@@ -20,6 +20,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.errorprone.matchers.JUnitMatchers.JUNIT4_RUN_WITH_ANNOTATION;
 import static com.sun.tools.javac.code.Scope.LookupKind.NON_RECURSIVE;
+import static java.util.Objects.requireNonNull;
 
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.VisibleForTesting;
@@ -144,6 +145,8 @@ public class ASTHelpers {
    * do any complex analysis here, just catch the obvious cases.
    */
   public static boolean sameVariable(ExpressionTree expr1, ExpressionTree expr2) {
+    requireNonNull(expr1);
+    requireNonNull(expr2);
     // Throw up our hands if we're not comparing identifiers and/or field accesses.
     if ((expr1.getKind() != Kind.IDENTIFIER && expr1.getKind() != Kind.MEMBER_SELECT)
         || (expr2.getKind() != Kind.IDENTIFIER && expr2.getKind() != Kind.MEMBER_SELECT)) {

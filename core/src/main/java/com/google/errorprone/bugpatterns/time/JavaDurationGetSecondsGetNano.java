@@ -124,7 +124,9 @@ public final class JavaDurationGetSecondsGetNano extends BugChecker
               ExpressionTree getSecondsReceiver = ASTHelpers.getReceiver(tree);
               if (getSecondsReceiver != null) {
                 // if the methods are being invoked directly on the same variable...
-                if (ASTHelpers.sameVariable(getNanoReceiver, getSecondsReceiver)) {
+                if (getNanoReceiver != null
+                    && getSecondsReceiver != null
+                    && ASTHelpers.sameVariable(getNanoReceiver, getSecondsReceiver)) {
                   return true;
                 }
                 if (!checkProtoChains) {
