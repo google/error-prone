@@ -116,6 +116,7 @@ import com.google.errorprone.bugpatterns.HashtableContains;
 import com.google.errorprone.bugpatterns.HidingField;
 import com.google.errorprone.bugpatterns.IdentityBinaryExpression;
 import com.google.errorprone.bugpatterns.ImmutableModification;
+import com.google.errorprone.bugpatterns.Incomparable;
 import com.google.errorprone.bugpatterns.IncompatibleModifiersChecker;
 import com.google.errorprone.bugpatterns.InconsistentCapitalization;
 import com.google.errorprone.bugpatterns.InconsistentHashCode;
@@ -495,6 +496,7 @@ public class BuiltInCheckerSuppliers {
           IdentityBinaryExpression.class,
           ImmutableChecker.class,
           ImmutableModification.class,
+          Incomparable.class,
           IncompatibleArgumentType.class,
           IndexOfChar.class,
           InexactVarargsConditional.class,
