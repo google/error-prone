@@ -374,11 +374,6 @@ public final class TimeUnitMismatch extends BugChecker
       return SECONDS;
     }
 
-    /*
-     * One of these calls will return a nonsense, single-item list (["timeoutseconds"] or
-     * ["timeout_seconds"]). That should be harmless, and the other should be something useful
-     * (["timeout", "seconds"]).
-     */
     List<String> words = fixUnitCamelCase(splitToLowercaseTerms(name));
 
     // People use variable names like "firstTimestamp" and "secondTimestamp."
