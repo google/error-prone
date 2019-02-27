@@ -23,6 +23,7 @@ import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.Reachability.canCompleteNormally;
 
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import com.google.common.collect.Sets.SetView;
 import com.google.errorprone.BugPattern;
@@ -65,16 +66,23 @@ public class UnnecessaryDefaultInEnumSwitch extends BugChecker implements Switch
       "Switch handles all enum values: the default case can be omitted to enable enforcement "
           + "at compile-time that the switch statement is exhaustive.";
 
-  @Override
-  public Description matchSwitch(SwitchTree tree, VisitorState state) {
+  private static final String DESCRIPTION_UNRECOGNIZED =
+      "Switch handles all enum values except for `UNRECOGNIZED`. The default case can be changed "
+          + "to `UNRECOGNIZED` to enable compile-time enforcement that the switch statement is "
+          + "exhaustive";
 
-    TypeSymbol switchType = ((JCSwitch) tree).getExpression().type.tsym;
+  @Override
+  public Description matchSwitch(SwitchTree switchTree, VisitorState state) {
+    // Only look at enum switches.
+    TypeSymbol switchType = ((JCSwitch) switchTree).getExpression().type.tsym;
     if (switchType.getKind() != ElementKind.ENUM) {
       return NO_MATCH;
     }
+
+    // Extract default case and the one before it.
     CaseTree caseBeforeDefault = null;
     CaseTree defaultCase = null;
-    for (CaseTree caseTree : tree.getCases()) {
+    for (CaseTree caseTree : switchTree.getCases()) {
       if (caseTree.getExpression() == null) {
         defaultCase = caseTree;
         break;
@@ -85,50 +93,38 @@ public class UnnecessaryDefaultInEnumSwitch extends BugChecker implements Switch
     if (caseBeforeDefault == null || defaultCase == null) {
       return NO_MATCH;
     }
-    Set<String> handledCases =
-        tree.getCases().stream()
-            .map(CaseTree::getExpression)
-            .filter(IdentifierTree.class::isInstance)
-            .map(p -> ((IdentifierTree) p).getName().toString())
-            .collect(toImmutableSet());
-    boolean unrecognized = false;
-    SetView<String> setDifference =
-        Sets.difference(ASTHelpers.enumValues(switchType), handledCases);
-    if (!setDifference.isEmpty()) {
-      if (setDifference.contains("UNRECOGNIZED") && setDifference.size() == 1) {
-        // if a switch handles all values of an proto-generated enum except for 'UNRECOGNIZED',
-        // we explicitly handle 'UNRECOGNIZED' and remove the default.
-        unrecognized = true;
-      } else {
-        return NO_MATCH;
-      }
+
+    SetView<String> unhandledCases = unhandledCases(switchTree, switchType);
+    if (unhandledCases.equals(ImmutableSet.of("UNRECOGNIZED"))) {
+      // switch handles all values of an proto-generated enum except for 'UNRECOGNIZED'.
+      return fixUnrecognized(switchTree, defaultCase, state);
     }
+    if (unhandledCases.isEmpty()) {
+      // switch is exhaustive, remove the default if we can.
+      return fixDefault(switchTree, caseBeforeDefault, defaultCase, state);
+    }
+    // switch is non-exhaustive, default can stay.
+    return NO_MATCH;
+  }
+
+  private Description fixDefault(
+      SwitchTree switchTree, CaseTree caseBeforeDefault, CaseTree defaultCase, VisitorState state) {
     List<? extends StatementTree> defaultStatements = defaultCase.getStatements();
     if (trivialDefault(defaultStatements)) {
       // deleting `default:` or `default: break;` is a no-op
-      SuggestedFix fix =
-          SuggestedFix.replace(
-              defaultCase, unrecognized ? "case UNRECOGNIZED: \n // continue below" : "");
       return buildDescription(defaultCase)
           .setMessage(DESCRIPTION_REMOVED_DEFAULT)
-          .addFix(fix)
+          .addFix(SuggestedFix.delete(defaultCase))
           .build();
     }
-    String defaultSource =
-        state
-            .getSourceCode()
-            .subSequence(
-                ((JCTree) defaultStatements.get(0)).getStartPosition(),
-                state.getEndPosition(getLast(defaultStatements)))
-            .toString();
-    String initialComments = comments(state, defaultCase, defaultStatements);
-    if (!canCompleteNormally(tree)) {
+    String defaultContents = getDefaultCaseContents(defaultCase, defaultStatements, state);
+    if (!canCompleteNormally(switchTree)) {
       // if the switch statement cannot complete normally, then deleting the default
       // and moving its statements to after the switch statement is a no-op
       SuggestedFix fix =
           SuggestedFix.builder()
-              .replace(defaultCase, unrecognized ? "case UNRECOGNIZED: \n break;" : "")
-              .postfixWith(tree, initialComments + defaultSource)
+              .postfixWith(switchTree, defaultContents)
+              .delete(defaultCase)
               .build();
       return buildDescription(defaultCase)
           .setMessage(DESCRIPTION_MOVED_DEFAULT)
@@ -173,26 +169,50 @@ public class UnnecessaryDefaultInEnumSwitch extends BugChecker implements Switch
       // it's OK to to delete the default.
       return buildDescription(defaultCase)
           .setMessage(DESCRIPTION_REMOVED_DEFAULT)
-          .addFix(
-              unrecognized
-                  ? SuggestedFix.builder()
-                      .replace(defaultCase, "case UNRECOGNIZED:" + initialComments + defaultSource)
-                      .build()
-                  : SuggestedFix.delete(defaultCase))
+          .addFix(SuggestedFix.delete(defaultCase))
           .build();
     }
     // case (1) -- If it can complete, we need to merge the default into it.
     SuggestedFix.Builder fix = SuggestedFix.builder().delete(defaultCase);
-    if (unrecognized) {
-      fix.prefixWith(defaultCase, "case UNRECOGNIZED:")
-          .postfixWith(defaultCase, initialComments + defaultSource);
-    } else {
-      fix.postfixWith(caseBeforeDefault, initialComments + defaultSource);
-    }
+    fix.postfixWith(caseBeforeDefault, defaultContents);
     return buildDescription(defaultCase)
         .setMessage(DESCRIPTION_REMOVED_DEFAULT)
         .addFix(fix.build())
         .build();
+  }
+
+  private Description fixUnrecognized(
+      SwitchTree switchTree, CaseTree defaultCase, VisitorState state) {
+    List<? extends StatementTree> defaultStatements = defaultCase.getStatements();
+    Description.Builder unrecognizedDescription =
+        buildDescription(defaultCase).setMessage(DESCRIPTION_UNRECOGNIZED);
+    if (trivialDefault(defaultStatements)) {
+      // the default case is empty or contains only `break` -- replace it with `case UNRECOGNIZED:`
+      // with fall out.
+      SuggestedFix fix =
+          SuggestedFix.replace(defaultCase, "case UNRECOGNIZED: \n // continue below");
+      return unrecognizedDescription.addFix(fix).build();
+    }
+    String defaultContents = getDefaultCaseContents(defaultCase, defaultStatements, state);
+    if (!canCompleteNormally(switchTree)) {
+      // the switch statement cannot complete normally -- replace default with
+      // `case UNRECOGNIZED: break;` and move content of default case to after the switch tree.
+      SuggestedFix fix =
+          SuggestedFix.builder()
+              .replace(defaultCase, "case UNRECOGNIZED: \n break;")
+              .postfixWith(switchTree, defaultContents)
+              .build();
+      return unrecognizedDescription.addFix(fix).build();
+    }
+
+    SuggestedFix fix = SuggestedFix.replace(defaultCase, "case UNRECOGNIZED:" + defaultContents);
+    if (!SuggestedFixes.compilesWithFix(fix, state)) {
+      // code in the default case can't be deleted -- no fix available.
+      return NO_MATCH;
+    }
+
+    // delete default and move its contents into `UNRECOGNIZED` case.
+    return unrecognizedDescription.addFix(fix).build();
   }
 
   /** Returns true if the default is empty, or contains only a break statement. */
@@ -204,9 +224,37 @@ public class UnnecessaryDefaultInEnumSwitch extends BugChecker implements Switch
         && getOnlyElement(defaultStatements).getKind() == Tree.Kind.BREAK);
   }
 
+  private static SetView<String> unhandledCases(SwitchTree tree, TypeSymbol switchType) {
+    Set<String> handledCases =
+        tree.getCases().stream()
+            .map(CaseTree::getExpression)
+            .filter(IdentifierTree.class::isInstance)
+            .map(p -> ((IdentifierTree) p).getName().toString())
+            .collect(toImmutableSet());
+    return Sets.difference(ASTHelpers.enumValues(switchType), handledCases);
+  }
+
+  private static String getDefaultCaseContents(
+      CaseTree defaultCase, List<? extends StatementTree> defaultStatements, VisitorState state) {
+    CharSequence sourceCode = state.getSourceCode();
+    if (sourceCode == null) {
+      return "";
+    }
+    String defaultSource =
+        sourceCode
+            .subSequence(
+                ((JCTree) defaultStatements.get(0)).getStartPosition(),
+                state.getEndPosition(getLast(defaultStatements)))
+            .toString();
+    String initialComments = comments(defaultCase, defaultStatements, sourceCode);
+    return initialComments + defaultSource;
+  }
+
   /** Returns the comments between the "default:" case and the first statement within it, if any. */
-  private String comments(
-      VisitorState state, CaseTree defaultCase, List<? extends StatementTree> defaultStatements) {
+  private static String comments(
+      CaseTree defaultCase,
+      List<? extends StatementTree> defaultStatements,
+      CharSequence sourceCode) {
     // If there are no statements, then there can be no comments that we strip,
     // because comments are attached to the statements, not the "default:" case.
     if (defaultStatements.isEmpty()) {
@@ -217,8 +265,7 @@ public class UnnecessaryDefaultInEnumSwitch extends BugChecker implements Switch
     // we have no way of identifying the end position of just the "default:" statement.
     int defaultStart = ((JCTree) defaultCase).getStartPosition();
     int statementStart = ((JCTree) defaultStatements.get(0)).getStartPosition();
-    String defaultAndComments =
-        state.getSourceCode().subSequence(defaultStart, statementStart).toString();
+    String defaultAndComments = sourceCode.subSequence(defaultStart, statementStart).toString();
     String comments =
         defaultAndComments
             .substring(defaultAndComments.indexOf("default:") + "default:".length())

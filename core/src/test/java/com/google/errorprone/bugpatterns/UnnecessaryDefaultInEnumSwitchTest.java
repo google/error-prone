@@ -749,4 +749,34 @@ public class UnnecessaryDefaultInEnumSwitchTest {
             "}")
         .doTest(TEXT_MATCH);
   }
+
+  @Test
+  public void messages() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  enum NormalEnum { A, B }",
+            "  enum ProtoEnum { ONE, TWO, UNRECOGNIZED }",
+            "  void normal(NormalEnum e) {",
+            "    switch (e) {",
+            "      case A:",
+            "      case B:",
+            "      // BUG: Diagnostic contains: default case can be omitted",
+            "      default:",
+            "        break;",
+            "    }",
+            "  }",
+            "  void proto(ProtoEnum e) {",
+            "    switch (e) {",
+            "      case ONE:",
+            "      case TWO:",
+            "      // BUG: Diagnostic contains: UNRECOGNIZED",
+            "      default:",
+            "        break;",
+            "    }",
+            "  }",
+            "}")
+        .doTest();
+  }
 }
