@@ -57,6 +57,7 @@ import static com.sun.source.tree.Tree.Kind.UNSIGNED_RIGHT_SHIFT_ASSIGNMENT;
 import static com.sun.source.tree.Tree.Kind.XOR_ASSIGNMENT;
 
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.annotations.NoAllocation;
 import com.google.errorprone.bugpatterns.BugChecker.AssignmentTreeMatcher;
@@ -124,7 +125,8 @@ import java.util.Set;
     summary =
         "@NoAllocation was specified on this method, but something was found that would"
             + " trigger an allocation",
-    severity = ERROR)
+    severity = ERROR,
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class NoAllocationChecker extends BugChecker
     implements AssignmentTreeMatcher,
         BinaryTreeMatcher,
