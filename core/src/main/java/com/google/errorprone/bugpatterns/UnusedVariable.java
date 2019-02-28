@@ -243,7 +243,7 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
               .setMessage(
                   String.format(
                       "%s %s '%s' is never read.",
-                      unused instanceof VariableTree ? "The" : "The assignment to this",
+                      isEverUsed.contains(symbol) ? "This assignment to the" : "The",
                       describeVariable(symbol),
                       symbol.name))
               .addAllFixes(
