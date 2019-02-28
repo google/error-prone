@@ -1013,6 +1013,27 @@ public class UnusedVariableTest {
   }
 
   @Test
+  public void unusedAssignment_messages() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            "package unusedvars;",
+            "public class Test {",
+            "  public int test() {",
+            "    // BUG: Diagnostic contains: This assignment to the local variable",
+            "    int a = 1;",
+            "    a = 2;",
+            "    int b = a;",
+            "    int c = b;",
+            "    // BUG: Diagnostic contains: This assignment to the local variable",
+            "    b = 2;",
+            "    return c;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void unusedAssignmentAfterUse() {
     refactoringHelper
         .addInputLines(
