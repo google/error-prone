@@ -132,6 +132,9 @@ public final class RefersToDaggerCodegen extends BugChecker implements MethodInv
     if (DAGGER_1_GENERATED_BASE_TYPES.stream()
         .anyMatch(dagger1Type -> isGeneratedBaseType(rootCallingClass, state, dagger1Type))) {
       return true;
+    } else if (isGeneratedBaseType(rootCallingClass, state, "dagger.MembersInjector")
+        && rootCallingClass.getSimpleName().toString().contains("$$ParentAdapter")) {
+      return true;
     }
     return false;
   }
