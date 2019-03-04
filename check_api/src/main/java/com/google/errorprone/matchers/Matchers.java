@@ -217,14 +217,6 @@ public class Matchers {
     return MethodMatchers.constructor();
   }
 
-  /** @deprecated prefer {@link MethodMatchers#instanceMethod} */
-  @Deprecated
-  // TODO(cushon): expunge
-  public static InstanceMethod instanceMethod(
-      Matcher<? super ExpressionTree> receiverMatcher, String methodName) {
-    return new InstanceMethod(receiverMatcher, methodName);
-  }
-
   /** Matches an AST node that represents a non-static field. */
   public static Matcher<ExpressionTree> isInstanceField() {
     return new Matcher<ExpressionTree>() {
@@ -344,6 +336,7 @@ public class Matchers {
     return new ConstructorOfClass(matchType, constructorMatcher);
   }
 
+  // TODO(cushon): expunge
   public static Matcher<MethodInvocationTree> methodSelect(
       Matcher<ExpressionTree> methodSelectMatcher) {
     return new MethodInvocationMethodSelect(methodSelectMatcher);
@@ -1128,22 +1121,6 @@ public class Matchers {
     };
   }
 
-  /**
-   * Matches an instance method that is a descendant of the instance method specified by the class
-   * name and method name.
-   *
-   * @param fullClassName The name of the class whose instance method to match, e.g.,
-   *     "java.util.Map"
-   * @param methodName The name of the method to match, including arguments, e.g.,
-   *     "get(java.lang.Object)"
-   * @deprecated prefer {@link MethodMatchers#instanceMethod}
-   */
-  @Deprecated
-  // TODO(cushon): expunge
-  public static Matcher<ExpressionTree> isDescendantOfMethod(
-      String fullClassName, String methodName) {
-    return new DescendantOf(fullClassName, methodName);
-  }
 
   /**
    * Matches a binary tree if the given matchers match the operands in either order. That is,
