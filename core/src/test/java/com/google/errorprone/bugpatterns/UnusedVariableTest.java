@@ -1034,6 +1034,66 @@ public class UnusedVariableTest {
   }
 
   @Test
+  public void unusedAssignment_nulledOut_noWarning() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            "package unusedvars;",
+            "public class Test {",
+            "  public void test() {",
+            "    Integer a = 1;",
+            "    a.hashCode();",
+            "    a = null;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void unusedAssignment_nulledOut_thenAssignedAgain() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            "package unusedvars;",
+            "public class Test {",
+            "  public void test() {",
+            "    Integer a = 1;",
+            "    a.hashCode();",
+            "    a = null;",
+            "    a = 2;",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "package unusedvars;",
+            "public class Test {",
+            "  public void test() {",
+            "    Integer a = 1;",
+            "    a.hashCode();",
+            "    a = null;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void unusedAssignment_initialAssignmentNull_givesWarning() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            "package unusedvars;",
+            "public class Test {",
+            "  public void test() {",
+            "    // BUG: Diagnostic contains: assignment",
+            "    Integer a = null;",
+            "    a = 1;",
+            "    a.hashCode();",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void unusedAssignmentAfterUse() {
     refactoringHelper
         .addInputLines(
