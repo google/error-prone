@@ -107,6 +107,7 @@ import javax.annotation.Nullable;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.Name;
+import javax.lang.model.type.NullType;
 
 /** Bugpattern to detect unused declarations. */
 @BugPattern(
@@ -228,7 +229,7 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
       if (onlyCheckForReassignments.contains(unusedSymbol) && specs.size() <= 1) {
         continue;
       }
-      Tree unused = specs.iterator().next().variableTree().getLeaf();
+      Tree unused = specs.iterator().next().assignmentPath().getLeaf();
       VarSymbol symbol = (VarSymbol) unusedSymbol;
       ImmutableList<SuggestedFix> fixes;
       if (symbol.getKind() == ElementKind.PARAMETER
@@ -799,6 +800,11 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
       if (!declarationSites.containsKey(symbol)) {
         return;
       }
+      // Don't regard assigning `null` as a potentially unused assignment, as people do this for GC
+      // reasons.
+      if (getType(tree.getExpression()) instanceof NullType) {
+        return;
+      }
       hasBeenAssigned.add(symbol);
       TreePath assignmentSite = declarationSites.get(symbol);
       if (scopeDepth(assignmentSite) != Iterables.size(getCurrentPath().getParentPath())) {
@@ -932,8 +938,8 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
     /** {@link Symbol} of the unsued element. */
     abstract Symbol symbol();
 
-    /** {@link VariableTree} for the original declaration site. */
-    abstract TreePath variableTree();
+    /** {@link VariableTree} or {@link AssignmentTree} for the original assignment site. */
+    abstract TreePath assignmentPath();
 
     /**
      * All the usage sites of this variable that we claim are unused (including the initial
@@ -949,12 +955,12 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
 
     private static UnusedSpec of(
         Symbol symbol,
-        TreePath variableTree,
+        TreePath assignmentPath,
         Iterable<TreePath> treePaths,
         @Nullable AssignmentTree assignmentTree) {
       return new AutoValue_UnusedVariable_UnusedSpec(
           symbol,
-          variableTree,
+          assignmentPath,
           ImmutableList.copyOf(treePaths),
           Optional.ofNullable(assignmentTree));
     }
