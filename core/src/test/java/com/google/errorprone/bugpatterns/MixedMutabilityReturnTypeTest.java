@@ -52,6 +52,26 @@ public final class MixedMutabilityReturnTypeTest {
   }
 
   @Test
+  public void whenSuppressed_noWarning() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.util.Collections;",
+            "import java.util.List;",
+            "import java.util.ArrayList;",
+            "class Test {",
+            "  @SuppressWarnings(\"MixedMutabilityReturnType\")",
+            "  List<Integer> foo() {",
+            "    if (hashCode() > 0) {",
+            "      return Collections.emptyList();",
+            "    }",
+            "    return new ArrayList<>();",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void tracksActualVariableTypes() {
     compilationHelper
         .addSourceLines(
@@ -417,6 +437,39 @@ public final class MixedMutabilityReturnTypeTest {
             "    }",
             "    ints.add(1);",
             "    return ImmutableList.copyOf(ints);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void refactoringWithNestedCollectionsHelper() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            "import java.util.ArrayList;",
+            "import java.util.Collections;",
+            "import java.util.List;",
+            "class Test {",
+            "  <T> List<T> foo(T a) {",
+            "    if (hashCode() > 0) {",
+            "      return new ArrayList<>(Collections.singleton(a));",
+            "    }",
+            "    return Collections.singletonList(a);",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "import com.google.common.collect.ImmutableList;",
+            "import java.util.ArrayList;",
+            "import java.util.Collections;",
+            "import java.util.List;",
+            "class Test {",
+            "  <T> List<T> foo(T a) {",
+            "    if (hashCode() > 0) {",
+            "      return ImmutableList.copyOf(new ArrayList<>(Collections.singleton(a)));",
+            "    }",
+            "    return ImmutableList.of(a);",
             "  }",
             "}")
         .doTest();
