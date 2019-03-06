@@ -25,6 +25,7 @@ import static com.google.errorprone.matchers.Matchers.expressionStatement;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
 import static com.sun.source.tree.Tree.Kind.UNION_TYPE;
 
+import com.google.common.collect.Iterables;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
@@ -33,7 +34,11 @@ import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.sun.source.tree.CatchTree;
+import com.sun.source.tree.ExpressionStatementTree;
+import com.sun.source.tree.ExpressionTree;
+import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.StatementTree;
+import com.sun.source.tree.Tree;
 import com.sun.source.tree.TryTree;
 import java.util.List;
 import java.util.Optional;
@@ -67,9 +72,13 @@ public class TryFailRefactoring extends BugChecker implements TryTreeMatcher {
       return NO_MATCH;
     }
     // try body statements, excluding the trailing `fail()`
-    List<? extends StatementTree> throwingStatements =
-        tree.getBlock().getStatements().subList(0, tree.getBlock().getStatements().size() - 1);
-    Optional<Fix> fix = AssertThrowsUtils.tryFailToAssertThrows(tree, throwingStatements, state);
+    List<? extends StatementTree> throwingStatements = body.subList(0, body.size() - 1);
+    Iterable<? extends ExpressionTree> failArgs =
+        ((MethodInvocationTree) ((ExpressionStatementTree) getLast(body)).getExpression())
+            .getArguments();
+    Optional<Tree> message = Optional.ofNullable(Iterables.get(failArgs, 0, null));
+    Optional<Fix> fix =
+        AssertThrowsUtils.tryFailToAssertThrows(tree, throwingStatements, message, state);
     return fix.isPresent() ? describeMatch(tree, fix) : NO_MATCH;
   }
 }

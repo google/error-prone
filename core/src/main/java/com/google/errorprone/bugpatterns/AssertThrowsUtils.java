@@ -23,9 +23,11 @@ import com.google.common.collect.Iterables;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.SuggestedFix;
+import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.CatchTree;
 import com.sun.source.tree.ExpressionStatementTree;
 import com.sun.source.tree.StatementTree;
+import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.TryTree;
 import com.sun.tools.javac.tree.JCTree;
@@ -69,7 +71,10 @@ public class AssertThrowsUtils {
    *     could not be constructed for the given code (e.g. multi-catch).
    */
   public static Optional<Fix> tryFailToAssertThrows(
-      TryTree tryTree, List<? extends StatementTree> throwingStatements, VisitorState state) {
+      TryTree tryTree,
+      List<? extends StatementTree> throwingStatements,
+      Optional<Tree> failureMessage,
+      VisitorState state) {
     List<? extends CatchTree> catchTrees = tryTree.getCatches();
     if (catchTrees.size() != 1) {
       return Optional.empty();
@@ -88,7 +93,14 @@ public class AssertThrowsUtils {
     }
     fixPrefix.append(
         String.format(
-            "assertThrows(%s.class, () -> ",
+            "assertThrows(%s%s.class, () -> ",
+            failureMessage
+                // Supplying a constant string adds little value, since a failure here always means
+                // the same thing: the method just called wasn't expected to complete normally, but
+                // it did.
+                .filter(t -> ASTHelpers.constValue(t, String.class) == null)
+                .map(t -> state.getSourceForNode(t) + ", ")
+                .orElse(""),
             state.getSourceForNode(catchTree.getParameter().getType())));
     boolean useExpressionLambda =
         throwingStatements.size() == 1
