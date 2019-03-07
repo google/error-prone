@@ -60,6 +60,7 @@ public class ComparableTypeNegativeCases {
 
   public static class HalfOpen implements Door {}
 
+  // BUG: Diagnostic contains: [ComparableType]
   static final class Open extends HalfOpen implements Comparable<Door> {
     @Override
     public int compareTo(Door o) {
@@ -69,6 +70,7 @@ public class ComparableTypeNegativeCases {
 
   public static class A {}
 
+  // BUG: Diagnostic contains: [ComparableType]
   public static class B extends A implements Comparable<A> {
 
     @Override
@@ -99,6 +101,7 @@ public class ComparableTypeNegativeCases {
     }
   }
 
+  // BUG: Diagnostic contains: [ComparableType]
   static final class XGram implements Comparable {
 
     @Override

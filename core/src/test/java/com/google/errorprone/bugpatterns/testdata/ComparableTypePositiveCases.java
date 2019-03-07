@@ -101,7 +101,6 @@ public class ComparableTypePositiveCases {
   // BUG: Diagnostic contains: [ComparableType]
   public abstract static class AClass implements Comparable<Integer> {}
 
-  // BUG: Diagnostic contains: [ComparableType]
   public static class BClass extends AClass {
     @Override
     public int compareTo(Integer o) {
@@ -122,14 +121,13 @@ public class ComparableTypePositiveCases {
     }
   }
 
+  // BUG: Diagnostic contains: [ComparableType]
   public abstract static class One<T> implements Comparable<T> {}
 
-  // BUG: Diagnostic contains: [ComparableType]
   public static class Two extends One<Integer> {
     @Override
     public int compareTo(Integer o) {
       return 0;
     }
   }
-
 }
