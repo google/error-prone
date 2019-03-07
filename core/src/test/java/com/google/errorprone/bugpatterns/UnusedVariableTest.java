@@ -233,7 +233,6 @@ public class UnusedVariableTest {
         .doTest();
   }
 
-
   @Test
   public void unusedNative() {
     helper
