@@ -43,7 +43,6 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.ListMultimap;
 import com.google.common.collect.Multimaps;
-import com.google.common.collect.Sets;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
@@ -153,12 +152,6 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
           // TAG fields are used by convention in Android apps.
           "TAG");
 
-  private static final ImmutableSet<Modifier> LOGGER_REQUIRED_MODIFIERS =
-      Sets.immutableEnumSet(Modifier.PRIVATE, Modifier.STATIC, Modifier.FINAL);
-
-  private static final ImmutableSet<String> LOGGER_TYPE_NAME = ImmutableSet.of("GoogleLogger");
-
-  private static final ImmutableSet<String> LOGGER_VAR_NAME = ImmutableSet.of("logger");
   private final boolean reportInjectedFields;
 
   public UnusedVariable(ErrorProneFlags flags) {
@@ -610,14 +603,7 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
         return true;
       }
       return variableTree.getModifiers().getFlags().contains(Modifier.PRIVATE)
-          && !SPECIAL_FIELDS.contains(symbol.getSimpleName().toString())
-          && !isLoggerField(variableTree);
-    }
-
-    private boolean isLoggerField(VariableTree variableTree) {
-      return variableTree.getModifiers().getFlags().containsAll(LOGGER_REQUIRED_MODIFIERS)
-          && LOGGER_TYPE_NAME.contains(variableTree.getType().toString())
-          && LOGGER_VAR_NAME.contains(variableTree.getName().toString());
+          && !SPECIAL_FIELDS.contains(symbol.getSimpleName().toString());
     }
 
     /** Returns whether {@code sym} can be removed without updating call sites in other files. */
