@@ -60,16 +60,8 @@ public class IterableAndIterator extends BugChecker implements ClassTreeMatcher 
       superTypes.add(superClass);
     }
 
-    /* NOTE: at "Eight day", use Java 8 feature below
     return superTypes.stream()
         .anyMatch(superType -> ITERABLE_AND_ITERATOR_MATCHER.matches(superType, state));
-     */
-    for (Tree superType : superTypes) {
-      if (ITERABLE_AND_ITERATOR_MATCHER.matches(superType, state)) {
-        return true;
-      }
-    }
-    return false;
   }
 
   @Override
