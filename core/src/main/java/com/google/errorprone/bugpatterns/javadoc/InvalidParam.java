@@ -23,6 +23,7 @@ import static com.google.errorprone.bugpatterns.javadoc.Utils.getBestMatch;
 import static com.google.errorprone.bugpatterns.javadoc.Utils.getDocComment;
 import static com.google.errorprone.bugpatterns.javadoc.Utils.getDocTreePath;
 import static com.google.errorprone.bugpatterns.javadoc.Utils.replace;
+import static com.google.errorprone.names.LevenshteinEditDistance.getEditDistance;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
@@ -35,6 +36,8 @@ import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.matchers.Description;
 import com.sun.source.doctree.DocTree;
+import com.sun.source.doctree.DocTree.Kind;
+import com.sun.source.doctree.LiteralTree;
 import com.sun.source.doctree.ParamTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.MethodTree;
@@ -44,6 +47,7 @@ import com.sun.source.util.DocTreePathScanner;
 import com.sun.tools.javac.tree.DCTree.DCDocComment;
 import java.util.Optional;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 /**
  * Matches incorrect Javadoc {@literal @}param tags.
@@ -58,6 +62,13 @@ import java.util.Set;
     providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION,
     documentSuppression = false)
 public final class InvalidParam extends BugChecker implements ClassTreeMatcher, MethodTreeMatcher {
+
+  private static final Pattern POSSIBLE_PARAMETER = Pattern.compile("[a-z][A-Za-z0-9]*");
+
+  /**
+   * Heuristic for the relative edit distance below which we report maybe-param {@literal @code}s.
+   */
+  private static final double LIKELY_PARAMETER_THRESHOLD = 0.25;
 
   @Override
   public Description matchClass(ClassTree classTree, VisitorState state) {
@@ -140,6 +151,41 @@ public final class InvalidParam extends BugChecker implements ClassTreeMatcher, 
                         .build()));
       }
       return super.visitParam(paramTree, null);
+    }
+
+    @Override
+    public Void visitLiteral(LiteralTree node, Void unused) {
+      if (node.getKind() != Kind.CODE) {
+        return super.visitLiteral(node, null);
+      }
+      String body = node.getBody().getBody();
+      if (!POSSIBLE_PARAMETER.matcher(body).matches()) {
+        return super.visitLiteral(node, null);
+      }
+      String bestMatch = null;
+      int minDistance = Integer.MAX_VALUE;
+      for (String parameter : parameters) {
+        int distance = getEditDistance(body, parameter);
+        if (distance < minDistance) {
+          bestMatch = parameter;
+          minDistance = distance;
+        }
+      }
+      if (bestMatch != null
+          && !bestMatch.equals(body)
+          && (double) minDistance / body.length() <= LIKELY_PARAMETER_THRESHOLD) {
+        String message =
+            String.format(
+                "`%s` is very close to the parameter `%s`. "
+                    + "Did you mean to reference the parameter?",
+                body, bestMatch);
+        state.reportMatch(
+            buildDescription(diagnosticPosition(getCurrentPath(), state))
+                .setMessage(message)
+                .addFix(replace(node.getBody(), bestMatch, state))
+                .build());
+      }
+      return super.visitLiteral(node, null);
     }
   }
 
