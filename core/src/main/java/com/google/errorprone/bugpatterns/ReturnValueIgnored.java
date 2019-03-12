@@ -48,10 +48,10 @@ public class ReturnValueIgnored extends AbstractReturnValueIgnored {
   /**
    * A set of types which this checker should examine method calls on.
    *
-   * <p>There are also some high-priority return value ignored checks in FindBugs for various
+   * <p>There are also some high-priority return value ignored checks in SpotBugs for various
    * threading constructs which do not return the same type as the receiver. This check does not
-   * deal with them, since the fix is less straightforward. See a list of the FindBugs checks here:
-   * http://code.google.com/searchframe#Fccnll6ERQ0/trunk/findbugs/src/java/edu/umd/cs/findbugs/ba/CheckReturnAnnotationDatabase.java
+   * deal with them, since the fix is less straightforward. See a list of the SpotBugs checks here:
+   * https://github.com/spotbugs/spotbugs/blob/master/spotbugs/src/main/java/edu/umd/cs/findbugs/ba/CheckReturnAnnotationDatabase.java
    */
   private static final Set<String> typesToCheck =
       new HashSet<>(
