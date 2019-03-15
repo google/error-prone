@@ -15,6 +15,9 @@
  */
 package com.google.errorprone.annotations.concurrent;
 
+import static javax.lang.model.element.Modifier.FINAL;
+
+import com.google.errorprone.annotations.IncompatibleModifiers;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -58,6 +61,7 @@ import java.lang.annotation.Target;
  * unless you really understand this <b>and</b> you really need the performance benefits of
  * introducing the data race, do not use this construct.
  */
+@IncompatibleModifiers({FINAL})
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
 public @interface LazyInit {}
