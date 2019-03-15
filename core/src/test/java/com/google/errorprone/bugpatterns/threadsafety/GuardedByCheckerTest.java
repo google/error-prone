@@ -1432,6 +1432,30 @@ public class GuardedByCheckerTest {
         .doTest();
   }
 
+  @Ignore("b/128641856")
+  @Test
+  public void innerClassInMethod() {
+    compilationHelper
+        .addSourceLines(
+            "threadsafety/Test.java",
+            "package threadsafety;",
+            "import javax.annotation.concurrent.GuardedBy;",
+            "public class Test {",
+            "  public final Object mu = new Object();",
+            "  @GuardedBy(\"mu\") int i = 0;",
+            "  void f() {",
+            "    class Inner {",
+            "      @GuardedBy(\"mu\") void m() {i++;}",
+            "    }",
+            "    Inner i = new Inner();",
+            "    synchronized (mu) {",
+            "      i.m();",
+            "    }",
+            "  }",
+            "}")
+        .doTest();
+  }
+
   @Test
   public void innerClassMethod_classBoundary() {
     compilationHelper
