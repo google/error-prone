@@ -52,7 +52,10 @@ import javax.annotation.Nullable;
     summary =
         "This method passes a pair of parameters through to String.format, but the enclosing "
             + "method wasn't annotated @FormatMethod. Doing so gives compile-time rather than "
-            + "run-time protection against malformed format strings.",
+            + "run-time protection against malformed format strings.\n\n"
+            + "WARNING: There's a very high chance that existing code will not be passing in "
+            + "well-formed format strings. Make sure you run tests including all users of "
+            + "this code before submitting.",
     severity = WARNING,
     tags = FRAGILE_CODE,
     providesFix = REQUIRES_HUMAN_ATTENTION)

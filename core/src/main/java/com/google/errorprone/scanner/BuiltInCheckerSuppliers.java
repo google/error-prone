@@ -582,6 +582,7 @@ public class BuiltInCheckerSuppliers {
   public static final ImmutableSet<BugCheckerInfo> ENABLED_WARNINGS =
       getSuppliers(
           AmbiguousMethodReference.class,
+          AnnotateFormatMethod.class,
           ArrayAsKeyOfSetOrMap.class,
           ArgumentSelectionDefectChecker.class,
           AssertEqualsArgumentOrderChecker.class,
@@ -736,7 +737,6 @@ public class BuiltInCheckerSuppliers {
   public static final ImmutableSet<BugCheckerInfo> DISABLED_CHECKS =
       getSuppliers(
           AndroidJdkLibsChecker.class,
-          AnnotateFormatMethod.class,
           AnnotationPosition.class,
           AssertFalse.class,
           AssistedInjectAndInjectOnConstructors.class,
