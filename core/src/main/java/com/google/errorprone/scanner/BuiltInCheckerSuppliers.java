@@ -366,7 +366,6 @@ import com.google.errorprone.bugpatterns.nullness.NullableDereference;
 import com.google.errorprone.bugpatterns.nullness.ParameterNotNullable;
 import com.google.errorprone.bugpatterns.nullness.ReturnMissingNullable;
 import com.google.errorprone.bugpatterns.overloading.InconsistentOverloads;
-import com.google.errorprone.bugpatterns.threadsafety.DeprecatedThreadMethods;
 import com.google.errorprone.bugpatterns.threadsafety.DoubleCheckedLocking;
 import com.google.errorprone.bugpatterns.threadsafety.GuardedByChecker;
 import com.google.errorprone.bugpatterns.threadsafety.ImmutableAnnotationChecker;
@@ -612,7 +611,6 @@ public class BuiltInCheckerSuppliers {
           ComplexBooleanConstant.class,
           DateFormatConstant.class,
           DefaultCharset.class,
-          DeprecatedThreadMethods.class,
           DoubleBraceInitialization.class,
           DoubleCheckedLocking.class,
           EqualsGetClass.class,
