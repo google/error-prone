@@ -23,10 +23,12 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.BugPattern.StandardTags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.annotations.IncompatibleModifiers;
 import com.google.errorprone.bugpatterns.BugChecker.AnnotationTreeMatcher;
+import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.AnnotationTree;
@@ -46,7 +48,8 @@ import javax.lang.model.element.TypeElement;
             + "@IncompatibleModifiers annotation",
     linkType = NONE,
     severity = WARNING,
-    tags = StandardTags.LIKELY_ERROR)
+    tags = StandardTags.LIKELY_ERROR,
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 
 // TODO(cushon): merge the implementation with RequiredModifiersChecker
 public class IncompatibleModifiersChecker extends BugChecker implements AnnotationTreeMatcher {
@@ -107,6 +110,9 @@ public class IncompatibleModifiersChecker extends BugChecker implements Annotati
             ? String.format("The annotation '@%s'", annotationName)
             : "This annotation";
     String customMessage = String.format(MESSAGE_TEMPLATE, nameString, incompatible);
-    return buildDescription(tree).setMessage(customMessage).build();
+    return buildDescription(tree)
+        .addFix(SuggestedFixes.removeModifiers((ModifiersTree) parent, state, incompatible))
+        .setMessage(customMessage)
+        .build();
   }
 }

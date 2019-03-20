@@ -22,10 +22,12 @@ import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.BugPattern.StandardTags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.annotations.RequiredModifiers;
 import com.google.errorprone.bugpatterns.BugChecker.AnnotationTreeMatcher;
+import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.AnnotationTree;
@@ -42,7 +44,8 @@ import javax.lang.model.element.Modifier;
             + "@RequiredModifiers annotation",
     linkType = NONE,
     severity = WARNING,
-    tags = StandardTags.LIKELY_ERROR)
+    tags = StandardTags.LIKELY_ERROR,
+    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class RequiredModifiersChecker extends BugChecker implements AnnotationTreeMatcher {
 
   private static final String MESSAGE_TEMPLATE =
@@ -77,6 +80,14 @@ public class RequiredModifiersChecker extends BugChecker implements AnnotationTr
             ? String.format("The annotation '@%s'", annotationName)
             : "This annotation";
     String customMessage = String.format(MESSAGE_TEMPLATE, nameString, missing);
-    return buildDescription(tree).setMessage(customMessage).build();
+    return buildDescription(tree)
+        .addFix(
+            SuggestedFixes.addModifiers(
+                state.getPath().getParentPath().getParentPath().getLeaf(),
+                (ModifiersTree) parent,
+                state,
+                missing))
+        .setMessage(customMessage)
+        .build();
   }
 }

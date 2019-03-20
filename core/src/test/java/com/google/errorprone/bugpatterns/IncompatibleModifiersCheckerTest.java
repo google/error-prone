@@ -16,6 +16,7 @@
 
 package com.google.errorprone.bugpatterns;
 
+import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
 import org.junit.Before;
 import org.junit.Test;
@@ -226,6 +227,33 @@ public class IncompatibleModifiersCheckerTest {
             "public @interface Anno {",
             "}")
         .addSourceLines("testdata/package-info.java", "@Anno", "package testdata;")
+        .doTest();
+  }
+
+  @Test
+  public void refactoring() {
+    BugCheckerRefactoringTestHelper.newInstance(new IncompatibleModifiersChecker(), getClass())
+        .addInputLines(
+            "test/NotAbstract.java",
+            "package test;",
+            "import static javax.lang.model.element.Modifier.ABSTRACT;",
+            "import com.google.errorprone.annotations.IncompatibleModifiers;",
+            "@IncompatibleModifiers(ABSTRACT)",
+            "public @interface NotAbstract {",
+            "}")
+        .expectUnchanged()
+        .addInputLines(
+            "test/IncompatibleModifiersTestCase.java",
+            "package test;",
+            "import test.NotAbstract;",
+            "@NotAbstract abstract class IncompatibleModifiersTestCase {",
+            "}")
+        .addOutputLines(
+            "test/IncompatibleModifiersTestCase.java",
+            "package test;",
+            "import test.NotAbstract;",
+            "@NotAbstract class IncompatibleModifiersTestCase {",
+            "}")
         .doTest();
   }
 }
