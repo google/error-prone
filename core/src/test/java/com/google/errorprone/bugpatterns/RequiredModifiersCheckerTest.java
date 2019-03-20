@@ -16,6 +16,7 @@
 
 package com.google.errorprone.bugpatterns;
 
+import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
 import javax.tools.JavaFileObject;
 import org.junit.Before;
@@ -204,6 +205,33 @@ public class RequiredModifiersCheckerTest {
             "public @interface Anno {",
             "}")
         .addSourceLines("testdata/package-info.java", "@Anno", "package testdata;")
+        .doTest();
+  }
+
+  @Test
+  public void refactoring() {
+    BugCheckerRefactoringTestHelper.newInstance(new RequiredModifiersChecker(), getClass())
+        .addInputLines(
+            "test/AbstractRequired.java",
+            "package test;",
+            "import static javax.lang.model.element.Modifier.ABSTRACT;",
+            "import com.google.errorprone.annotations.RequiredModifiers;",
+            "@RequiredModifiers(ABSTRACT)",
+            "public @interface AbstractRequired {",
+            "}")
+        .expectUnchanged()
+        .addInputLines(
+            "test/RequiredModifiersTestCase.java",
+            "package test;",
+            "import test.AbstractRequired;",
+            "@AbstractRequired class RequiredModifiersTestCase {",
+            "}")
+        .addOutputLines(
+            "test/RequiredModifiersTestCase.java",
+            "package test;",
+            "import test.AbstractRequired;",
+            "@AbstractRequired abstract class RequiredModifiersTestCase {",
+            "}")
         .doTest();
   }
 }

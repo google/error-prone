@@ -160,8 +160,13 @@ public class SuggestedFixes {
     if (originalModifiers == null) {
       return Optional.empty();
     }
-    Set<Modifier> toAdd =
-        Sets.difference(new TreeSet<>(Arrays.asList(modifiers)), originalModifiers.getFlags());
+    return addModifiers(tree, originalModifiers, state, new TreeSet<>(Arrays.asList(modifiers)));
+  }
+
+  /** Adds modifiers to the given declaration and corresponding modifiers tree. */
+  public static Optional<SuggestedFix> addModifiers(
+      Tree tree, ModifiersTree originalModifiers, VisitorState state, Set<Modifier> modifiers) {
+    Set<Modifier> toAdd = Sets.difference(modifiers, originalModifiers.getFlags());
     SuggestedFix.Builder fix = SuggestedFix.builder();
     List<Modifier> modifiersToWrite = new ArrayList<>();
     if (!originalModifiers.getFlags().isEmpty()) {
@@ -228,6 +233,12 @@ public class SuggestedFixes {
     if (originalModifiers == null) {
       return Optional.empty();
     }
+    return removeModifiers(originalModifiers, state, toRemove);
+  }
+
+  /** Adds modifiers to the given declaration and corresponding modifiers tree. */
+  public static Optional<SuggestedFix> removeModifiers(
+      ModifiersTree originalModifiers, VisitorState state, Set<Modifier> toRemove) {
     SuggestedFix.Builder fix = SuggestedFix.builder();
     List<ErrorProneToken> tokens = state.getTokensForNode(originalModifiers);
     int basePos = ((JCTree) originalModifiers).getStartPosition();
