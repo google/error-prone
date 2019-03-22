@@ -447,6 +447,17 @@ public class SuggestedFixes {
                   fix.replace(tree, replacement);
                 }
               }
+
+              @Override
+              public void visitSelect(JCTree.JCFieldAccess tree) {
+                if (sym.equals(getSymbol(tree))) {
+                  fix.replace(
+                      state.getEndPosition(tree.getExpression()),
+                      state.getEndPosition(tree),
+                      "." + replacement);
+                }
+                super.visitSelect(tree);
+              }
             });
     return fix.build();
   }
