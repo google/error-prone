@@ -15,6 +15,7 @@
 package com.google.errorprone.bugpatterns.threadsafety;
 
 import static com.google.errorprone.bugpatterns.threadsafety.IllegalGuardedBy.checkGuardedBy;
+import static java.util.Objects.requireNonNull;
 
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.util.ASTHelpers;
@@ -67,7 +68,7 @@ public class GuardedBySymbolResolver implements GuardedByBinder.Resolver {
   private GuardedBySymbolResolver(
       ClassSymbol enclosingClass, CompilationUnitTree compilationUnit, Context context, Tree leaf) {
     this.compilationUnit = (JCCompilationUnit) compilationUnit;
-    this.enclosingClass = enclosingClass;
+    this.enclosingClass = requireNonNull(enclosingClass);
     this.context = context;
     this.types = Types.instance(context);
     this.decl = leaf;
