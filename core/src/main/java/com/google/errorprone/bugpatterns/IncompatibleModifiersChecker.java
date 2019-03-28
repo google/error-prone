@@ -17,7 +17,7 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.LinkType.NONE;
-import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
+import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
@@ -47,7 +47,7 @@ import javax.lang.model.element.TypeElement;
         "This annotation has incompatible modifiers as specified by its "
             + "@IncompatibleModifiers annotation",
     linkType = NONE,
-    severity = WARNING,
+    severity = ERROR,
     tags = StandardTags.LIKELY_ERROR,
     providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 
