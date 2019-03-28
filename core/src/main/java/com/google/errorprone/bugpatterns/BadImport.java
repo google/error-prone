@@ -29,7 +29,6 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.MultiMatcher;
-import com.google.errorprone.matchers.MultiMatcher.MultiMatchResult;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.ClassTree;
@@ -193,17 +192,29 @@ public class BadImport extends BugChecker implements ImportTreeMatcher {
               case METHOD:
               case VARIABLE:
               case ANNOTATED_TYPE:
-                MultiMatchResult<AnnotationTree> matchResult =
-                    HAS_TYPE_USE_ANNOTATION.multiMatchResult(parent, state);
-                if (matchResult.matches()) {
-                  for (AnnotationTree annotation : matchResult.matchingNodes()) {
-                    builder.delete(annotation);
-                    builder.prefixWith(node, state.getSourceForNode(annotation) + " ");
-                  }
+                moveTypeAnnotations(node, parent, state, builder);
+                break;
+              case PARAMETERIZED_TYPE:
+                Tree grandParent = getCurrentPath().getParentPath().getParentPath().getLeaf();
+                if (grandParent.getKind() == Kind.VARIABLE
+                    || grandParent.getKind() == Kind.METHOD) {
+                  moveTypeAnnotations(node, grandParent, state, builder);
                 }
                 break;
               default:
                 // Do nothing.
+            }
+          }
+
+          private void moveTypeAnnotations(
+              IdentifierTree node,
+              Tree annotationHolder,
+              VisitorState state,
+              SuggestedFix.Builder builder) {
+            for (AnnotationTree annotation :
+                HAS_TYPE_USE_ANNOTATION.multiMatchResult(annotationHolder, state).matchingNodes()) {
+              builder.delete(annotation);
+              builder.prefixWith(node, state.getSourceForNode(annotation) + " ");
             }
           }
         }.scan(path, null);
