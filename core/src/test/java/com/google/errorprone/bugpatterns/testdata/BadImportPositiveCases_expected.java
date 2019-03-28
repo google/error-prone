@@ -18,6 +18,7 @@ package com.google.errorprone.bugpatterns.testdata;
 import static com.google.errorprone.bugpatterns.testdata.BadImportPositiveCases.Example.INSTANCE;
 
 import com.google.common.collect.ImmutableList;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Tests for {@link BadImport}.
@@ -35,6 +36,19 @@ class BadImportPositiveCases {
     ImmutableList.Builder<ImmutableList.Builder> builder1Raw;
     ImmutableList.Builder<ImmutableList.Builder<String>> builder2;
     ImmutableList.Builder<ImmutableList.Builder> builder2Raw;
+  }
+
+  ImmutableList.@Nullable Builder<ImmutableList.@Nullable Builder<@Nullable String>>
+      parameterizedWithTypeUseAnnotationMethod() {
+    return null;
+  }
+
+  public void variableDeclarationsNestedGenericsAndTypeUseAnnotations() {
+
+    ImmutableList.@Nullable Builder<@Nullable String> parameterizedWithTypeUseAnnotation1;
+
+    ImmutableList.@Nullable Builder<ImmutableList.@Nullable Builder<@Nullable String>>
+        parameterizedWithTypeUseAnnotation2;
   }
 
   public void newClass() {
