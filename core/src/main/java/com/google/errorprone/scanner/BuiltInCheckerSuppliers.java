@@ -172,6 +172,7 @@ import com.google.errorprone.bugpatterns.MockitoInternalUsage;
 import com.google.errorprone.bugpatterns.MockitoUsage;
 import com.google.errorprone.bugpatterns.ModifiedButNotUsed;
 import com.google.errorprone.bugpatterns.ModifyCollectionInEnhancedForLoop;
+import com.google.errorprone.bugpatterns.ModifySourceCollectionInStream;
 import com.google.errorprone.bugpatterns.ModifyingCollectionWithItself;
 import com.google.errorprone.bugpatterns.MultiVariableDeclaration;
 import com.google.errorprone.bugpatterns.MultipleParallelOrSequentialCalls;
@@ -669,6 +670,7 @@ public class BuiltInCheckerSuppliers {
           MockitoInternalUsage.class,
           ModifiedButNotUsed.class,
           ModifyCollectionInEnhancedForLoop.class,
+          ModifySourceCollectionInStream.class,
           MultipleParallelOrSequentialCalls.class,
           MutableConstantField.class,
           NarrowingCompoundAssignment.class,
