@@ -167,6 +167,9 @@ Type declaration annotated with @Immutable is not immutable
 __[ImmutableModification](bugpattern/ImmutableModification)__<br>
 Modifying an immutable collection is guaranteed to throw an exception and leave the collection unmodified
 
+__[Incomparable](bugpattern/Incomparable)__<br>
+Types contained in sorted collections must implement Comparable.
+
 __[IncompatibleArgumentType](bugpattern/IncompatibleArgumentType)__<br>
 Passing argument to a generic method with an incompatible type.
 
