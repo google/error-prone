@@ -15,6 +15,7 @@
  */
 package com.google.errorprone.bugpatterns.time;
 
+import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -38,6 +39,29 @@ public class JavaTimeDefaultTimeZoneTest {
             "  // BUG: Diagnostic matches: REPLACEME",
             "  Clock clock = Clock.systemDefaultZone();",
             "  Clock clockWithZone = Clock.system(systemDefault());",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void staticImportOfStaticMethod() {
+    BugCheckerRefactoringTestHelper.newInstance(
+            new JavaTimeDefaultTimeZone(), JavaTimeDefaultTimeZoneTest.class)
+        .addInputLines(
+            "in/TestClass.java",
+            "import static java.time.LocalDate.now;",
+            "",
+            "import java.time.LocalDate;",
+            "public class TestClass {",
+            "  LocalDate date = now();",
+            "}")
+        .addOutputLines(
+            "out/TestClass.java",
+            "import static java.time.LocalDate.now;",
+            "import java.time.LocalDate;",
+            "import java.time.ZoneId;",
+            "public class TestClass {",
+            "  LocalDate date = now(ZoneId.systemDefault());",
             "}")
         .doTest();
   }
