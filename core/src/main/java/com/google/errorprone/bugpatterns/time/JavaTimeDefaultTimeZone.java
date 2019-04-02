@@ -30,7 +30,6 @@ import com.google.errorprone.matchers.Matchers;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
-import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -105,31 +104,39 @@ public final class JavaTimeDefaultTimeZone extends BugChecker
       return Description.NO_MATCH;
     }
 
-    MethodSymbol method = ASTHelpers.getSymbol(tree);
-    String replacementMethod = method.name.toString();
-
-    // we special case Clock because the replacement isn't just an overload, but a new API entirely
-    if (CLOCK_MATCHER.matches(tree, state)) {
-      replacementMethod = "system";
-    }
-
     String idealReplacementCode = "ZoneId.of(\"America/Los_Angeles\")";
 
     SuggestedFix.Builder fixBuilder = SuggestedFix.builder();
     String zoneIdName = SuggestedFixes.qualifyType(state, fixBuilder, "java.time.ZoneId");
     String replacementCode = zoneIdName + ".systemDefault()";
 
-    fixBuilder.replace(
-        state.getEndPosition(ASTHelpers.getReceiver(tree)),
-        state.getEndPosition(tree),
-        "." + replacementMethod + "(" + replacementCode + ")");
+    // The method could be statically imported and have no receiver: if so, just swap out the whole
+    // tree as opposed to surgically replacing the post-receiver part..
+    ExpressionTree receiver = ASTHelpers.getReceiver(tree);
+    // we special case Clock because the replacement isn't just an overload, but a new API entirely
+    boolean systemDefaultZoneClockMethod = CLOCK_MATCHER.matches(tree, state);
+    String replacementMethod =
+        systemDefaultZoneClockMethod ? "system" : ASTHelpers.getSymbol(tree).name.toString();
+    if (receiver != null) {
+      fixBuilder.replace(
+          state.getEndPosition(receiver),
+          state.getEndPosition(tree),
+          "." + replacementMethod + "(" + replacementCode + ")");
+    } else {
+      if (systemDefaultZoneClockMethod) {
+        fixBuilder.addStaticImport("java.time.Clock.systemDefaultZone");
+      }
+      fixBuilder.replace(tree, replacementMethod + "(" + replacementCode + ")");
+    }
 
     return buildDescription(tree)
         .setMessage(
             String.format(
                 "%s.%s is not allowed because it silently uses the system default time-zone. You "
                     + "must pass an explicit time-zone (e.g., %s) to this method.",
-                method.owner.getSimpleName(), method, idealReplacementCode))
+                ASTHelpers.getSymbol(tree).owner.getSimpleName(),
+                ASTHelpers.getSymbol(tree),
+                idealReplacementCode))
         .addFix(fixBuilder.build())
         .build();
   }
