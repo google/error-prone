@@ -53,6 +53,7 @@ import com.google.errorprone.bugpatterns.CannotMockFinalClass;
 import com.google.errorprone.bugpatterns.CanonicalDuration;
 import com.google.errorprone.bugpatterns.CatchAndPrintStackTrace;
 import com.google.errorprone.bugpatterns.CatchFail;
+import com.google.errorprone.bugpatterns.ChainedAssertionLosesContext;
 import com.google.errorprone.bugpatterns.ChainingConstructorIgnoresParameter;
 import com.google.errorprone.bugpatterns.CheckReturnValue;
 import com.google.errorprone.bugpatterns.ClassCanBeStatic;
@@ -117,6 +118,7 @@ import com.google.errorprone.bugpatterns.HashtableContains;
 import com.google.errorprone.bugpatterns.HidingField;
 import com.google.errorprone.bugpatterns.IdentityBinaryExpression;
 import com.google.errorprone.bugpatterns.ImmutableModification;
+import com.google.errorprone.bugpatterns.ImplementAssertionWithChaining;
 import com.google.errorprone.bugpatterns.Incomparable;
 import com.google.errorprone.bugpatterns.IncompatibleModifiersChecker;
 import com.google.errorprone.bugpatterns.InconsistentCapitalization;
@@ -225,6 +227,7 @@ import com.google.errorprone.bugpatterns.ProtoStringFieldReferenceEquality;
 import com.google.errorprone.bugpatterns.ProtoTruthMixedDescriptors;
 import com.google.errorprone.bugpatterns.ProtocolBufferOrdinal;
 import com.google.errorprone.bugpatterns.ProtosAsKeyOfSetOrMap;
+import com.google.errorprone.bugpatterns.ProvideDescriptionToCheck;
 import com.google.errorprone.bugpatterns.ProvidesFixChecker;
 import com.google.errorprone.bugpatterns.RandomCast;
 import com.google.errorprone.bugpatterns.RandomModInteger;
@@ -607,6 +610,7 @@ public class BuiltInCheckerSuppliers {
           CanonicalDuration.class,
           CatchAndPrintStackTrace.class,
           CatchFail.class,
+          ChainedAssertionLosesContext.class,
           ClassCanBeStatic.class,
           ClassNewInstance.class,
           CloseableProvides.class,
@@ -770,6 +774,7 @@ public class BuiltInCheckerSuppliers {
           FuzzyEqualsShouldNotBeUsedInEqualsMethod.class,
           HardCodedSdCardPath.class,
           ImmutableRefactoring.class,
+          ImplementAssertionWithChaining.class,
           InconsistentOverloads.class,
           InjectedConstructorAnnotations.class,
           InsecureCipherMode.class,
@@ -810,6 +815,7 @@ public class BuiltInCheckerSuppliers {
           PrivateConstructorForNoninstantiableModule.class,
           PrivateConstructorForUtilityClass.class,
           ProtosAsKeyOfSetOrMap.class,
+          ProvideDescriptionToCheck.class,
           ProvidesFixChecker.class,
           QualifierWithTypeUse.class,
           RedundantThrows.class,
