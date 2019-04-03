@@ -45,9 +45,9 @@ for (String id : ids) {
 TIP: This pattern is simpler with Java 8's
 [`Collection.removeIf`](https://docs.oracle.com/javase/8/docs/api/java/util/Collection.html#removeIf-java.util.function.Predicate-):
 
-    ```java {.good}
-    ids.removeIf(id -> shouldRemove(id));
-    ```
+```java {.good}
+ids.removeIf(id -> shouldRemove(id));
+```
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("ModifyCollectionInEnhancedForLoop")` to the enclosing element.

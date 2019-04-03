@@ -14,7 +14,7 @@ To make changes, edit the @BugPattern annotation or the explanation in docs/bugp
 
 ## The problem
 If the body of the lambda passed to `assertThrows` contains multiple statements,
-executation of the lambda will stop at the first statement that throws an
+execution of the lambda will stop at the first statement that throws an
 exception and all subsequent statements will be ignored.
 
 This means that:
@@ -27,24 +27,25 @@ This means that:
 Don't do this:
 
 ```java {.bad}
-ImmutableList<Integer> xs;
 assertThrows(
     UnsupportedOperationException.class,
     () -> {
-        xs = ImmutableList.of(); // the test passes if this throws
-        xs.add(0);
-        assertThat(xs).isEmpty(); // this is never executed
+        AppendOnlyList list = new AppendOnlyList();
+        list.add(0, "a");
+        list.remove(0);
+        assertThat(list).containsExactly("a");
     });
 ```
 
 Do this instead:
 
 ```java {.good}
-ImmutableList<Integer> xs = ImmutableList.of();
+AppendOnlyList list = new AppendOnlyList();
+list.add(0, "a");
 assertThrows(
     UnsupportedOperationException.class,
-    () -> xs.add(0));
-assertThat(xs).isEmpty();
+    () -> list.remove(0));
+assertThat(list).containsExactly("a");
 ```
 
 ## Suppression
