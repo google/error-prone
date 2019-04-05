@@ -101,7 +101,7 @@ public final class InterfaceWithOnlyStatics extends BugChecker implements ClassT
     suggestedFix
         .merge(fixClass(tree, state))
         .postfixWith(getLast(members), String.format("\nprivate %s() {}", tree.getSimpleName()));
-    return buildDescription(tree).addFix(suggestedFix.build()).build();
+    return describeMatch(tree, suggestedFix.build());
   }
 
   private static SuggestedFix fixClass(ClassTree classTree, VisitorState state) {

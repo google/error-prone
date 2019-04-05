@@ -88,6 +88,6 @@ public class TruthConstantAsserts extends BugChecker implements MethodInvocation
       return Description.NO_MATCH;
     }
     SuggestedFix fix = SuggestedFix.swap(expr, expectation);
-    return buildDescription(methodInvocationTree).addFix(fix).build();
+    return describeMatch(methodInvocationTree, fix);
   }
 }

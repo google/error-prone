@@ -73,14 +73,13 @@ public final class MathRoundIntLong extends BugChecker implements MethodInvocati
   private Description removeMathRoundCall(MethodInvocationTree tree, VisitorState state) {
     if (ROUND_CALLS_WITH_INT_ARG.matches(tree, state)) {
       if (ASTHelpers.requiresParentheses(Iterables.getOnlyElement(tree.getArguments()), state)) {
-        return buildDescription(tree)
-            .addFix(
-                SuggestedFix.builder()
-                    .prefixWith(tree, "(")
-                    .replace(tree, state.getSourceForNode(tree.getArguments().get(0)))
-                    .postfixWith(tree, ")")
-                    .build())
-            .build();
+        return describeMatch(
+            tree,
+            SuggestedFix.builder()
+                .prefixWith(tree, "(")
+                .replace(tree, state.getSourceForNode(tree.getArguments().get(0)))
+                .postfixWith(tree, ")")
+                .build());
       }
       return describeMatch(
           tree, SuggestedFix.replace(tree, state.getSourceForNode(tree.getArguments().get(0))));

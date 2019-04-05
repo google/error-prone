@@ -113,6 +113,18 @@ public abstract class BugChecker implements Suppressible, Serializable {
     return buildDescription(node).addFix(fix).build();
   }
 
+  /** Helper to create a Description for the common case where there is a fix. */
+  @CheckReturnValue
+  protected Description describeMatch(JCTree node, Fix fix) {
+    return describeMatch((Tree) node, fix);
+  }
+
+  /** Helper to create a Description for the common case where there is a fix. */
+  @CheckReturnValue
+  protected Description describeMatch(DiagnosticPosition position, Fix fix) {
+    return buildDescription(position).addFix(fix).build();
+  }
+
   /** Helper to create a Description for the common case where there is no fix. */
   @CheckReturnValue
   protected Description describeMatch(Tree node) {

@@ -91,7 +91,7 @@ public class UseCorrectAssertInTests extends BugChecker implements MethodTreeMat
         replaceAssert(fix, foundAssert, state);
       }
 
-      return buildDescription(methodTree).addFix(fix.build()).build();
+      return describeMatch(methodTree, fix.build());
     }
     return Description.NO_MATCH;
   }

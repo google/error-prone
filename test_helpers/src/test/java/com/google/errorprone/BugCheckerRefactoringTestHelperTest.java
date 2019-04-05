@@ -259,7 +259,7 @@ public class BugCheckerRefactoringTestHelperTest {
     @Override
     public Description matchCompilationUnit(CompilationUnitTree tree, VisitorState state) {
       SuggestedFix fix = SuggestedFix.builder().addImport("java.util.ArrayList").build();
-      return buildDescription(tree).addFix(fix).build();
+      return describeMatch(tree, fix);
     }
   }
 }
