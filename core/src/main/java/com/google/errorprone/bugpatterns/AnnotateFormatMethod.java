@@ -102,15 +102,14 @@ public final class AnnotateFormatMethod extends BugChecker implements MethodInvo
     boolean fixable =
         formatParameter.get().equals(enclosingParameters.get(enclosingParameters.size() - 2));
     if (fixable) {
-      return buildDescription(enclosingMethod)
-          .addFix(
-              SuggestedFix.builder()
-                  .prefixWith(enclosingMethod, "@FormatMethod ")
-                  .prefixWith(formatParameter.get(), "@FormatString ")
-                  .addImport("com.google.errorprone.annotations.FormatMethod")
-                  .addImport("com.google.errorprone.annotations.FormatString")
-                  .build())
-          .build();
+      return describeMatch(
+          enclosingMethod,
+          SuggestedFix.builder()
+              .prefixWith(enclosingMethod, "@FormatMethod ")
+              .prefixWith(formatParameter.get(), "@FormatString ")
+              .addImport("com.google.errorprone.annotations.FormatMethod")
+              .addImport("com.google.errorprone.annotations.FormatString")
+              .build());
     }
     return buildDescription(enclosingMethod).setMessage(message() + REORDER).build();
   }

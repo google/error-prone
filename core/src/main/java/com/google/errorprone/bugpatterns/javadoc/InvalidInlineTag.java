@@ -181,10 +181,8 @@ public final class InvalidInlineTag extends BugChecker
                 .replace(startOfCurly, startOfCurly + 1, " ")
                 .build();
         state.reportMatch(
-            buildDescription(
-                    getDiagnosticPosition(beforeAt, getCurrentPath().getTreePath().getLeaf()))
-                .addFix(fix)
-                .build());
+            describeMatch(
+                getDiagnosticPosition(beforeAt, getCurrentPath().getTreePath().getLeaf()), fix));
       }
     }
 
@@ -249,10 +247,8 @@ public final class InvalidInlineTag extends BugChecker
         SuggestedFix fix =
             SuggestedFix.replace(startPos, endPos, String.format("{@code %s}", paramName));
         state.reportMatch(
-            buildDescription(
-                    getDiagnosticPosition(startPos, getCurrentPath().getTreePath().getLeaf()))
-                .addFix(fix)
-                .build());
+            describeMatch(
+                getDiagnosticPosition(startPos, getCurrentPath().getTreePath().getLeaf()), fix));
       }
     }
 

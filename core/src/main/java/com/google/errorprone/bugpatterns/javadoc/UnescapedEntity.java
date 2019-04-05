@@ -296,9 +296,9 @@ public final class UnescapedEntity extends BugChecker
     }
 
     private Description replacementFix(String replacement) {
-      return buildDescription(diagnosticPosition(getCurrentPath(), state))
-          .addFix(replace(getCurrentPath().getLeaf(), replacement, state))
-          .build();
+      return describeMatch(
+          diagnosticPosition(getCurrentPath(), state),
+          replace(getCurrentPath().getLeaf(), replacement, state));
     }
   }
 

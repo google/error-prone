@@ -114,7 +114,7 @@ public class UngroupedOverloads extends BugChecker implements ClassTreeMatcher {
     if (batchFindings && !descriptions.isEmpty()) {
       SuggestedFix.Builder fix = SuggestedFix.builder();
       descriptions.forEach(d -> fix.merge((SuggestedFix) getOnlyElement(d.fixes)));
-      return buildDescription(descriptions.get(0).position).addFix(fix.build()).build();
+      return describeMatch(descriptions.get(0).position, fix.build());
     }
     descriptions.forEach(state::reportMatch);
     return NO_MATCH;

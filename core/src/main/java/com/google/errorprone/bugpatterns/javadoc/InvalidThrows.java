@@ -79,9 +79,9 @@ public final class InvalidThrows extends BugChecker implements MethodTreeMatcher
       if (type != null && isCheckedException(type)) {
         if (methodTree.getThrows().stream().noneMatch(t -> isSubtype(type, getType(t), state))) {
           state.reportMatch(
-              buildDescription(diagnosticPosition(getCurrentPath(), state))
-                  .addFix(Utils.replace(throwsTree, "", state))
-                  .build());
+              describeMatch(
+                  diagnosticPosition(getCurrentPath(), state),
+                  Utils.replace(throwsTree, "", state)));
         }
       }
       return super.visitThrows(throwsTree, null);

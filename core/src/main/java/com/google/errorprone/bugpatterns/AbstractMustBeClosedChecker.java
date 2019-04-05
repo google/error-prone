@@ -104,13 +104,12 @@ public abstract class AbstractMustBeClosedChecker extends BugChecker {
             }
             // The caller method is not annotated, so the closing of the returned resource is not
             // enforced. Suggest fixing this by annotating the caller method.
-            return buildDescription(tree)
-                .addFix(
-                    SuggestedFix.builder()
-                        .prefixWith(callerMethodTree, "@MustBeClosed\n")
-                        .addImport(MustBeClosed.class.getCanonicalName())
-                        .build())
-                .build();
+            return describeMatch(
+                tree,
+                SuggestedFix.builder()
+                    .prefixWith(callerMethodTree, "@MustBeClosed\n")
+                    .addImport(MustBeClosed.class.getCanonicalName())
+                    .build());
           }
           break;
         case CONDITIONAL_EXPRESSION:

@@ -69,9 +69,8 @@ public final class ReturnFromVoid extends BugChecker implements MethodTreeMatche
     public Void visitReturn(ReturnTree returnTree, Void unused) {
       if (isSameType(getType(methodTree.getReturnType()), state.getSymtab().voidType, state)) {
         state.reportMatch(
-            buildDescription(diagnosticPosition(getCurrentPath(), state))
-                .addFix(Utils.replace(returnTree, "", state))
-                .build());
+            describeMatch(
+                diagnosticPosition(getCurrentPath(), state), Utils.replace(returnTree, "", state)));
       }
       return super.visitReturn(returnTree, null);
     }

@@ -66,12 +66,10 @@ public class InstanceOfAndCastMatchWrongType extends BugChecker implements TypeC
       return Description.NO_MATCH;
     }
     if (castingMatcher.matches(typeCastTree, visitorState)) {
-      return buildDescription(typeCastTree)
-          .addFix(
-              SuggestedFix.replace(
-                  castingMatcher.nodeToReplace,
-                  visitorState.getSourceForNode(typeCastTree.getType())))
-          .build();
+      return describeMatch(
+          typeCastTree,
+          SuggestedFix.replace(
+              castingMatcher.nodeToReplace, visitorState.getSourceForNode(typeCastTree.getType())));
     }
     return Description.NO_MATCH;
   }

@@ -68,9 +68,7 @@ public class AutoValueConstructorOrderChecker extends BugChecker implements NewC
       return Description.NO_MATCH;
     }
 
-    return buildDescription(invocationInfo.tree())
-        .addFix(changes.buildPermuteArgumentsFix(invocationInfo))
-        .build();
+    return describeMatch(invocationInfo.tree(), changes.buildPermuteArgumentsFix(invocationInfo));
   }
 
   private static Function<ParameterPair, Double> buildDistanceFunction() {
