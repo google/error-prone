@@ -57,4 +57,12 @@ public class SelfAssignmentPositiveCases1 {
   public String foldableString() {
     return "foo" + "bar";
   }
+
+  public void testCast() {
+    int a = 0;
+    // BUG: Diagnostic contains: remove this line
+    a = (int) a;
+    // BUG: Diagnostic contains: remove this line
+    a = (short) a;
+  }
 }
