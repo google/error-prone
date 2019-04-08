@@ -61,13 +61,12 @@ public class BigDecimalLiteralDouble extends BugChecker implements NewClassTreeM
   // Matches literals and unary +/- followed by a literal, since most people conceptually think of
   // -1.0 as a literal. Doesn't handle nested unary operators as new BigDecimal(String) doesn't
   // accept multiple unary prefixes.
-  private static final Matcher<ExpressionTree> FLOATING_POINT_ARGUMENT =
-      (tree, state) -> {
-        if (tree.getKind() == Kind.UNARY_PLUS || tree.getKind() == Kind.UNARY_MINUS) {
-          tree = ((UnaryTree) tree).getExpression();
-        }
-        return tree.getKind() == Kind.DOUBLE_LITERAL || tree.getKind() == Kind.FLOAT_LITERAL;
-      };
+  private static boolean floatingPointArgument(ExpressionTree tree) {
+    if (tree.getKind() == Kind.UNARY_PLUS || tree.getKind() == Kind.UNARY_MINUS) {
+      tree = ((UnaryTree) tree).getExpression();
+    }
+    return tree.getKind() == Kind.DOUBLE_LITERAL || tree.getKind() == Kind.FLOAT_LITERAL;
+  }
 
   @Override
   public Description matchNewClass(NewClassTree tree, VisitorState state) {
@@ -76,7 +75,7 @@ public class BigDecimalLiteralDouble extends BugChecker implements NewClassTreeM
     }
 
     ExpressionTree arg = getOnlyElement(tree.getArguments());
-    if (!FLOATING_POINT_ARGUMENT.matches(arg, state)) {
+    if (!floatingPointArgument(arg)) {
       return Description.NO_MATCH;
     }
 

@@ -49,29 +49,28 @@ import com.sun.tools.javac.code.Symbol.MethodSymbol;
             + "observables may never execute. It also means the error case is not being handled",
     severity = WARNING)
 public final class RxReturnValueIgnored extends AbstractReturnValueIgnored {
-  private static final Matcher<ExpressionTree> HAS_CIRV_ANNOTATION =
-      (tree, state) -> {
-        Symbol untypedSymbol = getSymbol(tree);
-        if (!(untypedSymbol instanceof MethodSymbol)) {
-          return false;
-        }
+  private static boolean hasCirvAnnotation(ExpressionTree tree, VisitorState state) {
+    Symbol untypedSymbol = getSymbol(tree);
+    if (!(untypedSymbol instanceof MethodSymbol)) {
+      return false;
+    }
 
-        MethodSymbol sym = (MethodSymbol) untypedSymbol;
-        // Directly has @CanIgnoreReturnValue
-        if (ASTHelpers.hasAnnotation(sym, CanIgnoreReturnValue.class, state)) {
-          return true;
-        }
+    MethodSymbol sym = (MethodSymbol) untypedSymbol;
+    // Directly has @CanIgnoreReturnValue
+    if (ASTHelpers.hasAnnotation(sym, CanIgnoreReturnValue.class, state)) {
+      return true;
+    }
 
-        // If a super-class's method is annotated with @CanIgnoreReturnValue, we only honor that
-        // if the super-type returned the exact same type. This lets us catch issues where a
-        // superclass was annotated with @CanIgnoreReturnValue but the parent did not intend to
-        // return an Rx type
-        return ASTHelpers.findSuperMethods(sym, state.getTypes()).stream()
-            .anyMatch(
-                superSym ->
-                    hasAnnotation(superSym, CanIgnoreReturnValue.class, state)
-                        && superSym.getReturnType().tsym.equals(sym.getReturnType().tsym));
-      };
+    // If a super-class's method is annotated with @CanIgnoreReturnValue, we only honor that
+    // if the super-type returned the exact same type. This lets us catch issues where a
+    // superclass was annotated with @CanIgnoreReturnValue but the parent did not intend to
+    // return an Rx type
+    return ASTHelpers.findSuperMethods(sym, state.getTypes()).stream()
+        .anyMatch(
+            superSym ->
+                hasAnnotation(superSym, CanIgnoreReturnValue.class, state)
+                    && superSym.getReturnType().tsym.equals(sym.getReturnType().tsym));
+  }
 
   private static final Matcher<ExpressionTree> MATCHER =
       allOf(
@@ -87,7 +86,7 @@ public final class RxReturnValueIgnored extends AbstractReturnValueIgnored {
               isSubtypeOf("rx.Observable"),
               isSubtypeOf("rx.Single"),
               isSubtypeOf("rx.Completable")),
-          not(HAS_CIRV_ANNOTATION));
+          not(RxReturnValueIgnored::hasCirvAnnotation));
 
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {

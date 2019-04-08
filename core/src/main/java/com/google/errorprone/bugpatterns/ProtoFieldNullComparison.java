@@ -379,7 +379,7 @@ public class ProtoFieldNullComparison extends BugChecker implements CompilationU
       @Override
       Fixer match(ExpressionTree tree, VisitorState state) {
         if (EXTENSION_METHODS_WITH_NO_FIX.matches(tree, state)) {
-          return emptyFix();
+          return GetterTypes::emptyFix;
         }
         if (EXTENSION_METHODS_WITH_FIX.matches(tree, state)) {
           // If the extension represents a repeated field (i.e.: it's an ExtensionLite<T, List<R>>),
@@ -395,7 +395,7 @@ public class ProtoFieldNullComparison extends BugChecker implements CompilationU
           // We can't make a fix on a raw type because there is not a way to guarantee that
           // it does not contain a repeated field
           if (genericsArgument.getTypeArguments().size() != 2) {
-            return emptyFix();
+            return GetterTypes::emptyFix;
           }
 
           // If the second element within the generic argument is a subtype of list,
@@ -404,7 +404,7 @@ public class ProtoFieldNullComparison extends BugChecker implements CompilationU
               genericsArgument.getTypeArguments().get(1),
               state.getTypeFromString("java.util.List"),
               state)) {
-            return emptyFix();
+            return GetterTypes::emptyFix;
           }
           // Now that it is guaranteed that there is not a repeated field, providing a fix is safe
           return generateFix(methodInvocation);
@@ -426,8 +426,8 @@ public class ProtoFieldNullComparison extends BugChecker implements CompilationU
      * Returns a Fixer representing a situation where we don't have a fix, but want to mark a
      * callsite as containing a bug.
      */
-    private static Fixer emptyFix() {
-      return (n, s) -> Optional.empty();
+    private static Optional<String> emptyFix(boolean n, VisitorState s) {
+      return Optional.empty();
     }
 
     private static boolean isGetter(ExpressionTree expressionTree) {

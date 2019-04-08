@@ -26,6 +26,7 @@ import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.MethodInvocationTree;
+import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.TypeSymbol;
 import java.util.function.Function;
@@ -53,7 +54,7 @@ public class AssertEqualsArgumentOrderChecker extends BugChecker
   private final ArgumentChangeFinder argumentchangeFinder =
       ArgumentChangeFinder.builder()
           .setDistanceFunction(buildDistanceFunction())
-          .addHeuristic(changeMustBeBetterThanOriginal())
+          .addHeuristic(AssertEqualsArgumentOrderChecker::changeMustBeBetterThanOriginal)
           .addHeuristic(new CreatesDuplicateCallHeuristic())
           .addHeuristic(new NameInCommentHeuristic())
           .build();
@@ -141,8 +142,8 @@ public class AssertEqualsArgumentOrderChecker extends BugChecker
     return false;
   }
 
-  private static Heuristic changeMustBeBetterThanOriginal() {
-    return (changes, node, sym, state) ->
-        changes.totalAssignmentCost() < changes.totalOriginalCost();
+  private static boolean changeMustBeBetterThanOriginal(
+      Changes changes, Tree node, MethodSymbol sym, VisitorState state) {
+    return changes.totalAssignmentCost() < changes.totalOriginalCost();
   }
 }

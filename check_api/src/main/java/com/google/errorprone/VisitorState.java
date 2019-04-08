@@ -72,7 +72,7 @@ public class VisitorState {
 
   // The default no-op implementation of DescriptionListener. We use this instead of null so callers
   // of getDescriptionListener() don't have to do null-checking.
-  private static final DescriptionListener NULL_LISTENER = description -> {};
+  private static void nullListener(Description description) {}
 
   /**
    * Return a VisitorState that has no Error Prone configuration, and can't report results.
@@ -82,7 +82,7 @@ public class VisitorState {
   public static VisitorState createForUtilityPurposes(Context context) {
     return new VisitorState(
         context,
-        NULL_LISTENER,
+        VisitorState::nullListener,
         ImmutableMap.of(),
         ErrorProneOptions.empty(),
         // Can't use this VisitorState to report results, so no-op collector.
@@ -138,7 +138,7 @@ public class VisitorState {
   public VisitorState(Context context) {
     this(
         context,
-        NULL_LISTENER,
+        VisitorState::nullListener,
         ImmutableMap.of(),
         ErrorProneOptions.empty(),
         // Can't use this VisitorState to report results, so no-op collector.

@@ -135,8 +135,11 @@ public class SizeGreaterThanOrEqualsZero extends BugChecker implements BinaryTre
                   STATIC_CLASSES.column(MethodName.LENGTH).keySet().stream()
                       .map(className -> staticMethod().onClass(className).named("length")))
               .collect(toImmutableList()));
-  private static final Matcher<MemberSelectTree> ARRAY_LENGTH_MATCHER =
-      (tree, state) -> ASTHelpers.getSymbol(tree) == state.getSymtab().lengthVar;
+
+  private static boolean arrayLengthMatcher(MemberSelectTree tree, VisitorState state) {
+    return ASTHelpers.getSymbol(tree) == state.getSymtab().lengthVar;
+  }
+
   private static final Matcher<ExpressionTree> HAS_EMPTY_METHOD = classHasIsEmptyFunction();
 
   @Override
@@ -162,7 +165,7 @@ public class SizeGreaterThanOrEqualsZero extends BugChecker implements BinaryTre
         return provideReplacementForProtoMethodInvocation(tree, callToSize, state);
       }
     } else if (operand instanceof MemberSelectTree) {
-      if (ARRAY_LENGTH_MATCHER.matches((MemberSelectTree) operand, state)) {
+      if (arrayLengthMatcher((MemberSelectTree) operand, state)) {
         return removeEqualsFromComparison(tree, state, expressionType);
       }
     }
