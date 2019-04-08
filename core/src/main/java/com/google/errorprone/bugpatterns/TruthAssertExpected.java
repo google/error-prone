@@ -82,23 +82,22 @@ public final class TruthAssertExpected extends BugChecker implements MethodInvoc
    * assertThat(expectedBar.id())}, but not if the identifier extends {@link Throwable} (as this is
    * often named {@code expectedException} or similar).
    */
-  private static final Matcher<ExpressionTree> EXPECTED_VALUE =
-      (tree, state) -> {
-        if (!(tree instanceof MethodInvocationTree)) {
-          return false;
-        }
-        MethodInvocationTree methodTree = (MethodInvocationTree) tree;
-        IdentifierTree identifier = getRootIdentifier(getOnlyElement(methodTree.getArguments()));
-        if (identifier == null) {
-          return false;
-        }
-        Type throwable = Suppliers.typeFromClass(Throwable.class).get(state);
-        return Ascii.toLowerCase(identifier.getName().toString()).contains("expected")
-            && !ASTHelpers.isSubtype(ASTHelpers.getType(identifier), throwable, state);
-      };
+  private static boolean expectedValue(ExpressionTree tree, VisitorState state) {
+    if (!(tree instanceof MethodInvocationTree)) {
+      return false;
+    }
+    MethodInvocationTree methodTree = (MethodInvocationTree) tree;
+    IdentifierTree identifier = getRootIdentifier(getOnlyElement(methodTree.getArguments()));
+    if (identifier == null) {
+      return false;
+    }
+    Type throwable = Suppliers.typeFromClass(Throwable.class).get(state);
+    return Ascii.toLowerCase(identifier.getName().toString()).contains("expected")
+        && !ASTHelpers.isSubtype(ASTHelpers.getType(identifier), throwable, state);
+  }
 
   private static final Matcher<ExpressionTree> ASSERT_ON_EXPECTED =
-      allOf(ASSERTION, EXPECTED_VALUE);
+      allOf(ASSERTION, TruthAssertExpected::expectedValue);
 
   /** Truth assertion chains which are commutative. Many are not, such as {@code containsAny}. */
   private static final Matcher<ExpressionTree> REVERSIBLE_TERMINATORS =
@@ -158,7 +157,7 @@ public final class TruthAssertExpected extends BugChecker implements MethodInvoc
     if (!MATCH.matches(tree, state)) {
       return Description.NO_MATCH;
     }
-    if (EXPECTED_VALUE.matches(tree, state)) {
+    if (expectedValue(tree, state)) {
       return Description.NO_MATCH;
     }
     ExpressionTree assertion = findReceiverMatching(tree, state, ASSERT_ON_EXPECTED);

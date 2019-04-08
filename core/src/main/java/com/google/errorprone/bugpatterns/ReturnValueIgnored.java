@@ -100,38 +100,36 @@ public class ReturnValueIgnored extends AbstractReturnValueIgnored {
    * {@link java.time} types are immutable. The only methods we allow ignoring the return value on
    * are the {@code parse}-style APIs since folks often use it for validation.
    */
-  private static final Matcher<ExpressionTree> JAVA_TIME_TYPES =
-      (tree, state) -> {
-        if (packageStartsWith("java.time").matches(tree, state)) {
+  private static boolean javaTimeTypes(ExpressionTree tree, VisitorState state) {
+    if (packageStartsWith("java.time").matches(tree, state)) {
+      return false;
+    }
+    Symbol symbol = ASTHelpers.getSymbol(tree);
+    if (symbol instanceof MethodSymbol) {
+      MethodSymbol methodSymbol = (MethodSymbol) symbol;
+      if (methodSymbol.owner.packge().getQualifiedName().toString().startsWith("java.time")
+          && methodSymbol.getModifiers().contains(Modifier.PUBLIC)) {
+        if (ALLOWED_JAVA_TIME_METHODS.matches(tree, state)) {
           return false;
         }
-        Symbol symbol = ASTHelpers.getSymbol(tree);
-        if (symbol instanceof MethodSymbol) {
-          MethodSymbol methodSymbol = (MethodSymbol) symbol;
-          if (methodSymbol.owner.packge().getQualifiedName().toString().startsWith("java.time")
-              && methodSymbol.getModifiers().contains(Modifier.PUBLIC)) {
-            if (ALLOWED_JAVA_TIME_METHODS.matches(tree, state)) {
-              return false;
-            }
-            return true;
-          }
-        }
-        return false;
-      };
+        return true;
+      }
+    }
+    return false;
+  }
 
   /**
    * Methods in {@link java.util.function} are pure, and their returnvalues should not be discarded.
    */
-  private static final Matcher<ExpressionTree> FUNCTIONAL_METHOD =
-      (tree, state) -> {
-        Symbol symbol = ASTHelpers.getSymbol(tree);
-        return symbol instanceof MethodSymbol
-            && ((MethodSymbol) symbol)
-                .owner
-                .packge()
-                .getQualifiedName()
-                .contentEquals("java.util.function");
-      };
+  private static boolean functionalMethod(ExpressionTree tree, VisitorState state) {
+    Symbol symbol = ASTHelpers.getSymbol(tree);
+    return symbol instanceof MethodSymbol
+        && ((MethodSymbol) symbol)
+            .owner
+            .packge()
+            .getQualifiedName()
+            .contentEquals("java.util.function");
+  }
 
   /**
    * The return value of stream methods should always be checked (except for forEach and
@@ -150,7 +148,11 @@ public class ReturnValueIgnored extends AbstractReturnValueIgnored {
   @Override
   public Matcher<? super ExpressionTree> specializedMatcher() {
     return anyOf(
-        RETURNS_SAME_TYPE, FUNCTIONAL_METHOD, STREAM_METHOD, ARRAYS_METHODS, JAVA_TIME_TYPES);
+        RETURNS_SAME_TYPE,
+        ReturnValueIgnored::functionalMethod,
+        STREAM_METHOD,
+        ARRAYS_METHODS,
+        ReturnValueIgnored::javaTimeTypes);
   }
 
   /** Matches method invocations that return the same type as the receiver object. */
