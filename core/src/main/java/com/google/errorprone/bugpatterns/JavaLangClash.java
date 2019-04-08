@@ -71,6 +71,11 @@ public class JavaLangClash extends BugChecker
     if (other == null || other.equals(symbol)) {
       return NO_MATCH;
     }
+    if (simpleName.contentEquals("Compiler")) {
+      // java.lang.Compiler is deprecated for removal in 9 and should not be used, so we don't care
+      // if other types named 'Compiler' are declared
+      return NO_MATCH;
+    }
     return buildDescription(tree)
         .setMessage(String.format("%s clashes with %s\n", symbol, other))
         .build();
