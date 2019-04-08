@@ -41,8 +41,11 @@ import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
+import com.sun.source.tree.ParenthesizedTree;
 import com.sun.source.tree.Tree;
+import com.sun.source.tree.TypeCastTree;
 import com.sun.source.tree.VariableTree;
+import com.sun.source.util.SimpleTreeVisitor;
 import com.sun.tools.javac.code.Flags;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Type;
@@ -68,6 +71,24 @@ public class SelfAssignment extends BugChecker
   @Override
   public Description matchAssignment(AssignmentTree tree, VisitorState state) {
     ExpressionTree expression = stripNullCheck(tree.getExpression(), state);
+    // TODO(cushon): consider handling assignment expressions too, i.e. `x = y = x`
+    expression =
+        new SimpleTreeVisitor<ExpressionTree, Void>() {
+          @Override
+          public ExpressionTree visitParenthesized(ParenthesizedTree node, Void unused) {
+            return node.getExpression().accept(this, null);
+          }
+
+          @Override
+          public ExpressionTree visitTypeCast(TypeCastTree node, Void unused) {
+            return node.getExpression().accept(this, null);
+          }
+
+          @Override
+          protected ExpressionTree defaultAction(Tree node, Void unused) {
+            return node instanceof ExpressionTree ? (ExpressionTree) node : null;
+          }
+        }.visit(expression, null);
     if (ASTHelpers.sameVariable(tree.getVariable(), expression)) {
       return describeForAssignment(tree, state);
     }
