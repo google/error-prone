@@ -76,4 +76,14 @@ public class JavaLangClashTest {
             "public class AssertionStatusDirectives {}")
         .doTest();
   }
+
+  @Test
+  public void negative_compiler() {
+    testHelper
+        .addSourceLines(
+            "Compiler.java", //
+            "package p;",
+            "public class Compiler {}")
+        .doTest();
+  }
 }
