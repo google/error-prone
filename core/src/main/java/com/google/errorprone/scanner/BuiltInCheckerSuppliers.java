@@ -153,6 +153,7 @@ import com.google.errorprone.bugpatterns.JavaLangClash;
 import com.google.errorprone.bugpatterns.JdkObsolete;
 import com.google.errorprone.bugpatterns.LambdaFunctionalInterface;
 import com.google.errorprone.bugpatterns.LiteByteStringUtf8;
+import com.google.errorprone.bugpatterns.LiteEnumValueOf;
 import com.google.errorprone.bugpatterns.LockNotBeforeTry;
 import com.google.errorprone.bugpatterns.LogicalAssignment;
 import com.google.errorprone.bugpatterns.LongLiteralLowerCaseSuffix;
@@ -666,6 +667,7 @@ public class BuiltInCheckerSuppliers {
           JUnit3FloatingPointComparisonWithoutDelta.class,
           JUnit4ClassUsedInJUnit3.class,
           JUnitAmbiguousTestClass.class,
+          LiteEnumValueOf.class,
           LockNotBeforeTry.class,
           LogicalAssignment.class,
           MathAbsoluteRandom.class,
