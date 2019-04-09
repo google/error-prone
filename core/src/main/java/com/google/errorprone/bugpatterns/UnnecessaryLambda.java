@@ -65,8 +65,8 @@ import javax.lang.model.element.Modifier;
 @BugPattern(
     name = "UnnecessaryLambda",
     summary =
-        "Return a lambda from a helper method or saving it in a constant is unnecessary; prefer to"
-            + " implement the functional interface method directly and use a method reference"
+        "Returning a lambda from a helper method or saving it in a constant is unnecessary; prefer"
+            + " to implement the functional interface method directly and use a method reference"
             + " instead.",
     severity = WARNING,
     providesFix = REQUIRES_HUMAN_ATTENTION)
