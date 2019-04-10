@@ -16,4 +16,17 @@
 
 package android.os;
 
-public class Bundle {}
+import java.io.Serializable;
+
+/** Stub for android.os.Bundle */
+public class Bundle {
+  public Bundle() {}
+
+  public Serializable getSerializable(String key) {
+    return null;
+  }
+
+  public void putCharSequence(String key, CharSequence value) {
+    throw new RuntimeException("Stub!");
+  }
+}
