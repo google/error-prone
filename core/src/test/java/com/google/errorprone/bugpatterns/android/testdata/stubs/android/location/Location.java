@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 The Error Prone Authors.
+ * Copyright 2019 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,19 +14,25 @@
  * limitations under the License.
  */
 
-package android.os;
+package android.location;
 
-import java.io.Serializable;
+import android.os.Bundle;
 
-/** Stub for android.os.Bundle */
-public class Bundle {
-  public Bundle() {}
+public class Location {
 
-  public Serializable getSerializable(String key) {
-    return null;
+  public Location(String provider) {
+    throw new RuntimeException("Stub!");
   }
 
-  public void putCharSequence(String key, CharSequence value) {
+  public Location(Location l) {
+    throw new RuntimeException("Stub!");
+  }
+
+  public android.os.Bundle getExtras() {
+    throw new RuntimeException("Stub!");
+  }
+
+  public void setExtras(Bundle extras) {
     throw new RuntimeException("Stub!");
   }
 }

@@ -130,6 +130,15 @@ public class Matchers {
    */
   @SafeVarargs
   public static <T extends Tree> Matcher<T> allOf(final Matcher<? super T>... matchers) {
+    return Matchers.<T>allOf(ImmutableList.copyOf(matchers));
+  }
+
+  /**
+   * Compose several matchers together, such that the composite matches an AST node iff all the
+   * given matchers do.
+   */
+  public static <T extends Tree> Matcher<T> allOf(
+      final Iterable<? extends Matcher<? super T>> matchers) {
     return new Matcher<T>() {
       @Override
       public boolean matches(T t, VisitorState state) {
