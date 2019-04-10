@@ -72,23 +72,7 @@ public class SelfAssignment extends BugChecker
   public Description matchAssignment(AssignmentTree tree, VisitorState state) {
     ExpressionTree expression = stripNullCheck(tree.getExpression(), state);
     // TODO(cushon): consider handling assignment expressions too, i.e. `x = y = x`
-    expression =
-        new SimpleTreeVisitor<ExpressionTree, Void>() {
-          @Override
-          public ExpressionTree visitParenthesized(ParenthesizedTree node, Void unused) {
-            return node.getExpression().accept(this, null);
-          }
-
-          @Override
-          public ExpressionTree visitTypeCast(TypeCastTree node, Void unused) {
-            return node.getExpression().accept(this, null);
-          }
-
-          @Override
-          protected ExpressionTree defaultAction(Tree node, Void unused) {
-            return node instanceof ExpressionTree ? (ExpressionTree) node : null;
-          }
-        }.visit(expression, null);
+    expression = skipCast(expression);
     if (ASTHelpers.sameVariable(tree.getVariable(), expression)) {
       return describeForAssignment(tree, state);
     }
@@ -118,6 +102,25 @@ public class SelfAssignment extends BugChecker
       return describeForVarDecl(tree, state);
     }
     return Description.NO_MATCH;
+  }
+
+  private static ExpressionTree skipCast(ExpressionTree expression) {
+    return new SimpleTreeVisitor<ExpressionTree, Void>() {
+      @Override
+      public ExpressionTree visitParenthesized(ParenthesizedTree node, Void unused) {
+        return node.getExpression().accept(this, null);
+      }
+
+      @Override
+      public ExpressionTree visitTypeCast(TypeCastTree node, Void unused) {
+        return node.getExpression().accept(this, null);
+      }
+
+      @Override
+      protected ExpressionTree defaultAction(Tree node, Void unused) {
+        return node instanceof ExpressionTree ? (ExpressionTree) node : null;
+      }
+    }.visit(expression, null);
   }
 
   /**
@@ -180,6 +183,7 @@ public class SelfAssignment extends BugChecker
       // new rhs is first argument to checkNotNull()
       rhs = stripNullCheck(rhs, state);
     }
+    rhs = skipCast(rhs);
 
     ImmutableList<Fix> exploratoryFieldFixes = ImmutableList.of();
     if (lhs.getKind() == MEMBER_SELECT) {
