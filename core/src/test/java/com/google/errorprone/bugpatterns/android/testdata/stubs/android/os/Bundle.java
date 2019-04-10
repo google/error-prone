@@ -25,8 +25,4 @@ public class Bundle {
   public Serializable getSerializable(String key) {
     return null;
   }
-
-  public void putCharSequence(String key, CharSequence value) {
-    throw new RuntimeException("Stub!");
-  }
 }
