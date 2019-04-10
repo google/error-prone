@@ -360,6 +360,7 @@ import com.google.errorprone.bugpatterns.inject.guice.InjectOnFinalField;
 import com.google.errorprone.bugpatterns.inject.guice.OverridesGuiceInjectableMethod;
 import com.google.errorprone.bugpatterns.inject.guice.OverridesJavaxInjectableMethod;
 import com.google.errorprone.bugpatterns.inject.guice.ProvidesMethodOutsideOfModule;
+import com.google.errorprone.bugpatterns.javadoc.EmptyBlockTag;
 import com.google.errorprone.bugpatterns.javadoc.EscapedEntity;
 import com.google.errorprone.bugpatterns.javadoc.InheritDoc;
 import com.google.errorprone.bugpatterns.javadoc.InvalidBlockTag;
@@ -767,6 +768,7 @@ public class BuiltInCheckerSuppliers {
           DepAnn.class,
           DescribeFix.class,
           DivZero.class,
+          EmptyBlockTag.class,
           EmptyIfStatement.class,
           EmptySetMultibindingContributions.class,
           EmptyTopLevelDeclaration.class,
