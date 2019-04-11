@@ -79,6 +79,7 @@ public class ReturnValueIgnored extends AbstractReturnValueIgnored {
    *       java.time.format.DateTimeFormatterBuilder}
    *   <li>{@link java.time.temporal.ChronoField#checkValidIntValue}
    *   <li>{@link java.time.temporal.ChronoField#checkValidValue}
+   *   <li>{@link java.time.temporal.ValueRange#checkValidValue}
    * </ul>
    */
   private static final Matcher<ExpressionTree> ALLOWED_JAVA_TIME_METHODS =
@@ -94,7 +95,8 @@ public class ReturnValueIgnored extends AbstractReturnValueIgnored {
           instanceMethod()
               .onExactClass("java.time.temporal.ChronoField")
               .named("checkValidIntValue"),
-          instanceMethod().onExactClass("java.time.temporal.ChronoField").named("checkValidValue"));
+          instanceMethod().onExactClass("java.time.temporal.ChronoField").named("checkValidValue"),
+          instanceMethod().onExactClass("java.time.temporal.ValueRange").named("checkValidValue"));
 
   /**
    * {@link java.time} types are immutable. The only methods we allow ignoring the return value on
