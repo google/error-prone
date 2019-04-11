@@ -54,6 +54,13 @@ public class ImplementAssertionWithChainingPositiveCases {
       }
     }
 
+    void hasKind(Kind expected) {
+      // BUG: Diagnostic contains: check("kind()").that(actual().kind()).isEqualTo(expected)
+      if (actual().kind() != expected) {
+        fail("has kind %s", expected);
+      }
+    }
+
     void hasOtherFooInteger(int expected) {
       // BUG: Diagnostic contains:
       // check("otherFoo().integer()").that(actual().otherFoo().integer()).isEqualTo(expected)
@@ -66,10 +73,12 @@ public class ImplementAssertionWithChainingPositiveCases {
   private static final class Foo {
     final String string;
     final int integer;
+    final Kind kind;
 
-    Foo(String string, int integer) {
+    Foo(String string, int integer, Kind kind) {
       this.string = string;
       this.integer = integer;
+      this.kind = kind;
     }
 
     String string() {
@@ -80,8 +89,14 @@ public class ImplementAssertionWithChainingPositiveCases {
       return integer;
     }
 
+    Kind kind() {
+      return kind;
+    }
+
     Foo otherFoo() {
       return this;
     }
   }
+
+  private enum Kind {}
 }
