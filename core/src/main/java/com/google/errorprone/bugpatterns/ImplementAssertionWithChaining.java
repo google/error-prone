@@ -25,6 +25,7 @@ import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.instanceMethod;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
 import static com.google.errorprone.util.ASTHelpers.getType;
+import static com.google.errorprone.util.ASTHelpers.isSubtype;
 import static com.google.errorprone.util.ASTHelpers.stripParentheses;
 import static com.sun.source.tree.Tree.Kind.BLOCK;
 import static com.sun.source.tree.Tree.Kind.EXPRESSION_STATEMENT;
@@ -120,7 +121,7 @@ public final class ImplementAssertionWithChaining extends BugChecker implements 
             stripParentheses(((UnaryTree) condition).getExpression()), state);
 
       case NOT_EQUAL_TO:
-        return findActualAndExpectedForBinaryOp((BinaryTree) condition);
+        return findActualAndExpectedForBinaryOp((BinaryTree) condition, state);
 
       default:
         return null;
@@ -143,13 +144,28 @@ public final class ImplementAssertionWithChaining extends BugChecker implements 
   }
 
   private static ImmutableList<ExpressionTree> findActualAndExpectedForBinaryOp(
-      BinaryTree binaryTree) {
-    if (!getType(binaryTree.getLeftOperand()).isPrimitive()
-        || !getType(binaryTree.getRightOperand()).isPrimitive()) {
+      BinaryTree binaryTree, VisitorState state) {
+    /*
+     * It's actually enough for *either* to be a primitive, thanks to autounboxing (and enough for
+     * *either* to be an enum, since equals() is symmetric). However, it turns out that handling
+     * those cases catches almost nothing new in practice, and I'm seeing some evidence that "null"
+     * is considered to be a primitive? or something? That seems wrong, but given the low payoff,
+     * I'm not going to investigate further.
+     */
+    boolean bothPrimitives =
+        getType(binaryTree.getLeftOperand()).isPrimitive()
+            && getType(binaryTree.getRightOperand()).isPrimitive();
+    boolean bothEnums =
+        isEnum(binaryTree.getLeftOperand(), state) && isEnum(binaryTree.getRightOperand(), state);
+    if (!bothPrimitives && !bothEnums) {
       // TODO(cpovirk): Generate an isSameAs() check (if that is what users really want).
       return null;
     }
     return ImmutableList.of(binaryTree.getLeftOperand(), binaryTree.getRightOperand());
+  }
+
+  private static boolean isEnum(ExpressionTree tree, VisitorState state) {
+    return isSubtype(getType(tree), state.getTypeFromString("java.lang.Enum"), state);
   }
 
   /**

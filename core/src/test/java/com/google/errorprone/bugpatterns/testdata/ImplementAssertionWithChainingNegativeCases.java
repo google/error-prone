@@ -37,15 +37,23 @@ public class ImplementAssertionWithChainingNegativeCases {
         fail("had unexpected integer");
       }
     }
+
+    void hasBoxedIntegerSameInstance(Integer expected) {
+      if (actual().boxedInteger() != expected) {
+        fail("didn't match expected string instance");
+      }
+    }
   }
 
   private static final class Foo {
     final String string;
     final int integer;
+    final Integer boxedInteger;
 
-    Foo(String string, int integer) {
+    Foo(String string, int integer, Integer boxedInteger) {
       this.string = string;
       this.integer = integer;
+      this.boxedInteger = boxedInteger;
     }
 
     String string() {
@@ -54,6 +62,10 @@ public class ImplementAssertionWithChainingNegativeCases {
 
     int integer() {
       return integer;
+    }
+
+    Integer boxedInteger() {
+      return boxedInteger;
     }
 
     Foo otherFoo() {
