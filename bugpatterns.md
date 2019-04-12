@@ -63,7 +63,7 @@ __[CollectionToArraySafeParameter](bugpattern/CollectionToArraySafeParameter)__<
 The type of the array parameter of Collection.toArray needs to be compatible with the array type
 
 __[ComparableType](bugpattern/ComparableType)__<br>
- Implementing &#39;Comparable&lt;T&gt;&#39; where T is not compatible with the implementing class.
+Implementing &#39;Comparable&lt;T&gt;&#39; where T is not the same as the implementing class is incorrect, since it violates the symmetry contract of compareTo.
 
 __[ComparingThisWithNull](bugpattern/ComparingThisWithNull)__<br>
 this == null is always false, this != null is always true

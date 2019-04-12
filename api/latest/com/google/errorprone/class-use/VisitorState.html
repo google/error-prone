@@ -2627,8 +2627,9 @@
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>static <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util">Optional</a>&lt;<a href="../../../../com/google/errorprone/fixes/Fix.html" title="interface in com.google.errorprone.fixes">Fix</a>&gt;</code></td>
-<td class="colLast"><span class="typeNameLabel">AssertThrowsUtils.</span><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/bugpatterns/AssertThrowsUtils.html#tryFailToAssertThrows-com.sun.source.tree.TryTree-java.util.List-com.google.errorprone.VisitorState-">tryFailToAssertThrows</a></span>(com.sun.source.tree.TryTree&nbsp;tryTree,
+<td class="colLast"><span class="typeNameLabel">AssertThrowsUtils.</span><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/bugpatterns/AssertThrowsUtils.html#tryFailToAssertThrows-com.sun.source.tree.TryTree-java.util.List-java.util.Optional-com.google.errorprone.VisitorState-">tryFailToAssertThrows</a></span>(com.sun.source.tree.TryTree&nbsp;tryTree,
                      <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;? extends com.sun.source.tree.StatementTree&gt;&nbsp;throwingStatements,
+                     <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util">Optional</a>&lt;com.sun.source.tree.Tree&gt;&nbsp;failureMessage,
                      <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>
 <div class="block">Transforms a try-catch block in the try-fail pattern into a call to JUnit's <code>assertThrows</code>, inserting the behavior of the <code>try</code> block into a lambda parameter, and
  assigning the expected exception to a variable, if it is used within the <code>catch</code> block.</div>
@@ -3938,16 +3939,6 @@
 <tr class="rowColor">
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><span class="typeNameLabel">MethodInvocation.</span><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/matchers/MethodInvocation.html#matches-com.sun.source.tree.ExpressionTree-com.google.errorprone.VisitorState-">matches</a></span>(com.sun.source.tree.ExpressionTree&nbsp;expressionTree,
-       <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code>boolean</code></td>
-<td class="colLast"><span class="typeNameLabel">InstanceMethod.</span><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/matchers/InstanceMethod.html#matches-com.sun.source.tree.ExpressionTree-com.google.errorprone.VisitorState-">matches</a></span>(com.sun.source.tree.ExpressionTree&nbsp;item,
-       <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code>boolean</code></td>
-<td class="colLast"><span class="typeNameLabel">DescendantOf.</span><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/matchers/DescendantOf.html#matches-com.sun.source.tree.ExpressionTree-com.google.errorprone.VisitorState-">matches</a></span>(com.sun.source.tree.ExpressionTree&nbsp;expressionTree,
        <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
 </tr>
 <tr class="altColor">

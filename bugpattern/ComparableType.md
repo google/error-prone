@@ -1,7 +1,6 @@
 ---
 title: ComparableType
-summary: ' Implementing ''Comparable<T>'' where T is not compatible with the implementing
-  class.'
+summary: Implementing 'Comparable<T>' where T is not the same as the implementing class is incorrect, since it violates the symmetry contract of compareTo.
 layout: bugpattern
 tags: ''
 severity: ERROR
@@ -149,7 +148,6 @@ public class ComparableTypePositiveCases {
   // BUG: Diagnostic contains: [ComparableType]
   public abstract static class AClass implements Comparable<Integer> {}
 
-  // BUG: Diagnostic contains: [ComparableType]
   public static class BClass extends AClass {
     @Override
     public int compareTo(Integer o) {
@@ -170,16 +168,15 @@ public class ComparableTypePositiveCases {
     }
   }
 
+  // BUG: Diagnostic contains: [ComparableType]
   public abstract static class One<T> implements Comparable<T> {}
 
-  // BUG: Diagnostic contains: [ComparableType]
   public static class Two extends One<Integer> {
     @Override
     public int compareTo(Integer o) {
       return 0;
     }
   }
-
 }
 {% endhighlight %}
 
@@ -249,6 +246,7 @@ public class ComparableTypeNegativeCases {
 
   public static class HalfOpen implements Door {}
 
+  // BUG: Diagnostic contains: [ComparableType]
   static final class Open extends HalfOpen implements Comparable<Door> {
     @Override
     public int compareTo(Door o) {
@@ -258,6 +256,7 @@ public class ComparableTypeNegativeCases {
 
   public static class A {}
 
+  // BUG: Diagnostic contains: [ComparableType]
   public static class B extends A implements Comparable<A> {
 
     @Override
@@ -288,6 +287,7 @@ public class ComparableTypeNegativeCases {
     }
   }
 
+  // BUG: Diagnostic contains: [ComparableType]
   static final class XGram implements Comparable {
 
     @Override
