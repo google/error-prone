@@ -221,4 +221,20 @@ public class UnnecessaryLambdaTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void nonFunctionalInterfaceMethod() {
+    testHelper
+        .addInputLines(
+            "Test.java",
+            "import java.util.function.Predicate;",
+            "class Test {",
+            "  private static final Predicate<String> F = x -> \"hello \".equals(x);",
+            "  void g() {",
+            "    Predicate<String> l = Test.F.and(x -> true);",
+            "  }",
+            "}")
+        .expectUnchanged()
+        .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
+  }
 }
