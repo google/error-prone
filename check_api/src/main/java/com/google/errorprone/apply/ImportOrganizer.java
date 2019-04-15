@@ -114,7 +114,7 @@ public interface ImportOrganizer {
     }
 
     @Override
-    public String toString() {
+    public final String toString() {
       return String.format("import%s %s", isStatic() ? " static" : "", getType());
     }
   }
