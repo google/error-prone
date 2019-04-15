@@ -1,8 +1,6 @@
 // See https://github.com/tbroyer/gradle-errorprone-plugin
-// See https://github.com/tbroyer/gradle-apt-plugin
 plugins {
-  id 'net.ltgt.errorprone' version '0.0.13' apply false
-  id 'net.ltgt.apt' version '0.14' apply false
+  id 'net.ltgt.errorprone' version '0.7.1' apply false
 }
 
 subprojects {
@@ -15,9 +13,10 @@ subprojects {
 
   apply plugin: 'java'
   apply plugin: 'net.ltgt.errorprone'
-  apply plugin: 'net.ltgt.apt'
 
   dependencies {
     errorprone 'com.google.errorprone:error_prone_core:2.3.4-SNAPSHOT'
+    // for JDK 8 support
+    errorproneJavac 'com.google.errorprone:javac:9+181-r4173-1'
   }
 }
