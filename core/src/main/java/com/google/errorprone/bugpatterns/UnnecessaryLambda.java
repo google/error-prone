@@ -58,6 +58,7 @@ import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.TypeTag;
 import com.sun.tools.javac.tree.JCTree;
 import java.util.Objects;
+import java.util.function.Predicate;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
 
@@ -88,6 +89,10 @@ public class UnnecessaryLambda extends BugChecker
     }
     SuggestedFix.Builder fix = SuggestedFix.builder();
     String name = tree.getName().toString();
+    Tree type = tree.getReturnType();
+    if (!canFix(type, sym, state)) {
+      return NO_MATCH;
+    }
     new TreePathScanner<Void, Void>() {
       @Override
       public Void visitMethodInvocation(MethodInvocationTree node, Void unused) {
@@ -97,7 +102,6 @@ public class UnnecessaryLambda extends BugChecker
         return super.visitMethodInvocation(node, null);
       }
     }.scan(state.getPath().getCompilationUnit(), null);
-    Tree type = tree.getReturnType();
     lambdaToMethod(state, lambda, fix, name, type);
     return describeMatch(tree, fix.build());
   }
@@ -116,6 +120,10 @@ public class UnnecessaryLambda extends BugChecker
         || sym.getKind() != ElementKind.FIELD
         || !sym.isPrivate()
         || !sym.getModifiers().contains(Modifier.FINAL)) {
+      return NO_MATCH;
+    }
+    Tree type = tree.getType();
+    if (!canFix(type, sym, state)) {
       return NO_MATCH;
     }
     SuggestedFix.Builder fix = SuggestedFix.builder();
@@ -141,9 +149,46 @@ public class UnnecessaryLambda extends BugChecker
       }
     }.scan(state.getPath().getCompilationUnit(), null);
     SuggestedFixes.removeModifiers(tree, state, Modifier.FINAL).ifPresent(fix::merge);
-    Tree type = tree.getType();
     lambdaToMethod(state, lambda, fix, name, type);
     return describeMatch(tree, fix.build());
+  }
+
+  /**
+   * Check if the only methods invoked on the functional interface type are the descriptor method,
+   * e.g. don't rewrite uses of {@link Predicate} in compilation units that call other methods like
+   * {#link Predicate#add}.
+   */
+  boolean canFix(Tree type, Symbol sym, VisitorState state) {
+    Symbol descriptor = state.getTypes().findDescriptorSymbol(getType(type).asElement());
+    class Scanner extends TreePathScanner<Void, Void> {
+
+      boolean fixable = true;
+
+      @Override
+      public Void visitMethodInvocation(MethodInvocationTree node, Void unused) {
+        check(node);
+        return super.visitMethodInvocation(node, null);
+      }
+
+      private void check(MethodInvocationTree node) {
+        ExpressionTree lhs = node.getMethodSelect();
+        if (!(lhs instanceof MemberSelectTree)) {
+          return;
+        }
+        ExpressionTree receiver = ((MemberSelectTree) lhs).getExpression();
+        if (!Objects.equals(sym, getSymbol(receiver))) {
+          return;
+        }
+        Symbol symbol = getSymbol(lhs);
+        if (Objects.equals(descriptor, symbol)) {
+          return;
+        }
+        fixable = false;
+      }
+    }
+    Scanner scanner = new Scanner();
+    scanner.scan(state.getPath().getCompilationUnit(), null);
+    return scanner.fixable;
   }
 
   private void lambdaToMethod(
@@ -188,7 +233,7 @@ public class UnnecessaryLambda extends BugChecker
       fix.replace(
           receiver != null ? state.getEndPosition(receiver) : ((JCTree) node).getStartPosition(),
           state.getEndPosition(parent),
-          newName);
+          (receiver != null ? "." : "") + newName);
     } else {
       Symbol sym = getSymbol(node);
       fix.replace(
