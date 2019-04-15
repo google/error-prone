@@ -52,7 +52,7 @@ public class MethodVisibility implements Matcher<MethodTree> {
     DEFAULT(null),
     PRIVATE(Modifier.PRIVATE);
 
-    private Modifier correspondingModifier;
+    private final Modifier correspondingModifier;
 
     Visibility(Modifier correspondingModifier) {
       this.correspondingModifier = correspondingModifier;
