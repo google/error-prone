@@ -49,13 +49,13 @@ import javax.lang.model.element.ElementKind;
  */
 public class StrictFormatStringValidation {
 
-  private static final Matcher<ExpressionTree> MOCKITO_ARGUMENT_MATCHER =
-      staticMethod().onClass("org.mockito.Matchers");
+  private static final Matcher<ExpressionTree> MOCKITO_MATCHERS =
+      staticMethod().onClassAny("org.mockito.Matchers", "org.mockito.ArgumentMatchers");
 
   @Nullable
   public static ValidationResult validate(
       ExpressionTree formatStringTree, List<? extends ExpressionTree> args, VisitorState state) {
-    if (MOCKITO_ARGUMENT_MATCHER.matches(formatStringTree, state)) {
+    if (MOCKITO_MATCHERS.matches(formatStringTree, state)) {
       // Mockito matchers do not pass standard @FormatString requirements, but we allow them so
       // that people can verify @FormatMethod methods.
       return null;
