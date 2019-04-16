@@ -21,14 +21,11 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import org.junit.Ignore;
-
 /**
  * Tests for {@link ProtoDurationGetSecondsGetNano}.
  *
  * @author kak@google.com (Kurt Alfred Kluever)
  */
-@Ignore("b/74365407 test proto sources are broken")
 @RunWith(JUnit4.class)
 public class ProtoDurationGetSecondsGetNanoTest {
 

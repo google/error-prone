@@ -184,6 +184,13 @@
     </dependency>
     <dependency>
       <!-- Apache 2.0 -->
+      <groupId>com.google.truth.extensions</groupId>
+      <artifactId>truth-proto-extension</artifactId>
+      <version>${truth.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <!-- Apache 2.0 -->
       <groupId>com.google.inject</groupId>
       <artifactId>guice</artifactId>
       <version>4.0-beta5</version>
@@ -390,6 +397,8 @@
         <artifactId>protobuf-maven-plugin</artifactId>
         <version>0.5.1</version>
         <configuration>
+          <protoSourceRoot>src/main/proto</protoSourceRoot>
+          <protoTestSourceRoot>src/test/proto</protoTestSourceRoot>
           <protocArtifact>com.google.protobuf:protoc:3.4.0:exe:${os.detected.classifier}</protocArtifact>
           <pluginId>grpc-java</pluginId>
           <pluginArtifact>io.grpc:protoc-gen-grpc-java:1.0.1:exe:${os.detected.classifier}</pluginArtifact>
@@ -399,6 +408,8 @@
             <goals>
               <goal>compile</goal>
               <goal>compile-custom</goal>
+              <goal>test-compile</goal>
+              <goal>test-compile-custom</goal>
             </goals>
           </execution>
         </executions>
