@@ -22,8 +22,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import org.junit.Ignore;
-
 /** {@link ReferenceEquality}Test */
 @RunWith(JUnit4.class)
 public class ReferenceEqualityTest {
@@ -33,7 +31,7 @@ public class ReferenceEqualityTest {
   private final BugCheckerRefactoringTestHelper refactoringTestHelper =
       BugCheckerRefactoringTestHelper.newInstance(new ReferenceEquality(), getClass());
 
-  @Ignore("b/74365407 test proto sources are broken")
+  
   @Test
   public void protoGetter_nonnull() {
     compilationHelper

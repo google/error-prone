@@ -23,14 +23,11 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import org.junit.Ignore;
-
 /**
  * Tests for {@link ProtoRedundantSet} bugpattern.
  *
  * @author ghm@google.com (Graeme Morgan)
  */
-@Ignore("b/74365407 test proto sources are broken")
 @RunWith(JUnit4.class)
 public final class ProtoRedundantSetTest {
   private final CompilationTestHelper compilationHelper =
