@@ -20,10 +20,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import org.junit.Ignore;
-
 /** @author flx@google.com (Felix Berger) */
-@Ignore("b/74365407 test proto sources are broken")
 @RunWith(JUnit4.class)
 public final class ProtoFieldNullComparisonTest {
 

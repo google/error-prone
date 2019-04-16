@@ -23,8 +23,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import org.junit.Ignore;
-
 /**
  * Tests for {@link ModifiedButNotUsed} bugpattern.
  *
@@ -203,7 +201,7 @@ public final class ModifiedButNotUsedTest {
   }
 
   @Test
-  @Ignore("b/74365407 test proto sources are broken")
+  
   public void proto() {
     compilationHelper
         .addSourceLines(
@@ -227,7 +225,7 @@ public final class ModifiedButNotUsedTest {
   }
 
   @Test
-  @Ignore("b/74365407 test proto sources are broken")
+  
   public void protoSideEffects() {
     refactoringHelper
         .addInputLines(
@@ -258,7 +256,7 @@ public final class ModifiedButNotUsedTest {
   }
 
   @Test
-  @Ignore("b/74365407 test proto sources are broken")
+  
   public void protoNegative() {
     compilationHelper
         .addSourceLines(
@@ -294,7 +292,7 @@ public final class ModifiedButNotUsedTest {
   }
 
   @Test
-  @Ignore("b/74365407 test proto sources are broken")
+  
   public void protoUnusedExpression() {
     compilationHelper
         .addSourceLines(
@@ -313,7 +311,7 @@ public final class ModifiedButNotUsedTest {
   }
 
   @Test
-  @Ignore("b/74365407 test proto sources are broken")
+  
   public void protoUnusedButNotModified() {
     compilationHelper
         .addSourceLines(
@@ -330,7 +328,7 @@ public final class ModifiedButNotUsedTest {
   }
 
   @Test
-  @Ignore("b/74365407 test proto sources are broken")
+  
   public void protoUnusedExpressionViaBuilderGetter() {
     compilationHelper
         .addSourceLines(

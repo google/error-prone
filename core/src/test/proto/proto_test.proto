@@ -32,4 +32,7 @@ message TestProtoMessage {
   extensions 100 to 199;
 }
 
-enum TestEnum { TEST_ENUM_VAL = 1; }
+enum TestEnum {
+  UNSPECIFIED = 0;
+  TEST_ENUM_VAL = 1;
+}
