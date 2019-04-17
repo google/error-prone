@@ -21,12 +21,15 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
+import org.junit.Ignore;
+
 /**
  * Tests for {@link ProtoTruthMixedDescriptors} bugpattern.
  *
  * @author ghm@google.com (Graeme Morgan)
  */
 @RunWith(JUnit4.class)
+@Ignore("b/130672458")
 public final class ProtoTruthMixedDescriptorsTest {
   private final CompilationTestHelper compilationHelper =
       CompilationTestHelper.newInstance(ProtoTruthMixedDescriptors.class, getClass());
