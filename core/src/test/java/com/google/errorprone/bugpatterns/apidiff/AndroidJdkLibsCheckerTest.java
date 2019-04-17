@@ -146,4 +146,20 @@ public class AndroidJdkLibsCheckerTest extends Java7ApiCheckerTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void allowJava8Flag_getTimeZone() {
+    allowJava8Helper
+        .addSourceLines(
+            "Test.java",
+            "import java.time.ZoneId;",
+            "import java.util.TimeZone;",
+            "public class Test {",
+            "  public static void test() {",
+            "    TimeZone.getTimeZone(\"a\");",
+            "    TimeZone.getTimeZone(ZoneId.of(\"a\"));",
+            "  }",
+            "}")
+        .doTest();
+  }
 }
