@@ -22,8 +22,11 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
+import org.junit.Ignore;
+
 /** Unit tests for {@link com.google.errorprone.bugpatterns.SizeGreaterThanOrEqualsZero} */
 @RunWith(JUnit4.class)
+@Ignore("b/130669807")
 public class SizeGreaterThanOrEqualsZeroTest {
   CompilationTestHelper compilationHelper;
 

@@ -22,11 +22,14 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
+import org.junit.Ignore;
+
 /**
  * Verify that there are no usages of Mockito internal implementations.
  *
  * @author tvanderlippe@google.com (Tim van der Lippe)
  */
+@Ignore("b/130664407")
 @RunWith(JUnit4.class)
 public class MockitoInternalUsageTest {
 

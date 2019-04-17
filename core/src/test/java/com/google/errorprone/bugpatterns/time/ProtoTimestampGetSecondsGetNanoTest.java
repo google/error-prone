@@ -21,12 +21,15 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
+import org.junit.Ignore;
+
 /**
  * Tests for {@link ProtoTimestampGetSecondsGetNano}.
  *
  * @author kak@google.com (Kurt Alfred Kluever)
  */
 @RunWith(JUnit4.class)
+@Ignore("b/130667208")
 public class ProtoTimestampGetSecondsGetNanoTest {
 
   private CompilationTestHelper compilationHelper;
