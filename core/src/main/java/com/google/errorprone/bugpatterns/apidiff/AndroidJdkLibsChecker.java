@@ -177,6 +177,7 @@ public class AndroidJdkLibsChecker extends ApiDiffChecker {
             .put("java/util/Arrays", ClassMemberKey.create("stream", ""))
             .put("java/util/Date", ClassMemberKey.create("from", ""))
             .put("java/util/GregorianCalendar", ClassMemberKey.create("from", ""))
+            .put("java/util/TimeZone", ClassMemberKey.create("getTimeZone", ""))
             .put("java/lang/Integer", ClassMemberKey.create("sum", ""))
             .put("java/lang/Long", ClassMemberKey.create("sum", ""))
             .put("java/lang/Double", ClassMemberKey.create("sum", ""))
