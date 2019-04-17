@@ -35,6 +35,7 @@ import com.sun.source.util.DocTreePath;
 import com.sun.source.util.DocTreePathScanner;
 import com.sun.tools.javac.api.JavacTrees;
 import com.sun.tools.javac.code.Type;
+import javax.lang.model.element.Element;
 
 /**
  * Matches errors in Javadoc {@literal @}throws tags.
@@ -71,17 +72,17 @@ public final class InvalidThrows extends BugChecker implements MethodTreeMatcher
     @Override
     public Void visitThrows(ThrowsTree throwsTree, Void unused) {
       ReferenceTree exName = throwsTree.getExceptionName();
-      Type type =
-          (Type)
-              JavacTrees.instance(state.context)
-                  .getElement(new DocTreePath(getCurrentPath(), exName))
-                  .asType();
-      if (type != null && isCheckedException(type)) {
-        if (methodTree.getThrows().stream().noneMatch(t -> isSubtype(type, getType(t), state))) {
-          state.reportMatch(
-              describeMatch(
-                  diagnosticPosition(getCurrentPath(), state),
-                  Utils.replace(throwsTree, "", state)));
+      Element element =
+          JavacTrees.instance(state.context).getElement(new DocTreePath(getCurrentPath(), exName));
+      if (element != null) {
+        Type type = (Type) element.asType();
+        if (isCheckedException(type)) {
+          if (methodTree.getThrows().stream().noneMatch(t -> isSubtype(type, getType(t), state))) {
+            state.reportMatch(
+                describeMatch(
+                    diagnosticPosition(getCurrentPath(), state),
+                    Utils.replace(throwsTree, "", state)));
+          }
         }
       }
       return super.visitThrows(throwsTree, null);
