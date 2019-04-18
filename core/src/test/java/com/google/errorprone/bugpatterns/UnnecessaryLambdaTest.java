@@ -235,6 +235,36 @@ public class UnnecessaryLambdaTest {
             "  }",
             "}")
         .expectUnchanged()
-        .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
+        .doTest();
+  }
+
+  @Test
+  public void variable_bind() {
+    testHelper
+        .addInputLines(
+            "Bind.java",
+            "package com.google.inject.testing.fieldbinder;",
+            "import static java.lang.annotation.ElementType.FIELD;",
+            "import static java.lang.annotation.RetentionPolicy.RUNTIME;",
+            "import java.lang.annotation.Retention;",
+            "import java.lang.annotation.Target;",
+            "@Retention(RUNTIME)",
+            "@Target({FIELD})",
+            "public @interface Bind {}")
+        .expectUnchanged()
+        .addInputLines(
+            "Test.java",
+            "import java.util.function.Function;",
+            "import com.google.inject.testing.fieldbinder.Bind;",
+            "class Test {",
+            "  @Bind",
+            "  private final Function<String, String> camelCase = x -> \"hello \" + x;",
+            "  void g() {",
+            "    Function<String, String> f = camelCase;",
+            "    System.err.println(camelCase.apply(\"world\"));",
+            "  }",
+            "}")
+        .expectUnchanged()
+        .doTest();
   }
 }
