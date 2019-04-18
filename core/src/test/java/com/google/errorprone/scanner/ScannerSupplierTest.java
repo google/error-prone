@@ -638,18 +638,19 @@ public class ScannerSupplierTest {
     }
 
     final void hasSeverities(Map<String, SeverityLevel> severities) {
-      check().that(actual().severities()).containsExactlyEntriesIn(severities);
+      check("severities()").that(actual().severities()).containsExactlyEntriesIn(severities);
     }
 
     @SafeVarargs
     final void hasEnabledChecks(Class<? extends BugChecker>... bugCheckers) {
-      check()
+      check("getEnabledChecks()")
           .that(actual().getEnabledChecks())
           .containsExactlyElementsIn(getSuppliers(bugCheckers));
     }
 
     final MapSubject flagsMap() {
-      return check().that(actual().getFlags().getFlagsMap()).named("Flags map");
+      return check("getFlags().getFlagsMap()")
+          .that(actual().getFlags().getFlagsMap());
     }
   }
 
