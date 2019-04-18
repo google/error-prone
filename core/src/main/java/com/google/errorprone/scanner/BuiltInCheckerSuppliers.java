@@ -172,7 +172,6 @@ import com.google.errorprone.bugpatterns.MixedArrayDimensions;
 import com.google.errorprone.bugpatterns.MixedDescriptors;
 import com.google.errorprone.bugpatterns.MixedMutabilityReturnType;
 import com.google.errorprone.bugpatterns.MockitoCast;
-import com.google.errorprone.bugpatterns.MockitoInternalUsage;
 import com.google.errorprone.bugpatterns.MockitoUsage;
 import com.google.errorprone.bugpatterns.ModifiedButNotUsed;
 import com.google.errorprone.bugpatterns.ModifyCollectionInEnhancedForLoop;
@@ -677,7 +676,6 @@ public class BuiltInCheckerSuppliers {
           MissingOverride.class,
           MixedDescriptors.class,
           MixedMutabilityReturnType.class,
-          MockitoInternalUsage.class,
           ModifiedButNotUsed.class,
           ModifyCollectionInEnhancedForLoop.class,
           ModifySourceCollectionInStream.class,
