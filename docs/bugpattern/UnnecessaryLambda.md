@@ -34,3 +34,17 @@ Advantages of using a method include:
 *   If the behavior is nontrivial, it's more natural to write javadoc for the
     method.
 
+Be aware that this change is not purely syntactic: it affects the semantics of
+your program in some small ways. In particular, evaluating the same method
+reference twice is not guaranteed to return an identical object.
+
+This means that, first, inlining the reference instead of storing a lambda may
+cause additional memory allocations - usually this very slight performance cost
+is worth the improved readability, but use your judgment if the performance
+matters to you.
+
+Secondly, if the correctness of your program depends on reference equality of
+your lambda, inlining it may break you. Ideally, you should *not* depend on
+reference equality for a lambda, but if you are doing so, consider not making
+this change.
+
