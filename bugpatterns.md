@@ -173,6 +173,9 @@ Types contained in sorted collections must implement Comparable.
 __[IncompatibleArgumentType](bugpattern/IncompatibleArgumentType)__<br>
 Passing argument to a generic method with an incompatible type.
 
+__[IncompatibleModifiers](bugpattern/IncompatibleModifiers)__<br>
+This annotation has incompatible modifiers as specified by its @IncompatibleModifiers annotation
+
 __[IndexOfChar](bugpattern/IndexOfChar)__<br>
 The first argument to indexOf is a Unicode code point, and the second is the index to start the search from
 
@@ -409,6 +412,9 @@ __[VarTypeName](bugpattern/VarTypeName)__<br>
 __[AmbiguousMethodReference](bugpattern/AmbiguousMethodReference)__<br>
 Method reference is ambiguous
 
+__[AnnotateFormatMethod](bugpattern/AnnotateFormatMethod)__<br>
+This method passes a pair of parameters through to String.format, but the enclosing method wasn&#39;t annotated @FormatMethod. Doing so gives compile-time rather than run-time protection against malformed format strings.&#10;&#10;WARNING: There&#39;s a very high chance that existing code will not be passing in well-formed format strings. Make sure you run tests including all users of this code before submitting.
+
 __[ArgumentSelectionDefectChecker](bugpattern/ArgumentSelectionDefectChecker)__<br>
 Arguments are in the wrong order or could be commented for clarity.
 
@@ -454,6 +460,9 @@ new BigDecimal(double) loses precision in this case.
 __[BoxedPrimitiveConstructor](bugpattern/BoxedPrimitiveConstructor)__<br>
 valueOf or autoboxing provides better time and space performance
 
+__[BoxedPrimitiveEquality](bugpattern/BoxedPrimitiveEquality)__<br>
+Comparison using reference equality instead of value equality. Reference equality of boxed primitive types is usually not useful, as they are value objects, and it is bug-prone, as instances are cached for some values but not others.
+
 __[ByteBufferBackingArray](bugpattern/ByteBufferBackingArray)__<br>
 ByteBuffer.array() shouldn&#39;t be called unless ByteBuffer.arrayOffset() is used or if the ByteBuffer was initialized using ByteBuffer.wrap() or ByteBuffer.allocate().
 
@@ -468,6 +477,9 @@ Logging or rethrowing exceptions should usually be preferred to catching and cal
 
 __[CatchFail](bugpattern/CatchFail)__<br>
 Ignoring exceptions and calling fail() is unnecessary, and makes test output less useful
+
+__[ChainedAssertionLosesContext](bugpattern/ChainedAssertionLosesContext)__<br>
+Inside a Subject, use check(...) instead of assert*() to preserve user-supplied messages and other settings.
 
 __[ClassCanBeStatic](bugpattern/ClassCanBeStatic)__<br>
 Inner class is non-static but does not reference enclosing class
@@ -495,9 +507,6 @@ DateFormat is not thread-safe, and should not be used as a constant field.
 
 __[DefaultCharset](bugpattern/DefaultCharset)__<br>
 Implicit use of the platform default charset, which can result in differing behaviour between JVM executions or incorrect behavior if the encoding of the data source doesn&#39;t match expectations.
-
-__[DeprecatedThreadMethods](bugpattern/DeprecatedThreadMethods)__<br>
-Avoid deprecated Thread methods; read the method&#39;s javadoc for details.
 
 __[DoubleBraceInitialization](bugpattern/DoubleBraceInitialization)__<br>
 Prefer collection factory methods or builders to the double-brace initialization pattern.
@@ -555,9 +564,6 @@ Annotations should always be immutable
 
 __[ImmutableEnumChecker](bugpattern/ImmutableEnumChecker)__<br>
 Enums should always be immutable
-
-__[IncompatibleModifiers](bugpattern/IncompatibleModifiers)__<br>
-This annotation has incompatible modifiers as specified by its @IncompatibleModifiers annotation
 
 __[InconsistentCapitalization](bugpattern/InconsistentCapitalization)__<br>
 It is confusing to have a field and a parameter under the same scope that differ only in capitalization.
@@ -634,6 +640,9 @@ Joda-Time&#39;s ConverterManager makes the semantics of DateTime/Instant/etc con
 __[JodaWithDurationAddedLong](bugpattern/JodaWithDurationAddedLong)__<br>
 Use of JodaTime&#39;s type.withDurationAdded(long, int) (where &lt;type&gt; = {Duration,Instant,DateTime}). Please use type.withDurationAdded(Duration.millis(long), int) instead.
 
+__[LiteEnumValueOf](bugpattern/LiteEnumValueOf)__<br>
+Instead of converting enums to string and back, its numeric value should be used instead as it is the stable part of the protocol defined by the enum.
+
 __[LockNotBeforeTry](bugpattern/LockNotBeforeTry)__<br>
 Calls to Lock#lock should be immediately followed by a try block which releases the lock.
 
@@ -658,14 +667,14 @@ The field number passed into #getFieldByNumber belongs to a different proto to t
 __[MixedMutabilityReturnType](bugpattern/MixedMutabilityReturnType)__<br>
 This method returns both mutable and immutable collections or maps from different paths. This may be confusing for users of the method.
 
-__[MockitoInternalUsage](bugpattern/MockitoInternalUsage)__<br>
-org.mockito.internal.* is a private API and should not be used by clients
-
 __[ModifiedButNotUsed](bugpattern/ModifiedButNotUsed)__<br>
 A collection or proto builder was created, but its values were never accessed.
 
 __[ModifyCollectionInEnhancedForLoop](bugpattern/ModifyCollectionInEnhancedForLoop)__<br>
 Modifying a collection while iterating over it in a loop may cause a ConcurrentModificationException to be thrown.
+
+__[ModifySourceCollectionInStream](bugpattern/ModifySourceCollectionInStream)__<br>
+Modifying the backing source during stream operations may cause unintended results.
 
 __[MultipleParallelOrSequentialCalls](bugpattern/MultipleParallelOrSequentialCalls)__<br>
 Multiple calls to either parallel or sequential are unnecessary and cause confusion.
@@ -823,6 +832,9 @@ Avoid hash-based containers of java.net.URL--the containers rely on equals() and
 __[UndefinedEquals](bugpattern/UndefinedEquals)__<br>
 This type is not guaranteed to implement a useful #equals method.
 
+__[UnnecessaryLambda](bugpattern/UnnecessaryLambda)__<br>
+Returning a lambda from a helper method or saving it in a constant is unnecessary; prefer to implement the functional interface method directly and use a method reference instead.
+
 __[UnnecessaryParentheses](bugpattern/UnnecessaryParentheses)__<br>
 Unnecessary use of grouping parentheses
 
@@ -878,6 +890,9 @@ This expression was previously declared as a constant; consider replacing this o
 
 __[DepAnn](bugpattern/DepAnn)__<br>
 Deprecated item is not annotated with @Deprecated
+
+__[DescribeFix](bugpattern/DescribeFix)__<br>
+`describeFix(tree, fix)` is equivalent to and simpler than `buildDescription(tree).addFix(fix).build()`
 
 __[DivZero](bugpattern/DivZero)__<br>
 Division by integer literal zero
@@ -941,9 +956,6 @@ This method does not acquire the locks specified by its @UnlockMethod annotation
 
 ## Experimental : WARNING
 
-__[AnnotateFormatMethod](bugpattern/AnnotateFormatMethod)__<br>
-This method passes a pair of parameters through to String.format, but the enclosing method wasn&#39;t annotated @FormatMethod. Doing so gives compile-time rather than run-time protection against malformed format strings.
-
 __[AnnotationPosition](bugpattern/AnnotationPosition)__<br>
 Annotations should be positioned after Javadocs, but before modifiers.
 
@@ -964,6 +976,9 @@ Constructors should not invoke overridable methods.
 
 __[ConstructorLeaksThis](bugpattern/ConstructorLeaksThis)__<br>
 Constructors should not pass the &#39;this&#39; reference out in method invocations, since the object may not be fully constructed.
+
+__[EmptyBlockTag](bugpattern/EmptyBlockTag)__<br>
+A block tag (@param, @return, @throws, @deprecated) has an empty description.
 
 __[EmptyTopLevelDeclaration](bugpattern/EmptyTopLevelDeclaration)__<br>
 Empty top-level type declaration
@@ -1096,6 +1111,9 @@ Fields that can be null should be annotated @Nullable
 __[ImmutableRefactoring](bugpattern/ImmutableRefactoring)__<br>
 Refactors uses of the JSR 305 @Immutable to Error Prone&#39;s annotation
 
+__[ImplementAssertionWithChaining](bugpattern/ImplementAssertionWithChaining)__<br>
+Prefer check(...), which usually generates more readable failure messages.
+
 __[LambdaFunctionalInterface](bugpattern/LambdaFunctionalInterface)__<br>
 Use Java&#39;s utility functional interfaces instead of Function&lt;A, B&gt; for primitive types.
 
@@ -1129,6 +1147,9 @@ Add a private constructor to modules that will not be instantiated by Dagger.
 __[PrivateConstructorForUtilityClass](bugpattern/PrivateConstructorForUtilityClass)__<br>
 Utility classes (only static members) are not designed to be instantiated and should be made noninstantiable with a default constructor.
 
+__[ProvideDescriptionToCheck](bugpattern/ProvideDescriptionToCheck)__<br>
+Provide a description of the value to be included in the failure message.
+
 __[RemoveUnusedImports](bugpattern/RemoveUnusedImports)__<br>
 Unused imports
 
@@ -1155,6 +1176,9 @@ Type parameters must be a single letter with an optional numeric suffix, or an U
 
 __[UngroupedOverloads](bugpattern/UngroupedOverloads)__<br>
 Constructors and methods with the same name should appear sequentially with no other code in between. Please re-order or re-name methods.
+
+__[UnnecessaryBoxedVariable](bugpattern/UnnecessaryBoxedVariable)__<br>
+It is unnecessary for this variable to be boxed. Use the primitive instead.
 
 __[UnnecessarySetDefault](bugpattern/UnnecessarySetDefault)__<br>
 Unnecessary call to NullPointerTester#setDefault

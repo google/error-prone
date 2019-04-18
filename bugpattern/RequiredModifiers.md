@@ -4,7 +4,7 @@ summary: This annotation is missing required modifiers as specified by its @Requ
 layout: bugpattern
 tags: LikelyError
 severity: WARNING
-providesFix: NO_FIX
+providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

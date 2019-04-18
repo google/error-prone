@@ -86,6 +86,10 @@
 <td class="colFirst"><a href="#com.google.errorprone.annotations">com.google.errorprone.annotations</a></td>
 <td class="colLast">&nbsp;</td>
 </tr>
+<tr class="rowColor">
+<td class="colFirst"><a href="#com.google.errorprone.annotations.concurrent">com.google.errorprone.annotations.concurrent</a></td>
+<td class="colLast">&nbsp;</td>
+</tr>
 </tbody>
 </table>
 </li>
@@ -114,6 +118,27 @@
 <td class="colFirst"><code>interface&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/annotations/Var.html" title="annotation in com.google.errorprone.annotations">Var</a></span></code>
 <div class="block">The parameter or local variable to which this annotation is applied is non-final.</div>
+</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li class="blockList"><a name="com.google.errorprone.annotations.concurrent">
+<!--   -->
+</a>
+<h3>Uses of <a href="../../../../../com/google/errorprone/annotations/IncompatibleModifiers.html" title="annotation in com.google.errorprone.annotations">IncompatibleModifiers</a> in <a href="../../../../../com/google/errorprone/annotations/concurrent/package-summary.html">com.google.errorprone.annotations.concurrent</a></h3>
+<table class="useSummary" border="0" cellpadding="3" cellspacing="0" summary="Use table, listing classes, and an explanation">
+<caption><span>Classes in <a href="../../../../../com/google/errorprone/annotations/concurrent/package-summary.html">com.google.errorprone.annotations.concurrent</a> with annotations of type <a href="../../../../../com/google/errorprone/annotations/IncompatibleModifiers.html" title="annotation in com.google.errorprone.annotations">IncompatibleModifiers</a></span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colFirst" scope="col">Modifier and Type</th>
+<th class="colLast" scope="col">Class and Description</th>
+</tr>
+<tbody>
+<tr class="altColor">
+<td class="colFirst"><code>interface&nbsp;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/annotations/concurrent/LazyInit.html" title="annotation in com.google.errorprone.annotations.concurrent">LazyInit</a></span></code>
+<div class="block">Use this annotation on any static or field that will be initialized lazily, where races yield no
+ semantic difference in the code (as, for example, is the case with <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true#hashCode--" title="class or interface in java.lang"><code>String.hashCode()</code></a>).</div>
 </td>
 </tr>
 </tbody>

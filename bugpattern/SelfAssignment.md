@@ -90,6 +90,19 @@ public class SelfAssignmentPositiveCases1 {
   public String foldableString() {
     return "foo" + "bar";
   }
+
+  public void testCast() {
+    int a = 0;
+    // BUG: Diagnostic contains: this.a = (int) a
+    a = (int) a;
+    // BUG: Diagnostic contains: this.a = (short) a
+    a = (short) a;
+  }
+
+  public void testCast(int x) {
+    // BUG: Diagnostic contains: this.a = (int) x;
+    this.a = (int) a;
+  }
 }
 {% endhighlight %}
 
