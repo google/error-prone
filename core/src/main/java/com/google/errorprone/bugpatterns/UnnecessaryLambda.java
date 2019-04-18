@@ -37,6 +37,7 @@ import com.google.errorprone.bugpatterns.BugChecker.VariableTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
+import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
@@ -120,6 +121,9 @@ public class UnnecessaryLambda extends BugChecker
         || sym.getKind() != ElementKind.FIELD
         || !sym.isPrivate()
         || !sym.getModifiers().contains(Modifier.FINAL)) {
+      return NO_MATCH;
+    }
+    if (ASTHelpers.hasAnnotation(tree, "com.google.inject.testing.fieldbinder.Bind", state)) {
       return NO_MATCH;
     }
     Tree type = tree.getType();
