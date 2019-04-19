@@ -1182,6 +1182,17 @@ public class ASTHelpers {
     }
   }
 
+  /** Returns the value of the {@code @Generated} annotation on the top-level class, if present. */
+  public static ImmutableSet<String> getGeneratedBy(VisitorState state) {
+    ClassTree outerClass = null;
+    for (Tree enclosing : state.getPath()) {
+      if (enclosing instanceof ClassTree) {
+        outerClass = (ClassTree) enclosing;
+      }
+    }
+    return getGeneratedBy(getSymbol(outerClass), state);
+  }
+
   /**
    * Returns the values of the given symbol's {@code javax.annotation.Generated} or {@code
    * javax.annotation.processing.Generated} annotation, if present.
