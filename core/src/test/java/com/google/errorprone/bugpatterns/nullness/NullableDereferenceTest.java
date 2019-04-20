@@ -327,6 +327,67 @@ public class NullableDereferenceTest {
         .doTest();
   }
 
+  @Test // for https://github.com/google/error-prone/issues/1253
+  public void testCheckNotNull() {
+    createCompilationTestHelper()
+        .addSourceLines(
+            "com/google/errorprone/bugpatterns/nullness/CheckNotNullTest.java",
+            "package com.google.errorprone.bugpatterns.nullness;",
+            "import static com.google.common.base.Preconditions.checkNotNull;",
+            "import org.checkerframework.checker.nullness.qual.Nullable;",
+            "public class CheckNotNullTest {",
+            "  public void testCheck(@Nullable Integer arg) {",
+            "    // TODO(b/121273225): make checker see <T extends @NonNull Object> bound",
+            "    Integer value = checkNotNull(arg);",
+            "    // Ideally we'd like to avoid the following warning",
+            "    // BUG: Diagnostic contains: possibly null",
+            "    int result = value.intValue();",
+            "    result = arg.intValue();",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test // for https://github.com/google/error-prone/issues/1253
+  public void testCustomNotNullBound() {
+    createCompilationTestHelper()
+        .addSourceLines(
+            "com/google/errorprone/bugpatterns/nullness/CheckNotNullTest.java",
+            "package com.google.errorprone.bugpatterns.nullness;",
+            "import org.checkerframework.checker.nullness.qual.NonNull;",
+            "import org.checkerframework.checker.nullness.qual.Nullable;",
+            "public class CheckNotNullTest {",
+            "  public void testCheck(@Nullable Integer arg) {",
+            "    // BUG: Diagnostic contains: possibly null",
+            "    Integer value = nonNullOnly(arg);",
+            "    // Ideally we'd like to avoid the following warning",
+            "    // BUG: Diagnostic contains: possibly null",
+            "    int result = value.intValue();",
+            "  }",
+            "  private static <T extends @NonNull Object> T nonNullOnly(T arg) { return arg; }",
+            "}")
+        .doTest();
+  }
+
+  /** Tests that {@link com.google.common.base.Verify#verifyNotNull} doesn't generate any errors. */
+  @Test // for https://github.com/google/error-prone/issues/1253
+  public void testVerifyNotNull() {
+    createCompilationTestHelper()
+        .addSourceLines(
+            "com/google/errorprone/bugpatterns/nullness/VerifyNotNullTest.java",
+            "package com.google.errorprone.bugpatterns.nullness;",
+            "import static com.google.common.base.Verify.verifyNotNull;",
+            "import org.checkerframework.checker.nullness.qual.Nullable;",
+            "public class VerifyNotNullTest {",
+            "  public void testVerify(@Nullable Integer arg) {",
+            "    Integer value = verifyNotNull(arg);",
+            "    int result = value.intValue();",
+            "    result = arg.intValue();",
+            "  }",
+            "}")
+        .doTest();
+  }
+
   private CompilationTestHelper createCompilationTestHelper() {
     return CompilationTestHelper.newInstance(NullableDereference.class, getClass());
   }
