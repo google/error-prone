@@ -127,10 +127,12 @@ public class NullableDereference extends BugChecker
       if (param.equals(sym.getParameters().last()) && sym.isVarArgs()) {
         break; // TODO(b/121273225): support varargs
       }
-      // TODO(b/121273225): handle and check constrained type variables
+      // TODO(b/121273225): check type parameters, e.g., calls to void m(List<@NonNull String> l)
       // TODO(b/121203670): Recognize @ParametersAreNonnullByDefault etc.
       // Ignore unannotated and @Nullable parameters
-      if (NullnessAnnotations.fromAnnotationsOn(param).orElse(null) != Nullness.NONNULL) {
+      if (NullnessAnnotations.fromAnnotationsOn(param)
+              .orElseGet(() -> NullnessAnnotations.getUpperBound(param.type).orElse(null))
+          != Nullness.NONNULL) {
         continue;
       }
       ExpressionTree arg = arguments.get(i);
