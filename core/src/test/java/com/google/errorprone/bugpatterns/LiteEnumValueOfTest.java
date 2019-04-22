@@ -16,7 +16,11 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static org.junit.Assume.assumeFalse;
+import static org.junit.Assume.assumeTrue;
+
 import com.google.errorprone.CompilationTestHelper;
+import com.google.errorprone.util.RuntimeVersion;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -30,7 +34,9 @@ import org.junit.runners.JUnit4;
 public class LiteEnumValueOfTest {
 
   private final CompilationTestHelper compilationHelper =
-      CompilationTestHelper.newInstance(LiteEnumValueOf.class, getClass());
+      CompilationTestHelper.newInstance(LiteEnumValueOf.class, getClass())
+          .addSourceFile("android/testdata/stubs/android/os/Parcel.java")
+          .addSourceFile("android/testdata/stubs/android/os/Parcelable.java");
 
   @Test
   public void testPositiveCase() {
@@ -40,5 +46,75 @@ public class LiteEnumValueOfTest {
   @Test
   public void testNegativeCase() {
     compilationHelper.addSourceFile("LiteEnumValueOfNegativeCases.java").doTest();
+  }
+
+  @Test
+  public void testNegativeCaseJDK8OrEarlier() {
+    assumeFalse(RuntimeVersion.isAtLeast9());
+    testGeneratedAutoValueClass("javax.annotation.Generated");
+  }
+
+  @Test
+  public void testNegativeCaseJDK9OrAbove() {
+    assumeTrue(RuntimeVersion.isAtLeast9());
+    testGeneratedAutoValueClass("javax.annotation.processing.Generated");
+  }
+
+  private static final String[] PROTOLITE_ENUM =
+      new String[] {
+        "enum ProtoLiteEnum implements com.google.protobuf.Internal.EnumLite {",
+        "  FOO(1),",
+        "  BAR(2);",
+        "  private final int number;",
+        "  private ProtoLiteEnum(int number) {",
+        "    this.number = number;",
+        "  }",
+        "  @Override",
+        "  public int getNumber() {",
+        "    return number;",
+        "  }",
+        "}"
+      };
+
+  private void testGeneratedAutoValueClass(String importClass) {
+    String importStatement = "import " + importClass + ";";
+    compilationHelper
+        .addSourceLines("ProtoLiteEnum.java", PROTOLITE_ENUM)
+        .addSourceLines("TestData.java", "class TestData {}")
+        .addSourceLines("$AutoValue_TestData.java", createDollarAutoValueClass(importStatement))
+        .addSourceLines("AutoValue_TestData.java", createAutoValueClass(importStatement))
+        .doTest();
+  }
+
+  private static String[] createDollarAutoValueClass(String importStatement) {
+    return new String[] {
+      importStatement,
+      "@Generated(\"com.google.auto.value.processor.AutoValueProcessor\")",
+      "class $AutoValue_TestData extends TestData {}"
+    };
+  }
+
+  private static String[] createAutoValueClass(String importStatement) {
+    return new String[] {
+      "import android.os.Parcel;",
+      "import android.os.Parcelable;",
+      "import com.google.errorprone.bugpatterns.proto.ProtoTest.TestEnum;",
+      importStatement,
+      "@Generated(\"com.ryanharter.auto.value.parcel.AutoValueParcelExtension\")",
+      "class AutoValue_TestData extends $AutoValue_TestData {",
+      "    AutoValue_TestData(ProtoLiteEnum protoLiteEnum) {}",
+      "    public static final Parcelable.Creator<AutoValue_TestData> CREATOR =",
+      "        new Parcelable.Creator<AutoValue_TestData>() {",
+      "          @Override",
+      "          public AutoValue_TestData createFromParcel(Parcel in) {",
+      "            return new AutoValue_TestData(ProtoLiteEnum.valueOf(\"FOO\"));",
+      "          }",
+      "          @Override",
+      "          public AutoValue_TestData[] newArray(int size) {",
+      "            return null;",
+      "          }",
+      "        };",
+      "}"
+    };
   }
 }

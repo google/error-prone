@@ -25,6 +25,7 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
+import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.tools.javac.code.Type;
@@ -52,6 +53,12 @@ public class LiteEnumValueOf extends BugChecker implements MethodInvocationTreeM
   public Description matchMethodInvocation(
       MethodInvocationTree methodInvocationTree, VisitorState state) {
     if (!PROTO_MSG_VALUE_OF_MATCHER.matches(methodInvocationTree, state)) {
+      return Description.NO_MATCH;
+    }
+    // AutoValue Parcelable generated code uses the API in #createForParcel implementation.
+    // We explicitly suppress the matches.
+    if (ASTHelpers.getGeneratedBy(state)
+        .contains("com.ryanharter.auto.value.parcel.AutoValueParcelExtension")) {
       return Description.NO_MATCH;
     }
     return describeMatch(methodInvocationTree);
