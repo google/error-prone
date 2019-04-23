@@ -89,6 +89,10 @@ public final class OptionalMapToOptional extends BugChecker implements MethodInv
       return NO_MATCH;
     }
     List<Type> typeArguments = targetType.type().getTypeArguments();
+    // If the receiving Optional is raw, so will the target type of Function.
+    if (typeArguments.isEmpty()) {
+      return NO_MATCH;
+    }
     Type typeMappedTo = typeArguments.get(1);
     if (!OPTIONAL.apply(typeMappedTo, state)) {
       return NO_MATCH;
