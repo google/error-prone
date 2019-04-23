@@ -282,6 +282,7 @@ import com.google.errorprone.bugpatterns.TypeParameterUnusedInFormals;
 import com.google.errorprone.bugpatterns.URLEqualsHashCode;
 import com.google.errorprone.bugpatterns.UndefinedEquals;
 import com.google.errorprone.bugpatterns.UngroupedOverloads;
+import com.google.errorprone.bugpatterns.UnnecessaryAnonymousClass;
 import com.google.errorprone.bugpatterns.UnnecessaryBoxedVariable;
 import com.google.errorprone.bugpatterns.UnnecessaryDefaultInEnumSwitch;
 import com.google.errorprone.bugpatterns.UnnecessaryLambda;
@@ -730,6 +731,7 @@ public class BuiltInCheckerSuppliers {
           TypeParameterShadowing.class,
           TypeParameterUnusedInFormals.class,
           UndefinedEquals.class,
+          UnnecessaryAnonymousClass.class,
           UnnecessaryLambda.class,
           UnnecessaryParentheses.class,
           UnsafeFinalization.class,
