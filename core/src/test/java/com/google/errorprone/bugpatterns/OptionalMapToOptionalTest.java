@@ -97,4 +97,18 @@ public final class OptionalMapToOptionalTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void rawOptional() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            "import java.util.Optional;",
+            "class Test {",
+            "  public Optional<Integer> test(Optional optional) {",
+            "    return optional.map(i -> 1);",
+            "  }",
+            "}")
+        .doTest();
+  }
 }
