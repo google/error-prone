@@ -21,6 +21,8 @@ import static org.junit.Assume.assumeTrue;
 
 import com.google.errorprone.CompilationTestHelper;
 import com.google.errorprone.util.RuntimeVersion;
+import java.util.stream.Stream;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -46,6 +48,23 @@ public class LiteEnumValueOfTest {
   @Test
   public void testNegativeCase() {
     compilationHelper.addSourceFile("LiteEnumValueOfNegativeCases.java").doTest();
+  }
+
+  @Test
+  public void testWrappedCaseInLite() {
+    compilationHelper
+        .addSourceLines("OuterClass.java", generateProtoLiteEnumInGeneratedMessageLite())
+        .addSourceLines("Usage.java", generateUsageProtoLiteEnumValueOf(true))
+        .doTest();
+  }
+
+  @Test
+  @Ignore("b/130683674")
+  public void testWrappedCaseInFullProto() {
+    compilationHelper
+        .addSourceLines("OuterClass.java", generateProtoLiteEnumInGeneratedMessage())
+        .addSourceLines("Usage.java", generateUsageProtoLiteEnumValueOf(false))
+        .doTest();
   }
 
   @Test
@@ -76,6 +95,17 @@ public class LiteEnumValueOfTest {
         "}"
       };
 
+  private static String[] generateUsageProtoLiteEnumValueOf(boolean addDiagnostic) {
+    return new String[] {
+      "class Usage {",
+      "  private OuterClass.ProtoLiteEnum testMethod() {",
+      addDiagnostic ? "    // BUG: Diagnostic contains: LiteEnumValueOf" : "",
+      "    return OuterClass.ProtoLiteEnum.valueOf(\"FOO\");",
+      "  }",
+      "}"
+    };
+  }
+
   private void testGeneratedAutoValueClass(String importClass) {
     String importStatement = "import " + importClass + ";";
     compilationHelper
@@ -84,6 +114,35 @@ public class LiteEnumValueOfTest {
         .addSourceLines("$AutoValue_TestData.java", createDollarAutoValueClass(importStatement))
         .addSourceLines("AutoValue_TestData.java", createAutoValueClass(importStatement))
         .doTest();
+  }
+
+  private static String[] generateProtoLiteEnumInGeneratedMessageLite() {
+    String[] start =
+        new String[] {
+          // abstract instead of implementing dynamicMethod(MethodToInvoke,Object,Object) in
+          // GeneratedMessageLite
+          "public abstract class OuterClass extends ",
+          "    com.google.protobuf.GeneratedMessageLite<OuterClass, OuterClass.Builder> {"
+        };
+    String[] end =
+        new String[] {
+          "  public static final class Builder extends",
+          "      com.google.protobuf.GeneratedMessageLite.Builder<OuterClass, Builder> {",
+          "    private Builder() { super(null); }",
+          "  }",
+          "};"
+        };
+    return Stream.of(start, PROTOLITE_ENUM, end).flatMap(Stream::of).toArray(String[]::new);
+  }
+
+  private static String[] generateProtoLiteEnumInGeneratedMessage() {
+    String[] start =
+        new String[] {
+          // abstract instead of implementing newBuilderForType(BuilderParent) in GeneratedMessage
+          "public abstract class OuterClass extends com.google.protobuf.GeneratedMessage {"
+        };
+    String[] end = new String[] {"};"};
+    return Stream.of(start, PROTOLITE_ENUM, end).flatMap(Stream::of).toArray(String[]::new);
   }
 
   private static String[] createDollarAutoValueClass(String importStatement) {
