@@ -665,7 +665,7 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
     // call.
     private int inMethodCall = 0;
 
-    private final Set<Symbol> hasBeenAssigned = new HashSet<>();
+    private final Map<Symbol, TreePath> assignmentSite = new HashMap<>();
 
     private TreePath currentExpressionStatement = null;
 
@@ -702,7 +702,7 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
     public Void visitVariable(VariableTree tree, Void unused) {
       VarSymbol symbol = getSymbol(tree);
       if (hasBeenAssigned(tree, symbol)) {
-        hasBeenAssigned.add(symbol);
+        assignmentSite.put(symbol, getCurrentPath());
       }
       return super.visitVariable(tree, null);
     }
@@ -779,11 +779,8 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
       }
       Symbol symbol = getSymbol(tree.getVariable());
       // Check if it was actually assigned to at this depth (or is a parameter).
-      if (!((hasBeenAssigned.contains(symbol) && symbol.getKind() == ElementKind.LOCAL_VARIABLE)
+      if (!((assignmentSite.containsKey(symbol) && symbol.getKind() == ElementKind.LOCAL_VARIABLE)
           || symbol.getKind() == ElementKind.PARAMETER)) {
-        return;
-      }
-      if (!declarationSites.containsKey(symbol)) {
         return;
       }
       // Don't regard assigning `null` as a potentially unused assignment, as people do this for GC
@@ -791,19 +788,26 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
       if (getType(tree.getExpression()) instanceof NullType) {
         return;
       }
-      hasBeenAssigned.add(symbol);
-      TreePath assignmentSite = declarationSites.get(symbol);
-      if (scopeDepth(assignmentSite) != Iterables.size(getCurrentPath().getParentPath())) {
+      TreePath lastAssignmentSite = assignmentSite.get(symbol);
+      if (lastAssignmentSite == null) {
+        return;
+      }
+      TreePath declarationSite = declarationSites.get(symbol);
+      if (declarationSite == null) {
+        return;
+      }
+      if (scopeDepth(declarationSite) != Iterables.size(getCurrentPath().getParentPath())) {
         return;
       }
       if (unusedElements.containsKey(symbol)) {
-        unusedSpecs.add(UnusedSpec.of(symbol, assignmentSite, usageSites.get(symbol), tree));
+        unusedSpecs.add(UnusedSpec.of(symbol, lastAssignmentSite, usageSites.get(symbol), tree));
       } else {
         isEverUsed.add(symbol);
       }
       unusedElements.put(symbol, getCurrentPath());
       usageSites.removeAll(symbol);
       usageSites.put(symbol, getCurrentPath().getParentPath());
+      assignmentSite.put(symbol, getCurrentPath().getParentPath());
     }
 
     // This is a crude proxy for when a variable is unconditionally overwritten. It doesn't match
