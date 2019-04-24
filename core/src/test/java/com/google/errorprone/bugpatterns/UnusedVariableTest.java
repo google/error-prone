@@ -1026,7 +1026,8 @@ public class UnusedVariableTest {
             "    int c = b;",
             "    // BUG: Diagnostic contains: This assignment to the local variable",
             "    b = 2;",
-            "    return c;",
+            "    b = 3;",
+            "    return b + c;",
             "  }",
             "}")
         .doTest();
