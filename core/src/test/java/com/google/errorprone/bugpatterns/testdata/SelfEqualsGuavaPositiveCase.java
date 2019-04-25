@@ -19,7 +19,7 @@ package com.google.errorprone.bugpatterns.testdata;
 import com.google.common.base.Objects;
 
 /** @author alexeagle@google.com (Alex Eagle) */
-public class GuavaSelfEqualsPositiveCase {
+public class SelfEqualsGuavaPositiveCase {
   private String field = "";
 
   @Override
@@ -30,7 +30,7 @@ public class GuavaSelfEqualsPositiveCase {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    GuavaSelfEqualsPositiveCase other = (GuavaSelfEqualsPositiveCase) o;
+    SelfEqualsGuavaPositiveCase other = (SelfEqualsGuavaPositiveCase) o;
     boolean retVal;
     // BUG: Diagnostic contains: Objects.equal(field, other.field)
     retVal = Objects.equal(field, field);
