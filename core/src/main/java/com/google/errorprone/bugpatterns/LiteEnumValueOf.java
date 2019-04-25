@@ -28,6 +28,7 @@ import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
+import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Type;
 
 /**
@@ -65,8 +66,26 @@ public class LiteEnumValueOf extends BugChecker implements MethodInvocationTreeM
   }
 
   private static boolean isEnumLiteProtoOnly(Type type, VisitorState state) {
-    return isSubtype(type, state.getTypeFromString("com.google.protobuf.Internal.EnumLite"), state)
-        && !isSubtype(
-            type, state.getTypeFromString("com.google.protobuf.ProtocolMessageEnum"), state);
+    Symbol symbol = type.asElement();
+    if (symbol == null) {
+      return false;
+    }
+    boolean isLiteEnum =
+        isSubtype(type, state.getTypeFromString("com.google.protobuf.Internal.EnumLite"), state)
+            && !isSubtype(
+                type, state.getTypeFromString("com.google.protobuf.ProtocolMessageEnum"), state);
+    if (!isLiteEnum) {
+      return false;
+    }
+    // we check the outer class of the type as well since oneof keyword generates EnumLite enums
+    // in full proto library.
+    Symbol outerClass = ASTHelpers.enclosingClass(symbol);
+    if (outerClass == null) {
+      // lite enums can be top level classes with java_multiple_files.
+      return isLiteEnum;
+    }
+    Type outerClassType = outerClass.asType();
+    return !isSubtype(
+        outerClassType, state.getTypeFromString("com.google.protobuf.GeneratedMessage"), state);
   }
 }

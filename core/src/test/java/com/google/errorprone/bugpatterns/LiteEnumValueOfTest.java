@@ -22,7 +22,6 @@ import static org.junit.Assume.assumeTrue;
 import com.google.errorprone.CompilationTestHelper;
 import com.google.errorprone.util.RuntimeVersion;
 import java.util.stream.Stream;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -46,6 +45,21 @@ public class LiteEnumValueOfTest {
   }
 
   @Test
+  public void testPositiveCase2() {
+    compilationHelper
+        .addSourceLines("ProtoLiteEnum.java", PROTOLITE_ENUM)
+        .addSourceLines(
+            "Usage.java",
+            "class Usage {",
+            "  private ProtoLiteEnum testMethod() {",
+            "    // BUG: Diagnostic contains: LiteEnumValueOf",
+            "    return ProtoLiteEnum.valueOf(\"FOO\");",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void testNegativeCase() {
     compilationHelper.addSourceFile("LiteEnumValueOfNegativeCases.java").doTest();
   }
@@ -59,7 +73,6 @@ public class LiteEnumValueOfTest {
   }
 
   @Test
-  @Ignore("b/130683674")
   public void testWrappedCaseInFullProto() {
     compilationHelper
         .addSourceLines("OuterClass.java", generateProtoLiteEnumInGeneratedMessage())
