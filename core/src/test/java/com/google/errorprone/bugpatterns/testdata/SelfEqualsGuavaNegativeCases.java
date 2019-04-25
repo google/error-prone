@@ -19,7 +19,7 @@ package com.google.errorprone.bugpatterns.testdata;
 import com.google.common.base.Objects;
 
 /** @author bhagwani@google.com (Sumit Bhagwani) */
-public class GuavaSelfEqualsNegativeCases {
+public class SelfEqualsGuavaNegativeCases {
   private String field;
 
   @Override
@@ -31,7 +31,7 @@ public class GuavaSelfEqualsNegativeCases {
       return false;
     }
 
-    GuavaSelfEqualsNegativeCases other = (GuavaSelfEqualsNegativeCases) o;
+    SelfEqualsGuavaNegativeCases other = (SelfEqualsGuavaNegativeCases) o;
     return Objects.equal(field, other.field);
   }
 
