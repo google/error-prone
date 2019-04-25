@@ -106,6 +106,7 @@ import javax.annotation.Nullable;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
+import javax.lang.model.element.Name;
 import javax.lang.model.type.ArrayType;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeMirror;
@@ -491,18 +492,33 @@ public class SuggestedFixes {
   public static SuggestedFix renameMethodInvocation(
       MethodInvocationTree tree, String replacement, VisitorState state) {
     Tree methodSelect = tree.getMethodSelect();
+    Name identifier;
     int startPos;
-    String extra = "";
     if (methodSelect instanceof MemberSelectTree) {
+      identifier = ((MemberSelectTree) methodSelect).getIdentifier();
       startPos = state.getEndPosition(((MemberSelectTree) methodSelect).getExpression());
-      extra = ".";
     } else if (methodSelect instanceof IdentifierTree) {
+      identifier = ((IdentifierTree) methodSelect).getName();
       startPos = ((JCTree) tree).getStartPosition();
     } else {
-      return SuggestedFix.builder().build();
+      throw malformedMethodInvocationTree(tree);
     }
-    int endPos = state.getEndPosition(methodSelect);
-    return SuggestedFix.replace(startPos, endPos, extra + replacement);
+    List<ErrorProneToken> tokens =
+        ErrorProneTokens.getTokens(
+            state.getSourceCode().subSequence(startPos, state.getEndPosition(tree)).toString(),
+            state.context);
+    for (ErrorProneToken token : Lists.reverse(tokens)) {
+      if (token.kind() == TokenKind.IDENTIFIER && token.name().equals(identifier)) {
+        return SuggestedFix.replace(startPos + token.pos(), startPos + token.endPos(), replacement);
+      }
+    }
+    throw malformedMethodInvocationTree(tree);
+  }
+
+  private static final IllegalStateException malformedMethodInvocationTree(
+      MethodInvocationTree tree) {
+    return new IllegalStateException(
+        String.format("Couldn't replace the method name in %s.", tree));
   }
 
   /** Deletes the given exceptions from a method's throws clause. */

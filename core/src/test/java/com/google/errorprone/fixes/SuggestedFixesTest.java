@@ -36,6 +36,7 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.LiteralTreeMatcher;
+import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.ReturnTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.VariableTreeMatcher;
@@ -46,6 +47,7 @@ import com.sun.source.doctree.LinkTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.LiteralTree;
+import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.ReturnTree;
 import com.sun.source.tree.Tree;
@@ -1297,5 +1299,44 @@ public class SuggestedFixesTest {
         .isEqualTo(URI.create("file:/com/google/Foo.java"));
     assertThat(SuggestedFixes.sourceURI(URI.create("jar:file:sources.jar!/com/google/Foo.java")))
         .isEqualTo(URI.create("file:/com/google/Foo.java"));
+  }
+
+  @BugPattern(
+      name = "RenameMethodChecker",
+      summary = "RenameMethodChecker",
+      severity = ERROR,
+      providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
+  private static class RenameMethodChecker extends BugChecker
+      implements MethodInvocationTreeMatcher {
+    @Override
+    public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
+      return describeMatch(tree, SuggestedFixes.renameMethodInvocation(tree, "emptySet", state));
+    }
+  }
+
+  @Test
+  public void renameMethodInvocation() {
+    BugCheckerRefactoringTestHelper.newInstance(new RenameMethodChecker(), getClass())
+        .addInputLines(
+            "Test.java", //
+            "import java.util.Collections;",
+            "class Test {",
+            "  Object foo = Collections.<Integer /* foo */>emptyList();",
+            "  Object bar = Collections.<Integer>/* foo */emptyList();",
+            "  Object baz = Collections.<Integer>  emptyList  ();",
+            "  class emptyList {}",
+            "  Object quux = Collections.<emptyList>emptyList();",
+            "}")
+        .addOutputLines(
+            "Test.java", //
+            "import java.util.Collections;",
+            "class Test {",
+            "  Object foo = Collections.<Integer /* foo */>emptySet();",
+            "  Object bar = Collections.<Integer>/* foo */emptySet();",
+            "  Object baz = Collections.<Integer>  emptySet  ();",
+            "  class emptyList {}",
+            "  Object quux = Collections.<emptyList>emptySet();",
+            "}")
+        .doTest(TEXT_MATCH);
   }
 }
