@@ -32,11 +32,13 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.TryTreeMatcher;
 import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.matchers.Description;
+import com.google.errorprone.matchers.JUnitMatchers;
 import com.google.errorprone.matchers.Matcher;
 import com.sun.source.tree.CatchTree;
 import com.sun.source.tree.ExpressionStatementTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
+import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.TryTree;
@@ -57,6 +59,9 @@ public class TryFailRefactoring extends BugChecker implements TryTreeMatcher {
 
   @Override
   public Description matchTry(TryTree tree, VisitorState state) {
+    if (!JUnitMatchers.TEST_CASE.matches(state.findEnclosing(MethodTree.class), state)) {
+      return NO_MATCH;
+    }
     List<? extends StatementTree> body = tree.getBlock().getStatements();
     if (body.isEmpty() || tree.getFinallyBlock() != null || tree.getCatches().size() != 1) {
       // TODO(cushon): support finally
