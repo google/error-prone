@@ -28,6 +28,7 @@ import com.google.errorprone.SuppressionInfo.SuppressedState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.dataflow.nullnesspropagation.NullnessAnalysis;
 import com.google.errorprone.matchers.Description;
+import com.google.errorprone.matchers.Suppressible;
 import com.google.errorprone.util.ErrorProneToken;
 import com.google.errorprone.util.ErrorProneTokens;
 import com.sun.source.tree.Tree;
@@ -65,6 +66,7 @@ public class VisitorState {
   private final Map<String, SeverityLevel> severityMap;
   private final ErrorProneOptions errorProneOptions;
   private final LoadingCache<String, Optional<Type>> typeCache;
+  private final ErrorProneTimings timings;
   public final Context context;
 
   private final TreePath path;
@@ -206,6 +208,7 @@ public class VisitorState {
 
     this.suppressedState = suppressedState;
     this.path = path;
+    this.timings = ErrorProneTimings.instance(context);
     this.typeCache =
         typeCache != null
             ? typeCache
@@ -579,5 +582,10 @@ public class VisitorState {
   /** Returns true if the compilation is targeting Android. */
   public boolean isAndroidCompatible() {
     return Options.instance(context).getBoolean("androidCompatible");
+  }
+
+  /** Returns a timing span for the given {@link Suppressible}. */
+  public AutoCloseable timingSpan(Suppressible suppressible) {
+    return timings.span(suppressible);
   }
 }
