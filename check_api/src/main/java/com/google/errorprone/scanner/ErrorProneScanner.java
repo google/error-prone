@@ -425,7 +425,7 @@ public class ErrorProneScanner extends Scanner {
       // If the ErrorProneOptions say to visit suppressed code, we still visit it
       if (suppressed == SuppressedState.UNSUPPRESSED
           || errorProneOptions.isIgnoreSuppressionAnnotations()) {
-        try {
+        try (AutoCloseable unused = oldState.timingSpan(matcher)) {
           // We create a new VisitorState with the suppression info specific to this matcher.
           VisitorState stateWithSuppressionInformation =
               oldState.withPathAndSuppression(getCurrentPath(), suppressed);
