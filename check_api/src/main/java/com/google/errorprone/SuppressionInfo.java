@@ -100,15 +100,6 @@ public class SuppressionInfo {
   }
 
   /**
-   * Returns true if {@code name} is a suppressed name according to the suppression signals in this
-   * object (namely, is a member of previously-seen {@code SuppressWarnings} or {@code SuppressLint}
-   * annotation.
-   */
-  public boolean isNameSuppressed(String name) {
-    return suppressWarningsStrings.contains(name);
-  }
-
-  /**
    * Generates the {@link SuppressionInfo} for a {@link CompilationUnitTree}. This differs in that
    * {@code isGenerated} is determined by inspecting the annotations of the outermost class so that
    * matchers on {@link CompilationUnitTree} will also be suppressed.
