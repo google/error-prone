@@ -40,6 +40,7 @@
     <junit.version>4.13-beta-1</junit.version>
     <dataflow.version>2.5.3</dataflow.version>
     <mockito.version>2.25.0</mockito.version>
+    <compile.testing.version>0.16</compile.testing.version>
   </properties>
 
   <modules>
