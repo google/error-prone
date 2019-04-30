@@ -94,7 +94,7 @@ public class DiffApplier extends AbstractService {
         notifyFailed(e);
       }
       logger.log(
-          Level.INFO, String.format("Completed %d files in %s", completedFiles.get(), stopwatch));
+          Level.FINEST, String.format("Completed %d files in %s", completedFiles.get(), stopwatch));
       if (!diffsFailedPaths.isEmpty()) {
         logger.log(
             Level.SEVERE,

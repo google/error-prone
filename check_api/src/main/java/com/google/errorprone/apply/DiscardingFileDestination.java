@@ -25,7 +25,7 @@ public class DiscardingFileDestination implements FileDestination {
 
   @Override
   public void writeFile(SourceFile file) {
-    log.info(String.format("Altered file %s thrown away", file.getPath()));
+    log.finest(String.format("Altered file %s thrown away", file.getPath()));
   }
 
   @Override

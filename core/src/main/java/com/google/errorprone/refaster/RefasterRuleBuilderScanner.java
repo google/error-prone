@@ -18,7 +18,6 @@ package com.google.errorprone.refaster;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkState;
-import static java.util.logging.Level.FINE;
 
 import com.google.common.collect.ImmutableClassToInstanceMap;
 import com.google.common.collect.ImmutableList;
@@ -41,6 +40,9 @@ import com.sun.source.util.SimpleTreeVisitor;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.util.Context;
+
+import static java.util.logging.Level.FINEST;
+
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -109,7 +111,7 @@ public final class RefasterRuleBuilderScanner extends SimpleTreeVisitor<Void, Vo
   public Void visitMethod(MethodTree tree, Void v) {
     try {
       VisitorState state = new VisitorState(context);
-      logger.log(FINE, "Discovered method with name {0}", tree.getName());
+      logger.log(FINEST, "Discovered method with name {0}", tree.getName());
       if (ASTHelpers.hasAnnotation(tree, Placeholder.class, state)) {
         checkArgument(
             tree.getModifiers().getFlags().contains(Modifier.ABSTRACT),
