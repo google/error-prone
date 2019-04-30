@@ -283,7 +283,7 @@
       <!-- Apache 2.0 -->
       <groupId>com.google.testing.compile</groupId>
       <artifactId>compile-testing</artifactId>
-      <version>0.15</version>
+      <version>${compile.testing.version}</version>
       <scope>test</scope>
     </dependency>
     <dependency>
