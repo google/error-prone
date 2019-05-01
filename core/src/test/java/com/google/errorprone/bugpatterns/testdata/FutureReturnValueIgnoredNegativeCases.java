@@ -30,7 +30,6 @@ import com.google.common.base.Ticker;
 import com.google.common.reflect.AbstractInvocationHandler;
 import com.google.common.util.concurrent.AbstractFuture;
 import com.google.common.util.concurrent.AsyncFunction;
-import com.google.common.util.concurrent.CheckedFuture;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
@@ -39,8 +38,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executor;
@@ -146,34 +143,6 @@ public class FutureReturnValueIgnoredNegativeCases {
     <V> ListenableFuture<V> returnsInputType(ListenableFuture<V> future, final int n) {
       return null;
     }
-  }
-
-  public static <T, E extends Exception> CheckedFuture<List<T>, E> allAsList(
-      CheckedFuture<? extends T, E>... futures) {
-    return asListHelper(Futures.allAsList(null, null), futures);
-  }
-
-  private static <T, E extends Exception> CheckedFuture<List<T>, E> asListHelper(
-      ListenableFuture<List<T>> future, CheckedFuture<? extends T, E>... originalFutures) {
-    return asListHelper(future, Arrays.asList(originalFutures));
-  }
-
-  /**
-   * Helper method for Iterable allAsList and successfulAsList calls which special-cases empty
-   * iterables.
-   *
-   * @param future the future to make checked
-   * @param originalFutures the original futures
-   * @return a checked version of the future argument
-   */
-  private static <T, E extends Exception> CheckedFuture<List<T>, E> asListHelper(
-      ListenableFuture<List<T>> future,
-      Iterable<? extends CheckedFuture<? extends T, E>> originalFutures) {
-    Iterator<? extends CheckedFuture<? extends T, E>> iterator = originalFutures.iterator();
-    if (!iterator.hasNext()) {
-      return null;
-    }
-    return null;
   }
 
   public static class RetryingFuture<T> extends AbstractFuture<T> {
