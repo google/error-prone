@@ -236,7 +236,7 @@ public class ErrorProneOptionsTest {
     ErrorProneOptions options =
         ErrorProneOptions.processArgs(new String[] {"-XepPatchImportOrder:static-first"});
     assertThat(options.patchingOptions().importOrganizer())
-        .isSameAs(ImportOrganizer.STATIC_FIRST_ORGANIZER);
+        .isSameInstanceAs(ImportOrganizer.STATIC_FIRST_ORGANIZER);
   }
 
   @Test
@@ -244,7 +244,7 @@ public class ErrorProneOptionsTest {
     ErrorProneOptions options =
         ErrorProneOptions.processArgs(new String[] {"-XepPatchImportOrder:static-last"});
     assertThat(options.patchingOptions().importOrganizer())
-        .isSameAs(ImportOrganizer.STATIC_LAST_ORGANIZER);
+        .isSameInstanceAs(ImportOrganizer.STATIC_LAST_ORGANIZER);
   }
 
   @Test
@@ -252,7 +252,7 @@ public class ErrorProneOptionsTest {
     ErrorProneOptions options =
         ErrorProneOptions.processArgs(new String[] {"-XepPatchImportOrder:android-static-first"});
     assertThat(options.patchingOptions().importOrganizer())
-        .isSameAs(ImportOrganizer.ANDROID_STATIC_FIRST_ORGANIZER);
+        .isSameInstanceAs(ImportOrganizer.ANDROID_STATIC_FIRST_ORGANIZER);
   }
 
   @Test
@@ -260,6 +260,6 @@ public class ErrorProneOptionsTest {
     ErrorProneOptions options =
         ErrorProneOptions.processArgs(new String[] {"-XepPatchImportOrder:android-static-last"});
     assertThat(options.patchingOptions().importOrganizer())
-        .isSameAs(ImportOrganizer.ANDROID_STATIC_LAST_ORGANIZER);
+        .isSameInstanceAs(ImportOrganizer.ANDROID_STATIC_LAST_ORGANIZER);
   }
 }

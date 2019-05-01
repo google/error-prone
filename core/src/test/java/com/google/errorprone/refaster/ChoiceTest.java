@@ -35,10 +35,10 @@ public class ChoiceTest {
   @Test
   public void testNone() {
     assertThat(Choice.none().first()).isAbsent();
-    assertThat(Choice.none().condition(true)).isSameAs(Choice.none());
-    assertThat(Choice.none().condition(Predicates.alwaysTrue())).isSameAs(Choice.none());
+    assertThat(Choice.none().condition(true)).isSameInstanceAs(Choice.none());
+    assertThat(Choice.none().condition(Predicates.alwaysTrue())).isSameInstanceAs(Choice.none());
     assertThat(Choice.none().thenChoose(Functions.constant(Choice.of("foo"))))
-        .isSameAs(Choice.none());
+        .isSameInstanceAs(Choice.none());
   }
 
   @Test
