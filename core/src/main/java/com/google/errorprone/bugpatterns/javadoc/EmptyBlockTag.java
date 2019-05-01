@@ -50,7 +50,10 @@ import java.util.List;
  */
 @BugPattern(
     name = "EmptyBlockTag",
-    summary = "A block tag (@param, @return, @throws, @deprecated) has an empty description.",
+    summary =
+        "A block tag (@param, @return, @throws, @deprecated) has an empty description. Block tags"
+            + " without descriptions don't add much value for future readers of the code; consider"
+            + " removing the tag entirely or adding a description.",
     severity = WARNING,
     linkType = CUSTOM,
     link = "http://google.github.io/styleguide/javaguide.html#s7.1.3-javadoc-block-tags",
