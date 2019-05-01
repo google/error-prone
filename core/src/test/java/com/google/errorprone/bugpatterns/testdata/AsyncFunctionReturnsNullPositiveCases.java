@@ -17,12 +17,11 @@ package com.google.errorprone.bugpatterns.testdata;
 import static com.google.common.util.concurrent.Futures.immediateFuture;
 
 import com.google.common.util.concurrent.AsyncFunction;
-import com.google.common.util.concurrent.CheckedFuture;
 import com.google.common.util.concurrent.ListenableFuture;
 
 /** Positive cases for {@link AsyncFunctionReturnsNull}. */
 public class AsyncFunctionReturnsNullPositiveCases {
-  static {
+  static void listenableFutures() {
     new AsyncFunction<String, Object>() {
       @Override
       public ListenableFuture<Object> apply(String input) throws Exception {
@@ -37,22 +36,6 @@ public class AsyncFunctionReturnsNullPositiveCases {
         if (o instanceof String) {
           return immediateFuture((String) o);
         }
-        // BUG: Diagnostic contains: immediateFuture(null)
-        return null;
-      }
-    };
-
-    new AsyncFunction<Object, String>() {
-      @Override
-      public CheckedFuture<String, Exception> apply(Object o) {
-        // BUG: Diagnostic contains: immediateFuture(null)
-        return null;
-      }
-    };
-
-    new MyAsyncFunction() {
-      @Override
-      public CheckedFuture<String, Exception> apply(Object o) {
         // BUG: Diagnostic contains: immediateFuture(null)
         return null;
       }
