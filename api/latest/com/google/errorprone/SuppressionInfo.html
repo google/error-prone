@@ -18,7 +18,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10,"i1":10,"i2":10,"i3":10};
+var methods = {"i0":10,"i1":10,"i2":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -184,14 +184,6 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 </td>
 </tr>
 <tr id="i1" class="rowColor">
-<td class="colFirst"><code>boolean</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../com/google/errorprone/SuppressionInfo.html#isNameSuppressed-java.lang.String-">isNameSuppressed</a></span>(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;name)</code>
-<div class="block">Returns true if <code>name</code> is a suppressed name according to the suppression signals in this
- object (namely, is a member of previously-seen <code>SuppressWarnings</code> or <code>SuppressLint</code>
- annotation.</div>
-</td>
-</tr>
-<tr id="i2" class="altColor">
 <td class="colFirst"><code><a href="../../../com/google/errorprone/SuppressionInfo.SuppressedState.html" title="enum in com.google.errorprone">SuppressionInfo.SuppressedState</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../com/google/errorprone/SuppressionInfo.html#suppressedState-com.google.errorprone.matchers.Suppressible-boolean-">suppressedState</a></span>(<a href="../../../com/google/errorprone/matchers/Suppressible.html" title="interface in com.google.errorprone.matchers">Suppressible</a>&nbsp;suppressible,
                boolean&nbsp;suppressedInGeneratedCode)</code>
@@ -199,7 +191,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
  object.</div>
 </td>
 </tr>
-<tr id="i3" class="rowColor">
+<tr id="i2" class="altColor">
 <td class="colFirst"><code><a href="../../../com/google/errorprone/SuppressionInfo.html" title="class in com.google.errorprone">SuppressionInfo</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../com/google/errorprone/SuppressionInfo.html#withExtendedSuppressions-com.sun.tools.javac.code.Symbol-com.google.errorprone.VisitorState-java.util.Set-">withExtendedSuppressions</a></span>(com.sun.tools.javac.code.Symbol&nbsp;sym,
                         <a href="../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
@@ -263,18 +255,6 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <dd><code>suppressedInGeneratedCode</code> - true if this checker instance should be considered suppressed
      if the signals in this object say we're in generated code.</dd>
 </dl>
-</li>
-</ul>
-<a name="isNameSuppressed-java.lang.String-">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>isNameSuppressed</h4>
-<pre>public&nbsp;boolean&nbsp;isNameSuppressed(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;name)</pre>
-<div class="block">Returns true if <code>name</code> is a suppressed name according to the suppression signals in this
- object (namely, is a member of previously-seen <code>SuppressWarnings</code> or <code>SuppressLint</code>
- annotation.</div>
 </li>
 </ul>
 <a name="forCompilationUnit-com.sun.source.tree.CompilationUnitTree-com.google.errorprone.VisitorState-">

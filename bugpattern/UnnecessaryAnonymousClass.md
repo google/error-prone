@@ -1,6 +1,6 @@
 ---
-title: UnnecessaryLambda
-summary: Returning a lambda from a helper method or saving it in a constant is unnecessary; prefer to implement the functional interface method directly and use a method reference instead.
+title: UnnecessaryAnonymousClass
+summary: Implementing a functional interface is unnecessary; prefer to implement the functional interface method directly and use a method reference instead.
 layout: bugpattern
 tags: ''
 severity: WARNING
@@ -13,8 +13,8 @@ To make changes, edit the @BugPattern annotation or the explanation in docs/bugp
 -->
 
 ## The problem
-Prefer method references to constant lambda expressions, or to a helper method
-that does nothing but return a lambda.
+Prefer method references to anonymous classes that implement functional
+interfaces.
 
 That is, prefer this:
 
@@ -32,7 +32,12 @@ to this:
 
 ```java
 private static final Function<Foo, Bar> GET_BAR_FUNCTION =
-    foo -> BarService.lookupBar(foo, defaultCredentials());
+    new Function<Foo, Bar>() {
+      @Override
+      public Bar apply(Foo foo) {
+        return BarService.lookupBar(foo, defaultCredentials());
+      }
+    };
 
 ...
 
@@ -53,15 +58,14 @@ Be aware that this change is not purely syntactic: it affects the semantics of
 your program in some small ways. In particular, evaluating the same method
 reference twice is not guaranteed to return an identical object.
 
-This means that, first, inlining the reference instead of storing a lambda may
+This means that, first, inlining the reference instead of using a constant may
 cause additional memory allocations - usually this very slight performance cost
 is worth the improved readability, but use your judgment if the performance
 matters to you.
 
-Secondly, if the correctness of your program depends on reference equality of
-your lambda, inlining it may break you. Ideally, you should *not* depend on
-reference equality for a lambda, but if you are doing so, consider not making
-this change.
+Secondly, if the correctness of your program depends on reference equality,
+inlining the method reference may break you. Ideally, you should *not* depend on
+reference equality, but if you are doing so, consider not making this change.
 
 ## Suppression
-Suppress false positives by adding the suppression annotation `@SuppressWarnings("UnnecessaryLambda")` to the enclosing element.
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("UnnecessaryAnonymousClass")` to the enclosing element.

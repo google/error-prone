@@ -766,6 +766,9 @@ This annotation is missing required modifiers as specified by its @RequiredModif
 __[RxReturnValueIgnored](bugpattern/RxReturnValueIgnored)__<br>
 Returned Rx objects must be checked. Ignoring a returned Rx value means it is never scheduled for execution
 
+__[SameNameButDifferent](bugpattern/SameNameButDifferent)__<br>
+This type name shadows another in a way that may be confusing.
+
 __[ShortCircuitBoolean](bugpattern/ShortCircuitBoolean)__<br>
 Prefer the short-circuiting boolean operators &amp;&amp; and || to &amp; and |.
 
@@ -831,6 +834,9 @@ Avoid hash-based containers of java.net.URL--the containers rely on equals() and
 
 __[UndefinedEquals](bugpattern/UndefinedEquals)__<br>
 This type is not guaranteed to implement a useful #equals method.
+
+__[UnnecessaryAnonymousClass](bugpattern/UnnecessaryAnonymousClass)__<br>
+Implementing a functional interface is unnecessary; prefer to implement the functional interface method directly and use a method reference instead.
 
 __[UnnecessaryLambda](bugpattern/UnnecessaryLambda)__<br>
 Returning a lambda from a helper method or saving it in a constant is unnecessary; prefer to implement the functional interface method directly and use a method reference instead.
@@ -978,7 +984,7 @@ __[ConstructorLeaksThis](bugpattern/ConstructorLeaksThis)__<br>
 Constructors should not pass the &#39;this&#39; reference out in method invocations, since the object may not be fully constructed.
 
 __[EmptyBlockTag](bugpattern/EmptyBlockTag)__<br>
-A block tag (@param, @return, @throws, @deprecated) has an empty description.
+A block tag (@param, @return, @throws, @deprecated) has an empty description. Block tags without descriptions don&#39;t add much value for future readers of the code; consider removing the tag entirely or adding a description.
 
 __[EmptyTopLevelDeclaration](bugpattern/EmptyTopLevelDeclaration)__<br>
 Empty top-level type declaration
