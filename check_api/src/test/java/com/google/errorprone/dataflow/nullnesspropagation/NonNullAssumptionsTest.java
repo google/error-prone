@@ -51,7 +51,7 @@ public class NonNullAssumptionsTest {
         if (Modifier.isFinal(field.getModifiers()) && Modifier.isStatic(field.getModifiers())) {
           ++found;
           field.setAccessible(true);
-          assertThat(field.get(null)).named(field.toString()).isNotNull();
+          assertWithMessage(field.toString()).that(field.get(null)).isNotNull();
         }
       }
       assertWithMessage(classname).that(found).isGreaterThan(0);

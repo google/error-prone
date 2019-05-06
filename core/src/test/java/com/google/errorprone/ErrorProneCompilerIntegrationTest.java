@@ -526,7 +526,7 @@ public class ErrorProneCompilerIntegrationTest {
                         "    return;",
                         "  }",
                         "}")));
-    assertThat(exitCode).named(outputStream.toString()).isEqualTo(Result.ERROR);
+    assertWithMessage(outputStream.toString()).that(exitCode).isEqualTo(Result.ERROR);
     assertThat(diagnosticHelper.getDiagnostics()).hasSize(1);
     Diagnostic<? extends JavaFileObject> diag =
         Iterables.getOnlyElement(diagnosticHelper.getDiagnostics());
@@ -556,7 +556,7 @@ public class ErrorProneCompilerIntegrationTest {
             new String[] {"-XDcompilePolicy=byfile"},
             Arrays.asList(compiler.fileManager().forSourceLines("Test.java", "class Test {}")));
     outputStream.flush();
-    assertThat(exitCode).named(outputStream.toString()).isEqualTo(Result.OK);
+    assertWithMessage(outputStream.toString()).that(exitCode).isEqualTo(Result.OK);
   }
 
   @Test
@@ -566,7 +566,7 @@ public class ErrorProneCompilerIntegrationTest {
             new String[] {"-XDcompilePolicy=simple"},
             Arrays.asList(compiler.fileManager().forSourceLines("Test.java", "class Test {}")));
     outputStream.flush();
-    assertThat(exitCode).named(outputStream.toString()).isEqualTo(Result.OK);
+    assertWithMessage(outputStream.toString()).that(exitCode).isEqualTo(Result.OK);
   }
 
   @BugPattern(
