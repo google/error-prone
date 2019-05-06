@@ -134,6 +134,7 @@ public final class WellKnownMutability implements ThreadSafety.KnownTypes {
         .add("com.google.protobuf.Descriptors$EnumValueDescriptor")
         .add("com.google.protobuf.Descriptors$FieldDescriptor")
         .add("com.google.protobuf.Descriptors$FileDescriptor")
+        .add("com.google.protobuf.Descriptors$OneofDescriptor")
         .add("com.google.protobuf.Descriptors$ServiceDescriptor")
         .add("com.google.protobuf.Extension")
         .add("com.google.protobuf.ExtensionRegistry$ExtensionInfo")
