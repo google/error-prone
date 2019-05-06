@@ -15,7 +15,7 @@
  */
 package com.google.errorprone.bugpatterns;
 
-import static com.google.common.truth.Truth.assertThat;
+import static com.google.common.truth.Truth.assertWithMessage;
 import static com.google.errorprone.bugpatterns.TypeParameterNaming.TypeParameterNamingClassification.CLASS_NAME_WITH_T;
 import static com.google.errorprone.bugpatterns.TypeParameterNaming.TypeParameterNamingClassification.LETTER_WITH_MAYBE_NUMERAL;
 import static com.google.errorprone.bugpatterns.TypeParameterNaming.TypeParameterNamingClassification.NON_CLASS_NAME_WITH_T_SUFFIX;
@@ -313,6 +313,6 @@ public class TypeParameterNamingTest {
   }
 
   private static Subject<?, TypeParameterNamingClassification> assertKindOfName(String s) {
-    return assertThat(TypeParameterNamingClassification.classify(s)).named(s);
+    return assertWithMessage(s).that(TypeParameterNamingClassification.classify(s));
   }
 }

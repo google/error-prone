@@ -19,6 +19,7 @@ package com.google.errorprone;
 import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.common.collect.MoreCollectors.onlyElement;
 import static com.google.common.truth.Truth.assertThat;
+import static com.google.common.truth.Truth.assertWithMessage;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Locale.ENGLISH;
 import static org.junit.Assert.assertThrows;
@@ -146,8 +147,8 @@ public class ErrorProneJavacPluginTest {
                     "-XDcompilePolicy=byfile"),
                 ImmutableList.of(),
                 fileManager.getJavaFileObjects(fileA, fileB));
-    assertThat(task.call())
-        .named(Joiner.on('\n').join(diagnosticCollector.getDiagnostics()))
+    assertWithMessage(Joiner.on('\n').join(diagnosticCollector.getDiagnostics()))
+        .that(task.call())
         .isTrue();
     assertThat(Files.readAllLines(fileA, UTF_8))
         .containsExactly(
@@ -205,8 +206,8 @@ public class ErrorProneJavacPluginTest {
                     "-XDcompilePolicy=byfile"),
                 ImmutableList.of(),
                 fileManager.getJavaFileObjects(fileA, fileB));
-    assertThat(task.call())
-        .named(Joiner.on('\n').join(diagnosticCollector.getDiagnostics()))
+    assertWithMessage(Joiner.on('\n').join(diagnosticCollector.getDiagnostics()))
+        .that(task.call())
         .isTrue();
     assertThat(
             Files.readAllLines(patchFile, UTF_8).stream()
