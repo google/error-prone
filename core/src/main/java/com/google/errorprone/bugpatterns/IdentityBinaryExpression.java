@@ -109,10 +109,12 @@ public class IdentityBinaryExpression extends BugChecker implements BinaryTreeMa
       return NO_MATCH;
     }
     switch (tree.getKind()) {
-      case EQUAL_TO:
+      case NOT_EQUAL_TO:
+        // X != X is only true when X is NaN, so suggest isNaN(X)
         replacement = isNanReplacement(tree, state).orElse(replacement);
         break;
-      case NOT_EQUAL_TO:
+      case EQUAL_TO:
+        // X == X is true unless X is NaN, so suggest !isNaN(X)
         replacement = isNanReplacement(tree, state).map(r -> "!" + r).orElse(replacement);
         break;
       default: // fall out
