@@ -633,24 +633,26 @@ public class ScannerSupplierTest {
 
   private static class ScannerSupplierSubject
       extends Subject<ScannerSupplierSubject, ScannerSupplier> {
+    private final ScannerSupplier actual;
+
     ScannerSupplierSubject(FailureMetadata failureMetadata, ScannerSupplier scannerSupplier) {
       super(failureMetadata, scannerSupplier);
+      this.actual = scannerSupplier;
     }
 
     final void hasSeverities(Map<String, SeverityLevel> severities) {
-      check("severities()").that(actual().severities()).containsExactlyEntriesIn(severities);
+      check("severities()").that(actual.severities()).containsExactlyEntriesIn(severities);
     }
 
     @SafeVarargs
     final void hasEnabledChecks(Class<? extends BugChecker>... bugCheckers) {
       check("getEnabledChecks()")
-          .that(actual().getEnabledChecks())
+          .that(actual.getEnabledChecks())
           .containsExactlyElementsIn(getSuppliers(bugCheckers));
     }
 
     final MapSubject flagsMap() {
-      return check("getFlags().getFlagsMap()")
-          .that(actual().getFlags().getFlagsMap());
+      return check("getFlags().getFlagsMap()").that(actual.getFlags().getFlagsMap());
     }
   }
 
