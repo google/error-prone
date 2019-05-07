@@ -16,6 +16,7 @@
 
 package com.google.errorprone.bugpatterns;
 
+
 import com.google.errorprone.CompilationTestHelper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -163,21 +164,21 @@ public class IdentityBinaryExpressionTest {
             "class Test {",
             "  boolean f(float a, Float b, double c, Double d) {",
             "    boolean r = false;",
-            "    // BUG: Diagnostic contains: equivalent to `Float.isNaN(a)`",
-            "    r |= a == a;",
             "    // BUG: Diagnostic contains: equivalent to `!Float.isNaN(a)`",
+            "    r |= a == a;",
+            "    // BUG: Diagnostic contains: equivalent to `Float.isNaN(a)`",
             "    r |= a != a;",
-            "    // BUG: Diagnostic contains: equivalent to `Float.isNaN(b)`",
-            "    r |= b == b;",
             "    // BUG: Diagnostic contains: equivalent to `!Float.isNaN(b)`",
+            "    r |= b == b;",
+            "    // BUG: Diagnostic contains: equivalent to `Float.isNaN(b)`",
             "    r |= b != b;",
-            "    // BUG: Diagnostic contains: equivalent to `Double.isNaN(c)`",
-            "    r |= c == c;",
             "    // BUG: Diagnostic contains: equivalent to `!Double.isNaN(c)`",
+            "    r |= c == c;",
+            "    // BUG: Diagnostic contains: equivalent to `Double.isNaN(c)`",
             "    r |= c != c;",
-            "    // BUG: Diagnostic contains: equivalent to `Double.isNaN(d)`",
-            "    r |= d == d;",
             "    // BUG: Diagnostic contains: equivalent to `!Double.isNaN(d)`",
+            "    r |= d == d;",
+            "    // BUG: Diagnostic contains: equivalent to `Double.isNaN(d)`",
             "    r |= d != d;",
             "    return r;",
             "  }",
