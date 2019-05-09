@@ -88,6 +88,7 @@ import java.util.Optional;
 import java.util.Set;
 import javax.annotation.Nullable;
 import javax.lang.model.element.VariableElement;
+import javax.lang.model.type.TypeVariable;
 import org.checkerframework.dataflow.analysis.Analysis;
 import org.checkerframework.dataflow.cfg.CFGBuilder;
 import org.checkerframework.dataflow.cfg.ControlFlowGraph;
@@ -758,8 +759,15 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
     }
 
     Optional<Nullness> declaredNullness = NullnessAnnotations.fromAnnotationsOn(accessed.symbol);
-    return declaredNullness.orElseGet(
-        () -> NullnessAnnotations.getUpperBound(accessed.symbol.type).orElse(defaultAssumption));
+    if (!declaredNullness.isPresent()) {
+      Type ftype = accessed.symbol.type;
+      if (ftype instanceof TypeVariable) {
+        declaredNullness = NullnessAnnotations.getUpperBound((TypeVariable) ftype);
+      } else {
+        declaredNullness = NullnessAnnotations.fromDefaultAnnotations(accessed.symbol);
+      }
+    }
+    return declaredNullness.orElse(defaultAssumption);
   }
 
   private Nullness returnValueNullness(MethodInvocationNode node, @Nullable ClassAndMethod callee) {
