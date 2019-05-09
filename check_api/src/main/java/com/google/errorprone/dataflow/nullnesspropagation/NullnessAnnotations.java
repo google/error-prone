@@ -20,7 +20,6 @@ import static javax.lang.model.element.ElementKind.TYPE_PARAMETER;
 
 import com.google.errorprone.util.MoreAnnotations;
 import com.sun.tools.javac.code.Symbol;
-import com.sun.tools.javac.code.Type;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -33,7 +32,6 @@ import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Parameterizable;
 import javax.lang.model.element.TypeParameterElement;
 import javax.lang.model.type.IntersectionType;
-import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.type.TypeVariable;
 
@@ -58,6 +56,7 @@ public class NullnessAnnotations {
     if (sym != null) {
       return fromAnnotationStream(
           MoreAnnotations.getDeclarationAndTypeAttributes(sym).map(Object::toString));
+
     }
     return Optional.empty();
   }
@@ -69,14 +68,32 @@ public class NullnessAnnotations {
     return Optional.empty();
   }
 
-  public static Optional<Nullness> getUpperBound(@Nullable Type type) {
-    if (type != null && type.getKind() == TypeKind.TYPEVAR) {
-      return getUpperBound((TypeVariable) type);
+  /**
+   * Walks the syntactically enclosing elements of the given element until it finds a defaulting
+   * annotation.
+   */
+  // Note this may be a good candidate for caching
+  public static Optional<Nullness> fromDefaultAnnotations(@Nullable Element sym) {
+    while (sym != null) {
+      // Just look through declaration annotations here for simplicitly; default annotations aren't
+      // type annotations.  For now we're just using a hard-coded simple name.
+      // TODO(b/121272440): Look for existing default annotations
+      if (sym.getAnnotationMirrors().stream()
+          .map(Object::toString)
+          .anyMatch(it -> it.endsWith(".DefaultNotNull"))) {
+        return Optional.of(Nullness.NONNULL);
+      }
+      sym = sym.getEnclosingElement();
     }
     return Optional.empty();
   }
 
-  private static Optional<Nullness> getUpperBound(TypeVariable typeVar) {
+  /**
+   * Returns any declared or implied bound for the given type variable, meaning this returns any
+   * annotation on the given type variable and otherwise returns {@link #fromDefaultAnnotations} to
+   * find any default in scope of the given type variable.
+   */
+  public static Optional<Nullness> getUpperBound(TypeVariable typeVar) {
     // Annotations on bounds at type variable declaration
     Optional<Nullness> result;
     if (typeVar.getUpperBound() instanceof IntersectionType) {
@@ -103,17 +120,21 @@ public class NullnessAnnotations {
       if (genericElt.getKind().isClass()
           || genericElt.getKind().isInterface()
           || genericElt.getKind() == ElementKind.METHOD) {
-        return ((Parameterizable) genericElt)
-            .getTypeParameters().stream()
-                .filter(
-                    typeParam ->
-                        typeParam.getSimpleName().equals(typeVar.asElement().getSimpleName()))
-                .findFirst()
-                // Annotations at class/interface/method type variable declaration
-                .flatMap(decl -> fromAnnotationList(decl.getAnnotationMirrors()));
+        result =
+            ((Parameterizable) genericElt)
+                .getTypeParameters().stream()
+                    .filter(
+                        typeParam ->
+                            typeParam.getSimpleName().equals(typeVar.asElement().getSimpleName()))
+                    .findFirst()
+                    // Annotations at class/interface/method type variable declaration
+                    .flatMap(decl -> fromAnnotationList(decl.getAnnotationMirrors()));
       }
     }
-    return Optional.empty();
+
+    // If the type variable doesn't have an explicit bound, see if its declaration is in the scope
+    // of a default and use that as the bound.
+    return result.isPresent() ? result : fromDefaultAnnotations(typeVar.asElement());
   }
 
   private static Optional<Nullness> fromAnnotationList(List<?> annotations) {

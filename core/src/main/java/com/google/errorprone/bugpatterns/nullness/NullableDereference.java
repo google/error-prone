@@ -41,9 +41,11 @@ import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.tree.JCTree.JCExpression;
 import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Function;
 import javax.annotation.Nullable;
 import javax.lang.model.type.TypeKind;
+import javax.lang.model.type.TypeVariable;
 
 /**
  * Warns when a dereference has a possibly-null receiver.
@@ -130,9 +132,7 @@ public class NullableDereference extends BugChecker
       // TODO(b/121273225): check type parameters, e.g., calls to void m(List<@NonNull String> l)
       // TODO(b/121203670): Recognize @ParametersAreNonnullByDefault etc.
       // Ignore unannotated and @Nullable parameters
-      if (NullnessAnnotations.fromAnnotationsOn(param)
-              .orElseGet(() -> NullnessAnnotations.getUpperBound(param.type).orElse(null))
-          != Nullness.NONNULL) {
+      if (nullnessFromAnnotations(param).orElse(null) != Nullness.NONNULL) {
         continue;
       }
       ExpressionTree arg = arguments.get(i);
@@ -171,5 +171,17 @@ public class NullableDereference extends BugChecker
         return buildDescription(tree).setMessage(describer.apply("possibly")).build();
     }
     throw new AssertionError("Unhandled: " + nullness);
+  }
+
+  private static Optional<Nullness> nullnessFromAnnotations(VarSymbol param) {
+    Optional<Nullness> result = NullnessAnnotations.fromAnnotationsOn(param);
+    if (result.isPresent()) {
+      return result;
+    }
+    if (param.type instanceof TypeVariable) {
+      return NullnessAnnotations.getUpperBound((TypeVariable) param.type);
+    } else {
+      return NullnessAnnotations.fromDefaultAnnotations(param);
+    }
   }
 }

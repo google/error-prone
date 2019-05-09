@@ -66,6 +66,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
 import javax.annotation.Nullable;
+import javax.lang.model.type.TypeVariable;
 
 /**
  * Eagerly traverse one {@code MethodTree} at a time and accumulate constraints between nullness
@@ -142,7 +143,6 @@ public class NullnessQualifierInference extends TreeScanner<Void, Void> {
       @Nullable Type declaredType,
       Tree sourceTree,
       ArrayDeque<Integer> argSelector) {
-    checkArgument(decl == null || argSelector.isEmpty());
     List<Type> inferredTypeArguments = inferredType.getTypeArguments();
     List<Type> declaredTypeArguments =
         declaredType != null ? declaredType.getTypeArguments() : ImmutableList.of();
@@ -151,14 +151,15 @@ public class NullnessQualifierInference extends TreeScanner<Void, Void> {
       argSelector.push(i);
       generateConstraintsFromAnnotations(
           inferredTypeArguments.get(i),
-          /*decl=*/ null,
+          decl,
           i < declaredTypeArguments.size() ? declaredTypeArguments.get(i) : null,
           sourceTree,
           argSelector);
       argSelector.pop();
     }
 
-    Optional<Nullness> fromAnnotations = extractExplicitNullness(declaredType, decl);
+    Optional<Nullness> fromAnnotations =
+        extractExplicitNullness(declaredType, argSelector.isEmpty() ? decl : null);
     if (!fromAnnotations.isPresent()) {
       // Check declared type before inferred type so that type annotations on the declaration take
       // precedence (just like declaration annotations) over annotations on the inferred type.
@@ -167,9 +168,16 @@ public class NullnessQualifierInference extends TreeScanner<Void, Void> {
       fromAnnotations = NullnessAnnotations.fromAnnotationsOn(inferredType);
     }
     if (!fromAnnotations.isPresent()) {
-      // Check bounds last so explicit annotations take precedence. Even for bounds we still use
-      // equality constraint below since we have to assume the bound as the "worst" case.
-      fromAnnotations = NullnessAnnotations.getUpperBound(declaredType);
+      if (declaredType instanceof TypeVariable) {
+        // Check bounds second so explicit annotations take precedence. Even for bounds we still use
+        // equality constraint below since we have to assume the bound as the "worst" case.
+        fromAnnotations = NullnessAnnotations.getUpperBound((TypeVariable) declaredType);
+      } else {
+        // Look for a default annotation in scope of either the symbol we're looking at or, if this
+        // is a type variable, the type variable declaration's scope, which is effectively the type
+        // variable's bound
+        fromAnnotations = NullnessAnnotations.fromDefaultAnnotations(decl);
+      }
     }
     // Use equality constraints even for top-level type, since we want to "trust" the annotation
     fromAnnotations
@@ -423,32 +431,6 @@ public class NullnessQualifierInference extends TreeScanner<Void, Void> {
     consumer.accept(TypeArgInferenceVar.create(ImmutableList.copyOf(partialSelector), sourceNode));
   }
 
-  private static void findUnannotatedTypeVarRefs(
-      TypeVariableSymbol typeVar,
-      Tree sourceNode,
-      Type type,
-      @Nullable Symbol decl,
-      ArrayDeque<Integer> partialSelector,
-      ImmutableSet.Builder<InferenceVariable> resultBuilder) {
-    checkArgument(decl == null || partialSelector.isEmpty());
-    List<Type> typeArguments = type.getTypeArguments();
-    for (int i = 0; i < typeArguments.size(); i++) {
-      partialSelector.push(i);
-      findUnannotatedTypeVarRefs(
-          typeVar,
-          sourceNode,
-          typeArguments.get(i),
-          /*decl=*/ null,
-          partialSelector,
-          resultBuilder);
-      partialSelector.pop();
-    }
-    if (type.tsym.equals(typeVar) && !extractExplicitNullness(type, decl).isPresent()) {
-      resultBuilder.add(
-          TypeArgInferenceVar.create(ImmutableList.copyOf(partialSelector), sourceNode));
-    }
-  }
-
   private static Optional<Nullness> extractExplicitNullness(
       @Nullable Type type, @Nullable Symbol symbol) {
     if (symbol != null) {
@@ -494,11 +476,10 @@ public class NullnessQualifierInference extends TreeScanner<Void, Void> {
       ExpressionTree rVal,
       @Nullable Tree lVal,
       ArrayDeque<Integer> argSelector) {
-    checkArgument(decl == null || argSelector.isEmpty());
     List<Type> typeArguments = lType.getTypeArguments();
     for (int i = 0; i < typeArguments.size(); i++) {
       argSelector.push(i);
-      generateConstraintsForWrite(typeArguments.get(i), /*decl=*/ null, rVal, lVal, argSelector);
+      generateConstraintsForWrite(typeArguments.get(i), decl, rVal, lVal, argSelector);
       argSelector.pop();
     }
 
@@ -507,10 +488,15 @@ public class NullnessQualifierInference extends TreeScanner<Void, Void> {
     // If there is an explicit annotation, trust it and constrain the corresponding type arg
     // inference variable to be equal to that proper inference variable.
     boolean isBound = false;
-    Optional<Nullness> fromAnnotations = extractExplicitNullness(lType, decl);
+    Optional<Nullness> fromAnnotations =
+        extractExplicitNullness(lType, argSelector.isEmpty() ? decl : null);
     if (!fromAnnotations.isPresent()) {
-      fromAnnotations = NullnessAnnotations.getUpperBound(lType);
-      isBound = true;
+      if (lType instanceof TypeVariable) {
+        fromAnnotations = NullnessAnnotations.getUpperBound((TypeVariable) lType);
+        isBound = true;
+      } else {
+        fromAnnotations = NullnessAnnotations.fromDefaultAnnotations(decl);
+      }
     }
     // Top-level target types implicitly only constrain from above: for instance, a method
     // parameter annotated @Nullable can be called with a non-null argument just fine. Same
