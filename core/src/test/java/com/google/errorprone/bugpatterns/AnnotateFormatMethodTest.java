@@ -16,8 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import com.google.errorprone.BugCheckerRefactoringTestHelper;
-import com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode;
 import com.google.errorprone.CompilationTestHelper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -45,29 +43,6 @@ public final class AnnotateFormatMethodTest {
             "  }",
             "}")
         .doTest();
-  }
-
-  @Test
-  public void refactoring() {
-    BugCheckerRefactoringTestHelper.newInstance(new AnnotateFormatMethod(), getClass())
-        .addInputLines(
-            "AnnotateFormatMethodPositiveCases.java",
-            "class AnnotateFormatMethodPositiveCases {",
-            "  String formatMe(String formatString, Object... args) {",
-            "    return String.format(formatString, args);",
-            "  }",
-            "}")
-        .addOutputLines(
-            "AnnotateFormatMethodPositiveCases_expected.java",
-            "import com.google.errorprone.annotations.FormatMethod;",
-            "import com.google.errorprone.annotations.FormatString;",
-            "class AnnotateFormatMethodPositiveCases {",
-            "  @FormatMethod",
-            "  String formatMe(@FormatString String formatString, Object... args) {",
-            "    return String.format(formatString, args);",
-            "  }",
-            "}")
-        .doTest(TestMode.AST_MATCH);
   }
 
   @Test
