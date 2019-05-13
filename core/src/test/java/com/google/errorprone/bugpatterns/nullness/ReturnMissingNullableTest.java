@@ -355,6 +355,28 @@ public class ReturnMissingNullableTest {
   }
 
   @Test
+  public void testNegativeCases_checkNotNullNullableInput() {
+    createCompilationTestHelper()
+        .addSourceLines(
+            "com/google/errorprone/bugpatterns/nullness/NullReturnTest.java",
+            "package com.google.errorprone.bugpatterns.nullness;",
+            "import javax.annotation.Nullable;",
+            "public class NullReturnTest {",
+            "  @Nullable String message;",
+            "  public String getMessage() {",
+            "    return checkNotNull(message);",
+            "  }",
+            // One style of "check not null" method, whose type argument is unannotated, and accepts
+            // a @Nullable input.
+            "  private static <T> T checkNotNull(@Nullable T obj) {",
+            "    if (obj==null) throw new NullPointerException();",
+            "    return obj;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void testNegativeCases_nonNullArrayWithNullableElements() {
     createCompilationTestHelper()
         .addSourceLines(
