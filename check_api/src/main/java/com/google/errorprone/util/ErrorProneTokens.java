@@ -31,11 +31,16 @@ import com.sun.tools.javac.util.Position.LineMap;
 
 /** A utility for tokenizing and preserving comments. */
 public class ErrorProneTokens {
-
+  private final int offset;
   private final CommentSavingTokenizer commentSavingTokenizer;
   private final ScannerFactory scannerFactory;
 
   public ErrorProneTokens(String source, Context context) {
+    this(source, 0, context);
+  }
+
+  public ErrorProneTokens(String source, int offset, Context context) {
+    this.offset = offset;
     scannerFactory = ScannerFactory.instance(context);
     char[] buffer = source == null ? new char[] {} : source.toCharArray();
     commentSavingTokenizer = new CommentSavingTokenizer(scannerFactory, buffer, buffer.length);
@@ -50,14 +55,23 @@ public class ErrorProneTokens {
     ImmutableList.Builder<ErrorProneToken> tokens = ImmutableList.builder();
     do {
       scanner.nextToken();
-      tokens.add(new ErrorProneToken(scanner.token()));
+      tokens.add(new ErrorProneToken(scanner.token(), offset));
     } while (scanner.token().kind != TokenKind.EOF);
     return tokens.build();
   }
 
   /** Returns the tokens for the given source text, including comments. */
   public static ImmutableList<ErrorProneToken> getTokens(String source, Context context) {
-    return new ErrorProneTokens(source, context).getTokens();
+    return getTokens(source, 0, context);
+  }
+
+  /**
+   * Returns the tokens for the given source text, including comments, indicating the offset of the
+   * source within the overall file.
+   */
+  public static ImmutableList<ErrorProneToken> getTokens(
+      String source, int offset, Context context) {
+    return new ErrorProneTokens(source, offset, context).getTokens();
   }
 
   /** A {@link JavaTokenizer} that saves comments. */
