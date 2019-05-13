@@ -81,34 +81,4 @@ public abstract class Commented<T extends Tree> {
     abstract Commented<T> build();
   }
 
-  private static final class OffsetComment implements Comment {
-
-    private final Comment wrapped;
-    private final int offset;
-
-    private OffsetComment(Comment wrapped, int offset) {
-      this.wrapped = wrapped;
-      this.offset = offset;
-    }
-
-    @Override
-    public String getText() {
-      return wrapped.getText();
-    }
-
-    @Override
-    public int getSourcePos(int i) {
-      return wrapped.getSourcePos(i) + offset;
-    }
-
-    @Override
-    public CommentStyle getStyle() {
-      return wrapped.getStyle();
-    }
-
-    @Override
-    public boolean isDeprecated() {
-      return false;
-    }
-  }
 }
