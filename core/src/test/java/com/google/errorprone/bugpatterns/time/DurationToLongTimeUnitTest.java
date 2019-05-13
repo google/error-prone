@@ -282,4 +282,23 @@ public class DurationToLongTimeUnitTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void intTimeUnitParameters() {
+    helper
+        .addSourceLines(
+            "TestClass.java",
+            "import java.time.Duration;",
+            "import java.util.concurrent.TimeUnit;",
+            "public class TestClass {",
+            "  void javaTime(Duration d) {",
+            // TODO(b/132492921) "    // BUG: Diagnostic contains: DurationToLongTimeUnit",
+            "    myMethod((int) d.toHours(), TimeUnit.SECONDS);",
+            "  }",
+            "  void myMethod(int value, TimeUnit unit) {",
+            "    // no op",
+            "  }",
+            "}")
+        .doTest();
+  }
 }
