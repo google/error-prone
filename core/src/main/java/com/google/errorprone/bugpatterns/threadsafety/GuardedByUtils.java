@@ -20,11 +20,10 @@ import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 
 import com.google.auto.value.AutoValue;
-import com.google.common.base.MoreObjects;
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.VisitorState;
+import com.google.errorprone.util.MoreAnnotations;
 import com.sun.source.tree.Tree;
-import com.sun.tools.javac.code.Attribute;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.parser.JavacParser;
 import com.sun.tools.javac.parser.ParserFactory;
@@ -32,16 +31,13 @@ import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.util.Context;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Stream;
-import javax.lang.model.element.AnnotationValue;
-import javax.lang.model.util.SimpleAnnotationValueVisitor8;
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
 public class GuardedByUtils {
   public static ImmutableSet<String> getGuardValues(Symbol sym) {
-    return getAnnotationValueAsStrings(sym, "GuardedBy");
+    return getAnnotationValueAsStrings(sym);
   }
 
   static ImmutableSet<String> getGuardValues(Tree tree, VisitorState state) {
@@ -49,44 +45,21 @@ public class GuardedByUtils {
     if (sym == null) {
       return null;
     }
-    return getAnnotationValueAsStrings(sym, "GuardedBy");
+    return getAnnotationValueAsStrings(sym);
   }
 
-  private static ImmutableSet<String> getAnnotationValueAsStrings(Symbol sym, String guardedBy) {
+  private static ImmutableSet<String> getAnnotationValueAsStrings(Symbol sym) {
     return sym.getRawAttributes().stream()
-        .filter(a -> a.getAnnotationType().asElement().getSimpleName().contentEquals(guardedBy))
+        .filter(a -> a.getAnnotationType().asElement().getSimpleName().contentEquals("GuardedBy"))
         .flatMap(
             a ->
-                // TODO(cushon): after the next release:
-                // MoreAnnotations.getValue(a, "value").map(MoreAnnotations::asStrings)
-                a.getElementValues().entrySet().stream()
-                    .filter(e -> e.getKey().getSimpleName().contentEquals("value"))
-                    .map(Map.Entry::getValue)
-                    .findFirst()
-                    .map(GuardedByUtils::asStrings)
+                MoreAnnotations.getValue(a, "value")
+                    .map(MoreAnnotations::asStrings)
                     .orElse(Stream.empty()))
         .collect(toImmutableSet());
   }
 
-  private static Stream<String> asStrings(Attribute v) {
-    return MoreObjects.firstNonNull(
-        v.accept(
-            new SimpleAnnotationValueVisitor8<Stream<String>, Void>() {
-              @Override
-              public Stream<String> visitString(String s, Void aVoid) {
-                return Stream.of(s);
-              }
-
-              @Override
-              public Stream<String> visitArray(List<? extends AnnotationValue> list, Void aVoid) {
-                return list.stream().flatMap(a -> a.accept(this, null)).filter(x -> x != null);
-              }
-            },
-            null),
-        Stream.empty());
-  }
-
-  public static JCTree.JCExpression parseString(String guardedByString, Context context) {
+  static JCTree.JCExpression parseString(String guardedByString, Context context) {
     JavacParser parser =
         ParserFactory.instance(context)
             .newParser(
