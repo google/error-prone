@@ -18,9 +18,6 @@ package com.google.errorprone;
 
 import com.google.common.base.Optional;
 import com.google.common.base.Splitter;
-import com.google.common.cache.CacheBuilder;
-import com.google.common.cache.CacheLoader;
-import com.google.common.cache.LoadingCache;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMultiset;
@@ -54,9 +51,9 @@ import com.sun.tools.javac.util.Name;
 import com.sun.tools.javac.util.Names;
 import com.sun.tools.javac.util.Options;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ExecutionException;
 import javax.annotation.Nullable;
 
 /** @author alexeagle@google.com (Alex Eagle) */
@@ -66,7 +63,7 @@ public class VisitorState {
   private final StatisticsCollector statisticsCollector;
   private final Map<String, SeverityLevel> severityMap;
   private final ErrorProneOptions errorProneOptions;
-  private final LoadingCache<String, Optional<Type>> typeCache;
+  private final Map<String, Optional<Type>> typeCache;
   private final ErrorProneTimings timings;
   public final Context context;
 
@@ -198,7 +195,7 @@ public class VisitorState {
       Map<String, SeverityLevel> severityMap,
       ErrorProneOptions errorProneOptions,
       StatisticsCollector statisticsCollector,
-      LoadingCache<String, Optional<Type>> typeCache,
+      Map<String, Optional<Type>> typeCache,
       TreePath path,
       SuppressedState suppressedState) {
     this.context = context;
@@ -213,10 +210,10 @@ public class VisitorState {
     this.typeCache =
         typeCache != null
             ? typeCache
-            : CacheBuilder.newBuilder()
-                .concurrencyLevel(1) // resolving symbols in javac is not thread-safe
-                .build(
-                    CacheLoader.from(key -> Optional.fromNullable(getTypeFromStringInternal(key))));
+            // TODO(ronshapiro): should we presize this with a reasonable size? We can check for the
+            // smallest build and see how many types are loaded and use that. Or perhaps a heuristic
+            // based on number of files?
+            : new HashMap<>();
   }
 
   public VisitorState withPath(TreePath path) {
@@ -335,11 +332,9 @@ public class VisitorState {
    */
   @Nullable
   public Type getTypeFromString(String typeStr) {
-    try {
-      return typeCache.get(typeStr).orNull();
-    } catch (ExecutionException e) {
-      return null;
-    }
+    return typeCache
+        .computeIfAbsent(typeStr, key -> Optional.fromNullable(getTypeFromStringInternal(key)))
+        .orNull();
   }
 
   @Nullable
