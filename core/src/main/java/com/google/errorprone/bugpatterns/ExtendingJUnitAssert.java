@@ -35,7 +35,6 @@ import com.sun.source.tree.Tree;
 import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.parser.Tokens.TokenKind;
-import com.sun.tools.javac.tree.JCTree;
 import java.util.List;
 
 /** @author kayco@google.com (Kayla Walker) */
@@ -77,25 +76,22 @@ public class ExtendingJUnitAssert extends BugChecker implements ClassTreeMatcher
         null);
 
     Tree extendsClause = tree.getExtendsClause();
-    int startOfClass = ((JCTree) tree).getStartPosition();
     int endOfExtendsClause = state.getEndPosition(extendsClause);
-    int extendsPosInClass = endOfExtendsClause - startOfClass;
 
-    List<ErrorProneToken> tokens = state.getTokensForNode(tree);
+    List<ErrorProneToken> tokens = state.getOffsetTokensForNode(tree);
 
-    int max = 0;
+    int startPos = 0;
     for (ErrorProneToken token : tokens) {
-      if (token.pos() > extendsPosInClass) {
+      if (token.pos() > endOfExtendsClause) {
         break;
       }
       if (token.kind() == TokenKind.EXTENDS) {
         int curr = token.pos();
-        if (curr > max) {
-          max = curr;
+        if (curr > startPos) {
+          startPos = curr;
         }
       }
     }
-    int startPos = ((JCTree) tree).getStartPosition() + max;
     return fix.replace(startPos, endOfExtendsClause, "").build();
   }
 }

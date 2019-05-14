@@ -38,7 +38,6 @@ import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.MultiMatcher;
 import com.google.errorprone.util.ASTHelpers;
 import com.google.errorprone.util.ErrorProneToken;
-import com.google.errorprone.util.ErrorProneTokens;
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.ClassTree;
@@ -106,16 +105,10 @@ public final class AssignmentToMock extends BugChecker
     }
     int startPos = ((JCTree) tree).getStartPosition();
     ImmutableList<ErrorProneToken> tokens =
-        ErrorProneTokens.getTokens(
-            state
-                .getSourceCode()
-                .subSequence(startPos, ((JCTree) tree.getInitializer()).getStartPosition())
-                .toString(),
-            state.context);
+        state.getOffsetTokens(startPos, ((JCTree) tree.getInitializer()).getStartPosition());
     for (ErrorProneToken token : tokens.reverse()) {
       if (token.kind() == TokenKind.EQ) {
-        return SuggestedFix.replace(
-            startPos + token.pos(), state.getEndPosition(tree.getInitializer()), "");
+        return SuggestedFix.replace(token.pos(), state.getEndPosition(tree.getInitializer()), "");
       }
     }
     return SuggestedFix.builder().build();

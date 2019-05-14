@@ -46,7 +46,6 @@ import com.google.errorprone.apply.SourceFile;
 import com.google.errorprone.fixes.SuggestedFix.Builder;
 import com.google.errorprone.util.ASTHelpers;
 import com.google.errorprone.util.ErrorProneToken;
-import com.google.errorprone.util.ErrorProneTokens;
 import com.google.errorprone.util.FindIdentifiers;
 import com.sun.source.doctree.DocTree;
 import com.sun.source.tree.AnnotationTree;
@@ -177,12 +176,11 @@ public class SuggestedFixes {
       for (Modifier mod : toAdd) {
         modifierPositions.put(mod, -1);
       }
-      List<ErrorProneToken> tokens = state.getTokensForNode(originalModifiers);
-      int base = ((JCTree) originalModifiers).getStartPosition();
+      List<ErrorProneToken> tokens = state.getOffsetTokensForNode(originalModifiers);
       for (ErrorProneToken tok : tokens) {
         Modifier mod = getTokModifierKind(tok);
         if (mod != null) {
-          modifierPositions.put(mod, base + tok.pos());
+          modifierPositions.put(mod, tok.pos());
         }
       }
       // walk the map of all modifiers, and accumulate a list of new modifiers to insert
@@ -216,13 +214,12 @@ public class SuggestedFixes {
         state.getEndPosition(originalModifiers) != Position.NOPOS
             ? state.getEndPosition(originalModifiers) + 1
             : ((JCTree) tree).getStartPosition();
-    int base = ((JCTree) tree).getStartPosition();
-    Optional<Integer> insert =
-        state.getTokensForNode(tree).stream()
-            .map(token -> token.pos() + base)
+    int insertPos =
+        state.getOffsetTokensForNode(tree).stream()
+            .mapToInt(ErrorProneToken::pos)
             .filter(thisPos -> thisPos >= pos)
-            .findFirst();
-    int insertPos = insert.orElse(pos); // shouldn't ever be able to get to the else
+            .findFirst()
+            .orElse(pos); // shouldn't ever be able to get to the else
     fix.replace(insertPos, insertPos, Joiner.on(' ').join(toAdd) + " ");
   }
 
@@ -241,14 +238,13 @@ public class SuggestedFixes {
   public static Optional<SuggestedFix> removeModifiers(
       ModifiersTree originalModifiers, VisitorState state, Set<Modifier> toRemove) {
     SuggestedFix.Builder fix = SuggestedFix.builder();
-    List<ErrorProneToken> tokens = state.getTokensForNode(originalModifiers);
-    int basePos = ((JCTree) originalModifiers).getStartPosition();
+    List<ErrorProneToken> tokens = state.getOffsetTokensForNode(originalModifiers);
     boolean empty = true;
     for (ErrorProneToken tok : tokens) {
       Modifier mod = getTokModifierKind(tok);
       if (toRemove.contains(mod)) {
         empty = false;
-        fix.replace(basePos + tok.pos(), basePos + tok.endPos() + 1, "");
+        fix.replace(tok.pos(), tok.endPos() + 1, "");
       }
     }
     if (empty) {
@@ -472,16 +468,10 @@ public class SuggestedFixes {
         tree.getBody() != null
             ? ((JCTree) tree.getBody()).getStartPosition()
             : state.getEndPosition(tree);
-    List<ErrorProneToken> methodTokens =
-        ErrorProneTokens.getTokens(
-            state.getSourceCode().subSequence(basePos, endPos).toString(), state.context);
+    List<ErrorProneToken> methodTokens = state.getOffsetTokens(basePos, endPos);
     for (ErrorProneToken token : methodTokens) {
       if (token.kind() == TokenKind.IDENTIFIER && token.name().equals(tree.getName())) {
-        int nameStartPosition = basePos + token.pos();
-        int nameEndPosition = basePos + token.endPos();
-        return SuggestedFix.builder()
-            .replace(nameStartPosition, nameEndPosition, replacement)
-            .build();
+        return SuggestedFix.builder().replace(token.pos(), token.endPos(), replacement).build();
       }
     }
     // Method name not found.
@@ -503,13 +493,10 @@ public class SuggestedFixes {
     } else {
       throw malformedMethodInvocationTree(tree);
     }
-    List<ErrorProneToken> tokens =
-        ErrorProneTokens.getTokens(
-            state.getSourceCode().subSequence(startPos, state.getEndPosition(tree)).toString(),
-            state.context);
+    List<ErrorProneToken> tokens = state.getOffsetTokens(startPos, state.getEndPosition(tree));
     for (ErrorProneToken token : Lists.reverse(tokens)) {
       if (token.kind() == TokenKind.IDENTIFIER && token.name().equals(identifier)) {
-        return SuggestedFix.replace(startPos + token.pos(), startPos + token.endPos(), replacement);
+        return SuggestedFix.replace(token.pos(), token.endPos(), replacement);
       }
     }
     throw malformedMethodInvocationTree(tree);
@@ -548,9 +535,9 @@ public class SuggestedFixes {
   }
 
   private static int getThrowsPosition(MethodTree tree, VisitorState state) {
-    for (ErrorProneToken token : state.getTokensForNode(tree)) {
+    for (ErrorProneToken token : state.getOffsetTokensForNode(tree)) {
       if (token.kind() == Tokens.TokenKind.THROWS) {
-        return ((JCTree) tree).getStartPosition() + token.pos();
+        return token.pos();
       }
     }
     throw new AssertionError();
@@ -1055,9 +1042,8 @@ public class SuggestedFixes {
     } else {
       startTokenization = state.getEndPosition(classTree.getModifiers());
     }
-    String source =
-        state.getSourceCode().subSequence(startTokenization, state.getEndPosition(tree)).toString();
-    ImmutableList<ErrorProneToken> tokens = ErrorProneTokens.getTokens(source, state.context);
+    ImmutableList<ErrorProneToken> tokens =
+        state.getOffsetTokens(startTokenization, state.getEndPosition(tree));
     if (previousMember == null) {
       tokens = getTokensAfterOpeningBrace(tokens);
     }
@@ -1065,29 +1051,28 @@ public class SuggestedFixes {
       return SuggestedFix.replace(tree, replacement);
     }
     if (tokens.get(0).comments().isEmpty()) {
-      return SuggestedFix.replace(
-          startTokenization + tokens.get(0).pos(), state.getEndPosition(tree), replacement);
+      return SuggestedFix.replace(tokens.get(0).pos(), state.getEndPosition(tree), replacement);
     }
     ImmutableList<Comment> comments =
         ImmutableList.sortedCopyOf(
             Comparator.<Comment>comparingInt(c -> c.getSourcePos(0)).reversed(),
             tokens.get(0).comments());
-    int startPos = ((JCTree) tree).getStartPosition() - startTokenization;
+    int startPos = ((JCTree) tree).getStartPosition();
     // This can happen for desugared expressions like `int a, b;`.
-    if (startPos < 0) {
+    if (startPos < startTokenization) {
       return SuggestedFix.builder().build();
     }
     // Delete backwards for comments which are not separated from our target by a blank line.
+    CharSequence sourceCode = state.getSourceCode();
     for (Comment comment : comments) {
       int endOfCommentPos = comment.getSourcePos(comment.getText().length() - 1);
-      String stringBetweenComments = source.substring(endOfCommentPos, startPos);
+      CharSequence stringBetweenComments = sourceCode.subSequence(endOfCommentPos, startPos);
       if (stringBetweenComments.chars().filter(c -> c == '\n').count() > 1) {
         break;
       }
       startPos = comment.getSourcePos(0);
     }
-    return SuggestedFix.replace(
-        startTokenization + startPos, state.getEndPosition(tree), replacement);
+    return SuggestedFix.replace(startPos, state.getEndPosition(tree), replacement);
   }
 
   private static ImmutableList<ErrorProneToken> getTokensAfterOpeningBrace(

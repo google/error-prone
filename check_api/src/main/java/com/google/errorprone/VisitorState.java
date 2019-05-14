@@ -21,6 +21,7 @@ import com.google.common.base.Splitter;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMultiset;
 import com.google.errorprone.BugPattern.SeverityLevel;
@@ -522,7 +523,7 @@ public class VisitorState {
    * <p>This is moderately expensive (the source of the node has to be re-lexed), so it should only
    * be used if a fix is already going to be emitted.
    */
-  public List<ErrorProneToken> getTokensForNode(Tree tree) {
+  public ImmutableList<ErrorProneToken> getTokensForNode(Tree tree) {
     return ErrorProneTokens.getTokens(getSourceForNode(tree), context);
   }
 
@@ -533,9 +534,21 @@ public class VisitorState {
    * <p>This is moderately expensive (the source of the node has to be re-lexed), so it should only
    * be used if a fix is already going to be emitted.
    */
-  public List<ErrorProneToken> getOffsetTokensForNode(Tree tree) {
+  public ImmutableList<ErrorProneToken> getOffsetTokensForNode(Tree tree) {
     int start = ((JCTree) tree).getStartPosition();
     return ErrorProneTokens.getTokens(getSourceForNode(tree), start, context);
+  }
+
+  /**
+   * Returns the list of {@link Token}s for source code between the given positions, offset by the
+   * start position.
+   *
+   * <p>This is moderately expensive (the source of the node has to be re-lexed), so it should only
+   * be used if a fix is already going to be emitted.
+   */
+  public ImmutableList<ErrorProneToken> getOffsetTokens(int start, int end) {
+    return ErrorProneTokens.getTokens(
+        getSourceCode().subSequence(start, end).toString(), start, context);
   }
 
   /** Returns the end position of the node, or -1 if it is not available. */

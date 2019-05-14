@@ -30,7 +30,6 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ErrorProneToken;
-import com.google.errorprone.util.ErrorProneTokens;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
@@ -107,15 +106,13 @@ public final class InterfaceWithOnlyStatics extends BugChecker implements ClassT
   private static SuggestedFix fixClass(ClassTree classTree, VisitorState state) {
     int startPos = ((JCTree) classTree).getStartPosition();
     int endPos = ((JCTree) classTree.getMembers().get(0)).getStartPosition();
-    ImmutableList<ErrorProneToken> tokens =
-        ErrorProneTokens.getTokens(
-            state.getSourceCode().subSequence(startPos, endPos).toString(), state.context);
+    ImmutableList<ErrorProneToken> tokens = state.getOffsetTokens(startPos, endPos);
     String modifiers =
         getSymbol(classTree).owner.enclClass() == null ? "final class" : "static final class";
     SuggestedFix.Builder fix = SuggestedFix.builder();
     for (ErrorProneToken token : tokens) {
       if (token.kind() == TokenKind.INTERFACE) {
-        fix.replace(startPos + token.pos(), startPos + token.endPos(), modifiers);
+        fix.replace(token.pos(), token.endPos(), modifiers);
       }
     }
     return fix.build();

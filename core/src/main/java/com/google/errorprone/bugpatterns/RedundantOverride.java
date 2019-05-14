@@ -31,7 +31,6 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
-import com.google.errorprone.util.ErrorProneTokens;
 import com.sun.source.doctree.DocCommentTree;
 import com.sun.source.tree.ExpressionStatementTree;
 import com.sun.source.tree.ExpressionTree;
@@ -121,7 +120,7 @@ public final class RedundantOverride extends BugChecker implements MethodTreeMat
       }
     }
     // Exempt if there are comments within the body. (Do this last, as it's expensive.)
-    if (ErrorProneTokens.getTokens(state.getSourceForNode(tree.getBody()), state.context).stream()
+    if (state.getOffsetTokensForNode(tree.getBody()).stream()
         .anyMatch(t -> !t.comments().isEmpty())) {
       return NO_MATCH;
     }
