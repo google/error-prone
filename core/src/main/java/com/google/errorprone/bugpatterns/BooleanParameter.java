@@ -36,7 +36,6 @@ import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
 import com.google.errorprone.util.Comments;
 import com.google.errorprone.util.ErrorProneToken;
-import com.google.errorprone.util.ErrorProneTokens;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.NewClassTree;
@@ -89,19 +88,16 @@ public class BooleanParameter extends BugChecker
     }
     int start = ((JCTree) tree).getStartPosition();
     int end = state.getEndPosition(getLast(arguments));
-    String source = state.getSourceCode().subSequence(start, end).toString();
-    Deque<ErrorProneToken> tokens =
-        new ArrayDeque<>(ErrorProneTokens.getTokens(source, state.context));
+    Deque<ErrorProneToken> tokens = new ArrayDeque<>(state.getOffsetTokens(start, end));
     forEachPair(
         sym.getParameters().stream(),
         arguments.stream(),
-        (p, c) -> checkParameter(p, c, start, tokens, state));
+        (p, c) -> checkParameter(p, c, tokens, state));
   }
 
   private void checkParameter(
       VarSymbol paramSym,
       ExpressionTree a,
-      int start,
       Deque<ErrorProneToken> tokens,
       VisitorState state) {
     if (!isBooleanLiteral(a)) {
@@ -119,8 +115,7 @@ public class BooleanParameter extends BugChecker
     if (EXCLUDED_NAMES.contains(name)) {
       return;
     }
-    while (!tokens.isEmpty()
-        && ((start + tokens.peekFirst().pos()) < ((JCTree) a).getStartPosition())) {
+    while (!tokens.isEmpty() && tokens.peekFirst().pos() < ((JCTree) a).getStartPosition()) {
       tokens.removeFirst();
     }
     if (tokens.isEmpty()) {
@@ -128,7 +123,7 @@ public class BooleanParameter extends BugChecker
     }
     Range<Integer> argRange =
         Range.closedOpen(((JCTree) a).getStartPosition(), state.getEndPosition(a));
-    if (!argRange.contains(start + tokens.peekFirst().pos())) {
+    if (!argRange.contains(tokens.peekFirst().pos())) {
       return;
     }
     if (hasParameterComment(tokens.removeFirst())) {

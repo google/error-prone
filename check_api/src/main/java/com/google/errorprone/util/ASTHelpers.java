@@ -308,7 +308,7 @@ public class ASTHelpers {
         return false;
       }
       // TODO(b/112139121): work around for javac's too-early constant string folding
-      return ErrorProneTokens.getTokens(state.getSourceForNode(expression), state.context).stream()
+      return state.getOffsetTokensForNode(expression).stream()
           .anyMatch(t -> t.kind() == TokenKind.PLUS);
     }
     if (expression instanceof UnaryTree) {
@@ -1655,8 +1655,7 @@ public class ASTHelpers {
 
   /** Returns whether the given {@code tree} contains any comments in its source. */
   public static boolean containsComments(Tree tree, VisitorState state) {
-    return ErrorProneTokens.getTokens(state.getSourceForNode(tree), state.context).stream()
-        .anyMatch(t -> !t.comments().isEmpty());
+    return state.getOffsetTokensForNode(tree).stream().anyMatch(t -> !t.comments().isEmpty());
   }
 
   /**

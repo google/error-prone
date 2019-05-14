@@ -30,7 +30,6 @@ import com.google.errorprone.bugpatterns.BugChecker.VariableTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ErrorProneToken;
-import com.google.errorprone.util.ErrorProneTokens;
 import com.sun.source.tree.ArrayTypeTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
@@ -71,12 +70,9 @@ public class MixedArrayDimensions extends BugChecker
       if (start >= end) {
         continue;
       }
-      String dim = source.subSequence(start, end).toString();
-      if (dim.isEmpty()) {
-        continue;
-      }
-      ImmutableList<ErrorProneToken> tokens = ErrorProneTokens.getTokens(dim.trim(), state.context);
+      ImmutableList<ErrorProneToken> tokens = state.getOffsetTokens(start, end);
       if (tokens.size() > 2 && tokens.get(0).kind() == TokenKind.IDENTIFIER) {
+        String dim = source.subSequence(start, end).toString();
         int nonWhitespace = CharMatcher.isNot(' ').indexIn(dim);
         int idx = dim.indexOf("[]", nonWhitespace);
         if (idx > nonWhitespace) {

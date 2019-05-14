@@ -29,7 +29,6 @@ import com.google.errorprone.bugpatterns.BugChecker.SwitchTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
-import com.google.errorprone.util.ErrorProneTokens;
 import com.google.errorprone.util.Reachability;
 import com.sun.source.tree.CaseTree;
 import com.sun.source.tree.SwitchTree;
@@ -85,10 +84,8 @@ public class MissingDefault extends BugChecker implements SwitchTreeMatcher {
     if (idx != tree.getCases().size() - 1) {
       return NO_MATCH;
     }
-    int end = state.getEndPosition(tree);
-    if (ErrorProneTokens.getTokens(
-            state.getSourceCode().subSequence(state.getEndPosition(defaultCase), end).toString(),
-            state.context)
+    if (state
+        .getOffsetTokens(state.getEndPosition(defaultCase), state.getEndPosition(tree))
         .stream()
         .anyMatch(t -> !t.comments().isEmpty())) {
       return NO_MATCH;

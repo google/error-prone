@@ -40,7 +40,6 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
 import com.google.errorprone.util.ErrorProneToken;
-import com.google.errorprone.util.ErrorProneTokens;
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.MethodTree;
@@ -120,13 +119,12 @@ public final class AnnotationPosition extends BugChecker
     ImmutableList<ErrorProneToken> modifierTokens =
         tokens.stream().filter(t -> MODIFIERS.contains(t.kind())).collect(toImmutableList());
     if (!modifierTokens.isEmpty()) {
-      int firstModifierPos = treePos + modifierTokens.get(0).pos();
-      int lastModifierPos = treePos + getLast(modifierTokens).endPos();
+      int firstModifierPos = modifierTokens.get(0).pos();
+      int lastModifierPos = getLast(modifierTokens).endPos();
 
       Description description =
           checkAnnotations(
               tree,
-              treePos,
               annotations,
               danglingJavadoc,
               firstModifierPos,
@@ -138,7 +136,7 @@ public final class AnnotationPosition extends BugChecker
     }
     if (danglingJavadoc != null) {
       SuggestedFix.Builder builder = SuggestedFix.builder();
-      String javadoc = removeJavadoc(state, treePos, danglingJavadoc, builder);
+      String javadoc = removeJavadoc(state, danglingJavadoc, builder);
 
       String message = "Javadocs should appear before any modifiers or annotations.";
       return buildDescription(tree)
@@ -170,14 +168,12 @@ public final class AnnotationPosition extends BugChecker
     } else {
       throw new AssertionError();
     }
-    return ErrorProneTokens.getTokens(
-        state.getSourceCode().subSequence(annotationEnd, endPos).toString(), state.context);
+    return state.getOffsetTokens(annotationEnd, endPos);
   }
 
   /** Checks that annotations are on the right side of the modifiers. */
   private Description checkAnnotations(
       Tree tree,
-      int treePos,
       List<? extends AnnotationTree> annotations,
       Comment danglingJavadoc,
       int firstModifierPos,
@@ -219,7 +215,7 @@ public final class AnnotationPosition extends BugChecker
         builder.delete(annotation);
       }
       String javadoc =
-          danglingJavadoc == null ? "" : removeJavadoc(state, treePos, danglingJavadoc, builder);
+          danglingJavadoc == null ? "" : removeJavadoc(state, danglingJavadoc, builder);
       builder
           .replace(
               firstModifierPos,
@@ -249,8 +245,8 @@ public final class AnnotationPosition extends BugChecker
   }
 
   private static String removeJavadoc(
-      VisitorState state, int startPos, Comment danglingJavadoc, SuggestedFix.Builder builder) {
-    int javadocStart = startPos + danglingJavadoc.getSourcePos(0);
+      VisitorState state, Comment danglingJavadoc, SuggestedFix.Builder builder) {
+    int javadocStart = danglingJavadoc.getSourcePos(0);
     int javadocEnd = javadocStart + danglingJavadoc.getText().length();
     // Capturing an extra newline helps the formatter.
     if (state.getSourceCode().charAt(javadocEnd) == '\n') {

@@ -73,6 +73,7 @@ import com.sun.tools.javac.code.Type.TypeVar;
 import com.sun.tools.javac.main.Main.Result;
 import com.sun.tools.javac.model.JavacElements;
 import com.sun.tools.javac.parser.Tokens.Comment;
+import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCLiteral;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -612,10 +613,11 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
           public Void visitNewClass(NewClassTree tree, VisitorState state) {
             setAssertionsComplete();
             List<String> comments = new ArrayList<>();
-            for (ErrorProneToken t : state.getTokensForNode(tree)) {
+            int startPos = ((JCTree) tree).getStartPosition();
+            for (ErrorProneToken t : state.getOffsetTokensForNode(tree)) {
               if (!t.comments().isEmpty()) {
                 for (Comment c : t.comments()) {
-                  Verify.verify(c.getSourcePos(0) >= 0);
+                  Verify.verify(c.getSourcePos(0) >= startPos);
                   comments.add(c.getText());
                 }
               }

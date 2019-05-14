@@ -94,13 +94,12 @@ public class ParameterName extends BugChecker
       return;
     }
     Deque<ErrorProneToken> tokens =
-        new ArrayDeque<>(ErrorProneTokens.getTokens(source, state.context));
+        new ArrayDeque<>(ErrorProneTokens.getTokens(source, start, state.context));
     forEachPair(
         sym.getParameters().stream(),
         arguments.stream(),
         (p, a) -> {
-          while (!tokens.isEmpty()
-              && ((start + tokens.peekFirst().pos()) < ((JCTree) a).getStartPosition())) {
+          while (!tokens.isEmpty() && tokens.peekFirst().pos() < ((JCTree) a).getStartPosition()) {
             tokens.removeFirst();
           }
           if (tokens.isEmpty()) {
@@ -108,17 +107,16 @@ public class ParameterName extends BugChecker
           }
           Range<Integer> argRange =
               Range.closedOpen(((JCTree) a).getStartPosition(), state.getEndPosition(a));
-          if (!argRange.contains(start + tokens.peekFirst().pos())) {
+          if (!argRange.contains(tokens.peekFirst().pos())) {
             return;
           }
-          checkArgument(p, a, start, tokens.removeFirst(), state);
+          checkArgument(p, a, tokens.removeFirst(), state);
         });
   }
 
   private void checkArgument(
       VarSymbol formal,
       ExpressionTree actual,
-      int start,
       ErrorProneToken token,
       VisitorState state) {
     List<Comment> matches = new ArrayList<>();
@@ -148,8 +146,8 @@ public class ParameterName extends BugChecker
                       match.getText(), formal.getSimpleName()))
               .addFix(
                   SuggestedFix.replace(
-                      start + match.getSourcePos(0),
-                      start + match.getSourcePos(match.getText().length() - 1) + 1,
+                      match.getSourcePos(0),
+                      match.getSourcePos(match.getText().length() - 1) + 1,
                       String.format("/* %s= */", formal.getSimpleName())))
               .build());
     }
