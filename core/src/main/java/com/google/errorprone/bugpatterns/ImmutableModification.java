@@ -47,47 +47,38 @@ public class ImmutableModification extends BugChecker implements MethodInvocatio
           .putAll(
               "com.google.common.collect.ImmutableCollection",
               "add",
-              "remove",
               "addAll",
+              "clear",
+              "remove",
               "removeAll",
               "removeIf",
-              "retainAll",
-              "clear")
-          .putAll(
-              "com.google.common.collect.ImmutableList",
-              "addAll",
-              "set",
-              "add",
-              "remove",
-              "replaceAll",
-              "sort")
-          .putAll("com.google.common.collect.ImmutableListMultimap", "removeAll", "replaceValues")
+              "retainAll")
+          .putAll("com.google.common.collect.ImmutableList", "set", "sort")
           .putAll(
               "com.google.common.collect.ImmutableMap",
-              "put",
-              "putIfAbsent",
-              "replace",
+              "clear",
+              "compute",
               "computeIfAbsent",
               "computeIfPresent",
-              "compute",
               "merge",
+              "put",
               "putAll",
-              "replaceAll",
+              "putIfAbsent",
               "remove",
-              "clear")
+              "replace",
+              "replaceAll")
           .putAll(
               "com.google.common.collect.ImmutableMultimap",
-              "removeAll",
-              "replaceValues",
               "clear",
               "put",
               "putAll",
-              "remove")
-          .putAll("com.google.common.collect.ImmutableMultiset", "add", "remove", "setCount")
-          .putAll("com.google.common.collect.ImmutableRangeMap", "put", "putAll", "clear", "remove")
+              "remove",
+              "removeAll",
+              "replaceValues")
+          .putAll("com.google.common.collect.ImmutableMultiset", "setCount")
+          .putAll("com.google.common.collect.ImmutableRangeMap", "clear", "put", "putAll", "remove")
           .putAll(
               "com.google.common.collect.ImmutableRangeSet", "add", "addAll", "remove", "removeAll")
-          .putAll("com.google.common.collect.ImmutableSetMultimap", "removeAll", "replaceValues")
           .putAll("com.google.common.collect.ImmutableSortedMap", "pollFirstEntry", "pollLastEntry")
           .putAll("com.google.common.collect.ImmutableSortedSet", "pollFirst", "pollLast")
           .putAll("com.google.common.collect.ImmutableTable", "clear", "put", "putAll", "remove")
@@ -96,12 +87,12 @@ public class ImmutableModification extends BugChecker implements MethodInvocatio
           .putAll(
               "com.google.common.collect.Sets.SetView",
               "add",
-              "remove",
               "addAll",
+              "clear",
+              "remove",
               "removeAll",
               "removeIf",
-              "retainAll",
-              "clear")
+              "retainAll")
           .build();
 
   static final Matcher<ExpressionTree> MATCHER =
