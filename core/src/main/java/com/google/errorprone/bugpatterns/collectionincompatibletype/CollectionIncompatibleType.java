@@ -18,10 +18,12 @@ package com.google.errorprone.bugpatterns.collectionincompatibletype;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.fixes.SuggestedFixes.addSuppressWarnings;
+import static com.google.errorprone.predicates.TypePredicates.isDescendantOfAny;
 
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Splitter;
 import com.google.common.base.Verify;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.ProvidesFix;
@@ -34,8 +36,11 @@ import com.google.errorprone.bugpatterns.collectionincompatibletype.AbstractColl
 import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
+import com.google.errorprone.matchers.Matcher;
+import com.google.errorprone.matchers.Matchers;
 import com.google.errorprone.util.ASTHelpers;
 import com.google.errorprone.util.Signatures;
+import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.tools.javac.code.Types;
 import java.util.Arrays;
@@ -86,10 +91,23 @@ public class CollectionIncompatibleType extends BugChecker implements MethodInvo
     this.fixType = fixType;
   }
 
+  /**
+   * The least-common ancestor of all of the types of {@link #DIRECT_MATCHERS} and {@link
+   * #TYPE_ARG_MATCHERS}.
+   */
+  private static final Matcher<ExpressionTree> FIRST_ORDER_MATCHER =
+      Matchers.anyMethod()
+          .onClass(
+              isDescendantOfAny(
+                  ImmutableList.of(
+                      "java.util.Collection", "java.util.Dictionary", "java.util.Map")));
+
   // The "normal" case of extracting the type of a method argument
   private static final Iterable<MethodArgMatcher> DIRECT_MATCHERS =
       Arrays.asList(
           // "Normal" cases, e.g. Collection#remove(Object)
+          // Make sure to keep that the type or one of its supertype should be present in
+          // FIRST_ORDER_MATCHER
           new MethodArgMatcher("java.util.Collection", "contains(java.lang.Object)", 0, 0),
           new MethodArgMatcher("java.util.Collection", "remove(java.lang.Object)", 0, 0),
           new MethodArgMatcher("java.util.Deque", "removeFirstOccurrence(java.lang.Object)", 0, 0),
@@ -112,6 +130,8 @@ public class CollectionIncompatibleType extends BugChecker implements MethodInvo
   // Collection#containsAll(Collection<?>)
   private static final Iterable<TypeArgOfMethodArgMatcher> TYPE_ARG_MATCHERS =
       Arrays.asList(
+          // Make sure to keep that the type or one of its supertype should be present in
+          // FIRST_ORDER_MATCHER
           new TypeArgOfMethodArgMatcher(
               "java.util.Collection", // class that defines the method
               "containsAll(java.util.Collection<?>)", // method signature
@@ -136,6 +156,10 @@ public class CollectionIncompatibleType extends BugChecker implements MethodInvo
 
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
+    if (!FIRST_ORDER_MATCHER.matches(tree, state)) {
+      return Description.NO_MATCH;
+    }
+
     MatchResult directResult = firstNonNullMatchResult(DIRECT_MATCHERS, tree, state);
     MatchResult typeArgResult = null;
     if (directResult == null) {
