@@ -85,6 +85,7 @@ import com.google.errorprone.bugpatterns.DescribeFix;
 import com.google.errorprone.bugpatterns.DiscardedPostfixExpression;
 import com.google.errorprone.bugpatterns.DivZero;
 import com.google.errorprone.bugpatterns.DoNotCallChecker;
+import com.google.errorprone.bugpatterns.DoNotMockChecker;
 import com.google.errorprone.bugpatterns.DoubleBraceInitialization;
 import com.google.errorprone.bugpatterns.DuplicateMapKeys;
 import com.google.errorprone.bugpatterns.EmptyIfStatement;
@@ -486,6 +487,7 @@ public class BuiltInCheckerSuppliers {
           DeadException.class,
           DeadThread.class,
           DoNotCallChecker.class,
+          DoNotMockChecker.class,
           DuplicateMapKeys.class,
           DurationFrom.class,
           DurationGetTemporalUnit.class,

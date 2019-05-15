@@ -336,6 +336,13 @@
       <version>3.9.0</version>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <!-- Apache 2.0 -->
+      <groupId>org.easymock</groupId>
+      <artifactId>easymock</artifactId>
+      <version>3.1</version>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 
   <build>
