@@ -24,6 +24,7 @@ import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.util.MoreAnnotations;
 import com.sun.source.tree.Tree;
+import com.sun.tools.javac.code.Attribute;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.parser.JavacParser;
 import com.sun.tools.javac.parser.ParserFactory;
@@ -49,7 +50,11 @@ public class GuardedByUtils {
   }
 
   private static ImmutableSet<String> getAnnotationValueAsStrings(Symbol sym) {
-    return sym.getRawAttributes().stream()
+    List<Attribute.Compound> rawAttributes = sym.getRawAttributes();
+    if (rawAttributes.isEmpty()) {
+      return ImmutableSet.of();
+    }
+    return rawAttributes.stream()
         .filter(a -> a.getAnnotationType().asElement().getSimpleName().contentEquals("GuardedBy"))
         .flatMap(
             a ->
