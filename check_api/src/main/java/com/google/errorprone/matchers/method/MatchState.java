@@ -17,9 +17,9 @@
 package com.google.errorprone.matchers.method;
 
 import com.google.auto.value.AutoValue;
-import com.google.common.collect.ImmutableList;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Type;
+import java.util.List;
 
 /** The state that is propagated across a match operation. */
 @AutoValue
@@ -31,10 +31,11 @@ abstract class MatchState {
   abstract MethodSymbol sym();
 
   /** The method's formal parameter types. */
-  abstract ImmutableList<Type> paramTypes();
+  final List<Type> paramTypes() {
+    return sym().type.getParameterTypes();
+  }
 
   static MatchState create(Type ownerType, MethodSymbol methodSymbol) {
-    return new AutoValue_MatchState(
-        ownerType, methodSymbol, ImmutableList.copyOf(methodSymbol.type.getParameterTypes()));
+    return new AutoValue_MatchState(ownerType, methodSymbol);
   }
 }
