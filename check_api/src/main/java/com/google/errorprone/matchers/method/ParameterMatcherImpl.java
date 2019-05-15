@@ -24,6 +24,7 @@ import com.google.errorprone.suppliers.Supplier;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.tools.javac.code.Type;
+import java.util.List;
 
 /** Matches on a method's formal parameters. */
 public class ParameterMatcherImpl extends AbstractChainedMatcher<MatchState, MatchState>
@@ -40,7 +41,7 @@ public class ParameterMatcherImpl extends AbstractChainedMatcher<MatchState, Mat
   @Override
   protected Optional<MatchState> matchResult(
       ExpressionTree item, MatchState info, VisitorState state) {
-    ImmutableList<Type> actual = ImmutableList.copyOf(info.paramTypes());
+    List<Type> actual = info.paramTypes();
     if (actual.size() != expected.size()) {
       return Optional.absent();
     }
