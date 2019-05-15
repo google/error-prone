@@ -413,7 +413,7 @@ __[AmbiguousMethodReference](bugpattern/AmbiguousMethodReference)__<br>
 Method reference is ambiguous
 
 __[AnnotateFormatMethod](bugpattern/AnnotateFormatMethod)__<br>
-This method passes a pair of parameters through to String.format, but the enclosing method wasn&#39;t annotated @FormatMethod. Doing so gives compile-time rather than run-time protection against malformed format strings.&#10;&#10;WARNING: There&#39;s a very high chance that existing code will not be passing in well-formed format strings. Make sure you run tests including all users of this code before submitting.
+This method passes a pair of parameters through to String.format, but the enclosing method wasn&#39;t annotated @FormatMethod. Doing so gives compile-time rather than run-time protection against malformed format strings.
 
 __[ArgumentSelectionDefectChecker](bugpattern/ArgumentSelectionDefectChecker)__<br>
 Arguments are in the wrong order or could be commented for clarity.

@@ -2897,6 +2897,8 @@
 </dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/util/ErrorProneTokens.html#ErrorProneTokens-java.lang.String-com.sun.tools.javac.util.Context-">ErrorProneTokens(String, Context)</a></span> - Constructor for class com.google.errorprone.util.<a href="com/google/errorprone/util/ErrorProneTokens.html" title="class in com.google.errorprone.util">ErrorProneTokens</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/util/ErrorProneTokens.html#ErrorProneTokens-java.lang.String-int-com.sun.tools.javac.util.Context-">ErrorProneTokens(String, int, Context)</a></span> - Constructor for class com.google.errorprone.util.<a href="com/google/errorprone/util/ErrorProneTokens.html" title="class in com.google.errorprone.util">ErrorProneTokens</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/ErrorProneVersion.html" title="class in com.google.errorprone"><span class="typeNameLink">ErrorProneVersion</span></a> - Class in <a href="com/google/errorprone/package-summary.html">com.google.errorprone</a></dt>
 <dd>
 <div class="block">The Error Prone version.</div>
@@ -3303,6 +3305,11 @@
 <dt><span class="memberNameLink"><a href="com/google/errorprone/scanner/ScannerSupplier.html#fromBugCheckerInfos-java.lang.Iterable-">fromBugCheckerInfos(Iterable&lt;BugCheckerInfo&gt;)</a></span> - Static method in class com.google.errorprone.scanner.<a href="com/google/errorprone/scanner/ScannerSupplier.html" title="class in com.google.errorprone.scanner">ScannerSupplier</a></dt>
 <dd>
 <div class="block">Returns a <a href="com/google/errorprone/scanner/ScannerSupplier.html" title="class in com.google.errorprone.scanner"><code>ScannerSupplier</code></a> built from a list of <a href="com/google/errorprone/BugCheckerInfo.html" title="class in com.google.errorprone"><code>BugCheckerInfo</code></a>s.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/dataflow/nullnesspropagation/NullnessAnnotations.html#fromDefaultAnnotations-javax.lang.model.element.Element-">fromDefaultAnnotations(Element)</a></span> - Static method in class com.google.errorprone.dataflow.nullnesspropagation.<a href="com/google/errorprone/dataflow/nullnesspropagation/NullnessAnnotations.html" title="class in com.google.errorprone.dataflow.nullnesspropagation">NullnessAnnotations</a></dt>
+<dd>
+<div class="block">Walks the syntactically enclosing elements of the given element until it finds a defaulting
+ annotation.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/BugPatternInstance.html#fromElement-javax.lang.model.element.Element-">fromElement(Element)</a></span> - Static method in class com.google.errorprone.<a href="com/google/errorprone/BugPatternInstance.html" title="class in com.google.errorprone">BugPatternInstance</a></dt>
 <dd>&nbsp;</dd>
@@ -4162,6 +4169,16 @@
 </dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/apidiff/ApiDiffProto.ClassDiff.DiffCase.html#getNumber--">getNumber()</a></span> - Method in enum com.google.errorprone.bugpatterns.apidiff.<a href="com/google/errorprone/bugpatterns/apidiff/ApiDiffProto.ClassDiff.DiffCase.html" title="enum in com.google.errorprone.bugpatterns.apidiff">ApiDiffProto.ClassDiff.DiffCase</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/VisitorState.html#getOffsetTokens-int-int-">getOffsetTokens(int, int)</a></span> - Method in class com.google.errorprone.<a href="com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a></dt>
+<dd>
+<div class="block">Returns the list of <code>Tokens.Token</code>s for source code between the given positions, offset by the
+ start position.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/VisitorState.html#getOffsetTokensForNode-com.sun.source.tree.Tree-">getOffsetTokensForNode(Tree)</a></span> - Method in class com.google.errorprone.<a href="com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a></dt>
+<dd>
+<div class="block">Returns the list of <code>Tokens.Token</code>s for the given <code>JCTree</code>, offset by the start position
+ of the tree within the overall source.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/refaster/Inliner.html#getOptionalBinding-com.google.errorprone.refaster.Bindings.Key-">getOptionalBinding(Bindings.Key&lt;V&gt;)</a></span> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/Inliner.html" title="class in com.google.errorprone.refaster">Inliner</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/refaster/UMethodType.html#getParameterTypes--">getParameterTypes()</a></span> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/UMethodType.html" title="class in com.google.errorprone.refaster">UMethodType</a></dt>
@@ -4346,6 +4363,11 @@
 <dd>
 <div class="block">Returns the tokens for the given source text, including comments.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/util/ErrorProneTokens.html#getTokens-java.lang.String-int-com.sun.tools.javac.util.Context-">getTokens(String, int, Context)</a></span> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/ErrorProneTokens.html" title="class in com.google.errorprone.util">ErrorProneTokens</a></dt>
+<dd>
+<div class="block">Returns the tokens for the given source text, including comments, indicating the offset of the
+ source within the overall file.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/VisitorState.html#getTokensForNode-com.sun.source.tree.Tree-">getTokensForNode(Tree)</a></span> - Method in class com.google.errorprone.<a href="com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a></dt>
 <dd>
 <div class="block">Returns the list of <code>Tokens.Token</code>s for the given <code>JCTree</code>.</div>
@@ -4410,8 +4432,12 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/threadsafety/UnlockMethodChecker.html#getUnwanted-com.sun.source.tree.MethodTree-com.google.errorprone.VisitorState-">getUnwanted(MethodTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/UnlockMethodChecker.html" title="class in com.google.errorprone.bugpatterns.threadsafety">UnlockMethodChecker</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="com/google/errorprone/dataflow/nullnesspropagation/NullnessAnnotations.html#getUpperBound-com.sun.tools.javac.code.Type-">getUpperBound(Type)</a></span> - Static method in class com.google.errorprone.dataflow.nullnesspropagation.<a href="com/google/errorprone/dataflow/nullnesspropagation/NullnessAnnotations.html" title="class in com.google.errorprone.dataflow.nullnesspropagation">NullnessAnnotations</a></dt>
-<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/dataflow/nullnesspropagation/NullnessAnnotations.html#getUpperBound-javax.lang.model.type.TypeVariable-">getUpperBound(TypeVariable)</a></span> - Static method in class com.google.errorprone.dataflow.nullnesspropagation.<a href="com/google/errorprone/dataflow/nullnesspropagation/NullnessAnnotations.html" title="class in com.google.errorprone.dataflow.nullnesspropagation">NullnessAnnotations</a></dt>
+<dd>
+<div class="block">Returns any declared or implied bound for the given type variable, meaning this returns any
+ annotation on the given type variable and otherwise returns <a href="com/google/errorprone/dataflow/nullnesspropagation/NullnessAnnotations.html#fromDefaultAnnotations-javax.lang.model.element.Element-"><code>NullnessAnnotations.fromDefaultAnnotations(javax.lang.model.element.Element)</code></a> to
+ find any default in scope of the given type variable.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/refaster/UTypeVar.html#getUpperBound--">getUpperBound()</a></span> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/UTypeVar.html" title="class in com.google.errorprone.refaster">UTypeVar</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/util/ASTHelpers.html#getUpperBound-com.sun.tools.javac.code.Type-com.sun.tools.javac.code.Types-">getUpperBound(Type, Types)</a></span> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/ASTHelpers.html" title="class in com.google.errorprone.util">ASTHelpers</a></dt>
