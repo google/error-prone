@@ -78,7 +78,7 @@ public abstract class AbstractToString extends BugChecker
       Tree parent, ExpressionTree expression, VisitorState state);
 
   private static final Matcher<ExpressionTree> TO_STRING =
-      instanceMethod().onDescendantOf("java.lang.Object").withSignature("toString()");
+      instanceMethod().anyClass().withSignature("toString()");
 
   private static final Matcher<ExpressionTree> PRINT_STRING =
       anyOf(
