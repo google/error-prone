@@ -16,7 +16,6 @@
 
 package com.google.errorprone.matchers.method;
 
-import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.matchers.method.MethodMatchers.StaticMethodMatcher;
@@ -25,6 +24,7 @@ import com.google.errorprone.predicates.TypePredicates;
 import com.google.errorprone.suppliers.Supplier;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.tools.javac.code.Type;
+import java.util.Optional;
 
 /** Matches static methods, allows refinement on class type. */
 class StaticMethodMatcherImpl extends MethodMatcher implements StaticMethodMatcher {
@@ -32,7 +32,7 @@ class StaticMethodMatcherImpl extends MethodMatcher implements StaticMethodMatch
   protected Optional<MatchState> matchResult(
       ExpressionTree item, MatchState method, VisitorState state) {
     if (!method.sym().isStatic()) {
-      return Optional.absent();
+      return Optional.empty();
     }
     return Optional.of(method);
   }

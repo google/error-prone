@@ -16,10 +16,10 @@
 
 package com.google.errorprone.matchers.method;
 
-import com.google.common.base.Optional;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.annotations.ForOverride;
 import com.sun.source.tree.ExpressionTree;
+import java.util.Optional;
 
 /** Super-type for matchers that compose other matchers. */
 abstract class AbstractChainedMatcher<A, B> extends AbstractSimpleMatcher<B> {
@@ -34,9 +34,6 @@ abstract class AbstractChainedMatcher<A, B> extends AbstractSimpleMatcher<B> {
 
   @Override
   protected final Optional<B> matchResult(ExpressionTree item, VisitorState state) {
-    Optional<A> baseResult = baseMatcher.matchResult(item, state);
-    return baseResult.isPresent()
-        ? matchResult(item, baseResult.get(), state)
-        : Optional.<B>absent();
+    return baseMatcher.matchResult(item, state).flatMap(base -> matchResult(item, base, state));
   }
 }

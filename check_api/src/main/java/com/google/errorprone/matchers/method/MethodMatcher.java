@@ -16,7 +16,6 @@
 
 package com.google.errorprone.matchers.method;
 
-import com.google.common.base.Optional;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
@@ -24,6 +23,7 @@ import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.NewClassTree;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
+import java.util.Optional;
 
 /** Base matcher for member methods. */
 abstract class MethodMatcher extends AbstractChainedMatcher<MatchState, MatchState> {
@@ -33,11 +33,11 @@ abstract class MethodMatcher extends AbstractChainedMatcher<MatchState, MatchSta
         public Optional<MatchState> matchResult(ExpressionTree tree, VisitorState state) {
           Symbol sym = ASTHelpers.getSymbol(tree);
           if (!(sym instanceof MethodSymbol)) {
-            return Optional.absent();
+            return Optional.empty();
           }
           if (tree instanceof NewClassTree) {
             // Don't match constructors as they are neither static nor instance methods.
-            return Optional.absent();
+            return Optional.empty();
           }
           if (tree instanceof MethodInvocationTree) {
             tree = ((MethodInvocationTree) tree).getMethodSelect();

@@ -18,7 +18,6 @@ package com.google.errorprone.matchers.method;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
-import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.matchers.method.MethodMatchers.MethodNameMatcher;
@@ -27,6 +26,7 @@ import com.google.errorprone.suppliers.Suppliers;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.tools.javac.util.Name;
 import java.util.Arrays;
+import java.util.Optional;
 import java.util.regex.Pattern;
 
 /** Matchers that select on method name. */
@@ -64,7 +64,7 @@ public abstract class MethodNameMatcherImpl extends AbstractChainedMatcher<Match
     protected Optional<MatchState> matchResult(
         ExpressionTree item, MatchState method, VisitorState state) {
       if (!method.sym().getSimpleName().contentEquals(name)) {
-        return Optional.absent();
+        return Optional.empty();
       }
       return Optional.of(method);
     }
@@ -97,7 +97,7 @@ public abstract class MethodNameMatcherImpl extends AbstractChainedMatcher<Match
     protected Optional<MatchState> matchResult(
         ExpressionTree item, MatchState method, VisitorState state) {
       if (!regex.matcher(method.sym().getSimpleName().toString()).matches()) {
-        return Optional.absent();
+        return Optional.empty();
       }
       return Optional.of(method);
     }
@@ -119,7 +119,7 @@ public abstract class MethodNameMatcherImpl extends AbstractChainedMatcher<Match
       Name symbolName = method.sym().getSimpleName();
       return names.stream().anyMatch(symbolName::contentEquals)
           ? Optional.of(method)
-          : Optional.absent();
+          : Optional.empty();
     }
   }
 }

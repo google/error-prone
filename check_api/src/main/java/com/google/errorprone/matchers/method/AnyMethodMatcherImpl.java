@@ -16,13 +16,13 @@
 
 package com.google.errorprone.matchers.method;
 
-import com.google.common.base.Optional;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.matchers.method.MethodMatchers.AnyMethodMatcher;
 import com.google.errorprone.matchers.method.MethodMatchers.MethodClassMatcher;
 import com.google.errorprone.predicates.TypePredicate;
 import com.google.errorprone.predicates.TypePredicates;
 import com.sun.source.tree.ExpressionTree;
+import java.util.Optional;
 
 /** Matches instance or static methods, allows refinement on class type. */
 class AnyMethodMatcherImpl extends MethodMatcher implements AnyMethodMatcher {

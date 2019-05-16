@@ -16,7 +16,6 @@
 
 package com.google.errorprone.matchers.method;
 
-import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.matchers.method.MethodMatchers.ConstructorClassMatcher;
@@ -27,6 +26,7 @@ import com.google.errorprone.suppliers.Suppliers;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.tools.javac.code.Type;
 import java.util.Arrays;
+import java.util.Optional;
 
 /** Matches on class type, allows refinement on parameters. */
 class ConstructorClassMatcherImpl extends AbstractChainedMatcher<MatchState, MatchState>
@@ -40,7 +40,7 @@ class ConstructorClassMatcherImpl extends AbstractChainedMatcher<MatchState, Mat
     if (predicate.apply(baseResult.ownerType(), state)) {
       return Optional.of(baseResult);
     }
-    return Optional.absent();
+    return Optional.empty();
   }
 
   public ConstructorClassMatcherImpl(ConstructorMatcherImpl baseMatcher, TypePredicate predicate) {
