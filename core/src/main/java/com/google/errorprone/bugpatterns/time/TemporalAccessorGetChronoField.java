@@ -20,19 +20,22 @@ import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableListMultimap;
-import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterables;
+import com.google.common.collect.Streams;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.matchers.Description;
-import com.google.errorprone.matchers.Matcher;
-import com.google.errorprone.matchers.Matchers;
+import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
+import com.sun.tools.javac.code.Symbol.MethodSymbol;
+import com.sun.tools.javac.code.Symbol.VarSymbol;
+import com.sun.tools.javac.util.List;
+import com.sun.tools.javac.util.Name;
 import java.time.DayOfWeek;
 import java.time.Instant;
 import java.time.LocalDate;
@@ -65,15 +68,14 @@ import java.util.Optional;
  * throw an {@code UnsupportedTemporalTypeException}.
  */
 @BugPattern(
-  name = "TemporalAccessorGetChronoField",
-  summary = "TemporalAccessor.get() only works for certain values of ChronoField.",
-  explanation =
-      "TemporalAccessor.get(ChronoField) only works for certain values of ChronoField. E.g., "
-          + "DayOfWeek only supports DAY_OF_WEEK. All other values are guaranteed to throw a "
-          + "UnsupportedTemporalTypeException.",
-  severity = ERROR,
-  providesFix = NO_FIX
-)
+    name = "TemporalAccessorGetChronoField",
+    summary = "TemporalAccessor.get() only works for certain values of ChronoField.",
+    explanation =
+        "TemporalAccessor.get(ChronoField) only works for certain values of ChronoField. E.g., "
+            + "DayOfWeek only supports DAY_OF_WEEK. All other values are guaranteed to throw an "
+            + "UnsupportedTemporalTypeException.",
+    severity = ERROR,
+    providesFix = NO_FIX)
 public final class TemporalAccessorGetChronoField extends BugChecker
     implements MethodInvocationTreeMatcher {
 
@@ -104,60 +106,55 @@ public final class TemporalAccessorGetChronoField extends BugChecker
           ZonedDateTime.now(ARBITRARY_ZONE),
           ZoneOffset.ofHours(8));
 
-  private static final ImmutableListMultimap<Class<?>, ChronoField> UNSUPPORTED =
-      buildUnsupported();
+  private static final ImmutableListMultimap<String, ChronoField> UNSUPPORTED = buildUnsupported();
 
-  private static ImmutableListMultimap<Class<?>, ChronoField> buildUnsupported() {
-    ImmutableListMultimap.Builder<Class<?>, ChronoField> builder = ImmutableListMultimap.builder();
+  private static ImmutableListMultimap<String, ChronoField> buildUnsupported() {
+    ImmutableListMultimap.Builder<String, ChronoField> builder = ImmutableListMultimap.builder();
     for (TemporalAccessor temporalAccessor : TEMPORAL_ACCESSOR_INSTANCES) {
       for (ChronoField chronoField : ChronoField.values()) {
         if (!temporalAccessor.isSupported(chronoField)) {
-          builder.put(temporalAccessor.getClass(), chronoField);
+          builder.put(temporalAccessor.getClass().getCanonicalName(), chronoField);
         }
       }
     }
     return builder.build();
   }
 
-  private static final ImmutableMap<Matcher<ExpressionTree>, Class<?>> MATCHER_MAP =
-      buildMatcherMap();
-
-  private static ImmutableMap<Matcher<ExpressionTree>, Class<?>> buildMatcherMap() {
-    ImmutableMap.Builder<Matcher<ExpressionTree>, Class<?>> matchers = ImmutableMap.builder();
-    for (Class<?> clazz : UNSUPPORTED.keySet()) {
-      matchers.put(
-          Matchers.instanceMethod()
-              .onExactClass(clazz.getName())
-              .namedAnyOf("get", "getLong")
-              .withParameters("java.time.temporal.TemporalField"),
-          clazz);
-    }
-    return matchers.build();
-  }
-
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
-    for (ImmutableMap.Entry<Matcher<ExpressionTree>, Class<?>> entry : MATCHER_MAP.entrySet()) {
-      if (entry.getKey().matches(tree, state)) {
-        return isDefinitelyInvalidChronoField(tree, UNSUPPORTED.get(entry.getValue()))
-            ? describeMatch(tree)
-            : Description.NO_MATCH;
-      }
+    MethodSymbol sym = ASTHelpers.getSymbol(tree);
+    Name methodName = sym.name;
+    if (!(methodName.contentEquals("get") || methodName.contentEquals("getLong"))) {
+      return Description.NO_MATCH;
+    }
+
+    List<VarSymbol> params = sym.params();
+    if (params.size() != 1) {
+      return Description.NO_MATCH;
+    }
+    Name argType = params.get(0).type.tsym.getQualifiedName();
+    if (!argType.contentEquals("java.time.temporal.TemporalField")) {
+      return Description.NO_MATCH;
+    }
+
+    String declaringType = sym.owner.getQualifiedName().toString();
+    ImmutableList<ChronoField> invalidChronoFields = UNSUPPORTED.get(declaringType);
+    if (invalidChronoFields != null && isDefinitelyInvalidChronoField(tree, invalidChronoFields)) {
+      return describeMatch(tree);
     }
     return Description.NO_MATCH;
   }
 
   private static boolean isDefinitelyInvalidChronoField(
       MethodInvocationTree tree, Iterable<ChronoField> invalidChronoFields) {
-    Optional<String> constant = getEnumName(Iterables.getOnlyElement(tree.getArguments()));
-    if (constant.isPresent()) {
-      for (ChronoField invalidChronoField : invalidChronoFields) {
-        if (constant.get().equals(invalidChronoField.name())) {
-          return true;
-        }
-      }
-    }
-    return false;
+    return getEnumName(Iterables.getOnlyElement(tree.getArguments()))
+        .map(
+            /* TODO(amalloy): We could pre-index chronoFields instead of iterating over it.
+             * However, it's fairly rare to get to this point, so it's not a big deal if
+             * it's relatively slow. */
+            constant ->
+                Streams.stream(invalidChronoFields).map(Enum::name).anyMatch(constant::equals))
+        .orElse(false);
   }
 
   private static Optional<String> getEnumName(ExpressionTree chronoField) {
