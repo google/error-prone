@@ -16,10 +16,10 @@
 
 package com.google.errorprone.matchers.method;
 
-import com.google.common.base.Optional;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.matchers.method.MethodMatchers.MethodSignatureMatcher;
 import com.sun.source.tree.ExpressionTree;
+import java.util.Optional;
 
 /** Matches on method signature. */
 public class MethodSignatureMatcherImpl extends AbstractChainedMatcher<MatchState, MatchState>
@@ -39,6 +39,6 @@ public class MethodSignatureMatcherImpl extends AbstractChainedMatcher<MatchStat
     boolean matches =
         method.sym().getSimpleName().contentEquals(methodName)
             || method.sym().toString().equals(methodName);
-    return matches ? Optional.of(method) : Optional.<MatchState>absent();
+    return matches ? Optional.of(method) : Optional.empty();
   }
 }

@@ -16,7 +16,6 @@
 
 package com.google.errorprone.matchers.method;
 
-import com.google.common.base.Optional;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.matchers.method.MethodMatchers.ConstructorClassMatcher;
 import com.google.errorprone.matchers.method.MethodMatchers.ConstructorMatcher;
@@ -28,6 +27,7 @@ import com.sun.source.tree.ExpressionTree;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Type;
+import java.util.Optional;
 import javax.annotation.Nullable;
 
 /** Matches constructors, allows refinement on class type. */
@@ -38,7 +38,7 @@ public class ConstructorMatcherImpl extends AbstractSimpleMatcher<MatchState>
   protected Optional<MatchState> matchResult(ExpressionTree tree, VisitorState state) {
     MethodSymbol sym = getConstructor(tree);
     if (sym == null) {
-      return Optional.absent();
+      return Optional.empty();
     }
     return Optional.of(MatchState.create(sym.owner.type, sym));
   }

@@ -16,7 +16,6 @@
 
 package com.google.errorprone.matchers.method;
 
-import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.matchers.method.MethodMatchers.ParameterMatcher;
@@ -25,6 +24,7 @@ import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.tools.javac.code.Type;
 import java.util.List;
+import java.util.Optional;
 
 /** Matches on a method's formal parameters. */
 public class ParameterMatcherImpl extends AbstractChainedMatcher<MatchState, MatchState>
@@ -43,11 +43,11 @@ public class ParameterMatcherImpl extends AbstractChainedMatcher<MatchState, Mat
       ExpressionTree item, MatchState info, VisitorState state) {
     List<Type> actual = info.paramTypes();
     if (actual.size() != expected.size()) {
-      return Optional.absent();
+      return Optional.empty();
     }
     for (int i = 0; i < actual.size(); ++i) {
       if (!ASTHelpers.isSameType(actual.get(i), expected.get(i).get(state), state)) {
-        return Optional.absent();
+        return Optional.empty();
       }
     }
     return Optional.of(info);

@@ -16,7 +16,6 @@
 
 package com.google.errorprone.matchers.method;
 
-import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.matchers.method.MethodMatchers.MethodClassMatcher;
@@ -25,6 +24,7 @@ import com.google.errorprone.matchers.method.MethodMatchers.MethodSignatureMatch
 import com.google.errorprone.matchers.method.MethodNameMatcherImpl.Regex;
 import com.google.errorprone.predicates.TypePredicate;
 import com.sun.source.tree.ExpressionTree;
+import java.util.Optional;
 import java.util.regex.Pattern;
 
 /** Matches on the method's class type, and allows refinement on method name or signature. */
@@ -41,9 +41,7 @@ class MethodClassMatcherImpl extends AbstractChainedMatcher<MatchState, MatchSta
   @Override
   protected Optional<MatchState> matchResult(
       ExpressionTree item, MatchState method, VisitorState state) {
-    return predicate.apply(method.ownerType(), state)
-        ? Optional.of(method)
-        : Optional.<MatchState>absent();
+    return predicate.apply(method.ownerType(), state) ? Optional.of(method) : Optional.empty();
   }
 
   @Override

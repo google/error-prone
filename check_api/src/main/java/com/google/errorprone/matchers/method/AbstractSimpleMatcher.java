@@ -16,10 +16,10 @@
 
 package com.google.errorprone.matchers.method;
 
-import com.google.common.base.Optional;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.matchers.Matcher;
 import com.sun.source.tree.ExpressionTree;
+import java.util.Optional;
 
 /** Super-type for base (non-chained) matchers. */
 abstract class AbstractSimpleMatcher<T> implements Matcher<ExpressionTree> {
