@@ -88,7 +88,8 @@ abstract class UNewClass extends UExpression implements NewClassTree {
         .thenChoose(unifications(getTypeArguments(), newClass.getTypeArguments()))
         .thenChoose(unifications(getIdentifier(), newClass.getIdentifier()))
         .thenChoose(unifications(getClassBody(), newClass.getClassBody()))
-        .thenChoose(unifications(getArguments(), newClass.getArguments()));
+        .thenChoose(
+            unifications(getArguments(), newClass.getArguments(), /* allowVarargs= */ true));
   }
 
   @Override
