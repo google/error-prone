@@ -32,6 +32,7 @@ import com.sun.source.tree.CompoundAssignmentTree;
 import com.sun.source.tree.EnhancedForLoopTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
+import com.sun.source.tree.MemberReferenceTree;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.ReturnTree;
@@ -341,6 +342,19 @@ public class UnnecessaryBoxedVariable extends BugChecker implements VariableTree
       // Don't count a return value as a boxed usage. If it's not otherwise used in a boxed way,
       // it is trivial to box it on return.
       return null;
+    }
+
+    @Override
+    public Void visitMemberReference(MemberReferenceTree node, Void aVoid) {
+      ExpressionTree qualifierExpression = node.getQualifierExpression();
+      if (qualifierExpression.getKind() == Kind.IDENTIFIER) {
+        Symbol symbol = ASTHelpers.getSymbol(qualifierExpression);
+        if (Objects.equals(symbol, varSymbol)) {
+          found = true;
+          return null;
+        }
+      }
+      return super.visitMemberReference(node, aVoid);
     }
   }
 }
