@@ -30,7 +30,6 @@ import com.google.errorprone.bugpatterns.collectionincompatibletype.AbstractColl
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.method.MethodMatchers;
-import com.google.errorprone.matchers.method.MethodMatchers.ParameterMatcher;
 import com.google.errorprone.util.ASTHelpers;
 import com.google.errorprone.util.Signatures;
 import com.sun.source.tree.ExpressionTree;
@@ -53,7 +52,7 @@ public class TruthIncompatibleType extends BugChecker implements MethodInvocatio
       new AbstractCollectionIncompatibleTypeMatcher() {
 
         // TODO(cushon): expand to other assertThat methods to handle e.g. ListSubject
-        private final ParameterMatcher assertThatObject =
+        private final Matcher<ExpressionTree> assertThatObject =
             MethodMatchers.staticMethod()
                 .onClass("com.google.common.truth.Truth")
                 .named("assertThat")

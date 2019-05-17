@@ -35,10 +35,9 @@ import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
-import com.google.errorprone.matchers.method.MethodMatchers.MethodNameMatcher;
-import com.google.errorprone.matchers.method.MethodMatchers.ParameterMatcher;
 import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.ExpressionStatementTree;
+import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.VariableTree;
@@ -84,8 +83,8 @@ public final class AndroidInjectionBeforeSuper extends BugChecker implements Met
 
     private final String lifecycleMethod;
     private final Matcher<MethodTree> methodMatcher;
-    private final MethodNameMatcher methodInvocationMatcher;
-    private final ParameterMatcher injectMethodMatcher;
+    private final Matcher<ExpressionTree> methodInvocationMatcher;
+    private final Matcher<ExpressionTree> injectMethodMatcher;
 
     MatchType(
         String componentType,

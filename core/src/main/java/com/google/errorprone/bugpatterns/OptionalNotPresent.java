@@ -21,8 +21,8 @@ import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.matchers.Description;
+import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
-import com.google.errorprone.matchers.method.MethodMatchers.MethodNameMatcher;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.BinaryTree;
@@ -46,12 +46,12 @@ import java.util.Iterator;
     severity = WARNING)
 public class OptionalNotPresent extends BugChecker implements MethodInvocationTreeMatcher {
 
-  private static final MethodNameMatcher GOOGLE_OPTIONAL_PRESENT =
+  private static final Matcher<ExpressionTree> GOOGLE_OPTIONAL_PRESENT =
       Matchers.instanceMethod()
           .onDescendantOf(com.google.common.base.Optional.class.getName())
           .named("isPresent");
 
-  private static final MethodNameMatcher OPTIONAL_PRESENT =
+  private static final Matcher<ExpressionTree> OPTIONAL_PRESENT =
       Matchers.instanceMethod().onDescendantOf("java.util.Optional").named("isPresent");
 
   @Override

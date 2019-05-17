@@ -38,10 +38,10 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
-import com.google.errorprone.matchers.method.MethodMatchers.ConstructorMatcher;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ExpressionStatementTree;
+import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.NewClassTree;
@@ -73,7 +73,7 @@ public class MustBeClosedChecker extends AbstractMustBeClosedChecker
 
   private static final Matcher<MethodTree> AUTO_CLOSEABLE_CONSTRUCTOR_MATCHER =
       allOf(methodIsConstructor(), enclosingClass(isSubtypeOf(AutoCloseable.class)));
-  private static final ConstructorMatcher CONSTRUCTOR = constructor();
+  private static final Matcher<ExpressionTree> CONSTRUCTOR = constructor();
 
   /**
    * Check that the {@link MustBeClosed} annotation is only used for constructors of AutoCloseables

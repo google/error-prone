@@ -34,7 +34,6 @@ import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
-import com.google.errorprone.matchers.method.MethodMatchers.MethodNameMatcher;
 import com.google.errorprone.suppliers.Suppliers;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
@@ -65,10 +64,10 @@ public final class TruthAssertExpected extends BugChecker implements MethodInvoc
   private static final String TRUTH = "com.google.common.truth.Truth";
   private static final String PROTOTRUTH = "com.google.common.truth.extensions.proto.ProtoTruth";
 
-  private static final MethodNameMatcher TRUTH_ASSERTTHAT =
+  private static final Matcher<ExpressionTree> TRUTH_ASSERTTHAT =
       staticMethod().onClassAny(TRUTH, PROTOTRUTH).named("assertThat");
 
-  private static final MethodNameMatcher TRUTH_VERB =
+  private static final Matcher<ExpressionTree> TRUTH_VERB =
       instanceMethod()
           .onDescendantOf("com.google.common.truth.StandardSubjectBuilder")
           .named("that");

@@ -37,10 +37,10 @@ import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.JUnitMatchers;
 import com.google.errorprone.matchers.Matcher;
-import com.google.errorprone.matchers.method.MethodMatchers.MethodNameMatcher;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.CatchTree;
 import com.sun.source.tree.ExpressionStatementTree;
+import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
@@ -71,7 +71,7 @@ import java.util.stream.Stream;
     providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class CatchFail extends BugChecker implements TryTreeMatcher {
 
-  public static final MethodNameMatcher ASSERT_WITH_MESSAGE =
+  public static final Matcher<ExpressionTree> ASSERT_WITH_MESSAGE =
       staticMethod().onClass("com.google.common.truth.Truth").named("assertWithMessage");
 
   private static final Matcher<StatementTree> FAIL_METHOD =

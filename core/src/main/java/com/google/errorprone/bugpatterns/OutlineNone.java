@@ -30,7 +30,6 @@ import com.google.errorprone.matchers.AnnotationMatcherUtils;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
-import com.google.errorprone.matchers.method.MethodMatchers.MethodNameMatcher;
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
@@ -51,7 +50,7 @@ public class OutlineNone extends BugChecker
   // TODO(b/119196262): Expand to more methods of setting CSS properties.
   private static final Matcher<AnnotationTree> TEMPLATE_ANNOTATION =
       Matchers.isType("com.google.gwt.safehtml.client.SafeHtmlTemplates.Template");
-  private static final MethodNameMatcher GWT_SET_PROPERTY =
+  private static final Matcher<ExpressionTree> GWT_SET_PROPERTY =
       Matchers.instanceMethod()
           .onDescendantOf("com.google.gwt.dom.client.Style")
           .withNameMatching(Pattern.compile("setProperty(Px)?"));

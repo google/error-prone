@@ -34,7 +34,6 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
-import com.google.errorprone.matchers.method.MethodMatchers.ConstructorClassMatcher;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
@@ -52,9 +51,6 @@ import java.util.List;
     providesFix = REQUIRES_HUMAN_ATTENTION)
 public final class JodaNewPeriod extends BugChecker implements MethodInvocationTreeMatcher {
 
-  private static final ConstructorClassMatcher PERIOD_CONSTRUCTOR =
-      constructor().forClass("org.joda.time.Period");
-
   private static final String READABLE_PARTIAL = "org.joda.time.ReadablePartial";
 
   private static final String READABLE_INSTANT = "org.joda.time.ReadableInstant";
@@ -67,9 +63,13 @@ public final class JodaNewPeriod extends BugChecker implements MethodInvocationT
                   "getMonths", "getWeeks", "getDays", "getHours", "getMinutes", "getSeconds"),
           receiverOfInvocation(
               anyOf(
-                  PERIOD_CONSTRUCTOR.withParameters("long", "long"),
-                  PERIOD_CONSTRUCTOR.withParameters(READABLE_PARTIAL, READABLE_PARTIAL),
-                  PERIOD_CONSTRUCTOR.withParameters(READABLE_INSTANT, READABLE_INSTANT))));
+                  constructor().forClass("org.joda.time.Period").withParameters("long", "long"),
+                  constructor()
+                      .forClass("org.joda.time.Period")
+                      .withParameters(READABLE_PARTIAL, READABLE_PARTIAL),
+                  constructor()
+                      .forClass("org.joda.time.Period")
+                      .withParameters(READABLE_INSTANT, READABLE_INSTANT))));
 
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
