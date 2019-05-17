@@ -17,6 +17,7 @@
 package com.google.errorprone.bugpatterns.testdata;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 /** @author awturner@google.com (Andy Turner) */
 class UnnecessaryBoxedVariableCases {
@@ -145,6 +146,11 @@ class UnnecessaryBoxedVariableCases {
   void positive_castMethod_statementExpression() {
     Integer myVariable = 0;
     myVariable.longValue();
+  }
+
+  void negative_methodReference() {
+    Integer myVariable = 0;
+    Stream<Integer> stream = Stream.of(1).filter(myVariable::equals);
   }
 
   private void methodPrimitiveArg(int i) {}
