@@ -94,6 +94,9 @@ public class UnnecessaryLambda extends BugChecker
     if (!canFix(type, sym, state)) {
       return NO_MATCH;
     }
+    if (state.isAndroidCompatible()) {
+      return NO_MATCH;
+    }
     new TreePathScanner<Void, Void>() {
       @Override
       public Void visitMethodInvocation(MethodInvocationTree node, Void unused) {
@@ -128,6 +131,9 @@ public class UnnecessaryLambda extends BugChecker
     }
     Tree type = tree.getType();
     if (!canFix(type, sym, state)) {
+      return NO_MATCH;
+    }
+    if (state.isAndroidCompatible()) {
       return NO_MATCH;
     }
     SuggestedFix.Builder fix = SuggestedFix.builder();

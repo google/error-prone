@@ -99,6 +99,9 @@ public class UnnecessaryAnonymousClass extends BugChecker implements VariableTre
     if (type == null || !state.getTypes().isFunctionalInterface(type)) {
       return NO_MATCH;
     }
+    if (state.isAndroidCompatible()) {
+      return NO_MATCH;
+    }
     SuggestedFix.Builder fix = SuggestedFix.builder();
     String name =
         sym.isStatic()
