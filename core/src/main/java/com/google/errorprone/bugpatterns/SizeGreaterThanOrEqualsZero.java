@@ -38,7 +38,6 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
-import com.google.errorprone.matchers.method.MethodMatchers.ParameterMatcher;
 import com.google.errorprone.predicates.TypePredicates;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.BinaryTree;
@@ -120,7 +119,7 @@ public class SizeGreaterThanOrEqualsZero extends BugChecker implements BinaryTre
               .onClass(TypePredicates.isDescendantOfAny(CLASSES.column(MethodName.LENGTH).keySet()))
               .named("length"));
   private static final Pattern PROTO_COUNT_METHOD_PATTERN = Pattern.compile("get(.+)Count");
-  private static final ParameterMatcher PROTO_METHOD_NAMED_GET_COUNT =
+  private static final Matcher<ExpressionTree> PROTO_METHOD_NAMED_GET_COUNT =
       instanceMethod()
           .onClass(TypePredicates.isDescendantOf("com.google.protobuf.GeneratedMessage"))
           .withNameMatching(PROTO_COUNT_METHOD_PATTERN)

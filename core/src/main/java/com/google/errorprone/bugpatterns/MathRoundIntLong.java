@@ -31,8 +31,8 @@ import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
-import com.google.errorprone.matchers.method.MethodMatchers.MethodNameMatcher;
 import com.google.errorprone.util.ASTHelpers;
+import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 
 /**
@@ -50,7 +50,7 @@ import com.sun.source.tree.MethodInvocationTree;
     severity = ERROR,
     providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public final class MathRoundIntLong extends BugChecker implements MethodInvocationTreeMatcher {
-  private static final MethodNameMatcher MATH_ROUND_CALLS =
+  private static final Matcher<ExpressionTree> MATH_ROUND_CALLS =
       staticMethod().onClass("java.lang.Math").named("round");
 
   private static final Matcher<MethodInvocationTree> ROUND_CALLS_WITH_INT_ARG =

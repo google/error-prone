@@ -23,8 +23,8 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.VariableTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
+import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.method.MethodMatchers;
-import com.google.errorprone.matchers.method.MethodMatchers.MethodNameMatcher;
 import com.google.errorprone.util.ASTHelpers;
 import com.google.errorprone.util.ASTHelpers.TargetType;
 import com.sun.source.tree.AssignmentTree;
@@ -65,7 +65,7 @@ import javax.lang.model.element.ElementKind;
     providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION,
     severity = SeverityLevel.SUGGESTION)
 public class UnnecessaryBoxedVariable extends BugChecker implements VariableTreeMatcher {
-  private static final MethodNameMatcher VALUE_OF_MATCHER =
+  private static final Matcher<ExpressionTree> VALUE_OF_MATCHER =
       MethodMatchers.staticMethod()
           .onClass(UnnecessaryBoxedVariable::isBoxableType)
           .named("valueOf");
@@ -221,11 +221,11 @@ public class UnnecessaryBoxedVariable extends BugChecker implements VariableTree
 
   private static class FindBoxedUsagesScanner extends TreeScanner<Void, Void> {
     // Method invocations like V.hashCode() can be replaced with TypeOfV.hashCode(v).
-    private static final MethodNameMatcher SIMPLE_METHOD_MATCH =
+    private static final Matcher<ExpressionTree> SIMPLE_METHOD_MATCH =
         MethodMatchers.instanceMethod().anyClass().namedAnyOf("hashCode", "toString");
 
     // Method invocations like V.intValue() can be replaced with (int) v.
-    private static final MethodNameMatcher CAST_METHOD_MATCH =
+    private static final Matcher<ExpressionTree> CAST_METHOD_MATCH =
         MethodMatchers.instanceMethod()
             .onClass(UnnecessaryBoxedVariable::isBoxableType)
             .namedAnyOf(

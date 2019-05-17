@@ -25,8 +25,9 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
-import com.google.errorprone.matchers.method.MethodMatchers.MethodNameMatcher;
+import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
+import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.util.TreePath;
@@ -41,10 +42,10 @@ import com.sun.source.util.TreePath;
 public class MultipleParallelOrSequentialCalls extends BugChecker
     implements MethodInvocationTreeMatcher {
 
-  private static final MethodNameMatcher STREAM =
+  private static final Matcher<ExpressionTree> STREAM =
       instanceMethod().onDescendantOf("java.util.Collection").named("stream");
 
-  private static final MethodNameMatcher PARALLELSTREAM =
+  private static final Matcher<ExpressionTree> PARALLELSTREAM =
       instanceMethod().onDescendantOf("java.util.Collection").named("parallelStream");
 
   @Override

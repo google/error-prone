@@ -52,7 +52,6 @@ import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
-import com.google.errorprone.matchers.method.MethodMatchers.ParameterMatcher;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionStatementTree;
 import com.sun.source.tree.ExpressionTree;
@@ -245,7 +244,7 @@ public class UnnecessarySetDefault extends BugChecker implements MethodInvocatio
     return description.build();
   }
 
-  private static ParameterMatcher factoryMatcher(Class<?> clazz, String name) {
+  private static Matcher<ExpressionTree> factoryMatcher(Class<?> clazz, String name) {
     return staticMethod().onClass(clazz.getCanonicalName()).named(name).withParameters();
   }
 

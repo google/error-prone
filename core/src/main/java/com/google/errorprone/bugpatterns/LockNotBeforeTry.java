@@ -30,7 +30,6 @@ import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
-import com.google.errorprone.matchers.method.MethodMatchers.MethodClassMatcher;
 import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.ExpressionStatementTree;
 import com.sun.source.tree.ExpressionTree;
@@ -56,10 +55,10 @@ import com.sun.source.util.TreeScanner;
     providesFix = REQUIRES_HUMAN_ATTENTION)
 public final class LockNotBeforeTry extends BugChecker implements MethodInvocationTreeMatcher {
 
-  private static final MethodClassMatcher LOCK_METHOD =
-      instanceMethod().onDescendantOf("java.util.concurrent.locks.Lock");
-  private static final Matcher<ExpressionTree> LOCK = LOCK_METHOD.named("lock");
-  private static final Matcher<ExpressionTree> UNLOCK = LOCK_METHOD.named("unlock");
+  private static final Matcher<ExpressionTree> LOCK =
+      instanceMethod().onDescendantOf("java.util.concurrent.locks.Lock").named("lock");
+  private static final Matcher<ExpressionTree> UNLOCK =
+      instanceMethod().onDescendantOf("java.util.concurrent.locks.Lock").named("unlock");
 
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
