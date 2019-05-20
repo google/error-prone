@@ -54,6 +54,7 @@ import com.google.errorprone.bugpatterns.BugChecker.VariableTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
+import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
@@ -61,6 +62,7 @@ import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.Tree;
+import com.sun.source.tree.TypeCastTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
@@ -138,9 +140,23 @@ public final class TimeUnitMismatch extends BugChecker
     MethodSymbol symbol = getSymbol(tree);
     if (symbol != null) {
       checkTimeUnitToUnit(tree, symbol, state);
-      checkAll(symbol.getParameters(), tree.getArguments(), state);
+      boolean setterMethodReported = checkSetterStyleMethod(tree, symbol, state);
+      if (!setterMethodReported) {
+        checkAll(symbol.getParameters(), tree.getArguments(), state);
+      }
     }
     return ANY_MATCHES_WERE_ALREADY_REPORTED;
+  }
+
+  // check for setTimeoutInSecs(int timeout) where the callsite is millis
+  private boolean checkSetterStyleMethod(
+      MethodInvocationTree tree, MethodSymbol symbol, VisitorState state) {
+    if (symbol.params().length() == 1
+        && ASTHelpers.isVoidType(symbol.getReturnType(), state)
+        && tree.getArguments().size() == 1) {
+      return check(symbol.name.toString(), tree.getArguments().get(0), state);
+    }
+    return false;
   }
 
   /*
@@ -154,24 +170,26 @@ public final class TimeUnitMismatch extends BugChecker
    * Checks whether this call is a call to {@code TimeUnit.to*} and, if so, whether the units of its
    * parameter and its receiver disagree.
    */
-  private void checkTimeUnitToUnit(
+  private boolean checkTimeUnitToUnit(
       MethodInvocationTree tree, MethodSymbol methodSymbol, VisitorState state) {
     if (tree.getMethodSelect().getKind() != MEMBER_SELECT) {
-      return;
+      return false;
     }
 
     MemberSelectTree memberSelect = (MemberSelectTree) tree.getMethodSelect();
     Symbol receiverSymbol = getSymbol(memberSelect.getExpression());
     if (receiverSymbol == null) {
-      return;
+      return false;
     }
 
     if (isTimeUnit(receiverSymbol, state)
         && receiverSymbol.isEnum()
         && TIME_UNIT_TO_UNIT_METHODS.containsValue(methodSymbol.getSimpleName().toString())
         && tree.getArguments().size() == 1) {
-      check(receiverSymbol.getSimpleName().toString(), getOnlyElement(tree.getArguments()), state);
+      return check(
+          receiverSymbol.getSimpleName().toString(), getOnlyElement(tree.getArguments()), state);
     }
+    return false;
   }
 
   private static boolean isTimeUnit(Symbol receiverSymbol, VisitorState state) {
@@ -190,11 +208,11 @@ public final class TimeUnitMismatch extends BugChecker
           .put(DAYS, "toDays")
           .build();
 
-  private void checkAll(
+  private boolean checkAll(
       List<VarSymbol> formals, List<? extends ExpressionTree> actuals, VisitorState state) {
     if (formals.size() != actuals.size()) {
       // varargs? weird usages of inner classes? TODO(cpovirk): Handle those correctly.
-      return;
+      return false;
     }
 
     /*
@@ -202,12 +220,14 @@ public final class TimeUnitMismatch extends BugChecker
      * This is the kind of thing that DurationToLongTimeUnit covers but more generic.
      */
 
+    boolean hasFinding = false;
     for (int i = 0; i < formals.size(); i++) {
-      check(formals.get(i).getSimpleName().toString(), actuals.get(i), state);
+      hasFinding |= check(formals.get(i).getSimpleName().toString(), actuals.get(i), state);
     }
+    return hasFinding;
   }
 
-  private void check(String formalName, ExpressionTree actualTree, VisitorState state) {
+  private boolean check(String formalName, ExpressionTree actualTree, VisitorState state) {
     /*
      * Sometimes people name a Duration parameter something like "durationMs." Then we falsely
      * report a problem if the value comes from Duration.ofSeconds(). Let's stick to numeric types.
@@ -216,7 +236,7 @@ public final class TimeUnitMismatch extends BugChecker
      * possible mistakes.
      */
     if (!NUMERIC_TIME_TYPE.matches(actualTree, state)) {
-      return;
+      return false;
     }
 
     /*
@@ -233,13 +253,13 @@ public final class TimeUnitMismatch extends BugChecker
        */
       // TODO(cpovirk): Look for multiplication/division operations that are meant to change units.
       // TODO(cpovirk): ...even if they include casts!
-      return;
+      return false;
     }
 
     TimeUnit formalUnit = unitSuggestedByName(formalName);
     TimeUnit actualUnit = unitSuggestedByName(actualName);
     if (formalUnit == null || actualUnit == null || formalUnit == actualUnit) {
-      return;
+      return false;
     }
 
     String message =
@@ -293,6 +313,7 @@ public final class TimeUnitMismatch extends BugChecker
      * produces nested toFoo(...) calls. A better fix would be to replace the existing call with a
      * corrected call.
      */
+    return true;
   }
 
   /**
@@ -306,6 +327,8 @@ public final class TimeUnitMismatch extends BugChecker
   @Nullable
   private static String extractArgumentName(ExpressionTree expr) {
     switch (expr.getKind()) {
+      case TYPE_CAST:
+        return extractArgumentName(((TypeCastTree) expr).getExpression());
       case MEMBER_SELECT:
         {
           // If we have a field or method access, we use the name of the field/method. (We ignore
