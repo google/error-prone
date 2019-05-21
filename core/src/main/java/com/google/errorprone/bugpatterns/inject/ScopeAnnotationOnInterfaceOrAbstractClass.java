@@ -41,7 +41,7 @@ import com.sun.tools.javac.code.Flags;
 /** @author sgoldfeder@google.com (Steven Goldfeder) */
 @BugPattern(
     name = "InjectScopeAnnotationOnInterfaceOrAbstractClass",
-    summary = "Scope annotation on an interface or abstact class is not allowed",
+    summary = "Scope annotation on an interface or abstract class is not allowed",
     severity = ERROR,
     providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class ScopeAnnotationOnInterfaceOrAbstractClass extends BugChecker
