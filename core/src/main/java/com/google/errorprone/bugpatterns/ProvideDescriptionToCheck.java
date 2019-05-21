@@ -25,7 +25,9 @@ import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.instanceMethod;
 import static com.sun.source.tree.Tree.Kind.IDENTIFIER;
+import static com.sun.source.tree.Tree.Kind.MEMBER_SELECT;
 import static com.sun.source.tree.Tree.Kind.METHOD_INVOCATION;
+import static java.lang.String.format;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -33,6 +35,7 @@ import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.sun.source.tree.ExpressionTree;
+import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.util.TreePath;
@@ -62,23 +65,48 @@ public final class ProvideDescriptionToCheck extends BugChecker
     if (!NO_ARG_CHECK.matches(maybeCheckCall, state)) {
       return NO_MATCH;
     }
-    if (maybeCheckCall.getMethodSelect().getKind() != IDENTIFIER) {
-      return NO_MATCH;
-      // TODO(cpovirk): Handle "this.check(...)," etc.
-    }
 
     MethodInvocationTree maybeThatCall = findThatCall(state);
-    if (maybeThatCall == null) {
+    if (maybeThatCall == null || maybeThatCall.getArguments().size() != 1) {
       return NO_MATCH;
     }
 
     ExpressionTree arg = getOnlyElement(maybeThatCall.getArguments());
     String checkDescription = makeCheckDescription(arg, state);
     if (checkDescription == null) {
+      /*
+       * TODO(cpovirk): Consider alternative ways of guessing the name.
+       *
+       * Our best bet: Look at the name of the assertion method. If the method is `StringSubject
+       * hasUsername()`, then we should probably generate `check("username()")`. Similarly for
+       * `StringSubject withUsername()` and `StringSubject username()`.
+       *
+       * One bit of complexity here is parameters: If the method is `StringSubject
+       * hasUsername(String param)`, should we generate `check("username()")` or
+       * `check("username(%s)", param)`? The former is right if the assertion is
+       * `check().that(actualUsername).isEqualTo(param)`; the latter is right if the assertion is
+       * `return check().that(usernameFor(param))`. We could guess based on whether `param` is used
+       * before the call to `that` (including in computing the argument to `that`, even though the
+       * argument comes textually *after* `that`) and based on whether the assertion method returns
+       * a Subject (though note that some methods `return this`, a practice we discourage).
+       */
       return NO_MATCH;
     }
-    return describeMatch(
-        maybeCheckCall, replace(maybeCheckCall, String.format("check(%s)", checkDescription)));
+
+    String newCheck = format("check(%s)", checkDescription);
+    if (maybeCheckCall.getMethodSelect().getKind() == IDENTIFIER) {
+      return describeMatch(maybeCheckCall, replace(maybeCheckCall, newCheck));
+    } else if (maybeCheckCall.getMethodSelect().getKind() == MEMBER_SELECT) {
+      MemberSelectTree methodSelect = (MemberSelectTree) maybeCheckCall.getMethodSelect();
+      return describeMatch(
+          maybeCheckCall,
+          replace(
+              state.getEndPosition(methodSelect.getExpression()),
+              state.getEndPosition(maybeCheckCall),
+              "." + newCheck));
+    } else {
+      return NO_MATCH;
+    }
   }
 
   /**
@@ -115,24 +143,24 @@ public final class ProvideDescriptionToCheck extends BugChecker
 
   private static final Matcher<ExpressionTree> NO_ARG_CHECK =
       instanceMethod()
-          .onExactClass("com.google.common.truth.Subject")
+          .onDescendantOf("com.google.common.truth.Subject")
           .named("check")
           .withParameters();
 
   private static final Matcher<ExpressionTree> SUBJECT_BUILDER_THAT =
       anyOf(
           instanceMethod()
-              .onExactClass("com.google.common.truth.CustomSubjectBuilder")
+              .onDescendantOf("com.google.common.truth.CustomSubjectBuilder")
               .named("that"),
           instanceMethod()
-              .onExactClass("com.google.common.truth.SimpleSubjectBuilder")
+              .onDescendantOf("com.google.common.truth.SimpleSubjectBuilder")
               .named("that"),
           instanceMethod()
-              .onExactClass("com.google.common.truth.StandardSubjectBuilder")
+              .onDescendantOf("com.google.common.truth.StandardSubjectBuilder")
               .named("that"));
 
   private static final Matcher<ExpressionTree> WITH_MESSAGE_OR_ABOUT =
       instanceMethod()
-          .onExactClass("com.google.common.truth.StandardSubjectBuilder")
+          .onDescendantOf("com.google.common.truth.StandardSubjectBuilder")
           .namedAnyOf("withMessage", "about");
 }

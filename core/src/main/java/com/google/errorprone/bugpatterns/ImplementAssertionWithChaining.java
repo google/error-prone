@@ -33,6 +33,7 @@ import static com.sun.source.tree.Tree.Kind.EXPRESSION_STATEMENT;
 import static com.sun.source.tree.Tree.Kind.IDENTIFIER;
 import static com.sun.source.tree.Tree.Kind.MEMBER_SELECT;
 import static com.sun.source.tree.Tree.Kind.METHOD_INVOCATION;
+import static java.lang.String.format;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
@@ -62,7 +63,7 @@ import java.util.List;
  * <pre>{@code
  * // Before:
  * if (actual().foo() != expected) {
- *   fail("has foo", expected):;
+ *   fail("has foo", expected);
  * }
  *
  * // After:
@@ -86,8 +87,8 @@ public final class ImplementAssertionWithChaining extends BugChecker implements 
     }
 
     /*
-     * TODO(cpovirk): Also look for assertions that could use isTrue, isFalse, isEmpty, etc. (But
-     * isTrue and isFalse in particular often benefit from custom messages.)
+     * TODO(cpovirk): Also look for assertions that could use isTrue, isFalse, isNull, isEmpty, etc.
+     * (But isTrue and isFalse in particular often benefit from custom messages.)
      */
     ImmutableList<ExpressionTree> actualAndExpected =
         findActualAndExpected(stripParentheses(ifTree.getCondition()), state);
@@ -100,11 +101,15 @@ public final class ImplementAssertionWithChaining extends BugChecker implements 
       return NO_MATCH;
     }
 
+    /*
+     * TODO(cpovirk): Write "this.check(...)" if the code uses "this.actual()" or "this.fail*(...)."
+     * Similarly for "otherObject.check(...)."
+     */
     return describeMatch(
         ifTree,
         replace(
             ifTree,
-            String.format(
+            format(
                 "check(%s).that(%s).isEqualTo(%s);",
                 checkDescription,
                 state.getSourceForNode(actualAndExpected.get(0)),
@@ -254,19 +259,19 @@ public final class ImplementAssertionWithChaining extends BugChecker implements 
 
   private static final Matcher<ExpressionTree> LEGACY_FAIL_METHOD =
       anyOf(
-          instanceMethod().onExactClass("com.google.common.truth.Subject").named("fail"),
+          instanceMethod().onDescendantOf("com.google.common.truth.Subject").named("fail"),
           instanceMethod()
-              .onExactClass("com.google.common.truth.Subject")
+              .onDescendantOf("com.google.common.truth.Subject")
               .named("failWithBadResults"),
           instanceMethod()
-              .onExactClass("com.google.common.truth.Subject")
+              .onDescendantOf("com.google.common.truth.Subject")
               .named("failWithCustomSubject"),
           instanceMethod()
-              .onExactClass("com.google.common.truth.Subject")
+              .onDescendantOf("com.google.common.truth.Subject")
               .named("failWithoutActual")
               .withParameters("java.lang.String"),
           instanceMethod()
-              .onExactClass("com.google.common.truth.Subject")
+              .onDescendantOf("com.google.common.truth.Subject")
               .named("failWithoutSubject"));
 
   private static final Matcher<ExpressionTree> EQUALS_LIKE_METHOD =
