@@ -24,6 +24,7 @@ import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.instanceMethod;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
+import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
 import static com.google.errorprone.util.ASTHelpers.stripParentheses;
@@ -49,6 +50,7 @@ import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.UnaryTree;
+import com.sun.tools.javac.code.Symbol;
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.List;
@@ -232,7 +234,7 @@ public final class ImplementAssertionWithChaining extends BugChecker implements 
       parts.addFirst(memberSelect.getIdentifier() + "()");
 
       ExpressionTree expression = memberSelect.getExpression();
-      if (ACTUAL_METHOD.matches(expression, state)) {
+      if (ACTUAL_METHOD.matches(expression, state) || refersToFieldNamedActual(expression)) {
         return '"' + Joiner.on('.').join(parts) + '"';
       }
       if (expression.getKind() != METHOD_INVOCATION) {
@@ -240,6 +242,14 @@ public final class ImplementAssertionWithChaining extends BugChecker implements 
       }
       invocation = (MethodInvocationTree) expression;
     }
+  }
+
+  private static boolean refersToFieldNamedActual(ExpressionTree tree) {
+    Symbol symbol = getSymbol(tree);
+    // Using the name "actual" for this field is just a convention, but that's good enough here.
+    return symbol != null
+        && symbol.getKind().isField()
+        && symbol.getSimpleName().contentEquals("actual");
   }
 
   private static final Matcher<ExpressionTree> LEGACY_FAIL_METHOD =
