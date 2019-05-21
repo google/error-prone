@@ -21,7 +21,6 @@ import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 
 import com.google.common.base.CharMatcher;
-import com.google.common.collect.ImmutableList;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.StandardTags;
 import com.google.errorprone.VisitorState;
@@ -35,6 +34,7 @@ import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
 import com.sun.tools.javac.parser.Tokens.TokenKind;
+import java.util.List;
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
@@ -70,7 +70,7 @@ public class MixedArrayDimensions extends BugChecker
       if (start >= end) {
         continue;
       }
-      ImmutableList<ErrorProneToken> tokens = state.getOffsetTokens(start, end);
+      List<ErrorProneToken> tokens = state.getOffsetTokens(start, end);
       if (tokens.size() > 2 && tokens.get(0).kind() == TokenKind.IDENTIFIER) {
         String dim = source.subSequence(start, end).toString();
         int nonWhitespace = CharMatcher.isNot(' ').indexIn(dim);

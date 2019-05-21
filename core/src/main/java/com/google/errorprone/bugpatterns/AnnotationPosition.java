@@ -148,7 +148,7 @@ public final class AnnotationPosition extends BugChecker
   }
 
   /** Tokenizes as little of the {@code tree} as possible to ensure we grab all the annotations. */
-  private static ImmutableList<ErrorProneToken> annotationTokens(
+  private static List<ErrorProneToken> annotationTokens(
       Tree tree, VisitorState state, int annotationEnd) {
     int endPos;
     if (tree instanceof JCMethodDecl) {
