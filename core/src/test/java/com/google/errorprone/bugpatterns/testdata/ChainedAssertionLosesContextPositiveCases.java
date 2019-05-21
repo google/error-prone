@@ -27,6 +27,8 @@ import com.google.common.truth.Truth;
 /** @author cpovirk@google.com (Chris Povirk) */
 public class ChainedAssertionLosesContextPositiveCases {
   static final class FooSubject extends Subject<FooSubject, Foo> {
+    private final Foo actual;
+
     static Factory<FooSubject, Foo> foos() {
       return FooSubject::new;
     }
@@ -37,40 +39,41 @@ public class ChainedAssertionLosesContextPositiveCases {
 
     private FooSubject(FailureMetadata metadata, Foo actual) {
       super(metadata, actual);
+      this.actual = actual;
     }
 
     void hasString(String expected) {
-      // BUG: Diagnostic contains: check("string()").that(actual().string()).isEqualTo(expected)
-      Truth.assertThat(actual().string()).isEqualTo(expected);
+      // BUG: Diagnostic contains: check("string()").that(actual.string()).isEqualTo(expected)
+      Truth.assertThat(actual.string()).isEqualTo(expected);
     }
 
     void hasOtherFooInteger(int expected) {
       // BUG: Diagnostic contains:
-      // check("otherFoo().integer()").that(actual().otherFoo().integer()).isEqualTo(expected)
-      Truth.assertThat(actual().otherFoo().integer()).isEqualTo(expected);
+      // check("otherFoo().integer()").that(actual.otherFoo().integer()).isEqualTo(expected)
+      Truth.assertThat(actual.otherFoo().integer()).isEqualTo(expected);
     }
 
     FooSubject otherFooAbout() {
-      // BUG: Diagnostic contains: check("otherFoo()").about(foos()).that(actual().otherFoo())
-      return assertAbout(foos()).that(actual().otherFoo());
+      // BUG: Diagnostic contains: check("otherFoo()").about(foos()).that(actual.otherFoo())
+      return assertAbout(foos()).that(actual.otherFoo());
     }
 
     void withMessage(String expected) {
       // BUG: Diagnostic contains:
-      // check("string()").withMessage("blah").that(actual().string()).isEqualTo(expected)
-      assertWithMessage("blah").that(actual().string()).isEqualTo(expected);
+      // check("string()").withMessage("blah").that(actual.string()).isEqualTo(expected)
+      assertWithMessage("blah").that(actual.string()).isEqualTo(expected);
     }
 
     void withMessageWithArgs(String expected) {
       // BUG: Diagnostic contains:
-      // check("string()").withMessage("%s", "blah").that(actual().string()).isEqualTo(expected)
-      assertWithMessage("%s", "blah").that(actual().string()).isEqualTo(expected);
+      // check("string()").withMessage("%s", "blah").that(actual.string()).isEqualTo(expected)
+      assertWithMessage("%s", "blah").that(actual.string()).isEqualTo(expected);
     }
 
     void plainAssert(String expected) {
       // BUG: Diagnostic contains:
-      // check("string()").that(actual().string()).isEqualTo(expected)
-      assert_().that(actual().string()).isEqualTo(expected);
+      // check("string()").that(actual.string()).isEqualTo(expected)
+      assert_().that(actual.string()).isEqualTo(expected);
     }
   }
 

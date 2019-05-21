@@ -25,36 +25,39 @@ import com.google.common.truth.Subject;
 /** @author cpovirk@google.com (Chris Povirk) */
 public class ProvideDescriptionToCheckPositiveCases {
   static final class FooSubject extends Subject<FooSubject, Foo> {
+    private final Foo actual;
+
     private FooSubject(FailureMetadata metadata, Foo actual) {
       super(metadata, actual);
+      this.actual = actual;
     }
 
     void hasString(String expected) {
-      // BUG: Diagnostic contains: check("string()").that(actual().string()).isEqualTo(expected)
-      check().that(actual().string()).isEqualTo(expected);
+      // BUG: Diagnostic contains: check("string()").that(actual.string()).isEqualTo(expected)
+      check().that(actual.string()).isEqualTo(expected);
     }
 
     void hasStringWithMessage(String expected) {
       // BUG: Diagnostic contains:
-      // check("string()").withMessage("abc").that(actual().string()).isEqualTo(expected)
-      check().withMessage("abc").that(actual().string()).isEqualTo(expected);
+      // check("string()").withMessage("abc").that(actual.string()).isEqualTo(expected)
+      check().withMessage("abc").that(actual.string()).isEqualTo(expected);
     }
 
     void hasStringAbout(String expected) {
       // BUG: Diagnostic contains:
-      // check("string()").about(myStrings()).that(actual().string()).isEqualTo(expected)
-      check().about(myStrings()).that(actual().string()).isEqualTo(expected);
+      // check("string()").about(myStrings()).that(actual.string()).isEqualTo(expected)
+      check().about(myStrings()).that(actual.string()).isEqualTo(expected);
     }
 
     void hasStringWithMessageAbout(String expected) {
       // BUG: Diagnostic contains: check("string()")
-      check().withMessage("abc").about(myStrings()).that(actual().string()).isEqualTo(expected);
+      check().withMessage("abc").about(myStrings()).that(actual.string()).isEqualTo(expected);
     }
 
     void hasOtherFooInteger(int expected) {
       // BUG: Diagnostic contains:
-      // check("otherFoo().integer()").that(actual().otherFoo().integer()).isEqualTo(expected)
-      check().that(actual().otherFoo().integer()).isEqualTo(expected);
+      // check("otherFoo().integer()").that(actual.otherFoo().integer()).isEqualTo(expected)
+      check().that(actual.otherFoo().integer()).isEqualTo(expected);
     }
   }
 

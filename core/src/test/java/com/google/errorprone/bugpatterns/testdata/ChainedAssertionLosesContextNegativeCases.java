@@ -25,8 +25,11 @@ import com.google.common.truth.Subject;
 /** @author cpovirk@google.com (Chris Povirk) */
 public class ChainedAssertionLosesContextNegativeCases {
   static final class FooSubject extends Subject<FooSubject, Foo> {
+    private final Foo actual;
+
     private FooSubject(FailureMetadata metadata, Foo actual) {
       super(metadata, actual);
+      this.actual = actual;
     }
 
     static Factory<FooSubject, Foo> foos() {
@@ -38,8 +41,8 @@ public class ChainedAssertionLosesContextNegativeCases {
     }
 
     FooSubject otherFoo() {
-      // Should someday suggest: check("otherFoo()").about(foos()).that(actual().otherFoo())
-      return assertThat(actual().otherFoo());
+      // Should someday suggest: check("otherFoo()").about(foos()).that(actual.otherFoo())
+      return assertThat(actual.otherFoo());
     }
   }
 

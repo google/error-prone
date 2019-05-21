@@ -22,24 +22,27 @@ import com.google.common.truth.Subject;
 /** @author cpovirk@google.com (Chris Povirk) */
 public class ImplementAssertionWithChainingNegativeCases {
   static final class FooSubject extends Subject<FooSubject, Foo> {
+    private final Foo actual;
+
     private FooSubject(FailureMetadata metadata, Foo actual) {
       super(metadata, actual);
+      this.actual = actual;
     }
 
     void doesNotHaveString(String other) {
-      if (actual().string().equals(other)) {
+      if (actual.string().equals(other)) {
         fail("matched unexpected string");
       }
     }
 
     void doesNotHaveInteger(int other) {
-      if (actual().integer() == other) {
+      if (actual.integer() == other) {
         fail("had unexpected integer");
       }
     }
 
     void hasBoxedIntegerSameInstance(Integer expected) {
-      if (actual().boxedInteger() != expected) {
+      if (actual.boxedInteger() != expected) {
         fail("didn't match expected string instance");
       }
     }

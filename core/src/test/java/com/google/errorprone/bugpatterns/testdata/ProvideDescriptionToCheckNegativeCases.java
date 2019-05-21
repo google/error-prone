@@ -22,12 +22,15 @@ import com.google.common.truth.Subject;
 /** @author cpovirk@google.com (Chris Povirk) */
 public class ProvideDescriptionToCheckNegativeCases {
   static final class FooSubject extends Subject<FooSubject, Foo> {
+    private final Foo actual;
+
     private FooSubject(FailureMetadata metadata, Foo actual) {
       super(metadata, actual);
+      this.actual = actual;
     }
 
     void alreadyPassesDescription(String expected) {
-      check("s()").that(actual().string()).isEqualTo(expected);
+      check("s()").that(actual.string()).isEqualTo(expected);
     }
   }
 
