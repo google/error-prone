@@ -58,6 +58,11 @@ public class ChainedAssertionLosesContextPositiveCases {
       return assertAbout(foos()).that(actual.otherFoo());
     }
 
+    FooSubject otherFooThat() {
+      // BUG: Diagnostic contains: check("otherFoo()").about(foos()).that(actual.otherFoo())
+      return assertThat(actual.otherFoo());
+    }
+
     void withMessage(String expected) {
       // BUG: Diagnostic contains:
       // check("string()").withMessage("blah").that(actual.string()).isEqualTo(expected)

@@ -39,11 +39,6 @@ public class ChainedAssertionLosesContextNegativeCases {
     static FooSubject assertThat(Foo foo) {
       return assertAbout(foos()).that(foo);
     }
-
-    FooSubject otherFoo() {
-      // Should someday suggest: check("otherFoo()").about(foos()).that(actual.otherFoo())
-      return assertThat(actual.otherFoo());
-    }
   }
 
   void someTestMethod() {

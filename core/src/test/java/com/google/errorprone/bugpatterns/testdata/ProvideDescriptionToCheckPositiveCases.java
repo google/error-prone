@@ -18,6 +18,7 @@ package com.google.errorprone.bugpatterns.testdata;
 
 import static com.google.errorprone.bugpatterns.testdata.ProvideDescriptionToCheckPositiveCases.MyStringSubject.myStrings;
 
+import com.google.common.truth.CustomSubjectBuilder;
 import com.google.common.truth.FailureMetadata;
 import com.google.common.truth.StringSubject;
 import com.google.common.truth.Subject;
@@ -35,6 +36,11 @@ public class ProvideDescriptionToCheckPositiveCases {
     void hasString(String expected) {
       // BUG: Diagnostic contains: check("string()").that(actual.string()).isEqualTo(expected)
       check().that(actual.string()).isEqualTo(expected);
+    }
+
+    void hasStringThisCheck(String expected) {
+      // BUG: Diagnostic contains: this.check("string()").that(actual.string()).isEqualTo(
+      this.check().that(actual.string()).isEqualTo(expected);
     }
 
     void hasStringWithMessage(String expected) {
@@ -59,6 +65,12 @@ public class ProvideDescriptionToCheckPositiveCases {
       // check("otherFoo().integer()").that(actual.otherFoo().integer()).isEqualTo(expected)
       check().that(actual.otherFoo().integer()).isEqualTo(expected);
     }
+
+    FooSubject hasOtherFooUsingFactory() {
+      // BUG: Diagnostic contains:
+      // check("otherFoo()").about(foos()).that(actual.otherFoo())
+      return check().about(foos()).that(actual.otherFoo());
+    }
   }
 
   static final class MyStringSubject extends StringSubject {
@@ -69,6 +81,20 @@ public class ProvideDescriptionToCheckPositiveCases {
     static Factory<StringSubject, String> myStrings() {
       return MyStringSubject::new;
     }
+  }
+
+  static final class FooCustomSubjectBuilder extends CustomSubjectBuilder {
+    FooCustomSubjectBuilder(FailureMetadata metadata) {
+      super(metadata);
+    }
+
+    FooSubject that(Foo actual) {
+      return new FooSubject(metadata(), actual);
+    }
+  }
+
+  static CustomSubjectBuilder.Factory<FooCustomSubjectBuilder> foos() {
+    return FooCustomSubjectBuilder::new;
   }
 
   private static final class Foo {
