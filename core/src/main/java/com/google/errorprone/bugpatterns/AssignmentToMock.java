@@ -28,6 +28,7 @@ import static com.google.errorprone.matchers.Matchers.hasArgumentWithValue;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.AssignmentTreeMatcher;
@@ -49,6 +50,7 @@ import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.parser.Tokens.TokenKind;
 import com.sun.tools.javac.tree.JCTree;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /** Discourage manual initialization or assignment to fields annotated with {@code @Mock}. */
@@ -104,9 +106,9 @@ public final class AssignmentToMock extends BugChecker
       return SuggestedFix.delete(anno);
     }
     int startPos = ((JCTree) tree).getStartPosition();
-    ImmutableList<ErrorProneToken> tokens =
+    List<ErrorProneToken> tokens =
         state.getOffsetTokens(startPos, ((JCTree) tree.getInitializer()).getStartPosition());
-    for (ErrorProneToken token : tokens.reverse()) {
+    for (ErrorProneToken token : Lists.reverse(tokens)) {
       if (token.kind() == TokenKind.EQ) {
         return SuggestedFix.replace(token.pos(), state.getEndPosition(tree.getInitializer()), "");
       }

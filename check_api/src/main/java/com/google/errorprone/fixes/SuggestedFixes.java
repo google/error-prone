@@ -1042,7 +1042,7 @@ public class SuggestedFixes {
     } else {
       startTokenization = state.getEndPosition(classTree.getModifiers());
     }
-    ImmutableList<ErrorProneToken> tokens =
+    List<ErrorProneToken> tokens =
         state.getOffsetTokens(startTokenization, state.getEndPosition(tree));
     if (previousMember == null) {
       tokens = getTokensAfterOpeningBrace(tokens);
@@ -1075,8 +1075,7 @@ public class SuggestedFixes {
     return SuggestedFix.replace(startPos, state.getEndPosition(tree), replacement);
   }
 
-  private static ImmutableList<ErrorProneToken> getTokensAfterOpeningBrace(
-      ImmutableList<ErrorProneToken> tokens) {
+  private static List<ErrorProneToken> getTokensAfterOpeningBrace(List<ErrorProneToken> tokens) {
     for (int i = 0; i < tokens.size() - 1; ++i) {
       if (tokens.get(i).kind() == TokenKind.LBRACE) {
         return tokens.subList(i + 1, tokens.size());
