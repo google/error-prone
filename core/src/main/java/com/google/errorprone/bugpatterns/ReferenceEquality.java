@@ -80,8 +80,10 @@ public class ReferenceEquality extends AbstractReferenceEquality {
     }
     Symbol compareTo = getOnlyMember(state, state.getSymtab().comparableType, "compareTo");
     Symbol equals = getOnlyMember(state, state.getSymtab().objectType, "equals");
-    if (!sym.overrides(compareTo, classType.tsym, state.getTypes(), /* checkResult= */ false)
-        && !sym.overrides(equals, classType.tsym, state.getTypes(), /* checkResult= */ false)) {
+    if (!(sym.getSimpleName().contentEquals("compareTo")
+            && sym.overrides(compareTo, classType.tsym, state.getTypes(), /* checkResult= */ false))
+        && !(sym.getSimpleName().contentEquals("equals")
+            && sym.overrides(equals, classType.tsym, state.getTypes(), /* checkResult= */ false))) {
       return false;
     }
     if (!ASTHelpers.isSameType(type, classType, state)) {

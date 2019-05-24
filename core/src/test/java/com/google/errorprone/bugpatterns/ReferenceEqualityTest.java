@@ -394,6 +394,35 @@ public class ReferenceEqualityTest {
             "  public int compareTo(Test o) {",
             "    return this == o ? 0 : -1;",
             "  }",
+            "  public boolean equals(Object obj) {",
+            "    return obj instanceof Test;",
+            "  }",
+            "  public int hashCode() {",
+            "    return 1;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void likeCompareToButDifferentName() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test implements Comparable<Test> {",
+            "  public int compareTo(Test o) {",
+            "    return this == o ? 0 : -1;",
+            "  }",
+            "  public int notCompareTo(Test o) {",
+            "    // BUG: Diagnostic contains:",
+            "    return this == o ? 0 : -1;",
+            "  }",
+            "  public boolean equals(Object obj) {",
+            "    return obj instanceof Test;",
+            "  }",
+            "  public int hashCode() {",
+            "    return 1;",
+            "  }",
             "}")
         .doTest();
   }
