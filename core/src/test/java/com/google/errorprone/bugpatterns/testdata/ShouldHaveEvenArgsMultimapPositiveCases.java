@@ -53,26 +53,13 @@ public class ShouldHaveEvenArgsMultimapPositiveCases {
 
   public void testWithOddArgsWithCorrespondence() {
     assertThat(multimap)
-        .comparingValuesUsing(new TestCorrespondence())
+        .comparingValuesUsing(Correspondence.from((a, b) -> true, "dummy"))
         // BUG: Diagnostic contains: even number of arguments
         .containsExactly("hello", "there", "rest");
 
     assertThat(multimap)
-        .comparingValuesUsing(new TestCorrespondence())
+        .comparingValuesUsing(Correspondence.from((a, b) -> true, "dummy"))
         // BUG: Diagnostic contains: even number of arguments
         .containsExactly("hello", "there", "hello", "there", "rest");
-  }
-
-  private static class TestCorrespondence extends Correspondence<String, String> {
-
-    @Override
-    public boolean compare(String str1, String str2) {
-      return true;
-    }
-
-    @Override
-    public String toString() {
-      return "test_correspondence";
-    }
   }
 }
