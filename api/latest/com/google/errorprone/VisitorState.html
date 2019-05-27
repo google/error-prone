@@ -257,7 +257,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../com/google/errorprone/VisitorState.html#getNullnessAnalysis--">getNullnessAnalysis</a></span>()</code>&nbsp;</td>
 </tr>
 <tr id="i11" class="rowColor">
-<td class="colFirst"><code>com.google.common.collect.ImmutableList&lt;<a href="../../../com/google/errorprone/util/ErrorProneToken.html" title="class in com.google.errorprone.util">ErrorProneToken</a>&gt;</code></td>
+<td class="colFirst"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;<a href="../../../com/google/errorprone/util/ErrorProneToken.html" title="class in com.google.errorprone.util">ErrorProneToken</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../com/google/errorprone/VisitorState.html#getOffsetTokens-int-int-">getOffsetTokens</a></span>(int&nbsp;start,
                int&nbsp;end)</code>
 <div class="block">Returns the list of <code>Tokens.Token</code>s for source code between the given positions, offset by the
@@ -265,7 +265,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 </td>
 </tr>
 <tr id="i12" class="altColor">
-<td class="colFirst"><code>com.google.common.collect.ImmutableList&lt;<a href="../../../com/google/errorprone/util/ErrorProneToken.html" title="class in com.google.errorprone.util">ErrorProneToken</a>&gt;</code></td>
+<td class="colFirst"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;<a href="../../../com/google/errorprone/util/ErrorProneToken.html" title="class in com.google.errorprone.util">ErrorProneToken</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../com/google/errorprone/VisitorState.html#getOffsetTokensForNode-com.sun.source.tree.Tree-">getOffsetTokensForNode</a></span>(com.sun.source.tree.Tree&nbsp;tree)</code>
 <div class="block">Returns the list of <code>Tokens.Token</code>s for the given <code>JCTree</code>, offset by the start position
  of the tree within the overall source.</div>
@@ -301,7 +301,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../com/google/errorprone/VisitorState.html#getSymtab--">getSymtab</a></span>()</code>&nbsp;</td>
 </tr>
 <tr id="i19" class="rowColor">
-<td class="colFirst"><code>com.google.common.collect.ImmutableList&lt;<a href="../../../com/google/errorprone/util/ErrorProneToken.html" title="class in com.google.errorprone.util">ErrorProneToken</a>&gt;</code></td>
+<td class="colFirst"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;<a href="../../../com/google/errorprone/util/ErrorProneToken.html" title="class in com.google.errorprone.util">ErrorProneToken</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../com/google/errorprone/VisitorState.html#getTokensForNode-com.sun.source.tree.Tree-">getTokensForNode</a></span>(com.sun.source.tree.Tree&nbsp;tree)</code>
 <div class="block">Returns the list of <code>Tokens.Token</code>s for the given <code>JCTree</code>.</div>
 </td>
@@ -768,7 +768,7 @@ public&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.
 <ul class="blockList">
 <li class="blockList">
 <h4>getTokensForNode</h4>
-<pre>public&nbsp;com.google.common.collect.ImmutableList&lt;<a href="../../../com/google/errorprone/util/ErrorProneToken.html" title="class in com.google.errorprone.util">ErrorProneToken</a>&gt;&nbsp;getTokensForNode(com.sun.source.tree.Tree&nbsp;tree)</pre>
+<pre>public&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;<a href="../../../com/google/errorprone/util/ErrorProneToken.html" title="class in com.google.errorprone.util">ErrorProneToken</a>&gt;&nbsp;getTokensForNode(com.sun.source.tree.Tree&nbsp;tree)</pre>
 <div class="block">Returns the list of <code>Tokens.Token</code>s for the given <code>JCTree</code>.
 
  <p>This is moderately expensive (the source of the node has to be re-lexed), so it should only
@@ -781,7 +781,7 @@ public&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.
 <ul class="blockList">
 <li class="blockList">
 <h4>getOffsetTokensForNode</h4>
-<pre>public&nbsp;com.google.common.collect.ImmutableList&lt;<a href="../../../com/google/errorprone/util/ErrorProneToken.html" title="class in com.google.errorprone.util">ErrorProneToken</a>&gt;&nbsp;getOffsetTokensForNode(com.sun.source.tree.Tree&nbsp;tree)</pre>
+<pre>public&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;<a href="../../../com/google/errorprone/util/ErrorProneToken.html" title="class in com.google.errorprone.util">ErrorProneToken</a>&gt;&nbsp;getOffsetTokensForNode(com.sun.source.tree.Tree&nbsp;tree)</pre>
 <div class="block">Returns the list of <code>Tokens.Token</code>s for the given <code>JCTree</code>, offset by the start position
  of the tree within the overall source.
 
@@ -795,8 +795,8 @@ public&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.
 <ul class="blockList">
 <li class="blockList">
 <h4>getOffsetTokens</h4>
-<pre>public&nbsp;com.google.common.collect.ImmutableList&lt;<a href="../../../com/google/errorprone/util/ErrorProneToken.html" title="class in com.google.errorprone.util">ErrorProneToken</a>&gt;&nbsp;getOffsetTokens(int&nbsp;start,
-                                                                                int&nbsp;end)</pre>
+<pre>public&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;<a href="../../../com/google/errorprone/util/ErrorProneToken.html" title="class in com.google.errorprone.util">ErrorProneToken</a>&gt;&nbsp;getOffsetTokens(int&nbsp;start,
+                                             int&nbsp;end)</pre>
 <div class="block">Returns the list of <code>Tokens.Token</code>s for source code between the given positions, offset by the
  start position.
 

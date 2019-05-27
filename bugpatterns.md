@@ -98,6 +98,9 @@ The result of this unary operation on a lambda parameter is discarded
 __[DoNotCall](bugpattern/DoNotCall)__<br>
 This method should not be called.
 
+__[DoNotMock](bugpattern/DoNotMock)__<br>
+Identifies undesirable mocks.
+
 __[DuplicateMapKeys](bugpattern/DuplicateMapKeys)__<br>
 Map#ofEntries will throw an IllegalArgumentException if there are any duplicate keys
 
@@ -916,7 +919,7 @@ __[InjectMoreThanOneQualifier](bugpattern/InjectMoreThanOneQualifier)__<br>
 Using more than one qualifier annotation on the same element is not allowed.
 
 __[InjectScopeAnnotationOnInterfaceOrAbstractClass](bugpattern/InjectScopeAnnotationOnInterfaceOrAbstractClass)__<br>
-Scope annotation on an interface or abstact class is not allowed
+Scope annotation on an interface or abstract class is not allowed
 
 __[InjectScopeOrQualifierAnnotationRetention](bugpattern/InjectScopeOrQualifierAnnotationRetention)__<br>
 Scoping and qualifier annotations must have runtime retention.

@@ -48,49 +48,52 @@ import com.google.common.truth.Subject;
 /** @author cpovirk@google.com (Chris Povirk) */
 public class ImplementAssertionWithChainingPositiveCases {
   static final class FooSubject extends Subject<FooSubject, Foo> {
+    private final Foo actual;
+
     private FooSubject(FailureMetadata metadata, Foo actual) {
       super(metadata, actual);
+      this.actual = actual;
     }
 
     void hasString(String expected) {
-      // BUG: Diagnostic contains: check("string()").that(actual().string()).isEqualTo(expected)
-      if (!actual().string().equals(expected)) {
+      // BUG: Diagnostic contains: check("string()").that(actual.string()).isEqualTo(expected)
+      if (!actual.string().equals(expected)) {
         fail("didn't match expected string");
       }
     }
 
     void hasStringGuavaObjectsEqual(String expected) {
-      // BUG: Diagnostic contains: check("string()").that(actual().string()).isEqualTo(expected)
-      if (!com.google.common.base.Objects.equal(actual().string(), expected)) {
+      // BUG: Diagnostic contains: check("string()").that(actual.string()).isEqualTo(expected)
+      if (!com.google.common.base.Objects.equal(actual.string(), expected)) {
         fail("didn't match expected string");
       }
     }
 
     void hasStringJavaObjectsEquals(String expected) {
-      // BUG: Diagnostic contains: check("string()").that(actual().string()).isEqualTo(expected)
-      if (!java.util.Objects.equals(actual().string(), expected)) {
+      // BUG: Diagnostic contains: check("string()").that(actual.string()).isEqualTo(expected)
+      if (!java.util.Objects.equals(actual.string(), expected)) {
         fail("didn't match expected string");
       }
     }
 
     void hasInteger(int expected) {
-      // BUG: Diagnostic contains: check("integer()").that(actual().integer()).isEqualTo(expected)
-      if (actual().integer() != expected) {
+      // BUG: Diagnostic contains: check("integer()").that(actual.integer()).isEqualTo(expected)
+      if (actual.integer() != expected) {
         fail("has integer %s", expected);
       }
     }
 
     void hasKind(Kind expected) {
-      // BUG: Diagnostic contains: check("kind()").that(actual().kind()).isEqualTo(expected)
-      if (actual().kind() != expected) {
+      // BUG: Diagnostic contains: check("kind()").that(actual.kind()).isEqualTo(expected)
+      if (actual.kind() != expected) {
         fail("has kind %s", expected);
       }
     }
 
     void hasOtherFooInteger(int expected) {
       // BUG: Diagnostic contains:
-      // check("otherFoo().integer()").that(actual().otherFoo().integer()).isEqualTo(expected)
-      if (actual().otherFoo().integer() != expected) {
+      // check("otherFoo().integer()").that(actual.otherFoo().integer()).isEqualTo(expected)
+      if (actual.otherFoo().integer() != expected) {
         fail("has other foo with integer %s", expected);
       }
     }
@@ -156,24 +159,27 @@ import com.google.common.truth.Subject;
 /** @author cpovirk@google.com (Chris Povirk) */
 public class ImplementAssertionWithChainingNegativeCases {
   static final class FooSubject extends Subject<FooSubject, Foo> {
+    private final Foo actual;
+
     private FooSubject(FailureMetadata metadata, Foo actual) {
       super(metadata, actual);
+      this.actual = actual;
     }
 
     void doesNotHaveString(String other) {
-      if (actual().string().equals(other)) {
+      if (actual.string().equals(other)) {
         fail("matched unexpected string");
       }
     }
 
     void doesNotHaveInteger(int other) {
-      if (actual().integer() == other) {
+      if (actual.integer() == other) {
         fail("had unexpected integer");
       }
     }
 
     void hasBoxedIntegerSameInstance(Integer expected) {
-      if (actual().boxedInteger() != expected) {
+      if (actual.boxedInteger() != expected) {
         fail("didn't match expected string instance");
       }
     }

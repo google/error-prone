@@ -13,7 +13,45 @@ To make changes, edit the @BugPattern annotation or the explanation in docs/bugp
 -->
 
 ## The problem
+Assertions made _inside the implementation of another [Truth] assertion_ should
+use [`check`], not `assertThat`.
 
+Before:
+
+```
+class MyProtoSubject {
+  public void hasFoo(Foo expected) {
+    assertThat(actual().foo()).isEqualTo(expected);
+  }
+}
+```
+
+After:
+
+```
+class MyProtoSubject {
+  public void hasFoo(Foo expected) {
+    check("foo()").that(actual().foo()).isEqualTo(expected);
+  }
+}
+```
+
+Benefits of `check` include:
+
+-   When the assertion fails, the failure message includes more context: The
+    message specifies that the assertion was performed on `myProto.foo()`, and
+    it includes the full value of `myProto` for reference.
+-   If the user of the assertion called `assertWithMessage`, that message, which
+    is lost in the `assertThat` version, is shown by the `check` version.
+-   `check` makes it possible to test the assertion with [`ExpectFailure`] and
+    to use [`Expect`] or [`assume`]. `assertThat`, by contrast, overrides any
+    user-specified failure behavior.
+
+[Truth]: https://github.com/google/truth
+[`check`]: https://google.github.io/truth/api/latest/com/google/common/truth/Subject.html#check-java.lang.String-java.lang.Object...-
+[`ExpectFailure`]: https://google.github.io/truth/api/latest/com/google/common/truth/ExpectFailure.html
+[`Expect`]: https://google.github.io/truth/api/latest/com/google/common/truth/Expect.html
+[`assume`]: https://google.github.io/truth/api/latest/com/google/common/truth/TruthJUnit.html#assume--
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("ChainedAssertionLosesContext")` to the enclosing element.
@@ -53,6 +91,8 @@ import com.google.common.truth.Truth;
 /** @author cpovirk@google.com (Chris Povirk) */
 public class ChainedAssertionLosesContextPositiveCases {
   static final class FooSubject extends Subject<FooSubject, Foo> {
+    private final Foo actual;
+
     static Factory<FooSubject, Foo> foos() {
       return FooSubject::new;
     }
@@ -63,40 +103,46 @@ public class ChainedAssertionLosesContextPositiveCases {
 
     private FooSubject(FailureMetadata metadata, Foo actual) {
       super(metadata, actual);
+      this.actual = actual;
     }
 
     void hasString(String expected) {
-      // BUG: Diagnostic contains: check("string()").that(actual().string()).isEqualTo(expected)
-      Truth.assertThat(actual().string()).isEqualTo(expected);
+      // BUG: Diagnostic contains: check("string()").that(actual.string()).isEqualTo(expected)
+      Truth.assertThat(actual.string()).isEqualTo(expected);
     }
 
     void hasOtherFooInteger(int expected) {
       // BUG: Diagnostic contains:
-      // check("otherFoo().integer()").that(actual().otherFoo().integer()).isEqualTo(expected)
-      Truth.assertThat(actual().otherFoo().integer()).isEqualTo(expected);
+      // check("otherFoo().integer()").that(actual.otherFoo().integer()).isEqualTo(expected)
+      Truth.assertThat(actual.otherFoo().integer()).isEqualTo(expected);
     }
 
     FooSubject otherFooAbout() {
-      // BUG: Diagnostic contains: check("otherFoo()").about(foos()).that(actual().otherFoo())
-      return assertAbout(foos()).that(actual().otherFoo());
+      // BUG: Diagnostic contains: check("otherFoo()").about(foos()).that(actual.otherFoo())
+      return assertAbout(foos()).that(actual.otherFoo());
+    }
+
+    FooSubject otherFooThat() {
+      // BUG: Diagnostic contains: check("otherFoo()").about(foos()).that(actual.otherFoo())
+      return assertThat(actual.otherFoo());
     }
 
     void withMessage(String expected) {
       // BUG: Diagnostic contains:
-      // check("string()").withMessage("blah").that(actual().string()).isEqualTo(expected)
-      assertWithMessage("blah").that(actual().string()).isEqualTo(expected);
+      // check("string()").withMessage("blah").that(actual.string()).isEqualTo(expected)
+      assertWithMessage("blah").that(actual.string()).isEqualTo(expected);
     }
 
     void withMessageWithArgs(String expected) {
       // BUG: Diagnostic contains:
-      // check("string()").withMessage("%s", "blah").that(actual().string()).isEqualTo(expected)
-      assertWithMessage("%s", "blah").that(actual().string()).isEqualTo(expected);
+      // check("string()").withMessage("%s", "blah").that(actual.string()).isEqualTo(expected)
+      assertWithMessage("%s", "blah").that(actual.string()).isEqualTo(expected);
     }
 
     void plainAssert(String expected) {
       // BUG: Diagnostic contains:
-      // check("string()").that(actual().string()).isEqualTo(expected)
-      assert_().that(actual().string()).isEqualTo(expected);
+      // check("string()").that(actual.string()).isEqualTo(expected)
+      assert_().that(actual.string()).isEqualTo(expected);
     }
   }
 
@@ -155,8 +201,11 @@ import com.google.common.truth.Subject;
 /** @author cpovirk@google.com (Chris Povirk) */
 public class ChainedAssertionLosesContextNegativeCases {
   static final class FooSubject extends Subject<FooSubject, Foo> {
+    private final Foo actual;
+
     private FooSubject(FailureMetadata metadata, Foo actual) {
       super(metadata, actual);
+      this.actual = actual;
     }
 
     static Factory<FooSubject, Foo> foos() {
@@ -165,11 +214,6 @@ public class ChainedAssertionLosesContextNegativeCases {
 
     static FooSubject assertThat(Foo foo) {
       return assertAbout(foos()).that(foo);
-    }
-
-    FooSubject otherFoo() {
-      // Should someday suggest: check("otherFoo()").about(foos()).that(actual().otherFoo())
-      return assertThat(actual().otherFoo());
     }
   }
 

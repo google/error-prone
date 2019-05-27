@@ -84,6 +84,8 @@ public class TimeUnitMismatchPositiveCases {
 
   void doSomething(double startSec, double endSec) {}
 
+  void setMyMillis(int timeout) {}
+
   void args() {
     double ms = 0;
     double ns = 0;
@@ -91,6 +93,9 @@ public class TimeUnitMismatchPositiveCases {
     doSomething(ms, ns);
     // BUG: Diagnostic contains: expected seconds but was nanoseconds
     doSomething(ms, ns);
+
+    // BUG: Diagnostic contains: expected milliseconds but was nanoseconds
+    setMyMillis((int) ns);
   }
 
   void timeUnit() {

@@ -44,6 +44,7 @@ package com.google.errorprone.bugpatterns.testdata;
 
 import static com.google.errorprone.bugpatterns.testdata.ProvideDescriptionToCheckPositiveCases.MyStringSubject.myStrings;
 
+import com.google.common.truth.CustomSubjectBuilder;
 import com.google.common.truth.FailureMetadata;
 import com.google.common.truth.StringSubject;
 import com.google.common.truth.Subject;
@@ -51,36 +52,50 @@ import com.google.common.truth.Subject;
 /** @author cpovirk@google.com (Chris Povirk) */
 public class ProvideDescriptionToCheckPositiveCases {
   static final class FooSubject extends Subject<FooSubject, Foo> {
+    private final Foo actual;
+
     private FooSubject(FailureMetadata metadata, Foo actual) {
       super(metadata, actual);
+      this.actual = actual;
     }
 
     void hasString(String expected) {
-      // BUG: Diagnostic contains: check("string()").that(actual().string()).isEqualTo(expected)
-      check().that(actual().string()).isEqualTo(expected);
+      // BUG: Diagnostic contains: check("string()").that(actual.string()).isEqualTo(expected)
+      check().that(actual.string()).isEqualTo(expected);
+    }
+
+    void hasStringThisCheck(String expected) {
+      // BUG: Diagnostic contains: this.check("string()").that(actual.string()).isEqualTo(
+      this.check().that(actual.string()).isEqualTo(expected);
     }
 
     void hasStringWithMessage(String expected) {
       // BUG: Diagnostic contains:
-      // check("string()").withMessage("abc").that(actual().string()).isEqualTo(expected)
-      check().withMessage("abc").that(actual().string()).isEqualTo(expected);
+      // check("string()").withMessage("abc").that(actual.string()).isEqualTo(expected)
+      check().withMessage("abc").that(actual.string()).isEqualTo(expected);
     }
 
     void hasStringAbout(String expected) {
       // BUG: Diagnostic contains:
-      // check("string()").about(myStrings()).that(actual().string()).isEqualTo(expected)
-      check().about(myStrings()).that(actual().string()).isEqualTo(expected);
+      // check("string()").about(myStrings()).that(actual.string()).isEqualTo(expected)
+      check().about(myStrings()).that(actual.string()).isEqualTo(expected);
     }
 
     void hasStringWithMessageAbout(String expected) {
       // BUG: Diagnostic contains: check("string()")
-      check().withMessage("abc").about(myStrings()).that(actual().string()).isEqualTo(expected);
+      check().withMessage("abc").about(myStrings()).that(actual.string()).isEqualTo(expected);
     }
 
     void hasOtherFooInteger(int expected) {
       // BUG: Diagnostic contains:
-      // check("otherFoo().integer()").that(actual().otherFoo().integer()).isEqualTo(expected)
-      check().that(actual().otherFoo().integer()).isEqualTo(expected);
+      // check("otherFoo().integer()").that(actual.otherFoo().integer()).isEqualTo(expected)
+      check().that(actual.otherFoo().integer()).isEqualTo(expected);
+    }
+
+    FooSubject hasOtherFooUsingFactory() {
+      // BUG: Diagnostic contains:
+      // check("otherFoo()").about(foos()).that(actual.otherFoo())
+      return check().about(foos()).that(actual.otherFoo());
     }
   }
 
@@ -92,6 +107,20 @@ public class ProvideDescriptionToCheckPositiveCases {
     static Factory<StringSubject, String> myStrings() {
       return MyStringSubject::new;
     }
+  }
+
+  static final class FooCustomSubjectBuilder extends CustomSubjectBuilder {
+    FooCustomSubjectBuilder(FailureMetadata metadata) {
+      super(metadata);
+    }
+
+    FooSubject that(Foo actual) {
+      return new FooSubject(metadata(), actual);
+    }
+  }
+
+  static CustomSubjectBuilder.Factory<FooCustomSubjectBuilder> foos() {
+    return FooCustomSubjectBuilder::new;
   }
 
   private static final class Foo {
@@ -146,12 +175,15 @@ import com.google.common.truth.Subject;
 /** @author cpovirk@google.com (Chris Povirk) */
 public class ProvideDescriptionToCheckNegativeCases {
   static final class FooSubject extends Subject<FooSubject, Foo> {
+    private final Foo actual;
+
     private FooSubject(FailureMetadata metadata, Foo actual) {
       super(metadata, actual);
+      this.actual = actual;
     }
 
     void alreadyPassesDescription(String expected) {
-      check("s()").that(actual().string()).isEqualTo(expected);
+      check("s()").that(actual.string()).isEqualTo(expected);
     }
   }
 

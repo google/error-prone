@@ -128,34 +128,47 @@
 <tbody>
 <tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/AbstractMockChecker.html" title="class in com.google.errorprone.bugpatterns">AbstractMockChecker</a>&lt;T extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/Annotation.html?is-external=true" title="class or interface in java.lang.annotation">Annotation</a>&gt;</span></code>
+<div class="block">Helper for enforcing Annotations that disallow mocking.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/AnnotationPosition.html" title="class in com.google.errorprone.bugpatterns">AnnotationPosition</a></span></code>
 <div class="block">Checks annotation positioning, and orphaned Javadocs.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/AssignmentToMock.html" title="class in com.google.errorprone.bugpatterns">AssignmentToMock</a></span></code>
 <div class="block">Discourage manual initialization or assignment to fields annotated with <code>@Mock</code>.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/CannotMockFinalClass.html" title="class in com.google.errorprone.bugpatterns">CannotMockFinalClass</a></span></code>
 <div class="block">Bug pattern to recognize attempts to mock final types.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/ConstantField.html" title="class in com.google.errorprone.bugpatterns">ConstantField</a></span></code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/DateFormatConstant.html" title="class in com.google.errorprone.bugpatterns">DateFormatConstant</a></span></code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/DepAnn.html" title="class in com.google.errorprone.bugpatterns">DepAnn</a></span></code>
 <div class="block">Matches the behaviour of the javac dep-ann Xlint warning.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>class&nbsp;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/DoNotMockChecker.html" title="class in com.google.errorprone.bugpatterns">DoNotMockChecker</a></span></code>
+<div class="block">Points out if a Mockito or EasyMock mock is mocking an object that would be better off being
+ tested using an alternative instance.</div>
 </td>
 </tr>
 <tr class="altColor">

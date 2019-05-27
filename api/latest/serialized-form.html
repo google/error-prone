@@ -248,6 +248,42 @@
 </li>
 </ul>
 </li>
+<li class="blockList"><a name="com.google.errorprone.bugpatterns.AbstractMockChecker">
+<!--   -->
+</a>
+<h3>Class <a href="com/google/errorprone/bugpatterns/AbstractMockChecker.html" title="class in com.google.errorprone.bugpatterns">com.google.errorprone.bugpatterns.AbstractMockChecker</a> extends <a href="com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a> implements Serializable</h3>
+<ul class="blockList">
+<li class="blockList">
+<h3>Serialized Fields</h3>
+<ul class="blockList">
+<li class="blockList">
+<h4>varExtractor</h4>
+<pre><a href="com/google/errorprone/bugpatterns/AbstractMockChecker.TypeExtractor.html" title="interface in com.google.errorprone.bugpatterns">AbstractMockChecker.TypeExtractor</a>&lt;<a href="com/google/errorprone/bugpatterns/AbstractMockChecker.TypeExtractor.html" title="type parameter in AbstractMockChecker.TypeExtractor">T</a> extends com.sun.source.tree.Tree&gt; varExtractor</pre>
+</li>
+<li class="blockList">
+<h4>methodExtractor</h4>
+<pre><a href="com/google/errorprone/bugpatterns/AbstractMockChecker.TypeExtractor.html" title="interface in com.google.errorprone.bugpatterns">AbstractMockChecker.TypeExtractor</a>&lt;<a href="com/google/errorprone/bugpatterns/AbstractMockChecker.TypeExtractor.html" title="type parameter in AbstractMockChecker.TypeExtractor">T</a> extends com.sun.source.tree.Tree&gt; methodExtractor</pre>
+</li>
+<li class="blockList">
+<h4>annotationClass</h4>
+<pre><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">T</a>&gt; annotationClass</pre>
+</li>
+<li class="blockList">
+<h4>annotationName</h4>
+<pre><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a> annotationName</pre>
+</li>
+<li class="blockList">
+<h4>getValueFunction</h4>
+<pre><a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/Function.html?is-external=true" title="class or interface in java.util.function">Function</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/Function.html?is-external=true" title="class or interface in java.util.function">T</a>,<a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/Function.html?is-external=true" title="class or interface in java.util.function">R</a>&gt; getValueFunction</pre>
+</li>
+<li class="blockListLast">
+<h4>forbidder</h4>
+<pre><a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/Supplier.html?is-external=true" title="class or interface in java.util.function">Supplier</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/Supplier.html?is-external=true" title="class or interface in java.util.function">T</a>&gt; forbidder</pre>
+</li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="blockList"><a name="com.google.errorprone.bugpatterns.AbstractMustBeClosedChecker">
 <!--   -->
 </a>
@@ -645,6 +681,11 @@
 <!--   -->
 </a>
 <h3>Class <a href="com/google/errorprone/bugpatterns/DoNotCallChecker.html" title="class in com.google.errorprone.bugpatterns">com.google.errorprone.bugpatterns.DoNotCallChecker</a> extends <a href="com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a> implements Serializable</h3>
+</li>
+<li class="blockList"><a name="com.google.errorprone.bugpatterns.DoNotMockChecker">
+<!--   -->
+</a>
+<h3>Class <a href="com/google/errorprone/bugpatterns/DoNotMockChecker.html" title="class in com.google.errorprone.bugpatterns">com.google.errorprone.bugpatterns.DoNotMockChecker</a> extends <a href="com/google/errorprone/bugpatterns/AbstractMockChecker.html" title="class in com.google.errorprone.bugpatterns">AbstractMockChecker</a>&lt;<a href="com/google/errorprone/annotations/DoNotMock.html" title="annotation in com.google.errorprone.annotations">DoNotMock</a>&gt; implements Serializable</h3>
 </li>
 <li class="blockList"><a name="com.google.errorprone.bugpatterns.DoubleBraceInitialization">
 <!--   -->

@@ -89,14 +89,20 @@
 </td>
 </tr>
 <tr class="rowColor">
+<td class="colFirst"><a href="#com.google.errorprone.matchers">com.google.errorprone.matchers</a></td>
+<td class="colLast">
+<div class="block">A predicate DSL for matching javac AST nodes.</div>
+</td>
+</tr>
+<tr class="altColor">
 <td class="colFirst"><a href="#com.google.errorprone.matchers.method">com.google.errorprone.matchers.method</a></td>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><a href="#com.google.errorprone.predicates">com.google.errorprone.predicates</a></td>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><a href="#com.google.errorprone.predicates.type">com.google.errorprone.predicates.type</a></td>
 <td class="colLast">&nbsp;</td>
 </tr>
@@ -137,6 +143,26 @@
 <tr class="altColor">
 <td class="colFirst"><code>protected <a href="../../../../../com/google/errorprone/predicates/TypePredicate.html" title="interface in com.google.errorprone.predicates">TypePredicate</a></code></td>
 <td class="colLast"><span class="typeNameLabel">StreamToString.</span><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/StreamToString.html#typePredicate--">typePredicate</a></span>()</code>&nbsp;</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li class="blockList"><a name="com.google.errorprone.matchers">
+<!--   -->
+</a>
+<h3>Uses of <a href="../../../../../com/google/errorprone/predicates/TypePredicate.html" title="interface in com.google.errorprone.predicates">TypePredicate</a> in <a href="../../../../../com/google/errorprone/matchers/package-summary.html">com.google.errorprone.matchers</a></h3>
+<table class="useSummary" border="0" cellpadding="3" cellspacing="0" summary="Use table, listing methods, and an explanation">
+<caption><span>Methods in <a href="../../../../../com/google/errorprone/matchers/package-summary.html">com.google.errorprone.matchers</a> with parameters of type <a href="../../../../../com/google/errorprone/predicates/TypePredicate.html" title="interface in com.google.errorprone.predicates">TypePredicate</a></span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colFirst" scope="col">Modifier and Type</th>
+<th class="colLast" scope="col">Method and Description</th>
+</tr>
+<tbody>
+<tr class="altColor">
+<td class="colFirst"><code>static &lt;T extends com.sun.source.tree.Tree&gt;<br><a href="../../../../../com/google/errorprone/matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;T&gt;</code></td>
+<td class="colLast"><span class="typeNameLabel">Matchers.</span><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/matchers/Matchers.html#typePredicateMatcher-com.google.errorprone.predicates.TypePredicate-">typePredicateMatcher</a></span>(<a href="../../../../../com/google/errorprone/predicates/TypePredicate.html" title="interface in com.google.errorprone.predicates">TypePredicate</a>&nbsp;pred)</code>
+<div class="block">Match a Tree based solely on the type produced by <a href="../../../../../com/google/errorprone/util/ASTHelpers.html#getType-com.sun.source.tree.Tree-"><code>ASTHelpers.getType(Tree)</code></a>.</div>
+</td>
 </tr>
 </tbody>
 </table>
