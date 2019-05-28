@@ -13,4 +13,4 @@ However, there's a slightly easier way to express this:
 @Multibinds abstract Set<MyType> provideEmptySetOfMyType();
 ```
 
-[dmb]: https://google.github.io/dagger/multibindings.html
+[dmb]: https://dagger.dev/multibindings.html
