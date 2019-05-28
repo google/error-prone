@@ -215,7 +215,8 @@ public final class InconsistentHashCode extends BugChecker implements ClassTreeM
     }
 
     private void handleSymbol(Symbol symbol) {
-      if (symbol.getKind() == ElementKind.FIELD
+      if (symbol != null
+          && symbol.getKind() == ElementKind.FIELD
           && !symbol.isStatic()
           && symbol.owner.equals(classSymbol)) {
         String name = symbol.name.toString();

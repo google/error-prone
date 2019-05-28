@@ -128,4 +128,31 @@ public final class InconsistentHashCodeTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void breakLabeledBlock() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  private int a;",
+            "  private int b;",
+            "  private int hashCode;",
+            "  public void accessesLocalWithLabeledBreak() {",
+            "    label: {",
+            "      switch (a) {",
+            "        case 0: break label;",
+            "      }",
+            "    }",
+            "  }",
+            "  @Override public boolean equals(Object o) {",
+            "    Test that = (Test) o;",
+            "    return this.a == that.a && this.b == that.b;",
+            "  }",
+            "  @Override public int hashCode() {",
+            "    return hashCode;",
+            "  }",
+            "}")
+        .doTest();
+  }
 }
