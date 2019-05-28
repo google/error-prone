@@ -391,6 +391,7 @@ import com.google.errorprone.bugpatterns.threadsafety.ThreadPriorityCheck;
 import com.google.errorprone.bugpatterns.threadsafety.UnlockMethodChecker;
 import com.google.errorprone.bugpatterns.time.DurationFrom;
 import com.google.errorprone.bugpatterns.time.DurationGetTemporalUnit;
+import com.google.errorprone.bugpatterns.time.DurationOfLongTemporalUnit;
 import com.google.errorprone.bugpatterns.time.DurationToLongTimeUnit;
 import com.google.errorprone.bugpatterns.time.JavaDurationGetSecondsGetNano;
 import com.google.errorprone.bugpatterns.time.JavaDurationWithNanos;
@@ -491,6 +492,7 @@ public class BuiltInCheckerSuppliers {
           DuplicateMapKeys.class,
           DurationFrom.class,
           DurationGetTemporalUnit.class,
+          DurationOfLongTemporalUnit.class,
           DurationToLongTimeUnit.class,
           EqualsHashCode.class,
           EqualsNaN.class,

@@ -79,7 +79,9 @@ public final class DurationGetTemporalUnit extends BugChecker
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
     if (MATCHER.matches(tree, state)) {
-      Optional<ChronoUnit> invalidUnit = getInvalidChronoUnit(tree, INVALID_TEMPORAL_UNITS);
+      Optional<ChronoUnit> invalidUnit =
+          getInvalidChronoUnit(
+              Iterables.getOnlyElement(tree.getArguments()), INVALID_TEMPORAL_UNITS);
       if (invalidUnit.isPresent()) {
         if (SUGGESTIONS.containsKey(invalidUnit.get())) {
           SuggestedFix.Builder builder = SuggestedFix.builder();
@@ -95,10 +97,10 @@ public final class DurationGetTemporalUnit extends BugChecker
     return Description.NO_MATCH;
   }
 
-  // used by PeriodGetTemporalUnit
+  // used by PeriodGetTemporalUnit and DurationOfLongTemporalUnit
   static Optional<ChronoUnit> getInvalidChronoUnit(
-      MethodInvocationTree tree, EnumSet<ChronoUnit> invalidUnits) {
-    Optional<String> constant = getEnumName(Iterables.getOnlyElement(tree.getArguments()));
+      ExpressionTree tree, Iterable<ChronoUnit> invalidUnits) {
+    Optional<String> constant = getEnumName(tree);
     if (constant.isPresent()) {
       for (ChronoUnit invalidTemporalUnit : invalidUnits) {
         if (constant.get().equals(invalidTemporalUnit.name())) {

@@ -19,6 +19,7 @@ import static com.google.errorprone.BugPattern.ProvidesFix.NO_FIX;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.bugpatterns.time.DurationGetTemporalUnit.getInvalidChronoUnit;
 
+import com.google.common.collect.Iterables;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
@@ -57,7 +58,9 @@ public final class PeriodGetTemporalUnit extends BugChecker implements MethodInv
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
     return MATCHER.matches(tree, state)
-            && getInvalidChronoUnit(tree, INVALID_TEMPORAL_UNITS).isPresent()
+            && getInvalidChronoUnit(
+                    Iterables.getOnlyElement(tree.getArguments()), INVALID_TEMPORAL_UNITS)
+                .isPresent()
         ? describeMatch(tree)
         : Description.NO_MATCH;
   }
