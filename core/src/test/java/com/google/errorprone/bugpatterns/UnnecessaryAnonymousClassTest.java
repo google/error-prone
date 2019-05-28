@@ -91,4 +91,29 @@ public class UnnecessaryAnonymousClassTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void abstractClass() {
+    testHelper
+        .addInputLines(
+            "Test.java",
+            "import java.util.function.Function;",
+            "class Test {",
+            "  static abstract class Impl implements Function<String, String> {",
+            "    public String apply(String input) {",
+            "      return input;",
+            "    }",
+            "    public abstract void f(String input);",
+            "  }",
+            "  private final Function<String, String> camelCase = new Impl() {",
+            "    public void f(String input) {}",
+            "  };",
+            "  void g() {",
+            "    Function<String, String> f = camelCase;",
+            "    System.err.println(camelCase.apply(\"world\"));",
+            "  }",
+            "}")
+        .expectUnchanged()
+        .doTest();
+  }
 }

@@ -44,6 +44,7 @@ import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePathScanner;
 import com.sun.tools.javac.code.Symbol;
+import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.tree.JCTree;
 import java.util.Objects;
@@ -97,6 +98,18 @@ public class UnnecessaryAnonymousClass extends BugChecker implements VariableTre
     MethodTree implementation = (MethodTree) member;
     Type type = getType(tree.getType());
     if (type == null || !state.getTypes().isFunctionalInterface(type)) {
+      return NO_MATCH;
+    }
+    MethodSymbol methodSymbol = getSymbol(implementation);
+    if (methodSymbol == null) {
+      return NO_MATCH;
+    }
+    Symbol descriptorSymbol = state.getTypes().findDescriptorSymbol(type.tsym);
+    if (!methodSymbol.getSimpleName().contentEquals(descriptorSymbol.getSimpleName())) {
+      return NO_MATCH;
+    }
+    if (!methodSymbol.overrides(
+        descriptorSymbol, methodSymbol.owner.enclClass(), state.getTypes(), false)) {
       return NO_MATCH;
     }
     if (state.isAndroidCompatible()) {
