@@ -65,8 +65,15 @@ public class SelfAssignment extends BugChecker
     implements AssignmentTreeMatcher, VariableTreeMatcher {
   private static final Matcher<MethodInvocationTree> NON_NULL_MATCHER =
       anyOf(
+          staticMethod().onClass("java.util.Objects").named("requireNonNull"),
           staticMethod().onClass("com.google.common.base.Preconditions").named("checkNotNull"),
-          staticMethod().onClass("java.util.Objects").named("requireNonNull"));
+          staticMethod()
+              .onClass("com.google.common.time.Durations")
+              .namedAnyOf("checkNotNegative", "checkPositive"),
+          staticMethod()
+              .onClass("com.google.protobuf.util.Durations")
+              .namedAnyOf("checkNotNegative", "checkPositive", "checkValid"),
+          staticMethod().onClass("com.google.protobuf.util.Timestamps").named("checkValid"));
 
   @Override
   public Description matchAssignment(AssignmentTree tree, VisitorState state) {
