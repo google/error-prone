@@ -391,8 +391,9 @@ import com.google.errorprone.bugpatterns.threadsafety.ThreadPriorityCheck;
 import com.google.errorprone.bugpatterns.threadsafety.UnlockMethodChecker;
 import com.google.errorprone.bugpatterns.time.DurationFrom;
 import com.google.errorprone.bugpatterns.time.DurationGetTemporalUnit;
-import com.google.errorprone.bugpatterns.time.DurationOfLongTemporalUnit;
+import com.google.errorprone.bugpatterns.time.DurationTemporalUnit;
 import com.google.errorprone.bugpatterns.time.DurationToLongTimeUnit;
+import com.google.errorprone.bugpatterns.time.InstantTemporalUnit;
 import com.google.errorprone.bugpatterns.time.JavaDurationGetSecondsGetNano;
 import com.google.errorprone.bugpatterns.time.JavaDurationWithNanos;
 import com.google.errorprone.bugpatterns.time.JavaDurationWithSeconds;
@@ -492,7 +493,7 @@ public class BuiltInCheckerSuppliers {
           DuplicateMapKeys.class,
           DurationFrom.class,
           DurationGetTemporalUnit.class,
-          DurationOfLongTemporalUnit.class,
+          DurationTemporalUnit.class,
           DurationToLongTimeUnit.class,
           EqualsHashCode.class,
           EqualsNaN.class,
@@ -518,6 +519,7 @@ public class BuiltInCheckerSuppliers {
           InfiniteRecursion.class,
           InjectOnFinalField.class,
           InjectOnMemberAndConstructor.class,
+          InstantTemporalUnit.class,
           InvalidPatternSyntax.class,
           InvalidTimeZoneID.class,
           InvalidZoneId.class,
