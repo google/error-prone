@@ -20,6 +20,8 @@ import static com.google.errorprone.BugPattern.ProvidesFix.NO_FIX;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.bugpatterns.time.DurationGetTemporalUnit.getInvalidChronoUnit;
 import static com.google.errorprone.matchers.Matchers.allOf;
+import static com.google.errorprone.matchers.Matchers.anyOf;
+import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
 
 import com.google.common.collect.ImmutableSet;
@@ -36,28 +38,36 @@ import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 
 /**
- * Bans calls to {@code Duration.of(long, TemporalUnit)} where the {@link
- * java.time.temporal.TemporalUnit} is not {@link ChronoUnit#DAYS} or it has an estimated duration
- * (which is guaranteed to throw an {@code DateTimeException}).
+ * Bans calls to {@code Duration} APIs where the {@link java.time.temporal.TemporalUnit} is not
+ * {@link ChronoUnit#DAYS} or it has an estimated duration (which is guaranteed to throw an {@code
+ * DateTimeException}).
  */
 @BugPattern(
-    name = "DurationOfLongTemporalUnit",
-    summary = "Duration.of(long, TemporalUnit) only works for DAYS or exact durations.",
+    name = "DurationTemporalUnit",
+    summary = "Duration APIs only work for DAYS or exact durations.",
     explanation =
-        "Duration.of(long, TemporalUnit) only works for TemporalUnits with exact durations or"
+        "Duration APIs only work for TemporalUnits with exact durations or"
             + " ChronoUnit.DAYS. E.g., Duration.of(1, ChronoUnit.YEARS) is guaranteed to throw a"
             + " DateTimeException.",
     severity = ERROR,
     providesFix = NO_FIX)
-public final class DurationOfLongTemporalUnit extends BugChecker
-    implements MethodInvocationTreeMatcher {
+public final class DurationTemporalUnit extends BugChecker implements MethodInvocationTreeMatcher {
+
+  private static final String DURATION = "java.time.Duration";
+  private static final String TEMPORAL_UNIT = "java.time.temporal.TemporalUnit";
 
   private static final Matcher<ExpressionTree> DURATION_OF_LONG_TEMPORAL_UNIT =
       allOf(
-          staticMethod()
-              .onClass("java.time.Duration")
-              .named("of")
-              .withParameters("long", "java.time.temporal.TemporalUnit"),
+          anyOf(
+              staticMethod().onClass(DURATION).named("of").withParameters("long", TEMPORAL_UNIT),
+              instanceMethod()
+                  .onExactClass(DURATION)
+                  .named("minus")
+                  .withParameters("long", TEMPORAL_UNIT),
+              instanceMethod()
+                  .onExactClass(DURATION)
+                  .named("plus")
+                  .withParameters("long", TEMPORAL_UNIT)),
           Matchers.not(Matchers.packageStartsWith("java.")));
 
   private static final ImmutableSet<ChronoUnit> INVALID_TEMPORAL_UNITS =
@@ -69,15 +79,10 @@ public final class DurationOfLongTemporalUnit extends BugChecker
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
     if (DURATION_OF_LONG_TEMPORAL_UNIT.matches(tree, state)) {
-      if (isSecondParamDaysOrExactDuration(tree)) {
+      if (getInvalidChronoUnit(tree.getArguments().get(1), INVALID_TEMPORAL_UNITS).isPresent()) {
         return describeMatch(tree);
       }
     }
     return Description.NO_MATCH;
-  }
-
-  // will be used by other checks (e.g., Instant.plus(long, TemporalUnit))
-  static boolean isSecondParamDaysOrExactDuration(MethodInvocationTree tree) {
-    return getInvalidChronoUnit(tree.getArguments().get(1), INVALID_TEMPORAL_UNITS).isPresent();
   }
 }
