@@ -37,15 +37,16 @@ import java.util.Arrays;
 
 /**
  * Bans calls to {@code Duration.of(long, TemporalUnit)} where the {@link
- * java.time.temporal.TemporalUnit} has an estimated duration (which is guaranteed to throw an
- * {@code DateTimeException}).
+ * java.time.temporal.TemporalUnit} is not {@link ChronoUnit#DAYS} or it has an estimated duration
+ * (which is guaranteed to throw an {@code DateTimeException}).
  */
 @BugPattern(
     name = "DurationOfLongTemporalUnit",
-    summary = "Duration.of(long, TemporalUnit) only works for TemporalUnits with exact durations.",
+    summary = "Duration.of(long, TemporalUnit) only works for DAYS or exact durations.",
     explanation =
-        "Duration.of(long, TemporalUnit) only works for TemporalUnits with exact durations. "
-            + "E.g., Duration.of(1, ChronoUnit.YEAR) is guaranteed to throw a DateTimeException.",
+        "Duration.of(long, TemporalUnit) only works for TemporalUnits with exact durations or"
+            + " ChronoUnit.DAYS. E.g., Duration.of(1, ChronoUnit.YEARS) is guaranteed to throw a"
+            + " DateTimeException.",
     severity = ERROR,
     providesFix = NO_FIX)
 public final class DurationOfLongTemporalUnit extends BugChecker
@@ -62,16 +63,21 @@ public final class DurationOfLongTemporalUnit extends BugChecker
   private static final ImmutableSet<ChronoUnit> INVALID_TEMPORAL_UNITS =
       Arrays.stream(ChronoUnit.values())
           .filter(c -> c.isDurationEstimated())
+          .filter(c -> !c.equals(ChronoUnit.DAYS)) // DAYS is explicitly allowed
           .collect(toImmutableEnumSet());
 
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
     if (DURATION_OF_LONG_TEMPORAL_UNIT.matches(tree, state)) {
-      if (getInvalidChronoUnit(tree.getArguments().get(1), INVALID_TEMPORAL_UNITS).isPresent()) {
-        // TODO(kak): do we want to include the name of the invalid ChronoUnit in the message?
+      if (isSecondParamDaysOrExactDuration(tree)) {
         return describeMatch(tree);
       }
     }
     return Description.NO_MATCH;
+  }
+
+  // will be used by other checks (e.g., Instant.plus(long, TemporalUnit))
+  static boolean isSecondParamDaysOrExactDuration(MethodInvocationTree tree) {
+    return getInvalidChronoUnit(tree.getArguments().get(1), INVALID_TEMPORAL_UNITS).isPresent();
   }
 }
