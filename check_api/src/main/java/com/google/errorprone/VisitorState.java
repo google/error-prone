@@ -16,8 +16,10 @@
 
 package com.google.errorprone;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Optional;
-import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMultiset;
 import com.google.errorprone.BugPattern.SeverityLevel;
@@ -401,19 +403,32 @@ public class VisitorState {
   // TODO(cushon): consider migrating call sites to use binary names and removing this code.
   // (But then we'd probably want error handling for probably-incorrect canonical names,
   // so it may not end up being a performance win.)
-  private static String inferBinaryName(String classname) {
-    StringBuilder sb = new StringBuilder();
-    boolean first = true;
-    char sep = '.';
-    for (String bit : Splitter.on('.').split(classname)) {
-      if (!first) {
-        sb.append(sep);
+  @VisibleForTesting
+  static String inferBinaryName(String classname) {
+    int len = classname.length();
+    checkArgument(!classname.isEmpty(), "class name must be non-empty");
+    checkArgument(classname.charAt(len - 1) != '.', "invalid class name: %s", classname);
+
+    int lastPeriod = classname.lastIndexOf('.');
+    if (lastPeriod == -1) {
+      return classname; // top level class in default package
+    }
+    int secondToLastPeriod = classname.lastIndexOf('.', lastPeriod - 1);
+    if (secondToLastPeriod != -1
+        && !Character.isUpperCase(classname.charAt(secondToLastPeriod + 1))) {
+      return classname; // top level class
+    }
+
+    StringBuilder sb = new StringBuilder(len);
+    boolean foundUppercase = false;
+    for (int i = 0; i < len; i++) {
+      char c = classname.charAt(i);
+      foundUppercase = foundUppercase || Character.isUpperCase(c);
+      if (c == '.') {
+        sb.append(foundUppercase ? '$' : '.');
+      } else {
+        sb.append(c);
       }
-      sb.append(bit);
-      if (Character.isUpperCase(bit.charAt(0))) {
-        sep = '$';
-      }
-      first = false;
     }
     return sb.toString();
   }
