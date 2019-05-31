@@ -6,7 +6,7 @@ Before:
 ```
 class MyProtoSubject {
   public void hasFoo(Foo expected) {
-    assertThat(actual().foo()).isEqualTo(expected);
+    assertThat(actual.foo()).isEqualTo(expected);
   }
 }
 ```
@@ -16,7 +16,7 @@ After:
 ```
 class MyProtoSubject {
   public void hasFoo(Foo expected) {
-    check("foo()").that(actual().foo()).isEqualTo(expected);
+    check("foo()").that(actual.foo()).isEqualTo(expected);
   }
 }
 ```
