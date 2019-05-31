@@ -224,8 +224,8 @@ public class ComparisonContractViolated extends BugChecker implements MethodTree
           }
           BinaryTree binaryExpr = (BinaryTree) conditionExpr;
           Type ty = ASTHelpers.getType(binaryExpr.getLeftOperand());
-          Types types = Types.instance(state.context);
-          Symtab symtab = Symtab.instance(state.context);
+          Types types = state.getTypes();
+          Symtab symtab = state.getSymtab();
 
           ExpressionTree first =
               trueFirst ? binaryExpr.getLeftOperand() : binaryExpr.getRightOperand();

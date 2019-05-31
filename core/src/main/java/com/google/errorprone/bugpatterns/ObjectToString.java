@@ -58,7 +58,7 @@ public class ObjectToString extends AbstractToString {
       return false;
     }
     Types types = state.getTypes();
-    Names names = Names.instance(state.context);
+    Names names = state.getNames();
     // find Object.toString
     MethodSymbol toString =
         (MethodSymbol) state.getSymtab().objectType.tsym.members().findFirst(names.toString);
