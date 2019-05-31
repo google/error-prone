@@ -64,7 +64,7 @@ public class FunctionalInterfaceMethodChanged extends BugChecker implements Meth
     ClassTree enclosingClazz = ASTHelpers.findEnclosingNode(state.getPath(), ClassTree.class);
     if (tree.getModifiers().getFlags().contains(Modifier.DEFAULT)
         && IS_FUNCTIONAL_INTERFACE.matches(enclosingClazz, state)) {
-      Types types = Types.instance(state.context);
+      Types types = state.getTypes();
       Set<Symbol> functionalSuperInterfaceSams =
           enclosingClazz.getImplementsClause().stream()
               .filter(t -> IS_FUNCTIONAL_INTERFACE.matches(t, state))

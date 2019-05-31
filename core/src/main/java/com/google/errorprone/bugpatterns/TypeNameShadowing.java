@@ -46,7 +46,6 @@ import com.sun.tools.javac.comp.AttrContext;
 import com.sun.tools.javac.comp.Enter;
 import com.sun.tools.javac.comp.Env;
 import com.sun.tools.javac.tree.JCTree.Tag;
-import com.sun.tools.javac.util.Names;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -123,8 +122,7 @@ public class TypeNameShadowing extends BugChecker implements MethodTreeMatcher, 
             .getEnv(ASTHelpers.getSymbol(state.findEnclosing(ClassTree.class)));
 
     Symtab symtab = state.getSymtab();
-    PackageSymbol javaLang =
-        symtab.enterPackage(symtab.java_base, Names.instance(state.context).java_lang);
+    PackageSymbol javaLang = symtab.enterPackage(symtab.java_base, state.getNames().java_lang);
 
     Iterable<Symbol> enclosingTypes = typesInEnclosingScope(env, javaLang);
 
