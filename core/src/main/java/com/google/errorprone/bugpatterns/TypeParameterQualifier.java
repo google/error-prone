@@ -47,8 +47,7 @@ public class TypeParameterQualifier extends BugChecker implements MemberSelectTr
       return Description.NO_MATCH;
     }
     TreeMaker make =
-        TreeMaker.instance(state.context)
-            .forToplevel((JCCompilationUnit) state.getPath().getCompilationUnit());
+        state.getTreeMaker().forToplevel((JCCompilationUnit) state.getPath().getCompilationUnit());
     JCExpression qual = make.QualIdent(ASTHelpers.getSymbol(tree));
     return describeMatch(tree, SuggestedFix.replace(tree, qual.toString()));
   }

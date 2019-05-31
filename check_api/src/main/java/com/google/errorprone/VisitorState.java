@@ -64,10 +64,8 @@ public class VisitorState {
   private final StatisticsCollector statisticsCollector;
   private final Map<String, SeverityLevel> severityMap;
   private final ErrorProneOptions errorProneOptions;
-  private final Map<String, Optional<Type>> typeCache;
-  private final ErrorProneTimings timings;
+  private final SharedState sharedState;
   public final Context context;
-
   private final TreePath path;
   private final SuppressionInfo.SuppressedState suppressedState;
 
@@ -89,8 +87,8 @@ public class VisitorState {
         // Can't use this VisitorState to report results, so no-op collector.
         StatisticsCollector.createNoOpCollector(),
         null,
-        null,
-        SuppressedState.UNSUPPRESSED);
+        SuppressedState.UNSUPPRESSED,
+        null);
   }
 
   /**
@@ -106,8 +104,8 @@ public class VisitorState {
         ErrorProneOptions.empty(),
         StatisticsCollector.createCollector(),
         null,
-        null,
-        SuppressedState.UNSUPPRESSED);
+        SuppressedState.UNSUPPRESSED,
+        null);
   }
 
   /**
@@ -125,8 +123,8 @@ public class VisitorState {
         errorProneOptions,
         StatisticsCollector.createCollector(),
         null,
-        null,
-        SuppressedState.UNSUPPRESSED);
+        SuppressedState.UNSUPPRESSED,
+        null);
   }
 
   /**
@@ -145,8 +143,8 @@ public class VisitorState {
         // Can't use this VisitorState to report results, so no-op collector.
         StatisticsCollector.createNoOpCollector(),
         null,
-        null,
-        SuppressedState.UNSUPPRESSED);
+        SuppressedState.UNSUPPRESSED,
+        null);
   }
 
   /**
@@ -164,8 +162,8 @@ public class VisitorState {
         ErrorProneOptions.empty(),
         StatisticsCollector.createCollector(),
         null,
-        null,
-        SuppressedState.UNSUPPRESSED);
+        SuppressedState.UNSUPPRESSED,
+        null);
   }
 
   /**
@@ -186,8 +184,8 @@ public class VisitorState {
         errorProneOptions,
         StatisticsCollector.createCollector(),
         null,
-        null,
-        SuppressedState.UNSUPPRESSED);
+        SuppressedState.UNSUPPRESSED,
+        null);
   }
 
   private VisitorState(
@@ -196,9 +194,9 @@ public class VisitorState {
       Map<String, SeverityLevel> severityMap,
       ErrorProneOptions errorProneOptions,
       StatisticsCollector statisticsCollector,
-      Map<String, Optional<Type>> typeCache,
       TreePath path,
-      SuppressedState suppressedState) {
+      SuppressedState suppressedState,
+      SharedState sharedState) {
     this.context = context;
     this.descriptionListener = descriptionListener;
     this.severityMap = severityMap;
@@ -207,14 +205,7 @@ public class VisitorState {
 
     this.suppressedState = suppressedState;
     this.path = path;
-    this.timings = ErrorProneTimings.instance(context);
-    this.typeCache =
-        typeCache != null
-            ? typeCache
-            // TODO(ronshapiro): should we presize this with a reasonable size? We can check for the
-            // smallest build and see how many types are loaded and use that. Or perhaps a heuristic
-            // based on number of files?
-            : new HashMap<>();
+    this.sharedState = sharedState != null ? sharedState : new SharedState(context);
   }
 
   public VisitorState withPath(TreePath path) {
@@ -224,9 +215,9 @@ public class VisitorState {
         severityMap,
         errorProneOptions,
         statisticsCollector,
-        typeCache,
         path,
-        suppressedState);
+        suppressedState,
+        sharedState);
   }
 
   public VisitorState withPathAndSuppression(TreePath path, SuppressedState suppressedState) {
@@ -236,9 +227,9 @@ public class VisitorState {
         severityMap,
         errorProneOptions,
         statisticsCollector,
-        typeCache,
         path,
-        suppressedState);
+        suppressedState,
+        sharedState);
   }
 
   public TreePath getPath() {
@@ -246,15 +237,19 @@ public class VisitorState {
   }
 
   public TreeMaker getTreeMaker() {
-    return TreeMaker.instance(context);
+    return sharedState.treeMaker;
   }
 
   public Types getTypes() {
-    return Types.instance(context);
+    return sharedState.types;
   }
 
   public Symtab getSymtab() {
-    return Symtab.instance(context);
+    return sharedState.symtab;
+  }
+
+  public Names getNames() {
+    return sharedState.names;
   }
 
   public NullnessAnalysis getNullnessAnalysis() {
@@ -317,7 +312,7 @@ public class VisitorState {
   }
 
   public Name getName(String nameStr) {
-    return Names.instance(context).fromString(nameStr);
+    return getNames().fromString(nameStr);
   }
 
   /**
@@ -333,7 +328,8 @@ public class VisitorState {
    */
   @Nullable
   public Type getTypeFromString(String typeStr) {
-    return typeCache
+    return sharedState
+        .typeCache
         .computeIfAbsent(typeStr, key -> Optional.fromNullable(getTypeFromStringInternal(key)))
         .orNull();
   }
@@ -362,12 +358,11 @@ public class VisitorState {
   public Symbol getSymbolFromString(String symStr) {
     symStr = inferBinaryName(symStr);
     Name name = getName(symStr);
-    Modules modules = Modules.instance(context);
-    boolean modular = modules.getDefaultModule() != getSymtab().noModule;
+    boolean modular = sharedState.modules.getDefaultModule() != getSymtab().noModule;
     if (!modular) {
       return getSymbolFromString(getSymtab().noModule, name);
     }
-    for (ModuleSymbol msym : Modules.instance(context).allModules()) {
+    for (ModuleSymbol msym : sharedState.modules.allModules()) {
       ClassSymbol result = getSymbolFromString(msym, name);
       if (result != null) {
         // TODO(cushon): the path where we iterate over all modules is probably slow.
@@ -620,6 +615,35 @@ public class VisitorState {
 
   /** Returns a timing span for the given {@link Suppressible}. */
   public AutoCloseable timingSpan(Suppressible suppressible) {
-    return timings.span(suppressible);
+    return sharedState.timings.span(suppressible);
+  }
+
+  /**
+   * Instances that every {@link VisitorState} instance can share.
+   *
+   * <p>For the types that are typically stored in {@link Context}, caching the references over
+   * {@code SomeClass.instance(context)} has sizable performance improvements in aggregate.
+   */
+  private static final class SharedState {
+    private final Modules modules;
+    private final Names names;
+    private final Symtab symtab;
+    private final ErrorProneTimings timings;
+    private final Types types;
+    private final TreeMaker treeMaker;
+
+    // TODO(ronshapiro): should we presize this with a reasonable size? We can check for the
+    // smallest build and see how many types are loaded and use that. Or perhaps a heuristic
+    // based on number of files?
+    private final Map<String, Optional<Type>> typeCache = new HashMap<>();
+
+    SharedState(Context context) {
+      this.modules = Modules.instance(context);
+      this.names = Names.instance(context);
+      this.symtab = Symtab.instance(context);
+      this.timings = ErrorProneTimings.instance(context);
+      this.types = Types.instance(context);
+      this.treeMaker = TreeMaker.instance(context);
+    }
   }
 }

@@ -21,6 +21,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.junit.Assert.fail;
 
 import com.google.errorprone.ErrorProneInMemoryFileManager;
+import com.google.errorprone.VisitorState;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.tools.javac.api.JavacTaskImpl;
@@ -515,7 +516,11 @@ public class GuardedByBinderTest {
               GuardedByBinder.bindString(
                   exprString,
                   GuardedBySymbolResolver.from(
-                      ASTHelpers.getSymbol(classDecl), compilationUnit, task.getContext(), null));
+                      ASTHelpers.getSymbol(classDecl),
+                      compilationUnit,
+                      task.getContext(),
+                      null,
+                      VisitorState.createForUtilityPurposes(task.getContext())));
           if (!guardExpression.isPresent()) {
             throw new IllegalGuardedBy(exprString);
           }

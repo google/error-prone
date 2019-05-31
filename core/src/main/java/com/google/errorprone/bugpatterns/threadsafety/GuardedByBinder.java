@@ -57,7 +57,7 @@ public class GuardedByBinder {
                   ALREADY_BOUND_RESOLVER,
                   ASTHelpers.getSymbol(visitorState.findEnclosing(ClassTree.class)),
                   visitorState.getTypes(),
-                  Names.instance(visitorState.context))));
+                  visitorState.getNames())));
     } catch (IllegalGuardedBy expected) {
       return Optional.empty();
     }
@@ -72,8 +72,8 @@ public class GuardedByBinder {
               BinderContext.of(
                   resolver,
                   resolver.enclosingClass(),
-                  Types.instance(resolver.context()),
-                  Names.instance(resolver.context()))));
+                  resolver.visitorState().getTypes(),
+                  resolver.visitorState().getNames())));
     } catch (IllegalGuardedBy expected) {
       return Optional.empty();
     }

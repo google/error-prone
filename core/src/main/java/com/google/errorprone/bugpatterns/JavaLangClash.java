@@ -37,7 +37,6 @@ import com.sun.tools.javac.code.Symtab;
 import com.sun.tools.javac.tree.JCTree.JCClassDecl;
 import com.sun.tools.javac.tree.JCTree.JCTypeParameter;
 import com.sun.tools.javac.util.Name;
-import com.sun.tools.javac.util.Names;
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
@@ -61,8 +60,7 @@ public class JavaLangClash extends BugChecker
 
   private Description check(Tree tree, Name simpleName, VisitorState state) {
     Symtab symtab = state.getSymtab();
-    PackageSymbol javaLang =
-        symtab.enterPackage(symtab.java_base, Names.instance(state.context).java_lang);
+    PackageSymbol javaLang = symtab.enterPackage(symtab.java_base, state.getNames().java_lang);
     Symbol other =
         getFirst(
             javaLang.members().getSymbolsByName(simpleName, s -> s.getModifiers().contains(PUBLIC)),
