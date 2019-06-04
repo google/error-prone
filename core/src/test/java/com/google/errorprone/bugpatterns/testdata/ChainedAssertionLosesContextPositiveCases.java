@@ -26,7 +26,7 @@ import com.google.common.truth.Truth;
 
 /** @author cpovirk@google.com (Chris Povirk) */
 public class ChainedAssertionLosesContextPositiveCases {
-  static final class FooSubject extends Subject<FooSubject, Foo> {
+  static final class FooSubject extends Subject {
     private final Foo actual;
 
     static Factory<FooSubject, Foo> foos() {

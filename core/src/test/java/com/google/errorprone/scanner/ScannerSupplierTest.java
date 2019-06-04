@@ -631,8 +631,7 @@ public class ScannerSupplierTest {
     assertThat(exception).hasMessageThat().contains("may not be disabled");
   }
 
-  private static class ScannerSupplierSubject
-      extends Subject<ScannerSupplierSubject, ScannerSupplier> {
+  private static class ScannerSupplierSubject extends Subject {
     private final ScannerSupplier actual;
 
     ScannerSupplierSubject(FailureMetadata failureMetadata, ScannerSupplier scannerSupplier) {
