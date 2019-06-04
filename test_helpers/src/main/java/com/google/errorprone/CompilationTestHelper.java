@@ -285,7 +285,6 @@ public class CompilationTestHelper {
   }
 
   /** Performs a compilation and checks that the diagnostics and result match the expectations. */
-  // TODO(eaftan): any way to ensure that this is actually called?
   public void doTest() {
     Preconditions.checkState(!sources.isEmpty(), "No source files to compile");
     Result result = compile();
