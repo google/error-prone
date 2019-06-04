@@ -25,7 +25,7 @@ import com.google.common.truth.Subject;
 
 /** @author cpovirk@google.com (Chris Povirk) */
 public class ProvideDescriptionToCheckPositiveCases {
-  static final class FooSubject extends Subject<FooSubject, Foo> {
+  static final class FooSubject extends Subject {
     private final Foo actual;
 
     private FooSubject(FailureMetadata metadata, Foo actual) {

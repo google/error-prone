@@ -312,7 +312,7 @@ public class TypeParameterNamingTest {
     assertKindOfName("ACanalPanamaT").isEqualTo(NON_CLASS_NAME_WITH_T_SUFFIX);
   }
 
-  private static Subject<?, TypeParameterNamingClassification> assertKindOfName(String s) {
+  private static Subject assertKindOfName(String s) {
     return assertWithMessage(s).that(TypeParameterNamingClassification.classify(s));
   }
 }
