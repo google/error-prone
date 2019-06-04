@@ -407,6 +407,7 @@ import com.google.errorprone.bugpatterns.time.JodaPlusMinusLong;
 import com.google.errorprone.bugpatterns.time.JodaTimeConverterManager;
 import com.google.errorprone.bugpatterns.time.JodaToSelf;
 import com.google.errorprone.bugpatterns.time.JodaWithDurationAddedLong;
+import com.google.errorprone.bugpatterns.time.LocalDateTemporalAmount;
 import com.google.errorprone.bugpatterns.time.PeriodFrom;
 import com.google.errorprone.bugpatterns.time.PeriodGetTemporalUnit;
 import com.google.errorprone.bugpatterns.time.PeriodTimeMath;
@@ -534,6 +535,7 @@ public class BuiltInCheckerSuppliers {
           JUnit4TestNotRun.class,
           JUnitAssertSameCheck.class,
           LiteByteStringUtf8.class,
+          LocalDateTemporalAmount.class,
           LoopConditionChecker.class,
           MathRoundIntLong.class,
           MislabeledAndroidString.class,
