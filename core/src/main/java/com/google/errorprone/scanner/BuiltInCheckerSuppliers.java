@@ -19,6 +19,7 @@ package com.google.errorprone.scanner;
 import com.google.common.base.Predicates;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
+import com.google.common.collect.Streams;
 import com.google.errorprone.BugCheckerInfo;
 import com.google.errorprone.bugpatterns.AmbiguousMethodReference;
 import com.google.errorprone.bugpatterns.AnnotateFormatMethod;
@@ -430,11 +431,9 @@ public class BuiltInCheckerSuppliers {
 
   public static ImmutableSet<BugCheckerInfo> getSuppliers(
       Iterable<Class<? extends BugChecker>> checkers) {
-    ImmutableSet.Builder<BugCheckerInfo> result = ImmutableSet.builder();
-    for (Class<? extends BugChecker> checker : checkers) {
-      result.add(BugCheckerInfo.create(checker));
-    }
-    return result.build();
+    return Streams.stream(checkers)
+        .map(BugCheckerInfo::create)
+        .collect(ImmutableSet.toImmutableSet());
   }
 
   /** Returns a {@link ScannerSupplier} with all {@link BugChecker}s in Error Prone. */

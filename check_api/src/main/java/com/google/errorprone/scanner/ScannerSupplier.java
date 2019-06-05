@@ -25,6 +25,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
+import com.google.common.collect.Streams;
 import com.google.errorprone.BugCheckerInfo;
 import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.ErrorProneFlags;
@@ -76,15 +77,14 @@ public abstract class ScannerSupplier implements Supplier<Scanner> {
 
   /** Returns a {@link ScannerSupplier} built from a list of {@link BugCheckerInfo}s. */
   public static ScannerSupplier fromBugCheckerInfos(Iterable<BugCheckerInfo> checkers) {
-    ImmutableBiMap.Builder<String, BugCheckerInfo> builder = ImmutableBiMap.builder();
-    for (BugCheckerInfo checker : checkers) {
-      builder.put(checker.canonicalName(), checker);
-    }
-    ImmutableBiMap<String, BugCheckerInfo> allChecks = builder.build();
+    ImmutableBiMap<String, BugCheckerInfo> allChecks =
+        Streams.stream(checkers)
+            .collect(
+                ImmutableBiMap.toImmutableBiMap(BugCheckerInfo::canonicalName, checker -> checker));
     return new ScannerSupplierImpl(
         allChecks,
         defaultSeverities(allChecks.values()),
-        ImmutableSet.<String>of(),
+        ImmutableSet.of(),
         ErrorProneFlags.empty());
   }
 
@@ -279,12 +279,11 @@ public abstract class ScannerSupplier implements Supplier<Scanner> {
    */
   @CheckReturnValue
   public ScannerSupplier filter(Predicate<? super BugCheckerInfo> predicate) {
-    ImmutableSet.Builder<String> disabled = ImmutableSet.builder();
-    for (BugCheckerInfo check : getAllChecks().values()) {
-      if (!predicate.apply(check)) {
-        disabled.add(check.canonicalName());
-      }
-    }
-    return new ScannerSupplierImpl(getAllChecks(), severities(), disabled.build(), getFlags());
+    ImmutableSet<String> disabled =
+        getAllChecks().values().stream()
+            .filter(predicate.negate())
+            .map(BugCheckerInfo::canonicalName)
+            .collect(ImmutableSet.toImmutableSet());
+    return new ScannerSupplierImpl(getAllChecks(), severities(), disabled, getFlags());
   }
 }
