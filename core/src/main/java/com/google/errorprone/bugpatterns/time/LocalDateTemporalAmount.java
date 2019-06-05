@@ -38,7 +38,10 @@ import com.sun.source.tree.MethodInvocationTree;
  */
 @BugPattern(
     name = "LocalDateTemporalAmount",
-    summary = "LocalDate.plus() and minus() does not work with non-zero Durations",
+    summary =
+        "LocalDate.plus() and minus() does not work with Durations. LocalDate represents civil"
+            + " time (years/months/days), so java.time.Period is the appropriate thing to add or"
+            + " subtract instead.",
     severity = ERROR,
     providesFix = NO_FIX)
 public final class LocalDateTemporalAmount extends BugChecker
