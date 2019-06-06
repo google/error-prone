@@ -200,7 +200,7 @@ public final class UseCorrectAssertInTestsTest {
         .addOutputLines(
             OUTPUT,
             inputWithExpressionsAndImport(
-                "Integer a = 1;", "assertThat(a).isSameAs(1);", ASSERT_THAT_IMPORT))
+                "Integer a = 1;", "assertThat(a).isSameInstanceAs(1);", ASSERT_THAT_IMPORT))
         .doTest();
   }
 
@@ -211,7 +211,7 @@ public final class UseCorrectAssertInTestsTest {
         .addOutputLines(
             OUTPUT,
             inputWithExpressionsAndImport(
-                "Integer a = 1;", "assertThat(a).isSameAs(1);", ASSERT_THAT_IMPORT))
+                "Integer a = 1;", "assertThat(a).isSameInstanceAs(1);", ASSERT_THAT_IMPORT))
         .doTest();
   }
 
@@ -222,7 +222,7 @@ public final class UseCorrectAssertInTestsTest {
         .addOutputLines(
             OUTPUT,
             inputWithExpressionsAndImport(
-                "Integer a = 1;", "assertThat(a).isNotSameAs(1);", ASSERT_THAT_IMPORT))
+                "Integer a = 1;", "assertThat(a).isNotSameInstanceAs(1);", ASSERT_THAT_IMPORT))
         .doTest();
   }
 
@@ -234,7 +234,7 @@ public final class UseCorrectAssertInTestsTest {
             OUTPUT,
             inputWithExpressionsAndImport(
                 "int a = 1;",
-                "assertWithMessage(\"detail\").that(a).isSameAs(1);",
+                "assertWithMessage(\"detail\").that(a).isSameInstanceAs(1);",
                 ASSERT_WITH_MESSAGE_IMPORT))
         .doTest();
   }

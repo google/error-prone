@@ -66,8 +66,8 @@ public class UseCorrectAssertInTests extends BugChecker implements MethodTreeMat
   private static final String ASSERT_WITH_MESSAGE = "assertWithMessage(%s).that(%s).";
   private static final String IS_TRUE = "isTrue();";
   private static final String IS_FALSE = "isFalse();";
-  private static final String IS_SAME_AS = "isSameAs(%s);";
-  private static final String IS_NOT_SAME_AS = "isNotSameAs(%s);";
+  private static final String IS_SAME_AS = "isSameInstanceAs(%s);";
+  private static final String IS_NOT_SAME_AS = "isNotSameInstanceAs(%s);";
   private static final String IS_EQUAL_TO = "isEqualTo(%s);";
   private static final String IS_NULL = "isNull();";
   private static final String IS_NOT_NULL = "isNotNull();";
