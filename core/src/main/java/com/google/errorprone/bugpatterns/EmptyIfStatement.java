@@ -17,9 +17,8 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
-import static com.google.errorprone.matchers.Matchers.nextStatement;
-import static com.google.errorprone.matchers.Matchers.parentNode;
-import static com.sun.source.tree.Tree.Kind.IF;
+import static com.google.errorprone.matchers.Description.NO_MATCH;
+import static com.google.errorprone.matchers.Matchers.isLastStatementInBlock;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.ProvidesFix;
@@ -27,11 +26,10 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.EmptyStatementTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
-import com.google.errorprone.matchers.Matchers;
 import com.sun.source.tree.EmptyStatementTree;
 import com.sun.source.tree.IfTree;
-import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree;
+import com.sun.source.util.TreePath;
 
 /**
  * This checker finds and fixes empty statements after an if, with no else part. For example: if
@@ -56,16 +54,15 @@ public class EmptyIfStatement extends BugChecker implements EmptyStatementTreeMa
    */
   @Override
   public Description matchEmptyStatement(EmptyStatementTree tree, VisitorState state) {
-    boolean matches = false;
-    Tree parent = state.getPath().getParentPath().getLeaf();
-    if (parent.getKind() == IF) {
-      IfTree parentAsIf = (IfTree) parent;
-      matches =
-          (parentAsIf.getThenStatement() instanceof EmptyStatementTree)
-              && (parentAsIf.getElseStatement() == null);
+    TreePath parentPath = state.getPath().getParentPath();
+    Tree parent = parentPath.getLeaf();
+    if (!(parent instanceof IfTree)) {
+      return NO_MATCH;
     }
-    if (!matches) {
-      return Description.NO_MATCH;
+    IfTree ifTree = (IfTree) parent;
+    if (!(ifTree.getThenStatement() instanceof EmptyStatementTree)
+        || ifTree.getElseStatement() != null) {
+      return NO_MATCH;
     }
 
     /*
@@ -75,18 +72,13 @@ public class EmptyIfStatement extends BugChecker implements EmptyStatementTreeMa
      * empty then part of the if.  If the next statement is not a block, then also
      * suggest deleting the empty then part of the if.
      */
-    boolean nextStmtIsNull =
-        parentNode(nextStatement(Matchers.<StatementTree>isSame(null))).matches(tree, state);
-
-    assert (state.getPath().getParentPath().getLeaf().getKind() == IF);
-    IfTree ifParent = (IfTree) state.getPath().getParentPath().getLeaf();
-    if (nextStmtIsNull) {
+    if (isLastStatementInBlock().matches(ifTree, state.withPath(parentPath))) {
       // No following statements. Delete whole if.
       return describeMatch(parent, SuggestedFix.delete(parent));
     } else {
       // There are more statements. Delete the empty then part of the if.
       return describeMatch(
-          ifParent.getThenStatement(), SuggestedFix.delete(ifParent.getThenStatement()));
+          ifTree.getThenStatement(), SuggestedFix.delete(ifTree.getThenStatement()));
     }
   }
 }
