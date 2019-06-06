@@ -83,7 +83,7 @@ public final class JavaTimeDefaultTimeZone extends BugChecker
   private static final Matcher<ExpressionTree> IN_JAVA_TIME =
       Matchers.packageStartsWith("java.time");
 
-  private static boolean matches(MethodInvocationTree tree, VisitorState state) {
+  private static boolean matches(MethodInvocationTree tree) {
     if (!tree.getArguments().isEmpty()) {
       return false;
     }
@@ -107,7 +107,7 @@ public final class JavaTimeDefaultTimeZone extends BugChecker
 
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
-    if (!matches(tree, state) || IN_JAVA_TIME.matches(tree, state)) {
+    if (!matches(tree) || IN_JAVA_TIME.matches(tree, state)) {
       return Description.NO_MATCH;
     }
 
