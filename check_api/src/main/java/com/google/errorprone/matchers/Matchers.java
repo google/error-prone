@@ -23,6 +23,7 @@ import static com.google.errorprone.suppliers.Suppliers.STRING_TYPE;
 import static com.google.errorprone.suppliers.Suppliers.typeFromClass;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.stripParentheses;
+import static java.util.Objects.requireNonNull;
 
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.VisitorState;
@@ -351,10 +352,11 @@ public class Matchers {
    * parentNode(kindIs(Kind.RETURN))} would match the {@code this} expression in {@code return
    * this;}
    */
-  public static Matcher<Tree> parentNode(Matcher<? extends Tree> treeMatcher) {
-    @SuppressWarnings("unchecked") // Safe contravariant cast
-    Matcher<Tree> matcher = (Matcher<Tree>) treeMatcher;
-    return new ParentNode(matcher);
+  public static Matcher<Tree> parentNode(Matcher<Tree> treeMatcher) {
+    return (tree, state) -> {
+      TreePath parent = requireNonNull(state.getPath().getParentPath());
+      return treeMatcher.matches(parent.getLeaf(), state.withPath(parent));
+    };
   }
 
   /**
@@ -468,14 +470,13 @@ public class Matchers {
    *
    * <p>TODO(eaftan): This could be used instead of enclosingBlock and enclosingClass.
    */
-  public static <T extends Tree> Matcher<Tree> enclosingNode(final Matcher<T> matcher) {
-    // TODO(cushon): this should take a Class<T>
+  public static Matcher<Tree> enclosingNode(Matcher<Tree> matcher) {
     return (t, state) -> {
       TreePath path = state.getPath().getParentPath();
       while (path != null) {
         Tree node = path.getLeaf();
         state = state.withPath(path);
-        if (matcher.matches((T) node, state)) {
+        if (matcher.matches(node, state)) {
           return true;
         }
         path = path.getParentPath();
