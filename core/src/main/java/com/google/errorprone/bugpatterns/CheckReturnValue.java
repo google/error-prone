@@ -21,7 +21,6 @@ import static com.google.errorprone.util.ASTHelpers.enclosingClass;
 import static com.google.errorprone.util.ASTHelpers.enclosingPackage;
 import static com.google.errorprone.util.ASTHelpers.hasDirectAnnotationWithSimpleName;
 
-import com.google.common.base.Optional;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
@@ -36,6 +35,7 @@ import com.sun.source.tree.MethodTree;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
+import java.util.Optional;
 import javax.lang.model.element.ElementKind;
 
 /** @author eaftan@google.com (Eddie Aftandilian) */
@@ -50,59 +50,34 @@ public class CheckReturnValue extends AbstractReturnValueIgnored
   private static final String CHECK_RETURN_VALUE = "CheckReturnValue";
   private static final String CAN_IGNORE_RETURN_VALUE = "CanIgnoreReturnValue";
 
-  private static Optional<Boolean> shouldCheckReturnValue(Symbol sym, VisitorState state) {
+  // TODO(amalloy): After java 9, these two methods can be simplified with a Stream<Boolean> using
+  // iterate/takeWhile.
+  private static Optional<Boolean> shouldCheckReturnValue(Symbol sym) {
     if (hasDirectAnnotationWithSimpleName(sym, CAN_IGNORE_RETURN_VALUE)) {
       return Optional.of(false);
     }
     if (hasDirectAnnotationWithSimpleName(sym, CHECK_RETURN_VALUE)) {
       return Optional.of(true);
     }
-    return Optional.absent();
+    return Optional.empty();
   }
 
-  private static Optional<Boolean> checkEnclosingClasses(MethodSymbol method, VisitorState state) {
+  private static Optional<Boolean> checkEnclosingClasses(MethodSymbol method) {
     Symbol enclosingClass = enclosingClass(method);
     while (enclosingClass instanceof ClassSymbol) {
-      Optional<Boolean> result = shouldCheckReturnValue(enclosingClass, state);
+      Optional<Boolean> result = shouldCheckReturnValue(enclosingClass);
       if (result.isPresent()) {
         return result;
       }
       enclosingClass = enclosingClass.owner;
     }
-    return Optional.absent();
+    return Optional.empty();
   }
 
-  private static Optional<Boolean> checkPackage(MethodSymbol method, VisitorState state) {
-    return shouldCheckReturnValue(enclosingPackage(method), state);
+  private static Optional<Boolean> checkPackage(MethodSymbol method) {
+    return shouldCheckReturnValue(enclosingPackage(method));
   }
 
-  private static final Matcher<ExpressionTree> MATCHER =
-      new Matcher<ExpressionTree>() {
-        @Override
-        public boolean matches(ExpressionTree tree, VisitorState state) {
-          Symbol sym = ASTHelpers.getSymbol(tree);
-          if (!(sym instanceof MethodSymbol)) {
-            return false;
-          }
-          MethodSymbol method = (MethodSymbol) sym;
-          Optional<Boolean> result = shouldCheckReturnValue(method, state);
-          if (result.isPresent()) {
-            return result.get();
-          }
-
-          result = checkEnclosingClasses(method, state);
-          if (result.isPresent()) {
-            return result.get();
-          }
-
-          result = checkPackage(method, state);
-          if (result.isPresent()) {
-            return result.get();
-          }
-
-          return false;
-        }
-      };
 
   /**
    * Return a matcher for method invocations in which the method being called has the
@@ -110,7 +85,18 @@ public class CheckReturnValue extends AbstractReturnValueIgnored
    */
   @Override
   public Matcher<ExpressionTree> specializedMatcher() {
-    return MATCHER;
+    return (tree, state) -> {
+      Symbol sym = ASTHelpers.getSymbol(tree);
+      if (!(sym instanceof MethodSymbol)) {
+        return false;
+      }
+      MethodSymbol method = (MethodSymbol) sym;
+      return shouldCheckReturnValue(method)
+          .orElseGet(
+              () ->
+                  checkEnclosingClasses(method)
+                      .orElseGet(() -> checkPackage(method).orElse(false)));
+    };
   }
 
   private static final String BOTH_ERROR =
@@ -119,7 +105,7 @@ public class CheckReturnValue extends AbstractReturnValueIgnored
   /**
    * Validate {@code @CheckReturnValue} and {@link CanIgnoreReturnValue} usage on methods.
    *
-   * <p>The annotations should not both be appled to the same method.
+   * <p>The annotations should not both be applied to the same method.
    *
    * <p>The annotations should not be applied to void-returning methods. Doing so makes no sense,
    * because there is no return value to check.
@@ -144,7 +130,7 @@ public class CheckReturnValue extends AbstractReturnValueIgnored
       return Description.NO_MATCH;
     }
     if (method.getKind() != ElementKind.METHOD) {
-      // skip contructors (which javac thinks are void-returning)
+      // skip constructors (which javac thinks are void-returning)
       return Description.NO_MATCH;
     }
     if (!ASTHelpers.isVoidType(method.getReturnType(), state)) {
