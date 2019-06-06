@@ -30,8 +30,8 @@ import com.google.errorprone.matchers.Matchers;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
-import java.util.ArrayList;
-import java.util.List;
+import com.sun.tools.javac.code.Symbol.MethodSymbol;
+import com.sun.tools.javac.util.Name;
 
 import com.google.errorprone.fixes.SuggestedFixes;
 
@@ -80,27 +80,34 @@ public final class JavaTimeDefaultTimeZone extends BugChecker
           .named("systemDefaultZone")
           .withParameters();
 
-  private static final Matcher<ExpressionTree> MATCHER =
-      Matchers.allOf(
-          buildMatcher(),
-          // Allow usage by java.time itself
-          Matchers.not(Matchers.packageStartsWith("java.time")));
+  private static final Matcher<ExpressionTree> IN_JAVA_TIME =
+      Matchers.packageStartsWith("java.time");
 
-  private static Matcher<ExpressionTree> buildMatcher() {
-    List<Matcher<ExpressionTree>> matchers = new ArrayList<>();
-    for (String type : NOW_STATIC) {
-      matchers.add(Matchers.staticMethod().onClass(type).named("now").withParameters());
+  private static boolean matches(MethodInvocationTree tree, VisitorState state) {
+    if (!tree.getArguments().isEmpty()) {
+      return false;
     }
-    for (String type : DATE_NOW_INSTANCE) {
-      matchers.add(Matchers.instanceMethod().onExactClass(type).named("dateNow").withParameters());
+    MethodSymbol symbol = ASTHelpers.getSymbol(tree);
+    if (symbol == null) {
+      return false;
     }
-    matchers.add(CLOCK_MATCHER);
-    return Matchers.anyOf(matchers);
+    Name methodName = symbol.getSimpleName();
+    if (methodName.contentEquals("now")) {
+      return symbol.isStatic() && NOW_STATIC.contains(symbol.owner.getQualifiedName().toString());
+    }
+    if (methodName.contentEquals("dateNow")) {
+      return !symbol.isStatic()
+          && DATE_NOW_INSTANCE.contains(symbol.owner.getQualifiedName().toString());
+    }
+    if (methodName.contentEquals("systemDefaultZone")) {
+      return symbol.isStatic() && symbol.owner.getQualifiedName().contentEquals("java.time.Clock");
+    }
+    return false;
   }
 
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
-    if (!MATCHER.matches(tree, state)) {
+    if (!matches(tree, state) || IN_JAVA_TIME.matches(tree, state)) {
       return Description.NO_MATCH;
     }
 
