@@ -21,13 +21,15 @@ import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.BugPattern.ProvidesFix.REQUIRES_HUMAN_ATTENTION;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.bugpatterns.ImplementAssertionWithChaining.makeCheckDescription;
-import static com.google.errorprone.bugpatterns.ProvideDescriptionToCheck.findThatCall;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
+import static com.google.errorprone.matchers.Matchers.anyOf;
+import static com.google.errorprone.matchers.Matchers.instanceMethod;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
 import static com.google.errorprone.util.ASTHelpers.getDeclaredSymbol;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
 import static com.sun.source.tree.Tree.Kind.CLASS;
+import static com.sun.source.tree.Tree.Kind.METHOD_INVOCATION;
 import static java.lang.String.format;
 import static java.util.stream.Stream.concat;
 import static javax.lang.model.element.Modifier.STATIC;
@@ -137,6 +139,38 @@ public final class ChainedAssertionLosesContext extends BugChecker
        * appropriate Subject.Factory, and generate check().about(...).that(...).
        */
       return NO_MATCH;
+    }
+  }
+
+  /**
+   * Starting from a {@code VisitorState} pointing at part of a fluent assertion statement (like
+   * {@code check()} or {@code assertWithMessage()}, walks up the tree and returns the subsequent
+   * call to {@code that(...)}.
+   *
+   * <p>Often, the call is made directly on the result of the given tree -- like when the input is
+   * {@code check()}, which is part of the expression {@code check().that(...)}. But sometimes there
+   * is an intervening call to {@code withMessage}, {@code about}, or both.
+   */
+  static MethodInvocationTree findThatCall(VisitorState state) {
+    TreePath path = state.getPath();
+    /*
+     * Each iteration walks 1 method call up the tree, but it's actually 2 steps in the tree because
+     * there's a MethodSelectTree between each pair of MethodInvocationTrees.
+     */
+    while (true) {
+      path = path.getParentPath().getParentPath();
+      Tree leaf = path.getLeaf();
+      if (leaf.getKind() != METHOD_INVOCATION) {
+        return null;
+      }
+      MethodInvocationTree maybeThatCall = (MethodInvocationTree) leaf;
+      if (WITH_MESSAGE_OR_ABOUT.matches(maybeThatCall, state)) {
+        continue;
+      } else if (SUBJECT_BUILDER_THAT.matches(maybeThatCall, state)) {
+        return maybeThatCall;
+      } else {
+        return null;
+      }
     }
   }
 
@@ -252,4 +286,21 @@ public final class ChainedAssertionLosesContext extends BugChecker
       staticMethod().onClass(TRUTH_CLASS).named("assertWithMessage");
   private static final Matcher<ExpressionTree> ASSERT =
       staticMethod().onClass(TRUTH_CLASS).named("assert_");
+
+  private static final Matcher<ExpressionTree> SUBJECT_BUILDER_THAT =
+      anyOf(
+          instanceMethod()
+              .onDescendantOf("com.google.common.truth.CustomSubjectBuilder")
+              .named("that"),
+          instanceMethod()
+              .onDescendantOf("com.google.common.truth.SimpleSubjectBuilder")
+              .named("that"),
+          instanceMethod()
+              .onDescendantOf("com.google.common.truth.StandardSubjectBuilder")
+              .named("that"));
+
+  private static final Matcher<ExpressionTree> WITH_MESSAGE_OR_ABOUT =
+      instanceMethod()
+          .onDescendantOf("com.google.common.truth.StandardSubjectBuilder")
+          .namedAnyOf("withMessage", "about");
 }

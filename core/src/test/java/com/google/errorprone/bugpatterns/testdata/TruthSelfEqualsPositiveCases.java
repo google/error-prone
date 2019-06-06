@@ -41,13 +41,13 @@ public class TruthSelfEqualsPositiveCases {
   public void testAssertThatSame() {
     String test = Boolean.TRUE.toString();
     // BUG: Diagnostic contains: new EqualsTester().addEqualityGroup(test).testEquals()
-    assertThat(test).isSameAs(test);
+    assertThat(test).isSameInstanceAs(test);
   }
 
   public void testAssertWithMessageSame() {
     String test = Boolean.TRUE.toString();
     // BUG: Diagnostic contains: new EqualsTester().addEqualityGroup(test).testEquals()
-    assertWithMessage("msg").that(test).isSameAs(test);
+    assertWithMessage("msg").that(test).isSameInstanceAs(test);
   }
 
   public void testAssertThatNeq() {
@@ -58,8 +58,8 @@ public class TruthSelfEqualsPositiveCases {
 
   public void testAssertThatNotSame() {
     String test = Boolean.TRUE.toString();
-    // BUG: Diagnostic contains: isNotSameAs method are the same object
-    assertThat(test).isNotSameAs(test);
+    // BUG: Diagnostic contains: isNotSameInstanceAs method are the same object
+    assertThat(test).isNotSameInstanceAs(test);
   }
 
   public void testAssertWithMessageNeq() {
@@ -70,7 +70,7 @@ public class TruthSelfEqualsPositiveCases {
 
   public void testAssertWithMessageNotSame() {
     String test = Boolean.TRUE.toString();
-    // BUG: Diagnostic contains: isNotSameAs method are the same object
-    assertWithMessage("msg").that(test).isNotSameAs(test);
+    // BUG: Diagnostic contains: isNotSameInstanceAs method are the same object
+    assertWithMessage("msg").that(test).isNotSameInstanceAs(test);
   }
 }

@@ -230,7 +230,6 @@ import com.google.errorprone.bugpatterns.ProtoStringFieldReferenceEquality;
 import com.google.errorprone.bugpatterns.ProtoTruthMixedDescriptors;
 import com.google.errorprone.bugpatterns.ProtocolBufferOrdinal;
 import com.google.errorprone.bugpatterns.ProtosAsKeyOfSetOrMap;
-import com.google.errorprone.bugpatterns.ProvideDescriptionToCheck;
 import com.google.errorprone.bugpatterns.ProvidesFixChecker;
 import com.google.errorprone.bugpatterns.RandomCast;
 import com.google.errorprone.bugpatterns.RandomModInteger;
@@ -832,7 +831,6 @@ public class BuiltInCheckerSuppliers {
           PrivateConstructorForNoninstantiableModule.class,
           PrivateConstructorForUtilityClass.class,
           ProtosAsKeyOfSetOrMap.class,
-          ProvideDescriptionToCheck.class,
           ProvidesFixChecker.class,
           QualifierWithTypeUse.class,
           RedundantThrows.class,

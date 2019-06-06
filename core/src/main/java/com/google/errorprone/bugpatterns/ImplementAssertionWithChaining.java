@@ -55,6 +55,7 @@ import com.sun.tools.javac.code.Symbol;
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.List;
+import java.util.regex.Pattern;
 
 /**
  * Migrates Truth subjects from a manual "test and fail" approach to one using {@code
@@ -63,7 +64,7 @@ import java.util.List;
  * <pre>{@code
  * // Before:
  * if (actual().foo() != expected) {
- *   fail("has foo", expected);
+ *   failWithActual("expected to have foo", expected);
  * }
  *
  * // After:
@@ -177,7 +178,7 @@ public final class ImplementAssertionWithChaining extends BugChecker implements 
 
   /**
    * Checks that the statement, after unwrapping any braces, consists of a single call to a {@code
-   * fail} method.
+   * fail*} method.
    */
   private static boolean isCallToFail(StatementTree then, VisitorState state) {
     while (then.getKind() == BLOCK) {
@@ -198,10 +199,9 @@ public final class ImplementAssertionWithChaining extends BugChecker implements 
     ExpressionTree methodSelect = thenCall.getMethodSelect();
     if (methodSelect.getKind() != IDENTIFIER) {
       return false;
-      // TODO(cpovirk): Handle "this.fail(...)," etc.
+      // TODO(cpovirk): Handle "this.fail*(...)," etc.
     }
-    // TODO(cpovirk): Support *all* fail methods.
-    return LEGACY_FAIL_METHOD.matches(methodSelect, state);
+    return FAIL_METHOD.matches(methodSelect, state);
   }
 
   /**
@@ -257,22 +257,10 @@ public final class ImplementAssertionWithChaining extends BugChecker implements 
         && symbol.getSimpleName().contentEquals("actual");
   }
 
-  private static final Matcher<ExpressionTree> LEGACY_FAIL_METHOD =
-      anyOf(
-          instanceMethod().onDescendantOf("com.google.common.truth.Subject").named("fail"),
-          instanceMethod()
-              .onDescendantOf("com.google.common.truth.Subject")
-              .named("failWithBadResults"),
-          instanceMethod()
-              .onDescendantOf("com.google.common.truth.Subject")
-              .named("failWithCustomSubject"),
-          instanceMethod()
-              .onDescendantOf("com.google.common.truth.Subject")
-              .named("failWithoutActual")
-              .withParameters("java.lang.String"),
-          instanceMethod()
-              .onDescendantOf("com.google.common.truth.Subject")
-              .named("failWithoutSubject"));
+  private static final Matcher<ExpressionTree> FAIL_METHOD =
+      instanceMethod()
+          .onDescendantOf("com.google.common.truth.Subject")
+          .withNameMatching(Pattern.compile("fail.*"));
 
   private static final Matcher<ExpressionTree> EQUALS_LIKE_METHOD =
       anyOf(

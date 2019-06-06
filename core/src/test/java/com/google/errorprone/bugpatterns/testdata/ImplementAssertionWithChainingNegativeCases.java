@@ -31,19 +31,19 @@ public class ImplementAssertionWithChainingNegativeCases {
 
     void doesNotHaveString(String other) {
       if (actual.string().equals(other)) {
-        fail("matched unexpected string");
+        failWithActual("expected not to have string", other);
       }
     }
 
     void doesNotHaveInteger(int other) {
       if (actual.integer() == other) {
-        fail("had unexpected integer");
+        failWithActual("expected not to have integer", other);
       }
     }
 
     void hasBoxedIntegerSameInstance(Integer expected) {
       if (actual.boxedInteger() != expected) {
-        fail("didn't match expected string instance");
+        failWithActual("expected to have boxed integer", expected);
       }
     }
   }

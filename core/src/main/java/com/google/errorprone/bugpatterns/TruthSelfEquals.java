@@ -59,17 +59,18 @@ public class TruthSelfEquals extends BugChecker implements MethodInvocationTreeM
    * <ul>
    *   <li>assertThat(a).isEqualTo(a)
    *   <li>assertThat(a).isNotEqualTo(a)
-   *   <li>assertThat(a).isNotSameAs(a)
-   *   <li>assertThat(a).isSameAs(a)
+   *   <li>assertThat(a).isNotSameInstanceAs(a)
+   *   <li>assertThat(a).isSameInstanceAs(a)
    *   <li>assertWithMessage(msg).that(a).isEqualTo(a)
    *   <li>assertWithMessage(msg).that(a).isNotEqualTo(a)
-   *   <li>assertWithMessage(msg).that(a).isNotSameAs(a)
-   *   <li>assertWithMessage(msg).that(a).isSameAs(a)
+   *   <li>assertWithMessage(msg).that(a).isNotSameInstanceAs(a)
+   *   <li>assertWithMessage(msg).that(a).isSameInstanceAs(a)
    * </ul>
    */
-  private static final Pattern EQUALS_SAME = Pattern.compile("(isEqualTo|isSameAs)");
+  private static final Pattern EQUALS_SAME = Pattern.compile("(isEqualTo|isSameInstanceAs)");
 
-  private static final Pattern NOT_EQUALS_NOT_SAME = Pattern.compile("(isNotEqualTo|isNotSameAs)");
+  private static final Pattern NOT_EQUALS_NOT_SAME =
+      Pattern.compile("(isNotEqualTo|isNotSameInstanceAs)");
 
   private static final Matcher<MethodInvocationTree> EQUALS_MATCHER =
       allOf(
