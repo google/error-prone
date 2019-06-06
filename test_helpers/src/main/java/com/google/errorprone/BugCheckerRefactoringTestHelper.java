@@ -25,6 +25,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Iterators;
 import com.google.common.io.CharStreams;
+import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import com.google.errorprone.annotations.CheckReturnValue;
 import com.google.errorprone.apply.DescriptionBasedDiff;
 import com.google.errorprone.apply.ImportOrganizer;
@@ -62,6 +63,7 @@ import javax.tools.JavaFileObject;
  *
  * @author kurs@google.com (Jan Kurs)
  */
+@CheckReturnValue
 public class BugCheckerRefactoringTestHelper {
 
   /** Test mode for matching refactored source against expected source. */
@@ -143,44 +145,37 @@ public class BugCheckerRefactoringTestHelper {
     this.fileManager = new ErrorProneInMemoryFileManager(clazz);
   }
 
-  @CheckReturnValue
   public static BugCheckerRefactoringTestHelper newInstance(
       BugChecker refactoringBugChecker, Class<?> clazz) {
     return new BugCheckerRefactoringTestHelper(refactoringBugChecker, clazz);
   }
 
-  @CheckReturnValue
   public BugCheckerRefactoringTestHelper.ExpectOutput addInput(String inputFilename) {
     return new ExpectOutput(fileManager.forResource(inputFilename));
   }
 
-  @CheckReturnValue
   public BugCheckerRefactoringTestHelper.ExpectOutput addInputLines(String path, String... input) {
     String inputPath = getPath("in/", path);
     assertThat(fileManager.exists(inputPath)).isFalse();
     return new ExpectOutput(fileManager.forSourceLines(inputPath, input));
   }
 
-  @CheckReturnValue
   public BugCheckerRefactoringTestHelper setFixChooser(FixChooser chooser) {
     this.fixChooser = chooser;
     return this;
   }
 
-  @CheckReturnValue
   public BugCheckerRefactoringTestHelper setArgs(String... args) {
     this.options = ImmutableList.copyOf(args);
     return this;
   }
 
   /** If set, fixes that produce output that doesn't compile are allowed. Off by default. */
-  @CheckReturnValue
   public BugCheckerRefactoringTestHelper allowBreakingChanges() {
     allowBreakingChanges = true;
     return this;
   }
 
-  @CheckReturnValue
   public BugCheckerRefactoringTestHelper setImportOrder(String importOrder) {
     this.importOrder = importOrder;
     return this;
@@ -217,6 +212,7 @@ public class BugCheckerRefactoringTestHelper {
     }
   }
 
+  @CanIgnoreReturnValue
   private JCCompilationUnit doCompile(
       final JavaFileObject input, Iterable<JavaFileObject> files, Context context)
       throws IOException {
@@ -299,11 +295,10 @@ public class BugCheckerRefactoringTestHelper {
   public class ExpectOutput {
     private final JavaFileObject input;
 
-    public ExpectOutput(JavaFileObject input) {
+    private ExpectOutput(JavaFileObject input) {
       this.input = input;
     }
 
-    @CheckReturnValue
     public BugCheckerRefactoringTestHelper addOutputLines(String path, String... output) {
       String outputPath = getPath("out/", path);
       if (fileManager.exists(outputPath)) {
@@ -312,12 +307,10 @@ public class BugCheckerRefactoringTestHelper {
       return addInputAndOutput(input, fileManager.forSourceLines(outputPath, output));
     }
 
-    @CheckReturnValue
     public BugCheckerRefactoringTestHelper addOutput(String outputFilename) {
       return addInputAndOutput(input, fileManager.forResource(outputFilename));
     }
 
-    @CheckReturnValue
     public BugCheckerRefactoringTestHelper expectUnchanged() {
       return addInputAndOutput(input, input);
     }
