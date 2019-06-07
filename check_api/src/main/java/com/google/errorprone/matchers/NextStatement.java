@@ -53,7 +53,7 @@ public class NextStatement<T extends StatementTree> implements Matcher<T> {
       nextStmt = blockStatements.get(statementIndex);
     }
 
-    // TODO(glorioso): return false always instead of allowing the matcher to fail to match null?
+    // TODO(b/134670335): return false always instead of allowing the matcher to fail to match null?
     return matcher.matches(nextStmt, state);
   }
 }
