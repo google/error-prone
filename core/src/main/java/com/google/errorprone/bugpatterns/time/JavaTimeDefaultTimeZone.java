@@ -31,7 +31,6 @@ import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
-import com.sun.tools.javac.util.Name;
 
 import com.google.errorprone.fixes.SuggestedFixes;
 
@@ -91,18 +90,19 @@ public final class JavaTimeDefaultTimeZone extends BugChecker
     if (symbol == null) {
       return false;
     }
-    Name methodName = symbol.getSimpleName();
-    if (methodName.contentEquals("now")) {
-      return symbol.isStatic() && NOW_STATIC.contains(symbol.owner.getQualifiedName().toString());
+
+    switch (symbol.getSimpleName().toString()) {
+      case "now":
+        return symbol.isStatic() && NOW_STATIC.contains(symbol.owner.getQualifiedName().toString());
+      case "dateNow":
+        return !symbol.isStatic()
+            && DATE_NOW_INSTANCE.contains(symbol.owner.getQualifiedName().toString());
+      case "systemDefaultZone":
+        return symbol.isStatic()
+            && symbol.owner.getQualifiedName().contentEquals("java.time.Clock");
+      default:
+        return false;
     }
-    if (methodName.contentEquals("dateNow")) {
-      return !symbol.isStatic()
-          && DATE_NOW_INSTANCE.contains(symbol.owner.getQualifiedName().toString());
-    }
-    if (methodName.contentEquals("systemDefaultZone")) {
-      return symbol.isStatic() && symbol.owner.getQualifiedName().contentEquals("java.time.Clock");
-    }
-    return false;
   }
 
   @Override
