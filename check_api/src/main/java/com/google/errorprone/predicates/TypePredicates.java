@@ -78,4 +78,30 @@ public final class TypePredicates {
   public static TypePredicate isDescendantOf(String type) {
     return isDescendantOf(Suppliers.typeFromString(type));
   }
+
+  public static TypePredicate allOf(TypePredicate... predicates) {
+    return (type, state) -> {
+      for (TypePredicate predicate : predicates) {
+        if (!predicate.apply(type, state)) {
+          return false;
+        }
+      }
+      return true;
+    };
+  }
+
+  public static TypePredicate anyOf(TypePredicate... predicates) {
+    return (type, state) -> {
+      for (TypePredicate predicate : predicates) {
+        if (predicate.apply(type, state)) {
+          return true;
+        }
+      }
+      return false;
+    };
+  }
+
+  public static TypePredicate not(TypePredicate predicate) {
+    return (type, state) -> !predicate.apply(type, state);
+  }
 }
