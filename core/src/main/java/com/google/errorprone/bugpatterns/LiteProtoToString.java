@@ -24,7 +24,6 @@ import static com.google.errorprone.predicates.TypePredicates.not;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 
-import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Streams;
 import com.google.errorprone.BugPattern;
@@ -35,6 +34,7 @@ import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Type;
+import java.util.Optional;
 
 /** Flags calls to {@code toString} on lite protos. */
 @BugPattern(
@@ -89,11 +89,11 @@ public final class LiteProtoToString extends AbstractToString {
 
   @Override
   protected Optional<Fix> implicitToStringFix(ExpressionTree tree, VisitorState state) {
-    return Optional.absent();
+    return Optional.empty();
   }
 
   @Override
   protected Optional<Fix> toStringFix(Tree parent, ExpressionTree tree, VisitorState state) {
-    return Optional.absent();
+    return Optional.empty();
   }
 }

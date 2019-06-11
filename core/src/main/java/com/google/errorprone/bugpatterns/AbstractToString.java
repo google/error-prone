@@ -21,7 +21,6 @@ import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.instanceMethod;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
 
-import com.google.common.base.Optional;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.IdentifierTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.MemberSelectTreeMatcher;
@@ -42,6 +41,7 @@ import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Type.MethodType;
+import java.util.Optional;
 
 /**
  * An abstract matcher for implicit and explicit calls to {@code Object.toString()}, for use on
@@ -65,7 +65,7 @@ public abstract class AbstractToString extends BugChecker
 
   /** Adds the description message for match on the type without fixes. */
   protected Optional<String> descriptionMessageForDefaultMatch(Type type, VisitorState state) {
-    return Optional.absent();
+    return Optional.empty();
   }
 
   /**

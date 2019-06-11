@@ -21,7 +21,6 @@ import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
 
-import com.google.common.base.Optional;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.Fix;
@@ -37,6 +36,7 @@ import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Type;
+import java.util.Optional;
 
 /**
  * Flags {@code com.sun.source.tree.Tree#toString} usage in {@link BugChecker}s.
@@ -84,30 +84,26 @@ public class TreeToString extends AbstractToString {
   @Override
   protected Optional<Fix> toStringFix(Tree parent, ExpressionTree tree, VisitorState state) {
     if (!(parent instanceof MethodInvocationTree)) {
-      return Optional.absent();
+      return Optional.empty();
     }
     ExpressionTree receiver = getReceiver((ExpressionTree) parent);
     if (receiver == null) {
-      return Optional.absent();
+      return Optional.empty();
     }
     return fix(receiver, parent, state);
   }
 
   private static Optional<Fix> fix(Tree target, Tree replace, VisitorState state) {
-    return Optional.fromJavaUtil(
-        FindIdentifiers.findAllIdents(state).stream()
-            .filter(
-                s ->
-                    isSubtype(
-                        s.type,
-                        state.getTypeFromString("com.google.errorprone.VisitorState"),
-                        state))
-            .findFirst()
-            .map(
-                s ->
-                    SuggestedFix.replace(
-                        replace,
-                        String.format(
-                            "%s.getSourceForNode(%s)", s, state.getSourceForNode(target)))));
+    return FindIdentifiers.findAllIdents(state).stream()
+        .filter(
+            s ->
+                isSubtype(
+                    s.type, state.getTypeFromString("com.google.errorprone.VisitorState"), state))
+        .findFirst()
+        .map(
+            s ->
+                SuggestedFix.replace(
+                    replace,
+                    String.format("%s.getSourceForNode(%s)", s, state.getSourceForNode(target))));
   }
 }
