@@ -56,6 +56,7 @@ import com.google.errorprone.bugpatterns.CatchAndPrintStackTrace;
 import com.google.errorprone.bugpatterns.CatchFail;
 import com.google.errorprone.bugpatterns.ChainedAssertionLosesContext;
 import com.google.errorprone.bugpatterns.ChainingConstructorIgnoresParameter;
+import com.google.errorprone.bugpatterns.CheckNotNullMultipleTimes;
 import com.google.errorprone.bugpatterns.CheckReturnValue;
 import com.google.errorprone.bugpatterns.ClassCanBeStatic;
 import com.google.errorprone.bugpatterns.ClassName;
@@ -475,6 +476,7 @@ public class BuiltInCheckerSuppliers {
           BadShiftAmount.class,
           BundleDeserializationCast.class,
           ChainingConstructorIgnoresParameter.class,
+          CheckNotNullMultipleTimes.class,
           CheckReturnValue.class,
           CollectionIncompatibleType.class,
           CollectionToArraySafeParameter.class,
