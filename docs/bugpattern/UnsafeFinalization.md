@@ -27,7 +27,7 @@ public class GameRunner {
   }
 
   public void run() {
-    GameLibrary.playGame(nativeResourcePointer); // Bug!
+    GameLibrary.playGame(nativeResourcePtr); // Bug!
   }
 }
 
