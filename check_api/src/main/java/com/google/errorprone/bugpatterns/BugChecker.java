@@ -245,6 +245,10 @@ public abstract class BugChecker implements Suppressible, Serializable {
     return info.supportsSuppressWarnings();
   }
 
+  public boolean disableable() {
+    return info.disableable();
+  }
+
   @Override
   public Set<Class<? extends Annotation>> customSuppressionAnnotations() {
     return info.customSuppressionAnnotations();

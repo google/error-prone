@@ -52,6 +52,7 @@ public class ErrorProneOptions {
   private static final String PATCH_OUTPUT_LOCATION = "-XepPatchLocation:";
   private static final String PATCH_IMPORT_ORDER_PREFIX = "-XepPatchImportOrder:";
   private static final String EXCLUDED_PATHS_PREFIX = "-XepExcludedPaths:";
+  private static final String IGNORE_LARGE_CODE_GENERATORS = "-XepIgnoreLargeCodeGenerators:";
 
   private static final String ERRORS_AS_WARNINGS_FLAG = "-XepAllErrorsAsWarnings";
   private static final String ENABLE_ALL_CHECKS = "-XepAllDisabledChecksAsWarnings";
@@ -165,6 +166,7 @@ public class ErrorProneOptions {
   private final PatchingOptions patchingOptions;
   private final Pattern excludedPattern;
   private final boolean ignoreSuppressionAnnotations;
+  private final boolean ignoreLargeCodeGenerators;
 
   private ErrorProneOptions(
       ImmutableMap<String, Severity> severityMap,
@@ -178,7 +180,8 @@ public class ErrorProneOptions {
       ErrorProneFlags flags,
       PatchingOptions patchingOptions,
       Pattern excludedPattern,
-      boolean ignoreSuppressionAnnotations) {
+      boolean ignoreSuppressionAnnotations,
+      boolean ignoreLargeCodeGenerators) {
     this.severityMap = severityMap;
     this.remainingArgs = remainingArgs;
     this.ignoreUnknownChecks = ignoreUnknownChecks;
@@ -191,6 +194,7 @@ public class ErrorProneOptions {
     this.patchingOptions = patchingOptions;
     this.excludedPattern = excludedPattern;
     this.ignoreSuppressionAnnotations = ignoreSuppressionAnnotations;
+    this.ignoreLargeCodeGenerators = ignoreLargeCodeGenerators;
   }
 
   public String[] getRemainingArgs() {
@@ -221,6 +225,10 @@ public class ErrorProneOptions {
     return ignoreSuppressionAnnotations;
   }
 
+  public boolean ignoreLargeCodeGenerators() {
+    return ignoreLargeCodeGenerators;
+  }
+
   public ErrorProneFlags getFlags() {
     return flags;
   }
@@ -241,6 +249,7 @@ public class ErrorProneOptions {
     private boolean disableAllChecks = false;
     private boolean isTestOnlyTarget = false;
     private boolean ignoreSuppressionAnnotations = false;
+    private boolean ignoreLargeCodeGenerators = true;
     private Map<String, Severity> severityMap = new HashMap<>();
     private final ErrorProneFlags.Builder flagsBuilder = ErrorProneFlags.builder();
     private final PatchingOptions.Builder patchingOptionsBuilder = PatchingOptions.builder();
@@ -299,6 +308,10 @@ public class ErrorProneOptions {
       this.enableAllChecksAsWarnings = enableAllChecksAsWarnings;
     }
 
+    public void setIgnoreLargeCodeGenerators(boolean ignoreLargeCodeGenerators) {
+      this.ignoreLargeCodeGenerators = ignoreLargeCodeGenerators;
+    }
+
     public void setDisableAllChecks(boolean disableAllChecks) {
       // Discard previously set severities so that the DisableAllChecks flag is position sensitive.
       severityMap.clear();
@@ -326,7 +339,8 @@ public class ErrorProneOptions {
           flagsBuilder.build(),
           patchingOptionsBuilder.build(),
           excludedPattern,
-          ignoreSuppressionAnnotations);
+          ignoreSuppressionAnnotations,
+          ignoreLargeCodeGenerators);
     }
 
     public void setExcludedPattern(Pattern excludedPattern) {
@@ -426,6 +440,7 @@ public class ErrorProneOptions {
           } else if (arg.startsWith(EXCLUDED_PATHS_PREFIX)) {
             String pathRegex = arg.substring(EXCLUDED_PATHS_PREFIX.length());
             builder.setExcludedPattern(Pattern.compile(pathRegex));
+
           } else {
             remainingArgs.add(arg);
           }
