@@ -16,6 +16,7 @@
 
 package com.google.errorprone.scanner;
 
+
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
@@ -537,6 +538,7 @@ public class ErrorProneScanner extends Scanner {
 
   @Override
   public Void visitCompilationUnit(CompilationUnitTree tree, VisitorState visitorState) {
+
     VisitorState state =
         processMatchers(
             compilationUnitMatchers,

@@ -27,6 +27,7 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.IdentifierTreeMatcher;
 import com.google.errorprone.matchers.Description;
+import com.google.errorprone.util.RuntimeVersion;
 import com.sun.source.tree.IdentifierTree;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -35,6 +36,10 @@ import org.junit.runners.JUnit4;
 /** Tests for {@link Scanner}. */
 @RunWith(JUnit4.class)
 public class ScannerTest {
+  private static final String IMPORT_GENERATED_ANNOTATION =
+      RuntimeVersion.isAtLeast9()
+          ? "import javax.annotation.processing.Generated;"
+          : "import javax.annotation.Generated;";
   private final CompilationTestHelper compilationHelper =
       CompilationTestHelper.newInstance(ShouldNotUseFoo.class, getClass());
 
