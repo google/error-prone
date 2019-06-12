@@ -18,6 +18,7 @@ package com.google.errorprone.bugpatterns.testdata;
 
 import java.util.List;
 import java.util.stream.Stream;
+import javax.annotation.Nullable;
 
 /** @author awturner@google.com (Andy Turner) */
 class UnnecessaryBoxedVariableCases {
@@ -80,8 +81,8 @@ class UnnecessaryBoxedVariableCases {
     for (int i : array) {}
   }
 
-  final void negative_invokeMethod(Integer i) {
-    i.toString();
+  final void negative_invokeMethod(Integer i) throws InterruptedException {
+    i.wait(0);
   }
 
   final Object[] negative_objectArray(Long l) {
@@ -150,6 +151,38 @@ class UnnecessaryBoxedVariableCases {
   void negative_methodReference() {
     Integer myVariable = 0;
     Stream<Integer> stream = Stream.of(1).filter(myVariable::equals);
+  }
+
+  static void positive_parameter_staticMethod(boolean b) {
+    boolean a = b;
+  }
+
+  static void negative_parameter_staticMethod(Boolean b) {
+    System.out.println("a " + b);
+  }
+
+  static boolean positive_parameter_returnType(boolean b) {
+    return b;
+  }
+
+  void negative_parameter_instanceMethod_nonFinal(Boolean b) {
+    boolean a = b;
+  }
+
+  final void negative_parameter_instanceMethod_final(boolean b) {
+    boolean a = b;
+  }
+
+  static void negative_parameter_unused(Integer i) {}
+
+  static void positive_removeNullable_parameter(int i) {
+    int j = i;
+  }
+
+  static void positive_removeNullable_localVariable() {
+    int i = 0;
+    int j = 0;
+    int k = i + j;
   }
 
   private void methodPrimitiveArg(int i) {}
