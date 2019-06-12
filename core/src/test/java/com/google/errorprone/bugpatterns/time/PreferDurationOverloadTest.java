@@ -27,7 +27,7 @@ public class PreferDurationOverloadTest {
       CompilationTestHelper.newInstance(PreferDurationOverload.class, getClass());
 
   @Test
-  public void callingMethodWithDurationOverload() {
+  public void callingLongTimeUnitMethodWithDurationOverload() {
     helper
         .addSourceLines(
             "TestClass.java",
@@ -43,7 +43,7 @@ public class PreferDurationOverloadTest {
   }
 
   @Test
-  public void callingMethodWithDurationOverload_intParam() {
+  public void callingLongTimeUnitMethodWithDurationOverload_intParam() {
     helper
         .addSourceLines(
             "TestClass.java",
@@ -59,7 +59,7 @@ public class PreferDurationOverloadTest {
   }
 
   @Test
-  public void callingMethodWithDurationOverload_privateMethod() {
+  public void callingLongTimeUnitMethodWithDurationOverload_privateMethod() {
     helper
         .addSourceLines(
             "TestClass.java",
@@ -79,7 +79,7 @@ public class PreferDurationOverloadTest {
   }
 
   @Test
-  public void callingMethodWithoutDurationOverload() {
+  public void callingLongTimeUnitMethodWithoutDurationOverload() {
     helper
         .addSourceLines(
             "TestClass.java",
@@ -88,6 +88,74 @@ public class PreferDurationOverloadTest {
             "public class TestClass {",
             "  public String foo(Future<String> future) throws Exception {",
             "    return future.get(42L, TimeUnit.SECONDS);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void callingJodaDurationMethodWithDurationOverload_privateMethod() {
+    helper
+        .addSourceLines(
+            "TestClass.java",
+            "import java.time.Duration;",
+            "public class TestClass {",
+            "  private void bar(org.joda.time.Duration d) {",
+            "  }",
+            "  private void bar(Duration d) {",
+            "  }",
+            "  public void foo(org.joda.time.Duration jodaDuration) {",
+            "    // BUG: Diagnostic contains: bar(Duration.ofMillis(jodaDuration.getMillis()));",
+            "    bar(jodaDuration);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void callingJodaDurationMethodWithoutDurationOverload() {
+    helper
+        .addSourceLines(
+            "TestClass.java",
+            "public class TestClass {",
+            "  private void bar(org.joda.time.Duration d) {",
+            "  }",
+            "  public void foo(org.joda.time.Duration jodaDuration) {",
+            "    bar(jodaDuration);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void callingJodaReadableDurationMethodWithDurationOverload_privateMethod() {
+    helper
+        .addSourceLines(
+            "TestClass.java",
+            "import java.time.Duration;",
+            "public class TestClass {",
+            "  private void bar(org.joda.time.ReadableDuration d) {",
+            "  }",
+            "  private void bar(Duration d) {",
+            "  }",
+            "  public void foo(org.joda.time.Duration jodaDuration) {",
+            "    // BUG: Diagnostic contains: bar(Duration.ofMillis(jodaDuration.getMillis()));",
+            "    bar(jodaDuration);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void callingJodaReadableDurationMethodWithoutDurationOverload() {
+    helper
+        .addSourceLines(
+            "TestClass.java",
+            "public class TestClass {",
+            "  private void bar(org.joda.time.ReadableDuration d) {",
+            "  }",
+            "  public void foo(org.joda.time.Duration jodaDuration) {",
+            "    bar(jodaDuration);",
             "  }",
             "}")
         .doTest();
