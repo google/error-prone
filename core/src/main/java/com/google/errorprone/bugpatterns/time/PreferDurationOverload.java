@@ -65,8 +65,7 @@ public final class PreferDurationOverload extends BugChecker
   private static final ImmutableMap<TimeUnit, String> TIMEUNIT_TO_DURATION_FACTORY =
       new ImmutableMap.Builder<TimeUnit, String>()
           .put(TimeUnit.NANOSECONDS, "%s.ofNanos(%s)")
-          // TODO(kak): Do we want to handle MICROSECONDS? We'd need to either use
-          // Duration.of(%s, MICROSECONDS) or com.google.common.time.Durations.ofMicros(%s)
+          .put(TimeUnit.MICROSECONDS, "%s.of(%s, %s)")
           .put(TimeUnit.MILLISECONDS, "%s.ofMillis(%s)")
           .put(TimeUnit.SECONDS, "%s.ofSeconds(%s)")
           .put(TimeUnit.MINUTES, "%s.ofMinutes(%s)")
@@ -88,12 +87,26 @@ public final class PreferDurationOverload extends BugChecker
           String durationFactory = TIMEUNIT_TO_DURATION_FACTORY.get(optionalTimeUnit.get());
           if (durationFactory != null) {
             SuggestedFix.Builder fix = SuggestedFix.builder();
-            String qualifiedType = SuggestedFixes.qualifyType(state, fix, DURATION);
+            String qualifiedDuration = SuggestedFixes.qualifyType(state, fix, DURATION);
+            String value = state.getSourceForNode(arguments.get(0));
+            String replacement;
+            if (optionalTimeUnit.get() == TimeUnit.MICROSECONDS) {
+              String qualifiedChronoUnit =
+                  SuggestedFixes.qualifyType(state, fix, "java.time.temporal.ChronoUnit");
+              replacement =
+                  String.format(
+                      durationFactory,
+                      qualifiedDuration,
+                      value,
+                      qualifiedChronoUnit + ".MICROSECONDS");
+            } else {
+              replacement = String.format(durationFactory, qualifiedDuration, value);
+            }
+
             fix.replace(
                 ((JCTree) arguments.get(0)).getStartPosition(),
                 state.getEndPosition(arguments.get(1)),
-                String.format(
-                    durationFactory, qualifiedType, state.getSourceForNode(arguments.get(0))));
+                replacement);
             return describeMatch(tree, fix.build());
           }
         }
