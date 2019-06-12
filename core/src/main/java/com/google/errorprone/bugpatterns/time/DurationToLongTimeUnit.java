@@ -129,7 +129,7 @@ public final class DurationToLongTimeUnit extends BugChecker
     return Description.NO_MATCH;
   }
 
-  private static Optional<TimeUnit> getTimeUnit(ExpressionTree timeUnit) {
+  static Optional<TimeUnit> getTimeUnit(ExpressionTree timeUnit) {
     if (timeUnit instanceof IdentifierTree) { // e.g., SECONDS
       return Enums.getIfPresent(TimeUnit.class, ((IdentifierTree) timeUnit).getName().toString());
     }
