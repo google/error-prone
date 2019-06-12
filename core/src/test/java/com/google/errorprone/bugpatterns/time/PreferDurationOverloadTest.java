@@ -27,6 +27,23 @@ public class PreferDurationOverloadTest {
       CompilationTestHelper.newInstance(PreferDurationOverload.class, getClass());
 
   @Test
+  public void callingLongTimeUnitMethodWithDurationOverload_microseconds() {
+    helper
+        .addSourceLines(
+            "TestClass.java",
+            "import com.google.common.cache.CacheBuilder;",
+            "import java.util.concurrent.TimeUnit;",
+            "public class TestClass {",
+            "  public CacheBuilder foo(CacheBuilder builder) {",
+            "    // BUG: Diagnostic contains: builder.expireAfterAccess(Duration.of(42,"
+                + " ChronoUnit.MICROSECONDS));",
+            "    return builder.expireAfterAccess(42, TimeUnit.MICROSECONDS);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void callingLongTimeUnitMethodWithDurationOverload() {
     helper
         .addSourceLines(
