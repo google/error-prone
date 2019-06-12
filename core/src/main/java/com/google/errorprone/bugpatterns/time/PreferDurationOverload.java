@@ -19,6 +19,7 @@ import static com.google.errorprone.BugPattern.ProvidesFix.REQUIRES_HUMAN_ATTENT
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.isSameType;
+import static com.google.errorprone.util.ASTHelpers.isSubtype;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableMap;
@@ -48,11 +49,13 @@ import java.util.concurrent.TimeUnit;
             + " generally the case with overloaded methods.",
     severity = WARNING,
     explanation =
-        "APIs that require a <long, TimeUnit> pair suffer from a number of problems: 1) they may"
-            + " require plumbing 2 parameters through various layers of your application; 2)"
-            + " overflows are possible when doing any duration math; 3) they lack semantic"
-            + " meaning; 4) decomposing a duration into a <long, TimeUnit> is dangerous because of"
-            + " unit mismatch and/or excessive truncation.",
+        "APIs that accept a java.time.Duration should be preferred, when available. JodaTime is"
+            + " now considered a legacy library, and APIs that require a <long, TimeUnit> pair"
+            + " suffer from a number of problems: 1) they may require plumbing 2 parameters"
+            + " through various layers of your application; 2) overflows are possible when doing"
+            + " any duration math; 3) they lack semantic meaning; 4) decomposing a duration into a"
+            + " <long, TimeUnit> is dangerous because of unit mismatch and/or excessive"
+            + " truncation.",
     providesFix = REQUIRES_HUMAN_ATTENTION)
 public final class PreferDurationOverload extends BugChecker
     implements MethodInvocationTreeMatcher {
@@ -73,13 +76,15 @@ public final class PreferDurationOverload extends BugChecker
 
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
+    List<? extends ExpressionTree> arguments = tree.getArguments();
+
     // TODO(kak): Add support for methods with > 2 parameters. E.g.,
     // foo(String, long, TimeUnit, Frobber) -> foo(String, Duration, Frobber)
-    if (isLongTimeUnitMethod(tree, state)) {
-      List<? extends ExpressionTree> arguments = tree.getArguments();
+
+    if (isLongTimeUnitMethodCall(tree, state)) {
       Optional<TimeUnit> optionalTimeUnit = DurationToLongTimeUnit.getTimeUnit(arguments.get(1));
       if (optionalTimeUnit.isPresent()) {
-        if (durationOverloadExists(tree, state)) {
+        if (javaDurationOverloadExists(tree, state)) {
           String durationFactory = TIMEUNIT_TO_DURATION_FACTORY.get(optionalTimeUnit.get());
           if (durationFactory != null) {
             SuggestedFix.Builder fix = SuggestedFix.builder();
@@ -94,11 +99,40 @@ public final class PreferDurationOverload extends BugChecker
         }
       }
     }
-    // TODO(kak): Add support for Joda Durations. I.e., if (isJodaDurationMethod(tree, state)) { }
+
+    if (isJodaDurationMethodCall(tree, state)) {
+      if (javaDurationOverloadExists(tree, state)) {
+        SuggestedFix.Builder fix = SuggestedFix.builder();
+        // TODO(kak): Maybe only emit a match if Duration doesn't have to be fully qualified?
+        String qualifiedType = SuggestedFixes.qualifyType(state, fix, DURATION);
+
+        // We could suggest using JavaTimeConversions.toJavaDuration(jodaDuration), but that
+        // requires an additional dependency and isn't open-sourced.
+
+        // TODO(kak): Extract the numeric primitive if the Joda Duration is being constructed
+        // inline. E.g., foo(Duration.standardSeconds(42)) -> foo(Duration.ofSeconds(42))
+        fix.replace(
+            arguments.get(0),
+            String.format(
+                "%s.ofMillis(%s.getMillis())",
+                qualifiedType, state.getSourceForNode(arguments.get(0))));
+        return describeMatch(tree, fix.build());
+      }
+    }
+
     return Description.NO_MATCH;
   }
 
-  private static boolean isLongTimeUnitMethod(MethodInvocationTree tree, VisitorState state) {
+  private static boolean isJodaDurationMethodCall(MethodInvocationTree tree, VisitorState state) {
+    Type jodaDurationType = state.getTypeFromString("org.joda.time.ReadableDuration");
+    List<VarSymbol> params = getSymbol(tree).getParameters();
+    if (params.size() == 1) {
+      return isSubtype(params.get(0).asType(), jodaDurationType, state);
+    }
+    return false;
+  }
+
+  private static boolean isLongTimeUnitMethodCall(MethodInvocationTree tree, VisitorState state) {
     Type longType = state.getSymtab().longType;
     Type timeUnitType = state.getTypeFromString("java.util.concurrent.TimeUnit");
     List<VarSymbol> params = getSymbol(tree).getParameters();
@@ -109,7 +143,7 @@ public final class PreferDurationOverload extends BugChecker
     return false;
   }
 
-  private static boolean durationOverloadExists(MethodInvocationTree tree, VisitorState state) {
+  private static boolean javaDurationOverloadExists(MethodInvocationTree tree, VisitorState state) {
     MethodSymbol methodSymbol = getSymbol(tree);
     Type durationType = state.getTypeFromString(DURATION);
     return !ASTHelpers.findMatchingMethods(
