@@ -130,6 +130,44 @@ public class PreferDurationOverloadTest {
   }
 
   @Test
+  public void callingJodaDurationMethodWithDurationOverload_privateMethod_jodaMillis() {
+    helper
+        .addSourceLines(
+            "TestClass.java",
+            "import java.time.Duration;",
+            "public class TestClass {",
+            "  private void bar(org.joda.time.Duration d) {",
+            "  }",
+            "  private void bar(Duration d) {",
+            "  }",
+            "  public void foo() {",
+            "    // BUG: Diagnostic contains: bar(Duration.ofMillis(42));",
+            "    bar(org.joda.time.Duration.millis(42));",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void callingJodaDurationMethodWithDurationOverload_privateMethod_jodaSeconds() {
+    helper
+        .addSourceLines(
+            "TestClass.java",
+            "import java.time.Duration;",
+            "public class TestClass {",
+            "  private void bar(org.joda.time.Duration d) {",
+            "  }",
+            "  private void bar(Duration d) {",
+            "  }",
+            "  public void foo() {",
+            "    // BUG: Diagnostic contains: bar(Duration.ofSeconds(42));",
+            "    bar(org.joda.time.Duration.standardSeconds(42));",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void callingJodaDurationMethodWithoutDurationOverload() {
     helper
         .addSourceLines(
