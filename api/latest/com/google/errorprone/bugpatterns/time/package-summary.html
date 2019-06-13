@@ -95,10 +95,24 @@
 </td>
 </tr>
 <tr class="altColor">
+<td class="colFirst"><a href="../../../../../com/google/errorprone/bugpatterns/time/DurationTemporalUnit.html" title="class in com.google.errorprone.bugpatterns.time">DurationTemporalUnit</a></td>
+<td class="colLast">
+<div class="block">Bans calls to <code>Duration</code> APIs where the <a href="https://docs.oracle.com/javase/8/docs/api/java/time/temporal/TemporalUnit.html?is-external=true" title="class or interface in java.time.temporal"><code>TemporalUnit</code></a> is not
+ <a href="https://docs.oracle.com/javase/8/docs/api/java/time/temporal/ChronoUnit.html?is-external=true#DAYS" title="class or interface in java.time.temporal"><code>ChronoUnit.DAYS</code></a> or it has an estimated duration (which is guaranteed to throw an <code>DateTimeException</code>).</div>
+</td>
+</tr>
+<tr class="rowColor">
 <td class="colFirst"><a href="../../../../../com/google/errorprone/bugpatterns/time/DurationToLongTimeUnit.html" title="class in com.google.errorprone.bugpatterns.time">DurationToLongTimeUnit</a></td>
 <td class="colLast">
 <div class="block">Reports an error when a Duration or Instant is incorrectly decomposed in order to call an API
  which accepts a <code>&lt;long, TimeUnit&gt;</code> pair.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><a href="../../../../../com/google/errorprone/bugpatterns/time/InstantTemporalUnit.html" title="class in com.google.errorprone.bugpatterns.time">InstantTemporalUnit</a></td>
+<td class="colLast">
+<div class="block">Bans calls to <code>Instant</code> APIs where the <a href="https://docs.oracle.com/javase/8/docs/api/java/time/temporal/TemporalUnit.html?is-external=true" title="class or interface in java.time.temporal"><code>TemporalUnit</code></a> is not one
+ of: <code>NANOS</code>, <code>MICROS</code>, <code>MILLIS</code>, <code>SECONDS</code>, <code>MINUTES</code>, <code>HOURS</code>, <code>HALF_DAYS</code>, or <code>DAYS</code>.</div>
 </td>
 </tr>
 <tr class="rowColor">
@@ -183,52 +197,59 @@
 </td>
 </tr>
 <tr class="altColor">
+<td class="colFirst"><a href="../../../../../com/google/errorprone/bugpatterns/time/LocalDateTemporalAmount.html" title="class in com.google.errorprone.bugpatterns.time">LocalDateTemporalAmount</a></td>
+<td class="colLast">
+<div class="block">Bans calls to <code>LocalDate.plus(TemporalAmount)</code> and <code>LocalDate.minus(TemporalAmount)</code>
+ where the <a href="https://docs.oracle.com/javase/8/docs/api/java/time/temporal/TemporalAmount.html?is-external=true" title="class or interface in java.time.temporal"><code>TemporalAmount</code></a> is a non-zero <a href="https://docs.oracle.com/javase/8/docs/api/java/time/Duration.html?is-external=true" title="class or interface in java.time"><code>Duration</code></a>.</div>
+</td>
+</tr>
+<tr class="rowColor">
 <td class="colFirst"><a href="../../../../../com/google/errorprone/bugpatterns/time/PeriodFrom.html" title="class in com.google.errorprone.bugpatterns.time">PeriodFrom</a></td>
 <td class="colLast">
 <div class="block">Bans calls to <code>Period.from(temporalAmount)</code> where <code>temporalAmount</code> is a <a href="https://docs.oracle.com/javase/8/docs/api/java/time/Duration.html?is-external=true" title="class or interface in java.time"><code>Duration</code></a>.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><a href="../../../../../com/google/errorprone/bugpatterns/time/PeriodGetTemporalUnit.html" title="class in com.google.errorprone.bugpatterns.time">PeriodGetTemporalUnit</a></td>
 <td class="colLast">
 <div class="block">Bans calls to <code>Period.get(temporalUnit)</code> where <code>temporalUnit</code> is not <code>YEARS</code>,
  <code>MONTHS</code>, or <code>DAYS</code>.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><a href="../../../../../com/google/errorprone/bugpatterns/time/PeriodTimeMath.html" title="class in com.google.errorprone.bugpatterns.time">PeriodTimeMath</a></td>
 <td class="colLast">
 <div class="block">Bans calls to <code>Period#plus/minus(TemporalAmount)</code> where the argument is a Duration.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><a href="../../../../../com/google/errorprone/bugpatterns/time/ProtoDurationGetSecondsGetNano.html" title="class in com.google.errorprone.bugpatterns.time">ProtoDurationGetSecondsGetNano</a></td>
 <td class="colLast">
 <div class="block">This checker warns about accessing the underlying nanosecond-adjustment field of a duration
  without a "nearby" access of the underlying seconds field.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><a href="../../../../../com/google/errorprone/bugpatterns/time/ProtoTimestampGetSecondsGetNano.html" title="class in com.google.errorprone.bugpatterns.time">ProtoTimestampGetSecondsGetNano</a></td>
 <td class="colLast">
 <div class="block">This checker warns about accessing the underlying nanosecond-adjustment field of a protobuf
  timestamp without a "nearby" access of the underlying seconds field.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><a href="../../../../../com/google/errorprone/bugpatterns/time/TemporalAccessorGetChronoField.html" title="class in com.google.errorprone.bugpatterns.time">TemporalAccessorGetChronoField</a></td>
 <td class="colLast">
 <div class="block">Bans calls to <code>TemporalAccessor.get(ChronoField)</code> where the implementation is guaranteed to
  throw an <code>UnsupportedTemporalTypeException</code>.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><a href="../../../../../com/google/errorprone/bugpatterns/time/TimeUnitConversionChecker.html" title="class in com.google.errorprone.bugpatterns.time">TimeUnitConversionChecker</a></td>
 <td class="colLast">
 <div class="block">Check for problematic or suspicious TimeUnit conversion calls.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><a href="../../../../../com/google/errorprone/bugpatterns/time/TimeUnitMismatch.html" title="class in com.google.errorprone.bugpatterns.time">TimeUnitMismatch</a></td>
 <td class="colLast">
 <div class="block">Checker that detects likely time-unit mismatches by looking at identifier names.</div>

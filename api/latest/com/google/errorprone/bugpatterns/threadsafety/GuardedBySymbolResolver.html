@@ -18,7 +18,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10,"i1":10,"i2":9,"i3":9,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10};
+var methods = {"i0":10,"i1":10,"i2":9,"i3":9,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -149,10 +149,11 @@ implements <a href="../../../../../com/google/errorprone/bugpatterns/threadsafet
 </tr>
 <tr id="i2" class="altColor">
 <td class="colFirst"><code>static <a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/GuardedBySymbolResolver.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedBySymbolResolver</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/GuardedBySymbolResolver.html#from-com.sun.tools.javac.code.Symbol.ClassSymbol-com.sun.source.tree.CompilationUnitTree-com.sun.tools.javac.util.Context-com.sun.source.tree.Tree-">from</a></span>(com.sun.tools.javac.code.Symbol.ClassSymbol&nbsp;owner,
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/GuardedBySymbolResolver.html#from-com.sun.tools.javac.code.Symbol.ClassSymbol-com.sun.source.tree.CompilationUnitTree-com.sun.tools.javac.util.Context-com.sun.source.tree.Tree-com.google.errorprone.VisitorState-">from</a></span>(com.sun.tools.javac.code.Symbol.ClassSymbol&nbsp;owner,
     com.sun.source.tree.CompilationUnitTree&nbsp;compilationUnit,
     com.sun.tools.javac.util.Context&nbsp;context,
-    com.sun.source.tree.Tree&nbsp;leaf)</code>&nbsp;</td>
+    com.sun.source.tree.Tree&nbsp;leaf,
+    <a href="../../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;visitorState)</code>&nbsp;</td>
 </tr>
 <tr id="i3" class="rowColor">
 <td class="colFirst"><code>static <a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/GuardedBySymbolResolver.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedBySymbolResolver</a></code></td>
@@ -187,6 +188,10 @@ implements <a href="../../../../../com/google/errorprone/bugpatterns/threadsafet
 <td class="colFirst"><code>com.sun.tools.javac.code.Symbol</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/GuardedBySymbolResolver.html#resolveTypeLiteral-com.sun.source.tree.ExpressionTree-">resolveTypeLiteral</a></span>(com.sun.source.tree.ExpressionTree&nbsp;expr)</code>&nbsp;</td>
 </tr>
+<tr id="i10" class="altColor">
+<td class="colFirst"><code><a href="../../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/GuardedBySymbolResolver.html#visitorState--">visitorState</a></span>()</code>&nbsp;</td>
+</tr>
 </table>
 <ul class="blockList">
 <li class="blockList"><a name="methods.inherited.from.class.java.lang.Object">
@@ -219,7 +224,7 @@ implements <a href="../../../../../com/google/errorprone/bugpatterns/threadsafet
                                            <a href="../../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;visitorState)</pre>
 </li>
 </ul>
-<a name="from-com.sun.tools.javac.code.Symbol.ClassSymbol-com.sun.source.tree.CompilationUnitTree-com.sun.tools.javac.util.Context-com.sun.source.tree.Tree-">
+<a name="from-com.sun.tools.javac.code.Symbol.ClassSymbol-com.sun.source.tree.CompilationUnitTree-com.sun.tools.javac.util.Context-com.sun.source.tree.Tree-com.google.errorprone.VisitorState-">
 <!--   -->
 </a>
 <ul class="blockList">
@@ -228,7 +233,8 @@ implements <a href="../../../../../com/google/errorprone/bugpatterns/threadsafet
 <pre>public static&nbsp;<a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/GuardedBySymbolResolver.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedBySymbolResolver</a>&nbsp;from(com.sun.tools.javac.code.Symbol.ClassSymbol&nbsp;owner,
                                            com.sun.source.tree.CompilationUnitTree&nbsp;compilationUnit,
                                            com.sun.tools.javac.util.Context&nbsp;context,
-                                           com.sun.source.tree.Tree&nbsp;leaf)</pre>
+                                           com.sun.source.tree.Tree&nbsp;leaf,
+                                           <a href="../../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;visitorState)</pre>
 </li>
 </ul>
 <a name="context--">
@@ -238,6 +244,15 @@ implements <a href="../../../../../com/google/errorprone/bugpatterns/threadsafet
 <li class="blockList">
 <h4>context</h4>
 <pre>public&nbsp;com.sun.tools.javac.util.Context&nbsp;context()</pre>
+</li>
+</ul>
+<a name="visitorState--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>visitorState</h4>
+<pre>public&nbsp;<a href="../../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;visitorState()</pre>
 </li>
 </ul>
 <a name="enclosingClass--">

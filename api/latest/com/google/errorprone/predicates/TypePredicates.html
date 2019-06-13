@@ -18,7 +18,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":9,"i1":9,"i2":9,"i3":9,"i4":9,"i5":9,"i6":9,"i7":9};
+var methods = {"i0":9,"i1":9,"i2":9,"i3":9,"i4":9,"i5":9,"i6":9,"i7":9,"i8":9,"i9":9,"i10":9};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -149,51 +149,63 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 </tr>
 <tr id="i0" class="altColor">
 <td class="colFirst"><code>static <a href="../../../../com/google/errorprone/predicates/TypePredicate.html" title="interface in com.google.errorprone.predicates">TypePredicate</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/predicates/TypePredicates.html#allOf-com.google.errorprone.predicates.TypePredicate...-">allOf</a></span>(<a href="../../../../com/google/errorprone/predicates/TypePredicate.html" title="interface in com.google.errorprone.predicates">TypePredicate</a>...&nbsp;predicates)</code>&nbsp;</td>
+</tr>
+<tr id="i1" class="rowColor">
+<td class="colFirst"><code>static <a href="../../../../com/google/errorprone/predicates/TypePredicate.html" title="interface in com.google.errorprone.predicates">TypePredicate</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/predicates/TypePredicates.html#anyOf-com.google.errorprone.predicates.TypePredicate...-">anyOf</a></span>(<a href="../../../../com/google/errorprone/predicates/TypePredicate.html" title="interface in com.google.errorprone.predicates">TypePredicate</a>...&nbsp;predicates)</code>&nbsp;</td>
+</tr>
+<tr id="i2" class="altColor">
+<td class="colFirst"><code>static <a href="../../../../com/google/errorprone/predicates/TypePredicate.html" title="interface in com.google.errorprone.predicates">TypePredicate</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/predicates/TypePredicates.html#anyType--">anyType</a></span>()</code>
 <div class="block">Match any type.</div>
 </td>
 </tr>
-<tr id="i1" class="rowColor">
+<tr id="i3" class="rowColor">
 <td class="colFirst"><code>static <a href="../../../../com/google/errorprone/predicates/TypePredicate.html" title="interface in com.google.errorprone.predicates">TypePredicate</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/predicates/TypePredicates.html#isArray--">isArray</a></span>()</code>
 <div class="block">Match arrays.</div>
 </td>
 </tr>
-<tr id="i2" class="altColor">
+<tr id="i4" class="altColor">
 <td class="colFirst"><code>static <a href="../../../../com/google/errorprone/predicates/TypePredicate.html" title="interface in com.google.errorprone.predicates">TypePredicate</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/predicates/TypePredicates.html#isDescendantOf-java.lang.String-">isDescendantOf</a></span>(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;type)</code>
 <div class="block">Match sub-types of the given type.</div>
 </td>
 </tr>
-<tr id="i3" class="rowColor">
+<tr id="i5" class="rowColor">
 <td class="colFirst"><code>static <a href="../../../../com/google/errorprone/predicates/TypePredicate.html" title="interface in com.google.errorprone.predicates">TypePredicate</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/predicates/TypePredicates.html#isDescendantOf-com.google.errorprone.suppliers.Supplier-">isDescendantOf</a></span>(<a href="../../../../com/google/errorprone/suppliers/Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a>&lt;com.sun.tools.javac.code.Type&gt;&nbsp;type)</code>
 <div class="block">Match sub-types of the given type.</div>
 </td>
 </tr>
-<tr id="i4" class="altColor">
+<tr id="i6" class="altColor">
 <td class="colFirst"><code>static <a href="../../../../com/google/errorprone/predicates/TypePredicate.html" title="interface in com.google.errorprone.predicates">TypePredicate</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/predicates/TypePredicates.html#isDescendantOfAny-java.lang.Iterable-">isDescendantOfAny</a></span>(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Iterable.html?is-external=true" title="class or interface in java.lang">Iterable</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;types)</code>
 <div class="block">Match types that are a sub-type of one of the given types.</div>
 </td>
 </tr>
-<tr id="i5" class="rowColor">
+<tr id="i7" class="rowColor">
 <td class="colFirst"><code>static <a href="../../../../com/google/errorprone/predicates/TypePredicate.html" title="interface in com.google.errorprone.predicates">TypePredicate</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/predicates/TypePredicates.html#isExactType-java.lang.String-">isExactType</a></span>(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;type)</code>
 <div class="block">Match types that are exactly equal.</div>
 </td>
 </tr>
-<tr id="i6" class="altColor">
+<tr id="i8" class="altColor">
 <td class="colFirst"><code>static <a href="../../../../com/google/errorprone/predicates/TypePredicate.html" title="interface in com.google.errorprone.predicates">TypePredicate</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/predicates/TypePredicates.html#isExactType-com.google.errorprone.suppliers.Supplier-">isExactType</a></span>(<a href="../../../../com/google/errorprone/suppliers/Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a>&lt;com.sun.tools.javac.code.Type&gt;&nbsp;type)</code>
 <div class="block">Match types that are exactly equal.</div>
 </td>
 </tr>
-<tr id="i7" class="rowColor">
+<tr id="i9" class="rowColor">
 <td class="colFirst"><code>static <a href="../../../../com/google/errorprone/predicates/TypePredicate.html" title="interface in com.google.errorprone.predicates">TypePredicate</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/predicates/TypePredicates.html#isExactTypeAny-java.lang.Iterable-">isExactTypeAny</a></span>(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Iterable.html?is-external=true" title="class or interface in java.lang">Iterable</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;types)</code>
 <div class="block">Match types that are exactly equal to any of the given types.</div>
 </td>
+</tr>
+<tr id="i10" class="altColor">
+<td class="colFirst"><code>static <a href="../../../../com/google/errorprone/predicates/TypePredicate.html" title="interface in com.google.errorprone.predicates">TypePredicate</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/predicates/TypePredicates.html#not-com.google.errorprone.predicates.TypePredicate-">not</a></span>(<a href="../../../../com/google/errorprone/predicates/TypePredicate.html" title="interface in com.google.errorprone.predicates">TypePredicate</a>&nbsp;predicate)</code>&nbsp;</td>
 </tr>
 </table>
 <ul class="blockList">
@@ -307,11 +319,38 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <a name="isDescendantOf-java.lang.String-">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>isDescendantOf</h4>
 <pre>public static&nbsp;<a href="../../../../com/google/errorprone/predicates/TypePredicate.html" title="interface in com.google.errorprone.predicates">TypePredicate</a>&nbsp;isDescendantOf(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;type)</pre>
 <div class="block">Match sub-types of the given type.</div>
+</li>
+</ul>
+<a name="allOf-com.google.errorprone.predicates.TypePredicate...-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>allOf</h4>
+<pre>public static&nbsp;<a href="../../../../com/google/errorprone/predicates/TypePredicate.html" title="interface in com.google.errorprone.predicates">TypePredicate</a>&nbsp;allOf(<a href="../../../../com/google/errorprone/predicates/TypePredicate.html" title="interface in com.google.errorprone.predicates">TypePredicate</a>...&nbsp;predicates)</pre>
+</li>
+</ul>
+<a name="anyOf-com.google.errorprone.predicates.TypePredicate...-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>anyOf</h4>
+<pre>public static&nbsp;<a href="../../../../com/google/errorprone/predicates/TypePredicate.html" title="interface in com.google.errorprone.predicates">TypePredicate</a>&nbsp;anyOf(<a href="../../../../com/google/errorprone/predicates/TypePredicate.html" title="interface in com.google.errorprone.predicates">TypePredicate</a>...&nbsp;predicates)</pre>
+</li>
+</ul>
+<a name="not-com.google.errorprone.predicates.TypePredicate-">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>not</h4>
+<pre>public static&nbsp;<a href="../../../../com/google/errorprone/predicates/TypePredicate.html" title="interface in com.google.errorprone.predicates">TypePredicate</a>&nbsp;not(<a href="../../../../com/google/errorprone/predicates/TypePredicate.html" title="interface in com.google.errorprone.predicates">TypePredicate</a>&nbsp;predicate)</pre>
 </li>
 </ul>
 </li>

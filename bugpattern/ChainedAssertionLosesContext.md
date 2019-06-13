@@ -21,7 +21,7 @@ Before:
 ```
 class MyProtoSubject {
   public void hasFoo(Foo expected) {
-    assertThat(actual().foo()).isEqualTo(expected);
+    assertThat(actual.foo()).isEqualTo(expected);
   }
 }
 ```
@@ -31,7 +31,7 @@ After:
 ```
 class MyProtoSubject {
   public void hasFoo(Foo expected) {
-    check("foo()").that(actual().foo()).isEqualTo(expected);
+    check("foo()").that(actual.foo()).isEqualTo(expected);
   }
 }
 ```
@@ -90,7 +90,7 @@ import com.google.common.truth.Truth;
 
 /** @author cpovirk@google.com (Chris Povirk) */
 public class ChainedAssertionLosesContextPositiveCases {
-  static final class FooSubject extends Subject<FooSubject, Foo> {
+  static final class FooSubject extends Subject {
     private final Foo actual;
 
     static Factory<FooSubject, Foo> foos() {
@@ -200,7 +200,7 @@ import com.google.common.truth.Subject;
 
 /** @author cpovirk@google.com (Chris Povirk) */
 public class ChainedAssertionLosesContextNegativeCases {
-  static final class FooSubject extends Subject<FooSubject, Foo> {
+  static final class FooSubject extends Subject {
     private final Foo actual;
 
     private FooSubject(FailureMetadata metadata, Foo actual) {

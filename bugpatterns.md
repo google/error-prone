@@ -53,6 +53,9 @@ Object serialized in Bundle may have been flattened to base type.
 __[ChainingConstructorIgnoresParameter](bugpattern/ChainingConstructorIgnoresParameter)__<br>
 The called constructor accepts a parameter with the same name and type as one of its caller&#39;s parameters, but its caller doesn&#39;t pass that parameter to it.  It&#39;s likely that it was intended to.
 
+__[CheckNotNullMultipleTimes](bugpattern/CheckNotNullMultipleTimes)__<br>
+A variable was checkNotNulled multiple times. Did you mean to check something else?
+
 __[CheckReturnValue](bugpattern/CheckReturnValue)__<br>
 Ignored return value of method that is annotated with @CheckReturnValue
 
@@ -109,6 +112,9 @@ Duration.from(Duration) returns itself; from(Period) throws a runtime exception.
 
 __[DurationGetTemporalUnit](bugpattern/DurationGetTemporalUnit)__<br>
 Duration.get() only works with SECONDS or NANOS.
+
+__[DurationTemporalUnit](bugpattern/DurationTemporalUnit)__<br>
+Duration APIs only work for DAYS or exact durations.
 
 __[DurationToLongTimeUnit](bugpattern/DurationToLongTimeUnit)__<br>
 Unit mismatch when decomposing a Duration or Instant to call a &lt;long, TimeUnit&gt; API
@@ -194,6 +200,9 @@ A class can be annotated with at most one scope annotation.
 __[InjectOnMemberAndConstructor](bugpattern/InjectOnMemberAndConstructor)__<br>
 Members shouldn&#39;t be annotated with @Inject if constructor is already annotated @Inject
 
+__[InstantTemporalUnit](bugpattern/InstantTemporalUnit)__<br>
+Instant APIs only work for NANOS, MICROS, MILLIS, SECONDS, MINUTES, HOURS, HALF_DAYS and DAYS.
+
 __[InvalidPatternSyntax](bugpattern/InvalidPatternSyntax)__<br>
 Invalid syntax used for a regular expression
 
@@ -235,6 +244,9 @@ Use of Joda-Time&#39;s DateTime.toDateTime(), Duration.toDuration(), Instant.toI
 
 __[LiteByteStringUtf8](bugpattern/LiteByteStringUtf8)__<br>
 This pattern will silently corrupt certain byte sequences from the serialized protocol message. Use ByteString or byte[] directly
+
+__[LocalDateTemporalAmount](bugpattern/LocalDateTemporalAmount)__<br>
+LocalDate.plus() and minus() does not work with Durations. LocalDate represents civil time (years/months/days), so java.time.Period is the appropriate thing to add or subtract instead.
 
 __[LoopConditionChecker](bugpattern/LoopConditionChecker)__<br>
 Loop condition is never modified in loop body.
@@ -645,6 +657,9 @@ Use of JodaTime&#39;s type.withDurationAdded(long, int) (where &lt;type&gt; = {D
 
 __[LiteEnumValueOf](bugpattern/LiteEnumValueOf)__<br>
 Instead of converting enums to string and back, its numeric value should be used instead as it is the stable part of the protocol defined by the enum.
+
+__[LiteProtoToString](bugpattern/LiteProtoToString)__<br>
+#toString on lite protos will not generate a useful representation of the proto from optimized builds. Consider whether using some subset of fields instead would provide useful information.
 
 __[LockNotBeforeTry](bugpattern/LockNotBeforeTry)__<br>
 Calls to Lock#lock should be immediately followed by a try block which releases the lock.
@@ -1155,9 +1170,6 @@ Add a private constructor to modules that will not be instantiated by Dagger.
 
 __[PrivateConstructorForUtilityClass](bugpattern/PrivateConstructorForUtilityClass)__<br>
 Utility classes (only static members) are not designed to be instantiated and should be made noninstantiable with a default constructor.
-
-__[ProvideDescriptionToCheck](bugpattern/ProvideDescriptionToCheck)__<br>
-Provide a description of the value to be included in the failure message.
 
 __[RemoveUnusedImports](bugpattern/RemoveUnusedImports)__<br>
 Unused imports
