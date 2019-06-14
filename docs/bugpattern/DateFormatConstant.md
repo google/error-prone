@@ -24,7 +24,7 @@ If the field is never accessed by multiple threads, rename it to use
 `lowerCamelCase`.
 
 ```java
-@NotThreadSafe
+// not thread safe
 private static final DateFormat dateFormat =
     new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
