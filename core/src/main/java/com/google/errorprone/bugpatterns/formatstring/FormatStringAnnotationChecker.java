@@ -49,7 +49,7 @@ public final class FormatStringAnnotationChecker extends BugChecker
 
   /**
    * Matches a method or constructor invocation. The input symbol should match the invoked method or
-   * contructor and the args should be the parameters in the invocation.
+   * constructor and the args should be the parameters in the invocation.
    */
   private Description matchInvocation(
       ExpressionTree tree,
