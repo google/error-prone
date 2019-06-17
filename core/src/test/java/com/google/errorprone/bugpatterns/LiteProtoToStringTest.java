@@ -100,4 +100,58 @@ public final class LiteProtoToStringTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void floggerAtWarning_error() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.common.flogger.GoogleLogger;",
+            "import com.google.protobuf.GeneratedMessageLite;",
+            "class Test {",
+            "  private static final GoogleLogger logger = GoogleLogger.forEnclosingClass();",
+            "  private void test(GeneratedMessageLite message) {",
+            "    // BUG: Diagnostic contains:",
+            "    logger.atWarning().log(message);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void floggerAtVerbose_noWarning() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.common.flogger.GoogleLogger;",
+            "import com.google.protobuf.GeneratedMessageLite;",
+            "class Test {",
+            "  private static final GoogleLogger logger = GoogleLogger.forEnclosingClass();",
+            "  private void test(GeneratedMessageLite message) {",
+            "    logger.atFine().log(message);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void customFormatMethod() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.errorprone.annotations.FormatMethod;",
+            "import com.google.protobuf.GeneratedMessageLite;",
+            "class Test {",
+            "  private void test(GeneratedMessageLite message) {",
+            "    // BUG: Diagnostic contains:",
+            "    format(null, \"%s\", message);",
+            "    format(message, \"%s\", 1);",
+            "  }",
+            "  @FormatMethod",
+            "  String format(Object tag, String format, Object... args) {",
+            "    return String.format(format, args);",
+            "  }",
+            "}")
+        .doTest();
+  }
 }
