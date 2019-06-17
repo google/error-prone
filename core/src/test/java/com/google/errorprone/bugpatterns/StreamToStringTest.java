@@ -69,6 +69,7 @@ public class StreamToStringTest {
             "      .map(String::valueOf).collect(Collectors.joining(\", \")));",
             "    String s = \"\" + Arrays.asList(42).stream()",
             "      .map(String::valueOf).collect(Collectors.joining(\", \"));",
+            "    String.format(\"%s %s\", null, null);",
             "  }",
             "}")
         .doTest();
