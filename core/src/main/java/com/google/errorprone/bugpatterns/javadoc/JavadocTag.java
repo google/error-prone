@@ -29,6 +29,7 @@ abstract class JavadocTag {
           blockTag("apiNote"),
           blockTag("attr"), // commonly used by Android
           blockTag("contact"),
+          blockTag("fails"), // commonly used tag for denoting async failure modes
           blockTag("hide"),
           blockTag("implNote"),
           blockTag("implSpec"),
