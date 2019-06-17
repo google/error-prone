@@ -152,7 +152,7 @@ public class StrictFormatStringValidation {
                       + "with an @FormatString must match the types of the format arguments in "
                       + "the @FormatMethod header where the format string was declared.\n\t"
                       + "Format arg types passed: %s\n\tFormat arg types expected: %s",
-                  calleeFormatArgTypes.toArray(), ownerFormatArgTypes.toArray()));
+                  calleeFormatArgTypes, ownerFormatArgTypes));
         }
       }
     }
