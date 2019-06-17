@@ -16,8 +16,8 @@
 
 package com.google.errorprone.bugpatterns;
 
+import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -26,12 +26,11 @@ import org.junit.runners.JUnit4;
 @RunWith(JUnit4.class)
 public class ArrayToStringTest {
 
-  private CompilationTestHelper compilationHelper;
+  private final CompilationTestHelper compilationHelper =
+      CompilationTestHelper.newInstance(ArrayToString.class, getClass());
 
-  @Before
-  public void setUp() {
-    compilationHelper = CompilationTestHelper.newInstance(ArrayToString.class, getClass());
-  }
+  private final BugCheckerRefactoringTestHelper refactoringHelper =
+      BugCheckerRefactoringTestHelper.newInstance(new ArrayToString(), getClass());
 
   @Test
   public void testPositiveCase() {
@@ -62,18 +61,26 @@ public class ArrayToStringTest {
 
   @Test
   public void printString() {
-    compilationHelper
-        .addSourceLines(
+    refactoringHelper
+        .addInputLines(
             "Test.java",
             "class Test {",
             "  int[] g() { return null; }",
             "  void f(int[] xs) {",
-            "    // BUG: Diagnostic contains: println(Arrays.toString(xs))",
             "    System.err.println(xs);",
-            "    // BUG: Diagnostic contains: println(Arrays.toString(xs))",
             "    System.err.println(String.valueOf(xs));",
-            "    // BUG: Diagnostic contains: println(Arrays.toString(g()))",
             "    System.err.println(String.valueOf(g()));",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "import java.util.Arrays;",
+            "class Test {",
+            "  int[] g() { return null; }",
+            "  void f(int[] xs) {",
+            "    System.err.println(Arrays.toString(xs));",
+            "    System.err.println(Arrays.toString(xs));",
+            "    System.err.println(Arrays.toString(g()));",
             "  }",
             "}")
         .doTest();
@@ -101,6 +108,74 @@ public class ArrayToStringTest {
             "  void f(int[] xs) {",
             "    // BUG: Diagnostic contains: append(Arrays.toString(xs))",
             "    new StringBuilder().append(xs);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void customFormatMethod() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.errorprone.annotations.FormatMethod;",
+            "class Test {",
+            "  private void test(Object[] arr) {",
+            "    // BUG: Diagnostic contains:",
+            "    format(\"%s %s\", arr, 2);",
+            "  }",
+            "  @FormatMethod",
+            "  String format(String format, Object... args) {",
+            "    return String.format(format, args);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void customFormatMethod_varargsPassedThrough() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.errorprone.annotations.FormatMethod;",
+            "class Test {",
+            "  private void test(String format, Object... args) {",
+            "    format(null, format, args);",
+            "  }",
+            "  @FormatMethod",
+            "  String format(Object tag, String format, Object... args) {",
+            "    return String.format(format, args);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void methodReturningArray() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  private void test() {",
+            "    // BUG: Diagnostic contains:",
+            "    String.format(\"%s %s\", arr(), 1);",
+            "  }",
+            "  Object[] arr() {",
+            "    return null;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void throwableToString() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  void test(Exception e) {",
+            "    // BUG: Diagnostic contains: Throwables.getStackTraceAsString(e)",
+            "    String.format(\"%s, %s\", 1, e.getStackTrace());",
             "  }",
             "}")
         .doTest();

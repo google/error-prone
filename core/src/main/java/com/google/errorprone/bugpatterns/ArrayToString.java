@@ -55,7 +55,12 @@ public class ArrayToString extends AbstractToString {
   protected Optional<Fix> implicitToStringFix(ExpressionTree tree, VisitorState state) {
     // e.g. println(theArray) -> println(Arrays.toString(theArray))
     // or:  "" + theArray -> "" + Arrays.toString(theArray)
-    return fix(tree, tree, state);
+    return toStringFix(tree, tree, state);
+  }
+
+  @Override
+  protected boolean allowableToStringKind(ToStringKind toStringKind) {
+    return toStringKind == ToStringKind.FLOGGER;
   }
 
   @Override

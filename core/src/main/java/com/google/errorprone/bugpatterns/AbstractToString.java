@@ -20,28 +20,32 @@ import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.instanceMethod;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
+import static com.google.errorprone.matchers.Matchers.symbolHasAnnotation;
+import static com.google.errorprone.util.ASTHelpers.getReceiver;
+import static com.google.errorprone.util.ASTHelpers.getSymbol;
+import static com.google.errorprone.util.ASTHelpers.getType;
 
 import com.google.errorprone.VisitorState;
-import com.google.errorprone.bugpatterns.BugChecker.IdentifierTreeMatcher;
-import com.google.errorprone.bugpatterns.BugChecker.MemberSelectTreeMatcher;
+import com.google.errorprone.annotations.FormatMethod;
+import com.google.errorprone.bugpatterns.BugChecker.BinaryTreeMatcher;
+import com.google.errorprone.bugpatterns.BugChecker.CompoundAssignmentTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.predicates.TypePredicate;
-import com.google.errorprone.util.ASTHelpers;
+import com.sun.source.tree.BinaryTree;
+import com.sun.source.tree.CompoundAssignmentTree;
 import com.sun.source.tree.ExpressionTree;
-import com.sun.source.tree.IdentifierTree;
-import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
-import com.sun.tools.javac.code.Symbol;
-import com.sun.tools.javac.code.Symbol.MethodSymbol;
-import com.sun.tools.javac.code.Symbol.VarSymbol;
+import com.sun.source.util.TreePath;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Type.MethodType;
+import java.util.List;
 import java.util.Optional;
+import javax.lang.model.type.TypeKind;
 
 /**
  * An abstract matcher for implicit and explicit calls to {@code Object.toString()}, for use on
@@ -50,7 +54,7 @@ import java.util.Optional;
  * <p>See examples in {@link StreamToString} and {@link ArrayToString}.
  */
 public abstract class AbstractToString extends BugChecker
-    implements MethodInvocationTreeMatcher, IdentifierTreeMatcher, MemberSelectTreeMatcher {
+    implements BinaryTreeMatcher, MethodInvocationTreeMatcher, CompoundAssignmentTreeMatcher {
 
   /** The type to match on. */
   protected abstract TypePredicate typePredicate();
@@ -68,6 +72,11 @@ public abstract class AbstractToString extends BugChecker
     return Optional.empty();
   }
 
+  /** Whether this kind of toString call is allowable for this check. */
+  protected boolean allowableToStringKind(ToStringKind toStringKind) {
+    return false;
+  }
+
   /**
    * Constructs a fix for an explicit toString call, e.g. from {@code Object.toString()} or {@code
    * String.valueOf()}.
@@ -79,6 +88,17 @@ public abstract class AbstractToString extends BugChecker
 
   private static final Matcher<ExpressionTree> TO_STRING =
       instanceMethod().anyClass().withSignature("toString()");
+
+  private static final Matcher<ExpressionTree> FLOGGER_LOG =
+      instanceMethod().onDescendantOf("com.google.common.flogger.LoggingApi").named("log");
+
+  private static final Matcher<ExpressionTree> FORMAT_METHOD =
+      anyOf(
+          symbolHasAnnotation(FormatMethod.class),
+          staticMethod().onClass("java.lang.String").named("format"));
+
+  private static final Matcher<ExpressionTree> VALUE_OF =
+      staticMethod().onClass("java.lang.String").withSignature("valueOf(java.lang.Object)");
 
   private static final Matcher<ExpressionTree> PRINT_STRING =
       anyOf(
@@ -92,62 +112,118 @@ public abstract class AbstractToString extends BugChecker
               .onDescendantOf("java.lang.StringBuilder")
               .withSignature("append(java.lang.Object)"));
 
-  private static final Matcher<ExpressionTree> VALUE_OF =
-      staticMethod().onClass("java.lang.String").withSignature("valueOf(java.lang.Object)");
-
-  @Override
-  public Description matchIdentifier(IdentifierTree tree, VisitorState state) {
-    return checkToString(tree, state);
-  }
-
-  @Override
-  public Description matchMemberSelect(MemberSelectTree tree, VisitorState state) {
-    return checkToString(tree, state);
+  private static boolean isInVarargsPosition(
+      ExpressionTree argTree, MethodInvocationTree methodInvocationTree, VisitorState state) {
+    int parameterCount = getSymbol(methodInvocationTree).getParameters().size();
+    List<? extends ExpressionTree> arguments = methodInvocationTree.getArguments();
+    // Don't match if we're passing an array into a varargs parameter, but do match if there are
+    // other parameters along with it.
+    return (arguments.size() > parameterCount || !state.getTypes().isArray(getType(argTree)))
+        && arguments.indexOf(argTree) >= parameterCount - 1;
   }
 
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
-    ExpressionTree receiver = ASTHelpers.getReceiver(tree);
-    Type receiverType = ASTHelpers.getType(receiver);
-    if (TO_STRING.matches(tree, state) && typePredicate().apply(receiverType, state)) {
-      return maybeFix(tree, state, receiverType, toStringFix(tree, receiver, state));
+    if (PRINT_STRING.matches(tree, state)) {
+      for (ExpressionTree argTree : tree.getArguments()) {
+        handleStringifiedTree(argTree, ToStringKind.IMPLICIT, state);
+      }
     }
-    return checkToString(tree, state);
+    if (VALUE_OF.matches(tree, state)) {
+      for (ExpressionTree argTree : tree.getArguments()) {
+        handleStringifiedTree(
+            tree,
+            argTree,
+            ToStringKind.EXPLICIT,
+            state.withPath(new TreePath(state.getPath(), argTree)));
+      }
+    }
+    if (TO_STRING.matches(tree, state)) {
+      ExpressionTree receiver = getReceiver(tree);
+      handleStringifiedTree(tree, receiver, ToStringKind.EXPLICIT, state);
+    }
+    if (FORMAT_METHOD.matches(tree, state)) {
+      for (ExpressionTree argTree : tree.getArguments()) {
+        if (isInVarargsPosition(argTree, tree, state)) {
+          handleStringifiedTree(argTree, ToStringKind.IMPLICIT, state);
+        }
+      }
+    }
+    if (FLOGGER_LOG.matches(tree, state)) {
+      for (ExpressionTree argTree : tree.getArguments()) {
+        handleStringifiedTree(argTree, ToStringKind.FLOGGER, state);
+      }
+    }
+    return NO_MATCH;
   }
 
-  /**
-   * Tests if the given expression is converted to a String by its parent (i.e. its parent is a
-   * string concat expression, {@code String.format}, or {@code println(Object)}).
-   */
-  private Description checkToString(ExpressionTree tree, VisitorState state) {
-    Symbol sym = ASTHelpers.getSymbol(tree);
-    if (!(sym instanceof VarSymbol || sym instanceof MethodSymbol)) {
+  @Override
+  public Description matchBinary(BinaryTree tree, VisitorState state) {
+    if (!state.getTypes().isSameType(getType(tree), state.getSymtab().stringType)) {
       return NO_MATCH;
     }
-    Type type = ASTHelpers.getType(tree);
+    if (tree.getKind() == Kind.PLUS) {
+      handleStringifiedTree(tree.getLeftOperand(), ToStringKind.IMPLICIT, state);
+      handleStringifiedTree(tree.getRightOperand(), ToStringKind.IMPLICIT, state);
+    }
+    if (tree.getKind() == Kind.PLUS_ASSIGNMENT) {
+      handleStringifiedTree(tree.getRightOperand(), ToStringKind.IMPLICIT, state);
+    }
+    return NO_MATCH;
+  }
+
+  @Override
+  public Description matchCompoundAssignment(CompoundAssignmentTree tree, VisitorState state) {
+    if (state.getTypes().isSameType(getType(tree.getVariable()), state.getSymtab().stringType)
+        && tree.getKind() == Kind.PLUS_ASSIGNMENT) {
+      handleStringifiedTree(tree.getExpression(), ToStringKind.IMPLICIT, state);
+    }
+    return NO_MATCH;
+  }
+
+  private void handleStringifiedTree(
+      ExpressionTree tree, ToStringKind toStringKind, VisitorState state) {
+    handleStringifiedTree(tree, tree, toStringKind, state);
+  }
+
+  private void handleStringifiedTree(
+      Tree parent, ExpressionTree tree, ToStringKind toStringKind, VisitorState state) {
+    Type type = type(tree);
+    if (type.getKind() == TypeKind.NULL
+        || !typePredicate().apply(type, state)
+        || allowableToStringKind(toStringKind)) {
+      return;
+    }
+    state.reportMatch(maybeFix(tree, state, type, getFix(tree, state, parent, toStringKind)));
+  }
+
+  private static Type type(ExpressionTree tree) {
+    Type type = getType(tree);
     if (type instanceof MethodType) {
-      type = type.getReturnType();
+      return type.getReturnType();
     }
-    Tree parent = state.getPath().getParentPath().getLeaf();
-    ToStringKind toStringKind = isToString(parent, tree, state);
-    if (toStringKind == ToStringKind.NONE) {
-      return NO_MATCH;
-    }
-    if (!typePredicate().apply(type, state)) {
-      return NO_MATCH;
-    }
-    Optional<Fix> fix;
+    return type;
+  }
+
+  private Optional<Fix> getFix(
+      ExpressionTree tree, VisitorState state, Tree parent, ToStringKind toStringKind) {
     switch (toStringKind) {
       case IMPLICIT:
-        fix = implicitToStringFix(tree, state);
-        break;
+      case FLOGGER:
+        return implicitToStringFix(tree, state);
       case EXPLICIT:
-        fix = toStringFix(parent, tree, state);
-        break;
-      default:
-        throw new AssertionError(toStringKind);
+        return toStringFix(parent, tree, state);
+      case NONE:
+        // fall out
     }
-    return maybeFix(tree, state, type, fix);
+    throw new AssertionError();
+  }
+
+  private Description maybeFix(Tree tree, VisitorState state, Type matchedType, Optional<Fix> fix) {
+    Description.Builder description = buildDescription(tree);
+    fix.ifPresent(description::addFix);
+    descriptionMessageForDefaultMatch(matchedType, state).ifPresent(description::setMessage);
+    return description.build();
   }
 
   enum ToStringKind {
@@ -155,43 +231,7 @@ public abstract class AbstractToString extends BugChecker
     IMPLICIT,
     /** {@code String.valueOf()} or {@code #toString()}. */
     EXPLICIT,
-    NONE
-  }
-
-  /** Classifies expressions that are converted to strings by their enclosing expression. */
-  ToStringKind isToString(Tree parent, ExpressionTree tree, VisitorState state) {
-    // is the enclosing expression string concat?
-    if (isStringConcat(parent, state)) {
-      return ToStringKind.IMPLICIT;
-    }
-    if (parent instanceof ExpressionTree) {
-      ExpressionTree parentExpression = (ExpressionTree) parent;
-      // the enclosing method is print() or println()
-      if (PRINT_STRING.matches(parentExpression, state)) {
-        return ToStringKind.IMPLICIT;
-      }
-      // the enclosing method is String.valueOf()
-      if (VALUE_OF.matches(parentExpression, state)) {
-        return ToStringKind.EXPLICIT;
-      }
-    }
-    return ToStringKind.NONE;
-  }
-
-  private boolean isStringConcat(Tree tree, VisitorState state) {
-    return (tree.getKind() == Kind.PLUS || tree.getKind() == Kind.PLUS_ASSIGNMENT)
-        && state.getTypes().isSameType(ASTHelpers.getType(tree), state.getSymtab().stringType);
-  }
-
-  private Description maybeFix(Tree tree, VisitorState state, Type matchedType, Optional<Fix> fix) {
-    Description.Builder description = buildDescription(tree);
-    if (fix.isPresent()) {
-      description.addFix(fix.get());
-    }
-    Optional<String> summary = descriptionMessageForDefaultMatch(matchedType, state);
-    if (summary.isPresent()) {
-      description.setMessage(summary.get());
-    }
-    return description.build();
+    FLOGGER,
+    NONE,
   }
 }
