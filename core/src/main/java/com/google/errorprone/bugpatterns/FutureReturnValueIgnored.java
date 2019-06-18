@@ -99,6 +99,9 @@ public final class FutureReturnValueIgnored extends AbstractReturnValueIgnored
               .onDescendantOf("io.netty.channel.ChannelFuture")
               .namedAnyOf("addListener", "addListeners"),
           instanceMethod()
+              .onDescendantOf("io.netty.channel.ChannelPromise")
+              .namedAnyOf("setSuccess", "setFailure"),
+          instanceMethod()
               .onExactClass("java.util.concurrent.CompletableFuture")
               .namedAnyOf("exceptionally", "completeAsync", "orTimeout", "completeOnTimeout"));
 
