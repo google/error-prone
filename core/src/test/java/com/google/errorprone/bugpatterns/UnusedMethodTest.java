@@ -83,7 +83,7 @@ public final class UnusedMethodTest {
             "package unusedvars;",
             "import java.io.IOException;",
             "import java.io.ObjectStreamException;",
-            "public class Unuseds {",
+            "public class Unuseds implements java.io.Serializable {",
             "  private void readObject(java.io.ObjectInputStream in) throws IOException {",
             "    in.hashCode();",
             "  }",

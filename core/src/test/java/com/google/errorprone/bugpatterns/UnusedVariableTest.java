@@ -1269,4 +1269,23 @@ public class UnusedVariableTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void exemptedMethods() {
+    helper
+        .addSourceLines(
+            "Unuseds.java",
+            "package unusedvars;",
+            "import java.io.IOException;",
+            "import java.io.ObjectStreamException;",
+            "public class Unuseds implements java.io.Serializable {",
+            "  private void readObject(java.io.ObjectInputStream in) throws IOException {}",
+            "  private void writeObject(java.io.ObjectOutputStream out) throws IOException {}",
+            "  private Object readResolve() {",
+            "    return null;",
+            "  }",
+            "  private void readObjectNoData() throws ObjectStreamException {}",
+            "}")
+        .doTest();
+  }
 }

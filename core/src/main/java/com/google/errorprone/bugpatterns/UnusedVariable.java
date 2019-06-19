@@ -24,6 +24,7 @@ import static com.google.common.collect.Iterables.getLast;
 import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.BugPattern.ProvidesFix.REQUIRES_HUMAN_ATTENTION;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
+import static com.google.errorprone.matchers.Matchers.SERIALIZATION_METHODS;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
@@ -650,6 +651,9 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
 
     @Override
     public Void visitMethod(MethodTree tree, Void unused) {
+      if (SERIALIZATION_METHODS.matches(tree, state)) {
+        return scan(tree.getBody(), null);
+      }
       return isSuppressed(tree) ? null : super.visitMethod(tree, unused);
     }
   }
