@@ -19,13 +19,8 @@ package com.google.errorprone.bugpatterns;
 import static com.google.common.collect.Iterables.getLast;
 import static com.google.errorprone.BugPattern.ProvidesFix.REQUIRES_HUMAN_ATTENTION;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
-import static com.google.errorprone.matchers.Matchers.allOf;
-import static com.google.errorprone.matchers.Matchers.anyOf;
-import static com.google.errorprone.matchers.Matchers.isSameType;
-import static com.google.errorprone.matchers.Matchers.isVoidType;
-import static com.google.errorprone.matchers.Matchers.methodHasParameters;
-import static com.google.errorprone.matchers.Matchers.methodIsNamed;
-import static com.google.errorprone.matchers.Matchers.methodReturns;
+import static com.google.errorprone.matchers.Matchers.SERIALIZATION_METHODS;
+import static com.google.errorprone.suppliers.Suppliers.typeFromString;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
@@ -37,9 +32,6 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.CompilationUnitTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
-import com.google.errorprone.matchers.Matcher;
-import com.google.errorprone.suppliers.Supplier;
-import com.google.errorprone.suppliers.Suppliers;
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
@@ -83,21 +75,6 @@ public final class UnusedMethod extends BugChecker implements CompilationUnitTre
   private static final String JUNIT_PARAMS_VALUE = "value";
   private static final String JUNIT_PARAMS_ANNOTATION_TYPE = "junitparams.Parameters";
 
-  private static final Supplier<Type> OBJECT = Suppliers.typeFromString("java.lang.Object");
-
-  /** Method signature of special methods. */
-  private static final Matcher<MethodTree> SPECIAL_METHODS =
-      anyOf(
-          allOf(
-              methodIsNamed("readObject"),
-              methodHasParameters(isSameType("java.io.ObjectInputStream"))),
-          allOf(
-              methodIsNamed("writeObject"),
-              methodHasParameters(isSameType("java.io.ObjectOutputStream"))),
-          allOf(methodIsNamed("readObjectNoData"), methodReturns(isVoidType())),
-          allOf(methodIsNamed("readResolve"), methodReturns(OBJECT)),
-          allOf(methodIsNamed("writeReplace"), methodReturns(OBJECT)));
-
 
   private static final ImmutableSet<String> EXEMPTING_METHOD_ANNOTATIONS =
       ImmutableSet.of(
@@ -134,7 +111,7 @@ public final class UnusedMethod extends BugChecker implements CompilationUnitTre
 
       private boolean exemptedBySuperType(Type type, VisitorState state) {
         return EXEMPTING_SUPER_TYPES.stream()
-            .anyMatch(t -> isSubtype(type, Suppliers.typeFromString(t).get(state), state));
+            .anyMatch(t -> isSubtype(type, typeFromString(t).get(state), state));
       }
 
       @Override
@@ -202,7 +179,7 @@ public final class UnusedMethod extends BugChecker implements CompilationUnitTre
         MethodSymbol methodSymbol = getSymbol(tree);
         if (methodSymbol == null
             || methodSymbol.getKind() == ElementKind.CONSTRUCTOR
-            || SPECIAL_METHODS.matches(tree, state)) {
+            || SERIALIZATION_METHODS.matches(tree, state)) {
           return false;
         }
 

@@ -16,12 +16,16 @@
 
 package com.google.errorprone.matchers;
 
+import static com.google.errorprone.matchers.Matchers.methodReturns;
 import static com.google.errorprone.suppliers.Suppliers.BOOLEAN_TYPE;
 import static com.google.errorprone.suppliers.Suppliers.INT_TYPE;
 import static com.google.errorprone.suppliers.Suppliers.JAVA_LANG_BOOLEAN_TYPE;
 import static com.google.errorprone.suppliers.Suppliers.STRING_TYPE;
 import static com.google.errorprone.suppliers.Suppliers.typeFromClass;
+import static com.google.errorprone.suppliers.Suppliers.typeFromString;
+import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
+import static com.google.errorprone.util.ASTHelpers.isSubtype;
 import static com.google.errorprone.util.ASTHelpers.stripParentheses;
 import static java.util.Objects.requireNonNull;
 
@@ -191,7 +195,7 @@ public class Matchers {
    */
   public static <T extends Tree> Matcher<T> symbolMatcher(BiPredicate<Symbol, VisitorState> pred) {
     return (tree, state) -> {
-      Symbol sym = ASTHelpers.getSymbol(tree);
+      Symbol sym = getSymbol(tree);
       return sym != null && pred.test(sym, state);
     };
   }
@@ -572,7 +576,7 @@ public class Matchers {
   public static Matcher<ExpressionTree> booleanConstant(boolean value) {
     return (expressionTree, state) -> {
       if (expressionTree instanceof JCFieldAccess) {
-        Symbol symbol = ASTHelpers.getSymbol(expressionTree);
+        Symbol symbol = getSymbol(expressionTree);
         if (symbol.isStatic()
             && state.getTypes().unboxedTypeOrType(symbol.type).getTag() == TypeTag.BOOLEAN) {
           return ((value && symbol.getSimpleName().contentEquals("TRUE"))
@@ -720,7 +724,7 @@ public class Matchers {
    */
   public static <T extends Tree> Matcher<T> symbolHasAnnotation(
       Class<? extends Annotation> inputClass) {
-    return (tree, state) -> ASTHelpers.hasAnnotation(ASTHelpers.getSymbol(tree), inputClass, state);
+    return (tree, state) -> ASTHelpers.hasAnnotation(getSymbol(tree), inputClass, state);
   }
 
   /**
@@ -732,7 +736,7 @@ public class Matchers {
    */
   public static Matcher<MethodTree> hasAnnotationOnAnyOverriddenMethod(String annotationClass) {
     return (tree, state) -> {
-      MethodSymbol methodSym = ASTHelpers.getSymbol(tree);
+      MethodSymbol methodSym = getSymbol(tree);
       if (methodSym == null) {
         return false;
       }
@@ -801,10 +805,7 @@ public class Matchers {
    */
   public static Matcher<MethodTree> methodWithClassAndName(String className, String methodName) {
     return (methodTree, state) ->
-        ASTHelpers.getSymbol(methodTree)
-                .getEnclosingElement()
-                .getQualifiedName()
-                .contentEquals(className)
+        getSymbol(methodTree).getEnclosingElement().getQualifiedName().contentEquals(className)
             && methodTree.getName().contentEquals(methodName);
   }
 
@@ -861,7 +862,7 @@ public class Matchers {
   }
 
   public static Matcher<MethodTree> methodIsConstructor() {
-    return (methodTree, state) -> ASTHelpers.getSymbol(methodTree).isConstructor();
+    return (methodTree, state) -> getSymbol(methodTree).isConstructor();
   }
 
   /**
@@ -872,7 +873,7 @@ public class Matchers {
    */
   public static Matcher<MethodTree> constructorOfClass(String className) {
     return (methodTree, state) -> {
-      Symbol symbol = ASTHelpers.getSymbol(methodTree);
+      Symbol symbol = getSymbol(methodTree);
       return symbol.getEnclosingElement().getQualifiedName().contentEquals(className)
           && symbol.isConstructor();
     };
@@ -922,8 +923,7 @@ public class Matchers {
    * constant, parameter to a method, etc.
    */
   public static Matcher<VariableTree> isField() {
-    return (variableTree, state) ->
-        ElementKind.FIELD == ASTHelpers.getSymbol(variableTree).getKind();
+    return (variableTree, state) -> ElementKind.FIELD == getSymbol(variableTree).getKind();
   }
 
   /**
@@ -932,7 +932,7 @@ public class Matchers {
    * @param kind The kind of nesting to match, eg ANONYMOUS, LOCAL, MEMBER, TOP_LEVEL
    */
   public static Matcher<ClassTree> nestingKind(NestingKind kind) {
-    return (classTree, state) -> kind == ASTHelpers.getSymbol(classTree).getNestingKind();
+    return (classTree, state) -> kind == getSymbol(classTree).getNestingKind();
   }
 
   /**
@@ -959,7 +959,7 @@ public class Matchers {
   /** Returns true if the Tree node has the expected {@code Modifier}. */
   public static <T extends Tree> Matcher<T> hasModifier(Modifier modifier) {
     return (tree, state) -> {
-      Symbol sym = ASTHelpers.getSymbol(tree);
+      Symbol sym = getSymbol(tree);
       return sym != null && sym.getModifiers().contains(modifier);
     };
   }
@@ -972,14 +972,14 @@ public class Matchers {
   /** Matches an AST node that is static. */
   public static <T extends Tree> Matcher<T> isStatic() {
     return (tree, state) -> {
-      Symbol sym = ASTHelpers.getSymbol(tree);
+      Symbol sym = getSymbol(tree);
       return sym != null && sym.isStatic();
     };
   }
 
   /** Matches an AST node that is transient. */
   public static <T extends Tree> Matcher<T> isTransient() {
-    return (tree, state) -> ASTHelpers.getSymbol(tree).getModifiers().contains(Modifier.TRANSIENT);
+    return (tree, state) -> getSymbol(tree).getModifiers().contains(Modifier.TRANSIENT);
   }
 
   /**
@@ -1338,4 +1338,22 @@ public class Matchers {
   public static Matcher<MethodTree> hashCodeMethodDeclaration() {
     return HASH_CODE_DECLARATION;
   }
+
+  /** Method signature of serialization methods. */
+  public static final Matcher<MethodTree> SERIALIZATION_METHODS =
+      allOf(
+          (t, s) -> isSubtype(getSymbol(t).owner.type, s.getSymtab().serializableType, s),
+          anyOf(
+              allOf(
+                  methodIsNamed("readObject"),
+                  methodHasParameters(isSameType("java.io.ObjectInputStream"))),
+              allOf(
+                  methodIsNamed("writeObject"),
+                  methodHasParameters(isSameType("java.io.ObjectOutputStream"))),
+              allOf(methodIsNamed("readObjectNoData"), methodReturns(isVoidType())),
+              allOf(
+                  methodIsNamed("readResolve"), methodReturns(typeFromString("java.lang.Object"))),
+              allOf(
+                  methodIsNamed("writeReplace"),
+                  methodReturns(typeFromString("java.lang.Object")))));
 }
