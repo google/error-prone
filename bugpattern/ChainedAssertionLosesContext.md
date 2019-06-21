@@ -19,7 +19,9 @@ use [`check`], not `assertThat`.
 Before:
 
 ```
-class MyProtoSubject {
+class MyProtoSubject extends Subject {
+  ...
+
   public void hasFoo(Foo expected) {
     assertThat(actual.foo()).isEqualTo(expected);
   }
@@ -29,7 +31,9 @@ class MyProtoSubject {
 After:
 
 ```
-class MyProtoSubject {
+class MyProtoSubject extends Subject {
+  ...
+
   public void hasFoo(Foo expected) {
     check("foo()").that(actual.foo()).isEqualTo(expected);
   }

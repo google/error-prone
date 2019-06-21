@@ -13,7 +13,7 @@ To make changes, edit the @BugPattern annotation or the explanation in docs/bugp
 -->
 
 ## The problem
-Effective Java Item 62 says:
+Effective Java Item 70 says:
 
 > Use the Javadoc `@throws` tag to document each unchecked exception that a
 > method can throw, but do not use the throws keyword to include unchecked

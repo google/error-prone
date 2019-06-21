@@ -760,6 +760,9 @@ Including the first argument of checkNotNull in the failure message is not usefu
 __[PreconditionsInvalidPlaceholder](bugpattern/PreconditionsInvalidPlaceholder)__<br>
 Preconditions only accepts the %s placeholder in error message strings
 
+__[PreferDurationOverload](bugpattern/PreferDurationOverload)__<br>
+Prefer using java.time.Duration-based APIs when available. Note that this checker does not and cannot guarantee that the overloads have equivalent semantics, but that is generally the case with overloaded methods.
+
 __[ProtoDurationGetSecondsGetNano](bugpattern/ProtoDurationGetSecondsGetNano)__<br>
 getNanos() only accesses the underlying nanosecond-adjustment of the duration.
 
