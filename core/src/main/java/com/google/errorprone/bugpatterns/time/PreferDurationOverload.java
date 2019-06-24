@@ -43,12 +43,14 @@ import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
+import com.sun.source.tree.MethodTree;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.tree.JCTree;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 /** This check suggests the use of {@code java.time.Duration}-based APIs, when available. */
@@ -108,7 +110,7 @@ public final class PreferDurationOverload extends BugChecker
     if (isLongTimeUnitMethodCall(tree, state)) {
       Optional<TimeUnit> optionalTimeUnit = DurationToLongTimeUnit.getTimeUnit(arguments.get(1));
       if (optionalTimeUnit.isPresent()) {
-        if (javaDurationOverloadExists(tree, state)) {
+        if (hasValidJavaTimeDurationOverload(tree, state)) {
           String durationFactory = TIMEUNIT_TO_DURATION_FACTORY.get(optionalTimeUnit.get());
           if (durationFactory != null) {
             SuggestedFix.Builder fix = SuggestedFix.builder();
@@ -145,7 +147,7 @@ public final class PreferDurationOverload extends BugChecker
 
     if (isJodaDurationMethodCall(tree, state)) {
       ExpressionTree arg0 = arguments.get(0);
-      if (javaDurationOverloadExists(tree, state)) {
+      if (hasValidJavaTimeDurationOverload(tree, state)) {
         SuggestedFix.Builder fix = SuggestedFix.builder();
         // TODO(kak): Maybe only emit a match if Duration doesn't have to be fully qualified?
         String qualifiedDuration = SuggestedFixes.qualifyType(state, fix, JAVA_DURATION);
@@ -205,10 +207,15 @@ public final class PreferDurationOverload extends BugChecker
     return false;
   }
 
-  private static boolean javaDurationOverloadExists(MethodInvocationTree tree, VisitorState state) {
+  private static boolean hasValidJavaTimeDurationOverload(
+      MethodInvocationTree tree, VisitorState state) {
     MethodSymbol methodSymbol = getSymbol(tree);
+    if (methodSymbol == null) {
+      return false;
+    }
     Type durationType = state.getTypeFromString(JAVA_DURATION);
-    return !ASTHelpers.findMatchingMethods(
+    Set<MethodSymbol> durationOverloads =
+        ASTHelpers.findMatchingMethods(
             methodSymbol.name,
             input ->
                 !input.equals(methodSymbol)
@@ -217,7 +224,18 @@ public final class PreferDurationOverload extends BugChecker
                     && input.getParameters().size() == 1
                     && isSameType(input.getParameters().get(0).asType(), durationType, state),
             ASTHelpers.enclosingClass(methodSymbol).asType(),
-            state.getTypes())
-        .isEmpty();
+            state.getTypes());
+    if (durationOverloads.isEmpty()) {
+      return false;
+    }
+
+    // If we found an overload, make sure we're not currently *inside* that overload, to avoid
+    // creating an infinite loop.  There *should* only be one, but just in case, we'll check each
+    // overload against the outer method.
+    MethodTree t = state.findEnclosing(MethodTree.class);
+    if (t == null) {
+      return true;
+    }
+    return durationOverloads.stream().noneMatch(getSymbol(t)::equals);
   }
 }
