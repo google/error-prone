@@ -76,6 +76,24 @@ public class PreferDurationOverloadTest {
   }
 
   @Test
+  public void callLongTimeUnitInsideImpl() {
+    helper
+        .addSourceLines(
+            "TestClass.java",
+            "import java.time.Duration;",
+            "import java.util.concurrent.TimeUnit;",
+            "public class TestClass {",
+            "  private void bar(long d, TimeUnit u) {",
+            "  }",
+            "  private void bar(Duration d) {",
+            //  Would normally flag, but we're avoiding recursive suggestions
+            "    bar(d.toMillis(), TimeUnit.MILLISECONDS);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void callingLongTimeUnitMethodWithDurationOverload_privateMethod() {
     helper
         .addSourceLines(
