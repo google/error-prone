@@ -244,7 +244,13 @@ public class MissingSuperCall extends BugChecker
   }
 
   private static boolean isSuper(ExpressionTree tree) {
-    return tree.getKind() == Kind.IDENTIFIER
-        && ((IdentifierTree) tree).getName().contentEquals("super");
+    switch (tree.getKind()) {
+      case IDENTIFIER:
+        return ((IdentifierTree) tree).getName().contentEquals("super");
+      case MEMBER_SELECT:
+        return ((MemberSelectTree) tree).getIdentifier().contentEquals("super");
+      default:
+        return false;
+    }
   }
 }
