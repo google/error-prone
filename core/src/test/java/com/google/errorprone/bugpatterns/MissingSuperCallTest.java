@@ -160,6 +160,26 @@ public class MissingSuperCallTest {
   }
 
   @Test
+  public void negativeDoesCallInterfaceSuper() {
+    compilationHelper
+        .addSourceLines(
+            "Super.java",
+            "import android.support.annotation.CallSuper;",
+            "public interface Super {",
+            "  @CallSuper default void doIt() {}",
+            "}")
+        .addSourceLines(
+            "Sub.java",
+            "import java.util.Objects;",
+            "public class Sub implements Super {",
+            "  @Override public void doIt() {",
+            "    Super.super.doIt();",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void positiveTwoLevelsApart() {
     compilationHelper
         .addSourceLines(
