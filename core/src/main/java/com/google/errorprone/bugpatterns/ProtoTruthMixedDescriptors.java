@@ -61,7 +61,9 @@ public final class ProtoTruthMixedDescriptors extends BugChecker
 
   private static final Matcher<ExpressionTree> IGNORING =
       instanceMethod()
-          .onDescendantOf("com.google.common.truth.extensions.proto.ProtoFluentAssertion")
+          .onDescendantOfAny(
+              "com.google.common.truth.extensions.proto.ProtoFluentAssertion",
+              "com.google.common.truth.extensions.proto.ProtoSubject")
           .named("ignoringFields");
 
   private static final Matcher<ExpressionTree> ASSERT_THAT =
