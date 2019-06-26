@@ -162,6 +162,11 @@ public class Matchers {
     return (tree, state) -> tree.getKind() == kind;
   }
 
+  /** Matches an AST node of a given kind, for example, an Annotation or a switch block. */
+  public static <T extends Tree> Matcher<T> kindAnyOf(Set<Kind> kinds) {
+    return (tree, state) -> kinds.contains(tree.getKind());
+  }
+
   /** Matches an AST node which is the same object reference as the given node. */
   public static <T extends Tree> Matcher<T> isSame(Tree t) {
     return (tree, state) -> tree == t;
