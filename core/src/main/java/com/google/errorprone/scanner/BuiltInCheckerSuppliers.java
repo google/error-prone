@@ -379,6 +379,7 @@ import com.google.errorprone.bugpatterns.nullness.FieldMissingNullable;
 import com.google.errorprone.bugpatterns.nullness.NullableDereference;
 import com.google.errorprone.bugpatterns.nullness.ParameterNotNullable;
 import com.google.errorprone.bugpatterns.nullness.ReturnMissingNullable;
+import com.google.errorprone.bugpatterns.nullness.UnnecessaryCheckNotNull;
 import com.google.errorprone.bugpatterns.overloading.InconsistentOverloads;
 import com.google.errorprone.bugpatterns.threadsafety.DoubleCheckedLocking;
 import com.google.errorprone.bugpatterns.threadsafety.GuardedByChecker;
@@ -594,6 +595,7 @@ public class BuiltInCheckerSuppliers {
           TruthSelfEquals.class,
           TryFailThrowable.class,
           TypeParameterQualifier.class,
+          UnnecessaryCheckNotNull.class,
           UnnecessaryTypeArgument.class,
           UnusedAnonymousClass.class,
           UnusedCollectionModifiedInPlace.class,
