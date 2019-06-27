@@ -96,10 +96,18 @@ public final class FutureReturnValueIgnored extends AbstractReturnValueIgnored
           // ChannelFuture#addListener(s) returns itself for chaining. Any exception during the
           // future execution should be dealt by the listener(s).
           instanceMethod()
-              .onDescendantOf("io.netty.channel.ChannelFuture")
-              .namedAnyOf("addListener", "addListeners"),
+              .onDescendantOf("io.netty.util.concurrent.Future")
+              .namedAnyOf(
+                  "addListener",
+                  "addListeners",
+                  "removeListener",
+                  "removeListeners",
+                  "sync",
+                  "syncUninterruptibly",
+                  "await",
+                  "awaitUninterruptibly"),
           instanceMethod()
-              .onDescendantOf("io.netty.channel.ChannelPromise")
+              .onDescendantOf("io.netty.util.concurrent.Promise")
               .namedAnyOf("setSuccess", "setFailure"),
           instanceMethod()
               .onExactClass("java.util.concurrent.CompletableFuture")
