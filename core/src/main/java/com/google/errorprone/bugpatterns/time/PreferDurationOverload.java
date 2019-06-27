@@ -104,8 +104,22 @@ public final class PreferDurationOverload extends BugChecker
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
     List<? extends ExpressionTree> arguments = tree.getArguments();
 
-    // TODO(kak): Add support for methods with > 2 parameters. E.g.,
+    // TODO(glorioso): Add support for methods with > 2 parameters. E.g.,
     // foo(String, long, TimeUnit, Frobber) -> foo(String, Duration, Frobber)
+
+    if (isNumericMethodCall(tree, state)) {
+      if (hasValidJavaTimeDurationOverload(tree, state)) {
+        // we don't know what units to use, but we can still warn the user!
+        return buildDescription(tree)
+            .setMessage(
+                String.format(
+                    "If the numeric primitive (%s) represents a Duration, please call"
+                        + " %s(Duration) instead.",
+                    state.getSourceForNode(arguments.get(0)),
+                    state.getSourceForNode(tree.getMethodSelect())))
+            .build();
+      }
+    }
 
     if (isLongTimeUnitMethodCall(tree, state)) {
       Optional<TimeUnit> optionalTimeUnit = DurationToLongTimeUnit.getTimeUnit(arguments.get(1));
@@ -185,6 +199,17 @@ public final class PreferDurationOverload extends BugChecker
     }
 
     return Description.NO_MATCH;
+  }
+
+  private static boolean isNumericMethodCall(MethodInvocationTree tree, VisitorState state) {
+    List<VarSymbol> params = getSymbol(tree).getParameters();
+    if (params.size() == 1) {
+      Type type0 = params.get(0).asType();
+      return isSameType(type0, state.getSymtab().intType, state)
+          || isSameType(type0, state.getSymtab().longType, state)
+          || isSameType(type0, state.getSymtab().doubleType, state);
+    }
+    return false;
   }
 
   private static boolean isJodaDurationMethodCall(MethodInvocationTree tree, VisitorState state) {
