@@ -80,7 +80,8 @@ public class ForOverrideCheckerTest {
             "package test;",
             "import com.google.errorprone.annotations.ForOverride;",
             "public class Test {",
-            "  // BUG: Diagnostic contains: must have protected or package-private visibility",
+            "  // BUG: Diagnostic contains: @ForOverride must have protected or package-private"
+                + " visibility",
             "  @ForOverride public void myMethod() {}",
             "}")
         .doTest();
@@ -94,7 +95,8 @@ public class ForOverrideCheckerTest {
             "package test;",
             "import com.google.errorprone.annotations.ForOverride;",
             "public class Test {",
-            "  // BUG: Diagnostic contains: must have protected or package-private visibility",
+            "  // BUG: Diagnostic contains: @ForOverride must have protected or package-private"
+                + " visibility",
             "  @ForOverride private void myMethod() {}",
             "}")
         .doTest();
@@ -108,7 +110,8 @@ public class ForOverrideCheckerTest {
             "package test;",
             "import com.google.errorprone.annotations.ForOverride;",
             "public interface Test {",
-            "  // BUG: Diagnostic contains: must have protected or package-private visibility",
+            "  // BUG: Diagnostic contains: @ForOverride must have protected or package-private"
+                + " visibility",
             "  @ForOverride void myMethod();",
             "}")
         .doTest();
@@ -264,7 +267,7 @@ public class ForOverrideCheckerTest {
             "test/Test.java",
             "package test2;",
             "public class Test extends test.ExtendMe {",
-            "  // BUG: Diagnostic contains: must have protected or package-private visibility",
+            "  // BUG: Diagnostic contains: overrides @ForOverride method test.ExtendMe.overrideMe",
             "  public int overrideMe() {",
             "    System.err.println(\"Capybaras are rodents.\");",
             "    return 1;",
