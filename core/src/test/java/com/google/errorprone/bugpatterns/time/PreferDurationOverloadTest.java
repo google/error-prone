@@ -233,4 +233,22 @@ public class PreferDurationOverloadTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void callingNumericPrimitiveMethodWithDurationOverload() {
+    helper
+        .addSourceLines(
+            "TestClass.java",
+            "public class TestClass {",
+            "  private void bar(java.time.Duration d) {",
+            "  }",
+            "  private void bar(long d) {",
+            "  }",
+            "  public void foo() {",
+            "    // BUG: Diagnostic contains: call bar(Duration) instead",
+            "    bar(42);",
+            "  }",
+            "}")
+        .doTest();
+  }
 }
