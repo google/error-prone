@@ -119,7 +119,19 @@ public class ForOverrideChecker extends BugChecker
       List<MethodSymbol> overriddenMethods = getOverriddenMethods(state, method);
 
       if (!overriddenMethods.isEmpty()) {
-        String customMessage = MESSAGE_BASE + "must have protected or package-private visibility";
+        MethodSymbol nearestForOverrideMethod = overriddenMethods.get(0);
+        String customMessage = "must have protected or package-private visibility";
+        if (nearestForOverrideMethod.equals(method)) {
+          // The method itself is @ForOverride but is too visible
+          customMessage = MESSAGE_BASE + customMessage;
+
+        } else {
+          // The method overrides an @ForOverride method and expands its visibility
+          customMessage =
+              String.format(
+                  "Method overrides @ForOverride method %s.%s, so it %s",
+                  nearestForOverrideMethod.enclClass(), nearestForOverrideMethod, customMessage);
+        }
         return buildDescription(tree).setMessage(customMessage).build();
       }
     }
