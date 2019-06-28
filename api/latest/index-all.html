@@ -5918,6 +5918,10 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/util/ErrorProneToken.html#kind--">kind()</a></span> - Method in class com.google.errorprone.util.<a href="com/google/errorprone/util/ErrorProneToken.html" title="class in com.google.errorprone.util">ErrorProneToken</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/matchers/Matchers.html#kindAnyOf-java.util.Set-">kindAnyOf(Set&lt;Tree.Kind&gt;)</a></span> - Static method in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/Matchers.html" title="class in com.google.errorprone.matchers">Matchers</a></dt>
+<dd>
+<div class="block">Matches an AST node of a given kind, for example, an Annotation or a switch block.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/matchers/Matchers.html#kindIs-com.sun.source.tree.Tree.Kind-">kindIs(Tree.Kind)</a></span> - Static method in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/Matchers.html" title="class in com.google.errorprone.matchers">Matchers</a></dt>
 <dd>
 <div class="block">Matches an AST node of a given kind, for example, an Annotation or a switch block.</div>
@@ -6988,6 +6992,8 @@
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/NonRuntimeAnnotation.html#matchMethodInvocation-com.sun.source.tree.MethodInvocationTree-com.google.errorprone.VisitorState-">matchMethodInvocation(MethodInvocationTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/NonRuntimeAnnotation.html" title="class in com.google.errorprone.bugpatterns">NonRuntimeAnnotation</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/nullness/NullableDereference.html#matchMethodInvocation-com.sun.source.tree.MethodInvocationTree-com.google.errorprone.VisitorState-">matchMethodInvocation(MethodInvocationTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.nullness.<a href="com/google/errorprone/bugpatterns/nullness/NullableDereference.html" title="class in com.google.errorprone.bugpatterns.nullness">NullableDereference</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/nullness/UnnecessaryCheckNotNull.html#matchMethodInvocation-com.sun.source.tree.MethodInvocationTree-com.google.errorprone.VisitorState-">matchMethodInvocation(MethodInvocationTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.nullness.<a href="com/google/errorprone/bugpatterns/nullness/UnnecessaryCheckNotNull.html" title="class in com.google.errorprone.bugpatterns.nullness">UnnecessaryCheckNotNull</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/ObjectsHashCodePrimitive.html#matchMethodInvocation-com.sun.source.tree.MethodInvocationTree-com.google.errorprone.VisitorState-">matchMethodInvocation(MethodInvocationTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/ObjectsHashCodePrimitive.html" title="class in com.google.errorprone.bugpatterns">ObjectsHashCodePrimitive</a></dt>
 <dd>&nbsp;</dd>
@@ -10328,6 +10334,13 @@
 <div class="block">Finds and fixes unnecessarily boxed variables.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/UnnecessaryBoxedVariable.html#UnnecessaryBoxedVariable--">UnnecessaryBoxedVariable()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/UnnecessaryBoxedVariable.html" title="class in com.google.errorprone.bugpatterns">UnnecessaryBoxedVariable</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/bugpatterns/nullness/UnnecessaryCheckNotNull.html" title="class in com.google.errorprone.bugpatterns.nullness"><span class="typeNameLink">UnnecessaryCheckNotNull</span></a> - Class in <a href="com/google/errorprone/bugpatterns/nullness/package-summary.html">com.google.errorprone.bugpatterns.nullness</a></dt>
+<dd>
+<div class="block">Checks for <code>Preconditions.checkNotNull</code> and <code>Verify.verifyNotNull</code> with a new
+ class/array argument.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/nullness/UnnecessaryCheckNotNull.html#UnnecessaryCheckNotNull--">UnnecessaryCheckNotNull()</a></span> - Constructor for class com.google.errorprone.bugpatterns.nullness.<a href="com/google/errorprone/bugpatterns/nullness/UnnecessaryCheckNotNull.html" title="class in com.google.errorprone.bugpatterns.nullness">UnnecessaryCheckNotNull</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/UnnecessaryDefaultInEnumSwitch.html" title="class in com.google.errorprone.bugpatterns"><span class="typeNameLink">UnnecessaryDefaultInEnumSwitch</span></a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
 <dd>&nbsp;</dd>

@@ -18,18 +18,18 @@ equivalent to referencing the type parameter's upper bound directly.
 
 For example, this signature:
 
-```java
+```java {.bad}
 static <T extends Message> T populate(T.Builder builder) {}
 ```
 
 Is identical to the following:
 
-```java
+```java {.good}
 static <T extends Message> T populate(Message.Builder builder) {}
 ```
 
-The use of `T.Builder` is unnecessary and misleading, so referring to the type
-by its canonical name should always be preferred.
+The use of `T.Builder` is unnecessary and misleading. Always refer to the type
+by its canonical name `Message.Builder` instead.
 
 ## Suppression
-Suppress false positives by adding the suppression annotation `@SuppressWarnings("TypeParameterQualifier")` to the enclosing element.
+This check may not be suppressed.

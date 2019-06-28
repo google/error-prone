@@ -410,6 +410,9 @@ Catching Throwable/Error masks failures from fail() or assert*() in the try bloc
 __[TypeParameterQualifier](bugpattern/TypeParameterQualifier)__<br>
 Type parameter used as type qualifier
 
+__[UnnecessaryCheckNotNull](bugpattern/UnnecessaryCheckNotNull)__<br>
+By specification, a constructor cannot return a null value, so invoking Preconditions.checkNotNull(...) or Verify.verifyNotNull(...) is redundant
+
 __[UnnecessaryTypeArgument](bugpattern/UnnecessaryTypeArgument)__<br>
 Non-generic methods should not be invoked with type arguments
 
