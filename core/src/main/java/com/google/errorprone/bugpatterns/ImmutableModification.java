@@ -19,16 +19,14 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 
-import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSetMultimap;
-import com.google.common.collect.Multimaps;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.MethodInvocationTree;
-import com.sun.tools.javac.code.Symbol;
+import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Type;
 import java.util.Set;
 
@@ -41,92 +39,74 @@ import java.util.Set;
     severity = ERROR)
 public class ImmutableModification extends BugChecker implements MethodInvocationTreeMatcher {
 
-  public static final ImmutableMap<String, ? extends Set<String>> ILLEGAL =
-      ImmutableMap.copyOf(
-          Multimaps.asMap(
-              ImmutableSetMultimap.<String, String>builder()
-                  .putAll("com.google.common.collect.ImmutableBiMap", "forcePut")
-                  .putAll("com.google.common.collect.ImmutableClassToInstanceMap", "putInstance")
-                  .putAll(
-                      "com.google.common.collect.ImmutableCollection",
-                      "add",
-                      "addAll",
-                      "clear",
-                      "remove",
-                      "removeAll",
-                      "removeIf",
-                      "retainAll")
-                  .putAll("com.google.common.collect.ImmutableList", "set", "sort")
-                  .putAll(
-                      "com.google.common.collect.ImmutableMap",
-                      "clear",
-                      "compute",
-                      "computeIfAbsent",
-                      "computeIfPresent",
-                      "merge",
-                      "put",
-                      "putAll",
-                      "putIfAbsent",
-                      "remove",
-                      "replace",
-                      "replaceAll")
-                  .putAll(
-                      "com.google.common.collect.ImmutableMultimap",
-                      "clear",
-                      "put",
-                      "putAll",
-                      "remove",
-                      "removeAll",
-                      "replaceValues")
-                  .putAll("com.google.common.collect.ImmutableMultiset", "setCount")
-                  .putAll(
-                      "com.google.common.collect.ImmutableRangeMap",
-                      "clear",
-                      "put",
-                      "putAll",
-                      "remove")
-                  .putAll(
-                      "com.google.common.collect.ImmutableRangeSet",
-                      "add",
-                      "addAll",
-                      "remove",
-                      "removeAll")
-                  .putAll(
-                      "com.google.common.collect.ImmutableSortedMap",
-                      "pollFirstEntry",
-                      "pollLastEntry")
-                  .putAll("com.google.common.collect.ImmutableSortedSet", "pollFirst", "pollLast")
-                  .putAll(
-                      "com.google.common.collect.ImmutableTable",
-                      "clear",
-                      "put",
-                      "putAll",
-                      "remove")
-                  .putAll("com.google.common.collect.UnmodifiableIterator", "remove")
-                  .putAll("com.google.common.collect.UnmodifiableListIterator", "add", "set")
-                  .putAll(
-                      "com.google.common.collect.Sets.SetView",
-                      "add",
-                      "addAll",
-                      "clear",
-                      "remove",
-                      "removeAll",
-                      "removeIf",
-                      "retainAll")
-                  .build()
-                  .inverse()));
+  public static final ImmutableSetMultimap<String, String> ILLEGAL_METHODS_BY_BASE_TYPE =
+      ImmutableSetMultimap.<String, String>builder()
+          .putAll("com.google.common.collect.ImmutableBiMap", "forcePut")
+          .putAll("com.google.common.collect.ImmutableClassToInstanceMap", "putInstance")
+          .putAll(
+              "com.google.common.collect.ImmutableCollection",
+              "add",
+              "addAll",
+              "clear",
+              "remove",
+              "removeAll",
+              "removeIf",
+              "retainAll")
+          .putAll("com.google.common.collect.ImmutableList", "set", "sort")
+          .putAll(
+              "com.google.common.collect.ImmutableMap",
+              "clear",
+              "compute",
+              "computeIfAbsent",
+              "computeIfPresent",
+              "merge",
+              "put",
+              "putAll",
+              "putIfAbsent",
+              "remove",
+              "replace",
+              "replaceAll")
+          .putAll(
+              "com.google.common.collect.ImmutableMultimap",
+              "clear",
+              "put",
+              "putAll",
+              "remove",
+              "removeAll",
+              "replaceValues")
+          .putAll("com.google.common.collect.ImmutableMultiset", "setCount")
+          .putAll("com.google.common.collect.ImmutableRangeMap", "clear", "put", "putAll", "remove")
+          .putAll(
+              "com.google.common.collect.ImmutableRangeSet", "add", "addAll", "remove", "removeAll")
+          .putAll("com.google.common.collect.ImmutableSortedMap", "pollFirstEntry", "pollLastEntry")
+          .putAll("com.google.common.collect.ImmutableSortedSet", "pollFirst", "pollLast")
+          .putAll("com.google.common.collect.ImmutableTable", "clear", "put", "putAll", "remove")
+          .putAll("com.google.common.collect.UnmodifiableIterator", "remove")
+          .putAll("com.google.common.collect.UnmodifiableListIterator", "add", "set")
+          .putAll(
+              "com.google.common.collect.Sets.SetView",
+              "add",
+              "addAll",
+              "clear",
+              "remove",
+              "removeAll",
+              "removeIf",
+              "retainAll")
+          .build();
 
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
-    Symbol sym = ASTHelpers.getSymbol(tree);
-    if (sym == null) {
+    MethodSymbol method = ASTHelpers.getSymbol(tree);
+    if (method == null) {
       return NO_MATCH;
     }
-    Set<String> forbiddenTypes = ILLEGAL.get(sym.getQualifiedName().toString());
+
+    Set<String> forbiddenTypes =
+        ILLEGAL_METHODS_BY_BASE_TYPE.inverse().get(method.getSimpleName().toString());
     if (forbiddenTypes == null) {
       return NO_MATCH;
     }
-    Type ownerType = sym.owner.type;
+    Type ownerType = method.owner.type;
     for (String forbiddenType : forbiddenTypes) {
       if (ASTHelpers.isSubtype(ownerType, state.getTypeFromString(forbiddenType), state)) {
         return describeMatch(tree);
