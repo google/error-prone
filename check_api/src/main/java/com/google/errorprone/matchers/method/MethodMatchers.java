@@ -16,12 +16,19 @@
 
 package com.google.errorprone.matchers.method;
 
+import com.google.errorprone.VisitorState;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.predicates.TypePredicate;
 import com.google.errorprone.suppliers.Supplier;
+import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
+import com.sun.source.tree.MethodInvocationTree;
+import com.sun.source.tree.NewClassTree;
+import com.sun.tools.javac.code.Symbol;
+import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Type;
 import java.util.regex.Pattern;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class MethodMatchers {
 
@@ -144,18 +151,55 @@ public class MethodMatchers {
   // Method matcher factories
 
   public static StaticMethodMatcher staticMethod() {
-    return new StaticMethodMatcherImpl();
+    return new MethodMatcherImpl(
+        MethodMatchers::baseMethodMatcher, (method, state) -> method.sym().isStatic());
   }
 
   public static InstanceMethodMatcher instanceMethod() {
-    return new InstanceMethodMatcherImpl();
+    return new MethodMatcherImpl(
+        MethodMatchers::baseMethodMatcher, (method, state) -> !method.sym().isStatic());
   }
 
   public static AnyMethodMatcher anyMethod() {
-    return new AnyMethodMatcherImpl();
+    return new MethodMatcherImpl(MethodMatchers::baseMethodMatcher);
   }
 
   public static ConstructorMatcher constructor() {
-    return new ConstructorMatcherImpl();
+    return new MethodMatcherImpl(MethodMatchers::baseConstructorMatcher);
+  }
+
+  private static @Nullable MatchState baseMethodMatcher(ExpressionTree tree, VisitorState state) {
+    Symbol sym = ASTHelpers.getSymbol(tree);
+    if (!(sym instanceof MethodSymbol)) {
+      return null;
+    }
+    if (tree instanceof NewClassTree) {
+      // Don't match constructors as they are neither static nor instance methods.
+      return null;
+    }
+    if (tree instanceof MethodInvocationTree) {
+      tree = ((MethodInvocationTree) tree).getMethodSelect();
+    }
+    return MethodMatchState.create(tree, (MethodSymbol) sym);
+  }
+
+  private static @Nullable MatchState baseConstructorMatcher(
+      ExpressionTree tree, VisitorState state) {
+    switch (tree.getKind()) {
+      case NEW_CLASS:
+      case METHOD_INVOCATION:
+        break;
+      default:
+        return null;
+    }
+    Symbol sym = ASTHelpers.getSymbol(tree);
+    if (!(sym instanceof MethodSymbol)) {
+      return null;
+    }
+    MethodSymbol method = (MethodSymbol) sym;
+    if (!method.isConstructor()) {
+      return null;
+    }
+    return ConstructorMatchState.create(method);
   }
 }

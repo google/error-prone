@@ -16,20 +16,29 @@
 
 package com.google.errorprone.matchers.method;
 
+import com.google.auto.value.AutoValue;
+import com.google.errorprone.util.ASTHelpers;
+import com.sun.source.tree.ExpressionTree;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Type;
-import java.util.List;
 
-/** The state that is propagated across a match operation. */
-public interface MatchState {
+/** The state that is propagated across a match operation for methods. */
+@AutoValue
+abstract class MethodMatchState implements MatchState {
   /** The type of the class in which a member method or constructor is declared. */
-  Type ownerType();
+  abstract ExpressionTree tree();
+
+  @Override
+  public Type ownerType() {
+    // TODO(cushon): should this be the symbol's owner type, not the receiver's owner type?
+    return ASTHelpers.getReceiverType(tree());
+  }
 
   /** The method being matched. */
-  MethodSymbol sym();
+  @Override
+  public abstract MethodSymbol sym();
 
-  /** The method's formal parameter types. */
-  default List<Type> paramTypes() {
-    return sym().type.getParameterTypes();
+  static MatchState create(ExpressionTree tree, MethodSymbol methodSymbol) {
+    return new AutoValue_MethodMatchState(tree, methodSymbol);
   }
 }

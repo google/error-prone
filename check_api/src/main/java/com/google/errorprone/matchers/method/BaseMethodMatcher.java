@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 The Error Prone Authors.
+ * Copyright 2019 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,20 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.google.errorprone.matchers.method;
 
 import com.google.errorprone.VisitorState;
-import com.google.errorprone.matchers.Matcher;
 import com.sun.source.tree.ExpressionTree;
-import java.util.Optional;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
-/** Super-type for base (non-chained) matchers. */
-abstract class AbstractSimpleMatcher<T> implements Matcher<ExpressionTree> {
-  protected abstract Optional<T> matchResult(ExpressionTree item, VisitorState state);
-
-  @Override
-  public final boolean matches(ExpressionTree tree, VisitorState state) {
-    return matchResult(tree, state).isPresent();
-  }
+interface BaseMethodMatcher {
+  @Nullable
+  MatchState match(ExpressionTree tree, VisitorState state);
 }
