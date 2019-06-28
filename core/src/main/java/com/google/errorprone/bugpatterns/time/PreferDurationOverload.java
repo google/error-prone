@@ -141,10 +141,7 @@ public final class PreferDurationOverload extends BugChecker
                   SuggestedFixes.qualifyType(state, fix, "java.time.temporal.ChronoUnit");
               replacement =
                   String.format(
-                      durationFactory,
-                      qualifiedDuration,
-                      value,
-                      qualifiedChronoUnit + ".MICROSECONDS");
+                      durationFactory, qualifiedDuration, value, qualifiedChronoUnit + ".MICROS");
             } else {
               replacement = String.format(durationFactory, qualifiedDuration, value);
             }
