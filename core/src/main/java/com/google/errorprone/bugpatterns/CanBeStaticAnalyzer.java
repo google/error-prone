@@ -62,7 +62,7 @@ public class CanBeStaticAnalyzer extends TreeScanner {
   private CanBeStaticAnalyzer(Symbol owner, VisitorState state) {
     this.owner = owner;
     this.state = state;
-    this.names = Names.instance(state.context);
+    this.names = state.getNames();
   }
 
   @Override
