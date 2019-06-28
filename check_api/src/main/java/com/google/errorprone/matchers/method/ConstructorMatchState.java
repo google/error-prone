@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 The Error Prone Authors.
+ * Copyright 2019 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,23 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.google.errorprone.matchers.method;
 
+import com.google.auto.value.AutoValue;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Type;
-import java.util.List;
 
-/** The state that is propagated across a match operation. */
-public interface MatchState {
+/** The state that is propagated across a match operation for constructors. */
+@AutoValue
+public abstract class ConstructorMatchState implements MatchState {
   /** The type of the class in which a member method or constructor is declared. */
-  Type ownerType();
+  @Override
+  public Type ownerType() {
+    return sym().owner.type;
+  }
 
   /** The method being matched. */
-  MethodSymbol sym();
+  @Override
+  public abstract MethodSymbol sym();
 
-  /** The method's formal parameter types. */
-  default List<Type> paramTypes() {
-    return sym().type.getParameterTypes();
+  static MatchState create(MethodSymbol methodSymbol) {
+    return new AutoValue_ConstructorMatchState(methodSymbol);
   }
 }
