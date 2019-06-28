@@ -42,7 +42,7 @@ import com.sun.tools.javac.code.Symbol;
 @BugPattern(
     name = "DepAnn",
     altNames = "dep-ann",
-    summary = "Deprecated item is not annotated with @Deprecated",
+    summary = "Item documented with a @deprecated javadoc note is not annotated with @Deprecated",
     severity = ERROR,
     providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class DepAnn extends BugChecker
