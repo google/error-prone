@@ -36,7 +36,7 @@ public class PreferDurationOverloadTest {
             "public class TestClass {",
             "  public CacheBuilder foo(CacheBuilder builder) {",
             "    // BUG: Diagnostic contains: builder.expireAfterAccess(Duration.of(42,"
-                + " ChronoUnit.MICROSECONDS));",
+                + " ChronoUnit.MICROS));",
             "    return builder.expireAfterAccess(42, TimeUnit.MICROSECONDS);",
             "  }",
             "}")
