@@ -37,8 +37,7 @@ import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.Tree.Kind;
 
 /**
- * Checks for {@code Preconditions.checkNotNull} and {@code Verify.verifyNotNull} with a new
- * class/array argument.
+ * Checks for unnecessarily performing null checks on expression which create a new class/array.
  *
  * @author awturner@google.com (Andy Turner)
  * @author bhagwani@google.com (Sumit Bhagwani)
@@ -46,8 +45,8 @@ import com.sun.source.tree.Tree.Kind;
 @BugPattern(
     name = "UnnecessaryCheckNotNull",
     summary =
-        "By specification, a constructor cannot return a null value, so invoking "
-            + "Preconditions.checkNotNull(...) or Verify.verifyNotNull(...) is redundant",
+        "By specification, creating instances with 'new' cannot return a null value, so invoking"
+            + " null check methods is redundant",
     severity = ERROR,
     providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class UnnecessaryCheckNotNull extends BugChecker implements MethodInvocationTreeMatcher {
@@ -56,7 +55,8 @@ public class UnnecessaryCheckNotNull extends BugChecker implements MethodInvocat
       allOf(
           Matchers.<MethodInvocationTree>anyOf(
               staticMethod().onClass("com.google.common.base.Preconditions").named("checkNotNull"),
-              staticMethod().onClass("com.google.common.base.Verify").named("verifyNotNull")),
+              staticMethod().onClass("com.google.common.base.Verify").named("verifyNotNull"),
+              staticMethod().onClass("java.util.Objects").named("requireNonNull")),
           argument(
               0,
               Matchers.<ExpressionTree>kindAnyOf(ImmutableSet.of(Kind.NEW_CLASS, Kind.NEW_ARRAY))));
