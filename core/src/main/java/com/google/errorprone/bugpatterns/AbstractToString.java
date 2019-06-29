@@ -104,13 +104,12 @@ public abstract class AbstractToString extends BugChecker
       anyOf(
           instanceMethod()
               .onDescendantOf("java.io.PrintStream")
-              .withSignature("print(java.lang.Object)"),
+              .namedAnyOf("print", "println")
+              .withParameters("java.lang.Object"),
           instanceMethod()
-              .onDescendantOf("java.io.PrintStream")
-              .withSignature("println(java.lang.Object)"),
-          instanceMethod()
-              .onDescendantOf("java.lang.StringBuilder")
-              .withSignature("append(java.lang.Object)"));
+              .onExactClass("java.lang.StringBuilder")
+              .named("append")
+              .withParameters("java.lang.Object"));
 
   private static boolean isInVarargsPosition(
       ExpressionTree argTree, MethodInvocationTree methodInvocationTree, VisitorState state) {
