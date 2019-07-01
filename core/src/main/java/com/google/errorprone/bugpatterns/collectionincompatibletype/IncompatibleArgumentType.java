@@ -56,7 +56,8 @@ public class IncompatibleArgumentType extends BugChecker implements MethodInvoca
   // null requiredType: I found the type variable, but I can't bind it to any type
   @AutoValue
   abstract static class RequiredType {
-    abstract @Nullable Type type();
+    @Nullable
+    abstract Type type();
 
     static RequiredType create(Type type) {
       return new AutoValue_IncompatibleArgumentType_RequiredType(type);
