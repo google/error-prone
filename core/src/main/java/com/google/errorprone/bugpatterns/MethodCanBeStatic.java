@@ -175,6 +175,7 @@ public class MethodCanBeStatic extends BugChecker implements CompilationUnitTree
   private Description generateDescription(
       Map<MethodSymbol, MethodDetails> nodes, VisitorState state) {
     SuggestedFix.Builder fixBuilder = SuggestedFix.builder();
+    fixBuilder.setShortDescription("Make static");
     Set<MethodTree> affectedTrees = new HashSet<>();
     for (Map.Entry<MethodSymbol, MethodDetails> entry : nodes.entrySet()) {
       MethodSymbol sym = entry.getKey();
