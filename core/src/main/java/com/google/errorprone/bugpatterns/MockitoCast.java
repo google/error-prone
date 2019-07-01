@@ -246,16 +246,16 @@ public class MockitoCast extends BugChecker implements CompilationUnitTreeMatche
    */
   static class MockAnswerStrategyScanner extends TreeScanner<Boolean, Void> {
 
-    static boolean scan(Tree tree, VisitorState state, Set<VarSymbol> badMocks) {
-      return firstNonNull(tree.accept(new MockAnswerStrategyScanner(state, badMocks), null), false);
-    }
-
     private final VisitorState state;
     private final Set<VarSymbol> badMocks;
 
     public MockAnswerStrategyScanner(VisitorState state, Set<VarSymbol> badMocks) {
       this.state = state;
       this.badMocks = badMocks;
+    }
+
+    static boolean scan(Tree tree, VisitorState state, Set<VarSymbol> badMocks) {
+      return firstNonNull(tree.accept(new MockAnswerStrategyScanner(state, badMocks), null), false);
     }
 
     @Override
