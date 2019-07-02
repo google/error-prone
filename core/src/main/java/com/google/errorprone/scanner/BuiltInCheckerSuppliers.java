@@ -218,7 +218,6 @@ import com.google.errorprone.bugpatterns.PackageInfo;
 import com.google.errorprone.bugpatterns.PackageLocation;
 import com.google.errorprone.bugpatterns.ParameterComment;
 import com.google.errorprone.bugpatterns.ParameterName;
-import com.google.errorprone.bugpatterns.PreconditionsCheckNotNull;
 import com.google.errorprone.bugpatterns.PreconditionsCheckNotNullPrimitive;
 import com.google.errorprone.bugpatterns.PreconditionsCheckNotNullRepeated;
 import com.google.errorprone.bugpatterns.PreconditionsInvalidPlaceholder;
@@ -564,7 +563,6 @@ public class BuiltInCheckerSuppliers {
           PeriodFrom.class,
           PeriodTimeMath.class,
           PeriodGetTemporalUnit.class,
-          PreconditionsCheckNotNull.class,
           PreconditionsCheckNotNullPrimitive.class,
           PredicateIncompatibleType.class,
           PrivateSecurityContractProtoAccess.class,

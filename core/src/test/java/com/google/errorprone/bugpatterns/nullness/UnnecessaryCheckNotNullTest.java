@@ -138,4 +138,14 @@ public class UnnecessaryCheckNotNullTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void testPositiveCase() {
+    compilationHelper.addSourceFile("UnnecessaryCheckNotNullPositiveCase.java").doTest();
+  }
+
+  @Test
+  public void testNegativeCase() {
+    compilationHelper.addSourceFile("UnnecessaryCheckNotNullNegativeCase.java").doTest();
+  }
 }
