@@ -203,11 +203,6 @@ public final class EmptySetMultibindingContributions extends BugChecker
     return describeMatch(method, fixBuilder.build());
   }
 
-  private Description fixByDelegating() {
-    // TODO(gak): add a suggested fix by which we make a nested abstract module that we can include
-    return NO_MATCH;
-  }
-
   private String createReplacementMethodModifiers(VisitorState state, JCModifiers modifiers) {
     ImmutableList.Builder<String> modifierStringsBuilder =
         ImmutableList.<String>builder().add("@Multibinds");
