@@ -48,10 +48,10 @@ import com.google.errorprone.bugpatterns.DivZero;
 import com.google.errorprone.bugpatterns.EqualsIncompatibleType;
 import com.google.errorprone.bugpatterns.LongLiteralLowerCaseSuffix;
 import com.google.errorprone.bugpatterns.PackageLocation;
-import com.google.errorprone.bugpatterns.PreconditionsCheckNotNull;
 import com.google.errorprone.bugpatterns.RestrictedApiChecker;
 import com.google.errorprone.bugpatterns.StaticQualifiedUsingExpression;
 import com.google.errorprone.bugpatterns.StringEquality;
+import com.google.errorprone.bugpatterns.nullness.UnnecessaryCheckNotNull;
 import com.sun.source.util.JavacTask;
 import com.sun.tools.javac.api.JavacTool;
 import com.sun.tools.javac.file.JavacFileManager;
@@ -103,15 +103,14 @@ public class ScannerSupplierTest {
         ScannerSupplier.fromBugCheckerClasses(
             ArrayEquals.class, StaticQualifiedUsingExpression.class);
     ScannerSupplier ss2 =
-        ScannerSupplier.fromBugCheckerClasses(
-            BadShiftAmount.class, PreconditionsCheckNotNull.class);
+        ScannerSupplier.fromBugCheckerClasses(BadShiftAmount.class, UnnecessaryCheckNotNull.class);
 
     assertScanner(ss1.plus(ss2))
         .hasEnabledChecks(
             ArrayEquals.class,
             StaticQualifiedUsingExpression.class,
             BadShiftAmount.class,
-            PreconditionsCheckNotNull.class);
+            UnnecessaryCheckNotNull.class);
   }
 
   // Allow different instances of classes to be merged, provided they have the same name.
