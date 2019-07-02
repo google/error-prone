@@ -139,7 +139,9 @@ public abstract class AbstractToString extends BugChecker
     }
     if (TO_STRING.matches(tree, state)) {
       ExpressionTree receiver = getReceiver(tree);
-      handleStringifiedTree(tree, receiver, ToStringKind.EXPLICIT, state);
+      if (receiver != null) {
+        handleStringifiedTree(tree, receiver, ToStringKind.EXPLICIT, state);
+      }
     }
     if (FORMAT_METHOD.matches(tree, state)) {
       for (ExpressionTree argTree : tree.getArguments()) {

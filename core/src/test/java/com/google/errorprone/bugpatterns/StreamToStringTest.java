@@ -74,4 +74,17 @@ public class StreamToStringTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void withinStreamClass() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "public abstract class Test implements java.util.stream.Stream {",
+            "  public String s() {",
+            "    return toString();",
+            "  }",
+            "}")
+        .doTest();
+  }
 }
