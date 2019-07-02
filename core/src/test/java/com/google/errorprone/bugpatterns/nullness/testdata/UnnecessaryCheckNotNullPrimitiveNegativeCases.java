@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns.testdata;
+package com.google.errorprone.bugpatterns.nullness.testdata;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import com.google.common.base.Preconditions;
 
-public class PreconditionsCheckNotNullPrimitiveNegativeCases {
+public class UnnecessaryCheckNotNullPrimitiveNegativeCases {
   public void test() {
     Object obj1 = new Object();
 
