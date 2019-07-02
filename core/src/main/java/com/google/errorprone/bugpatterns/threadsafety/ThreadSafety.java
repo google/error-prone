@@ -158,9 +158,9 @@ public final class ThreadSafety {
     private KnownTypes knownTypes;
     private ImmutableSet<String> markerAnnotations;
     private ImmutableSet<String> acceptedAnnotations = ImmutableSet.of();
-    private @Nullable Class<? extends Annotation> containerOfAnnotation;
-    private @Nullable Class<? extends Annotation> suppressAnnotation;
-    private @Nullable Class<? extends Annotation> typeParameterAnnotation;
+    @Nullable private Class<? extends Annotation> containerOfAnnotation;
+    @Nullable private Class<? extends Annotation> suppressAnnotation;
+    @Nullable private Class<? extends Annotation> typeParameterAnnotation;
 
     /** See {@link Purpose}. */
     public Builder setPurpose(Purpose purpose) {
