@@ -19,6 +19,7 @@ package com.google.errorprone.matchers.method;
 import static com.google.common.base.Preconditions.checkArgument;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.matchers.method.MethodMatchers.AnyMethodMatcher;
@@ -37,9 +38,9 @@ import com.google.errorprone.suppliers.Suppliers;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.tools.javac.code.Type;
-import com.sun.tools.javac.util.Name;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 import java.util.function.BiPredicate;
 import java.util.regex.Pattern;
 
@@ -173,16 +174,8 @@ final class MethodMatcherImpl
 
   @Override
   public MethodNameMatcher namedAnyOf(Iterable<String> names) {
-    return append(
-        (method, state) -> {
-          Name methodName = method.sym().getSimpleName();
-          for (String name : names) {
-            if (methodName.contentEquals(name)) {
-              return true;
-            }
-          }
-          return false;
-        });
+    Set<String> expected = ImmutableSet.copyOf(names);
+    return append((method, state) -> expected.contains(method.sym().getSimpleName().toString()));
   }
 
   @Override
