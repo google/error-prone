@@ -1,6 +1,9 @@
 There are various libraries available to check if a variable is null or not.
-Most notable ones are : * com.google.common.base.Preconditions.checkNotNull *
-com.google.common.base.Verify.verifyNotNull * java.util.Objects.requireNonNull
+Most notable ones are :
+
+*   `com.google.common.base.Preconditions.checkNotNull`
+*   `com.google.common.base.Verify.verifyNotNull`
+*   `java.util.Objects.requireNonNull`
 
 These methods generally takes two arguments. The first is the reference that
 should be non-null. The second is the error message to print (usually a string

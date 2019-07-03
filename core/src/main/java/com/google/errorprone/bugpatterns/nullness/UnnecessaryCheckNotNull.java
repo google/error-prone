@@ -161,7 +161,7 @@ public class UnnecessaryCheckNotNull extends BugChecker implements MethodInvocat
     if ((arg1 instanceof BinaryTree
             || arg1.getKind() == Kind.METHOD_INVOCATION
             || arg1.getKind() == Kind.LOGICAL_COMPLEMENT)
-        && ((JCExpression) arg1).type == state.getSymtab().booleanType) {
+        && state.getTypes().isSameType(((JCExpression) arg1).type, state.getSymtab().booleanType)) {
       return describeMatch(arg1, createCheckArgumentOrStateCall(methodInvocationTree, state, arg1));
     }
 
