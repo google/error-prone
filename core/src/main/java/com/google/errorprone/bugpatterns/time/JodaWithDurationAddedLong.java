@@ -31,7 +31,6 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
-import com.google.errorprone.matchers.Matchers;
 import com.google.errorprone.matchers.method.MethodMatchers;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
@@ -75,10 +74,9 @@ public final class JodaWithDurationAddedLong extends BugChecker
           not(packageStartsWith("org.joda.time")));
 
   private static final Matcher<ExpressionTree> DURATION_GET_MILLIS_MATCHER =
-      Matchers.methodInvocation(
-          MethodMatchers.instanceMethod()
-              .onDescendantOf("org.joda.time.ReadableDuration")
-              .named("getMillis"));
+      MethodMatchers.instanceMethod()
+          .onDescendantOf("org.joda.time.ReadableDuration")
+          .named("getMillis");
 
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
