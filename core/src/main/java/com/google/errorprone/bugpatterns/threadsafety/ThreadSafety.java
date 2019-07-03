@@ -62,6 +62,7 @@ import java.util.stream.Collectors;
 import javax.annotation.Nullable;
 import javax.lang.model.element.AnnotationValue;
 import javax.lang.model.element.ElementKind;
+import javax.lang.model.type.TypeKind;
 import javax.lang.model.util.SimpleAnnotationValueVisitor8;
 import org.pcollections.ConsPStack;
 
@@ -666,7 +667,7 @@ public final class ThreadSafety {
       return null;
     }
     Type enclosing = type.getEnclosingType();
-    while (!Type.noType.equals(enclosing)) {
+    while (!enclosing.getKind().equals(TypeKind.NONE)) {
       if (getMarkerOrAcceptedAnnotation(enclosing.tsym, state) == null
           && isThreadSafeType(
                   /* allowContainerTypeParameters= */ false,
