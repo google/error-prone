@@ -30,15 +30,14 @@ import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.TypeSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
-import com.sun.tools.javac.code.Type;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.stream.Collectors;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.Name;
+import javax.lang.model.type.TypeKind;
 
 /**
  * @author sulku@google.com (Marsela Sulku)
@@ -69,7 +68,7 @@ public class HidingField extends BugChecker implements ClassTreeMatcher {
 
     ClassSymbol classSymbol = ASTHelpers.getSymbol(classTree);
 
-    while (!Objects.equals(classSymbol.getSuperclass(), Type.noType)) {
+    while (!classSymbol.getSuperclass().getKind().equals(TypeKind.NONE)) {
       TypeSymbol parentSymbol = classSymbol.getSuperclass().asElement();
       List<Symbol> parentElements = parentSymbol.getEnclosedElements();
 
