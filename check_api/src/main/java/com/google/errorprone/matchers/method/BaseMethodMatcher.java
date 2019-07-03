@@ -16,10 +16,51 @@
 package com.google.errorprone.matchers.method;
 
 import com.google.errorprone.VisitorState;
+import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
+import com.sun.source.tree.MethodInvocationTree;
+import com.sun.source.tree.NewClassTree;
+import com.sun.tools.javac.code.Symbol;
+import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 interface BaseMethodMatcher {
   @Nullable
   MatchState match(ExpressionTree tree, VisitorState state);
+
+  BaseMethodMatcher METHOD =
+      (tree, state) -> {
+        Symbol sym = ASTHelpers.getSymbol(tree);
+        if (!(sym instanceof MethodSymbol)) {
+          return null;
+        }
+        if (tree instanceof NewClassTree) {
+          // Don't match constructors as they are neither static nor instance methods.
+          return null;
+        }
+        if (tree instanceof MethodInvocationTree) {
+          tree = ((MethodInvocationTree) tree).getMethodSelect();
+        }
+        return MethodMatchState.create(tree, (MethodSymbol) sym);
+      };
+
+  BaseMethodMatcher CONSTRUCTOR =
+      (tree, state) -> {
+        switch (tree.getKind()) {
+          case NEW_CLASS:
+          case METHOD_INVOCATION:
+            break;
+          default:
+            return null;
+        }
+        Symbol sym = ASTHelpers.getSymbol(tree);
+        if (!(sym instanceof MethodSymbol)) {
+          return null;
+        }
+        MethodSymbol method = (MethodSymbol) sym;
+        if (!method.isConstructor()) {
+          return null;
+        }
+        return ConstructorMatchState.create(method);
+      };
 }

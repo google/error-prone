@@ -16,7 +16,6 @@
 
 package com.google.errorprone.matchers;
 
-import static com.google.errorprone.matchers.Matchers.methodReturns;
 import static com.google.errorprone.suppliers.Suppliers.BOOLEAN_TYPE;
 import static com.google.errorprone.suppliers.Suppliers.INT_TYPE;
 import static com.google.errorprone.suppliers.Suppliers.JAVA_LANG_BOOLEAN_TYPE;

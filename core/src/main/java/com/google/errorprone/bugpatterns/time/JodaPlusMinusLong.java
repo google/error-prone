@@ -65,10 +65,9 @@ public final class JodaPlusMinusLong extends BugChecker implements MethodInvocat
           Matchers.not(Matchers.packageStartsWith("org.joda.time")));
 
   private static final Matcher<ExpressionTree> DURATION_GET_MILLIS_MATCHER =
-      Matchers.methodInvocation(
-          MethodMatchers.instanceMethod()
-              .onDescendantOf("org.joda.time.ReadableDuration")
-              .named("getMillis"));
+      MethodMatchers.instanceMethod()
+          .onDescendantOf("org.joda.time.ReadableDuration")
+          .named("getMillis");
 
   private static Matcher<ExpressionTree> buildMatcher() {
     List<Matcher<ExpressionTree>> matchers = new ArrayList<>();
