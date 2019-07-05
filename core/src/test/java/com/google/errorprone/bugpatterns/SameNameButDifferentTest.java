@@ -172,6 +172,26 @@ public final class SameNameButDifferentTest {
   }
 
   @Test
+  public void doesNotThrowConcurrentModification_whenFilteringNonShadowingTypeNames() {
+    helper
+        .addSourceLines(
+            "A.java",
+            "class A {",
+            "  public void foo() {",
+            "    class B {}",
+            "    B b = new B();",
+            "  }",
+            "  public void bar() {",
+            "    class B {}",
+            "    class C {}",
+            "    C c = new C();",
+            "    B b = new B();",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void referencesSelf() {
     helper
         .addSourceLines(

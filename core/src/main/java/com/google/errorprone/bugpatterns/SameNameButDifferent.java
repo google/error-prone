@@ -132,21 +132,23 @@ public final class SameNameButDifferent extends BugChecker implements Compilatio
       }
     }.scan(state.getPath(), null);
 
-    // Remove any (simpleName, typeSymbol) entries which don't contain any occurrences which
-    // shadow a class name outside the enclosing class.
+    // Keep any (simpleName, typeSymbol) entries which shadow a class name outside the enclosing
+    // class.
+    Table<String, TypeSymbol, List<TreePath>> trimmedTable = HashBasedTable.create();
     for (Map.Entry<String, Map<TypeSymbol, List<TreePath>>> row : table.rowMap().entrySet()) {
       Map<TypeSymbol, List<TreePath>> columns = row.getValue();
       if (columns.size() <= 1) {
         continue;
       }
-      columns
-          .entrySet()
-          .removeIf(
-              cell ->
-                  cell.getValue().stream().noneMatch(treePath -> shadowsClass(state, treePath)));
+      for (Map.Entry<TypeSymbol, List<TreePath>> cell : columns.entrySet()) {
+        if (cell.getValue().stream().anyMatch(treePath -> shadowsClass(state, treePath))) {
+          trimmedTable.put(row.getKey(), cell.getKey(), cell.getValue());
+        }
+      }
     }
 
-    for (Map.Entry<String, Map<TypeSymbol, List<TreePath>>> row : table.rowMap().entrySet()) {
+    for (Map.Entry<String, Map<TypeSymbol, List<TreePath>>> row :
+        trimmedTable.rowMap().entrySet()) {
       String simpleName = row.getKey();
       Map<TypeSymbol, List<TreePath>> columns = row.getValue();
 
@@ -172,7 +174,7 @@ public final class SameNameButDifferent extends BugChecker implements Compilatio
                 columns.keySet().stream()
                     .map(t -> t.getQualifiedName().toString())
                     .collect(joining(", ", "[", "]")));
-        for (List<TreePath> treePaths : table.row(simpleName).values()) {
+        for (List<TreePath> treePaths : trimmedTable.row(simpleName).values()) {
           for (TreePath treePath : treePaths) {
             state.reportMatch(
                 buildDescription(treePath.getLeaf())
