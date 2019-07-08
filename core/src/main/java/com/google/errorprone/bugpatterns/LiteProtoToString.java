@@ -52,7 +52,8 @@ public final class LiteProtoToString extends AbstractToString {
           not(isDescendantOf("com.google.protobuf.Message")));
 
   private static final ImmutableSet<String> VERBOSE_LOGGING =
-      ImmutableSet.of("atVerbose", "atFine", "atFinest", "atDebug", "v", "d");
+      ImmutableSet.of(
+          "atVerbose", "atFine", "atFiner", "atFinest", "atDebug", "atConfig", "v", "d");
 
   @Override
   protected TypePredicate typePredicate() {
