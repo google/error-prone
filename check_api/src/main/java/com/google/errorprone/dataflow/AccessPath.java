@@ -61,7 +61,8 @@ import org.checkerframework.javacutil.TreeUtils;
 public abstract class AccessPath {
 
   /** If present, base of access path is contained Element; if absent, base is `this` */
-  public abstract @Nullable Element base();
+  @Nullable
+  public abstract Element base();
 
   public abstract ImmutableList<String> path();
 
