@@ -307,6 +307,7 @@ import com.google.errorprone.bugpatterns.VarTypeName;
 import com.google.errorprone.bugpatterns.VariableNameSameAsType;
 import com.google.errorprone.bugpatterns.WaitNotInLoop;
 import com.google.errorprone.bugpatterns.WildcardImport;
+import com.google.errorprone.bugpatterns.WithSignatureDiscouraged;
 import com.google.errorprone.bugpatterns.WrongParameterPackage;
 import com.google.errorprone.bugpatterns.android.BinderIdentityRestoredDangerously;
 import com.google.errorprone.bugpatterns.android.BundleDeserializationCast;
@@ -756,7 +757,8 @@ public class BuiltInCheckerSuppliers {
           UseCorrectAssertInTests.class,
           VariableNameSameAsType.class,
           WaitNotInLoop.class,
-          WakelockReleasedDangerously.class);
+          WakelockReleasedDangerously.class,
+          WithSignatureDiscouraged.class);
 
   /** A list of all checks that are off by default. */
   public static final ImmutableSet<BugCheckerInfo> DISABLED_CHECKS =
