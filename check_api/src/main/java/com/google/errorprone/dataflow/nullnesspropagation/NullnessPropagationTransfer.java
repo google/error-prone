@@ -244,7 +244,7 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
   private transient CompilationUnitTree compilationUnit;
 
   /** Cached local inference results for nullability annotations on type parameters */
-  private transient @Nullable InferredNullability inferenceResults;
+  @Nullable private transient InferredNullability inferenceResults;
 
   @Override
   public AccessPathStore<Nullness> initialStore(
@@ -912,7 +912,7 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
       return false;
     }
     return types.isSameType(sym.type, symtab.objectType)
-        && (!variablesAtIndexes(ImmutableSet.of(0), arguments).isEmpty());
+        && !variablesAtIndexes(ImmutableSet.of(0), arguments).isEmpty();
   }
 
   private static List<LocalVariableNode> variablesAtIndexes(
