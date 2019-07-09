@@ -320,12 +320,6 @@ Period.get() only works with YEARS, MONTHS, or DAYS.
 __[PeriodTimeMath](bugpattern/PeriodTimeMath)__<br>
 When adding or subtracting from a Period, Duration is incompatible.
 
-__[PreconditionsCheckNotNull](bugpattern/PreconditionsCheckNotNull)__<br>
-Literal passed as first argument to Preconditions.checkNotNull() can never be null
-
-__[PreconditionsCheckNotNullPrimitive](bugpattern/PreconditionsCheckNotNullPrimitive)__<br>
-First argument to `Preconditions.checkNotNull()` is a primitive rather than an object reference
-
 __[PredicateIncompatibleType](bugpattern/PredicateIncompatibleType)__<br>
 Using ::equals or ::isInstance as an incompatible Predicate; the predicate will always return false
 
@@ -411,7 +405,7 @@ __[TypeParameterQualifier](bugpattern/TypeParameterQualifier)__<br>
 Type parameter used as type qualifier
 
 __[UnnecessaryCheckNotNull](bugpattern/UnnecessaryCheckNotNull)__<br>
-By specification, a constructor cannot return a null value, so invoking Preconditions.checkNotNull(...) or Verify.verifyNotNull(...) is redundant
+This null check is unnecessary; the expression can never be null
 
 __[UnnecessaryTypeArgument](bugpattern/UnnecessaryTypeArgument)__<br>
 Non-generic methods should not be invoked with type arguments
@@ -919,7 +913,7 @@ __[DeduplicateConstants](bugpattern/DeduplicateConstants)__<br>
 This expression was previously declared as a constant; consider replacing this occurrence.
 
 __[DepAnn](bugpattern/DepAnn)__<br>
-Deprecated item is not annotated with @Deprecated
+Item documented with a @deprecated javadoc note is not annotated with @Deprecated
 
 __[DescribeFix](bugpattern/DescribeFix)__<br>
 `describeFix(tree, fix)` is equivalent to and simpler than `buildDescription(tree).addFix(fix).build()`

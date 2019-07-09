@@ -121,8 +121,7 @@ var activeTableTab = "activeTableTab";
 <pre>public class <span class="typeNameLabel">UnnecessaryCheckNotNull</span>
 extends <a href="../../../../../com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a>
 implements <a href="../../../../../com/google/errorprone/bugpatterns/BugChecker.MethodInvocationTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.MethodInvocationTreeMatcher</a></pre>
-<div class="block">Checks for <code>Preconditions.checkNotNull</code> and <code>Verify.verifyNotNull</code> with a new
- class/array argument.</div>
+<div class="block">Checks for unnecessarily performing null checks on expressions which can't be null.</div>
 <dl>
 <dt><span class="simpleTagLabel">Author:</span></dt>
 <dd>awturner@google.com (Andy Turner), bhagwani@google.com (Sumit Bhagwani)</dd>

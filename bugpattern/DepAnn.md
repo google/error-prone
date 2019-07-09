@@ -1,6 +1,6 @@
 ---
 title: DepAnn
-summary: Deprecated item is not annotated with @Deprecated
+summary: Item documented with a @deprecated javadoc note is not annotated with @Deprecated
 layout: bugpattern
 tags: ''
 severity: ERROR

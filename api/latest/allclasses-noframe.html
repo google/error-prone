@@ -233,7 +233,7 @@
 <li><a href="com/google/errorprone/dataflow/ConstantPropagationAnalysis.html" title="class in com.google.errorprone.dataflow">ConstantPropagationAnalysis</a></li>
 <li><a href="com/google/errorprone/bugpatterns/ConstructorInvokesOverridable.html" title="class in com.google.errorprone.bugpatterns">ConstructorInvokesOverridable</a></li>
 <li><a href="com/google/errorprone/bugpatterns/ConstructorLeaksThis.html" title="class in com.google.errorprone.bugpatterns">ConstructorLeaksThis</a></li>
-<li><a href="com/google/errorprone/matchers/method/ConstructorMatcherImpl.html" title="class in com.google.errorprone.matchers.method">ConstructorMatcherImpl</a></li>
+<li><a href="com/google/errorprone/matchers/method/ConstructorMatchState.html" title="class in com.google.errorprone.matchers.method">ConstructorMatchState</a></li>
 <li><a href="com/google/errorprone/matchers/ConstructorOfClass.html" title="class in com.google.errorprone.matchers">ConstructorOfClass</a></li>
 <li><a href="com/google/errorprone/matchers/Contains.html" title="class in com.google.errorprone.matchers">Contains</a></li>
 <li><a href="com/google/errorprone/refaster/ControlFlowVisitor.html" title="class in com.google.errorprone.refaster">ControlFlowVisitor</a></li>
@@ -491,6 +491,7 @@
 <li><a href="com/google/errorprone/matchers/Matcher.html" title="interface in com.google.errorprone.matchers"><span class="interfaceName">Matcher</span></a></li>
 <li><a href="com/google/errorprone/matchers/Matchers.html" title="class in com.google.errorprone.matchers">Matchers</a></li>
 <li><a href="com/google/errorprone/refaster/annotation/Matches.html" title="annotation in com.google.errorprone.refaster.annotation">Matches</a></li>
+<li><a href="com/google/errorprone/matchers/method/MatchState.html" title="interface in com.google.errorprone.matchers.method"><span class="interfaceName">MatchState</span></a></li>
 <li><a href="com/google/errorprone/bugpatterns/MathAbsoluteRandom.html" title="class in com.google.errorprone.bugpatterns">MathAbsoluteRandom</a></li>
 <li><a href="com/google/errorprone/bugpatterns/MathRoundIntLong.html" title="class in com.google.errorprone.bugpatterns">MathRoundIntLong</a></li>
 <li><a href="com/google/errorprone/refaster/annotation/MayOptionallyUse.html" title="annotation in com.google.errorprone.refaster.annotation">MayOptionallyUse</a></li>
@@ -499,6 +500,17 @@
 <li><a href="com/google/errorprone/dataflow/nullnesspropagation/MethodInfo.html" title="interface in com.google.errorprone.dataflow.nullnesspropagation"><span class="interfaceName">MethodInfo</span></a></li>
 <li><a href="com/google/errorprone/matchers/MethodInvocation.html" title="class in com.google.errorprone.matchers">MethodInvocation</a></li>
 <li><a href="com/google/errorprone/matchers/MethodInvocationArgument.html" title="class in com.google.errorprone.matchers">MethodInvocationArgument</a></li>
+<li><a href="com/google/errorprone/matchers/method/MethodInvocationMatcher.html" title="class in com.google.errorprone.matchers.method">MethodInvocationMatcher</a></li>
+<li><a href="com/google/errorprone/matchers/method/MethodInvocationMatcher.MethodKind.html" title="enum in com.google.errorprone.matchers.method">MethodInvocationMatcher.MethodKind</a></li>
+<li><a href="com/google/errorprone/matchers/method/MethodInvocationMatcher.Rule.html" title="class in com.google.errorprone.matchers.method">MethodInvocationMatcher.Rule</a></li>
+<li><a href="com/google/errorprone/matchers/method/MethodInvocationMatcher.Token.html" title="interface in com.google.errorprone.matchers.method"><span class="interfaceName">MethodInvocationMatcher.Token</span></a></li>
+<li><a href="com/google/errorprone/matchers/method/MethodInvocationMatcher.Token.DefinedIn.html" title="class in com.google.errorprone.matchers.method">MethodInvocationMatcher.Token.DefinedIn</a></li>
+<li><a href="com/google/errorprone/matchers/method/MethodInvocationMatcher.Token.Kind.html" title="class in com.google.errorprone.matchers.method">MethodInvocationMatcher.Token.Kind</a></li>
+<li><a href="com/google/errorprone/matchers/method/MethodInvocationMatcher.Token.MethodName.html" title="class in com.google.errorprone.matchers.method">MethodInvocationMatcher.Token.MethodName</a></li>
+<li><a href="com/google/errorprone/matchers/method/MethodInvocationMatcher.Token.ParameterTypes.html" title="class in com.google.errorprone.matchers.method">MethodInvocationMatcher.Token.ParameterTypes</a></li>
+<li><a href="com/google/errorprone/matchers/method/MethodInvocationMatcher.Token.ReceiverSupertype.html" title="class in com.google.errorprone.matchers.method">MethodInvocationMatcher.Token.ReceiverSupertype</a></li>
+<li><a href="com/google/errorprone/matchers/method/MethodInvocationMatcher.Token.ReceiverType.html" title="class in com.google.errorprone.matchers.method">MethodInvocationMatcher.Token.ReceiverType</a></li>
+<li><a href="com/google/errorprone/matchers/method/MethodInvocationMatcher.TokenType.html" title="enum in com.google.errorprone.matchers.method">MethodInvocationMatcher.TokenType</a></li>
 <li><a href="com/google/errorprone/matchers/MethodInvocationMethodSelect.html" title="class in com.google.errorprone.matchers">MethodInvocationMethodSelect</a></li>
 <li><a href="com/google/errorprone/matchers/method/MethodMatchers.html" title="class in com.google.errorprone.matchers.method">MethodMatchers</a></li>
 <li><a href="com/google/errorprone/matchers/method/MethodMatchers.AnyMethodMatcher.html" title="interface in com.google.errorprone.matchers.method"><span class="interfaceName">MethodMatchers.AnyMethodMatcher</span></a></li>
@@ -506,12 +518,11 @@
 <li><a href="com/google/errorprone/matchers/method/MethodMatchers.ConstructorMatcher.html" title="interface in com.google.errorprone.matchers.method"><span class="interfaceName">MethodMatchers.ConstructorMatcher</span></a></li>
 <li><a href="com/google/errorprone/matchers/method/MethodMatchers.InstanceMethodMatcher.html" title="interface in com.google.errorprone.matchers.method"><span class="interfaceName">MethodMatchers.InstanceMethodMatcher</span></a></li>
 <li><a href="com/google/errorprone/matchers/method/MethodMatchers.MethodClassMatcher.html" title="interface in com.google.errorprone.matchers.method"><span class="interfaceName">MethodMatchers.MethodClassMatcher</span></a></li>
+<li><a href="com/google/errorprone/matchers/method/MethodMatchers.MethodMatcher.html" title="interface in com.google.errorprone.matchers.method"><span class="interfaceName">MethodMatchers.MethodMatcher</span></a></li>
 <li><a href="com/google/errorprone/matchers/method/MethodMatchers.MethodNameMatcher.html" title="interface in com.google.errorprone.matchers.method"><span class="interfaceName">MethodMatchers.MethodNameMatcher</span></a></li>
 <li><a href="com/google/errorprone/matchers/method/MethodMatchers.MethodSignatureMatcher.html" title="interface in com.google.errorprone.matchers.method"><span class="interfaceName">MethodMatchers.MethodSignatureMatcher</span></a></li>
 <li><a href="com/google/errorprone/matchers/method/MethodMatchers.ParameterMatcher.html" title="interface in com.google.errorprone.matchers.method"><span class="interfaceName">MethodMatchers.ParameterMatcher</span></a></li>
 <li><a href="com/google/errorprone/matchers/method/MethodMatchers.StaticMethodMatcher.html" title="interface in com.google.errorprone.matchers.method"><span class="interfaceName">MethodMatchers.StaticMethodMatcher</span></a></li>
-<li><a href="com/google/errorprone/matchers/method/MethodNameMatcherImpl.html" title="class in com.google.errorprone.matchers.method">MethodNameMatcherImpl</a></li>
-<li><a href="com/google/errorprone/matchers/method/MethodSignatureMatcherImpl.html" title="class in com.google.errorprone.matchers.method">MethodSignatureMatcherImpl</a></li>
 <li><a href="com/google/errorprone/matchers/MethodVisibility.html" title="class in com.google.errorprone.matchers">MethodVisibility</a></li>
 <li><a href="com/google/errorprone/matchers/MethodVisibility.Visibility.html" title="enum in com.google.errorprone.matchers">MethodVisibility.Visibility</a></li>
 <li><a href="com/google/errorprone/bugpatterns/android/MislabeledAndroidString.html" title="class in com.google.errorprone.bugpatterns.android">MislabeledAndroidString</a></li>
@@ -594,7 +605,6 @@
 <li><a href="com/google/errorprone/bugpatterns/PackageInfo.html" title="class in com.google.errorprone.bugpatterns">PackageInfo</a></li>
 <li><a href="com/google/errorprone/bugpatterns/PackageLocation.html" title="class in com.google.errorprone.bugpatterns">PackageLocation</a></li>
 <li><a href="com/google/errorprone/bugpatterns/ParameterComment.html" title="class in com.google.errorprone.bugpatterns">ParameterComment</a></li>
-<li><a href="com/google/errorprone/matchers/method/ParameterMatcherImpl.html" title="class in com.google.errorprone.matchers.method">ParameterMatcherImpl</a></li>
 <li><a href="com/google/errorprone/bugpatterns/ParameterName.html" title="class in com.google.errorprone.bugpatterns">ParameterName</a></li>
 <li><a href="com/google/errorprone/bugpatterns/nullness/ParameterNotNullable.html" title="class in com.google.errorprone.bugpatterns.nullness">ParameterNotNullable</a></li>
 <li><a href="com/google/errorprone/bugpatterns/android/ParcelableCreator.html" title="class in com.google.errorprone.bugpatterns.android">ParcelableCreator</a></li>
@@ -603,8 +613,6 @@
 <li><a href="com/google/errorprone/bugpatterns/time/PeriodGetTemporalUnit.html" title="class in com.google.errorprone.bugpatterns.time">PeriodGetTemporalUnit</a></li>
 <li><a href="com/google/errorprone/bugpatterns/time/PeriodTimeMath.html" title="class in com.google.errorprone.bugpatterns.time">PeriodTimeMath</a></li>
 <li><a href="com/google/errorprone/refaster/annotation/Placeholder.html" title="annotation in com.google.errorprone.refaster.annotation">Placeholder</a></li>
-<li><a href="com/google/errorprone/bugpatterns/PreconditionsCheckNotNull.html" title="class in com.google.errorprone.bugpatterns">PreconditionsCheckNotNull</a></li>
-<li><a href="com/google/errorprone/bugpatterns/PreconditionsCheckNotNullPrimitive.html" title="class in com.google.errorprone.bugpatterns">PreconditionsCheckNotNullPrimitive</a></li>
 <li><a href="com/google/errorprone/bugpatterns/PreconditionsCheckNotNullRepeated.html" title="class in com.google.errorprone.bugpatterns">PreconditionsCheckNotNullRepeated</a></li>
 <li><a href="com/google/errorprone/bugpatterns/PreconditionsInvalidPlaceholder.html" title="class in com.google.errorprone.bugpatterns">PreconditionsInvalidPlaceholder</a></li>
 <li><a href="com/google/errorprone/bugpatterns/PredicateIncompatibleType.html" title="class in com.google.errorprone.bugpatterns">PredicateIncompatibleType</a></li>

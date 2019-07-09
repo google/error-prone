@@ -18,8 +18,8 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":6,"i1":6,"i2":6,"i3":6,"i4":6,"i5":6};
-var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],4:["t3","Abstract Methods"]};
+var methods = {"i0":38,"i1":38,"i2":38,"i3":38,"i4":38,"i5":38};
+var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],4:["t3","Abstract Methods"],32:["t6","Deprecated Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
 var tableTab = "tableTab";
@@ -50,7 +50,7 @@ var activeTableTab = "activeTableTab";
 <div class="subNav">
 <ul class="navList">
 <li><a href="../../../../../com/google/errorprone/matchers/method/MethodMatchers.InstanceMethodMatcher.html" title="interface in com.google.errorprone.matchers.method"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
-<li><a href="../../../../../com/google/errorprone/matchers/method/MethodMatchers.MethodNameMatcher.html" title="interface in com.google.errorprone.matchers.method"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
+<li><a href="../../../../../com/google/errorprone/matchers/method/MethodMatchers.MethodMatcher.html" title="interface in com.google.errorprone.matchers.method"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
 </ul>
 <ul class="navList">
 <li><a href="../../../../../index.html?com/google/errorprone/matchers/method/MethodMatchers.MethodClassMatcher.html" target="_top">Frames</a></li>
@@ -101,16 +101,20 @@ var activeTableTab = "activeTableTab";
 <li class="blockList">
 <dl>
 <dt>All Superinterfaces:</dt>
-<dd><a href="../../../../../com/google/errorprone/matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.ExpressionTree&gt;, <a href="https://docs.oracle.com/javase/8/docs/api/java/io/Serializable.html?is-external=true" title="class or interface in java.io">Serializable</a></dd>
+<dd><a href="../../../../../com/google/errorprone/matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.ExpressionTree&gt;, <a href="../../../../../com/google/errorprone/matchers/method/MethodMatchers.MethodMatcher.html" title="interface in com.google.errorprone.matchers.method">MethodMatchers.MethodMatcher</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/io/Serializable.html?is-external=true" title="class or interface in java.io">Serializable</a></dd>
 </dl>
 <dl>
 <dt>Enclosing class:</dt>
 <dd><a href="../../../../../com/google/errorprone/matchers/method/MethodMatchers.html" title="class in com.google.errorprone.matchers.method">MethodMatchers</a></dd>
 </dl>
 <hr>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;
+<div class="block"><span class="deprecationComment">use <code>Matcher&lt;ExpressionTree&gt;</code> instead of referring directly to this type.</span></div>
+</div>
 <br>
-<pre>public static interface <span class="typeNameLabel">MethodMatchers.MethodClassMatcher</span>
-extends <a href="../../../../../com/google/errorprone/matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.ExpressionTree&gt;</pre>
+<pre><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Deprecated.html?is-external=true" title="class or interface in java.lang">@Deprecated</a>
+public static interface <span class="typeNameLabel">MethodMatchers.MethodClassMatcher</span>
+extends <a href="../../../../../com/google/errorprone/matchers/method/MethodMatchers.MethodMatcher.html" title="interface in com.google.errorprone.matchers.method">MethodMatchers.MethodMatcher</a></pre>
 </li>
 </ul>
 </div>
@@ -124,7 +128,7 @@ extends <a href="../../../../../com/google/errorprone/matchers/Matcher.html" tit
 </a>
 <h3>Method Summary</h3>
 <table class="memberSummary" border="0" cellpadding="3" cellspacing="0" summary="Method Summary table, listing methods, and an explanation">
-<caption><span id="t0" class="activeTableTab"><span>All Methods</span><span class="tabEnd">&nbsp;</span></span><span id="t2" class="tableTab"><span><a href="javascript:show(2);">Instance Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t3" class="tableTab"><span><a href="javascript:show(4);">Abstract Methods</a></span><span class="tabEnd">&nbsp;</span></span></caption>
+<caption><span id="t0" class="activeTableTab"><span>All Methods</span><span class="tabEnd">&nbsp;</span></span><span id="t2" class="tableTab"><span><a href="javascript:show(2);">Instance Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t3" class="tableTab"><span><a href="javascript:show(4);">Abstract Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t6" class="tableTab"><span><a href="javascript:show(32);">Deprecated Methods</a></span><span class="tabEnd">&nbsp;</span></span></caption>
 <tr>
 <th class="colFirst" scope="col">Modifier and Type</th>
 <th class="colLast" scope="col">Method and Description</th>
@@ -132,40 +136,53 @@ extends <a href="../../../../../com/google/errorprone/matchers/Matcher.html" tit
 <tr id="i0" class="altColor">
 <td class="colFirst"><code><a href="../../../../../com/google/errorprone/matchers/method/MethodMatchers.MethodNameMatcher.html" title="interface in com.google.errorprone.matchers.method">MethodMatchers.MethodNameMatcher</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/matchers/method/MethodMatchers.MethodClassMatcher.html#named-java.lang.String-">named</a></span>(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;name)</code>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;</div>
 <div class="block">Match methods with the given name.</div>
 </td>
 </tr>
 <tr id="i1" class="rowColor">
 <td class="colFirst"><code><a href="../../../../../com/google/errorprone/matchers/method/MethodMatchers.MethodNameMatcher.html" title="interface in com.google.errorprone.matchers.method">MethodMatchers.MethodNameMatcher</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/matchers/method/MethodMatchers.MethodClassMatcher.html#namedAnyOf-java.lang.Iterable-">namedAnyOf</a></span>(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Iterable.html?is-external=true" title="class or interface in java.lang">Iterable</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;names)</code>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;</div>
 <div class="block">Match methods with any of the given names.</div>
 </td>
 </tr>
 <tr id="i2" class="altColor">
 <td class="colFirst"><code><a href="../../../../../com/google/errorprone/matchers/method/MethodMatchers.MethodNameMatcher.html" title="interface in com.google.errorprone.matchers.method">MethodMatchers.MethodNameMatcher</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/matchers/method/MethodMatchers.MethodClassMatcher.html#namedAnyOf-java.lang.String...-">namedAnyOf</a></span>(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>...&nbsp;names)</code>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;</div>
 <div class="block">Match methods with any of the given names.</div>
 </td>
 </tr>
 <tr id="i3" class="rowColor">
 <td class="colFirst"><code><a href="../../../../../com/google/errorprone/matchers/method/MethodMatchers.MethodNameMatcher.html" title="interface in com.google.errorprone.matchers.method">MethodMatchers.MethodNameMatcher</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/matchers/method/MethodMatchers.MethodClassMatcher.html#withAnyName--">withAnyName</a></span>()</code>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;</div>
 <div class="block">Match methods with any name.</div>
 </td>
 </tr>
 <tr id="i4" class="altColor">
 <td class="colFirst"><code><a href="../../../../../com/google/errorprone/matchers/method/MethodMatchers.MethodNameMatcher.html" title="interface in com.google.errorprone.matchers.method">MethodMatchers.MethodNameMatcher</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/matchers/method/MethodMatchers.MethodClassMatcher.html#withNameMatching-java.util.regex.Pattern-">withNameMatching</a></span>(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html?is-external=true" title="class or interface in java.util.regex">Pattern</a>&nbsp;pattern)</code>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;</div>
 <div class="block">Match methods with a name that matches the given regular expression.</div>
 </td>
 </tr>
 <tr id="i5" class="rowColor">
 <td class="colFirst"><code><a href="../../../../../com/google/errorprone/matchers/method/MethodMatchers.MethodSignatureMatcher.html" title="interface in com.google.errorprone.matchers.method">MethodMatchers.MethodSignatureMatcher</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/matchers/method/MethodMatchers.MethodClassMatcher.html#withSignature-java.lang.String-">withSignature</a></span>(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;signature)</code>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;</div>
 <div class="block">Match methods with the given signature.</div>
 </td>
 </tr>
 </table>
+<ul class="blockList">
+<li class="blockList"><a name="methods.inherited.from.class.com.google.errorprone.matchers.method.MethodMatchers.MethodMatcher">
+<!--   -->
+</a>
+<h3>Methods inherited from interface&nbsp;com.google.errorprone.matchers.method.<a href="../../../../../com/google/errorprone/matchers/method/MethodMatchers.MethodMatcher.html" title="interface in com.google.errorprone.matchers.method">MethodMatchers.MethodMatcher</a></h3>
+<code><a href="../../../../../com/google/errorprone/matchers/method/MethodMatchers.MethodMatcher.html#asRule--">asRule</a></code></li>
+</ul>
 <ul class="blockList">
 <li class="blockList"><a name="methods.inherited.from.class.com.google.errorprone.matchers.Matcher">
 <!--   -->
@@ -194,6 +211,7 @@ extends <a href="../../../../../com/google/errorprone/matchers/Matcher.html" tit
 <li class="blockList">
 <h4>named</h4>
 <pre><a href="../../../../../com/google/errorprone/matchers/method/MethodMatchers.MethodNameMatcher.html" title="interface in com.google.errorprone.matchers.method">MethodMatchers.MethodNameMatcher</a>&nbsp;named(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;name)</pre>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;</div>
 <div class="block">Match methods with the given name. (e.g. <code>toString</code>)</div>
 </li>
 </ul>
@@ -204,6 +222,7 @@ extends <a href="../../../../../com/google/errorprone/matchers/Matcher.html" tit
 <li class="blockList">
 <h4>namedAnyOf</h4>
 <pre><a href="../../../../../com/google/errorprone/matchers/method/MethodMatchers.MethodNameMatcher.html" title="interface in com.google.errorprone.matchers.method">MethodMatchers.MethodNameMatcher</a>&nbsp;namedAnyOf(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>...&nbsp;names)</pre>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;</div>
 <div class="block">Match methods with any of the given names.</div>
 </li>
 </ul>
@@ -214,6 +233,7 @@ extends <a href="../../../../../com/google/errorprone/matchers/Matcher.html" tit
 <li class="blockList">
 <h4>namedAnyOf</h4>
 <pre><a href="../../../../../com/google/errorprone/matchers/method/MethodMatchers.MethodNameMatcher.html" title="interface in com.google.errorprone.matchers.method">MethodMatchers.MethodNameMatcher</a>&nbsp;namedAnyOf(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Iterable.html?is-external=true" title="class or interface in java.lang">Iterable</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;names)</pre>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;</div>
 <div class="block">Match methods with any of the given names.</div>
 </li>
 </ul>
@@ -224,6 +244,7 @@ extends <a href="../../../../../com/google/errorprone/matchers/Matcher.html" tit
 <li class="blockList">
 <h4>withAnyName</h4>
 <pre><a href="../../../../../com/google/errorprone/matchers/method/MethodMatchers.MethodNameMatcher.html" title="interface in com.google.errorprone.matchers.method">MethodMatchers.MethodNameMatcher</a>&nbsp;withAnyName()</pre>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;</div>
 <div class="block">Match methods with any name.</div>
 </li>
 </ul>
@@ -234,6 +255,7 @@ extends <a href="../../../../../com/google/errorprone/matchers/Matcher.html" tit
 <li class="blockList">
 <h4>withNameMatching</h4>
 <pre><a href="../../../../../com/google/errorprone/matchers/method/MethodMatchers.MethodNameMatcher.html" title="interface in com.google.errorprone.matchers.method">MethodMatchers.MethodNameMatcher</a>&nbsp;withNameMatching(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html?is-external=true" title="class or interface in java.util.regex">Pattern</a>&nbsp;pattern)</pre>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;</div>
 <div class="block">Match methods with a name that matches the given regular expression.</div>
 </li>
 </ul>
@@ -244,6 +266,7 @@ extends <a href="../../../../../com/google/errorprone/matchers/Matcher.html" tit
 <li class="blockList">
 <h4>withSignature</h4>
 <pre><a href="../../../../../com/google/errorprone/matchers/method/MethodMatchers.MethodSignatureMatcher.html" title="interface in com.google.errorprone.matchers.method">MethodMatchers.MethodSignatureMatcher</a>&nbsp;withSignature(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;signature)</pre>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;</div>
 <div class="block">Match methods with the given signature. The implementation uses javac internals to
  pretty-print the signatures, and the signature format is not well-specified. This matcher
  should be used with caution.
@@ -280,7 +303,7 @@ extends <a href="../../../../../com/google/errorprone/matchers/Matcher.html" tit
 <div class="subNav">
 <ul class="navList">
 <li><a href="../../../../../com/google/errorprone/matchers/method/MethodMatchers.InstanceMethodMatcher.html" title="interface in com.google.errorprone.matchers.method"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
-<li><a href="../../../../../com/google/errorprone/matchers/method/MethodMatchers.MethodNameMatcher.html" title="interface in com.google.errorprone.matchers.method"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
+<li><a href="../../../../../com/google/errorprone/matchers/method/MethodMatchers.MethodMatcher.html" title="interface in com.google.errorprone.matchers.method"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
 </ul>
 <ul class="navList">
 <li><a href="../../../../../index.html?com/google/errorprone/matchers/method/MethodMatchers.MethodClassMatcher.html" target="_top">Frames</a></li>

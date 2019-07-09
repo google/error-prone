@@ -1427,16 +1427,6 @@
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/PreconditionsCheckNotNull.html" title="class in com.google.errorprone.bugpatterns">PreconditionsCheckNotNull</a></span></code>&nbsp;</td>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code>class&nbsp;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/PreconditionsCheckNotNullPrimitive.html" title="class in com.google.errorprone.bugpatterns">PreconditionsCheckNotNullPrimitive</a></span></code>
-<div class="block">Checks that the 1st argument to Preconditions.checkNotNull() isn't a primitive.</div>
-</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/PreconditionsCheckNotNullRepeated.html" title="class in com.google.errorprone.bugpatterns">PreconditionsCheckNotNullRepeated</a></span></code>
 <div class="block">Checks that Precondition.checkNotNull is not invoked with same arg twice.</div>
 </td>
@@ -2385,8 +2375,7 @@
 <tr class="rowColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/nullness/UnnecessaryCheckNotNull.html" title="class in com.google.errorprone.bugpatterns.nullness">UnnecessaryCheckNotNull</a></span></code>
-<div class="block">Checks for <code>Preconditions.checkNotNull</code> and <code>Verify.verifyNotNull</code> with a new
- class/array argument.</div>
+<div class="block">Checks for unnecessarily performing null checks on expressions which can't be null.</div>
 </td>
 </tr>
 </tbody>
