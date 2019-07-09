@@ -105,6 +105,7 @@ import com.google.errorprone.bugpatterns.ExpectedExceptionRefactoring;
 import com.google.errorprone.bugpatterns.ExtendingJUnitAssert;
 import com.google.errorprone.bugpatterns.FallThrough;
 import com.google.errorprone.bugpatterns.FieldCanBeFinal;
+import com.google.errorprone.bugpatterns.FieldCanBeLocal;
 import com.google.errorprone.bugpatterns.Finally;
 import com.google.errorprone.bugpatterns.FloatCast;
 import com.google.errorprone.bugpatterns.FloatingPointAssertionWithinEpsilon;
@@ -791,6 +792,7 @@ public class BuiltInCheckerSuppliers {
           ExpectedExceptionChecker.class,
           ExpectedExceptionRefactoring.class,
           FieldCanBeFinal.class,
+          FieldCanBeLocal.class,
           FieldMissingNullable.class,
           FunctionalInterfaceClash.class,
           FuzzyEqualsShouldNotBeUsedInEqualsMethod.class,
