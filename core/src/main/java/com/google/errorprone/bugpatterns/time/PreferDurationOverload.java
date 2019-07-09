@@ -17,6 +17,7 @@ package com.google.errorprone.bugpatterns.time;
 
 import static com.google.errorprone.BugPattern.ProvidesFix.REQUIRES_HUMAN_ATTENTION;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
+import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.constructor;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
@@ -87,6 +88,10 @@ public final class PreferDurationOverload extends BugChecker
           .put(DAYS, "%s.ofDays(%s)")
           .build();
 
+  private static final Matcher<ExpressionTree> IGNORED_APIS =
+      anyOf(
+          );
+
   private static final ImmutableMap<Matcher<ExpressionTree>, TimeUnit>
       JODA_DURATION_FACTORY_MATCHERS =
           new ImmutableMap.Builder<Matcher<ExpressionTree>, TimeUnit>()
@@ -102,6 +107,11 @@ public final class PreferDurationOverload extends BugChecker
 
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
+    // we return no match for a set of explicitly ignored APIs
+    if (IGNORED_APIS.matches(tree, state)) {
+      return Description.NO_MATCH;
+    }
+
     List<? extends ExpressionTree> arguments = tree.getArguments();
 
     // TODO(glorioso): Add support for methods with > 2 parameters. E.g.,

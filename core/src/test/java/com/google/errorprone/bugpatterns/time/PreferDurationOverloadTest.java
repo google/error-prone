@@ -251,4 +251,8 @@ public class PreferDurationOverloadTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void ignoredApisAreExcluded() {
+  }
 }
