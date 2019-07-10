@@ -60,7 +60,10 @@ import java.util.Optional;
 public class StringSplitter extends BugChecker implements MethodInvocationTreeMatcher {
 
   private static final Matcher<ExpressionTree> MATCHER =
-      instanceMethod().onExactClass("java.lang.String").withSignature("split(java.lang.String)");
+      instanceMethod()
+          .onExactClass("java.lang.String")
+          .named("split")
+          .withParameters("java.lang.String");
 
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {

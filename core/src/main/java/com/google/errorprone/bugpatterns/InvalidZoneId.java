@@ -47,7 +47,8 @@ public class InvalidZoneId extends BugChecker implements MethodInvocationTreeMat
   private static final Matcher<ExpressionTree> METHOD_MATCHER =
       MethodMatchers.staticMethod()
           .onClass("java.time.ZoneId")
-          .withSignature("of(java.lang.String)");
+          .named("of")
+          .withParameters("java.lang.String");
 
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, final VisitorState state) {

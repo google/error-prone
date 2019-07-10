@@ -50,12 +50,14 @@ public class ThreeLetterTimeZoneID extends BugChecker implements MethodInvocatio
   private static final Matcher<ExpressionTree> METHOD_MATCHER =
       MethodMatchers.staticMethod()
           .onClass("java.util.TimeZone")
-          .withSignature("getTimeZone(java.lang.String)");
+          .named("getTimeZone")
+          .withParameters("java.lang.String");
 
   private static final Matcher<ExpressionTree> JODATIME_METHOD_MATCHER =
       MethodMatchers.staticMethod()
           .onClass("org.joda.time.DateTimeZone")
-          .withSignature("forTimeZone(java.util.TimeZone)");
+          .named("forTimeZone")
+          .withParameters("java.util.TimeZone");
 
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, final VisitorState state) {

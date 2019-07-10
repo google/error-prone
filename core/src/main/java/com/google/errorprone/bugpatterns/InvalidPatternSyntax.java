@@ -81,19 +81,24 @@ public class InvalidPatternSyntax extends BugChecker implements MethodInvocation
           anyOf(
               instanceMethod()
                   .onDescendantOf("java.lang.String")
-                  .withSignature("matches(java.lang.String)"),
+                  .named("matches")
+                  .withParameters("java.lang.String"),
               instanceMethod()
                   .onDescendantOf("java.lang.String")
-                  .withSignature("replaceAll(java.lang.String,java.lang.String)"),
+                  .named("replaceAll")
+                  .withParameters("java.lang.String", "java.lang.String"),
               instanceMethod()
                   .onDescendantOf("java.lang.String")
-                  .withSignature("replaceFirst(java.lang.String,java.lang.String)"),
+                  .named("replaceFirst")
+                  .withParameters("java.lang.String", "java.lang.String"),
               instanceMethod()
                   .onDescendantOf("java.lang.String")
-                  .withSignature("split(java.lang.String)"),
+                  .named("split")
+                  .withParameters("java.lang.String"),
               instanceMethod()
                   .onDescendantOf("java.lang.String")
-                  .withSignature("split(java.lang.String,int)"),
+                  .named("split")
+                  .withParameters("java.lang.String", "int"),
               staticMethod().onClass("java.util.regex.Pattern").named("matches"),
               staticMethod().onClass("com.google.common.base.Splitter").named("onPattern")),
           argument(0, BAD_REGEX_LITERAL));
