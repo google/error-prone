@@ -40,7 +40,10 @@ import com.sun.source.tree.Tree.Kind;
 public class RandomModInteger extends BugChecker implements BinaryTreeMatcher {
 
   private static final Matcher<ExpressionTree> RANDOM_NEXT_INT =
-      Matchers.instanceMethod().onDescendantOf("java.util.Random").withSignature("nextInt()");
+      Matchers.instanceMethod()
+          .onDescendantOf("java.util.Random")
+          .named("nextInt")
+          .withParameters();
 
   @Override
   public Description matchBinary(BinaryTree tree, VisitorState state) {

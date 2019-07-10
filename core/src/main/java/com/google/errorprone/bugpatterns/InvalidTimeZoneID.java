@@ -50,7 +50,8 @@ public class InvalidTimeZoneID extends BugChecker implements MethodInvocationTre
       Matchers.methodInvocation(
           MethodMatchers.staticMethod()
               .onClass("java.util.TimeZone")
-              .withSignature("getTimeZone(java.lang.String)"));
+              .named("getTimeZone")
+              .withParameters("java.lang.String"));
 
   // https://docs.oracle.com/javase/8/docs/api/java/util/TimeZone.html
   // "a custom time zone ID can be specified to produce a TimeZone".

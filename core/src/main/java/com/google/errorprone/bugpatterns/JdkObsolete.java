@@ -144,17 +144,21 @@ public class JdkObsolete extends BugChecker
           // a pre-JDK-8039124 concession
           instanceMethod()
               .onExactClass("java.util.regex.Matcher")
-              .withSignature("appendTail(java.lang.StringBuffer)"),
+              .named("appendTail")
+              .withParameters("java.lang.StringBuffer"),
           instanceMethod()
               .onExactClass("java.util.regex.Matcher")
-              .withSignature("appendReplacement(java.lang.StringBuffer,java.lang.String)"),
+              .named("appendReplacement")
+              .withParameters("java.lang.StringBuffer", "java.lang.String"),
           // TODO(cushon): back this out if https://github.com/google/re2j/pull/44 happens
           instanceMethod()
               .onExactClass("com.google.re2j.Matcher")
-              .withSignature("appendTail(java.lang.StringBuffer)"),
+              .named("appendTail")
+              .withParameters("java.lang.StringBuffer"),
           instanceMethod()
               .onExactClass("com.google.re2j.Matcher")
-              .withSignature("appendReplacement(java.lang.StringBuffer,java.lang.String)"));
+              .named("appendReplacement")
+              .withParameters("java.lang.StringBuffer", "java.lang.String"));
 
   @Override
   public Description matchNewClass(NewClassTree tree, VisitorState state) {
