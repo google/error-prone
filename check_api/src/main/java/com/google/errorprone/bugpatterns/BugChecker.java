@@ -259,9 +259,7 @@ public abstract class BugChecker implements Suppressible, Serializable {
    * bug checker.
    */
   public boolean isSuppressed(Tree tree) {
-    SuppressWarnings suppression = ASTHelpers.getAnnotation(tree, SuppressWarnings.class);
-    return suppression != null
-        && !Collections.disjoint(Arrays.asList(suppression.value()), allNames());
+    return isSuppressed(ASTHelpers.getAnnotation(tree, SuppressWarnings.class));
   }
 
   /**
@@ -269,7 +267,10 @@ public abstract class BugChecker implements Suppressible, Serializable {
    * this bug checker.
    */
   public boolean isSuppressed(Symbol symbol) {
-    SuppressWarnings suppression = ASTHelpers.getAnnotation(symbol, SuppressWarnings.class);
+    return isSuppressed(ASTHelpers.getAnnotation(symbol, SuppressWarnings.class));
+  }
+
+  private boolean isSuppressed(SuppressWarnings suppression) {
     return suppression != null
         && !Collections.disjoint(Arrays.asList(suppression.value()), allNames());
   }
