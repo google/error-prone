@@ -31,11 +31,9 @@ import java.io.ObjectInputStream;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.regex.Pattern;
 
 /**
@@ -105,7 +103,7 @@ public class ErrorProneOptions {
       return inPlace() || !baseDirectory().isEmpty();
     }
 
-    abstract Set<String> namedCheckers();
+    abstract ImmutableSet<String> namedCheckers();
 
     abstract boolean inPlace();
 
@@ -119,14 +117,14 @@ public class ErrorProneOptions {
       return new AutoValue_ErrorProneOptions_PatchingOptions.Builder()
           .baseDirectory("")
           .inPlace(false)
-          .namedCheckers(Collections.emptySet())
+          .namedCheckers(ImmutableSet.of())
           .importOrganizer(ImportOrganizer.STATIC_FIRST_ORGANIZER);
     }
 
     @AutoValue.Builder
     abstract static class Builder {
 
-      abstract Builder namedCheckers(Set<String> checkers);
+      abstract Builder namedCheckers(ImmutableSet<String> checkers);
 
       abstract Builder inPlace(boolean inPlace);
 
