@@ -40,7 +40,7 @@ import java.util.Optional;
 @BugPattern(
     name = "LiteProtoToString",
     summary =
-        "#toString on lite protos will not generate a useful representation of the proto from"
+        "toString() on lite protos will not generate a useful representation of the proto from"
             + " optimized builds. Consider whether using some subset of fields instead would"
             + " provide useful information.",
     severity = WARNING,
