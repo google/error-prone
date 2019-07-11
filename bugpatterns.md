@@ -892,6 +892,9 @@ Because of spurious wakeups, Object.wait() and Condition.await() must always be 
 __[WakelockReleasedDangerously](bugpattern/WakelockReleasedDangerously)__<br>
 A wakelock acquired with a timeout may be released by the system before calling `release`, even after checking `isHeld()`. If so, it will throw a RuntimeException. Please wrap in a try/catch block.
 
+__[WithSignatureDiscouraged](bugpattern/WithSignatureDiscouraged)__<br>
+withSignature is discouraged. Prefer .named and/or .withParameters where possible.
+
 ## Experimental : ERROR
 
 __[AndroidJdkLibsChecker](bugpattern/AndroidJdkLibsChecker)__<br>
@@ -1128,6 +1131,9 @@ Prefer assertThrows to ExpectedException
 
 __[FieldCanBeFinal](bugpattern/FieldCanBeFinal)__<br>
 This field is only assigned during initialization; consider making it final
+
+__[FieldCanBeLocal](bugpattern/FieldCanBeLocal)__<br>
+This field can be replaced with a local variable in the methods that use it.
 
 __[FieldMissingNullable](bugpattern/FieldMissingNullable)__<br>
 Fields that can be null should be annotated @Nullable
