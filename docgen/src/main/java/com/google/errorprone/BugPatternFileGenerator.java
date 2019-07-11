@@ -50,6 +50,8 @@ import java.util.stream.Collectors;
 import javax.annotation.Nullable;
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
+import org.yaml.snakeyaml.constructor.SafeConstructor;
+import org.yaml.snakeyaml.representer.Representer;
 
 /**
  * Reads each line of the bugpatterns.txt tab-delimited data file, and generates a GitHub Jekyll
@@ -196,7 +198,7 @@ class BugPatternFileGenerator implements LineProcessor<List<BugPatternInstance>>
                 .build();
         DumperOptions options = new DumperOptions();
         options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
-        Yaml yaml = new Yaml(options);
+        Yaml yaml = new Yaml(new SafeConstructor(), new Representer(), options);
         Writer yamlWriter = new StringWriter();
         yamlWriter.write("---\n");
         yaml.dump(frontmatterData, yamlWriter);
