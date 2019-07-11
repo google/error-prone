@@ -656,7 +656,7 @@ __[LiteEnumValueOf](bugpattern/LiteEnumValueOf)__<br>
 Instead of converting enums to string and back, its numeric value should be used instead as it is the stable part of the protocol defined by the enum.
 
 __[LiteProtoToString](bugpattern/LiteProtoToString)__<br>
-#toString on lite protos will not generate a useful representation of the proto from optimized builds. Consider whether using some subset of fields instead would provide useful information.
+toString() on lite protos will not generate a useful representation of the proto from optimized builds. Consider whether using some subset of fields instead would provide useful information.
 
 __[LockNotBeforeTry](bugpattern/LockNotBeforeTry)__<br>
 Calls to Lock#lock should be immediately followed by a try block which releases the lock.

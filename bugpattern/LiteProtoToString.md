@@ -1,8 +1,6 @@
 ---
 title: LiteProtoToString
-summary: '#toString on lite protos will not generate a useful representation of the
-  proto from optimized builds. Consider whether using some subset of fields instead
-  would provide useful information.'
+summary: toString() on lite protos will not generate a useful representation of the proto from optimized builds. Consider whether using some subset of fields instead would provide useful information.
 layout: bugpattern
 tags: ''
 severity: WARNING
