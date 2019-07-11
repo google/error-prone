@@ -454,6 +454,8 @@
             <artifactId>maven-surefire-plugin</artifactId>
             <version>2.19.1</version>
             <configuration>
+              <forkCount>4</forkCount>
+              <reuseForks>true</reuseForks>
               <!-- set heap size to work around http://github.com/travis-ci/travis-ci/issues/3396 -->
               <!-- put javac.jar on bootclasspath when executing tests -->
               <argLine>-Xmx1g -Xbootclasspath/p:${settings.localRepository}/com/google/errorprone/javac/${javac.version}/javac-${javac.version}.jar</argLine>
