@@ -27,6 +27,7 @@ import static com.google.errorprone.matchers.Matchers.methodIsConstructor;
 import com.google.auto.value.AutoValue;
 import com.google.common.base.Function;
 import com.google.common.base.Joiner;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableListMultimap;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.LinkedListMultimap;
@@ -131,7 +132,7 @@ public class AssistedParameters extends BugChecker implements MethodTreeMatcher 
               ConflictResult.create(
                   typeAndParameters.getKey(),
                   assistedValueToParameters.getKey(),
-                  assistedValueToParameters.getValue()));
+                  ImmutableList.copyOf(assistedValueToParameters.getValue())));
         }
       }
     }
@@ -178,9 +179,9 @@ public class AssistedParameters extends BugChecker implements MethodTreeMatcher 
 
     abstract String value();
 
-    abstract List<VariableTree> parameters();
+    abstract ImmutableList<VariableTree> parameters();
 
-    static ConflictResult create(Type t, String v, List<VariableTree> p) {
+    static ConflictResult create(Type t, String v, ImmutableList<VariableTree> p) {
       return new AutoValue_AssistedParameters_ConflictResult(t, v, p);
     }
   }
