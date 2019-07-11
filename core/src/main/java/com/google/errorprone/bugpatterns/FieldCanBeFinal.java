@@ -46,7 +46,6 @@ import com.sun.tools.javac.code.Flags;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
-import com.sun.tools.javac.util.Context;
 import java.util.EnumSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -108,7 +107,7 @@ public class FieldCanBeFinal extends BugChecker implements CompilationUnitTreeMa
           Kind.POSTFIX_INCREMENT);
 
   /** The initalization context where an assignment occurred. */
-  enum InitializationContext {
+  private enum InitializationContext {
     /** A class (static) initializer. */
     STATIC,
     /** An instance initializer. */
@@ -118,17 +117,17 @@ public class FieldCanBeFinal extends BugChecker implements CompilationUnitTreeMa
   }
 
   /** A record of all assignments to variables in the current compilation unit. */
-  static class VariableAssignmentRecords {
+  private static class VariableAssignmentRecords {
 
     private final Map<VarSymbol, VariableAssignments> assignments = new LinkedHashMap<>();
 
     /** Returns all {@link VariableAssignments} in the current compilation unit. */
-    public Iterable<VariableAssignments> getAssignments() {
+    private Iterable<VariableAssignments> getAssignments() {
       return assignments.values();
     }
 
     /** Records an assignment to a variable. */
-    public void recordAssignment(Tree tree, InitializationContext init) {
+    private void recordAssignment(Tree tree, InitializationContext init) {
       Symbol sym = ASTHelpers.getSymbol(tree);
       if (sym != null && sym.getKind() == ElementKind.FIELD) {
         recordAssignment((VarSymbol) sym, init);
@@ -136,45 +135,44 @@ public class FieldCanBeFinal extends BugChecker implements CompilationUnitTreeMa
     }
 
     /** Records an assignment to a variable. */
-    public void recordAssignment(VarSymbol sym, InitializationContext init) {
+    private void recordAssignment(VarSymbol sym, InitializationContext init) {
       getDeclaration(sym).recordAssignment(init);
     }
 
     private VariableAssignments getDeclaration(VarSymbol sym) {
-      VariableAssignments info =
-          assignments.computeIfAbsent(sym, (VarSymbol k) -> new VariableAssignments(k));
-      return info;
+      return assignments.computeIfAbsent(sym, VariableAssignments::new);
     }
 
     /** Records a variable declaration. */
-    public void recordDeclaration(VarSymbol sym, VariableTree tree) {
+    private void recordDeclaration(VarSymbol sym, VariableTree tree) {
       getDeclaration(sym).recordDeclaration(tree);
     }
   }
 
   /** A record of all assignments to a specific variable in the current compilation unit. */
-  static class VariableAssignments {
+  private static class VariableAssignments {
 
-    final VarSymbol sym;
-    final EnumSet<InitializationContext> writes = EnumSet.noneOf(InitializationContext.class);
-    VariableTree declaration;
+    private final VarSymbol sym;
+    private final EnumSet<InitializationContext> writes =
+        EnumSet.noneOf(InitializationContext.class);
+    private VariableTree declaration;
 
     VariableAssignments(VarSymbol sym) {
       this.sym = sym;
     }
 
     /** Records an assignment to the variable. */
-    public void recordAssignment(InitializationContext init) {
+    private void recordAssignment(InitializationContext init) {
       writes.add(init);
     }
 
     /** Records that a variable was declared in this compilation unit. */
-    public void recordDeclaration(VariableTree tree) {
+    private void recordDeclaration(VariableTree tree) {
       declaration = tree;
     }
 
     /** Returns true if the variable is effectively final. */
-    boolean isEffectivelyFinal() {
+    private boolean isEffectivelyFinal() {
       if (declaration == null) {
         return false;
       }
@@ -205,7 +203,7 @@ public class FieldCanBeFinal extends BugChecker implements CompilationUnitTreeMa
       return writes.contains(wanted) || (sym.flags() & Flags.HASINIT) == Flags.HASINIT;
     }
 
-    VariableTree declaration() {
+    private VariableTree declaration() {
       return declaration;
     }
   }
@@ -213,7 +211,7 @@ public class FieldCanBeFinal extends BugChecker implements CompilationUnitTreeMa
   @Override
   public Description matchCompilationUnit(CompilationUnitTree tree, VisitorState state) {
     VariableAssignmentRecords writes = new VariableAssignmentRecords();
-    new FinalScanner(writes, state.context).scan(state.getPath(), InitializationContext.NONE);
+    new FinalScanner(writes, state).scan(state.getPath(), InitializationContext.NONE);
     outer:
     for (VariableAssignments var : writes.getAssignments()) {
       if (!var.isEffectivelyFinal()) {
@@ -248,11 +246,11 @@ public class FieldCanBeFinal extends BugChecker implements CompilationUnitTreeMa
   private class FinalScanner extends TreePathScanner<Void, InitializationContext> {
 
     private final VariableAssignmentRecords writes;
-    private final Context context;
+    private final VisitorState compilationState;
 
-    public FinalScanner(VariableAssignmentRecords writes, Context context) {
+    private FinalScanner(VariableAssignmentRecords writes, VisitorState compilationState) {
       this.writes = writes;
-      this.context = context;
+      this.compilationState = compilationState;
     }
 
     @Override
@@ -292,7 +290,7 @@ public class FieldCanBeFinal extends BugChecker implements CompilationUnitTreeMa
       return super.visitAssignment(node, init);
     }
 
-    boolean isThisAccess(Tree tree) {
+    private boolean isThisAccess(Tree tree) {
       if (tree.getKind() == Kind.IDENTIFIER) {
         return true;
       }
@@ -309,7 +307,7 @@ public class FieldCanBeFinal extends BugChecker implements CompilationUnitTreeMa
 
     @Override
     public Void visitClass(ClassTree node, InitializationContext init) {
-      VisitorState state = new VisitorState(context).withPath(getCurrentPath());
+      VisitorState state = compilationState.withPath(getCurrentPath());
 
       if (isSuppressed(node)) {
         return null;
