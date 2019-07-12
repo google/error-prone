@@ -32,6 +32,9 @@ import com.sun.source.tree.MethodInvocationTree;
 /**
  * Bug checker to detect usage of {@code Thread.stop()}, {@code Thread.yield()}, and changing thread
  * priorities.
+ *
+ * @author siyuanl@google.com (Siyuan Liu)
+ * @author eleanorh@google.com (Eleanor Harris)
  */
 @BugPattern(
     name = "ThreadPriorityCheck",
@@ -39,11 +42,6 @@ import com.sun.source.tree.MethodInvocationTree;
         "Relying on the thread scheduler is discouraged; "
             + "see Effective Java Item 72 (2nd edition) / 84 (3rd edition).",
     severity = WARNING)
-
-/**
- * @author siyuanl@google.com (Siyuan Liu)
- * @author eleanorh@google.com (Eleanor Harris)
- */
 public class ThreadPriorityCheck extends BugChecker implements MethodInvocationTreeMatcher {
 
   private static final Matcher<ExpressionTree> THREAD_MATCHERS =
