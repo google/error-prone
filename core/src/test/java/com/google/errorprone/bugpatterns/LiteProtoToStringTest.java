@@ -63,6 +63,20 @@ public final class LiteProtoToStringTest {
   }
 
   @Test
+  public void unknownFieldSet_noMatch() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.protobuf.UnknownFieldSet;",
+            "class Test {",
+            "  private String test(UnknownFieldSet message) {",
+            "    return message.toString();",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   @Ignore // TODO(b/130683674,ghm): Support checking toString on proto enums.
   public void enums() {
     compilationHelper
