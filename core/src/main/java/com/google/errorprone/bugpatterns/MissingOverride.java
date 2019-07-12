@@ -99,7 +99,7 @@ public class MissingOverride extends BugChecker implements MethodTreeMatcher {
       return null;
     }
     for (Type s : types.closure(owner.type)) {
-      if (s == owner.type) {
+      if (types.isSameType(s, owner.type)) {
         continue;
       }
       for (Symbol m : s.tsym.members().getSymbolsByName(sym.name)) {
