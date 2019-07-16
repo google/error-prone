@@ -32,7 +32,7 @@ import java.lang.annotation.Target;
  * be closed.
  *
  * <p>Note that Android SDK versions prior to 19 do not support try-with-resources, so the
- * annotation should be avoided on APIs that may be used on Android.
+ * annotation should be avoided on APIs that may be used on Android, unless desugaring is used.
  */
 @Documented
 @Target({CONSTRUCTOR, METHOD})
