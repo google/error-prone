@@ -87,7 +87,7 @@ public abstract class AbstractToString extends BugChecker
       Tree parent, ExpressionTree expression, VisitorState state);
 
   private static final Matcher<ExpressionTree> TO_STRING =
-      instanceMethod().anyClass().withSignature("toString()");
+      instanceMethod().anyClass().named("toString").withParameters();
 
   private static final Matcher<ExpressionTree> FLOGGER_LOG =
       instanceMethod().onDescendantOf("com.google.common.flogger.LoggingApi").named("log");
@@ -98,7 +98,10 @@ public abstract class AbstractToString extends BugChecker
           staticMethod().onClass("java.lang.String").named("format"));
 
   private static final Matcher<ExpressionTree> VALUE_OF =
-      staticMethod().onClass("java.lang.String").withSignature("valueOf(java.lang.Object)");
+      staticMethod()
+          .onClass("java.lang.String")
+          .named("valueOf")
+          .withParameters("java.lang.Object");
 
   private static final Matcher<ExpressionTree> PRINT_STRING =
       anyOf(
