@@ -77,13 +77,11 @@ public final class InconsistentHashCode extends BugChecker implements ClassTreeM
 
   /** Non-static methods that we might expect to see in #hashCode, and allow. */
   private static final Matcher<ExpressionTree> HASH_CODE_METHODS =
-      instanceMethod().onDescendantOf("java.lang.Object").named("hashCode").withParameters();
+      instanceMethod().anyClass().named("hashCode").withParameters();
 
   /** Non-static methods that we might expect to see in #equals, and allow. */
   private static final Matcher<ExpressionTree> EQUALS_METHODS =
-      anyOf(
-          instanceMethod().onDescendantOf("java.lang.Object").named("getClass"),
-          instanceEqualsInvocation());
+      anyOf(instanceMethod().anyClass().named("getClass"), instanceEqualsInvocation());
 
   @Override
   public Description matchClass(ClassTree tree, VisitorState state) {

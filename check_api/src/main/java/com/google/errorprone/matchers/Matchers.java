@@ -1280,10 +1280,9 @@ public class Matchers {
   }
 
   private static final Matcher<ExpressionTree> ASSERT_EQUALS =
-      anyOf(
-          staticMethod().onClass("org.junit.Assert").named("assertEquals"),
-          staticMethod().onClass("junit.framework.Assert").named("assertEquals"),
-          staticMethod().onClass("junit.framework.TestCase").named("assertEquals"));
+      staticMethod()
+          .onClassAny("org.junit.Assert", "junit.framework.Assert", "junit.framework.TestCase")
+          .named("assertEquals");
 
   /**
    * Matches calls to the method {@code org.junit.Assert#assertEquals} and corresponding methods in
@@ -1294,10 +1293,9 @@ public class Matchers {
   }
 
   private static final Matcher<ExpressionTree> ASSERT_NOT_EQUALS =
-      anyOf(
-          staticMethod().onClass("org.junit.Assert").named("assertNotEquals"),
-          staticMethod().onClass("junit.framework.Assert").named("assertNotEquals"),
-          staticMethod().onClass("junit.framework.TestCase").named("assertNotEquals"));
+      staticMethod()
+          .onClassAny("org.junit.Assert", "junit.framework.Assert", "junit.framework.TestCase")
+          .named("assertNotEquals");
 
   /**
    * Matches calls to the method {@code org.junit.Assert#assertNotEquals} and corresponding methods
