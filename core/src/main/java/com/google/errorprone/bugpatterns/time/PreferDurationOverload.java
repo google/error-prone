@@ -54,27 +54,28 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
-/** This check suggests the use of {@code java.time.Duration}-based APIs, when available. */
+/** This check suggests the use of {@code java.time}-based APIs, when available. */
 @BugPattern(
     name = "PreferDurationOverload",
     summary =
-        "Prefer using java.time.Duration-based APIs when available. Note that this checker does"
+        "Prefer using java.time-based APIs when available. Note that this checker does"
             + " not and cannot guarantee that the overloads have equivalent semantics, but that is"
             + " generally the case with overloaded methods.",
     severity = WARNING,
     explanation =
-        "APIs that accept a java.time.Duration should be preferred, when available. JodaTime is"
-            + " now considered a legacy library, and APIs that require a <long, TimeUnit> pair"
-            + " suffer from a number of problems: 1) they may require plumbing 2 parameters"
-            + " through various layers of your application; 2) overflows are possible when doing"
-            + " any duration math; 3) they lack semantic meaning; 4) decomposing a duration into a"
-            + " <long, TimeUnit> is dangerous because of unit mismatch and/or excessive"
-            + " truncation.",
+        "APIs that accept a java.time.Duration/Instant should be preferred, when available."
+            + " JodaTime is now considered a legacy library, and APIs that require a <long,"
+            + " TimeUnit> pair suffer from a number of problems: 1) they may require plumbing 2"
+            + " parameters through various layers of your application; 2) overflows are possible"
+            + " when doing any duration math; 3) they lack semantic meaning; 4) decomposing a"
+            + " duration into a <long, TimeUnit> is dangerous because of unit mismatch and/or"
+            + " excessive truncation.",
     providesFix = REQUIRES_HUMAN_ATTENTION)
 public final class PreferDurationOverload extends BugChecker
     implements MethodInvocationTreeMatcher {
 
   private static final String JAVA_DURATION = "java.time.Duration";
+  private static final String JAVA_INSTANT = "java.time.Instant";
   private static final String JODA_DURATION = "org.joda.time.Duration";
 
   private static final ImmutableMap<TimeUnit, String> TIMEUNIT_TO_DURATION_FACTORY =
@@ -119,15 +120,10 @@ public final class PreferDurationOverload extends BugChecker
 
     if (isNumericMethodCall(tree, state)) {
       if (hasValidJavaTimeDurationOverload(tree, state)) {
-        // we don't know what units to use, but we can still warn the user!
-        return buildDescription(tree)
-            .setMessage(
-                String.format(
-                    "If the numeric primitive (%s) represents a Duration, please call"
-                        + " %s(Duration) instead.",
-                    state.getSourceForNode(arguments.get(0)),
-                    state.getSourceForNode(tree.getMethodSelect())))
-            .build();
+        return buildDescriptionForNumericPrimitive(tree, state, arguments, "Duration");
+      }
+      if (hasValidJavaTimeInstantOverload(tree, state)) {
+        return buildDescriptionForNumericPrimitive(tree, state, arguments, "Instant");
       }
     }
 
@@ -166,7 +162,7 @@ public final class PreferDurationOverload extends BugChecker
       }
     }
 
-    if (isJodaDurationMethodCall(tree, state)) {
+    if (isMethodCallWithSingleParameter(tree, state, "org.joda.time.ReadableDuration")) {
       ExpressionTree arg0 = arguments.get(0);
       if (hasValidJavaTimeDurationOverload(tree, state)) {
         SuggestedFix.Builder fix = SuggestedFix.builder();
@@ -205,7 +201,28 @@ public final class PreferDurationOverload extends BugChecker
       }
     }
 
+    if (isMethodCallWithSingleParameter(tree, state, "org.joda.time.ReadableInstant")) {
+      // TODO(b/137688947): implement this branch
+    }
+
     return Description.NO_MATCH;
+  }
+
+  private Description buildDescriptionForNumericPrimitive(
+      MethodInvocationTree tree,
+      VisitorState state,
+      List<? extends ExpressionTree> arguments,
+      String javaTimeType) {
+    // we don't know what units to use, but we can still warn the user!
+    return buildDescription(tree)
+        .setMessage(
+            String.format(
+                "If the numeric primitive (%s) represents a %s, please call %s(%s) instead.",
+                state.getSourceForNode(arguments.get(0)),
+                javaTimeType,
+                state.getSourceForNode(tree.getMethodSelect()),
+                javaTimeType))
+        .build();
   }
 
   private static boolean isNumericMethodCall(MethodInvocationTree tree, VisitorState state) {
@@ -219,13 +236,11 @@ public final class PreferDurationOverload extends BugChecker
     return false;
   }
 
-  private static boolean isJodaDurationMethodCall(MethodInvocationTree tree, VisitorState state) {
-    Type jodaDurationType = state.getTypeFromString("org.joda.time.ReadableDuration");
+  private static boolean isMethodCallWithSingleParameter(
+      MethodInvocationTree tree, VisitorState state, String typeName) {
+    Type type = state.getTypeFromString(typeName);
     List<VarSymbol> params = getSymbol(tree).getParameters();
-    if (params.size() == 1) {
-      return isSubtype(params.get(0).asType(), jodaDurationType, state);
-    }
-    return false;
+    return (params.size() == 1) && isSubtype(params.get(0).asType(), type, state);
   }
 
   private static boolean isLongTimeUnitMethodCall(MethodInvocationTree tree, VisitorState state) {
@@ -241,12 +256,22 @@ public final class PreferDurationOverload extends BugChecker
 
   private static boolean hasValidJavaTimeDurationOverload(
       MethodInvocationTree tree, VisitorState state) {
+    return hasValidJavaTimeOverload(tree, state, JAVA_DURATION);
+  }
+
+  private static boolean hasValidJavaTimeInstantOverload(
+      MethodInvocationTree tree, VisitorState state) {
+    return hasValidJavaTimeOverload(tree, state, JAVA_INSTANT);
+  }
+
+  private static boolean hasValidJavaTimeOverload(
+      MethodInvocationTree tree, VisitorState state, String typeName) {
     MethodSymbol methodSymbol = getSymbol(tree);
     if (methodSymbol == null) {
       return false;
     }
-    Type durationType = state.getTypeFromString(JAVA_DURATION);
-    Set<MethodSymbol> durationOverloads =
+    Type type = state.getTypeFromString(typeName);
+    Set<MethodSymbol> overloads =
         ASTHelpers.findMatchingMethods(
             methodSymbol.name,
             input ->
@@ -254,10 +279,10 @@ public final class PreferDurationOverload extends BugChecker
                     // TODO(kak): Do we want to check return types too?
                     && input.isStatic() == methodSymbol.isStatic()
                     && input.getParameters().size() == 1
-                    && isSameType(input.getParameters().get(0).asType(), durationType, state),
+                    && isSameType(input.getParameters().get(0).asType(), type, state),
             ASTHelpers.enclosingClass(methodSymbol).asType(),
             state.getTypes());
-    if (durationOverloads.isEmpty()) {
+    if (overloads.isEmpty()) {
       return false;
     }
 
@@ -268,6 +293,6 @@ public final class PreferDurationOverload extends BugChecker
     if (t == null) {
       return true;
     }
-    return durationOverloads.stream().noneMatch(getSymbol(t)::equals);
+    return overloads.stream().noneMatch(getSymbol(t)::equals);
   }
 }
