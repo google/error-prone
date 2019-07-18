@@ -16,18 +16,23 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.common.collect.Iterables.getLast;
 import static com.google.errorprone.BugPattern.ProvidesFix.REQUIRES_HUMAN_ATTENTION;
 import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
+import static com.google.errorprone.util.ASTHelpers.getAnnotation;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 
 import com.google.common.collect.HashMultimap;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Multimap;
+import com.google.common.collect.Sets;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.CompilationUnitTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
+import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
@@ -44,9 +49,12 @@ import com.sun.source.util.TreePathScanner;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.tree.JCTree;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Target;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import javax.lang.model.element.ElementKind;
@@ -60,6 +68,8 @@ import javax.lang.model.element.ElementKind;
     providesFix = REQUIRES_HUMAN_ATTENTION,
     documentSuppression = false)
 public final class FieldCanBeLocal extends BugChecker implements CompilationUnitTreeMatcher {
+  private static final ImmutableSet<ElementType> VALID_ON_LOCAL_VARIABLES =
+      Sets.immutableEnumSet(ElementType.LOCAL_VARIABLE, ElementType.TYPE_USE);
 
   @Override
   public Description matchCompilationUnit(CompilationUnitTree tree, VisitorState state) {
@@ -75,10 +85,31 @@ public final class FieldCanBeLocal extends BugChecker implements CompilationUnit
             && symbol.getKind() == ElementKind.FIELD
             && symbol.isPrivate()
             && !isSuppressed(variableTree)
+            && canBeLocal(variableTree)
         ) {
           potentialFields.put(symbol, getCurrentPath());
         }
         return null;
+      }
+
+      private boolean canBeLocal(VariableTree variableTree) {
+        if (variableTree.getModifiers() == null) {
+          return true;
+        }
+        return variableTree.getModifiers().getAnnotations().stream()
+            .allMatch(this::canBeUsedOnLocalVariable);
+      }
+
+      private boolean canBeUsedOnLocalVariable(AnnotationTree annotationTree) {
+        // TODO(b/137842683): Should this (and all other places using getAnnotation with Target) be
+        // replaced with annotation mirror traversals?
+        // This is safe given we know that Target does not have Class fields.
+        Target target = getAnnotation(annotationTree, Target.class);
+        if (target == null) {
+          return true;
+        }
+        return !Sets.intersection(VALID_ON_LOCAL_VARIABLES, ImmutableSet.copyOf(target.value()))
+            .isEmpty();
       }
 
     }.scan(state.getPath(), null);
@@ -208,7 +239,9 @@ public final class FieldCanBeLocal extends BugChecker implements CompilationUnit
         continue;
       }
       SuggestedFix.Builder fix = SuggestedFix.builder();
-      String type = state.getSourceForNode(((VariableTree) declarationSite.getLeaf()).getType());
+      VariableTree variableTree = (VariableTree) declarationSite.getLeaf();
+      String type = state.getSourceForNode(variableTree.getType());
+      String annotations = getAnnotationSource(state, variableTree);
       fix.delete(declarationSite.getLeaf());
       Set<Tree> deletedTrees = new HashSet<>();
       for (TreePath assignmentSite : assignmentLocations) {
@@ -224,7 +257,7 @@ public final class FieldCanBeLocal extends BugChecker implements CompilationUnit
           deletedTrees.add(assignmentTree.getVariable());
           fix.delete(assignmentSite.getParentPath().getLeaf());
         } else {
-          fix.prefixWith(assignmentSite.getLeaf(), type + " ");
+          fix.prefixWith(assignmentSite.getLeaf(), annotations + " " + type + " ");
         }
       }
       // Strip "this." off any uses of the field.
@@ -246,5 +279,18 @@ public final class FieldCanBeLocal extends BugChecker implements CompilationUnit
       state.reportMatch(describeMatch(declarationSite.getLeaf(), fix.build()));
     }
     return Description.NO_MATCH;
+  }
+
+  private static String getAnnotationSource(VisitorState state, VariableTree variableTree) {
+    List<? extends AnnotationTree> annotations = variableTree.getModifiers().getAnnotations();
+    if (annotations == null || annotations.isEmpty()) {
+      return "";
+    }
+    return state
+        .getSourceCode()
+        .subSequence(
+            ((JCTree) annotations.get(0)).getStartPosition(),
+            state.getEndPosition(getLast(annotations)))
+        .toString();
   }
 }

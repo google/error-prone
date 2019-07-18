@@ -17,6 +17,7 @@
 package com.google.errorprone.bugpatterns;
 
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
+import com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode;
 import com.google.errorprone.CompilationTestHelper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -41,6 +42,124 @@ public final class FieldCanBeLocalTest {
             "  private int a;",
             "  int foo() {",
             "    a = 1;",
+            "    return a;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void hasFieldAnnotation_noMatch() {
+    helper
+        .addSourceLines(
+            "Field.java",
+            "import java.lang.annotation.ElementType;",
+            "import java.lang.annotation.Retention;",
+            "import java.lang.annotation.RetentionPolicy;",
+            "import java.lang.annotation.Target;",
+            "@Target(ElementType.FIELD)",
+            "@Retention(RetentionPolicy.RUNTIME)",
+            "@interface Field {}")
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  @Field private int a;",
+            "  int foo() {",
+            "    a = 1;",
+            "    return a;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void hasVariableAnnotation_matchesAndAnnotationCopied() {
+    refactoringTestHelper
+        .addInputLines(
+            "Field.java",
+            "import java.lang.annotation.ElementType;",
+            "import java.lang.annotation.Retention;",
+            "import java.lang.annotation.RetentionPolicy;",
+            "import java.lang.annotation.Target;",
+            "@Target({ElementType.FIELD, ElementType.LOCAL_VARIABLE})",
+            "@Retention(RetentionPolicy.RUNTIME)",
+            "@interface Field {}")
+        .expectUnchanged()
+        .addInputLines(
+            "Test.java",
+            "class Test {",
+            "  @Field private int a;",
+            "  int foo() {",
+            "    a = 1;",
+            "    return a;",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "class Test {",
+            "  int foo() {",
+            "    @Field int a = 1;",
+            "    return a;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void multipleVariableAnnotations() {
+    refactoringTestHelper
+        .addInputLines(
+            "Test.java",
+            "import javax.annotation.Nonnull;",
+            "import javax.annotation.Nullable;",
+            "class Test {",
+            "  @Nonnull /* foo */ @Nullable private Integer a;",
+            "  int foo() {",
+            "    a = 1;",
+            "    return a;",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "import javax.annotation.Nonnull;",
+            "import javax.annotation.Nullable;",
+            "class Test {",
+            "",
+            "  int foo() {",
+            "    @Nonnull /* foo */ @Nullable Integer a = 1;",
+            "    return a;",
+            "  }",
+            "}")
+        .doTest(TestMode.TEXT_MATCH);
+  }
+
+  @Test
+  public void hasTypeUseAnnotation_match() {
+    refactoringTestHelper
+        .addInputLines(
+            "Field.java",
+            "import java.lang.annotation.ElementType;",
+            "import java.lang.annotation.Retention;",
+            "import java.lang.annotation.RetentionPolicy;",
+            "import java.lang.annotation.Target;",
+            "@Target(ElementType.TYPE_USE)",
+            "@Retention(RetentionPolicy.RUNTIME)",
+            "@interface Field {}")
+        .expectUnchanged()
+        .addInputLines(
+            "Test.java",
+            "class Test {",
+            "  @Field private int a;",
+            "  int foo() {",
+            "    a = 1;",
+            "    return a;",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "class Test {",
+            "  int foo() {",
+            "    @Field int a = 1;",
             "    return a;",
             "  }",
             "}")
