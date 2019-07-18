@@ -356,8 +356,16 @@ public class VisitorState {
   // TODO(cushon): deal with binary compat issues and return ClassSymbol
   @Nullable
   public Symbol getSymbolFromString(String symStr) {
-    symStr = inferBinaryName(symStr);
-    Name name = getName(symStr);
+    return getSymbolFromName(getName(inferBinaryName(symStr)));
+  }
+
+  /**
+   * Look up the class symbol for a given Name.
+   *
+   * @param name the name to look up, which must be in binary form (i.e. with $ for nested classes).
+   */
+  @Nullable
+  public Symbol getSymbolFromName(Name name) {
     boolean modular = sharedState.modules.getDefaultModule() != getSymtab().noModule;
     if (!modular) {
       return getSymbolFromString(getSymtab().noModule, name);
