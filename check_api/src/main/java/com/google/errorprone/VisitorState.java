@@ -220,7 +220,23 @@ public class VisitorState {
         sharedState);
   }
 
+  @Deprecated // TODO(amalloy): Delete after next error-prone release.
   public VisitorState withPathAndSuppression(TreePath path, SuppressedState suppressedState) {
+    return new VisitorState(
+        context,
+        descriptionListener,
+        severityMap,
+        errorProneOptions,
+        statisticsCollector,
+        path,
+        suppressedState,
+        sharedState);
+  }
+
+  public VisitorState withSuppression(SuppressedState suppressedState) {
+    if (suppressedState == this.suppressedState) {
+      return this;
+    }
     return new VisitorState(
         context,
         descriptionListener,

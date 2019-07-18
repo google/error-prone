@@ -421,6 +421,8 @@ public class ErrorProneScanner extends Scanner {
   private <M extends Suppressible, T extends Tree> VisitorState processMatchers(
       Iterable<M> matchers, T tree, TreeProcessor<M, T> processingFunction, VisitorState oldState) {
     ErrorProneOptions errorProneOptions = oldState.errorProneOptions();
+    // A VisitorState with our new path, but without mentioning the suppression of any matcher.
+    VisitorState newState = oldState.withPath(getCurrentPath());
     for (M matcher : matchers) {
       SuppressedState suppressed = isSuppressed(matcher, errorProneOptions);
       // If the ErrorProneOptions say to visit suppressed code, we still visit it
@@ -428,8 +430,7 @@ public class ErrorProneScanner extends Scanner {
           || errorProneOptions.isIgnoreSuppressionAnnotations()) {
         try (AutoCloseable unused = oldState.timingSpan(matcher)) {
           // We create a new VisitorState with the suppression info specific to this matcher.
-          VisitorState stateWithSuppressionInformation =
-              oldState.withPathAndSuppression(getCurrentPath(), suppressed);
+          VisitorState stateWithSuppressionInformation = newState.withSuppression(suppressed);
           reportMatch(
               processingFunction.process(matcher, tree, stateWithSuppressionInformation),
               stateWithSuppressionInformation);
@@ -438,10 +439,7 @@ public class ErrorProneScanner extends Scanner {
         }
       }
     }
-
-    // Return a VisitorState with our new path, but without mentioning the suppression of any
-    // matcher.
-    return oldState.withPath(getCurrentPath());
+    return newState;
   }
 
   @Override
