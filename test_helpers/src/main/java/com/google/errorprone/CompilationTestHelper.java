@@ -326,6 +326,8 @@ public class CompilationTestHelper {
                         outputStream))
                 .that(result)
                 .isEqualTo(expected));
+
+    diagnosticHelper.clearDiagnostics();
   }
 
   private Result compile() {
