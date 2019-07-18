@@ -377,6 +377,35 @@ public class CompilationTestHelperTest {
     assertThat(expected).hasMessageThat().contains("No expected error message with key [X]");
   }
 
+  @Test
+  public void doTestClearsDiagnostics() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "public class Test {",
+            "  public boolean doIt() {",
+            "    // BUG: Diagnostic contains: Method may return normally",
+            "    return true;",
+            "  }",
+            "}")
+        .doTest();
+
+    AssertionError expected =
+        assertThrows(
+            AssertionError.class,
+            () ->
+                compilationHelper
+                    .addSourceLines(
+                      "Test.java",
+                      "public class Test {",
+                      "  public void doIt() {",
+                      "    // BUG: Diagnostic contains: Method may return normally",
+                      "  }",
+                      "}")
+                    .doTest());
+    assertThat(expected.getMessage()).contains("Did not see an error on line 4");
+  }
+
   @BugPattern(
       name = "ReturnTreeChecker",
       summary = "Method may return normally.",
