@@ -46,8 +46,9 @@ import java.util.Optional;
 @BugPattern(
     name = "TreeToString",
     summary =
-        "Tree#toString shouldn't be used for Trees deriving from the code being "
-            + "compiled, as it discards whitespace and comments.",
+        "Tree#toString shouldn't be used for Trees deriving from the code being compiled, as it"
+            + " discards whitespace and comments. If this code is within an ErrorProne check,"
+            + " consider VisitorState#getSourceForNode.",
     severity = WARNING,
     providesFix = NO_FIX)
 public class TreeToString extends AbstractToString {
