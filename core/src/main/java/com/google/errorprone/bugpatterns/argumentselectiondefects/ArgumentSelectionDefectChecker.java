@@ -60,7 +60,7 @@ import java.util.function.Function;
 public class ArgumentSelectionDefectChecker extends BugChecker
     implements MethodInvocationTreeMatcher, NewClassTreeMatcher {
 
-  private final ArgumentChangeFinder argumentchangeFinder;
+  private final ArgumentChangeFinder argumentChangeFinder;
 
   public ArgumentSelectionDefectChecker() {
     this(
@@ -76,7 +76,7 @@ public class ArgumentSelectionDefectChecker extends BugChecker
 
   @VisibleForTesting
   ArgumentSelectionDefectChecker(ArgumentChangeFinder argumentChangeFinder) {
-    this.argumentchangeFinder = argumentChangeFinder;
+    this.argumentChangeFinder = argumentChangeFinder;
   }
 
   @Override
@@ -112,7 +112,7 @@ public class ArgumentSelectionDefectChecker extends BugChecker
 
   private Description visitNewClassOrMethodInvocation(InvocationInfo invocationInfo) {
 
-    Changes changes = argumentchangeFinder.findChanges(invocationInfo);
+    Changes changes = argumentChangeFinder.findChanges(invocationInfo);
 
     if (changes.isEmpty()) {
       return Description.NO_MATCH;
