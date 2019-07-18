@@ -253,6 +253,24 @@ public class PreferDurationOverloadTest {
   }
 
   @Test
+  public void callingNumericPrimitiveMethodWithInstantOverload() {
+    helper
+        .addSourceLines(
+            "TestClass.java",
+            "public class TestClass {",
+            "  private void bar(java.time.Instant i) {",
+            "  }",
+            "  private void bar(long timestamp) {",
+            "  }",
+            "  public void foo() {",
+            "    // BUG: Diagnostic contains: call bar(Instant) instead",
+            "    bar(42);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void ignoredApisAreExcluded() {
   }
 }
