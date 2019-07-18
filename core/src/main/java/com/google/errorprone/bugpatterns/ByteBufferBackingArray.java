@@ -63,9 +63,7 @@ public class ByteBufferBackingArray extends BugChecker implements MethodInvocati
       anyOf(instanceMethod().onDescendantOf(ByteBuffer.class.getName()).named("arrayOffset"));
 
   private static final Matcher<ExpressionTree> BYTE_BUFFER_ALLOWED_INITIALIZERS_MATCHER =
-      anyOf(
-          staticMethod().onClass(ByteBuffer.class.getName()).named("allocate"),
-          staticMethod().onClass(ByteBuffer.class.getName()).named("wrap"));
+      staticMethod().onClass(ByteBuffer.class.getName()).namedAnyOf("allocate", "wrap");
 
   private static final Matcher<ExpressionTree> BYTE_BUFFER_MATCHER = isSameType(ByteBuffer.class);
 

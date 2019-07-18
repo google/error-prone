@@ -60,21 +60,18 @@ public class OrphanedFormatString extends BugChecker implements LiteralTreeMatch
               constructor().forClass("java.lang.StringBuilder"),
               allOf(
                   constructor()
-                      .forClass(TypePredicates.isDescendantOf((s) -> s.getSymtab().throwableType)),
+                      .forClass(TypePredicates.isDescendantOf(s -> s.getSymtab().throwableType)),
                   (tree, state) -> {
                     Symbol sym = ASTHelpers.getSymbol(tree);
                     return sym instanceof MethodSymbol && !((MethodSymbol) sym).isVarArgs();
                   }),
-              instanceMethod().onDescendantOf("java.io.PrintStream").namedAnyOf("print", "println"),
-              instanceMethod().onDescendantOf("java.io.PrintWriter").namedAnyOf("print", "println"),
+              instanceMethod()
+                  .onDescendantOfAny("java.io.PrintStream", "java.io.PrintWriter")
+                  .namedAnyOf("print", "println"),
               instanceMethod()
                   .onExactClass("java.lang.StringBuilder")
                   .named("append")
-                  .withParameters("java.lang.CharSequence", "int", "int"),
-              instanceMethod()
-                  .onExactClass("java.lang.StringBuilder")
-                  .named("append")
-                  .withParameters("char[]", "int", "int")));
+                  .withParameters("java.lang.CharSequence", "int", "int")));
 
 
   @Override

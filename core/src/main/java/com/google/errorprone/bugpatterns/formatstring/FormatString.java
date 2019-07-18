@@ -42,9 +42,10 @@ public class FormatString extends BugChecker implements MethodInvocationTreeMatc
   // TODO(cushon): add support for additional printf methods, maybe with an annotation
   private static final Matcher<ExpressionTree> FORMAT_METHOD =
       anyOf(
-          instanceMethod().onDescendantOf("java.io.PrintStream").namedAnyOf("format", "printf"),
-          instanceMethod().onDescendantOf("java.io.PrintWriter").namedAnyOf("format", "printf"),
-          instanceMethod().onDescendantOf("java.util.Formatter").named("format"),
+          instanceMethod()
+              .onDescendantOfAny(
+                  "java.io.PrintStream", "java.io.PrintWriter", "java.util.Formatter")
+              .namedAnyOf("format", "printf"),
           staticMethod().onClass("java.lang.String").named("format"),
           staticMethod()
               .onClass("java.io.Console")
