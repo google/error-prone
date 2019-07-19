@@ -135,4 +135,37 @@ public class UnnecessaryMethodInvocationMatcherTest {
         .expectUnchanged()
         .doTest();
   }
+
+  @Test
+  public void expressionStatement() {
+    refactoringTestHelper
+        .addInputLines(
+            "Test.java",
+            "import static com.google.errorprone.matchers.Matchers.*;",
+            "import com.google.errorprone.matchers.Matcher;",
+            "import com.sun.source.tree.StatementTree;",
+            "public class Test {",
+            "  private static final Matcher<StatementTree> TARGETED =",
+            "      expressionStatement(",
+            "          methodInvocation(",
+            "              instanceMethod()",
+            "                  .onDescendantOfAny(",
+            "                      \"java.lang.Class\",",
+            "                      \"java.lang.String\")));",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "import static com.google.errorprone.matchers.Matchers.*;",
+            "import com.google.errorprone.matchers.Matcher;",
+            "import com.sun.source.tree.StatementTree;",
+            "public class Test {",
+            "  private static final Matcher<StatementTree> TARGETED =",
+            "      expressionStatement(",
+            "          instanceMethod()",
+            "              .onDescendantOfAny(",
+            "                  \"java.lang.Class\",",
+            "                  \"java.lang.String\"));",
+            "}")
+        .doTest();
+  }
 }
