@@ -60,6 +60,45 @@ public class PreferDurationOverloadTest {
   }
 
   @Test
+  public void callingLongTimeUnitMethodWithDurationOverload_durationDecompose() {
+    helper
+        .addSourceLines(
+            "TestClass.java",
+            "import com.google.common.cache.CacheBuilder;",
+            "import java.time.Duration;",
+            "import java.util.concurrent.TimeUnit;",
+            "public class TestClass {",
+            "  public CacheBuilder foo(CacheBuilder builder) {",
+            "    Duration duration = Duration.ofMillis(12345);",
+            "    // BUG: Diagnostic contains: builder.expireAfterAccess(duration);",
+            "    return builder.expireAfterAccess(duration.getSeconds(), TimeUnit.SECONDS);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void callingLongTimeUnitMethodWithDurationOverload_durationHashCode() {
+    // this is admittedly a _very_ weird case, but we should _not_ suggest re-writing to:
+    // builder.expireAfterAccess(duration)
+    helper
+        .addSourceLines(
+            "TestClass.java",
+            "import com.google.common.cache.CacheBuilder;",
+            "import java.time.Duration;",
+            "import java.util.concurrent.TimeUnit;",
+            "public class TestClass {",
+            "  public CacheBuilder foo(CacheBuilder builder) {",
+            "    Duration duration = Duration.ofMillis(12345);",
+            "    // BUG: Diagnostic contains: return"
+                + " builder.expireAfterAccess(Duration.ofSeconds(duration.hashCode()));",
+            "    return builder.expireAfterAccess(duration.hashCode(), TimeUnit.SECONDS);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void callingLongTimeUnitMethodWithDurationOverload_intParam() {
     helper
         .addSourceLines(
