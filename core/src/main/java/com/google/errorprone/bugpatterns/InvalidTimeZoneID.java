@@ -26,7 +26,6 @@ import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
-import com.google.errorprone.matchers.Matchers;
 import com.google.errorprone.matchers.method.MethodMatchers;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
@@ -47,11 +46,10 @@ public class InvalidTimeZoneID extends BugChecker implements MethodInvocationTre
       ImmutableSet.copyOf(TimeZone.getAvailableIDs());
 
   private static final Matcher<ExpressionTree> METHOD_MATCHER =
-      Matchers.methodInvocation(
-          MethodMatchers.staticMethod()
-              .onClass("java.util.TimeZone")
-              .named("getTimeZone")
-              .withParameters("java.lang.String"));
+      MethodMatchers.staticMethod()
+          .onClass("java.util.TimeZone")
+          .named("getTimeZone")
+          .withParameters("java.lang.String");
 
   // https://docs.oracle.com/javase/8/docs/api/java/util/TimeZone.html
   // "a custom time zone ID can be specified to produce a TimeZone".

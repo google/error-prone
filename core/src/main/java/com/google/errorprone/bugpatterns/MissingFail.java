@@ -161,7 +161,7 @@ public class MissingFail extends BugChecker implements TryTreeMatcher {
       Matchers.allOf(
           ASSERT_CALL, Matchers.not(Matchers.anyOf(ASSERT_FALSE_FALSE, ASSERT_TRUE_TRUE)));
   private static final Matcher<ExpressionTree> VERIFY_CALL =
-      methodInvocation(staticMethod().onClass("org.mockito.Mockito").named("verify"));
+      staticMethod().onClass("org.mockito.Mockito").named("verify");
   private static final MultiMatcher<TryTree, Tree> ASSERT_LAST_CALL_IN_TRY =
       new ChildOfTryMatcher(
           MatchType.LAST,
