@@ -45,6 +45,7 @@ import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
+import com.sun.source.tree.NewClassTree;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type;
@@ -64,19 +65,30 @@ import java.util.concurrent.TimeUnit;
     severity = WARNING,
     explanation =
         "APIs that accept a java.time.Duration/Instant should be preferred, when available."
-            + " JodaTime is now considered a legacy library, and APIs that require a <long,"
-            + " TimeUnit> pair suffer from a number of problems: 1) they may require plumbing 2"
-            + " parameters through various layers of your application; 2) overflows are possible"
-            + " when doing any duration math; 3) they lack semantic meaning; 4) decomposing a"
-            + " duration into a <long, TimeUnit> is dangerous because of unit mismatch and/or"
-            + " excessive truncation.",
+            + " JodaTime is now considered a legacy library for Java 8+ users. Representing"
+            + " date/time concepts as numeric primitives is strongly discouraged (e.g., long"
+            + " timeout). APIs that require a <long, TimeUnit> pair suffer from a number of"
+            + " problems: 1) they may require plumbing 2 parameters through various layers of your"
+            + " application; 2) overflows are possible when doing any duration math; 3) they lack"
+            + " semantic meaning; 4) decomposing a duration into a <long, TimeUnit> is dangerous"
+            + " because of unit mismatch and/or excessive truncation.",
     providesFix = REQUIRES_HUMAN_ATTENTION)
 public final class PreferDurationOverload extends BugChecker
     implements MethodInvocationTreeMatcher {
 
   private static final String JAVA_DURATION = "java.time.Duration";
-  private static final String JAVA_INSTANT = "java.time.Instant";
   private static final String JODA_DURATION = "org.joda.time.Duration";
+
+  private static final ImmutableMap<Matcher<ExpressionTree>, TimeUnit>
+      JODA_DURATION_FACTORY_MATCHERS =
+          new ImmutableMap.Builder<Matcher<ExpressionTree>, TimeUnit>()
+              .put(constructor().forClass(JODA_DURATION).withParameters("long"), MILLISECONDS)
+              .put(staticMethod().onClass(JODA_DURATION).named("millis"), MILLISECONDS)
+              .put(staticMethod().onClass(JODA_DURATION).named("standardSeconds"), SECONDS)
+              .put(staticMethod().onClass(JODA_DURATION).named("standardMinutes"), MINUTES)
+              .put(staticMethod().onClass(JODA_DURATION).named("standardHours"), HOURS)
+              .put(staticMethod().onClass(JODA_DURATION).named("standardDays"), DAYS)
+              .build();
 
   private static final ImmutableMap<TimeUnit, String> TIMEUNIT_TO_DURATION_FACTORY =
       new ImmutableMap.Builder<TimeUnit, String>()
@@ -89,20 +101,15 @@ public final class PreferDurationOverload extends BugChecker
           .put(DAYS, "%s.ofDays(%s)")
           .build();
 
+  private static final String JAVA_INSTANT = "java.time.Instant";
+  private static final String JODA_INSTANT = "org.joda.time.Instant";
+
+  private static final Matcher<ExpressionTree> JODA_INSTANT_CONSTRUCTOR_MATCHER =
+      constructor().forClass(JODA_INSTANT).withParameters("long");
+
   private static final Matcher<ExpressionTree> IGNORED_APIS =
       anyOf(
           );
-
-  private static final ImmutableMap<Matcher<ExpressionTree>, TimeUnit>
-      JODA_DURATION_FACTORY_MATCHERS =
-          new ImmutableMap.Builder<Matcher<ExpressionTree>, TimeUnit>()
-              .put(constructor().forClass(JODA_DURATION).withParameters("long"), MILLISECONDS)
-              .put(staticMethod().onClass(JODA_DURATION).named("millis"), MILLISECONDS)
-              .put(staticMethod().onClass(JODA_DURATION).named("standardSeconds"), SECONDS)
-              .put(staticMethod().onClass(JODA_DURATION).named("standardMinutes"), MINUTES)
-              .put(staticMethod().onClass(JODA_DURATION).named("standardHours"), HOURS)
-              .put(staticMethod().onClass(JODA_DURATION).named("standardDays"), DAYS)
-              .build();
 
   // TODO(kak): Add support for constructors that accept a <long, TimeUnit> or JodaTime Duration
 
@@ -119,10 +126,10 @@ public final class PreferDurationOverload extends BugChecker
     // foo(String, long, TimeUnit, Frobber) -> foo(String, Duration, Frobber)
 
     if (isNumericMethodCall(tree, state)) {
-      if (hasValidJavaTimeDurationOverload(tree, state)) {
+      if (hasJavaTimeOverload(tree, state, JAVA_DURATION)) {
         return buildDescriptionForNumericPrimitive(tree, state, arguments, "Duration");
       }
-      if (hasValidJavaTimeInstantOverload(tree, state)) {
+      if (hasJavaTimeOverload(tree, state, JAVA_INSTANT)) {
         return buildDescriptionForNumericPrimitive(tree, state, arguments, "Instant");
       }
     }
@@ -130,7 +137,7 @@ public final class PreferDurationOverload extends BugChecker
     if (isLongTimeUnitMethodCall(tree, state)) {
       Optional<TimeUnit> optionalTimeUnit = DurationToLongTimeUnit.getTimeUnit(arguments.get(1));
       if (optionalTimeUnit.isPresent()) {
-        if (hasValidJavaTimeDurationOverload(tree, state)) {
+        if (hasJavaTimeOverload(tree, state, JAVA_DURATION)) {
           String durationFactory = TIMEUNIT_TO_DURATION_FACTORY.get(optionalTimeUnit.get());
           if (durationFactory != null) {
             SuggestedFix.Builder fix = SuggestedFix.builder();
@@ -164,7 +171,7 @@ public final class PreferDurationOverload extends BugChecker
 
     if (isMethodCallWithSingleParameter(tree, state, "org.joda.time.ReadableDuration")) {
       ExpressionTree arg0 = arguments.get(0);
-      if (hasValidJavaTimeDurationOverload(tree, state)) {
+      if (hasJavaTimeOverload(tree, state, JAVA_DURATION)) {
         SuggestedFix.Builder fix = SuggestedFix.builder();
         // TODO(kak): Maybe only emit a match if Duration doesn't have to be fully qualified?
         String qualifiedDuration = SuggestedFixes.qualifyType(state, fix, JAVA_DURATION);
@@ -175,10 +182,17 @@ public final class PreferDurationOverload extends BugChecker
         for (Entry<Matcher<ExpressionTree>, TimeUnit> entry :
             JODA_DURATION_FACTORY_MATCHERS.entrySet()) {
           if (entry.getKey().matches(arg0, state)) {
+            String value = null;
             if (arg0 instanceof MethodInvocationTree) {
               MethodInvocationTree jodaDurationCreation = (MethodInvocationTree) arg0;
-              String value = state.getSourceForNode(jodaDurationCreation.getArguments().get(0));
+              value = state.getSourceForNode(jodaDurationCreation.getArguments().get(0));
+            }
+            if (arg0 instanceof NewClassTree) {
+              NewClassTree jodaDurationCreation = (NewClassTree) arg0;
+              value = state.getSourceForNode(jodaDurationCreation.getArguments().get(0));
+            }
 
+            if (value != null) {
               String durationFactory = TIMEUNIT_TO_DURATION_FACTORY.get(entry.getValue());
               if (durationFactory != null) {
                 String replacement = String.format(durationFactory, qualifiedDuration, value);
@@ -202,7 +216,33 @@ public final class PreferDurationOverload extends BugChecker
     }
 
     if (isMethodCallWithSingleParameter(tree, state, "org.joda.time.ReadableInstant")) {
-      // TODO(b/137688947): implement this branch
+      ExpressionTree arg0 = arguments.get(0);
+      if (hasJavaTimeOverload(tree, state, JAVA_INSTANT)) {
+        SuggestedFix.Builder fix = SuggestedFix.builder();
+        // TODO(kak): Maybe only emit a match if Instant doesn't have to be fully qualified?
+        String qualifiedInstant = SuggestedFixes.qualifyType(state, fix, JAVA_INSTANT);
+
+        // TODO(kak): Add support for org.joda.time.Instant.EPOCH -> java.time.Instant.EPOCH
+
+        // If the Joda Instant is being constructed inline, then unwrap it.
+        if (JODA_INSTANT_CONSTRUCTOR_MATCHER.matches(arg0, state)) {
+          if (arg0 instanceof NewClassTree) {
+            NewClassTree jodaInstantCreation = (NewClassTree) arg0;
+            String value = state.getSourceForNode(jodaInstantCreation.getArguments().get(0));
+            fix.replace(arg0, String.format("%s.ofEpochMilli(%s)", qualifiedInstant, value));
+            return describeMatch(tree, fix.build());
+          }
+        }
+
+        // We could suggest using JavaTimeConversions.toJavaInstant(jodaInstant), but that
+        // requires an additional dependency and isn't open-sourced.
+        fix.replace(
+            arguments.get(0),
+            String.format(
+                "%s.ofEpochMilli(%s.getMillis())",
+                qualifiedInstant, state.getSourceForNode(arguments.get(0))));
+        return describeMatch(tree, fix.build());
+      }
     }
 
     return Description.NO_MATCH;
@@ -254,17 +294,7 @@ public final class PreferDurationOverload extends BugChecker
     return false;
   }
 
-  private static boolean hasValidJavaTimeDurationOverload(
-      MethodInvocationTree tree, VisitorState state) {
-    return hasValidJavaTimeOverload(tree, state, JAVA_DURATION);
-  }
-
-  private static boolean hasValidJavaTimeInstantOverload(
-      MethodInvocationTree tree, VisitorState state) {
-    return hasValidJavaTimeOverload(tree, state, JAVA_INSTANT);
-  }
-
-  private static boolean hasValidJavaTimeOverload(
+  private static boolean hasJavaTimeOverload(
       MethodInvocationTree tree, VisitorState state, String typeName) {
     MethodSymbol methodSymbol = getSymbol(tree);
     if (methodSymbol == null) {

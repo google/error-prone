@@ -148,7 +148,7 @@ public class PreferDurationOverloadTest {
   }
 
   @Test
-  public void callingJodaDurationMethodWithDurationOverload_privateMethod_jodaMillis() {
+  public void callingJodaDurationMethodWithDurationOverload_privateMethod_jodaDurationMillis() {
     helper
         .addSourceLines(
             "TestClass.java",
@@ -161,6 +161,44 @@ public class PreferDurationOverloadTest {
             "  public void foo() {",
             "    // BUG: Diagnostic contains: bar(Duration.ofMillis(42));",
             "    bar(org.joda.time.Duration.millis(42));",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void callingJodaDurationMethodWithDurationOverload_privateMethod_jodaDurationCtor() {
+    helper
+        .addSourceLines(
+            "TestClass.java",
+            "import java.time.Duration;",
+            "public class TestClass {",
+            "  private void bar(org.joda.time.Duration d) {",
+            "  }",
+            "  private void bar(Duration d) {",
+            "  }",
+            "  public void foo() {",
+            "    // BUG: Diagnostic contains: bar(Duration.ofMillis(42));",
+            "    bar(new org.joda.time.Duration(42));",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void callingJodaInstantMethodWithInstantOverload_privateMethod_jodaInstantCtor() {
+    helper
+        .addSourceLines(
+            "TestClass.java",
+            "import java.time.Instant;",
+            "public class TestClass {",
+            "  private void bar(org.joda.time.Instant i) {",
+            "  }",
+            "  private void bar(Instant i) {",
+            "  }",
+            "  public void foo() {",
+            "    // BUG: Diagnostic contains: bar(Instant.ofEpochMilli(42));",
+            "    bar(new org.joda.time.Instant(42));",
             "  }",
             "}")
         .doTest();
