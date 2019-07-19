@@ -351,7 +351,7 @@ final class MethodMatcherImpl
 
   @Override
   public MethodNameMatcher namedAnyOf(String... names) {
-    return namedAnyOf(ImmutableList.copyOf(names));
+    return namedAnyOf(ImmutableSet.copyOf(names));
   }
 
   @Override
