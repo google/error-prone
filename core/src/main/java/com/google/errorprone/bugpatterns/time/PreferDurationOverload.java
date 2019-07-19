@@ -19,6 +19,7 @@ import static com.google.errorprone.BugPattern.ProvidesFix.REQUIRES_HUMAN_ATTENT
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.constructor;
+import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.isSameType;
@@ -111,6 +112,15 @@ public final class PreferDurationOverload extends BugChecker
       anyOf(
           );
 
+  private static final Matcher<ExpressionTree> JAVA_DURATION_DECOMPOSITION_MATCHER =
+      anyOf(
+          instanceMethod().onExactClass(JAVA_DURATION).named("toNanos"),
+          instanceMethod().onExactClass(JAVA_DURATION).named("toMillis"),
+          instanceMethod().onExactClass(JAVA_DURATION).named("getSeconds"),
+          instanceMethod().onExactClass(JAVA_DURATION).named("toMinutes"),
+          instanceMethod().onExactClass(JAVA_DURATION).named("toHours"),
+          instanceMethod().onExactClass(JAVA_DURATION).named("toDays"));
+
   // TODO(kak): Add support for constructors that accept a <long, TimeUnit> or JodaTime Duration
 
   @Override
@@ -143,19 +153,34 @@ public final class PreferDurationOverload extends BugChecker
             SuggestedFix.Builder fix = SuggestedFix.builder();
             String qualifiedDuration = SuggestedFixes.qualifyType(state, fix, JAVA_DURATION);
             String value = state.getSourceForNode(arguments.get(0));
-            String replacement;
+            String replacement = null;
 
-            // TODO(kak): Add support for:
-            //   foo(javaDuration.getSeconds(), SECONDS);
-            //   foo(javaDuration.toMillis(), MILLISECONDS);
+            // rewrite foo(javaDuration.getSeconds(), SECONDS) -> foo(javaDuration)
+            if (arguments.get(0) instanceof MethodInvocationTree) {
+              MethodInvocationTree maybeDurationDecomposition =
+                  (MethodInvocationTree) arguments.get(0);
+              if (JAVA_DURATION_DECOMPOSITION_MATCHER.matches(maybeDurationDecomposition, state)) {
+                if (ASTHelpers.isSameType(
+                    ASTHelpers.getReceiverType(maybeDurationDecomposition),
+                    state.getTypeFromString(JAVA_DURATION),
+                    state)) {
+                  replacement =
+                      state.getSourceForNode(ASTHelpers.getReceiver(maybeDurationDecomposition));
+                }
+              }
+            }
 
+            // handle microseconds separately, since there is no Duration factory for micros
             if (optionalTimeUnit.get() == MICROSECONDS) {
               String qualifiedChronoUnit =
                   SuggestedFixes.qualifyType(state, fix, "java.time.temporal.ChronoUnit");
               replacement =
                   String.format(
                       durationFactory, qualifiedDuration, value, qualifiedChronoUnit + ".MICROS");
-            } else {
+            }
+
+            // Otherwise, just use the normal replacement
+            if (replacement == null) {
               replacement = String.format(durationFactory, qualifiedDuration, value);
             }
 
