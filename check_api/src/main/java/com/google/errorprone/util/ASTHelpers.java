@@ -22,6 +22,8 @@ import static com.google.errorprone.matchers.JUnitMatchers.JUNIT4_RUN_WITH_ANNOT
 import static com.sun.tools.javac.code.Scope.LookupKind.NON_RECURSIVE;
 import static java.util.Objects.requireNonNull;
 
+import com.github.benmanes.caffeine.cache.Cache;
+import com.github.benmanes.caffeine.cache.Caffeine;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.CharMatcher;
@@ -677,19 +679,27 @@ public class ASTHelpers {
     return false;
   }
 
+  private static final Cache<String, Boolean> inheritedAnnotationCache =
+      Caffeine.newBuilder().maximumSize(1000).build();
+
+  @SuppressWarnings("ConstantConditions") // IntelliJ worries unboxing our Boolean may throw NPE.
   private static boolean isInherited(VisitorState state, String annotationName) {
-    Symbol annotationSym = state.getSymbolFromString(annotationName);
-    if (annotationSym == null) {
-      return false;
-    }
-    try {
-      annotationSym.complete();
-    } catch (CompletionFailure e) {
-      // @Inherited won't work if the annotation isn't on the classpath, but we can still check
-      // if it's present directly
-    }
-    Symbol inheritedSym = state.getSymtab().inheritedType.tsym;
-    return annotationSym.attribute(inheritedSym) != null;
+    return inheritedAnnotationCache.get(
+        annotationName,
+        name -> {
+          Symbol annotationSym = state.getSymbolFromString(name);
+          if (annotationSym == null) {
+            return false;
+          }
+          try {
+            annotationSym.complete();
+          } catch (CompletionFailure e) {
+            /* @Inherited won't work if the annotation isn't on the classpath, but we can still
+            check if it's present directly */
+          }
+          Symbol inheritedSym = state.getSymtab().inheritedType.tsym;
+          return annotationSym.attribute(inheritedSym) != null;
+        });
   }
 
   private static boolean hasAttribute(Symbol sym, Name annotationName) {
