@@ -59,7 +59,7 @@ public class SourceFile {
     try {
       return CharSource.wrap(sourceBuilder).readLines();
     } catch (IOException e) {
-      throw new AssertionError("IOException not possible, as the string is in-memory");
+      throw new AssertionError("IOException not possible, as the string is in-memory", e);
     }
   }
 
@@ -114,7 +114,7 @@ public class SourceFile {
       }
       return lines;
     } catch (IOException e) {
-      throw new AssertionError("Wrapped StringReader should not produce I/O exceptions");
+      throw new AssertionError("Wrapped StringReader should not produce I/O exceptions", e);
     }
   }
 
