@@ -24,6 +24,7 @@ import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.isSameType;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
+import static com.sun.tools.javac.code.Scope.LookupKind.NON_RECURSIVE;
 import static java.util.concurrent.TimeUnit.DAYS;
 import static java.util.concurrent.TimeUnit.HOURS;
 import static java.util.concurrent.TimeUnit.MICROSECONDS;
@@ -33,6 +34,7 @@ import static java.util.concurrent.TimeUnit.NANOSECONDS;
 import static java.util.concurrent.TimeUnit.SECONDS;
 
 import com.google.common.base.Optional;
+import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableMap;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -47,13 +49,18 @@ import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.NewClassTree;
+import com.sun.tools.javac.code.Scope;
+import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
+import com.sun.tools.javac.code.Symbol.TypeSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type;
+import com.sun.tools.javac.code.Types;
 import com.sun.tools.javac.tree.JCTree;
+import com.sun.tools.javac.util.Filter;
+import com.sun.tools.javac.util.Name;
 import java.util.List;
 import java.util.Map.Entry;
-import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 /** This check suggests the use of {@code java.time}-based APIs, when available. */
@@ -325,21 +332,6 @@ public final class PreferDurationOverload extends BugChecker
     if (methodSymbol == null) {
       return false;
     }
-    Type type = state.getTypeFromString(typeName);
-    Set<MethodSymbol> overloads =
-        ASTHelpers.findMatchingMethods(
-            methodSymbol.name,
-            input ->
-                !input.equals(methodSymbol)
-                    // TODO(kak): Do we want to check return types too?
-                    && input.isStatic() == methodSymbol.isStatic()
-                    && input.getParameters().size() == 1
-                    && isSameType(input.getParameters().get(0).asType(), type, state),
-            ASTHelpers.enclosingClass(methodSymbol).asType(),
-            state.getTypes());
-    if (overloads.isEmpty()) {
-      return false;
-    }
 
     // If we found an overload, make sure we're not currently *inside* that overload, to avoid
     // creating an infinite loop.  There *should* only be one, but just in case, we'll check each
@@ -348,6 +340,44 @@ public final class PreferDurationOverload extends BugChecker
     if (t == null) {
       return true;
     }
-    return overloads.stream().noneMatch(getSymbol(t)::equals);
+    Type type = state.getTypeFromString(typeName);
+    return hasMatchingMethods(
+        ASTHelpers.getSymbol(t),
+        methodSymbol.name,
+        input ->
+            !input.equals(methodSymbol)
+                // TODO(kak): Do we want to check return types too?
+                && input.isStatic() == methodSymbol.isStatic()
+                && input.getParameters().size() == 1
+                && isSameType(input.getParameters().get(0).asType(), type, state),
+        ASTHelpers.enclosingClass(methodSymbol).asType(),
+        state.getTypes());
+  }
+
+  // Adapted from ASTHelpers.findMatchingMethods(); but this short-circuits
+  private static boolean hasMatchingMethods(
+      Symbol self,
+      Name name,
+      final Predicate<MethodSymbol> predicate,
+      Type startClass,
+      Types types) {
+    Filter<Symbol> matchesMethodPredicate =
+        sym -> sym instanceof MethodSymbol && predicate.apply((MethodSymbol) sym);
+
+    // Iterate over all classes and interfaces that startClass inherits from.
+    for (Type superClass : types.closure(startClass)) {
+      // Iterate over all the methods declared in superClass.
+      TypeSymbol superClassSymbol = superClass.tsym;
+      Scope superClassSymbols = superClassSymbol.members();
+      if (superClassSymbols != null) { // Can be null if superClass is a type variable
+        for (Symbol symbol :
+            superClassSymbols.getSymbolsByName(name, matchesMethodPredicate, NON_RECURSIVE)) {
+          if (!self.equals(symbol)) {
+            return true;
+          }
+        }
+      }
+    }
+    return false;
   }
 }
