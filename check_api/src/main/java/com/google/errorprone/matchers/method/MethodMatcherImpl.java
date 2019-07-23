@@ -193,7 +193,7 @@ final class MethodMatcherImpl
 
   @Override
   public boolean matches(ExpressionTree tree, VisitorState state) {
-    MatchState method = baseMatcher.match(tree, state);
+    MatchState method = baseMatcher.match(tree);
     if (method == null) {
       return false;
     }
