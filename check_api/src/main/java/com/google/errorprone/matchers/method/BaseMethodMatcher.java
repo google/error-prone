@@ -15,7 +15,6 @@
  */
 package com.google.errorprone.matchers.method;
 
-import com.google.errorprone.VisitorState;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
@@ -26,10 +25,10 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 
 interface BaseMethodMatcher {
   @Nullable
-  MatchState match(ExpressionTree tree, VisitorState state);
+  MatchState match(ExpressionTree tree);
 
   BaseMethodMatcher METHOD =
-      (tree, state) -> {
+      tree -> {
         Symbol sym = ASTHelpers.getSymbol(tree);
         if (!(sym instanceof MethodSymbol)) {
           return null;
@@ -45,7 +44,7 @@ interface BaseMethodMatcher {
       };
 
   BaseMethodMatcher CONSTRUCTOR =
-      (tree, state) -> {
+      tree -> {
         switch (tree.getKind()) {
           case NEW_CLASS:
           case METHOD_INVOCATION:
