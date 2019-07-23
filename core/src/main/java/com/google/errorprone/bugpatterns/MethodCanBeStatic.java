@@ -229,7 +229,9 @@ public class MethodCanBeStatic extends BugChecker implements CompilationUnitTree
     if (sym == null) {
       return true;
     }
-    if (sym.isConstructor() || sym.getModifiers().contains(Modifier.NATIVE)) {
+    if (sym.isConstructor()
+        || sym.getModifiers().contains(Modifier.NATIVE)
+        || sym.getModifiers().contains(Modifier.SYNCHRONIZED)) {
       return true;
     }
     if (!sym.isPrivate()) {

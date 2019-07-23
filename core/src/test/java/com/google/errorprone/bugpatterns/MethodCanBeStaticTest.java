@@ -215,6 +215,19 @@ public class MethodCanBeStaticTest {
   }
 
   @Test
+  public void negativeSynchronized() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  private synchronized String frobnicate() {",
+            "    return \"\";",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void negativeSuppressed() {
     testHelper
         .addSourceLines(
