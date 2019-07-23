@@ -36,6 +36,7 @@ import static java.util.concurrent.TimeUnit.SECONDS;
 import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Iterables;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
@@ -328,39 +329,33 @@ public final class PreferDurationOverload extends BugChecker
 
   private static boolean hasJavaTimeOverload(
       MethodInvocationTree tree, VisitorState state, String typeName) {
-    MethodSymbol methodSymbol = getSymbol(tree);
-    if (methodSymbol == null) {
+    MethodSymbol calledMethod = getSymbol(tree);
+    if (calledMethod == null) {
       return false;
     }
 
-    // If we found an overload, make sure we're not currently *inside* that overload, to avoid
-    // creating an infinite loop.  There *should* only be one, but just in case, we'll check each
-    // overload against the outer method.
     MethodTree t = state.findEnclosing(MethodTree.class);
-    if (t == null) {
-      return true;
-    }
+    MethodSymbol enclosingMethod = t == null ? null : ASTHelpers.getSymbol(t);
+
     Type type = state.getTypeFromString(typeName);
     return hasMatchingMethods(
-        ASTHelpers.getSymbol(t),
-        methodSymbol.name,
+        calledMethod.name,
         input ->
-            !input.equals(methodSymbol)
+            !input.equals(calledMethod)
+                // Make sure we're not currently *inside* that overload, to avoid
+                // creating an infinite loop.
+                && !input.equals(enclosingMethod)
                 // TODO(kak): Do we want to check return types too?
-                && input.isStatic() == methodSymbol.isStatic()
+                && input.isStatic() == calledMethod.isStatic()
                 && input.getParameters().size() == 1
                 && isSameType(input.getParameters().get(0).asType(), type, state),
-        ASTHelpers.enclosingClass(methodSymbol).asType(),
+        ASTHelpers.enclosingClass(calledMethod).asType(),
         state.getTypes());
   }
 
   // Adapted from ASTHelpers.findMatchingMethods(); but this short-circuits
   private static boolean hasMatchingMethods(
-      Symbol self,
-      Name name,
-      final Predicate<MethodSymbol> predicate,
-      Type startClass,
-      Types types) {
+      Name name, final Predicate<MethodSymbol> predicate, Type startClass, Types types) {
     Filter<Symbol> matchesMethodPredicate =
         sym -> sym instanceof MethodSymbol && predicate.apply((MethodSymbol) sym);
 
@@ -370,11 +365,9 @@ public final class PreferDurationOverload extends BugChecker
       TypeSymbol superClassSymbol = superClass.tsym;
       Scope superClassSymbols = superClassSymbol.members();
       if (superClassSymbols != null) { // Can be null if superClass is a type variable
-        for (Symbol symbol :
-            superClassSymbols.getSymbolsByName(name, matchesMethodPredicate, NON_RECURSIVE)) {
-          if (!self.equals(symbol)) {
-            return true;
-          }
+        if (!Iterables.isEmpty(
+            superClassSymbols.getSymbolsByName(name, matchesMethodPredicate, NON_RECURSIVE))) {
+          return true;
         }
       }
     }

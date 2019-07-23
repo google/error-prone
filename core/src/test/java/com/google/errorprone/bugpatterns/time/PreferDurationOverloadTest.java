@@ -350,4 +350,8 @@ public class PreferDurationOverloadTest {
   @Test
   public void ignoredApisAreExcluded() {
   }
+
+  @Test
+  public void b138221392() {
+  }
 }
