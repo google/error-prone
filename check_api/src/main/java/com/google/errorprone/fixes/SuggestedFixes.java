@@ -69,6 +69,7 @@ import com.sun.tools.javac.api.JavacTrees;
 import com.sun.tools.javac.code.BoundKind;
 import com.sun.tools.javac.code.Kinds.KindSelector;
 import com.sun.tools.javac.code.Symbol;
+import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Types.DefaultTypeVisitor;
 import com.sun.tools.javac.main.Arguments;
@@ -265,6 +266,14 @@ public class SuggestedFixes {
   public static String qualifyType(VisitorState state, SuggestedFix.Builder fix, Symbol sym) {
     if (sym.getKind() == ElementKind.TYPE_PARAMETER) {
       return sym.getSimpleName().toString();
+    }
+    if (sym.getKind() == ElementKind.CLASS) {
+      if (sym.isLocal()) {
+        if (!sym.isAnonymous()) {
+          return sym.getSimpleName().toString();
+        }
+        sym = ((ClassSymbol) sym).getSuperclass().tsym;
+      }
     }
     Deque<String> names = new ArrayDeque<>();
     for (Symbol curr = sym; curr != null; curr = curr.owner) {
