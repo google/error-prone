@@ -38,6 +38,7 @@ import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.LiteralTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
+import com.google.errorprone.bugpatterns.BugChecker.NewClassTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.ReturnTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.VariableTreeMatcher;
 import com.google.errorprone.bugpatterns.RemoveUnusedImports;
@@ -49,6 +50,7 @@ import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.LiteralTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
+import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.ReturnTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
@@ -1338,5 +1340,123 @@ public class SuggestedFixesTest {
             "  Object quux = Collections.<emptyList>emptySet();",
             "}")
         .doTest(TEXT_MATCH);
+  }
+
+  /**
+   * Test checker that raises a diagnostic with the result of {@link SuggestedFixes#qualifyType} on
+   * new instances.
+   */
+  @BugPattern(
+      name = "QualifyTypeLocalClassChecker",
+      summary = "QualifyTypeLocalClassChecker",
+      severity = ERROR,
+      providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
+  public static class QualifyTypeLocalClassChecker extends BugChecker
+      implements NewClassTreeMatcher {
+
+    @Override
+    public Description matchNewClass(NewClassTree tree, VisitorState state) {
+      SuggestedFix.Builder builder = SuggestedFix.builder();
+      return buildDescription(tree)
+          .setMessage(SuggestedFixes.qualifyType(state, builder, ASTHelpers.getType(tree).tsym))
+          .build();
+    }
+  }
+
+  @Test
+  public void qualifyTypeLocal_localClass() {
+    CompilationTestHelper.newInstance(QualifyTypeLocalClassChecker.class, getClass())
+        .addSourceLines(
+            "Test.java",
+            "import java.util.function.Supplier;",
+            "class Test {",
+            "  static {",
+            "    class InStaticInitializer {}",
+            "    // BUG: Diagnostic contains: [QualifyTypeLocalClassChecker] InStaticInitializer",
+            "    new InStaticInitializer();",
+            "  }",
+            "",
+            "  {",
+            "    class InInstanceInitializer {}",
+            "    // BUG: Diagnostic contains: [QualifyTypeLocalClassChecker] InInstanceInitializer",
+            "    new InInstanceInitializer();",
+            "  }",
+            "",
+            "  Test() { // in constructor",
+            "    class InConstructor {}",
+            "    // BUG: Diagnostic contains: [QualifyTypeLocalClassChecker] InConstructor",
+            "    new InConstructor();",
+            "  }",
+            "",
+            "  static Object staticMethod() {",
+            "    class InStaticMethod {}",
+            "    // BUG: Diagnostic contains: [QualifyTypeLocalClassChecker] InStaticMethod",
+            "    return new InStaticMethod();",
+            "  }",
+            "",
+            "  Object instanceMethod() {",
+            "    class InInstanceMethod {}",
+            "    // BUG: Diagnostic contains: [QualifyTypeLocalClassChecker] InInstanceMethod",
+            "    return new InInstanceMethod();",
+            "  }",
+            "",
+            "  void lambda() {",
+            "    Supplier<Object> consumer = () -> {",
+            "      class InLambda {}",
+            "      // BUG: Diagnostic contains: [QualifyTypeLocalClassChecker] InLambda",
+            "      return new InLambda();",
+            "    };",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void qualifyTypeLocal_anonymousClass() {
+    CompilationTestHelper.newInstance(QualifyTypeLocalClassChecker.class, getClass())
+        .addSourceLines(
+            "Test.java",
+            "import java.util.function.Supplier;",
+            "class Test {",
+            "  // BUG: Diagnostic contains: [QualifyTypeLocalClassChecker] Object",
+            "  static Object staticField = new Object() {};",
+            "",
+            "  // BUG: Diagnostic contains: [QualifyTypeLocalClassChecker] Object",
+            "  Object instanceField = new Object() {};",
+            "",
+            "  static {",
+            "    // BUG: Diagnostic contains: [QualifyTypeLocalClassChecker] Object",
+            "    new Object() {};",
+            "  }",
+            "",
+            "  {",
+            "    class InInstanceInitializer {}",
+            "    // BUG: Diagnostic contains: [QualifyTypeLocalClassChecker] Object",
+            "    new Object() {};",
+            "  }",
+            "",
+            "  Test() { // in constructor",
+            "    // BUG: Diagnostic contains: [QualifyTypeLocalClassChecker] Object",
+            "    new Object() {};",
+            "  }",
+            "",
+            "  static Object staticMethod() {",
+            "    // BUG: Diagnostic contains: [QualifyTypeLocalClassChecker] Object",
+            "    return new Object() {};",
+            "  }",
+            "",
+            "  Object instanceMethod() {",
+            "    // BUG: Diagnostic contains: [QualifyTypeLocalClassChecker] Object",
+            "    return new Object() {};",
+            "  }",
+            "",
+            "  void lambda() {",
+            "    Supplier<Object> consumer = () -> {",
+            "      // BUG: Diagnostic contains: [QualifyTypeLocalClassChecker] Object",
+            "      return new Object() {};",
+            "    };",
+            "  }",
+            "}")
+        .doTest();
   }
 }
