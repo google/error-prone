@@ -107,9 +107,25 @@ public class FormatStringTest {
   @Test
   public void testCStyleLongConversion() throws Exception {
     testFormat("use %d for all integral types", "String.format(\"%l\", 42);");
+  }
+
+  @Test
+  public void testCStyleLongConversion2() throws Exception {
     testFormat("use %d for all integral types", "String.format(\"%ld\", 42);");
+  }
+
+  @Test
+  public void testCStyleLongConversion3() throws Exception {
     testFormat("use %d for all integral types", "String.format(\"%lld\", 42);");
+  }
+
+  @Test
+  public void testCStyleLongConversion4() throws Exception {
     testFormat("%f for all floating point ", "String.format(\"%lf\", 42);");
+  }
+
+  @Test
+  public void testCStyleLongConversion5() throws Exception {
     testFormat("%f for all floating point ", "String.format(\"%llf\", 42);");
   }
 
@@ -117,11 +133,23 @@ public class FormatStringTest {
   public void testConditionalExpression() throws Exception {
     testFormat(
         "missing argument for format specifier '%s'", "String.format(true ? \"\" : \"%s\");");
+  }
+
+  @Test
+  public void testConditionalExpression2() throws Exception {
     testFormat(
         "missing argument for format specifier '%s'", "String.format(true ? \"%s\" : \"\");");
+  }
+
+  @Test
+  public void testConditionalExpression3() throws Exception {
     testFormat(
         "extra format arguments: used 1, provided 2",
         "String.format(true ? \"%s\" : \"%s\", 1, 2);");
+  }
+
+  @Test
+  public void testConditionalExpression4() throws Exception {
     testFormat(
         "extra format arguments: used 1, provided 2",
         "String.format(true ? \"%s\" : \"%s\", 1, 2);");
@@ -186,22 +214,78 @@ public class FormatStringTest {
   }
 
   @Test
-  public void testPrintfMethods() throws Exception {
+  public void testPrintfMethods_StringFormat() throws Exception {
     testFormat("", "String.format(\"%d\", \"hello\");");
+  }
+
+  @Test
+  public void testPrintfMethods_StringFormatWithLocale() throws Exception {
     testFormat("", "String.format(Locale.ENGLISH, \"%d\", \"hello\");");
+  }
+
+  @Test
+  public void testPrintfMethods_PrintWriterFormat() throws Exception {
     testFormat("", "new PrintWriter(System.err).format(\"%d\", \"hello\");");
+  }
+
+  @Test
+  public void testPrintfMethods_PrintWriterFormatWithLocale() throws Exception {
     testFormat("", "new PrintWriter(System.err).format(Locale.ENGLISH, \"%d\", \"hello\");");
+  }
+
+  @Test
+  public void testPrintfMethods_PrintWriterPrintf() throws Exception {
     testFormat("", "new PrintWriter(System.err).printf(\"%d\", \"hello\");");
+  }
+
+  @Test
+  public void testPrintfMethods_PrintWriterPrintfWithLocale() throws Exception {
     testFormat("", "new PrintWriter(System.err).printf(Locale.ENGLISH, \"%d\", \"hello\");");
+  }
+
+  @Test
+  public void testPrintfMethods_PrintStreamFormat() throws Exception {
     testFormat("", "new PrintStream(System.err).format(\"%d\", \"hello\");");
+  }
+
+  @Test
+  public void testPrintfMethods_PrintStreamFormatWithLocale() throws Exception {
     testFormat("", "new PrintStream(System.err).format(Locale.ENGLISH, \"%d\", \"hello\");");
+  }
+
+  @Test
+  public void testPrintfMethods_PrintStreamPrintf() throws Exception {
     testFormat("", "new PrintStream(System.err).printf(\"%d\", \"hello\");");
+  }
+
+  @Test
+  public void testPrintfMethods_PrintStreamPrintfWithLocale() throws Exception {
     testFormat("", "new PrintStream(System.err).printf(Locale.ENGLISH, \"%d\", \"hello\");");
+  }
+
+  @Test
+  public void testPrintfMethods_FormatterFormatWithLocale() throws Exception {
     testFormat(
         "", "new java.util.Formatter(System.err).format(Locale.ENGLISH, \"%d\", \"hello\");");
+  }
+
+  @Test
+  public void testPrintfMethods_ConsolePrintf() throws Exception {
     testFormat("", "System.console().printf(\"%d\", \"hello\");");
+  }
+
+  @Test
+  public void testPrintfMethods_ConsoleFormat() throws Exception {
     testFormat("", "System.console().format(\"%d\", \"hello\");");
+  }
+
+  @Test
+  public void testPrintfMethods_ConsoleReadline() throws Exception {
     testFormat("", "System.console().readLine(\"%d\", \"hello\");");
+  }
+
+  @Test
+  public void testPrintfMethods_ConsoleReadPassword() throws Exception {
     testFormat("", "System.console().readPassword(\"%d\", \"hello\");");
   }
 

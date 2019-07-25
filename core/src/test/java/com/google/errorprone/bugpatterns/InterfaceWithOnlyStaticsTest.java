@@ -99,16 +99,22 @@ public class InterfaceWithOnlyStaticsTest {
             "package dagger;",
             "public @interface Module {}")
         .addSourceLines(
-            "ProducerModule.java", //
-            "package dagger.producers;",
-            "public @interface ProducerModule {}")
-        .addSourceLines(
             "Test.java", //
             "import dagger.Module;",
             "@Module",
             "interface Test {",
             "  public static final int foo = 42;",
             "}")
+        .doTest();
+  }
+
+  @Test
+  public void negative_daggerModules_producerModule() {
+    testHelper
+        .addSourceLines(
+            "ProducerModule.java", //
+            "package dagger.producers;",
+            "public @interface ProducerModule {}")
         .addSourceLines(
             "Test.java", //
             "import dagger.producers.ProducerModule;",

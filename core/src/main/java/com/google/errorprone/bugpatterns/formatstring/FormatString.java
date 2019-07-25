@@ -47,9 +47,9 @@ public class FormatString extends BugChecker implements MethodInvocationTreeMatc
                   "java.io.PrintStream", "java.io.PrintWriter", "java.util.Formatter")
               .namedAnyOf("format", "printf"),
           staticMethod().onClass("java.lang.String").named("format"),
-          staticMethod()
-              .onClass("java.io.Console")
-              .namedAnyOf("format", "printf", "readline", "readPassword"));
+          instanceMethod()
+              .onExactClass("java.io.Console")
+              .namedAnyOf("format", "printf", "readLine", "readPassword"));
 
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, final VisitorState state) {

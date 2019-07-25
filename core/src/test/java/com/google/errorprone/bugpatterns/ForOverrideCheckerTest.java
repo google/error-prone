@@ -195,6 +195,10 @@ public class ForOverrideCheckerTest {
             "  }",
             "}")
         .doTest();
+  }
+
+  @Test
+  public void testUserCanCallSuperFromOverridden_explicitQualification() {
     compilationHelper
         .addSourceLines(
             "test/Test.java",
