@@ -149,14 +149,6 @@ public class IncompatibleModifiersCheckerTest {
             "  Modifier[] value();",
             "}")
         .addSourceLines(
-            "test/NotAbstract.java",
-            "package test;",
-            "import static javax.lang.model.element.Modifier.ABSTRACT;",
-            "import com.google.common.annotations.IncompatibleModifiers;",
-            "@IncompatibleModifiers(ABSTRACT)",
-            "public @interface NotAbstract {",
-            "}")
-        .addSourceLines(
             "test/RequiredModifiersTestCase.java",
             "package test;",
             "import test.NotAbstract;",
@@ -179,14 +171,6 @@ public class IncompatibleModifiersCheckerTest {
             "@Target(ElementType.ANNOTATION_TYPE)",
             "public @interface IncompatibleModifiers {",
             "  Modifier[] value();",
-            "}")
-        .addSourceLines(
-            "test/NotAbstract.java",
-            "package test;",
-            "import static javax.lang.model.element.Modifier.ABSTRACT;",
-            "import com.google.common.annotations.IncompatibleModifiers;",
-            "@IncompatibleModifiers(ABSTRACT)",
-            "public @interface NotAbstract {",
             "}")
         .addSourceLines(
             "test/RequiredModifiersTestCase.java",

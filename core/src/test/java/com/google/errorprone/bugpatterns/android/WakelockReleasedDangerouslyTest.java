@@ -460,7 +460,7 @@ public class WakelockReleasedDangerouslyTest {
   }
 
   @Test
-  public void innerClass() {
+  public void innerClass_negative() {
     compilationHelper
         .addSourceLines(
             "OuterClass.java",
@@ -478,6 +478,12 @@ public class WakelockReleasedDangerouslyTest {
             "    }",
             "  }",
             "}")
+        .doTest();
+  }
+
+  @Test
+  public void innerClass_positive() {
+    compilationHelper
         .addSourceLines(
             "OuterClass.java",
             "import android.os.PowerManager.WakeLock;",

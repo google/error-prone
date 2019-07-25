@@ -327,18 +327,15 @@ public class ErrorProneCompilerIntegrationTest {
   @Test
   public void flagEnablesCheck() {
     String[] testFile = {"public class Test {", "  public Test() {", "    if (true);", "  }", "}"};
-
-    Result exitCode =
-        compiler.compile(
-            Arrays.asList(compiler.fileManager().forSourceLines("Test.java", testFile)));
+    List<JavaFileObject> fileObjects =
+        Arrays.asList(compiler.fileManager().forSourceLines("Test.java", testFile));
+    Result exitCode = compiler.compile(fileObjects);
     outputStream.flush();
     assertThat(diagnosticHelper.getDiagnostics()).isEmpty();
     assertThat(outputStream.toString(), exitCode, is(Result.OK));
 
     String[] args = {"-Xep:EmptyIf"};
-    exitCode =
-        compiler.compile(
-            args, Arrays.asList(compiler.fileManager().forSourceLines("Test.java", testFile)));
+    exitCode = compiler.compile(args, fileObjects);
     outputStream.flush();
 
     Matcher<? super Iterable<Diagnostic<? extends JavaFileObject>>> matcher =
@@ -353,11 +350,10 @@ public class ErrorProneCompilerIntegrationTest {
   @Test
   public void severityIsResetOnNextCompilation() {
     String[] testFile = {"public class Test {", "  void doIt (int i) {", "    i = i;", "  }", "}"};
-
+    List<JavaFileObject> fileObjects =
+        Arrays.asList(compiler.fileManager().forSourceLines("Test.java", testFile));
     String[] args = {"-Xep:SelfAssignment:WARN"};
-    Result exitCode =
-        compiler.compile(
-            args, Arrays.asList(compiler.fileManager().forSourceLines("Test.java", testFile)));
+    Result exitCode = compiler.compile(args, fileObjects);
     outputStream.flush();
     Matcher<? super Iterable<Diagnostic<? extends JavaFileObject>>> matcher =
         hasItem(diagnosticMessage(containsString("[SelfAssignment]")));
@@ -367,9 +363,7 @@ public class ErrorProneCompilerIntegrationTest {
         .isTrue();
 
     // Should reset to default severity (ERROR)
-    exitCode =
-        compiler.compile(
-            Arrays.asList(compiler.fileManager().forSourceLines("Test.java", testFile)));
+    exitCode = compiler.compile(fileObjects);
     outputStream.flush();
     assertThat(outputStream.toString(), exitCode, is(Result.ERROR));
   }
@@ -377,11 +371,10 @@ public class ErrorProneCompilerIntegrationTest {
   @Test
   public void maturityIsResetOnNextCompilation() {
     String[] testFile = {"public class Test {", "  public Test() {", "    if (true);", "  }", "}"};
-
+    List<JavaFileObject> fileObjects =
+        Arrays.asList(compiler.fileManager().forSourceLines("Test.java", testFile));
     String[] args = {"-Xep:EmptyIf"};
-    Result exitCode =
-        compiler.compile(
-            args, Arrays.asList(compiler.fileManager().forSourceLines("Test.java", testFile)));
+    Result exitCode = compiler.compile(args, fileObjects);
     outputStream.flush();
     Matcher<? super Iterable<Diagnostic<? extends JavaFileObject>>> matcher =
         hasItem(diagnosticMessage(containsString("[EmptyIf]")));
@@ -391,9 +384,7 @@ public class ErrorProneCompilerIntegrationTest {
         .isTrue();
 
     diagnosticHelper.clearDiagnostics();
-    exitCode =
-        compiler.compile(
-            Arrays.asList(compiler.fileManager().forSourceLines("Test.java", testFile)));
+    exitCode = compiler.compile(fileObjects);
     outputStream.flush();
     assertThat(outputStream.toString(), exitCode, is(Result.OK));
     assertThat(diagnosticHelper.getDiagnostics()).isEmpty();
@@ -409,13 +400,12 @@ public class ErrorProneCompilerIntegrationTest {
       "}"
     };
 
+    List<JavaFileObject> fileObjects =
+        Arrays.asList(compiler.fileManager().forSourceLines("Generated.java", generatedFile));
+
     {
       String[] args = {"-Xep:RemoveUnusedImports:WARN"};
-      Result exitCode =
-          compiler.compile(
-              args,
-              Arrays.asList(
-                  compiler.fileManager().forSourceLines("Generated.java", generatedFile)));
+      Result exitCode = compiler.compile(args, fileObjects);
       outputStream.flush();
       assertThat(diagnosticHelper.getDiagnostics()).hasSize(1);
       assertThat(diagnosticHelper.getDiagnostics().get(0).getMessage(ENGLISH))
@@ -427,11 +417,7 @@ public class ErrorProneCompilerIntegrationTest {
 
     {
       String[] args = {"-Xep:RemoveUnusedImports:WARN", "-XepDisableWarningsInGeneratedCode"};
-      Result exitCode =
-          compiler.compile(
-              args,
-              Arrays.asList(
-                  compiler.fileManager().forSourceLines("Generated.java", generatedFile)));
+      Result exitCode = compiler.compile(args, fileObjects);
       outputStream.flush();
       assertThat(diagnosticHelper.getDiagnostics()).isEmpty();
       assertThat(outputStream.toString(), exitCode, is(Result.OK));
@@ -450,13 +436,11 @@ public class ErrorProneCompilerIntegrationTest {
       "}"
     };
 
+    List<JavaFileObject> fileObjects =
+        Arrays.asList(compiler.fileManager().forSourceLines("Generated.java", generatedFile));
     {
       String[] args = {"-Xep:EmptyIf:WARN"};
-      Result exitCode =
-          compiler.compile(
-              args,
-              Arrays.asList(
-                  compiler.fileManager().forSourceLines("Generated.java", generatedFile)));
+      Result exitCode = compiler.compile(args, fileObjects);
       outputStream.flush();
       assertThat(diagnosticHelper.getDiagnostics()).hasSize(1);
       assertThat(diagnosticHelper.getDiagnostics().get(0).getMessage(ENGLISH))
@@ -468,11 +452,7 @@ public class ErrorProneCompilerIntegrationTest {
 
     {
       String[] args = {"-Xep:EmptyIf:WARN", "-XepDisableWarningsInGeneratedCode"};
-      Result exitCode =
-          compiler.compile(
-              args,
-              Arrays.asList(
-                  compiler.fileManager().forSourceLines("Generated.java", generatedFile)));
+      Result exitCode = compiler.compile(args, fileObjects);
       outputStream.flush();
       assertThat(diagnosticHelper.getDiagnostics()).isEmpty();
       assertThat(outputStream.toString(), exitCode, is(Result.OK));

@@ -244,35 +244,128 @@ public class NarrowingCompoundAssignmentTest {
   }
 
   @Test
-  public void testPreservePrecedenceExhaustive() throws Exception {
+  public void testPreservePrecedenceExhaustive_multMult() throws Exception {
     testPrecedence("*", "*", /* parens= */ true);
+  }
+
+  @Test
+  public void testPreservePrecedenceExhaustive_multPlus() throws Exception {
     testPrecedence("*", "+", /* parens= */ true);
+  }
+
+  @Test
+  public void testPreservePrecedenceExhaustive_multLShift() throws Exception {
     testPrecedence("*", "<<", /* parens= */ true);
+  }
+
+  @Test
+  public void testPreservePrecedenceExhaustive_multAnd() throws Exception {
     testPrecedence("*", "&", /* parens= */ true);
+  }
+
+  @Test
+  public void testPreservePrecedenceExhaustive_multOr() throws Exception {
     testPrecedence("*", "|", /* parens= */ true);
+  }
 
+  @Test
+  public void testPreservePrecedenceExhaustive_plusMult() throws Exception {
     testPrecedence("+", "*", /* parens= */ false);
-    testPrecedence("+", "+", /* parens= */ true);
-    testPrecedence("+", "<<", /* parens= */ true);
-    testPrecedence("+", "&", /* parens= */ true);
-    testPrecedence("+", "|", /* parens= */ true);
+  }
 
+  @Test
+  public void testPreservePrecedenceExhaustive_plusPlus() throws Exception {
+    testPrecedence("+", "+", /* parens= */ true);
+  }
+
+  @Test
+  public void testPreservePrecedenceExhaustive_plusLShift() throws Exception {
+    testPrecedence("+", "<<", /* parens= */ true);
+  }
+
+  @Test
+  public void testPreservePrecedenceExhaustive_plusAnd() throws Exception {
+    testPrecedence("+", "&", /* parens= */ true);
+  }
+
+  @Test
+  public void testPreservePrecedenceExhaustive_plusOr() throws Exception {
+    testPrecedence("+", "|", /* parens= */ true);
+  }
+
+  @Test
+  public void testPreservePrecedenceExhaustive_lShiftMult() throws Exception {
     testPrecedence("<<", "*", /* parens= */ false);
+  }
+
+  @Test
+  public void testPreservePrecedenceExhaustive_lShiftPlus() throws Exception {
     testPrecedence("<<", "+", /* parens= */ false);
+  }
+
+  @Test
+  public void testPreservePrecedenceExhaustive_lShiftLShift() throws Exception {
     testPrecedence("<<", "<<", /* parens= */ true);
+  }
+
+  @Test
+  public void testPreservePrecedenceExhaustive_lShiftAnd() throws Exception {
     testPrecedence("<<", "&", /* parens= */ true);
+  }
+
+  @Test
+  public void testPreservePrecedenceExhaustive_lShiftOr() throws Exception {
     testPrecedence("<<", "|", /* parens= */ true);
+  }
+
+  @Test
+  public void testPreservePrecedenceExhaustive_andMult() throws Exception {
 
     testPrecedence("&", "*", /* parens= */ false);
-    testPrecedence("&", "+", /* parens= */ false);
-    testPrecedence("&", "<<", /* parens= */ false);
-    testPrecedence("&", "&", /* parens= */ true);
-    testPrecedence("&", "|", /* parens= */ true);
+  }
 
+  @Test
+  public void testPreservePrecedenceExhaustive_andPlus() throws Exception {
+    testPrecedence("&", "+", /* parens= */ false);
+  }
+
+  @Test
+  public void testPreservePrecedenceExhaustive_andLShift() throws Exception {
+    testPrecedence("&", "<<", /* parens= */ false);
+  }
+
+  @Test
+  public void testPreservePrecedenceExhaustive_andAnd() throws Exception {
+    testPrecedence("&", "&", /* parens= */ true);
+  }
+
+  @Test
+  public void testPreservePrecedenceExhaustive_andOr() throws Exception {
+    testPrecedence("&", "|", /* parens= */ true);
+  }
+
+  @Test
+  public void testPreservePrecedenceExhaustive_orMult() throws Exception {
     testPrecedence("|", "*", /* parens= */ false);
+  }
+
+  @Test
+  public void testPreservePrecedenceExhaustive_orPlus() throws Exception {
     testPrecedence("|", "+", /* parens= */ false);
+  }
+
+  @Test
+  public void testPreservePrecedenceExhaustive_orLShift() throws Exception {
     testPrecedence("|", "<<", /* parens= */ false);
+  }
+
+  @Test
+  public void testPreservePrecedenceExhaustive_orAnd() throws Exception {
     testPrecedence("|", "&", /* parens= */ false);
+  }
+
+  @Test
+  public void testPreservePrecedenceExhaustive_orOr() throws Exception {
     testPrecedence("|", "|", /* parens= */ true);
   }
 
