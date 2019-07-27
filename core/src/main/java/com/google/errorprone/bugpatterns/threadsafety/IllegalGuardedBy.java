@@ -16,6 +16,9 @@
 
 package com.google.errorprone.bugpatterns.threadsafety;
 
+import com.google.errorprone.annotations.FormatMethod;
+import com.google.errorprone.annotations.FormatString;
+
 /**
  * An error that occurred during the parsing or binding of a GuardedBy expression.
  *
@@ -34,7 +37,9 @@ public class IllegalGuardedBy extends RuntimeException {
   }
 
   /** Throws an {@link IllegalGuardedBy} exception if the given condition is false. */
-  public static void checkGuardedBy(boolean condition, String formatString, Object... formatArgs) {
+  @FormatMethod
+  public static void checkGuardedBy(
+      boolean condition, @FormatString String formatString, Object... formatArgs) {
     if (!condition) {
       throw new IllegalGuardedBy(String.format(formatString, formatArgs));
     }
