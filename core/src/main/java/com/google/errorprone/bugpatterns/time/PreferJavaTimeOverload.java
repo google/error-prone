@@ -66,7 +66,8 @@ import java.util.concurrent.TimeUnit;
 
 /** This check suggests the use of {@code java.time}-based APIs, when available. */
 @BugPattern(
-    name = "PreferDurationOverload",
+    name = "PreferJavaTimeOverload",
+    altNames = {"PreferDurationOverload"},
     summary =
         "Prefer using java.time-based APIs when available. Note that this checker does"
             + " not and cannot guarantee that the overloads have equivalent semantics, but that is"
@@ -82,7 +83,7 @@ import java.util.concurrent.TimeUnit;
             + " semantic meaning; 4) decomposing a duration into a <long, TimeUnit> is dangerous"
             + " because of unit mismatch and/or excessive truncation.",
     providesFix = REQUIRES_HUMAN_ATTENTION)
-public final class PreferDurationOverload extends BugChecker
+public final class PreferJavaTimeOverload extends BugChecker
     implements MethodInvocationTreeMatcher {
 
   private static final String JAVA_DURATION = "java.time.Duration";

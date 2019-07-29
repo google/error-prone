@@ -415,7 +415,7 @@ import com.google.errorprone.bugpatterns.time.LocalDateTemporalAmount;
 import com.google.errorprone.bugpatterns.time.PeriodFrom;
 import com.google.errorprone.bugpatterns.time.PeriodGetTemporalUnit;
 import com.google.errorprone.bugpatterns.time.PeriodTimeMath;
-import com.google.errorprone.bugpatterns.time.PreferDurationOverload;
+import com.google.errorprone.bugpatterns.time.PreferJavaTimeOverload;
 import com.google.errorprone.bugpatterns.time.ProtoDurationGetSecondsGetNano;
 import com.google.errorprone.bugpatterns.time.ProtoTimestampGetSecondsGetNano;
 import com.google.errorprone.bugpatterns.time.TemporalAccessorGetChronoField;
@@ -715,7 +715,7 @@ public class BuiltInCheckerSuppliers {
           ParameterName.class,
           PreconditionsCheckNotNullRepeated.class,
           PreconditionsInvalidPlaceholder.class,
-          PreferDurationOverload.class,
+          PreferJavaTimeOverload.class,
           ProtoRedundantSet.class,
           ProtoDurationGetSecondsGetNano.class,
           ProtoTimestampGetSecondsGetNano.class,
