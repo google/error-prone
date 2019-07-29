@@ -20,11 +20,11 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** Tests for {@link PreferDurationOverload}. */
+/** Tests for {@link PreferJavaTimeOverload}. */
 @RunWith(JUnit4.class)
-public class PreferDurationOverloadTest {
+public class PreferJavaTimeOverloadTest {
   private final CompilationTestHelper helper =
-      CompilationTestHelper.newInstance(PreferDurationOverload.class, getClass());
+      CompilationTestHelper.newInstance(PreferJavaTimeOverload.class, getClass());
 
   @Test
   public void callingLongTimeUnitMethodWithDurationOverload_microseconds() {
