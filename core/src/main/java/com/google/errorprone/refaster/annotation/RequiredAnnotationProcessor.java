@@ -16,6 +16,8 @@
 
 package com.google.errorprone.refaster.annotation;
 
+import com.google.errorprone.annotations.FormatMethod;
+import com.google.errorprone.annotations.FormatString;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -115,8 +117,9 @@ public final class RequiredAnnotationProcessor extends AbstractProcessor {
     validateElements(element.getEnclosedElements());
   }
 
+  @FormatMethod
   private void printError(
-      Element element, AnnotationMirror annotation, String message, Object... args) {
+      Element element, AnnotationMirror annotation, @FormatString String message, Object... args) {
     processingEnv
         .getMessager()
         .printMessage(Kind.ERROR, String.format(message, args), element, annotation);
