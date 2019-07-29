@@ -18,8 +18,8 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10,"i1":10,"i2":9,"i3":9,"i4":9,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10,"i13":10,"i14":10,"i15":10,"i16":10,"i17":10,"i18":10,"i19":10,"i20":10,"i21":10,"i22":10,"i23":10,"i24":10,"i25":10,"i26":10,"i27":10,"i28":10,"i29":10,"i30":10,"i31":10};
-var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
+var methods = {"i0":10,"i1":10,"i2":9,"i3":9,"i4":9,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10,"i13":10,"i14":10,"i15":10,"i16":10,"i17":10,"i18":10,"i19":10,"i20":10,"i21":10,"i22":10,"i23":10,"i24":10,"i25":10,"i26":10,"i27":10,"i28":10,"i29":10,"i30":10,"i31":10,"i32":42,"i33":10};
+var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"],32:["t6","Deprecated Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
 var tableTab = "tableTab";
@@ -187,7 +187,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 </a>
 <h3>Method Summary</h3>
 <table class="memberSummary" border="0" cellpadding="3" cellspacing="0" summary="Method Summary table, listing methods, and an explanation">
-<caption><span id="t0" class="activeTableTab"><span>All Methods</span><span class="tabEnd">&nbsp;</span></span><span id="t1" class="tableTab"><span><a href="javascript:show(1);">Static Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t2" class="tableTab"><span><a href="javascript:show(2);">Instance Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t4" class="tableTab"><span><a href="javascript:show(8);">Concrete Methods</a></span><span class="tabEnd">&nbsp;</span></span></caption>
+<caption><span id="t0" class="activeTableTab"><span>All Methods</span><span class="tabEnd">&nbsp;</span></span><span id="t1" class="tableTab"><span><a href="javascript:show(1);">Static Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t2" class="tableTab"><span><a href="javascript:show(2);">Instance Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t4" class="tableTab"><span><a href="javascript:show(8);">Concrete Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t6" class="tableTab"><span><a href="javascript:show(32);">Deprecated Methods</a></span><span class="tabEnd">&nbsp;</span></span></caption>
 <tr>
 <th class="colFirst" scope="col">Modifier and Type</th>
 <th class="colLast" scope="col">Method and Description</th>
@@ -293,28 +293,34 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 </tr>
 <tr id="i17" class="rowColor">
 <td class="colFirst"><code>com.sun.tools.javac.code.Symbol</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../com/google/errorprone/VisitorState.html#getSymbolFromString-java.lang.String-">getSymbolFromString</a></span>(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;symStr)</code>&nbsp;</td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../com/google/errorprone/VisitorState.html#getSymbolFromName-com.sun.tools.javac.util.Name-">getSymbolFromName</a></span>(com.sun.tools.javac.util.Name&nbsp;name)</code>
+<div class="block">Look up the class symbol for a given Name.</div>
+</td>
 </tr>
 <tr id="i18" class="altColor">
+<td class="colFirst"><code>com.sun.tools.javac.code.Symbol</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../com/google/errorprone/VisitorState.html#getSymbolFromString-java.lang.String-">getSymbolFromString</a></span>(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;symStr)</code>&nbsp;</td>
+</tr>
+<tr id="i19" class="rowColor">
 <td class="colFirst"><code>com.sun.tools.javac.code.Symbol.ClassSymbol</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../com/google/errorprone/VisitorState.html#getSymbolFromString-com.sun.tools.javac.code.Symbol.ModuleSymbol-com.sun.tools.javac.util.Name-">getSymbolFromString</a></span>(com.sun.tools.javac.code.Symbol.ModuleSymbol&nbsp;msym,
                    com.sun.tools.javac.util.Name&nbsp;name)</code>&nbsp;</td>
 </tr>
-<tr id="i19" class="rowColor">
+<tr id="i20" class="altColor">
 <td class="colFirst"><code>com.sun.tools.javac.code.Symtab</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../com/google/errorprone/VisitorState.html#getSymtab--">getSymtab</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i20" class="altColor">
+<tr id="i21" class="rowColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;<a href="../../../com/google/errorprone/util/ErrorProneToken.html" title="class in com.google.errorprone.util">ErrorProneToken</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../com/google/errorprone/VisitorState.html#getTokensForNode-com.sun.source.tree.Tree-">getTokensForNode</a></span>(com.sun.source.tree.Tree&nbsp;tree)</code>
 <div class="block">Returns the list of <code>Tokens.Token</code>s for the given <code>JCTree</code>.</div>
 </td>
 </tr>
-<tr id="i21" class="rowColor">
+<tr id="i22" class="altColor">
 <td class="colFirst"><code>com.sun.tools.javac.tree.TreeMaker</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../com/google/errorprone/VisitorState.html#getTreeMaker--">getTreeMaker</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i22" class="altColor">
+<tr id="i23" class="rowColor">
 <td class="colFirst"><code>com.sun.tools.javac.code.Type</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../com/google/errorprone/VisitorState.html#getType-com.sun.tools.javac.code.Type-boolean-java.util.List-">getType</a></span>(com.sun.tools.javac.code.Type&nbsp;baseType,
        boolean&nbsp;isArray,
@@ -322,17 +328,17 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <div class="block">Build an instance of a Type.</div>
 </td>
 </tr>
-<tr id="i23" class="rowColor">
+<tr id="i24" class="altColor">
 <td class="colFirst"><code>com.sun.tools.javac.code.Type</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../com/google/errorprone/VisitorState.html#getTypeFromString-java.lang.String-">getTypeFromString</a></span>(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;typeStr)</code>
 <div class="block">Given the binary name of a class, returns the <code>Type</code>.</div>
 </td>
 </tr>
-<tr id="i24" class="altColor">
+<tr id="i25" class="rowColor">
 <td class="colFirst"><code>com.sun.tools.javac.code.Types</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../com/google/errorprone/VisitorState.html#getTypes--">getTypes</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i25" class="rowColor">
+<tr id="i26" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../com/google/errorprone/VisitorState.html#incrementCounter-com.google.errorprone.bugpatterns.BugChecker-java.lang.String-">incrementCounter</a></span>(<a href="../../../com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a>&nbsp;bugChecker,
                 <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;key)</code>
@@ -340,7 +346,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
  by 1.</div>
 </td>
 </tr>
-<tr id="i26" class="altColor">
+<tr id="i27" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../com/google/errorprone/VisitorState.html#incrementCounter-com.google.errorprone.bugpatterns.BugChecker-java.lang.String-int-">incrementCounter</a></span>(<a href="../../../com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a>&nbsp;bugChecker,
                 <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;key,
@@ -349,30 +355,36 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
  by <code>count</code>.</div>
 </td>
 </tr>
-<tr id="i27" class="rowColor">
+<tr id="i28" class="altColor">
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../com/google/errorprone/VisitorState.html#isAndroidCompatible--">isAndroidCompatible</a></span>()</code>
 <div class="block">Returns true if the compilation is targeting Android.</div>
 </td>
 </tr>
-<tr id="i28" class="altColor">
+<tr id="i29" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../com/google/errorprone/VisitorState.html#reportMatch-com.google.errorprone.matchers.Description-">reportMatch</a></span>(<a href="../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a>&nbsp;description)</code>&nbsp;</td>
 </tr>
-<tr id="i29" class="rowColor">
+<tr id="i30" class="altColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/AutoCloseable.html?is-external=true" title="class or interface in java.lang">AutoCloseable</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../com/google/errorprone/VisitorState.html#timingSpan-com.google.errorprone.matchers.Suppressible-">timingSpan</a></span>(<a href="../../../com/google/errorprone/matchers/Suppressible.html" title="interface in com.google.errorprone.matchers">Suppressible</a>&nbsp;suppressible)</code>
 <div class="block">Returns a timing span for the given <a href="../../../com/google/errorprone/matchers/Suppressible.html" title="interface in com.google.errorprone.matchers"><code>Suppressible</code></a>.</div>
 </td>
 </tr>
-<tr id="i30" class="altColor">
+<tr id="i31" class="rowColor">
 <td class="colFirst"><code><a href="../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../com/google/errorprone/VisitorState.html#withPath-com.sun.source.util.TreePath-">withPath</a></span>(com.sun.source.util.TreePath&nbsp;path)</code>&nbsp;</td>
 </tr>
-<tr id="i31" class="rowColor">
+<tr id="i32" class="altColor">
 <td class="colFirst"><code><a href="../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../com/google/errorprone/VisitorState.html#withPathAndSuppression-com.sun.source.util.TreePath-com.google.errorprone.SuppressionInfo.SuppressedState-">withPathAndSuppression</a></span>(com.sun.source.util.TreePath&nbsp;path,
-                      <a href="../../../com/google/errorprone/SuppressionInfo.SuppressedState.html" title="enum in com.google.errorprone">SuppressionInfo.SuppressedState</a>&nbsp;suppressedState)</code>&nbsp;</td>
+                      <a href="../../../com/google/errorprone/SuppressionInfo.SuppressedState.html" title="enum in com.google.errorprone">SuppressionInfo.SuppressedState</a>&nbsp;suppressedState)</code>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;</div>
+</td>
+</tr>
+<tr id="i33" class="rowColor">
+<td class="colFirst"><code><a href="../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../com/google/errorprone/VisitorState.html#withSuppression-com.google.errorprone.SuppressionInfo.SuppressedState-">withSuppression</a></span>(<a href="../../../com/google/errorprone/SuppressionInfo.SuppressedState.html" title="enum in com.google.errorprone">SuppressionInfo.SuppressedState</a>&nbsp;suppressedState)</code>&nbsp;</td>
 </tr>
 </table>
 <ul class="blockList">
@@ -513,8 +525,19 @@ public&nbsp;VisitorState(com.sun.tools.javac.util.Context&nbsp;context,
 <ul class="blockList">
 <li class="blockList">
 <h4>withPathAndSuppression</h4>
-<pre>public&nbsp;<a href="../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;withPathAndSuppression(com.sun.source.util.TreePath&nbsp;path,
-                                           <a href="../../../com/google/errorprone/SuppressionInfo.SuppressedState.html" title="enum in com.google.errorprone">SuppressionInfo.SuppressedState</a>&nbsp;suppressedState)</pre>
+<pre><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Deprecated.html?is-external=true" title="class or interface in java.lang">@Deprecated</a>
+public&nbsp;<a href="../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;withPathAndSuppression(com.sun.source.util.TreePath&nbsp;path,
+                                                       <a href="../../../com/google/errorprone/SuppressionInfo.SuppressedState.html" title="enum in com.google.errorprone">SuppressionInfo.SuppressedState</a>&nbsp;suppressedState)</pre>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;</div>
+</li>
+</ul>
+<a name="withSuppression-com.google.errorprone.SuppressionInfo.SuppressedState-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>withSuppression</h4>
+<pre>public&nbsp;<a href="../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;withSuppression(<a href="../../../com/google/errorprone/SuppressionInfo.SuppressedState.html" title="enum in com.google.errorprone">SuppressionInfo.SuppressedState</a>&nbsp;suppressedState)</pre>
 </li>
 </ul>
 <a name="getPath--">
@@ -672,6 +695,21 @@ public&nbsp;com.sun.tools.javac.code.Symbol&nbsp;getSymbolFromString(<a href="ht
 <dd><code>symStr</code> - the string representation of a symbol</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the Symbol object, or null if it cannot be found</dd>
+</dl>
+</li>
+</ul>
+<a name="getSymbolFromName-com.sun.tools.javac.util.Name-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getSymbolFromName</h4>
+<pre><a href="https://docs.oracle.com/javase/8/docs/api/javax/annotation/Nullable.html?is-external=true" title="class or interface in javax.annotation">@Nullable</a>
+public&nbsp;com.sun.tools.javac.code.Symbol&nbsp;getSymbolFromName(com.sun.tools.javac.util.Name&nbsp;name)</pre>
+<div class="block">Look up the class symbol for a given Name.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>name</code> - the name to look up, which must be in binary form (i.e. with $ for nested classes).</dd>
 </dl>
 </li>
 </ul>

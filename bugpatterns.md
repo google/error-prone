@@ -758,7 +758,7 @@ __[PreconditionsInvalidPlaceholder](bugpattern/PreconditionsInvalidPlaceholder)_
 Preconditions only accepts the %s placeholder in error message strings
 
 __[PreferDurationOverload](bugpattern/PreferDurationOverload)__<br>
-Prefer using java.time.Duration-based APIs when available. Note that this checker does not and cannot guarantee that the overloads have equivalent semantics, but that is generally the case with overloaded methods.
+Prefer using java.time-based APIs when available. Note that this checker does not and cannot guarantee that the overloads have equivalent semantics, but that is generally the case with overloaded methods.
 
 __[ProtoDurationGetSecondsGetNano](bugpattern/ProtoDurationGetSecondsGetNano)__<br>
 getNanos() only accesses the underlying nanosecond-adjustment of the duration.
@@ -824,7 +824,7 @@ __[ToStringReturnsNull](bugpattern/ToStringReturnsNull)__<br>
 An implementation of Object.toString() should never return null.
 
 __[TreeToString](bugpattern/TreeToString)__<br>
-Tree#toString shouldn&#39;t be used for Trees deriving from the code being compiled, as it discards whitespace and comments.
+Tree#toString shouldn&#39;t be used for Trees deriving from the code being compiled, as it discards whitespace and comments. If this code is within an ErrorProne check, consider VisitorState#getSourceForNode.
 
 __[TruthAssertExpected](bugpattern/TruthAssertExpected)__<br>
 The actual and expected values appear to be swapped, which results in poor assertion failure messages. The actual value should come first.
@@ -858,6 +858,9 @@ Implementing a functional interface is unnecessary; prefer to implement the func
 
 __[UnnecessaryLambda](bugpattern/UnnecessaryLambda)__<br>
 Returning a lambda from a helper method or saving it in a constant is unnecessary; prefer to implement the functional interface method directly and use a method reference instead.
+
+__[UnnecessaryMethodInvocationMatcher](bugpattern/UnnecessaryMethodInvocationMatcher)__<br>
+It is not necessary to wrap a MethodMatcher with methodInvocation().
 
 __[UnnecessaryParentheses](bugpattern/UnnecessaryParentheses)__<br>
 Unnecessary use of grouping parentheses

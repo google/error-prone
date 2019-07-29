@@ -4480,6 +4480,10 @@
 <dd>
 <div class="block">Gets the symbol for a member reference.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/VisitorState.html#getSymbolFromName-com.sun.tools.javac.util.Name-">getSymbolFromName(Name)</a></span> - Method in class com.google.errorprone.<a href="com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a></dt>
+<dd>
+<div class="block">Look up the class symbol for a given Name.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/VisitorState.html#getSymbolFromString-java.lang.String-">getSymbolFromString(String)</a></span> - Method in class com.google.errorprone.<a href="com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/VisitorState.html#getSymbolFromString-com.sun.tools.javac.code.Symbol.ModuleSymbol-com.sun.tools.javac.util.Name-">getSymbolFromString(Symbol.ModuleSymbol, Name)</a></span> - Method in class com.google.errorprone.<a href="com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a></dt>
@@ -7176,6 +7180,8 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/UndefinedEquals.html#matchMethodInvocation-com.sun.source.tree.MethodInvocationTree-com.google.errorprone.VisitorState-">matchMethodInvocation(MethodInvocationTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/UndefinedEquals.html" title="class in com.google.errorprone.bugpatterns">UndefinedEquals</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/UnnecessaryMethodInvocationMatcher.html#matchMethodInvocation-com.sun.source.tree.MethodInvocationTree-com.google.errorprone.VisitorState-">matchMethodInvocation(MethodInvocationTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/UnnecessaryMethodInvocationMatcher.html" title="class in com.google.errorprone.bugpatterns">UnnecessaryMethodInvocationMatcher</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/UnnecessarySetDefault.html#matchMethodInvocation-com.sun.source.tree.MethodInvocationTree-com.google.errorprone.VisitorState-">matchMethodInvocation(MethodInvocationTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/UnnecessarySetDefault.html" title="class in com.google.errorprone.bugpatterns">UnnecessarySetDefault</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/UnnecessaryTypeArgument.html#matchMethodInvocation-com.sun.source.tree.MethodInvocationTree-com.google.errorprone.VisitorState-">matchMethodInvocation(MethodInvocationTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/UnnecessaryTypeArgument.html" title="class in com.google.errorprone.bugpatterns">UnnecessaryTypeArgument</a></dt>
@@ -8719,7 +8725,7 @@
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/time/PreferDurationOverload.html" title="class in com.google.errorprone.bugpatterns.time"><span class="typeNameLink">PreferDurationOverload</span></a> - Class in <a href="com/google/errorprone/bugpatterns/time/package-summary.html">com.google.errorprone.bugpatterns.time</a></dt>
 <dd>
-<div class="block">This check suggests the use of <code>java.time.Duration</code>-based APIs, when available.</div>
+<div class="block">This check suggests the use of <code>java.time</code>-based APIs, when available.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/time/PreferDurationOverload.html#PreferDurationOverload--">PreferDurationOverload()</a></span> - Constructor for class com.google.errorprone.bugpatterns.time.<a href="com/google/errorprone/bugpatterns/time/PreferDurationOverload.html" title="class in com.google.errorprone.bugpatterns.time">PreferDurationOverload</a></dt>
 <dd>&nbsp;</dd>
@@ -10543,6 +10549,14 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/UnnecessaryLambda.html#UnnecessaryLambda--">UnnecessaryLambda()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/UnnecessaryLambda.html" title="class in com.google.errorprone.bugpatterns">UnnecessaryLambda</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/bugpatterns/UnnecessaryMethodInvocationMatcher.html" title="class in com.google.errorprone.bugpatterns"><span class="typeNameLink">UnnecessaryMethodInvocationMatcher</span></a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
+<dd>
+<div class="block"><a href="com/google/errorprone/matchers/Matchers.html#methodInvocation-com.google.errorprone.matchers.Matcher-"><code>Matchers.methodInvocation(Matcher)</code></a> is not exactly deprecated, but it is legacy, and in
+ particular is not needed when the argument is a MethodMatcher, since MethodMatcher already does
+ the unwrapping that methodInvocation does.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/UnnecessaryMethodInvocationMatcher.html#UnnecessaryMethodInvocationMatcher--">UnnecessaryMethodInvocationMatcher()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/UnnecessaryMethodInvocationMatcher.html" title="class in com.google.errorprone.bugpatterns">UnnecessaryMethodInvocationMatcher</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/UnnecessaryParentheses.html" title="class in com.google.errorprone.bugpatterns"><span class="typeNameLink">UnnecessaryParentheses</span></a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/UnnecessaryParentheses.html#UnnecessaryParentheses--">UnnecessaryParentheses()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/UnnecessaryParentheses.html" title="class in com.google.errorprone.bugpatterns">UnnecessaryParentheses</a></dt>
@@ -11406,7 +11420,9 @@ the order they are declared.</div>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/VisitorState.html#withPath-com.sun.source.util.TreePath-">withPath(TreePath)</a></span> - Method in class com.google.errorprone.<a href="com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/VisitorState.html#withPathAndSuppression-com.sun.source.util.TreePath-com.google.errorprone.SuppressionInfo.SuppressedState-">withPathAndSuppression(TreePath, SuppressionInfo.SuppressedState)</a></span> - Method in class com.google.errorprone.<a href="com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/matchers/method/MethodMatchers.MethodClassMatcher.html#withSignature-java.lang.String-">withSignature(String)</a></span> - Method in interface com.google.errorprone.matchers.method.<a href="com/google/errorprone/matchers/method/MethodMatchers.MethodClassMatcher.html" title="interface in com.google.errorprone.matchers.method">MethodMatchers.MethodClassMatcher</a></dt>
 <dd>
 <div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
@@ -11420,6 +11436,8 @@ the order they are declared.</div>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/WithSignatureDiscouraged.html#WithSignatureDiscouraged--">WithSignatureDiscouraged()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/WithSignatureDiscouraged.html" title="class in com.google.errorprone.bugpatterns">WithSignatureDiscouraged</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/refaster/BlockTemplate.html#withStatements-java.lang.Iterable-">withStatements(Iterable&lt;? extends UStatement&gt;)</a></span> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/BlockTemplate.html" title="class in com.google.errorprone.refaster">BlockTemplate</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/VisitorState.html#withSuppression-com.google.errorprone.SuppressionInfo.SuppressedState-">withSuppression(SuppressionInfo.SuppressedState)</a></span> - Method in class com.google.errorprone.<a href="com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/matchers/JUnitMatchers.html#wouldRunInJUnit4">wouldRunInJUnit4</a></span> - Static variable in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/JUnitMatchers.html" title="class in com.google.errorprone.matchers">JUnitMatchers</a></dt>
 <dd>
