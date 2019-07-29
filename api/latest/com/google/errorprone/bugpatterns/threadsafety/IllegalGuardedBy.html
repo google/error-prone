@@ -254,9 +254,11 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/RuntimeExce
 <ul class="blockList">
 <li class="blockList">
 <h4>checkGuardedBy</h4>
-<pre>public static&nbsp;void&nbsp;checkGuardedBy(boolean&nbsp;condition,
-                                  <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;formatString,
-                                  <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>...&nbsp;formatArgs)</pre>
+<pre><a href="../../../../../com/google/errorprone/annotations/FormatMethod.html" title="annotation in com.google.errorprone.annotations">@FormatMethod</a>
+public static&nbsp;void&nbsp;checkGuardedBy(boolean&nbsp;condition,
+                                                <a href="../../../../../com/google/errorprone/annotations/FormatString.html" title="annotation in com.google.errorprone.annotations">@FormatString</a>
+                                                <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;formatString,
+                                                <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>...&nbsp;formatArgs)</pre>
 <div class="block">Throws an <a href="../../../../../com/google/errorprone/bugpatterns/threadsafety/IllegalGuardedBy.html" title="class in com.google.errorprone.bugpatterns.threadsafety"><code>IllegalGuardedBy</code></a> exception if the given condition is false.</div>
 </li>
 </ul>
