@@ -51,11 +51,11 @@ abstract class UNewArray extends UExpression implements NewArrayTree {
 
   @Nullable
   @Override
-  public abstract List<UExpression> getDimensions();
+  public abstract ImmutableList<UExpression> getDimensions();
 
   @Nullable
   @Override
-  public abstract List<UExpression> getInitializers();
+  public abstract ImmutableList<UExpression> getInitializers();
 
   @Override
   @Nullable

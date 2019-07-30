@@ -19,6 +19,7 @@ package com.google.errorprone.refaster;
 import static com.google.errorprone.refaster.Unifier.unifications;
 
 import com.google.auto.value.AutoValue;
+import com.google.common.collect.ImmutableSet;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.TreeVisitor;
 import com.sun.tools.javac.tree.JCTree.JCExpression;
@@ -33,12 +34,12 @@ import javax.annotation.Nullable;
 @AutoValue
 abstract class UOfKind extends UExpression {
   public static UOfKind create(UExpression expression, Set<Kind> allowed) {
-    return new AutoValue_UOfKind(expression, allowed);
+    return new AutoValue_UOfKind(expression, ImmutableSet.copyOf(allowed));
   }
 
   abstract UExpression expression();
 
-  abstract Set<Kind> allowed();
+  abstract ImmutableSet<Kind> allowed();
 
   @Override
   public JCExpression inline(Inliner inliner) throws CouldNotResolveImportException {

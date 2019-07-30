@@ -51,7 +51,7 @@ abstract class UTypeApply extends UExpression implements ParameterizedTypeTree {
   public abstract UExpression getType();
 
   @Override
-  public abstract List<UExpression> getTypeArguments();
+  public abstract ImmutableList<UExpression> getTypeArguments();
 
   @Override
   @Nullable
