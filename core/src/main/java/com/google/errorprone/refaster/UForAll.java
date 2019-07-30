@@ -34,7 +34,7 @@ public abstract class UForAll extends UType {
     return new AutoValue_UForAll(ImmutableList.copyOf(typeVars), quantifiedType);
   }
 
-  public abstract List<UTypeVar> getTypeVars();
+  public abstract ImmutableList<UTypeVar> getTypeVars();
 
   public abstract UType getQuantifiedType();
 

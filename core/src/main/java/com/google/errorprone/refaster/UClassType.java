@@ -44,7 +44,7 @@ public abstract class UClassType extends UType {
 
   abstract StringName fullyQualifiedClass();
 
-  abstract List<UType> typeArguments();
+  abstract ImmutableList<UType> typeArguments();
 
   @Override
   public Choice<Unifier> visitClassType(ClassType classType, Unifier unifier) {
