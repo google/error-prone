@@ -19,6 +19,7 @@ package com.google.errorprone.bugpatterns.formatstring;
 import static com.google.common.collect.Iterables.getOnlyElement;
 
 import com.google.auto.value.AutoValue;
+import com.google.common.base.Preconditions;
 import com.google.common.collect.Iterables;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.util.ASTHelpers;
@@ -95,6 +96,10 @@ public class FormatStringValidation {
       @Nullable MethodSymbol formatMethodSymbol,
       Collection<? extends ExpressionTree> arguments,
       final VisitorState state) {
+    Preconditions.checkArgument(
+        !arguments.isEmpty(),
+        "A format method should have one or more arguments, but Method(%s) has zero arguments.",
+        formatMethodSymbol);
 
     Deque<ExpressionTree> args = new ArrayDeque<>(arguments);
 

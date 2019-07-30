@@ -280,6 +280,19 @@ public class FormatStringTest {
   }
 
   @Test
+  public void testPrintfMethods_ConsoleFormat_noErrorsWithEmptyArgs() throws Exception {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  void f() {",
+            "    System.console().readLine();",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void testPrintfMethods_ConsoleReadline() throws Exception {
     testFormat("", "System.console().readLine(\"%d\", \"hello\");");
   }
