@@ -43,7 +43,7 @@ abstract class UBlock extends USimpleStatement implements BlockTree {
   }
 
   @Override
-  public abstract List<UStatement> getStatements();
+  public abstract ImmutableList<UStatement> getStatements();
 
   static Choice<Unifier> unifyStatementList(
       Iterable<? extends UStatement> statements,

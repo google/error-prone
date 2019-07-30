@@ -25,7 +25,6 @@ import com.sun.source.tree.TreeVisitor;
 import com.sun.tools.javac.tree.JCTree.JCExpressionStatement;
 import com.sun.tools.javac.tree.JCTree.JCForLoop;
 import com.sun.tools.javac.tree.JCTree.JCStatement;
-import java.util.List;
 import javax.annotation.Nullable;
 
 /**
@@ -49,14 +48,14 @@ abstract class UForLoop extends USimpleStatement implements ForLoopTree {
   }
 
   @Override
-  public abstract List<UStatement> getInitializer();
+  public abstract ImmutableList<UStatement> getInitializer();
 
   @Override
   @Nullable
   public abstract UExpression getCondition();
 
   @Override
-  public abstract List<UExpressionStatement> getUpdate();
+  public abstract ImmutableList<UExpressionStatement> getUpdate();
 
   @Override
   public abstract USimpleStatement getStatement();
