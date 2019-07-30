@@ -145,7 +145,7 @@
       <!-- Apache 2.0 -->
       <groupId>com.github.ben-manes.caffeine</groupId>
       <artifactId>caffeine</artifactId>
-      <version>2.2.6</version>
+      <version>${caffeine.version}</version>
     </dependency>
   </dependencies>
 
