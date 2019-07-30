@@ -24,7 +24,6 @@ import com.sun.source.tree.TryTree;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCBlock;
 import com.sun.tools.javac.tree.JCTree.JCTry;
-import java.util.List;
 import javax.annotation.Nullable;
 
 /**
@@ -44,13 +43,13 @@ abstract class UTry extends USimpleStatement implements TryTree {
   }
 
   @Override
-  public abstract List<UTree<?>> getResources();
+  public abstract ImmutableList<UTree<?>> getResources();
 
   @Override
   public abstract UBlock getBlock();
 
   @Override
-  public abstract List<UCatch> getCatches();
+  public abstract ImmutableList<UCatch> getCatches();
 
   @Override
   @Nullable

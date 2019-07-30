@@ -69,13 +69,13 @@ abstract class UNewClass extends UExpression implements NewClassTree {
    * is for the constructor alone and not the class.
    */
   @Override
-  public abstract List<UExpression> getTypeArguments();
+  public abstract ImmutableList<UExpression> getTypeArguments();
 
   @Override
   public abstract UExpression getIdentifier();
 
   @Override
-  public abstract List<UExpression> getArguments();
+  public abstract ImmutableList<UExpression> getArguments();
 
   @Override
   @Nullable
