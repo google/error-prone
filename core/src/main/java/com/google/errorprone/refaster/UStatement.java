@@ -16,6 +16,7 @@ package com.google.errorprone.refaster;
 
 import com.google.auto.value.AutoValue;
 import com.google.common.base.Function;
+import com.google.common.collect.ImmutableList;
 import com.google.errorprone.refaster.UStatement.UnifierWithUnconsumedStatements;
 import com.sun.source.tree.StatementTree;
 import com.sun.tools.javac.tree.JCTree.JCStatement;
@@ -37,12 +38,12 @@ public interface UStatement
     public static UnifierWithUnconsumedStatements create(
         Unifier unifier, List<? extends StatementTree> unconsumedStatements) {
       return new AutoValue_UStatement_UnifierWithUnconsumedStatements(
-          unifier, unconsumedStatements);
+          unifier, ImmutableList.copyOf(unconsumedStatements));
     }
 
     public abstract Unifier unifier();
 
-    public abstract List<? extends StatementTree> unconsumedStatements();
+    public abstract ImmutableList<? extends StatementTree> unconsumedStatements();
   }
 
   com.sun.tools.javac.util.List<JCStatement> inlineStatements(Inliner inliner)
