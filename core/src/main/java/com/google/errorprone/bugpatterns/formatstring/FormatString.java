@@ -44,12 +44,20 @@ public class FormatString extends BugChecker implements MethodInvocationTreeMatc
       anyOf(
           instanceMethod()
               .onDescendantOfAny(
-                  "java.io.PrintStream", "java.io.PrintWriter", "java.util.Formatter")
+                  "java.io.PrintStream",
+                  "java.io.PrintWriter",
+                  "java.util.Formatter",
+                  "java.io.Console")
               .namedAnyOf("format", "printf"),
           staticMethod().onClass("java.lang.String").named("format"),
+          // Exclude zero-arg java.io.Console.readPassword from format methods.
           instanceMethod()
               .onExactClass("java.io.Console")
-              .namedAnyOf("format", "printf", "readLine", "readPassword"));
+              .withSignature("readPassword(java.lang.String,java.lang.Object...)"),
+          // Exclude zero-arg method java.io.Console.readLine from format methods.
+          instanceMethod()
+              .onExactClass("java.io.Console")
+              .withSignature("readLine(java.lang.String,java.lang.Object...)"));
 
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, final VisitorState state) {
