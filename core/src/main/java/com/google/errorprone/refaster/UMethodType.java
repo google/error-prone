@@ -44,7 +44,7 @@ public abstract class UMethodType extends UType {
 
   public abstract UType getReturnType();
 
-  public abstract List<UType> getParameterTypes();
+  public abstract ImmutableList<UType> getParameterTypes();
 
   @Override
   @Nullable
