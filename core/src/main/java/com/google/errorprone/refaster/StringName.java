@@ -35,7 +35,7 @@ public abstract class StringName
   abstract String contents();
 
   @Override
-  public String toString() {
+  public final String toString() {
     return contents();
   }
 
