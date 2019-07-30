@@ -35,7 +35,7 @@ import javax.annotation.Nullable;
 @AutoValue
 public abstract class UMethodInvocation extends UExpression implements MethodInvocationTree {
   public static UMethodInvocation create(UExpression methodSelect, List<UExpression> arguments) {
-    return new AutoValue_UMethodInvocation(methodSelect, arguments);
+    return new AutoValue_UMethodInvocation(methodSelect, ImmutableList.copyOf(arguments));
   }
 
   public static UMethodInvocation create(UExpression methodSelect, UExpression... arguments) {
@@ -46,7 +46,7 @@ public abstract class UMethodInvocation extends UExpression implements MethodInv
   public abstract UExpression getMethodSelect();
 
   @Override
-  public abstract List<UExpression> getArguments();
+  public abstract ImmutableList<UExpression> getArguments();
 
   @Override
   @Nullable

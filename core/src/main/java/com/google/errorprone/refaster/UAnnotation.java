@@ -46,7 +46,7 @@ abstract class UAnnotation extends UExpression implements AnnotationTree {
   public abstract UTree<?> getAnnotationType();
 
   @Override
-  public abstract List<UExpression> getArguments();
+  public abstract ImmutableList<UExpression> getArguments();
 
   @Override
   @Nullable
