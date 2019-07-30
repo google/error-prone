@@ -63,7 +63,7 @@ public class UTypeVar extends UType {
     }
 
     @Override
-    public String toString() {
+    public final String toString() {
       return type().toString();
     }
   }
