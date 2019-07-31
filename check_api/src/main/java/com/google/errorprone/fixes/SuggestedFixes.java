@@ -783,6 +783,16 @@ public class SuggestedFixes {
    * be used with restraint.
    */
   public static boolean compilesWithFix(Fix fix, VisitorState state) {
+    return compilesWithFix(fix, state, ImmutableList.of());
+  }
+
+  /**
+   * Returns true if the current compilation would succeed with the given fix applied, using the
+   * given additional compiler options. Note that calling this method is very expensive as it
+   * requires rerunning the entire compile, so it should be used with restraint.
+   */
+  public static boolean compilesWithFix(
+      Fix fix, VisitorState state, ImmutableList<String> extraOptions) {
     if (fix.isEmpty()) {
       return true;
     }
@@ -840,7 +850,7 @@ public class SuggestedFixes {
                 CharStreams.nullWriter(),
                 state.context.get(JavaFileManager.class),
                 diagnosticListener,
-                ImmutableList.of(),
+                extraOptions,
                 arguments.getClassNames(),
                 fileObjects,
                 context);
