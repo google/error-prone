@@ -78,7 +78,7 @@ public class ThreeLetterTimeZoneID extends BugChecker implements MethodInvocatio
     for (String r : replacement.replacements) {
       builder.addFix(
           SuggestedFix.replace(
-              tree.getArguments().get(0), state.getTreeMaker().Literal(r).toString()));
+              tree.getArguments().get(0), state.getElements().getConstantExpression(r)));
     }
     return builder.build();
   }
