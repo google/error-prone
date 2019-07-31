@@ -43,6 +43,7 @@ import com.sun.tools.javac.code.Type.ArrayType;
 import com.sun.tools.javac.code.Type.ClassType;
 import com.sun.tools.javac.code.Types;
 import com.sun.tools.javac.comp.Modules;
+import com.sun.tools.javac.model.JavacElements;
 import com.sun.tools.javac.parser.Tokens.Token;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
@@ -56,6 +57,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.Nullable;
+import javax.lang.model.util.Elements;
 
 /** @author alexeagle@google.com (Alex Eagle) */
 public class VisitorState {
@@ -258,6 +260,10 @@ public class VisitorState {
 
   public Types getTypes() {
     return sharedState.types;
+  }
+
+  public Elements getElements() {
+    return JavacElements.instance(context);
   }
 
   public Symtab getSymtab() {
