@@ -59,7 +59,7 @@ public final class PatchFileDestination implements FileDestination {
       List<String> originalLines = LINE_SPLITTER.splitToList(oldSource);
 
       Patch<String> diff = DiffUtils.diff(originalLines, LINE_SPLITTER.splitToList(newSource));
-      String relativePath = relativize(sourceFilePath);
+      String relativePath = getRelativePath(sourceFilePath);
       List<String> unifiedDiff =
           DiffUtils.generateUnifiedDiff(relativePath, relativePath, originalLines, diff, 2);
 
@@ -68,7 +68,7 @@ public final class PatchFileDestination implements FileDestination {
     }
   }
 
-  private String relativize(Path sourceFilePath) {
+  private String getRelativePath(Path sourceFilePath) {
     return baseDir.relativize(sourceFilePath).toString();
   }
 
