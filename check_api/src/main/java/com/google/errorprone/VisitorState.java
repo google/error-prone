@@ -363,7 +363,6 @@ public class VisitorState {
     if (primitiveOrVoidType != null) {
       return primitiveOrVoidType;
     }
-    // Fast path if the type's symbol is available.
     ClassSymbol classSymbol = (ClassSymbol) getSymbolFromString(typeStr);
     if (classSymbol != null) {
       return classSymbol.asType();
