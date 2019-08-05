@@ -148,7 +148,7 @@ public final class UndefinedEquals extends BugChecker implements MethodInvocatio
         return Optional.empty();
       }
     },
-    ITERABLE("Iterable", "java.lang.Iterable") {
+    ITERABLE("Iterable", "java.lang.Iterable", "com.google.common.collect.FluentIterable") {
       @Override
       Optional<SuggestedFix> generateFix(Tree receiver, Tree argument, VisitorState state) {
         return Optional.empty();
