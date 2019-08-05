@@ -46,9 +46,12 @@ import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
+import com.sun.source.tree.ParenthesizedTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
+import com.sun.source.tree.TypeCastTree;
 import com.sun.source.tree.VariableTree;
+import com.sun.source.util.SimpleTreeVisitor;
 import com.sun.source.util.TreePathScanner;
 import com.sun.tools.javac.code.Flags;
 import com.sun.tools.javac.code.Symbol;
@@ -138,13 +141,17 @@ public class ProtoFieldNullComparison extends BugChecker implements CompilationU
 
   private final boolean matchListGetters;
   private final boolean matchTestAssertions;
+  private final boolean descendIntoInitializers;
 
   public ProtoFieldNullComparison(ErrorProneFlags flags) {
     boolean trackServerProtoAssignments =
-        flags.getBoolean("ProtoFieldNullComparison:TrackServerProtoAssignments").orElse(false);
-    matchListGetters = flags.getBoolean("ProtoFieldNullComparison:MatchListGetters").orElse(false);
-    matchTestAssertions =
+        flags.getBoolean("ProtoFieldNullComparison:TrackServerProtoAssignments").orElse(true);
+    this.matchListGetters =
+        flags.getBoolean("ProtoFieldNullComparison:MatchListGetters").orElse(true);
+    this.matchTestAssertions =
         flags.getBoolean("ProtoFieldNullComparison:MatchTestAssertions").orElse(false);
+    this.descendIntoInitializers =
+        flags.getBoolean("ProtoFieldNullComparison:DescendIntoInitializers").orElse(true);
 
     ImmutableList.Builder<String> toTrack =
         ImmutableList.<String>builder().add(PROTO_LITE_SUPER_CLASS);
@@ -182,12 +189,37 @@ public class ProtoFieldNullComparison extends BugChecker implements CompilationU
     @Override
     public Void visitVariable(VariableTree variable, Void unused) {
       Symbol symbol = ASTHelpers.getSymbol(variable);
-      if (variable.getInitializer() != null
-          && isEffectivelyFinal(symbol)
-          && trackAssignments.matches(variable.getInitializer(), state)) {
-        effectivelyFinalValues.put(symbol, variable.getInitializer());
+      if (variable.getInitializer() != null && isEffectivelyFinal(symbol)) {
+        if (descendIntoInitializers) {
+          getInitializer(variable.getInitializer())
+              .ifPresent(e -> effectivelyFinalValues.put(symbol, e));
+        } else {
+          if (trackAssignments.matches(variable.getInitializer(), state)) {
+            effectivelyFinalValues.put(symbol, variable.getInitializer());
+          }
+        }
       }
       return isSuppressed(variable) ? null : super.visitVariable(variable, null);
+    }
+
+    private Optional<ExpressionTree> getInitializer(ExpressionTree tree) {
+      return Optional.ofNullable(
+          new SimpleTreeVisitor<ExpressionTree, Void>() {
+            @Override
+            public ExpressionTree visitMethodInvocation(MethodInvocationTree node, Void unused) {
+              return trackAssignments.matches(node, state) ? node : null;
+            }
+
+            @Override
+            public ExpressionTree visitParenthesized(ParenthesizedTree node, Void unused) {
+              return visit(node.getExpression(), null);
+            }
+
+            @Override
+            public ExpressionTree visitTypeCast(TypeCastTree node, Void unused) {
+              return visit(node.getExpression(), null);
+            }
+          }.visit(tree, null));
     }
 
     @Override
@@ -278,7 +310,7 @@ public class ProtoFieldNullComparison extends BugChecker implements CompilationU
   }
 
   private enum GetterTypes {
-    /** {@code proto.getField()} */
+    /** {@code proto.getFoo()} */
     SCALAR {
       @Override
       Fixer match(ExpressionTree tree, VisitorState state) {
@@ -322,7 +354,7 @@ public class ProtoFieldNullComparison extends BugChecker implements CompilationU
         return builder.replace(lastIndexOf, lastIndexOf + pattern.length(), replacement).toString();
       }
     },
-    /** {@code proto.getRepeatedField(index)} */
+    /** {@code proto.getRepeatedFoo(index)} */
     VECTOR_INDEXED {
       @Override
       Fixer match(ExpressionTree tree, VisitorState state) {
@@ -351,7 +383,7 @@ public class ProtoFieldNullComparison extends BugChecker implements CompilationU
             getOnlyElement(methodInvocation.getArguments()));
       }
     },
-    /** {@code proto.getRepeatedFieldList()} */
+    /** {@code proto.getRepeatedFooList()} */
     VECTOR {
       @Override
       Fixer match(ExpressionTree tree, VisitorState state) {
