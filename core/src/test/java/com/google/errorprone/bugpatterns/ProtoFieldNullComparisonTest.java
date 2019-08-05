@@ -73,7 +73,6 @@ public final class ProtoFieldNullComparisonTest {
             "    if (message.getMultiField(1) == null) {}",
             "  }",
             "}")
-        .setArgs(ImmutableList.of("-XepOpt:ProtoFieldNullComparison:MatchListGetters"))
         .doTest();
   }
 
@@ -96,7 +95,6 @@ public final class ProtoFieldNullComparisonTest {
             "    if (fields != null) {}",
             "  }",
             "}")
-        .setArgs(ImmutableList.of("-XepOpt:ProtoFieldNullComparison:TrackServerProtoAssignments"))
         .doTest();
   }
 
@@ -117,6 +115,8 @@ public final class ProtoFieldNullComparisonTest {
             "    if (fields != null) {}",
             "  }",
             "}")
+        .setArgs(
+            ImmutableList.of("-XepOpt:ProtoFieldNullComparison:TrackServerProtoAssignments=false"))
         .doTest();
   }
 
@@ -167,6 +167,23 @@ public final class ProtoFieldNullComparisonTest {
             "  public boolean doIt(TestProtoMessage mob, FieldDescriptor f) {",
             "    // BUG: Diagnostic contains: ProtoFieldNullComparison",
             "    return mob.getField(f) == null;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void testMessageOrBuilderGetFieldCast() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.protobuf.Descriptors.FieldDescriptor;",
+            "import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;",
+            "public class Test {",
+            "  public boolean doIt(TestProtoMessage mob, FieldDescriptor f) {",
+            "    String s = ((String) mob.getField(f));",
+            "    // BUG: Diagnostic contains: ProtoFieldNullComparison",
+            "    return s == null;",
             "  }",
             "}")
         .doTest();
@@ -320,7 +337,6 @@ public final class ProtoFieldNullComparisonTest {
             "    TestFieldProtoMessage fieldCopy = requireNonNull(field);",
             "  }",
             "}")
-        .setArgs(ImmutableList.of("-XepOpt:ProtoFieldNullComparison:TrackServerProtoAssignments"))
         .doTest();
   }
 
