@@ -102,8 +102,11 @@ public class ErrorProneAnalyzer implements TaskListener {
       DescriptionListener.Factory descriptionListenerFactory) {
     this.transformer = checkNotNull(transformer);
     this.errorProneOptions = checkNotNull(errorProneOptions);
-    this.context = checkNotNull(context);
     this.descriptionListenerFactory = checkNotNull(descriptionListenerFactory);
+
+    Context errorProneContext = new SubContext(context);
+    errorProneContext.put(ErrorProneOptions.class, errorProneOptions);
+    this.context = errorProneContext;
   }
 
   private int errorProneErrors = 0;
@@ -122,8 +125,6 @@ public class ErrorProneAnalyzer implements TaskListener {
     }
     // Assert that the event is unique and scan the current tree.
     verify(seen.add(path.getLeaf()), "Duplicate FLOW event for: %s", taskEvent.getTypeElement());
-    Context subContext = new SubContext(context);
-    subContext.put(ErrorProneOptions.class, errorProneOptions);
     Log log = Log.instance(context);
     JCCompilationUnit compilation = (JCCompilationUnit) path.getCompilationUnit();
     DescriptionListener descriptionListener =
@@ -144,11 +145,11 @@ public class ErrorProneAnalyzer implements TaskListener {
         // We only get TaskEvents for compilation units if they contain no package declarations
         // (e.g. package-info.java files).  In this case it's safe to analyze the
         // CompilationUnitTree immediately.
-        transformer.get().apply(path, subContext, countingDescriptionListener);
+        transformer.get().apply(path, context, countingDescriptionListener);
       } else if (finishedCompilation(path.getCompilationUnit())) {
         // Otherwise this TaskEvent is for a ClassTree, and we can scan the whole
         // CompilationUnitTree once we've seen all the enclosed classes.
-        transformer.get().apply(new TreePath(compilation), subContext, countingDescriptionListener);
+        transformer.get().apply(new TreePath(compilation), context, countingDescriptionListener);
       }
     } catch (ErrorProneError e) {
       e.logFatalError(log, context);
