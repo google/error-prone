@@ -62,10 +62,6 @@ import javax.lang.model.util.Elements;
 /** @author alexeagle@google.com (Alex Eagle) */
 public class VisitorState {
 
-  private final DescriptionListener descriptionListener;
-  private final StatisticsCollector statisticsCollector;
-  private final Map<String, SeverityLevel> severityMap;
-  private final ErrorProneOptions errorProneOptions;
   private final SharedState sharedState;
   public final Context context;
   private final TreePath path;
@@ -89,8 +85,7 @@ public class VisitorState {
         // Can't use this VisitorState to report results, so no-op collector.
         StatisticsCollector.createNoOpCollector(),
         null,
-        SuppressedState.UNSUPPRESSED,
-        null);
+        SuppressedState.UNSUPPRESSED);
   }
 
   /**
@@ -106,8 +101,7 @@ public class VisitorState {
         ErrorProneOptions.empty(),
         StatisticsCollector.createCollector(),
         null,
-        SuppressedState.UNSUPPRESSED,
-        null);
+        SuppressedState.UNSUPPRESSED);
   }
 
   /**
@@ -125,8 +119,7 @@ public class VisitorState {
         errorProneOptions,
         StatisticsCollector.createCollector(),
         null,
-        SuppressedState.UNSUPPRESSED,
-        null);
+        SuppressedState.UNSUPPRESSED);
   }
 
   /**
@@ -145,8 +138,7 @@ public class VisitorState {
         // Can't use this VisitorState to report results, so no-op collector.
         StatisticsCollector.createNoOpCollector(),
         null,
-        SuppressedState.UNSUPPRESSED,
-        null);
+        SuppressedState.UNSUPPRESSED);
   }
 
   /**
@@ -164,8 +156,7 @@ public class VisitorState {
         ErrorProneOptions.empty(),
         StatisticsCollector.createCollector(),
         null,
-        SuppressedState.UNSUPPRESSED,
-        null);
+        SuppressedState.UNSUPPRESSED);
   }
 
   /**
@@ -186,10 +177,13 @@ public class VisitorState {
         errorProneOptions,
         StatisticsCollector.createCollector(),
         null,
-        SuppressedState.UNSUPPRESSED,
-        null);
+        SuppressedState.UNSUPPRESSED);
   }
 
+  /**
+   * The constructor used for brand-new VisitorState objects from outside. It builds a new
+   * SharedState.
+   */
   private VisitorState(
       Context context,
       DescriptionListener descriptionListener,
@@ -197,57 +191,42 @@ public class VisitorState {
       ErrorProneOptions errorProneOptions,
       StatisticsCollector statisticsCollector,
       TreePath path,
-      SuppressedState suppressedState,
-      SharedState sharedState) {
+      SuppressedState suppressedState) {
     this.context = context;
-    this.descriptionListener = descriptionListener;
-    this.severityMap = severityMap;
-    this.errorProneOptions = errorProneOptions;
-    this.statisticsCollector = statisticsCollector;
-
     this.suppressedState = suppressedState;
     this.path = path;
-    this.sharedState = sharedState != null ? sharedState : new SharedState(context);
+
+    this.sharedState =
+        new SharedState(
+            context, descriptionListener, statisticsCollector, severityMap, errorProneOptions);
+  }
+
+  /**
+   * The constructor used for basing a new VisitorState object on an older one. It accepts
+   * parameters only for the things that can change, and reuses its SharedState.
+   */
+  private VisitorState(
+      Context context, TreePath path, SuppressedState suppressedState, SharedState sharedState) {
+    this.context = context;
+    this.path = path;
+    this.suppressedState = suppressedState;
+    this.sharedState = sharedState;
   }
 
   public VisitorState withPath(TreePath path) {
-    return new VisitorState(
-        context,
-        descriptionListener,
-        severityMap,
-        errorProneOptions,
-        statisticsCollector,
-        path,
-        suppressedState,
-        sharedState);
+    return new VisitorState(context, path, suppressedState, sharedState);
   }
 
   @Deprecated // TODO(amalloy): Delete after next error-prone release.
   public VisitorState withPathAndSuppression(TreePath path, SuppressedState suppressedState) {
-    return new VisitorState(
-        context,
-        descriptionListener,
-        severityMap,
-        errorProneOptions,
-        statisticsCollector,
-        path,
-        suppressedState,
-        sharedState);
+    return new VisitorState(context, path, suppressedState, sharedState);
   }
 
   public VisitorState withSuppression(SuppressedState suppressedState) {
     if (suppressedState == this.suppressedState) {
       return this;
     }
-    return new VisitorState(
-        context,
-        descriptionListener,
-        severityMap,
-        errorProneOptions,
-        statisticsCollector,
-        path,
-        suppressedState,
-        sharedState);
+    return new VisitorState(context, path, suppressedState, sharedState);
   }
 
   public TreePath getPath() {
@@ -279,7 +258,7 @@ public class VisitorState {
   }
 
   public ErrorProneOptions errorProneOptions() {
-    return errorProneOptions;
+    return sharedState.errorProneOptions;
   }
 
   public void reportMatch(Description description) {
@@ -288,17 +267,17 @@ public class VisitorState {
     // Instead, there could be another method on the listener that took a description and a
     // (separate) SeverityLevel. Adding the method to the interface would require updating the
     // existing implementations, though. Wait for default methods?
-    SeverityLevel override = severityMap.get(description.checkName);
+    SeverityLevel override = sharedState.severityMap.get(description.checkName);
     if (override != null) {
       description = description.applySeverityOverride(override);
     }
-    statisticsCollector.incrementCounter(statsKey(description.checkName + "-findings"));
+    sharedState.statisticsCollector.incrementCounter(statsKey(description.checkName + "-findings"));
 
     // TODO(glorioso): I believe it is correct to still emit regular findings since the
     // Scanner configured the visitor state to explicitly scan suppressed nodes, but perhaps
     // we can add a 'suppressed' field to Description to allow the description listener to bucket
     // them out.
-    descriptionListener.onDescribed(description);
+    sharedState.descriptionListener.onDescribed(description);
   }
 
   private String statsKey(String key) {
@@ -322,7 +301,8 @@ public class VisitorState {
    * <p>e.g.: a key of {@code foo} becomes {@code FooChecker-foo}.
    */
   public void incrementCounter(BugChecker bugChecker, String key, int count) {
-    statisticsCollector.incrementCounter(statsKey(bugChecker.canonicalName() + "-" + key), count);
+    sharedState.statisticsCollector.incrementCounter(
+        statsKey(bugChecker.canonicalName() + "-" + key), count);
   }
 
   /**
@@ -330,7 +310,7 @@ public class VisitorState {
    * #incrementCounter}.
    */
   public ImmutableMultiset<String> counters() {
-    return statisticsCollector.counters();
+    return sharedState.statisticsCollector.counters();
   }
 
   public Name getName(String nameStr) {
@@ -661,18 +641,33 @@ public class VisitorState {
     private final Types types;
     private final TreeMaker treeMaker;
 
+    private final DescriptionListener descriptionListener;
+    private final StatisticsCollector statisticsCollector;
+    private final Map<String, SeverityLevel> severityMap;
+    private final ErrorProneOptions errorProneOptions;
+
     // TODO(ronshapiro): should we presize this with a reasonable size? We can check for the
     // smallest build and see how many types are loaded and use that. Or perhaps a heuristic
     // based on number of files?
     private final Map<String, Optional<Type>> typeCache = new HashMap<>();
 
-    SharedState(Context context) {
+    SharedState(
+        Context context,
+        DescriptionListener descriptionListener,
+        StatisticsCollector statisticsCollector,
+        Map<String, SeverityLevel> severityMap,
+        ErrorProneOptions errorProneOptions) {
       this.modules = Modules.instance(context);
       this.names = Names.instance(context);
       this.symtab = Symtab.instance(context);
       this.timings = ErrorProneTimings.instance(context);
       this.types = Types.instance(context);
       this.treeMaker = TreeMaker.instance(context);
+
+      this.descriptionListener = descriptionListener;
+      this.statisticsCollector = statisticsCollector;
+      this.severityMap = severityMap;
+      this.errorProneOptions = errorProneOptions;
     }
   }
 }
