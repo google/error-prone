@@ -36,6 +36,7 @@ import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.CompilationUnitTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
+import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
@@ -128,6 +129,11 @@ public class ProtoFieldNullComparison extends BugChecker implements CompilationU
               .named("getField")
               .withParameters("com.google.protobuf.Descriptors.FieldDescriptor"));
 
+  private static final Matcher<ExpressionTree> OF_NULLABLE =
+      anyOf(
+          staticMethod().onClass("java.util.Optional").named("ofNullable"),
+          staticMethod().onClass("com.google.common.base.Optional").named("fromNullable"));
+
   private static boolean isNull(ExpressionTree tree) {
     return tree.getKind() == Kind.NULL_LITERAL;
   }
@@ -142,6 +148,7 @@ public class ProtoFieldNullComparison extends BugChecker implements CompilationU
   private final boolean matchListGetters;
   private final boolean matchTestAssertions;
   private final boolean descendIntoInitializers;
+  private final boolean matchOptionals;
 
   public ProtoFieldNullComparison(ErrorProneFlags flags) {
     boolean trackServerProtoAssignments =
@@ -152,6 +159,7 @@ public class ProtoFieldNullComparison extends BugChecker implements CompilationU
         flags.getBoolean("ProtoFieldNullComparison:MatchTestAssertions").orElse(false);
     this.descendIntoInitializers =
         flags.getBoolean("ProtoFieldNullComparison:DescendIntoInitializers").orElse(true);
+    this.matchOptionals = flags.getBoolean("ProtoFieldNullComparison:MatchOptionals").orElse(true);
 
     ImmutableList.Builder<String> toTrack =
         ImmutableList.<String>builder().add(PROTO_LITE_SUPER_CLASS);
@@ -252,6 +260,9 @@ public class ProtoFieldNullComparison extends BugChecker implements CompilationU
       } else if (matchTestAssertions && ASSERT_NOT_NULL.matches(node, subState)) {
         argument = getLast(node.getArguments());
         problemType = ProblemUsage.JUNIT;
+      } else if (matchOptionals && OF_NULLABLE.matches(node, subState)) {
+        argument = getOnlyElement(node.getArguments());
+        problemType = ProblemUsage.OPTIONAL;
       } else if (matchTestAssertions && TRUTH_NOT_NULL.matches(node, subState)) {
         argument = getOnlyElement(((MethodInvocationTree) getReceiver(node)).getArguments());
         problemType = ProblemUsage.TRUTH;
@@ -533,6 +544,14 @@ public class ProtoFieldNullComparison extends BugChecker implements CompilationU
             ? SuggestedFix.delete(parent)
             : SuggestedFix.replace(
                 tree, state.getSourceForNode(methodInvocationTree.getArguments().get(0)));
+      }
+    },
+    /** Matches comparisons with JUnit, i.e. {@code assertNotNull(proto.getField())}. */
+    OPTIONAL {
+      @Override
+      SuggestedFix fix(Fixer fixer, ExpressionTree tree, VisitorState state) {
+        MethodInvocationTree methodInvocationTree = (MethodInvocationTree) tree;
+        return SuggestedFixes.renameMethodInvocation(methodInvocationTree, "of", state);
       }
     };
 
