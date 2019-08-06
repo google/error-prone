@@ -384,4 +384,38 @@ public final class ProtoFieldNullComparisonTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void optional() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;",
+            "import java.util.Optional;",
+            "class Test {",
+            "  Optional<?> test() {",
+            "    TestProtoMessage message = TestProtoMessage.newBuilder().build();",
+            "    // BUG: Diagnostic contains: Optional.of(message.getMessage())",
+            "    return Optional.ofNullable(message.getMessage());",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void guavaOptional() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;",
+            "import java.util.Optional;",
+            "class Test {",
+            "  Optional<?> test() {",
+            "    TestProtoMessage message = TestProtoMessage.newBuilder().build();",
+            "    // BUG: Diagnostic contains: Optional.of(message.getMessage())",
+            "    return Optional.ofNullable(message.getMessage());",
+            "  }",
+            "}")
+        .doTest();
+  }
 }
