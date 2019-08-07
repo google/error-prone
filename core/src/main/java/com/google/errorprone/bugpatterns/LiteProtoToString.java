@@ -19,6 +19,7 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.ProvidesFix.NO_FIX;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.predicates.TypePredicates.allOf;
+import static com.google.errorprone.predicates.TypePredicates.anyOf;
 import static com.google.errorprone.predicates.TypePredicates.isDescendantOf;
 import static com.google.errorprone.predicates.TypePredicates.isExactType;
 import static com.google.errorprone.predicates.TypePredicates.not;
@@ -48,10 +49,15 @@ import java.util.Optional;
     providesFix = NO_FIX)
 public final class LiteProtoToString extends AbstractToString {
   private static final TypePredicate IS_LITE_PROTO =
-      allOf(
-          isDescendantOf("com.google.protobuf.MessageLite"),
-          not(isDescendantOf("com.google.protobuf.Message")),
-          not(isExactType("com.google.protobuf.UnknownFieldSet")));
+      anyOf(
+          allOf(
+              isDescendantOf("com.google.protobuf.MessageLite"),
+              not(isDescendantOf("com.google.protobuf.Message")),
+              not(isExactType("com.google.protobuf.UnknownFieldSet"))),
+          allOf(
+              isDescendantOf("com.google.protobuf.Internal.EnumLite"),
+              not(isDescendantOf("com.google.protobuf.ProtocolMessageEnum")),
+              not(isDescendantOf("com.google.protobuf.AbstractMessageLite.InternalOneOfEnum"))));
 
   private static final ImmutableSet<String> VERBOSE_LOGGING =
       ImmutableSet.of(
