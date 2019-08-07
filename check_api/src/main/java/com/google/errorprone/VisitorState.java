@@ -347,6 +347,9 @@ public class VisitorState {
     if (classSymbol != null) {
       return classSymbol.asType();
     }
+    // It's possible for the type to exist on the classpath and still for getSymbolFromString to
+    // return null if the type is not referenced in any source file (or by any of the referenced
+    // types' supertypes). Checking for this, however, is prohibitively slow. See b/138753468
     return null;
   }
 
