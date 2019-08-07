@@ -32,6 +32,13 @@ message TestProtoMessage {
   extensions 100 to 199;
 }
 
+message TestOneOfMessage {
+  oneof OneOf {
+    string foo = 1;
+    string bar = 2;
+  }
+}
+
 enum TestEnum {
   UNSPECIFIED = 0;
   TEST_ENUM_VAL = 1;

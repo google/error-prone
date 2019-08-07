@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import com.google.errorprone.CompilationTestHelper;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -77,7 +76,6 @@ public final class LiteProtoToStringTest {
   }
 
   @Test
-  @Ignore // TODO(b/130683674,ghm): Support checking toString on proto enums.
   public void enums() {
     compilationHelper
         .addSourceLines(
@@ -86,6 +84,7 @@ public final class LiteProtoToStringTest {
             "import com.google.protobuf.ProtocolMessageEnum;",
             "class Test {",
             "  private String test(EnumLite e) {",
+            "    // BUG: Diagnostic contains:",
             "    return e.toString();",
             "  }",
             "  private String test2(ProtocolMessageEnum e) {",
