@@ -19,7 +19,6 @@ package com.google.errorprone;
 import static com.google.common.base.Preconditions.checkArgument;
 
 import com.google.common.annotations.VisibleForTesting;
-import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMultiset;
 import com.google.errorprone.BugPattern.SeverityLevel;
@@ -28,6 +27,7 @@ import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.dataflow.nullnesspropagation.NullnessAnalysis;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Suppressible;
+import com.google.errorprone.suppliers.Supplier;
 import com.google.errorprone.util.ErrorProneToken;
 import com.google.errorprone.util.ErrorProneTokens;
 import com.sun.source.tree.Tree;
@@ -53,9 +53,11 @@ import com.sun.tools.javac.util.Name;
 import com.sun.tools.javac.util.Names;
 import com.sun.tools.javac.util.Options;
 import java.io.IOException;
+import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import javax.annotation.Nullable;
 import javax.lang.model.util.Elements;
 
@@ -65,7 +67,7 @@ public class VisitorState {
   private final SharedState sharedState;
   public final Context context;
   private final TreePath path;
-  private final SuppressionInfo.SuppressedState suppressedState;
+  private final SuppressedState suppressedState;
 
   // The default no-op implementation of DescriptionListener. We use this instead of null so callers
   // of getDescriptionListener() don't have to do null-checking.
@@ -332,8 +334,8 @@ public class VisitorState {
   public Type getTypeFromString(String typeStr) {
     return sharedState
         .typeCache
-        .computeIfAbsent(typeStr, key -> Optional.fromNullable(getTypeFromStringInternal(key)))
-        .orNull();
+        .computeIfAbsent(typeStr, key -> Optional.ofNullable(getTypeFromStringInternal(key)))
+        .orElse(null);
   }
 
   @Nullable
@@ -369,7 +371,7 @@ public class VisitorState {
    * @param name the name to look up, which must be in binary form (i.e. with $ for nested classes).
    */
   @Nullable
-  public Symbol getSymbolFromName(Name name) {
+  public ClassSymbol getSymbolFromName(Name name) {
     boolean modular = sharedState.modules.getDefaultModule() != getSymtab().noModule;
     if (!modular) {
       return getSymbolFromString(getSymtab().noModule, name);
@@ -630,6 +632,55 @@ public class VisitorState {
     return sharedState.timings.span(suppressible);
   }
 
+  private static class Cache<T> implements Supplier<T> {
+    private final Supplier<T> impl;
+    /* Uses T instead of Optional<T> because we don't want to cache null results
+    (b/138753468). These inline caches persist between compilation units, and a type that fails to
+    resolve in one may become available in the next; we want to keep looking it up
+    (relying on the per-file cache in typeCache) if we don't have a result. If you want to cache a
+    computation which can return null, wrap it in an Optional at the call site.*/
+
+    private WeakReference<T> cache = new WeakReference<>(null);
+    private JavacInvocationInstance provenance;
+
+    private Cache(Supplier<T> impl) {
+      this.impl = impl;
+      // provenance intentionally left null-initialized
+    }
+
+    @Override
+    public synchronized T get(VisitorState state) {
+      /* javac is single-threaded, so in principle we don't really need to lock.
+      But in practice it's cheap enough to be worth getting peace of mind that this is
+      always correct. */
+      T value = cache.get();
+      if (value == null) {
+        value = impl.get(state);
+        if (value != null) {
+          cache = new WeakReference<>(value);
+          provenance = state.sharedState.javacInvocationInstance;
+        }
+      } else {
+        JavacInvocationInstance current = state.sharedState.javacInvocationInstance;
+        if (provenance != current) {
+          value = impl.get(state);
+          cache = new WeakReference<>(value);
+          provenance = current;
+        }
+      }
+      return value;
+    }
+  }
+
+  /**
+   * Produces a cache for a function that is expected to return the same result throughout a
+   * compilation, but requires a VisitorState to compute that result. Do not use this method for a
+   * function that depends on the varying state of a VisitorState (e.g. {@link #getPath()}.
+   */
+  public static <T> Supplier<T> memoize(Supplier<T> f) {
+    return new Cache<>(f);
+  }
+
   /**
    * Instances that every {@link VisitorState} instance can share.
    *
@@ -643,6 +694,7 @@ public class VisitorState {
     private final ErrorProneTimings timings;
     private final Types types;
     private final TreeMaker treeMaker;
+    private final JavacInvocationInstance javacInvocationInstance;
 
     private final DescriptionListener descriptionListener;
     private final StatisticsCollector statisticsCollector;
@@ -666,6 +718,7 @@ public class VisitorState {
       this.timings = ErrorProneTimings.instance(context);
       this.types = Types.instance(context);
       this.treeMaker = TreeMaker.instance(context);
+      this.javacInvocationInstance = JavacInvocationInstance.instance(context);
 
       this.descriptionListener = descriptionListener;
       this.statisticsCollector = statisticsCollector;
