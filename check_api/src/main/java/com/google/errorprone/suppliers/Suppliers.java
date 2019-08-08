@@ -115,12 +115,7 @@ public class Suppliers {
    */
   public static Supplier<Type> typeFromString(final String typeString) {
     requireNonNull(typeString);
-    return new Supplier<Type>() {
-      @Override
-      public Type get(VisitorState state) {
-        return state.getTypeFromString(typeString);
-      }
-    };
+    return VisitorState.memoize(state -> state.getTypeFromString(typeString));
   }
 
   /** Given the class representation of a type, supplies the corresponding type. */
