@@ -123,13 +123,7 @@ public class Suppliers {
     return typeFromString(inputClass.getName());
   }
 
-  public static final Supplier<Type> JAVA_LANG_VOID_TYPE =
-      new Supplier<Type>() {
-        @Override
-        public Type get(VisitorState state) {
-          return state.getTypeFromString("java.lang.Void");
-        }
-      };
+  public static final Supplier<Type> JAVA_LANG_VOID_TYPE = typeFromClass(Void.class);
 
   public static final Supplier<Type> VOID_TYPE =
       new Supplier<Type>() {
