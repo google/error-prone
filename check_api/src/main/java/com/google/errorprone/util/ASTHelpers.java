@@ -668,13 +668,13 @@ public class ASTHelpers {
     if (hasAttribute(sym, annotationName)) {
       return true;
     }
-    if (isInherited(state, annotationClass)) {
-      while (sym instanceof ClassSymbol) {
+    if (sym instanceof ClassSymbol && isInherited(state, annotationClass)) {
+      do {
         if (hasAttribute(sym, annotationName)) {
           return true;
         }
         sym = ((ClassSymbol) sym).getSuperclass().tsym;
-      }
+      } while (sym instanceof ClassSymbol);
     }
     return false;
   }
