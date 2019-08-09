@@ -45,8 +45,8 @@ import com.sun.source.util.TreePath;
 @BugPattern(
     name = "PrivateConstructorForUtilityClass",
     summary =
-        "Utility classes (only static members) are not designed to be instantiated and should"
-            + " be made noninstantiable with a default constructor.",
+        "Utility classes (classes with only static members, which are not designed to be"
+            + " instantiated) should be made noninstantiable with a default constructor.",
     severity = SUGGESTION,
     providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public final class PrivateConstructorForUtilityClass extends BugChecker
