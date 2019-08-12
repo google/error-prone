@@ -420,8 +420,30 @@ public final class FieldCanBeLocalTest {
             "  }",
             "  public Predicate<Integer> set(int a) {",
             "    this.a = a;",
-            // No warning.
             "    return x -> x == this.a;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void usedWithinLambdaMemberSelect() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            "import java.util.function.Predicate;",
+            "import java.util.stream.Stream;",
+            "import java.util.Collections;",
+            "class Test {",
+            "  private Integer a;",
+            "  Test(int a) {",
+            "    this.a = a;",
+            "  }",
+            "  public Stream<Integer> set(int a) {",
+            "    this.a = a;",
+            "    return Collections.<Integer>emptyList().stream()",
+            "        .filter(x -> x == this.a)",
+            "        .filter(x -> x > 0);",
             "  }",
             "}")
         .doTest();
