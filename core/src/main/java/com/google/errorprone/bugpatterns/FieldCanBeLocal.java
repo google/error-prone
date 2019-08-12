@@ -226,7 +226,7 @@ public final class FieldCanBeLocal extends BugChecker implements CompilationUnit
         if (!inMethod) {
           potentialFields.remove(getSymbol(memberSelectTree));
         }
-        return null;
+        return super.visitMemberSelect(memberSelectTree, null);
       }
     }.scan(state.getPath(), null);
 
