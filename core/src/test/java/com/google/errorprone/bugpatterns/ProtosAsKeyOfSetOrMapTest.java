@@ -46,6 +46,7 @@ public final class ProtosAsKeyOfSetOrMapTest {
             "import java.util.HashMap;",
             "import java.util.HashSet;",
             "import java.util.Collection;",
+            "import java.util.concurrent.ConcurrentHashMap;",
             "import com.google.common.collect.Sets;",
             "import com.google.common.collect.Maps;",
             "import com.google.common.collect.HashMultiset;",
@@ -97,6 +98,9 @@ public final class ProtosAsKeyOfSetOrMapTest {
             "    LinkedHashMap<TestProtoMessage, Integer> testLinkedHashMap"
                 + "= new LinkedHashMap<TestProtoMessage, Integer>();",
             "    // BUG: Diagnostic contains: ProtosAsKeyOfSetOrMap",
+            "    ConcurrentHashMap<TestProtoMessage, Integer>  testConcurrentHashMap"
+                + "= new ConcurrentHashMap<TestProtoMessage, Integer>();",
+            "    // BUG: Diagnostic contains: ProtosAsKeyOfSetOrMap",
             "    LinkedHashMultiset<TestProtoMessage> testLinkedHashMultiSet"
                 + "= LinkedHashMultiset.create();",
             "    // BUG: Diagnostic contains: ProtosAsKeyOfSetOrMap",
@@ -115,6 +119,7 @@ public final class ProtosAsKeyOfSetOrMapTest {
             "import java.util.Set;",
             "import java.util.Map;",
             "import java.util.LinkedHashMap;",
+            "import java.util.concurrent.ConcurrentHashMap;",
             "import com.google.common.collect.Sets;",
             "import com.google.common.collect.Maps;",
             "import java.util.HashMap;",
@@ -150,6 +155,8 @@ public final class ProtosAsKeyOfSetOrMapTest {
             "    HashBiMap<String, Integer> testHashBiMap = HashBiMap.create();",
             "    LinkedHashMap<String, Integer> testLinkedHashMap"
                 + "= new LinkedHashMap<String, Integer>();",
+            "    ConcurrentHashMap<String, Integer> testConcurrentHashMap"
+                + "= new ConcurrentHashMap<String, Integer>();",
             "    HashMultiset<String> testHashMultiSet = HashMultiset.create();",
             "    LinkedHashMultiset<String> testLinkedHashMultiSet"
                 + "= LinkedHashMultiset.create();",
