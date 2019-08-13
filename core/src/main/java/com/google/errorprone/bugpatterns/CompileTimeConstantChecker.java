@@ -16,10 +16,12 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.errorprone.BugPattern.LinkType.NONE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.CompileTimeConstantExpressionMatcher.hasCompileTimeConstantAnnotation;
 
+import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.LambdaExpressionTreeMatcher;
@@ -37,9 +39,10 @@ import com.sun.source.tree.MemberReferenceTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.NewClassTree;
-import com.sun.source.tree.VariableTree;
+import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Flags;
 import com.sun.tools.javac.code.Symbol;
+import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -184,16 +187,70 @@ public class CompileTimeConstantChecker extends BugChecker
     if (method == null) {
       return Description.NO_MATCH;
     }
-    List<Integer> compileTimeConstantAnnotationIndexes = new ArrayList<>();
-    for (int i = 0; i < method.getParameters().size(); i++) {
-      if (hasCompileTimeConstantAnnotation(state, method.getParameters().get(i))) {
-        compileTimeConstantAnnotationIndexes.add(i);
-      }
-    }
+    List<Integer> compileTimeConstantAnnotationIndexes =
+        getAnnotatedParams(method.getParameters(), state);
     if (compileTimeConstantAnnotationIndexes.isEmpty()) {
       return Description.NO_MATCH;
     }
-    for (Symbol.MethodSymbol superMethod : ASTHelpers.findSuperMethods(method, state.getTypes())) {
+    return checkSuperMethods(
+        node,
+        state,
+        compileTimeConstantAnnotationIndexes,
+        ASTHelpers.findSuperMethods(method, state.getTypes()));
+  }
+
+  @Override
+  public Description matchMemberReference(MemberReferenceTree node, VisitorState state) {
+    Symbol.MethodSymbol sym = ASTHelpers.getSymbol(node);
+    if (sym == null) {
+      return Description.NO_MATCH;
+    }
+    List<Integer> compileTimeConstantAnnotationIndexes =
+        getAnnotatedParams(sym.getParameters(), state);
+    if (compileTimeConstantAnnotationIndexes.isEmpty()) {
+      return Description.NO_MATCH;
+    }
+    return checkLambda(node, state, compileTimeConstantAnnotationIndexes);
+  }
+
+  @Override
+  public Description matchLambdaExpression(LambdaExpressionTree node, VisitorState state) {
+    List<Integer> compileTimeConstantAnnotationIndexes =
+        getAnnotatedParams(
+            node.getParameters().stream().map(ASTHelpers::getSymbol).collect(toImmutableList()),
+            state);
+    if (compileTimeConstantAnnotationIndexes.isEmpty()) {
+      return Description.NO_MATCH;
+    }
+    return checkLambda(node, state, compileTimeConstantAnnotationIndexes);
+  }
+
+  private Description checkLambda(
+      ExpressionTree node, VisitorState state, List<Integer> compileTimeConstantAnnotationIndexes) {
+    MethodSymbol descriptorSymbol =
+        (MethodSymbol) state.getTypes().findDescriptorSymbol(ASTHelpers.getType(node).tsym);
+    ImmutableSet.Builder<Symbol.MethodSymbol> methods = ImmutableSet.builder();
+    methods.add(descriptorSymbol);
+    methods.addAll(ASTHelpers.findSuperMethods(descriptorSymbol, state.getTypes()));
+    return checkSuperMethods(node, state, compileTimeConstantAnnotationIndexes, methods.build());
+  }
+
+  private List<Integer> getAnnotatedParams(List<VarSymbol> params, VisitorState state) {
+    List<Integer> compileTimeConstantAnnotationIndexes = new ArrayList<>();
+    for (int i = 0; i < params.size(); i++) {
+      if (hasCompileTimeConstantAnnotation(state, params.get(i))) {
+        compileTimeConstantAnnotationIndexes.add(i);
+      }
+    }
+    return compileTimeConstantAnnotationIndexes;
+  }
+
+  private Description checkSuperMethods(
+      Tree node,
+      VisitorState state,
+      List<Integer> compileTimeConstantAnnotationIndexes,
+      Iterable<MethodSymbol> superMethods) {
+    for (Symbol.MethodSymbol superMethod : superMethods) {
       for (Integer index : compileTimeConstantAnnotationIndexes) {
         if (!hasCompileTimeConstantAnnotation(state, superMethod.getParameters().get(index))) {
           return buildDescription(node)
@@ -201,39 +258,6 @@ public class CompileTimeConstantChecker extends BugChecker
                   "Method with @CompileTimeConstant parameter can't override method without it.")
               .build();
         }
-      }
-    }
-    return Description.NO_MATCH;
-  }
-
-  @Override
-  public Description matchMemberReference(MemberReferenceTree tree, VisitorState state) {
-    Symbol.MethodSymbol sym = ASTHelpers.getSymbol(tree);
-    if (sym == null) {
-      return Description.NO_MATCH;
-    }
-    for (Symbol.VarSymbol formalParam : sym.getParameters()) {
-      if (hasCompileTimeConstantAnnotation(state, formalParam)) {
-        // We couldn't check how the reference will be used. Simply disallow all references.
-        return buildDescription(tree)
-            .setMessage(
-                "References to methods with @CompileTimeConstant parameters are not supported.")
-            .build();
-      }
-    }
-    return Description.NO_MATCH;
-  }
-
-  @Override
-  public Description matchLambdaExpression(LambdaExpressionTree tree, VisitorState state) {
-    for (VariableTree formalParam : tree.getParameters()) {
-      if (hasCompileTimeConstantAnnotation(state, ASTHelpers.getSymbol(formalParam))) {
-        // We couldn't check how the lambda expression will be used. Simply disallow all lambda
-        // expressions.
-        return buildDescription(tree)
-            .setMessage(
-                "Lambda expressions with @CompileTimeConstant parameters are not supported.")
-            .build();
       }
     }
     return Description.NO_MATCH;
