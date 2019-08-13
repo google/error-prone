@@ -365,8 +365,66 @@ public class CompileTimeConstantCheckerTest {
             "public class CompileTimeConstantTestCase {",
             "  public static void m(@CompileTimeConstant String s) { }",
             "  public static Consumer<String> r(String x) {",
-            "    // BUG: Diagnostic contains: References to methods with @CompileTimeConstant",
+            "    // BUG: Diagnostic contains: Method with @CompileTimeConstant parameter",
             "    return CompileTimeConstantTestCase::m;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void testMatches_constructorReference() {
+    compilationHelper
+        .addSourceLines(
+            "test/CompileTimeConstantTestCase.java",
+            "package test;",
+            "import com.google.errorprone.annotations.CompileTimeConstant;",
+            "import java.util.function.Function;",
+            "public class CompileTimeConstantTestCase {",
+            "  CompileTimeConstantTestCase(@CompileTimeConstant String s) { }",
+            "  public static Function<String, CompileTimeConstantTestCase> r(String x) {",
+            "    // BUG: Diagnostic contains: Method with @CompileTimeConstant parameter",
+            "    return CompileTimeConstantTestCase::new;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void testMatches_methodReferenceCorrectOverrideMethod() {
+    compilationHelper
+        .addSourceLines(
+            "test/CompileTimeConstantTestCase.java",
+            "package test;",
+            "import com.google.errorprone.annotations.CompileTimeConstant;",
+            "import java.util.function.Consumer;",
+            "public class CompileTimeConstantTestCase {",
+            "  interface ConstantFn {",
+            "    void apply(@CompileTimeConstant String s);",
+            "  }",
+            "  public static void m(@CompileTimeConstant String s) { }",
+            "  public static ConstantFn r(String x) {",
+            "    return CompileTimeConstantTestCase::m;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void testMatches_methodReferenceCorrectOverrideConstructor() {
+    compilationHelper
+        .addSourceLines(
+            "test/CompileTimeConstantTestCase.java",
+            "package test;",
+            "import com.google.errorprone.annotations.CompileTimeConstant;",
+            "import java.util.function.Consumer;",
+            "public class CompileTimeConstantTestCase {",
+            "  interface ConstantFn {",
+            "    CompileTimeConstantTestCase apply(@CompileTimeConstant String s);",
+            "  }",
+            "  CompileTimeConstantTestCase(@CompileTimeConstant String s) {}",
+            "  public static ConstantFn r(String x) {",
+            "    return CompileTimeConstantTestCase::new;",
             "  }",
             "}")
         .doTest();
@@ -381,8 +439,45 @@ public class CompileTimeConstantCheckerTest {
             "import com.google.errorprone.annotations.CompileTimeConstant;",
             "import java.util.function.Consumer;",
             "public class CompileTimeConstantTestCase {",
-            "  // BUG: Diagnostic contains: Lambda expressions with @CompileTimeConstant",
+            "  // BUG: Diagnostic contains: Method with @CompileTimeConstant parameter",
             "  Consumer<String> c = (@CompileTimeConstant String s) -> {};",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void testDoesNotMatch_lambdaExpression_correctOverride() {
+    compilationHelper
+        .addSourceLines(
+            "test/CompileTimeConstantTestCase.java",
+            "package test;",
+            "import com.google.errorprone.annotations.CompileTimeConstant;",
+            "import java.util.function.Consumer;",
+            "public class CompileTimeConstantTestCase {",
+            "  interface ConstantFn {",
+            "    void apply(@CompileTimeConstant String s);",
+            "  }",
+            "  ConstantFn c = (@CompileTimeConstant String s) -> {doFoo(s);};",
+            "  void doFoo(final @CompileTimeConstant String foo) {}",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void testMatches_lambdaExpressionWithoutAnnotatedParameters() {
+    compilationHelper
+        .addSourceLines(
+            "test/CompileTimeConstantTestCase.java",
+            "package test;",
+            "import com.google.errorprone.annotations.CompileTimeConstant;",
+            "import java.util.function.Consumer;",
+            "public class CompileTimeConstantTestCase {",
+            "  interface ConstantFn {",
+            "    void apply(@CompileTimeConstant String s);",
+            "  }",
+            "  // BUG: Diagnostic contains: Non-compile-time constant expression",
+            "  ConstantFn c = s -> {doFoo(s);};",
+            "  void doFoo(final @CompileTimeConstant String foo) {}",
             "}")
         .doTest();
   }
