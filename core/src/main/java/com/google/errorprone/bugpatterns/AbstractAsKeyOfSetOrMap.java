@@ -67,6 +67,7 @@ public abstract class AbstractAsKeyOfSetOrMap extends BugChecker
               .onClass("com.google.common.collect.Maps")
               .named("newLinkedHashMap"),
           Matchers.constructor().forClass("java.util.LinkedHashMap"),
+          Matchers.constructor().forClass("java.util.concurrent.ConcurrentHashMap"),
           MethodMatchers.staticMethod()
               .onClass("com.google.common.collect.HashBiMap")
               .named("create"));
