@@ -757,7 +757,7 @@ Including the first argument of checkNotNull in the failure message is not usefu
 __[PreconditionsInvalidPlaceholder](bugpattern/PreconditionsInvalidPlaceholder)__<br>
 Preconditions only accepts the %s placeholder in error message strings
 
-__[PreferDurationOverload](bugpattern/PreferDurationOverload)__<br>
+__[PreferJavaTimeOverload](bugpattern/PreferJavaTimeOverload)__<br>
 Prefer using java.time-based APIs when available. Note that this checker does not and cannot guarantee that the overloads have equivalent semantics, but that is generally the case with overloaded methods.
 
 __[ProtoDurationGetSecondsGetNano](bugpattern/ProtoDurationGetSecondsGetNano)__<br>
@@ -824,7 +824,7 @@ __[ToStringReturnsNull](bugpattern/ToStringReturnsNull)__<br>
 An implementation of Object.toString() should never return null.
 
 __[TreeToString](bugpattern/TreeToString)__<br>
-Tree#toString shouldn&#39;t be used for Trees deriving from the code being compiled, as it discards whitespace and comments. If this code is within an ErrorProne check, consider VisitorState#getSourceForNode.
+Tree#toString shouldn&#39;t be used for Trees deriving from the code being compiled, as it discards whitespace and comments.
 
 __[TruthAssertExpected](bugpattern/TruthAssertExpected)__<br>
 The actual and expected values appear to be swapped, which results in poor assertion failure messages. The actual value should come first.
@@ -1178,7 +1178,7 @@ __[PrivateConstructorForNoninstantiableModule](bugpattern/PrivateConstructorForN
 Add a private constructor to modules that will not be instantiated by Dagger.
 
 __[PrivateConstructorForUtilityClass](bugpattern/PrivateConstructorForUtilityClass)__<br>
-Utility classes (only static members) are not designed to be instantiated and should be made noninstantiable with a default constructor.
+Utility classes (classes with only static members, which are not designed to be instantiated) should be made noninstantiable with a default constructor.
 
 __[RemoveUnusedImports](bugpattern/RemoveUnusedImports)__<br>
 Unused imports
