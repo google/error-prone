@@ -19,18 +19,19 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.ProvidesFix.NO_FIX;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.predicates.TypePredicates.allOf;
-import static com.google.errorprone.predicates.TypePredicates.anyOf;
 import static com.google.errorprone.predicates.TypePredicates.isDescendantOf;
 import static com.google.errorprone.predicates.TypePredicates.isExactType;
 import static com.google.errorprone.predicates.TypePredicates.not;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
+import static com.google.errorprone.util.ASTHelpers.getType;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Streams;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.Fix;
+import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.predicates.TypePredicate;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
@@ -48,16 +49,24 @@ import java.util.Optional;
     severity = WARNING,
     providesFix = NO_FIX)
 public final class LiteProtoToString extends AbstractToString {
+  private static final String LITE_ENUM_MESSAGE =
+      "toString() on lite proto enums will generate different representations of the value from"
+          + " development and optimized builds. Consider using #getNumber if you only need a"
+          + " serialized representation of the value, or #name if you really need the name. Using"
+          + " #name will prevent the optimizer stripping out the names of elements, however;"
+          + " so do not use if this enum contains strings that should not leak external to Google.";
+
   private static final TypePredicate IS_LITE_PROTO =
-      anyOf(
-          allOf(
-              isDescendantOf("com.google.protobuf.MessageLite"),
-              not(isDescendantOf("com.google.protobuf.Message")),
-              not(isExactType("com.google.protobuf.UnknownFieldSet"))),
-          allOf(
-              isDescendantOf("com.google.protobuf.Internal.EnumLite"),
-              not(isDescendantOf("com.google.protobuf.ProtocolMessageEnum")),
-              not(isDescendantOf("com.google.protobuf.AbstractMessageLite.InternalOneOfEnum"))));
+      allOf(
+          isDescendantOf("com.google.protobuf.MessageLite"),
+          not(isDescendantOf("com.google.protobuf.Message")),
+          not(isExactType("com.google.protobuf.UnknownFieldSet")));
+
+  private static final TypePredicate IS_LITE_ENUM =
+      allOf(
+          isDescendantOf("com.google.protobuf.Internal.EnumLite"),
+          not(isDescendantOf("com.google.protobuf.ProtocolMessageEnum")),
+          not(isDescendantOf("com.google.protobuf.AbstractMessageLite.InternalOneOfEnum")));
 
   private static final ImmutableSet<String> VERBOSE_LOGGING =
       ImmutableSet.of(
@@ -75,7 +84,7 @@ public final class LiteProtoToString extends AbstractToString {
     if (isVerboseLogMessage(state)) {
       return false;
     }
-    return IS_LITE_PROTO.apply(type, state);
+    return IS_LITE_PROTO.apply(type, state) || IS_LITE_ENUM.apply(type, state);
   }
 
   private static boolean isVerboseLogMessage(VisitorState state) {
@@ -93,16 +102,22 @@ public final class LiteProtoToString extends AbstractToString {
 
   @Override
   protected Optional<String> descriptionMessageForDefaultMatch(Type type, VisitorState state) {
-    return Optional.of(message());
+    return Optional.of(IS_LITE_ENUM.apply(type, state) ? LITE_ENUM_MESSAGE : message());
   }
 
   @Override
   protected Optional<Fix> implicitToStringFix(ExpressionTree tree, VisitorState state) {
-    return Optional.empty();
+    return IS_LITE_ENUM.apply(getType(tree), state)
+        ? Optional.of(SuggestedFix.postfixWith(tree, ".getNumber()"))
+        : Optional.empty();
   }
 
   @Override
   protected Optional<Fix> toStringFix(Tree parent, ExpressionTree tree, VisitorState state) {
-    return Optional.empty();
+    return IS_LITE_ENUM.apply(getType(tree), state)
+        ? Optional.of(
+            SuggestedFix.replace(
+                parent, String.format("%s.getNumber()", state.getSourceForNode(tree))))
+        : Optional.empty();
   }
 }
