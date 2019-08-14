@@ -16,6 +16,7 @@
 
 package com.google.errorprone.scanner;
 
+import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.ErrorProneOptions;
 import com.google.errorprone.SuppressionInfo;
@@ -30,7 +31,7 @@ import com.sun.source.tree.Tree;
 import com.sun.source.util.TreePath;
 import com.sun.source.util.TreePathScanner;
 import com.sun.tools.javac.code.Symbol;
-import java.lang.annotation.Annotation;
+import com.sun.tools.javac.util.Name;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
@@ -89,7 +90,7 @@ public class Scanner extends TreePathScanner<Void, VisitorState> {
       if (sym != null) {
         currentSuppressions =
             currentSuppressions.withExtendedSuppressions(
-                sym, state, getCustomSuppressionAnnotations());
+                sym, state, getCustomSuppressionAnnotations(state));
       }
     }
     return prevSuppressionInfo;
@@ -100,24 +101,23 @@ public class Scanner extends TreePathScanner<Void, VisitorState> {
    *
    * @param suppressible holds information about the suppressibility of a checker
    * @param errorProneOptions Options object configuring whether or not to suppress non-errors in
-   *     generated code.
    */
   protected SuppressedState isSuppressed(
-      Suppressible suppressible, ErrorProneOptions errorProneOptions) {
+      Suppressible suppressible, ErrorProneOptions errorProneOptions, VisitorState state) {
 
     boolean suppressedInGeneratedCode =
         errorProneOptions.disableWarningsInGeneratedCode()
             && severityMap().get(suppressible.canonicalName()) != SeverityLevel.ERROR;
 
-    return currentSuppressions.suppressedState(suppressible, suppressedInGeneratedCode);
+    return currentSuppressions.suppressedState(suppressible, suppressedInGeneratedCode, state);
   }
 
   /**
    * Returns a set of all the custom suppression annotation types used by the {@code BugChecker}s in
    * this{@code Scanner}.
    */
-  protected Set<Class<? extends Annotation>> getCustomSuppressionAnnotations() {
-    return Collections.<Class<? extends Annotation>>emptySet();
+  protected Set<? extends Name> getCustomSuppressionAnnotations(VisitorState state) {
+    return ImmutableSet.of();
   }
 
   protected void reportMatch(Description description, VisitorState state) {

@@ -16,10 +16,13 @@
 
 package com.google.errorprone;
 
+import static com.google.common.collect.ImmutableSet.toImmutableSet;
+
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.annotations.CheckReturnValue;
 import com.google.errorprone.annotations.Immutable;
 import com.google.errorprone.matchers.Suppressible;
+import com.google.errorprone.suppliers.Supplier;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
@@ -28,12 +31,13 @@ import com.sun.tools.javac.code.Attribute;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
+import com.sun.tools.javac.util.Name;
 import com.sun.tools.javac.util.Pair;
-import java.lang.annotation.Annotation;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.stream.Stream;
 
 /**
  * Immutable container of "suppression signals" - annotations or other information gathered from
@@ -50,29 +54,31 @@ public class SuppressionInfo {
   public static final SuppressionInfo EMPTY =
       new SuppressionInfo(ImmutableSet.of(), ImmutableSet.of(), false);
 
-  private static final ImmutableSet<String> GENERATED_ANNOTATIONS =
-      ImmutableSet.of("javax.annotation.Generated", "javax.annotation.processing.Generated");
-
+  private static final Supplier<Name> ANDROID_SUPPRESS_LINT =
+      VisitorState.memoize(state -> state.getName("android.annotation.SuppressLint"));
+  private static final Supplier<Name> VALUE = VisitorState.memoize(state -> state.getName("value"));
+  private static final Supplier<ImmutableSet<Name>> GENERATED_ANNOTATIONS =
+      VisitorState.memoize(
+          state ->
+              Stream.of("javax.annotation.Generated", "javax.annotation.processing.Generated")
+                  .map(state::getName)
+                  .collect(toImmutableSet()));
   private final ImmutableSet<String> suppressWarningsStrings;
-  private final ImmutableSet<Class<? extends Annotation>> customSuppressions;
+
+  @SuppressWarnings("Immutable") /* Name is javac's interned version of a string. */
+  private final ImmutableSet<Name> customSuppressions;
+
   private final boolean inGeneratedCode;
 
   private SuppressionInfo(
-      Set<String> suppressWarningsStrings,
-      Set<Class<? extends Annotation>> customSuppressions,
-      boolean inGeneratedCode) {
+      Set<String> suppressWarningsStrings, Set<Name> customSuppressions, boolean inGeneratedCode) {
     this.suppressWarningsStrings = ImmutableSet.copyOf(suppressWarningsStrings);
     this.customSuppressions = ImmutableSet.copyOf(customSuppressions);
     this.inGeneratedCode = inGeneratedCode;
   }
 
   private static boolean isGenerated(Symbol sym, VisitorState state) {
-    for (String annotation : GENERATED_ANNOTATIONS) {
-      if (ASTHelpers.hasAnnotation(sym, annotation, state)) {
-        return true;
-      }
-    }
-    return false;
+    return !ASTHelpers.annotationsAmong(sym, GENERATED_ANNOTATIONS.get(state), state).isEmpty();
   }
 
   /**
@@ -81,10 +87,9 @@ public class SuppressionInfo {
    *
    * @param suppressible Holds information about the suppressibilty of a checker
    * @param suppressedInGeneratedCode true if this checker instance should be considered suppressed
-   *     if the signals in this object say we're in generated code.
    */
   public SuppressedState suppressedState(
-      Suppressible suppressible, boolean suppressedInGeneratedCode) {
+      Suppressible suppressible, boolean suppressedInGeneratedCode, VisitorState state) {
     if (inGeneratedCode && suppressedInGeneratedCode) {
       return SuppressedState.SUPPRESSED;
     }
@@ -92,7 +97,7 @@ public class SuppressionInfo {
         && !Collections.disjoint(suppressible.allNames(), suppressWarningsStrings)) {
       return SuppressedState.SUPPRESSED;
     }
-    if (!Collections.disjoint(suppressible.customSuppressionAnnotations(), customSuppressions)) {
+    if (suppressible.suppressedByAnyOf(customSuppressions, state)) {
       return SuppressedState.SUPPRESSED;
     }
 
@@ -133,36 +138,33 @@ public class SuppressionInfo {
    *     SuppressWarnings symbol type}.
    */
   public SuppressionInfo withExtendedSuppressions(
-      Symbol sym,
-      VisitorState state,
-      Set<Class<? extends Annotation>> customSuppressionAnnosToLookFor) {
+      Symbol sym, VisitorState state, Set<? extends Name> customSuppressionAnnosToLookFor) {
     boolean newInGeneratedCode = inGeneratedCode || isGenerated(sym, state);
     boolean anyModification = newInGeneratedCode != inGeneratedCode;
 
     /* Handle custom suppression annotations. */
-    Set<Class<? extends Annotation>> newCustomSuppressions = null;
-    for (Class<? extends Annotation> annotationType : customSuppressionAnnosToLookFor) {
-      // Don't need to check already-suppressed annos
-      if (customSuppressions.contains(annotationType)) {
-        continue;
-      }
-      if (ASTHelpers.hasAnnotation(sym, annotationType, state)) {
-        anyModification = true;
-        if (newCustomSuppressions == null) {
-          newCustomSuppressions = new HashSet<>(customSuppressions);
-        }
-        newCustomSuppressions.add(annotationType);
-      }
+    Set<Name> lookingFor = new HashSet<>(customSuppressionAnnosToLookFor);
+    lookingFor.removeAll(customSuppressions);
+    Set<Name> newlyPresent = ASTHelpers.annotationsAmong(sym, lookingFor, state);
+    Set<Name> newCustomSuppressions;
+    if (!newlyPresent.isEmpty()) {
+      anyModification = true;
+      newCustomSuppressions = newlyPresent;
+      newCustomSuppressions.addAll(customSuppressions);
+    } else {
+      newCustomSuppressions = customSuppressions;
     }
 
     /* Handle {@code @SuppressWarnings} and {@code @SuppressLint}. */
+    Name suppressLint = ANDROID_SUPPRESS_LINT.get(state);
+    Name valueName = VALUE.get(state);
     Set<String> newSuppressions = null;
     // Iterate over annotations on this symbol, looking for SuppressWarnings
     for (Attribute.Compound attr : sym.getAnnotationMirrors()) {
       if ((attr.type.tsym == state.getSymtab().suppressWarningsType.tsym)
-          || attr.type.tsym.getQualifiedName().contentEquals("android.annotation.SuppressLint")) {
+          || attr.type.tsym.getQualifiedName().equals(suppressLint)) {
         for (Pair<MethodSymbol, Attribute> value : attr.values) {
-          if (value.fst.name.contentEquals("value")) {
+          if (value.fst.name.equals(valueName)) {
             if (value.snd
                 instanceof Attribute.Array) { // SuppressWarnings/SuppressLint take an array
               for (Attribute suppress : ((Attribute.Array) value.snd).values) {
@@ -190,9 +192,6 @@ public class SuppressionInfo {
       return this;
     }
 
-    if (newCustomSuppressions == null) {
-      newCustomSuppressions = customSuppressions;
-    }
     if (newSuppressions == null) {
       newSuppressions = suppressWarningsStrings;
     }

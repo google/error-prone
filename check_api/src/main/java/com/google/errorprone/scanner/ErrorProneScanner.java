@@ -17,6 +17,7 @@
 package com.google.errorprone.scanner;
 
 
+import com.google.common.base.Supplier;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
@@ -135,10 +136,10 @@ import com.sun.source.tree.WildcardTree;
 import com.sun.source.util.TreePath;
 import com.sun.tools.javac.code.Symbol.CompletionFailure;
 import com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition;
+import com.sun.tools.javac.util.Name;
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -150,7 +151,8 @@ import java.util.Set;
  */
 public class ErrorProneScanner extends Scanner {
 
-  private final Set<Class<? extends Annotation>> customSuppressionAnnotations = new HashSet<>();
+  private final com.google.errorprone.suppliers.Supplier<? extends Set<? extends Name>>
+      customSuppressionAnnotations;
 
   private final Map<String, SeverityLevel> severities;
   private final ImmutableSet<BugChecker> bugCheckers;
@@ -182,9 +184,21 @@ public class ErrorProneScanner extends Scanner {
   public ErrorProneScanner(Iterable<BugChecker> checkers, Map<String, SeverityLevel> severities) {
     this.bugCheckers = ImmutableSet.copyOf(checkers);
     this.severities = severities;
+    ImmutableSet.Builder<Class<? extends Annotation>> annotationClassesBuilder =
+        ImmutableSet.builder();
     for (BugChecker checker : this.bugCheckers) {
-      registerNodeTypes(checker);
+      registerNodeTypes(checker, annotationClassesBuilder);
     }
+    ImmutableSet<Class<? extends Annotation>> annotationClasses = annotationClassesBuilder.build();
+    this.customSuppressionAnnotations =
+        VisitorState.memoize(
+            state -> {
+              ImmutableSet.Builder<Name> builder = ImmutableSet.builder();
+              for (Class<? extends Annotation> annotation : annotationClasses) {
+                builder.add(state.getName(annotation.getName()));
+              }
+              return builder.build();
+            });
   }
 
   private static Map<String, BugPattern.SeverityLevel> defaultSeverities(
@@ -197,8 +211,8 @@ public class ErrorProneScanner extends Scanner {
   }
 
   @Override
-  protected Set<Class<? extends Annotation>> getCustomSuppressionAnnotations() {
-    return customSuppressionAnnotations;
+  protected Set<? extends Name> getCustomSuppressionAnnotations(VisitorState state) {
+    return customSuppressionAnnotations.get(state);
   }
 
   private final List<AnnotationTreeMatcher> annotationMatchers = new ArrayList<>();
@@ -255,8 +269,10 @@ public class ErrorProneScanner extends Scanner {
   private final List<WhileLoopTreeMatcher> whileLoopMatchers = new ArrayList<>();
   private final List<WildcardTreeMatcher> wildcardMatchers = new ArrayList<>();
 
-  private void registerNodeTypes(BugChecker checker) {
-    customSuppressionAnnotations.addAll(checker.customSuppressionAnnotations());
+  private void registerNodeTypes(
+      BugChecker checker,
+      ImmutableSet.Builder<Class<? extends Annotation>> customSuppressionAnnotationClasses) {
+    customSuppressionAnnotationClasses.addAll(checker.customSuppressionAnnotations());
 
     if (checker instanceof AnnotationTreeMatcher) {
       annotationMatchers.add((AnnotationTreeMatcher) checker);
@@ -424,7 +440,7 @@ public class ErrorProneScanner extends Scanner {
     // A VisitorState with our new path, but without mentioning the suppression of any matcher.
     VisitorState newState = oldState.withPath(getCurrentPath());
     for (M matcher : matchers) {
-      SuppressedState suppressed = isSuppressed(matcher, errorProneOptions);
+      SuppressedState suppressed = isSuppressed(matcher, errorProneOptions, newState);
       // If the ErrorProneOptions say to visit suppressed code, we still visit it
       if (suppressed == SuppressedState.UNSUPPRESSED
           || errorProneOptions.isIgnoreSuppressionAnnotations()) {
