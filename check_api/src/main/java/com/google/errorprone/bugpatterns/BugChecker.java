@@ -17,8 +17,10 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.common.base.MoreObjects.firstNonNull;
+import static com.google.common.collect.ImmutableSet.toImmutableSet;
 
 import com.google.common.base.Preconditions;
+import com.google.common.collect.Iterables;
 import com.google.errorprone.BugCheckerInfo;
 import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.VisitorState;
@@ -26,6 +28,7 @@ import com.google.errorprone.annotations.CheckReturnValue;
 import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Suppressible;
+import com.google.errorprone.suppliers.Supplier;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.AnnotatedTypeTree;
 import com.sun.source.tree.AnnotationTree;
@@ -82,6 +85,7 @@ import com.sun.source.tree.WildcardTree;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition;
+import com.sun.tools.javac.util.Name;
 import java.io.Serializable;
 import java.lang.annotation.Annotation;
 import java.util.Arrays;
@@ -90,6 +94,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.BiPredicate;
 
 /**
  * A base class for implementing bug checkers. The {@code BugChecker} supplies a Scanner
@@ -102,9 +107,37 @@ import java.util.Set;
  */
 public abstract class BugChecker implements Suppressible, Serializable {
   private final BugCheckerInfo info;
+  private final BiPredicate<Set<? extends Name>, VisitorState> checkSuppression;
 
   public BugChecker() {
     info = BugCheckerInfo.create(getClass());
+    checkSuppression = suppressionPredicate(info.customSuppressionAnnotations());
+  }
+
+  private static BiPredicate<Set<? extends Name>, VisitorState> suppressionPredicate(
+      Set<Class<? extends Annotation>> suppressionClasses) {
+    switch (suppressionClasses.size()) {
+      case 0:
+        return (annos, state) -> false;
+      case 1:
+        {
+          Supplier<Name> self =
+              VisitorState.memoize(
+                  state -> state.getName(Iterables.getOnlyElement(suppressionClasses).getName()));
+          return (annos, state) -> annos.contains(self.get(state));
+        }
+      default:
+        {
+          Supplier<Set<? extends Name>> self =
+              VisitorState.memoize(
+                  state ->
+                      suppressionClasses.stream()
+                          .map(Class::getName)
+                          .map(state::getName)
+                          .collect(toImmutableSet()));
+          return (annos, state) -> !Collections.disjoint(self.get(state), annos);
+        }
+    }
   }
 
   /** Helper to create a Description for the common case where there is a fix. */
@@ -252,6 +285,11 @@ public abstract class BugChecker implements Suppressible, Serializable {
   @Override
   public Set<Class<? extends Annotation>> customSuppressionAnnotations() {
     return info.customSuppressionAnnotations();
+  }
+
+  @Override
+  public boolean suppressedByAnyOf(Set<Name> annotations, VisitorState s) {
+    return checkSuppression.test(annotations, s);
   }
 
   /**

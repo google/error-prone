@@ -16,6 +16,8 @@
 
 package com.google.errorprone.matchers;
 
+import com.google.errorprone.VisitorState;
+import com.sun.tools.javac.util.Name;
 import java.lang.annotation.Annotation;
 import java.util.Set;
 
@@ -35,4 +37,6 @@ public interface Suppressible {
 
   /** Returns the custom suppression annotations for this checker, if custom suppression is used. */
   Set<Class<? extends Annotation>> customSuppressionAnnotations();
+
+  boolean suppressedByAnyOf(Set<Name> annotations, VisitorState s);
 }
