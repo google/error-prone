@@ -83,7 +83,7 @@ import com.google.errorprone.bugpatterns.DeadThread;
 import com.google.errorprone.bugpatterns.DeduplicateConstants;
 import com.google.errorprone.bugpatterns.DefaultCharset;
 import com.google.errorprone.bugpatterns.DepAnn;
-import com.google.errorprone.bugpatterns.DescribeFix;
+import com.google.errorprone.bugpatterns.DescribeMatch;
 import com.google.errorprone.bugpatterns.DiscardedPostfixExpression;
 import com.google.errorprone.bugpatterns.DivZero;
 import com.google.errorprone.bugpatterns.DoNotCallChecker;
@@ -783,7 +783,7 @@ public class BuiltInCheckerSuppliers {
           ConstructorLeaksThis.class,
           DeduplicateConstants.class,
           DepAnn.class,
-          DescribeFix.class,
+          DescribeMatch.class,
           DivZero.class,
           EmptyBlockTag.class,
           EmptyIfStatement.class,
