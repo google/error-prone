@@ -362,7 +362,16 @@ public class VisitorState {
   // TODO(cushon): deal with binary compat issues and return ClassSymbol
   @Nullable
   public Symbol getSymbolFromString(String symStr) {
-    return getSymbolFromName(getName(inferBinaryName(symStr)));
+    return getSymbolFromName(binaryNameFromClassname(symStr));
+  }
+
+  /**
+   * Returns the Name object corresponding to the named class, converting it to binary form along
+   * the way if necessary (i.e., replacing Foo.Bar with Foo$Bar). To get the Name corresponding to
+   * some string that is not a class name, see the more general {@link #getName(String)}.
+   */
+  public Name binaryNameFromClassname(String className) {
+    return getName(inferBinaryName(className));
   }
 
   /**

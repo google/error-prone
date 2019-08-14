@@ -662,6 +662,7 @@ public class ASTHelpers {
     if (sym == null) {
       return false;
     }
+    // TODO(amalloy): unify with hasAnnotation(Symbol, Name, VisitorState)
     // normalize to non-binary names
     annotationClass = annotationClass.replace('$', '.');
     Name annotationName = state.getName(annotationClass);
@@ -679,15 +680,15 @@ public class ASTHelpers {
     return false;
   }
 
-  private static final Cache<String, Boolean> inheritedAnnotationCache =
+  private static final Cache<Name, Boolean> inheritedAnnotationCache =
       Caffeine.newBuilder().maximumSize(1000).build();
 
   @SuppressWarnings("ConstantConditions") // IntelliJ worries unboxing our Boolean may throw NPE.
-  private static boolean isInherited(VisitorState state, String annotationName) {
+  private static boolean isInherited(VisitorState state, Name annotationName) {
     return inheritedAnnotationCache.get(
         annotationName,
         name -> {
-          Symbol annotationSym = state.getSymbolFromString(name);
+          Symbol annotationSym = state.getSymbolFromName(name);
           if (annotationSym == null) {
             return false;
           }
@@ -702,6 +703,10 @@ public class ASTHelpers {
         });
   }
 
+  private static boolean isInherited(VisitorState state, String annotationName) {
+    return isInherited(state, state.binaryNameFromClassname(annotationName));
+  }
+
   private static boolean hasAttribute(Symbol sym, Name annotationName) {
     for (Compound a : sym.getRawAttributes()) {
       if (a.type.tsym.getQualifiedName().equals(annotationName)) {
@@ -709,6 +714,57 @@ public class ASTHelpers {
       }
     }
     return false;
+  }
+
+  /**
+   * Determines which of a set of annotations are present on a symbol.
+   *
+   * @param sym The symbol to inspect for annotations
+   * @param annotationClasses The annotations of interest to look for, Each name must be in binary
+   *     form, e.g. "com.google.Foo$Bar", not "com.google.Foo.Bar".
+   * @return A possibly-empty set of annotations present on the queried element.
+   */
+  public static Set<Name> annotationsAmong(
+      Symbol sym, Set<? extends Name> annotationClasses, VisitorState state) {
+    if (sym == null) {
+      return ImmutableSet.of();
+    }
+    Set<Name> result = directAnnotationsAmong(sym, annotationClasses);
+    if (!(sym instanceof ClassSymbol)) {
+      return result;
+    }
+
+    Set<Name> possibleInherited = new HashSet<>();
+    for (Name a : annotationClasses) {
+      if (!result.contains(a) && isInherited(state, a)) {
+        possibleInherited.add(a);
+      }
+    }
+    sym = ((ClassSymbol) sym).getSuperclass().tsym;
+    while (sym instanceof ClassSymbol && !possibleInherited.isEmpty()) {
+      for (Name local : directAnnotationsAmong(sym, possibleInherited)) {
+        result.add(local);
+        possibleInherited.remove(local);
+      }
+      sym = ((ClassSymbol) sym).getSuperclass().tsym;
+    }
+    return result;
+  }
+
+  /**
+   * Explicitly returns a modifiable {@code Set<Name>}, so that annotationsAmong can futz with it to
+   * add inherited annotations.
+   */
+  private static Set<Name> directAnnotationsAmong(
+      Symbol sym, Set<? extends Name> binaryAnnotationNames) {
+    Set<Name> result = new HashSet<>();
+    for (Compound a : sym.getRawAttributes()) {
+      Name annoName = a.type.tsym.flatName();
+      if (binaryAnnotationNames.contains(annoName)) {
+        result.add(annoName);
+      }
+    }
+    return result;
   }
 
   /**
