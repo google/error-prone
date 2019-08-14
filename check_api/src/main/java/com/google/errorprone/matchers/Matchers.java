@@ -29,6 +29,7 @@ import static com.google.errorprone.util.ASTHelpers.stripParentheses;
 import static java.util.Objects.requireNonNull;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.dataflow.nullnesspropagation.Nullness;
 import com.google.errorprone.matchers.ChildMultiMatcher.MatchType;
@@ -73,6 +74,7 @@ import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 import com.sun.tools.javac.tree.JCTree.JCExpression;
 import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
 import com.sun.tools.javac.tree.JCTree.JCIdent;
+import com.sun.tools.javac.util.Name;
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -662,8 +664,12 @@ public class Matchers {
    *     "javax.annotation.Nullable", or "some.package.OuterClassName$InnerClassName")
    */
   public static <T extends Tree> Matcher<T> hasAnnotation(String annotationClass) {
-    return (tree, state) ->
-        ASTHelpers.hasAnnotation(ASTHelpers.getDeclaredSymbol(tree), annotationClass, state);
+    Supplier<Set<Name>> name =
+        VisitorState.memoize(
+            state -> ImmutableSet.of(state.binaryNameFromClassname(annotationClass)));
+    return (T tree, VisitorState state) ->
+        !ASTHelpers.annotationsAmong(ASTHelpers.getDeclaredSymbol(tree), name.get(state), state)
+            .isEmpty();
   }
 
   /**
@@ -673,13 +679,16 @@ public class Matchers {
    * @param annotationMirror mirror referring to the annotation type
    */
   public static Matcher<Tree> hasAnnotation(TypeMirror annotationMirror) {
-    return (tree, state) -> {
+    String annotationName = annotationMirror.toString();
+    return (Tree tree, VisitorState state) -> {
       JavacProcessingEnvironment javacEnv = JavacProcessingEnvironment.instance(state.context);
       TypeElement typeElem = (TypeElement) javacEnv.getTypeUtils().asElement(annotationMirror);
-      String name = annotationMirror.toString();
+      String name;
       if (typeElem != null) {
         // Get the binary name if possible ($ to separate nested members). See b/36160747
         name = javacEnv.getElementUtils().getBinaryName(typeElem).toString();
+      } else {
+        name = annotationName;
       }
       return ASTHelpers.hasAnnotation(ASTHelpers.getDeclaredSymbol(tree), name, state);
     };
