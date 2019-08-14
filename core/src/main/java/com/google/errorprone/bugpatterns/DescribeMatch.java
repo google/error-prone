@@ -34,13 +34,13 @@ import com.sun.source.tree.MethodInvocationTree;
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
-    name = "DescribeFix",
+    name = "DescribeMatch",
     summary =
-        "`describeFix(tree, fix)` is equivalent to and simpler than"
+        "`describeMatch(tree, fix)` is equivalent to and simpler than"
             + " `buildDescription(tree).addFix(fix).build()`",
     severity = ERROR,
     providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
-public class DescribeFix extends BugChecker implements MethodInvocationTreeMatcher {
+public class DescribeMatch extends BugChecker implements MethodInvocationTreeMatcher {
 
   private static final Matcher<ExpressionTree> BUILD_DESCRIPTION =
       instanceMethod()

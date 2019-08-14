@@ -21,11 +21,11 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** {@link DescribeFix}Test */
+/** {@link DescribeMatch}Test */
 @RunWith(JUnit4.class)
-public class DescribeFixTest {
+public class DescribeMatchTest {
   private final BugCheckerRefactoringTestHelper testHelper =
-      BugCheckerRefactoringTestHelper.newInstance(new DescribeFix(), getClass());
+      BugCheckerRefactoringTestHelper.newInstance(new DescribeMatch(), getClass());
 
   @Test
   public void refactoring() {
