@@ -20,12 +20,15 @@ import static com.google.errorprone.matchers.method.MethodMatchers.instanceMetho
 
 import com.google.common.collect.Iterables;
 import com.google.errorprone.VisitorState;
+import com.google.errorprone.fixes.Fix;
+import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.tools.javac.code.Type;
 import java.util.Collection;
+import java.util.Optional;
 
 /**
  * Matches an instance method like {@link Collection#contains}, for which we just need to compare
@@ -73,5 +76,18 @@ class MethodArgMatcher extends AbstractCollectionIncompatibleTypeMatcher {
         state.getSymbolFromString(typeName),
         typeArgIndex,
         state.getTypes());
+  }
+
+  @Override
+  Optional<Fix> buildFix(MatchResult result) {
+    return Optional.of(SuggestedFix.prefixWith(result.sourceTree(), "(Object) "));
+  }
+
+  @Override
+  public String message(MatchResult result, String sourceType, String targetType) {
+    return String.format(
+        "Argument '%s' should not be passed to this method; its type %s is not compatible "
+            + "with its collection's type argument %s",
+        result.sourceTree(), sourceType, targetType);
   }
 }

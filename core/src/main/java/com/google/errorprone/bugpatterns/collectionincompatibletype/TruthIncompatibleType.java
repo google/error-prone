@@ -134,11 +134,7 @@ public class TruthIncompatibleType extends BugChecker implements MethodInvocatio
       targetType = result.targetType().toString();
     }
     Description.Builder description = buildDescription(tree);
-    description.setMessage(
-        String.format(
-            "Argument '%s' should not be passed to this method; its type %s is not compatible "
-                + "with subject type %s",
-            result.sourceTree(), sourceType, targetType));
+    description.setMessage(result.message(sourceType, targetType));
     return description.build();
   }
 }

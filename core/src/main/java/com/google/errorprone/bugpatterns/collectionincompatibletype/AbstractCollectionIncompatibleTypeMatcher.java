@@ -18,6 +18,7 @@ package com.google.errorprone.bugpatterns.collectionincompatibletype;
 
 import com.google.auto.value.AutoValue;
 import com.google.errorprone.VisitorState;
+import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.matchers.Matcher;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
@@ -26,6 +27,7 @@ import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Types;
 import java.util.Collection;
 import java.util.Map;
+import java.util.Optional;
 import javax.annotation.Nullable;
 
 /**
@@ -106,6 +108,14 @@ abstract class AbstractCollectionIncompatibleTypeMatcher {
       return new AutoValue_AbstractCollectionIncompatibleTypeMatcher_MatchResult(
           sourceTree, sourceType, targetType, matcher);
     }
+
+    public String message(String sourceType, String targetType) {
+      return matcher().message(this, sourceType, targetType);
+    }
+
+    public Optional<Fix> buildFix() {
+      return matcher().buildFix(this);
+    }
   }
 
   @Nullable
@@ -154,5 +164,15 @@ abstract class AbstractCollectionIncompatibleTypeMatcher {
     }
 
     return tyargs.get(typeArgIndex);
+  }
+
+  Optional<Fix> buildFix(MatchResult result) {
+    return Optional.empty();
+  }
+
+  protected String message(MatchResult result, String sourceType, String targetType) {
+    return String.format(
+        "Argument '%s' should not be passed to this method; its type %s is not compatible with %s",
+        result.sourceTree(), sourceType, targetType);
   }
 }

@@ -129,4 +129,48 @@ public class CollectionIncompatibleTypeTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void disjoint() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.util.Collections;",
+            "import java.util.List;",
+            "public class Test {",
+            "  void f(List<String> a, List<String> b) {",
+            "    Collections.disjoint(a, b);",
+            "  }",
+            "  void g(List<String> a, List<Integer> b) {",
+            "    // BUG: Diagnostic contains: not compatible",
+            "    Collections.disjoint(a, b);",
+            "  }",
+            "  void h(List<?> a, List<Integer> b) {",
+            "    Collections.disjoint(a, b);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void difference() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.util.Set;",
+            "import com.google.common.collect.Sets;",
+            "public class Test {",
+            "  void f(Set<String> a, Set<String> b) {",
+            "    Sets.difference(a, b);",
+            "  }",
+            "  void g(Set<String> a, Set<Integer> b) {",
+            "    // BUG: Diagnostic contains: not compatible",
+            "    Sets.difference(a, b);",
+            "  }",
+            "  void h(Set<?> a, Set<Integer> b) {",
+            "    Sets.difference(a, b);",
+            "  }",
+            "}")
+        .doTest();
+  }
 }
