@@ -223,6 +223,7 @@ import com.google.errorprone.bugpatterns.PreconditionsCheckNotNullRepeated;
 import com.google.errorprone.bugpatterns.PreconditionsInvalidPlaceholder;
 import com.google.errorprone.bugpatterns.PredicateIncompatibleType;
 import com.google.errorprone.bugpatterns.PrimitiveArrayPassedToVarargsMethod;
+import com.google.errorprone.bugpatterns.PrimitiveAtomicReference;
 import com.google.errorprone.bugpatterns.PrivateConstructorForUtilityClass;
 import com.google.errorprone.bugpatterns.PrivateSecurityContractProtoAccess;
 import com.google.errorprone.bugpatterns.ProtoFieldNullComparison;
@@ -716,6 +717,7 @@ public class BuiltInCheckerSuppliers {
           PreconditionsCheckNotNullRepeated.class,
           PreconditionsInvalidPlaceholder.class,
           PreferJavaTimeOverload.class,
+          PrimitiveAtomicReference.class,
           ProtoRedundantSet.class,
           ProtoDurationGetSecondsGetNano.class,
           ProtoTimestampGetSecondsGetNano.class,
