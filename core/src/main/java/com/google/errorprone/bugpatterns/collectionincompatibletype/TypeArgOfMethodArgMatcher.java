@@ -18,14 +18,19 @@ package com.google.errorprone.bugpatterns.collectionincompatibletype;
 
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 
+import com.google.common.base.Splitter;
 import com.google.common.collect.Iterables;
 import com.google.errorprone.VisitorState;
+import com.google.errorprone.fixes.Fix;
+import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
+import com.google.errorprone.util.Signatures;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.tools.javac.code.Type;
 import java.util.Collection;
+import java.util.Optional;
 
 /**
  * Matches an instance method like {@link Collection#removeAll}, for which we need to extract the
@@ -96,5 +101,25 @@ class TypeArgOfMethodArgMatcher extends AbstractCollectionIncompatibleTypeMatche
 
   String getMethodArgTypeName() {
     return methodArgTypeName;
+  }
+
+  @Override
+  Optional<Fix> buildFix(MatchResult result) {
+    String fullyQualifiedType = getMethodArgTypeName();
+    String simpleType = Iterables.getLast(Splitter.on('.').split(fullyQualifiedType));
+    return Optional.of(
+        SuggestedFix.builder()
+            .prefixWith(result.sourceTree(), String.format("(%s<?>) ", simpleType))
+            .addImport(fullyQualifiedType)
+            .build());
+  }
+
+  @Override
+  public String message(MatchResult result, String sourceType, String targetType) {
+    String sourceTreeType = Signatures.prettyType(ASTHelpers.getType(result.sourceTree()));
+    return String.format(
+        "Argument '%s' should not be passed to this method; its type %s has a type argument "
+            + "%s that is not compatible with its collection's type argument %s",
+        result.sourceTree(), sourceTreeType, sourceType, targetType);
   }
 }
