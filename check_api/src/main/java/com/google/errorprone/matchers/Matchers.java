@@ -16,6 +16,7 @@
 
 package com.google.errorprone.matchers;
 
+import static com.google.common.collect.Iterables.getLast;
 import static com.google.errorprone.suppliers.Suppliers.BOOLEAN_TYPE;
 import static com.google.errorprone.suppliers.Suppliers.INT_TYPE;
 import static com.google.errorprone.suppliers.Suppliers.JAVA_LANG_BOOLEAN_TYPE;
@@ -495,13 +496,33 @@ public class Matchers {
     };
   }
 
+  private static boolean siblingStatement(
+      int offset, Matcher<StatementTree> matcher, StatementTree statement, VisitorState state) {
+    // TODO(cushon): walking arbitrarily far up to find a block tree often isn't what we want
+    TreePath blockPath = state.findPathToEnclosing(BlockTree.class);
+    if (blockPath == null) {
+      return false;
+    }
+    BlockTree block = (BlockTree) blockPath.getLeaf();
+    List<? extends StatementTree> statements = block.getStatements();
+    int idx = statements.indexOf(statement);
+    if (idx == -1) {
+      return false;
+    }
+    idx += offset;
+    if (idx < 0 || idx >= statements.size()) {
+      return false;
+    }
+    StatementTree sibling = statements.get(idx);
+    return matcher.matches(sibling, state.withPath(new TreePath(blockPath, sibling)));
+  }
+
   /**
    * Matches a statement AST node if the following statement in the enclosing block matches the
    * given matcher.
    */
-  public static <T extends StatementTree> NextStatement<T> nextStatement(
-      Matcher<StatementTree> matcher) {
-    return new NextStatement<>(matcher);
+  public static <T extends StatementTree> Matcher<T> nextStatement(Matcher<StatementTree> matcher) {
+    return (statement, state) -> siblingStatement(/* offset= */ 1, matcher, statement, state);
   }
 
   /**
@@ -510,25 +531,20 @@ public class Matchers {
    */
   public static <T extends StatementTree> Matcher<T> previousStatement(
       Matcher<StatementTree> matcher) {
-    return (T statement, VisitorState state) -> {
-      BlockTree block = state.findEnclosing(BlockTree.class);
-      if (block == null) {
-        return false;
-      }
-      List<? extends StatementTree> statements = block.getStatements();
-      int idx = statements.indexOf(statement);
-      if (idx <= 0) {
-        // The block wrapping us doesn't contain this statement, or doesn't contain a previous
-        // statement.
-        return false;
-      }
-      return matcher.matches(statements.get(idx - 1), state);
-    };
+    return (statement, state) -> siblingStatement(/* offset= */ -1, matcher, statement, state);
   }
 
   /** Matches a statement AST node if the statement is the last statement in the block. */
   public static Matcher<StatementTree> isLastStatementInBlock() {
-    return new IsLastStatementInBlock<>();
+    return (statement, state) -> {
+      // TODO(cushon): walking arbitrarily far up to find a block tree often isn't what we want
+      TreePath blockPath = state.findPathToEnclosing(BlockTree.class);
+      if (blockPath == null) {
+        return false;
+      }
+      BlockTree block = (BlockTree) blockPath.getLeaf();
+      return getLast(block.getStatements()).equals(statement);
+    };
   }
 
   /** Matches an AST node if it is a literal other than null. */
