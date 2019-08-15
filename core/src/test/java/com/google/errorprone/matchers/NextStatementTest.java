@@ -48,8 +48,7 @@ public final class NextStatementTest {
       StatementTree exprStat =
           ASTHelpers.findEnclosingNode(state.getPath(), ExpressionStatementTree.class);
       assertThat(exprStat).isNotNull();
-      if (new NextStatement<StatementTree>(Matchers.<StatementTree>anything())
-          .matches(exprStat, state)) {
+      if (Matchers.nextStatement(Matchers.<StatementTree>anything()).matches(exprStat, state)) {
         return describeMatch(cat);
       }
       return Description.NO_MATCH;
