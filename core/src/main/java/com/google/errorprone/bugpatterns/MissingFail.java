@@ -53,7 +53,6 @@ import com.google.errorprone.matchers.JUnitMatchers;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
 import com.google.errorprone.matchers.MultiMatcher;
-import com.google.errorprone.matchers.NextStatement;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.CatchTree;
@@ -185,7 +184,7 @@ public class MissingFail extends BugChecker implements TryTreeMatcher {
 
   private static final Matcher<Tree> RETURN_IN_BLOCK =
       contains(toType(StatementTree.class, returnStatement(Matchers.anything())));
-  private static final NextStatement<StatementTree> RETURN_AFTER =
+  private static final Matcher<StatementTree> RETURN_AFTER =
       nextStatement(returnStatement(Matchers.anything()));
 
   private static final Matcher<VariableTree> INAPPLICABLE_EXCEPTION =
