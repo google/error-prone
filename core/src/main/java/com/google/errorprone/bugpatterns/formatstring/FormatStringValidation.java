@@ -98,7 +98,7 @@ public class FormatStringValidation {
       final VisitorState state) {
     Preconditions.checkArgument(
         !arguments.isEmpty(),
-        "A format method should have one or more arguments, but Method(%s) has zero arguments.",
+        "A format method should have one or more arguments, but method (%s) has zero arguments.",
         formatMethodSymbol);
 
     Deque<ExpressionTree> args = new ArrayDeque<>(arguments);
