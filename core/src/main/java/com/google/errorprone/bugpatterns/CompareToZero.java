@@ -148,6 +148,7 @@ public final class CompareToZero extends BugChecker implements MethodInvocationT
         SuggestedFix fix = generateFix(binaryTree, state, comparatorSide, ">");
         state.reportMatch(
             buildDescription(binaryTree).setMessage(SUGGEST_IMPROVEMENT).addFix(fix).build());
+        return null;
       }
       if (COMPARISONS.contains(binaryTree.getKind())) {
         state.reportMatch(describeMatch(binaryTree));

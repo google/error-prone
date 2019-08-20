@@ -59,6 +59,22 @@ public final class CompareToZeroTest {
   }
 
   @Test
+  public void positive_gte1_has_1_finding() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  boolean test(Integer i) {",
+            "    // BUG: Diagnostic matches: KEY",
+            "    return i.compareTo(2) >= 1;",
+            "  }",
+            "}")
+        .expectErrorMessage(
+            "KEY", msg -> msg.contains("consistency") && !msg.contains("implementation"))
+        .doTest();
+  }
+
+  @Test
   public void positiveAddition() {
     compilationHelper
         .addSourceLines(
