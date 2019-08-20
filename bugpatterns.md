@@ -760,6 +760,9 @@ Preconditions only accepts the %s placeholder in error message strings
 __[PreferJavaTimeOverload](bugpattern/PreferJavaTimeOverload)__<br>
 Prefer using java.time-based APIs when available. Note that this checker does not and cannot guarantee that the overloads have equivalent semantics, but that is generally the case with overloaded methods.
 
+__[PrimitiveAtomicReference](bugpattern/PrimitiveAtomicReference)__<br>
+Using compareAndSet with boxed primitives is dangerous, as reference rather than value equality is used. Consider using AtomicInteger, AtomicLong, or AtomicBoolean instead.
+
 __[ProtoDurationGetSecondsGetNano](bugpattern/ProtoDurationGetSecondsGetNano)__<br>
 getNanos() only accesses the underlying nanosecond-adjustment of the duration.
 
@@ -921,8 +924,8 @@ This expression was previously declared as a constant; consider replacing this o
 __[DepAnn](bugpattern/DepAnn)__<br>
 Item documented with a @deprecated javadoc note is not annotated with @Deprecated
 
-__[DescribeFix](bugpattern/DescribeFix)__<br>
-`describeFix(tree, fix)` is equivalent to and simpler than `buildDescription(tree).addFix(fix).build()`
+__[DescribeMatch](bugpattern/DescribeMatch)__<br>
+`describeMatch(tree, fix)` is equivalent to and simpler than `buildDescription(tree).addFix(fix).build()`
 
 __[DivZero](bugpattern/DivZero)__<br>
 Division by integer literal zero
@@ -1080,7 +1083,7 @@ __[QualifierWithTypeUse](bugpattern/QualifierWithTypeUse)__<br>
 Injection frameworks currently don&#39;t understand Qualifiers in TYPE_PARAMETER or TYPE_USE contexts.
 
 __[RedundantOverride](bugpattern/RedundantOverride)__<br>
-This override is redundant, and can be removed.
+This overriding method is redundant, and can be removed.
 
 __[RedundantThrows](bugpattern/RedundantThrows)__<br>
 Thrown exception is a subtype of another

@@ -1,6 +1,6 @@
 ---
 title: RedundantOverride
-summary: This override is redundant, and can be removed.
+summary: This overriding method is redundant, and can be removed.
 layout: bugpattern
 tags: ''
 severity: WARNING

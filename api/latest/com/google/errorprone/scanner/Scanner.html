@@ -172,8 +172,8 @@ extends com.sun.source.util.TreePathScanner&lt;<a href="https://docs.oracle.com/
 <th class="colLast" scope="col">Method and Description</th>
 </tr>
 <tr id="i0" class="altColor">
-<td class="colFirst"><code>protected <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util">Set</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&lt;? extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/Annotation.html?is-external=true" title="class or interface in java.lang.annotation">Annotation</a>&gt;&gt;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/scanner/Scanner.html#getCustomSuppressionAnnotations--">getCustomSuppressionAnnotations</a></span>()</code>
+<td class="colFirst"><code>protected <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util">Set</a>&lt;? extends com.sun.tools.javac.util.Name&gt;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/scanner/Scanner.html#getCustomSuppressionAnnotations-com.google.errorprone.VisitorState-">getCustomSuppressionAnnotations</a></span>(<a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>
 <div class="block">Returns a set of all the custom suppression annotation types used by the <code>BugChecker</code>s in
  this<code>Scanner</code>.</div>
 </td>
@@ -187,8 +187,9 @@ extends com.sun.source.util.TreePathScanner&lt;<a href="https://docs.oracle.com/
 </tr>
 <tr id="i2" class="altColor">
 <td class="colFirst"><code>protected <a href="../../../../com/google/errorprone/SuppressionInfo.SuppressedState.html" title="enum in com.google.errorprone">SuppressionInfo.SuppressedState</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/scanner/Scanner.html#isSuppressed-com.google.errorprone.matchers.Suppressible-com.google.errorprone.ErrorProneOptions-">isSuppressed</a></span>(<a href="../../../../com/google/errorprone/matchers/Suppressible.html" title="interface in com.google.errorprone.matchers">Suppressible</a>&nbsp;suppressible,
-            <a href="../../../../com/google/errorprone/ErrorProneOptions.html" title="class in com.google.errorprone">ErrorProneOptions</a>&nbsp;errorProneOptions)</code>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/scanner/Scanner.html#isSuppressed-com.google.errorprone.matchers.Suppressible-com.google.errorprone.ErrorProneOptions-com.google.errorprone.VisitorState-">isSuppressed</a></span>(<a href="../../../../com/google/errorprone/matchers/Suppressible.html" title="interface in com.google.errorprone.matchers">Suppressible</a>&nbsp;suppressible,
+            <a href="../../../../com/google/errorprone/ErrorProneOptions.html" title="class in com.google.errorprone">ErrorProneOptions</a>&nbsp;errorProneOptions,
+            <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>
 <div class="block">Returns if this checker should be suppressed on the current tree path.</div>
 </td>
 </tr>
@@ -300,30 +301,30 @@ extends com.sun.source.util.TreePathScanner&lt;<a href="https://docs.oracle.com/
 </dl>
 </li>
 </ul>
-<a name="isSuppressed-com.google.errorprone.matchers.Suppressible-com.google.errorprone.ErrorProneOptions-">
+<a name="isSuppressed-com.google.errorprone.matchers.Suppressible-com.google.errorprone.ErrorProneOptions-com.google.errorprone.VisitorState-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>isSuppressed</h4>
 <pre>protected&nbsp;<a href="../../../../com/google/errorprone/SuppressionInfo.SuppressedState.html" title="enum in com.google.errorprone">SuppressionInfo.SuppressedState</a>&nbsp;isSuppressed(<a href="../../../../com/google/errorprone/matchers/Suppressible.html" title="interface in com.google.errorprone.matchers">Suppressible</a>&nbsp;suppressible,
-                                                       <a href="../../../../com/google/errorprone/ErrorProneOptions.html" title="class in com.google.errorprone">ErrorProneOptions</a>&nbsp;errorProneOptions)</pre>
+                                                       <a href="../../../../com/google/errorprone/ErrorProneOptions.html" title="class in com.google.errorprone">ErrorProneOptions</a>&nbsp;errorProneOptions,
+                                                       <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</pre>
 <div class="block">Returns if this checker should be suppressed on the current tree path.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>suppressible</code> - holds information about the suppressibility of a checker</dd>
-<dd><code>errorProneOptions</code> - Options object configuring whether or not to suppress non-errors in
-     generated code.</dd>
+<dd><code>errorProneOptions</code> - Options object configuring whether or not to suppress non-errors in</dd>
 </dl>
 </li>
 </ul>
-<a name="getCustomSuppressionAnnotations--">
+<a name="getCustomSuppressionAnnotations-com.google.errorprone.VisitorState-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>getCustomSuppressionAnnotations</h4>
-<pre>protected&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util">Set</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&lt;? extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/Annotation.html?is-external=true" title="class or interface in java.lang.annotation">Annotation</a>&gt;&gt;&nbsp;getCustomSuppressionAnnotations()</pre>
+<pre>protected&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util">Set</a>&lt;? extends com.sun.tools.javac.util.Name&gt;&nbsp;getCustomSuppressionAnnotations(<a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</pre>
 <div class="block">Returns a set of all the custom suppression annotation types used by the <code>BugChecker</code>s in
  this<code>Scanner</code>.</div>
 </li>
