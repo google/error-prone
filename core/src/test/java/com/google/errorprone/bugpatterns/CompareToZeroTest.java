@@ -89,6 +89,19 @@ public final class CompareToZeroTest {
   }
 
   @Test
+  public void testStringConcat_ignored() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  String test(Integer i) {",
+            "    return \"\" + i.compareTo(3);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void refactoring() {
     refactoringHelper
         .addInputLines(

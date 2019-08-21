@@ -31,6 +31,7 @@ import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
+import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.BinaryTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
@@ -98,10 +99,7 @@ public final class CompareToZero extends BugChecker implements MethodInvocationT
     @Override
     public Void visitBinary(BinaryTree binaryTree, VisitorState state) {
       Kind kind = binaryTree.getKind();
-      if (OTHER_STRANGE_OPERATIONS.contains(kind)) {
-        state.reportMatch(describeMatch(binaryTree));
-        return null;
-      }
+
       // `child` is the Tree we had before bubbling up to this BinaryTree. Check which side it
       // corresponds to.
       boolean reversed = binaryTree.getRightOperand() == child;
@@ -109,6 +107,18 @@ public final class CompareToZero extends BugChecker implements MethodInvocationT
           reversed ? binaryTree.getRightOperand() : binaryTree.getLeftOperand();
       ExpressionTree otherSide =
           reversed ? binaryTree.getLeftOperand() : binaryTree.getRightOperand();
+
+      if (OTHER_STRANGE_OPERATIONS.contains(kind)) {
+        // Consider string concatenation with the result of compareTo to be OK, but otherwise
+        // raise the alarm.
+        if (!(kind.equals(Kind.PLUS)
+            && ASTHelpers.isSameType(
+                ASTHelpers.getType(otherSide), state.getSymtab().stringType, state))) {
+          state.reportMatch(describeMatch(binaryTree));
+        }
+        return null;
+      }
+
       Integer constantInt = constValue(otherSide, Integer.class);
       if (constantInt == null) {
         return null;
