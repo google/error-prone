@@ -31,6 +31,7 @@ import static com.google.errorprone.matchers.method.MethodMatchers.instanceMetho
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.isSameType;
+import static com.google.errorprone.util.ASTHelpers.isSubtype;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
@@ -47,6 +48,7 @@ import com.sun.tools.javac.code.Type;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.BiFunction;
 
 /**
  * Flags types which do not have well-defined equals behavior.
@@ -59,6 +61,9 @@ import java.util.Optional;
     severity = WARNING,
     providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public final class UndefinedEquals extends BugChecker implements MethodInvocationTreeMatcher {
+
+  private static final Matcher<ExpressionTree> IS_EQUAL_TO =
+      instanceMethod().onDescendantOf("com.google.common.truth.Subject").named("isEqualTo");
 
   private static final Matcher<MethodInvocationTree> ASSERT_THAT_EQUALS =
       allOf(
@@ -101,9 +106,70 @@ public final class UndefinedEquals extends BugChecker implements MethodInvocatio
             b ->
                 buildDescription(tree)
                     .setMessage(b.shortName() + " does not have well-defined equals behavior.")
-                    .addFix(b.generateFix(receiver, argument, state))
+                    .addFix(generateFix(tree, state, receiver, argument))
                     .build())
         .orElse(Description.NO_MATCH);
+  }
+
+  private static Optional<SuggestedFix> generateFix(
+      MethodInvocationTree tree, VisitorState state, Tree receiver, Tree argument) {
+    // Generate fix for certain Truth `isEqualTo` calls
+    if (IS_EQUAL_TO.matches(tree, state)) {
+      String methodText =
+          state.getSourceForNode(tree.getMethodSelect()); // e.g. "assertThat(foo).isEqualTo"
+      String assertThatWithArg = methodText.substring(0, methodText.lastIndexOf('.'));
+
+      // If both the argument and receiver are subtypes of the given type, rewrites the isEqualTo
+      // method invocation to use the replacement comparison method instead.
+      BiFunction<Type, String, Optional<SuggestedFix>> generateTruthFix =
+          (type, replacementMethod) -> {
+            if (type != null
+                && isSubtype(getType(argument), type, state)
+                && isSubtype(getType(receiver), type, state)) {
+              return Optional.of(
+                  SuggestedFix.replace(
+                      tree,
+                      String.format("%s.%s(%s)", assertThatWithArg, replacementMethod, receiver)));
+            }
+            return Optional.empty();
+          };
+
+      // If both are subtypes of Iterable, rewrite
+      Type iterableType = state.getSymtab().iterableType;
+      Type multimapType = state.getTypeFromString(getOnlyElement(BadClass.MULTIMAP.typeNames));
+      Optional<SuggestedFix> fix =
+          firstPresent(
+              generateTruthFix.apply(iterableType, "containsExactlyElementsIn"),
+              generateTruthFix.apply(multimapType, "containsExactlyEntriesIn"));
+      if (fix.isPresent()) {
+        return fix;
+      }
+    }
+
+    // Generate fix for CharSequence
+    Type charSequenceType =
+        state.getTypeFromString(getOnlyElement(BadClass.CHAR_SEQUENCE.typeNames));
+    BiFunction<Tree, Tree, Optional<SuggestedFix>> generateCharSequenceFix =
+        (maybeCharSequence, maybeString) -> {
+          if (charSequenceType != null
+              && isSameType(getType(maybeCharSequence), charSequenceType, state)
+              && isSameType(getType(maybeString), state.getSymtab().stringType, state)) {
+            return Optional.of(SuggestedFix.postfixWith(maybeCharSequence, ".toString()"));
+          }
+          return Optional.empty();
+        };
+    return firstPresent(
+        generateCharSequenceFix.apply(receiver, argument),
+        generateCharSequenceFix.apply(argument, receiver));
+  }
+
+  private static <T> Optional<T> firstPresent(Optional<T>... optionals) {
+    for (Optional<T> optional : optionals) {
+      if (optional.isPresent()) {
+        return optional;
+      }
+    }
+    return Optional.empty();
   }
 
   private enum BadClass {
@@ -111,61 +177,17 @@ public final class UndefinedEquals extends BugChecker implements MethodInvocatio
         "LongSparseArray",
         "android.util.LongSparseArray",
         "android.support.v4.util.LongSparseArrayCompat",
-        "androidx.collection.LongSparseArrayCompat") {
-      @Override
-      Optional<SuggestedFix> generateFix(Tree receiver, Tree argument, VisitorState state) {
-        return Optional.empty();
-      }
-    },
+        "androidx.collection.LongSparseArrayCompat"),
     SPARSE_ARRAY(
         "SparseArray",
         "android.util.SparseArray",
         "android.support.v4.util.SparseArrayCompat",
-        "androidx.collection.SparseArrayCompat") {
-      @Override
-      Optional<SuggestedFix> generateFix(Tree receiver, Tree argument, VisitorState state) {
-        return Optional.empty();
-      }
-    },
-    MULTIMAP("Multimap", "com.google.common.collect.Multimap") {
-      @Override
-      Optional<SuggestedFix> generateFix(Tree receiver, Tree argument, VisitorState state) {
-        return Optional.empty();
-      }
-    },
-    CHAR_SEQUENCE("CharSequence", "java.lang.CharSequence") {
-      @Override
-      Optional<SuggestedFix> generateFix(Tree receiver, Tree argument, VisitorState state) {
-        Type charSequence = state.getTypeFromString(getOnlyElement(CHAR_SEQUENCE.typeNames));
-        if (isSameType(getType(receiver), charSequence, state)
-            && isSameType(getType(argument), state.getSymtab().stringType, state)) {
-          return Optional.of(SuggestedFix.postfixWith(receiver, ".toString()"));
-        }
-        if (isSameType(getType(argument), charSequence, state)
-            && isSameType(getType(receiver), state.getSymtab().stringType, state)) {
-          return Optional.of(SuggestedFix.postfixWith(argument, ".toString()"));
-        }
-        return Optional.empty();
-      }
-    },
-    ITERABLE("Iterable", "java.lang.Iterable", "com.google.common.collect.FluentIterable") {
-      @Override
-      Optional<SuggestedFix> generateFix(Tree receiver, Tree argument, VisitorState state) {
-        return Optional.empty();
-      }
-    },
-    COLLECTION("Collection", "java.util.Collection") {
-      @Override
-      Optional<SuggestedFix> generateFix(Tree receiver, Tree argument, VisitorState state) {
-        return Optional.empty();
-      }
-    },
-    QUEUE("Queue", "java.util.Queue") {
-      @Override
-      Optional<SuggestedFix> generateFix(Tree receiver, Tree argument, VisitorState state) {
-        return Optional.empty();
-      }
-    };
+        "androidx.collection.SparseArrayCompat"),
+    MULTIMAP("Multimap", "com.google.common.collect.Multimap"),
+    CHAR_SEQUENCE("CharSequence", "java.lang.CharSequence"),
+    ITERABLE("Iterable", "java.lang.Iterable", "com.google.common.collect.FluentIterable"),
+    COLLECTION("Collection", "java.util.Collection"),
+    QUEUE("Queue", "java.util.Queue");
 
     private final String shortName;
     private final ImmutableSet<String> typeNames;
@@ -174,8 +196,6 @@ public final class UndefinedEquals extends BugChecker implements MethodInvocatio
       this.shortName = shortName;
       this.typeNames = ImmutableSet.copyOf(typeNames);
     }
-
-    abstract Optional<SuggestedFix> generateFix(Tree receiver, Tree argument, VisitorState state);
 
     private boolean matchesType(Type type, VisitorState state) {
       return typeNames.stream()
