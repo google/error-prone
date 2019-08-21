@@ -3,14 +3,14 @@ Javadocs are interpreted as HTML, so special characters such as `<`, `>`, and
 
 Text within `@code`, `@literal` and `@link` tags is exempt from this.
 
-```java {.bad}
+```java
 /** Returns whether n > 3. */
 boolean greaterThanThree(int n);
 ```
 
 Could be rendered as one of these instead:
 
-```java {.good}
+```java
 /** Returns whether n &gt; 3. */
 boolean greaterThanThree(int n);
 
@@ -21,7 +21,7 @@ boolean greaterThanThree(int n);
 A common pitfall is type parameters. The following Javadoc is valid, but
 contains an unknown HTML tag (`Integer`):
 
-```java {.bad}
+```java
 /** Returns an Iterable<Integer> of prime numbers. */
 Iterable<Integer> generatePrimes();
 ```

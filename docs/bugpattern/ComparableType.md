@@ -3,7 +3,7 @@ class.
 
 For example, do this:
 
-```java {.good}
+```java
 class Foo implements Comparable<Foo> {
   public int compareTo(Foo other) { ... }
 }
@@ -11,7 +11,7 @@ class Foo implements Comparable<Foo> {
 
 not this:
 
-```java {.bad}
+```java
 class Foo implements Comparable<Bar> {
   public int compareTo(Foo other) { ... }
 }

@@ -4,7 +4,7 @@ turn into an error.
 
 For example,
 
-```java {.bad}
+```java
 class AccountManager {
   /** Retrieves the current user, or absent if not logged in. */
   Optional<Account> getUser() {

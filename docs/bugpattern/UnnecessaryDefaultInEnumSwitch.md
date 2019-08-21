@@ -79,7 +79,7 @@ boolean isReady(State state) {
 
 After:
 
-```java {.good}
+```java
 boolean isReady(State state) {
   switch (state) {
     case READY:
@@ -111,7 +111,7 @@ boolean isReady(State state) {
 
 After:
 
-```java {.good}
+```java
 boolean isReady(State state) {
   switch (state) {
     case READY:

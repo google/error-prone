@@ -1,7 +1,7 @@
 The `@throws` tag should not document a checked exception which is not actually
 thrown by the documented method.
 
-```java {.bad}
+```java
 /**
  * Validates {@code n}.
  *

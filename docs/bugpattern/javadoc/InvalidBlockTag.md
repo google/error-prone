@@ -1,6 +1,6 @@
 A non-standard Javadoc block tag was used.
 
-```java {.bad}
+```java
 /**
  * @returns two times n
  */
@@ -9,7 +9,7 @@ int twoTimes(int n) {
 }
 ```
 
-```java {.good}
+```java
 /**
  * @return two times n
  */

@@ -12,7 +12,7 @@ From the javadoc for
 
 That is, prefer this:
 
-```java {.good}
+```java
 mutableValues.stream()
   .filter(x -> x < 5)
   .collect(Collectors.toList()) // Terminate stream before source modification.
@@ -21,7 +21,7 @@ mutableValues.stream()
 
 to this:
 
-```java {.bad}
+```java
 mutableValues.stream()
   .filter(x -> x < 5)
   .forEach(mutableValues::remove);

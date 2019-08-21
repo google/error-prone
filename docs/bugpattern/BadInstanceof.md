@@ -6,7 +6,7 @@ specifically calls `instanceof` out as *not* being a compile-time constant
 expression, so the usage of this pattern can lead to unreachable code that won't
 be flagged by the compiler:
 
-```java {.bad}
+```java
 class Foo {
   void doSomething() {
     if (this instanceof Foo) { // BAD: always true
@@ -20,10 +20,10 @@ class Foo {
 In general, an `instanceof` comparison against a superclass is equivalent to a
 null check:
 
-```java {.bad}
+```java
 foo instanceof Foo
 ```
 
-```java {.good}
+```java
 foo != null
 ```

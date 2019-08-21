@@ -4,7 +4,7 @@ for greater than. While most implementations return `-1`, `0` and `+1` for those
 cases respectively, this is not guaranteed. Always comparing to `0` is the
 safest use of the return value.
 
-```java {.bad}
+```java
   boolean <T> isLessThan(Comparator<T> comparator, T a, T b) {
     // Fragile: it's not guaranteed that `comparator` returns -1 to mean
     // "less than".
@@ -12,7 +12,7 @@ safest use of the return value.
   }
 ```
 
-```java {.good}
+```java
   boolean <T> isLessThan(Comparator<T> comparator, T a, T b) {
     return comparator.compare(a, b) < 0;
   }
@@ -27,7 +27,7 @@ code if turned into a comparison to `0`, e.g.:
   }
 ```
 
-```java {.good}
+```java
   boolean <T> greaterThan(Comparator<T> comparator, T a, T b) {
     return comparator.compare(a, b) > 0;
   }

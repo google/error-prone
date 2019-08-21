@@ -1,6 +1,6 @@
 Don't implement `#equals` using just a `hashCode` comparison:
 
-```java {.bad}
+```java
 class MyClass {
   private final int a;
   private final int b;

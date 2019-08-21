@@ -2,7 +2,7 @@ HTML entities used within `@code` and `@literal` tags will be interpreted
 directly rather than converted to the expected characters. For example, this is
 wrong:
 
-```java {.bad}
+```java
 /**
  * <pre>{@code
  *   &#064;Override
@@ -17,7 +17,7 @@ An option is to drop the {@code } tags, though this will then require escaping
 any generic type parameters which may otherwise be interpreted as HTML. That is,
 `List<Integer>` is the text "List" followed by the (non-existent) tag "Integer".
 
-```java {.good}
+```java
 /**
  * <pre>
  *   &#064;Override

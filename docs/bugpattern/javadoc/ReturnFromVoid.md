@@ -1,6 +1,6 @@
 Methods which do not return anything should not have a `@return` tag.
 
-```java {.bad}
+```java
 /**
  * Frobnicates.
  *

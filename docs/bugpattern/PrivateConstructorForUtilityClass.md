@@ -10,7 +10,7 @@ uninstantiable.
 To prevent users from instantiating classes that are not designed to be
 instantiated, you can add a private constructor:
 
-```java {.good}
+```java
 public class UtilityClass {
   private UtilityClass() {}
 }

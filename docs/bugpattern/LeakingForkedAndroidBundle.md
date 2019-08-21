@@ -4,7 +4,7 @@
 > reflected on the method with its forked instance.
 
 
-```java {.bad}
+```java
 Location location = new Location("gps");
 Bundle bundle = new Bundle();
 bundle.putFloat("someFloat", 12.3f);
@@ -15,7 +15,7 @@ location.setExtras(bundle);
 bundle.putInt("someInt", 7);
 ```
 
-```java {.bad}
+```java
 private static Bundle getLocationExtras(Location location) {
   Bundle bundle = location.getExtras();
   if (bundle != null) {

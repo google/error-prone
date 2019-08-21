@@ -3,7 +3,7 @@
 Fields that may be `null` should be annotated with `@Nullable`. For example, do
 this:
 
-```java {.good}
+```java
 public class Foo {
   @Nullable private String message = "hello";
   public void reset() {
@@ -14,7 +14,7 @@ public class Foo {
 
 Not this:
 
-```java {.bad}
+```java
 public class Foo {
   private String message = "hello";
   public void reset() {

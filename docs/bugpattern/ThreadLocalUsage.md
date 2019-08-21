@@ -6,7 +6,7 @@ instance may remain live as long the thread that stored it stays live.
 
 Example:
 
-```java {.bad}
+```java
 class C {
    private final ThreadLocal<D> local = new ThreadLocal<D>();
 
@@ -23,6 +23,6 @@ class C {
 
 The fix is often to make the field `static`:
 
-```java {.good}
+```java
 private static final ThreadLocal<D> local = new ThreadLocal<D>();
 ```

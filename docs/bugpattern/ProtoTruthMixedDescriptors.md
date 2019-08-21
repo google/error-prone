@@ -12,7 +12,7 @@ message Foo {
 }
 ```
 
-```java {.bad}
+```java
 void assertOnFoo(Foo foo) {
   assertThat(foo).ignoringFields(Bar.NAME_FIELD_NUMBER).isEqualTo(...);
 }
@@ -22,7 +22,7 @@ This will ignore the `Foo#name` field rather than `Bar#name`. The field number
 can be turned into a `Descriptor` object to resolve the correct nested field to
 ignore:
 
-```java {.good}
+```java
 void assertOnFoo(Foo foo) {
   assertThat(foo)
       .ignoringFieldDescriptors(

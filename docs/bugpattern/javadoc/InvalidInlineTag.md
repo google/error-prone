@@ -3,7 +3,7 @@ example, `@param` should be used as a block tag to describe parameters, but
 cannot be used inline to link to parameters (prefer `{@code paramName}` for
 that).
 
-```java {.bad}
+```java
 /**
  * Doubles {@param n}.
  */
@@ -12,7 +12,7 @@ int twoTimes(int n) {
 }
 ```
 
-```java {.good}
+```java
 /**
  * Doubles {@code n}.
  */
