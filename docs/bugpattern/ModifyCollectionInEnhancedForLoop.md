@@ -8,7 +8,7 @@ From the javadoc for
 
 That is, prefer this:
 
-```java {.good}
+```java
 Iterator<String> it = ids.iterator();
 while (it.hasNext()) {
   if (shouldRemove(it.next())) {
@@ -19,7 +19,7 @@ while (it.hasNext()) {
 
 to this:
 
-```java {.bad}
+```java
 for (String id : ids) {
   if (shouldRemove(id)) {
     ids.remove(id); // will cause a ConcurrentModificationException!
@@ -30,6 +30,6 @@ for (String id : ids) {
 TIP: This pattern is simpler with Java 8's
 [`Collection.removeIf`](https://docs.oracle.com/javase/8/docs/api/java/util/Collection.html#removeIf-java.util.function.Predicate-):
 
-```java {.good}
+```java
 ids.removeIf(id -> shouldRemove(id));
 ```

@@ -1,7 +1,7 @@
 Some test helpers such as `EqualsTester` require a terminating method call to be
 of any use.
 
-```java {.bad}
+```java
   @Test
   public void string() {
     new EqualsTester()

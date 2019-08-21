@@ -6,7 +6,7 @@ Either add a description after the tag, or delete the low-information tag.
 
 ### @throws
 
-```java {.bad}
+```java
 interface Test {
   /**
    * @throws StorageException
@@ -15,7 +15,7 @@ interface Test {
 }
 ```
 
-```java {.good}
+```java
 interface Test {
   /**
    * @throws StorageException when unable to write to storage
@@ -24,7 +24,7 @@ interface Test {
 }
 ```
 
-```java {.good}
+```java
 interface Test {
   void write() throws StorageException;
 }
@@ -32,7 +32,7 @@ interface Test {
 
 ### @param
 
-```java {.bad}
+```java
 interface Test {
   /**
    * Does a foo.
@@ -43,7 +43,7 @@ interface Test {
 }
 ```
 
-```java {.good}
+```java
 interface Test {
   /**
    * Does a foo.
@@ -54,7 +54,7 @@ interface Test {
 }
 ```
 
-```java {.good}
+```java
 interface Test {
   /**
    * Does a foo.

@@ -5,7 +5,7 @@ annotating the format string with
 `@com.google.errorprone.annotations.FormatString` and the method with
 `@FormatMethod` to allow compile-time checking for well-formed format strings.
 
-```java {.bad}
+```java
 static void log(String format, String... args) {
   Log.w(format, args);
 }
@@ -18,7 +18,7 @@ void frobnicate(int a, int b) {
 }
 ```
 
-```java {.good}
+```java
 @FormatMethod
 static void log(@FormatString String format, String... args) {
   Log.w(format, args);

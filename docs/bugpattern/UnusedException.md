@@ -2,7 +2,7 @@ Catching an exception and throwing another is a common pattern. This is often
 used to supply additional information, or to turn a checked exception into an
 unchecked one.
 
-```java {.bad}
+```java
   try {
     ioLogic();
   } catch (IOException e) {
@@ -16,7 +16,7 @@ possible fault in `ioLogic()` far harder than is necessary.
 
 Prefer wrapping the original exception instead,
 
-```java {.good}
+```java
   try {
     ioLogic();
   } catch (IOException e) {

@@ -11,7 +11,7 @@ This means that:
 
 Don't do this:
 
-```java {.bad}
+```java
 assertThrows(
     UnsupportedOperationException.class,
     () -> {
@@ -24,7 +24,7 @@ assertThrows(
 
 Do this instead:
 
-```java {.good}
+```java
 AppendOnlyList list = new AppendOnlyList();
 list.add(0, "a");
 assertThrows(

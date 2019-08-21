@@ -43,7 +43,7 @@ The problem is described in the [javadoc] for `Files`.
 To ensure the stream is closed, always use try-with-resources. For example, when
 using `Files.lines`, do this:
 
-```java {.good}
+```java
 String input;
 try (Stream<String> stream = Files.lines(path)) {
   input = stream.collect(Collectors.joining(", "));
@@ -52,7 +52,7 @@ try (Stream<String> stream = Files.lines(path)) {
 
 Not this:
 
-```java {.bad}
+```java
 // the Reader is never closed!
 String input = Files.lines(path).collect(Collectors.joining(", ");
 ```

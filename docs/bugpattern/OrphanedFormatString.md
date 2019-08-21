@@ -3,7 +3,7 @@ perform string formatting is usually a mistake.
 
 Do this:
 
-```java {.good}
+```java
 if (!isValid(arg)) {
   throw new IllegalArgumentException(String.format("invalid arg: %s", arg));
 }
@@ -11,7 +11,7 @@ if (!isValid(arg)) {
 
 Not this:
 
-```java {.bad}
+```java
 if (!isValid(arg)) {
   throw new IllegalArgumentException("invalid arg: %s");
 }
