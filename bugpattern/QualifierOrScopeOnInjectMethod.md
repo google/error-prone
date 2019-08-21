@@ -66,7 +66,7 @@ annotation, or the method is a **provider** method, and the `@Inject` method
 won't have any effect, as modules are constructed without a dependency injection
 container.
 
-```java {.bad}
+```java
 class Example {
   // Here, @Singleton is ignored. Perhaps the scope should go onto Example, to make dependency
   // injection systems treat the Example type as a singleton.
@@ -75,7 +75,7 @@ class Example {
 }
 ```
 
-```java {.bad}
+```java
 class MyModule extends AbstractModule {
   ...
   // The `@Inject` doesn't do anything: Guice will use this method to define a Singleton binding

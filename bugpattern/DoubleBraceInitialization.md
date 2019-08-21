@@ -35,13 +35,13 @@ The `List.of`, `Set.of`, and `Map.of` static factories
 
 That is, prefer this:
 
-```java {.good}
+```java
 ImmutableList.of("Denmark", "Norway", "Sweden");
 ```
 
 Not this:
 
-```java {.bad}
+```java
 new ArrayList<>() {
   {
     add("Denmark");

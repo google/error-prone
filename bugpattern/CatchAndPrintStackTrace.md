@@ -17,7 +17,7 @@ Discarding an exception after calling `printStackTrace` should usually be
 avoided.
 
 
-```java {.good}
+```java
 try {
   // ...
 } catch (IOException e) {
@@ -25,7 +25,7 @@ try {
 }
 ```
 
-```java {.good}
+```java
 try {
   // ...
 } catch (IOException e) {
@@ -33,7 +33,7 @@ try {
 }
 ```
 
-```java {.bad}
+```java
 try {
   // ...
 } catch (IOException e) {

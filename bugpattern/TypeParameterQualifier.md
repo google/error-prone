@@ -18,13 +18,13 @@ equivalent to referencing the type parameter's upper bound directly.
 
 For example, this signature:
 
-```java {.bad}
+```java
 static <T extends Message> T populate(T.Builder builder) {}
 ```
 
 Is identical to the following:
 
-```java {.good}
+```java
 static <T extends Message> T populate(Message.Builder builder) {}
 ```
 

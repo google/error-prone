@@ -28,7 +28,7 @@ NOTE: This check applies to normal (server) protos and Lite protos. The
 deprecated nano runtime does produce objects which use `null` values to indicate
 field absence.
 
-```java {.bad}
+```java
 void test(MyProto proto) {
   if (proto.getField() == null) {
     ...
@@ -42,7 +42,7 @@ void test(MyProto proto) {
 }
 ```
 
-```java {.good}
+```java
 void test(MyProto proto) {
   if (!proto.hasField()) {
     ...
@@ -59,7 +59,7 @@ void test(MyProto proto) {
 If the presence of a field is required information in proto3, the field can be
 wrapped. For example,
 
-```java {.good}
+```java
 message MyMessage {
   google.protobuf.StringValue my_string = 1;
 }

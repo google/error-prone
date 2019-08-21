@@ -17,7 +17,7 @@ Implementations of `Object#hashCode` should not incorporate fields which the
 implementation of `Object#equals` does not. This violates the contract of
 `hashCode`: specifically, equal objects must have equal hashCodes.
 
-```java {.bad}
+```java
 class Foo {
   private final int a;
   private final int b;

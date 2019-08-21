@@ -20,13 +20,13 @@ constants.
 
 Prefer using a `public final` class instead to prohibit subclassing.
 
-```java {.bad}
+```java
 public interface Constants {
   final float PI = 3.14159f;
 }
 ```
 
-```java {.good}
+```java
 public final class Constants {
   public static final float PI = 3.14159f;
 

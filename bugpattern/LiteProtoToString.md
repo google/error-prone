@@ -19,7 +19,7 @@ typically not be optimized, but can pose a problem if the default lite
 `#toString` finds its way into production code as part of an important error
 message.
 
-```java {.bad}
+```java
   public void validate(MyProto myProto) {
     if (!myProto.hasFrobnicator()) {
       // MyProto missing frobnicator: asf@6531767b

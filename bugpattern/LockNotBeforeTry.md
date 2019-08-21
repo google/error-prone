@@ -16,7 +16,7 @@ To make changes, edit the @BugPattern annotation or the explanation in docs/bugp
 Wherever possible, calls to Lock#lock should be immediately followed by a `try`
 block with a `finally` clause which releases the lock,
 
-```java {.good}
+```java
 lock.lock();
 try {
   frobnicate();
@@ -30,7 +30,7 @@ documentation for `Lock` allows for `Lock#lock` to throw an unchecked exception
 if, for example, it determines that the program will deadlock. In this
 situation, `#unlock` will be called even if `#lock` throws,
 
-```java {.bad}
+```java
 try {
   lock.lock();
   frobnicate();
@@ -43,7 +43,7 @@ Doing work between the `lock` invocation and the start of the `try` block is
 potentially very bad, as the lock will go unreleased if the intermediate work
 throws,
 
-```java {.bad}
+```java
 lock.lock();
 checkState(frobnicator.ready());
 try {

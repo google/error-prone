@@ -17,7 +17,7 @@ To make changes, edit the @BugPattern annotation or the explanation in docs/bugp
 Implementations of `#equals` should return `false` for different types, not
 throw.
 
-```java {.bad}
+```java
 class Data {
   private int a;
 

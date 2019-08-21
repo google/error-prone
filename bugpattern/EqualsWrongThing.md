@@ -16,7 +16,7 @@ To make changes, edit the @BugPattern annotation or the explanation in docs/bugp
 An equals method compares non-corresponding fields from itself and the other
 instance:
 
-```java {.bad}
+```java
 class Frobnicator {
   private int a;
   private int b;

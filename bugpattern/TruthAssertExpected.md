@@ -16,7 +16,7 @@ To make changes, edit the @BugPattern annotation or the explanation in docs/bugp
 Arguments to a fluent [Truth](go/truth) assertion appear to be reversed based on
 the argument names.
 
-```java {.bad}
+```java
   int expected = 1;
   assertThat(expected).isEqualTo(codeUnderTest());
 ```
@@ -32,7 +32,7 @@ but was : 1
 Which will likely make debugging the problem harder. Truth assertions should
 follow the opposite order to JUnit assertions. Compare:
 
-```java {.good}
+```java
   assertThat(actual).isEqualTo(expected);
   assertEquals(expected, actual);
 ```

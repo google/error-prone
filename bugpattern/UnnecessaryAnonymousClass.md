@@ -18,7 +18,7 @@ interfaces.
 
 That is, prefer this:
 
-```java {.good}
+```java
 private static Bar getBar(Foo foo) {
   return BarService.lookupBar(foo, defaultCredentials());
 }

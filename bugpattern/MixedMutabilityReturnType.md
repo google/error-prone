@@ -18,7 +18,7 @@ but immutable in others. Doing so may lead users of your API to make incorrect
 assumptions about the mutability of the return type. For example, consider this
 method:
 
-```java {.bad}
+```java
 List<Integer> primeFactors(int n) {
   if (isPrime(n)) {
     return Collections.singletonList(n);

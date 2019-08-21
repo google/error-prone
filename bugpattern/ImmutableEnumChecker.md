@@ -108,7 +108,7 @@ TIP: Instead of creating an enum with functional interface fields (`Predicate`,
 `Function`, etc.), declare abstract methods that are overridden by each
 constant. For example, do this:
 
-```java {.good}
+```java
 enum Types {
   STRING {
     @Override public boolean hasCompatibleType(Object o) {
@@ -128,7 +128,7 @@ enum Types {
 
 ... not this:
 
-```java {.bad}
+```java
 enum Types {
   STRING(o -> o instanceof String),
   NUMBER(o -> o instanceof Number),

@@ -16,7 +16,7 @@ To make changes, edit the @BugPattern annotation or the explanation in docs/bugp
 ## The problem
 Don't implement `#equals` using just a `hashCode` comparison:
 
-```java {.bad}
+```java
 class MyClass {
   private final int a;
   private final int b;
