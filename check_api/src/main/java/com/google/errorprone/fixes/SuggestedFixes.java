@@ -601,8 +601,6 @@ public class SuggestedFixes {
    * closest suppressible node, or add {@code warningToSuppress} to that node if there's already a
    * {@code SuppressWarnings} annotation there.
    *
-   * @param fixBuilder The fixBuilder to add the fix to
-   * @param state VisitorState (used for resolving types, etc.)
    * @param warningToSuppress the warning to be suppressed, without the surrounding annotation. For
    *     example, to produce {@code @SuppressWarnings("Foo")}, pass {@code Foo}.
    * @param lineComment if non-null, the {@code @SuppressWarnings} will be prefixed by a line
@@ -622,8 +620,6 @@ public class SuggestedFixes {
    * closest suppressible node, or add {@code warningToSuppress} to that node if there's already a
    * {@code SuppressWarnings} annotation there.
    *
-   * @param fixBuilder The fixBuilder to add the fix to
-   * @param state VisitorState (used for resolving types, etc.)
    * @param warningToSuppress the warning to be suppressed, without the surrounding annotation. For
    *     example, to produce {@code @SuppressWarnings("Foo")}, pass {@code Foo}.
    * @param lineComment if non-null, the {@code @SuppressWarnings} will have this comment associated
