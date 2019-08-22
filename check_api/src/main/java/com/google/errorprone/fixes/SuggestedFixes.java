@@ -601,8 +601,8 @@ public class SuggestedFixes {
    * closest suppressible node, or add {@code warningToSuppress} to that node if there's already a
    * {@code SuppressWarnings} annotation there.
    *
-   * @param fixBuilder
-   * @param state
+   * @param fixBuilder The fixBuilder to add the fix to
+   * @param state VisitorState (used for resolving types, etc.)
    * @param warningToSuppress the warning to be suppressed, without the surrounding annotation. For
    *     example, to produce {@code @SuppressWarnings("Foo")}, pass {@code Foo}.
    * @param lineComment if non-null, the {@code @SuppressWarnings} will be prefixed by a line
@@ -614,6 +614,31 @@ public class SuggestedFixes {
       VisitorState state,
       String warningToSuppress,
       @Nullable String lineComment) {
+    addSuppressWarnings(fixBuilder, state, warningToSuppress, lineComment, true);
+  }
+
+  /**
+   * Modifies {@code fixBuilder} to either create a new {@code @SuppressWarnings} element on the
+   * closest suppressible node, or add {@code warningToSuppress} to that node if there's already a
+   * {@code SuppressWarnings} annotation there.
+   *
+   * @param fixBuilder The fixBuilder to add the fix to
+   * @param state VisitorState (used for resolving types, etc.)
+   * @param warningToSuppress the warning to be suppressed, without the surrounding annotation. For
+   *     example, to produce {@code @SuppressWarnings("Foo")}, pass {@code Foo}.
+   * @param lineComment if non-null, the {@code @SuppressWarnings} will have this comment associated
+   *     with it. Do not pass leading {@code //} or include any line breaks.
+   * @param commentOnNewLine if false, and this suppression results in a new annotation, the line
+   *     comment will be added on the same line as the {@code @SuppressWarnings} annotation. In
+   *     other cases, the line comment will be on its own line.
+   * @see #addSuppressWarnings(VisitorState, String, String)
+   */
+  public static void addSuppressWarnings(
+      Builder fixBuilder,
+      VisitorState state,
+      String warningToSuppress,
+      @Nullable String lineComment,
+      boolean commentOnNewLine) {
     // Find the nearest tree to add @SuppressWarnings to.
     Tree suppressibleNode = suppressibleNode(state.getPath());
     if (suppressibleNode == null) {
@@ -650,7 +675,9 @@ public class SuggestedFixes {
     } else {
       // Otherwise, add a suppress annotation to the element
       String replacement =
-          formattedLineComment.orElse("") + "@SuppressWarnings(" + suppression + ") ";
+          commentOnNewLine
+              ? formattedLineComment.orElse("") + "@SuppressWarnings(" + suppression + ") "
+              : "@SuppressWarnings(" + suppression + ") " + formattedLineComment.orElse("");
 
       fixBuilder.prefixWith(suppressibleNode, replacement);
     }
