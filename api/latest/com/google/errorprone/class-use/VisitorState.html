@@ -3914,6 +3914,18 @@
 </td>
 </tr>
 <tr class="rowColor">
+<td class="colFirst"><code>static void</code></td>
+<td class="colLast"><span class="typeNameLabel">SuggestedFixes.</span><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/fixes/SuggestedFixes.html#addSuppressWarnings-com.google.errorprone.fixes.SuggestedFix.Builder-com.google.errorprone.VisitorState-java.lang.String-java.lang.String-boolean-">addSuppressWarnings</a></span>(<a href="../../../../com/google/errorprone/fixes/SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a>&nbsp;fixBuilder,
+                   <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
+                   <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;warningToSuppress,
+                   <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;lineComment,
+                   boolean&nbsp;commentOnNewLine)</code>
+<div class="block">Modifies <code>fixBuilder</code> to either create a new <code>@SuppressWarnings</code> element on the
+ closest suppressible node, or add <code>warningToSuppress</code> to that node if there's already a
+ <code>SuppressWarnings</code> annotation there.</div>
+</td>
+</tr>
+<tr class="altColor">
 <td class="colFirst"><code>static <a href="../../../../com/google/errorprone/fixes/Fix.html" title="interface in com.google.errorprone.fixes">Fix</a></code></td>
 <td class="colLast"><span class="typeNameLabel">SuggestedFixes.</span><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/fixes/SuggestedFixes.html#addSuppressWarnings-com.google.errorprone.VisitorState-java.lang.String-">addSuppressWarnings</a></span>(<a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
                    <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;warningToSuppress)</code>
@@ -3921,7 +3933,7 @@
  suppressible element to the node pointed at by <code>state.getPath()</code>.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>static <a href="../../../../com/google/errorprone/fixes/Fix.html" title="interface in com.google.errorprone.fixes">Fix</a></code></td>
 <td class="colLast"><span class="typeNameLabel">SuggestedFixes.</span><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/fixes/SuggestedFixes.html#addSuppressWarnings-com.google.errorprone.VisitorState-java.lang.String-java.lang.String-">addSuppressWarnings</a></span>(<a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
                    <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;warningToSuppress,
@@ -3931,7 +3943,7 @@
  the suppression with a comment suffix (e.g.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>static <a href="../../../../com/google/errorprone/fixes/SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a></code></td>
 <td class="colLast"><span class="typeNameLabel">SuggestedFixes.</span><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/fixes/SuggestedFixes.html#addValuesToAnnotationArgument-com.sun.source.tree.AnnotationTree-java.lang.String-java.util.Collection-com.google.errorprone.VisitorState-">addValuesToAnnotationArgument</a></span>(com.sun.source.tree.AnnotationTree&nbsp;annotation,
                              <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;parameterName,
@@ -3940,14 +3952,14 @@
 <div class="block">Returns a fix that appends <code>newValues</code> to the <code>parameterName</code> argument for <code>annotation</code>, regardless of whether there is already an argument.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>static boolean</code></td>
 <td class="colLast"><span class="typeNameLabel">SuggestedFixes.</span><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/fixes/SuggestedFixes.html#compilesWithFix-com.google.errorprone.fixes.Fix-com.google.errorprone.VisitorState-">compilesWithFix</a></span>(<a href="../../../../com/google/errorprone/fixes/Fix.html" title="interface in com.google.errorprone.fixes">Fix</a>&nbsp;fix,
                <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>
 <div class="block">Returns true if the current compilation would succeed with the given fix applied.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>static boolean</code></td>
 <td class="colLast"><span class="typeNameLabel">SuggestedFixes.</span><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/fixes/SuggestedFixes.html#compilesWithFix-com.google.errorprone.fixes.Fix-com.google.errorprone.VisitorState-com.google.common.collect.ImmutableList-">compilesWithFix</a></span>(<a href="../../../../com/google/errorprone/fixes/Fix.html" title="interface in com.google.errorprone.fixes">Fix</a>&nbsp;fix,
                <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
@@ -3956,7 +3968,7 @@
  given additional compiler options.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>static <a href="../../../../com/google/errorprone/fixes/Fix.html" title="interface in com.google.errorprone.fixes">Fix</a></code></td>
 <td class="colLast"><span class="typeNameLabel">SuggestedFixes.</span><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/fixes/SuggestedFixes.html#deleteExceptions-com.sun.source.tree.MethodTree-com.google.errorprone.VisitorState-java.util.List-">deleteExceptions</a></span>(com.sun.source.tree.MethodTree&nbsp;tree,
                 <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
@@ -3964,7 +3976,7 @@
 <div class="block">Deletes the given exceptions from a method's throws clause.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>static <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a></code></td>
 <td class="colLast"><span class="typeNameLabel">SuggestedFixes.</span><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/fixes/SuggestedFixes.html#prettyType-com.google.errorprone.VisitorState-com.google.errorprone.fixes.SuggestedFix.Builder-com.sun.tools.javac.code.Type-">prettyType</a></span>(<a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
           <a href="../../../../com/google/errorprone/fixes/SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a>&nbsp;fix,
@@ -3972,7 +3984,7 @@
 <div class="block">Pretty-prints a Type for use in fixes, qualifying any enclosed type names using <a href="../../../../com/google/errorprone/fixes/SuggestedFixes.html#qualifyType-com.google.errorprone.VisitorState-com.google.errorprone.fixes.SuggestedFix.Builder-com.sun.tools.javac.code.Symbol-"><code>SuggestedFixes.qualifyType(com.google.errorprone.VisitorState, com.google.errorprone.fixes.SuggestedFix.Builder, com.sun.tools.javac.code.Symbol)</code></a>}.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>static void</code></td>
 <td class="colLast"><span class="typeNameLabel">SuggestedFixes.</span><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/fixes/SuggestedFixes.html#qualifyDocReference-com.google.errorprone.fixes.SuggestedFix.Builder-com.sun.source.util.DocTreePath-com.google.errorprone.VisitorState-">qualifyDocReference</a></span>(<a href="../../../../com/google/errorprone/fixes/SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a>&nbsp;fix,
                    com.sun.source.util.DocTreePath&nbsp;docPath,
@@ -3980,7 +3992,7 @@
 <div class="block">Fully qualifies a javadoc reference, e.g.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>static <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a></code></td>
 <td class="colLast"><span class="typeNameLabel">SuggestedFixes.</span><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/fixes/SuggestedFixes.html#qualifyType-com.google.errorprone.VisitorState-com.google.errorprone.fixes.SuggestedFix.Builder-java.lang.String-">qualifyType</a></span>(<a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
            <a href="../../../../com/google/errorprone/fixes/SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a>&nbsp;fix,
@@ -3988,7 +4000,7 @@
 <div class="block">Returns a human-friendly name of the given <code>typeName</code> for use in fixes.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>static <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a></code></td>
 <td class="colLast"><span class="typeNameLabel">SuggestedFixes.</span><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/fixes/SuggestedFixes.html#qualifyType-com.google.errorprone.VisitorState-com.google.errorprone.fixes.SuggestedFix.Builder-com.sun.tools.javac.code.Symbol-">qualifyType</a></span>(<a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
            <a href="../../../../com/google/errorprone/fixes/SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a>&nbsp;fix,
@@ -3996,7 +4008,7 @@
 <div class="block">Returns a human-friendly name of the given <code>Symbol.TypeSymbol</code> for use in fixes.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>static <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a></code></td>
 <td class="colLast"><span class="typeNameLabel">SuggestedFixes.</span><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/fixes/SuggestedFixes.html#qualifyType-com.google.errorprone.VisitorState-com.google.errorprone.fixes.SuggestedFix.Builder-javax.lang.model.type.TypeMirror-">qualifyType</a></span>(<a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
            <a href="../../../../com/google/errorprone/fixes/SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a>&nbsp;fix,
@@ -4004,7 +4016,7 @@
 <div class="block">Returns a human-friendly name of the given type for use in fixes.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>static <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util">Optional</a>&lt;<a href="../../../../com/google/errorprone/fixes/SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a>&gt;</code></td>
 <td class="colLast"><span class="typeNameLabel">SuggestedFixes.</span><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/fixes/SuggestedFixes.html#removeModifiers-com.sun.source.tree.ModifiersTree-com.google.errorprone.VisitorState-java.util.Set-">removeModifiers</a></span>(com.sun.source.tree.ModifiersTree&nbsp;originalModifiers,
                <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
@@ -4012,7 +4024,7 @@
 <div class="block">Adds modifiers to the given declaration and corresponding modifiers tree.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>static <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util">Optional</a>&lt;<a href="../../../../com/google/errorprone/fixes/SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a>&gt;</code></td>
 <td class="colLast"><span class="typeNameLabel">SuggestedFixes.</span><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/fixes/SuggestedFixes.html#removeModifiers-com.sun.source.tree.Tree-com.google.errorprone.VisitorState-javax.lang.model.element.Modifier...-">removeModifiers</a></span>(com.sun.source.tree.Tree&nbsp;tree,
                <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
@@ -4020,7 +4032,7 @@
 <div class="block">Remove modifiers from the given class, method, or field declaration.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>static <a href="../../../../com/google/errorprone/fixes/SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a></code></td>
 <td class="colLast"><span class="typeNameLabel">SuggestedFixes.</span><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/fixes/SuggestedFixes.html#renameMethod-com.sun.source.tree.MethodTree-java.lang.String-com.google.errorprone.VisitorState-">renameMethod</a></span>(com.sun.source.tree.MethodTree&nbsp;tree,
             <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;replacement,
@@ -4028,7 +4040,7 @@
 <div class="block">Be warned, only changes method name at the declaration.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>static <a href="../../../../com/google/errorprone/fixes/SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a></code></td>
 <td class="colLast"><span class="typeNameLabel">SuggestedFixes.</span><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/fixes/SuggestedFixes.html#renameMethodInvocation-com.sun.source.tree.MethodInvocationTree-java.lang.String-com.google.errorprone.VisitorState-">renameMethodInvocation</a></span>(com.sun.source.tree.MethodInvocationTree&nbsp;tree,
                       <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;replacement,
@@ -4036,7 +4048,7 @@
 <div class="block">Replaces the name of the method being invoked in <code>tree</code> with <code>replacement</code>.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>static <a href="../../../../com/google/errorprone/fixes/SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a></code></td>
 <td class="colLast"><span class="typeNameLabel">SuggestedFixes.</span><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/fixes/SuggestedFixes.html#renameVariable-com.sun.source.tree.VariableTree-java.lang.String-com.google.errorprone.VisitorState-">renameVariable</a></span>(com.sun.source.tree.VariableTree&nbsp;tree,
               <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;replacement,
@@ -4044,7 +4056,7 @@
 <div class="block">Renames the given <code>VariableTree</code> and its usages in the current compilation unit to <code>replacement</code>.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>static <a href="../../../../com/google/errorprone/fixes/SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a></code></td>
 <td class="colLast"><span class="typeNameLabel">SuggestedFixes.</span><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/fixes/SuggestedFixes.html#replaceIncludingComments-com.sun.source.util.TreePath-java.lang.String-com.google.errorprone.VisitorState-">replaceIncludingComments</a></span>(com.sun.source.util.TreePath&nbsp;path,
                         <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;replacement,
@@ -4052,7 +4064,7 @@
 <div class="block">Replaces the tree at <code>path</code> along with any Javadocs/associated single-line comments.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>static <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util">Optional</a>&lt;<a href="../../../../com/google/errorprone/fixes/SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a>&gt;</code></td>
 <td class="colLast"><span class="typeNameLabel">SuggestedFixes.</span><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/fixes/SuggestedFixes.html#suggestWhitelistAnnotation-java.lang.String-com.sun.source.util.TreePath-com.google.errorprone.VisitorState-">suggestWhitelistAnnotation</a></span>(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;whitelistAnnotation,
                           com.sun.source.util.TreePath&nbsp;where,
