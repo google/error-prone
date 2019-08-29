@@ -70,8 +70,8 @@ Both Truth and JUnit provide clearer ways to assert this.
 Truth:
 
 ```
-assertThat(a).isSameAs(b);
-assertThat(a).isNotSameAs(b);
+assertThat(a).isSameInstanceAs(b);
+assertThat(a).isNotSameInstanceAs(b);
 ```
 
 JUnit:
