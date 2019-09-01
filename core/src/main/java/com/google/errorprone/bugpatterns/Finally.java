@@ -168,7 +168,7 @@ public class Finally extends BugChecker
     }
 
     public FinallyJumpMatcher(JCBreak jcBreak) {
-      this.label = jcBreak.label;
+      this.label = jcBreak.getLabel();
       this.jumpType = JumpType.BREAK;
     }
 
