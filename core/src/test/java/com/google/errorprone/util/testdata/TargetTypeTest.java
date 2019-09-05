@@ -20,7 +20,6 @@ import java.io.Serializable;
 import java.util.List;
 
 abstract class TargetTypeTest {
-
   void unary() {
     System.out.println(
         // BUG: Diagnostic contains: boolean
@@ -376,14 +375,6 @@ abstract class TargetTypeTest {
     List<String> y = id(detectStringList());
     // BUG: Diagnostic contains: java.lang.Integer
     Integer z = id(detectPrimitiveInt());
-  }
-
-  void typeCast() {
-    // BUG: Diagnostic contains: int
-    long a = (int) detectPrimitiveByte();
-
-    // BUG: Diagnostic contains: java.lang.Object
-    String s = (String) (Object) detectString();
   }
 
   // Helper methods that we can search for.

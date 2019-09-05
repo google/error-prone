@@ -29,7 +29,6 @@ import static org.junit.Assume.assumeFalse;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Verify;
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.ProvidesFix;
@@ -962,7 +961,6 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
   @Test
   public void targetType() {
     CompilationTestHelper.newInstance(TargetTypeChecker.class, getClass())
-        .setArgs(ImmutableList.of("-Xmaxerrs", "200", "-Xmaxwarns", "200"))
         .addSourceFile("TargetTypeTest.java")
         .doTest();
   }
