@@ -64,7 +64,6 @@ import com.sun.source.tree.ReturnTree;
 import com.sun.source.tree.SwitchTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
-import com.sun.source.tree.TypeCastTree;
 import com.sun.source.tree.TypeParameterTree;
 import com.sun.source.tree.UnaryTree;
 import com.sun.source.tree.VariableTree;
@@ -1474,11 +1473,6 @@ public class ASTHelpers {
     @Override
     public Type visitParenthesized(ParenthesizedTree node, Void unused) {
       return visit(node.getExpression(), unused);
-    }
-
-    @Override
-    public Type visitTypeCast(TypeCastTree node, Void aVoid) {
-      return getType(node.getType());
     }
 
     @Nullable
