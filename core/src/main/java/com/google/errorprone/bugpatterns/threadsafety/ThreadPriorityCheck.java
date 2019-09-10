@@ -40,7 +40,7 @@ import com.sun.source.tree.MethodInvocationTree;
     name = "ThreadPriorityCheck",
     summary =
         "Relying on the thread scheduler is discouraged; "
-            + "see Effective Java Item 72 (2nd edition) / 84 (3rd edition).",
+            + "see Effective Java 3rd Edition Item 84.",
     severity = WARNING)
 public class ThreadPriorityCheck extends BugChecker implements MethodInvocationTreeMatcher {
 

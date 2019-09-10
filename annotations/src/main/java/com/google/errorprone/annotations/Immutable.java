@@ -67,7 +67,7 @@ import java.lang.annotation.Target;
  *
  * <ul>
  *   <li>Java Concurrency in Practice §3.4
- *   <li>Effective Java §15
+ *   <li>Effective Java 3rd Edition §17
  * </ul>
  */
 @Documented
