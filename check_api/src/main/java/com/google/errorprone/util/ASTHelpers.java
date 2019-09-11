@@ -28,6 +28,7 @@ import com.google.auto.value.AutoValue;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.CharMatcher;
 import com.google.common.base.Predicate;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.dataflow.nullnesspropagation.Nullness;
@@ -37,17 +38,21 @@ import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.suppliers.Suppliers;
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.ArrayAccessTree;
+import com.sun.source.tree.AssertTree;
 import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.BinaryTree;
+import com.sun.source.tree.CaseTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.CompoundAssignmentTree;
 import com.sun.source.tree.ConditionalExpressionTree;
 import com.sun.source.tree.DoWhileLoopTree;
+import com.sun.source.tree.EnhancedForLoopTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.ForLoopTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.IfTree;
+import com.sun.source.tree.InstanceOfTree;
 import com.sun.source.tree.LambdaExpressionTree;
 import com.sun.source.tree.LiteralTree;
 import com.sun.source.tree.MemberReferenceTree;
@@ -62,8 +67,11 @@ import com.sun.source.tree.ParameterizedTypeTree;
 import com.sun.source.tree.ParenthesizedTree;
 import com.sun.source.tree.ReturnTree;
 import com.sun.source.tree.SwitchTree;
+import com.sun.source.tree.SynchronizedTree;
+import com.sun.source.tree.ThrowTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
+import com.sun.source.tree.TypeCastTree;
 import com.sun.source.tree.TypeParameterTree;
 import com.sun.source.tree.UnaryTree;
 import com.sun.source.tree.VariableTree;
@@ -74,6 +82,7 @@ import com.sun.tools.javac.api.JavacTrees;
 import com.sun.tools.javac.code.Attribute;
 import com.sun.tools.javac.code.Attribute.Compound;
 import com.sun.tools.javac.code.Attribute.TypeCompound;
+import com.sun.tools.javac.code.BoundKind;
 import com.sun.tools.javac.code.Flags;
 import com.sun.tools.javac.code.Scope;
 import com.sun.tools.javac.code.Symbol;
@@ -87,6 +96,7 @@ import com.sun.tools.javac.code.Symtab;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Type.ClassType;
 import com.sun.tools.javac.code.Type.TypeVar;
+import com.sun.tools.javac.code.Type.WildcardType;
 import com.sun.tools.javac.code.TypeAnnotations;
 import com.sun.tools.javac.code.TypeAnnotations.AnnotationType;
 import com.sun.tools.javac.code.TypeTag;
@@ -1381,11 +1391,11 @@ public class ASTHelpers {
    */
   @Nullable
   public static TargetType targetType(VisitorState state) {
-    if (!(state.getPath().getLeaf() instanceof ExpressionTree)) {
+    if (!canHaveTargetType(state.getPath().getLeaf())) {
       return null;
     }
-    TreePath parent = state.getPath();
     ExpressionTree current;
+    TreePath parent = state.getPath();
     do {
       current = (ExpressionTree) parent.getLeaf();
       parent = parent.getParentPath();
@@ -1400,6 +1410,40 @@ public class ASTHelpers {
       return null;
     }
     return TargetType.create(type, parent);
+  }
+
+  private static boolean canHaveTargetType(Tree tree) {
+    // Anything that isn't an expression can't have a target type.
+    if (!(tree instanceof ExpressionTree)) {
+      return false;
+    }
+    switch (tree.getKind()) {
+      case IDENTIFIER:
+      case MEMBER_SELECT:
+        if (!(ASTHelpers.getSymbol(tree) instanceof VarSymbol)) {
+          // If we're selecting other than a member (e.g. a type or a method) then this doesn't
+          // have a target type.
+          return false;
+        }
+        break;
+      case PRIMITIVE_TYPE:
+      case ARRAY_TYPE:
+      case PARAMETERIZED_TYPE:
+      case EXTENDS_WILDCARD:
+      case SUPER_WILDCARD:
+      case UNBOUNDED_WILDCARD:
+      case ANNOTATED_TYPE:
+      case INTERSECTION_TYPE:
+      case TYPE_ANNOTATION:
+        // These are all things that only appear in type uses, so they can't have a target type.
+        return false;
+      case ANNOTATION:
+        // Annotations can only appear on elements which don't have target types.
+        return false;
+      default:
+        // Continue.
+    }
+    return true;
   }
 
   @VisibleForTesting
@@ -1424,10 +1468,33 @@ public class ASTHelpers {
       }
     }
 
+    @Override
+    public Type visitAssert(AssertTree node, Void aVoid) {
+      return current.equals(node.getCondition())
+          ? state.getSymtab().booleanType
+          : state.getSymtab().stringType;
+    }
+
     @Nullable
     @Override
     public Type visitAssignment(AssignmentTree tree, Void unused) {
       return getType(tree.getVariable());
+    }
+
+    @Override
+    public Type visitAnnotation(AnnotationTree tree, Void unused) {
+      return null;
+    }
+
+    @Override
+    public Type visitCase(CaseTree tree, Void unused) {
+      SwitchTree switchTree = (SwitchTree) parent.getParentPath().getLeaf();
+      return getType(switchTree.getExpression());
+    }
+
+    @Override
+    public Type visitClass(ClassTree node, Void aVoid) {
+      return null;
     }
 
     @Nullable
@@ -1466,8 +1533,33 @@ public class ASTHelpers {
     }
 
     @Override
+    public Type visitEnhancedForLoop(EnhancedForLoopTree node, Void aVoid) {
+      Type variableType = ASTHelpers.getType(node.getVariable());
+      if (state.getTypes().isArray(ASTHelpers.getType(node.getExpression()))) {
+        // For iterating an array, the target type is LoopVariableType[].
+        return state.getType(variableType, true, ImmutableList.of());
+      }
+      // For iterating an iterable, the target type is Iterable<? extends LoopVariableType>.
+      variableType = state.getTypes().boxedTypeOrType(variableType);
+      return state.getType(
+          state.getSymtab().iterableType,
+          false,
+          ImmutableList.of(new WildcardType(variableType, BoundKind.EXTENDS, variableType.tsym)));
+    }
+
+    @Override
+    public Type visitInstanceOf(InstanceOfTree node, Void aVoid) {
+      return state.getSymtab().objectType;
+    }
+
+    @Override
     public Type visitLambdaExpression(LambdaExpressionTree lambdaExpressionTree, Void unused) {
       return state.getTypes().findDescriptorType(getType(lambdaExpressionTree)).getReturnType();
+    }
+
+    @Override
+    public Type visitMethod(MethodTree node, Void aVoid) {
+      return null;
     }
 
     @Override
@@ -1489,6 +1581,22 @@ public class ASTHelpers {
         }
       }
       throw new AssertionError("return not enclosed by method or lambda");
+    }
+
+    @Override
+    public Type visitSynchronized(SynchronizedTree node, Void aVoid) {
+      // The null occurs if you've asked for the type of the parentheses around the expression.
+      return Objects.equals(current, node.getExpression()) ? state.getSymtab().objectType : null;
+    }
+
+    @Override
+    public Type visitThrow(ThrowTree node, Void aVoid) {
+      return ASTHelpers.getType(current);
+    }
+
+    @Override
+    public Type visitTypeCast(TypeCastTree node, Void aVoid) {
+      return getType(node.getType());
     }
 
     @Nullable
@@ -1593,6 +1701,9 @@ public class ASTHelpers {
 
     @Override
     public Type visitNewClass(NewClassTree tree, Void unused) {
+      if (Objects.equals(current, tree.getEnclosingExpression())) {
+        return ((ClassSymbol) ASTHelpers.getSymbol(tree.getIdentifier())).owner.type;
+      }
       return visitMethodInvocationOrNewClass(
           tree.getArguments(), ASTHelpers.getSymbol(tree), ((JCNewClass) tree).constructorType);
     }
@@ -1663,10 +1774,13 @@ public class ASTHelpers {
     @Nullable
     @Override
     public Type visitNewArray(NewArrayTree node, Void aVoid) {
+      if (Objects.equals(node.getType(), current)) {
+        return null;
+      }
       if (node.getDimensions().contains(current)) {
         return state.getSymtab().intType;
       }
-      if (node.getInitializers().contains(current)) {
+      if (node.getInitializers() != null && node.getInitializers().contains(current)) {
         return state.getTypes().elemtype(ASTHelpers.getType(node));
       }
       return null;

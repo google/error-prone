@@ -16,6 +16,7 @@
 
 package com.google.errorprone.util.testdata;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.List;
 
@@ -377,6 +378,119 @@ abstract class TargetTypeTest {
     Integer z = id(detectPrimitiveInt());
   }
 
+  void typeCast() {
+    // BUG: Diagnostic contains: int
+    long a = (int) detectPrimitiveByte();
+
+    // BUG: Diagnostic contains: java.lang.Object
+    String s = (String) (Object) detectString();
+  }
+
+  void enhancedForLoop() {
+    // BUG: Diagnostic contains: java.lang.String[]
+    for (String s : detectStringArray()) {}
+
+    // BUG: Diagnostic contains: java.lang.Object[]
+    for (Object s : detectStringArray()) {}
+
+    // BUG: Diagnostic contains: int[]
+    for (int i : detectPrimitiveIntArray()) {}
+
+    // BUG: Diagnostic contains: long[]
+    for (long i : detectPrimitiveIntArray()) {}
+
+    // BUG: Diagnostic contains: java.lang.Integer[]
+    for (Integer i : detectPrimitiveIntArray()) {}
+
+    // BUG: Diagnostic contains: java.lang.Object[]
+    for (Object i : detectPrimitiveIntArray()) {}
+
+    // BUG: Diagnostic contains: java.lang.Iterable<? extends java.lang.String>
+    for (String s : detectStringList()) {}
+
+    // BUG: Diagnostic contains: java.lang.Iterable<? extends java.lang.Object>
+    for (Object s : detectStringList()) {}
+
+    // BUG: Diagnostic contains: java.lang.Iterable<? extends java.lang.Integer>
+    for (int s : detectIntegerList()) {}
+  }
+
+  void testAssert() {
+    // BUG: Diagnostic contains: boolean
+    assert detectPrimitiveBoolean();
+
+    // BUG: Diagnostic contains: boolean
+    assert detectWrappedBoolean();
+
+    // BUG: Diagnostic contains: boolean
+    assert detectPrimitiveBoolean() : "";
+
+    // BUG: Diagnostic contains: java.lang.String
+    assert false : detectString();
+
+    // BUG: Diagnostic contains: java.lang.String
+    assert false : detectPrimitiveInt();
+  }
+
+  void testSwitch(int anInt, String aString) {
+    final int detectInt = 0;
+    switch (anInt) {
+        // BUG: Diagnostic contains: int
+      case detectInt:
+        break;
+    }
+
+    final byte detectByte = 0;
+    switch (anInt) {
+        // BUG: Diagnostic contains: int
+      case detectByte:
+        break;
+    }
+
+    final String detectString = "";
+    switch (aString) {
+        // BUG: Diagnostic contains: java.lang.String
+      case detectString:
+        break;
+    }
+  }
+
+  void instanceOf() {
+    // BUG: Diagnostic contains: java.lang.Object
+    if (detectString() instanceof String) {}
+
+    // BUG: Diagnostic contains: java.lang.Object
+    if (detectStringList() instanceof Serializable) {}
+  }
+
+  void testSynchronized() {
+    // BUG: Diagnostic contains: java.lang.Object
+    synchronized (detectString()) {
+    }
+  }
+
+  void testThrow() throws IOException {
+    if (System.currentTimeMillis() > 0) {
+      // BUG: Diagnostic contains: java.lang.IllegalArgumentException
+      throw detectIllegalArgumentException();
+    }
+    if (System.currentTimeMillis() > 0) {
+      // BUG: Diagnostic contains: java.io.IOException
+      throw detectIoException();
+    }
+  }
+
+  void newClass() {
+    // BUG: Diagnostic contains: java.lang.String
+    new IllegalArgumentException(detectString());
+
+    // BUG: Diagnostic contains: HasInner
+    detectHasInner().new Inner();
+
+    // BUG: Diagnostic contains: HasInner
+    detectDifferentName().new Inner();
+  }
+
   // Helper methods that we can search for.
   static byte detectPrimitiveByte() {
     return 0;
@@ -388,6 +502,10 @@ abstract class TargetTypeTest {
 
   static int detectPrimitiveInt() {
     return 0;
+  }
+
+  static int[] detectPrimitiveIntArray() {
+    return new int[0];
   }
 
   static Boolean detectWrappedBoolean() {
@@ -418,5 +536,33 @@ abstract class TargetTypeTest {
     return null;
   }
 
+  static List<Integer> detectIntegerList() {
+    return null;
+  }
+
+  static IllegalArgumentException detectIllegalArgumentException() {
+    return null;
+  }
+
+  static IOException detectIoException() {
+    return null;
+  }
+
+  static HasInner detectHasInner() {
+    return null;
+  }
+
+  static DifferentName detectDifferentName() {
+    return null;
+  }
+
   enum ThisEnum {}
+
+  class HasInner {
+    class Inner {}
+  }
+
+  // Not called the obvious "ExtendsHasInner" in order to avoid erroneously matching the "HasInner"
+  // part of it.
+  class DifferentName extends HasInner {}
 }
