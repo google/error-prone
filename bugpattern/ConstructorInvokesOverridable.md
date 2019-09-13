@@ -13,10 +13,11 @@ To make changes, edit the @BugPattern annotation or the explanation in docs/bugp
 -->
 
 ## The problem
-As Effective Java §17 warns: "Constructors must not invoke overridable methods".
-The risk is that overrides of these methods in subclasses will observe the new
-instance in an incompletely-constructed state. (Subclass state will certainly be
-uninitialized, and base class state may be incomplete as well.)
+As Effective Java 3rd Edition §19 warns: "Constructors must not invoke
+overridable methods". The risk is that overrides of these methods in subclasses
+will observe the new instance in an incompletely-constructed state. (Subclass
+state will certainly be uninitialized, and base class state may be incomplete as
+well.)
 
 This advice applies not only to constructors per se, but also to instance
 variable initializers and instance initializer blocks.

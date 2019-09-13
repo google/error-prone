@@ -22,7 +22,7 @@ accessor. For more information, see:
 *   http://jeremymanson.blogspot.com/2008/05/double-checked-locking.html
 *   http://www.cs.umd.edu/~pugh/java/memoryModel/DoubleCheckedLocking.html
 *   Java Concurrency in Practice, §16.2.4
-*   Effective Java, Item 71
+*   Effective Java 3rd Edition, Item 83
 
 The canonical example of *correct* double-checked locking for lazy
 initialization is:

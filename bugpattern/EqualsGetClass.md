@@ -82,10 +82,10 @@ and not worth propagating and legitimizing.
 
 ## More information
 
-See [Effective Java, 2nd Edition, Item 8][ej8] ("Obey the general contract when
-overriding equals").
+See [Effective Java, 3rd Edition, Item 10][ej3e-10] ("Obey the general contract
+when overriding equals").
 
-[ej8]: https://books.google.com/books?id=ka2VUBqHiWkC
+[ej3e-10]: https://books.google.com/books?id=BIpDDwAAQBAJ
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("EqualsGetClass")` to the enclosing element.

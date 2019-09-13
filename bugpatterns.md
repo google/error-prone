@@ -815,7 +815,7 @@ __[ThreadLocalUsage](bugpattern/ThreadLocalUsage)__<br>
 ThreadLocals should be stored in static fields
 
 __[ThreadPriorityCheck](bugpattern/ThreadPriorityCheck)__<br>
-Relying on the thread scheduler is discouraged; see Effective Java Item 72 (2nd edition) / 84 (3rd edition).
+Relying on the thread scheduler is discouraged; see Effective Java 3rd Edition Item 84.
 
 __[ThreeLetterTimeZoneID](bugpattern/ThreeLetterTimeZoneID)__<br>
 Three-letter time zone identifiers are deprecated, may be ambiguous, and might not do what you intend; the full IANA time zone ID should be used instead.
