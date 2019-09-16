@@ -269,6 +269,7 @@ import com.google.errorprone.bugpatterns.ThreadLocalUsage;
 import com.google.errorprone.bugpatterns.ThreeLetterTimeZoneID;
 import com.google.errorprone.bugpatterns.ThrowIfUncheckedKnownChecked;
 import com.google.errorprone.bugpatterns.ThrowNull;
+import com.google.errorprone.bugpatterns.ThrowSpecificExceptions;
 import com.google.errorprone.bugpatterns.ThrowsUncheckedException;
 import com.google.errorprone.bugpatterns.ToStringReturnsNull;
 import com.google.errorprone.bugpatterns.TreeToString;
@@ -804,20 +805,18 @@ public class BuiltInCheckerSuppliers {
           ImmutableRefactoring.class,
           ImplementAssertionWithChaining.class,
           InconsistentOverloads.class,
+          InheritDoc.class,
           InjectedConstructorAnnotations.class,
           InsecureCipherMode.class,
           InterfaceWithOnlyStatics.class,
-          InvalidTargetingOnScopingAnnotation.class,
-          IterablePathParameter.class,
-          JMockTestWithoutRunWithOrRuleAnnotation.class,
-          Java7ApiChecker.class,
-          InheritDoc.class,
           InvalidBlockTag.class,
           InvalidInlineTag.class,
           InvalidParam.class,
-          RedundantOverride.class,
-          ReturnFromVoid.class,
+          InvalidTargetingOnScopingAnnotation.class,
           InvalidThrows.class,
+          IterablePathParameter.class,
+          JMockTestWithoutRunWithOrRuleAnnotation.class,
+          Java7ApiChecker.class,
           JavaxInjectOnFinalField.class,
           LambdaFunctionalInterface.class,
           LockMethodChecker.class,
@@ -845,8 +844,10 @@ public class BuiltInCheckerSuppliers {
           ProtosAsKeyOfSetOrMap.class,
           ProvidesFixChecker.class,
           QualifierWithTypeUse.class,
+          RedundantOverride.class,
           RedundantThrows.class,
           RemoveUnusedImports.class,
+          ReturnFromVoid.class,
           ReturnMissingNullable.class,
           ScopeAnnotationOnInterfaceOrAbstractClass.class,
           ScopeOnModule.class,
@@ -858,6 +859,7 @@ public class BuiltInCheckerSuppliers {
           SystemExitOutsideMain.class,
           TestExceptionChecker.class,
           TestExceptionRefactoring.class,
+          ThrowSpecificExceptions.class,
           ThrowsUncheckedException.class,
           TimeUnitMismatch.class,
           TryFailRefactoring.class,
