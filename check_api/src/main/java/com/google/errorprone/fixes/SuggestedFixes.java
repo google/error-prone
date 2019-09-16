@@ -816,7 +816,7 @@ public class SuggestedFixes {
    */
   public static boolean compilesWithFix(
       Fix fix, VisitorState state, ImmutableList<String> extraOptions) {
-    if (fix.isEmpty()) {
+    if (fix.isEmpty() && extraOptions.isEmpty()) {
       return true;
     }
     JCCompilationUnit compilationUnit = (JCCompilationUnit) state.getPath().getCompilationUnit();
