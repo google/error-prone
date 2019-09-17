@@ -16,7 +16,7 @@
 package com.google.errorprone.bugpatterns.time;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
-import static com.google.errorprone.bugpatterns.time.JavaDurationGetSecondsGetNano.containsGetSecondsCallInNearbyCode;
+import static com.google.errorprone.bugpatterns.time.NearbyCallers.containsCallToSameReceiverNearby;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 
@@ -59,8 +59,8 @@ public final class JavaInstantGetSecondsGetNano extends BugChecker
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
     if (GET_NANO.matches(tree, state)) {
-      if (!containsGetSecondsCallInNearbyCode(
-          tree, state, GET_EPOCH_SECOND, /*checkProtoChains=*/ false)) {
+      if (!containsCallToSameReceiverNearby(
+          tree, GET_EPOCH_SECOND, state, /*checkProtoChains=*/ false)) {
         return describeMatch(tree);
       }
     }
