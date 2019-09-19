@@ -56,7 +56,7 @@ public class UnusedNestedClassTest {
   public void usedWithinSelf_warning() {
     compilationHelper
         .addSourceLines(
-            "Test.java", //
+            "Test.java",
             "class A {",
             "  // BUG: Diagnostic contains:",
             "  private static class B {",
@@ -70,7 +70,7 @@ public class UnusedNestedClassTest {
   public void usedOutsideSelf_noWarning() {
     compilationHelper
         .addSourceLines(
-            "Test.java", //
+            "Test.java",
             "class A {",
             "  private static final B b = new B();",
             "  private static class B {}",
@@ -82,7 +82,7 @@ public class UnusedNestedClassTest {
   public void usedOutsideSelf_oddQualification_noWarning() {
     compilationHelper
         .addSourceLines(
-            "Test.java", //
+            "Test.java",
             "class A {",
             "  public static final Object b = new A.B();",
             "  private static class B {}",
@@ -94,13 +94,14 @@ public class UnusedNestedClassTest {
   public void suppression() {
     compilationHelper
         .addSourceLines(
-            "Test.java", //
+            "Test.java",
             "class A {",
             "  @SuppressWarnings(\"unused\")",
             "  private class B {}",
             "}")
         .doTest();
   }
+
 
   @Test
   public void refactoring() {
