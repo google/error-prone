@@ -278,6 +278,24 @@ public class PreferJavaTimeOverloadTest {
   }
 
   @Test
+  public void callingJodaDurationMethodWithSupertypeJavaDurationOverload() {
+    helper
+        .addSourceLines(
+            "TestClass.java",
+            "public class TestClass extends SuperClass {",
+            "  @Override",
+            "  public void bar(java.time.Duration d) {",
+            "    bar(org.joda.time.Duration.standardSeconds(d.getSeconds()));",
+            "  }",
+            "  public void bar(org.joda.time.Duration jodaDuration) {}",
+            "}",
+            "class SuperClass {",
+            "  public void bar(java.time.Duration d) {}",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void callingJodaReadableDurationMethodWithDurationOverload_privateMethod() {
     helper
         .addSourceLines(
