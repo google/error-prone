@@ -337,6 +337,9 @@ public final class PreferJavaTimeOverload extends BugChecker
                 // Make sure we're not currently *inside* that overload, to avoid
                 // creating an infinite loop.
                 && !input.equals(enclosingMethod)
+                && !enclosingMethod.overrides(
+                    input, (TypeSymbol) input.owner, state.getTypes(), true)
+
                 // TODO(kak): Do we want to check return types too?
                 && input.isStatic() == calledMethod.isStatic()
                 && input.getParameters().size() == 1
