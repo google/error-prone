@@ -314,6 +314,7 @@ import com.google.errorprone.bugpatterns.WaitNotInLoop;
 import com.google.errorprone.bugpatterns.WildcardImport;
 import com.google.errorprone.bugpatterns.WithSignatureDiscouraged;
 import com.google.errorprone.bugpatterns.WrongParameterPackage;
+import com.google.errorprone.bugpatterns.XorPower;
 import com.google.errorprone.bugpatterns.android.BinderIdentityRestoredDangerously;
 import com.google.errorprone.bugpatterns.android.BundleDeserializationCast;
 import com.google.errorprone.bugpatterns.android.FragmentInjection;
@@ -601,7 +602,8 @@ public class BuiltInCheckerSuppliers {
           UnnecessaryTypeArgument.class,
           UnusedAnonymousClass.class,
           UnusedCollectionModifiedInPlace.class,
-          VarTypeName.class);
+          VarTypeName.class,
+          XorPower.class);
 
   /** A list of all checks with severity WARNING that are on by default. */
   public static final ImmutableSet<BugCheckerInfo> ENABLED_WARNINGS =
