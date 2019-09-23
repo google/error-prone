@@ -1240,4 +1240,30 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
     tests.add(scanner);
     assertCompiles(scanner);
   }
+
+  @Test
+  public void testOutermostclass_dotClass() {
+    writeFile(
+        "Foo.java",
+        "class Foo {",
+        "  void f() {",
+        "    Object unused = boolean.class;",
+        "  }",
+        "}");
+
+    TestScanner scanner =
+        new TestScanner() {
+          @Override
+          public Void visitMemberSelect(MemberSelectTree tree, VisitorState state) {
+            Symbol targetSymbol = ASTHelpers.getSymbol(tree);
+            // ASTHelpers#outermostClass shouldn't itself NPE
+            assertThat(ASTHelpers.outermostClass(targetSymbol)).isNull();
+            setAssertionsComplete();
+            return super.visitMemberSelect(tree, state);
+          }
+        };
+    tests.add(scanner);
+
+    assertCompiles(scanner);
+  }
 }
