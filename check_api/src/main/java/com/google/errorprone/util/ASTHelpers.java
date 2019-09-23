@@ -1847,9 +1847,10 @@ public class ASTHelpers {
    * aren't containing in a package, unlike {@link Symbol#outermostClass} (see b/123431414).
    */
   // TODO(b/123431414): fix javac and use Symbol.outermostClass insteads
+  @Nullable
   public static ClassSymbol outermostClass(Symbol symbol) {
     ClassSymbol curr = symbol.enclClass();
-    while (curr.owner != null) {
+    while (curr != null && curr.owner != null) {
       ClassSymbol encl = curr.owner.enclClass();
       if (encl == null) {
         break;
