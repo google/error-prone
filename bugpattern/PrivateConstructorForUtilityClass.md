@@ -1,6 +1,6 @@
 ---
 title: PrivateConstructorForUtilityClass
-summary: Utility classes (classes with only static members, which are not designed to be instantiated) should be made noninstantiable with a default constructor.
+summary: Classes which are not intended to be instantiated should be made non-instantiable with a private constructor. This includes utility classes (classes with only static members), and the main class.
 layout: bugpattern
 tags: ''
 severity: SUGGESTION

@@ -419,6 +419,9 @@ Collection is modified in place, but the result is not used
 __[VarTypeName](bugpattern/VarTypeName)__<br>
 `var` should not be used as a type name.
 
+__[XorPower](bugpattern/XorPower)__<br>
+The `^` operator is binary XOR, not a power operator.
+
 ## On by default : WARNING
 
 __[AmbiguousMethodReference](bugpattern/AmbiguousMethodReference)__<br>
@@ -540,6 +543,9 @@ Implementing #equals by just comparing hashCodes is fragile. Hashes collide freq
 
 __[ExtendingJUnitAssert](bugpattern/ExtendingJUnitAssert)__<br>
 When only using JUnit Assert&#39;s static methods, you should import statically instead of extending.
+
+__[ExtendsAutoValue](bugpattern/ExtendsAutoValue)__<br>
+Do not extend an @AutoValue class in non-generated code.
 
 __[FallThrough](bugpattern/FallThrough)__<br>
 Switch case may fall through
@@ -1103,6 +1109,9 @@ Code that contains System.exit() is untestable.
 __[TestExceptionChecker](bugpattern/TestExceptionChecker)__<br>
 Using @Test(expected=...) is discouraged, since the test will pass if *any* statement in the test method throws the expected exception
 
+__[ThrowSpecificExceptions](bugpattern/ThrowSpecificExceptions)__<br>
+Consider throwing more specific exceptions rather than (e.g.) RuntimeException. Throwing generic exceptions forces any users of the API that wish to handle the failure mode to catch very non-specific exceptions that convey little information.
+
 __[TimeUnitMismatch](bugpattern/TimeUnitMismatch)__<br>
 An value that appears to be represented in one unit is used where another appears to be required (e.g., seconds where nanos are needed)
 
@@ -1181,7 +1190,7 @@ __[PrivateConstructorForNoninstantiableModule](bugpattern/PrivateConstructorForN
 Add a private constructor to modules that will not be instantiated by Dagger.
 
 __[PrivateConstructorForUtilityClass](bugpattern/PrivateConstructorForUtilityClass)__<br>
-Utility classes (classes with only static members, which are not designed to be instantiated) should be made noninstantiable with a default constructor.
+Classes which are not intended to be instantiated should be made non-instantiable with a private constructor. This includes utility classes (classes with only static members), and the main class.
 
 __[RemoveUnusedImports](bugpattern/RemoveUnusedImports)__<br>
 Unused imports
