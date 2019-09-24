@@ -18,7 +18,6 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Matchers.allOf;
-import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.argument;
 import static com.google.errorprone.matchers.Matchers.instanceMethod;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
@@ -44,13 +43,13 @@ public class MathAbsoluteRandom extends BugChecker implements MethodInvocationTr
           staticMethod().onClass("java.lang.Math").named("abs"),
           argument(
               0,
-              anyOf(
-                  instanceMethod().onDescendantOf("java.util.Random"),
-                  staticMethod().onClass("java.lang.Math").named("random"))));
+              instanceMethod()
+                  .onDescendantOf("java.util.Random")
+                  .namedAnyOf("nextInt", "nextLong")
+                  .withParameters()));
 
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
-
     if (RANDOM_ABS_VAL.matches(tree, state)) {
       return describeMatch(tree);
     }
