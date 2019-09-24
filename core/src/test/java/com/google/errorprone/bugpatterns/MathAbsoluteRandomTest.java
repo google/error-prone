@@ -29,20 +29,6 @@ public class MathAbsoluteRandomTest {
       CompilationTestHelper.newInstance(MathAbsoluteRandom.class, getClass());
 
   @Test
-  public void math() {
-    helper
-        .addSourceLines(
-            "Test.java",
-            "class Test {",
-            "  void f() {",
-            "    // BUG: Diagnostic contains: MathAbsoluteRandom",
-            "    Math.abs(Math.random()); ",
-            "  }",
-            "}")
-        .doTest();
-  }
-
-  @Test
   public void random() {
     helper
         .addSourceLines(
@@ -53,6 +39,21 @@ public class MathAbsoluteRandomTest {
             "  void f() {",
             "    // BUG: Diagnostic contains: MathAbsoluteRandom",
             "    Math.abs(random.nextInt()); ",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void randomWithBounds() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            "import java.util.Random;",
+            "class Test {",
+            "private static final Random random = new Random();",
+            "  void f() {",
+            "    Math.abs(random.nextInt(10)); ",
             "  }",
             "}")
         .doTest();
@@ -93,6 +94,20 @@ public class MathAbsoluteRandomTest {
             "class Test {",
             "  void f() {",
             "    long random = Math.round(Math.random() * 10000);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void negativeDouble() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            "import java.util.Random;",
+            "class Test {",
+            "  void f() {",
+            "    double random = Math.abs(new Random().nextDouble());",
             "  }",
             "}")
         .doTest();
