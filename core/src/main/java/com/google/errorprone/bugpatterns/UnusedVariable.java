@@ -394,7 +394,8 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
           String newContent =
               String.format(
                   "%s%s unused",
-                  modifiers.isEmpty() ? "" : (modifiers + " "), variableTree.getType());
+                  modifiers.isEmpty() ? "" : (modifiers + " "),
+                  state.getSourceForNode(variableTree.getType()));
           // The new content for the second fix should be identical to the content for the first
           // fix in this case because we can't just remove the enhanced for loop variable.
           fix.replace(variableTree, newContent);
