@@ -175,7 +175,6 @@ class BugPatternFileGenerator implements LineProcessor<List<BugPatternInstance>>
           ImmutableMap.<String, Object>builder()
               .put("tags", Joiner.on(", ").join(pattern.tags))
               .put("severity", pattern.severity)
-              .put("providesFix", pattern.providesFix.displayInfo())
               .put("name", pattern.name)
               .put("className", pattern.className)
               .put("summary", pattern.summary.trim())
@@ -194,7 +193,6 @@ class BugPatternFileGenerator implements LineProcessor<List<BugPatternInstance>>
                 .put("layout", "bugpattern")
                 .put("tags", Joiner.on(", ").join(pattern.tags))
                 .put("severity", pattern.severity.toString())
-                .put("providesFix", pattern.providesFix.toString())
                 .build();
         DumperOptions options = new DumperOptions();
         options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
