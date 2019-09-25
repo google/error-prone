@@ -1,5 +1,5 @@
-The presence of an unused declaration may indicate a bug. This check highlights
-_private_ methods and variables which are unused and can be safely removed
+The presence of an unused variable may indicate a bug. This check highlights
+_private_ fields and parameters which are unused and can be safely removed
 without considering the impact on other source files.
 
 
@@ -15,5 +15,5 @@ private static void authenticate(User user, Application unusedApplication) {
 ```
 
 
-All false positives (including on methods) can be suppressed by annotating the
-closing method with `@SuppressWarnings("unused")`.
+All false positives can be suppressed by annotating the variable with
+`@SuppressWarnings("unused")`.
