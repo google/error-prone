@@ -127,12 +127,13 @@ public @interface BugPattern {
   String[] tags() default {};
 
   /** Whether and what type of fix this check provides. */
-  ProvidesFix providesFix() default ProvidesFix.NO_FIX;
+  ProvidesFix providesFix() default ProvidesFix.UNSPECIFIED;
 
   /** Types of fixes BugCheckers can provide. */
   public enum ProvidesFix {
     NO_FIX("No"),
-    REQUIRES_HUMAN_ATTENTION("Yes, requires human attention");
+    REQUIRES_HUMAN_ATTENTION("Yes, requires human attention"),
+    UNSPECIFIED("");
 
     private final String displayInfo;
 

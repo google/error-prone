@@ -4,7 +4,6 @@ summary: Exception created but not thrown
 layout: bugpattern
 tags: LikelyError
 severity: ERROR
-providesFix: NO_FIX
 ---
 
 <!--

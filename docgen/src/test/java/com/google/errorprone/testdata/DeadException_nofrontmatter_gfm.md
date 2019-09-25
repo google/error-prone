@@ -10,7 +10,6 @@ __Exception created but not thrown__
 <div style="float:right;"><table id="metadata">
 <tr><td>Severity</td><td>ERROR</td></tr>
 <tr><td>Tags</td><td>LikelyError</td></tr>
-<tr><td>Provides Fix?</td><td>No</td></tr>
 <div class=".more-info" data-qualified-name=com.google.errorprone.bugpatterns.DeadException></div>
 </table></div>
 
