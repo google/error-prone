@@ -63,6 +63,7 @@ import com.sun.tools.javac.util.Name;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.concurrent.TimeUnit;
+import javax.annotation.Nullable;
 
 /** This check suggests the use of {@code java.time}-based APIs, when available. */
 @BugPattern(
@@ -327,7 +328,7 @@ public final class PreferJavaTimeOverload extends BugChecker
     }
 
     MethodTree t = state.findEnclosing(MethodTree.class);
-    MethodSymbol enclosingMethod = t == null ? null : ASTHelpers.getSymbol(t);
+    @Nullable MethodSymbol enclosingMethod = t == null ? null : ASTHelpers.getSymbol(t);
 
     Type type = state.getTypeFromString(typeName);
     return hasMatchingMethods(
@@ -337,8 +338,9 @@ public final class PreferJavaTimeOverload extends BugChecker
                 // Make sure we're not currently *inside* that overload, to avoid
                 // creating an infinite loop.
                 && !input.equals(enclosingMethod)
-                && !enclosingMethod.overrides(
-                    input, (TypeSymbol) input.owner, state.getTypes(), true)
+                && (enclosingMethod == null
+                    || !enclosingMethod.overrides(
+                        input, (TypeSymbol) input.owner, state.getTypes(), true))
 
                 // TODO(kak): Do we want to check return types too?
                 && input.isStatic() == calledMethod.isStatic()

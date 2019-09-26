@@ -330,6 +330,24 @@ public class PreferJavaTimeOverloadTest {
   }
 
   @Test
+  public void callingPrimitiveOverloadFromFieldInitializer() {
+    helper
+        .addSourceLines(
+            "TestClass.java",
+            "public class TestClass {",
+            "  static {",
+            "    // BUG: Diagnostic contains: call bar(Duration) instead",
+            "    bar(42);",
+            "  }",
+            "  private static void bar(java.time.Duration d) {",
+            "  }",
+            "  private static void bar(long d) {",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void callingNumericPrimitiveMethodWithDurationOverload() {
     helper
         .addSourceLines(
