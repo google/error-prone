@@ -4,7 +4,6 @@ summary: This may have surprising semantics, e.g. new Period(LocalDate.parse("19
 layout: bugpattern
 tags: ''
 severity: WARNING
-providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

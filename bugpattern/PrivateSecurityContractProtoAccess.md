@@ -4,7 +4,6 @@ summary: Access to a private protocol buffer field is forbidden. This protocol b
 layout: bugpattern
 tags: ''
 severity: ERROR
-providesFix: NO_FIX
 ---
 
 <!--

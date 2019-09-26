@@ -4,7 +4,6 @@ summary: Returning a lambda from a helper method or saving it in a constant is u
 layout: bugpattern
 tags: ''
 severity: WARNING
-providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

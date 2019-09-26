@@ -4,7 +4,6 @@ summary: An implementation of Object.toString() should never return null.
 layout: bugpattern
 tags: ''
 severity: WARNING
-providesFix: NO_FIX
 ---
 
 <!--

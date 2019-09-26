@@ -4,7 +4,6 @@ summary: Arguments are in the wrong order or could be commented for clarity.
 layout: bugpattern
 tags: ''
 severity: WARNING
-providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

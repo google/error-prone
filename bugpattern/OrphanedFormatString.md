@@ -4,7 +4,6 @@ summary: String literal contains format specifiers, but is not passed to a forma
 layout: bugpattern
 tags: ''
 severity: WARNING
-providesFix: NO_FIX
 ---
 
 <!--

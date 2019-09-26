@@ -4,7 +4,6 @@ summary: Overriding method is missing a call to overridden super method
 layout: bugpattern
 tags: ''
 severity: ERROR
-providesFix: NO_FIX
 ---
 
 <!--

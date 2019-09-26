@@ -4,7 +4,6 @@ summary: Returned Rx objects must be checked. Ignoring a returned Rx value means
 layout: bugpattern
 tags: ''
 severity: WARNING
-providesFix: NO_FIX
 ---
 
 <!--

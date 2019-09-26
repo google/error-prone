@@ -4,7 +4,6 @@ summary: Casting a lambda to this @FunctionalInterface can cause a behavior chan
 layout: bugpattern
 tags: ''
 severity: ERROR
-providesFix: NO_FIX
 ---
 
 <!--

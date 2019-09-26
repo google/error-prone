@@ -5,7 +5,6 @@ summary: 'Static and default interface methods are not natively supported on old
 layout: bugpattern
 tags: ''
 severity: ERROR
-providesFix: NO_FIX
 ---
 
 <!--

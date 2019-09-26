@@ -4,7 +4,6 @@ summary: Arrays do not override equals() or hashCode, so comparisons will be don
 layout: bugpattern
 tags: ''
 severity: WARNING
-providesFix: NO_FIX
 ---
 
 <!--

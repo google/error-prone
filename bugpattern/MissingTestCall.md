@@ -4,7 +4,6 @@ summary: A terminating method call is required for a test helper to have any eff
 layout: bugpattern
 tags: ''
 severity: ERROR
-providesFix: NO_FIX
 ---
 
 <!--

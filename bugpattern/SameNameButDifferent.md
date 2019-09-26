@@ -4,7 +4,6 @@ summary: This type name shadows another in a way that may be confusing.
 layout: bugpattern
 tags: ''
 severity: WARNING
-providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

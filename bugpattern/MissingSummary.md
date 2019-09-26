@@ -4,7 +4,6 @@ summary: A summary line is required on public/protected Javadocs.
 layout: bugpattern
 tags: Style
 severity: WARNING
-providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

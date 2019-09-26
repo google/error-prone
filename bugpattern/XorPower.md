@@ -4,7 +4,6 @@ summary: The `^` operator is binary XOR, not a power operator.
 layout: bugpattern
 tags: ''
 severity: ERROR
-providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

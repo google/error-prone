@@ -4,7 +4,6 @@ summary: withSignature is discouraged. Prefer .named and/or .withParameters wher
 layout: bugpattern
 tags: ''
 severity: WARNING
-providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

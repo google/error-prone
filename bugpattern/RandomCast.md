@@ -4,7 +4,6 @@ summary: Casting a random number in the range [0.0, 1.0) to an integer or long a
 layout: bugpattern
 tags: ''
 severity: ERROR
-providesFix: NO_FIX
 ---
 
 <!--

@@ -4,7 +4,6 @@ summary: This method passes a pair of parameters through to String.format, but t
 layout: bugpattern
 tags: FragileCode
 severity: WARNING
-providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

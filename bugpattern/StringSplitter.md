@@ -4,7 +4,6 @@ summary: String.split(String) has surprising behavior
 layout: bugpattern
 tags: ''
 severity: WARNING
-providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

@@ -4,7 +4,6 @@ summary: Annotations should be positioned after Javadocs, but before modifiers.
 layout: bugpattern
 tags: Style
 severity: WARNING
-providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

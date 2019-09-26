@@ -4,7 +4,6 @@ summary: Protos should not be used as a key to a map, in a set, or in a contains
 layout: bugpattern
 tags: ''
 severity: WARNING
-providesFix: NO_FIX
 ---
 
 <!--

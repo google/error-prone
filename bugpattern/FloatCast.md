@@ -4,7 +4,6 @@ summary: Use parentheses to make the precedence explicit
 layout: bugpattern
 tags: ''
 severity: WARNING
-providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

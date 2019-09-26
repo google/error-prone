@@ -4,7 +4,6 @@ summary: Arguments to AutoValue constructor are in the wrong order
 layout: bugpattern
 tags: ''
 severity: ERROR
-providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

@@ -4,7 +4,6 @@ summary: Math.abs does not always give a positive result. Please consider other 
 layout: bugpattern
 tags: ''
 severity: WARNING
-providesFix: NO_FIX
 ---
 
 <!--

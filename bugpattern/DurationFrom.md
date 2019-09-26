@@ -4,7 +4,6 @@ summary: Duration.from(Duration) returns itself; from(Period) throws a runtime e
 layout: bugpattern
 tags: ''
 severity: ERROR
-providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

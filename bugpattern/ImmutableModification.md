@@ -4,7 +4,6 @@ summary: Modifying an immutable collection is guaranteed to throw an exception a
 layout: bugpattern
 tags: ''
 severity: ERROR
-providesFix: NO_FIX
 ---
 
 <!--

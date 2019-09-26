@@ -7,7 +7,6 @@ summary: 'This TimeUnit conversion looks buggy: converting from a smaller unit t
 layout: bugpattern
 tags: ''
 severity: WARNING
-providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

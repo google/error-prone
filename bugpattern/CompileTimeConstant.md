@@ -4,7 +4,6 @@ summary: Non-compile-time constant expression passed to parameter with @CompileT
 layout: bugpattern
 tags: ''
 severity: ERROR
-providesFix: NO_FIX
 ---
 
 <!--

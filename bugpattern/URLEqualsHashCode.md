@@ -4,7 +4,6 @@ summary: Avoid hash-based containers of java.net.URL--the containers rely on equ
 layout: bugpattern
 tags: FragileCode
 severity: WARNING
-providesFix: NO_FIX
 ---
 
 <!--

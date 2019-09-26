@@ -4,7 +4,6 @@ summary: Constructors should not invoke overridable methods.
 layout: bugpattern
 tags: ''
 severity: WARNING
-providesFix: NO_FIX
 ---
 
 <!--

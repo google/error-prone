@@ -4,7 +4,6 @@ summary: Importing nested classes/static methods/static fields with commonly-use
 layout: bugpattern
 tags: ''
 severity: WARNING
-providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

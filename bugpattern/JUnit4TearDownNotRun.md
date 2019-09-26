@@ -4,7 +4,6 @@ summary: tearDown() method will not be run; please add JUnit's @After annotation
 layout: bugpattern
 tags: ''
 severity: ERROR
-providesFix: NO_FIX
 ---
 
 <!--

@@ -4,7 +4,6 @@ summary: Use of duration.withMillis(long) is not allowed. Please use Duration.mi
 layout: bugpattern
 tags: ''
 severity: WARNING
-providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

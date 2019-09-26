@@ -4,7 +4,6 @@ summary: Don't refer to Dagger's internal or generated code
 layout: bugpattern
 tags: ''
 severity: ERROR
-providesFix: NO_FIX
 ---
 
 <!--

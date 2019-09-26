@@ -4,7 +4,6 @@ summary: Using static imports for types is unnecessary
 layout: bugpattern
 tags: Style
 severity: SUGGESTION
-providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

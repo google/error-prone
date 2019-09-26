@@ -4,7 +4,6 @@ summary: A collection or proto builder was created, but its values were never ac
 layout: bugpattern
 tags: ''
 severity: WARNING
-providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

@@ -4,7 +4,6 @@ summary: Invalid zone identifier. ZoneId.of(String) will throw exception at runt
 layout: bugpattern
 tags: ''
 severity: ERROR
-providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

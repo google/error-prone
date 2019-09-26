@@ -4,7 +4,6 @@ summary: Duration.get() only works with SECONDS or NANOS.
 layout: bugpattern
 tags: ''
 severity: ERROR
-providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

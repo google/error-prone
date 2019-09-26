@@ -4,7 +4,6 @@ summary: Empty top-level type declaration
 layout: bugpattern
 tags: ''
 severity: WARNING
-providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

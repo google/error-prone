@@ -4,7 +4,6 @@ summary: Expression of type int may overflow before being assigned to a long
 layout: bugpattern
 tags: FragileCode
 severity: WARNING
-providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

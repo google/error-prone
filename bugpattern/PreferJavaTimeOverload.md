@@ -4,7 +4,6 @@ summary: Prefer using java.time-based APIs when available. Note that this checke
 layout: bugpattern
 tags: ''
 severity: WARNING
-providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

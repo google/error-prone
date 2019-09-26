@@ -5,7 +5,6 @@ summary: 'The contract of #equals states that it should return false for incompa
 layout: bugpattern
 tags: ''
 severity: WARNING
-providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

@@ -4,7 +4,6 @@ summary: Scopes on modules have no function and will soon be an error.
 layout: bugpattern
 tags: ''
 severity: SUGGESTION
-providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

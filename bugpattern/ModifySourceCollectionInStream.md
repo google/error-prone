@@ -4,7 +4,6 @@ summary: Modifying the backing source during stream operations may cause uninten
 layout: bugpattern
 tags: ''
 severity: WARNING
-providesFix: NO_FIX
 ---
 
 <!--

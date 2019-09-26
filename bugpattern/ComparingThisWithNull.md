@@ -4,7 +4,6 @@ summary: this == null is always false, this != null is always true
 layout: bugpattern
 tags: ''
 severity: ERROR
-providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

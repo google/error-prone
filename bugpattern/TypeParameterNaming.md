@@ -4,7 +4,6 @@ summary: Type parameters must be a single letter with an optional numeric suffix
 layout: bugpattern
 tags: Style
 severity: SUGGESTION
-providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

@@ -4,7 +4,6 @@ summary: Streams that encapsulate a closeable resource should be closed using tr
 layout: bugpattern
 tags: ''
 severity: WARNING
-providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

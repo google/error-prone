@@ -4,7 +4,6 @@ summary: Use of instant.withMillis(long) is not allowed. Please use new Instant(
 layout: bugpattern
 tags: ''
 severity: WARNING
-providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

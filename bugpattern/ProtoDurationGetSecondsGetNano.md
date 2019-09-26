@@ -4,7 +4,6 @@ summary: getNanos() only accesses the underlying nanosecond-adjustment of the du
 layout: bugpattern
 tags: ''
 severity: WARNING
-providesFix: NO_FIX
 ---
 
 <!--

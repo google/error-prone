@@ -4,7 +4,6 @@ summary: This class's name looks like a Type Parameter.
 layout: bugpattern
 tags: Style
 severity: SUGGESTION
-providesFix: NO_FIX
 ---
 
 <!--

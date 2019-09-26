@@ -4,7 +4,6 @@ summary: Fields annotated with @Mock should not be manually assigned to.
 layout: bugpattern
 tags: ''
 severity: WARNING
-providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

@@ -4,7 +4,6 @@ summary: Duration can be expressed more clearly with different units
 layout: bugpattern
 tags: ''
 severity: WARNING
-providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

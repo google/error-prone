@@ -4,7 +4,6 @@ summary: Instance created but never used
 layout: bugpattern
 tags: ''
 severity: ERROR
-providesFix: NO_FIX
 ---
 
 <!--

@@ -4,7 +4,6 @@ summary: '`describeMatch(tree, fix)` is equivalent to and simpler than `buildDes
 layout: bugpattern
 tags: ''
 severity: ERROR
-providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

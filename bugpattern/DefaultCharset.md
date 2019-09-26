@@ -4,7 +4,6 @@ summary: Implicit use of the platform default charset, which can result in diffe
 layout: bugpattern
 tags: FragileCode
 severity: WARNING
-providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

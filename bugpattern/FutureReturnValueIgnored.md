@@ -4,7 +4,6 @@ summary: Return value of methods returning Future must be checked. Ignoring retu
 layout: bugpattern
 tags: FragileCode
 severity: WARNING
-providesFix: NO_FIX
 ---
 
 <!--

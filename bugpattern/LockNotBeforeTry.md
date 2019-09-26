@@ -4,7 +4,6 @@ summary: Calls to Lock#lock should be immediately followed by a try block which 
 layout: bugpattern
 tags: FragileCode
 severity: WARNING
-providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

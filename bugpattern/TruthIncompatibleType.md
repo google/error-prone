@@ -4,7 +4,6 @@ summary: Argument is not compatible with the subject's type.
 layout: bugpattern
 tags: ''
 severity: WARNING
-providesFix: NO_FIX
 ---
 
 <!--

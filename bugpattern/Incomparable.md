@@ -4,7 +4,6 @@ summary: Types contained in sorted collections must implement Comparable.
 layout: bugpattern
 tags: ''
 severity: ERROR
-providesFix: NO_FIX
 ---
 
 <!--

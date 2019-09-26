@@ -4,7 +4,6 @@ summary: Math.round(Integer) results in truncation
 layout: bugpattern
 tags: ''
 severity: ERROR
-providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

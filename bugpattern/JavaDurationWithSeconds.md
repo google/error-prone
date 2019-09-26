@@ -4,7 +4,6 @@ summary: Use of java.time.Duration.withSeconds(long) is not allowed.
 layout: bugpattern
 tags: ''
 severity: WARNING
-providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

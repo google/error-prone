@@ -4,7 +4,6 @@ summary: Calling toString on an array does not provide useful information
 layout: bugpattern
 tags: ''
 severity: ERROR
-providesFix: NO_FIX
 ---
 
 <!--

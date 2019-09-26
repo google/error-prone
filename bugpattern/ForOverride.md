@@ -4,7 +4,6 @@ summary: Method annotated @ForOverride must be protected or package-private and 
 layout: bugpattern
 tags: ''
 severity: ERROR
-providesFix: NO_FIX
 ---
 
 <!--

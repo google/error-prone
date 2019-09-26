@@ -4,7 +4,6 @@ summary: Constructors on abstract classes are never directly @Injected, only the
 layout: bugpattern
 tags: ''
 severity: WARNING
-providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

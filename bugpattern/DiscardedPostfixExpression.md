@@ -4,7 +4,6 @@ summary: The result of this unary operation on a lambda parameter is discarded
 layout: bugpattern
 tags: ''
 severity: ERROR
-providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

@@ -4,7 +4,6 @@ summary: Field name is CONSTANT_CASE, but field is not static and final
 layout: bugpattern
 tags: ''
 severity: SUGGESTION
-providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

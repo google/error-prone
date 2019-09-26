@@ -4,7 +4,6 @@ summary: '@Provides methods need to be declared in a Module to have any effect.'
 layout: bugpattern
 tags: ''
 severity: ERROR
-providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

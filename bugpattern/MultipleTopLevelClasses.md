@@ -4,7 +4,6 @@ summary: Source files should not contain multiple top-level class declarations
 layout: bugpattern
 tags: Style
 severity: SUGGESTION
-providesFix: NO_FIX
 ---
 
 <!--

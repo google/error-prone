@@ -4,7 +4,6 @@ summary: This field is only assigned during initialization; consider making it f
 layout: bugpattern
 tags: ''
 severity: SUGGESTION
-providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

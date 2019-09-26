@@ -4,7 +4,6 @@ summary: Ignoring exceptions and calling fail() is unnecessary, and makes test o
 layout: bugpattern
 tags: ''
 severity: WARNING
-providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

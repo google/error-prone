@@ -4,7 +4,6 @@ summary: Tree#toString shouldn't be used for Trees deriving from the code being 
 layout: bugpattern
 tags: ''
 severity: WARNING
-providesFix: NO_FIX
 ---
 
 <!--

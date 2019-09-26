@@ -4,7 +4,6 @@ summary: Declaring types inside package-info.java files is very bad form
 layout: bugpattern
 tags: ''
 severity: ERROR
-providesFix: NO_FIX
 ---
 
 <!--

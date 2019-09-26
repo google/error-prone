@@ -4,7 +4,6 @@ summary: Assignment where a boolean expression was expected; use == if this assi
 layout: bugpattern
 tags: LikelyError
 severity: WARNING
-providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

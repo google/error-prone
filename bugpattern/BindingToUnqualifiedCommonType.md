@@ -4,7 +4,6 @@ summary: This code declares a binding for a common value type without a Qualifie
 layout: bugpattern
 tags: ''
 severity: WARNING
-providesFix: NO_FIX
 ---
 
 <!--

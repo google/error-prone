@@ -5,7 +5,6 @@ summary: 'The field number passed into #getFieldByNumber belongs to a different 
 layout: bugpattern
 tags: ''
 severity: WARNING
-providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

@@ -4,7 +4,6 @@ summary: LocalDate.plus() and minus() does not work with Durations. LocalDate re
 layout: bugpattern
 tags: ''
 severity: ERROR
-providesFix: NO_FIX
 ---
 
 <!--

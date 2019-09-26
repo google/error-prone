@@ -4,7 +4,6 @@ summary: The arguments passed to `ignoringFields` are inconsistent with the prot
 layout: bugpattern
 tags: ''
 severity: ERROR
-providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

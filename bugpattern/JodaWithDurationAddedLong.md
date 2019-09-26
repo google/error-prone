@@ -4,7 +4,6 @@ summary: Use of JodaTime's type.withDurationAdded(long, int) (where <type> = {Du
 layout: bugpattern
 tags: ''
 severity: WARNING
-providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

@@ -4,7 +4,6 @@ summary: Floating-point comparison without error tolerance
 layout: bugpattern
 tags: ''
 severity: WARNING
-providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

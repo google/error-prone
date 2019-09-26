@@ -4,7 +4,6 @@ summary: This conditional expression may evaluate to null, which will result in 
 layout: bugpattern
 tags: ''
 severity: ERROR
-providesFix: NO_FIX
 ---
 
 <!--

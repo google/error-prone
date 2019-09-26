@@ -4,7 +4,6 @@ summary: The actual and expected values appear to be swapped, which results in p
 layout: bugpattern
 tags: Style
 severity: WARNING
-providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

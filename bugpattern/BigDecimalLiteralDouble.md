@@ -4,7 +4,6 @@ summary: new BigDecimal(double) loses precision in this case.
 layout: bugpattern
 tags: ''
 severity: WARNING
-providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

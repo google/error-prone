@@ -4,7 +4,6 @@ summary: A variable was checkNotNulled multiple times. Did you mean to check som
 layout: bugpattern
 tags: ''
 severity: ERROR
-providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

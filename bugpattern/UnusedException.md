@@ -4,7 +4,6 @@ summary: This catch block catches an exception and re-throws another, but swallo
 layout: bugpattern
 tags: Style
 severity: WARNING
-providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

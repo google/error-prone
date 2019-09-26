@@ -4,7 +4,6 @@ summary: Incompatible type as argument to Object-accepting Java collections meth
 layout: bugpattern
 tags: ''
 severity: ERROR
-providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

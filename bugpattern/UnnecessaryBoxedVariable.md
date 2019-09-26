@@ -4,7 +4,6 @@ summary: It is unnecessary for this variable to be boxed. Use the primitive inst
 layout: bugpattern
 tags: ''
 severity: SUGGESTION
-providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

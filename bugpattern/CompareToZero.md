@@ -6,7 +6,6 @@ summary: 'The result of #compareTo or #compare should only be compared to 0. It 
 layout: bugpattern
 tags: ''
 severity: WARNING
-providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

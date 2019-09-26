@@ -4,7 +4,6 @@ summary: Dereference of possibly-null value
 layout: bugpattern
 tags: ''
 severity: WARNING
-providesFix: NO_FIX
 ---
 
 <!--

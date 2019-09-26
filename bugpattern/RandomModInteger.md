@@ -4,7 +4,6 @@ summary: Use Random.nextInt(int).  Random.nextInt() % n can have negative result
 layout: bugpattern
 tags: ''
 severity: ERROR
-providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

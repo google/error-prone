@@ -4,7 +4,6 @@ summary: Including fields in hashCode which are not compared in equals violates 
 layout: bugpattern
 tags: FragileCode
 severity: WARNING
-providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

@@ -4,7 +4,6 @@ summary: When only using JUnit Assert's static methods, you should import static
 layout: bugpattern
 tags: ''
 severity: WARNING
-providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

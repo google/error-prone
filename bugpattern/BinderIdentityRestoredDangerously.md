@@ -4,7 +4,6 @@ summary: A call to Binder.clearCallingIdentity() should be followed by Binder.re
 layout: bugpattern
 tags: FragileCode
 severity: WARNING
-providesFix: NO_FIX
 ---
 
 <!--

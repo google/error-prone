@@ -4,7 +4,6 @@ summary: Overloads will be ambiguous when passing lambda arguments.
 layout: bugpattern
 tags: ''
 severity: WARNING
-providesFix: NO_FIX
 ---
 
 <!--

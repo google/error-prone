@@ -4,7 +4,6 @@ summary: If you return or throw from a finally, then values returned or thrown f
 layout: bugpattern
 tags: FragileCode
 severity: WARNING
-providesFix: NO_FIX
 ---
 
 <!--

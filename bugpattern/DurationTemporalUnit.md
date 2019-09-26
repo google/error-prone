@@ -4,7 +4,6 @@ summary: Duration APIs only work for DAYS or exact durations.
 layout: bugpattern
 tags: ''
 severity: ERROR
-providesFix: NO_FIX
 ---
 
 <!--

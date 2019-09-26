@@ -4,7 +4,6 @@ summary: Conditional expression in varargs call contains array and non-array arg
 layout: bugpattern
 tags: ''
 severity: ERROR
-providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

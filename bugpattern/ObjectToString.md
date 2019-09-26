@@ -4,7 +4,6 @@ summary: Calling toString on Objects that don't override toString() doesn't prov
 layout: bugpattern
 tags: ''
 severity: WARNING
-providesFix: NO_FIX
 ---
 
 <!--

@@ -4,7 +4,6 @@ summary: Class should not implement both `Iterable` and `Iterator`
 layout: bugpattern
 tags: FragileCode
 severity: WARNING
-providesFix: NO_FIX
 ---
 
 <!--

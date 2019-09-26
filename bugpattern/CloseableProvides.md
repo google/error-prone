@@ -4,7 +4,6 @@ summary: Providing Closeable resources makes their lifecycle unclear
 layout: bugpattern
 tags: ''
 severity: WARNING
-providesFix: NO_FIX
 ---
 
 <!--

@@ -4,7 +4,6 @@ summary: Calling getAnnotation on an annotation that is not retained at runtime.
 layout: bugpattern
 tags: ''
 severity: ERROR
-providesFix: NO_FIX
 ---
 
 <!--

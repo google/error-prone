@@ -4,7 +4,6 @@ summary: instanceof used in a way that is equivalent to a null check.
 layout: bugpattern
 tags: Simplification
 severity: WARNING
-providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

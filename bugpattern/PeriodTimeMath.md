@@ -4,7 +4,6 @@ summary: When adding or subtracting from a Period, Duration is incompatible.
 layout: bugpattern
 tags: ''
 severity: ERROR
-providesFix: NO_FIX
 ---
 
 <!--

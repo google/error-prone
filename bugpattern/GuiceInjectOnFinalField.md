@@ -4,7 +4,6 @@ summary: Although Guice allows injecting final fields, doing so is disallowed be
 layout: bugpattern
 tags: ''
 severity: ERROR
-providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

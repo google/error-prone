@@ -4,7 +4,6 @@ summary: reachabilityFence should always be called inside a finally block
 layout: bugpattern
 tags: ''
 severity: WARNING
-providesFix: NO_FIX
 ---
 
 <!--

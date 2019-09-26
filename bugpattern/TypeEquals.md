@@ -4,7 +4,6 @@ summary: com.sun.tools.javac.code.Type doesn't override Object.equals and instan
 layout: bugpattern
 tags: ''
 severity: WARNING
-providesFix: NO_FIX
 ---
 
 <!--

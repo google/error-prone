@@ -4,7 +4,6 @@ summary: Instant APIs only work for NANOS, MICROS, MILLIS, SECONDS, MINUTES, HOU
 layout: bugpattern
 tags: ''
 severity: ERROR
-providesFix: NO_FIX
 ---
 
 <!--

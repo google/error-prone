@@ -4,7 +4,6 @@ summary: Joda-Time's ConverterManager makes the semantics of DateTime/Instant/et
 layout: bugpattern
 tags: ''
 severity: WARNING
-providesFix: NO_FIX
 ---
 
 <!--

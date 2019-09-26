@@ -4,7 +4,6 @@ summary: Unit mismatch when decomposing a Duration or Instant to call a <long, T
 layout: bugpattern
 tags: ''
 severity: ERROR
-providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

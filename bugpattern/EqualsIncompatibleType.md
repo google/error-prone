@@ -4,7 +4,6 @@ summary: An equality test between objects with incompatible types always returns
 layout: bugpattern
 tags: ''
 severity: WARNING
-providesFix: NO_FIX
 ---
 
 <!--

@@ -4,7 +4,6 @@ summary: It is confusing to have a field and a parameter under the same scope th
 layout: bugpattern
 tags: ''
 severity: WARNING
-providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

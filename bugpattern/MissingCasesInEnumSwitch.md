@@ -4,7 +4,6 @@ summary: Switches on enum types should either handle all values, or have a defau
 layout: bugpattern
 tags: ''
 severity: WARNING
-providesFix: NO_FIX
 ---
 
 <!--

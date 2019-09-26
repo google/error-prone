@@ -4,7 +4,6 @@ summary: Prefer `asSubclass` instead of casting the result of `newInstance`, to 
 layout: bugpattern
 tags: FragileCode
 severity: WARNING
-providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

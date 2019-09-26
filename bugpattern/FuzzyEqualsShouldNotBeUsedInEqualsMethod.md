@@ -4,7 +4,6 @@ summary: DoubleMath.fuzzyEquals should never be used in an Object.equals() metho
 layout: bugpattern
 tags: ''
 severity: ERROR
-providesFix: NO_FIX
 ---
 
 <!--

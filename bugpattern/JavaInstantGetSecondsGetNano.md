@@ -4,7 +4,6 @@ summary: instant.getNano() only accesses the underlying nanosecond adjustment fr
 layout: bugpattern
 tags: ''
 severity: WARNING
-providesFix: NO_FIX
 ---
 
 <!--

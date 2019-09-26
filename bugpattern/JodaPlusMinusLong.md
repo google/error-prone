@@ -4,7 +4,6 @@ summary: Use of JodaTime's type.plus(long) or type.minus(long) is not allowed (w
 layout: bugpattern
 tags: ''
 severity: WARNING
-providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

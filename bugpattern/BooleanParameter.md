@@ -4,7 +4,6 @@ summary: Use parameter comments to document ambiguous literals
 layout: bugpattern
 tags: ''
 severity: SUGGESTION
-providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

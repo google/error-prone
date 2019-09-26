@@ -4,7 +4,6 @@ summary: Using ::equals or ::isInstance as an incompatible Predicate; the predic
 layout: bugpattern
 tags: ''
 severity: ERROR
-providesFix: NO_FIX
 ---
 
 <!--

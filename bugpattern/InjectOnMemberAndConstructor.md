@@ -4,7 +4,6 @@ summary: Members shouldn't be annotated with @Inject if constructor is already a
 layout: bugpattern
 tags: ''
 severity: ERROR
-providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

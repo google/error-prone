@@ -4,7 +4,6 @@ summary: Path implements Iterable<Path>; prefer Collection<Path> for clarity
 layout: bugpattern
 tags: ''
 severity: ERROR
-providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

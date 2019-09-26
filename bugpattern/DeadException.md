@@ -4,7 +4,6 @@ summary: Exception created but not thrown
 layout: bugpattern
 tags: ''
 severity: ERROR
-providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

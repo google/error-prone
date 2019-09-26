@@ -4,7 +4,6 @@ summary: '@CompileTimeConstant parameters should be final or effectively final'
 layout: bugpattern
 tags: ''
 severity: ERROR
-providesFix: NO_FIX
 ---
 
 <!--

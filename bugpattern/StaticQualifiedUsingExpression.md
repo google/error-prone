@@ -4,7 +4,6 @@ summary: A static variable or method should be qualified with a class name, not 
 layout: bugpattern
 tags: FragileCode
 severity: WARNING
-providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

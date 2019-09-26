@@ -4,7 +4,6 @@ summary: This null check is unnecessary; the expression can never be null
 layout: bugpattern
 tags: ''
 severity: ERROR
-providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

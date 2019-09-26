@@ -4,7 +4,6 @@ summary: Instead of converting enums to string and back, its numeric value shoul
 layout: bugpattern
 tags: ''
 severity: WARNING
-providesFix: NO_FIX
 ---
 
 <!--

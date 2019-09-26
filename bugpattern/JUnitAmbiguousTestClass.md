@@ -4,7 +4,6 @@ summary: Test class inherits from JUnit 3's TestCase but has JUnit 4 @Test annot
 layout: bugpattern
 tags: ''
 severity: WARNING
-providesFix: NO_FIX
 ---
 
 <!--

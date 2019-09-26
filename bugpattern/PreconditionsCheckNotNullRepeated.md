@@ -4,7 +4,6 @@ summary: Including the first argument of checkNotNull in the failure message is 
 layout: bugpattern
 tags: ''
 severity: WARNING
-providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

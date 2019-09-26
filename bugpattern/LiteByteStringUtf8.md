@@ -4,7 +4,6 @@ summary: This pattern will silently corrupt certain byte sequences from the seri
 layout: bugpattern
 tags: ''
 severity: ERROR
-providesFix: NO_FIX
 ---
 
 <!--

@@ -4,7 +4,6 @@ summary: == NaN always returns false; use the isNaN methods instead
 layout: bugpattern
 tags: ''
 severity: ERROR
-providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

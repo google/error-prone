@@ -4,7 +4,6 @@ summary: Please also override int read(byte[], int, int), otherwise multi-byte r
 layout: bugpattern
 tags: Performance
 severity: WARNING
-providesFix: NO_FIX
 ---
 
 <!--

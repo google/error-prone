@@ -4,7 +4,6 @@ summary: Do not extend an @AutoValue class in non-generated code.
 layout: bugpattern
 tags: ''
 severity: WARNING
-providesFix: NO_FIX
 ---
 
 <!--

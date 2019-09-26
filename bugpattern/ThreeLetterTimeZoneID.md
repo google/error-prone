@@ -4,7 +4,6 @@ summary: Three-letter time zone identifiers are deprecated, may be ambiguous, an
 layout: bugpattern
 tags: ''
 severity: WARNING
-providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

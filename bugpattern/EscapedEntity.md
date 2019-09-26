@@ -4,7 +4,6 @@ summary: HTML entities in @code/@literal tags will appear literally in the rende
 layout: bugpattern
 tags: Style
 severity: WARNING
-providesFix: NO_FIX
 ---
 
 <!--

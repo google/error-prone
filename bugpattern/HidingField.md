@@ -4,7 +4,6 @@ summary: Hiding fields of superclasses may cause confusion and errors
 layout: bugpattern
 tags: ''
 severity: WARNING
-providesFix: NO_FIX
 ---
 
 <!--

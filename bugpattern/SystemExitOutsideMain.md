@@ -4,7 +4,6 @@ summary: Code that contains System.exit() is untestable.
 layout: bugpattern
 tags: ''
 severity: WARNING
-providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

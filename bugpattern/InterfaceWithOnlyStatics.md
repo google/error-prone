@@ -4,7 +4,6 @@ summary: This interface only contains static fields and methods; consider making
 layout: bugpattern
 tags: ''
 severity: WARNING
-providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

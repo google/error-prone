@@ -4,7 +4,6 @@ summary: This expression was previously declared as a constant; consider replaci
 layout: bugpattern
 tags: ''
 severity: ERROR
-providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

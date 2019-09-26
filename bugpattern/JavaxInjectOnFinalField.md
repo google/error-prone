@@ -4,7 +4,6 @@ summary: '@javax.inject.Inject cannot be put on a final field.'
 layout: bugpattern
 tags: ''
 severity: ERROR
-providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

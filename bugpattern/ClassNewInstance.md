@@ -4,7 +4,6 @@ summary: Class.newInstance() bypasses exception checking; prefer getDeclaredCons
 layout: bugpattern
 tags: FragileCode
 severity: WARNING
-providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

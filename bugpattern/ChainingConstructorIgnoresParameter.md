@@ -4,7 +4,6 @@ summary: The called constructor accepts a parameter with the same name and type 
 layout: bugpattern
 tags: ''
 severity: ERROR
-providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

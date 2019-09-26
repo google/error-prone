@@ -4,7 +4,6 @@ summary: Inside a Subject, use check(...) instead of assert*() to preserve user-
 layout: bugpattern
 tags: ''
 severity: WARNING
-providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

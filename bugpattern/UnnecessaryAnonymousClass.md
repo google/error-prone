@@ -4,7 +4,6 @@ summary: Implementing a functional interface is unnecessary; prefer to implement
 layout: bugpattern
 tags: ''
 severity: WARNING
-providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

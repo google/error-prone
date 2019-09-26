@@ -5,7 +5,6 @@ summary: 'Implementing #equals by just comparing hashCodes is fragile. Hashes co
 layout: bugpattern
 tags: FragileCode
 severity: WARNING
-providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

@@ -4,7 +4,6 @@ summary: A block tag (@param, @return, @throws, @deprecated) has an empty descri
 layout: bugpattern
 tags: Style
 severity: WARNING
-providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

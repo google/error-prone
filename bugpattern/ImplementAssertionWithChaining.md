@@ -4,7 +4,6 @@ summary: Prefer check(...), which usually generates more readable failure messag
 layout: bugpattern
 tags: ''
 severity: SUGGESTION
-providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

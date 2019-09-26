@@ -4,7 +4,6 @@ summary: Period.get() only works with YEARS, MONTHS, or DAYS.
 layout: bugpattern
 tags: ''
 severity: ERROR
-providesFix: NO_FIX
 ---
 
 <!--

@@ -4,7 +4,6 @@ summary: String.substring(0) returns the original String
 layout: bugpattern
 tags: ''
 severity: ERROR
-providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

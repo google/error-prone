@@ -4,7 +4,6 @@ summary: Thrown exception is a subtype of another
 layout: bugpattern
 tags: ''
 severity: WARNING
-providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

@@ -5,7 +5,6 @@ summary: 'Switch handles all enum values: an explicit default case is unnecessar
 layout: bugpattern
 tags: ''
 severity: WARNING
-providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

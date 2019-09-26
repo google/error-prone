@@ -4,7 +4,6 @@ summary: Period.from(Period) returns itself; from(Duration) throws a runtime exc
 layout: bugpattern
 tags: ''
 severity: ERROR
-providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

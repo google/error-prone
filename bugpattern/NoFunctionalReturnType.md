@@ -4,7 +4,6 @@ summary: Instead of returning a functional type, return the actual type that the
 layout: bugpattern
 tags: ''
 severity: WARNING
-providesFix: NO_FIX
 ---
 
 <!--

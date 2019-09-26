@@ -4,7 +4,6 @@ summary: ThreadLocals should be stored in static fields
 layout: bugpattern
 tags: ''
 severity: WARNING
-providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

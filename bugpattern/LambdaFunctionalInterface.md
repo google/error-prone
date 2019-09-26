@@ -4,7 +4,6 @@ summary: Use Java's utility functional interfaces instead of Function<A, B> for 
 layout: bugpattern
 tags: ''
 severity: SUGGESTION
-providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

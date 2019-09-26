@@ -4,7 +4,6 @@ summary: Type declaration annotated with @Immutable is not immutable
 layout: bugpattern
 tags: ''
 severity: ERROR
-providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

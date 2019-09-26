@@ -4,7 +4,6 @@ summary: TemporalAccessor.get() only works for certain values of ChronoField.
 layout: bugpattern
 tags: ''
 severity: ERROR
-providesFix: NO_FIX
 ---
 
 <!--

@@ -4,7 +4,6 @@ summary: Refactors uses of the JSR 305 @Immutable to Error Prone's annotation
 layout: bugpattern
 tags: ''
 severity: SUGGESTION
-providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

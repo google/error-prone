@@ -4,7 +4,6 @@ summary: Map#ofEntries will throw an IllegalArgumentException if there are any d
 layout: bugpattern
 tags: ''
 severity: ERROR
-providesFix: NO_FIX
 ---
 
 <!--

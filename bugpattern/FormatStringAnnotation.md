@@ -4,7 +4,6 @@ summary: Invalid format string passed to formatting method.
 layout: bugpattern
 tags: ''
 severity: ERROR
-providesFix: NO_FIX
 ---
 
 <!--

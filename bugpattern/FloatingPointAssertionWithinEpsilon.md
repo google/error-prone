@@ -4,7 +4,6 @@ summary: This fuzzy equality check is using a tolerance less than the gap to the
 layout: bugpattern
 tags: Simplification
 severity: WARNING
-providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

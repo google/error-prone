@@ -4,7 +4,6 @@ summary: Non-constant variable missing @Var annotation
 layout: bugpattern
 tags: ''
 severity: WARNING
-providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

@@ -4,7 +4,6 @@ summary: Because of spurious wakeups, Object.wait() and Condition.await() must a
 layout: bugpattern
 tags: FragileCode
 severity: WARNING
-providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

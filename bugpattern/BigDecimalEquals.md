@@ -4,7 +4,6 @@ summary: 'BigDecimal#equals has surprising behavior: it also compares scale.'
 layout: bugpattern
 tags: ''
 severity: WARNING
-providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

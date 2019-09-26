@@ -4,7 +4,6 @@ summary: Fields that can be null should be annotated @Nullable
 layout: bugpattern
 tags: ''
 severity: SUGGESTION
-providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

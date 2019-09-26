@@ -4,7 +4,6 @@ summary: SWIG generated code that can't call a C++ destructor will leak memory
 layout: bugpattern
 tags: ''
 severity: WARNING
-providesFix: NO_FIX
 ---
 
 <!--

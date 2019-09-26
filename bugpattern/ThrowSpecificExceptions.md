@@ -4,7 +4,6 @@ summary: Consider throwing more specific exceptions rather than (e.g.) RuntimeEx
 layout: bugpattern
 tags: ''
 severity: WARNING
-providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

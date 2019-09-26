@@ -4,7 +4,6 @@ summary: Using a collection function with itself as the argument.
 layout: bugpattern
 tags: ''
 severity: ERROR
-providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

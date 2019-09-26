@@ -4,7 +4,6 @@ summary: Use of Joda-Time's DateTime.toDateTime(), Duration.toDuration(), Instan
 layout: bugpattern
 tags: ''
 severity: ERROR
-providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

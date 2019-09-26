@@ -4,7 +4,6 @@ summary: Casting inside an if block should be plausibly consistent with the inst
 layout: bugpattern
 tags: ''
 severity: WARNING
-providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

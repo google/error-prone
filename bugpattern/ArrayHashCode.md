@@ -4,7 +4,6 @@ summary: hashcode method on array does not hash array contents
 layout: bugpattern
 tags: ''
 severity: ERROR
-providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

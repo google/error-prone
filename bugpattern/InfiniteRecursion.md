@@ -4,7 +4,6 @@ summary: This method always recurses, and will cause a StackOverflowError
 layout: bugpattern
 tags: ''
 severity: ERROR
-providesFix: NO_FIX
 ---
 
 <!--

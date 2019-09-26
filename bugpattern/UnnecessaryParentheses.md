@@ -4,7 +4,6 @@ summary: Unnecessary use of grouping parentheses
 layout: bugpattern
 tags: Style
 severity: WARNING
-providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

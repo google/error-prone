@@ -4,7 +4,6 @@ summary: This field can be replaced with a local variable in the methods that us
 layout: bugpattern
 tags: ''
 severity: SUGGESTION
-providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

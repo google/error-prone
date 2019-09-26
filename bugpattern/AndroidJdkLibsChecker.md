@@ -4,7 +4,6 @@ summary: Use of class, field, or method that is not compatible with legacy Andro
 layout: bugpattern
 tags: ''
 severity: ERROR
-providesFix: NO_FIX
 ---
 
 <!--

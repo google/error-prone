@@ -4,7 +4,6 @@ summary: isEqualTo should not be used to test an object for equality with itself
 layout: bugpattern
 tags: ''
 severity: ERROR
-providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

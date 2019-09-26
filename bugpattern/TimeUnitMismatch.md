@@ -4,7 +4,6 @@ summary: An value that appears to be represented in one unit is used where anoth
 layout: bugpattern
 tags: ''
 severity: WARNING
-providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

@@ -4,7 +4,6 @@ summary: Classes that override equals should also override hashCode.
 layout: bugpattern
 tags: FragileCode
 severity: ERROR
-providesFix: NO_FIX
 ---
 
 <!--

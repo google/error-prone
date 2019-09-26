@@ -4,7 +4,6 @@ summary: It is not necessary to wrap a MethodMatcher with methodInvocation().
 layout: bugpattern
 tags: ''
 severity: WARNING
-providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

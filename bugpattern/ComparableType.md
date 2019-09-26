@@ -4,7 +4,6 @@ summary: Implementing 'Comparable<T>' where T is not the same as the implementin
 layout: bugpattern
 tags: ''
 severity: ERROR
-providesFix: NO_FIX
 ---
 
 <!--

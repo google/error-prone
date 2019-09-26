@@ -4,7 +4,6 @@ summary: Classes which are not intended to be instantiated should be made non-in
 layout: bugpattern
 tags: ''
 severity: SUGGESTION
-providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

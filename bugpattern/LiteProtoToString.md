@@ -4,7 +4,6 @@ summary: toString() on lite protos will not generate a useful representation of 
 layout: bugpattern
 tags: ''
 severity: WARNING
-providesFix: NO_FIX
 ---
 
 <!--

@@ -4,7 +4,6 @@ summary: ' Check for non-whitelisted callers to RestrictedApiChecker.'
 layout: bugpattern
 tags: ''
 severity: ERROR
-providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

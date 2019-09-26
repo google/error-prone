@@ -4,7 +4,6 @@ summary: Method reference is ambiguous
 layout: bugpattern
 tags: ''
 severity: WARNING
-providesFix: NO_FIX
 ---
 
 <!--

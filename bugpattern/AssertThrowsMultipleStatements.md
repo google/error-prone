@@ -4,7 +4,6 @@ summary: The lambda passed to assertThrows should contain exactly one statement
 layout: bugpattern
 tags: ''
 severity: WARNING
-providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

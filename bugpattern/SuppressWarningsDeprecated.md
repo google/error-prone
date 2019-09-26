@@ -4,7 +4,6 @@ summary: Suppressing "deprecated" is probably a typo for "deprecation"
 layout: bugpattern
 tags: ''
 severity: ERROR
-providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

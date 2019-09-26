@@ -4,7 +4,6 @@ summary: Using compareAndSet with boxed primitives is dangerous, as reference ra
 layout: bugpattern
 tags: ''
 severity: WARNING
-providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

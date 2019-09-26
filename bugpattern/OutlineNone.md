@@ -4,7 +4,6 @@ summary: Setting CSS outline style to none or 0 (while not otherwise providing v
 layout: bugpattern
 tags: ''
 severity: WARNING
-providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

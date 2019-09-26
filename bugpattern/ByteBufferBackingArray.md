@@ -4,7 +4,6 @@ summary: ByteBuffer.array() shouldn't be called unless ByteBuffer.arrayOffset() 
 layout: bugpattern
 tags: ''
 severity: WARNING
-providesFix: NO_FIX
 ---
 
 <!--

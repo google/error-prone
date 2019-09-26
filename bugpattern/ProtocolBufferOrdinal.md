@@ -4,7 +4,6 @@ summary: To get the tag number of a protocol buffer enum, use getNumber() instea
 layout: bugpattern
 tags: ''
 severity: ERROR
-providesFix: NO_FIX
 ---
 
 <!--

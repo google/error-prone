@@ -4,7 +4,6 @@ summary: Type parameter declaration overrides another type parameter already dec
 layout: bugpattern
 tags: Style
 severity: WARNING
-providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

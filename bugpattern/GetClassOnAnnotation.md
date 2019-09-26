@@ -4,7 +4,6 @@ summary: Calling getClass() on an annotation may return a proxy class
 layout: bugpattern
 tags: ''
 severity: ERROR
-providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

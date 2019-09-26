@@ -5,7 +5,6 @@ summary: 'Subclasses of Fragment must be instantiable via Class#newInstance(): t
 layout: bugpattern
 tags: LikelyError
 severity: WARNING
-providesFix: NO_FIX
 ---
 
 <!--

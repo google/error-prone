@@ -4,7 +4,6 @@ summary: This method returns both mutable and immutable collections or maps from
 layout: bugpattern
 tags: ''
 severity: WARNING
-providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

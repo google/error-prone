@@ -4,7 +4,6 @@ summary: The default case of a switch should appear at the end of the last state
 layout: bugpattern
 tags: ''
 severity: SUGGESTION
-providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

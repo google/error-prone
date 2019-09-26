@@ -4,7 +4,6 @@ summary: Mockito cannot mock final classes
 layout: bugpattern
 tags: ''
 severity: WARNING
-providesFix: NO_FIX
 ---
 
 <!--

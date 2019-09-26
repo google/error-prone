@@ -4,7 +4,6 @@ summary: Modifying a collection while iterating over it in a loop may cause a Co
 layout: bugpattern
 tags: ''
 severity: WARNING
-providesFix: NO_FIX
 ---
 
 <!--

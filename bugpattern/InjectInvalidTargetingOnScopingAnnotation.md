@@ -4,7 +4,6 @@ summary: A scoping annotation's Target should include TYPE and METHOD.
 layout: bugpattern
 tags: ''
 severity: ERROR
-providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

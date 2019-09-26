@@ -4,7 +4,6 @@ summary: valueOf or autoboxing provides better time and space performance
 layout: bugpattern
 tags: Performance
 severity: WARNING
-providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

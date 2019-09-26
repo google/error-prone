@@ -4,7 +4,6 @@ summary: == must be used in equals method to check equality to itself or an infi
 layout: bugpattern
 tags: ''
 severity: ERROR
-providesFix: NO_FIX
 ---
 
 <!--

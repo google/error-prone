@@ -4,7 +4,6 @@ summary: Use of new Duration(long) is not allowed. Please use Duration.millis(lo
 layout: bugpattern
 tags: ''
 severity: WARNING
-providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

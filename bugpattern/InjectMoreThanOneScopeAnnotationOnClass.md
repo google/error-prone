@@ -4,7 +4,6 @@ summary: A class can be annotated with at most one scope annotation.
 layout: bugpattern
 tags: ''
 severity: ERROR
-providesFix: NO_FIX
 ---
 
 <!--

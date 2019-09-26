@@ -4,7 +4,6 @@ summary: Logging or rethrowing exceptions should usually be preferred to catchin
 layout: bugpattern
 tags: ''
 severity: WARNING
-providesFix: NO_FIX
 ---
 
 <!--

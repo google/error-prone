@@ -4,7 +4,6 @@ summary: Relying on the thread scheduler is discouraged; see Effective Java 3rd 
 layout: bugpattern
 tags: ''
 severity: WARNING
-providesFix: NO_FIX
 ---
 
 <!--

@@ -4,7 +4,6 @@ summary: A field on a protocol buffer was set twice in the same chained expressi
 layout: bugpattern
 tags: FragileCode
 severity: WARNING
-providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

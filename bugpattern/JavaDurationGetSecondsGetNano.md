@@ -4,7 +4,6 @@ summary: duration.getNano() only accesses the underlying nanosecond adjustment f
 layout: bugpattern
 tags: ''
 severity: WARNING
-providesFix: NO_FIX
 ---
 
 <!--

@@ -4,7 +4,6 @@ summary: Prefer assertThrows to try/fail
 layout: bugpattern
 tags: Refactoring
 severity: SUGGESTION
-providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

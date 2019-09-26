@@ -4,7 +4,6 @@ summary: AndroidInjection.inject() should always be invoked before calling super
 layout: bugpattern
 tags: ''
 severity: ERROR
-providesFix: NO_FIX
 ---
 
 <!--

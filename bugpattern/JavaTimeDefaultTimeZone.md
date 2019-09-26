@@ -4,7 +4,6 @@ summary: java.time APIs that silently use the default system time-zone are not a
 layout: bugpattern
 tags: ''
 severity: WARNING
-providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

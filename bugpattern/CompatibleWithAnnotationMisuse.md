@@ -4,7 +4,6 @@ summary: '@CompatibleWith''s value is not a type argument.'
 layout: bugpattern
 tags: ''
 severity: ERROR
-providesFix: NO_FIX
 ---
 
 <!--

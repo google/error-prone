@@ -4,7 +4,6 @@ summary: contains() is a legacy method that is equivalent to containsValue()
 layout: bugpattern
 tags: ''
 severity: ERROR
-providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

@@ -4,7 +4,6 @@ summary: One should not call optional.get() inside an if statement that checks !
 layout: bugpattern
 tags: ''
 severity: WARNING
-providesFix: NO_FIX
 ---
 
 <!--

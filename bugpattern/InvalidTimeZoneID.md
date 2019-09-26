@@ -4,7 +4,6 @@ summary: Invalid time zone identifier. TimeZone.getTimeZone(String) will silentl
 layout: bugpattern
 tags: ''
 severity: ERROR
-providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

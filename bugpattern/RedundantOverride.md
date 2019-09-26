@@ -4,7 +4,6 @@ summary: This overriding method is redundant, and can be removed.
 layout: bugpattern
 tags: ''
 severity: WARNING
-providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

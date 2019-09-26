@@ -4,7 +4,6 @@ summary: Unnecessary call to NullPointerTester#setDefault
 layout: bugpattern
 tags: ''
 severity: SUGGESTION
-providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

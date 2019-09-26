@@ -4,7 +4,6 @@ summary: This class has more than one @Inject-annotated constructor. Please remo
 layout: bugpattern
 tags: ''
 severity: ERROR
-providesFix: NO_FIX
 ---
 
 <!--

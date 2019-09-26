@@ -4,7 +4,6 @@ summary: Scoping and qualifier annotations must have runtime retention.
 layout: bugpattern
 tags: ''
 severity: ERROR
-providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

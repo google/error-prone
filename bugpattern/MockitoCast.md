@@ -4,7 +4,6 @@ summary: A bug in Mockito will cause this test to fail at runtime with a ClassCa
 layout: bugpattern
 tags: ''
 severity: ERROR
-providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

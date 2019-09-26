@@ -4,7 +4,6 @@ summary: 'This type is not guaranteed to implement a useful #equals method.'
 layout: bugpattern
 tags: ''
 severity: WARNING
-providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

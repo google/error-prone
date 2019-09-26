@@ -4,7 +4,6 @@ summary: This annotation has incompatible modifiers as specified by its @Incompa
 layout: bugpattern
 tags: LikelyError
 severity: ERROR
-providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

@@ -4,7 +4,6 @@ summary: Javadoc is interpreted as HTML, so HTML entities such as &, <, > must b
 layout: bugpattern
 tags: Style
 severity: WARNING
-providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

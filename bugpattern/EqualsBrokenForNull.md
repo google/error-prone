@@ -4,7 +4,6 @@ summary: equals() implementation may throw NullPointerException when given null
 layout: bugpattern
 tags: ''
 severity: WARNING
-providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

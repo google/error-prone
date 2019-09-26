@@ -4,7 +4,6 @@ summary: Variable assigned to itself
 layout: bugpattern
 tags: ''
 severity: ERROR
-providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

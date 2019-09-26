@@ -4,7 +4,6 @@ summary: Type parameter declaration shadows another named type
 layout: bugpattern
 tags: Style
 severity: WARNING
-providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

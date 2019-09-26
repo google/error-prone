@@ -4,7 +4,6 @@ summary: Prefer collection factory methods or builders to the double-brace initi
 layout: bugpattern
 tags: ''
 severity: WARNING
-providesFix: NO_FIX
 ---
 
 <!--

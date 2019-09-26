@@ -4,7 +4,6 @@ summary: equals method doesn't override Object.equals
 layout: bugpattern
 tags: FragileCode
 severity: WARNING
-providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

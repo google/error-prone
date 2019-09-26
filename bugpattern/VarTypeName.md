@@ -4,7 +4,6 @@ summary: '`var` should not be used as a type name.'
 layout: bugpattern
 tags: ''
 severity: ERROR
-providesFix: NO_FIX
 ---
 
 <!--

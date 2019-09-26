@@ -4,7 +4,6 @@ summary: Throwing 'null' always results in a NullPointerException being thrown.
 layout: bugpattern
 tags: ''
 severity: ERROR
-providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

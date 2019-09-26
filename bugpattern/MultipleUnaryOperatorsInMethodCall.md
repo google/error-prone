@@ -4,7 +4,6 @@ summary: Avoid having multiple unary operators acting on the same variable in a 
 layout: bugpattern
 tags: ''
 severity: SUGGESTION
-providesFix: NO_FIX
 ---
 
 <!--

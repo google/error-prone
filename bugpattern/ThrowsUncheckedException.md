@@ -4,7 +4,6 @@ summary: Unchecked exceptions do not need to be declared in the method signature
 layout: bugpattern
 tags: ''
 severity: SUGGESTION
-providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

@@ -4,7 +4,6 @@ summary: The documented method doesn't actually throw this checked exception.
 layout: bugpattern
 tags: Style
 severity: WARNING
-providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

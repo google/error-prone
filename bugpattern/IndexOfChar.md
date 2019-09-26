@@ -4,7 +4,6 @@ summary: The first argument to indexOf is a Unicode code point, and the second i
 layout: bugpattern
 tags: ''
 severity: ERROR
-providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

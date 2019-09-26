@@ -4,7 +4,6 @@ summary: Mapping to another Optional will yield a nested Optional. Did you mean 
 layout: bugpattern
 tags: ''
 severity: WARNING
-providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

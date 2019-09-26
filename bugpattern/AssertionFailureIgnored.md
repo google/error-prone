@@ -4,7 +4,6 @@ summary: This assertion throws an AssertionError if it fails, which will be caug
 layout: bugpattern
 tags: LikelyError
 severity: WARNING
-providesFix: NO_FIX
 ---
 
 <!--

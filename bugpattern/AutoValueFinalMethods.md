@@ -4,7 +4,6 @@ summary: Make toString(), hashCode() and equals() final in AutoValue classes, so
 layout: bugpattern
 tags: ''
 severity: WARNING
-providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

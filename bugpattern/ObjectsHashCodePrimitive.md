@@ -4,7 +4,6 @@ summary: Objects.hashCode(Object o) should not be passed a primitive value
 layout: bugpattern
 tags: ''
 severity: WARNING
-providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

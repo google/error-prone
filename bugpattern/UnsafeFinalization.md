@@ -4,7 +4,6 @@ summary: Finalizer may run before native code finishes execution
 layout: bugpattern
 tags: ''
 severity: WARNING
-providesFix: NO_FIX
 ---
 
 <!--

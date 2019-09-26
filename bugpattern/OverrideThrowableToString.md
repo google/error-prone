@@ -4,7 +4,6 @@ summary: To return a custom message with a Throwable class, one should override 
 layout: bugpattern
 tags: ''
 severity: WARNING
-providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

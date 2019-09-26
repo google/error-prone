@@ -4,7 +4,6 @@ summary: Item documented with a @deprecated javadoc note is not annotated with @
 layout: bugpattern
 tags: ''
 severity: ERROR
-providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

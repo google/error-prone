@@ -4,7 +4,6 @@ summary: A conditional expression with numeric operands of differing types will 
 layout: bugpattern
 tags: ''
 severity: ERROR
-providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

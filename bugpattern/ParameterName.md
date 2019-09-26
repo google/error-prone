@@ -4,7 +4,6 @@ summary: Detects `/* name= */`-style comments on actual parameters where the nam
 layout: bugpattern
 tags: ''
 severity: WARNING
-providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

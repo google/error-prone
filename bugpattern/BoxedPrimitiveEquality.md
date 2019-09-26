@@ -4,7 +4,6 @@ summary: Comparison using reference equality instead of value equality. Referenc
 layout: bugpattern
 tags: ''
 severity: WARNING
-providesFix: NO_FIX
 ---
 
 <!--

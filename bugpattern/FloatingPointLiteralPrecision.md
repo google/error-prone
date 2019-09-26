@@ -4,7 +4,6 @@ summary: Floating point literal loses precision
 layout: bugpattern
 tags: Style
 severity: WARNING
-providesFix: REQUIRES_HUMAN_ATTENTION
 ---
 
 <!--

@@ -4,7 +4,6 @@ summary: Comparing different pairs of fields/getters in an equals implementation
 layout: bugpattern
 tags: ''
 severity: ERROR
-providesFix: NO_FIX
 ---
 
 <!--

@@ -4,7 +4,6 @@ summary: variableName and type with the same name would refer to the static fiel
 layout: bugpattern
 tags: ''
 severity: WARNING
-providesFix: NO_FIX
 ---
 
 <!--
