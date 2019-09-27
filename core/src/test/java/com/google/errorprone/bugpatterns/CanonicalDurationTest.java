@@ -176,4 +176,37 @@ public class CanonicalDurationTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void consistentWithinExpression() {
+    BugCheckerRefactoringTestHelper.newInstance(new CanonicalDuration(), getClass())
+        .addInputLines(
+            "A.java",
+            "package a;",
+            "import static java.time.Duration.ofSeconds;",
+            "import static java.util.Arrays.asList;",
+            "import java.time.Duration;",
+            "import java.util.List;",
+            "public class A {",
+            "  // The 120 is left alone here because 121 can't be converted too.",
+            "  static final List<Duration> negative = asList(ofSeconds(120), ofSeconds(121));",
+            "",
+            "  static final List<Duration> positive = asList(ofSeconds(120), ofSeconds(180));",
+            "}")
+        .addOutputLines(
+            "A.java",
+            "package a;",
+            "import static java.time.Duration.ofMinutes;",
+            "import static java.time.Duration.ofSeconds;",
+            "import static java.util.Arrays.asList;",
+            "import java.time.Duration;",
+            "import java.util.List;",
+            "public class A {",
+            "  // The 120 is left alone here because 121 can't be converted too.",
+            "  static final List<Duration> negative = asList(ofSeconds(120), ofSeconds(121));",
+            "",
+            "  static final List<Duration> positive = asList(ofMinutes(2), ofMinutes(3));",
+            "}")
+        .doTest();
+  }
 }
