@@ -35,7 +35,9 @@ import com.sun.tools.javac.tree.JCTree;
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
     name = "UnnecessaryParentheses",
-    summary = "Unnecessary use of grouping parentheses",
+    summary =
+        "These grouping parentheses are unnecessary; it is unlikely the code will"
+            + " be misinterpreted without them",
     severity = WARNING,
     providesFix = REQUIRES_HUMAN_ATTENTION,
     tags = STYLE)
