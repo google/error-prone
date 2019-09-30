@@ -13,7 +13,7 @@ To make changes, edit the @BugPattern annotation or the explanation in docs/bugp
 
 ## The problem
 The [Google Java Style Guide §4.8.4.3][style] requires each switch statement to
-includes a `default` statement group, even if it contains no code.
+include a `default` statement group, even if it contains no code.
 
 NOTE: A switch statement for an `enum` type may omit the `default` statement
 group, if it includes explicit cases covering all possible values of that type.
