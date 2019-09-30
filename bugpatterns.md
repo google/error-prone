@@ -872,7 +872,7 @@ __[UnnecessaryMethodInvocationMatcher](bugpattern/UnnecessaryMethodInvocationMat
 It is not necessary to wrap a MethodMatcher with methodInvocation().
 
 __[UnnecessaryParentheses](bugpattern/UnnecessaryParentheses)__<br>
-Unnecessary use of grouping parentheses
+These grouping parentheses are unnecessary; it is unlikely the code will be misinterpreted without them
 
 __[UnsafeFinalization](bugpattern/UnsafeFinalization)__<br>
 Finalizer may run before native code finishes execution

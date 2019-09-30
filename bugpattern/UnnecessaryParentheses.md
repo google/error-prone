@@ -1,6 +1,6 @@
 ---
 title: UnnecessaryParentheses
-summary: Unnecessary use of grouping parentheses
+summary: These grouping parentheses are unnecessary; it is unlikely the code will be misinterpreted without them
 layout: bugpattern
 tags: Style
 severity: WARNING
