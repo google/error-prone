@@ -44,6 +44,7 @@ import javax.lang.model.element.Modifier;
  */
 @BugPattern(
     name = "AutoValueImmutableFields",
+    altNames = "mutable",
     summary = "AutoValue recommends using immutable collections",
     severity = WARNING,
     providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION,
