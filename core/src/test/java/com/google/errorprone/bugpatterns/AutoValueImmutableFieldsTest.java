@@ -254,6 +254,21 @@ public class AutoValueImmutableFieldsTest {
   }
 
   @Test
+  public void suppressionWithMutable() {
+    compilationHelper
+        .addSourceLines(
+            "in/Test.java",
+            "import com.google.auto.value.AutoValue;",
+            "import java.util.Collection;",
+            "@AutoValue",
+            "abstract class Test {",
+            "  @SuppressWarnings(\"mutable\")",
+            "  public abstract Collection<String> countries();",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void matchesNonPublic() {
     compilationHelper
         .addSourceLines(
