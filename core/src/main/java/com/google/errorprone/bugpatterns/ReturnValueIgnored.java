@@ -91,7 +91,7 @@ public class ReturnValueIgnored extends AbstractReturnValueIgnored {
           staticMethod().onClass("java.time.ZoneId").named("ofOffset"),
           instanceMethod()
               .onExactClass("java.time.format.DateTimeFormatterBuilder")
-              .withNameMatching(Pattern.compile("^append.*")),
+              .withNameMatching(Pattern.compile("^(append|parse|pad|optional).*")),
           instanceMethod()
               .onExactClass("java.time.temporal.ChronoField")
               .named("checkValidIntValue"),
