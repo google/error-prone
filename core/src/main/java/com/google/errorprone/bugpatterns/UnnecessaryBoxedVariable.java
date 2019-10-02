@@ -119,18 +119,25 @@ public class UnnecessaryBoxedVariable extends BugChecker implements VariableTree
     SuggestedFix.Builder fixBuilder = SuggestedFix.builder();
     fixBuilder.replace(tree.getType(), unboxed.get().tsym.getSimpleName().toString());
 
+    fixMethodInvocations(scanner.fixableSimpleMethodInvocations, fixBuilder, state);
+    fixCastingInvocations(
+        scanner.fixableCastMethodInvocations, enclosingMethod.get(), fixBuilder, state);
+
     // Remove @Nullable annotation, if present.
     AnnotationTree nullableAnnotation =
         ASTHelpers.getAnnotationWithSimpleName(tree.getModifiers().getAnnotations(), "Nullable");
     if (nullableAnnotation != null) {
       fixBuilder.replace(nullableAnnotation, "");
+      return buildDescription(tree)
+          .setMessage(
+              "This @Nullable is always unboxed when used, which will result in a NPE if it is"
+                  + " actually null. Use a primitive if this variable should never be null, or"
+                  + " else fix the code to avoid unboxing it.")
+          .addFix(fixBuilder.build())
+          .build();
+    } else {
+      return describeMatch(tree, fixBuilder.build());
     }
-
-    fixMethodInvocations(scanner.fixableSimpleMethodInvocations, fixBuilder, state);
-    fixCastingInvocations(
-        scanner.fixableCastMethodInvocations, enclosingMethod.get(), fixBuilder, state);
-
-    return describeMatch(tree, fixBuilder.build());
   }
 
   private static Optional<Type> unboxed(Tree tree, VisitorState state) {
