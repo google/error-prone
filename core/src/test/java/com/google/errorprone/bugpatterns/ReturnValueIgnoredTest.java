@@ -146,6 +146,26 @@ public class ReturnValueIgnoredTest {
   }
 
   @Test
+  public void issue1363_dateTimeFormatterBuilder() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.time.format.DateTimeFormatterBuilder;",
+            "class Test {",
+            "  void f() {",
+            "    DateTimeFormatterBuilder formatter = new DateTimeFormatterBuilder();",
+            "    formatter.appendZoneId();",
+            "    formatter.optionalEnd();",
+            "    formatter.padNext(5);",
+            "    formatter.parseCaseSensitive();",
+            "    // BUG: Diagnostic contains: ReturnValueIgnored",
+            "    formatter.toFormatter();",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void issue876() {
     compilationHelper
         .addSourceLines(
