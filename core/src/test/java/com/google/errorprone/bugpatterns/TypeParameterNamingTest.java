@@ -24,9 +24,9 @@ import static com.google.errorprone.bugpatterns.TypeParameterNaming.TypeParamete
 import com.google.common.truth.Subject;
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.BugCheckerRefactoringTestHelper.FixChoosers;
+import com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode;
 import com.google.errorprone.CompilationTestHelper;
 import com.google.errorprone.bugpatterns.TypeParameterNaming.TypeParameterNamingClassification;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -35,15 +35,10 @@ import org.junit.runners.JUnit4;
 @RunWith(JUnit4.class)
 public class TypeParameterNamingTest {
 
-  private CompilationTestHelper compilationHelper;
-  private BugCheckerRefactoringTestHelper refactoring;
-
-  @Before
-  public void setUp() {
-    compilationHelper = CompilationTestHelper.newInstance(TypeParameterNaming.class, getClass());
-    refactoring =
-        BugCheckerRefactoringTestHelper.newInstance(new TypeParameterNaming(), getClass());
-  }
+  private final CompilationTestHelper compilationHelper =
+      CompilationTestHelper.newInstance(TypeParameterNaming.class, getClass());
+  private final BugCheckerRefactoringTestHelper refactoring =
+      BugCheckerRefactoringTestHelper.newInstance(new TypeParameterNaming(), getClass());
 
   @Test
   public void positiveCases() {
@@ -63,6 +58,7 @@ public class TypeParameterNamingTest {
     refactoring
         .addInputLines(
             "in/Test.java",
+            "/** @param <BadName> bad name */",
             "class Test<BadName> {",
             "  public <T, Foo> void method(Foo f) {",
             "    BadName bad = null;",
@@ -71,6 +67,7 @@ public class TypeParameterNamingTest {
             "}")
         .addOutputLines(
             "out/Test.java",
+            "/** @param <BadNameT> bad name */",
             "class Test<BadNameT> {",
             "  public <T, FooT> void method(FooT f) {",
             "    BadNameT bad = null;",
@@ -78,7 +75,7 @@ public class TypeParameterNamingTest {
             "  }",
             "}")
         .setFixChooser(FixChoosers.FIRST)
-        .doTest();
+        .doTest(TestMode.TEXT_MATCH);
   }
 
   @Test
@@ -87,6 +84,7 @@ public class TypeParameterNamingTest {
         .addInputLines(
             "in/Test.java",
             "class Test<BadName> {",
+            "  /** @param <Foo> foo */",
             "  public <T, Foo> void method(Foo f) {",
             "    BadName bad = null;",
             "    Foo d = f;",
@@ -95,13 +93,14 @@ public class TypeParameterNamingTest {
         .addOutputLines(
             "out/Test.java",
             "class Test<B> {",
+            "  /** @param <F> foo */",
             "  public <T, F> void method(F f) {",
             "    B bad = null;",
             "    F d = f;",
             "  }",
             "}")
         .setFixChooser(FixChoosers.SECOND)
-        .doTest();
+        .doTest(TestMode.TEXT_MATCH);
   }
 
   @Test
