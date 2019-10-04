@@ -33,8 +33,11 @@ import com.google.errorprone.bugpatterns.BugChecker.TypeParameterTreeMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.names.NamingConventions;
 import com.google.errorprone.util.ASTHelpers;
+import com.sun.source.tree.ClassTree;
+import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.TypeParameterTree;
+import com.sun.source.util.TreePath;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.TypeVariableSymbol;
 import java.util.ArrayList;
@@ -137,13 +140,15 @@ public class TypeParameterNaming extends BugChecker implements TypeParameterTree
     Description.Builder descriptionBuilder =
         buildDescription(tree).setMessage(errorMessage(tree.getName(), classification));
 
+    TreePath enclosingPath = enclosingMethodOrClass(state.getPath());
+
     if (classification != TypeParameterNamingClassification.NON_CLASS_NAME_WITH_T_SUFFIX) {
       descriptionBuilder.addFix(
           TypeParameterShadowing.renameTypeVariable(
               tree,
               state.getPath().getParentPath().getLeaf(),
               suggestedNameFollowedWithT(tree.getName().toString()),
-              state));
+              state.withPath(enclosingPath)));
     }
 
     return descriptionBuilder
@@ -152,8 +157,17 @@ public class TypeParameterNaming extends BugChecker implements TypeParameterTree
                 tree,
                 state.getPath().getParentPath().getLeaf(),
                 suggestedSingleLetter(tree.getName().toString(), tree),
-                state))
+                state.withPath(enclosingPath)))
         .build();
+  }
+
+  private static TreePath enclosingMethodOrClass(TreePath path) {
+    for (TreePath parent = path; parent != null; parent = parent.getParentPath()) {
+      if (parent.getLeaf() instanceof MethodTree || parent.getLeaf() instanceof ClassTree) {
+        return parent;
+      }
+    }
+    return path;
   }
 
   private static String errorMessage(Name name, TypeParameterNamingClassification classification) {
