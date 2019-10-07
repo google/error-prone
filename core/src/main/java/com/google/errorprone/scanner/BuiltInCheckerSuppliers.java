@@ -406,6 +406,7 @@ import com.google.errorprone.bugpatterns.time.JavaDurationGetSecondsGetNano;
 import com.google.errorprone.bugpatterns.time.JavaDurationWithNanos;
 import com.google.errorprone.bugpatterns.time.JavaDurationWithSeconds;
 import com.google.errorprone.bugpatterns.time.JavaInstantGetSecondsGetNano;
+import com.google.errorprone.bugpatterns.time.JavaPeriodGetDays;
 import com.google.errorprone.bugpatterns.time.JavaTimeDefaultTimeZone;
 import com.google.errorprone.bugpatterns.time.JodaDurationConstructor;
 import com.google.errorprone.bugpatterns.time.JodaDurationWithMillis;
@@ -675,6 +676,7 @@ public class BuiltInCheckerSuppliers {
           JavaInstantGetSecondsGetNano.class,
           JavaTimeDefaultTimeZone.class,
           JavaLangClash.class,
+          JavaPeriodGetDays.class,
           JdkObsolete.class,
           JodaDurationConstructor.class,
           JodaDurationWithMillis.class,
