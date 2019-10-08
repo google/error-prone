@@ -17,6 +17,7 @@
 package com.google.errorprone;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
+import static javax.tools.StandardLocation.SOURCE_PATH;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Optional;
@@ -87,6 +88,34 @@ public class ErrorProneInMemoryFileManager extends JavacFileManager {
       throw new UncheckedIOException(e);
     }
     return Iterables.getOnlyElement(getJavaFileObjects(path));
+  }
+
+  @Override
+  public boolean hasLocation(Location location) {
+    /*
+     * Short-circuit the check that module-info.java is found under the sourcepath.
+     *
+     * Here's why this short-circuits it:
+     * http://hg.openjdk.java.net/jdk/jdk11/file/1ddf9a99e4ad/src/jdk.compiler/share/classes/com/sun/tools/javac/comp/Modules.java#l523
+     *
+     * Here's why we want to do so:
+     *
+     * To determine whether a module-info.java is found under the sourcepath, javac looks for the
+     * sourcepath Path objects on the default filesystem (i.e., using Paths.get(...)):
+     * http://hg.openjdk.java.net/jdk/jdk11/file/1ddf9a99e4ad/src/jdk.compiler/share/classes/com/sun/tools/javac/file/JavacFileManager.java#l112
+     *
+     * With some reflection on javac internals, we can override it to use our fileSystem.get(...).
+     * However, there's still a problem, as javac converts the Path objects to File objects to do
+     * its work:
+     * http://hg.openjdk.java.net/jdk/jdk11/file/1ddf9a99e4ad/src/jdk.compiler/share/classes/com/sun/tools/javac/file/JavacFileManager.java#l940
+     *
+     * This doesn't work for custom file systems like jimfs. So javac will never find anything under
+     * our sourcepath (unless we start writing files to disk, which we could, like in our
+     * integration tests).
+     *
+     * Thus, we short-circuit the check entirely.
+     */
+    return location != SOURCE_PATH && super.hasLocation(location);
   }
 
   // TODO(cushon): the testdata/ fallback is a hack, fix affected tests and remove it
