@@ -16,9 +16,12 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static java.util.Arrays.asList;
+
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode;
 import com.google.errorprone.CompilationTestHelper;
+import com.google.errorprone.util.RuntimeVersion;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -117,5 +120,20 @@ public class UnusedNestedClassTest {
             "class A {",
             "}")
         .doTest(TestMode.TEXT_MATCH);
+  }
+
+  @Test
+  public void moduleInfo() {
+    if (!RuntimeVersion.isAtLeast9()) {
+      return;
+    }
+    compilationHelper
+        .setArgs(asList("-source", "9", "-target", "9"))
+        .addSourceLines(
+            "module-info.java", //
+            "module foo {",
+            "  requires java.base;",
+            "}")
+        .doTest();
   }
 }

@@ -957,7 +957,8 @@ public class ASTHelpers {
 
   /** Return the enclosing {@code ClassSymbol} of the given symbol, or {@code null}. */
   public static ClassSymbol enclosingClass(Symbol sym) {
-    return sym.owner.enclClass();
+    // sym.owner is null in the case of module symbols.
+    return sym.owner == null ? null : sym.owner.enclClass();
   }
 
   /** Return the enclosing {@code PackageSymbol} of the given symbol, or {@code null}. */
