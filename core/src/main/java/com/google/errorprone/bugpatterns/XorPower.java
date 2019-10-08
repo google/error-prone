@@ -20,6 +20,7 @@ import static com.google.errorprone.BugPattern.ProvidesFix.REQUIRES_HUMAN_ATTENT
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 
+import com.google.common.base.Strings;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.BinaryTreeMatcher;
@@ -28,7 +29,6 @@ import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.BinaryTree;
 import com.sun.source.tree.Tree;
-import java.util.Objects;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
@@ -43,8 +43,15 @@ public class XorPower extends BugChecker implements BinaryTreeMatcher {
       return NO_MATCH;
     }
     Integer lhs = ASTHelpers.constValue(tree.getLeftOperand(), Integer.class);
-    if (!Objects.equals(lhs, 2)) {
+    if (lhs == null) {
       return NO_MATCH;
+    }
+    switch (lhs.intValue()) {
+      case 2:
+      case 10:
+        break;
+      default:
+        return NO_MATCH;
     }
     Integer rhs = ASTHelpers.constValue(tree.getRightOperand(), Integer.class);
     if (rhs == null) {
@@ -61,8 +68,19 @@ public class XorPower extends BugChecker implements BinaryTreeMatcher {
                     "The ^ operator is binary XOR, not a power operator, so '%s' will always"
                         + " evaluate to %d.",
                     state.getSourceForNode(tree), lhs ^ rhs));
-    if (rhs <= 31) {
-      description.addFix(SuggestedFix.replace(tree, String.format("1 << %d", rhs)));
+    switch (lhs.intValue()) {
+      case 2:
+        if (rhs <= 31) {
+          description.addFix(SuggestedFix.replace(tree, String.format("1 << %d", rhs)));
+        }
+        break;
+      case 10:
+        if (rhs <= 9) {
+          description.addFix(SuggestedFix.replace(tree, "1" + Strings.repeat("0", rhs)));
+        }
+        break;
+      default:
+        throw new AssertionError(lhs);
     }
     return description.build();
   }
