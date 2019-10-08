@@ -631,6 +631,9 @@ instant.getNano() only accesses the underlying nanosecond adjustment from the wh
 __[JavaLangClash](bugpattern/JavaLangClash)__<br>
 Never reuse class names from java.lang
 
+__[JavaPeriodGetDays](bugpattern/JavaPeriodGetDays)__<br>
+period.getDays() only accesses the &quot;days&quot; portion of the Period, and doesn&#39;t represent the total span of time of the period. Consider using org.threeten.extra.Days to extract the difference between two civil dates if you want the whole time.
+
 __[JavaTimeDefaultTimeZone](bugpattern/JavaTimeDefaultTimeZone)__<br>
 java.time APIs that silently use the default system time-zone are not allowed.
 
