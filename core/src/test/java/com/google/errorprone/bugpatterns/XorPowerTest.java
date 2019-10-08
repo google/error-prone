@@ -34,6 +34,7 @@ public class XorPowerTest {
             "  static final int X = 2 ^ 16;",
             "  static final int Y = 2 ^ 32;",
             "  static final int Z = 2 ^ 31;",
+            "  static final int P = 10 ^ 6;",
             "}")
         .addOutputLines(
             "Test.java",
@@ -41,6 +42,7 @@ public class XorPowerTest {
             "  static final int X = 1 << 16;",
             "  static final int Y = 2 ^ 32;",
             "  static final int Z = 1 << 31;",
+            "  static final int P = 1000000;",
             "}")
         .doTest();
   }
