@@ -12,7 +12,7 @@ To make changes, edit the @BugPattern annotation or the explanation in docs/bugp
 -->
 
 ## The problem
-Arguments to a fluent [Truth](go/truth) assertion appear to be reversed based on
+Arguments to a fluent [Truth][truth] assertion appear to be reversed based on
 the argument names.
 
 ```java
@@ -36,7 +36,9 @@ follow the opposite order to JUnit assertions. Compare:
   assertEquals(expected, actual);
 ```
 
-See https://google.github.io/truth/faq#order for more details.
+See https://truth.dev/faq#order for more details.
+
+[truth]: https://truth.dev
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("TruthAssertExpected")` to the enclosing element.

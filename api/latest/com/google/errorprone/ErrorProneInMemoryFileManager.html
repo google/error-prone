@@ -18,7 +18,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10};
+var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -255,13 +255,17 @@ extends com.sun.tools.javac.file.JavacFileManager</pre>
 <div class="block">Creates a <a href="https://docs.oracle.com/javase/8/docs/api/javax/tools/JavaFileObject.html?is-external=true" title="class or interface in javax.tools"><code>JavaFileObject</code></a> with the given name and content.</div>
 </td>
 </tr>
+<tr id="i6" class="altColor">
+<td class="colFirst"><code>boolean</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../com/google/errorprone/ErrorProneInMemoryFileManager.html#hasLocation-javax.tools.JavaFileManager.Location-">hasLocation</a></span>(<a href="https://docs.oracle.com/javase/8/docs/api/javax/tools/JavaFileManager.Location.html?is-external=true" title="class or interface in javax.tools">JavaFileManager.Location</a>&nbsp;location)</code>&nbsp;</td>
+</tr>
 </table>
 <ul class="blockList">
 <li class="blockList"><a name="methods.inherited.from.class.com.sun.tools.javac.file.JavacFileManager">
 <!--   -->
 </a>
 <h3>Methods inherited from class&nbsp;com.sun.tools.javac.file.JavacFileManager</h3>
-<code>asPath, close, contains, flush, getClassLoader, getFileForInput, getFileForOutput, getFileForOutput, getJavaFileForInput, getJavaFileForOutput, getJavaFileObject, getJavaFileObject, getJavaFileObjects, getJavaFileObjects, getJavaFileObjects, getJavaFileObjectsFromFiles, getJavaFileObjectsFromPaths, getJavaFileObjectsFromStrings, getLocation, getLocationAsPaths, getLocationForModule, getLocationForModule, getMessage, getRelativeName, getServiceLoader, hasLocation, inferBinaryName, inferModuleName, isRelativeUri, isRelativeUri, isSameFile, isSymbolFileEnabled, list, listLocationsForModules, preRegister, setContext, setLocation, setLocationForModule, setLocationFromPaths, setPathFactory, setSymbolFileEnabled, testName, toArray</code></li>
+<code>asPath, close, contains, flush, getClassLoader, getFileForInput, getFileForOutput, getFileForOutput, getJavaFileForInput, getJavaFileForOutput, getJavaFileObject, getJavaFileObject, getJavaFileObjects, getJavaFileObjects, getJavaFileObjects, getJavaFileObjectsFromFiles, getJavaFileObjectsFromPaths, getJavaFileObjectsFromStrings, getLocation, getLocationAsPaths, getLocationForModule, getLocationForModule, getMessage, getRelativeName, getServiceLoader, inferBinaryName, inferModuleName, isRelativeUri, isRelativeUri, isSameFile, isSymbolFileEnabled, list, listLocationsForModules, preRegister, setContext, setLocation, setLocationForModule, setLocationFromPaths, setPathFactory, setSymbolFileEnabled, testName, toArray</code></li>
 </ul>
 <ul class="blockList">
 <li class="blockList"><a name="methods.inherited.from.class.com.sun.tools.javac.file.BaseFileManager">
@@ -362,6 +366,21 @@ extends com.sun.tools.javac.file.JavacFileManager</pre>
 <pre>public&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/javax/tools/JavaFileObject.html?is-external=true" title="class or interface in javax.tools">JavaFileObject</a>&nbsp;forResource(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&lt;?&gt;&nbsp;clazz,
                                   <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;fileName)</pre>
 <div class="block">Loads a resource of the provided class into a <a href="https://docs.oracle.com/javase/8/docs/api/javax/tools/JavaFileObject.html?is-external=true" title="class or interface in javax.tools"><code>JavaFileObject</code></a>.</div>
+</li>
+</ul>
+<a name="hasLocation-javax.tools.JavaFileManager.Location-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>hasLocation</h4>
+<pre>public&nbsp;boolean&nbsp;hasLocation(<a href="https://docs.oracle.com/javase/8/docs/api/javax/tools/JavaFileManager.Location.html?is-external=true" title="class or interface in javax.tools">JavaFileManager.Location</a>&nbsp;location)</pre>
+<dl>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code><a href="https://docs.oracle.com/javase/8/docs/api/javax/tools/JavaFileManager.html?is-external=true#hasLocation-javax.tools.JavaFileManager.Location-" title="class or interface in javax.tools">hasLocation</a></code>&nbsp;in interface&nbsp;<code><a href="https://docs.oracle.com/javase/8/docs/api/javax/tools/JavaFileManager.html?is-external=true" title="class or interface in javax.tools">JavaFileManager</a></code></dd>
+<dt><span class="overrideSpecifyLabel">Overrides:</span></dt>
+<dd><code>hasLocation</code>&nbsp;in class&nbsp;<code>com.sun.tools.javac.file.JavacFileManager</code></dd>
+</dl>
 </li>
 </ul>
 <a name="forResource-java.lang.String-">
