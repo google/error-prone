@@ -37,6 +37,8 @@ public class ImmutableModificationTest {
             "  void f(ImmutableList<String> xs) {",
             "    // BUG: Diagnostic contains:",
             "    xs.remove(0);",
+            "    // BUG: Diagnostic contains:",
+            "    xs.forEach(xs::remove);",
             "  }",
             "}")
         .doTest();
