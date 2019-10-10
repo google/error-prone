@@ -22,9 +22,12 @@ import static com.google.errorprone.matchers.Description.NO_MATCH;
 import com.google.common.collect.ImmutableSetMultimap;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
+import com.google.errorprone.bugpatterns.BugChecker.MemberReferenceTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
+import com.sun.source.tree.ExpressionTree;
+import com.sun.source.tree.MemberReferenceTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Type;
@@ -37,7 +40,8 @@ import java.util.Set;
         "Modifying an immutable collection is guaranteed to throw an exception and leave the"
             + " collection unmodified",
     severity = ERROR)
-public class ImmutableModification extends BugChecker implements MethodInvocationTreeMatcher {
+public class ImmutableModification extends BugChecker
+    implements MethodInvocationTreeMatcher, MemberReferenceTreeMatcher {
 
   public static final ImmutableSetMultimap<String, String> ILLEGAL_METHODS_BY_BASE_TYPE =
       ImmutableSetMultimap.<String, String>builder()
@@ -95,8 +99,16 @@ public class ImmutableModification extends BugChecker implements MethodInvocatio
           .build();
 
   @Override
+  public Description matchMemberReference(MemberReferenceTree tree, VisitorState state) {
+    return match(tree, ASTHelpers.getSymbol(tree), state);
+  }
+
+  @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
-    MethodSymbol method = ASTHelpers.getSymbol(tree);
+    return match(tree, ASTHelpers.getSymbol(tree), state);
+  }
+
+  private Description match(ExpressionTree tree, MethodSymbol method, VisitorState state) {
     if (method == null) {
       return NO_MATCH;
     }
