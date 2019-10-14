@@ -44,7 +44,7 @@ import java.util.List;
     summary =
         "Use of JodaTime's type.plus(long) or type.minus(long) is not allowed (where <type> = "
             + "{Duration,Instant,DateTime,DateMidnight}). Please use "
-            + " type.plus(Duration.millis(long)) or type.minus(Duration.millis(long)) instead.",
+            + "type.plus(Duration.millis(long)) or type.minus(Duration.millis(long)) instead.",
     explanation =
         "JodaTime's type.plus(long) and type.minus(long) methods are often a source of bugs "
             + "because the units of the parameters are ambiguous. Please use "
