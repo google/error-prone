@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
-import com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode;
 import com.google.errorprone.CompilationTestHelper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -84,7 +83,7 @@ public final class UnusedExceptionTest {
             "    }",
             "  }",
             "}")
-        .doTest(TestMode.AST_MATCH);
+        .doTest();
   }
 
   @Test
@@ -255,6 +254,23 @@ public final class UnusedExceptionTest {
             "  }",
             "}")
         .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
+  public void interruptedException_noFinding() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  void test() {",
+            "    try {",
+            "      throw new InterruptedException();",
+            "    } catch (InterruptedException e) {",
+            "      throw new IllegalStateException(\"foo\");",
+            "    }",
+            "  }",
+            "}")
         .doTest();
   }
 }

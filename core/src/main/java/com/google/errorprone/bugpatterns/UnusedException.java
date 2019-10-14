@@ -21,6 +21,7 @@ import static com.google.common.collect.Iterables.getLast;
 import static com.google.errorprone.BugPattern.ProvidesFix.REQUIRES_HUMAN_ATTENTION;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.BugPattern.StandardTags.STYLE;
+import static com.google.errorprone.util.ASTHelpers.isSameType;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
@@ -78,6 +79,9 @@ public final class UnusedException extends BugChecker implements CatchTreeMatche
       return Description.NO_MATCH;
     }
     VarSymbol exceptionSymbol = ASTHelpers.getSymbol(tree.getParameter());
+    if (isSameType(exceptionSymbol.asType(), state.getSymtab().interruptedExceptionType, state)) {
+      return Description.NO_MATCH;
+    }
     AtomicBoolean symbolUsed = new AtomicBoolean(false);
     ((JCTree) tree)
         .accept(
