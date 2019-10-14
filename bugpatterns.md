@@ -631,6 +631,12 @@ instant.getNano() only accesses the underlying nanosecond adjustment from the wh
 __[JavaLangClash](bugpattern/JavaLangClash)__<br>
 Never reuse class names from java.lang
 
+__[JavaLocalDateTimeGetNano](bugpattern/JavaLocalDateTimeGetNano)__<br>
+localDateTime.getNano() only accesss the nanos-of-second field. It&#39;s rare to only use getNano() without a nearby getSecond() call.
+
+__[JavaLocalTimeGetNano](bugpattern/JavaLocalTimeGetNano)__<br>
+localTime.getNano() only accesses the nanos-of-second field. It&#39;s rare to only use getNano() without a nearby getSecond() call.
+
 __[JavaPeriodGetDays](bugpattern/JavaPeriodGetDays)__<br>
 period.getDays() only accesses the &quot;days&quot; portion of the Period, and doesn&#39;t represent the total span of time of the period. Consider using org.threeten.extra.Days to extract the difference between two civil dates if you want the whole time.
 

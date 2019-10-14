@@ -5840,6 +5840,20 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/JavaLangClash.html#JavaLangClash--">JavaLangClash()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/JavaLangClash.html" title="class in com.google.errorprone.bugpatterns">JavaLangClash</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/bugpatterns/time/JavaLocalDateTimeGetNano.html" title="class in com.google.errorprone.bugpatterns.time"><span class="typeNameLink">JavaLocalDateTimeGetNano</span></a> - Class in <a href="com/google/errorprone/bugpatterns/time/package-summary.html">com.google.errorprone.bugpatterns.time</a></dt>
+<dd>
+<div class="block">This checker warns about calls to <a href="https://docs.oracle.com/javase/8/docs/api/java/time/LocalDateTime.html?is-external=true#getNano--" title="class or interface in java.time"><code>LocalDateTime.getNano()</code></a> without a corresponding "nearby"
+ call to <a href="https://docs.oracle.com/javase/8/docs/api/java/time/LocalDateTime.html?is-external=true#getSecond--" title="class or interface in java.time"><code>LocalDateTime.getSecond()</code></a>.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/time/JavaLocalDateTimeGetNano.html#JavaLocalDateTimeGetNano--">JavaLocalDateTimeGetNano()</a></span> - Constructor for class com.google.errorprone.bugpatterns.time.<a href="com/google/errorprone/bugpatterns/time/JavaLocalDateTimeGetNano.html" title="class in com.google.errorprone.bugpatterns.time">JavaLocalDateTimeGetNano</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/bugpatterns/time/JavaLocalTimeGetNano.html" title="class in com.google.errorprone.bugpatterns.time"><span class="typeNameLink">JavaLocalTimeGetNano</span></a> - Class in <a href="com/google/errorprone/bugpatterns/time/package-summary.html">com.google.errorprone.bugpatterns.time</a></dt>
+<dd>
+<div class="block">This checker warns about calls to <a href="https://docs.oracle.com/javase/8/docs/api/java/time/LocalTime.html?is-external=true#getNano--" title="class or interface in java.time"><code>LocalTime.getNano()</code></a> without a corresponding "nearby" call
+ to <a href="https://docs.oracle.com/javase/8/docs/api/java/time/LocalTime.html?is-external=true#getSecond--" title="class or interface in java.time"><code>LocalTime.getSecond()</code></a>.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/time/JavaLocalTimeGetNano.html#JavaLocalTimeGetNano--">JavaLocalTimeGetNano()</a></span> - Constructor for class com.google.errorprone.bugpatterns.time.<a href="com/google/errorprone/bugpatterns/time/JavaLocalTimeGetNano.html" title="class in com.google.errorprone.bugpatterns.time">JavaLocalTimeGetNano</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/time/JavaPeriodGetDays.html" title="class in com.google.errorprone.bugpatterns.time"><span class="typeNameLink">JavaPeriodGetDays</span></a> - Class in <a href="com/google/errorprone/bugpatterns/time/package-summary.html">com.google.errorprone.bugpatterns.time</a></dt>
 <dd>
 <div class="block">This checker warns about calls to <code>period.getDays()</code> without a corresponding "nearby" call
@@ -7176,6 +7190,10 @@
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/time/JavaDurationWithSeconds.html#matchMethodInvocation-com.sun.source.tree.MethodInvocationTree-com.google.errorprone.VisitorState-">matchMethodInvocation(MethodInvocationTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.time.<a href="com/google/errorprone/bugpatterns/time/JavaDurationWithSeconds.html" title="class in com.google.errorprone.bugpatterns.time">JavaDurationWithSeconds</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/time/JavaInstantGetSecondsGetNano.html#matchMethodInvocation-com.sun.source.tree.MethodInvocationTree-com.google.errorprone.VisitorState-">matchMethodInvocation(MethodInvocationTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.time.<a href="com/google/errorprone/bugpatterns/time/JavaInstantGetSecondsGetNano.html" title="class in com.google.errorprone.bugpatterns.time">JavaInstantGetSecondsGetNano</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/time/JavaLocalDateTimeGetNano.html#matchMethodInvocation-com.sun.source.tree.MethodInvocationTree-com.google.errorprone.VisitorState-">matchMethodInvocation(MethodInvocationTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.time.<a href="com/google/errorprone/bugpatterns/time/JavaLocalDateTimeGetNano.html" title="class in com.google.errorprone.bugpatterns.time">JavaLocalDateTimeGetNano</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/time/JavaLocalTimeGetNano.html#matchMethodInvocation-com.sun.source.tree.MethodInvocationTree-com.google.errorprone.VisitorState-">matchMethodInvocation(MethodInvocationTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.time.<a href="com/google/errorprone/bugpatterns/time/JavaLocalTimeGetNano.html" title="class in com.google.errorprone.bugpatterns.time">JavaLocalTimeGetNano</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/time/JavaPeriodGetDays.html#matchMethodInvocation-com.sun.source.tree.MethodInvocationTree-com.google.errorprone.VisitorState-">matchMethodInvocation(MethodInvocationTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.time.<a href="com/google/errorprone/bugpatterns/time/JavaPeriodGetDays.html" title="class in com.google.errorprone.bugpatterns.time">JavaPeriodGetDays</a></dt>
 <dd>&nbsp;</dd>

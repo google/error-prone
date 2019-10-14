@@ -142,6 +142,20 @@
 </td>
 </tr>
 <tr class="rowColor">
+<td class="colFirst"><a href="../../../../../com/google/errorprone/bugpatterns/time/JavaLocalDateTimeGetNano.html" title="class in com.google.errorprone.bugpatterns.time">JavaLocalDateTimeGetNano</a></td>
+<td class="colLast">
+<div class="block">This checker warns about calls to <a href="https://docs.oracle.com/javase/8/docs/api/java/time/LocalDateTime.html?is-external=true#getNano--" title="class or interface in java.time"><code>LocalDateTime.getNano()</code></a> without a corresponding "nearby"
+ call to <a href="https://docs.oracle.com/javase/8/docs/api/java/time/LocalDateTime.html?is-external=true#getSecond--" title="class or interface in java.time"><code>LocalDateTime.getSecond()</code></a>.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><a href="../../../../../com/google/errorprone/bugpatterns/time/JavaLocalTimeGetNano.html" title="class in com.google.errorprone.bugpatterns.time">JavaLocalTimeGetNano</a></td>
+<td class="colLast">
+<div class="block">This checker warns about calls to <a href="https://docs.oracle.com/javase/8/docs/api/java/time/LocalTime.html?is-external=true#getNano--" title="class or interface in java.time"><code>LocalTime.getNano()</code></a> without a corresponding "nearby" call
+ to <a href="https://docs.oracle.com/javase/8/docs/api/java/time/LocalTime.html?is-external=true#getSecond--" title="class or interface in java.time"><code>LocalTime.getSecond()</code></a>.</div>
+</td>
+</tr>
+<tr class="rowColor">
 <td class="colFirst"><a href="../../../../../com/google/errorprone/bugpatterns/time/JavaPeriodGetDays.html" title="class in com.google.errorprone.bugpatterns.time">JavaPeriodGetDays</a></td>
 <td class="colLast">
 <div class="block">This checker warns about calls to <code>period.getDays()</code> without a corresponding "nearby" call
