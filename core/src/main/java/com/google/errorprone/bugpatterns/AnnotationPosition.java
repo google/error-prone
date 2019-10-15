@@ -124,12 +124,7 @@ public final class AnnotationPosition extends BugChecker
 
       Description description =
           checkAnnotations(
-              tree,
-              annotations,
-              danglingJavadoc,
-              firstModifierPos,
-              lastModifierPos,
-              state);
+              tree, annotations, danglingJavadoc, firstModifierPos, lastModifierPos, state);
       if (!description.equals(NO_MATCH)) {
         return description;
       }

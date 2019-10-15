@@ -289,7 +289,8 @@ public final class FindIdentifiers {
               if (scope == null) {
                 return ImmutableList.<VarSymbol>of().stream();
               }
-              return ImmutableList.copyOf(scope.getSymbols(VarSymbol.class::isInstance)).reverse()
+              return ImmutableList.copyOf(scope.getSymbols(VarSymbol.class::isInstance))
+                  .reverse()
                   .stream()
                   .map(v -> (VarSymbol) v)
                   .filter(v -> isVisible(v, state.getPath()));

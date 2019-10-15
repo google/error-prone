@@ -65,9 +65,7 @@ public final class JodaInstantWithMillis extends BugChecker implements MethodInv
     ExpressionTree millisArg = Iterables.getOnlyElement(tree.getArguments());
 
     builder.replace(
-        ((JCTree) tree).getStartPosition(),
-        ((JCTree) millisArg).getStartPosition(),
-        replacement);
+        ((JCTree) tree).getStartPosition(), ((JCTree) millisArg).getStartPosition(), replacement);
     return describeMatch(tree, builder.build());
   }
 }

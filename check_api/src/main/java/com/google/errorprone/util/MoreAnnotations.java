@@ -68,7 +68,8 @@ public final class MoreAnnotations {
                 .filter(anno -> isAnnotationOnType(sym, anno.position)))
         .collect(
             groupingBy(c -> c.type.asElement().getQualifiedName(), LinkedHashMap::new, toList()))
-        .values().stream()
+        .values()
+        .stream()
         .map(c -> c.get(0));
   }
 

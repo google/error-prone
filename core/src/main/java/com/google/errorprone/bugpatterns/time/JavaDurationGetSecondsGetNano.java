@@ -66,5 +66,4 @@ public final class JavaDurationGetSecondsGetNano extends BugChecker
     }
     return Description.NO_MATCH;
   }
-
 }

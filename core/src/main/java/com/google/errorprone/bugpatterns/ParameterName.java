@@ -115,10 +115,7 @@ public class ParameterName extends BugChecker
   }
 
   private void checkArgument(
-      VarSymbol formal,
-      ExpressionTree actual,
-      ErrorProneToken token,
-      VisitorState state) {
+      VarSymbol formal, ExpressionTree actual, ErrorProneToken token, VisitorState state) {
     List<Comment> matches = new ArrayList<>();
     for (Comment comment : token.comments()) {
       if (comment.getStyle() != BLOCK) {

@@ -64,4 +64,3 @@ public final class PeriodTimeMath extends BugChecker implements MethodInvocation
     return matcherToCheck.matches(tree, state) ? describeMatch(tree) : Description.NO_MATCH;
   }
 }
-

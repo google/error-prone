@@ -96,10 +96,7 @@ public class BooleanParameter extends BugChecker
   }
 
   private void checkParameter(
-      VarSymbol paramSym,
-      ExpressionTree a,
-      Deque<ErrorProneToken> tokens,
-      VisitorState state) {
+      VarSymbol paramSym, ExpressionTree a, Deque<ErrorProneToken> tokens, VisitorState state) {
     if (!isBooleanLiteral(a)) {
       return;
     }

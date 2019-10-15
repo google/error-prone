@@ -60,8 +60,7 @@ public final class JodaToSelf extends BugChecker
   private static final Matcher<ExpressionTree> MATCHER =
       Matchers.allOf(
           Matchers.anyOf(
-              TYPE_NAMES
-                  .stream()
+              TYPE_NAMES.stream()
                   .map(
                       typeName ->
                           Matchers.instanceMethod()
