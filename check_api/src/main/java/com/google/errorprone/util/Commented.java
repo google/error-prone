@@ -80,5 +80,4 @@ public abstract class Commented<T extends Tree> {
 
     abstract Commented<T> build();
   }
-
 }

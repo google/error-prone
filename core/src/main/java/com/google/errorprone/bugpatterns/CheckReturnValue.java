@@ -78,7 +78,6 @@ public class CheckReturnValue extends AbstractReturnValueIgnored
     return shouldCheckReturnValue(enclosingPackage(method));
   }
 
-
   /**
    * Return a matcher for method invocations in which the method being called has the
    * {@code @CheckReturnValue} annotation.

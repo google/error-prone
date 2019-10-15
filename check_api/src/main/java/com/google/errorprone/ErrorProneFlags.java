@@ -181,7 +181,6 @@ public final class ErrorProneFlags implements Serializable {
     return ErrorProneFlags.fromMap(combinedMaps);
   }
 
-
   /** Builder for Error Prone command-line flags object. Parses flags from strings. */
   public static class Builder {
 

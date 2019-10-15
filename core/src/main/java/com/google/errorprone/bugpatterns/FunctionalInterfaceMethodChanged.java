@@ -156,5 +156,5 @@ public class FunctionalInterfaceMethodChanged extends BugChecker implements Meth
     public Boolean visitMethodInvocation(MethodInvocationTree node, VisitorState state) {
       return ASTHelpers.getSymbol(node) == methodToCall;
     }
-  };
+  }
 }

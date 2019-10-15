@@ -64,5 +64,4 @@ public final class JavaPeriodGetDays extends BugChecker implements MethodInvocat
     }
     return Description.NO_MATCH;
   }
-
 }
