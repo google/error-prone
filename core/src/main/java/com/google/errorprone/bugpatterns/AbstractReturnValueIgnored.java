@@ -22,12 +22,10 @@ import static com.google.errorprone.matchers.Matchers.enclosingNode;
 import static com.google.errorprone.matchers.Matchers.expressionStatement;
 import static com.google.errorprone.matchers.Matchers.isLastStatementInBlock;
 import static com.google.errorprone.matchers.Matchers.kindIs;
-import static com.google.errorprone.matchers.Matchers.methodSelect;
 import static com.google.errorprone.matchers.Matchers.nextStatement;
 import static com.google.errorprone.matchers.Matchers.not;
 import static com.google.errorprone.matchers.Matchers.parentNode;
 import static com.google.errorprone.matchers.Matchers.previousStatement;
-import static com.google.errorprone.matchers.Matchers.toType;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
 
@@ -42,7 +40,6 @@ import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
-import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.LambdaExpressionTree;
 import com.sun.source.tree.MemberReferenceTree;
 import com.sun.source.tree.MemberReferenceTree.ReferenceMode;
@@ -75,7 +72,6 @@ public abstract class AbstractReturnValueIgnored extends BugChecker
                 anyOf(
                     AbstractReturnValueIgnored::isVoidReturningLambdaExpression,
                     Matchers.kindIs(Kind.EXPRESSION_STATEMENT))),
-            not(methodSelect(toType(IdentifierTree.class, identifierHasName("super")))),
             not((t, s) -> ASTHelpers.isVoidType(ASTHelpers.getType(t), s)),
             specializedMatcher(),
             not(AbstractReturnValueIgnored::mockitoInvocation),
@@ -180,10 +176,6 @@ public abstract class AbstractReturnValueIgnored extends BugChecker
    * side-effect-free methods, has a @CheckReturnValue annotation, etc.).
    */
   public abstract Matcher<? super ExpressionTree> specializedMatcher();
-
-  private static Matcher<IdentifierTree> identifierHasName(final String name) {
-    return (item, state) -> item.getName().contentEquals(name);
-  }
 
   /**
    * Fixes the error by assigning the result of the call to the receiver reference, or deleting the
