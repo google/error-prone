@@ -659,7 +659,7 @@ __[JodaNewPeriod](bugpattern/JodaNewPeriod)__<br>
 This may have surprising semantics, e.g. new Period(LocalDate.parse(&quot;1970-01-01&quot;), LocalDate.parse(&quot;1970-02-02&quot;)).getDays() == 1, not 32.
 
 __[JodaPlusMinusLong](bugpattern/JodaPlusMinusLong)__<br>
-Use of JodaTime&#39;s type.plus(long) or type.minus(long) is not allowed (where &lt;type&gt; = {Duration,Instant,DateTime,DateMidnight}). Please use  type.plus(Duration.millis(long)) or type.minus(Duration.millis(long)) instead.
+Use of JodaTime&#39;s type.plus(long) or type.minus(long) is not allowed (where &lt;type&gt; = {Duration,Instant,DateTime,DateMidnight}). Please use type.plus(Duration.millis(long)) or type.minus(Duration.millis(long)) instead.
 
 __[JodaTimeConverterManager](bugpattern/JodaTimeConverterManager)__<br>
 Joda-Time&#39;s ConverterManager makes the semantics of DateTime/Instant/etc construction subject to global static state. If you need to define your own converters, use a helper.
