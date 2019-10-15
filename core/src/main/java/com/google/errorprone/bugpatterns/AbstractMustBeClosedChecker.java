@@ -78,6 +78,7 @@ public abstract class AbstractMustBeClosedChecker extends BugChecker {
       return NO_MATCH;
     }
     if (AbstractReturnValueIgnored.expectedExceptionTest(tree, state)
+        || AbstractReturnValueIgnored.mockitoInvocation(tree, state)
         || MOCKITO_MATCHER.matches(state.getPath().getParentPath().getLeaf(), state)) {
       return NO_MATCH;
     }
