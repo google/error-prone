@@ -241,6 +241,7 @@ public final class FutureReturnValueIgnored extends AbstractReturnValueIgnored
     if (allOf(
             allOf(
                 parentNode(FutureReturnValueIgnored::isObjectReturningLambdaExpression),
+                not(AbstractReturnValueIgnored::mockitoInvocation),
                 not(AbstractReturnValueIgnored::expectedExceptionTest)),
             specializedMatcher(),
             not((t, s) -> ASTHelpers.isVoidType(ASTHelpers.getType(t), s)))

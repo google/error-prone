@@ -78,6 +78,7 @@ public abstract class AbstractReturnValueIgnored extends BugChecker
             not(methodSelect(toType(IdentifierTree.class, identifierHasName("super")))),
             not((t, s) -> ASTHelpers.isVoidType(ASTHelpers.getType(t), s)),
             specializedMatcher(),
+            not(AbstractReturnValueIgnored::mockitoInvocation),
             not(AbstractReturnValueIgnored::expectedExceptionTest))
         .matches(methodInvocationTree, state)) {
       return describe(methodInvocationTree, state);
@@ -226,10 +227,6 @@ public abstract class AbstractReturnValueIgnored extends BugChecker
 
   /** Allow return values to be ignored in tests that expect an exception to be thrown. */
   static boolean expectedExceptionTest(Tree tree, VisitorState state) {
-    if (mockitoInvocation(tree, state)) {
-      return true;
-    }
-
     // Allow unused return values in tests that check for thrown exceptions, e.g.:
     //
     // try {
@@ -283,7 +280,7 @@ public abstract class AbstractReturnValueIgnored extends BugChecker
    * Don't match the method that is invoked through {@code Mockito.verify(t)} or {@code
    * doReturn(val).when(t)}.
    */
-  private static boolean mockitoInvocation(Tree tree, VisitorState state) {
+  static boolean mockitoInvocation(Tree tree, VisitorState state) {
     if (!(tree instanceof JCMethodInvocation)) {
       return false;
     }
