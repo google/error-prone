@@ -39,7 +39,8 @@ public final class RectIntersectReturnValueIgnored extends AbstractReturnValueIg
   }
 
   @Override
-  public Description describe(MethodInvocationTree methodInvocationTree, VisitorState state) {
+  protected Description describeReturnValueIgnored(
+      MethodInvocationTree methodInvocationTree, VisitorState state) {
     return describeMatch(methodInvocationTree);
   }
 }

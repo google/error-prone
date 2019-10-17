@@ -246,7 +246,7 @@ public final class FutureReturnValueIgnored extends AbstractReturnValueIgnored
             specializedMatcher(),
             not((t, s) -> ASTHelpers.isVoidType(ASTHelpers.getType(t), s)))
         .matches(tree, state)) {
-      return describe(tree, state);
+      return describeReturnValueIgnored(tree, state);
     }
 
     return Description.NO_MATCH;
