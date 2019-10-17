@@ -46,6 +46,7 @@ import com.google.common.collect.ListMultimap;
 import com.google.common.collect.Multimaps;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.ErrorProneFlags;
+import com.google.errorprone.InvalidTokenException;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.CompilationUnitTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
@@ -379,8 +380,12 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
                 String.format(
                     "%s{ %s; }",
                     varSymbol.isStatic() ? "static " : "", state.getSourceForNode(initializer));
-            fix.merge(SuggestedFixes.replaceIncludingComments(usagePath, newContent, state));
-            removeSideEffectsFix.replace(statement, "");
+            try {
+              fix.merge(SuggestedFixes.replaceIncludingComments(usagePath, newContent, state));
+              removeSideEffectsFix.replace(statement, "");
+            } catch (InvalidTokenException e) {
+              return ImmutableList.of();
+            }
           } else {
             fix.replace(statement, String.format("%s;", state.getSourceForNode(initializer)));
             removeSideEffectsFix.replace(statement, "");

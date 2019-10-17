@@ -574,8 +574,12 @@ public class VisitorState {
    * be used if a fix is already going to be emitted.
    */
   public List<ErrorProneToken> getOffsetTokens(int start, int end) {
-    return ErrorProneTokens.getTokens(
-        getSourceCode().subSequence(start, end).toString(), start, context);
+    try {
+      return ErrorProneTokens.getTokens(
+          getSourceCode().subSequence(start, end).toString(), start, context);
+    } catch (IndexOutOfBoundsException e) {
+      throw new InvalidTokenException("Could not find source location.");
+    }
   }
 
   /** Returns the end position of the node, or -1 if it is not available. */

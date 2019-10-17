@@ -1288,4 +1288,18 @@ public class UnusedVariableTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void unusedVariableCreatedByAnnotation() {
+    helper
+        .addSourceLines(
+            "Unuseds.java",
+            "package unusedvars;",
+            "import lombok.extern.java.Log;",
+            "// BUG: Diagnostic contains: 'log' is never read",
+            "@Log",
+            "public class Unuseds {}")
+        .setArgs(ImmutableList.of("-processor", "lombok.launch.AnnotationProcessorHider$AnnotationProcessor"))
+        .doTest();
+  }
 }
