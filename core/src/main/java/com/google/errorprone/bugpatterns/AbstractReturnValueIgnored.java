@@ -75,9 +75,9 @@ public abstract class AbstractReturnValueIgnored extends BugChecker
             not((t, s) -> ASTHelpers.isVoidType(ASTHelpers.getType(t), s)),
             specializedMatcher(),
             not(AbstractReturnValueIgnored::mockitoInvocation),
-            not(AbstractReturnValueIgnored::expectedExceptionTest))
+            not((t, s) -> allowInExceptionThrowers() && expectedExceptionTest(t, s)))
         .matches(methodInvocationTree, state)) {
-      return describe(methodInvocationTree, state);
+      return describeReturnValueIgnored(methodInvocationTree, state);
     }
     return Description.NO_MATCH;
   }
@@ -91,10 +91,13 @@ public abstract class AbstractReturnValueIgnored extends BugChecker
             // looking for cases where the referenced method does not return void, but it's being
             // used on a void-returning functional interface.
             not((t, s) -> ASTHelpers.isVoidType(ASTHelpers.getSymbol(tree).getReturnType(), s)),
-            not((t, s) -> isThrowingFunctionalInterface(s, ((JCMemberReference) t).type)),
+            not(
+                (t, s) ->
+                    allowInExceptionThrowers()
+                        && isThrowingFunctionalInterface(s, ((JCMemberReference) t).type)),
             specializedMatcher())
         .matches(tree, state)) {
-      return describeMatch(tree);
+      return describeReturnValueIgnored(tree, state);
     }
 
     return Description.NO_MATCH;
@@ -175,13 +178,22 @@ public abstract class AbstractReturnValueIgnored extends BugChecker
    * Match whatever additional conditions concrete subclasses want to match (a list of known
    * side-effect-free methods, has a @CheckReturnValue annotation, etc.).
    */
-  public abstract Matcher<? super ExpressionTree> specializedMatcher();
+  protected abstract Matcher<? super ExpressionTree> specializedMatcher();
+
+  /**
+   * Override this to return false to forbid discarding return values in testers that are testing
+   * whether an exception is thrown.
+   */
+  protected boolean allowInExceptionThrowers() {
+    return true;
+  }
 
   /**
    * Fixes the error by assigning the result of the call to the receiver reference, or deleting the
-   * method call.
+   * method call. Subclasses may override if they prefer a different description.
    */
-  public Description describe(MethodInvocationTree methodInvocationTree, VisitorState state) {
+  protected Description describeReturnValueIgnored(
+      MethodInvocationTree methodInvocationTree, VisitorState state) {
     // Find the root of the field access chain, i.e. a.intern().trim() ==> a.
     ExpressionTree identifierExpr = ASTHelpers.getRootAssignable(methodInvocationTree);
     Type identifierType = null;
@@ -215,6 +227,15 @@ public abstract class AbstractReturnValueIgnored extends BugChecker
       fix = SuggestedFix.delete(parent);
     }
     return describeMatch(methodInvocationTree, fix);
+  }
+
+  /**
+   * Uses the default description for results ignored via a method reference. Subclasses may
+   * override if they prefer a different description.
+   */
+  protected Description describeReturnValueIgnored(
+      MemberReferenceTree memberReferenceTree, VisitorState state) {
+    return describeMatch(memberReferenceTree);
   }
 
   /** Allow return values to be ignored in tests that expect an exception to be thrown. */
