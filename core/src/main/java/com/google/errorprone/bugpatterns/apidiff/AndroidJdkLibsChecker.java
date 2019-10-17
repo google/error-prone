@@ -18,15 +18,14 @@ package com.google.errorprone.bugpatterns.apidiff;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 
-import com.google.common.collect.HashMultimap;
+import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ImmutableSetMultimap;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.bugpatterns.apidiff.ApiDiff.ClassMemberKey;
 import java.util.Map.Entry;
-import java.util.NavigableSet;
-import java.util.TreeSet;
+import java.util.stream.Collectors;
 
 /**
  * Checks for uses of classes, fields, or methods that are not compatible with legacy Android
@@ -58,51 +57,32 @@ public class AndroidJdkLibsChecker extends ApiDiffChecker {
 
   private static ApiDiff deriveApiDiff(boolean allowJava8) {
     ClassSupportInfo support = new ClassSupportInfo(allowJava8);
-    TreeSet<String> unsupportedClasses =
-        new TreeSet<>(Java7ApiChecker.API_DIFF.unsupportedClasses());
-    HashMultimap<String, ClassMemberKey> unsupportedMembers =
-        HashMultimap.create(Java7ApiChecker.API_DIFF.unsupportedMembersByClass());
+    ImmutableSet<String> unsupportedClasses =
+        ImmutableSet.<String>builder()
+            .addAll(
+                Java7ApiChecker.API_DIFF.unsupportedClasses().stream()
+                    .filter(cls -> !support.allowedPackages.contains(packageName(cls)))
+                    .filter(cls -> !support.allowedClasses.contains(cls))
+                    .collect(Collectors.toSet()))
+            .addAll(support.bannedClasses)
+            .build();
 
-    // Packages
-    for (String allowedPkg : support.allowedPackages) {
-      // Remove all classes in allowed package from blacklist.
-      for (String cls : classesStartingWithPackage(unsupportedClasses, allowedPkg)) {
-        // Filter out subpackages.
-        if (classIsInExactPackage(cls, allowedPkg)) {
-          unsupportedClasses.remove(cls);
-        }
-      }
-      // Remove all members of classes in allowed package from blacklist.
-      for (String cls :
-          classesStartingWithPackage(new TreeSet<>(unsupportedMembers.keys()), allowedPkg)) {
-        if (classIsInExactPackage(cls, allowedPkg)) {
-          unsupportedMembers.removeAll(cls);
-        }
-      }
-    }
-
-    // Classes
-    unsupportedClasses.removeAll(support.allowedClasses);
-    unsupportedClasses.addAll(support.bannedClasses);
-    support.allowedClasses.forEach(unsupportedMembers::removeAll);
-
-    // Members
-    if (!support.bannedMembers.isEmpty()) {
-      unsupportedMembers.entries().removeIf(support::memberIsWhitelisted);
-    }
-    unsupportedMembers.putAll(support.bannedMembers);
+    ImmutableMultimap<String, ClassMemberKey> unsupportedMembers =
+        ImmutableSetMultimap.<String, ClassMemberKey>builder()
+            .putAll(
+                Java7ApiChecker.API_DIFF.unsupportedMembersByClass().entries().stream()
+                    .filter(e -> !support.allowedPackages.contains(packageName(e.getKey())))
+                    .filter(e -> !support.allowedClasses.contains(e.getKey()))
+                    .filter(e -> support.bannedMembers.isEmpty() || !support.memberIsWhitelisted(e))
+                    .collect(Collectors.toSet()))
+            .putAll(support.bannedMembers)
+            .build();
 
     return ApiDiff.fromMembers(unsupportedClasses, unsupportedMembers);
   }
 
-  private static NavigableSet<String> classesStartingWithPackage(
-      NavigableSet<String> unsupportedClasses, String allowedPkg) {
-    return new TreeSet<>(
-        unsupportedClasses.subSet(allowedPkg, true, allowedPkg + Character.MAX_VALUE, true));
-  }
-
-  private static boolean classIsInExactPackage(String className, String packageName) {
-    return packageName.equals(className.substring(0, className.lastIndexOf('/') + 1));
+  private static String packageName(String className) {
+    return className.substring(0, className.lastIndexOf('/') + 1);
   }
 
   private static class ClassSupportInfo {
