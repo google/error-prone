@@ -50,7 +50,7 @@ public final class ThrowSpecificExceptions extends BugChecker implements NewClas
 
   @Override
   public Description matchNewClass(NewClassTree tree, VisitorState state) {
-    if (tree.getClassBody() != null) {
+    if (tree.getClassBody() != null || state.errorProneOptions().isTestOnlyTarget()) {
       return Description.NO_MATCH;
     }
     for (AbstractLikeException abstractLikeException : ABSTRACT_LIKE_EXCEPTIONS) {
