@@ -1,0 +1,234 @@
+/*
+ * Copyright 2019 The Error Prone Authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package com.google.errorprone.bugpatterns;
+
+import com.google.errorprone.BugCheckerRefactoringTestHelper;
+import com.google.errorprone.CompilationTestHelper;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
+
+/** Unit tests for {@link InterruptedExceptionSwallowed}. */
+@RunWith(JUnit4.class)
+public final class InterruptedExceptionSwallowedTest {
+  private final CompilationTestHelper compilationHelper =
+      CompilationTestHelper.newInstance(InterruptedExceptionSwallowed.class, getClass());
+
+  private final BugCheckerRefactoringTestHelper refactoringHelper =
+      BugCheckerRefactoringTestHelper.newInstance(new InterruptedExceptionSwallowed(), getClass());
+
+  @Test
+  public void negative() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.util.concurrent.Future;",
+            "class Test {",
+            "  void test(Future future) {",
+            "    try {",
+            "      throw new Exception();",
+            "    } catch (Exception e) {",
+            "      throw new IllegalStateException(e);",
+            "    }",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void negativeNestedCatch() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.util.concurrent.Future;",
+            "class Test {",
+            "  void test(Future future) {",
+            "    try {",
+            "       try {",
+            "         future.get();",
+            "       } catch (InterruptedException e) {}",
+            "    } catch (Exception e) {",
+            "      throw new IllegalStateException(e);",
+            "    }",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void positiveRethrown() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.util.concurrent.Future;",
+            "class Test {",
+            "  void test(Future future) {",
+            "    try {",
+            "       try {",
+            "         future.get();",
+            "       } catch (InterruptedException e) {",
+            "         throw e;",
+            "       }",
+            "    // BUG: Diagnostic contains:",
+            "    } catch (Exception e) {",
+            "      throw new IllegalStateException(e);",
+            "    }",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void checkedViaInstanceof_noWarning() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.util.concurrent.Future;",
+            "class Test {",
+            "  void test(Future future) {",
+            "    try {",
+            "      throw new Exception();",
+            "    } catch (Exception e) {",
+            "      if (e instanceof InterruptedException) {",
+            "        Thread.currentThread().interrupt();",
+            "      }",
+            "      throw new IllegalStateException(e);",
+            "    }",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void positiveSimpleCase() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.util.concurrent.Future;",
+            "class Test {",
+            "  void test(Future future) {",
+            "    try {",
+            "      future.get();",
+            "    // BUG: Diagnostic contains:",
+            "    } catch (Exception e) {",
+            "      throw new IllegalStateException(e);",
+            "    }",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void positiveRefactoring() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            "import java.util.concurrent.Future;",
+            "class Test {",
+            "  void test(Future future) {",
+            "    try {",
+            "      future.get();",
+            "    } catch (Exception e) {",
+            "      throw new IllegalStateException(e);",
+            "    }",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "import java.util.concurrent.Future;",
+            "class Test {",
+            "  void test(Future future) {",
+            "    try {",
+            "      future.get();",
+            "    } catch (Exception e) {",
+            "      if (e instanceof InterruptedException) {",
+            "        Thread.currentThread().interrupt();",
+            "      }",
+            "      throw new IllegalStateException(e);",
+            "    }",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void positiveRefactoringEmptyCatch() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            "import java.util.concurrent.Future;",
+            "class Test {",
+            "  void test(Future future) {",
+            "    try {",
+            "      future.get();",
+            "    } catch (Exception e) {}",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "import java.util.concurrent.Future;",
+            "class Test {",
+            "  void test(Future future) {",
+            "    try {",
+            "      future.get();",
+            "    } catch (Exception e) {",
+            "      if (e instanceof InterruptedException) {",
+            "        Thread.currentThread().interrupt();",
+            "      }",
+            "    }",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void negativeExplicitlyListed() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.util.concurrent.ExecutionException;",
+            "import java.util.concurrent.Future;",
+            "class Test {",
+            "  void test(Future future) {",
+            "    try {",
+            "      future.get();",
+            "    } catch (ExecutionException | InterruptedException e) {",
+            "      throw new IllegalStateException(e);",
+            "    }",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void suppression() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.util.concurrent.Future;",
+            "class Test {",
+            "  void test(Future future) {",
+            "    try {",
+            "      future.get();",
+            "    } catch (@SuppressWarnings(\"InterruptedExceptionSwallowed\") Exception e) {",
+            "      throw new IllegalStateException(e);",
+            "    }",
+            "  }",
+            "}")
+        .doTest();
+  }
+}
