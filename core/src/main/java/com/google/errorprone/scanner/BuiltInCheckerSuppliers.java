@@ -138,6 +138,7 @@ import com.google.errorprone.bugpatterns.InsecureCipherMode;
 import com.google.errorprone.bugpatterns.InstanceOfAndCastMatchWrongType;
 import com.google.errorprone.bugpatterns.IntLongMath;
 import com.google.errorprone.bugpatterns.InterfaceWithOnlyStatics;
+import com.google.errorprone.bugpatterns.InterruptedExceptionSwallowed;
 import com.google.errorprone.bugpatterns.InvalidPatternSyntax;
 import com.google.errorprone.bugpatterns.InvalidTimeZoneID;
 import com.google.errorprone.bugpatterns.InvalidZoneId;
@@ -819,6 +820,7 @@ public class BuiltInCheckerSuppliers {
           InjectedConstructorAnnotations.class,
           InsecureCipherMode.class,
           InterfaceWithOnlyStatics.class,
+          InterruptedExceptionSwallowed.class,
           InvalidBlockTag.class,
           InvalidInlineTag.class,
           InvalidParam.class,
