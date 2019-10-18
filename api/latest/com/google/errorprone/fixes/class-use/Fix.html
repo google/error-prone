@@ -379,22 +379,13 @@
 <tbody>
 <tr class="altColor">
 <td class="colFirst"><code>static <a href="../../../../../com/google/errorprone/fixes/Fix.html" title="interface in com.google.errorprone.fixes">Fix</a></code></td>
-<td class="colLast"><span class="typeNameLabel">SuggestedFixes.</span><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/fixes/SuggestedFixes.html#addMembers-com.sun.source.tree.ClassTree-com.google.errorprone.VisitorState-java.lang.String-java.lang.String...-">addMembers</a></span>(com.sun.source.tree.ClassTree&nbsp;classTree,
-          <a href="../../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
-          <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;firstMember,
-          <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>...&nbsp;otherMembers)</code>
-<div class="block">Returns a <a href="../../../../../com/google/errorprone/fixes/Fix.html" title="interface in com.google.errorprone.fixes"><code>Fix</code></a> that adds members defined by <code>firstMember</code> (and optionally <code>otherMembers</code>) to the end of the class referenced by <code>classTree</code>.</div>
-</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code>static <a href="../../../../../com/google/errorprone/fixes/Fix.html" title="interface in com.google.errorprone.fixes">Fix</a></code></td>
 <td class="colLast"><span class="typeNameLabel">SuggestedFixes.</span><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/fixes/SuggestedFixes.html#addSuppressWarnings-com.google.errorprone.VisitorState-java.lang.String-">addSuppressWarnings</a></span>(<a href="../../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
                    <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;warningToSuppress)</code>
 <div class="block">Returns a fix that adds a <code>@SuppressWarnings(warningToSuppress)</code> to the closest
  suppressible element to the node pointed at by <code>state.getPath()</code>.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>static <a href="../../../../../com/google/errorprone/fixes/Fix.html" title="interface in com.google.errorprone.fixes">Fix</a></code></td>
 <td class="colLast"><span class="typeNameLabel">SuggestedFixes.</span><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/fixes/SuggestedFixes.html#addSuppressWarnings-com.google.errorprone.VisitorState-java.lang.String-java.lang.String-">addSuppressWarnings</a></span>(<a href="../../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
                    <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;warningToSuppress,
@@ -404,7 +395,7 @@
  the suppression with a comment suffix (e.g.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>static <a href="../../../../../com/google/errorprone/fixes/Fix.html" title="interface in com.google.errorprone.fixes">Fix</a></code></td>
 <td class="colLast"><span class="typeNameLabel">SuggestedFixes.</span><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/fixes/SuggestedFixes.html#deleteExceptions-com.sun.source.tree.MethodTree-com.google.errorprone.VisitorState-java.util.List-">deleteExceptions</a></span>(com.sun.source.tree.MethodTree&nbsp;tree,
                 <a href="../../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,

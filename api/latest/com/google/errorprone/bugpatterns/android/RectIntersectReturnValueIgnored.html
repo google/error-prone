@@ -182,9 +182,9 @@ extends <a href="../../../../../com/google/errorprone/bugpatterns/AbstractReturn
 <th class="colLast" scope="col">Method and Description</th>
 </tr>
 <tr id="i0" class="altColor">
-<td class="colFirst"><code><a href="../../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/android/RectIntersectReturnValueIgnored.html#describe-com.sun.source.tree.MethodInvocationTree-com.google.errorprone.VisitorState-">describe</a></span>(com.sun.source.tree.MethodInvocationTree&nbsp;methodInvocationTree,
-        <a href="../../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>
+<td class="colFirst"><code>protected <a href="../../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/bugpatterns/android/RectIntersectReturnValueIgnored.html#describeReturnValueIgnored-com.sun.source.tree.MethodInvocationTree-com.google.errorprone.VisitorState-">describeReturnValueIgnored</a></span>(com.sun.source.tree.MethodInvocationTree&nbsp;methodInvocationTree,
+                          <a href="../../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>
 <div class="block">Fixes the error by assigning the result of the call to the receiver reference, or deleting the
  method call.</div>
 </td>
@@ -202,7 +202,7 @@ extends <a href="../../../../../com/google/errorprone/bugpatterns/AbstractReturn
 <!--   -->
 </a>
 <h3>Methods inherited from class&nbsp;com.google.errorprone.bugpatterns.<a href="../../../../../com/google/errorprone/bugpatterns/AbstractReturnValueIgnored.html" title="class in com.google.errorprone.bugpatterns">AbstractReturnValueIgnored</a></h3>
-<code><a href="../../../../../com/google/errorprone/bugpatterns/AbstractReturnValueIgnored.html#matchMemberReference-com.sun.source.tree.MemberReferenceTree-com.google.errorprone.VisitorState-">matchMemberReference</a>, <a href="../../../../../com/google/errorprone/bugpatterns/AbstractReturnValueIgnored.html#matchMethodInvocation-com.sun.source.tree.MethodInvocationTree-com.google.errorprone.VisitorState-">matchMethodInvocation</a></code></li>
+<code><a href="../../../../../com/google/errorprone/bugpatterns/AbstractReturnValueIgnored.html#allowInExceptionThrowers--">allowInExceptionThrowers</a>, <a href="../../../../../com/google/errorprone/bugpatterns/AbstractReturnValueIgnored.html#describeReturnValueIgnored-com.sun.source.tree.MemberReferenceTree-com.google.errorprone.VisitorState-">describeReturnValueIgnored</a>, <a href="../../../../../com/google/errorprone/bugpatterns/AbstractReturnValueIgnored.html#matchMemberReference-com.sun.source.tree.MemberReferenceTree-com.google.errorprone.VisitorState-">matchMemberReference</a>, <a href="../../../../../com/google/errorprone/bugpatterns/AbstractReturnValueIgnored.html#matchMethodInvocation-com.sun.source.tree.MethodInvocationTree-com.google.errorprone.VisitorState-">matchMethodInvocation</a></code></li>
 </ul>
 <ul class="blockList">
 <li class="blockList"><a name="methods.inherited.from.class.com.google.errorprone.bugpatterns.BugChecker">
@@ -272,20 +272,20 @@ extends <a href="../../../../../com/google/errorprone/bugpatterns/AbstractReturn
 </dl>
 </li>
 </ul>
-<a name="describe-com.sun.source.tree.MethodInvocationTree-com.google.errorprone.VisitorState-">
+<a name="describeReturnValueIgnored-com.sun.source.tree.MethodInvocationTree-com.google.errorprone.VisitorState-">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
-<h4>describe</h4>
-<pre>public&nbsp;<a href="../../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a>&nbsp;describe(com.sun.source.tree.MethodInvocationTree&nbsp;methodInvocationTree,
-                            <a href="../../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</pre>
-<div class="block"><span class="descfrmTypeLabel">Description copied from class:&nbsp;<code><a href="../../../../../com/google/errorprone/bugpatterns/AbstractReturnValueIgnored.html#describe-com.sun.source.tree.MethodInvocationTree-com.google.errorprone.VisitorState-">AbstractReturnValueIgnored</a></code></span></div>
+<h4>describeReturnValueIgnored</h4>
+<pre>protected&nbsp;<a href="../../../../../com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a>&nbsp;describeReturnValueIgnored(com.sun.source.tree.MethodInvocationTree&nbsp;methodInvocationTree,
+                                                 <a href="../../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</pre>
+<div class="block"><span class="descfrmTypeLabel">Description copied from class:&nbsp;<code><a href="../../../../../com/google/errorprone/bugpatterns/AbstractReturnValueIgnored.html#describeReturnValueIgnored-com.sun.source.tree.MethodInvocationTree-com.google.errorprone.VisitorState-">AbstractReturnValueIgnored</a></code></span></div>
 <div class="block">Fixes the error by assigning the result of the call to the receiver reference, or deleting the
- method call.</div>
+ method call. Subclasses may override if they prefer a different description.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Overrides:</span></dt>
-<dd><code><a href="../../../../../com/google/errorprone/bugpatterns/AbstractReturnValueIgnored.html#describe-com.sun.source.tree.MethodInvocationTree-com.google.errorprone.VisitorState-">describe</a></code>&nbsp;in class&nbsp;<code><a href="../../../../../com/google/errorprone/bugpatterns/AbstractReturnValueIgnored.html" title="class in com.google.errorprone.bugpatterns">AbstractReturnValueIgnored</a></code></dd>
+<dd><code><a href="../../../../../com/google/errorprone/bugpatterns/AbstractReturnValueIgnored.html#describeReturnValueIgnored-com.sun.source.tree.MethodInvocationTree-com.google.errorprone.VisitorState-">describeReturnValueIgnored</a></code>&nbsp;in class&nbsp;<code><a href="../../../../../com/google/errorprone/bugpatterns/AbstractReturnValueIgnored.html" title="class in com.google.errorprone.bugpatterns">AbstractReturnValueIgnored</a></code></dd>
 </dl>
 </li>
 </ul>
