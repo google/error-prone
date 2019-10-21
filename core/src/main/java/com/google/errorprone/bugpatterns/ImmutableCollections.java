@@ -82,6 +82,9 @@ public final class ImmutableCollections {
           .put(
               java.util.HashSet.class.getName(),
               com.google.common.collect.ImmutableSet.class.getName())
+          .put(
+              java.util.EnumMap.class.getName(),
+              com.google.common.collect.ImmutableMap.class.getName())
           .build();
 
   public static boolean isImmutableType(Type type) {
