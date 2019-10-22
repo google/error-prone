@@ -281,6 +281,20 @@ public class TypeParameterNamingTest {
   }
 
   @Test
+  public void negativeCases_manyNumberedTypes() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.util.ArrayList;",
+            "class Test<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10> {",
+            "  public <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10> void method(Exception e) {",
+            "    T10 t = null;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void classifyTypeName_singleLetter() {
     assertKindOfName("T").isEqualTo(LETTER_WITH_MAYBE_NUMERAL);
     assertKindOfName("D").isEqualTo(LETTER_WITH_MAYBE_NUMERAL);

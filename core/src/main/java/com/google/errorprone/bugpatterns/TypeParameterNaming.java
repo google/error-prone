@@ -68,6 +68,7 @@ import javax.lang.model.element.Name;
 public class TypeParameterNaming extends BugChecker implements TypeParameterTreeMatcher {
 
   private static final Pattern TRAILING_DIGIT_EXTRACTOR = Pattern.compile("^(.*?)(\\d+)$");
+  private static final Pattern SINGLE_PLUS_MAYBE_DIGITS = Pattern.compile("[A-Z]\\d*");
 
   private static String upperCamelToken(String s) {
     return "" + Ascii.toUpperCase(s.charAt(0)) + (s.length() == 1 ? "" : s.substring(1));
@@ -99,7 +100,6 @@ public class TypeParameterNaming extends BugChecker implements TypeParameterTree
     /** Anything else. */
     UNCLASSIFIED(false);
 
-    private static final Pattern SINGLE_PLUS_MAYBE_DIGIT = Pattern.compile("[A-Z]\\d?");
     private final boolean isValidName;
 
     TypeParameterNamingClassification(boolean isValidName) {
@@ -107,7 +107,7 @@ public class TypeParameterNaming extends BugChecker implements TypeParameterTree
     }
 
     public static TypeParameterNamingClassification classify(String name) {
-      if (SINGLE_PLUS_MAYBE_DIGIT.matcher(name).matches()) {
+      if (SINGLE_PLUS_MAYBE_DIGITS.matcher(name).matches()) {
         return LETTER_WITH_MAYBE_NUMERAL;
       }
 
