@@ -79,7 +79,7 @@ public class MissingDefault extends BugChecker implements SwitchTreeMatcher {
       return NO_MATCH;
     }
     // If `default` case is empty, and last in switch, add `// fall out` comment
-    // TODO(epmjohnston): Maybe move comment logic to go/bugpattern/FallThrough
+    // TODO(epmjohnston): Maybe move comment logic to https://errorprone.info/bugpattern/FallThrough
     int idx = tree.getCases().indexOf(defaultCase);
     if (idx != tree.getCases().size() - 1) {
       return NO_MATCH;
