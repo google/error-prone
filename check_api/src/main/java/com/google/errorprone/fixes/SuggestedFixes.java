@@ -885,19 +885,48 @@ public class SuggestedFixes {
    * be used with restraint.
    */
   public static boolean compilesWithFix(Fix fix, VisitorState state) {
-    return compilesWithFix(fix, state, ImmutableList.of());
+    return compilesWithFix(fix, state, ImmutableList.of(), false);
   }
 
   /**
    * Returns true if the current compilation would succeed with the given fix applied, using the
-   * given additional compiler options. Note that calling this method is very expensive as it
-   * requires rerunning the entire compile, so it should be used with restraint.
+   * given additional compiler options, optionally limiting the checking of compilation failures to
+   * the compilation unit in which the fix is applied. Note that calling this method is very
+   * expensive as it requires rerunning the entire compile, so it should be used with restraint.
    */
   public static boolean compilesWithFix(
-      Fix fix, VisitorState state, ImmutableList<String> extraOptions) {
+      Fix fix,
+      VisitorState state,
+      ImmutableList<String> extraOptions,
+      boolean onlyInSameCompilationUnit) {
+    int maxErrsPos = extraOptions.lastIndexOf("-Xmaxerrs");
+    int maxErrs;
+    if (maxErrsPos >= 0) {
+      // The maximum number of errors was explicitly set.
+      maxErrs = Integer.parseInt(extraOptions.get(maxErrsPos + 1));
+    } else {
+      // The maximum number of errors was not set - pick a default value.
+      maxErrs = 100;
+      extraOptions =
+          ImmutableList.<String>builder()
+              .addAll(extraOptions)
+              .add("-Xmaxerrs")
+              .add("" + maxErrs)
+              .build();
+    }
+    return compilesWithFix(fix, state, extraOptions, onlyInSameCompilationUnit, maxErrs);
+  }
+
+  private static boolean compilesWithFix(
+      Fix fix,
+      VisitorState state,
+      ImmutableList<String> extraOptions,
+      boolean onlyInSameCompilationUnit,
+      int maxErrs) {
     if (fix.isEmpty() && extraOptions.isEmpty()) {
       return true;
     }
+
     JCCompilationUnit compilationUnit = (JCCompilationUnit) state.getPath().getCompilationUnit();
     JavaFileObject modifiedFile = compilationUnit.getSourceFile();
     BasicJavacTask javacTask = (BasicJavacTask) state.context.get(JavacTask.class);
@@ -906,9 +935,10 @@ public class SuggestedFixes {
     }
     Arguments arguments = Arguments.instance(javacTask.getContext());
     List<JavaFileObject> fileObjects = new ArrayList<>(arguments.getFileObjects());
+    URI modifiedFileUri = modifiedFile.toUri();
     for (int i = 0; i < fileObjects.size(); i++) {
       final JavaFileObject oldFile = fileObjects.get(i);
-      if (modifiedFile.toUri().equals(oldFile.toUri())) {
+      if (modifiedFileUri.equals(oldFile.toUri())) {
         DescriptionBasedDiff diff =
             DescriptionBasedDiff.create(compilationUnit, ImportOrganizer.STATIC_FIRST_ORGANIZER);
         diff.handleFix(fix);
@@ -941,7 +971,7 @@ public class SuggestedFixes {
       String value = originalOptions.get(key);
       if (key.equals("-Xplugin:") && value.startsWith("ErrorProne")) {
         // When using the -Xplugin Error Prone integration, disable Error Prone for speculative
-        // recompiles to avoid infinite recurison.
+        // recompiles to avoid infinite recursion.
         continue;
       }
       options.put(key, value);
@@ -961,7 +991,24 @@ public class SuggestedFixes {
     } catch (IOException e) {
       throw new UncheckedIOException(e);
     }
-    return countErrors(diagnosticListener) == 0;
+
+    int countErrors = 0;
+    for (Diagnostic<? extends JavaFileObject> diagnostic : diagnosticListener.getDiagnostics()) {
+      if (diagnostic.getKind() != Diagnostic.Kind.ERROR) {
+        continue;
+      }
+
+      if (!onlyInSameCompilationUnit || diagnostic.getSource().toUri().equals(modifiedFileUri)) {
+        return false;
+      }
+      if (++countErrors >= maxErrs) {
+        // If we reached the maximum number of errors without finding an error in the modified
+        // compilation unit, we won't find any more errors, but we can't be sure that there isn't
+        // an error, as the error may simply be the (max+1)-th error, and thus was dropped.
+        return false;
+      }
+    }
+    return true;
   }
 
   /** Create a plausible URI to use in {@link #compilesWithFix}. */
@@ -976,12 +1023,6 @@ public class SuggestedFixes {
     } catch (IOException e) {
       throw new UncheckedIOException(e);
     }
-  }
-
-  private static long countErrors(DiagnosticCollector<JavaFileObject> diagnosticCollector) {
-    return diagnosticCollector.getDiagnostics().stream()
-        .filter(d -> d.getKind() == Diagnostic.Kind.ERROR)
-        .count();
   }
 
   /**

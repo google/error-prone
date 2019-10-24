@@ -63,6 +63,8 @@ import java.io.IOException;
 import java.lang.annotation.Retention;
 import java.net.URI;
 import java.util.Arrays;
+import java.util.Optional;
+import java.util.function.Function;
 import javax.lang.model.element.Modifier;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -1458,5 +1460,88 @@ public class SuggestedFixesTest {
             "  }",
             "}")
         .doTest();
+  }
+
+  /** Test checker that adds @SuppressWarnings when compilation succeeds in the current unit. */
+  @BugPattern(
+      name = "AddSuppressWarningsIfCompilationSucceedsOnlyInSameCompilationUnit",
+      summary = "",
+      severity = ERROR)
+  public static final class AddSuppressWarningsIfCompilationSucceedsOnlyInSameCompilationUnit
+      extends BugChecker implements ClassTreeMatcher {
+    @Override
+    public Description matchClass(ClassTree tree, VisitorState state) {
+      return addSuppressWarningsIfCompilationSucceeds(
+          tree, state, true, fix -> describeMatch(tree, fix));
+    }
+  }
+
+  @Test
+  public void compilesWithFix_onlyInSameCompilationUnit() {
+    // This compilation will succeed because we only consider the compilation errors in the first
+    // class.
+    CompilationTestHelper.newInstance(
+            AddSuppressWarningsIfCompilationSucceedsOnlyInSameCompilationUnit.class, getClass())
+        .addSourceLines(
+            "OnlyInSameCompilationUnit.java", //
+            "// BUG: Diagnostic contains: foobar",
+            "class OnlyInSameCompilationUnit {",
+            "}")
+        .addSourceLines(
+            "ClassContainingRawType.java", //
+            "class ClassContainingRawType {",
+            // This unsuppressed raw type would prevent compilation.
+            "  java.util.List list;",
+            "}")
+        .doTest();
+  }
+
+  /** Test checker that adds @SuppressWarnings when compilation succeeds in all units. */
+  @BugPattern(
+      name = "AddSuppressWarningsIfCompilationSucceedsInAllCompilationUnits",
+      summary = "",
+      severity = ERROR)
+  public static final class AddSuppressWarningsIfCompilationSucceedsInAllCompilationUnits
+      extends BugChecker implements ClassTreeMatcher {
+    @Override
+    public Description matchClass(ClassTree tree, VisitorState state) {
+      return addSuppressWarningsIfCompilationSucceeds(
+          tree, state, false, fix -> describeMatch(tree, fix));
+    }
+  }
+
+  @Test
+  public void compilesWithFix_inAllCompilationUnits() {
+    // This compilation will succeed because we consider all compilation errors.
+    CompilationTestHelper.newInstance(
+            AddSuppressWarningsIfCompilationSucceedsInAllCompilationUnits.class, getClass())
+        .addSourceLines(
+            "InAllCompilationUnits.java", //
+            "class InAllCompilationUnits {",
+            "}")
+        .addSourceLines(
+            "ClassContainingRawType.java", //
+            "class ClassContainingRawType {",
+            // This unsuppressed raw type prevents re-compilation, so the other class is unchanged.
+            "  java.util.List list;",
+            "}")
+        .doTest();
+  }
+
+  private static Description addSuppressWarningsIfCompilationSucceeds(
+      ClassTree tree,
+      VisitorState state,
+      boolean onlyInSameCompilationUnit,
+      Function<? super Fix, Description> toDescriptionFn) {
+    return Optional.of(SuggestedFix.prefixWith(tree, "@SuppressWarnings(\"foobar\") "))
+        .filter(
+            fix ->
+                SuggestedFixes.compilesWithFix(
+                    fix,
+                    state,
+                    ImmutableList.of("-Xlint:unchecked,rawtypes", "-Werror"),
+                    onlyInSameCompilationUnit))
+        .map(toDescriptionFn)
+        .orElse(NO_MATCH);
   }
 }
