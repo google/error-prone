@@ -6,5 +6,4 @@ handled properly, however `try` blocks that catch `Exception` or `Throwable` (or
 methods that `throws` either type) make it difficult to recognize that
 interruption may occur.
 
-See go/java-practices/interruptedexception for advice on how to handle
-`InterruptedException`.
+For advice on how to handle `InterruptedException`, see https://www.ibm.com/developerworks/library/j-jtp05236/index.html
