@@ -187,6 +187,7 @@ public final class UndefinedEquals extends BugChecker implements MethodInvocatio
     CHAR_SEQUENCE("CharSequence", "java.lang.CharSequence"),
     ITERABLE("Iterable", "java.lang.Iterable", "com.google.common.collect.FluentIterable"),
     COLLECTION("Collection", "java.util.Collection"),
+    IMMUTABLE_COLLECTION("ImmutableCollection", "com.google.common.collect.ImmutableCollection"),
     QUEUE("Queue", "java.util.Queue");
 
     private final String shortName;
