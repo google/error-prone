@@ -66,6 +66,22 @@ public final class UndefinedEqualsTest {
   }
 
   @Test
+  public void immutableCollection() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.common.collect.ImmutableCollection;",
+            "import java.util.Objects;",
+            "class Test {",
+            "  void f(ImmutableCollection a, ImmutableCollection b) {",
+            "     // BUG: Diagnostic contains: ImmutableCollection does not have",
+            "    Objects.equals(a,b);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void positiveAssertEquals() {
     compilationHelper
         .addSourceLines(
@@ -130,6 +146,7 @@ public final class UndefinedEqualsTest {
         .addInputLines(
             "Test.java",
             "import static com.google.common.truth.Truth.assertThat;",
+            "import com.google.common.collect.ImmutableCollection;",
             "import com.google.common.collect.Multimap;",
             "import java.lang.Iterable;",
             "import java.util.Collection;",
@@ -140,6 +157,7 @@ public final class UndefinedEqualsTest {
         .addOutputLines(
             "Test.java",
             "import static com.google.common.truth.Truth.assertThat;",
+            "import com.google.common.collect.ImmutableCollection;",
             "import com.google.common.collect.Multimap;",
             "import java.lang.Iterable;",
             "import java.util.Collection;",
