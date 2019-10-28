@@ -274,11 +274,13 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 </tr>
 <tr id="i11" class="rowColor">
 <td class="colFirst"><code>static boolean</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/fixes/SuggestedFixes.html#compilesWithFix-com.google.errorprone.fixes.Fix-com.google.errorprone.VisitorState-com.google.common.collect.ImmutableList-">compilesWithFix</a></span>(<a href="../../../../com/google/errorprone/fixes/Fix.html" title="interface in com.google.errorprone.fixes">Fix</a>&nbsp;fix,
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/fixes/SuggestedFixes.html#compilesWithFix-com.google.errorprone.fixes.Fix-com.google.errorprone.VisitorState-com.google.common.collect.ImmutableList-boolean-">compilesWithFix</a></span>(<a href="../../../../com/google/errorprone/fixes/Fix.html" title="interface in com.google.errorprone.fixes">Fix</a>&nbsp;fix,
                <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
-               com.google.common.collect.ImmutableList&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;extraOptions)</code>
+               com.google.common.collect.ImmutableList&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;extraOptions,
+               boolean&nbsp;onlyInSameCompilationUnit)</code>
 <div class="block">Returns true if the current compilation would succeed with the given fix applied, using the
- given additional compiler options.</div>
+ given additional compiler options, optionally limiting the checking of compilation failures to
+ the compilation unit in which the fix is applied.</div>
 </td>
 </tr>
 <tr id="i12" class="altColor">
@@ -800,7 +802,7 @@ public static&nbsp;<a href="../../../../com/google/errorprone/fixes/Fix.html" ti
  be used with restraint.</div>
 </li>
 </ul>
-<a name="compilesWithFix-com.google.errorprone.fixes.Fix-com.google.errorprone.VisitorState-com.google.common.collect.ImmutableList-">
+<a name="compilesWithFix-com.google.errorprone.fixes.Fix-com.google.errorprone.VisitorState-com.google.common.collect.ImmutableList-boolean-">
 <!--   -->
 </a>
 <ul class="blockList">
@@ -808,10 +810,12 @@ public static&nbsp;<a href="../../../../com/google/errorprone/fixes/Fix.html" ti
 <h4>compilesWithFix</h4>
 <pre>public static&nbsp;boolean&nbsp;compilesWithFix(<a href="../../../../com/google/errorprone/fixes/Fix.html" title="interface in com.google.errorprone.fixes">Fix</a>&nbsp;fix,
                                       <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
-                                      com.google.common.collect.ImmutableList&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;extraOptions)</pre>
+                                      com.google.common.collect.ImmutableList&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;extraOptions,
+                                      boolean&nbsp;onlyInSameCompilationUnit)</pre>
 <div class="block">Returns true if the current compilation would succeed with the given fix applied, using the
- given additional compiler options. Note that calling this method is very expensive as it
- requires rerunning the entire compile, so it should be used with restraint.</div>
+ given additional compiler options, optionally limiting the checking of compilation failures to
+ the compilation unit in which the fix is applied. Note that calling this method is very
+ expensive as it requires rerunning the entire compile, so it should be used with restraint.</div>
 </li>
 </ul>
 <a name="prettyType-com.google.errorprone.VisitorState-com.google.errorprone.fixes.SuggestedFix.Builder-com.sun.tools.javac.code.Type-">

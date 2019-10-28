@@ -427,11 +427,13 @@
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>static boolean</code></td>
-<td class="colLast"><span class="typeNameLabel">SuggestedFixes.</span><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/fixes/SuggestedFixes.html#compilesWithFix-com.google.errorprone.fixes.Fix-com.google.errorprone.VisitorState-com.google.common.collect.ImmutableList-">compilesWithFix</a></span>(<a href="../../../../../com/google/errorprone/fixes/Fix.html" title="interface in com.google.errorprone.fixes">Fix</a>&nbsp;fix,
+<td class="colLast"><span class="typeNameLabel">SuggestedFixes.</span><code><span class="memberNameLink"><a href="../../../../../com/google/errorprone/fixes/SuggestedFixes.html#compilesWithFix-com.google.errorprone.fixes.Fix-com.google.errorprone.VisitorState-com.google.common.collect.ImmutableList-boolean-">compilesWithFix</a></span>(<a href="../../../../../com/google/errorprone/fixes/Fix.html" title="interface in com.google.errorprone.fixes">Fix</a>&nbsp;fix,
                <a href="../../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
-               com.google.common.collect.ImmutableList&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;extraOptions)</code>
+               com.google.common.collect.ImmutableList&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;&nbsp;extraOptions,
+               boolean&nbsp;onlyInSameCompilationUnit)</code>
 <div class="block">Returns true if the current compilation would succeed with the given fix applied, using the
- given additional compiler options.</div>
+ given additional compiler options, optionally limiting the checking of compilation failures to
+ the compilation unit in which the fix is applied.</div>
 </td>
 </tr>
 </tbody>

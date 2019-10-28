@@ -1945,10 +1945,11 @@
 <dd>
 <div class="block">Returns true if the current compilation would succeed with the given fix applied.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/google/errorprone/fixes/SuggestedFixes.html#compilesWithFix-com.google.errorprone.fixes.Fix-com.google.errorprone.VisitorState-com.google.common.collect.ImmutableList-">compilesWithFix(Fix, VisitorState, ImmutableList&lt;String&gt;)</a></span> - Static method in class com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/SuggestedFixes.html" title="class in com.google.errorprone.fixes">SuggestedFixes</a></dt>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/fixes/SuggestedFixes.html#compilesWithFix-com.google.errorprone.fixes.Fix-com.google.errorprone.VisitorState-com.google.common.collect.ImmutableList-boolean-">compilesWithFix(Fix, VisitorState, ImmutableList&lt;String&gt;, boolean)</a></span> - Static method in class com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/SuggestedFixes.html" title="class in com.google.errorprone.fixes">SuggestedFixes</a></dt>
 <dd>
 <div class="block">Returns true if the current compilation would succeed with the given fix applied, using the
- given additional compiler options.</div>
+ given additional compiler options, optionally limiting the checking of compilation failures to
+ the compilation unit in which the fix is applied.</div>
 </dd>
 <dt><a href="com/google/errorprone/annotations/CompileTimeConstant.html" title="annotation in com.google.errorprone.annotations"><span class="typeNameLink">CompileTimeConstant</span></a> - Annotation Type in <a href="com/google/errorprone/annotations/package-summary.html">com.google.errorprone.annotations</a></dt>
 <dd>
