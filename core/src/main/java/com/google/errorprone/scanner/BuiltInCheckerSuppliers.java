@@ -290,6 +290,7 @@ import com.google.errorprone.bugpatterns.URLEqualsHashCode;
 import com.google.errorprone.bugpatterns.UndefinedEquals;
 import com.google.errorprone.bugpatterns.UngroupedOverloads;
 import com.google.errorprone.bugpatterns.UnnecessaryAnonymousClass;
+import com.google.errorprone.bugpatterns.UnnecessaryBoxedAssignment;
 import com.google.errorprone.bugpatterns.UnnecessaryBoxedVariable;
 import com.google.errorprone.bugpatterns.UnnecessaryDefaultInEnumSwitch;
 import com.google.errorprone.bugpatterns.UnnecessaryLambda;
@@ -879,6 +880,7 @@ public class BuiltInCheckerSuppliers {
           UnescapedEntity.class,
           UngroupedOverloads.class,
           UnlockMethodChecker.class,
+          UnnecessaryBoxedAssignment.class,
           UnnecessaryBoxedVariable.class,
           UnnecessaryDefaultInEnumSwitch.class,
           UnnecessarySetDefault.class,
