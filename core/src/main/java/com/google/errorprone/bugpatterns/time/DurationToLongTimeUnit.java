@@ -18,8 +18,10 @@ package com.google.errorprone.bugpatterns.time;
 import static com.google.errorprone.BugPattern.ProvidesFix.REQUIRES_HUMAN_ATTENTION;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.instanceMethod;
+import static com.google.errorprone.matchers.Matchers.staticMethod;
 import static java.util.concurrent.TimeUnit.DAYS;
 import static java.util.concurrent.TimeUnit.HOURS;
+import static java.util.concurrent.TimeUnit.MICROSECONDS;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static java.util.concurrent.TimeUnit.MINUTES;
 import static java.util.concurrent.TimeUnit.NANOSECONDS;
@@ -61,6 +63,9 @@ public final class DurationToLongTimeUnit extends BugChecker
   private static final String JAVA_DURATION = "java.time.Duration";
   private static final String JAVA_INSTANT = "java.time.Instant";
 
+  private static final String JAVA_DURATIONS = "com.google.common.time.Durations";
+  private static final String JAVA_INSTANTS = "com.google.common.time.Instants";
+
   private static final String JODA_DURATION = "org.joda.time.Duration";
   private static final String JODA_RDURATION = "org.joda.time.ReadableDuration";
   private static final String JODA_RINSTANT = "org.joda.time.ReadableInstant";
@@ -81,6 +86,16 @@ public final class DurationToLongTimeUnit extends BugChecker
           .put(instanceMethod().onExactClass(JAVA_DURATION).named("toDays"), DAYS)
           .put(instanceMethod().onExactClass(JAVA_INSTANT).named("toEpochMilli"), MILLISECONDS)
           .put(instanceMethod().onExactClass(JAVA_INSTANT).named("getEpochSecond"), SECONDS)
+          // com.google.common.time APIs
+          .put(staticMethod().onClass(JAVA_DURATIONS).named("toNanosSaturated"), NANOSECONDS)
+          .put(staticMethod().onClass(JAVA_DURATIONS).named("toMicros"), MICROSECONDS)
+          .put(staticMethod().onClass(JAVA_DURATIONS).named("toMicrosSaturated"), MICROSECONDS)
+          .put(staticMethod().onClass(JAVA_DURATIONS).named("toMillisSaturated"), MILLISECONDS)
+          .put(staticMethod().onClass(JAVA_INSTANTS).named("toEpochNanos"), NANOSECONDS)
+          .put(staticMethod().onClass(JAVA_INSTANTS).named("toEpochNanosSaturated"), NANOSECONDS)
+          .put(staticMethod().onClass(JAVA_INSTANTS).named("toEpochMicros"), MICROSECONDS)
+          .put(staticMethod().onClass(JAVA_INSTANTS).named("toEpochMicrosSaturated"), MICROSECONDS)
+          .put(staticMethod().onClass(JAVA_INSTANTS).named("toEpochMillisSaturated"), MILLISECONDS)
           // JodaTime
           .put(instanceMethod().onExactClass(JODA_DURATION).named("getStandardSeconds"), SECONDS)
           .put(instanceMethod().onExactClass(JODA_DURATION).named("getStandardMinutes"), MINUTES)
