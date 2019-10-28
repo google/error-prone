@@ -1231,6 +1231,9 @@ Type parameters must be a single letter with an optional numeric suffix, or an U
 __[UngroupedOverloads](bugpattern/UngroupedOverloads)__<br>
 Constructors and methods with the same name should appear sequentially with no other code in between. Please re-order or re-name methods.
 
+__[UnnecessaryBoxedAssignment](bugpattern/UnnecessaryBoxedAssignment)__<br>
+This expression can be implicitly boxed.
+
 __[UnnecessaryBoxedVariable](bugpattern/UnnecessaryBoxedVariable)__<br>
 It is unnecessary for this variable to be boxed. Use the primitive instead.
 
