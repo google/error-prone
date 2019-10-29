@@ -404,6 +404,7 @@ import com.google.errorprone.bugpatterns.time.DurationGetTemporalUnit;
 import com.google.errorprone.bugpatterns.time.DurationTemporalUnit;
 import com.google.errorprone.bugpatterns.time.DurationToLongTimeUnit;
 import com.google.errorprone.bugpatterns.time.InstantTemporalUnit;
+import com.google.errorprone.bugpatterns.time.InvalidJavaTimeConstant;
 import com.google.errorprone.bugpatterns.time.JavaDurationGetSecondsGetNano;
 import com.google.errorprone.bugpatterns.time.JavaDurationWithNanos;
 import com.google.errorprone.bugpatterns.time.JavaDurationWithSeconds;
@@ -534,6 +535,7 @@ public class BuiltInCheckerSuppliers {
           InjectOnFinalField.class,
           InjectOnMemberAndConstructor.class,
           InstantTemporalUnit.class,
+          InvalidJavaTimeConstant.class,
           InvalidPatternSyntax.class,
           InvalidTimeZoneID.class,
           InvalidZoneId.class,
