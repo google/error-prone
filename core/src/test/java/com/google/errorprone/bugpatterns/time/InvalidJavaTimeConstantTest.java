@@ -46,7 +46,7 @@ public class InvalidJavaTimeConstantTest {
             "import java.time.LocalDateTime;",
             "import java.time.LocalTime;",
             "public class TestCase {",
-            "  // BUG: Diagnostic contains: 0",
+            "  // BUG: Diagnostic contains: MonthOfYear (valid values 1 - 12): 0",
             "  private static final LocalDateTime LDT0 = LocalDateTime.of(0, 0, 0, 0, 0);",
             "  private static final LocalDateTime LDT1 = LocalDateTime.of(0, 1, 1, 0, 0);",
             "  private static final LocalTime LT = LocalTime.ofNanoOfDay(12345678);",
@@ -69,6 +69,7 @@ public class InvalidJavaTimeConstantTest {
             "  private static final LocalDate LD2 = LocalDate.of(1985, getBadMonth(), 31);",
             "  private static int getBadMonth() { return 13; }",
             "  private static final LocalDate EPOCH_DAY_ZERO = LocalDate.ofEpochDay(0);",
+            "  private static final LocalDate EPOCH_DAY_LARGE = LocalDate.ofEpochDay(123467);",
             "}")
         .doTest();
   }
@@ -82,9 +83,9 @@ public class InvalidJavaTimeConstantTest {
             "import java.time.LocalDate;",
             "import java.time.Month;",
             "public class TestCase {",
-            "  // BUG: Diagnostic contains: 32",
+            "  // BUG: Diagnostic contains: DayOfMonth (valid values 1 - 28/31): 32",
             "  private static final LocalDate LD0 = LocalDate.of(1985, 5, 32);",
-            "  // BUG: Diagnostic contains: 32",
+            "  // BUG: Diagnostic contains: DayOfMonth (valid values 1 - 28/31): 32",
             "  private static final LocalDate LD1 = LocalDate.of(1985, Month.MAY, 32);",
             "}")
         .doTest();
@@ -98,11 +99,11 @@ public class InvalidJavaTimeConstantTest {
             "package test;",
             "import java.time.LocalDate;",
             "public class TestCase {",
-            "  // BUG: Diagnostic contains: -1",
+            "  // BUG: Diagnostic contains: MonthOfYear (valid values 1 - 12): -1",
             "  private static final LocalDate LD0 = LocalDate.of(1985, -1, 31);",
-            "  // BUG: Diagnostic contains: 0",
+            "  // BUG: Diagnostic contains: MonthOfYear (valid values 1 - 12): 0",
             "  private static final LocalDate LD1 = LocalDate.of(1985, 0, 31);",
-            "  // BUG: Diagnostic contains: 13",
+            "  // BUG: Diagnostic contains: MonthOfYear (valid values 1 - 12): 13",
             "  private static final LocalDate LD2 = LocalDate.of(1985, 13, 31);",
             "}")
         .doTest();
@@ -117,10 +118,43 @@ public class InvalidJavaTimeConstantTest {
             "import java.time.LocalDate;",
             "import java.time.Year;",
             "public class TestCase {",
-            "  // BUG: Diagnostic contains: -1000000000",
+            "  // BUG: Diagnostic contains: Year (valid values -999999999 - 999999999):"
+                + " -1000000000",
             "  private static final LocalDate LD0 = LocalDate.of(Year.MIN_VALUE - 1, 5, 31);",
-            "  // BUG: Diagnostic contains: 1000000000",
+            "  // BUG: Diagnostic contains: Year (valid values -999999999 - 999999999): 1000000000",
             "  private static final LocalDate LD1 = LocalDate.of(Year.MAX_VALUE + 1, 5, 31);",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void localDate_withBadDayOfMonth() {
+    compilationHelper
+        .addSourceLines(
+            "test/TestCase.java",
+            "package test;",
+            "import java.time.LocalDate;",
+            "public class TestCase {",
+            "  private static LocalDate foo(LocalDate localDate) {",
+            "    // BUG: Diagnostic contains: DayOfMonth (valid values 1 - 28/31): 0",
+            "    return localDate.withDayOfMonth(0);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void localTime_withBadHour() {
+    compilationHelper
+        .addSourceLines(
+            "test/TestCase.java",
+            "package test;",
+            "import java.time.LocalTime;",
+            "public class TestCase {",
+            "  private static LocalTime foo(LocalTime localTime) {",
+            "    // BUG: Diagnostic contains: HourOfDay (valid values 0 - 23): 25",
+            "    return localTime.withHour(25);",
+            "  }",
             "}")
         .doTest();
   }
