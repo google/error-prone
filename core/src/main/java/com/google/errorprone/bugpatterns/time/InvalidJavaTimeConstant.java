@@ -35,9 +35,8 @@ import static java.time.temporal.ChronoField.SECOND_OF_MINUTE;
 import static java.time.temporal.ChronoField.YEAR;
 import static java.util.Arrays.asList;
 
+import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Maps;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
@@ -50,7 +49,6 @@ import com.sun.source.tree.MethodInvocationTree;
 import java.time.DateTimeException;
 import java.time.temporal.ChronoField;
 import java.util.List;
-import java.util.Map;
 
 /**
  * This checker errors on calls to {@code java.time} methods using values that are guaranteed to
@@ -67,28 +65,36 @@ import java.util.Map;
 public final class InvalidJavaTimeConstant extends BugChecker
     implements MethodInvocationTreeMatcher {
 
-  private static Map.Entry<Matcher<ExpressionTree>, ImmutableList<ChronoField>> staticEntry(
+  private static MatcherWithUnits createStatic(
       String className,
       String methodName,
       List<String> parameterTypes,
       List<ChronoField> parameterUnits) {
-    return makeEntry(true, className, methodName, parameterTypes, parameterUnits);
+    checkEqualSizes(parameterTypes, parameterUnits);
+    return new AutoValue_InvalidJavaTimeConstant_MatcherWithUnits(
+        staticMethod()
+            .onClass(className)
+            .named(methodName)
+            .withParameters(parameterTypes.toArray(new String[0])),
+        ImmutableList.copyOf(parameterUnits));
   }
 
-  private static Map.Entry<Matcher<ExpressionTree>, ImmutableList<ChronoField>> instanceEntry(
+  private static MatcherWithUnits createInstance(
       String className,
       String methodName,
       List<String> parameterTypes,
       List<ChronoField> parameterUnits) {
-    return makeEntry(false, className, methodName, parameterTypes, parameterUnits);
+    checkEqualSizes(parameterTypes, parameterUnits);
+    return new AutoValue_InvalidJavaTimeConstant_MatcherWithUnits(
+        instanceMethod()
+            .onExactClass(className)
+            .named(methodName)
+            .withParameters(parameterTypes.toArray(new String[0])),
+        ImmutableList.copyOf(parameterUnits));
   }
 
-  private static Map.Entry<Matcher<ExpressionTree>, ImmutableList<ChronoField>> makeEntry(
-      boolean isStatic,
-      String className,
-      String methodName,
-      List<String> parameterTypes,
-      List<ChronoField> parameterUnits) {
+  private static void checkEqualSizes(
+      List<String> parameterTypes, List<ChronoField> parameterUnits) {
     checkArgument(
         parameterTypes.size() == parameterUnits.size(),
         "There must be an equal number of parameter types (%s) and parameter units (%s):\n%s\n%s",
@@ -96,181 +102,173 @@ public final class InvalidJavaTimeConstant extends BugChecker
         parameterUnits.size(),
         parameterTypes,
         parameterUnits);
-    String[] parameters = parameterTypes.toArray(new String[0]);
-    Matcher<ExpressionTree> matcher =
-        isStatic
-            ? staticMethod().onClass(className).named(methodName).withParameters(parameters)
-            : instanceMethod().onExactClass(className).named(methodName).withParameters(parameters);
-    return Maps.immutableEntry(matcher, ImmutableList.copyOf(parameterUnits));
   }
 
-  private static final ImmutableList<Map.Entry<Matcher<ExpressionTree>, ImmutableList<ChronoField>>>
-      DAY_OF_WEEK_APIS =
-          ImmutableList.of(
-              staticEntry("java.time.DayOfWeek", "of", asList("int"), asList(DAY_OF_WEEK)));
+  @AutoValue
+  abstract static class MatcherWithUnits {
+    abstract Matcher<ExpressionTree> matcher();
 
-  private static final ImmutableList<Map.Entry<Matcher<ExpressionTree>, ImmutableList<ChronoField>>>
-      MONTH_APIS =
-          ImmutableList.of(
-              staticEntry("java.time.Month", "of", asList("int"), asList(MONTH_OF_YEAR)));
+    abstract ImmutableList<ChronoField> units();
+  }
 
-  private static final ImmutableList<Map.Entry<Matcher<ExpressionTree>, ImmutableList<ChronoField>>>
-      YEAR_APIS =
-          ImmutableList.of(
-              staticEntry("java.time.Year", "of", asList("int"), asList(YEAR)),
-              instanceEntry("java.time.Year", "atDay", asList("int"), asList(DAY_OF_YEAR)),
-              instanceEntry("java.time.Year", "atMonth", asList("int"), asList(MONTH_OF_YEAR)));
+  // Note, we use asList(...) below instead of ImmutableList.of(...) to reduce line wrapping.
+
+  private static final ImmutableList<MatcherWithUnits> DAY_OF_WEEK_APIS =
+      ImmutableList.of(
+          createStatic("java.time.DayOfWeek", "of", asList("int"), asList(DAY_OF_WEEK)));
+
+  private static final ImmutableList<MatcherWithUnits> MONTH_APIS =
+      ImmutableList.of(createStatic("java.time.Month", "of", asList("int"), asList(MONTH_OF_YEAR)));
+
+  private static final ImmutableList<MatcherWithUnits> YEAR_APIS =
+      ImmutableList.of(
+          createStatic("java.time.Year", "of", asList("int"), asList(YEAR)),
+          createInstance("java.time.Year", "atDay", asList("int"), asList(DAY_OF_YEAR)),
+          createInstance("java.time.Year", "atMonth", asList("int"), asList(MONTH_OF_YEAR)));
 
   private static final String YEAR_MONTH = "java.time.YearMonth";
-  private static final ImmutableList<Map.Entry<Matcher<ExpressionTree>, ImmutableList<ChronoField>>>
-      YEAR_MONTH_APIS =
-          ImmutableList.of(
-              staticEntry(YEAR_MONTH, "of", asList("int", "int"), asList(YEAR, MONTH_OF_YEAR)),
-              staticEntry(
-                  YEAR_MONTH, "of", asList("int", "java.time.Month"), asList(YEAR, MONTH_OF_YEAR)),
-              instanceEntry(YEAR_MONTH, "atDay", asList("int"), asList(DAY_OF_MONTH)),
-              instanceEntry(YEAR_MONTH, "withMonth", asList("int"), asList(MONTH_OF_YEAR)),
-              instanceEntry(YEAR_MONTH, "withYear", asList("int"), asList(YEAR)));
+  private static final ImmutableList<MatcherWithUnits> YEAR_MONTH_APIS =
+      ImmutableList.of(
+          createStatic(YEAR_MONTH, "of", asList("int", "int"), asList(YEAR, MONTH_OF_YEAR)),
+          createStatic(
+              YEAR_MONTH, "of", asList("int", "java.time.Month"), asList(YEAR, MONTH_OF_YEAR)),
+          createInstance(YEAR_MONTH, "atDay", asList("int"), asList(DAY_OF_MONTH)),
+          createInstance(YEAR_MONTH, "withMonth", asList("int"), asList(MONTH_OF_YEAR)),
+          createInstance(YEAR_MONTH, "withYear", asList("int"), asList(YEAR)));
 
   private static final String MONTH_DAY = "java.time.MonthDay";
-  private static final ImmutableList<Map.Entry<Matcher<ExpressionTree>, ImmutableList<ChronoField>>>
-      MONTH_DAY_APIS =
-          ImmutableList.of(
-              staticEntry(
-                  MONTH_DAY, "of", asList("int", "int"), asList(MONTH_OF_YEAR, DAY_OF_MONTH)),
-              staticEntry(
-                  MONTH_DAY,
-                  "of",
-                  asList("java.time.Month", "int"),
-                  asList(MONTH_OF_YEAR, DAY_OF_MONTH)),
-              instanceEntry(MONTH_DAY, "atYear", asList("int"), asList(YEAR)),
-              instanceEntry(MONTH_DAY, "withDayOfMonth", asList("int"), asList(DAY_OF_MONTH)),
-              instanceEntry(MONTH_DAY, "withMonth", asList("int"), asList(MONTH_OF_YEAR)));
+  private static final ImmutableList<MatcherWithUnits> MONTH_DAY_APIS =
+      ImmutableList.of(
+          createStatic(MONTH_DAY, "of", asList("int", "int"), asList(MONTH_OF_YEAR, DAY_OF_MONTH)),
+          createStatic(
+              MONTH_DAY,
+              "of",
+              asList("java.time.Month", "int"),
+              asList(MONTH_OF_YEAR, DAY_OF_MONTH)),
+          createInstance(MONTH_DAY, "atYear", asList("int"), asList(YEAR)),
+          createInstance(MONTH_DAY, "withDayOfMonth", asList("int"), asList(DAY_OF_MONTH)),
+          createInstance(MONTH_DAY, "withMonth", asList("int"), asList(MONTH_OF_YEAR)));
 
   private static final String LOCAL_TIME = "java.time.LocalTime";
-  private static final ImmutableList<Map.Entry<Matcher<ExpressionTree>, ImmutableList<ChronoField>>>
-      LOCAL_TIME_APIS =
-          ImmutableList.of(
-              staticEntry(
-                  LOCAL_TIME, "of", asList("int", "int"), asList(HOUR_OF_DAY, MINUTE_OF_HOUR)),
-              staticEntry(
-                  LOCAL_TIME,
-                  "of",
-                  asList("int", "int", "int"),
-                  asList(HOUR_OF_DAY, MINUTE_OF_HOUR, SECOND_OF_MINUTE)),
-              staticEntry(
-                  LOCAL_TIME,
-                  "of",
-                  asList("int", "int", "int", "int"),
-                  asList(HOUR_OF_DAY, MINUTE_OF_HOUR, SECOND_OF_MINUTE, NANO_OF_SECOND)),
-              staticEntry(LOCAL_TIME, "ofNanoOfDay", asList("long"), asList(NANO_OF_DAY)),
-              staticEntry(LOCAL_TIME, "ofSecondOfDay", asList("long"), asList(SECOND_OF_DAY)),
-              instanceEntry(LOCAL_TIME, "withHour", asList("int"), asList(HOUR_OF_DAY)),
-              instanceEntry(LOCAL_TIME, "withMinute", asList("int"), asList(MINUTE_OF_HOUR)),
-              instanceEntry(LOCAL_TIME, "withNano", asList("int"), asList(NANO_OF_SECOND)),
-              instanceEntry(LOCAL_TIME, "withSecond", asList("int"), asList(SECOND_OF_MINUTE)));
+  private static final ImmutableList<MatcherWithUnits> LOCAL_TIME_APIS =
+      ImmutableList.of(
+          createStatic(LOCAL_TIME, "of", asList("int", "int"), asList(HOUR_OF_DAY, MINUTE_OF_HOUR)),
+          createStatic(
+              LOCAL_TIME,
+              "of",
+              asList("int", "int", "int"),
+              asList(HOUR_OF_DAY, MINUTE_OF_HOUR, SECOND_OF_MINUTE)),
+          createStatic(
+              LOCAL_TIME,
+              "of",
+              asList("int", "int", "int", "int"),
+              asList(HOUR_OF_DAY, MINUTE_OF_HOUR, SECOND_OF_MINUTE, NANO_OF_SECOND)),
+          createStatic(LOCAL_TIME, "ofNanoOfDay", asList("long"), asList(NANO_OF_DAY)),
+          createStatic(LOCAL_TIME, "ofSecondOfDay", asList("long"), asList(SECOND_OF_DAY)),
+          createInstance(LOCAL_TIME, "withHour", asList("int"), asList(HOUR_OF_DAY)),
+          createInstance(LOCAL_TIME, "withMinute", asList("int"), asList(MINUTE_OF_HOUR)),
+          createInstance(LOCAL_TIME, "withNano", asList("int"), asList(NANO_OF_SECOND)),
+          createInstance(LOCAL_TIME, "withSecond", asList("int"), asList(SECOND_OF_MINUTE)));
 
   private static final String LOCAL_DATE = "java.time.LocalDate";
-  private static final ImmutableList<Map.Entry<Matcher<ExpressionTree>, ImmutableList<ChronoField>>>
-      LOCAL_DATE_APIS =
-          ImmutableList.of(
-              staticEntry(
-                  LOCAL_DATE,
-                  "of",
-                  asList("int", "int", "int"),
-                  asList(YEAR, MONTH_OF_YEAR, DAY_OF_MONTH)),
-              staticEntry(
-                  LOCAL_DATE,
-                  "of",
-                  asList("int", "java.time.Month", "int"),
-                  asList(YEAR, MONTH_OF_YEAR, DAY_OF_MONTH)),
-              staticEntry(LOCAL_DATE, "ofEpochDay", asList("long"), asList(EPOCH_DAY)),
-              staticEntry(LOCAL_DATE, "ofYearDay", asList("int", "int"), asList(YEAR, DAY_OF_YEAR)),
-              instanceEntry(LOCAL_DATE, "withDayOfMonth", asList("int"), asList(DAY_OF_MONTH)),
-              instanceEntry(LOCAL_DATE, "withDayOfYear", asList("int"), asList(DAY_OF_YEAR)),
-              instanceEntry(LOCAL_DATE, "withMonth", asList("int"), asList(MONTH_OF_YEAR)),
-              instanceEntry(LOCAL_DATE, "withYear", asList("int"), asList(YEAR)));
+  private static final ImmutableList<MatcherWithUnits> LOCAL_DATE_APIS =
+      ImmutableList.of(
+          createStatic(
+              LOCAL_DATE,
+              "of",
+              asList("int", "int", "int"),
+              asList(YEAR, MONTH_OF_YEAR, DAY_OF_MONTH)),
+          createStatic(
+              LOCAL_DATE,
+              "of",
+              asList("int", "java.time.Month", "int"),
+              asList(YEAR, MONTH_OF_YEAR, DAY_OF_MONTH)),
+          createStatic(LOCAL_DATE, "ofEpochDay", asList("long"), asList(EPOCH_DAY)),
+          createStatic(LOCAL_DATE, "ofYearDay", asList("int", "int"), asList(YEAR, DAY_OF_YEAR)),
+          createInstance(LOCAL_DATE, "withDayOfMonth", asList("int"), asList(DAY_OF_MONTH)),
+          createInstance(LOCAL_DATE, "withDayOfYear", asList("int"), asList(DAY_OF_YEAR)),
+          createInstance(LOCAL_DATE, "withMonth", asList("int"), asList(MONTH_OF_YEAR)),
+          createInstance(LOCAL_DATE, "withYear", asList("int"), asList(YEAR)));
 
   private static final String LOCAL_DATE_TIME = "java.time.LocalDateTime";
-  private static final ImmutableList<Map.Entry<Matcher<ExpressionTree>, ImmutableList<ChronoField>>>
-      LOCAL_DATE_TIME_APIS =
-          ImmutableList.of(
-              staticEntry(
-                  LOCAL_DATE_TIME,
-                  "of",
-                  asList("int", "int", "int", "int", "int"),
-                  asList(YEAR, MONTH_OF_YEAR, DAY_OF_MONTH, HOUR_OF_DAY, MINUTE_OF_HOUR)),
-              staticEntry(
-                  LOCAL_DATE_TIME,
-                  "of",
-                  asList("int", "java.time.Month", "int", "int", "int"),
-                  asList(YEAR, MONTH_OF_YEAR, DAY_OF_MONTH, HOUR_OF_DAY, MINUTE_OF_HOUR)),
-              staticEntry(
-                  LOCAL_DATE_TIME,
-                  "of",
-                  asList("int", "int", "int", "int", "int", "int"),
-                  asList(
-                      YEAR,
-                      MONTH_OF_YEAR,
-                      DAY_OF_MONTH,
-                      HOUR_OF_DAY,
-                      MINUTE_OF_HOUR,
-                      SECOND_OF_MINUTE)),
-              staticEntry(
-                  LOCAL_DATE_TIME,
-                  "of",
-                  asList("int", "java.time.Month", "int", "int", "int", "int"),
-                  asList(
-                      YEAR,
-                      MONTH_OF_YEAR,
-                      DAY_OF_MONTH,
-                      HOUR_OF_DAY,
-                      MINUTE_OF_HOUR,
-                      SECOND_OF_MINUTE)),
-              staticEntry(
-                  LOCAL_DATE_TIME,
-                  "of",
-                  asList("int", "int", "int", "int", "int", "int", "int"),
-                  asList(
-                      YEAR,
-                      MONTH_OF_YEAR,
-                      DAY_OF_MONTH,
-                      HOUR_OF_DAY,
-                      MINUTE_OF_HOUR,
-                      SECOND_OF_MINUTE,
-                      NANO_OF_SECOND)),
-              staticEntry(
-                  LOCAL_DATE_TIME,
-                  "of",
-                  asList("int", "java.time.Month", "int", "int", "int", "int", "int"),
-                  asList(
-                      YEAR,
-                      MONTH_OF_YEAR,
-                      DAY_OF_MONTH,
-                      HOUR_OF_DAY,
-                      MINUTE_OF_HOUR,
-                      SECOND_OF_MINUTE,
-                      NANO_OF_SECOND)),
-              instanceEntry(LOCAL_DATE_TIME, "withDayOfMonth", asList("int"), asList(DAY_OF_MONTH)),
-              instanceEntry(LOCAL_DATE_TIME, "withDayOfYear", asList("int"), asList(DAY_OF_YEAR)),
-              instanceEntry(LOCAL_DATE_TIME, "withHour", asList("int"), asList(HOUR_OF_DAY)),
-              instanceEntry(LOCAL_DATE_TIME, "withMinute", asList("int"), asList(MINUTE_OF_HOUR)),
-              instanceEntry(LOCAL_DATE_TIME, "withMonth", asList("int"), asList(MONTH_OF_YEAR)),
-              instanceEntry(LOCAL_DATE_TIME, "withNano", asList("int"), asList(NANO_OF_SECOND)),
-              instanceEntry(LOCAL_DATE_TIME, "withSecond", asList("int"), asList(SECOND_OF_MINUTE)),
-              instanceEntry(LOCAL_DATE_TIME, "withYear", asList("int"), asList(YEAR)));
+  private static final ImmutableList<MatcherWithUnits> LOCAL_DATE_TIME_APIS =
+      ImmutableList.of(
+          createStatic(
+              LOCAL_DATE_TIME,
+              "of",
+              asList("int", "int", "int", "int", "int"),
+              asList(YEAR, MONTH_OF_YEAR, DAY_OF_MONTH, HOUR_OF_DAY, MINUTE_OF_HOUR)),
+          createStatic(
+              LOCAL_DATE_TIME,
+              "of",
+              asList("int", "java.time.Month", "int", "int", "int"),
+              asList(YEAR, MONTH_OF_YEAR, DAY_OF_MONTH, HOUR_OF_DAY, MINUTE_OF_HOUR)),
+          createStatic(
+              LOCAL_DATE_TIME,
+              "of",
+              asList("int", "int", "int", "int", "int", "int"),
+              asList(
+                  YEAR,
+                  MONTH_OF_YEAR,
+                  DAY_OF_MONTH,
+                  HOUR_OF_DAY,
+                  MINUTE_OF_HOUR,
+                  SECOND_OF_MINUTE)),
+          createStatic(
+              LOCAL_DATE_TIME,
+              "of",
+              asList("int", "java.time.Month", "int", "int", "int", "int"),
+              asList(
+                  YEAR,
+                  MONTH_OF_YEAR,
+                  DAY_OF_MONTH,
+                  HOUR_OF_DAY,
+                  MINUTE_OF_HOUR,
+                  SECOND_OF_MINUTE)),
+          createStatic(
+              LOCAL_DATE_TIME,
+              "of",
+              asList("int", "int", "int", "int", "int", "int", "int"),
+              asList(
+                  YEAR,
+                  MONTH_OF_YEAR,
+                  DAY_OF_MONTH,
+                  HOUR_OF_DAY,
+                  MINUTE_OF_HOUR,
+                  SECOND_OF_MINUTE,
+                  NANO_OF_SECOND)),
+          createStatic(
+              LOCAL_DATE_TIME,
+              "of",
+              asList("int", "java.time.Month", "int", "int", "int", "int", "int"),
+              asList(
+                  YEAR,
+                  MONTH_OF_YEAR,
+                  DAY_OF_MONTH,
+                  HOUR_OF_DAY,
+                  MINUTE_OF_HOUR,
+                  SECOND_OF_MINUTE,
+                  NANO_OF_SECOND)),
+          createInstance(LOCAL_DATE_TIME, "withDayOfMonth", asList("int"), asList(DAY_OF_MONTH)),
+          createInstance(LOCAL_DATE_TIME, "withDayOfYear", asList("int"), asList(DAY_OF_YEAR)),
+          createInstance(LOCAL_DATE_TIME, "withHour", asList("int"), asList(HOUR_OF_DAY)),
+          createInstance(LOCAL_DATE_TIME, "withMinute", asList("int"), asList(MINUTE_OF_HOUR)),
+          createInstance(LOCAL_DATE_TIME, "withMonth", asList("int"), asList(MONTH_OF_YEAR)),
+          createInstance(LOCAL_DATE_TIME, "withNano", asList("int"), asList(NANO_OF_SECOND)),
+          createInstance(LOCAL_DATE_TIME, "withSecond", asList("int"), asList(SECOND_OF_MINUTE)),
+          createInstance(LOCAL_DATE_TIME, "withYear", asList("int"), asList(YEAR)));
 
-  private static final ImmutableMap<Matcher<ExpressionTree>, ImmutableList<ChronoField>> APIS =
-      ImmutableMap.<Matcher<ExpressionTree>, ImmutableList<ChronoField>>builder()
-          // put the more popular types at the beginning for a slight speed-up
-          .putAll(LOCAL_TIME_APIS)
-          .putAll(LOCAL_DATE_APIS)
-          .putAll(LOCAL_DATE_TIME_APIS)
-          .putAll(DAY_OF_WEEK_APIS)
-          .putAll(MONTH_APIS)
-          .putAll(MONTH_DAY_APIS)
-          .putAll(YEAR_APIS)
-          .putAll(YEAR_MONTH_APIS)
+  private static final ImmutableList<MatcherWithUnits> APIS =
+      ImmutableList.<MatcherWithUnits>builder()
+          // add the more popular types at the beginning for a slight speed-up
+          .addAll(LOCAL_TIME_APIS)
+          .addAll(LOCAL_DATE_APIS)
+          .addAll(LOCAL_DATE_TIME_APIS)
+          .addAll(DAY_OF_WEEK_APIS)
+          .addAll(MONTH_APIS)
+          .addAll(MONTH_DAY_APIS)
+          .addAll(YEAR_APIS)
+          .addAll(YEAR_MONTH_APIS)
           .build();
 
   private static final Matcher<ExpressionTree> JAVA_MATCHER =
@@ -283,15 +281,15 @@ public final class InvalidJavaTimeConstant extends BugChecker
       return Description.NO_MATCH;
     }
 
-    for (Map.Entry<Matcher<ExpressionTree>, ImmutableList<ChronoField>> entry : APIS.entrySet()) {
-      if (entry.getKey().matches(tree, state)) {
+    for (MatcherWithUnits matcherWithUnits : APIS) {
+      if (matcherWithUnits.matcher().matches(tree, state)) {
         List<? extends ExpressionTree> arguments = tree.getArguments();
         for (int i = 0; i < arguments.size(); i++) {
           ExpressionTree argument = arguments.get(i);
           Number constant = ASTHelpers.constValue(argument, Number.class);
           if (constant != null) {
             try {
-              entry.getValue().get(i).checkValidValue(constant.longValue());
+              matcherWithUnits.units().get(i).checkValidValue(constant.longValue());
             } catch (DateTimeException invalid) {
               return buildDescription(argument).setMessage(invalid.getMessage()).build();
             }
