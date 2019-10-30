@@ -158,4 +158,18 @@ public class InvalidJavaTimeConstantTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void dayOfWeek_withBadDay() {
+    compilationHelper
+        .addSourceLines(
+            "test/TestCase.java",
+            "package test;",
+            "import java.time.DayOfWeek;",
+            "public class TestCase {",
+            "  // BUG: Diagnostic contains: DayOfWeek (valid values 1 - 7): 8",
+            "  private static final DayOfWeek DOW = DayOfWeek.of(8);",
+            "}")
+        .doTest();
+  }
 }
