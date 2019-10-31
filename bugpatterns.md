@@ -204,7 +204,7 @@ __[InstantTemporalUnit](bugpattern/InstantTemporalUnit)__<br>
 Instant APIs only work for NANOS, MICROS, MILLIS, SECONDS, MINUTES, HOURS, HALF_DAYS and DAYS.
 
 __[InvalidJavaTimeConstant](bugpattern/InvalidJavaTimeConstant)__<br>
-This checker errors on calls to java.time methods using literals that are guaranteed to throw a DateTimeException.
+This checker errors on calls to java.time methods using values that are guaranteed to throw a DateTimeException.
 
 __[InvalidPatternSyntax](bugpattern/InvalidPatternSyntax)__<br>
 Invalid syntax used for a regular expression
