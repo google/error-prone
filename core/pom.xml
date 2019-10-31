@@ -24,7 +24,7 @@
     <repository>
       <id>alt-repo1</id>
       <name>repo1.maven.org</name>
-      <url>http://repo1.maven.org</url>
+      <url>https://repo1.maven.org</url>
     </repository>
   </repositories>
 
