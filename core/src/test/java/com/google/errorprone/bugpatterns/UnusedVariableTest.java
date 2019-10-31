@@ -434,6 +434,7 @@ public class UnusedVariableTest {
             "  private int unused;",
             "  private int unusedInt;",
             "  private static final int UNUSED_CONSTANT = 5;",
+            "  private int ignored;",
             "}")
         .doTest();
   }
