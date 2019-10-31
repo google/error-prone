@@ -120,6 +120,8 @@ import javax.lang.model.type.NullType;
 public final class UnusedVariable extends BugChecker implements CompilationUnitTreeMatcher {
   private static final String EXEMPT_PREFIX = "unused";
 
+  private static final ImmutableSet<String> EXEMPT_NAMES = ImmutableSet.of("ignored");
+
 
   /**
    * The set of annotation full names which exempt annotated element from being reported as unused.
@@ -528,7 +530,9 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
   }
 
   private static boolean exemptedByName(Name name) {
-    return Ascii.toLowerCase(name.toString()).startsWith(EXEMPT_PREFIX);
+    String nameString = name.toString();
+    return Ascii.toLowerCase(nameString).startsWith(EXEMPT_PREFIX)
+        || EXEMPT_NAMES.contains(nameString);
   }
 
   private class VariableFinder extends TreePathScanner<Void, Void> {
