@@ -1,0 +1,5 @@
+buildpack:
+  host: git.hubteam.com
+  organization: HubSpotProtected
+  repository: Blazar-Buildpack-Java
+  branch: v2
