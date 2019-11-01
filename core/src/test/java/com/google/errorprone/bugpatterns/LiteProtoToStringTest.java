@@ -120,6 +120,45 @@ public final class LiteProtoToStringTest {
 
 
   @Test
+  public void androidLogAtInfoOrFiner_noWarning() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.protobuf.GeneratedMessageLite;",
+            "class Test {",
+            "  static class Log {",
+            "    static void i(String s) {}",
+            "    static void d(String s) {}",
+            "    static void v(String s) {}",
+            "  }",
+            "  private void test(GeneratedMessageLite message) {",
+            "    Log.i(message.toString());",
+            "    Log.d(message.toString());",
+            "    Log.v(message.toString());",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void androidLogAtWarning_error() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.protobuf.GeneratedMessageLite;",
+            "class Test {",
+            "  static class Log {",
+            "    static void w(String s) {}",
+            "  }",
+            "  private void test(GeneratedMessageLite message) {",
+            "    // BUG: Diagnostic contains:",
+            "    Log.w(message.toString());",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void customFormatMethod() {
     compilationHelper
         .addSourceLines(
