@@ -16,21 +16,28 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.common.collect.Iterables.getLast;
 import static com.google.errorprone.BugPattern.ProvidesFix.REQUIRES_HUMAN_ATTENTION;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
+import static com.google.errorprone.util.ASTHelpers.isSameType;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
 import static java.lang.Boolean.TRUE;
+import static java.util.stream.Collectors.joining;
+import static java.util.stream.Collectors.toCollection;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
+import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.TryTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
+import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
+import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.CatchTree;
 import com.sun.source.tree.ClassTree;
@@ -51,11 +58,13 @@ import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Type.UnionClassType;
 import com.sun.tools.javac.code.Types;
+import com.sun.tools.javac.tree.JCTree;
 import java.util.ArrayDeque;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Stream;
 import javax.annotation.Nullable;
 
 /**
@@ -65,13 +74,73 @@ import javax.annotation.Nullable;
 @BugPattern(
     name = "InterruptedExceptionSwallowed",
     summary =
-        "This catch block catches a supertype of InterruptedException and doesn't handle it"
-            + " separately.",
+        "This catch block appears to be catching InterruptedException as an Exception/Throwable,"
+            + " and not handling the interruption separately.",
     severity = WARNING,
     providesFix = REQUIRES_HUMAN_ATTENTION,
     documentSuppression = false)
-public final class InterruptedExceptionSwallowed extends BugChecker implements TryTreeMatcher {
+public final class InterruptedExceptionSwallowed extends BugChecker
+    implements MethodTreeMatcher, TryTreeMatcher {
   private static final String AUTOCLOSEABLE = "java.lang.AutoCloseable";
+
+  private static final String METHOD_DESCRIPTION =
+      "This method can throw InterruptedException but declares that it throws Exception/Throwable."
+          + " This makes it difficult for callers to recognize the need to handle interruption"
+          + " properly.";
+
+  @Override
+  public Description matchMethod(MethodTree tree, VisitorState state) {
+    if (state.errorProneOptions().isTestOnlyTarget()) {
+      return NO_MATCH;
+    }
+    Type interrupted = state.getSymtab().interruptedExceptionType;
+    if (tree.getThrows().stream().anyMatch(t -> isSubtype(getType(t), interrupted, state))) {
+      return NO_MATCH;
+    }
+    ImmutableSet<Type> thrownExceptions = getThrownExceptions(tree.getBody(), state);
+    // Bail out if none of the exceptions thrown are subtypes of InterruptedException.
+    if (thrownExceptions.stream().noneMatch(t -> isSubtype(t, interrupted, state))) {
+      return NO_MATCH;
+    }
+    // Bail if any of the thrown exceptions are masking InterruptedException: that is, we don't want
+    // to suggest updating with `throws Exception, InterruptedException`.
+    if (thrownExceptions.stream()
+        .anyMatch(t -> !isSameType(t, interrupted, state) && isSubtype(interrupted, t, state))) {
+      return NO_MATCH;
+    }
+    Set<Type> exceptions =
+        Stream.concat(
+                thrownExceptions.stream()
+                    .filter(t -> !isSubtype(t, state.getSymtab().runtimeExceptionType, state)),
+                tree.getThrows().stream()
+                    .filter(t -> !isSubtype(interrupted, getType(t), state))
+                    .map(ASTHelpers::getType))
+            .collect(toCollection(HashSet::new));
+    for (Type type : ImmutableSet.copyOf(exceptions)) {
+      exceptions.removeIf(t -> !isSameType(t, type, state) && isSubtype(t, type, state));
+    }
+
+    // Don't suggest adding more than five exceptions to the method signature.
+    if (exceptions.size() > 5) {
+      return NO_MATCH;
+    }
+
+    SuggestedFix fix = narrowExceptionTypes(tree, exceptions, state);
+    return buildDescription(tree).setMessage(METHOD_DESCRIPTION).addFix(fix).build();
+  }
+
+  private static SuggestedFix narrowExceptionTypes(
+      MethodTree tree, Set<Type> exceptions, VisitorState state) {
+    SuggestedFix.Builder fix = SuggestedFix.builder();
+    fix.replace(
+        ((JCTree) tree.getThrows().get(0)).getStartPosition(),
+        state.getEndPosition(getLast(tree.getThrows())),
+        exceptions.stream()
+            .map(t -> SuggestedFixes.qualifyType(state, fix, t))
+            .sorted()
+            .collect(joining(", ")));
+    return fix.build();
+  }
 
   @Override
   public Description matchTry(TryTree tree, VisitorState state) {
