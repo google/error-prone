@@ -68,9 +68,11 @@ public final class LiteProtoToString extends AbstractToString {
           not(isDescendantOf("com.google.protobuf.ProtocolMessageEnum")),
           not(isDescendantOf("com.google.protobuf.AbstractMessageLite.InternalOneOfEnum")));
 
-  private static final ImmutableSet<String> VERBOSE_LOGGING =
-      ImmutableSet.of(
-          "atVerbose", "atFine", "atFiner", "atFinest", "atDebug", "atConfig", "v", "d");
+  private static final ImmutableSet<String> METHODS_STRIPPED_BY_OPTIMIZER =
+      ImmutableSet.<String>builder()
+          .add("atVerbose", "atFine", "atFiner", "atFinest", "atDebug", "atConfig", "atInfo")
+          .add("v", "d", "i")
+          .build();
 
   @Override
   protected TypePredicate typePredicate() {
@@ -81,19 +83,19 @@ public final class LiteProtoToString extends AbstractToString {
     if (state.errorProneOptions().isTestOnlyTarget()) {
       return false;
     }
-    if (isVerboseLogMessage(state)) {
+    if (isStrippedLogMessage(state)) {
       return false;
     }
     return IS_LITE_PROTO.apply(type, state) || IS_LITE_ENUM.apply(type, state);
   }
 
-  private static boolean isVerboseLogMessage(VisitorState state) {
-    return Streams.stream(state.getPath()).anyMatch(LiteProtoToString::isVerboseLogMessage);
+  private static boolean isStrippedLogMessage(VisitorState state) {
+    return Streams.stream(state.getPath()).anyMatch(LiteProtoToString::isStrippedLogMessage);
   }
 
-  private static boolean isVerboseLogMessage(Tree tree) {
+  private static boolean isStrippedLogMessage(Tree tree) {
     for (; tree instanceof MethodInvocationTree; tree = getReceiver((MethodInvocationTree) tree)) {
-      if (VERBOSE_LOGGING.contains(getSymbol(tree).getSimpleName().toString())) {
+      if (METHODS_STRIPPED_BY_OPTIMIZER.contains(getSymbol(tree).getSimpleName().toString())) {
         return true;
       }
     }
