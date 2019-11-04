@@ -417,14 +417,12 @@ public class CompilationTestHelperTest {
   }
 
   @BugPattern(
-      name = "ThisCheckerCannotBeInstantiated",
-      summary = "A checker that Error Prone can't instantiate.",
+      name = "PrivateConstructorChecker",
+      summary = "A checker that Error Prone can't instantiate because its constructor is private.",
       severity = ERROR)
-  public static class ThisCheckerCannotBeInstantiated extends BugChecker
+  public static class PrivateConstructorChecker extends BugChecker
       implements CompilationUnitTreeMatcher {
-    // One way to create a non-instantiable checker is to make it a non-static nested class.
-    // Here, we just make the constructor private.
-    private ThisCheckerCannotBeInstantiated() {}
+    private PrivateConstructorChecker() {}
 
     @Override
     public Description matchCompilationUnit(CompilationUnitTree tree, VisitorState state) {
@@ -433,12 +431,12 @@ public class CompilationTestHelperTest {
   }
 
   @Test
-  public void cannotInstantiateChecker() {
+  public void cannotInstantiateCheckerWithPrivateConstructor() {
     AssertionError expected =
         assertThrows(
             AssertionError.class,
             () ->
-                CompilationTestHelper.newInstance(ThisCheckerCannotBeInstantiated.class, getClass())
+                CompilationTestHelper.newInstance(PrivateConstructorChecker.class, getClass())
                     .addSourceLines(
                         "test/Test.java",
                         "package test;",
@@ -446,6 +444,82 @@ public class CompilationTestHelperTest {
                         "public class Test {}")
                     .doTest());
     assertThat(expected).hasMessageThat().contains("Could not instantiate BugChecker");
+    assertThat(expected)
+        .hasMessageThat()
+        .contains("Are both the class and the zero-arg constructor public?");
+  }
+
+  @BugPattern(
+      name = "PrivateChecker",
+      summary =
+          "A checker that Error Prone can't instantiate because it is private and has a default"
+              + " constructor.",
+      severity = ERROR)
+  private static class PrivateChecker extends BugChecker implements CompilationUnitTreeMatcher {
+
+    // By JLS 8.8.9, if there are no constructor declarations, then a default constructor with the
+    // same access modifier as the class is implicitly declared.  So here there is a default
+    // constructor with private access.
+
+    @Override
+    public Description matchCompilationUnit(CompilationUnitTree tree, VisitorState state) {
+      return NO_MATCH;
+    }
+  }
+
+  @Test
+  public void cannotInstantiatePrivateChecker() {
+    AssertionError expected =
+        assertThrows(
+            AssertionError.class,
+            () ->
+                CompilationTestHelper.newInstance(PrivateChecker.class, getClass())
+                    .addSourceLines(
+                        "test/Test.java",
+                        "package test;",
+                        "// BUG: Diagnostic contains:",
+                        "public class Test {}")
+                    .doTest());
+    assertThat(expected).hasMessageThat().contains("Could not instantiate BugChecker");
+    assertThat(expected)
+        .hasMessageThat()
+        .contains("Are both the class and the zero-arg constructor public?");
+  }
+
+  @BugPattern(
+      name = "PrivateCheckerWithPublicConstructor",
+      summary =
+          "A checker that Error Prone can't instantiate because the class is private even though"
+              + " the constructor is public.",
+      severity = ERROR)
+  private static class PrivateCheckerWithPublicConstructor extends BugChecker
+      implements CompilationUnitTreeMatcher {
+    public PrivateCheckerWithPublicConstructor() {}
+
+    @Override
+    public Description matchCompilationUnit(CompilationUnitTree tree, VisitorState state) {
+      return NO_MATCH;
+    }
+  }
+
+  @Test
+  public void cannotInstantiatePrivateCheckerWithPublicConstructor() {
+    AssertionError expected =
+        assertThrows(
+            AssertionError.class,
+            () ->
+                CompilationTestHelper.newInstance(
+                        PrivateCheckerWithPublicConstructor.class, getClass())
+                    .addSourceLines(
+                        "test/Test.java",
+                        "package test;",
+                        "// BUG: Diagnostic contains:",
+                        "public class Test {}")
+                    .doTest());
+    assertThat(expected).hasMessageThat().contains("Could not instantiate BugChecker");
+    assertThat(expected)
+        .hasMessageThat()
+        .contains("Are both the class and the zero-arg constructor public?");
   }
 
   /** Test classes used for withClassPath tests */
