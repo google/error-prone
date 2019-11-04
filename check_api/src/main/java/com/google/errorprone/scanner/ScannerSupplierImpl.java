@@ -77,9 +77,18 @@ class ScannerSupplierImpl extends ScannerSupplier implements Serializable {
         throw new LinkageError("Could not instantiate BugChecker.", e);
       }
     }
+
     // If no flags constructor, invoke default constructor.
+    Class<? extends BugChecker> checkerClass = checker.checkerClass();
     try {
-      return checker.checkerClass().getConstructor().newInstance();
+      return checkerClass.getConstructor().newInstance();
+    } catch (NoSuchMethodException | IllegalAccessException e) {
+      throw new LinkageError(
+          String.format(
+              "Could not instantiate BugChecker %s: Are both the class and the zero-arg"
+                  + " constructor public?",
+              checkerClass),
+          e);
     } catch (ReflectiveOperationException e) {
       throw new LinkageError("Could not instantiate BugChecker.", e);
     }
