@@ -221,6 +221,7 @@ import com.google.errorprone.bugpatterns.PackageInfo;
 import com.google.errorprone.bugpatterns.PackageLocation;
 import com.google.errorprone.bugpatterns.ParameterComment;
 import com.google.errorprone.bugpatterns.ParameterName;
+import com.google.errorprone.bugpatterns.ParametersButNotParameterized;
 import com.google.errorprone.bugpatterns.PreconditionsCheckNotNullRepeated;
 import com.google.errorprone.bugpatterns.PreconditionsInvalidPlaceholder;
 import com.google.errorprone.bugpatterns.PredicateIncompatibleType;
@@ -572,6 +573,7 @@ public class BuiltInCheckerSuppliers {
           OverlappingQualifierAndScopeAnnotation.class,
           OverridesJavaxInjectableMethod.class,
           PackageInfo.class,
+          ParametersButNotParameterized.class,
           ParcelableCreator.class,
           PeriodFrom.class,
           PeriodTimeMath.class,
