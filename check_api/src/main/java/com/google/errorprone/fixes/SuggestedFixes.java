@@ -25,6 +25,7 @@ import static com.google.errorprone.util.ASTHelpers.getAnnotationWithSimpleName;
 import static com.google.errorprone.util.ASTHelpers.getModifiers;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.sun.source.tree.Tree.Kind.ASSIGNMENT;
+import static com.sun.source.tree.Tree.Kind.CONDITIONAL_EXPRESSION;
 import static com.sun.source.tree.Tree.Kind.NEW_ARRAY;
 import static com.sun.tools.javac.code.TypeTag.CLASS;
 import static java.util.stream.Collectors.joining;
@@ -51,9 +52,12 @@ import com.google.errorprone.util.FindIdentifiers;
 import com.sun.source.doctree.DocTree;
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.AssignmentTree;
+import com.sun.source.tree.BinaryTree;
 import com.sun.source.tree.ClassTree;
+import com.sun.source.tree.CompoundAssignmentTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
+import com.sun.source.tree.InstanceOfTree;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
@@ -1244,5 +1248,22 @@ public class SuggestedFixes {
       }
     }
     return ImmutableList.of();
+  }
+
+  /** Casts the given {@code expressionTree} to {@code toType}, adding parentheses if necessary. */
+  public static String castTree(ExpressionTree expressionTree, String toType, VisitorState state) {
+    boolean needsParentheses =
+        expressionTree instanceof BinaryTree
+            || expressionTree instanceof AssignmentTree
+            || expressionTree instanceof CompoundAssignmentTree
+            || expressionTree instanceof InstanceOfTree
+            || expressionTree.getKind() == CONDITIONAL_EXPRESSION;
+
+    return "("
+        + toType
+        + ") "
+        + (needsParentheses ? "(" : "")
+        + state.getSourceForNode(expressionTree)
+        + (needsParentheses ? ")" : "");
   }
 }
