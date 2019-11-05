@@ -502,4 +502,84 @@ public class CompileTimeConstantCheckerTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void reportsDiagnostic_whenConstantFieldDeclaredWithoutFinal() {
+    compilationHelper
+        .addSourceLines(
+            "test/CompileTimeConstantTestCase.java",
+            "package test;",
+            "import com.google.errorprone.annotations.CompileTimeConstant;",
+            "public class CompileTimeConstantTestCase {",
+            "  // BUG: Diagnostic contains: . Did you mean to make 's' final?",
+            "  @CompileTimeConstant String s = \"s\";",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void noDiagnostic_whenConstantFieldDeclaredFinal() {
+    compilationHelper
+        .addSourceLines(
+            "test/CompileTimeConstantTestCase.java",
+            "package test;",
+            "import com.google.errorprone.annotations.CompileTimeConstant;",
+            "public class CompileTimeConstantTestCase {",
+            "  @CompileTimeConstant final String s = \"s\";",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void reportsDiagnostic_whenInitialisingFinalFieldWithNonConstant() {
+    compilationHelper
+        .addSourceLines(
+            "test/CompileTimeConstantTestCase.java",
+            "package test;",
+            "import com.google.errorprone.annotations.CompileTimeConstant;",
+            "public class CompileTimeConstantTestCase {",
+            "  @CompileTimeConstant final String s;",
+            "  CompileTimeConstantTestCase(String s) {",
+            "    // BUG: Diagnostic contains: Non-compile-time constant expression",
+            "    this.s = s;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void noDiagnostic_whenInitialisingFinalFieldWithConstant() {
+    compilationHelper
+        .addSourceLines(
+            "test/CompileTimeConstantTestCase.java",
+            "package test;",
+            "import com.google.errorprone.annotations.CompileTimeConstant;",
+            "public class CompileTimeConstantTestCase {",
+            "  @CompileTimeConstant final String s;",
+            "  CompileTimeConstantTestCase(@CompileTimeConstant String s) {",
+            "    this.s = s;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void noDiagnostic_whenInvokingMethodWithFinalField() {
+    compilationHelper
+        .addSourceLines(
+            "test/CompileTimeConstantTestCase.java",
+            "package test;",
+            "import com.google.errorprone.annotations.CompileTimeConstant;",
+            "public class CompileTimeConstantTestCase {",
+            "  @CompileTimeConstant final String s;",
+            "  CompileTimeConstantTestCase(@CompileTimeConstant String s) {",
+            "    this.s = s;",
+            "  }",
+            "  void invokeCTCMethod() {",
+            "    ctcMethod(s);",
+            "  }",
+            "  void ctcMethod(@CompileTimeConstant String s) {}",
+            "}")
+        .doTest();
+  }
 }

@@ -24,15 +24,18 @@ import static com.google.errorprone.matchers.CompileTimeConstantExpressionMatche
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
+import com.google.errorprone.bugpatterns.BugChecker.AssignmentTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.LambdaExpressionTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.MemberReferenceTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.NewClassTreeMatcher;
+import com.google.errorprone.bugpatterns.BugChecker.VariableTreeMatcher;
 import com.google.errorprone.matchers.CompileTimeConstantExpressionMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
+import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.LambdaExpressionTree;
 import com.sun.source.tree.MemberReferenceTree;
@@ -40,6 +43,7 @@ import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.Tree;
+import com.sun.source.tree.VariableTree;
 import com.sun.tools.javac.code.Flags;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
@@ -47,10 +51,13 @@ import com.sun.tools.javac.code.Symbol.VarSymbol;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import javax.lang.model.element.ElementKind;
 
 /**
  * Detects invocations of methods with a parameter annotated {@code @CompileTimeConstant} such that
- * the corresponding actual parameter is not a compile-time constant expression.
+ * the corresponding actual parameter is not a compile-time constant expression, and initialisation
+ * of fields declared {@code @CompileTimeConstant final} such that the actual value is not a
+ * compile-time constant expression.
  *
  * <p>This type annotation checker enforces that for all method and constructor invocations, for all
  * formal parameters of the invoked method/constructor that are annotated with the {@link
@@ -62,7 +69,21 @@ import java.util.List;
  *       time, or
  *   <li>the expression consists of the literal {@code null}, or
  *   <li>the expression consists of a single identifier, where the identifier is a formal method
- *       parameter that is declared {@code final} and has the {@link
+ *       parameter or class field that is declared {@code final} and has the {@link
+ *       com.google.errorprone.annotations.CompileTimeConstant} annotation.
+ * </ol>
+ *
+ * <p>This type annotation checker also enforces that for all field declarations annotated with the
+ * {@link com.google.errorprone.annotations.CompileTimeConstant} type annotation, the field is also
+ * declared {@code final} and the corresponding initialised value satifsies one of the following
+ * conditions:
+ *
+ * <ol>
+ *   <li>The expression is one for which the Java compiler can determine a constant value at compile
+ *       time, or
+ *   <li>the expression consists of the literal {@code null}, or
+ *   <li>the expression consists of a single identifier, where the identifier is a formal method
+ *       parameter or class field that is declared {@code final} and has the {@link
  *       com.google.errorprone.annotations.CompileTimeConstant} annotation.
  * </ol>
  *
@@ -83,7 +104,9 @@ public class CompileTimeConstantChecker extends BugChecker
         MemberReferenceTreeMatcher,
         MethodInvocationTreeMatcher,
         MethodTreeMatcher,
-        NewClassTreeMatcher {
+        NewClassTreeMatcher,
+        VariableTreeMatcher,
+        AssignmentTreeMatcher {
 
   private static final String DID_YOU_MEAN_FINAL_FMT_MESSAGE = " Did you mean to make '%s' final?";
 
@@ -223,6 +246,41 @@ public class CompileTimeConstantChecker extends BugChecker
       return Description.NO_MATCH;
     }
     return checkLambda(node, state, compileTimeConstantAnnotationIndexes);
+  }
+
+  @Override
+  public Description matchVariable(VariableTree node, VisitorState state) {
+    Symbol symbol = ASTHelpers.getSymbol(node);
+    if (symbol.owner.getKind() != ElementKind.CLASS) {
+      return Description.NO_MATCH;
+    }
+    if (!hasCompileTimeConstantAnnotation(state, symbol)) {
+      return Description.NO_MATCH;
+    }
+    if ((symbol.flags() & Flags.FINAL) == Flags.FINAL) {
+      return Description.NO_MATCH;
+    }
+    return buildDescription(node)
+        .setMessage(
+            this.message() + String.format(DID_YOU_MEAN_FINAL_FMT_MESSAGE, symbol.getSimpleName()))
+        .build();
+  }
+
+  @Override
+  public Description matchAssignment(AssignmentTree node, VisitorState state) {
+    ExpressionTree variable = node.getVariable();
+    ExpressionTree expression = node.getExpression();
+    Symbol assignedSymbol = ASTHelpers.getSymbol(variable);
+    if (assignedSymbol.owner.getKind() != ElementKind.CLASS) {
+      return Description.NO_MATCH;
+    }
+    if (!hasCompileTimeConstantAnnotation(state, assignedSymbol)) {
+      return Description.NO_MATCH;
+    }
+    if (compileTimeConstExpressionMatcher.matches(expression, state)) {
+      return Description.NO_MATCH;
+    }
+    return describeMatch(expression);
   }
 
   private Description checkLambda(
