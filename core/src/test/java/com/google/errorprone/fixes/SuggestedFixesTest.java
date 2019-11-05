@@ -1544,4 +1544,45 @@ public class SuggestedFixesTest {
         .map(toDescriptionFn)
         .orElse(NO_MATCH);
   }
+
+  /** Test checker that casts return expressions to int. */
+  @BugPattern(
+      name = "AddSuppressWarningsIfCompilationSucceedsInAllCompilationUnits",
+      summary = "",
+      severity = ERROR)
+  public static final class CastTreeToIntChecker extends BugChecker implements ReturnTreeMatcher {
+    @Override
+    public Description matchReturn(ReturnTree tree, VisitorState state) {
+      return describeMatch(
+          tree,
+          SuggestedFix.replace(
+              tree.getExpression(), SuggestedFixes.castTree(tree.getExpression(), "int", state)));
+    }
+  }
+
+  @Test
+  public void castTree() {
+    BugCheckerRefactoringTestHelper.newInstance(new CastTreeToIntChecker(), getClass())
+        .addInputLines(
+            "Test.java",
+            "class Test {",
+            "  public int one() { return 1; }",
+            "  public int negateOne() { return ~1; }",
+            "  public int castOne() { return (short) 1; }",
+            "  public int onePlusOne() { return 1 + 1; }",
+            "  public int simpleAssignment() { int a = 0; return a = 1; }",
+            "  public int compoundAssignment() { int a = 0; return a += 1; }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "class Test {",
+            "  public int one() { return (int) 1; }",
+            "  public int negateOne() { return (int) ~1; }",
+            "  public int castOne() { return (int) (short) 1; }",
+            "  public int onePlusOne() { return (int) (1 + 1); }",
+            "  public int simpleAssignment() { int a = 0; return (int) (a = 1); }",
+            "  public int compoundAssignment() { int a = 0; return (int) (a += 1); }",
+            "}")
+        .doTest();
+  }
 }
