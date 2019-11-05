@@ -16,9 +16,9 @@
 
 package com.google.errorprone.matchers;
 
+import static com.google.common.truth.Truth.assertThat;
 import static com.google.common.truth.Truth.assertWithMessage;
 
-import com.google.common.truth.Truth;
 import com.google.errorprone.CompilationTestHelper;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.annotations.CompileTimeConstant;
@@ -179,9 +179,9 @@ public class CompileTimeConstantExpressionMatcherTest {
   // and assignments to such variables are compile-time-constant.
   // For now, the annotation's target is restricted to ElementType.PARAMETER.
   @Test
-  public void testCompileTimeConstantAnnotationOnlyAllowedOnParameter() {
-    Truth.assertThat(CompileTimeConstant.class.getAnnotation(Target.class).value())
-        .isEqualTo(new ElementType[] {ElementType.PARAMETER});
+  public void testCompileTimeConstantAnnotationOnlyAllowedOnParameterOrField() {
+    assertThat(CompileTimeConstant.class.getAnnotation(Target.class).value())
+        .isEqualTo(new ElementType[] {ElementType.PARAMETER, ElementType.FIELD});
   }
 
   @Test

@@ -47,14 +47,13 @@ public class CompileTimeConstantExpressionMatcher implements Matcher<ExpressionT
   private static final String COMPILE_TIME_CONSTANT_ANNOTATION =
       CompileTimeConstant.class.getName();
 
-  @SuppressWarnings("unchecked")
   private final Matcher<ExpressionTree> matcher =
       Matchers.anyOf(
           // TODO(xtof): Consider utilising mdempsky's closed-over-addition matcher
           // (perhaps extended for other arithmetic operations).
           new ExpressionWithConstValueMatcher(),
           Matchers.kindIs(Tree.Kind.NULL_LITERAL),
-          new FinalCompileTimeConstantParameterMatcher());
+          new FinalCompileTimeConstantIdentifierMatcher());
 
   @Override
   public boolean matches(ExpressionTree t, VisitorState state) {
@@ -98,8 +97,11 @@ public class CompileTimeConstantExpressionMatcher implements Matcher<ExpressionT
     }
   }
 
-  /** A matcher that matches a {@code @CompileTimeConstant final} parameter}. */
-  private static final class FinalCompileTimeConstantParameterMatcher
+  /**
+   * A matcher that matches a {@code @CompileTimeConstant final} identifier}. These can either be a
+   * method parameter or a class field.
+   */
+  private static final class FinalCompileTimeConstantIdentifierMatcher
       implements Matcher<ExpressionTree> {
 
     @Override
@@ -110,8 +112,10 @@ public class CompileTimeConstantExpressionMatcher implements Matcher<ExpressionT
       Symbol.VarSymbol varSymbol = (Symbol.VarSymbol) ASTHelpers.getSymbol(t);
       Symbol owner = varSymbol.owner;
       ElementKind ownerKind = owner.getKind();
-      // Check that the identifier is a formal method/constructor parameter.
-      if (ownerKind != ElementKind.METHOD && ownerKind != ElementKind.CONSTRUCTOR) {
+      // Check that the identifier is a formal method/constructor parameter or a class field.
+      if (ownerKind != ElementKind.METHOD
+          && ownerKind != ElementKind.CONSTRUCTOR
+          && ownerKind != ElementKind.CLASS) {
         return false;
       }
       // Check that the symbol is final

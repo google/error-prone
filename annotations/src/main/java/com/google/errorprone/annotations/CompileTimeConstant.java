@@ -24,8 +24,8 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
 /**
- * Annotation for method parameter declarations, which denotes that corresponding actual parameters
- * must be compile-time constant expressions.
+ * Annotation for method parameter and class field declarations, which denotes that corresponding
+ * actual values must be compile-time constant expressions.
  *
  * <p>When the formal parameter of a method or constructor is annotated with the {@link
  * CompileTimeConstant} type annotation, the corresponding actual parameter must be an expression
@@ -36,8 +36,8 @@ import java.lang.annotation.Target;
  *       time, or
  *   <li>the expression consists of the literal {@code null}, or
  *   <li>the expression consists of a single identifier, where the identifier is a formal method
- *       parameter that is declared {@code final} and has the {@link CompileTimeConstant}
- *       annotation.
+ *       parameter or class field that is declared {@code final} and has the {@link
+ *       CompileTimeConstant} annotation.
  * </ol>
  *
  * <p>This constraint on call sites of methods or constructors that have one or more formal
@@ -68,6 +68,61 @@ import java.lang.annotation.Target;
  * }
  * }</pre>
  *
+ * <p>When a class field is annotated with the {@link CompileTimeConstant} type annotation, the
+ * field must also be declared to be {@code final}, and the corresponding initialised value must be
+ * an expression that satisfies one of the following conditions:
+ *
+ * <ol>
+ *   <li>The expression is one for which the Java compiler can determine a constant value at compile
+ *       time, or
+ *   <li>the expression consists of the literal {@code null}, or
+ *   <li>the expression consists of a single identifier, where the identifier is a formal method
+ *       parameter or class field that is declared {@code final} and has the {@link
+ *       CompileTimeConstant} annotation.
+ * </ol>
+ *
+ * <p>This constraint on fields with this annotation is enforced by <a
+ * href="https://errorprone.info">error-prone</a>.
+ *
+ * <p>For example, the following code snippet is legal:
+ *
+ * <pre>{@code
+ * public class C {
+ *   \@CompileTimeConstant final String S;
+ *   public C(@CompileTimeConstant String s) {
+ *     this.S = s;
+ *   }
+ *   void m(@CompileTimeConstant final String s) { }
+ *   void n() {
+ *     m(S);
+ *   }
+ * }
+ * }</pre>
+ *
+ * <p>In contrast, the following are illegal:
+ *
+ * <pre>{@code
+ * public class C {
+ *   \@CompileTimeConstant String S;
+ *   public C(@CompileTimeConstant String s) {
+ *     this.S = s;
+ *   }
+ *   void m(@CompileTimeConstant final String s) { }
+ *   void n() {
+ *     m(S);
+ *   }
+ * }
+ * }</pre>
+ *
+ * <pre>{@code
+ * public class C {
+ *   \@CompileTimeConstant final String S;
+ *   public C(String s) {
+ *     this.S = s;
+ *   }
+ * }
+ * }</pre>
+ *
  * <p>Compile-time constant values are implicitly under the control of the trust domain of the
  * application whose source code they are part of. Hence, this annotation is useful to constrain the
  * use of APIs that may only be safely called with values that are under application control.
@@ -80,5 +135,5 @@ import java.lang.annotation.Target;
  */
 @Documented
 @Retention(CLASS)
-@Target({ElementType.PARAMETER})
+@Target({ElementType.PARAMETER, ElementType.FIELD})
 public @interface CompileTimeConstant {}
