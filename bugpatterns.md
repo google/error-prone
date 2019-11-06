@@ -311,6 +311,9 @@ This method is not annotated with @Inject, but it overrides a method that is  an
 __[PackageInfo](bugpattern/PackageInfo)__<br>
 Declaring types inside package-info.java files is very bad form
 
+__[ParametersButNotParameterized](bugpattern/ParametersButNotParameterized)__<br>
+This test has @Parameters but is using the default JUnit4 runner. The parameters will have no effect.
+
 __[ParcelableCreator](bugpattern/ParcelableCreator)__<br>
 Detects classes which implement Parcelable but don&#39;t have CREATOR
 

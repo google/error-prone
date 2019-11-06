@@ -95,10 +95,10 @@
 <br>
 <pre><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/Documented.html?is-external=true" title="class or interface in java.lang.annotation">@Documented</a>
  <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/Retention.html?is-external=true" title="class or interface in java.lang.annotation">@Retention</a>(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/Retention.html?is-external=true#value--" title="class or interface in java.lang.annotation">value</a>=<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/RetentionPolicy.html?is-external=true#CLASS" title="class or interface in java.lang.annotation">CLASS</a>)
- <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/Target.html?is-external=true" title="class or interface in java.lang.annotation">@Target</a>(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/Target.html?is-external=true#value--" title="class or interface in java.lang.annotation">value</a>=<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/ElementType.html?is-external=true#PARAMETER" title="class or interface in java.lang.annotation">PARAMETER</a>)
+ <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/Target.html?is-external=true" title="class or interface in java.lang.annotation">@Target</a>(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/Target.html?is-external=true#value--" title="class or interface in java.lang.annotation">value</a>={<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/ElementType.html?is-external=true#PARAMETER" title="class or interface in java.lang.annotation">PARAMETER</a>,<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/ElementType.html?is-external=true#FIELD" title="class or interface in java.lang.annotation">FIELD</a>})
 public @interface <span class="memberNameLabel">CompileTimeConstant</span></pre>
-<div class="block">Annotation for method parameter declarations, which denotes that corresponding actual parameters
- must be compile-time constant expressions.
+<div class="block">Annotation for method parameter and class field declarations, which denotes that corresponding
+ actual values must be compile-time constant expressions.
 
  <p>When the formal parameter of a method or constructor is annotated with the <a href="../../../../com/google/errorprone/annotations/CompileTimeConstant.html" title="annotation in com.google.errorprone.annotations"><code>CompileTimeConstant</code></a> type annotation, the corresponding actual parameter must be an expression
  that satisfies one of the following conditions:
@@ -108,8 +108,7 @@ public @interface <span class="memberNameLabel">CompileTimeConstant</span></pre>
        time, or
    <li>the expression consists of the literal <code>null</code>, or
    <li>the expression consists of a single identifier, where the identifier is a formal method
-       parameter that is declared <code>final</code> and has the <a href="../../../../com/google/errorprone/annotations/CompileTimeConstant.html" title="annotation in com.google.errorprone.annotations"><code>CompileTimeConstant</code></a>
-       annotation.
+       parameter or class field that is declared <code>final</code> and has the <a href="../../../../com/google/errorprone/annotations/CompileTimeConstant.html" title="annotation in com.google.errorprone.annotations"><code>CompileTimeConstant</code></a> annotation.
  </ol>
 
  <p>This constraint on call sites of methods or constructors that have one or more formal
@@ -136,6 +135,60 @@ public @interface <span class="memberNameLabel">CompileTimeConstant</span></pre>
    void m(@CompileTimeConstant final String s) { }
    void n(String t) {
      m(t);
+   }
+ }
+ </code></pre>
+
+ <p>When a class field is annotated with the <a href="../../../../com/google/errorprone/annotations/CompileTimeConstant.html" title="annotation in com.google.errorprone.annotations"><code>CompileTimeConstant</code></a> type annotation, the
+ field must also be declared to be <code>final</code>, and the corresponding initialised value must be
+ an expression that satisfies one of the following conditions:
+
+ <ol>
+   <li>The expression is one for which the Java compiler can determine a constant value at compile
+       time, or
+   <li>the expression consists of the literal <code>null</code>, or
+   <li>the expression consists of a single identifier, where the identifier is a formal method
+       parameter or class field that is declared <code>final</code> and has the <a href="../../../../com/google/errorprone/annotations/CompileTimeConstant.html" title="annotation in com.google.errorprone.annotations"><code>CompileTimeConstant</code></a> annotation.
+ </ol>
+
+ <p>This constraint on fields with this annotation is enforced by <a
+ href="https://errorprone.info">error-prone</a>.
+
+ <p>For example, the following code snippet is legal:
+
+ <pre><code>
+ public class C {
+   \@CompileTimeConstant final String S;
+   public C(@CompileTimeConstant String s) {
+     this.S = s;
+   }
+   void m(@CompileTimeConstant final String s) { }
+   void n() {
+     m(S);
+   }
+ }
+ </code></pre>
+
+ <p>In contrast, the following are illegal:
+
+ <pre><code>
+ public class C {
+   \@CompileTimeConstant String S;
+   public C(@CompileTimeConstant String s) {
+     this.S = s;
+   }
+   void m(@CompileTimeConstant final String s) { }
+   void n() {
+     m(S);
+   }
+ }
+ </code></pre>
+
+ <pre><code>
+ public class C {
+   \@CompileTimeConstant final String S;
+   public C(String s) {
+     this.S = s;
    }
  }
  </code></pre>

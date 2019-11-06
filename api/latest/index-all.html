@@ -1479,6 +1479,10 @@
 <div class="block">Whether the method could *possibly* be static: i.e., this is false if it references an
  instance field.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/fixes/SuggestedFixes.html#castTree-com.sun.source.tree.ExpressionTree-java.lang.String-com.google.errorprone.VisitorState-">castTree(ExpressionTree, String, VisitorState)</a></span> - Static method in class com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/SuggestedFixes.html" title="class in com.google.errorprone.fixes">SuggestedFixes</a></dt>
+<dd>
+<div class="block">Casts the given <code>expressionTree</code> to <code>toType</code>, adding parentheses if necessary.</div>
+</dd>
 <dt><a href="com/google/errorprone/bugpatterns/CatchAndPrintStackTrace.html" title="class in com.google.errorprone.bugpatterns"><span class="typeNameLink">CatchAndPrintStackTrace</span></a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/CatchAndPrintStackTrace.html#CatchAndPrintStackTrace--">CatchAndPrintStackTrace()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/CatchAndPrintStackTrace.html" title="class in com.google.errorprone.bugpatterns">CatchAndPrintStackTrace</a></dt>
@@ -1953,13 +1957,15 @@
 </dd>
 <dt><a href="com/google/errorprone/annotations/CompileTimeConstant.html" title="annotation in com.google.errorprone.annotations"><span class="typeNameLink">CompileTimeConstant</span></a> - Annotation Type in <a href="com/google/errorprone/annotations/package-summary.html">com.google.errorprone.annotations</a></dt>
 <dd>
-<div class="block">Annotation for method parameter declarations, which denotes that corresponding actual parameters
- must be compile-time constant expressions.</div>
+<div class="block">Annotation for method parameter and class field declarations, which denotes that corresponding
+ actual values must be compile-time constant expressions.</div>
 </dd>
 <dt><a href="com/google/errorprone/bugpatterns/CompileTimeConstantChecker.html" title="class in com.google.errorprone.bugpatterns"><span class="typeNameLink">CompileTimeConstantChecker</span></a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
 <dd>
 <div class="block">Detects invocations of methods with a parameter annotated <code>@CompileTimeConstant</code> such that
- the corresponding actual parameter is not a compile-time constant expression.</div>
+ the corresponding actual parameter is not a compile-time constant expression, and initialisation
+ of fields declared <code>@CompileTimeConstant final</code> such that the actual value is not a
+ compile-time constant expression.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/CompileTimeConstantChecker.html#CompileTimeConstantChecker--">CompileTimeConstantChecker()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/CompileTimeConstantChecker.html" title="class in com.google.errorprone.bugpatterns">CompileTimeConstantChecker</a></dt>
 <dd>&nbsp;</dd>
@@ -6340,6 +6346,8 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/BugChecker.AssignmentTreeMatcher.html#matchAssignment-com.sun.source.tree.AssignmentTree-com.google.errorprone.VisitorState-">matchAssignment(AssignmentTree, VisitorState)</a></span> - Method in interface com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/BugChecker.AssignmentTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.AssignmentTreeMatcher</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/CompileTimeConstantChecker.html#matchAssignment-com.sun.source.tree.AssignmentTree-com.google.errorprone.VisitorState-">matchAssignment(AssignmentTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/CompileTimeConstantChecker.html" title="class in com.google.errorprone.bugpatterns">CompileTimeConstantChecker</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/IntLongMath.html#matchAssignment-com.sun.source.tree.AssignmentTree-com.google.errorprone.VisitorState-">matchAssignment(AssignmentTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/IntLongMath.html" title="class in com.google.errorprone.bugpatterns">IntLongMath</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/NoAllocationChecker.html#matchAssignment-com.sun.source.tree.AssignmentTree-com.google.errorprone.VisitorState-">matchAssignment(AssignmentTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/NoAllocationChecker.html" title="class in com.google.errorprone.bugpatterns">NoAllocationChecker</a></dt>
@@ -6513,6 +6521,8 @@
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/overloading/InconsistentOverloads.html#matchClass-com.sun.source.tree.ClassTree-com.google.errorprone.VisitorState-">matchClass(ClassTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.overloading.<a href="com/google/errorprone/bugpatterns/overloading/InconsistentOverloads.html" title="class in com.google.errorprone.bugpatterns.overloading">InconsistentOverloads</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/OverrideThrowableToString.html#matchClass-com.sun.source.tree.ClassTree-com.google.errorprone.VisitorState-">matchClass(ClassTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/OverrideThrowableToString.html" title="class in com.google.errorprone.bugpatterns">OverrideThrowableToString</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/ParametersButNotParameterized.html#matchClass-com.sun.source.tree.ClassTree-com.google.errorprone.VisitorState-">matchClass(ClassTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/ParametersButNotParameterized.html" title="class in com.google.errorprone.bugpatterns">ParametersButNotParameterized</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/PrivateConstructorForUtilityClass.html#matchClass-com.sun.source.tree.ClassTree-com.google.errorprone.VisitorState-">matchClass(ClassTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/PrivateConstructorForUtilityClass.html" title="class in com.google.errorprone.bugpatterns">PrivateConstructorForUtilityClass</a></dt>
 <dd>&nbsp;</dd>
@@ -7484,6 +7494,8 @@
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/BugChecker.VariableTreeMatcher.html#matchVariable-com.sun.source.tree.VariableTree-com.google.errorprone.VisitorState-">matchVariable(VariableTree, VisitorState)</a></span> - Method in interface com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/BugChecker.VariableTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.VariableTreeMatcher</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/CannotMockFinalClass.html#matchVariable-com.sun.source.tree.VariableTree-com.google.errorprone.VisitorState-">matchVariable(VariableTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/CannotMockFinalClass.html" title="class in com.google.errorprone.bugpatterns">CannotMockFinalClass</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/CompileTimeConstantChecker.html#matchVariable-com.sun.source.tree.VariableTree-com.google.errorprone.VisitorState-">matchVariable(VariableTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/CompileTimeConstantChecker.html" title="class in com.google.errorprone.bugpatterns">CompileTimeConstantChecker</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/ConstantField.html#matchVariable-com.sun.source.tree.VariableTree-com.google.errorprone.VisitorState-">matchVariable(VariableTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/ConstantField.html" title="class in com.google.errorprone.bugpatterns">ConstantField</a></dt>
 <dd>&nbsp;</dd>
@@ -8588,6 +8600,12 @@
 <dt><a href="com/google/errorprone/bugpatterns/nullness/ParameterNotNullable.html" title="class in com.google.errorprone.bugpatterns.nullness"><span class="typeNameLink">ParameterNotNullable</span></a> - Class in <a href="com/google/errorprone/bugpatterns/nullness/package-summary.html">com.google.errorprone.bugpatterns.nullness</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/nullness/ParameterNotNullable.html#ParameterNotNullable--">ParameterNotNullable()</a></span> - Constructor for class com.google.errorprone.bugpatterns.nullness.<a href="com/google/errorprone/bugpatterns/nullness/ParameterNotNullable.html" title="class in com.google.errorprone.bugpatterns.nullness">ParameterNotNullable</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/bugpatterns/ParametersButNotParameterized.html" title="class in com.google.errorprone.bugpatterns"><span class="typeNameLink">ParametersButNotParameterized</span></a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
+<dd>
+<div class="block">Flags uses of parameters in non-parameterized tests.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/ParametersButNotParameterized.html#ParametersButNotParameterized--">ParametersButNotParameterized()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/ParametersButNotParameterized.html" title="class in com.google.errorprone.bugpatterns">ParametersButNotParameterized</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/matchers/method/MethodInvocationMatcher.Token.ParameterTypes.html#ParameterTypes--">ParameterTypes()</a></span> - Constructor for class com.google.errorprone.matchers.method.<a href="com/google/errorprone/matchers/method/MethodInvocationMatcher.Token.ParameterTypes.html" title="class in com.google.errorprone.matchers.method">MethodInvocationMatcher.Token.ParameterTypes</a></dt>
 <dd>&nbsp;</dd>
