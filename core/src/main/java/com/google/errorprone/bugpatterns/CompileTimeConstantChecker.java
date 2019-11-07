@@ -271,6 +271,9 @@ public class CompileTimeConstantChecker extends BugChecker
     ExpressionTree variable = node.getVariable();
     ExpressionTree expression = node.getExpression();
     Symbol assignedSymbol = ASTHelpers.getSymbol(variable);
+    if (assignedSymbol == null || assignedSymbol.owner == null) {
+      return Description.NO_MATCH;
+    }
     if (assignedSymbol.owner.getKind() != ElementKind.CLASS) {
       return Description.NO_MATCH;
     }
