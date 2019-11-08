@@ -275,6 +275,7 @@ import com.google.errorprone.bugpatterns.ThrowNull;
 import com.google.errorprone.bugpatterns.ThrowSpecificExceptions;
 import com.google.errorprone.bugpatterns.ThrowsUncheckedException;
 import com.google.errorprone.bugpatterns.ToStringReturnsNull;
+import com.google.errorprone.bugpatterns.TransientMisuse;
 import com.google.errorprone.bugpatterns.TreeToString;
 import com.google.errorprone.bugpatterns.TruthAssertExpected;
 import com.google.errorprone.bugpatterns.TruthConstantAsserts;
@@ -879,6 +880,7 @@ public class BuiltInCheckerSuppliers {
           ThrowSpecificExceptions.class,
           ThrowsUncheckedException.class,
           TimeUnitMismatch.class,
+          TransientMisuse.class,
           TryFailRefactoring.class,
           TypeParameterNaming.class,
           UnescapedEntity.class,
