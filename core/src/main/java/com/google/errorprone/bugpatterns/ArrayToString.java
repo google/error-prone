@@ -60,7 +60,7 @@ public class ArrayToString extends AbstractToString {
 
   @Override
   protected boolean allowableToStringKind(ToStringKind toStringKind) {
-    return toStringKind == ToStringKind.FLOGGER;
+    return toStringKind == ToStringKind.FLOGGER || toStringKind == ToStringKind.FORMAT_METHOD;
   }
 
   @Override

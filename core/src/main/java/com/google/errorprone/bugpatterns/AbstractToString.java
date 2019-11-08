@@ -93,9 +93,10 @@ public abstract class AbstractToString extends BugChecker
       instanceMethod().onDescendantOf("com.google.common.flogger.LoggingApi").named("log");
 
   private static final Matcher<ExpressionTree> FORMAT_METHOD =
-      anyOf(
-          symbolHasAnnotation(FormatMethod.class),
-          staticMethod().onClass("java.lang.String").named("format"));
+      symbolHasAnnotation(FormatMethod.class);
+
+  private static final Matcher<ExpressionTree> STRING_FORMAT =
+      staticMethod().onClass("java.lang.String").named("format");
 
   private static final Matcher<ExpressionTree> VALUE_OF =
       staticMethod()
@@ -147,6 +148,13 @@ public abstract class AbstractToString extends BugChecker
       }
     }
     if (FORMAT_METHOD.matches(tree, state)) {
+      for (ExpressionTree argTree : tree.getArguments()) {
+        if (isInVarargsPosition(argTree, tree, state)) {
+          handleStringifiedTree(argTree, ToStringKind.FORMAT_METHOD, state);
+        }
+      }
+    }
+    if (STRING_FORMAT.matches(tree, state)) {
       for (ExpressionTree argTree : tree.getArguments()) {
         if (isInVarargsPosition(argTree, tree, state)) {
           handleStringifiedTree(argTree, ToStringKind.IMPLICIT, state);
@@ -214,6 +222,7 @@ public abstract class AbstractToString extends BugChecker
     switch (toStringKind) {
       case IMPLICIT:
       case FLOGGER:
+      case FORMAT_METHOD:
         return implicitToStringFix(tree, state);
       case EXPLICIT:
         return toStringFix(parent, tree, state);
@@ -235,6 +244,7 @@ public abstract class AbstractToString extends BugChecker
     IMPLICIT,
     /** {@code String.valueOf()} or {@code #toString()}. */
     EXPLICIT,
+    FORMAT_METHOD,
     FLOGGER,
     NONE,
   }

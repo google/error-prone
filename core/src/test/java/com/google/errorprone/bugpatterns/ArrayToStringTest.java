@@ -113,6 +113,10 @@ public class ArrayToStringTest {
         .doTest();
   }
 
+  /**
+   * Don't complain about {@code @FormatMethod}s; there's a chance they're handling arrays
+   * correctly.
+   */
   @Test
   public void customFormatMethod() {
     compilationHelper
@@ -121,29 +125,10 @@ public class ArrayToStringTest {
             "import com.google.errorprone.annotations.FormatMethod;",
             "class Test {",
             "  private void test(Object[] arr) {",
-            "    // BUG: Diagnostic contains:",
             "    format(\"%s %s\", arr, 2);",
             "  }",
             "  @FormatMethod",
             "  String format(String format, Object... args) {",
-            "    return String.format(format, args);",
-            "  }",
-            "}")
-        .doTest();
-  }
-
-  @Test
-  public void customFormatMethod_varargsPassedThrough() {
-    compilationHelper
-        .addSourceLines(
-            "Test.java",
-            "import com.google.errorprone.annotations.FormatMethod;",
-            "class Test {",
-            "  private void test(String format, Object... args) {",
-            "    format(null, format, args);",
-            "  }",
-            "  @FormatMethod",
-            "  String format(Object tag, String format, Object... args) {",
             "    return String.format(format, args);",
             "  }",
             "}")
