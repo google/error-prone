@@ -1133,6 +1133,9 @@ Consider throwing more specific exceptions rather than (e.g.) RuntimeException. 
 __[TimeUnitMismatch](bugpattern/TimeUnitMismatch)__<br>
 An value that appears to be represented in one unit is used where another appears to be required (e.g., seconds where nanos are needed)
 
+__[TransientMisuse](bugpattern/TransientMisuse)__<br>
+Static fields are implicitly transient, so the explicit modifier is unnecessary
+
 __[UnescapedEntity](bugpattern/UnescapedEntity)__<br>
 Javadoc is interpreted as HTML, so HTML entities such as &amp;, &lt;, &gt; must be escaped.
 

@@ -45,4 +45,9 @@ For more information on possible format string errors, see the documentation on
 the [FormatString check](FormatString).
 
 ## Suppression
+
+Suppress false positives by adding the suppression annotation
+@SuppressWarnings("FormatStringAnnotation") to the enclosing element.
+
+## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("FormatStringAnnotation")` to the enclosing element.

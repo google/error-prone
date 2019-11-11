@@ -97,6 +97,12 @@ public class ArrayToStringPositiveCases {
     // BUG: Diagnostic contains: Throwables.getStackTraceAsString(e)
     System.out.println(e.getStackTrace().toString());
   }
+
+  public void arrayOfArrays() {
+    int[][] a = {};
+    // BUG: Diagnostic contains: Arrays.deepToString(a)
+    System.out.println(a);
+  }
 }
 {% endhighlight %}
 
