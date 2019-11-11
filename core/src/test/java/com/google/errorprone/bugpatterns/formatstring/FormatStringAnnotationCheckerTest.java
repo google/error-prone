@@ -319,4 +319,21 @@ public class FormatStringAnnotationCheckerTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void negative_noFormatString() {
+    compilationHelper
+        .addSourceLines(
+            "test/FormatStringTestCase.java",
+            "package test;",
+            "import com.google.errorprone.annotations.FormatMethod;",
+            "public class FormatStringTestCase {",
+            "  // BUG: Diagnostic contains: must contain at least one String parameter",
+            "  @FormatMethod public static void log(int x, int y) {}",
+            "  void test() { ",
+            "    log(1, 2);",
+            "  }",
+            "}")
+        .doTest();
+  }
 }
