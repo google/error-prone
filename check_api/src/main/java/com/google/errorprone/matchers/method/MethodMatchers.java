@@ -141,6 +141,9 @@ public class MethodMatchers {
 
     /** Match methods whose formal parameters have the given types. */
     ParameterMatcher withParameters(Iterable<String> parameters);
+
+    /** Match constructors whose formal parameters have the given types. */
+    ParameterMatcher withParametersOfType(Iterable<Supplier<Type>> parameters);
   }
 
   /** @deprecated use {@code Matcher<ExpressionTree>} instead of referring directly to this type. */
