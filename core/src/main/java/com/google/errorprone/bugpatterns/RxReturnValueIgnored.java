@@ -72,6 +72,17 @@ public final class RxReturnValueIgnored extends AbstractReturnValueIgnored {
                     && superSym.getReturnType().tsym.equals(sym.getReturnType().tsym));
   }
 
+  private static boolean isWhitelistedMethod(ExpressionTree tree, VisitorState state) {
+    Symbol sym = getSymbol(tree);
+    if (!(sym instanceof MethodSymbol)) {
+      return false;
+    }
+
+    // Currently the only whitelisted method is Map.put().
+    return ASTHelpers.isSubtype(sym.owner.type, state.getTypeFromString("java.util.Map"), state)
+        && sym.name.contentEquals("put");
+  }
+
   private static final Matcher<ExpressionTree> MATCHER =
       allOf(
           Matchers.kindIs(Kind.METHOD_INVOCATION),
@@ -86,7 +97,10 @@ public final class RxReturnValueIgnored extends AbstractReturnValueIgnored {
               isSubtypeOf("rx.Observable"),
               isSubtypeOf("rx.Single"),
               isSubtypeOf("rx.Completable")),
-          not(RxReturnValueIgnored::hasCirvAnnotation));
+          not(
+              anyOf(
+                  RxReturnValueIgnored::hasCirvAnnotation,
+                  RxReturnValueIgnored::isWhitelistedMethod)));
 
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {

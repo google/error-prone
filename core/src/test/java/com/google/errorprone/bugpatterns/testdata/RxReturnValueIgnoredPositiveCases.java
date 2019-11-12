@@ -22,6 +22,8 @@ import io.reactivex.Maybe;
 import io.reactivex.Observable;
 import io.reactivex.Single;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 /** @author friedj@google.com (Jake Fried) */
 public class RxReturnValueIgnoredPositiveCases {
@@ -128,5 +130,21 @@ public class RxReturnValueIgnoredPositiveCases {
     }
 
     return;
+  }
+
+  static void getFromMap() {
+    Map<Object, Observable> map1 = new HashMap<>();
+    Map<Object, Single> map2 = new HashMap<>();
+    Map<Object, Flowable> map3 = new HashMap<>();
+    Map<Object, Maybe> map4 = new HashMap<>();
+
+    // BUG: Diagnostic contains: Rx objects must be checked.
+    map1.get(null);
+    // BUG: Diagnostic contains: Rx objects must be checked.
+    map2.get(null);
+    // BUG: Diagnostic contains: Rx objects must be checked.
+    map3.get(null);
+    // BUG: Diagnostic contains: Rx objects must be checked.
+    map4.get(null);
   }
 }
