@@ -1,6 +1,6 @@
 ---
 title: InterruptedExceptionSwallowed
-summary: This catch block appears to be catching InterruptedException as an Exception/Throwable, and not handling the interruption separately.
+summary: This catch block appears to be catching an explicitly declared InterruptedException as an Exception/Throwable and not handling the interruption separately.
 layout: bugpattern
 tags: ''
 severity: WARNING

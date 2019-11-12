@@ -1062,7 +1062,7 @@ __[InterfaceWithOnlyStatics](bugpattern/InterfaceWithOnlyStatics)__<br>
 This interface only contains static fields and methods; consider making it a final class instead to prevent subclassing.
 
 __[InterruptedExceptionSwallowed](bugpattern/InterruptedExceptionSwallowed)__<br>
-This catch block appears to be catching InterruptedException as an Exception/Throwable, and not handling the interruption separately.
+This catch block appears to be catching an explicitly declared InterruptedException as an Exception/Throwable and not handling the interruption separately.
 
 __[InvalidBlockTag](bugpattern/InvalidBlockTag)__<br>
 This tag is invalid.
