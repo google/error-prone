@@ -74,8 +74,8 @@ import javax.annotation.Nullable;
 @BugPattern(
     name = "InterruptedExceptionSwallowed",
     summary =
-        "This catch block appears to be catching InterruptedException as an Exception/Throwable,"
-            + " and not handling the interruption separately.",
+        "This catch block appears to be catching an explicitly declared InterruptedException as an"
+            + " Exception/Throwable and not handling the interruption separately.",
     severity = WARNING,
     providesFix = REQUIRES_HUMAN_ATTENTION,
     documentSuppression = false)
