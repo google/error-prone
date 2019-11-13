@@ -105,7 +105,7 @@ public abstract class AccessPathStore<V extends AbstractValue<V>>
   }
 
   @Override
-  public void visualize(CFGVisualizer<?, AccessPathStore<V>, ?> cfgVisualizer) {
+  public String visualize(CFGVisualizer<?, AccessPathStore<V>, ?> cfgVisualizer) {
     throw new UnsupportedOperationException("DOT output not supported");
   }
   /**

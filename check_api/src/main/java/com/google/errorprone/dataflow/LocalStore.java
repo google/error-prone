@@ -160,7 +160,7 @@ public final class LocalStore<V extends AbstractValue<V>>
   }
 
   @Override
-  public void visualize(CFGVisualizer<?, LocalStore<V>, ?> cfgVisualizer) {
+  public String visualize(CFGVisualizer<?, LocalStore<V>, ?> cfgVisualizer) {
     throw new UnsupportedOperationException("DOT output not supported");
   }
 
