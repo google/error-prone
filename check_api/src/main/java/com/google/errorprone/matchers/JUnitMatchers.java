@@ -101,16 +101,10 @@ public class JUnitMatchers {
           hasAnnotationOnAnyOverriddenMethod(JUNIT_BEFORE_ANNOTATION),
           hasAnnotation(JUNIT_BEFORE_CLASS_ANNOTATION));
 
-  public static final Matcher<MethodTree> hasNonJUnit4BeforeAnnotation =
-      allOf(hasAnnotationWithSimpleName("Before"), not(hasJUnit4BeforeAnnotations));
-
   public static final Matcher<MethodTree> hasJUnit4AfterAnnotations =
       anyOf(
           hasAnnotationOnAnyOverriddenMethod(JUNIT_AFTER_ANNOTATION),
           hasAnnotation(JUNIT_AFTER_CLASS_ANNOTATION));
-
-  public static final Matcher<MethodTree> hasNonJUnit4AfterAnnotation =
-      allOf(hasAnnotationWithSimpleName("After"), not(hasJUnit4AfterAnnotations));
 
   /** Matches a class that inherits from TestCase. */
   public static final Matcher<ClassTree> isTestCaseDescendant = isSubtypeOf(JUNIT3_TEST_CASE_CLASS);
