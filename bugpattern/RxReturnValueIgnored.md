@@ -49,6 +49,8 @@ import io.reactivex.Maybe;
 import io.reactivex.Observable;
 import io.reactivex.Single;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 /** @author friedj@google.com (Jake Fried) */
 public class RxReturnValueIgnoredPositiveCases {
@@ -156,6 +158,22 @@ public class RxReturnValueIgnoredPositiveCases {
 
     return;
   }
+
+  static void getFromMap() {
+    Map<Object, Observable> map1 = new HashMap<>();
+    Map<Object, Single> map2 = new HashMap<>();
+    Map<Object, Flowable> map3 = new HashMap<>();
+    Map<Object, Maybe> map4 = new HashMap<>();
+
+    // BUG: Diagnostic contains: Rx objects must be checked.
+    map1.get(null);
+    // BUG: Diagnostic contains: Rx objects must be checked.
+    map2.get(null);
+    // BUG: Diagnostic contains: Rx objects must be checked.
+    map3.get(null);
+    // BUG: Diagnostic contains: Rx objects must be checked.
+    map4.get(null);
+  }
 }
 {% endhighlight %}
 
@@ -186,6 +204,8 @@ import io.reactivex.Flowable;
 import io.reactivex.Maybe;
 import io.reactivex.Observable;
 import io.reactivex.Single;
+import java.util.HashMap;
+import java.util.Map;
 
 /** @author friedj@google.com (Jake Fried) */
 public class RxReturnValueIgnoredNegativeCases {
@@ -230,6 +250,18 @@ public class RxReturnValueIgnoredNegativeCases {
     new CanIgnoreImpl().getSingle();
     new CanIgnoreImpl().getFlowable();
     new CanIgnoreImpl().getMaybe();
+  }
+
+  static void putInMap() {
+    Map<Object, Observable<?>> map1 = new HashMap<>();
+    Map<Object, Single<?>> map2 = new HashMap<>();
+    Map<Object, Maybe<?>> map3 = new HashMap<>();
+    HashMap<Object, Flowable<?>> map4 = new HashMap<>();
+
+    map1.put(new Object(), null);
+    map2.put(new Object(), null);
+    map3.put(new Object(), null);
+    map4.put(new Object(), null);
   }
 
   @CanIgnoreReturnValue
