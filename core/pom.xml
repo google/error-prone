@@ -79,12 +79,6 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <!-- Apache 2.0 -->
-      <groupId>com.github.stephenc.jcip</groupId>
-      <artifactId>jcip-annotations</artifactId>
-      <version>1.0-1</version>
-    </dependency>
-    <dependency>
       <!-- MIT -->
       <groupId>org.pcollections</groupId>
       <artifactId>pcollections</artifactId>
