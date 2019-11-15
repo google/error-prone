@@ -22,7 +22,6 @@ import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.annotations.RestrictedApi;
 import com.google.errorprone.bugpatterns.BugChecker.AnnotationTreeMatcher;
-import com.google.errorprone.bugpatterns.BugChecker.MemberReferenceTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.NewClassTreeMatcher;
 import com.google.errorprone.matchers.Description;
@@ -30,12 +29,9 @@ import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.AnnotationTree;
-import com.sun.source.tree.ExpressionTree;
-import com.sun.source.tree.MemberReferenceTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.Tree;
-import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 import java.util.Optional;
@@ -53,10 +49,7 @@ import javax.lang.model.type.MirroredTypesException;
     disableable = false,
     providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class RestrictedApiChecker extends BugChecker
-    implements MethodInvocationTreeMatcher,
-        NewClassTreeMatcher,
-        AnnotationTreeMatcher,
-        MemberReferenceTreeMatcher {
+    implements MethodInvocationTreeMatcher, NewClassTreeMatcher, AnnotationTreeMatcher {
 
   /**
    * Validates a {@code @RestrictedApi} annotation and that the declared restriction makes sense.
@@ -80,34 +73,19 @@ public class RestrictedApiChecker extends BugChecker
 
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
-    return checkMethodUse(tree, state);
-  }
-
-  @Override
-  public Description matchMemberReference(MemberReferenceTree tree, VisitorState state) {
-    return checkMethodUse(tree, state);
-  }
-
-  @Override
-  public Description matchNewClass(NewClassTree tree, VisitorState state) {
-    // TODO(bangert): Handle implicit super() calls in generated constructors
-    return checkRestriction(ASTHelpers.getAnnotation(tree, RestrictedApi.class), tree, state);
-  }
-
-  private Description checkMethodUse(ExpressionTree tree, VisitorState state) {
     RestrictedApi annotation = ASTHelpers.getAnnotation(tree, RestrictedApi.class);
     if (annotation != null) {
       return checkRestriction(annotation, tree, state);
     }
 
-    Symbol sym = ASTHelpers.getSymbol(tree);
-    if (!(sym instanceof MethodSymbol)) {
+    MethodSymbol methSymbol = ASTHelpers.getSymbol(tree);
+    if (methSymbol == null) {
       return Description.NO_MATCH; // This shouldn't happen, but has. (See b/33758055)
     }
 
     // Try each super method for @RestrictedApi
     Optional<MethodSymbol> superWithRestrictedApi =
-        ASTHelpers.findSuperMethods((MethodSymbol) sym, state.getTypes()).stream()
+        ASTHelpers.findSuperMethods(methSymbol, state.getTypes()).stream()
             .filter((t) -> ASTHelpers.hasAnnotation(t, RestrictedApi.class, state))
             .findFirst();
     if (!superWithRestrictedApi.isPresent()) {
@@ -115,6 +93,11 @@ public class RestrictedApiChecker extends BugChecker
     }
     return checkRestriction(
         ASTHelpers.getAnnotation(superWithRestrictedApi.get(), RestrictedApi.class), tree, state);
+  }
+
+  @Override
+  public Description matchNewClass(NewClassTree tree, VisitorState state) {
+    return checkRestriction(ASTHelpers.getAnnotation(tree, RestrictedApi.class), tree, state);
   }
 
   private Description checkRestriction(

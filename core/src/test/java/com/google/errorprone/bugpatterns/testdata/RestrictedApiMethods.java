@@ -32,13 +32,6 @@ public class RestrictedApiMethods implements IFaceWithRestriction {
       whitelistAnnotations = {Whitelist.class},
       whitelistWithWarningAnnotations = {WhitelistWithWarning.class},
       link = "")
-  public RestrictedApiMethods() {}
-
-  @RestrictedApi(
-      explanation = "lorem",
-      whitelistAnnotations = {Whitelist.class},
-      whitelistWithWarningAnnotations = {WhitelistWithWarning.class},
-      link = "")
   public RestrictedApiMethods(int restricted) {}
 
   @RestrictedApi(
@@ -76,8 +69,6 @@ public class RestrictedApiMethods implements IFaceWithRestriction {
       return 42;
     }
   }
-
-  public static void accept(Runnable r) {}
 }
 
 interface IFaceWithRestriction {
