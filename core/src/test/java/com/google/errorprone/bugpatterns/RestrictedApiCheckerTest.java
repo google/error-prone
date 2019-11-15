@@ -45,7 +45,6 @@ public class RestrictedApiCheckerTest {
             "class Testcase {",
             "  void foo(RestrictedApiMethods m) {",
             "    m.normalMethod();",
-            "    m.accept(m::normalMethod);",
             "  }",
             "}")
         .doTest();
@@ -61,8 +60,6 @@ public class RestrictedApiCheckerTest {
             "  void foo(RestrictedApiMethods m) {",
             "    // BUG: Diagnostic contains: lorem",
             "    m.restrictedMethod();",
-            "    // BUG: Diagnostic contains: lorem",
-            "    m.accept(m::restrictedMethod);",
             "  }",
             "}")
         .expectResult(Result.ERROR)
@@ -81,10 +78,6 @@ public class RestrictedApiCheckerTest {
             "    m.restrictedMethod();",
             "    // BUG: Diagnostic contains: ipsum",
             "    m.dontCallMe();",
-            "    // BUG: Diagnostic contains: lorem",
-            "    m.accept(m::restrictedMethod);",
-            "    // BUG: Diagnostic contains: ipsum",
-            "    m.accept(m::dontCallMe);",
             "  }",
             "}")
         .expectResult(Result.ERROR)
@@ -100,7 +93,6 @@ public class RestrictedApiCheckerTest {
             "class Testcase {",
             "  void foo(RestrictedApiMethods m) {",
             "    m.restrictedMethod();",
-            "    m.accept(m::restrictedMethod);",
             "  }",
             "}")
         .expectResult(Result.OK)
@@ -117,8 +109,6 @@ public class RestrictedApiCheckerTest {
             "  void foo() {",
             "    // BUG: Diagnostic contains: lorem",
             "    RestrictedApiMethods.restrictedStaticMethod();",
-            "    // BUG: Diagnostic contains: lorem",
-            "    RestrictedApiMethods.accept(RestrictedApiMethods::restrictedStaticMethod);",
             "  }",
             "}")
         .expectResult(Result.ERROR)
@@ -135,23 +125,7 @@ public class RestrictedApiCheckerTest {
             "  void foo() {",
             "    // BUG: Diagnostic contains: lorem",
             "    new RestrictedApiMethods(0);",
-            "    // BUG: Diagnostic contains: lorem",
-            "    RestrictedApiMethods.accept(RestrictedApiMethods::new);",
             "  }",
-            "}")
-        .expectResult(Result.ERROR)
-        .doTest();
-  }
-
-  @Test
-  public void testImplicitRestrictedConstructorProhibited() {
-    helper
-        .addSourceLines(
-            "Testcase.java",
-            "package com.google.errorprone.bugpatterns.testdata;",
-            "class Testcase extends RestrictedApiMethods {",
-            "  // BUG: Diagnostic contains: lorem",
-            "  public Testcase() {}",
             "}")
         .expectResult(Result.ERROR)
         .doTest();
@@ -168,8 +142,6 @@ public class RestrictedApiCheckerTest {
             "  void foo(RestrictedApiMethods m) {",
             "    // BUG: Diagnostic contains: [RestrictedApi]",
             "    m.restrictedMethod();",
-            "    // BUG: Diagnostic contains: [RestrictedApi]",
-            "    m.accept(m::restrictedMethod);",
             "  }",
             "}")
         .expectResult(Result.OK)
@@ -186,7 +158,6 @@ public class RestrictedApiCheckerTest {
             "  @Whitelist",
             "  void foo(RestrictedApiMethods m) {",
             "    m.restrictedMethod();",
-            "    m.accept(m::restrictedMethod);",
             "  }",
             "}")
         .expectResult(Result.OK)
