@@ -162,4 +162,15 @@ public class AndroidJdkLibsCheckerTest extends Java7ApiCheckerTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void allowJava8Flag_explicitNestedClass() {
+    allowJava8Helper
+        .addSourceLines(
+            "Test.java",
+            "import java.util.Spliterator;",
+            "public abstract class Test implements Spliterator.OfInt {",
+            "}")
+        .doTest();
+  }
 }
