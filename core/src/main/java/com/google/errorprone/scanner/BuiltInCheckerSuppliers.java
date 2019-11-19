@@ -267,6 +267,7 @@ import com.google.errorprone.bugpatterns.SwitchDefault;
 import com.google.errorprone.bugpatterns.SystemExitOutsideMain;
 import com.google.errorprone.bugpatterns.TestExceptionChecker;
 import com.google.errorprone.bugpatterns.TestExceptionRefactoring;
+import com.google.errorprone.bugpatterns.TheoryButNoTheories;
 import com.google.errorprone.bugpatterns.ThreadJoinLoop;
 import com.google.errorprone.bugpatterns.ThreadLocalUsage;
 import com.google.errorprone.bugpatterns.ThreeLetterTimeZoneID;
@@ -604,6 +605,7 @@ public class BuiltInCheckerSuppliers {
           SubstringOfZero.class,
           SuppressWarningsDeprecated.class,
           TemporalAccessorGetChronoField.class,
+          TheoryButNoTheories.class,
           ThrowIfUncheckedKnownChecked.class,
           ThrowNull.class,
           TruthSelfEquals.class,
