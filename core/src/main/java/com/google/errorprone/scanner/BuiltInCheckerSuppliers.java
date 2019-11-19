@@ -373,6 +373,7 @@ import com.google.errorprone.bugpatterns.inject.guice.InjectOnFinalField;
 import com.google.errorprone.bugpatterns.inject.guice.OverridesGuiceInjectableMethod;
 import com.google.errorprone.bugpatterns.inject.guice.OverridesJavaxInjectableMethod;
 import com.google.errorprone.bugpatterns.inject.guice.ProvidesMethodOutsideOfModule;
+import com.google.errorprone.bugpatterns.javadoc.AlmostJavadoc;
 import com.google.errorprone.bugpatterns.javadoc.EmptyBlockTag;
 import com.google.errorprone.bugpatterns.javadoc.EscapedEntity;
 import com.google.errorprone.bugpatterns.javadoc.InheritDoc;
@@ -786,6 +787,7 @@ public class BuiltInCheckerSuppliers {
   /** A list of all checks that are off by default. */
   public static final ImmutableSet<BugCheckerInfo> DISABLED_CHECKS =
       getSuppliers(
+          AlmostJavadoc.class,
           AndroidJdkLibsChecker.class,
           AnnotationPosition.class,
           AssertFalse.class,
