@@ -22,6 +22,8 @@ import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.sun.tools.javac.parser.Tokens.Comment.CommentStyle.BLOCK;
 
+import com.google.auto.value.AutoValue;
+import com.google.common.base.Strings;
 import com.google.common.collect.Range;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.ProvidesFix;
@@ -39,6 +41,7 @@ import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.Tree;
+import com.sun.tools.javac.code.Flags;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.parser.Tokens.Comment;
@@ -99,24 +102,54 @@ public class ParameterName extends BugChecker
         sym.getParameters().stream(),
         arguments.stream(),
         (p, a) -> {
-          while (!tokens.isEmpty() && tokens.peekFirst().pos() < ((JCTree) a).getStartPosition()) {
-            tokens.removeFirst();
+          if (advanceTokens(tokens, a, state)) {
+            checkArgument(p, a, tokens.removeFirst(), state);
           }
-          if (tokens.isEmpty()) {
-            return;
-          }
-          Range<Integer> argRange =
-              Range.closedOpen(((JCTree) a).getStartPosition(), state.getEndPosition(a));
-          if (!argRange.contains(tokens.peekFirst().pos())) {
-            return;
-          }
-          checkArgument(p, a, tokens.removeFirst(), state);
         });
+
+    // handle any varargs arguments after the first
+    for (ExpressionTree arg : arguments.subList(sym.getParameters().size(), arguments.size())) {
+      if (advanceTokens(tokens, arg, state)) {
+        checkComment(arg, tokens.removeFirst(), state);
+      }
+    }
+  }
+
+  private static boolean advanceTokens(
+      Deque<ErrorProneToken> tokens, ExpressionTree actual, VisitorState state) {
+    while (!tokens.isEmpty() && tokens.peekFirst().pos() < ((JCTree) actual).getStartPosition()) {
+      tokens.removeFirst();
+    }
+    if (tokens.isEmpty()) {
+      return false;
+    }
+    Range<Integer> argRange =
+        Range.closedOpen(((JCTree) actual).getStartPosition(), state.getEndPosition(actual));
+    if (!argRange.contains(tokens.peekFirst().pos())) {
+      return false;
+    }
+    return true;
+  }
+
+  @AutoValue
+  abstract static class FixInfo {
+    abstract boolean isFormatCorrect();
+
+    abstract boolean isNameCorrect();
+
+    abstract Comment comment();
+
+    abstract String name();
+
+    static FixInfo create(
+        boolean isFormatCorrect, boolean isNameCorrect, Comment comment, String name) {
+      return new AutoValue_ParameterName_FixInfo(isFormatCorrect, isNameCorrect, comment, name);
+    }
   }
 
   private void checkArgument(
       VarSymbol formal, ExpressionTree actual, ErrorProneToken token, VisitorState state) {
-    List<Comment> matches = new ArrayList<>();
+    List<FixInfo> matches = new ArrayList<>();
     for (Comment comment : token.comments()) {
       if (comment.getStyle() != BLOCK) {
         continue;
@@ -127,26 +160,93 @@ public class ParameterName extends BugChecker
       if (!m.matches()) {
         continue;
       }
+
+      boolean isFormatCorrect = isVarargs(formal) ^ Strings.isNullOrEmpty(m.group(2));
       String name = m.group(1);
-      if (formal.getSimpleName().contentEquals(name)) {
-        // If there are multiple comments, bail if any one of them is an exact match.
-        return;
+      boolean isNameCorrect = formal.getSimpleName().contentEquals(name);
+
+      // If there are multiple parameter name comments, bail if any one of them is an exact match.
+      if (isNameCorrect && isFormatCorrect) {
+        matches.clear();
+        break;
       }
-      matches.add(comment);
+
+      matches.add(FixInfo.create(isFormatCorrect, isNameCorrect, comment, name));
     }
-    for (Comment match : matches) {
-      state.reportMatch(
-          buildDescription(actual)
-              .setMessage(
-                  String.format(
-                      "`%s` does not match formal parameter name `%s`",
-                      match.getText(), formal.getSimpleName()))
-              .addFix(
-                  SuggestedFix.replace(
-                      match.getSourcePos(0),
-                      match.getSourcePos(match.getText().length() - 1) + 1,
-                      String.format("/* %s= */", formal.getSimpleName())))
-              .build());
+
+    String fixTemplate = isVarargs(formal) ? "/* %s...= */" : "/* %s= */";
+    for (FixInfo match : matches) {
+      int replacementStartPos = match.comment().getSourcePos(0);
+      int replacementEndPos =
+          match.comment().getSourcePos(match.comment().getText().length() - 1) + 1;
+      SuggestedFix rewriteCommentFix =
+          SuggestedFix.replace(
+              replacementStartPos,
+              replacementEndPos,
+              String.format(fixTemplate, formal.getSimpleName()));
+      SuggestedFix rewriteToRegularCommentFix =
+          SuggestedFix.replace(
+              replacementStartPos, replacementEndPos, String.format("/* %s */", match.name()));
+
+      Description description;
+      if (match.isFormatCorrect() && !match.isNameCorrect()) {
+        description =
+            buildDescription(actual)
+                .setMessage(
+                    String.format(
+                        "`%s` does not match formal parameter name `%s`; either fix the name or"
+                            + " use a regular comment",
+                        match.comment().getText(), formal.getSimpleName()))
+                .addFix(rewriteCommentFix)
+                .addFix(rewriteToRegularCommentFix)
+                .build();
+      } else if (!match.isFormatCorrect() && match.isNameCorrect()) {
+        description =
+            buildDescription(actual)
+                .setMessage(
+                    String.format(
+                        "parameter name comment `%s` uses incorrect format",
+                        match.comment().getText()))
+                .addFix(rewriteCommentFix)
+                .build();
+      } else if (!match.isFormatCorrect() && !match.isNameCorrect()) {
+        description =
+            buildDescription(actual)
+                .setMessage(
+                    String.format(
+                        "`%s` does not match formal parameter name `%s` and uses incorrect "
+                            + "format; either fix the format or use a regular comment",
+                        match.comment().getText(), formal.getSimpleName()))
+                .addFix(rewriteCommentFix)
+                .addFix(rewriteToRegularCommentFix)
+                .build();
+      } else {
+        throw new AssertionError(
+            "Unexpected match with both isNameCorrect and isFormatCorrect true: " + match);
+      }
+      state.reportMatch(description);
     }
+  }
+
+  // complains on parameter name comments on varargs past the first one
+  private void checkComment(ExpressionTree arg, ErrorProneToken token, VisitorState state) {
+    for (Comment comment : token.comments()) {
+      if (comment.getStyle() != BLOCK) {
+        continue;
+      }
+      Matcher m =
+          NamedParameterComment.PARAMETER_COMMENT_PATTERN.matcher(
+              Comments.getTextFromComment(comment));
+      if (m.matches()) {
+        state.reportMatch(
+            buildDescription(arg)
+                .setMessage("parameter name comment only allowed on first varargs argument")
+                .build());
+      }
+    }
+  }
+
+  private static boolean isVarargs(VarSymbol sym) {
+    return (sym.flags() & Flags.VARARGS) == Flags.VARARGS;
   }
 }
