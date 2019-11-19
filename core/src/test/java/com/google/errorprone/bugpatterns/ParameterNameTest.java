@@ -479,4 +479,159 @@ public class ParameterNameTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void positiveVarargs() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  void foo(int... args) {}",
+            "",
+            "  void bar() {",
+            "    // BUG: Diagnostic contains: /* args...= */",
+            "    // /* argh */",
+            "    foo(/* argh...= */ 1, 2, 3);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void negativeVarargs() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  void foo(int... args) {}",
+            "",
+            "  void bar() {",
+            "    foo(/* args...= */ 1, 2);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void varargsCommentAllowedWithArraySyntax() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  void foo(int... args) {}",
+            "",
+            "  void bar() {",
+            "    int[] myInts = {1, 2, 3};",
+            "    foo(/* args...= */ myInts);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  // TODO(b/144728869): clean up existing usages with non-"..." syntax
+  @Test
+  public void normalCommentNotAllowedWithVarargsArraySyntax() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  void foo(int... args) {}",
+            "",
+            "  void bar() {",
+            "    int[] myInts = {1, 2, 3};",
+            "    // BUG: Diagnostic contains: /* args...= */",
+            "    foo(/* args= */ myInts);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void varargsCommentAllowedOnOnlyFirstArg() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  void foo(int... args) {}",
+            "",
+            "  void bar() {",
+            "    // BUG: Diagnostic contains: parameter name comment only allowed on first varargs"
+                + " argument",
+            "    foo(1, /* args...= */ 2);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void varargsWrongFormat() {
+    BugCheckerRefactoringTestHelper.newInstance(new ParameterName(), getClass())
+        .addInputLines(
+            "in/Test.java",
+            "class Test {",
+            "  void foo(int... args) {}",
+            "",
+            "  void bar() {",
+            "    foo(/* args= */ 1, 2);",
+            "  }",
+            "}")
+        .addOutputLines(
+            "out/Test.java",
+            "class Test {",
+            "  void foo(int... args) {}",
+            "",
+            "  void bar() {",
+            "    foo(/* args...= */ 1, 2);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void varargsIgnoreNonParameterNameComments() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  void foo(int... args) {}",
+            "",
+            "  void bar() {",
+            "    foo(/* fake */ 1, 2);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void varargsWrongNameAndWrongFormat() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  void foo(int... args) {}",
+            "",
+            "  void bar() {",
+            "    // BUG: Diagnostic contains: /* args...= */",
+            "    // /* argh */",
+            "    foo(/* argh= */ 1, 2);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void varargsCommentNotAllowedOnNormalArg() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  void foo(int i) {}",
+            "",
+            "  void bar() {",
+            "    // BUG: Diagnostic contains: /* i= */",
+            "    foo(/* i...= */ 1);",
+            "  }",
+            "}")
+        .doTest();
+  }
 }
