@@ -395,6 +395,9 @@ Suppressing &quot;deprecated&quot; is probably a typo for &quot;deprecation&quot
 __[TemporalAccessorGetChronoField](bugpattern/TemporalAccessorGetChronoField)__<br>
 TemporalAccessor.get() only works for certain values of ChronoField.
 
+__[TheoryButNoTheories](bugpattern/TheoryButNoTheories)__<br>
+This test has members annotated with @Theory, @DataPoint, or @DataPoints but is using the default JUnit4 runner.
+
 __[ThrowIfUncheckedKnownChecked](bugpattern/ThrowIfUncheckedKnownChecked)__<br>
 throwIfUnchecked(knownCheckedException) is a no-op.
 
@@ -1009,6 +1012,9 @@ __[UnlockMethod](bugpattern/UnlockMethod)__<br>
 This method does not acquire the locks specified by its @UnlockMethod annotation
 
 ## Experimental : WARNING
+
+__[AlmostJavadoc](bugpattern/AlmostJavadoc)__<br>
+This comment contains Javadoc or HTML tags, but isn&#39;t started with a double asterisk (/**); is it meant to be Javadoc?
 
 __[AnnotationPosition](bugpattern/AnnotationPosition)__<br>
 Annotations should be positioned after Javadocs, but before modifiers.
