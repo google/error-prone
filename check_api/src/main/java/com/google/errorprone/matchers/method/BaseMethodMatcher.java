@@ -48,6 +48,7 @@ interface BaseMethodMatcher {
         switch (tree.getKind()) {
           case NEW_CLASS:
           case METHOD_INVOCATION:
+          case MEMBER_REFERENCE:
             break;
           default:
             return null;
