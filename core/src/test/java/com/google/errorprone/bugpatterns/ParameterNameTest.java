@@ -498,6 +498,23 @@ public class ParameterNameTest {
   }
 
   @Test
+  public void emptyVarargs_shouldNotCrash() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  void foo(int first, int... rest) {}",
+            "",
+            "  void bar() {",
+            "    foo(/* first= */ 1);",
+            " // BUG: Diagnostic contains: /* first= */",
+            "    foo(/* second= */ 1);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void negativeVarargs() {
     testHelper
         .addSourceLines(

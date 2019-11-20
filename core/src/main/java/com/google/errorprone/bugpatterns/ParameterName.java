@@ -108,9 +108,13 @@ public class ParameterName extends BugChecker
         });
 
     // handle any varargs arguments after the first
-    for (ExpressionTree arg : arguments.subList(sym.getParameters().size(), arguments.size())) {
-      if (advanceTokens(tokens, arg, state)) {
-        checkComment(arg, tokens.removeFirst(), state);
+    int numParams = sym.getParameters().size();
+    int numArgs = arguments.size();
+    if (numParams < numArgs) {
+      for (ExpressionTree arg : arguments.subList(numParams, numArgs)) {
+        if (advanceTokens(tokens, arg, state)) {
+          checkComment(arg, tokens.removeFirst(), state);
+        }
       }
     }
   }
