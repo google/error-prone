@@ -41,7 +41,8 @@ import java.util.stream.Stream;
 public final class NamedParameterComment {
 
   public static final Pattern PARAMETER_COMMENT_PATTERN =
-      Pattern.compile("\\s*([\\w\\d_]+)(\\.\\.\\.)?\\s*=\\s*");
+      Pattern.compile(
+          "\\s*(\\p{javaJavaIdentifierStart}\\p{javaJavaIdentifierPart}*)(\\.\\.\\.)?\\s*=\\s*");
 
   private static final String PARAMETER_COMMENT_MARKER = "=";
 
