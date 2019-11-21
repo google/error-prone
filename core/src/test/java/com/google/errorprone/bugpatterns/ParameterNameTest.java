@@ -151,6 +151,21 @@ public class ParameterNameTest {
         .doTest();
   }
 
+  @Test // not allowed by Google style guide, but other styles may want this
+  public void namedParametersChecker_findsError_withUnusualIdentifier() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "abstract class Test {",
+            "  abstract void target(Object $param$);",
+            "  void test(Object arg) {",
+            "    // BUG: Diagnostic contains: 'target(/* $param$= */arg);'",
+            "    target(/* param= */arg);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
   @Test
   public void namedParametersChecker_suggestsSwap_withSwappedArgs() {
     testHelper
@@ -290,6 +305,20 @@ public class ParameterNameTest {
             "  abstract void target(Object param);",
             "  void test(Object arg) {",
             "    target(/* some_other_comment */arg);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void namedParametersChecker_ignoresComment_wrongVarargs() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "abstract class Test {",
+            "  abstract void target(Object... param);",
+            "  void test(Object arg) {",
+            "    target(/* param.!.= */arg);",
             "  }",
             "}")
         .doTest();
