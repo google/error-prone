@@ -43,6 +43,7 @@ public final class ParametersButNotParameterized extends BugChecker implements C
   private static final String PARAMETER = "org.junit.runners.Parameterized.Parameter";
   private static final String PARAMETERS = "org.junit.runners.Parameterized.Parameters";
 
+
   @Override
   public Description matchClass(ClassTree tree, VisitorState state) {
     if (!hasJUnit4TestRunner.matches(tree, state)) {
