@@ -1478,6 +1478,13 @@ public class SuggestedFixesTest {
 
   @Test
   public void compilesWithFix_onlyInSameCompilationUnit() {
+    String[] unrelatedFile = {
+      "class ClassContainingRawType {",
+      // This unsuppressed raw type would prevent compilation.
+      "  java.util.List list;",
+      "}",
+    };
+
     // This compilation will succeed because we only consider the compilation errors in the first
     // class.
     CompilationTestHelper.newInstance(
@@ -1487,12 +1494,19 @@ public class SuggestedFixesTest {
             "// BUG: Diagnostic contains: foobar",
             "class OnlyInSameCompilationUnit {",
             "}")
+        .addSourceLines("ClassContainingRawType.java", unrelatedFile)
+        .doTest();
+
+    // But a warning in the first class makes the compilation fail, so no suppression is added.
+    CompilationTestHelper.newInstance(
+            AddSuppressWarningsIfCompilationSucceedsOnlyInSameCompilationUnit.class, getClass())
         .addSourceLines(
-            "ClassContainingRawType.java", //
-            "class ClassContainingRawType {",
-            // This unsuppressed raw type would prevent compilation.
+            "OnlyInSameCompilationUnit.java", //
+            "class OnlyInSameCompilationUnit {",
+            // This unsuppressed raw type prevents compilation.
             "  java.util.List list;",
             "}")
+        .addSourceLines("ClassContainingRawType.java", unrelatedFile)
         .doTest();
   }
 
