@@ -903,22 +903,30 @@ public class SuggestedFixes {
       VisitorState state,
       ImmutableList<String> extraOptions,
       boolean onlyInSameCompilationUnit) {
-    int maxErrsPos = extraOptions.lastIndexOf("-Xmaxerrs");
-    int maxErrs;
-    if (maxErrsPos >= 0) {
+    ImmutableList.Builder<String> extraOptionsBuilder =
+        ImmutableList.<String>builder().addAll(extraOptions);
+    int maxErrors = findOptionOrAppend(extraOptionsBuilder, extraOptions, "-Xmaxerrs", 100);
+    int maxWarnings = findOptionOrAppend(extraOptionsBuilder, extraOptions, "-Xmaxwarns", 100);
+    return compilesWithFix(
+        fix, state, extraOptionsBuilder.build(), onlyInSameCompilationUnit, maxErrors, maxWarnings);
+  }
+
+  private static int findOptionOrAppend(
+      ImmutableList.Builder<String> newOptions,
+      ImmutableList<String> extraOptions,
+      String key,
+      int defaultValue) {
+    int pos = extraOptions.lastIndexOf(key);
+    int value;
+    if (pos >= 0) {
       // The maximum number of errors was explicitly set.
-      maxErrs = Integer.parseInt(extraOptions.get(maxErrsPos + 1));
+      value = Integer.parseInt(extraOptions.get(pos + 1));
     } else {
       // The maximum number of errors was not set - pick a default value.
-      maxErrs = 100;
-      extraOptions =
-          ImmutableList.<String>builder()
-              .addAll(extraOptions)
-              .add("-Xmaxerrs")
-              .add("" + maxErrs)
-              .build();
+      value = defaultValue;
+      newOptions.add(key).add("" + defaultValue);
     }
-    return compilesWithFix(fix, state, extraOptions, onlyInSameCompilationUnit, maxErrs);
+    return value;
   }
 
   private static boolean compilesWithFix(
@@ -926,7 +934,8 @@ public class SuggestedFixes {
       VisitorState state,
       ImmutableList<String> extraOptions,
       boolean onlyInSameCompilationUnit,
-      int maxErrs) {
+      int maxErrors,
+      int maxWarnings) {
     if (fix.isEmpty() && extraOptions.isEmpty()) {
       return true;
     }
@@ -996,19 +1005,36 @@ public class SuggestedFixes {
       throw new UncheckedIOException(e);
     }
 
+    // If we reached the maximum number of diagnostics of a given kind without finding one in the
+    // modified compilation unit, we won't find any more diagnostics, but we can't be sure that
+    // there isn't an diagnostic, as the diagnostic may simply be the (max+1)-th diagnostic, and
+    // thus was dropped.
     int countErrors = 0;
+    int countWarnings = 0;
+    boolean warningIsError = false;
+    boolean warningInSameCompilationUnit = false;
     for (Diagnostic<? extends JavaFileObject> diagnostic : diagnosticListener.getDiagnostics()) {
-      if (diagnostic.getKind() != Diagnostic.Kind.ERROR) {
-        continue;
+      warningIsError |= diagnostic.getCode().equals("compiler.err.warnings.and.werror");
+      boolean diagnosticInSameCompilationUnit =
+          diagnostic.getSource().toUri().equals(modifiedFileUri);
+      switch (diagnostic.getKind()) {
+        case ERROR:
+          ++countErrors;
+          if (!onlyInSameCompilationUnit || diagnosticInSameCompilationUnit) {
+            return false;
+          }
+          break;
+        case WARNING:
+          ++countWarnings;
+          warningInSameCompilationUnit |= diagnosticInSameCompilationUnit;
+          break;
+        default:
+          continue;
       }
 
-      if (!onlyInSameCompilationUnit || diagnostic.getSource().toUri().equals(modifiedFileUri)) {
-        return false;
-      }
-      if (++countErrors >= maxErrs) {
-        // If we reached the maximum number of errors without finding an error in the modified
-        // compilation unit, we won't find any more errors, but we can't be sure that there isn't
-        // an error, as the error may simply be the (max+1)-th error, and thus was dropped.
+      if ((warningIsError && warningInSameCompilationUnit)
+          || (countErrors >= maxErrors)
+          || (countWarnings >= maxWarnings)) {
         return false;
       }
     }
