@@ -16,6 +16,8 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH;
+
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -57,7 +59,8 @@ public class UnnecessaryAnonymousClassTest {
             "    System.err.println(camelCase(\"world\"));",
             "  }",
             "}")
-        .doTest();
+        // Make sure the method body is still reformatted correctly.
+        .doTest(TEXT_MATCH);
   }
 
   @Test
@@ -114,6 +117,38 @@ public class UnnecessaryAnonymousClassTest {
             "  }",
             "}")
         .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
+  public void recursive() {
+    testHelper
+        .addInputLines(
+            "Test.java",
+            "import java.util.function.Function;",
+            "class Test {",
+            "  private static final Function<Object, Object> STRINGIFY =",
+            "      new Function<Object, Object>() {",
+            "        @Override",
+            "        public Object apply(Object input) {",
+            "          return transform(STRINGIFY);",
+            "        }",
+            "      };",
+            "  public static Object transform(Function<Object, Object> f) {",
+            "    return f.apply(\"a\");",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "import java.util.function.Function;",
+            "class Test {",
+            "  private static Object stringify(Object input) {",
+            "    return transform(Test::stringify);",
+            "  }",
+            "  public static Object transform(Function<Object, Object> f) {",
+            "    return f.apply(\"a\");",
+            "  }",
+            "}")
         .doTest();
   }
 }

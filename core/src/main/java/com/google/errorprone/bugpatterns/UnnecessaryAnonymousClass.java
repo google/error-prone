@@ -29,9 +29,11 @@ import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.isGeneratedConstructor;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Range;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.VariableTreeMatcher;
+import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
@@ -47,6 +49,8 @@ import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.tree.JCTree;
+import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
+import java.util.ArrayList;
 import java.util.Objects;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
@@ -88,11 +92,11 @@ public class UnnecessaryAnonymousClass extends BugChecker implements VariableTre
     if (!(member instanceof MethodTree)) {
       return NO_MATCH;
     }
-    Symbol sym = getSymbol(tree);
-    if (sym == null
-        || sym.getKind() != ElementKind.FIELD
-        || !sym.isPrivate()
-        || !sym.getModifiers().contains(Modifier.FINAL)) {
+    Symbol varSym = getSymbol(tree);
+    if (varSym == null
+        || varSym.getKind() != ElementKind.FIELD
+        || !varSym.isPrivate()
+        || !varSym.getModifiers().contains(Modifier.FINAL)) {
       return NO_MATCH;
     }
     MethodTree implementation = (MethodTree) member;
@@ -115,57 +119,141 @@ public class UnnecessaryAnonymousClass extends BugChecker implements VariableTre
     if (state.isAndroidCompatible()) {
       return NO_MATCH;
     }
-    SuggestedFix.Builder fix = SuggestedFix.builder();
-    String name =
-        sym.isStatic()
+
+    SuggestedFix.Builder fixBuilder = SuggestedFix.builder();
+
+    // Derive new method name from identifier.
+    String newName =
+        varSym.isStatic()
             ? UPPER_UNDERSCORE.converterTo(LOWER_CAMEL).convert(tree.getName().toString())
             : tree.getName().toString();
-    new TreePathScanner<Void, Void>() {
-      @Override
-      public Void visitMemberSelect(MemberSelectTree node, Void unused) {
-        if (Objects.equals(getSymbol(node), sym)) {
-          replaceUseWithMethodReference(fix, node, name, state.withPath(getCurrentPath()));
-        }
-        return super.visitMemberSelect(node, null);
-      }
+    fixBuilder.merge(SuggestedFixes.renameMethod(implementation, newName, state));
 
-      @Override
-      public Void visitIdentifier(IdentifierTree node, Void unused) {
-        if (Objects.equals(getSymbol(node), sym)) {
-          replaceUseWithMethodReference(fix, node, name, state.withPath(getCurrentPath()));
-        }
-        return super.visitIdentifier(node, null);
-      }
-    }.scan(state.getPath().getCompilationUnit(), null);
-    SuggestedFixes.removeModifiers(tree, state, Modifier.FINAL).ifPresent(fix::merge);
-    int afterModifiers = state.getEndPosition(implementation.getModifiers());
-    if (afterModifiers == -1) {
-      afterModifiers = ((JCTree) implementation).getStartPosition();
-    }
-    fix.replace(state.getEndPosition(tree.getModifiers()) + 1, afterModifiers, "")
-        .replace(state.getEndPosition(implementation), state.getEndPosition(tree), "")
-        // force reformatting of the method body
-        .replace(implementation.getBody(), state.getSourceForNode(implementation.getBody()))
-        .merge(SuggestedFixes.renameMethod(implementation, name, state));
-    return describeMatch(tree, fix.build());
+    // Make non-final.
+    SuggestedFixes.removeModifiers(tree, state, Modifier.FINAL).ifPresent(fixBuilder::merge);
+
+    // Convert the anonymous class and variable assignment to a method definition.
+    fixBuilder.merge(trimToMethodDef(tree, state, implementation));
+
+    // Replace all uses of the identifier with a method reference.
+    fixBuilder.merge(replaceUsesWithMethodReference(newName, varSym, implementation, state));
+
+    return describeMatch(tree, fixBuilder.build());
   }
 
-  private static void replaceUseWithMethodReference(
-      SuggestedFix.Builder fix, ExpressionTree node, String newName, VisitorState state) {
-    Tree parent = state.getPath().getParentPath().getLeaf();
-    if (parent instanceof MemberSelectTree
-        && ((MemberSelectTree) parent).getExpression().equals(node)) {
-      Tree receiver = node.getKind() == Tree.Kind.IDENTIFIER ? null : getReceiver(node);
-      fix.replace(
-          receiver != null ? state.getEndPosition(receiver) : ((JCTree) node).getStartPosition(),
-          state.getEndPosition(parent),
-          newName);
-    } else {
-      Symbol sym = getSymbol(node);
-      fix.replace(
-          node,
-          String.format(
-              "%s::%s", sym.isStatic() ? sym.owner.enclClass().getSimpleName() : "this", newName));
+  /** Remove anonymous class definition beginning and end, leaving only the method definition. */
+  private static SuggestedFix trimToMethodDef(
+      VariableTree varDefinitionTree, VisitorState state, MethodTree implementation) {
+    int methodModifiersEndPos = state.getEndPosition(implementation.getModifiers());
+    if (methodModifiersEndPos == -1) {
+      methodModifiersEndPos = ((JCTree) implementation).getStartPosition();
+    }
+    int methodDefEndPos = state.getEndPosition(implementation);
+    int varModifiersEndPos = state.getEndPosition(varDefinitionTree.getModifiers()) + 1;
+    int varDefEndPos = state.getEndPosition(varDefinitionTree);
+    return SuggestedFix.builder()
+        .replace(varModifiersEndPos, methodModifiersEndPos, "")
+        .replace(methodDefEndPos, varDefEndPos, "")
+        .build();
+  }
+
+  /**
+   * Replace all uses of {@code varSym} within the enclosing compilation unit with a method
+   * reference, as specified by {@code newName}.
+   */
+  private static SuggestedFix replaceUsesWithMethodReference(
+      String newName, Symbol varSym, MethodTree implementation, VisitorState state) {
+    SuggestedFix.Builder fixBuilder = SuggestedFix.builder();
+    ArrayList<Fix> fixes = new ArrayList<>();
+
+    // Extract method body.
+    JCTree methodBody = (JCTree) implementation.getBody();
+    StringBuilder methodBodySource =
+        new StringBuilder(Objects.requireNonNull(state.getSourceForNode(methodBody)));
+    Range<Integer> methodBodyPositionRange =
+        Range.closedOpen(methodBody.getStartPosition(), state.getEndPosition(methodBody));
+
+    // Scan entire compilation unit to replace all uses of the variable with method references.
+    JCCompilationUnit compilationUnit = (JCCompilationUnit) state.getPath().getCompilationUnit();
+    new ReplaceUsesScanner(varSym, newName, state).scan(compilationUnit, fixes);
+
+    // Apply each fix generated by ReplaceUsesScanner to fixBuilder.
+    fixes.stream()
+        .flatMap(fix -> fix.getReplacements(compilationUnit.endPositions).stream())
+        .forEach(
+            replacement -> {
+              if (replacement.range().isConnected(methodBodyPositionRange)) {
+                // If the usage replacement overlaps with the method body, apply it to the method
+                // body source directly, to avoid fix collisions when we replace the whole thing.
+                methodBodySource.replace(
+                    replacement.startPosition() - methodBodyPositionRange.lowerEndpoint(),
+                    replacement.endPosition() - methodBodyPositionRange.lowerEndpoint(),
+                    replacement.replaceWith());
+              } else {
+                // Otherwise, just add directly to fixBuilder.
+                fixBuilder.replace(
+                    replacement.startPosition(),
+                    replacement.endPosition(),
+                    replacement.replaceWith());
+              }
+            });
+    return fixBuilder.replace(methodBody, methodBodySource.toString()).build();
+  }
+
+  private static class ReplaceUsesScanner extends TreePathScanner<Void, ArrayList<Fix>> {
+
+    private final Symbol sym;
+    private final String newName;
+    private final VisitorState state;
+
+    ReplaceUsesScanner(Symbol sym, String newName, VisitorState state) {
+      this.sym = sym;
+      this.newName = newName;
+      this.state = state;
+    }
+
+    @Override
+    public Void visitMemberSelect(MemberSelectTree node, ArrayList<Fix> fixes) {
+      if (Objects.equals(getSymbol(node), sym)) {
+        replaceUseWithMethodReference(node, fixes, state.withPath(getCurrentPath()));
+      }
+      return super.visitMemberSelect(node, fixes);
+    }
+
+    @Override
+    public Void visitIdentifier(IdentifierTree node, ArrayList<Fix> fixes) {
+      if (Objects.equals(getSymbol(node), sym)) {
+        replaceUseWithMethodReference(node, fixes, state.withPath(getCurrentPath()));
+      }
+      return super.visitIdentifier(node, fixes);
+    }
+
+    /**
+     * Replace the given {@code node} with the method reference specified by {@code this.newName}.
+     * Append the resulting {@link Fix} to {@code fixes}.
+     */
+    private void replaceUseWithMethodReference(
+        ExpressionTree node, ArrayList<Fix> fixes, VisitorState state) {
+      Tree parent = state.getPath().getParentPath().getLeaf();
+      if (parent instanceof MemberSelectTree
+          && ((MemberSelectTree) parent).getExpression().equals(node)) {
+        Tree receiver = node.getKind() == Tree.Kind.IDENTIFIER ? null : getReceiver(node);
+        fixes.add(
+            SuggestedFix.replace(
+                receiver != null
+                    ? state.getEndPosition(receiver)
+                    : ((JCTree) node).getStartPosition(),
+                state.getEndPosition(parent),
+                newName));
+      } else {
+        Symbol sym = getSymbol(node);
+        fixes.add(
+            SuggestedFix.replace(
+                node,
+                String.format(
+                    "%s::%s",
+                    sym.isStatic() ? sym.owner.enclClass().getSimpleName() : "this", newName)));
+      }
     }
   }
 }
