@@ -30,20 +30,26 @@ public class ExtendsAutoValueTest {
       CompilationTestHelper.newInstance(ExtendsAutoValue.class, getClass());
 
   @Test
-  public void extendsAutoValue_GoodNoSuperclass() throws Exception {
-    helper.addSourceLines("TestClass.java", "public class TestClass {}").doTest();
-  }
-
-  @Test
-  public void extendsAutoValue_GoodSuperclass() throws Exception {
+  public void extendsAutoValue_goodNoSuperclass() {
     helper
         .addSourceLines(
-            "TestClass.java", "class SuperClass {}", "public class TestClass extends SuperClass {}")
+            "TestClass.java", //
+            "public class TestClass {}")
         .doTest();
   }
 
   @Test
-  public void extendsAutoValue_GoodAutoValueExtendsSuperclass() throws Exception {
+  public void extendsAutoValue_goodSuperclass() {
+    helper
+        .addSourceLines(
+            "TestClass.java", //
+            "class SuperClass {}",
+            "public class TestClass extends SuperClass {}")
+        .doTest();
+  }
+
+  @Test
+  public void extendsAutoValue_goodAutoValueExtendsSuperclass() {
     helper
         .addSourceLines(
             "TestClass.java",
@@ -54,7 +60,7 @@ public class ExtendsAutoValueTest {
   }
 
   @Test
-  public void extendsAutoValue_GoodGeneratedIgnored() throws Exception {
+  public void extendsAutoValue_goodGeneratedIgnored() {
     helper
         .addSourceLines(
             "TestClass.java",
@@ -68,7 +74,7 @@ public class ExtendsAutoValueTest {
   }
 
   @Test
-  public void extendsAutoValue_Bad() throws Exception {
+  public void extendsAutoValue_bad() {
     helper
         .addSourceLines(
             "TestClass.java",
@@ -80,7 +86,22 @@ public class ExtendsAutoValueTest {
   }
 
   @Test
-  public void extendsAutoValue_BadNoImport() throws Exception {
+  public void extendsAutoOneOf_bad() {
+    helper
+        .addSourceLines(
+            "TestClass.java",
+            "import com.google.auto.value.AutoOneOf;",
+            "@AutoOneOf(AutoClass.Kind.class) class AutoClass {",
+            "  enum Kind {}",
+            "}",
+            "// BUG: Diagnostic contains: ExtendsAutoValue",
+            "public class TestClass extends AutoClass {",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void extendsAutoValue_badNoImport() {
     helper
         .addSourceLines(
             "TestClass.java",
@@ -91,7 +112,7 @@ public class ExtendsAutoValueTest {
   }
 
   @Test
-  public void extendsAutoValue_BadInnerClass() throws Exception {
+  public void extendsAutoValue_badInnerClass() {
     helper
         .addSourceLines(
             "OuterClass.java",
@@ -105,7 +126,7 @@ public class ExtendsAutoValueTest {
   }
 
   @Test
-  public void extendsAutoValue_BadInnerStaticClass() throws Exception {
+  public void extendsAutoValue_badInnerStaticClass() {
     helper
         .addSourceLines(
             "TestClass.java",
@@ -119,7 +140,7 @@ public class ExtendsAutoValueTest {
   }
 
   @Test
-  public void extendsAutoValue_BadButSuppressed() throws Exception {
+  public void extendsAutoValue_badButSuppressed() {
     helper
         .addSourceLines(
             "TestClass.java",
