@@ -17,6 +17,7 @@
 package com.google.errorprone.refaster;
 
 import static java.util.logging.Level.FINE;
+import static java.util.logging.Level.WARNING;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableClassToInstanceMap;
@@ -217,7 +218,7 @@ public abstract class Template<M extends TemplateMatch> implements Serializable 
       }
       return Optional.of(unifier);
     } catch (CouldNotResolveImportException e) {
-      logger.log(FINE, "Failure to resolve an import", e);
+      logger.log(WARNING, "Failure to resolve an import", e);
       return Optional.absent();
     } catch (InferException e) {
       logger.log(FINE, "No valid instantiation found: " + e.getMessage());

@@ -17,8 +17,8 @@
 package com.google.errorprone.refaster;
 
 import static com.google.common.base.Preconditions.checkState;
-import static java.util.logging.Level.FINE;
 import static java.util.logging.Level.SEVERE;
+import static java.util.logging.Level.WARNING;
 
 import com.google.auto.value.AutoValue;
 import com.google.common.base.Function;
@@ -208,7 +208,7 @@ public abstract class ExpressionTemplate extends Template<ExpressionTemplateMatc
                   return typecheck(
                       unifier, inliner, new Warner(target), expectedTypes, actualTypes);
                 } catch (CouldNotResolveImportException e) {
-                  logger.log(FINE, "Failure to resolve import", e);
+                  logger.log(WARNING, "Failure to resolve import", e);
                   return Optional.absent();
                 }
               }

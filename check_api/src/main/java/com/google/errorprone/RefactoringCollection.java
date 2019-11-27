@@ -194,7 +194,7 @@ class RefactoringCollection implements DescriptionListener.Factory {
         fileDestination.writeFile(file);
       } catch (IOException e) {
         logger.log(
-            Level.WARNING,
+            Level.SEVERE,
             "Failed to apply diff to file " + listener.base.getRelevantFileName(),
             e);
       }
