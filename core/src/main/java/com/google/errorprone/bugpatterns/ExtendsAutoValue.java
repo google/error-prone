@@ -16,20 +16,30 @@
 
 package com.google.errorprone.bugpatterns;
 
+import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
 import com.google.errorprone.matchers.Description;
+import com.google.errorprone.suppliers.Supplier;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ClassTree;
+import com.sun.tools.javac.util.Name;
 
 /** Makes sure that you are not extending a class that has @AutoValue as an annotation. */
 @BugPattern(
     name = "ExtendsAutoValue",
-    summary = "Do not extend an @AutoValue class in non-generated code.",
+    summary = "Do not extend an @AutoValue/@AutoOneOf class in non-generated code.",
     severity = SeverityLevel.WARNING)
 public final class ExtendsAutoValue extends BugChecker implements ClassTreeMatcher {
+
+  private static final Supplier<ImmutableSet<Name>> AUTOS =
+      VisitorState.memoize(
+          s ->
+              ImmutableSet.of(
+                  s.getName("com.google.auto.value.AutoValue"),
+                  s.getName("com.google.auto.value.AutoOneOf")));
 
   @Override
   public Description matchClass(ClassTree tree, VisitorState state) {
@@ -44,8 +54,9 @@ public final class ExtendsAutoValue extends BugChecker implements ClassTreeMatch
       // Doesn't extend anything, can't possibly be a violation.
       return Description.NO_MATCH;
     }
-    if (ASTHelpers.hasAnnotation(
-        ASTHelpers.getSymbol(tree.getExtendsClause()), "com.google.auto.value.AutoValue", state)) {
+    if (!ASTHelpers.annotationsAmong(
+            ASTHelpers.getSymbol(tree.getExtendsClause()), AUTOS.get(state), state)
+        .isEmpty()) {
       // Violation: one of its superclasses extends AutoValue.
       return buildDescription(tree).build();
     }
