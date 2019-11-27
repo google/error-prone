@@ -554,7 +554,7 @@ __[ExtendingJUnitAssert](bugpattern/ExtendingJUnitAssert)__<br>
 When only using JUnit Assert&#39;s static methods, you should import statically instead of extending.
 
 __[ExtendsAutoValue](bugpattern/ExtendsAutoValue)__<br>
-Do not extend an @AutoValue class in non-generated code.
+Do not extend an @AutoValue/@AutoOneOf class in non-generated code.
 
 __[FallThrough](bugpattern/FallThrough)__<br>
 Switch case may fall through

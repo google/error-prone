@@ -1,6 +1,6 @@
 ---
 title: ExtendsAutoValue
-summary: Do not extend an @AutoValue class in non-generated code.
+summary: Do not extend an @AutoValue/@AutoOneOf class in non-generated code.
 layout: bugpattern
 tags: ''
 severity: WARNING
