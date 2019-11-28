@@ -81,17 +81,21 @@ public class HeldLockAnalyzer {
    * members.
    */
   public static void analyze(
-      VisitorState state, LockEventListener listener, Predicate<Tree> isSuppressed) {
+      VisitorState state,
+      LockEventListener listener,
+      Predicate<Tree> isSuppressed,
+      GuardedByFlags flags) {
     HeldLockSet locks = HeldLockSet.empty();
-    locks = handleMonitorGuards(state, locks);
-    new LockScanner(state, listener, isSuppressed).scan(state.getPath(), locks);
+    locks = handleMonitorGuards(state, locks, flags);
+    new LockScanner(state, listener, isSuppressed, flags).scan(state.getPath(), locks);
   }
 
   // Don't use Class#getName() for inner classes, we don't want `Monitor$Guard`
   private static final String MONITOR_GUARD_CLASS =
       "com.google.common.util.concurrent.Monitor.Guard";
 
-  private static HeldLockSet handleMonitorGuards(VisitorState state, HeldLockSet locks) {
+  private static HeldLockSet handleMonitorGuards(
+      VisitorState state, HeldLockSet locks, GuardedByFlags flags) {
     JCNewClass newClassTree = ASTHelpers.findEnclosingNode(state.getPath(), JCNewClass.class);
     if (newClassTree == null) {
       return locks;
@@ -105,7 +109,7 @@ public class HeldLockAnalyzer {
     }
     Optional<GuardedByExpression> lockExpression =
         GuardedByBinder.bindExpression(
-            Iterables.getOnlyElement(newClassTree.getArguments()), state);
+            Iterables.getOnlyElement(newClassTree.getArguments()), state, flags);
     if (!lockExpression.isPresent()) {
       return locks;
     }
@@ -117,14 +121,19 @@ public class HeldLockAnalyzer {
     private final VisitorState visitorState;
     private final LockEventListener listener;
     private final Predicate<Tree> isSuppressed;
+    private final GuardedByFlags flags;
 
     private static final GuardedByExpression.Factory F = new GuardedByExpression.Factory();
 
     private LockScanner(
-        VisitorState visitorState, LockEventListener listener, Predicate<Tree> isSuppressed) {
+        VisitorState visitorState,
+        LockEventListener listener,
+        Predicate<Tree> isSuppressed,
+        GuardedByFlags flags) {
       this.visitorState = visitorState;
       this.listener = listener;
       this.isSuppressed = isSuppressed;
+      this.flags = flags;
     }
 
     @Override
@@ -143,7 +152,8 @@ public class HeldLockAnalyzer {
       // for invocations.
       for (String guard : GuardedByUtils.getGuardValues(tree, visitorState)) {
         Optional<GuardedByExpression> bound =
-            GuardedByBinder.bindString(guard, GuardedBySymbolResolver.from(tree, visitorState));
+            GuardedByBinder.bindString(
+                guard, GuardedBySymbolResolver.from(tree, visitorState), flags);
         if (bound.isPresent()) {
           locks = locks.plus(bound.get());
         }
@@ -162,7 +172,7 @@ public class HeldLockAnalyzer {
       // Cheesy try/finally heuristic: assume that all locks released in the finally
       // are held for the entirety of the try and catch statements.
       Collection<GuardedByExpression> releasedLocks =
-          ReleasedLockFinder.find(tree.getFinallyBlock(), visitorState);
+          ReleasedLockFinder.find(tree.getFinallyBlock(), visitorState, flags);
       if (resources.isEmpty()) {
         scan(tree.getBlock(), locks.plusAll(releasedLocks));
       } else {
@@ -179,7 +189,7 @@ public class HeldLockAnalyzer {
     public Void visitSynchronized(SynchronizedTree tree, HeldLockSet locks) {
       // The synchronized expression is held in the body of the synchronized statement:
       Optional<GuardedByExpression> lockExpression =
-          GuardedByBinder.bindExpression((JCExpression) tree.getExpression(), visitorState);
+          GuardedByBinder.bindExpression((JCExpression) tree.getExpression(), visitorState, flags);
       scan(tree.getBlock(), lockExpression.isPresent() ? locks.plus(lockExpression.get()) : locks);
       return null;
     }
@@ -224,11 +234,13 @@ public class HeldLockAnalyzer {
 
     private void checkMatch(ExpressionTree tree, HeldLockSet locks) {
       for (String guardString : GuardedByUtils.getGuardValues(tree, visitorState)) {
-        GuardedByBinder.bindString(guardString, GuardedBySymbolResolver.from(tree, visitorState))
+        GuardedByBinder.bindString(
+                guardString, GuardedBySymbolResolver.from(tree, visitorState), flags)
             .ifPresent(
                 guard -> {
                   Optional<GuardedByExpression> boundGuard =
-                      ExpectedLockCalculator.from((JCTree.JCExpression) tree, guard, visitorState);
+                      ExpectedLockCalculator.from(
+                          (JCTree.JCExpression) tree, guard, visitorState, flags);
                   if (!boundGuard.isPresent()) {
                     // We couldn't resolve a guarded by expression in the current scope, so we can't
                     // guarantee the access is protected and must report an error to be safe.
@@ -278,11 +290,14 @@ public class HeldLockAnalyzer {
   private static class LockOperationFinder extends TreeScanner<Void, Void> {
 
     static Collection<GuardedByExpression> find(
-        Tree tree, VisitorState state, Matcher<ExpressionTree> lockOperationMatcher) {
+        Tree tree,
+        VisitorState state,
+        Matcher<ExpressionTree> lockOperationMatcher,
+        GuardedByFlags flags) {
       if (tree == null) {
         return Collections.emptyList();
       }
-      LockOperationFinder finder = new LockOperationFinder(state, lockOperationMatcher);
+      LockOperationFinder finder = new LockOperationFinder(state, lockOperationMatcher, flags);
       tree.accept(finder, null);
       return finder.locks;
     }
@@ -290,6 +305,7 @@ public class HeldLockAnalyzer {
     private static final String READ_WRITE_LOCK_CLASS = "java.util.concurrent.locks.ReadWriteLock";
 
     private final Matcher<ExpressionTree> lockOperationMatcher;
+    private final GuardedByFlags flags;
 
     /** Matcher for ReadWriteLock lock accessors. */
     private static final Matcher<ExpressionTree> READ_WRITE_ACCESSOR_MATCHER =
@@ -300,9 +316,11 @@ public class HeldLockAnalyzer {
     private final VisitorState state;
     private final Set<GuardedByExpression> locks = new HashSet<>();
 
-    private LockOperationFinder(VisitorState state, Matcher<ExpressionTree> lockOperationMatcher) {
+    private LockOperationFinder(
+        VisitorState state, Matcher<ExpressionTree> lockOperationMatcher, GuardedByFlags flags) {
       this.state = state;
       this.lockOperationMatcher = lockOperationMatcher;
+      this.flags = flags;
     }
 
     @Override
@@ -323,7 +341,7 @@ public class HeldLockAnalyzer {
         return;
       }
       Optional<GuardedByExpression> node =
-          GuardedByBinder.bindExpression((JCExpression) tree, state);
+          GuardedByBinder.bindExpression((JCExpression) tree, state, flags);
       if (node.isPresent()) {
         GuardedByExpression receiver = ((GuardedByExpression.Select) node.get()).base();
         locks.add(receiver);
@@ -350,11 +368,12 @@ public class HeldLockAnalyzer {
       }
       for (String lockString : annotation.value()) {
         Optional<GuardedByExpression> guard =
-            GuardedByBinder.bindString(lockString, GuardedBySymbolResolver.from(tree, state));
+            GuardedByBinder.bindString(
+                lockString, GuardedBySymbolResolver.from(tree, state), flags);
         // TODO(cushon): http://docs.oracle.com/javase/8/docs/api/java/util/Optional.html#ifPresent
         if (guard.isPresent()) {
           Optional<GuardedByExpression> lock =
-              ExpectedLockCalculator.from((JCExpression) tree, guard.get(), state);
+              ExpectedLockCalculator.from((JCExpression) tree, guard.get(), state, flags);
           if (lock.isPresent()) {
             locks.add(lock.get());
           }
@@ -377,8 +396,9 @@ public class HeldLockAnalyzer {
       return Iterables.transform(LOCK_RESOURCES, LockResource::createUnlockMatcher);
     }
 
-    static Collection<GuardedByExpression> find(Tree tree, VisitorState state) {
-      return LockOperationFinder.find(tree, state, UNLOCK_MATCHER);
+    static Collection<GuardedByExpression> find(
+        Tree tree, VisitorState state, GuardedByFlags flags) {
+      return LockOperationFinder.find(tree, state, UNLOCK_MATCHER, flags);
     }
   }
 
@@ -396,8 +416,9 @@ public class HeldLockAnalyzer {
       return Iterables.transform(LOCK_RESOURCES, LockResource::createLockMatcher);
     }
 
-    static Collection<GuardedByExpression> find(Tree tree, VisitorState state) {
-      return LockOperationFinder.find(tree, state, LOCK_MATCHER);
+    static Collection<GuardedByExpression> find(
+        Tree tree, VisitorState state, GuardedByFlags flags) {
+      return LockOperationFinder.find(tree, state, LOCK_MATCHER, flags);
     }
   }
 
@@ -430,14 +451,15 @@ public class HeldLockAnalyzer {
     static Optional<GuardedByExpression> from(
         JCTree.JCExpression guardedMemberExpression,
         GuardedByExpression guard,
-        VisitorState state) {
+        VisitorState state,
+        GuardedByFlags flags) {
 
       if (isGuardReferenceAbsolute(guard)) {
         return Optional.of(guard);
       }
 
       Optional<GuardedByExpression> guardedMember =
-          GuardedByBinder.bindExpression(guardedMemberExpression, state);
+          GuardedByBinder.bindExpression(guardedMemberExpression, state, flags);
 
       if (!guardedMember.isPresent()) {
         return Optional.empty();

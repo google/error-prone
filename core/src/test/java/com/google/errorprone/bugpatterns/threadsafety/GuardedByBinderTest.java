@@ -520,7 +520,8 @@ public class GuardedByBinderTest {
                       compilationUnit,
                       task.getContext(),
                       null,
-                      VisitorState.createForUtilityPurposes(task.getContext())));
+                      VisitorState.createForUtilityPurposes(task.getContext())),
+                  GuardedByFlags.allOn());
           if (!guardExpression.isPresent()) {
             throw new IllegalGuardedBy(exprString);
           }

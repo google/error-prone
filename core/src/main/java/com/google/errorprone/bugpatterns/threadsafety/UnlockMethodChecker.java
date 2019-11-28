@@ -45,12 +45,14 @@ public class UnlockMethodChecker extends AbstractLockMethodChecker {
 
   @Override
   protected Set<GuardedByExpression> getActual(MethodTree tree, VisitorState state) {
-    return ImmutableSet.copyOf(HeldLockAnalyzer.ReleasedLockFinder.find(tree.getBody(), state));
+    return ImmutableSet.copyOf(
+        HeldLockAnalyzer.ReleasedLockFinder.find(tree.getBody(), state, GuardedByFlags.allOn()));
   }
 
   @Override
   protected Set<GuardedByExpression> getUnwanted(MethodTree tree, VisitorState state) {
-    return ImmutableSet.copyOf(HeldLockAnalyzer.AcquiredLockFinder.find(tree.getBody(), state));
+    return ImmutableSet.copyOf(
+        HeldLockAnalyzer.AcquiredLockFinder.find(tree.getBody(), state, GuardedByFlags.allOn()));
   }
 
   @Override

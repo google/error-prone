@@ -103,7 +103,8 @@ public abstract class AbstractLockMethodChecker extends BugChecker
     ImmutableSet.Builder<GuardedByExpression> builder = ImmutableSet.builder();
     for (String lockExpression : lockExpressions) {
       Optional<GuardedByExpression> guard =
-          GuardedByBinder.bindString(lockExpression, GuardedBySymbolResolver.from(tree, state));
+          GuardedByBinder.bindString(
+              lockExpression, GuardedBySymbolResolver.from(tree, state), GuardedByFlags.allOn());
       if (!guard.isPresent()) {
         return Optional.empty();
       }

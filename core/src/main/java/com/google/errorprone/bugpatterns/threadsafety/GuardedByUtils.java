@@ -100,7 +100,8 @@ public class GuardedByUtils {
     }
   }
 
-  public static GuardedByValidationResult isGuardedByValid(Tree tree, VisitorState state) {
+  public static GuardedByValidationResult isGuardedByValid(
+      Tree tree, VisitorState state, GuardedByFlags flags) {
     ImmutableSet<String> guards = GuardedByUtils.getGuardValues(tree, state);
     if (guards.isEmpty()) {
       return GuardedByValidationResult.ok();
@@ -109,7 +110,7 @@ public class GuardedByUtils {
     List<GuardedByExpression> boundGuards = new ArrayList<>();
     for (String guard : guards) {
       Optional<GuardedByExpression> boundGuard =
-          GuardedByBinder.bindString(guard, GuardedBySymbolResolver.from(tree, state));
+          GuardedByBinder.bindString(guard, GuardedBySymbolResolver.from(tree, state), flags);
       if (!boundGuard.isPresent()) {
         return GuardedByValidationResult.invalid("could not resolve guard");
       }
@@ -134,9 +135,10 @@ public class GuardedByUtils {
     return GuardedByValidationResult.ok();
   }
 
-  public static Symbol bindGuardedByString(Tree tree, String guard, VisitorState visitorState) {
+  public static Symbol bindGuardedByString(
+      Tree tree, String guard, VisitorState visitorState, GuardedByFlags flags) {
     Optional<GuardedByExpression> bound =
-        GuardedByBinder.bindString(guard, GuardedBySymbolResolver.from(tree, visitorState));
+        GuardedByBinder.bindString(guard, GuardedBySymbolResolver.from(tree, visitorState), flags);
     if (!bound.isPresent()) {
       return null;
     }
