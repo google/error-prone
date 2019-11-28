@@ -331,6 +331,28 @@ public class GuardedByCheckerTest {
   }
 
   @Test
+  public void methodQualifiedWithThis() {
+    compilationHelper
+        .addSourceLines(
+            "threadsafety/Test.java",
+            "package threadsafety;",
+            "import java.util.List;",
+            "import javax.annotation.concurrent.GuardedBy;",
+            "class Itself {",
+            "  @GuardedBy(\"this\")",
+            "  void f() {};",
+            "  void g() {",
+            "    // BUG: Diagnostic contains:",
+            "    // should be guarded by 'this'",
+            "    this.f();",
+            "    synchronized (this) { f(); }",
+            "    synchronized (this) { this.f(); }",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void testCtor() {
     compilationHelper
         .addSourceLines(
@@ -1523,7 +1545,6 @@ public class GuardedByCheckerTest {
         .doTest();
   }
 
-  @Ignore // TODO(cushon): clean up existing instances and re-enable
   @Test
   public void qualifiedMethod() {
     compilationHelper
@@ -1678,7 +1699,7 @@ public class GuardedByCheckerTest {
             "    f.x = 10;",
             "  }",
             "  void bar () {",
-            "    // TODO(b/112275411): handle new class expressions",
+            "    // BUG: Diagnostic contains: should be guarded by 'mu'",
             "    new Foo().x = 11;",
             "  }",
             "}")

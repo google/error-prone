@@ -21,6 +21,7 @@ import static com.google.errorprone.matchers.Description.NO_MATCH;
 
 import com.google.common.base.Joiner;
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.LambdaExpressionTreeMatcher;
@@ -51,6 +52,12 @@ public class GuardedByChecker extends BugChecker
 
   private static final String JUC_READ_WRITE_LOCK = "java.util.concurrent.locks.ReadWriteLock";
 
+  private final GuardedByFlags flags;
+
+  public GuardedByChecker(ErrorProneFlags flags) {
+    this.flags = GuardedByFlags.of(flags.getBoolean("GuardedByChecker:MatchOnErrors").orElse(true));
+  }
+
   @Override
   public Description matchMethod(MethodTree tree, final VisitorState state) {
     // Constructors (and field initializers, instance initalizers, and class initalizers) are free
@@ -69,12 +76,13 @@ public class GuardedByChecker extends BugChecker
     return NO_MATCH;
   }
 
-  private void analyze(final VisitorState state) {
+  private void analyze(VisitorState state) {
     HeldLockAnalyzer.analyze(
         state,
         (ExpressionTree tree, GuardedByExpression guard, HeldLockSet live) ->
             report(GuardedByChecker.this.checkGuardedAccess(tree, guard, live, state), state),
-        this::isSuppressed);
+        this::isSuppressed,
+        flags);
   }
 
   @Override
@@ -108,8 +116,8 @@ public class GuardedByChecker extends BugChecker
       return NO_MATCH;
     }
 
-    // TODO(cushon): re-enable once the clean-up is done
-    if (guard.kind() == GuardedByExpression.Kind.ERROR) {
+    // TODO(b/144776758): remove flag once the clean-up is done
+    if (!flags.matchMethodSymbols() && guard.kind() == GuardedByExpression.Kind.ERROR) {
       return NO_MATCH;
     }
 
@@ -212,8 +220,8 @@ public class GuardedByChecker extends BugChecker
   }
 
   /** Validates that {@code @GuardedBy} strings can be resolved. */
-  Description validate(Tree tree, VisitorState state) {
-    GuardedByValidationResult result = GuardedByUtils.isGuardedByValid(tree, state);
+  private Description validate(Tree tree, VisitorState state) {
+    GuardedByValidationResult result = GuardedByUtils.isGuardedByValid(tree, state, flags);
     if (result.isValid()) {
       return Description.NO_MATCH;
     }
