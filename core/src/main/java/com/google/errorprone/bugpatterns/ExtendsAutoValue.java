@@ -31,7 +31,7 @@ import com.sun.tools.javac.util.Name;
 @BugPattern(
     name = "ExtendsAutoValue",
     summary = "Do not extend an @AutoValue/@AutoOneOf class in non-generated code.",
-    severity = SeverityLevel.WARNING)
+    severity = SeverityLevel.ERROR)
 public final class ExtendsAutoValue extends BugChecker implements ClassTreeMatcher {
 
   private static final Supplier<ImmutableSet<Name>> AUTOS =
