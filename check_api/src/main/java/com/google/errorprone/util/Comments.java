@@ -97,9 +97,10 @@ public class Comments {
         return comment.getText().replaceAll("^\\s*/\\*\\s*(.*?)\\s*\\*/\\s*", "$1");
       case LINE:
         return comment.getText().replaceAll("^\\s*//\\s*", "");
-      default:
-        return comment.getText();
+      case JAVADOC:
+        return comment.getText().replaceAll("^\\s*/\\*\\*\\s*(.*?)\\s*\\*/\\s*", "$1");
     }
+    throw new AssertionError(comment.getStyle());
   }
 
   private static ImmutableList<Commented<ExpressionTree>> findCommentsForArguments(
