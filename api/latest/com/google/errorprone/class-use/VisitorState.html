@@ -3526,25 +3526,28 @@
 <tbody>
 <tr class="altColor">
 <td class="colFirst"><code>static void</code></td>
-<td class="colLast"><span class="typeNameLabel">HeldLockAnalyzer.</span><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/bugpatterns/threadsafety/HeldLockAnalyzer.html#analyze-com.google.errorprone.VisitorState-com.google.errorprone.bugpatterns.threadsafety.HeldLockAnalyzer.LockEventListener-com.google.common.base.Predicate-">analyze</a></span>(<a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
+<td class="colLast"><span class="typeNameLabel">HeldLockAnalyzer.</span><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/bugpatterns/threadsafety/HeldLockAnalyzer.html#analyze-com.google.errorprone.VisitorState-com.google.errorprone.bugpatterns.threadsafety.HeldLockAnalyzer.LockEventListener-com.google.common.base.Predicate-com.google.errorprone.bugpatterns.threadsafety.GuardedByFlags-">analyze</a></span>(<a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
        <a href="../../../../com/google/errorprone/bugpatterns/threadsafety/HeldLockAnalyzer.LockEventListener.html" title="interface in com.google.errorprone.bugpatterns.threadsafety">HeldLockAnalyzer.LockEventListener</a>&nbsp;listener,
-       com.google.common.base.Predicate&lt;com.sun.source.tree.Tree&gt;&nbsp;isSuppressed)</code>
+       com.google.common.base.Predicate&lt;com.sun.source.tree.Tree&gt;&nbsp;isSuppressed,
+       <a href="../../../../com/google/errorprone/bugpatterns/threadsafety/GuardedByFlags.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByFlags</a>&nbsp;flags)</code>
 <div class="block">Analyzes a method body, tracking the set of held locks and checking accesses to guarded
  members.</div>
 </td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>static <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util">Optional</a>&lt;<a href="../../../../com/google/errorprone/bugpatterns/threadsafety/GuardedByExpression.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByExpression</a>&gt;</code></td>
-<td class="colLast"><span class="typeNameLabel">GuardedByBinder.</span><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/bugpatterns/threadsafety/GuardedByBinder.html#bindExpression-com.sun.tools.javac.tree.JCTree.JCExpression-com.google.errorprone.VisitorState-">bindExpression</a></span>(com.sun.tools.javac.tree.JCTree.JCExpression&nbsp;exp,
-              <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;visitorState)</code>
+<td class="colLast"><span class="typeNameLabel">GuardedByBinder.</span><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/bugpatterns/threadsafety/GuardedByBinder.html#bindExpression-com.sun.tools.javac.tree.JCTree.JCExpression-com.google.errorprone.VisitorState-com.google.errorprone.bugpatterns.threadsafety.GuardedByFlags-">bindExpression</a></span>(com.sun.tools.javac.tree.JCTree.JCExpression&nbsp;exp,
+              <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;visitorState,
+              <a href="../../../../com/google/errorprone/bugpatterns/threadsafety/GuardedByFlags.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByFlags</a>&nbsp;flags)</code>
 <div class="block">Creates a <a href="../../../../com/google/errorprone/bugpatterns/threadsafety/GuardedByExpression.html" title="class in com.google.errorprone.bugpatterns.threadsafety"><code>GuardedByExpression</code></a> from a bound AST node, or returns <code>Optional.empty()</code> if the AST node doesn't correspond to a 'simple' lock expression.</div>
 </td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>static com.sun.tools.javac.code.Symbol</code></td>
-<td class="colLast"><span class="typeNameLabel">GuardedByUtils.</span><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/bugpatterns/threadsafety/GuardedByUtils.html#bindGuardedByString-com.sun.source.tree.Tree-java.lang.String-com.google.errorprone.VisitorState-">bindGuardedByString</a></span>(com.sun.source.tree.Tree&nbsp;tree,
+<td class="colLast"><span class="typeNameLabel">GuardedByUtils.</span><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/bugpatterns/threadsafety/GuardedByUtils.html#bindGuardedByString-com.sun.source.tree.Tree-java.lang.String-com.google.errorprone.VisitorState-com.google.errorprone.bugpatterns.threadsafety.GuardedByFlags-">bindGuardedByString</a></span>(com.sun.source.tree.Tree&nbsp;tree,
                    <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;guard,
-                   <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;visitorState)</code>&nbsp;</td>
+                   <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;visitorState,
+                   <a href="../../../../com/google/errorprone/bugpatterns/threadsafety/GuardedByFlags.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByFlags</a>&nbsp;flags)</code>&nbsp;</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code><a href="../../../../com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety</a></code></td>
@@ -3629,8 +3632,9 @@
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>static com.google.errorprone.bugpatterns.threadsafety.GuardedByUtils.GuardedByValidationResult</code></td>
-<td class="colLast"><span class="typeNameLabel">GuardedByUtils.</span><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/bugpatterns/threadsafety/GuardedByUtils.html#isGuardedByValid-com.sun.source.tree.Tree-com.google.errorprone.VisitorState-">isGuardedByValid</a></span>(com.sun.source.tree.Tree&nbsp;tree,
-                <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code>&nbsp;</td>
+<td class="colLast"><span class="typeNameLabel">GuardedByUtils.</span><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/bugpatterns/threadsafety/GuardedByUtils.html#isGuardedByValid-com.sun.source.tree.Tree-com.google.errorprone.VisitorState-com.google.errorprone.bugpatterns.threadsafety.GuardedByFlags-">isGuardedByValid</a></span>(com.sun.source.tree.Tree&nbsp;tree,
+                <a href="../../../../com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
+                <a href="../../../../com/google/errorprone/bugpatterns/threadsafety/GuardedByFlags.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByFlags</a>&nbsp;flags)</code>&nbsp;</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>static boolean</code></td>

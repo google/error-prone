@@ -131,6 +131,9 @@ __[EqualsReference](bugpattern/EqualsReference)__<br>
 __[EqualsWrongThing](bugpattern/EqualsWrongThing)__<br>
 Comparing different pairs of fields/getters in an equals implementation is probably a mistake.
 
+__[ExtendsAutoValue](bugpattern/ExtendsAutoValue)__<br>
+Do not extend an @AutoValue/@AutoOneOf class in non-generated code.
+
 __[ForOverride](bugpattern/ForOverride)__<br>
 Method annotated @ForOverride must be protected or package-private and only invoked from declaring class, or from an override of the method
 
@@ -552,9 +555,6 @@ Implementing #equals by just comparing hashCodes is fragile. Hashes collide freq
 
 __[ExtendingJUnitAssert](bugpattern/ExtendingJUnitAssert)__<br>
 When only using JUnit Assert&#39;s static methods, you should import statically instead of extending.
-
-__[ExtendsAutoValue](bugpattern/ExtendsAutoValue)__<br>
-Do not extend an @AutoValue/@AutoOneOf class in non-generated code.
 
 __[FallThrough](bugpattern/FallThrough)__<br>
 Switch case may fall through
