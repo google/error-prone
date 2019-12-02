@@ -41,6 +41,7 @@ public class ParameterNameTest {
             "  void f(int foo, int bar) {}",
             "  {",
             "    f(/* bar= */ 1, /* foo= */ 2);",
+            "    f(/** bar= */ 3, /** foo= */ 4);",
             "  }",
             "}")
         .addOutputLines(
@@ -49,6 +50,7 @@ public class ParameterNameTest {
             "  void f(int foo, int bar) {}",
             "  {",
             "    f(/* foo= */ 1, /* bar= */ 2);",
+            "    f(/* foo= */ 3, /* bar= */ 4);",
             "  }",
             "}")
         .doTest(TEXT_MATCH);

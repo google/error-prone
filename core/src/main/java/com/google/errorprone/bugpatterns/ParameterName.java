@@ -20,7 +20,6 @@ import static com.google.common.collect.Iterables.getLast;
 import static com.google.common.collect.Streams.forEachPair;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
-import static com.sun.tools.javac.parser.Tokens.Comment.CommentStyle.BLOCK;
 
 import com.google.auto.value.AutoValue;
 import com.google.common.base.Strings;
@@ -155,9 +154,6 @@ public class ParameterName extends BugChecker
       VarSymbol formal, ExpressionTree actual, ErrorProneToken token, VisitorState state) {
     List<FixInfo> matches = new ArrayList<>();
     for (Comment comment : token.comments()) {
-      if (comment.getStyle() != BLOCK) {
-        continue;
-      }
       Matcher m =
           NamedParameterComment.PARAMETER_COMMENT_PATTERN.matcher(
               Comments.getTextFromComment(comment));
@@ -235,9 +231,6 @@ public class ParameterName extends BugChecker
   // complains on parameter name comments on varargs past the first one
   private void checkComment(ExpressionTree arg, ErrorProneToken token, VisitorState state) {
     for (Comment comment : token.comments()) {
-      if (comment.getStyle() != BLOCK) {
-        continue;
-      }
       Matcher m =
           NamedParameterComment.PARAMETER_COMMENT_PATTERN.matcher(
               Comments.getTextFromComment(comment));
