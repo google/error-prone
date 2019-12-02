@@ -236,17 +236,25 @@ public final class InterruptedExceptionSwallowed extends BugChecker
       scan(tree.getFinallyBlock(), null);
       Set<Type> fromBlock = thrownTypes.pop();
       getThrownTypes().addAll(fromBlock);
+      // The above getCatches scan isn't quite accurate when exceptions are thrown from earlier catch blocks.
+      // It's necessary to prune exceptions thrown by resources and the main block, but doesn't adequately
+      // capture those thrown from catch blocks.
+      for (CatchTree catchTree : tree.getCatches()) {
+        ScanThrownTypes nestedScanner = new ScanThrownTypes(state);
+        catchTree.getBlock().accept(nestedScanner, null);
+        getThrownTypes().addAll(nestedScanner.getThrownTypes());
+      }
       return null;
     }
 
     @Override
     public Void visitCatch(CatchTree tree, Void unused) {
       Type type = getType(tree.getParameter());
-      // Remove the thrown types; if they're re-thrown they'll get re-added.
+      // Remove the thrown types; if they're re-thrown they'll get re-added in visitTry
       for (Type unionMember : extractTypes(type)) {
         getThrownTypes().removeIf(thrownType -> types.isAssignable(thrownType, unionMember));
       }
-      return super.visitCatch(tree, null);
+      return null;
     }
 
     @Override
