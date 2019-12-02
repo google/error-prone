@@ -16,6 +16,8 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH;
+
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
 import org.junit.Test;
@@ -41,7 +43,7 @@ public class FloatingPointLiteralPrecisionTest {
             "  double d = 2.0;",
             "  float f = 2.0f;",
             "}")
-        .doTest();
+        .doTest(TEXT_MATCH);
   }
 
   @Test
@@ -63,6 +65,27 @@ public class FloatingPointLiteralPrecisionTest {
             "  float f5 = 1_000.0f;",
             "  float f6 = 0x1.0p63f;",
             "}")
+        .doTest();
+  }
+
+  @Test
+  public void replacementTooLong() {
+    String[] input = {
+      "class Test {", //
+      "  // BUG: Diagnostic contains:",
+      "  double d = 1e23;",
+      "}"
+    };
+
+    // Don't provide a fix if the replacement is much longer than the current literal.
+    BugCheckerRefactoringTestHelper.newInstance(new FloatingPointLiteralPrecision(), getClass())
+        .addInputLines("in/Test.java", input)
+        .expectUnchanged()
+        .doTest(TEXT_MATCH);
+
+    // Make sure we're still emitting a warning.
+    CompilationTestHelper.newInstance(FloatingPointLiteralPrecision.class, getClass())
+        .addSourceLines("Test.java", input)
         .doTest();
   }
 }
