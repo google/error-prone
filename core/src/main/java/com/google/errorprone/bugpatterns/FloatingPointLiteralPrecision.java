@@ -41,6 +41,13 @@ import java.math.BigDecimal;
     tags = StandardTags.STYLE,
     providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class FloatingPointLiteralPrecision extends BugChecker implements LiteralTreeMatcher {
+
+  /*
+   * Don't emit a fix if the suggested fix is too much longer than the original literal, as defined
+   * by this constant multiplied by the original length.
+   */
+  private static final int REPLACEMENT_MAX_MULTIPLIER = 3;
+
   @Override
   public Description matchLiteral(LiteralTree tree, VisitorState state) {
     Type type = ASTHelpers.getType(tree);
@@ -84,6 +91,11 @@ public class FloatingPointLiteralPrecision extends BugChecker implements Literal
     if (exact.compareTo(value) == 0) {
       return NO_MATCH;
     }
-    return describeMatch(tree, SuggestedFix.replace(tree, value + suffix));
+    String replacement = value + suffix;
+    // Don't emit a fix with the warning if the replacement is too long.
+    if (replacement.length() > (REPLACEMENT_MAX_MULTIPLIER * source.length())) {
+      return describeMatch(tree);
+    }
+    return describeMatch(tree, SuggestedFix.replace(tree, replacement));
   }
 }
