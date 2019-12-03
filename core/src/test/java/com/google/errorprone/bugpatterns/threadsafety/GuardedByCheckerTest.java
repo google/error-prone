@@ -16,6 +16,7 @@
 
 package com.google.errorprone.bugpatterns.threadsafety;
 
+import com.google.common.collect.ImmutableList;
 import com.google.errorprone.CompilationTestHelper;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -1560,6 +1561,52 @@ public class GuardedByCheckerTest {
             "    Test t = new Test();",
             "    // BUG: Diagnostic contains: guarded by 't'",
             "    t.f();",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void qualifiedMethodWrongThis_causesFinding_whenMatchOnErrorsFlagNotSet() {
+    CompilationTestHelper.newInstance(GuardedByChecker.class, getClass())
+        .addSourceLines(
+            "MemoryAllocatedInfoJava.java",
+            "import javax.annotation.concurrent.GuardedBy;",
+            "public class MemoryAllocatedInfoJava {",
+            "  private static final class AllocationStats {",
+            "    @GuardedBy(\"MemoryAllocatedInfoJava.this\")",
+            "    void addAllocation(long size) {}",
+            "  }",
+            "  public void addStackTrace(long size) {",
+            "    synchronized (this) {",
+            "      AllocationStats stat = new AllocationStats();",
+            "      // BUG: Diagnostic contains: Access should be guarded by enclosing instance "
+                + "'MemoryAllocatedInfoJava' of 'stat', which is not accessible in this scope; "
+                + "instead found: 'this'",
+            "      stat.addAllocation(size);",
+            "    }",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void qualifiedMethodWrongThis_hasNoFinding_whenMatchOnErrorsFlagSetFalse() {
+    CompilationTestHelper.newInstance(GuardedByChecker.class, getClass())
+        .setArgs(ImmutableList.of("-XepOpt:GuardedByChecker:MatchOnErrors=false"))
+        .addSourceLines(
+            "MemoryAllocatedInfoJava.java",
+            "import javax.annotation.concurrent.GuardedBy;",
+            "public class MemoryAllocatedInfoJava {",
+            "  private static final class AllocationStats {",
+            "    @GuardedBy(\"MemoryAllocatedInfoJava.this\")",
+            "    void addAllocation(long size) {}",
+            "  }",
+            "  public void addStackTrace(long size) {",
+            "    synchronized (this) {",
+            "      AllocationStats stat = new AllocationStats();",
+            "      stat.addAllocation(size);",
+            "    }",
             "  }",
             "}")
         .doTest();
