@@ -5,7 +5,7 @@ Compile this with:
 
 ```shell
 javac \
-    -classpath error_prone_refaster-2.3.4-SNAPSHOT.jar \
+    -classpath error_prone_refaster-2.3.5-SNAPSHOT.jar \
     "-Xplugin:RefasterRuleCompiler --out `pwd`/refactoring.out" \
     StringLengthToEmpty.java
 ```

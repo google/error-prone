@@ -15,7 +15,7 @@ subprojects {
   apply plugin: 'net.ltgt.errorprone'
 
   dependencies {
-    errorprone 'com.google.errorprone:error_prone_core:2.3.4-SNAPSHOT'
+    errorprone 'com.google.errorprone:error_prone_core:2.3.5-SNAPSHOT'
     // for JDK 8 support
     errorproneJavac 'com.google.errorprone:javac:9+181-r4173-1'
   }
