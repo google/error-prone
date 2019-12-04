@@ -16,8 +16,8 @@
 
 package com.google.errorprone.bugpatterns;
 
+import com.google.common.collect.ImmutableList;
 import com.google.errorprone.CompilationTestHelper;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -26,12 +26,8 @@ import org.junit.runners.JUnit4;
 @RunWith(JUnit4.class)
 public class ReturnValueIgnoredTest {
 
-  private CompilationTestHelper compilationHelper;
-
-  @Before
-  public void setUp() {
-    compilationHelper = CompilationTestHelper.newInstance(ReturnValueIgnored.class, getClass());
-  }
+  private final CompilationTestHelper compilationHelper =
+      CompilationTestHelper.newInstance(ReturnValueIgnored.class, getClass());
 
   @Test
   public void testPositiveCases() {
@@ -181,6 +177,41 @@ public class ReturnValueIgnoredTest {
             "    void run() throws Exception;",
             "  }",
             "}")
+        .doTest();
+  }
+
+  @Test
+  public void collectionContains() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "abstract class Test {",
+            "  void test(java.util.List p) {",
+            "    // BUG: Diagnostic contains:",
+            "    p.contains(null);",
+            "  }",
+            "  void test2(java.util.Map p) {",
+            "    // BUG: Diagnostic contains:",
+            "    p.containsKey(null);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void collectionContains_flagOff() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "abstract class Test {",
+            "  void test(java.util.List p) {",
+            "    p.contains(null);",
+            "  }",
+            "  void test2(java.util.Map p) {",
+            "    p.containsKey(null);",
+            "  }",
+            "}")
+        .setArgs(ImmutableList.of("-XepOpt:ReturnValueIgnored:MatchContains=false"))
         .doTest();
   }
 }

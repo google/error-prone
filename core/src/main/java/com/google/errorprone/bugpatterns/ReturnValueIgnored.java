@@ -24,17 +24,15 @@ import static com.google.errorprone.matchers.method.MethodMatchers.instanceMetho
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
 import static com.google.errorprone.util.ASTHelpers.isSameType;
 
+import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
-import com.sun.tools.javac.code.Type;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.regex.Pattern;
 import javax.lang.model.element.Modifier;
 
@@ -53,20 +51,18 @@ public class ReturnValueIgnored extends AbstractReturnValueIgnored {
    * deal with them, since the fix is less straightforward. See a list of the SpotBugs checks here:
    * https://github.com/spotbugs/spotbugs/blob/master/spotbugs/src/main/java/edu/umd/cs/findbugs/ba/CheckReturnAnnotationDatabase.java
    */
-  private static final Set<String> typesToCheck =
-      new HashSet<>(
-          Arrays.asList(
-              "java.lang.String",
-              "java.math.BigInteger",
-              "java.math.BigDecimal",
-              "java.nio.file.Path"));
+  private static final ImmutableSet<String> TYPES_TO_CHECK =
+      ImmutableSet.of(
+          "java.lang.String", "java.math.BigInteger", "java.math.BigDecimal", "java.nio.file.Path");
 
   /**
    * Matches method invocations in which the method being called is on an instance of a type in the
-   * typesToCheck set and returns the same type (e.g. String.trim() returns a String).
+   * TYPES_TO_CHECK set and returns the same type (e.g. String.trim() returns a String).
    */
   private static final Matcher<ExpressionTree> RETURNS_SAME_TYPE =
-      allOf(methodReceiverHasType(typesToCheck), methodReturnsSameTypeAsReceiver());
+      allOf(
+          (t, s) -> TYPES_TO_CHECK.contains(ASTHelpers.getReceiverType(t).toString()),
+          (t, s) -> isSameType(ASTHelpers.getReceiverType(t), ASTHelpers.getReturnType(t), s));
 
   /**
    * This matcher allows the following methods in {@code java.time}:
@@ -147,37 +143,36 @@ public class ReturnValueIgnored extends AbstractReturnValueIgnored {
   private static final Matcher<ExpressionTree> ARRAYS_METHODS =
       staticMethod().onClass("java.util.Arrays");
 
+  private final Matcher<? super ExpressionTree> specializedMatcher;
+
+  public ReturnValueIgnored(ErrorProneFlags flags) {
+    boolean matchContains = flags.getBoolean("ReturnValueIgnored:MatchContains").orElse(true);
+    this.specializedMatcher =
+        matchContains
+            ? anyOf(
+                RETURNS_SAME_TYPE,
+                ReturnValueIgnored::functionalMethod,
+                STREAM_METHOD,
+                ARRAYS_METHODS,
+                ReturnValueIgnored::javaTimeTypes,
+                instanceMethod()
+                    .onDescendantOf("java.util.Collection")
+                    .named("contains")
+                    .withParameters("java.lang.Object"),
+                instanceMethod()
+                    .onDescendantOf("java.util.Map")
+                    .namedAnyOf("containsKey", "containsValue")
+                    .withParameters("java.lang.Object"))
+            : anyOf(
+                RETURNS_SAME_TYPE,
+                ReturnValueIgnored::functionalMethod,
+                STREAM_METHOD,
+                ARRAYS_METHODS,
+                ReturnValueIgnored::javaTimeTypes);
+  }
+
   @Override
   public Matcher<? super ExpressionTree> specializedMatcher() {
-    return anyOf(
-        RETURNS_SAME_TYPE,
-        ReturnValueIgnored::functionalMethod,
-        STREAM_METHOD,
-        ARRAYS_METHODS,
-        ReturnValueIgnored::javaTimeTypes);
-  }
-
-  /** Matches method invocations that return the same type as the receiver object. */
-  private static Matcher<ExpressionTree> methodReturnsSameTypeAsReceiver() {
-    return new Matcher<ExpressionTree>() {
-      @Override
-      public boolean matches(ExpressionTree expressionTree, VisitorState state) {
-        return isSameType(
-            ASTHelpers.getReceiverType(expressionTree),
-            ASTHelpers.getReturnType(expressionTree),
-            state);
-      }
-    };
-  }
-
-  /** Matches method calls whose receiver objects are of a type included in the set. */
-  private static Matcher<ExpressionTree> methodReceiverHasType(final Set<String> typeSet) {
-    return new Matcher<ExpressionTree>() {
-      @Override
-      public boolean matches(ExpressionTree expressionTree, VisitorState state) {
-        Type receiverType = ASTHelpers.getReceiverType(expressionTree);
-        return typeSet.contains(receiverType.toString());
-      }
-    };
+    return specializedMatcher;
   }
 }
