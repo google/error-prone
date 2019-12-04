@@ -30,6 +30,7 @@ import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.SuggestedFix;
+import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
@@ -67,9 +68,10 @@ import java.util.Set;
     providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class UnnecessaryCheckNotNull extends BugChecker implements MethodInvocationTreeMatcher {
 
+  private static final String PRECONDITIONS = "com.google.common.base.Preconditions";
   private static final Matcher<MethodInvocationTree> CHECK_NOT_NULL_MATCHER =
       Matchers.<MethodInvocationTree>anyOf(
-          staticMethod().onClass("com.google.common.base.Preconditions").named("checkNotNull"),
+          staticMethod().onClass(PRECONDITIONS).named("checkNotNull"),
           staticMethod().onClass("com.google.common.base.Verify").named("verifyNotNull"),
           staticMethod().onClass("java.util.Objects").named("requireNonNull"));
 
@@ -186,7 +188,7 @@ public class UnnecessaryCheckNotNull extends BugChecker implements MethodInvocat
     if (methodInvocationTree.getMethodSelect().getKind() == Kind.IDENTIFIER) {
       fix.addStaticImport("com.google.common.base.Preconditions." + replacementMethod);
     } else {
-      replacement.append("Preconditions.");
+      replacement.append(SuggestedFixes.qualifyType(state, fix, PRECONDITIONS)).append('.');
     }
     replacement.append(replacementMethod).append('(');
 

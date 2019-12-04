@@ -22,6 +22,7 @@ import com.google.common.base.Functions;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
+import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.matchers.CompilerBasedAbstractTest;
@@ -131,6 +132,32 @@ public class UnnecessaryCheckNotNullTest extends CompilerBasedAbstractTest {
             "// BUG: Diagnostic contains: UnnecessaryCheckNotNull",
             "Objects.requireNonNull(new int[5][2]);",
             "}",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void positive_qualifiedImport() {
+    BugCheckerRefactoringTestHelper.newInstance(new UnnecessaryCheckNotNull(), getClass())
+        .addInputLines(
+            "Test.java",
+            "import com.google.common.base.Verify;",
+            "import java.util.Objects;",
+            "class Test {",
+            "void negative() {",
+            "Verify.verifyNotNull(getClass().getName().contains(\"value\"));",
+            "}",
+            "static final class Preconditions {}",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "import com.google.common.base.Verify;",
+            "import java.util.Objects;",
+            "class Test {",
+            "void negative() {",
+            "com.google.common.base.Preconditions.checkArgument(getClass().getName().contains(\"value\"));",
+            "}",
+            "static final class Preconditions {}",
             "}")
         .doTest();
   }
