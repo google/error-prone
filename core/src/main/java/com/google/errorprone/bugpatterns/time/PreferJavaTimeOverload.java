@@ -17,8 +17,10 @@ package com.google.errorprone.bugpatterns.time;
 
 import static com.google.errorprone.BugPattern.ProvidesFix.REQUIRES_HUMAN_ATTENTION;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
+import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.constructor;
+import static com.google.errorprone.matchers.Matchers.toType;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
@@ -111,7 +113,13 @@ public final class PreferJavaTimeOverload extends BugChecker
 
   private static final Matcher<ExpressionTree> IGNORED_APIS =
       anyOf(
-          staticMethod().onClass("org.assertj.core.api.Assertions").named("assertThat"));
+          allOf(
+              staticMethod().anyClass().named("assertThat"),
+              toType(MethodInvocationTree.class, (Matcher<MethodInvocationTree>) (methodInvocationTree, state) ->
+                  isSubtype(
+                      ASTHelpers.getReturnType(methodInvocationTree),
+                      state.getTypeFromString("org.assertj.core.api.Assert"),
+                      state))));
 
   private static final Matcher<ExpressionTree> JAVA_DURATION_DECOMPOSITION_MATCHER =
       anyOf(
