@@ -341,11 +341,10 @@ public final class PreferJavaTimeOverload extends BugChecker
                 && (enclosingMethod == null
                     || !enclosingMethod.overrides(
                         input, (TypeSymbol) input.owner, state.getTypes(), true))
-
-                // TODO(kak): Do we want to check return types too?
                 && input.isStatic() == calledMethod.isStatic()
                 && input.getParameters().size() == 1
-                && isSameType(input.getParameters().get(0).asType(), type, state),
+                && isSameType(input.getParameters().get(0).asType(), type, state)
+                && isSameType(input.getReturnType(), calledMethod.getReturnType(), state),
         ASTHelpers.enclosingClass(calledMethod).asType(),
         state.getTypes());
   }

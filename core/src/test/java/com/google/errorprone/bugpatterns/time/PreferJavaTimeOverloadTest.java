@@ -390,4 +390,26 @@ public class PreferJavaTimeOverloadTest {
   @Test
   public void b138221392() {
   }
+
+  @Test
+  public void durationDividedBy() {
+    // See https://github.com/google/error-prone/issues/1431
+    helper
+        .addSourceLines(
+            "TestClass.java",
+            "import java.time.Duration;",
+            "public class TestClass {",
+            "  public static Duration dividedBy(long divisor) {",
+            "    return Duration.ZERO;",
+            "  }",
+            "  public static long dividedBy(Duration divisor) {",
+            "    return 0L;",
+            "  }",
+            "  public void foo() {",
+            "    dividedBy(42L);",
+            "    dividedBy(Duration.ZERO);",
+            "  }",
+            "}")
+        .doTest();
+  }
 }
