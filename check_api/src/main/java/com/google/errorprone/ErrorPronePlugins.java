@@ -21,6 +21,9 @@ import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.scanner.ScannerSupplier;
 import com.sun.tools.javac.processing.JavacProcessingEnvironment;
 import com.sun.tools.javac.util.Context;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ServiceLoader;
 import javax.tools.JavaFileManager;
 import javax.tools.StandardLocation;
@@ -38,8 +41,15 @@ public class ErrorPronePlugins {
     // Use the same classloader that Error Prone was loaded from to avoid classloader skew
     // when using Error Prone plugins together with the Error Prone javac plugin.
     JavacProcessingEnvironment processingEnvironment = JavacProcessingEnvironment.instance(context);
-    ClassLoader loader = processingEnvironment.getProcessorClassLoader();
-    Iterable<BugChecker> extraBugCheckers = ServiceLoader.load(BugChecker.class, loader);
+    List<ClassLoader> allClassLoaders = new ArrayList<>(2);
+    allClassLoaders.add(processingEnvironment.getProcessorClassLoader());
+    allClassLoaders.add(ErrorPronePlugins.class.getClassLoader());
+
+    List<Iterable<BugChecker>> bugCheckersByClassLoader = new ArrayList<>(allClassLoaders.size());
+    for (ClassLoader loader : allClassLoaders) {
+      bugCheckersByClassLoader.add(ServiceLoader.load(BugChecker.class, loader));
+    }
+    Iterable<BugChecker> extraBugCheckers = Iterables.concat(bugCheckersByClassLoader);
     if (Iterables.isEmpty(extraBugCheckers)) {
       return scannerSupplier;
     }
