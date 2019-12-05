@@ -103,6 +103,8 @@ public interface ImportOrganizer {
    */
   ImportOrganizer IDEA_ORGANIZER = new IdeaImportOrganizer();
 
+  ImportOrganizer HUBSPOT_IMPORT_ORGANIZER = new HubSpotImportOrganizer();
+
   /** Represents an import. */
   @AutoValue
   abstract class Import {

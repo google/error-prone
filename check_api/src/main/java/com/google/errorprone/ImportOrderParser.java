@@ -38,6 +38,8 @@ public final class ImportOrderParser {
         return ImportOrganizer.ANDROID_STATIC_LAST_ORGANIZER;
       case "idea":
         return ImportOrganizer.IDEA_ORGANIZER;
+      case "hubspot":
+        return ImportOrganizer.HUBSPOT_IMPORT_ORGANIZER;
       default:
         throw new IllegalStateException("Unknown import order: '" + importOrder + "'");
     }
