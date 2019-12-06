@@ -22,3 +22,22 @@ interruption may occur.
 
 For advice on how to handle `InterruptedException`, see https://www.ibm.com/developerworks/library/j-jtp05236/index.html
 
+## Suppression
+
+Where possible, the best option is to enumerate the specific exceptions being
+thrown/caught, so that `InterruptedException` is not possible. For example use
+[multiple exception types](https://docs.oracle.com/javase/8/docs/technotes/guides/language/catch-multiple.html)
+in a catch block instead of catching `Exception`.
+
+Suppress false positives by adding an
+`@SuppressWarnings("InterruptedExceptionSwallowed")` annotation to the enclosing
+element, or the caught exception.
+
+```java
+try {
+  future.get();
+} catch (@SuppressWarnings("InterruptedExceptionSwallowed") Exception e) {
+  throw new IllegalStateException(e);
+}
+```
+
