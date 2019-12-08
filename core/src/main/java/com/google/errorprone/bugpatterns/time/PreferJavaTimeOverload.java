@@ -111,7 +111,8 @@ public final class PreferJavaTimeOverload extends BugChecker
 
   private static final Matcher<ExpressionTree> IGNORED_APIS =
       anyOf(
-          staticMethod().onClass("org.assertj.core.api.Assertions").named("assertThat"));
+          // For AssertJ
+          staticMethod().anyClass().namedAnyOf("assertThat", "assumeThat"));
 
   private static final Matcher<ExpressionTree> JAVA_DURATION_DECOMPOSITION_MATCHER =
       anyOf(
