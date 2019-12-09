@@ -21,7 +21,9 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.matchers.Matcher;
 import com.sun.source.tree.ExpressionTree;
+import com.sun.source.tree.MemberReferenceTree;
 import com.sun.source.tree.MethodInvocationTree;
+import com.sun.source.util.SimpleTreeVisitor;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Types;
@@ -58,6 +60,9 @@ abstract class AbstractCollectionIncompatibleTypeMatcher {
   @Nullable
   abstract Type extractSourceType(MethodInvocationTree tree, VisitorState state);
 
+  @Nullable
+  abstract Type extractSourceType(MemberReferenceTree tree, VisitorState state);
+
   /**
    * Returns the AST node from which the source type was extracted. Needed to produce readable error
    * messages. For example, in this code sample:
@@ -74,6 +79,9 @@ abstract class AbstractCollectionIncompatibleTypeMatcher {
   @Nullable
   abstract ExpressionTree extractSourceTree(MethodInvocationTree tree, VisitorState state);
 
+  @Nullable
+  abstract ExpressionTree extractSourceTree(MemberReferenceTree tree, VisitorState state);
+
   /**
    * Extracts the target type to which the source type must be castable. For example, in this code
    * sample:
@@ -89,6 +97,9 @@ abstract class AbstractCollectionIncompatibleTypeMatcher {
    */
   @Nullable
   abstract Type extractTargetType(MethodInvocationTree tree, VisitorState state);
+
+  @Nullable
+  abstract Type extractTargetType(MemberReferenceTree tree, VisitorState state);
 
   @AutoValue
   abstract static class MatchResult {
@@ -119,24 +130,39 @@ abstract class AbstractCollectionIncompatibleTypeMatcher {
   }
 
   @Nullable
-  public final MatchResult matches(MethodInvocationTree tree, VisitorState state) {
+  public final MatchResult matches(ExpressionTree tree, VisitorState state) {
     if (!methodMatcher().matches(tree, state)) {
       return null;
     }
 
-    ExpressionTree sourceTree = extractSourceTree(tree, state);
-    Type sourceType = extractSourceType(tree, state);
-    Type targetType = extractTargetType(tree, state);
+    return new SimpleTreeVisitor<MatchResult, Void>() {
+      @Override
+      public MatchResult visitMethodInvocation(
+          MethodInvocationTree methodInvocationTree, Void unused) {
+        return getMatchResult(
+            extractSourceTree(methodInvocationTree, state),
+            extractSourceType(methodInvocationTree, state),
+            extractTargetType(methodInvocationTree, state));
+      }
 
+      @Override
+      public MatchResult visitMemberReference(
+          MemberReferenceTree memberReferenceTree, Void unused) {
+        return getMatchResult(
+            extractSourceTree(memberReferenceTree, state),
+            extractSourceType(memberReferenceTree, state),
+            extractTargetType(memberReferenceTree, state));
+      }
+    }.visit(tree, null);
+  }
+
+  private MatchResult getMatchResult(
+      @Nullable ExpressionTree sourceTree, @Nullable Type sourceType, @Nullable Type targetType) {
     if (sourceTree == null || sourceType == null || targetType == null) {
       return null;
     }
 
-    return MatchResult.create(
-        extractSourceTree(tree, state),
-        extractSourceType(tree, state),
-        extractTargetType(tree, state),
-        this);
+    return MatchResult.create(sourceTree, sourceType, targetType, this);
   }
 
   /**

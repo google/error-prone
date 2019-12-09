@@ -17,6 +17,7 @@
 package com.google.errorprone.bugpatterns.collectionincompatibletype;
 
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
+import static com.google.errorprone.util.ASTHelpers.getType;
 
 import com.google.common.collect.Iterables;
 import com.google.errorprone.VisitorState;
@@ -25,10 +26,12 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
+import com.sun.source.tree.MemberReferenceTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.tools.javac.code.Type;
 import java.util.Collection;
 import java.util.Optional;
+import javax.annotation.Nullable;
 
 /**
  * Matches an instance method like {@link Collection#contains}, for which we just need to compare
@@ -64,13 +67,35 @@ class MethodArgMatcher extends AbstractCollectionIncompatibleTypeMatcher {
     return Iterables.get(tree.getArguments(), methodArgIndex);
   }
 
+  @Nullable
+  @Override
+  ExpressionTree extractSourceTree(MemberReferenceTree tree, VisitorState state) {
+    return tree;
+  }
+
   @Override
   Type extractSourceType(MethodInvocationTree tree, VisitorState state) {
-    return ASTHelpers.getType(extractSourceTree(tree, state));
+    return getType(extractSourceTree(tree, state));
+  }
+
+  @Nullable
+  @Override
+  Type extractSourceType(MemberReferenceTree tree, VisitorState state) {
+    return state.getTypes().findDescriptorType(getType(tree)).getParameterTypes().get(0);
   }
 
   @Override
   Type extractTargetType(MethodInvocationTree tree, VisitorState state) {
+    return extractTypeArgAsMemberOfSupertype(
+        ASTHelpers.getReceiverType(tree),
+        state.getSymbolFromString(typeName),
+        typeArgIndex,
+        state.getTypes());
+  }
+
+  @Nullable
+  @Override
+  Type extractTargetType(MemberReferenceTree tree, VisitorState state) {
     return extractTypeArgAsMemberOfSupertype(
         ASTHelpers.getReceiverType(tree),
         state.getSymbolFromString(typeName),

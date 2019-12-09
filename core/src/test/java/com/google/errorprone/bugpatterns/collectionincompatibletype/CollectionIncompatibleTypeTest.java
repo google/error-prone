@@ -16,9 +16,11 @@
 
 package com.google.errorprone.bugpatterns.collectionincompatibletype;
 
+import com.google.common.collect.ImmutableList;
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode;
 import com.google.errorprone.CompilationTestHelper;
+import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.bugpatterns.collectionincompatibletype.CollectionIncompatibleType.FixType;
 import com.google.errorprone.scanner.ErrorProneScanner;
 import com.google.errorprone.scanner.ScannerSupplier;
@@ -65,7 +67,8 @@ public class CollectionIncompatibleTypeTest {
     CompilationTestHelper compilationHelperWithCastFix =
         CompilationTestHelper.newInstance(
             ScannerSupplier.fromScanner(
-                new ErrorProneScanner(new CollectionIncompatibleType(FixType.CAST))),
+                new ErrorProneScanner(
+                    new CollectionIncompatibleType(FixType.CAST, ErrorProneFlags.empty()))),
             getClass());
     compilationHelperWithCastFix
         .addSourceLines(
@@ -86,7 +89,8 @@ public class CollectionIncompatibleTypeTest {
   public void testSuppressWarningsFix() {
     BugCheckerRefactoringTestHelper refactorTestHelper =
         BugCheckerRefactoringTestHelper.newInstance(
-            new CollectionIncompatibleType(FixType.SUPPRESS_WARNINGS), getClass());
+            new CollectionIncompatibleType(FixType.SUPPRESS_WARNINGS, ErrorProneFlags.empty()),
+            getClass());
     refactorTestHelper
         .addInputLines(
             "in/Test.java",
@@ -169,6 +173,65 @@ public class CollectionIncompatibleTypeTest {
             "  }",
             "  void h(Set<?> a, Set<Integer> b) {",
             "    Sets.difference(a, b);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void methodReference() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.util.List;",
+            "public class Test {",
+            "  java.util.stream.Stream filter(List<Integer> xs, List<String> ss) {",
+            "    // BUG: Diagnostic contains:",
+            "    return xs.stream().filter(ss::contains);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void methodReference_disabled() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.util.List;",
+            "public class Test {",
+            "  java.util.stream.Stream filter(List<Integer> xs, List<String> ss) {",
+            "    return xs.stream().filter(ss::contains);",
+            "  }",
+            "}")
+        .setArgs(ImmutableList.of("-XepOpt:CollectionIncompatibleType:MatchMethodReferences=false"))
+        .doTest();
+  }
+
+  @Test
+  public void methodReferenceBinOp() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.util.List;",
+            "public class Test {",
+            "  void removeAll(List<List<Integer>> xs, List<String> ss) {",
+            "    // BUG: Diagnostic contains:",
+            "    xs.forEach(ss::removeAll);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void methodReference_compatibleType() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.util.List;",
+            "public class Test {",
+            "  java.util.stream.Stream filter(List<Integer> xs, List<Object> ss) {",
+            "    return xs.stream().filter(ss::contains);",
             "  }",
             "}")
         .doTest();

@@ -25,8 +25,10 @@ import static com.google.errorprone.util.ASTHelpers.getType;
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.ProvidesFix;
+import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
+import com.google.errorprone.bugpatterns.BugChecker.MemberReferenceTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.bugpatterns.EqualsIncompatibleType;
 import com.google.errorprone.bugpatterns.EqualsIncompatibleType.TypeCompatibilityReport;
@@ -38,6 +40,7 @@ import com.google.errorprone.matchers.Matchers;
 import com.google.errorprone.util.ASTHelpers;
 import com.google.errorprone.util.Signatures;
 import com.sun.source.tree.ExpressionTree;
+import com.sun.source.tree.MemberReferenceTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Types;
@@ -67,7 +70,8 @@ import javax.annotation.Nullable;
     summary = "Incompatible type as argument to Object-accepting Java collections method",
     severity = ERROR,
     providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
-public class CollectionIncompatibleType extends BugChecker implements MethodInvocationTreeMatcher {
+public class CollectionIncompatibleType extends BugChecker
+    implements MethodInvocationTreeMatcher, MemberReferenceTreeMatcher {
 
   public enum FixType {
     NONE,
@@ -77,15 +81,18 @@ public class CollectionIncompatibleType extends BugChecker implements MethodInvo
   }
 
   private final FixType fixType;
+  private final boolean matchMethodReferences;
 
   /** Creates a new {@link CollectionIncompatibleType} checker that provides no fix. */
-  public CollectionIncompatibleType() {
-    this(FixType.SUPPRESS_WARNINGS);
+  public CollectionIncompatibleType(ErrorProneFlags flags) {
+    this(FixType.SUPPRESS_WARNINGS, flags);
   }
 
   /** Creates a new {@link CollectionIncompatibleType} checker with the given {@code fixType}. */
-  public CollectionIncompatibleType(FixType fixType) {
+  public CollectionIncompatibleType(FixType fixType, ErrorProneFlags flags) {
     this.fixType = fixType;
+    this.matchMethodReferences =
+        flags.getBoolean("CollectionIncompatibleType:MatchMethodReferences").orElse(true);
   }
 
   /**
@@ -169,6 +176,15 @@ public class CollectionIncompatibleType extends BugChecker implements MethodInvo
 
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
+    return match(tree, state);
+  }
+
+  @Override
+  public Description matchMemberReference(MemberReferenceTree tree, VisitorState state) {
+    return matchMethodReferences ? match(tree, state) : NO_MATCH;
+  }
+
+  public Description match(ExpressionTree tree, VisitorState state) {
     if (!FIRST_ORDER_MATCHER.matches(tree, state)) {
       return NO_MATCH;
     }
@@ -228,7 +244,7 @@ public class CollectionIncompatibleType extends BugChecker implements MethodInvo
   @Nullable
   private static MatchResult firstNonNullMatchResult(
       Iterable<? extends AbstractCollectionIncompatibleTypeMatcher> matchers,
-      MethodInvocationTree tree,
+      ExpressionTree tree,
       VisitorState state) {
     for (AbstractCollectionIncompatibleTypeMatcher matcher : matchers) {
       MatchResult result = matcher.matches(tree, state);
@@ -266,8 +282,24 @@ public class CollectionIncompatibleType extends BugChecker implements MethodInvo
 
     @Nullable
     @Override
+    Type extractSourceType(MemberReferenceTree tree, VisitorState state) {
+      return extractTypeArgAsMemberOfSupertype(
+          getType(tree).getParameterTypes().get(0),
+          state.getSymbolFromString(collectionType),
+          0,
+          state.getTypes());
+    }
+
+    @Nullable
+    @Override
     ExpressionTree extractSourceTree(MethodInvocationTree tree, VisitorState state) {
       return tree.getArguments().get(0);
+    }
+
+    @Nullable
+    @Override
+    ExpressionTree extractSourceTree(MemberReferenceTree tree, VisitorState state) {
+      return tree;
     }
 
     @Nullable
@@ -275,6 +307,16 @@ public class CollectionIncompatibleType extends BugChecker implements MethodInvo
     Type extractTargetType(MethodInvocationTree tree, VisitorState state) {
       return extractTypeArgAsMemberOfSupertype(
           getType(tree.getArguments().get(1)),
+          state.getSymbolFromString(collectionType),
+          0,
+          state.getTypes());
+    }
+
+    @Nullable
+    @Override
+    Type extractTargetType(MemberReferenceTree tree, VisitorState state) {
+      return extractTypeArgAsMemberOfSupertype(
+          getType(tree).getParameterTypes().get(1),
           state.getSymbolFromString(collectionType),
           0,
           state.getTypes());

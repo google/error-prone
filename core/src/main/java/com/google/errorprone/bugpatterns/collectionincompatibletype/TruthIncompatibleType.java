@@ -33,6 +33,7 @@ import com.google.errorprone.matchers.method.MethodMatchers;
 import com.google.errorprone.util.ASTHelpers;
 import com.google.errorprone.util.Signatures;
 import com.sun.source.tree.ExpressionTree;
+import com.sun.source.tree.MemberReferenceTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.ParenthesizedTree;
 import com.sun.source.tree.Tree;
@@ -78,8 +79,20 @@ public class TruthIncompatibleType extends BugChecker implements MethodInvocatio
 
         @Nullable
         @Override
+        Type extractSourceType(MemberReferenceTree tree, VisitorState state) {
+          throw new UnsupportedOperationException();
+        }
+
+        @Nullable
+        @Override
         ExpressionTree extractSourceTree(MethodInvocationTree tree, VisitorState state) {
           return getOnlyElement(tree.getArguments());
+        }
+
+        @Nullable
+        @Override
+        ExpressionTree extractSourceTree(MemberReferenceTree tree, VisitorState state) {
+          throw new UnsupportedOperationException();
         }
 
         @Nullable
@@ -112,6 +125,12 @@ public class TruthIncompatibleType extends BugChecker implements MethodInvocatio
             }
           }
           return null;
+        }
+
+        @Nullable
+        @Override
+        Type extractTargetType(MemberReferenceTree tree, VisitorState state) {
+          throw new UnsupportedOperationException();
         }
       };
 
