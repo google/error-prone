@@ -412,4 +412,24 @@ public class PreferJavaTimeOverloadTest {
             "}")
         .doTest();
   }
+
+  // TODO(kak): After upgrading to AssertJ 3.15, double-check that removing the AssertJ matcher from
+  // PreferJavaTimeOverload.IGNORED_APIS causes these tests to start failing.
+  @Test
+  public void assertJ() {
+    // https://github.com/google/error-prone/issues/1377
+    // https://github.com/google/error-prone/issues/1437
+    helper
+        .addSourceLines(
+            "TestClass.java",
+            "public class TestClass {",
+            "  public void testAssertThat() {",
+            "    org.assertj.core.api.Assertions.assertThat(1).isEqualTo(1);",
+            "  }",
+            "  public void testAssumeThat() {",
+            "    org.assertj.core.api.Assumptions.assumeThat(1).isEqualTo(1);",
+            "  }",
+            "}")
+        .doTest();
+  }
 }
