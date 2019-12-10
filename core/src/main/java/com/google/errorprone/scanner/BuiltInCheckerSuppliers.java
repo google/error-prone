@@ -50,6 +50,7 @@ import com.google.errorprone.bugpatterns.BoxedPrimitiveConstructor;
 import com.google.errorprone.bugpatterns.BoxedPrimitiveEquality;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.ByteBufferBackingArray;
+import com.google.errorprone.bugpatterns.CacheLoaderNull;
 import com.google.errorprone.bugpatterns.CannotMockFinalClass;
 import com.google.errorprone.bugpatterns.CanonicalDuration;
 import com.google.errorprone.bugpatterns.CatchAndPrintStackTrace;
@@ -641,6 +642,7 @@ public class BuiltInCheckerSuppliers {
           BoxedPrimitiveConstructor.class,
           BoxedPrimitiveEquality.class,
           ByteBufferBackingArray.class,
+          CacheLoaderNull.class,
           CannotMockFinalClass.class,
           CanonicalDuration.class,
           CatchAndPrintStackTrace.class,
