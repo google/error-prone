@@ -39,7 +39,7 @@ import com.sun.tools.javac.util.List;
 import java.util.Hashtable;
 import java.util.concurrent.ConcurrentHashMap;
 
-/** @author cushon@google.com (Liam Miller-Cushon) */
+/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
     name = "HashtableContains",
     summary = "contains() is a legacy method that is equivalent to containsValue()",

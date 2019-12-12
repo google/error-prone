@@ -46,7 +46,7 @@ import java.util.List;
 import java.util.Set;
 import javax.lang.model.element.ElementKind;
 
-/** @author cushon@google.com (Liam Miller-Cushon) */
+/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
     name = "UnnecessaryDefaultInEnumSwitch",
     summary =

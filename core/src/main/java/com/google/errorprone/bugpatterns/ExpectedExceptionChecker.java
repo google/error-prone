@@ -36,7 +36,7 @@ import com.sun.source.tree.Tree;
 import java.util.List;
 import javax.annotation.Nullable;
 
-/** @author cushon@google.com (Liam Miller-Cushon) */
+/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
     name = "ExpectedExceptionChecker",
     summary =

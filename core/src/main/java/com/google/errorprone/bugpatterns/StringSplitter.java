@@ -51,7 +51,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-/** @author cushon@google.com (Liam Miller-Cushon) */
+/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
     name = "StringSplitter",
     summary = "String.split(String) has surprising behavior",

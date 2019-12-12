@@ -27,7 +27,7 @@ import com.google.errorprone.matchers.Description;
 import com.sun.source.tree.MethodTree;
 import com.sun.tools.javac.tree.JCTree.JCExpression;
 
-/** @author cushon@google.com (Liam Miller-Cushon) */
+/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
     name = "TestExceptionRefactoring",
     summary = "Prefer assertThrows to @Test(expected=...)",

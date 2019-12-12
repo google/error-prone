@@ -34,7 +34,7 @@ import com.sun.tools.javac.code.Symtab;
 import com.sun.tools.javac.code.Types;
 import java.util.List;
 
-/** @author cushon@google.com (Liam Miller-Cushon) */
+/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
     name = "NCopiesOfChar",
     summary =

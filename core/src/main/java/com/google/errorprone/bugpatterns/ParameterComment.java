@@ -42,7 +42,7 @@ import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.parser.Tokens.Comment;
 import java.util.stream.Stream;
 
-/** @author cushon@google.com (Liam Miller-Cushon) */
+/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
     name = "ParameterComment",
     summary = "Non-standard parameter comment; prefer `/* paramName= */ arg`",

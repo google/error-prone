@@ -63,7 +63,7 @@ import com.sun.tools.javac.code.Types;
 import java.util.Optional;
 import javax.annotation.Nullable;
 
-/** @author cushon@google.com (Liam Miller-Cushon) */
+/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
     name = "JdkObsolete",
     summary = "Suggests alternatives to obsolete JDK classes.",

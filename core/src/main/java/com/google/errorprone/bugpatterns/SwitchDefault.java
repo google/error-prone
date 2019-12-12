@@ -35,7 +35,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
-/** @author cushon@google.com (Liam Miller-Cushon) */
+/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
     name = "SwitchDefault",
     summary = "The default case of a switch should appear at the end of the last statement group",

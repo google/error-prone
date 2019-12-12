@@ -41,7 +41,7 @@ import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import javax.lang.model.element.Modifier;
 
-/** @author cushon@google.com (Liam Miller-Cushon) */
+/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 // TODO(cushon): this should subsume ImmutableModification and LocalizableWrongToString
 @BugPattern(
     name = "DoNotCall",

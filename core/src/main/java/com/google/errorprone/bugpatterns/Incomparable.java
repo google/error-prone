@@ -35,7 +35,7 @@ import com.sun.source.tree.NewClassTree;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.util.List;
 
-/** @author cushon@google.com (Liam Miller-Cushon) */
+/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
     name = "Incomparable",
     summary = "Types contained in sorted collections must implement Comparable.",

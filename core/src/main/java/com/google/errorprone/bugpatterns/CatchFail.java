@@ -62,7 +62,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-/** @author cushon@google.com (Liam Miller-Cushon) */
+/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
     name = "CatchFail",
     summary =

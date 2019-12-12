@@ -36,7 +36,7 @@ import com.sun.tools.javac.tree.JCTree.JCBinary;
 import com.sun.tools.javac.tree.TreeInfo;
 import java.util.EnumSet;
 
-/** @author cushon@google.com (Liam Miller-Cushon) */
+/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
     name = "OperatorPrecedence",
     summary = "Use grouping parenthesis to make the operator precedence explicit",
