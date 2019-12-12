@@ -28,7 +28,7 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.sun.source.tree.ThrowTree;
 
-/** @author cushon@google.com (Liam Miller-Cushon) */
+/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
     name = "ThrowNull",
     summary = "Throwing 'null' always results in a NullPointerException being thrown.",

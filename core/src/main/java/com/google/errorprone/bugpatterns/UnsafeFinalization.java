@@ -48,7 +48,7 @@ import java.util.stream.Stream;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.type.TypeKind;
 
-/** @author cushon@google.com (Liam Miller-Cushon) */
+/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
     name = "UnsafeFinalization",
     summary = "Finalizer may run before native code finishes execution",

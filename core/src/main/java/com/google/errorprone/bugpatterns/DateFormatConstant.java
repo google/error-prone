@@ -42,7 +42,7 @@ import java.util.Objects;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
 
-/** @author cushon@google.com (Liam Miller-Cushon) */
+/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
     name = "DateFormatConstant",
     summary = "DateFormat is not thread-safe, and should not be used as a constant field.",

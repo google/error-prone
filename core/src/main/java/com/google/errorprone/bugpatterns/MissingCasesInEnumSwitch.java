@@ -34,7 +34,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import javax.lang.model.element.ElementKind;
 
-/** @author cushon@google.com (Liam Miller-Cushon) */
+/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
     name = "MissingCasesInEnumSwitch",
     summary = "Switches on enum types should either handle all values, or have a default case.",

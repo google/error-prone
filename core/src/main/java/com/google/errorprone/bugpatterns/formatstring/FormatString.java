@@ -35,7 +35,7 @@ import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.Locale;
 
-/** @author cushon@google.com (Liam Miller-Cushon) */
+/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(name = "FormatString", summary = "Invalid printf-style format string", severity = ERROR)
 public class FormatString extends BugChecker implements MethodInvocationTreeMatcher {
 

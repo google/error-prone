@@ -53,7 +53,7 @@ import javax.annotation.Nullable;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
 
-/** @author cushon@google.com (Liam Miller-Cushon) */
+/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 // TODO(cushon): allow @LazyInit on fields as a suppression mechanism?
 @BugPattern(
     name = "DoubleCheckedLocking",

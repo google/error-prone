@@ -32,7 +32,7 @@ import com.sun.source.tree.UnaryTree;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.tree.JCTree.JCLambda;
 
-/** @author cushon@google.com (Liam Miller-Cushon) */
+/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
     name = "DiscardedPostfixExpression",
     summary = "The result of this unary operation on a lambda parameter is discarded",

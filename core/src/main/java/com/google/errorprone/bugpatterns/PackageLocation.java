@@ -30,7 +30,7 @@ import com.sun.source.tree.CompilationUnitTree;
 import com.sun.tools.javac.code.Symbol.PackageSymbol;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 
-/** @author cushon@google.com (Liam Miller-Cushon) */
+/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
     name = "PackageLocation",
     summary = "Package names should match the directory they are declared in",

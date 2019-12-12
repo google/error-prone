@@ -40,7 +40,7 @@ import com.sun.source.tree.VariableTree;
 import com.sun.tools.javac.code.Type;
 import javax.lang.model.type.TypeKind;
 
-/** @author cushon@google.com (Liam Miller-Cushon) */
+/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
     name = "IntLongMath",
     summary = "Expression of type int may overflow before being assigned to a long",

@@ -49,7 +49,7 @@ import com.sun.source.util.TreePath;
 import com.sun.tools.javac.code.Type;
 import javax.lang.model.type.TypeKind;
 
-/** @author cushon@google.com (Liam Miller-Cushon) */
+/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
     name = "ConstantOverflow",
     summary = "Compile-time constant expression overflows",

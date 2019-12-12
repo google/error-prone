@@ -38,7 +38,7 @@ import com.sun.source.tree.Tree;
 import com.sun.tools.javac.tree.JCTree;
 import java.util.List;
 
-/** @author cushon@google.com (Liam Miller-Cushon) */
+/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
     name = "AssertThrowsMultipleStatements",
     summary = "The lambda passed to assertThrows should contain exactly one statement",

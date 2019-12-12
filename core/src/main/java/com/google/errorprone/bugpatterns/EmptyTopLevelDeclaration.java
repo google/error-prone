@@ -29,7 +29,7 @@ import com.sun.source.tree.Tree;
 import java.util.ArrayList;
 import java.util.List;
 
-/** @author cushon@google.com (Liam Miller-Cushon) */
+/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
     name = "EmptyTopLevelDeclaration",
     summary = "Empty top-level type declaration",

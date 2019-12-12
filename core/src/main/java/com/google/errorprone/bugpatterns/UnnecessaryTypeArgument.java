@@ -36,7 +36,7 @@ import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.tree.JCTree;
 import java.util.List;
 
-/** @author cushon@google.com (Liam Miller-Cushon) */
+/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
     name = "UnnecessaryTypeArgument",
     summary = "Non-generic methods should not be invoked with type arguments",

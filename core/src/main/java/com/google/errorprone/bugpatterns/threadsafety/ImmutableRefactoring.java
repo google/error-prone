@@ -36,7 +36,7 @@ import com.sun.source.util.TreePathScanner;
 import com.sun.tools.javac.code.Symbol;
 import java.util.Optional;
 
-/** @author cushon@google.com (Liam Miller-Cushon) */
+/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
     name = "ImmutableRefactoring",
     summary = "Refactors uses of the JSR 305 @Immutable to Error Prone's annotation",

@@ -25,7 +25,7 @@ import com.google.errorprone.bugpatterns.BugChecker.CompilationUnitTreeMatcher;
 import com.google.errorprone.matchers.Description;
 import com.sun.source.tree.CompilationUnitTree;
 
-/** @author cushon@google.com (Liam Miller-Cushon) */
+/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
     name = "PackageInfo",
     summary = "Declaring types inside package-info.java files is very bad form",

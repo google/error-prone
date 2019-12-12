@@ -45,7 +45,7 @@ import com.sun.tools.javac.tree.JCTree;
 import java.util.List;
 import java.util.Objects;
 
-/** @author cushon@google.com (Liam Miller-Cushon) */
+/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
     name = "StreamResourceLeak",
     altNames = "FilesLinesLeak",
