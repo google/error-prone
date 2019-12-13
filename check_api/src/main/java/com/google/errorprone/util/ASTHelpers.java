@@ -1278,7 +1278,7 @@ public class ASTHelpers {
    * Returns the values of the given symbol's {@code javax.annotation.Generated} or {@code
    * javax.annotation.processing.Generated} annotation, if present.
    */
-  public static ImmutableSet<String> getGeneratedBy(Symbol symbol, VisitorState state) {
+  public static ImmutableSet<String> getGeneratedBy(ClassSymbol symbol, VisitorState state) {
     checkNotNull(symbol);
     Optional<Compound> c =
         Stream.of("javax.annotation.Generated", "javax.annotation.processing.Generated")

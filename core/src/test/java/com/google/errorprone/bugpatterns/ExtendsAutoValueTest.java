@@ -150,37 +150,4 @@ public class ExtendsAutoValueTest {
             "public class TestClass extends AutoClass {}")
         .doTest();
   }
-
-  @Test
-  public void extendsAutoValue_innerClassExtends() {
-    helper
-        .addSourceLines(
-            "TestClass.java",
-            "import com.google.auto.value.AutoValue;",
-            "@AutoValue class AutoClass {}",
-            "",
-            "public class TestClass {",
-            "  // BUG: Diagnostic contains: ExtendsAutoValue",
-            "  public class Extends extends AutoClass {}",
-            "}")
-        .doTest();
-  }
-
-  @Test
-  public void extendsAutoValue_innerClassExtends_generated() {
-    helper
-        .addSourceLines(
-            "TestClass.java",
-            "import com.google.auto.value.AutoValue;",
-            (RuntimeVersion.isAtLeast9()
-                ? "import javax.annotation.processing.Generated;"
-                : "import javax.annotation.Generated;"),
-            "@AutoValue class AutoClass {}",
-            "",
-            "@Generated(\"generator\")",
-            "public class TestClass {",
-            "  public class Extends extends AutoClass {}",
-            "}")
-        .doTest();
-  }
 }
