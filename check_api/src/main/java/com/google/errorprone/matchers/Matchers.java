@@ -1274,6 +1274,12 @@ public class Matchers {
               isSameType(BOOLEAN_TYPE)),
           allOf(
               staticMethod()
+                  .onClass("androidx.core.util.ObjectsCompat")
+                  .named("equals")
+                  .withParameters("java.lang.Object", "java.lang.Object"),
+              isSameType(BOOLEAN_TYPE)),
+          allOf(
+              staticMethod()
                   .onClass("java.util.Objects")
                   .named("equals")
                   .withParameters("java.lang.Object", "java.lang.Object"),

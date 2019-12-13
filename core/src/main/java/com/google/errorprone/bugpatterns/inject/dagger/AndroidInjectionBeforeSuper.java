@@ -57,6 +57,16 @@ public final class AndroidInjectionBeforeSuper extends BugChecker implements Met
         "onCreate",
         ImmutableList.of(variableType(isSameType("android.os.Bundle"))),
         "dagger.android.AndroidInjection"),
+    ANDROIDX_FRAGMENT(
+        "androidx.fragment.app.Fragment",
+        "onAttach",
+        ImmutableList.of(variableType(isSameType("android.content.Context"))),
+        "dagger.android.support.AndroidSupportInjection"),
+    ANDROIDX_FRAGMENT_PRE_API23(
+        "androidx.fragment.app.Fragment",
+        "onAttach",
+        ImmutableList.of(variableType(isSameType("android.app.Activity"))),
+        "dagger.android.support.AndroidSupportInjection"),
     FRAMEWORK_FRAGMENT(
         "android.app.Fragment",
         "onAttach",

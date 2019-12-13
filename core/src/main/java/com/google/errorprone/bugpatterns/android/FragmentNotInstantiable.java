@@ -59,6 +59,7 @@ public class FragmentNotInstantiable extends BugChecker implements ClassTreeMatc
   // Static library support version of the framework's Fragment. Used to write apps that run on
   // platforms prior to Android 3.0.
   private static final String FRAGMENT_CLASS_V4 = "android.support.v4.app.Fragment";
+  private static final String FRAGMENT_CLASS_ANDROIDX = "androidx.fragment.app.Fragment";
 
   private final ImmutableSet<String> fragmentClasses;
   private final Matcher<ClassTree> fragmentMatcher;
@@ -72,6 +73,7 @@ public class FragmentNotInstantiable extends BugChecker implements ClassTreeMatc
         ImmutableSet.<String>builder()
             .add(FRAGMENT_CLASS)
             .add(FRAGMENT_CLASS_V4)
+            .add(FRAGMENT_CLASS_ANDROIDX)
             .addAll(additionalFragmentClasses)
             .build();
     fragmentMatcher =
