@@ -636,6 +636,11 @@ public class VisitorState {
     return Options.instance(context).getBoolean("androidCompatible");
   }
 
+  /** Returns true if the compilation is using androidx libraries. */
+  public boolean isAndroidXCompatible() {
+    return Options.instance(context).getBoolean("androidXCompatible");
+  }
+
   /** Returns a timing span for the given {@link Suppressible}. */
   public AutoCloseable timingSpan(Suppressible suppressible) {
     return sharedState.timings.span(suppressible);

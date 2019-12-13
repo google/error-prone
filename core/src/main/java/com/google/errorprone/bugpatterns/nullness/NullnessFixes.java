@@ -23,6 +23,7 @@ import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Kinds.KindSelector;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
+import com.sun.tools.javac.util.Options;
 
 /**
  * Static utility methods for common functionality in the nullable checkers.
@@ -44,7 +45,7 @@ class NullnessFixes {
     Symbol sym = FindIdentifiers.findIdent("Nullable", state, KindSelector.VAL_TYP);
     String defaultType =
         state.isAndroidCompatible()
-            ? "android.support.annotation.Nullable"
+            ? (state.isAndroidXCompatible() ? "androidx.annotation.Nullable" : "android.support.annotation.Nullable" )
             : "javax.annotation.Nullable";
     if (sym != null) {
       ClassSymbol classSym = (ClassSymbol) sym;
