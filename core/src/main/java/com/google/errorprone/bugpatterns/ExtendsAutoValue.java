@@ -16,6 +16,8 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.common.collect.Streams.stream;
+
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.SeverityLevel;
@@ -26,6 +28,7 @@ import com.google.errorprone.suppliers.Supplier;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ClassTree;
 import com.sun.tools.javac.util.Name;
+import java.util.Objects;
 
 /** Makes sure that you are not extending a class that has @AutoValue as an annotation. */
 @BugPattern(
@@ -43,24 +46,29 @@ public final class ExtendsAutoValue extends BugChecker implements ClassTreeMatch
 
   @Override
   public Description matchClass(ClassTree tree, VisitorState state) {
-
-    if (!ASTHelpers.getGeneratedBy(ASTHelpers.getSymbol(tree), state).isEmpty()) {
-      // Skip generated code. Yes, I know we can do this via a flag but we should always ignore
-      // generated code, so to be sure, manually check it.
-      return Description.NO_MATCH;
-    }
-
     if (tree.getExtendsClause() == null) {
       // Doesn't extend anything, can't possibly be a violation.
       return Description.NO_MATCH;
     }
+
     if (!ASTHelpers.annotationsAmong(
             ASTHelpers.getSymbol(tree.getExtendsClause()), AUTOS.get(state), state)
         .isEmpty()) {
       // Violation: one of its superclasses extends AutoValue.
-      return buildDescription(tree).build();
+      if (!isInGeneratedCode(state)) {
+        return buildDescription(tree).build();
+      }
     }
 
     return Description.NO_MATCH;
+  }
+
+  private static boolean isInGeneratedCode(VisitorState state) {
+    // Skip generated code. Yes, I know we can do this via a flag but we should always ignore
+    // generated code, so to be sure, manually check it.
+    return stream(state.getPath())
+        .map(ASTHelpers::getSymbol)
+        .filter(Objects::nonNull)
+        .anyMatch(sym -> !ASTHelpers.getGeneratedBy(sym, state).isEmpty());
   }
 }
