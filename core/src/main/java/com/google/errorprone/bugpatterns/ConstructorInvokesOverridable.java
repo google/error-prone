@@ -18,6 +18,8 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Sets;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.util.ASTHelpers;
@@ -26,10 +28,15 @@ import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
+import com.sun.source.tree.MethodTree;
+import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.Tree;
+import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
+import java.util.ArrayDeque;
+import java.util.Deque;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.Name;
 
@@ -43,6 +50,9 @@ import javax.lang.model.element.Name;
     severity = WARNING)
 public class ConstructorInvokesOverridable extends ConstructorLeakChecker {
 
+  private static final ImmutableSet<Modifier> ENUM_CONSTANT_MODIFIERS =
+      Sets.immutableEnumSet(Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL);
+
   @Override
   protected void traverse(Tree tree, VisitorState state) {
     // If class is final, no method is overridable.
@@ -51,43 +61,113 @@ public class ConstructorInvokesOverridable extends ConstructorLeakChecker {
       return;
     }
     ClassSymbol classSym = ASTHelpers.getSymbol(classTree);
+    // If the class is anonymous, no method is overridable.
+    //
+    //   "it is impossible to declare a subclass of an anonymous class, despite
+    //    an anonymous class being non-final, because an anonymous class cannot
+    //    be named by an extends clause"
+    //
+    // https://docs.oracle.com/javase/specs/jls/se11/html/jls-15.html#jls-15.9.5
+    if (classSym.isAnonymous()) {
+      return;
+    }
+    //  "An enum declaration is implicitly final unless it contains at least one
+    //   enum constant that has a class body"
+    //
+    // https://docs.oracle.com/javase/specs/jls/se11/html/jls-8.html#jls-8.9
+    if (classSym.isEnum()) {
+      boolean hasSubclass =
+          classTree.getMembers().stream()
+              .filter(VariableTree.class::isInstance)
+              .map(VariableTree.class::cast)
+              .filter(variableTree -> variableTree.getModifiers().getFlags().containsAll(ENUM_CONSTANT_MODIFIERS))
+              .filter(variableTree -> classSym.type.equals(ASTHelpers.getType(variableTree)))
+              .map(VariableTree::getInitializer)
+              .filter(NewClassTree.class::isInstance)
+              .map(NewClassTree.class::cast)
+              .anyMatch(newClassTree -> newClassTree.getClassBody() != null);
+
+      if (!hasSubclass) {
+        return;
+      }
+    }
+
+    Deque<ClassSymbol> nestedClasses = new ArrayDeque<>();
 
     tree.accept(
         new TreeScanner<Void, Void>() {
           @Override
-          public Void visitMethodInvocation(MethodInvocationTree node, Void data) {
-            MethodSymbol method = ASTHelpers.getSymbol(node);
-            if (method != null
-                && !method.isConstructor()
-                && !method.isStatic()
-                && !method.isPrivate()
-                && !method.getModifiers().contains(Modifier.FINAL)
-                && isOnThis(node)
-                && method.isMemberOf(classSym, state.getTypes())) {
+          public Void visitClass(ClassTree node, Void unused) {
+            if (isSuppressed(node)) {
+              return null;
+            }
+            nestedClasses.push(ASTHelpers.getSymbol(node));
+            super.visitClass(node, null);
+            nestedClasses.pop();
+            return null;
+          }
+
+          @Override
+          public Void visitMethod(MethodTree node, Void unused) {
+            if (isSuppressed(node)) {
+              return null;
+            }
+            return super.visitMethod(node, null);
+          }
+
+          @Override
+          public Void visitMethodInvocation(MethodInvocationTree node, Void unused) {
+            if (isOverridable(node)) {
               state.reportMatch(describeMatch(node));
             }
-            return super.visitMethodInvocation(node, data);
+            return super.visitMethodInvocation(node, null);
+          }
+
+          @Override
+          public Void visitVariable(VariableTree node, Void unused) {
+            if (isSuppressed(node)) {
+              return null;
+            }
+            return super.visitVariable(node, null);
+          }
+
+          private boolean isOverridable(MethodInvocationTree node) {
+            MethodSymbol method = ASTHelpers.getSymbol(node);
+            if (method == null
+                || method.isConstructor()
+                || method.isStatic()
+                || method.isPrivate()
+                || method.getModifiers().contains(Modifier.FINAL)
+                || !method.isMemberOf(classSym, state.getTypes())) {
+              return false;
+            }
+
+            ExpressionTree receiver = ASTHelpers.getReceiver(node);
+            if (receiver != null) {
+              Name receiverName;
+              switch (receiver.getKind()) {
+                case IDENTIFIER:
+                  receiverName = ((IdentifierTree) receiver).getName();
+                  break;
+                case MEMBER_SELECT:
+                  receiverName = ((MemberSelectTree) receiver).getIdentifier();
+                  break;
+                default:
+                  return false;
+              }
+              return (receiverName.contentEquals("this") || receiverName.contentEquals("super"))
+                  && classSym.equals(ASTHelpers.getReceiverType(node).tsym);
+            }
+
+            for (ClassSymbol nestedClass : nestedClasses) {
+              if (method.isMemberOf(nestedClass, state.getTypes())) {
+                return false;
+              }
+            }
+
+            return true;
           }
         },
         null);
-  }
-
-  private static boolean isOnThis(MethodInvocationTree tree) {
-    ExpressionTree receiver = ASTHelpers.getReceiver(tree);
-    if (receiver == null) {
-      return true;
-    }
-    Name receiverName;
-    switch (receiver.getKind()) {
-      case IDENTIFIER:
-        receiverName = ((IdentifierTree) receiver).getName();
-        break;
-      case MEMBER_SELECT:
-        receiverName = ((MemberSelectTree) receiver).getIdentifier();
-        break;
-      default:
-        return false;
-    }
-    return receiverName.contentEquals("this") || receiverName.contentEquals("super");
   }
 }
