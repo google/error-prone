@@ -1344,6 +1344,43 @@ public class SuggestedFixesTest {
         .doTest(TEXT_MATCH);
   }
 
+  @BugPattern(
+          name = "RenameMethodChecker2",
+          summary = "RenameMethodChecker2",
+          severity = ERROR,
+          providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
+  private static class RenameMethodChecker2 extends BugChecker
+          implements MethodInvocationTreeMatcher {
+    @Override
+    public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
+      return describeMatch(tree, SuggestedFixes.renameMethodInvocation(tree, "singleton", state));
+    }
+  }
+
+  @Test
+  public void renameMethodInvocationWithArg() {
+    BugCheckerRefactoringTestHelper.newInstance(new RenameMethodChecker2(), getClass())
+        .addInputLines(
+            "Test.java",
+            "import java.util.Collections;",
+            "class Test {",
+            "  Integer singletonList = 1;",
+            "  Object foo = Collections.<Integer /* foo */>singletonList(singletonList);",
+            "  Object bar = Collections.<Integer>/* foo */singletonList(singletonList);",
+            "  Object baz = Collections.<Integer>  singletonList  (singletonList);",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "import java.util.Collections;",
+            "class Test {",
+            "  Integer singletonList = 1;",
+            "  Object foo = Collections.<Integer /* foo */>singleton(singletonList);",
+            "  Object bar = Collections.<Integer>/* foo */singleton(singletonList);",
+            "  Object baz = Collections.<Integer>  singleton  (singletonList);",
+            "}")
+        .doTest(TEXT_MATCH);
+  }
+
   /**
    * Test checker that raises a diagnostic with the result of {@link SuggestedFixes#qualifyType} on
    * new instances.

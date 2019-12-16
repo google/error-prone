@@ -586,9 +586,14 @@ public class SuggestedFixes {
       throw malformedMethodInvocationTree(tree);
     }
     List<ErrorProneToken> tokens = state.getOffsetTokens(startPos, state.getEndPosition(tree));
+    int depth = 0;
     for (ErrorProneToken token : Lists.reverse(tokens)) {
-      if (token.kind() == TokenKind.IDENTIFIER && token.name().equals(identifier)) {
+      if (depth == 0 && token.kind() == TokenKind.IDENTIFIER && token.name().equals(identifier)) {
         return SuggestedFix.replace(token.pos(), token.endPos(), replacement);
+      } else if (token.kind() == Tokens.TokenKind.RPAREN) {
+        depth++;
+      } else if (token.kind() == Tokens.TokenKind.LPAREN) {
+        depth--;
       }
     }
     throw malformedMethodInvocationTree(tree);
