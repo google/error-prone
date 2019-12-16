@@ -493,6 +493,9 @@ Comparison using reference equality instead of value equality. Reference equalit
 __[ByteBufferBackingArray](bugpattern/ByteBufferBackingArray)__<br>
 ByteBuffer.array() shouldn&#39;t be called unless ByteBuffer.arrayOffset() is used or if the ByteBuffer was initialized using ByteBuffer.wrap() or ByteBuffer.allocate().
 
+__[CacheLoaderNull](bugpattern/CacheLoaderNull)__<br>
+The result of CacheLoader#load must be non-null.
+
 __[CannotMockFinalClass](bugpattern/CannotMockFinalClass)__<br>
 Mockito cannot mock final classes
 

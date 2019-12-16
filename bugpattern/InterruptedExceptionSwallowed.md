@@ -35,7 +35,7 @@ element, or the caught exception.
 
 ```java
 try {
-  future.get();
+  ...
 } catch (@SuppressWarnings("InterruptedExceptionSwallowed") Exception e) {
   throw new IllegalStateException(e);
 }
