@@ -36,6 +36,7 @@ import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
+import com.google.errorprone.matchers.method.MethodMatchers;
 import com.google.errorprone.scanner.ErrorProneScanner;
 import com.google.errorprone.scanner.ScannerSupplier;
 import com.sun.source.tree.ClassTree;
@@ -403,6 +404,23 @@ public class MatchersTest {
   }
 
   @Test
+  public void booleanConstantMatchesTrue() {
+    CompilationTestHelper.newInstance(BooleanConstantTrueChecker.class, getClass())
+        .addSourceLines(
+            "test/BooleanConstantTrueCheckerTest.java",
+            "package test;",
+            "public class BooleanConstantTrueCheckerTest {",
+            "  public void function() {",
+            "    // BUG: Diagnostic contains:",
+            "    method(Boolean.TRUE);",
+            "    method(Boolean.FALSE);",
+            "  }",
+            "  void method(Object value) {}",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void packageNameChecker() {
     CompilationTestHelper.newInstance(PackageNameChecker.class, getClass())
         .addSourceLines(
@@ -537,6 +555,27 @@ public class MatchersTest {
     @Override
     public Description matchClass(ClassTree tree, VisitorState state) {
       return MATCHER.matches(tree, state) ? describeMatch(tree) : Description.NO_MATCH;
+    }
+  }
+
+  /** Checker that checks if an argument is 'Boolean.TRUE'. */
+  @BugPattern(
+      name = "BooleanConstantTrueChecker",
+      summary = "BooleanConstantTrueChecker",
+      severity = ERROR)
+  public static class BooleanConstantTrueChecker extends BugChecker
+      implements MethodInvocationTreeMatcher {
+
+    @Override
+    public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
+      if (Matchers.methodInvocation(
+              MethodMatchers.anyMethod(),
+              ChildMultiMatcher.MatchType.AT_LEAST_ONE,
+              Matchers.booleanConstant(true))
+          .matches(tree, state)) {
+        return describeMatch(tree);
+      }
+      return Description.NO_MATCH;
     }
   }
 }
