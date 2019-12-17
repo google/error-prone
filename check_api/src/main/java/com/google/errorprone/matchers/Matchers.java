@@ -601,8 +601,11 @@ public class Matchers {
         Symbol symbol = getSymbol(expressionTree);
         if (symbol.isStatic()
             && state.getTypes().unboxedTypeOrType(symbol.type).getTag() == TypeTag.BOOLEAN) {
-          return ((value && symbol.getSimpleName().contentEquals("TRUE"))
-              || symbol.getSimpleName().contentEquals("FALSE"));
+          if (value) {
+            return symbol.getSimpleName().contentEquals("TRUE");
+          } else {
+            return symbol.getSimpleName().contentEquals("FALSE");
+          }
         }
       }
       return false;
