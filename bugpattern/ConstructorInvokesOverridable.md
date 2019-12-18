@@ -93,6 +93,24 @@ public class ConstructorInvokesOverridablePositiveCases {
 
     // BUG: Diagnostic contains: Constructors should not invoke overridable
     new Thread(() -> unsafe()).start();
+
+    // final but calls our method
+    final class Local1 {
+      // BUG: Diagnostic contains: Constructors should not invoke overridable
+      final int i = unsafe();
+    }
+
+    // final and implements the method but calls ours
+    final class Local2 extends ConstructorInvokesOverridablePositiveCases {
+      // BUG: Diagnostic contains: Constructors should not invoke overridable
+      final int i = ConstructorInvokesOverridablePositiveCases.this.unsafe();
+    }
+
+    // implements and calls its own method, but non-final
+    class Local3 extends ConstructorInvokesOverridablePositiveCases {
+      // BUG: Diagnostic contains: Constructors should not invoke overridable
+      final int i = unsafe();
+    }
   }
 
   protected int unsafe() {
@@ -116,6 +134,20 @@ public class ConstructorInvokesOverridablePositiveCases {
     protected int innerUnsafe() {
       return 7;
     }
+  }
+
+  enum AnEnum implements java.util.function.IntSupplier {
+    INSTANCE {
+      final String s = name();
+
+      @Override
+      public int getAsInt() {
+        return s.length();
+      }
+    };
+
+    // BUG: Diagnostic contains: Constructors should not invoke overridable
+    final int i = getAsInt();
   }
 }
 {% endhighlight %}
@@ -164,8 +196,49 @@ public class ConstructorInvokesOverridableNegativeCases {
     safeStatic();
     safePrivate();
 
+    @SuppressWarnings("ConstructorInvokesOverridable")
+    class Suppressed {
+      final int suppressed = unsafe();
+    }
+
+    class SuppressedMembers {
+      @SuppressWarnings("ConstructorInvokesOverridable")
+      final int suppressed = unsafe();
+
+      @SuppressWarnings("ConstructorInvokesOverridable")
+      int suppressed() {
+        return unsafe();
+      }
+    }
+
     // Safe: on a different instance.
     new ConstructorInvokesOverridableNegativeCases().localVariable();
+
+    new ConstructorInvokesOverridableNegativeCases() {
+      // Safe: calls its own method and cannot be subclassed because it's anonymous.
+      final int i = unsafe();
+      final int j = this.unsafe();
+    };
+
+    final class Local extends ConstructorInvokesOverridableNegativeCases {
+      // Safe: calls its own method and cannot be subclassed because it's final.
+      final int i = unsafe();
+      final int j = this.unsafe();
+      final int k = Local.this.unsafe();
+    }
+
+    class Parent extends ConstructorInvokesOverridableNegativeCases {
+      class Inner extends ConstructorInvokesOverridableNegativeCases {
+        // OK to call an overridable method of the containing class
+        final int i = Parent.this.unsafe();
+      }
+    }
+
+    new java.util.HashMap<String, String>() {
+      {
+        put("Hi", "Mom");
+      }
+    };
 
     new Thread() {
       @Override
@@ -222,12 +295,35 @@ public class ConstructorInvokesOverridableNegativeCases {
         unsafe();
       }
     }
+    class Local2 extends ConstructorInvokesOverridableNegativeCases {
+      {
+        // same as above, but try to confuse the bug pattern
+        ConstructorInvokesOverridableNegativeCases.this.unsafe();
+      }
+    }
   }
 
   // Lookup is handled correctly for inner classes as well
   class Inner {
     // OK to call an overridable method of the containing class
     final int safeValue = unsafe();
+  }
+
+  class Inner2 extends ConstructorInvokesOverridableNegativeCases {
+    // same as above, but try to confuse the bug pattern
+    final int safeValue = ConstructorInvokesOverridableNegativeCases.this.unsafe();
+  }
+
+  enum AnEnum implements java.util.function.IntSupplier {
+    INSTANCE;
+
+    final String s = name();
+    final int i = getAsInt();
+
+    @Override
+    public int getAsInt() {
+      return s.length();
+    }
   }
 }
 {% endhighlight %}
