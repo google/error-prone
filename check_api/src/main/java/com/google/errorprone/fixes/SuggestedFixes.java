@@ -860,6 +860,9 @@ public class SuggestedFixes {
 
   private static String newArgument(Collection<String> initializers) {
     StringBuilder expression = new StringBuilder();
+    if (initializers.isEmpty()) {
+      return "{}";
+    }
     if (initializers.size() > 1) {
       expression.append('{');
     }
