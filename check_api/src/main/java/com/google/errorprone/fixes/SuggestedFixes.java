@@ -1056,11 +1056,20 @@ public class SuggestedFixes {
   }
 
   /**
+   * Pretty-prints a Type for use in diagnostic messages, qualifying any enclosed type names using
+   * {@link #qualifyType}}.
+   */
+  public static String prettyType(Type type, @Nullable VisitorState state) {
+    return prettyType(state, /* existingFix= */ null, type);
+  }
+
+  /**
    * Pretty-prints a Type for use in fixes, qualifying any enclosed type names using {@link
    * #qualifyType}}.
    */
   public static String prettyType(
-      @Nullable VisitorState state, @Nullable SuggestedFix.Builder fix, Type type) {
+      @Nullable VisitorState state, @Nullable SuggestedFix.Builder existingFix, Type type) {
+    SuggestedFix.Builder fix = existingFix == null ? SuggestedFix.builder() : existingFix;
     return type.accept(
         new DefaultTypeVisitor<String, Void>() {
           @Override
@@ -1076,7 +1085,7 @@ public class SuggestedFixes {
           @Override
           public String visitClassType(Type.ClassType t, Void unused) {
             StringBuilder sb = new StringBuilder();
-            if (state == null || fix == null) {
+            if (state == null) {
               sb.append(t.tsym.getSimpleName());
             } else {
               sb.append(qualifyType(state, fix, t.tsym));

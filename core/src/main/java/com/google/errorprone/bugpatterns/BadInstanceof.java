@@ -58,8 +58,7 @@ public final class BadInstanceof extends BugChecker implements InstanceOfTreeMat
     if (!isSubtype(getType(tree.getExpression()), getType(tree.getType()), state)) {
       return NO_MATCH;
     }
-    String subType =
-        SuggestedFixes.prettyType(state, /* fix= */ null, getType(tree.getExpression()));
+    String subType = SuggestedFixes.prettyType(getType(tree.getExpression()), state);
     String expression = state.getSourceForNode(tree.getExpression());
     String superType = state.getSourceForNode(tree.getType());
     if (isNonNull().matches(tree.getExpression(), state)) {

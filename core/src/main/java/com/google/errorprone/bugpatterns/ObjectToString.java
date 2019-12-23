@@ -82,14 +82,11 @@ public class ObjectToString extends AbstractToString {
 
   @Override
   protected Optional<String> descriptionMessageForDefaultMatch(Type type, VisitorState state) {
-    String format =
-        "%1$s is final and does not override Object.toString, so converting it to a string"
-            + " will print its identity (e.g. `%2$s@ 4488aabb`) instead of useful information.";
     return Optional.of(
         String.format(
-            format,
-            SuggestedFixes.prettyType(state, /* fix= */ null, type),
-            type.tsym.getSimpleName()));
+            "%1$s is final and does not override Object.toString, so converting it to a string"
+                + " will print its identity (e.g. `%2$s@4488aabb`) instead of useful information.",
+            SuggestedFixes.prettyType(type, state), type.tsym.getSimpleName()));
   }
 
   @Override

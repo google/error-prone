@@ -25,7 +25,6 @@ import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.scanner.ScannerSupplier;
 import com.sun.source.tree.ClassTree;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -34,12 +33,8 @@ import org.junit.runners.JUnit4;
 @RunWith(JUnit4.class)
 public class ObjectToStringTest {
 
-  private CompilationTestHelper compilationHelper;
-
-  @Before
-  public void setUp() {
-    compilationHelper = CompilationTestHelper.newInstance(ObjectToString.class, getClass());
-  }
+  private final CompilationTestHelper compilationHelper =
+      CompilationTestHelper.newInstance(ObjectToString.class, getClass());
 
   @Test
   public void testPositiveCase() {
@@ -95,6 +90,25 @@ public class ObjectToStringTest {
             "  }",
             "}")
         .withClasspath(ObjectToStringTest.class, TestLib.class, TestLib.Two.class)
+        .doTest();
+  }
+
+  @Test
+  public void qualifiedName() {
+    compilationHelper
+        .addSourceLines(
+            "A.java", //
+            "class A {",
+            "  static final class B {}",
+            "}")
+        .addSourceLines(
+            "C.java",
+            "class C {",
+            "  String test() {",
+            "    // BUG: Diagnostic contains: A.B",
+            "    return new A.B().toString();",
+            "  }",
+            "}")
         .doTest();
   }
 }
