@@ -31,6 +31,7 @@ import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.NewClassTree;
+import com.sun.source.tree.ThrowTree;
 
 /** Bugpattern to discourage throwing base exception classes.. */
 @BugPattern(
@@ -50,7 +51,9 @@ public final class ThrowSpecificExceptions extends BugChecker implements NewClas
 
   @Override
   public Description matchNewClass(NewClassTree tree, VisitorState state) {
-    if (tree.getClassBody() != null || state.errorProneOptions().isTestOnlyTarget()) {
+    if (tree.getClassBody() != null
+        || !(state.getPath().getParentPath().getLeaf() instanceof ThrowTree)
+        || state.errorProneOptions().isTestOnlyTarget()) {
       return Description.NO_MATCH;
     }
     for (AbstractLikeException abstractLikeException : ABSTRACT_LIKE_EXCEPTIONS) {

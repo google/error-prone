@@ -66,4 +66,17 @@ public final class ThrowSpecificExceptionsTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void dontMatchIfNotThrown() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            "public class Test {",
+            "  StackTraceElement[] getStackTrace() {",
+            "    return new Throwable().getStackTrace();",
+            "  }",
+            "}")
+        .doTest();
+  }
 }
