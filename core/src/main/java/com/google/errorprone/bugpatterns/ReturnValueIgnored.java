@@ -160,6 +160,10 @@ public class ReturnValueIgnored extends AbstractReturnValueIgnored {
                     .named("contains")
                     .withParameters("java.lang.Object"),
                 instanceMethod()
+                    .onDescendantOf("java.util.Collection")
+                    .named("containsAll")
+                    .withParameters("java.util.Collection"),
+                instanceMethod()
                     .onDescendantOf("java.util.Map")
                     .namedAnyOf("containsKey", "containsValue")
                     .withParameters("java.lang.Object"))
