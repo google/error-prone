@@ -23,6 +23,7 @@ import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.ReturnTreeMatcher;
+import com.google.errorprone.bugpatterns.nullness.NullnessFixes;
 import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
@@ -82,11 +83,7 @@ public class ProvidesNull extends BugChecker implements ReturnTreeMatcher {
       return Description.NO_MATCH;
     }
 
-    Fix addNullableFix =
-        SuggestedFix.builder()
-            .prefixWith(enclosingMethod, "@Nullable\n")
-            .addImport("javax.annotation.Nullable")
-            .build();
+    Fix addNullableFix = NullnessFixes.makeFix(state, enclosingMethod);
 
     CatchTree enclosingCatch = ASTHelpers.findEnclosingNode(state.getPath(), CatchTree.class);
     if (enclosingCatch == null) {

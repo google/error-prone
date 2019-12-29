@@ -23,18 +23,17 @@ import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Kinds.KindSelector;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
-import com.sun.tools.javac.util.Options;
 
 /**
  * Static utility methods for common functionality in the nullable checkers.
  *
  * @author awturner@google.com (Andy Turner)
  */
-class NullnessFixes {
+public final class NullnessFixes {
   private NullnessFixes() {}
 
   /** Make the {@link SuggestedFix} to add the {@code Nullable} annotation. */
-  static SuggestedFix makeFix(VisitorState state, Tree declaration) {
+  public static SuggestedFix makeFix(VisitorState state, Tree declaration) {
     SuggestedFix.Builder builder = SuggestedFix.builder();
     String qualifiedName = getQualifiedName(state, builder);
     return builder.prefixWith(declaration, "@" + qualifiedName + " ").build();
