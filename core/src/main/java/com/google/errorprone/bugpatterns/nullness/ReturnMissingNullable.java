@@ -20,6 +20,7 @@ import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.ProvidesFix;
+import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.ReturnTreeMatcher;
@@ -43,6 +44,12 @@ import javax.annotation.Nullable;
     severity = SUGGESTION,
     providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class ReturnMissingNullable extends BugChecker implements ReturnTreeMatcher {
+
+  private final ErrorProneFlags flags;
+
+  public ReturnMissingNullable(ErrorProneFlags flags) {
+    this.flags = flags;
+  }
 
   @Override
   public Description matchReturn(ReturnTree tree, VisitorState state) {
@@ -101,7 +108,7 @@ public class ReturnMissingNullable extends BugChecker implements ReturnTreeMatch
       VisitorState state, Tree declaration, Tree matchedTree, String message) {
     return buildDescription(matchedTree)
         .setMessage(message)
-        .addFix(NullnessFixes.makeFix(state, declaration))
+        .addFix(NullnessFixes.makeFix(state, flags, declaration))
         .build();
   }
 

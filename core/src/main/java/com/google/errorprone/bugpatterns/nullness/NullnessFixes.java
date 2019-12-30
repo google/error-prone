@@ -16,6 +16,7 @@
 
 package com.google.errorprone.bugpatterns.nullness;
 
+import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.util.FindIdentifiers;
@@ -33,19 +34,15 @@ public final class NullnessFixes {
   private NullnessFixes() {}
 
   /** Make the {@link SuggestedFix} to add the {@code Nullable} annotation. */
-  public static SuggestedFix makeFix(VisitorState state, Tree declaration) {
+  public static SuggestedFix makeFix(VisitorState state, ErrorProneFlags flags, Tree declaration) {
     SuggestedFix.Builder builder = SuggestedFix.builder();
-    String qualifiedName = getQualifiedName(state, builder);
+    String qualifiedName = getQualifiedName(state, flags, builder);
     return builder.prefixWith(declaration, "@" + qualifiedName + " ").build();
   }
 
-  private static String getQualifiedName(VisitorState state, SuggestedFix.Builder builder) {
-    // TODO(cpovirk): Suggest @NullableDecl if the code uses that.
+  private static String getQualifiedName(VisitorState state, ErrorProneFlags flags, SuggestedFix.Builder builder) {
     Symbol sym = FindIdentifiers.findIdent("Nullable", state, KindSelector.VAL_TYP);
-    String defaultType =
-        state.isAndroidCompatible()
-            ? (state.isAndroidXCompatible() ? "androidx.annotation.Nullable" : "android.support.annotation.Nullable" )
-            : "javax.annotation.Nullable";
+    String defaultType = flags.get("Nullness:NullableAnnotation").orElse("javax.annotation.Nullable");
     if (sym != null) {
       ClassSymbol classSym = (ClassSymbol) sym;
       if (classSym.isAnnotationType()) {

@@ -20,6 +20,7 @@ import static com.google.errorprone.BugPattern.ProvidesFix.REQUIRES_HUMAN_ATTENT
 import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
 
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.AssignmentTreeMatcher;
@@ -55,6 +56,13 @@ import javax.lang.model.element.ElementKind;
     providesFix = REQUIRES_HUMAN_ATTENTION)
 public class FieldMissingNullable extends BugChecker
     implements AssignmentTreeMatcher, VariableTreeMatcher {
+
+  private final ErrorProneFlags flags;
+
+  public FieldMissingNullable(ErrorProneFlags flags) {
+    this.flags = flags;
+  }
+
   @Override
   public Description matchVariable(VariableTree tree, VisitorState state) {
     Symbol assigned = ASTHelpers.getSymbol(tree);
@@ -167,7 +175,7 @@ public class FieldMissingNullable extends BugChecker
       VisitorState state, VariableTree declaration, Tree matchedTree, String message) {
     return buildDescription(matchedTree)
         .setMessage(message)
-        .addFix(NullnessFixes.makeFix(state, declaration))
+        .addFix(NullnessFixes.makeFix(state, flags, declaration))
         .build();
   }
 }

@@ -18,6 +18,7 @@ package com.google.errorprone.bugpatterns.nullness;
 
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
+import com.google.errorprone.ErrorProneFlags;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -667,6 +668,6 @@ public class ReturnMissingNullableTest {
   }
 
   private BugCheckerRefactoringTestHelper createRefactoringTestHelper() {
-    return BugCheckerRefactoringTestHelper.newInstance(new ReturnMissingNullable(), getClass());
+    return BugCheckerRefactoringTestHelper.newInstance(new ReturnMissingNullable(ErrorProneFlags.empty()), getClass());
   }
 }

@@ -20,6 +20,7 @@ import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.ProvidesFix;
+import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.ReturnTreeMatcher;
@@ -48,6 +49,12 @@ import com.sun.tools.javac.code.Symbol.MethodSymbol;
     providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class ProvidesNull extends BugChecker implements ReturnTreeMatcher {
 
+  private final ErrorProneFlags flags;
+
+  public ProvidesNull(ErrorProneFlags flags) {
+    this.flags = flags;
+  }
+
   /**
    * Matches explicit "return null" statements in methods annotated with {@code @Provides} but not
    * {@code @Nullable}. Suggests either annotating the method with {@code @Nullable} or throwing a
@@ -62,7 +69,7 @@ public class ProvidesNull extends BugChecker implements ReturnTreeMatcher {
     }
 
     TreePath path = state.getPath();
-    MethodTree enclosingMethod = null;
+    MethodTree enclosingMethod;
     while (true) {
       if (path == null || path.getLeaf() instanceof LambdaExpressionTree) {
         return Description.NO_MATCH;
@@ -83,7 +90,7 @@ public class ProvidesNull extends BugChecker implements ReturnTreeMatcher {
       return Description.NO_MATCH;
     }
 
-    Fix addNullableFix = NullnessFixes.makeFix(state, enclosingMethod);
+    Fix addNullableFix = NullnessFixes.makeFix(state, flags, enclosingMethod);
 
     CatchTree enclosingCatch = ASTHelpers.findEnclosingNode(state.getPath(), CatchTree.class);
     if (enclosingCatch == null) {
