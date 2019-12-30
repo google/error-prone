@@ -90,7 +90,7 @@ public class ProvidesNull extends BugChecker implements ReturnTreeMatcher {
       return Description.NO_MATCH;
     }
 
-    Fix addNullableFix = NullnessFixes.makeFix(state, flags, enclosingMethod);
+    Fix addNullableFix = NullnessFixes.makeFix(state, flags, enclosingMethod, "\n");
 
     CatchTree enclosingCatch = ASTHelpers.findEnclosingNode(state.getPath(), CatchTree.class);
     if (enclosingCatch == null) {

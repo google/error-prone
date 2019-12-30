@@ -35,9 +35,14 @@ public final class NullnessFixes {
 
   /** Make the {@link SuggestedFix} to add the {@code Nullable} annotation. */
   public static SuggestedFix makeFix(VisitorState state, ErrorProneFlags flags, Tree declaration) {
+    return makeFix(state, flags, declaration, " ");
+  }
+
+  /** Make the {@link SuggestedFix} to add the {@code Nullable} annotation. */
+  public static SuggestedFix makeFix(VisitorState state, ErrorProneFlags flags, Tree declaration, String suffix) {
     SuggestedFix.Builder builder = SuggestedFix.builder();
     String qualifiedName = getQualifiedName(state, flags, builder);
-    return builder.prefixWith(declaration, "@" + qualifiedName + " ").build();
+    return builder.prefixWith(declaration, "@" + qualifiedName + suffix).build();
   }
 
   private static String getQualifiedName(VisitorState state, ErrorProneFlags flags, SuggestedFix.Builder builder) {
