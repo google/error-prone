@@ -232,21 +232,22 @@ public final class InterruptedExceptionSwallowed extends BugChecker
       scan(tree.getResources(), null);
       inResources = false;
       scan(tree.getBlock(), null);
-      scan(tree.getCatches(), null);
+      // Make two passes over the `catch` blocks: once to remove caught exceptions, and once to
+      // add thrown ones. We can't do this in one step as an exception could be caught but later
+      // thrown.
+      for (CatchTree catchTree : tree.getCatches()) {
+        Type type = getType(catchTree.getParameter());
+        for (Type unionMember : extractTypes(type)) {
+          getThrownTypes().removeIf(thrownType -> types.isAssignable(thrownType, unionMember));
+        }
+      }
+      for (CatchTree catchTree : tree.getCatches()) {
+        scan(catchTree.getBlock(), null);
+      }
       scan(tree.getFinallyBlock(), null);
       Set<Type> fromBlock = thrownTypes.pop();
       getThrownTypes().addAll(fromBlock);
       return null;
-    }
-
-    @Override
-    public Void visitCatch(CatchTree tree, Void unused) {
-      Type type = getType(tree.getParameter());
-      // Remove the thrown types; if they're re-thrown they'll get re-added.
-      for (Type unionMember : extractTypes(type)) {
-        getThrownTypes().removeIf(thrownType -> types.isAssignable(thrownType, unionMember));
-      }
-      return super.visitCatch(tree, null);
     }
 
     @Override

@@ -93,6 +93,34 @@ public final class InterruptedExceptionSwallowedTest {
   }
 
   @Test
+  public void positiveThrowFromCatch() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.util.concurrent.ExecutionException;",
+            "import java.util.concurrent.Future;",
+            "class Test {",
+            "  void test(Future<?> future) {",
+            "    try {",
+            "      try {",
+            "        future.get();",
+            "      } catch (ExecutionException e) {",
+            "        if (e.getCause() instanceof IllegalStateException) {",
+            "          throw new InterruptedException();",
+            "        }",
+            "      } catch (InterruptedException e) {",
+            "        Thread.currentThread().interrupt();",
+            "        throw new IllegalStateException(e);",
+            "      }",
+            "    // BUG: Diagnostic contains:",
+            "    } catch (Exception e) {",
+            "    }",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void checkedViaInstanceof_noWarning() {
     compilationHelper
         .addSourceLines(
