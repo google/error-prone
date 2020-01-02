@@ -28,7 +28,6 @@ import static java.util.concurrent.TimeUnit.NANOSECONDS;
 import static java.util.concurrent.TimeUnit.SECONDS;
 
 import com.google.common.base.Enums;
-import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableMap;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -45,6 +44,7 @@ import com.sun.source.tree.MethodInvocationTree;
 import com.sun.tools.javac.code.Type;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -111,30 +111,27 @@ public final class DurationToLongTimeUnit extends BugChecker
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
     List<? extends ExpressionTree> arguments = tree.getArguments();
+
     if (arguments.size() >= 2) { // TODO(kak): Do we want to check varargs as well?
+      Type longType = state.getSymtab().longType;
+      Type timeUnitType = state.getTypeFromString(TIME_UNIT);
       for (int i = 0; i < arguments.size() - 1; i++) {
+        ExpressionTree arg0 = arguments.get(i);
+        ExpressionTree timeUnitTree = arguments.get(i + 1);
 
-        Type type0 = ASTHelpers.getType(arguments.get(i));
-        Type type1 = ASTHelpers.getType(arguments.get(i + 1));
-
-        Type longType = state.getSymtab().longType;
-        Type timeUnitType = state.getTypeFromString(TIME_UNIT);
-
+        Type type0 = ASTHelpers.getType(arg0);
+        Type type1 = ASTHelpers.getType(timeUnitTree);
         if (ASTHelpers.isSameType(type0, longType, state)
             && ASTHelpers.isSameType(type1, timeUnitType, state)) {
-          Optional<TimeUnit> timeUnit = getTimeUnit(arguments.get(i + 1));
-          if (timeUnit.isPresent()) {
-            ExpressionTree arg0 = arguments.get(i);
+          Optional<TimeUnit> timeUnitInArgument = getTimeUnit(timeUnitTree);
+          if (timeUnitInArgument.isPresent()) {
+
             for (Entry<Matcher<ExpressionTree>, TimeUnit> entry : MATCHERS.entrySet()) {
-              TimeUnit correctTimeUnit = entry.getValue();
-              if (entry.getKey().matches(arg0, state) && timeUnit.get() != correctTimeUnit) {
-                SuggestedFix fix =
-                    SuggestedFix.builder()
-                        // TODO(kak): Do we want to use static imports here?
-                        .addImport(TIME_UNIT)
-                        .replace(arguments.get(i + 1), "TimeUnit." + correctTimeUnit)
-                        .build();
-                return describeMatch(tree, fix);
+              TimeUnit timeUnitExpressedInConversion = entry.getValue();
+              if (entry.getKey().matches(arg0, state)
+                  && timeUnitInArgument.get() != timeUnitExpressedInConversion) {
+                return describeTimeUnitConversionFix(
+                    tree, timeUnitTree, timeUnitExpressedInConversion);
               }
             }
           }
@@ -144,14 +141,33 @@ public final class DurationToLongTimeUnit extends BugChecker
     return Description.NO_MATCH;
   }
 
+  private Description describeTimeUnitConversionFix(
+      MethodInvocationTree tree,
+      ExpressionTree timeUnitTree,
+      TimeUnit timeUnitExpressedInConversion) {
+    SuggestedFix fix =
+        SuggestedFix.builder()
+            // TODO(kak): Do we want to use static imports here?
+            .addImport(TIME_UNIT)
+            .replace(timeUnitTree, "TimeUnit." + timeUnitExpressedInConversion)
+            .build();
+    return describeMatch(tree, fix);
+  }
+
+  /**
+   * Given that this ExpressionTree's type is a {@link java.util.concurrent.TimeUnit}, return the
+   * TimeUnit it likely represents.
+   */
   static Optional<TimeUnit> getTimeUnit(ExpressionTree timeUnit) {
     if (timeUnit instanceof IdentifierTree) { // e.g., SECONDS
-      return Enums.getIfPresent(TimeUnit.class, ((IdentifierTree) timeUnit).getName().toString());
+      return Enums.getIfPresent(TimeUnit.class, ((IdentifierTree) timeUnit).getName().toString())
+          .toJavaUtil();
     }
     if (timeUnit instanceof MemberSelectTree) { // e.g., TimeUnit.SECONDS
       return Enums.getIfPresent(
-          TimeUnit.class, ((MemberSelectTree) timeUnit).getIdentifier().toString());
+              TimeUnit.class, ((MemberSelectTree) timeUnit).getIdentifier().toString())
+          .toJavaUtil();
     }
-    return Optional.absent();
+    return Optional.empty();
   }
 }
