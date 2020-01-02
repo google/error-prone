@@ -1314,7 +1314,7 @@ public class SuggestedFixesTest {
       implements MethodInvocationTreeMatcher {
     @Override
     public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
-      return describeMatch(tree, SuggestedFixes.renameMethodInvocation(tree, "emptySet", state));
+      return describeMatch(tree, SuggestedFixes.renameMethodInvocation(tree, "singleton", state));
     }
   }
 
@@ -1322,24 +1322,26 @@ public class SuggestedFixesTest {
   public void renameMethodInvocation() {
     BugCheckerRefactoringTestHelper.newInstance(new RenameMethodChecker(), getClass())
         .addInputLines(
-            "Test.java", //
+            "Test.java",
             "import java.util.Collections;",
             "class Test {",
-            "  Object foo = Collections.<Integer /* foo */>emptyList();",
-            "  Object bar = Collections.<Integer>/* foo */emptyList();",
-            "  Object baz = Collections.<Integer>  emptyList  ();",
+            "  int singletonList = 1;",
+            "  Object foo = Collections.<Integer /* foo */>singletonList(singletonList);",
+            "  Object bar = Collections.<Integer>/* foo */singletonList(singletonList);",
+            "  Object baz = Collections.<Integer>  singletonList  (singletonList);",
             "  class emptyList {}",
-            "  Object quux = Collections.<emptyList>emptyList();",
+            "  Object quux = Collections.<emptyList>singletonList(null);",
             "}")
         .addOutputLines(
-            "Test.java", //
+            "Test.java",
             "import java.util.Collections;",
             "class Test {",
-            "  Object foo = Collections.<Integer /* foo */>emptySet();",
-            "  Object bar = Collections.<Integer>/* foo */emptySet();",
-            "  Object baz = Collections.<Integer>  emptySet  ();",
+            "  int singletonList = 1;",
+            "  Object foo = Collections.<Integer /* foo */>singleton(singletonList);",
+            "  Object bar = Collections.<Integer>/* foo */singleton(singletonList);",
+            "  Object baz = Collections.<Integer>  singleton  (singletonList);",
             "  class emptyList {}",
-            "  Object quux = Collections.<emptyList>emptySet();",
+            "  Object quux = Collections.<emptyList>singleton(null);",
             "}")
         .doTest(TEXT_MATCH);
   }
