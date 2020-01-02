@@ -33,7 +33,6 @@ import static java.util.concurrent.TimeUnit.MINUTES;
 import static java.util.concurrent.TimeUnit.NANOSECONDS;
 import static java.util.concurrent.TimeUnit.SECONDS;
 
-import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterables;
@@ -62,6 +61,7 @@ import com.sun.tools.javac.util.Filter;
 import com.sun.tools.javac.util.Name;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import javax.annotation.Nullable;
 
@@ -164,7 +164,7 @@ public final class PreferJavaTimeOverload extends BugChecker
               MethodInvocationTree maybeDurationDecomposition =
                   (MethodInvocationTree) arguments.get(0);
               if (JAVA_DURATION_DECOMPOSITION_MATCHER.matches(maybeDurationDecomposition, state)) {
-                if (ASTHelpers.isSameType(
+                if (isSameType(
                     ASTHelpers.getReceiverType(maybeDurationDecomposition),
                     state.getTypeFromString(JAVA_DURATION),
                     state)) {
@@ -331,7 +331,7 @@ public final class PreferJavaTimeOverload extends BugChecker
     }
 
     MethodTree t = state.findEnclosing(MethodTree.class);
-    @Nullable MethodSymbol enclosingMethod = t == null ? null : ASTHelpers.getSymbol(t);
+    @Nullable MethodSymbol enclosingMethod = t == null ? null : getSymbol(t);
 
     Type type = state.getTypeFromString(typeName);
     return hasMatchingMethods(
