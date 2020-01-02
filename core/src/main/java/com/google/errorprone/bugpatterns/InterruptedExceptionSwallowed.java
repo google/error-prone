@@ -30,6 +30,7 @@ import static java.util.stream.Collectors.toCollection;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.MoreCollectors;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
@@ -37,6 +38,7 @@ import com.google.errorprone.bugpatterns.BugChecker.TryTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
+import com.google.errorprone.suppliers.Supplier;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.CatchTree;
@@ -59,6 +61,7 @@ import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Type.UnionClassType;
 import com.sun.tools.javac.code.Types;
 import com.sun.tools.javac.tree.JCTree;
+import com.sun.tools.javac.util.Name;
 import java.util.ArrayDeque;
 import java.util.HashSet;
 import java.util.List;
@@ -294,16 +297,20 @@ public final class InterruptedExceptionSwallowed extends BugChecker
     }
   }
 
+  private static final Supplier<Name> CLOSE = VisitorState.memoize(state -> state.getName("close"));
+
   private static Optional<MethodSymbol> getCloseMethod(ClassSymbol symbol, VisitorState state) {
     Types types = state.getTypes();
+    if (!types.isAssignable(symbol.type, state.getTypeFromString(AUTOCLOSEABLE))) {
+      return Optional.empty();
+    }
+    Name close = CLOSE.get(state);
     return symbol.getEnclosedElements().stream()
-        .filter(
-            sym ->
-                types.isAssignable(symbol.type, state.getTypeFromString(AUTOCLOSEABLE))
-                    && sym.getSimpleName().contentEquals("close")
-                    && sym.getTypeParameters().isEmpty())
-        .map(e -> (MethodSymbol) e)
-        .findFirst();
+        .filter(sym -> sym instanceof MethodSymbol && sym.getSimpleName().equals(close))
+        .map(sym -> (MethodSymbol) sym)
+        .filter(sym -> sym.params.isEmpty())
+        .filter(sym -> !sym.isConstructor())
+        .collect(MoreCollectors.toOptional());
   }
 
   private static ImmutableList<Type> extractTypes(@Nullable Type type) {

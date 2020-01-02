@@ -18,6 +18,7 @@ package com.google.errorprone.bugpatterns;
 
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -26,7 +27,12 @@ import org.junit.runners.JUnit4;
 @RunWith(JUnit4.class)
 public final class InterruptedExceptionSwallowedTest {
   private final CompilationTestHelper compilationHelper =
-      CompilationTestHelper.newInstance(InterruptedExceptionSwallowed.class, getClass());
+      CompilationTestHelper.newInstance(InterruptedExceptionSwallowed.class, getClass())
+          .addSourceLines(
+              "Thrower.java",
+              "class Thrower implements AutoCloseable {",
+              "  public void close() throws InterruptedException {}",
+              "}");
 
   private final BugCheckerRefactoringTestHelper refactoringHelper =
       BugCheckerRefactoringTestHelper.newInstance(new InterruptedExceptionSwallowed(), getClass());
@@ -86,6 +92,78 @@ public final class InterruptedExceptionSwallowedTest {
             "    // BUG: Diagnostic contains:",
             "    } catch (Exception e) {",
             "      throw new IllegalStateException(e);",
+            "    }",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void thrownByClose_throwsClauseTooBroad() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.util.concurrent.Future;",
+            "class Test {",
+            "  // BUG: Diagnostic contains:",
+            "  void test() throws Exception {",
+            "    try (Thrower t = new Thrower()) {",
+            "    }",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void thrownByClose_caughtByOuterCatch() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.util.concurrent.Future;",
+            "class Test {",
+            "  void test() {",
+            "    try {",
+            "      try (Thrower t = new Thrower()) {",
+            "      }",
+            "    // BUG: Diagnostic contains:",
+            "    } catch (Exception e) {",
+            "    }",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void negative_fieldNamedClose() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.util.concurrent.Future;",
+            "class Test {",
+            "  class Mischief implements AutoCloseable {",
+            "    public int close = 1;",
+            "    public void close() {}",
+            "  }",
+            "  void test() {",
+            "    try (Mischief m = new Mischief()) {",
+            "    }",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Ignore("Not implemented yet") // TODO(b/147102301)
+  @Test
+  public void thrownByClose_swallowedSilently() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.util.concurrent.Future;",
+            "class Test {",
+            "  void test() {",
+            "    try (Thrower t = new Thrower()) {",
+            "    // BUG: Diagnostic contains:",
+            "    } catch (Exception e) {",
             "    }",
             "  }",
             "}")
