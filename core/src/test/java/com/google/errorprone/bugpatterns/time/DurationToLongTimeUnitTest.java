@@ -15,7 +15,11 @@
  */
 package com.google.errorprone.bugpatterns.time;
 
+import static org.junit.Assume.assumeTrue;
+
+import com.google.common.collect.ImmutableList;
 import com.google.errorprone.CompilationTestHelper;
+import com.google.errorprone.util.RuntimeVersion;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -299,6 +303,27 @@ public class DurationToLongTimeUnitTest {
             "    // no op",
             "  }",
             "}")
+        .doTest();
+  }
+
+  @Test
+  public void timeUnitFromConvert() {
+    assumeTrue(RuntimeVersion.isAtLeast11());
+    helper
+        .addSourceLines(
+            "TestClass.java",
+            "import java.time.Duration;",
+            "import java.util.concurrent.TimeUnit;",
+            "public class TestClass {",
+            "  void javaTime(Duration d) {",
+            "    // BUG: Diagnostic contains: DurationToLongTimeUnit",
+            "    myMethod(TimeUnit.SECONDS.convert(d), TimeUnit.MINUTES);",
+            "  }",
+            "  void myMethod(long value, TimeUnit unit) {",
+            "    // no op",
+            "  }",
+            "}")
+        .setArgs(ImmutableList.of("--release", "11"))
         .doTest();
   }
 }
