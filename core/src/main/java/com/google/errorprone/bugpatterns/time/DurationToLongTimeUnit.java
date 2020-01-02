@@ -108,6 +108,9 @@ public final class DurationToLongTimeUnit extends BugChecker
           .put(instanceMethod().onExactClass(PROTO_TIMESTAMP).named("getSeconds"), SECONDS)
           .build();
 
+  private static final Matcher<ExpressionTree> TIME_UNIT_DECOMPOSITION =
+      instanceMethod().onExactClass(TIME_UNIT).named("convert").withParameters(JAVA_DURATION);
+
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
     List<? extends ExpressionTree> arguments = tree.getArguments();
@@ -132,6 +135,16 @@ public final class DurationToLongTimeUnit extends BugChecker
                   && timeUnitInArgument.get() != timeUnitExpressedInConversion) {
                 return describeTimeUnitConversionFix(
                     tree, timeUnitTree, timeUnitExpressedInConversion);
+              }
+            }
+
+            // Look for TimeUnit.convert(Duration), dynamically looking for the source time unit
+            // to convert from.
+            if (TIME_UNIT_DECOMPOSITION.matches(arg0, state)) {
+              Optional<TimeUnit> sourceTimeUnit = getTimeUnit(ASTHelpers.getReceiver(arg0));
+              if (sourceTimeUnit.isPresent()
+                  && !sourceTimeUnit.get().equals(timeUnitInArgument.get())) {
+                return describeTimeUnitConversionFix(tree, timeUnitTree, sourceTimeUnit.get());
               }
             }
           }
