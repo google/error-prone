@@ -585,7 +585,11 @@ public class SuggestedFixes {
     } else {
       throw malformedMethodInvocationTree(tree);
     }
-    List<ErrorProneToken> tokens = state.getOffsetTokens(startPos, state.getEndPosition(tree));
+    int endPos =
+        tree.getArguments().isEmpty()
+            ? state.getEndPosition(tree)
+            : ((JCTree) tree.getArguments().get(0)).getStartPosition();
+    List<ErrorProneToken> tokens = state.getOffsetTokens(startPos, endPos);
     for (ErrorProneToken token : Lists.reverse(tokens)) {
       if (token.kind() == TokenKind.IDENTIFIER && token.name().equals(identifier)) {
         return SuggestedFix.replace(token.pos(), token.endPos(), replacement);
