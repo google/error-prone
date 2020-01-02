@@ -24,6 +24,7 @@ import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
+import static com.google.errorprone.util.ASTHelpers.isConsideredFinal;
 import static com.google.errorprone.util.ASTHelpers.isSameType;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
 
@@ -43,7 +44,6 @@ import com.sun.source.tree.Tree;
 import com.sun.source.tree.TryTree;
 import com.sun.source.util.TreePath;
 import com.sun.source.util.TreeScanner;
-import com.sun.tools.javac.code.Flags;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type;
@@ -177,7 +177,7 @@ public abstract class AbstractMustBeClosedChecker extends BugChecker {
   }
 
   private boolean tryFinallyClose(VarSymbol var, TreePath path, VisitorState state) {
-    if ((var.flags() & (Flags.FINAL | Flags.EFFECTIVELY_FINAL)) == 0) {
+    if (!isConsideredFinal(var)) {
       return false;
     }
     Tree parent = path.getParentPath().getLeaf();

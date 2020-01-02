@@ -17,6 +17,7 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
+import static com.google.errorprone.util.ASTHelpers.isConsideredFinal;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.ProvidesFix;
@@ -32,7 +33,6 @@ import com.sun.source.tree.ForLoopTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
-import com.sun.tools.javac.code.Flags;
 import com.sun.tools.javac.code.Source;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.tree.JCTree;
@@ -107,7 +107,7 @@ public class VarChecker extends BugChecker implements VariableTreeMatcher {
       // flow information isn't collected for body-less methods
       return Description.NO_MATCH;
     }
-    if ((sym.flags() & (Flags.EFFECTIVELY_FINAL | Flags.FINAL)) != 0) {
+    if (isConsideredFinal(sym)) {
       return Description.NO_MATCH;
     }
     return describeMatch(tree, addVarAnnotation(tree));

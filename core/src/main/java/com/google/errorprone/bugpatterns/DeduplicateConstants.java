@@ -17,6 +17,7 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.util.ASTHelpers.isConsideredFinal;
 
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
@@ -33,7 +34,6 @@ import com.sun.source.tree.LiteralTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreeScanner;
-import com.sun.tools.javac.code.Flags;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.util.Name;
 import java.util.Collection;
@@ -161,7 +161,7 @@ public class DeduplicateConstants extends BugChecker implements CompilationUnitT
         if (sym == null) {
           return;
         }
-        if ((sym.flags() & (Flags.EFFECTIVELY_FINAL | Flags.FINAL)) == 0) {
+        if (!isConsideredFinal(sym)) {
           return;
         }
         // heuristic: long string constants are generally more interesting than short ones, or

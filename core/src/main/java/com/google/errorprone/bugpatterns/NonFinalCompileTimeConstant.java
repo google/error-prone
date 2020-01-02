@@ -18,8 +18,7 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
-import static com.sun.tools.javac.code.Flags.EFFECTIVELY_FINAL;
-import static com.sun.tools.javac.code.Flags.FINAL;
+import static com.google.errorprone.util.ASTHelpers.isConsideredFinal;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -55,8 +54,7 @@ public class NonFinalCompileTimeConstant extends BugChecker implements MethodTre
       if (!CompileTimeConstantExpressionMatcher.hasCompileTimeConstantAnnotation(state, sym)) {
         continue;
       }
-      if ((sym.flags() & FINAL) == FINAL
-          || (sym.flags() & EFFECTIVELY_FINAL) == EFFECTIVELY_FINAL) {
+      if (isConsideredFinal(sym)) {
         continue;
       }
       return describeMatch(parameter);

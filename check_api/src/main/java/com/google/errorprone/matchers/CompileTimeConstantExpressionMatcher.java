@@ -17,6 +17,7 @@
 package com.google.errorprone.matchers;
 
 import static com.google.common.base.MoreObjects.firstNonNull;
+import static com.google.errorprone.util.ASTHelpers.isConsideredFinal;
 
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.annotations.CompileTimeConstant;
@@ -25,7 +26,6 @@ import com.sun.source.tree.ConditionalExpressionTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.util.SimpleTreeVisitor;
-import com.sun.tools.javac.code.Flags;
 import com.sun.tools.javac.code.Symbol;
 import javax.lang.model.element.ElementKind;
 
@@ -119,8 +119,7 @@ public class CompileTimeConstantExpressionMatcher implements Matcher<ExpressionT
         return false;
       }
       // Check that the symbol is final
-      if ((varSymbol.flags() & Flags.FINAL) != Flags.FINAL
-          && (varSymbol.flags() & Flags.EFFECTIVELY_FINAL) != Flags.EFFECTIVELY_FINAL) {
+      if (!isConsideredFinal(varSymbol)) {
         return false;
       }
       // Check if the symbol has the @CompileTimeConstant annotation.

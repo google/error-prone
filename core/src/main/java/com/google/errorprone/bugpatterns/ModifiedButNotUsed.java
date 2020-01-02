@@ -28,6 +28,7 @@ import static com.google.errorprone.matchers.method.MethodMatchers.constructor;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
+import static com.google.errorprone.util.ASTHelpers.isConsideredFinal;
 import static java.util.stream.Collectors.joining;
 
 import com.google.common.collect.ImmutableList;
@@ -61,7 +62,6 @@ import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
 import com.sun.source.util.TreePathScanner;
-import com.sun.tools.javac.code.Flags;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import java.util.ArrayList;
@@ -197,7 +197,7 @@ public class ModifiedButNotUsed extends BugChecker
   @Override
   public Description matchVariable(VariableTree tree, VisitorState state) {
     VarSymbol symbol = getSymbol(tree);
-    if (!effectivelyFinal(symbol)) {
+    if (!isConsideredFinal(symbol)) {
       return NO_MATCH;
     }
     if (state.getPath().getParentPath().getLeaf() instanceof ClassTree) {
@@ -388,9 +388,5 @@ public class ModifiedButNotUsed extends BugChecker
           ? ImmutableList.of(withoutSideEffects.build(), withSideEffects.build())
           : ImmutableList.of(withoutSideEffects.build());
     }
-  }
-
-  private static boolean effectivelyFinal(Symbol symbol) {
-    return (symbol.flags() & (Flags.FINAL | Flags.EFFECTIVELY_FINAL)) != 0;
   }
 }

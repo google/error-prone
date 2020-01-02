@@ -17,6 +17,7 @@
 package com.google.errorprone.bugpatterns.formatstring;
 
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
+import static com.google.errorprone.util.ASTHelpers.isConsideredFinal;
 
 import com.google.common.base.MoreObjects;
 import com.google.common.collect.ImmutableList;
@@ -31,7 +32,6 @@ import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
 import com.sun.source.util.TreeScanner;
-import com.sun.tools.javac.code.Flags;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
@@ -85,7 +85,7 @@ public class StrictFormatStringValidation {
               formatStringTree));
     }
 
-    if ((formatStringSymbol.flags() & (Flags.FINAL | Flags.EFFECTIVELY_FINAL)) == 0) {
+    if (!isConsideredFinal(formatStringSymbol)) {
       return ValidationResult.create(
           null, "All variables passed as @FormatString must be final or effectively final");
     }
