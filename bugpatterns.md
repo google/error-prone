@@ -1130,6 +1130,9 @@ A static variable or method should be qualified with a class name, not expressio
 __[StringEquality](bugpattern/StringEquality)__<br>
 String comparison using reference equality instead of value equality
 
+__[StronglyTypeDuration](bugpattern/StronglyTypeDuration)__<br>
+This primitive integral type is only used to construct Durations. It would be clearer to strongly type the field instead.
+
 __[SystemExitOutsideMain](bugpattern/SystemExitOutsideMain)__<br>
 Code that contains System.exit() is untestable.
 
