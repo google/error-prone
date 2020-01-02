@@ -270,15 +270,14 @@ public final class InterruptedExceptionSwallowed extends BugChecker
       if (inResources) {
         Symbol symbol = getSymbol(tree.getType());
         if (symbol instanceof ClassSymbol) {
-          ClassSymbol classSymbol = (ClassSymbol) symbol;
-          Optional<MethodSymbol> methodSymbol = getCloseMethod(classSymbol, state);
-          methodSymbol.map(MethodSymbol::getThrownTypes).ifPresent(getThrownTypes()::addAll);
+          getCloseMethod((ClassSymbol) symbol, state)
+              .ifPresent(methodSymbol -> getThrownTypes().addAll(methodSymbol.getThrownTypes()));
         }
       }
       return super.visitVariable(tree, null);
     }
 
-    // We don't need to account for anything thrown by declarations,
+    // We don't need to account for anything thrown by declarations.
     @Override
     public Void visitLambdaExpression(LambdaExpressionTree tree, Void unused) {
       return null;
