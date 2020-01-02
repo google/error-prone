@@ -16,6 +16,8 @@
 
 package com.google.errorprone.util;
 
+import static com.google.errorprone.util.ASTHelpers.isConsideredFinal;
+
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
@@ -39,7 +41,6 @@ import com.sun.source.tree.TryTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
 import com.sun.source.util.TreeScanner;
-import com.sun.tools.javac.code.Flags;
 import com.sun.tools.javac.code.Kinds.KindSelector;
 import com.sun.tools.javac.code.Scope;
 import com.sun.tools.javac.code.Scope.WriteableScope;
@@ -398,7 +399,7 @@ public final class FindIdentifiers {
                         && ((NewClassTree) curr).getClassBody() != null)
                     || (curr.getKind() == Kind.CLASS && parent.getKind() == Kind.BLOCK),
             (curr, unused) -> Objects.equals(var.owner, ASTHelpers.getSymbol(curr)))) {
-          if ((var.flags() & (Flags.FINAL | Flags.EFFECTIVELY_FINAL)) == 0) {
+          if (!isConsideredFinal(var)) {
             return false;
           }
         }

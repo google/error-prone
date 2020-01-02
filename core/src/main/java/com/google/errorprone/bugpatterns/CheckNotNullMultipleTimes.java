@@ -21,6 +21,7 @@ import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
+import static com.google.errorprone.util.ASTHelpers.isConsideredFinal;
 
 import com.google.common.collect.HashMultiset;
 import com.google.common.collect.Multiset;
@@ -41,7 +42,6 @@ import com.sun.source.tree.SwitchTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.TryTree;
 import com.sun.source.util.TreePathScanner;
-import com.sun.tools.javac.code.Flags;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import java.util.HashMap;
@@ -75,8 +75,7 @@ public final class CheckNotNullMultipleTimes extends BugChecker implements Metho
             && getCurrentPath().getParentPath().getLeaf() instanceof StatementTree
             && CHECK_NOT_NULL.matches(tree, state)) {
           Symbol symbol = getSymbol(arguments.get(0));
-          if (symbol instanceof VarSymbol
-              && (symbol.flags() & (Flags.EFFECTIVELY_FINAL | Flags.FINAL)) != 0) {
+          if (symbol instanceof VarSymbol && isConsideredFinal(symbol)) {
             variables.add((VarSymbol) symbol);
             lastCheck.put((VarSymbol) symbol, tree);
           }

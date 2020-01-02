@@ -1861,4 +1861,9 @@ public class ASTHelpers {
     }
     return curr;
   }
+
+  /** Returns whether {@code symbol} is final or effectively final. */
+  public static boolean isConsideredFinal(Symbol symbol) {
+    return (symbol.flags() & (Flags.FINAL | Flags.EFFECTIVELY_FINAL)) != 0;
+  }
 }

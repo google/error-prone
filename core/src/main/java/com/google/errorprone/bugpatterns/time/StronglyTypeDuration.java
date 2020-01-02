@@ -20,6 +20,7 @@ import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
+import static com.google.errorprone.util.ASTHelpers.isConsideredFinal;
 import static com.google.errorprone.util.ASTHelpers.isSameType;
 
 import com.google.common.collect.HashMultimap;
@@ -44,7 +45,6 @@ import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePathScanner;
 import com.sun.source.util.TreeScanner;
-import com.sun.tools.javac.code.Flags;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type;
@@ -169,7 +169,7 @@ public final class StronglyTypeDuration extends BugChecker implements Compilatio
         Type type = state.getTypes().unboxedTypeOrType(symbol.type);
         if (symbol.getKind() == ElementKind.FIELD
             && symbol.getModifiers().contains(Modifier.PRIVATE)
-            && (symbol.flags() & (Flags.FINAL | Flags.EFFECTIVELY_FINAL)) != 0
+            && isConsideredFinal(symbol)
             && variableTree.getInitializer() != null
             && (isSameType(type, state.getSymtab().intType, state)
                 || isSameType(type, state.getSymtab().longType, state))

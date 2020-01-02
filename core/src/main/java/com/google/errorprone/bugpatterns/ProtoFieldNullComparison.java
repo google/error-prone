@@ -26,6 +26,7 @@ import static com.google.errorprone.matchers.Matchers.receiverOfInvocation;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.getType;
+import static com.google.errorprone.util.ASTHelpers.isConsideredFinal;
 import static com.google.errorprone.util.ASTHelpers.isSameType;
 
 import com.google.common.collect.ImmutableList;
@@ -54,7 +55,6 @@ import com.sun.source.tree.TypeCastTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.SimpleTreeVisitor;
 import com.sun.source.util.TreePathScanner;
-import com.sun.tools.javac.code.Flags;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Type;
@@ -197,7 +197,7 @@ public class ProtoFieldNullComparison extends BugChecker implements CompilationU
     @Override
     public Void visitVariable(VariableTree variable, Void unused) {
       Symbol symbol = ASTHelpers.getSymbol(variable);
-      if (variable.getInitializer() != null && isEffectivelyFinal(symbol)) {
+      if (variable.getInitializer() != null && symbol != null && isConsideredFinal(symbol)) {
         if (descendIntoInitializers) {
           getInitializer(variable.getInitializer())
               .ifPresent(e -> effectivelyFinalValues.put(symbol, e));
@@ -274,10 +274,6 @@ public class ProtoFieldNullComparison extends BugChecker implements CompilationU
           .ifPresent(state::reportMatch);
 
       return super.visitMethodInvocation(node, null);
-    }
-
-    private boolean isEffectivelyFinal(@Nullable Symbol symbol) {
-      return symbol != null && (symbol.flags() & (Flags.FINAL | Flags.EFFECTIVELY_FINAL)) != 0;
     }
 
     private Optional<Fixer> getFixer(ExpressionTree tree, VisitorState state) {
