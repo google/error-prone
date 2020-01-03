@@ -59,7 +59,8 @@ public class TryFailRefactoring extends BugChecker implements TryTreeMatcher {
 
   @Override
   public Description matchTry(TryTree tree, VisitorState state) {
-    if (!JUnitMatchers.TEST_CASE.matches(state.findEnclosing(MethodTree.class), state)) {
+    MethodTree enclosingMethod = state.findEnclosing(MethodTree.class);
+    if (enclosingMethod == null || !JUnitMatchers.TEST_CASE.matches(enclosingMethod, state)) {
       return NO_MATCH;
     }
     List<? extends StatementTree> body = tree.getBlock().getStatements();

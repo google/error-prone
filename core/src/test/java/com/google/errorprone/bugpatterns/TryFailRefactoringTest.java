@@ -26,6 +26,8 @@ import org.junit.runners.JUnit4;
 @RunWith(JUnit4.class)
 public class TryFailRefactoringTest {
 
+  private final CompilationTestHelper compilationTestHelper =
+      CompilationTestHelper.newInstance(TryFailRefactoring.class, getClass());
   private final BugCheckerRefactoringTestHelper testHelper =
       BugCheckerRefactoringTestHelper.newInstance(new TryFailRefactoring(), getClass());
 
@@ -180,6 +182,22 @@ public class TryFailRefactoringTest {
             "      fail();",
             "    } catch (IOException e) {",
             "      assertThat(e).hasMessageThat().contains(\"NOSUCH\");",
+            "    }",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void tryInStaticInitializer() {
+    compilationTestHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  static {",
+            "    try {",
+            "      int a;",
+            "    } catch (Exception e) {",
             "    }",
             "  }",
             "}")
