@@ -433,7 +433,7 @@ import com.google.errorprone.bugpatterns.time.PeriodTimeMath;
 import com.google.errorprone.bugpatterns.time.PreferJavaTimeOverload;
 import com.google.errorprone.bugpatterns.time.ProtoDurationGetSecondsGetNano;
 import com.google.errorprone.bugpatterns.time.ProtoTimestampGetSecondsGetNano;
-import com.google.errorprone.bugpatterns.time.StronglyTypeDuration;
+import com.google.errorprone.bugpatterns.time.StronglyTypeTime;
 import com.google.errorprone.bugpatterns.time.TemporalAccessorGetChronoField;
 import com.google.errorprone.bugpatterns.time.TimeUnitConversionChecker;
 import com.google.errorprone.bugpatterns.time.TimeUnitMismatch;
@@ -880,7 +880,7 @@ public class BuiltInCheckerSuppliers {
           StaticOrDefaultInterfaceMethod.class,
           StaticQualifiedUsingExpression.class,
           StringEquality.class,
-          StronglyTypeDuration.class,
+          StronglyTypeTime.class,
           SwitchDefault.class,
           SystemExitOutsideMain.class,
           TestExceptionChecker.class,

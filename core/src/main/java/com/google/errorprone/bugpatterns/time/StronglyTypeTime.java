@@ -18,8 +18,11 @@ package com.google.errorprone.bugpatterns.time;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
+import static com.google.errorprone.matchers.Matchers.anyOf;
+import static com.google.errorprone.matchers.Matchers.constructor;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
+import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.isConsideredFinal;
 import static com.google.errorprone.util.ASTHelpers.isSameType;
 
@@ -41,6 +44,7 @@ import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
+import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePathScanner;
@@ -55,24 +59,52 @@ import java.util.regex.Pattern;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
 
-/** Flags fields which would be better expressed as Durations rather than primitive integers. */
+/** Flags fields which would be better expressed as time types rather than primitive integers. */
 @BugPattern(
-    name = "StronglyTypeDuration",
+    name = "StronglyTypeTime",
     summary =
-        "This primitive integral type is only used to construct Durations. It would be clearer to"
+        "This primitive integral type is only used to construct time types. It would be clearer to"
             + " strongly type the field instead.",
     severity = WARNING)
-public final class StronglyTypeDuration extends BugChecker implements CompilationUnitTreeMatcher {
-  private static final Matcher<ExpressionTree> DURATION_FACTORY =
-      staticMethod()
-          .onClass("java.time.Duration")
-          .namedAnyOf("ofDays", "ofHours", "ofMillis", "ofMinutes", "ofNanos", "ofSeconds")
-          .withParameters("long");
+public final class StronglyTypeTime extends BugChecker implements CompilationUnitTreeMatcher {
+  private static final Matcher<ExpressionTree> TIME_FACTORY =
+      anyOf(
+          // Java time.
+          staticMethod()
+              .onClass("java.time.Duration")
+              .namedAnyOf("ofDays", "ofHours", "ofMillis", "ofMinutes", "ofNanos", "ofSeconds")
+              .withParameters("long"),
+          staticMethod()
+              .onClass("java.time.Instant")
+              .namedAnyOf("ofEpochMilli", "ofEpochSecond")
+              .withParameters("long"),
+          // Proto time.
+          staticMethod()
+              .onClass("com.google.protobuf.util.Timestamps")
+              .namedAnyOf("fromNanos", "fromMicros", "fromMillis", "fromSeconds"),
+          staticMethod()
+              .onClass("com.google.protobuf.util.Durations")
+              .namedAnyOf(
+                  "fromNanos",
+                  "fromMicros",
+                  "fromMillis",
+                  "fromSeconds",
+                  "fromMinutes",
+                  "fromHours",
+                  "fromDays"),
+          // Joda time.
+          staticMethod()
+              .onClass("org.joda.time.Duration")
+              .namedAnyOf(
+                  "millis", "standardSeconds", "standardMinutes", "standardHours", "standardDays")
+              .withParameters("long"),
+          constructor().forClass("org.joda.time.Instant").withParameters("long"),
+          constructor().forClass("org.joda.time.DateTime").withParameters("long"));
 
   @Override
   public Description matchCompilationUnit(CompilationUnitTree tree, VisitorState state) {
     Map<VarSymbol, VariableTree> fields = findPotentialFields(state);
-    SetMultimap<VarSymbol, MethodInvocationTree> usages = HashMultimap.create();
+    SetMultimap<VarSymbol, ExpressionTree> usages = HashMultimap.create();
 
     new TreePathScanner<Void, Void>() {
       @Override
@@ -93,12 +125,12 @@ public final class StronglyTypeDuration extends BugChecker implements Compilatio
           return;
         }
         Tree parent = getCurrentPath().getParentPath().getLeaf();
-        if (!(parent instanceof MethodInvocationTree)
-            || !DURATION_FACTORY.matches((MethodInvocationTree) parent, state)) {
+        if (!(parent instanceof ExpressionTree)
+            || !TIME_FACTORY.matches((ExpressionTree) parent, state)) {
           fields.remove(symbol);
           return;
         }
-        usages.put((VarSymbol) symbol, (MethodInvocationTree) parent);
+        usages.put((VarSymbol) symbol, (ExpressionTree) parent);
       }
     }.scan(tree, null);
 
@@ -109,28 +141,47 @@ public final class StronglyTypeDuration extends BugChecker implements Compilatio
   }
 
   private Description describeMatch(
-      VariableTree variableTree, Set<MethodInvocationTree> invocationTrees, VisitorState state) {
+      VariableTree variableTree, Set<ExpressionTree> invocationTrees, VisitorState state) {
     if (invocationTrees.stream().map(ASTHelpers::getSymbol).distinct().count() != 1) {
       return NO_MATCH;
     }
-    MethodInvocationTree method = invocationTrees.iterator().next();
+    ExpressionTree factory = invocationTrees.iterator().next();
     String newName = createNewName(variableTree.getName().toString());
     SuggestedFix.Builder fix = SuggestedFix.builder();
-    String duration = SuggestedFixes.qualifyType(state, fix, "java.time.Duration");
+    Type targetType = getType(factory);
+    String typeName = SuggestedFixes.qualifyType(state, fix, targetType);
     fix.replace(
         variableTree,
         String.format(
             "%s %s %s = %s(%s);",
             state.getSourceForNode(variableTree.getModifiers()),
-            duration,
+            typeName,
             newName,
-            state.getSourceForNode(method.getMethodSelect()),
+            getMethodSelectOrNewClass(factory, state),
             state.getSourceForNode(variableTree.getInitializer())));
 
-    for (MethodInvocationTree methodInvocationTree : invocationTrees) {
-      fix.replace(methodInvocationTree, newName);
+    for (ExpressionTree expressionTree : invocationTrees) {
+      fix.replace(expressionTree, newName);
     }
-    return describeMatch(variableTree, fix.build());
+    return buildDescription(variableTree)
+        .setMessage(
+            String.format(
+                "This primitive integral type is only used to construct %s instances. It would be"
+                    + " clearer to strongly type the field instead.",
+                targetType.tsym.getSimpleName()))
+        .addFix(fix.build())
+        .build();
+  }
+
+  private static String getMethodSelectOrNewClass(ExpressionTree tree, VisitorState state) {
+    switch (tree.getKind()) {
+      case METHOD_INVOCATION:
+        return state.getSourceForNode(((MethodInvocationTree) tree).getMethodSelect());
+      case NEW_CLASS:
+        return "new " + state.getSourceForNode(((NewClassTree) tree).getIdentifier());
+      default:
+        throw new AssertionError();
+    }
   }
 
   private static final Pattern TIME_UNIT_REMOVER =
