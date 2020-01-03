@@ -22,14 +22,14 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** Tests for {@link StronglyTypeDuration}. */
+/** Tests for {@link StronglyTypeTime}. */
 @RunWith(JUnit4.class)
-public final class StronglyTypeDurationTest {
+public final class StronglyTypeTimeTest {
   private final CompilationTestHelper compilationHelper =
-      CompilationTestHelper.newInstance(StronglyTypeDuration.class, getClass());
+      CompilationTestHelper.newInstance(StronglyTypeTime.class, getClass());
 
   private final BugCheckerRefactoringTestHelper refactoringHelper =
-      BugCheckerRefactoringTestHelper.newInstance(new StronglyTypeDuration(), getClass());
+      BugCheckerRefactoringTestHelper.newInstance(new StronglyTypeTime(), getClass());
 
   @Test
   public void findingLocatedOnField() {
@@ -38,7 +38,7 @@ public final class StronglyTypeDurationTest {
             "Test.java",
             "import java.time.Duration;",
             "class Test {",
-            "  // BUG: Diagnostic contains:",
+            "  // BUG: Diagnostic contains: Duration instances",
             "  private static final long FOO_MILLIS = 100;",
             "  public Duration get() {",
             "    return Duration.ofMillis(FOO_MILLIS);",
@@ -58,6 +58,57 @@ public final class StronglyTypeDurationTest {
             "  private static final Long FOO_MILLIS = 100L;",
             "  public Duration get() {",
             "    return Duration.ofMillis(FOO_MILLIS);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+
+  @Test
+  public void jodaInstant() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            "import org.joda.time.Instant;",
+            "class Test {",
+            "  private static final long FOO_MILLIS = 100L;",
+            "  public Instant get() {",
+            "    return new Instant(FOO_MILLIS);",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "import org.joda.time.Instant;",
+            "class Test {",
+            "  private static final Instant FOO = new Instant(100L);",
+            "  public Instant get() {",
+            "    return FOO;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void protoTimestamp() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            "import com.google.protobuf.Timestamp;",
+            "import com.google.protobuf.util.Timestamps;",
+            "class Test {",
+            "  private static final long FOO_MILLIS = 100L;",
+            "  public Timestamp get() {",
+            "    return Timestamps.fromMillis(FOO_MILLIS);",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "import com.google.protobuf.Timestamp;",
+            "import com.google.protobuf.util.Timestamps;",
+            "class Test {",
+            "  private static final Timestamp FOO = Timestamps.fromMillis(100L);",
+            "  public Timestamp get() {",
+            "    return FOO;",
             "  }",
             "}")
         .doTest();

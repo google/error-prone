@@ -281,6 +281,13 @@
       <scope>test</scope>
     </dependency>
     <dependency>
+      <!-- BSD -->
+      <groupId>com.google.protobuf</groupId>
+      <artifactId>protobuf-java-util</artifactId>
+      <version>3.7.1</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
       <!-- ICU License -->
       <groupId>com.ibm.icu</groupId>
       <artifactId>icu4j</artifactId>
