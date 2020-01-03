@@ -341,7 +341,7 @@ public final class FutureReturnValueIgnored extends AbstractReturnValueIgnored
               (t, s) -> t.getMode() == ReferenceMode.INVOKE,
               FutureReturnValueIgnored::isObjectReturningMethodReferenceExpression,
               not((t, s) -> isWhitelistedInterfaceType(((JCMemberReference) t).type, s)),
-              not((t, s) -> isThrowingFunctionalInterface(s, ((JCMemberReference) t).type)),
+              not((t, s) -> isThrowingFunctionalInterface(((JCMemberReference) t).type, s)),
               specializedMatcher())
           .matches(tree, state)) {
         return describeMatch(tree);
