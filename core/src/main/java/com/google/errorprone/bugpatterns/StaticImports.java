@@ -42,10 +42,10 @@ public final class StaticImports {
   /** Information about a static import. */
   @AutoValue
   public abstract static class StaticImportInfo {
-    /** @return the fully qualified name used to import the type (possibly non-canonical) */
+    /** The fully qualified name used to import the type (possibly non-canonical). */
     public abstract String importedName();
 
-    /** @return the fully-qualified canonical name of the type */
+    /** The fully-qualified canonical name of the type. */
     public abstract String canonicalName();
 
     /** The simple name of the imported member. */
@@ -55,7 +55,7 @@ public final class StaticImports {
     public abstract ImmutableSet<Symbol> members();
 
     /**
-     * Returns true if the import is canonical, i.e. the fully qualified name used to import the
+     * Returns whether the import is canonical, i.e. the fully qualified name used to import the
      * type matches the scopes it was declared in.
      */
     public boolean isCanonical() {
@@ -84,7 +84,7 @@ public final class StaticImports {
   }
 
   /**
-   * Returns a {@link StaticImports} if the given import is a static single-type import. Returns
+   * Returns a {@link StaticImportInfo} if the given import is a static single-type import. Returns
    * {@code null} otherwise, e.g. because the import is non-static, or an on-demand import, or
    * statically imports a field or method.
    */
@@ -129,8 +129,8 @@ public final class StaticImports {
       return null;
     }
 
-    /* Find the most specific subtype that defines one of the members that is imported.
-     * TODO(gak): we should instead find the most specific subtype with a member that is _used_ */
+    // Find the most specific subtype that defines one of the members that is imported.
+    // TODO(gak): we should instead find the most specific subtype with a member that is _used_
     Type canonicalOwner = null;
     for (Symbol member : members) {
       Type owner = types.erasure(member.owner.type);
@@ -154,10 +154,8 @@ public final class StaticImports {
   }
 
   /**
-   * Looks for a field or method with the given {@code identifier}, in
-   *
-   * @code typeSym} or one of it's super-types or super-interfaces, and that is visible from the
-   *     {@code start} symbol.
+   * Looks for a field or method with the given {@code identifier}, in {@code typeSym} or one of its
+   * super-types or super-interfaces, and that is visible from the {@code start} symbol.
    */
   // TODO(cushon): does javac really not expose this anywhere?
   //
@@ -177,22 +175,21 @@ public final class StaticImports {
 
     members.addAll(lookup(types.supertype(typeSym.type).tsym, start, identifier, types, pkg));
 
-    for (Type i : types.interfaces(typeSym.type)) {
-      members.addAll(lookup(i.tsym, start, identifier, types, pkg));
+    for (Type type : types.interfaces(typeSym.type)) {
+      members.addAll(lookup(type.tsym, start, identifier, types, pkg));
     }
 
-    OUTER:
     for (Symbol member : typeSym.members().getSymbolsByName(identifier)) {
       if (!member.isStatic()) {
         continue;
       }
       switch ((int) (member.flags() & Flags.AccessFlags)) {
         case Flags.PRIVATE:
-          continue OUTER;
+          continue;
         case 0:
         case Flags.PROTECTED:
           if (member.packge() != pkg) {
-            continue OUTER;
+            continue;
           }
           break;
         case Flags.PUBLIC:
@@ -206,4 +203,6 @@ public final class StaticImports {
 
     return members.build();
   }
+
+  private StaticImports() {}
 }

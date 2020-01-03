@@ -17,22 +17,15 @@
 package com.google.errorprone.bugpatterns;
 
 import com.google.errorprone.CompilationTestHelper;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** {@link NonCanonicalStaticImport}Test */
+/** {@link NonCanonicalStaticMemberImport}Test */
 @RunWith(JUnit4.class)
 public class NonCanonicalStaticMemberImportTest {
-
-  private CompilationTestHelper compilationHelper;
-
-  @Before
-  public void setUp() {
-    compilationHelper =
-        CompilationTestHelper.newInstance(NonCanonicalStaticMemberImport.class, getClass());
-  }
+  private final CompilationTestHelper compilationHelper =
+      CompilationTestHelper.newInstance(NonCanonicalStaticMemberImport.class, getClass());
 
   @Test
   public void positiveMethod() {
@@ -43,7 +36,12 @@ public class NonCanonicalStaticMemberImportTest {
             "public class A {",
             "  public static final int foo() { return 42; }",
             "}")
-        .addSourceLines("b/B.java", "package b;", "import a.A;", "public class B extends A {", "}")
+        .addSourceLines(
+            "b/B.java", //
+            "package b;",
+            "import a.A;",
+            "public class B extends A {",
+            "}")
         .addSourceLines(
             "b/Test.java",
             "package b;",
@@ -62,7 +60,12 @@ public class NonCanonicalStaticMemberImportTest {
             "public class A {",
             "  public static final int CONST = 42;",
             "}")
-        .addSourceLines("b/B.java", "package b;", "import a.A;", "public class B extends A {", "}")
+        .addSourceLines(
+            "b/B.java", //
+            "package b;",
+            "import a.A;",
+            "public class B extends A {",
+            "}")
         .addSourceLines(
             "b/Test.java",
             "package b;",
@@ -89,7 +92,12 @@ public class NonCanonicalStaticMemberImportTest {
             "public class A {",
             "  public static class Inner extends Super {}",
             "}")
-        .addSourceLines("b/B.java", "package b;", "import a.A;", "public class B extends A {", "}")
+        .addSourceLines(
+            "b/B.java", //
+            "package b;",
+            "import a.A;",
+            "public class B extends A {",
+            "}")
         .addSourceLines(
             "b/Test.java",
             "package b;",
@@ -108,8 +116,17 @@ public class NonCanonicalStaticMemberImportTest {
             "public class A {",
             "  public static final int foo() { return 42; }",
             "}")
-        .addSourceLines("b/B.java", "package b;", "import a.A;", "public class B extends A {", "}")
-        .addSourceLines("b/Test.java", "package b;", "import static a.A.foo;", "class Test {}")
+        .addSourceLines(
+            "b/B.java", //
+            "package b;",
+            "import a.A;",
+            "public class B extends A {",
+            "}")
+        .addSourceLines(
+            "b/Test.java", //
+            "package b;",
+            "import static a.A.foo;",
+            "class Test {}")
         .doTest();
   }
 
@@ -122,8 +139,17 @@ public class NonCanonicalStaticMemberImportTest {
             "public class A {",
             "  public static final int CONST = 42;",
             "}")
-        .addSourceLines("b/B.java", "package b;", "import a.A;", "public class B extends A {", "}")
-        .addSourceLines("b/Test.java", "package b;", "import static a.A.CONST;", "class Test {}")
+        .addSourceLines(
+            "b/B.java", //
+            "package b;",
+            "import a.A;",
+            "public class B extends A {",
+            "}")
+        .addSourceLines(
+            "b/Test.java", //
+            "package b;",
+            "import static a.A.CONST;",
+            "class Test {}")
         .doTest();
   }
 
@@ -142,9 +168,17 @@ public class NonCanonicalStaticMemberImportTest {
             "public class A {",
             "  public static class Inner extends Super {}",
             "}")
-        .addSourceLines("b/B.java", "package b;", "import a.A;", "public class B extends A {", "}")
         .addSourceLines(
-            "b/Test.java", "package b;", "import static a.Super.CONST;", "class Test {}")
+            "b/B.java", //
+            "package b;",
+            "import a.A;",
+            "public class B extends A {",
+            "}")
+        .addSourceLines(
+            "b/Test.java", //
+            "package b;",
+            "import static a.Super.CONST;",
+            "class Test {}")
         .doTest();
   }
 }
