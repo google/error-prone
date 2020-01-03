@@ -16,6 +16,9 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.common.collect.ImmutableSet.toImmutableSet;
+import static com.google.common.collect.Streams.stream;
+import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.enclosingNode;
@@ -28,7 +31,12 @@ import static com.google.errorprone.matchers.Matchers.parentNode;
 import static com.google.errorprone.matchers.Matchers.previousStatement;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
+import static com.google.errorprone.util.ASTHelpers.getSymbol;
+import static com.google.errorprone.util.ASTHelpers.getType;
+import static com.google.errorprone.util.ASTHelpers.isSubtype;
+import static com.google.errorprone.util.ASTHelpers.isVoidType;
 
+import com.google.common.base.Suppliers;
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MemberReferenceTreeMatcher;
@@ -37,7 +45,6 @@ import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
-import com.google.errorprone.matchers.Matchers;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.LambdaExpressionTree;
@@ -51,9 +58,10 @@ import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
 import com.sun.tools.javac.tree.JCTree.JCIdent;
-import com.sun.tools.javac.tree.JCTree.JCLambda;
 import com.sun.tools.javac.tree.JCTree.JCMemberReference;
 import com.sun.tools.javac.tree.JCTree.JCMethodInvocation;
+import java.util.Objects;
+import java.util.stream.Stream;
 import javax.lang.model.type.TypeKind;
 
 /**
@@ -63,44 +71,50 @@ import javax.lang.model.type.TypeKind;
  */
 public abstract class AbstractReturnValueIgnored extends BugChecker
     implements MethodInvocationTreeMatcher, MemberReferenceTreeMatcher {
+  private final java.util.function.Supplier<Matcher<ExpressionTree>> methodInvocationMatcher =
+      Suppliers.memoize(
+          () ->
+              allOf(
+                  parentNode(
+                      anyOf(
+                          AbstractReturnValueIgnored::isVoidReturningLambdaExpression,
+                          kindIs(Kind.EXPRESSION_STATEMENT))),
+                  not((t, s) -> isVoidType(getType(t), s)),
+                  specializedMatcher(),
+                  not(AbstractReturnValueIgnored::mockitoInvocation),
+                  not((t, s) -> allowInExceptionThrowers() && expectedExceptionTest(t, s))));
+
+  private final java.util.function.Supplier<Matcher<MemberReferenceTree>>
+      memberReferenceTreeMatcher =
+          Suppliers.memoize(
+              () ->
+                  allOf(
+                      (t, s) -> t.getMode() == ReferenceMode.INVOKE,
+                      AbstractReturnValueIgnored::isVoidReturningMethodReferenceExpression,
+                      // Skip cases where the method we're referencing really does return void.
+                      // We're only looking for cases where the referenced method does not return
+                      // void, but it's being used on a void-returning functional interface.
+                      not((t, s) -> isVoidType(getType(t), s)),
+                      not(
+                          (t, s) ->
+                              allowInExceptionThrowers()
+                                  && isThrowingFunctionalInterface(
+                                      ((JCMemberReference) t).type, s)),
+                      specializedMatcher()));
 
   @Override
   public Description matchMethodInvocation(
       MethodInvocationTree methodInvocationTree, VisitorState state) {
-    if (allOf(
-            parentNode(
-                anyOf(
-                    AbstractReturnValueIgnored::isVoidReturningLambdaExpression,
-                    Matchers.kindIs(Kind.EXPRESSION_STATEMENT))),
-            not((t, s) -> ASTHelpers.isVoidType(ASTHelpers.getType(t), s)),
-            specializedMatcher(),
-            not(AbstractReturnValueIgnored::mockitoInvocation),
-            not((t, s) -> allowInExceptionThrowers() && expectedExceptionTest(t, s)))
-        .matches(methodInvocationTree, state)) {
-      return describeReturnValueIgnored(methodInvocationTree, state);
-    }
-    return Description.NO_MATCH;
+    return methodInvocationMatcher.get().matches(methodInvocationTree, state)
+        ? describeReturnValueIgnored(methodInvocationTree, state)
+        : NO_MATCH;
   }
 
   @Override
   public Description matchMemberReference(MemberReferenceTree tree, VisitorState state) {
-    if (allOf(
-            (t, s) -> t.getMode() == ReferenceMode.INVOKE,
-            AbstractReturnValueIgnored::isVoidReturningMethodReferenceExpression,
-            // Skip cases where the method we're referencing really does return void. We're only
-            // looking for cases where the referenced method does not return void, but it's being
-            // used on a void-returning functional interface.
-            not((t, s) -> ASTHelpers.isVoidType(ASTHelpers.getSymbol(tree).getReturnType(), s)),
-            not(
-                (t, s) ->
-                    allowInExceptionThrowers()
-                        && isThrowingFunctionalInterface(s, ((JCMemberReference) t).type)),
-            specializedMatcher())
-        .matches(tree, state)) {
-      return describeReturnValueIgnored(tree, state);
-    }
-
-    return Description.NO_MATCH;
+    return memberReferenceTreeMatcher.get().matches(tree, state)
+        ? describeReturnValueIgnored(tree, state)
+        : NO_MATCH;
   }
 
   private static boolean isVoidReturningMethodReferenceExpression(
@@ -109,11 +123,8 @@ public abstract class AbstractReturnValueIgnored extends BugChecker
   }
 
   private static boolean isVoidReturningLambdaExpression(Tree tree, VisitorState state) {
-    if (!(tree instanceof LambdaExpressionTree)) {
-      return false;
-    }
-
-    return functionalInterfaceReturnsExactlyVoid(((JCLambda) tree).type, state);
+    return tree instanceof LambdaExpressionTree
+        && functionalInterfaceReturnsExactlyVoid(getType(tree), state);
   }
 
   /**
@@ -128,51 +139,46 @@ public abstract class AbstractReturnValueIgnored extends BugChecker
   }
 
   private static boolean methodCallInDeclarationOfThrowingRunnable(VisitorState state) {
-    // Find the nearest definitional context for this method invocation
-    // (i.e.: the nearest surrounding class or lambda)
-    Tree tree = null;
-    out:
-    for (Tree t : state.getPath()) {
-      switch (t.getKind()) {
-        case LAMBDA_EXPRESSION:
-        case CLASS:
-          tree = t;
-          break out;
-        default: // fall out, to loop again
-      }
-    }
-
-    if (tree == null) {
-      // Huh. Shouldn't happen.
-      return false;
-    }
-    return isThrowingFunctionalInterface(state, ASTHelpers.getType(tree));
+    return stream(state.getPath())
+        // Find the nearest definitional context for this method invocation
+        // (i.e.: the nearest surrounding class or lambda)
+        .filter(t -> t.getKind() == Kind.LAMBDA_EXPRESSION || t.getKind() == Kind.CLASS)
+        .findFirst()
+        .map(t -> isThrowingFunctionalInterface(getType(t), state))
+        // This shouldn't happen.
+        // TODO(ghm): Throw an exception for this impossible situation.
+        .orElse(false);
   }
 
-  static boolean isThrowingFunctionalInterface(VisitorState state, Type clazzType) {
-    return CLASSES_CONSIDERED_THROWING.stream()
-        .anyMatch(t -> ASTHelpers.isSubtype(clazzType, state.getTypeFromString(t), state));
+  static boolean isThrowingFunctionalInterface(Type clazzType, VisitorState state) {
+    return CLASSES_CONSIDERED_THROWING.get(state).stream()
+        .anyMatch(t -> isSubtype(clazzType, t, state));
   }
 
   /**
-   * {@code @FunctionalInterface}'s that are generally used as a lambda expression for 'a block of
+   * {@link FunctionalInterface}s that are generally used as a lambda expression for 'a block of
    * code that's going to fail', e.g.:
    *
    * <p>{@code assertThrows(FooException.class, () -> myCodeThatThrowsAnException());
    * errorCollector.checkThrows(FooException.class, () -> myCodeThatThrowsAnException()); }
-   *
-   * <p>// TODO(glorioso): Consider a meta-annotation like @LikelyToThrow instead/in addition?
    */
-  private static final ImmutableSet<String> CLASSES_CONSIDERED_THROWING =
-      ImmutableSet.of(
-          "org.junit.function.ThrowingRunnable",
-          "org.junit.jupiter.api.function.Executable",
-          "org.assertj.core.api.ThrowableAssert$ThrowingCallable",
-          "com.google.devtools.build.lib.testutil.MoreAsserts$ThrowingRunnable",
-          "com.google.truth.ExpectFailure.AssertionCallback",
-          "com.google.truth.ExpectFailure.DelegatedAssertionCallback",
-          "com.google.truth.ExpectFailure.StandardSubjectBuilderCallback",
-          "com.google.truth.ExpectFailure.SimpleSubjectBuilderCallback");
+  // TODO(glorioso): Consider a meta-annotation like @LikelyToThrow instead/in addition?
+  private static final com.google.errorprone.suppliers.Supplier<ImmutableSet<Type>>
+      CLASSES_CONSIDERED_THROWING =
+          VisitorState.memoize(
+              state ->
+                  Stream.of(
+                          "org.junit.function.ThrowingRunnable",
+                          "org.junit.jupiter.api.function.Executable",
+                          "org.assertj.core.api.ThrowableAssert$ThrowingCallable",
+                          "com.google.devtools.build.lib.testutil.MoreAsserts$ThrowingRunnable",
+                          "com.google.truth.ExpectFailure.AssertionCallback",
+                          "com.google.truth.ExpectFailure.DelegatedAssertionCallback",
+                          "com.google.truth.ExpectFailure.StandardSubjectBuilderCallback",
+                          "com.google.truth.ExpectFailure.SimpleSubjectBuilderCallback")
+                      .map(state::getTypeFromString)
+                      .filter(Objects::nonNull)
+                      .collect(toImmutableSet()));
 
   /**
    * Match whatever additional conditions concrete subclasses want to match (a list of known
@@ -211,7 +217,7 @@ public abstract class AbstractReturnValueIgnored extends BugChecker
         ASTHelpers.getReturnType(((JCMethodInvocation) methodInvocationTree).getMethodSelect());
 
     Fix fix;
-    Symbol symbol = ASTHelpers.getSymbol(identifierExpr);
+    Symbol symbol = getSymbol(identifierExpr);
     if (identifierExpr != null
         && symbol != null
         && !symbol.name.contentEquals("this")
@@ -236,23 +242,6 @@ public abstract class AbstractReturnValueIgnored extends BugChecker
   protected Description describeReturnValueIgnored(
       MemberReferenceTree memberReferenceTree, VisitorState state) {
     return describeMatch(memberReferenceTree);
-  }
-
-  /** Allow return values to be ignored in tests that expect an exception to be thrown. */
-  static boolean expectedExceptionTest(Tree tree, VisitorState state) {
-    // Allow unused return values in tests that check for thrown exceptions, e.g.:
-    //
-    // try {
-    //   Foo.newFoo(-1);
-    //   fail();
-    // } catch (IllegalArgumentException expected) {
-    // }
-    //
-    StatementTree statement = ASTHelpers.findEnclosingNode(state.getPath(), StatementTree.class);
-    if (statement != null && EXPECTED_EXCEPTION_MATCHER.matches(statement, state)) {
-      return true;
-    }
-    return false;
   }
 
   private static final Matcher<ExpressionTree> FAIL_METHOD =
@@ -282,6 +271,20 @@ public abstract class AbstractReturnValueIgnored extends BugChecker
               anyOf(isLastStatementInBlock(), parentNode(kindIs(Kind.LAMBDA_EXPRESSION))),
               // Within the context of a ThrowingRunnable/Executable:
               (t, s) -> methodCallInDeclarationOfThrowingRunnable(s)));
+
+  /** Allow return values to be ignored in tests that expect an exception to be thrown. */
+  static boolean expectedExceptionTest(Tree tree, VisitorState state) {
+    // Allow unused return values in tests that check for thrown exceptions, e.g.:
+    //
+    // try {
+    //   Foo.newFoo(-1);
+    //   fail();
+    // } catch (IllegalArgumentException expected) {
+    // }
+    //
+    StatementTree statement = ASTHelpers.findEnclosingNode(state.getPath(), StatementTree.class);
+    return statement != null && EXPECTED_EXCEPTION_MATCHER.matches(statement, state);
+  }
 
   private static final Matcher<ExpressionTree> MOCKITO_MATCHER =
       anyOf(
