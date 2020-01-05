@@ -38,7 +38,7 @@
     <javac.version>9+181-r4173-1</javac.version>
     <autovalue.version>1.5.3</autovalue.version>
     <junit.version>4.13-beta-1</junit.version>
-    <dataflow.version>3.0.0</dataflow.version>
+    <dataflow.version>3.1.0</dataflow.version>
     <mockito.version>2.25.0</mockito.version>
     <compile.testing.version>0.18</compile.testing.version>
     <caffeine.version>2.7.0</caffeine.version>
