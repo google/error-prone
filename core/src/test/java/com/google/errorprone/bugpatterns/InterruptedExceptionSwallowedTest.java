@@ -18,7 +18,6 @@ package com.google.errorprone.bugpatterns;
 
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -152,7 +151,6 @@ public final class InterruptedExceptionSwallowedTest {
         .doTest();
   }
 
-  @Ignore("Not implemented yet") // TODO(b/147102301)
   @Test
   public void thrownByClose_swallowedSilently() {
     compilationHelper

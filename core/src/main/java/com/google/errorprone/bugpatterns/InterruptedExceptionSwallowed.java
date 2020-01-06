@@ -50,7 +50,6 @@ import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.ThrowTree;
-import com.sun.source.tree.Tree;
 import com.sun.source.tree.TryTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreeScanner;
@@ -155,7 +154,7 @@ public final class InterruptedExceptionSwallowed extends BugChecker
         return NO_MATCH;
       }
       if (caughtTypes.stream().anyMatch(t -> isSubtype(interrupted, t, state))) {
-        ImmutableSet<Type> thrownExceptions = getThrownExceptions(tree.getBlock(), state);
+        ImmutableSet<Type> thrownExceptions = getThrownExceptions(tree, state);
         if (thrownExceptions.stream().anyMatch(t -> isSubtype(t, interrupted, state))
             && !blockChecksForInterruptedException(catchTree.getBlock(), state)
             && !isSuppressed(catchTree.getParameter())) {
@@ -196,9 +195,21 @@ public final class InterruptedExceptionSwallowed extends BugChecker
         }.scan(block, null));
   }
 
-  private static ImmutableSet<Type> getThrownExceptions(Tree tree, VisitorState state) {
+  /** Returns the exceptions thrown by {@code blockTree}. */
+  private static ImmutableSet<Type> getThrownExceptions(BlockTree blockTree, VisitorState state) {
     ScanThrownTypes scanner = new ScanThrownTypes(state);
-    scanner.scan(tree, null);
+    scanner.scan(blockTree, null);
+    return ImmutableSet.copyOf(scanner.getThrownTypes());
+  }
+
+  /**
+   * Returns the exceptions that need to be handled by {@code tryTree}'s catch blocks, or be
+   * propagated out.
+   */
+  private static ImmutableSet<Type> getThrownExceptions(TryTree tryTree, VisitorState state) {
+    ScanThrownTypes scanner = new ScanThrownTypes(state);
+    scanner.scanResources(tryTree);
+    scanner.scan(tryTree.getBlock(), null);
     return ImmutableSet.copyOf(scanner.getThrownTypes());
   }
 
@@ -231,9 +242,7 @@ public final class InterruptedExceptionSwallowed extends BugChecker
     @Override
     public Void visitTry(TryTree tree, Void unused) {
       thrownTypes.push(new HashSet<>());
-      inResources = true;
-      scan(tree.getResources(), null);
-      inResources = false;
+      scanResources(tree);
       scan(tree.getBlock(), null);
       // Make two passes over the `catch` blocks: once to remove caught exceptions, and once to
       // add thrown ones. We can't do this in one step as an exception could be caught but later
@@ -251,6 +260,12 @@ public final class InterruptedExceptionSwallowed extends BugChecker
       Set<Type> fromBlock = thrownTypes.pop();
       getThrownTypes().addAll(fromBlock);
       return null;
+    }
+
+    public void scanResources(TryTree tree) {
+      inResources = true;
+      scan(tree.getResources(), null);
+      inResources = false;
     }
 
     @Override
