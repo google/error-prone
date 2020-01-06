@@ -16,6 +16,8 @@
 
 package com.google.errorprone.bugpatterns.testdata;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import java.util.List;
 import java.util.stream.Stream;
 import javax.annotation.Nullable;
@@ -183,6 +185,22 @@ class UnnecessaryBoxedVariableCases {
     int i = 0;
     int j = 0;
     int k = i + j;
+  }
+
+  static int positive_nullChecked_expression(int i) {
+    return i;
+  }
+
+  static int positive_nullChecked_expression_message(int i) {
+    return i;
+  }
+
+  static int positive_nullChecked_statement(int i) {
+    return i;
+  }
+
+  static int positive_nullChecked_statement_message(int i) {
+    return i;
   }
 
   private void methodPrimitiveArg(int i) {}

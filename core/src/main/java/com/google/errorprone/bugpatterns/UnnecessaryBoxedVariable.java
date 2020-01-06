@@ -16,6 +16,11 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.errorprone.matchers.Matchers.anyOf;
+import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
+import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
+
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.BugPattern.SeverityLevel;
@@ -24,7 +29,6 @@ import com.google.errorprone.bugpatterns.BugChecker.VariableTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
-import com.google.errorprone.matchers.method.MethodMatchers;
 import com.google.errorprone.util.ASTHelpers;
 import com.google.errorprone.util.ASTHelpers.TargetType;
 import com.sun.source.tree.AnnotationTree;
@@ -38,6 +42,7 @@ import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.ReturnTree;
+import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.VariableTree;
@@ -69,9 +74,7 @@ import javax.lang.model.element.ElementKind;
     severity = SeverityLevel.SUGGESTION)
 public class UnnecessaryBoxedVariable extends BugChecker implements VariableTreeMatcher {
   private static final Matcher<ExpressionTree> VALUE_OF_MATCHER =
-      MethodMatchers.staticMethod()
-          .onClass(UnnecessaryBoxedVariable::isBoxableType)
-          .named("valueOf");
+      staticMethod().onClass(UnnecessaryBoxedVariable::isBoxableType).named("valueOf");
 
   @Override
   public Description matchVariable(VariableTree tree, VisitorState state) {
@@ -120,6 +123,7 @@ public class UnnecessaryBoxedVariable extends BugChecker implements VariableTree
     fixBuilder.replace(tree.getType(), unboxed.get().tsym.getSimpleName().toString());
 
     fixMethodInvocations(scanner.fixableSimpleMethodInvocations, fixBuilder, state);
+    fixNullCheckInvocations(scanner.fixableNullCheckInvocations, fixBuilder, state);
     fixCastingInvocations(
         scanner.fixableCastMethodInvocations, enclosingMethod.get(), fixBuilder, state);
 
@@ -153,6 +157,28 @@ public class UnnecessaryBoxedVariable extends BugChecker implements VariableTree
       return Optional.empty();
     }
     return Optional.of(unboxed);
+  }
+
+  private static void fixNullCheckInvocations(
+      List<TreePath> nullCheckInvocations, SuggestedFix.Builder fixBuilder, VisitorState state) {
+    for (TreePath pathForTree : nullCheckInvocations) {
+      checkArgument(pathForTree.getLeaf() instanceof MethodInvocationTree);
+      MethodInvocationTree methodInvocation = (MethodInvocationTree) pathForTree.getLeaf();
+
+      TargetType targetType = ASTHelpers.targetType(state.withPath(pathForTree));
+      if (targetType == null) {
+        // If the check is the only thing in a statement, remove the statement.
+        StatementTree statementTree =
+            ASTHelpers.findEnclosingNode(pathForTree, StatementTree.class);
+        if (statementTree != null) {
+          fixBuilder.delete(statementTree);
+        }
+      } else {
+        // If it's an expression, we can replace simply with the first argument.
+        fixBuilder.replace(
+            methodInvocation, state.getSourceForNode(methodInvocation.getArguments().get(0)));
+      }
+    }
   }
 
   private static void fixMethodInvocations(
@@ -268,11 +294,11 @@ public class UnnecessaryBoxedVariable extends BugChecker implements VariableTree
   private static class FindBoxedUsagesScanner extends TreePathScanner<Void, Void> {
     // Method invocations like V.hashCode() can be replaced with TypeOfV.hashCode(v).
     private static final Matcher<ExpressionTree> SIMPLE_METHOD_MATCH =
-        MethodMatchers.instanceMethod().anyClass().namedAnyOf("hashCode", "toString");
+        instanceMethod().anyClass().namedAnyOf("hashCode", "toString");
 
     // Method invocations like V.intValue() can be replaced with (int) v.
     private static final Matcher<ExpressionTree> CAST_METHOD_MATCH =
-        MethodMatchers.instanceMethod()
+        instanceMethod()
             .onClass(UnnecessaryBoxedVariable::isBoxableType)
             .namedAnyOf(
                 "byteValue",
@@ -283,10 +309,18 @@ public class UnnecessaryBoxedVariable extends BugChecker implements VariableTree
                 "doubleValue",
                 "booleanValue");
 
+    // Method invocations that check (and throw) if the value is potentially null.
+    private static final Matcher<ExpressionTree> NULL_CHECK_MATCH =
+        anyOf(
+            staticMethod().onClass("com.google.common.base.Preconditions").named("checkNotNull"),
+            staticMethod().onClass("com.google.common.base.Verify").named("verifyNonNull"),
+            staticMethod().onClass("java.util.Objects").named("requireNonNull"));
+
     private final VarSymbol varSymbol;
     private final TreePath path;
     private final VisitorState state;
     private final List<MethodInvocationTree> fixableSimpleMethodInvocations = new ArrayList<>();
+    private final List<TreePath> fixableNullCheckInvocations = new ArrayList<>();
     private final List<MethodInvocationTree> fixableCastMethodInvocations = new ArrayList<>();
 
     private boolean boxedUsageFound;
@@ -361,24 +395,32 @@ public class UnnecessaryBoxedVariable extends BugChecker implements VariableTree
 
     @Override
     public Void visitMethodInvocation(MethodInvocationTree node, Void unused) {
-      Tree receiver = ASTHelpers.getReceiver(node);
-      if (receiver != null) {
-        Symbol nodeSymbol = ASTHelpers.getSymbol(receiver);
-        if (Objects.equals(nodeSymbol, varSymbol)) {
+      if (NULL_CHECK_MATCH.matches(node, state)) {
+        Symbol firstArgSymbol =
+            ASTHelpers.getSymbol(ASTHelpers.stripParentheses(node.getArguments().get(0)));
+        if (Objects.equals(firstArgSymbol, varSymbol)) {
           used = true;
-          if (SIMPLE_METHOD_MATCH.matches(node, state)) {
-            fixableSimpleMethodInvocations.add(node);
-            return null;
-          }
-          if (CAST_METHOD_MATCH.matches(node, state)) {
-            fixableCastMethodInvocations.add(node);
-            return null;
-          }
-
-          boxedUsageFound = true;
+          fixableNullCheckInvocations.add(getCurrentPath());
           return null;
         }
       }
+
+      Tree receiver = ASTHelpers.getReceiver(node);
+      if (receiver != null && Objects.equals(ASTHelpers.getSymbol(receiver), varSymbol)) {
+        used = true;
+        if (SIMPLE_METHOD_MATCH.matches(node, state)) {
+          fixableSimpleMethodInvocations.add(node);
+          return null;
+        }
+        if (CAST_METHOD_MATCH.matches(node, state)) {
+          fixableCastMethodInvocations.add(node);
+          return null;
+        }
+
+        boxedUsageFound = true;
+        return null;
+      }
+
       return super.visitMethodInvocation(node, unused);
     }
 
