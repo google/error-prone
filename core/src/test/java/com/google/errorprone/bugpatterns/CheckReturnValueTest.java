@@ -94,7 +94,10 @@ public class CheckReturnValueTest {
   @Test
   public void testPackageAnnotation() {
     compilationHelper
-        .addSourceLines("package-info.java", "@javax.annotation.CheckReturnValue", "package lib;")
+        .addSourceLines(
+            "package-info.java", //
+            "@javax.annotation.CheckReturnValue",
+            "package lib;")
         .addSourceLines(
             "lib/Lib.java",
             "package lib;",
@@ -137,14 +140,23 @@ public class CheckReturnValueTest {
   @Test
   public void testVoidReturningMethodInAnnotatedPackage() {
     compilationHelper
-        .addSourceLines("package-info.java", "@javax.annotation.CheckReturnValue", "package lib;")
+        .addSourceLines(
+            "package-info.java", //
+            "@javax.annotation.CheckReturnValue",
+            "package lib;")
         .addSourceLines(
             "lib/Lib.java",
             "package lib;",
             "public class Lib {",
             "  public static void f() {}",
             "}")
-        .addSourceLines("Test.java", "class Test {", "  void m() {", "    lib.Lib.f();", "  }", "}")
+        .addSourceLines(
+            "Test.java", //
+            "class Test {",
+            "  void m() {",
+            "    lib.Lib.f();",
+            "  }",
+            "}")
         .doTest();
   }
 
@@ -221,7 +233,13 @@ public class CheckReturnValueTest {
             "  @com.google.errorprone.annotations.CanIgnoreReturnValue",
             "  public static int f() { return 42; }",
             "}")
-        .addSourceLines("Test.java", "class Test {", "  void m() {", "    lib.Lib.f();", "  }", "}")
+        .addSourceLines(
+            "Test.java", //
+            "class Test {",
+            "  void m() {",
+            "    lib.Lib.f();",
+            "  }",
+            "}")
         .doTest();
   }
 
@@ -236,7 +254,13 @@ public class CheckReturnValueTest {
             "  @com.google.errorprone.annotations.CanIgnoreReturnValue",
             "  public static int f() { return 42; }",
             "}")
-        .addSourceLines("Test.java", "class Test {", "  void m() {", "    lib.Lib.f();", "  }", "}")
+        .addSourceLines(
+            "Test.java", //
+            "class Test {",
+            "  void m() {",
+            "    lib.Lib.f();",
+            "  }",
+            "}")
         .doTest();
   }
 
@@ -316,7 +340,13 @@ public class CheckReturnValueTest {
             "public class Lib {",
             "  public static int f() { return 42; }",
             "}")
-        .addSourceLines("Test.java", "class Test {", "  void m() {", "    lib.Lib.f();", "  }", "}")
+        .addSourceLines(
+            "Test.java", //
+            "class Test {",
+            "  void m() {",
+            "    lib.Lib.f();",
+            "  }",
+            "}")
         .doTest();
   }
 
@@ -361,7 +391,13 @@ public class CheckReturnValueTest {
             "    return null;",
             "  }",
             "}")
-        .addSourceLines("Test.java", "class Test {", "  void m() {", "    lib.Lib.f();", "  }", "}")
+        .addSourceLines(
+            "Test.java", //
+            "class Test {",
+            "  void m() {",
+            "    lib.Lib.f();",
+            "  }",
+            "}")
         .doTest();
   }
 
@@ -566,6 +602,25 @@ public class CheckReturnValueTest {
             "class Test {",
             "  void m() {",
             "    inOrder().verify(new Lib()).f();",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void ignoreVoidReturningMethodReferences() {
+    compilationHelper
+        .addSourceLines(
+            "Lib.java",
+            "@javax.annotation.CheckReturnValue",
+            "public class Lib {",
+            "  public static void consume(Object o) {}",
+            "}")
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  void m(java.util.List<Object> xs) {",
+            "    xs.forEach(Lib::consume);",
             "  }",
             "}")
         .doTest();
