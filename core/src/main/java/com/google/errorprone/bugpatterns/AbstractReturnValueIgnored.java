@@ -94,7 +94,7 @@ public abstract class AbstractReturnValueIgnored extends BugChecker
                       // Skip cases where the method we're referencing really does return void.
                       // We're only looking for cases where the referenced method does not return
                       // void, but it's being used on a void-returning functional interface.
-                      not((t, s) -> isVoidType(getType(t), s)),
+                      not((t, s) -> isVoidType(getSymbol(t).getReturnType(), s)),
                       not(
                           (t, s) ->
                               allowInExceptionThrowers()
