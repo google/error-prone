@@ -784,9 +784,6 @@ Including the first argument of checkNotNull in the failure message is not usefu
 __[PreconditionsInvalidPlaceholder](bugpattern/PreconditionsInvalidPlaceholder)__<br>
 Preconditions only accepts the %s placeholder in error message strings
 
-__[PreferJavaTimeOverload](bugpattern/PreferJavaTimeOverload)__<br>
-Prefer using java.time-based APIs when available. Note that this checker does not and cannot guarantee that the overloads have equivalent semantics, but that is generally the case with overloaded methods.
-
 __[PrimitiveAtomicReference](bugpattern/PrimitiveAtomicReference)__<br>
 Using compareAndSet with boxed primitives is dangerous, as reference rather than value equality is used. Consider using AtomicInteger, AtomicLong, or AtomicBoolean instead.
 
@@ -1103,6 +1100,9 @@ Static import of member uses non-canonical name
 __[NullableDereference](bugpattern/NullableDereference)__<br>
 Dereference of possibly-null value
 
+__[PreferJavaTimeOverload](bugpattern/PreferJavaTimeOverload)__<br>
+Prefer using java.time-based APIs when available. Note that this checker does not and cannot guarantee that the overloads have equivalent semantics, but that is generally the case with overloaded methods.
+
 __[PrimitiveArrayPassedToVarargsMethod](bugpattern/PrimitiveArrayPassedToVarargsMethod)__<br>
 Passing a primitive array to a varargs method is usually wrong
 
@@ -1130,8 +1130,8 @@ A static variable or method should be qualified with a class name, not expressio
 __[StringEquality](bugpattern/StringEquality)__<br>
 String comparison using reference equality instead of value equality
 
-__[StronglyTypeDuration](bugpattern/StronglyTypeDuration)__<br>
-This primitive integral type is only used to construct Durations. It would be clearer to strongly type the field instead.
+__[StronglyTypeTime](bugpattern/StronglyTypeTime)__<br>
+This primitive integral type is only used to construct time types. It would be clearer to strongly type the field instead.
 
 __[SystemExitOutsideMain](bugpattern/SystemExitOutsideMain)__<br>
 Code that contains System.exit() is untestable.

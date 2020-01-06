@@ -153,11 +153,15 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 </tr>
 <tr id="i0" class="altColor">
 <td class="colFirst"><code>abstract <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/bugpatterns/StaticImports.StaticImportInfo.html#canonicalName--">canonicalName</a></span>()</code>&nbsp;</td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/bugpatterns/StaticImports.StaticImportInfo.html#canonicalName--">canonicalName</a></span>()</code>
+<div class="block">The fully-qualified canonical name of the type.</div>
+</td>
 </tr>
 <tr id="i1" class="rowColor">
 <td class="colFirst"><code>abstract <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/bugpatterns/StaticImports.StaticImportInfo.html#importedName--">importedName</a></span>()</code>&nbsp;</td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/bugpatterns/StaticImports.StaticImportInfo.html#importedName--">importedName</a></span>()</code>
+<div class="block">The fully qualified name used to import the type (possibly non-canonical).</div>
+</td>
 </tr>
 <tr id="i2" class="altColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a></code></td>
@@ -168,7 +172,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <tr id="i3" class="rowColor">
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/google/errorprone/bugpatterns/StaticImports.StaticImportInfo.html#isCanonical--">isCanonical</a></span>()</code>
-<div class="block">Returns true if the import is canonical, i.e.</div>
+<div class="block">Returns whether the import is canonical, i.e.</div>
 </td>
 </tr>
 <tr id="i4" class="altColor">
@@ -229,10 +233,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <li class="blockList">
 <h4>importedName</h4>
 <pre>public abstract&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;importedName()</pre>
-<dl>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>the fully qualified name used to import the type (possibly non-canonical)</dd>
-</dl>
+<div class="block">The fully qualified name used to import the type (possibly non-canonical).</div>
 </li>
 </ul>
 <a name="canonicalName--">
@@ -242,10 +243,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <li class="blockList">
 <h4>canonicalName</h4>
 <pre>public abstract&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;canonicalName()</pre>
-<dl>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>the fully-qualified canonical name of the type</dd>
-</dl>
+<div class="block">The fully-qualified canonical name of the type.</div>
 </li>
 </ul>
 <a name="simpleName--">
@@ -275,7 +273,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <li class="blockList">
 <h4>isCanonical</h4>
 <pre>public&nbsp;boolean&nbsp;isCanonical()</pre>
-<div class="block">Returns true if the import is canonical, i.e. the fully qualified name used to import the
+<div class="block">Returns whether the import is canonical, i.e. the fully qualified name used to import the
  type matches the scopes it was declared in.</div>
 </li>
 </ul>

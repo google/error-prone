@@ -1498,7 +1498,9 @@
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/BugChecker.html#canonicalName--">canonicalName()</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/StaticImports.StaticImportInfo.html#canonicalName--">canonicalName()</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/StaticImports.StaticImportInfo.html" title="class in com.google.errorprone.bugpatterns">StaticImports.StaticImportInfo</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">The fully-qualified canonical name of the type.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/matchers/Suppressible.html#canonicalName--">canonicalName()</a></span> - Method in interface com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/Suppressible.html" title="interface in com.google.errorprone.matchers">Suppressible</a></dt>
 <dd>
 <div class="block">The canonical name of the check.</div>
@@ -5179,7 +5181,9 @@
 <dt><span class="memberNameLink"><a href="com/google/errorprone/apply/ImportOrganizer.Import.html#Import--">Import()</a></span> - Constructor for class com.google.errorprone.apply.<a href="com/google/errorprone/apply/ImportOrganizer.Import.html" title="class in com.google.errorprone.apply">ImportOrganizer.Import</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/StaticImports.StaticImportInfo.html#importedName--">importedName()</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/StaticImports.StaticImportInfo.html" title="class in com.google.errorprone.bugpatterns">StaticImports.StaticImportInfo</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">The fully qualified name used to import the type (possibly non-canonical).</div>
+</dd>
 <dt><a href="com/google/errorprone/ImportOrderParser.html" title="class in com.google.errorprone"><span class="typeNameLink">ImportOrderParser</span></a> - Class in <a href="com/google/errorprone/package-summary.html">com.google.errorprone</a></dt>
 <dd>
 <div class="block">Parse import order strings.</div>
@@ -5599,7 +5603,7 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/StaticImports.StaticImportInfo.html#isCanonical--">isCanonical()</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/StaticImports.StaticImportInfo.html" title="class in com.google.errorprone.bugpatterns">StaticImports.StaticImportInfo</a></dt>
 <dd>
-<div class="block">Returns true if the import is canonical, i.e.</div>
+<div class="block">Returns whether the import is canonical, i.e.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/util/ASTHelpers.html#isCastable-com.sun.tools.javac.code.Type-com.sun.tools.javac.code.Type-com.google.errorprone.VisitorState-">isCastable(Type, Type, VisitorState)</a></span> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/ASTHelpers.html" title="class in com.google.errorprone.util">ASTHelpers</a></dt>
 <dd>
@@ -5612,6 +5616,10 @@
 <dt><span class="memberNameLink"><a href="com/google/errorprone/matchers/JUnitMatchers.html#isConcreteClassWithoutRunWith">isConcreteClassWithoutRunWith</a></span> - Static variable in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/JUnitMatchers.html" title="class in com.google.errorprone.matchers">JUnitMatchers</a></dt>
 <dd>
 <div class="block">Match a class which appears to be missing a @RunWith annotation.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/util/ASTHelpers.html#isConsideredFinal-com.sun.tools.javac.code.Symbol-">isConsideredFinal(Symbol)</a></span> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/ASTHelpers.html" title="class in com.google.errorprone.util">ASTHelpers</a></dt>
+<dd>
+<div class="block">Returns whether <code>symbol</code> is final or effectively final.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/predicates/TypePredicates.html#isDescendantOf-com.google.errorprone.suppliers.Supplier-">isDescendantOf(Supplier&lt;Type&gt;)</a></span> - Static method in class com.google.errorprone.predicates.<a href="com/google/errorprone/predicates/TypePredicates.html" title="class in com.google.errorprone.predicates">TypePredicates</a></dt>
 <dd>
@@ -6700,7 +6708,7 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/threadsafety/ImmutableRefactoring.html#matchCompilationUnit-com.sun.source.tree.CompilationUnitTree-com.google.errorprone.VisitorState-">matchCompilationUnit(CompilationUnitTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/ImmutableRefactoring.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ImmutableRefactoring</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/time/StronglyTypeDuration.html#matchCompilationUnit-com.sun.source.tree.CompilationUnitTree-com.google.errorprone.VisitorState-">matchCompilationUnit(CompilationUnitTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.time.<a href="com/google/errorprone/bugpatterns/time/StronglyTypeDuration.html" title="class in com.google.errorprone.bugpatterns.time">StronglyTypeDuration</a></dt>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/time/StronglyTypeTime.html#matchCompilationUnit-com.sun.source.tree.CompilationUnitTree-com.google.errorprone.VisitorState-">matchCompilationUnit(CompilationUnitTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.time.<a href="com/google/errorprone/bugpatterns/time/StronglyTypeTime.html" title="class in com.google.errorprone.bugpatterns.time">StronglyTypeTime</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/UnusedMethod.html#matchCompilationUnit-com.sun.source.tree.CompilationUnitTree-com.google.errorprone.VisitorState-">matchCompilationUnit(CompilationUnitTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/UnusedMethod.html" title="class in com.google.errorprone.bugpatterns">UnusedMethod</a></dt>
 <dd>&nbsp;</dd>
@@ -9995,8 +10003,6 @@
 <dd>
 <div class="block">Logic for inspecting static imports used by <a href="com/google/errorprone/bugpatterns/NonCanonicalStaticImport.html" title="class in com.google.errorprone.bugpatterns"><code>NonCanonicalStaticImport</code></a>, <a href="com/google/errorprone/bugpatterns/NonCanonicalStaticMemberImport.html" title="class in com.google.errorprone.bugpatterns"><code>NonCanonicalStaticMemberImport</code></a>, and <a href="com/google/errorprone/bugpatterns/UnnecessaryStaticImport.html" title="class in com.google.errorprone.bugpatterns"><code>UnnecessaryStaticImport</code></a>.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/StaticImports.html#StaticImports--">StaticImports()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/StaticImports.html" title="class in com.google.errorprone.bugpatterns">StaticImports</a></dt>
-<dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/StaticImports.StaticImportInfo.html" title="class in com.google.errorprone.bugpatterns"><span class="typeNameLink">StaticImports.StaticImportInfo</span></a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
 <dd>
 <div class="block">Information about a static import.</div>
@@ -10086,11 +10092,11 @@
 <dd>
 <div class="block">Given an ExpressionTree, removes any enclosing parentheses.</div>
 </dd>
-<dt><a href="com/google/errorprone/bugpatterns/time/StronglyTypeDuration.html" title="class in com.google.errorprone.bugpatterns.time"><span class="typeNameLink">StronglyTypeDuration</span></a> - Class in <a href="com/google/errorprone/bugpatterns/time/package-summary.html">com.google.errorprone.bugpatterns.time</a></dt>
+<dt><a href="com/google/errorprone/bugpatterns/time/StronglyTypeTime.html" title="class in com.google.errorprone.bugpatterns.time"><span class="typeNameLink">StronglyTypeTime</span></a> - Class in <a href="com/google/errorprone/bugpatterns/time/package-summary.html">com.google.errorprone.bugpatterns.time</a></dt>
 <dd>
-<div class="block">Flags fields which would be better expressed as Durations rather than primitive integers.</div>
+<div class="block">Flags fields which would be better expressed as time types rather than primitive integers.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/time/StronglyTypeDuration.html#StronglyTypeDuration--">StronglyTypeDuration()</a></span> - Constructor for class com.google.errorprone.bugpatterns.time.<a href="com/google/errorprone/bugpatterns/time/StronglyTypeDuration.html" title="class in com.google.errorprone.bugpatterns.time">StronglyTypeDuration</a></dt>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/time/StronglyTypeTime.html#StronglyTypeTime--">StronglyTypeTime()</a></span> - Constructor for class com.google.errorprone.bugpatterns.time.<a href="com/google/errorprone/bugpatterns/time/StronglyTypeTime.html" title="class in com.google.errorprone.bugpatterns.time">StronglyTypeTime</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/BugPattern.StandardTags.html#STYLE">STYLE</a></span> - Static variable in class com.google.errorprone.<a href="com/google/errorprone/BugPattern.StandardTags.html" title="class in com.google.errorprone">BugPattern.StandardTags</a></dt>
 <dd>
@@ -10608,7 +10614,7 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/StaticImports.html#tryCreate-com.sun.source.tree.ImportTree-com.google.errorprone.VisitorState-">tryCreate(ImportTree, VisitorState)</a></span> - Static method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/StaticImports.html" title="class in com.google.errorprone.bugpatterns">StaticImports</a></dt>
 <dd>
-<div class="block">Returns a <a href="com/google/errorprone/bugpatterns/StaticImports.html" title="class in com.google.errorprone.bugpatterns"><code>StaticImports</code></a> if the given import is a static single-type import.</div>
+<div class="block">Returns a <a href="com/google/errorprone/bugpatterns/StaticImports.StaticImportInfo.html" title="class in com.google.errorprone.bugpatterns"><code>StaticImports.StaticImportInfo</code></a> if the given import is a static single-type import.</div>
 </dd>
 <dt><a href="com/google/errorprone/bugpatterns/TryFailRefactoring.html" title="class in com.google.errorprone.bugpatterns"><span class="typeNameLink">TryFailRefactoring</span></a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
 <dd>
