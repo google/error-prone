@@ -23,6 +23,7 @@ import static com.google.common.base.Verify.verify;
 import com.google.common.base.Supplier;
 import com.google.common.base.Suppliers;
 import com.google.errorprone.BugPattern.SeverityLevel;
+import com.google.errorprone.descriptionlistener.DescriptionListeners;
 import com.google.errorprone.scanner.ErrorProneScannerTransformer;
 import com.google.errorprone.scanner.ScannerSupplier;
 import com.google.errorprone.util.ASTHelpers;
@@ -63,7 +64,7 @@ public class ErrorProneAnalyzer implements TaskListener {
         scansPlugins(scannerSupplier, errorProneOptions, context),
         errorProneOptions,
         context,
-        JavacErrorDescriptionListener.provider(context));
+        DescriptionListeners.factory(context));
   }
 
   private static Supplier<CodeTransformer> scansPlugins(
