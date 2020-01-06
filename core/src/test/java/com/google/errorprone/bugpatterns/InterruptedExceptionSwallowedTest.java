@@ -152,6 +152,26 @@ public final class InterruptedExceptionSwallowedTest {
   }
 
   @Test
+  public void thrownByClose_inherited() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.util.concurrent.Future;",
+            "class Test {",
+            "  class ThrowingParent implements AutoCloseable {",
+            "    public void close() throws InterruptedException {}",
+            "  }",
+            "  class ThrowingChild extends ThrowingParent {}",
+            "  // BUG: Diagnostic contains:",
+            "  void test() throws Exception {",
+            "    try (ThrowingChild t = new ThrowingChild()) {",
+            "    }",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void thrownByClose_swallowedSilently() {
     compilationHelper
         .addSourceLines(

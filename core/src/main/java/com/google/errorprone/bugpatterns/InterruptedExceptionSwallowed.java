@@ -16,6 +16,7 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.common.base.Verify.verify;
 import static com.google.common.collect.Iterables.getLast;
 import static com.google.errorprone.BugPattern.ProvidesFix.REQUIRES_HUMAN_ATTENTION;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
@@ -30,7 +31,6 @@ import static java.util.stream.Collectors.toCollection;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.MoreCollectors;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
@@ -39,6 +39,7 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.suppliers.Supplier;
+import com.google.errorprone.suppliers.Suppliers;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.CatchTree;
@@ -83,8 +84,6 @@ import javax.annotation.Nullable;
     documentSuppression = false)
 public final class InterruptedExceptionSwallowed extends BugChecker
     implements MethodTreeMatcher, TryTreeMatcher {
-  private static final String AUTOCLOSEABLE = "java.lang.AutoCloseable";
-
   private static final String METHOD_DESCRIPTION =
       "This method can throw InterruptedException but declares that it throws Exception/Throwable."
           + " This makes it difficult for callers to recognize the need to handle interruption"
@@ -312,20 +311,32 @@ public final class InterruptedExceptionSwallowed extends BugChecker
     }
   }
 
+  private static final Supplier<Type> AUTOCLOSEABLE =
+      Suppliers.typeFromString("java.lang.AutoCloseable");
   private static final Supplier<Name> CLOSE = VisitorState.memoize(state -> state.getName("close"));
 
   private static Optional<MethodSymbol> getCloseMethod(ClassSymbol symbol, VisitorState state) {
     Types types = state.getTypes();
-    if (!types.isAssignable(symbol.type, state.getTypeFromString(AUTOCLOSEABLE))) {
+    if (!types.isAssignable(symbol.type, AUTOCLOSEABLE.get(state))) {
       return Optional.empty();
     }
-    Name close = CLOSE.get(state);
-    return symbol.getEnclosedElements().stream()
-        .filter(sym -> sym instanceof MethodSymbol && sym.getSimpleName().equals(close))
-        .map(sym -> (MethodSymbol) sym)
-        .filter(sym -> sym.params.isEmpty())
-        .filter(sym -> !sym.isConstructor())
-        .collect(MoreCollectors.toOptional());
+    Type voidType = state.getSymtab().voidType;
+    Optional<MethodSymbol> declaredCloseMethod =
+        ASTHelpers.matchingMethods(
+                CLOSE.get(state),
+                s ->
+                    !s.isConstructor()
+                        && s.params.isEmpty()
+                        && types.isSameType(s.getReturnType(), voidType),
+                symbol.type,
+                types)
+            .findFirst();
+    verify(
+        declaredCloseMethod.isPresent(),
+        "%s implements AutoCloseable but no method named close() exists, even inherited",
+        symbol);
+
+    return declaredCloseMethod;
   }
 
   private static ImmutableList<Type> extractTypes(@Nullable Type type) {

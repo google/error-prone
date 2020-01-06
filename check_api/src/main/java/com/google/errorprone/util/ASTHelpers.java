@@ -18,6 +18,7 @@ package com.google.errorprone.util;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.errorprone.matchers.JUnitMatchers.JUNIT4_RUN_WITH_ANNOTATION;
 import static com.sun.tools.javac.code.Scope.LookupKind.NON_RECURSIVE;
 import static java.util.Objects.requireNonNull;
@@ -30,6 +31,7 @@ import com.google.common.base.CharMatcher;
 import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Streams;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.dataflow.nullnesspropagation.Nullness;
 import com.google.errorprone.dataflow.nullnesspropagation.NullnessAnalysis;
@@ -610,29 +612,48 @@ public class ASTHelpers {
    * Finds all methods in any superclass of {@code startClass} with a certain {@code name} that
    * match the given {@code predicate}.
    *
+   * @return The (possibly empty) list of methods in any superclass that match {@code predicate} and
+   *     have the given {@code name}. Results are returned least-abstract first, i.e., starting in
+   *     the {@code startClass} itself, progressing through its superclasses, and finally interfaces
+   *     in an unspecified order.
+   */
+  public static Stream<MethodSymbol> matchingMethods(
+      Name name,
+      java.util.function.Predicate<MethodSymbol> predicate,
+      Type startClass,
+      Types types) {
+    Filter<Symbol> matchesMethodPredicate =
+        sym -> sym instanceof MethodSymbol && predicate.test((MethodSymbol) sym);
+
+    // Iterate over all classes and interfaces that startClass inherits from.
+    return types.closure(startClass).stream()
+        .flatMap(
+            (Type superClass) -> {
+              // Iterate over all the methods declared in superClass.
+              TypeSymbol superClassSymbol = superClass.tsym;
+              Scope superClassSymbols = superClassSymbol.members();
+              if (superClassSymbols == null) { // Can be null if superClass is a type variable
+                return Stream.empty();
+              }
+              return Streams.stream(
+                      superClassSymbols.getSymbolsByName(
+                          name, matchesMethodPredicate, NON_RECURSIVE))
+                  // By definition of the filter, we know that the symbol is a MethodSymbol.
+                  .map(symbol -> (MethodSymbol) symbol);
+            });
+  }
+
+  /**
+   * Finds all methods in any superclass of {@code startClass} with a certain {@code name} that
+   * match the given {@code predicate}.
+   *
    * @return The (possibly empty) set of methods in any superclass that match {@code predicate} and
-   *     have the given {@code name}.
+   *     have the given {@code name}. The set's iteration order will be the same as the order
+   *     documented in {@link #matchingMethods(Name, java.util.function.Predicate, Type, Types)}.
    */
   public static Set<MethodSymbol> findMatchingMethods(
-      Name name, final Predicate<MethodSymbol> predicate, Type startClass, Types types) {
-    Filter<Symbol> matchesMethodPredicate =
-        sym -> sym instanceof MethodSymbol && predicate.apply((MethodSymbol) sym);
-
-    Set<MethodSymbol> matchingMethods = new HashSet<>();
-    // Iterate over all classes and interfaces that startClass inherits from.
-    for (Type superClass : types.closure(startClass)) {
-      // Iterate over all the methods declared in superClass.
-      TypeSymbol superClassSymbol = superClass.tsym;
-      Scope superClassSymbols = superClassSymbol.members();
-      if (superClassSymbols != null) { // Can be null if superClass is a type variable
-        for (Symbol symbol :
-            superClassSymbols.getSymbolsByName(name, matchesMethodPredicate, NON_RECURSIVE)) {
-          // By definition of the filter, we know that the symbol is a MethodSymbol.
-          matchingMethods.add((MethodSymbol) symbol);
-        }
-      }
-    }
-    return matchingMethods;
+      Name name, Predicate<MethodSymbol> predicate, Type startClass, Types types) {
+    return matchingMethods(name, predicate, startClass, types).collect(toImmutableSet());
   }
 
   /**
