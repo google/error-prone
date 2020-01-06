@@ -1,5 +1,8 @@
 provides:
-  - type-annotations
+  - type_annotations
+
+depends:
+  - parent
 
 env:
   SET_VERSION_OVERRIDE: "2.3.4-$GIT_BRANCH-SNAPSHOT"

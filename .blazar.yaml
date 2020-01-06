@@ -1,7 +1,4 @@
 provides:
-  - annotations
-
-depends:
   - parent
 
 env:
