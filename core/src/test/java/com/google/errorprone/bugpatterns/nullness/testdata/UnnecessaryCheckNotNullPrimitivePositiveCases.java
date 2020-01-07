@@ -75,9 +75,9 @@ public class UnnecessaryCheckNotNullPrimitivePositiveCases {
     Preconditions.checkNotNull(a != null);
     // BUG: Diagnostic contains: Preconditions.checkNotNull(a)
     Preconditions.checkNotNull(a == null);
-    // BUG: Diagnostic contains: Preconditions.checkState(int1 == int2)
+    // BUG: Diagnostic contains: checkState(int1 == int2)
     Preconditions.checkNotNull(int1 == int2);
-    // BUG: Diagnostic contains: Preconditions.checkState(int1 > int2)
+    // BUG: Diagnostic contains: checkState(int1 > int2)
     Preconditions.checkNotNull(int1 > int2);
     // BUG: Diagnostic contains: remove this line
     Preconditions.checkNotNull(boolean1 ? int1 : int2);
