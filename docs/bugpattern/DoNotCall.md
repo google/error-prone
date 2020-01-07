@@ -3,13 +3,8 @@ annotation (`com.google.errorprone.annotations.DoNotCall`).
 
 The check disallows invocations and method references of the annotated method.
 
-There are a few situations where this can be useful:
-
-*   methods that are required to satisfy the contract of an interface, but that
-    are not supported
-
-*   the method works, but its implementation should always be inlined into your
-    own code
+There are a few situations where this can be useful, including methods that are
+required to satisfy the contract of an interface, but that are not supported.
 
 A method annotated with `@DoNotCall` should always be `final` or `abstract`. If
 an `abstract` method is annotated `@DoNotCall` Error Prone will ensure all

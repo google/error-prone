@@ -13,9 +13,9 @@ message.
   }
 ```
 
-The fix will be highly dependent on the case in point. There may be an
-identifier associated with the message that would be useful to log, or even some
-serialized version of the entire proto.
+The fix will be highly dependent on the case at hand. There may be an identifier
+associated with the message that would be useful to log, or even some serialized
+version of the entire proto.
 
 NOTE: Logging fields of a proto will force those fields to be retained after
 optimization. This is not an issue if they're already being used, but writing a
