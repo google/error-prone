@@ -22,6 +22,7 @@ import static com.google.errorprone.BugPattern.ProvidesFix.REQUIRES_HUMAN_ATTENT
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.isSameType;
+import static com.google.errorprone.matchers.Matchers.staticMethod;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 import com.google.common.base.Verify;
@@ -43,6 +44,7 @@ import com.google.errorprone.bugpatterns.BugChecker.ReturnTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.VariableTreeMatcher;
 import com.google.errorprone.bugpatterns.RemoveUnusedImports;
 import com.google.errorprone.matchers.Description;
+import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.doctree.LinkTree;
 import com.sun.source.tree.ClassTree;
@@ -689,6 +691,113 @@ public class SuggestedFixesTest {
             "import pkg.Outer;",
             "class ReplaceReturnType {",
             "  Outer.Inner foo() { return null; }",
+            "}")
+        .doTest();
+  }
+
+  /** A test check that replaces all checkNotNulls with verifyNotNull. */
+  @BugPattern(
+      name = "ReplaceMethodInvocations",
+      summary = "Replaces checkNotNull with verifyNotNull.",
+      severity = ERROR,
+      providesFix = REQUIRES_HUMAN_ATTENTION)
+  public static class ReplaceMethodInvocations extends BugChecker
+      implements BugChecker.MethodInvocationTreeMatcher {
+    private static final Matcher<ExpressionTree> CHECK_NOT_NULL =
+        staticMethod().onClass("com.google.common.base.Preconditions").named("checkNotNull");
+
+    @Override
+    public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
+      if (!CHECK_NOT_NULL.matches(tree, state)) {
+        return NO_MATCH;
+      }
+      SuggestedFix.Builder builder = SuggestedFix.builder();
+      String qualifiedName =
+          SuggestedFixes.qualifyStaticImport(
+              "com.google.common.base.Verify.verifyNotNull", builder, state);
+      return describeMatch(
+          tree,
+          builder
+              .replace(
+                  tree,
+                  String.format(
+                      "%s(%s)", qualifiedName, state.getSourceForNode(tree.getArguments().get(0))))
+              .build());
+    }
+  }
+
+  @Test
+  public void qualifyStaticImport_addsStaticImportAndUsesUnqualifiedName() {
+    BugCheckerRefactoringTestHelper.newInstance(new ReplaceMethodInvocations(), getClass())
+        .addInputLines(
+            "Test.java",
+            "import static com.google.common.base.Preconditions.checkNotNull;",
+            "class Test {",
+            "  void test() {",
+            "    checkNotNull(1);",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "import static com.google.common.base.Preconditions.checkNotNull;",
+            "import static com.google.common.base.Verify.verifyNotNull;",
+            "class Test {",
+            "  void test() {",
+            "    verifyNotNull(1);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void qualifyStaticImport_whenAlreadyImported_usesUnqualifiedName() {
+    BugCheckerRefactoringTestHelper.newInstance(new ReplaceMethodInvocations(), getClass())
+        .addInputLines(
+            "Test.java",
+            "import static com.google.common.base.Preconditions.checkNotNull;",
+            "import static com.google.common.base.Verify.verifyNotNull;",
+            "class Test {",
+            "  void test() {",
+            "    verifyNotNull(2);",
+            "    checkNotNull(1);",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "import static com.google.common.base.Preconditions.checkNotNull;",
+            "import static com.google.common.base.Verify.verifyNotNull;",
+            "class Test {",
+            "  void test() {",
+            "    verifyNotNull(2);",
+            "    verifyNotNull(1);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void qualifyStaticImport_whenNamesClash_usesQualifiedName() {
+    BugCheckerRefactoringTestHelper.newInstance(new ReplaceMethodInvocations(), getClass())
+        .addInputLines(
+            "Test.java",
+            "import static com.google.common.base.Preconditions.checkNotNull;",
+            "class Test {",
+            "  void test() {",
+            "    verifyNotNull(2);",
+            "    checkNotNull(1);",
+            "  }",
+            "  void verifyNotNull(int a) {}",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "import static com.google.common.base.Preconditions.checkNotNull;",
+            "import com.google.common.base.Verify;",
+            "class Test {",
+            "  void test() {",
+            "    verifyNotNull(2);",
+            "    Verify.verifyNotNull(1);",
+            "  }",
+            "  void verifyNotNull(int a) {}",
             "}")
         .doTest();
   }

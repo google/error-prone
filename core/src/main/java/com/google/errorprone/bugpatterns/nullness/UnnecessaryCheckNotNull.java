@@ -21,7 +21,6 @@ import static com.google.errorprone.matchers.Matchers.argument;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
 import static com.sun.source.tree.Tree.Kind.STRING_LITERAL;
 
-import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.ProvidesFix;
@@ -30,6 +29,7 @@ import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.SuggestedFix;
+import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
@@ -174,26 +174,17 @@ public class UnnecessaryCheckNotNull extends BugChecker implements MethodInvocat
    */
   private static Fix createCheckArgumentOrStateCall(
       MethodInvocationTree methodInvocationTree, VisitorState state, ExpressionTree arg1) {
-    SuggestedFix.Builder fix = SuggestedFix.builder();
     String replacementMethod = "checkState";
     if (hasMethodParameter(state.getPath(), arg1)) {
       replacementMethod = "checkArgument";
     }
 
-    StringBuilder replacement = new StringBuilder();
+    SuggestedFix.Builder fix = SuggestedFix.builder();
+    String name =
+        SuggestedFixes.qualifyStaticImport(
+            "com.google.common.base.Preconditions." + replacementMethod, fix, state);
 
-    // Was the original call to Preconditions.checkNotNull a static import or not?
-    if (methodInvocationTree.getMethodSelect().getKind() == Kind.IDENTIFIER) {
-      fix.addStaticImport("com.google.common.base.Preconditions." + replacementMethod);
-    } else {
-      replacement.append("Preconditions.");
-    }
-    replacement.append(replacementMethod).append('(');
-
-    Joiner.on(", ").appendTo(replacement, methodInvocationTree.getArguments());
-
-    replacement.append(")");
-    fix.replace(methodInvocationTree, replacement.toString());
+    fix.replace(methodInvocationTree.getMethodSelect(), name);
     return fix.build();
   }
 

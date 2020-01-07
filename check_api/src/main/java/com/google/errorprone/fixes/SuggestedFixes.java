@@ -85,6 +85,7 @@ import com.sun.tools.javac.parser.Tokens.TokenKind;
 import com.sun.tools.javac.tree.DCTree;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
+import com.sun.tools.javac.tree.JCTree.JCIdent;
 import com.sun.tools.javac.tree.TreeScanner;
 import com.sun.tools.javac.util.Context;
 import com.sun.tools.javac.util.Options;
@@ -108,6 +109,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.StreamSupport;
 import javax.annotation.Nullable;
 import javax.lang.model.element.Element;
@@ -370,6 +372,38 @@ public class SuggestedFixes {
       }
     }
     return typeName;
+  }
+
+  /**
+   * Provides a name to use for the (fully qualified) method provided in {@code qualifiedName},
+   * trying to static import it if possible. Adds imports to {@code fix} as appropriate.
+   */
+  public static String qualifyStaticImport(
+      String qualifiedName, SuggestedFix.Builder fix, VisitorState state) {
+    String name = qualifiedName.substring(qualifiedName.lastIndexOf(".") + 1);
+    AtomicBoolean foundConflict = new AtomicBoolean(false);
+    new TreeScanner() {
+      @Override
+      public void visitIdent(JCIdent ident) {
+        if (ident.name.contentEquals(name)) {
+          Symbol symbol = getSymbol(ident);
+          if (symbol == null) {
+            return;
+          }
+          String identifierQualifiedName =
+              symbol.owner.getQualifiedName() + "." + symbol.getSimpleName();
+          if (!qualifiedName.equals(identifierQualifiedName)) {
+            foundConflict.set(true);
+          }
+        }
+      }
+    }.scan((JCCompilationUnit) state.getPath().getCompilationUnit());
+    if (foundConflict.get()) {
+      String className = qualifiedName.substring(0, qualifiedName.lastIndexOf("."));
+      return qualifyType(state, fix, className) + "." + name;
+    }
+    fix.addStaticImport(qualifiedName);
+    return name;
   }
 
   /** Replaces the leaf doctree in the given path with {@code replacement}. */
