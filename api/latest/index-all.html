@@ -6858,6 +6858,11 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/UnnecessaryStaticImport.html#matchImport-com.sun.source.tree.ImportTree-com.google.errorprone.VisitorState-">matchImport(ImportTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/UnnecessaryStaticImport.html" title="class in com.google.errorprone.bugpatterns">UnnecessaryStaticImport</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/util/ASTHelpers.html#matchingMethods-com.sun.tools.javac.util.Name-java.util.function.Predicate-com.sun.tools.javac.code.Type-com.sun.tools.javac.code.Types-">matchingMethods(Name, Predicate&lt;Symbol.MethodSymbol&gt;, Type, Types)</a></span> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/ASTHelpers.html" title="class in com.google.errorprone.util">ASTHelpers</a></dt>
+<dd>
+<div class="block">Finds all methods in any superclass of <code>startClass</code> with a certain <code>name</code> that
+ match the given <code>predicate</code>.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/matchers/MultiMatcher.MultiMatchResult.html#matchingNodes--">matchingNodes()</a></span> - Method in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/MultiMatcher.MultiMatchResult.html" title="class in com.google.errorprone.matchers">MultiMatcher.MultiMatchResult</a></dt>
 <dd>
 <div class="block">The list of nodes which matched the MultiMatcher's expectations (could be empty if the match
@@ -9211,6 +9216,11 @@
 <dt><span class="memberNameLink"><a href="com/google/errorprone/fixes/SuggestedFixes.html#qualifyDocReference-com.google.errorprone.fixes.SuggestedFix.Builder-com.sun.source.util.DocTreePath-com.google.errorprone.VisitorState-">qualifyDocReference(SuggestedFix.Builder, DocTreePath, VisitorState)</a></span> - Static method in class com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/SuggestedFixes.html" title="class in com.google.errorprone.fixes">SuggestedFixes</a></dt>
 <dd>
 <div class="block">Fully qualifies a javadoc reference, e.g.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/fixes/SuggestedFixes.html#qualifyStaticImport-java.lang.String-com.google.errorprone.fixes.SuggestedFix.Builder-com.google.errorprone.VisitorState-">qualifyStaticImport(String, SuggestedFix.Builder, VisitorState)</a></span> - Static method in class com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/SuggestedFixes.html" title="class in com.google.errorprone.fixes">SuggestedFixes</a></dt>
+<dd>
+<div class="block">Provides a name to use for the (fully qualified) method provided in <code>qualifiedName</code>,
+ trying to static import it if possible.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/SameNameButDifferent.html#qualifyType-com.google.errorprone.VisitorState-com.google.errorprone.fixes.SuggestedFix.Builder-com.sun.tools.javac.code.Symbol-">qualifyType(VisitorState, SuggestedFix.Builder, Symbol)</a></span> - Static method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/SameNameButDifferent.html" title="class in com.google.errorprone.bugpatterns">SameNameButDifferent</a></dt>
 <dd>
