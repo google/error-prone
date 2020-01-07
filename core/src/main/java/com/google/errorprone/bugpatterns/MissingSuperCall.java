@@ -188,8 +188,9 @@ public class MissingSuperCall extends BugChecker
     @Override
     public Boolean visitLambdaExpression(LambdaExpressionTree node, Void unused) {
       // don't descend into lambdas
-      return null;
+      return false;
     }
+
     @Override
     public Boolean visitMethodInvocation(MethodInvocationTree tree, Void unused) {
       boolean result = false;
