@@ -37,6 +37,7 @@ import com.google.errorprone.util.ErrorProneTokens;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.MethodTree;
+import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePathScanner;
@@ -124,8 +125,19 @@ public final class AlmostJavadoc extends BugChecker implements CompilationUnitTr
           return null;
         }
         ElementKind kind = getSymbol(variableTree).getKind();
-        if (kind == ElementKind.FIELD || kind == ElementKind.ENUM_CONSTANT) {
+        if (kind == ElementKind.FIELD) {
           javadoccablePositions.put(startPos(variableTree), variableTree);
+        }
+        // For enum constants, skip past the desugared class declaration.
+        if (kind == ElementKind.ENUM_CONSTANT) {
+          javadoccablePositions.put(startPos(variableTree), variableTree);
+          if (variableTree.getInitializer() instanceof NewClassTree) {
+            ClassTree classBody = ((NewClassTree) variableTree.getInitializer()).getClassBody();
+            if (classBody != null) {
+              scan(classBody.getMembers(), null);
+            }
+            return null;
+          }
         }
         return super.visitVariable(variableTree, null);
       }
