@@ -38,14 +38,11 @@ import com.sun.source.tree.LambdaExpressionTree;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
-import com.sun.source.tree.NewClassTree;
-import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import java.util.Arrays;
-import java.util.List;
 import javax.lang.model.element.Modifier;
 
 /** @author eaftan@google.com (Eddie Aftandilian) */
@@ -183,28 +180,16 @@ public class MissingSuperCall extends BugChecker
     }
 
     @Override
-    public Boolean visitNewClass(NewClassTree node, Void unused) {
-      Boolean r = scan(node.getEnclosingExpression(), null);
-      r = scanAndReduce(node.getIdentifier(), r);
-      r = scanAndReduce(node.getTypeArguments(), r);
-      r = scanAndReduce(node.getArguments(), r);
-      // don't descend into class body, if it exists
-      return r;
-    }
-
-    @Override
     public Boolean visitClass(ClassTree node, Void unused) {
-      // don't descend into local classes
+      // don't descend into classes
       return false;
     }
 
     @Override
     public Boolean visitLambdaExpression(LambdaExpressionTree node, Void unused) {
-      Boolean r = scan(node.getParameters(), null);
-      r = scanAndReduce(node.getBody(), r);
-      return r;
+      // don't descend into lambdas
+      return null;
     }
-
     @Override
     public Boolean visitMethodInvocation(MethodInvocationTree tree, Void unused) {
       boolean result = false;
@@ -221,13 +206,6 @@ public class MissingSuperCall extends BugChecker
       return result || super.visitMethodInvocation(tree, unused);
     }
 
-    private Boolean scanAndReduce(List<? extends Tree> node, Boolean r) {
-      return reduce(scan(node, null), r);
-    }
-
-    private Boolean scanAndReduce(Tree node, Boolean r) {
-      return reduce(scan(node, null), r);
-    }
 
     @Override
     public Boolean reduce(Boolean b1, Boolean b2) {
