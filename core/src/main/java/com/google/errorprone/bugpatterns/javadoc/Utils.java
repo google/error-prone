@@ -32,6 +32,7 @@ import com.sun.tools.javac.tree.EndPosTable;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 import com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition;
+import com.sun.tools.javac.util.Position;
 import java.util.Optional;
 import javax.annotation.Nullable;
 
@@ -65,6 +66,9 @@ final class Utils {
     int startPos = getStartPosition(docTree, state);
     int endPos =
         (int) positions.getEndPosition(compilationUnitTree, getDocCommentTree(state), docTree);
+    if (endPos == Position.NOPOS) {
+      return SuggestedFix.builder().build();
+    }
     return SuggestedFix.replace(startPos, endPos, replacement);
   }
 
