@@ -74,13 +74,13 @@ public class JavacErrorDescriptionListener implements DescriptionListener {
   public JavacErrorDescriptionListener(
       DescriptionListenerResources resources) {
     this.log = resources.getLog();
-    this.sourceFile = resources.getSourceFile();
+    this.sourceFile = resources.getCompilation().getSourceFile();
     this.context = resources.getContext();
     this.dontUseErrors = !resources.getUseErrors();
-    checkNotNull(resources.getEndPositions());
+    checkNotNull(resources.getCompilation().endPositions);
     try {
       CharSequence sourceFileContent = sourceFile.getCharContent(true);
-      fixToAppliedFix = fix -> AppliedFix.fromSource(sourceFileContent, resources.getEndPositions()).apply(fix);
+      fixToAppliedFix = fix -> AppliedFix.fromSource(sourceFileContent, resources.getCompilation().endPositions).apply(fix);
     } catch (IOException e) {
       throw new UncheckedIOException(e);
     }

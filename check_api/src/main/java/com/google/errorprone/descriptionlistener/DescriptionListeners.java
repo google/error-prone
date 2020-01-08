@@ -26,7 +26,7 @@ public class DescriptionListeners {
   private static DescriptionListener.Factory getFactory(Context context, boolean useErrors) {
     return (log, compilation) ->
         CUSTOM_DESCRIPTION_LISTENER_FACTORY_SUPPLIER.get().createFactory(
-            DescriptionListenerResources.create(log, compilation.endPositions, compilation.sourcefile, context, useErrors)
+            DescriptionListenerResources.create(log, compilation, context, useErrors)
         );
   }
 
