@@ -149,16 +149,22 @@ public final class MissingSummary extends BugChecker
 
   private Description generateSeeFix(DocTreePath docTreePath, SeeTree seeTree, VisitorState state) {
     int pos = ((DCDocComment) docTreePath.getDocComment()).comment.getSourcePos(0);
+    // javac fails to provide an endpos for @see sometimes; don't emit a fix in that case.
+    SuggestedFix replacement = Utils.replace(seeTree, "", state);
     SuggestedFix fix =
-        SuggestedFix.builder()
-            .merge(Utils.replace(seeTree, "", state))
-            .replace(
-                pos,
-                pos,
-                String.format(
-                    "See {@link %s}.\n",
-                    seeTree.getReference().stream().map(Object::toString).collect(joining(" "))))
-            .build();
+        replacement.isEmpty()
+            ? replacement
+            : SuggestedFix.builder()
+                .merge(replacement)
+                .replace(
+                    pos,
+                    pos,
+                    String.format(
+                        "See {@link %s}.\n",
+                        seeTree.getReference().stream()
+                            .map(Object::toString)
+                            .collect(joining(" "))))
+                .build();
     return buildDescription(diagnosticPosition(docTreePath, state))
         .setMessage(String.format(CONSIDER_USING_MESSAGE, "see"))
         .addFix(fix)
