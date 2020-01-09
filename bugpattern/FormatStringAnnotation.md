@@ -44,6 +44,13 @@ We will then check that the format string and format arguments match.
 For more information on possible format string errors, see the documentation on
 the [FormatString check](FormatString).
 
+The import for `@FormatMethod` is:
+
+```java
+import com.google.errorprone.annotations.FormatMethod;
+```
+
+
 ## Suppression
 
 Suppress false positives by adding the suppression annotation
