@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 The Error Prone Authors.
+ * Copyright 2020 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,28 +19,20 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.ProvidesFix;
 import java.util.Optional;
 
-/**
- * Ban use of YYYY in a SimpleDateFormat pattern, unless it is being used for a week date. Otherwise
- * the user almost certainly meant yyyy instead. See the summary in the {@link BugPattern} below for
- * more details.
- *
- * <p>This bug caused a Twitter outage in December 2014.
- */
+/** Ban use of D (day-of-year) in a date format pattern that also contains M (month-of-year). */
 @BugPattern(
-    name = "MisusedWeekYear",
+    name = "MisusedDayOfYear",
     summary =
-        "Use of \"YYYY\" (week year) in a date pattern without \"ww\" (week in year). "
-            + "You probably meant to use \"yyyy\" (year) instead.",
-    severity = ERROR,
-    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
-public final class MisusedWeekYear extends MisusedDateFormat {
+        "Use of 'DD' (day of year) in a date pattern with 'MM' (month of year) is not likely to be"
+            + " intentional, as it would lead to dates like 'March 73rd'.",
+    severity = ERROR)
+public final class MisusedDayOfYear extends MisusedDateFormat {
   @Override
   Optional<String> rewriteTo(String pattern) {
-    boolean[] containsY = new boolean[1];
-    boolean[] containsW = new boolean[1];
+    boolean[] containsD = new boolean[1];
+    boolean[] containsM = new boolean[1];
     parseDateFormat(
         pattern,
         new DateFormatConsumer() {
@@ -49,16 +41,16 @@ public final class MisusedWeekYear extends MisusedDateFormat {
 
           @Override
           public void consumeSpecial(char special) {
-            if (special == 'Y') {
-              containsY[0] = true;
+            if (special == 'D') {
+              containsD[0] = true;
             }
-            if (special == 'w') {
-              containsW[0] = true;
+            if (special == 'M') {
+              containsM[0] = true;
             }
           }
         });
-    if (containsY[0] && !containsW[0]) {
-      return Optional.of(replaceFormatChar(pattern, 'Y', 'y'));
+    if (containsD[0] && containsM[0]) {
+      return Optional.of(replaceFormatChar(pattern, 'D', 'd'));
     }
     return Optional.empty();
   }
