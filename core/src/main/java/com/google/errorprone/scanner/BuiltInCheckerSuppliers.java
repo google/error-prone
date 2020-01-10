@@ -166,6 +166,7 @@ import com.google.errorprone.bugpatterns.LockNotBeforeTry;
 import com.google.errorprone.bugpatterns.LogicalAssignment;
 import com.google.errorprone.bugpatterns.LongLiteralLowerCaseSuffix;
 import com.google.errorprone.bugpatterns.LoopConditionChecker;
+import com.google.errorprone.bugpatterns.LossyPrimitiveCompare;
 import com.google.errorprone.bugpatterns.MathAbsoluteRandom;
 import com.google.errorprone.bugpatterns.MathRoundIntLong;
 import com.google.errorprone.bugpatterns.MethodCanBeStatic;
@@ -561,6 +562,7 @@ public class BuiltInCheckerSuppliers {
           LiteByteStringUtf8.class,
           LocalDateTemporalAmount.class,
           LoopConditionChecker.class,
+          LossyPrimitiveCompare.class,
           MathRoundIntLong.class,
           MislabeledAndroidString.class,
           MissingSuperCall.class,
