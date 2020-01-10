@@ -733,6 +733,9 @@ Nested instanceOf conditions of disjoint types create blocks of code that never 
 __[NonAtomicVolatileUpdate](bugpattern/NonAtomicVolatileUpdate)__<br>
 This update of a volatile variable is non-atomic
 
+__[NonCanonicalType](bugpattern/NonCanonicalType)__<br>
+This type is referred to by a non-canonical name, which may be misleading.
+
 __[NonOverridingEquals](bugpattern/NonOverridingEquals)__<br>
 equals method doesn&#39;t override Object.equals
 
