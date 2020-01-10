@@ -47,8 +47,8 @@ import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
+import com.sun.source.util.TreePath;
 import com.sun.source.util.TreePathScanner;
-import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type;
@@ -103,7 +103,7 @@ public final class StronglyTypeTime extends BugChecker implements CompilationUni
 
   @Override
   public Description matchCompilationUnit(CompilationUnitTree tree, VisitorState state) {
-    Map<VarSymbol, VariableTree> fields = findPotentialFields(state);
+    Map<VarSymbol, TreePath> fields = findPathToPotentialFields(state);
     SetMultimap<VarSymbol, ExpressionTree> usages = HashMultimap.create();
 
     new TreePathScanner<Void, Void>() {
@@ -134,22 +134,23 @@ public final class StronglyTypeTime extends BugChecker implements CompilationUni
       }
     }.scan(tree, null);
 
-    for (Map.Entry<VarSymbol, VariableTree> entry : fields.entrySet()) {
+    for (Map.Entry<VarSymbol, TreePath> entry : fields.entrySet()) {
       state.reportMatch(describeMatch(entry.getValue(), usages.get(entry.getKey()), state));
     }
     return NO_MATCH;
   }
 
   private Description describeMatch(
-      VariableTree variableTree, Set<ExpressionTree> invocationTrees, VisitorState state) {
+      TreePath variableTreePath, Set<ExpressionTree> invocationTrees, VisitorState state) {
     if (invocationTrees.stream().map(ASTHelpers::getSymbol).distinct().count() != 1) {
       return NO_MATCH;
     }
+    VariableTree variableTree = (VariableTree) variableTreePath.getLeaf();
     ExpressionTree factory = invocationTrees.iterator().next();
     String newName = createNewName(variableTree.getName().toString());
     SuggestedFix.Builder fix = SuggestedFix.builder();
     Type targetType = getType(factory);
-    String typeName = SuggestedFixes.qualifyType(state, fix, targetType);
+    String typeName = SuggestedFixes.qualifyType(state.withPath(variableTreePath), fix, targetType);
     fix.replace(
         variableTree,
         String.format(
@@ -197,13 +198,13 @@ public final class StronglyTypeTime extends BugChecker implements CompilationUni
   }
 
   /**
-   * Finds potential fields that we might want to turn into Durations: (effectively) final integral
-   * private fields.
+   * Finds the path to potential fields that we might want to turn into Durations: (effectively)
+   * final integral private fields.
    */
   // TODO(b/147006492): Consider extracting a helper to find all fields that match a Matcher.
-  private Map<VarSymbol, VariableTree> findPotentialFields(VisitorState state) {
-    Map<VarSymbol, VariableTree> fields = new HashMap<>();
-    new TreeScanner<Void, Void>() {
+  private Map<VarSymbol, TreePath> findPathToPotentialFields(VisitorState state) {
+    Map<VarSymbol, TreePath> fields = new HashMap<>();
+    new TreePathScanner<Void, Void>() {
       @Override
       public Void visitClass(ClassTree classTree, Void unused) {
         return isSuppressed(classTree) ? null : super.visitClass(classTree, null);
@@ -225,7 +226,7 @@ public final class StronglyTypeTime extends BugChecker implements CompilationUni
             && (isSameType(type, state.getSymtab().intType, state)
                 || isSameType(type, state.getSymtab().longType, state))
             && !isSuppressed(variableTree)) {
-          fields.put(symbol, variableTree);
+          fields.put(symbol, getCurrentPath());
         }
         return super.visitVariable(variableTree, null);
       }

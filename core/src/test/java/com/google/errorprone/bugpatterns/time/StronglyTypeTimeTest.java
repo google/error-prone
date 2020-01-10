@@ -244,4 +244,30 @@ public final class StronglyTypeTimeTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void whenJodaAndJavaInstantUsed_fullyQualifiesName() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            "import java.time.Instant;",
+            "class Test {",
+            "  private static final long FOO_MILLIS = 100L;",
+            "  private static final Instant INSTANT = null;",
+            "  public org.joda.time.Instant get() {",
+            "    return new org.joda.time.Instant(FOO_MILLIS);",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "import java.time.Instant;",
+            "class Test {",
+            "  private static final org.joda.time.Instant FOO = new org.joda.time.Instant(100L);",
+            "  private static final Instant INSTANT = null;",
+            "  public org.joda.time.Instant get() {",
+            "    return FOO;",
+            "  }",
+            "}")
+        .doTest();
+  }
 }
