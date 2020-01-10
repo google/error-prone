@@ -17,13 +17,14 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.common.collect.Iterables.getOnlyElement;
+import static com.google.errorprone.util.ASTHelpers.getSymbol;
 
 import com.google.auto.value.AutoValue;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.VisitorState;
-import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ImportTree;
+import com.sun.source.tree.MemberSelectTree;
 import com.sun.tools.javac.code.Flags;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
@@ -103,7 +104,13 @@ public final class StaticImports {
       // so there's nothing to do here.
       return null;
     }
-    Symbol importedType = ASTHelpers.getSymbol(access.getExpression());
+    return tryCreate(access, state);
+  }
+
+  @Nullable
+  public static StaticImportInfo tryCreate(MemberSelectTree access, VisitorState state) {
+    Name identifier = (Name) access.getIdentifier();
+    Symbol importedType = getSymbol(access.getExpression());
     if (importedType == null) {
       return null;
     }
@@ -114,14 +121,12 @@ public final class StaticImports {
     if (canonicalType == null) {
       return null;
     }
-    Symbol.TypeSymbol baseType;
-    {
-      Symbol sym = ASTHelpers.getSymbol(access.getExpression());
-      if (!(sym instanceof Symbol.TypeSymbol)) {
-        return null;
-      }
-      baseType = (Symbol.TypeSymbol) sym;
+
+    Symbol sym = getSymbol(access.getExpression());
+    if (!(sym instanceof Symbol.TypeSymbol)) {
+      return null;
     }
+    Symbol.TypeSymbol baseType = (Symbol.TypeSymbol) sym;
     Symbol.PackageSymbol pkgSym =
         ((JCTree.JCCompilationUnit) state.getPath().getCompilationUnit()).packge;
     ImmutableSet<Symbol> members = lookup(baseType, baseType, identifier, types, pkgSym);
