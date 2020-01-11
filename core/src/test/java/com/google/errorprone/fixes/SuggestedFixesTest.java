@@ -24,6 +24,7 @@ import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.isSameType;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
+import static org.junit.Assume.assumeTrue;
 
 import com.google.common.base.Verify;
 import com.google.common.collect.ImmutableList;
@@ -46,6 +47,7 @@ import com.google.errorprone.bugpatterns.RemoveUnusedImports;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
+import com.google.errorprone.util.RuntimeVersion;
 import com.sun.source.doctree.LinkTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ExpressionTree;
@@ -1022,6 +1024,31 @@ public class SuggestedFixesTest {
   @Test
   public void compilesWithFixTest() {
     BugCheckerRefactoringTestHelper.newInstance(new CompilesWithFixChecker(), getClass())
+        .addInputLines(
+            "in/Test.java",
+            "class Test {",
+            "  void f() {",
+            "    int x = 0;",
+            "    int y = 1;",
+            "    System.err.println(y);",
+            "  }",
+            "}")
+        .addOutputLines(
+            "out/Test.java",
+            "class Test {",
+            "  void f() {",
+            "    int y = 1;",
+            "    System.err.println(y);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void compilesWithFix_releaseFlag() {
+    assumeTrue(RuntimeVersion.isAtLeast9());
+    BugCheckerRefactoringTestHelper.newInstance(new CompilesWithFixChecker(), getClass())
+        .setArgs("--release", "9")
         .addInputLines(
             "in/Test.java",
             "class Test {",

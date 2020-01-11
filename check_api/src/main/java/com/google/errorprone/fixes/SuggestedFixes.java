@@ -79,6 +79,7 @@ import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Types.DefaultTypeVisitor;
 import com.sun.tools.javac.main.Arguments;
+import com.sun.tools.javac.main.Option;
 import com.sun.tools.javac.parser.Tokens;
 import com.sun.tools.javac.parser.Tokens.Comment;
 import com.sun.tools.javac.parser.Tokens.TokenKind;
@@ -1023,9 +1024,15 @@ public class SuggestedFixes {
     Options originalOptions = Options.instance(javacTask.getContext());
     for (String key : originalOptions.keySet()) {
       String value = originalOptions.get(key);
-      if (key.equals("-Xplugin:") && value.startsWith("ErrorProne")) {
+      if (key.equals(Option.PLUGIN.getPrimaryName()) && value.startsWith("ErrorProne")) {
         // When using the -Xplugin Error Prone integration, disable Error Prone for speculative
         // recompiles to avoid infinite recursion.
+        continue;
+      }
+      if ((key.equals(Option.SOURCE.getPrimaryName()) || key.equals(Option.TARGET.getPrimaryName()))
+          && originalOptions.isSet(Option.RELEASE)) {
+        // javac does not allow -source and -target to be specified explicitly when --release is,
+        // but does add them in response to passing --release. Here we invert that operation.
         continue;
       }
       options.put(key, value);
