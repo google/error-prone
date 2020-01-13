@@ -117,13 +117,9 @@ public final class PreferJavaTimeOverload extends BugChecker
               .withAnyName());
 
   private static final Matcher<ExpressionTree> JAVA_DURATION_DECOMPOSITION_MATCHER =
-      anyOf(
-          instanceMethod().onExactClass(JAVA_DURATION).named("toNanos"),
-          instanceMethod().onExactClass(JAVA_DURATION).named("toMillis"),
-          instanceMethod().onExactClass(JAVA_DURATION).named("getSeconds"),
-          instanceMethod().onExactClass(JAVA_DURATION).named("toMinutes"),
-          instanceMethod().onExactClass(JAVA_DURATION).named("toHours"),
-          instanceMethod().onExactClass(JAVA_DURATION).named("toDays"));
+      instanceMethod()
+          .onExactClass(JAVA_DURATION)
+          .namedAnyOf("toNanos", "toMillis", "getSeconds", "toMinutes", "toHours", "toDays");
 
   // TODO(kak): Add support for constructors that accept a <long, TimeUnit> or JodaTime Duration
 
