@@ -70,7 +70,8 @@ public class BadImport extends BugChecker implements ImportTreeMatcher {
           "Entry",
           "Enum",
           "Type",
-          "Key");
+          "Key",
+          "Id");
   private static final ImmutableSet<String> BAD_STATIC_IDENTIFIERS =
       ImmutableSet.of(
           "builder",
