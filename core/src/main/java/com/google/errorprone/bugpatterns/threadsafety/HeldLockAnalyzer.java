@@ -29,6 +29,7 @@ import com.google.errorprone.bugpatterns.threadsafety.GuardedByExpression.Select
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
 import com.google.errorprone.util.ASTHelpers;
+import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.LambdaExpressionTree;
@@ -138,6 +139,9 @@ public class HeldLockAnalyzer {
 
     @Override
     public Void visitMethod(MethodTree tree, HeldLockSet locks) {
+      if (isSuppressed.apply(tree)) {
+        return null;
+      }
       // Synchronized instance methods hold the 'this' lock; synchronized static methods
       // hold the Class lock for the enclosing class.
       Set<Modifier> mods = tree.getModifiers().getFlags();
@@ -225,11 +229,12 @@ public class HeldLockAnalyzer {
 
     @Override
     public Void visitVariable(VariableTree node, HeldLockSet locks) {
-      if (!isSuppressed.apply(node)) {
-        return super.visitVariable(node, locks);
-      } else {
-        return null;
-      }
+      return isSuppressed.apply(node) ? null : super.visitVariable(node, locks);
+    }
+
+    @Override
+    public Void visitClass(ClassTree node, HeldLockSet locks) {
+      return isSuppressed.apply(node) ? null : super.visitClass(node, locks);
     }
 
     private void checkMatch(ExpressionTree tree, HeldLockSet locks) {
