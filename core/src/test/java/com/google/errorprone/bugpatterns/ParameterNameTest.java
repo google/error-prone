@@ -682,4 +682,25 @@ public class ParameterNameTest {
             "}")
         .doTest();
   }
+
+  /** A test input for separate compilation. */
+  public static class Holder {
+    public static void varargsMethod(int... values) {}
+  }
+
+  /** Regression test for b/147344912. */
+  @Test
+  public void varargsSeparateCompilation() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "import " + Holder.class.getCanonicalName() + ";",
+            "class Test {",
+            "  void bar() {",
+            "    Holder.varargsMethod(/* values...= */ 1, 1, 1);",
+            "  }",
+            "}")
+        .withClasspath(Holder.class, ParameterNameTest.class)
+        .doTest();
+  }
 }

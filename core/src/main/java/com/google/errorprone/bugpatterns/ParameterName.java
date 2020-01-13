@@ -22,6 +22,7 @@ import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 
 import com.google.auto.value.AutoValue;
+import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.collect.Range;
 import com.google.errorprone.BugPattern;
@@ -40,7 +41,6 @@ import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.Tree;
-import com.sun.tools.javac.code.Flags;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.parser.Tokens.Comment;
@@ -244,6 +244,9 @@ public class ParameterName extends BugChecker
   }
 
   private static boolean isVarargs(VarSymbol sym) {
-    return (sym.flags() & Flags.VARARGS) == Flags.VARARGS;
+    Preconditions.checkArgument(
+        sym.owner instanceof MethodSymbol, "sym must be a parameter to a method");
+    MethodSymbol method = (MethodSymbol) sym.owner;
+    return method.isVarArgs() && (method.getParameters().last() == sym);
   }
 }
