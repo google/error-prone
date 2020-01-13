@@ -1752,4 +1752,28 @@ public class GuardedByCheckerTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void suppressionOnMethod() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "package threadsafety;",
+            "import javax.annotation.concurrent.GuardedBy;",
+            "class Test {",
+            "  final Object lock = null;",
+            "  void foo() {",
+            "    class Foo extends Object {",
+            "      @GuardedBy(\"lock\") int x;",
+            "      @SuppressWarnings(\"GuardedBy\")",
+            "      void m() {",
+            "        synchronized (lock) {",
+            "          int z = x++;",
+            "        }",
+            "      }",
+            "    }",
+            "  }",
+            "}")
+        .doTest();
+  }
 }
