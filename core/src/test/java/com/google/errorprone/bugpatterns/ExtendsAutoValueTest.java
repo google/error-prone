@@ -16,6 +16,8 @@
 
 package com.google.errorprone.bugpatterns;
 
+import com.google.auto.value.processor.AutoValueProcessor;
+import com.google.common.collect.ImmutableList;
 import com.google.errorprone.CompilationTestHelper;
 import com.google.errorprone.util.RuntimeVersion;
 import org.junit.Test;
@@ -27,7 +29,8 @@ import org.junit.runners.JUnit4;
 public class ExtendsAutoValueTest {
 
   private final CompilationTestHelper helper =
-      CompilationTestHelper.newInstance(ExtendsAutoValue.class, getClass());
+      CompilationTestHelper.newInstance(ExtendsAutoValue.class, getClass())
+          .setArgs(ImmutableList.of("-processor", AutoValueProcessor.class.getName()));
 
   @Test
   public void extendsAutoValue_goodNoSuperclass() {
@@ -118,7 +121,7 @@ public class ExtendsAutoValueTest {
             "OuterClass.java",
             "import com.google.auto.value.AutoValue;",
             "public class OuterClass { ",
-            "  @AutoValue class AutoClass {}",
+            "  @AutoValue abstract static class AutoClass {}",
             "  // BUG: Diagnostic contains: ExtendsAutoValue",
             "  class TestClass extends AutoClass {}",
             "}")
