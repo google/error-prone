@@ -257,6 +257,9 @@ LocalDate.plus() and minus() does not work with Durations. LocalDate represents 
 __[LoopConditionChecker](bugpattern/LoopConditionChecker)__<br>
 Loop condition is never modified in loop body.
 
+__[LossyPrimitiveCompare](bugpattern/LossyPrimitiveCompare)__<br>
+Using an unnecessarily-wide comparison method can lead to lossy comparison
+
 __[MathRoundIntLong](bugpattern/MathRoundIntLong)__<br>
 Math.round(Integer) results in truncation
 
@@ -268,6 +271,9 @@ Overriding method is missing a call to overridden super method
 
 __[MissingTestCall](bugpattern/MissingTestCall)__<br>
 A terminating method call is required for a test helper to have any effect.
+
+__[MisusedDayOfYear](bugpattern/MisusedDayOfYear)__<br>
+Use of &#39;DD&#39; (day of year) in a date pattern with &#39;MM&#39; (month of year) is not likely to be intentional, as it would lead to dates like &#39;March 73rd&#39;.
 
 __[MisusedWeekYear](bugpattern/MisusedWeekYear)__<br>
 Use of &quot;YYYY&quot; (week year) in a date pattern without &quot;ww&quot; (week in year). You probably meant to use &quot;yyyy&quot; (year) instead.
