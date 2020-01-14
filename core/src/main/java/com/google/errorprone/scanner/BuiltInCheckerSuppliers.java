@@ -38,6 +38,7 @@ import com.google.errorprone.bugpatterns.AsyncCallableReturnsNull;
 import com.google.errorprone.bugpatterns.AsyncFunctionReturnsNull;
 import com.google.errorprone.bugpatterns.AutoValueFinalMethods;
 import com.google.errorprone.bugpatterns.AutoValueImmutableFields;
+import com.google.errorprone.bugpatterns.AutoValueSubclassLeaked;
 import com.google.errorprone.bugpatterns.BadAnnotationImplementation;
 import com.google.errorprone.bugpatterns.BadComparable;
 import com.google.errorprone.bugpatterns.BadImport;
@@ -639,6 +640,7 @@ public class BuiltInCheckerSuppliers {
           AssignmentToMock.class,
           AutoValueFinalMethods.class,
           AutoValueImmutableFields.class,
+          AutoValueSubclassLeaked.class,
           BadAnnotationImplementation.class,
           BadComparable.class,
           BadImport.class,
