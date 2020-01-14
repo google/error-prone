@@ -37,6 +37,7 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterables;
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
@@ -121,10 +122,21 @@ public final class PreferJavaTimeOverload extends BugChecker
           .onExactClass(JAVA_DURATION)
           .namedAnyOf("toNanos", "toMillis", "getSeconds", "toMinutes", "toHours", "toDays");
 
+  private final boolean hasJava8LibSupport;
+
+  public PreferJavaTimeOverload(ErrorProneFlags flags) {
+    this.hasJava8LibSupport = flags.getBoolean("Android:Java8Libs").orElse(false);
+  }
+
   // TODO(kak): Add support for constructors that accept a <long, TimeUnit> or JodaTime Duration
 
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
+    // don't fire for Android code that doesn't have Java8 library support (b/138965731)
+    if (state.isAndroidCompatible() && !hasJava8LibSupport) {
+      return Description.NO_MATCH;
+    }
+
     // we return no match for a set of explicitly ignored APIs
     if (IGNORED_APIS.matches(tree, state)) {
       return Description.NO_MATCH;
