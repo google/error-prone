@@ -38,9 +38,9 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.temporal.TemporalAccessor;
 import java.util.ArrayDeque;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Date;
 import java.util.Deque;
 import java.util.DuplicateFormatFlagsException;
@@ -119,17 +119,18 @@ public class FormatStringValidation {
       }
     }
 
-    Iterable<Object> instances =
-        Iterables.transform(
-            args,
-            (ExpressionTree input) -> {
-              try {
-                return getInstance(input, state);
-              } catch (Throwable t) {
-                // ignore symbol completion failures
-                return null;
-              }
-            });
+    Object[] instances =
+        args.stream()
+            .map(
+                (ExpressionTree input) -> {
+                  try {
+                    return getInstance(input, state);
+                  } catch (Throwable t) {
+                    // ignore symbol completion failures
+                    return null;
+                  }
+                })
+            .toArray();
 
     return formatStrings
         .map(formatString -> validate(formatString, instances))
@@ -219,9 +220,9 @@ public class FormatStringValidation {
     return s != null && types.isSubtype(t, s);
   }
 
-  private static ValidationResult validate(String formatString, Iterable<Object> arguments) {
+  private static ValidationResult validate(String formatString, Object[] arguments) {
     try {
-      String unused = String.format(formatString, Iterables.toArray(arguments, Object.class));
+      String unused = String.format(formatString, arguments);
     } catch (DuplicateFormatFlagsException e) {
       return ValidationResult.create(e, String.format("duplicate format flags: %s", e.getFlags()));
     } catch (FormatFlagsConversionMismatchException e) {
@@ -261,9 +262,8 @@ public class FormatStringValidation {
 
     try {
       // arguments are specified as type descriptors, and all we care about checking is the arity
-      String[] argDescriptors =
-          Collections.nCopies(Iterables.size(arguments), "Ljava/lang/Object;")
-              .toArray(new String[0]);
+      String[] argDescriptors = new String[arguments.length];
+      Arrays.fill(argDescriptors, "Ljava/lang/Object;");
       Formatter.check(formatString, argDescriptors);
     } catch (ExtraFormatArgumentsException e) {
       return ValidationResult.create(
