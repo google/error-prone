@@ -385,6 +385,7 @@ import com.google.errorprone.bugpatterns.javadoc.EscapedEntity;
 import com.google.errorprone.bugpatterns.javadoc.InheritDoc;
 import com.google.errorprone.bugpatterns.javadoc.InvalidBlockTag;
 import com.google.errorprone.bugpatterns.javadoc.InvalidInlineTag;
+import com.google.errorprone.bugpatterns.javadoc.InvalidLink;
 import com.google.errorprone.bugpatterns.javadoc.InvalidParam;
 import com.google.errorprone.bugpatterns.javadoc.InvalidThrows;
 import com.google.errorprone.bugpatterns.javadoc.MissingSummary;
@@ -843,6 +844,7 @@ public class BuiltInCheckerSuppliers {
           InterruptedExceptionSwallowed.class,
           InvalidBlockTag.class,
           InvalidInlineTag.class,
+          InvalidLink.class,
           InvalidParam.class,
           InvalidTargetingOnScopingAnnotation.class,
           InvalidThrows.class,
