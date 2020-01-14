@@ -1292,7 +1292,7 @@ public class ASTHelpers {
         outerClass = (ClassTree) enclosing;
       }
     }
-    return getGeneratedBy(getSymbol(outerClass), state);
+    return outerClass == null ? ImmutableSet.of() : getGeneratedBy(getSymbol(outerClass), state);
   }
 
 
