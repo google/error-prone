@@ -65,11 +65,13 @@ default from an exhaustive enum switch.
 Before:
 
 ```java
-boolean isReady(State state) {
+enum State { ON, OFF }
+
+boolean isOn(State state) {
   switch (state) {
-    case READY:
+    case ON:
       return true;
-    case DONE:
+    case OFF:
       return false;
     default:
       throw new AssertionError("unknown state: " + state);
@@ -80,11 +82,13 @@ boolean isReady(State state) {
 After:
 
 ```java
-boolean isReady(State state) {
+enum State { ON, OFF }
+
+boolean isOn(State state) {
   switch (state) {
-    case READY:
+    case ON:
       return true;
-    case DONE:
+    case OFF:
       return false;
   }
   throw new AssertionError("unknown state: " + state);
@@ -96,11 +100,13 @@ boolean isReady(State state) {
 Before:
 
 ```java
-boolean isReady(State state) {
+enum State { ON, OFF }
+
+boolean isOn(State state) {
   switch (state) {
-    case READY:
+    case ON:
       return true;
-    case DONE:
+    case OFF:
       break;
     default:
       break;
@@ -112,11 +118,13 @@ boolean isReady(State state) {
 After:
 
 ```java
-boolean isReady(State state) {
+enum State { ON, OFF }
+
+boolean isOn(State state) {
   switch (state) {
-    case READY:
+    case ON:
       return true;
-    case DONE:
+    case OFF:
       break;
   }
   return false;
