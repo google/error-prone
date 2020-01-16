@@ -26,7 +26,7 @@ import org.junit.runners.JUnit4;
 /** {@link ConstantField}Test */
 @RunWith(JUnit4.class)
 public class ConstantFieldTest {
-  CompilationTestHelper compilationHelper =
+  private final CompilationTestHelper compilationHelper =
       CompilationTestHelper.newInstance(ConstantField.class, getClass());
 
   @Test
@@ -58,30 +58,6 @@ public class ConstantFieldTest {
             "class Test {",
             "  // BUG: Diagnostic contains: 'Object constantCaseName = 42;'",
             "  Object CONSTANT_CASE_NAME = 42;",
-            "}")
-        .doTest();
-  }
-
-  @Test
-  public void typo() {
-    compilationHelper
-        .addSourceLines(
-            "Test.java",
-            "class Test {",
-            "  // BUG: Diagnostic contains: PROJECT_DATA_SUBDIRECTORY",
-            "  private static final String PROJECT_DATA_SUBDIREcTORY = \".project\";",
-            "}")
-        .doTest();
-  }
-
-  @Test
-  public void snakeCase() {
-    compilationHelper
-        .addSourceLines(
-            "Test.java",
-            "class Test {",
-            "  // BUG: Diagnostic contains: SNAKE_CASE_VARIABLE",
-            "  private static final String snake_case_variable = \"Kayla\";",
             "}")
         .doTest();
   }
@@ -151,25 +127,6 @@ public class ConstantFieldTest {
   }
 
   @Test
-  public void primitivesAreConstant() {
-    compilationHelper
-        .addSourceLines(
-            "Test.java",
-            "class Test {",
-            "  // BUG: Diagnostic contains:"
-                + " ints are immutable, field should be named 'CONSTANT'",
-            "  static final int constant = 42;",
-            "  // BUG: Diagnostic contains:"
-                + " Integers are immutable, field should be named 'BOXED_CONSTANT'",
-            "  static final Integer boxedConstant = 42;",
-            "  // BUG: Diagnostic contains:"
-                + " Strings are immutable, field should be named 'STRING_CONSTANT'",
-            "  static final String stringConstant = \"\";",
-            "}")
-        .doTest();
-  }
-
-  @Test
   public void primitivesAreConstant_negative() {
     compilationHelper
         .addSourceLines(
@@ -192,32 +149,6 @@ public class ConstantFieldTest {
             "class Test implements Serializable {",
             "  private static final long serialVersionUID = 1L;",
             "  private static final ObjectStreamField[] serialPersistentFields = {};",
-            "}")
-        .doTest();
-  }
-
-  @Test
-  public void positiveEnum() {
-    compilationHelper
-        .addSourceLines(
-            "Test.java",
-            "import javax.lang.model.element.ElementKind;",
-            "interface Test {",
-            "  // BUG: Diagnostic contains: 'ElementKind KIND = ElementKind.FIELD;'",
-            "  ElementKind Kind = ElementKind.FIELD;",
-            "}")
-        .doTest();
-  }
-
-  @Test
-  public void cppStyle() {
-    compilationHelper
-        .addSourceLines(
-            "Test.java",
-            "import javax.lang.model.element.ElementKind;",
-            "interface Test {",
-            "  // BUG: Diagnostic contains: int MAX_FOOS = 42",
-            "  static final int kMaxFoos = 42;",
             "}")
         .doTest();
   }

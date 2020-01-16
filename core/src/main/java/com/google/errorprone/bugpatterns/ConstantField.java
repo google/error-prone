@@ -27,13 +27,11 @@ import com.google.errorprone.bugpatterns.BugChecker.VariableTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
-import com.google.errorprone.names.NamingConventions;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.VariableTree;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
-import com.sun.tools.javac.code.Type;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
 
@@ -43,10 +41,6 @@ import javax.lang.model.element.Modifier;
     summary = "Field name is CONSTANT_CASE, but field is not static and final",
     severity = SUGGESTION,
     providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION
-    // TODO(glorioso): This feels like a Style change, but we suggest adding static and final
-    // to a field which may not compile if we do. We'll want to be more aggressive about not making
-    // breaking changes before we consider this a Style change.
-    // tags = StandardTags.STYLE
     )
 public class ConstantField extends BugChecker implements VariableTreeMatcher {
 
@@ -58,7 +52,7 @@ public class ConstantField extends BugChecker implements VariableTreeMatcher {
     }
     String name = sym.getSimpleName().toString();
     if (sym.isStatic() && sym.getModifiers().contains(Modifier.FINAL)) {
-      return checkImmutable(tree, state, sym, name);
+      return Description.NO_MATCH;
     }
     if (!name.equals(Ascii.toUpperCase(name))) {
       return Description.NO_MATCH;
@@ -104,49 +98,4 @@ public class ConstantField extends BugChecker implements VariableTreeMatcher {
     }
   }
 
-  private Description checkImmutable(
-      VariableTree tree, VisitorState state, VarSymbol sym, String name) {
-    Type type = sym.type;
-    if (type == null) {
-      return Description.NO_MATCH;
-    }
-    switch (name) {
-      case "serialVersionUID":
-        // mandated by the Serializable API
-        return Description.NO_MATCH;
-      default:
-        break;
-    }
-    if (Ascii.toUpperCase(name).equals(name)) {
-      return Description.NO_MATCH;
-    }
-    if (state.getTypes().unboxedTypeOrType(type).isPrimitive()
-        || ASTHelpers.isSameType(type, state.getSymtab().stringType, state)
-        || type.tsym.getKind() == ElementKind.ENUM) {
-      String constName = upperCaseReplace(name);
-      return buildDescription(tree)
-          .setMessage(
-              String.format(
-                  "%ss are immutable, field should be named '%s'",
-                  sym.type.tsym.getSimpleName(), constName))
-          .addFix(SuggestedFixes.renameVariable(tree, constName, state))
-          .build();
-    }
-    return Description.NO_MATCH;
-  }
-
-  private static String upperCaseReplace(String name) {
-    String constName;
-    if (name.contains("_")) {
-      constName = Ascii.toUpperCase(name);
-    } else {
-      constName = Ascii.toUpperCase(NamingConventions.convertToLowerUnderscore(name));
-    }
-
-    // C++-style constants like kFooBar should become FOO_BAR, not K_FOO_BAR
-    if (constName.startsWith("K_")) {
-      constName = constName.substring("K_".length());
-    }
-    return constName;
-  }
 }
