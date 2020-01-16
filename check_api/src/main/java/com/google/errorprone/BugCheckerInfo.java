@@ -29,6 +29,7 @@ import com.sun.source.tree.Tree;
 import java.io.Serializable;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Modifier;
+import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Stream;
@@ -237,7 +238,7 @@ public class BugCheckerInfo implements Serializable {
   }
 
   public Set<Class<? extends Annotation>> customSuppressionAnnotations() {
-    return customSuppressionAnnotations;
+    return Collections.unmodifiableSet(customSuppressionAnnotations);
   }
 
   public boolean disableable() {
