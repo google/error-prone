@@ -113,6 +113,7 @@ import com.google.errorprone.bugpatterns.Finally;
 import com.google.errorprone.bugpatterns.FloatCast;
 import com.google.errorprone.bugpatterns.FloatingPointAssertionWithinEpsilon;
 import com.google.errorprone.bugpatterns.FloatingPointLiteralPrecision;
+import com.google.errorprone.bugpatterns.ForEachIterable;
 import com.google.errorprone.bugpatterns.ForOverrideChecker;
 import com.google.errorprone.bugpatterns.FunctionalInterfaceClash;
 import com.google.errorprone.bugpatterns.FunctionalInterfaceMethodChanged;
@@ -832,6 +833,7 @@ public class BuiltInCheckerSuppliers {
           FieldCanBeLocal.class,
           FieldMissingNullable.class,
           FunctionalInterfaceClash.class,
+          ForEachIterable.class,
           FuzzyEqualsShouldNotBeUsedInEqualsMethod.class,
           HardCodedSdCardPath.class,
           ImmutableRefactoring.class,
