@@ -283,8 +283,9 @@ public class CollectionIncompatibleType extends BugChecker
     @Nullable
     @Override
     Type extractSourceType(MemberReferenceTree tree, VisitorState state) {
+      Type descriptorType = state.getTypes().findDescriptorType(getType(tree));
       return extractTypeArgAsMemberOfSupertype(
-          getType(tree).getParameterTypes().get(0),
+          descriptorType.getParameterTypes().get(0),
           state.getSymbolFromString(collectionType),
           0,
           state.getTypes());
@@ -315,8 +316,9 @@ public class CollectionIncompatibleType extends BugChecker
     @Nullable
     @Override
     Type extractTargetType(MemberReferenceTree tree, VisitorState state) {
+      Type descriptorType = state.getTypes().findDescriptorType(getType(tree));
       return extractTypeArgAsMemberOfSupertype(
-          getType(tree).getParameterTypes().get(1),
+          descriptorType.getParameterTypes().get(1),
           state.getSymbolFromString(collectionType),
           0,
           state.getTypes());

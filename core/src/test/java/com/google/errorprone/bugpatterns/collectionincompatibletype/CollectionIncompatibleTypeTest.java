@@ -24,7 +24,6 @@ import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.bugpatterns.collectionincompatibletype.CollectionIncompatibleType.FixType;
 import com.google.errorprone.scanner.ErrorProneScanner;
 import com.google.errorprone.scanner.ScannerSupplier;
-import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -33,14 +32,8 @@ import org.junit.runners.JUnit4;
 /** @author alexeagle@google.com (Alex Eagle) */
 @RunWith(JUnit4.class)
 public class CollectionIncompatibleTypeTest {
-
-  private CompilationTestHelper compilationHelper;
-
-  @Before
-  public void setUp() {
-    compilationHelper =
-        CompilationTestHelper.newInstance(CollectionIncompatibleType.class, getClass());
-  }
+  private final CompilationTestHelper compilationHelper =
+      CompilationTestHelper.newInstance(CollectionIncompatibleType.class, getClass());
 
   @Test
   public void testPositiveCases() {
@@ -232,6 +225,97 @@ public class CollectionIncompatibleTypeTest {
             "public class Test {",
             "  java.util.stream.Stream filter(List<Integer> xs, List<Object> ss) {",
             "    return xs.stream().filter(ss::contains);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void memberReferenceWithBoundedGenerics() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.common.collect.Sets;",
+            "import java.util.function.BiFunction;",
+            "import java.util.Set;",
+            "public class Test {",
+            "  <T extends String, M extends Integer> void a(",
+            "    BiFunction<Set<T>, Set<M>, Set<T>> b) {}",
+            "  void b() {",
+            "    // BUG: Diagnostic contains:",
+            "    a(Sets::difference);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void memberReferenceWithBoundedGenericsDependentOnEachOther() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.common.collect.Sets;",
+            "import java.util.function.BiFunction;",
+            "import java.util.Set;",
+            "public class Test {",
+            "  <T extends String, M extends T> void a(",
+            "    BiFunction<Set<T>, Set<M>, Set<T>> b) {}",
+            "  void b() {",
+            "    a(Sets::difference);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void memberReferenceWithConcreteIncompatibleTypes() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.common.collect.Sets;",
+            "import java.util.function.BiFunction;",
+            "import java.util.Set;",
+            "public class Test {",
+            "  void a(BiFunction<Set<Integer>, Set<String>, Set<Integer>> b) {}",
+            "  void b() {",
+            "    // BUG: Diagnostic contains:",
+            "    a(Sets::difference);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void memberReferenceWithConcreteCompatibleTypes() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.common.collect.Sets;",
+            "import java.util.function.BiFunction;",
+            "import java.util.Set;",
+            "public class Test {",
+            "  void a(BiFunction<Set<Integer>, Set<Number>, Set<Integer>> b) {}",
+            "  void b() {",
+            "    a(Sets::difference);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void memberReferenceWithCustomFunctionalInterface() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.common.collect.Sets;",
+            "import java.util.function.BiFunction;",
+            "import java.util.Set;",
+            "public interface Test {",
+            "  Set<Integer> test(Set<Integer> a, Set<String> b);",
+            "  static void a(Test b) {}",
+            "  static void b() {",
+            "    // BUG: Diagnostic contains: Integer is not compatible with String",
+            "    a(Sets::difference);",
             "  }",
             "}")
         .doTest();
