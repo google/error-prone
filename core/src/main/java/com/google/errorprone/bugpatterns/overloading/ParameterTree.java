@@ -21,7 +21,8 @@ import com.google.common.base.Preconditions;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
-import com.sun.tools.javac.code.Flags;
+import com.sun.tools.javac.code.Symbol;
+import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import java.util.Set;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.Name;
@@ -85,6 +86,10 @@ abstract class ParameterTree {
 
   // TODO(hanuszczak): This should probably be moved to ASTHelpers.
   private static boolean isVariableTreeVarArgs(VariableTree variableTree) {
-    return (ASTHelpers.getSymbol(variableTree).flags() & Flags.VARARGS) != 0;
+    Symbol sym = ASTHelpers.getSymbol(variableTree);
+    Preconditions.checkArgument(
+        sym.owner instanceof MethodSymbol, "sym must be a parameter to a method");
+    MethodSymbol method = (MethodSymbol) sym.owner;
+    return method.isVarArgs() && method.getParameters().last() == sym;
   }
 }
