@@ -16,7 +16,9 @@
 
 package com.google.errorprone.bugpatterns;
 
+import com.google.common.collect.ImmutableList;
 import com.google.errorprone.CompilationTestHelper;
+import com.google.errorprone.annotations.CompileTimeConstant;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -269,18 +271,44 @@ public class CompileTimeConstantCheckerTest {
         .doTest();
   }
 
+  /** Holder for a method we wish to reference from a test. */
+  public static class Holder {
+    public static void m(String s, @CompileTimeConstant String... p) {}
+
+    private Holder() {}
+  }
+
   @Test
-  public void testMatches_varargsFail() {
+  public void testMatches_varargsInDifferentCompilationUnit() {
     compilationHelper
         .addSourceLines(
             "test/CompileTimeConstantTestCase.java",
             "package test;",
             "import com.google.errorprone.annotations.CompileTimeConstant;",
+            "import " + Holder.class.getCanonicalName() + ";",
             "public class CompileTimeConstantTestCase {",
-            "  public static void m(String s, @CompileTimeConstant String... p) { }",
-            "  // BUG: Diagnostic contains: Non-compile-time constant expression passed",
-            "  public static void r(String s) { m(s, \"foo\", s); }",
+            "  public static void r(String s) {",
+            "    // BUG: Diagnostic contains: Non-compile-time constant expression passed",
+            "    Holder.m(s, \"foo\", s);",
+            "  }",
             "}")
+        .doTest();
+  }
+
+  @Test
+  public void testMatches_varargsInDifferentCompilationUnit_fixDisabled() {
+    compilationHelper
+        .addSourceLines(
+            "test/CompileTimeConstantTestCase.java",
+            "package test;",
+            "import com.google.errorprone.annotations.CompileTimeConstant;",
+            "import " + Holder.class.getCanonicalName() + ";",
+            "public class CompileTimeConstantTestCase {",
+            "  public static void r(String s) {",
+            "    Holder.m(s, \"foo\", s);",
+            "  }",
+            "}")
+        .setArgs(ImmutableList.of("-XepOpt:CompileTimeConstantChecker:FixVarArgsCheck=false"))
         .doTest();
   }
 

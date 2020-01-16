@@ -23,6 +23,7 @@ import static com.google.errorprone.matchers.CompileTimeConstantExpressionMatche
 
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.AssignmentTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.LambdaExpressionTreeMatcher;
@@ -113,6 +114,13 @@ public class CompileTimeConstantChecker extends BugChecker
   private final Matcher<ExpressionTree> compileTimeConstExpressionMatcher =
       new CompileTimeConstantExpressionMatcher();
 
+  private final boolean fixVarArgsCheck;
+
+  public CompileTimeConstantChecker(ErrorProneFlags flags) {
+    this.fixVarArgsCheck =
+        flags.getBoolean("CompileTimeConstantChecker:FixVarArgsCheck").orElse(true);
+  }
+
   /**
    * Matches formal parameters with {@link com.google.errorprone.annotations.CompileTimeConstant}
    * annotations against corresponding actual parameters.
@@ -152,7 +160,12 @@ public class CompileTimeConstantChecker extends BugChecker
 
     // If the last formal parameter is a vararg and has the @CompileTimeConstant annotation,
     // we need to check the remaining args as well.
-    if (lastFormalParam == null || (lastFormalParam.flags() & Flags.VARARGS) == 0) {
+    if (lastFormalParam == null) {
+      return Description.NO_MATCH;
+    }
+    boolean isVarArgs =
+        fixVarArgsCheck ? calleeSymbol.isVarArgs() : (lastFormalParam.flags() & Flags.VARARGS) != 0;
+    if (!isVarArgs) {
       return Description.NO_MATCH;
     }
     if (!hasCompileTimeConstantAnnotation(state, lastFormalParam)) {

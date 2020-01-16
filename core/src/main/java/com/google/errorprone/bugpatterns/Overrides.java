@@ -28,7 +28,6 @@ import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
-import com.sun.tools.javac.code.Flags;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import java.util.Iterator;
 import java.util.List;
@@ -50,7 +49,7 @@ public class Overrides extends BugChecker implements MethodTreeMatcher {
   @Override
   public Description matchMethod(MethodTree methodTree, VisitorState state) {
     MethodSymbol methodSymbol = ASTHelpers.getSymbol(methodTree);
-    boolean isVarargs = (methodSymbol.flags() & Flags.VARARGS) != 0;
+    boolean isVarargs = methodSymbol.isVarArgs();
 
     Set<MethodSymbol> superMethods = ASTHelpers.findSuperMethods(methodSymbol, state.getTypes());
 
