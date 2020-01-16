@@ -13,6 +13,8 @@ If the unhandled cases should be impossible, add a `default` clause that throws
 `AssertionError`:
 
 ```java
+enum State { READY, DONE, RUNNING, BLOCKED }
+
 switch (state) {
   case READY:
     return true;
@@ -27,13 +29,14 @@ If having execution fall out of the switch is intentional, add a `default`
 clause with a comment:
 
 ```java
+enum State { READY, DONE, RUNNING, BLOCKED }
+
 switch (state) {
   case READY:
     return true;
   case DONE:
     return false;
-  default:
-    // fall out
+  default: // continue below to handle RUNNING/BLOCKED/etc.
 }
 ```
 
