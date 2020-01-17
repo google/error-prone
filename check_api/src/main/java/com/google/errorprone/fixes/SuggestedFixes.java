@@ -360,9 +360,12 @@ public class SuggestedFixes {
         continue;
       }
       String className = typeName.substring(startOfClass + 1);
-      Symbol found = FindIdentifiers.findIdent(className, state, KindSelector.VAL_TYP);
+      // startOfClass + 1 to skip a leading '.'
+      String firstPartOfClassName = typeName.substring(startOfClass + 1, endOfClass);
+      Symbol found = FindIdentifiers.findIdent(firstPartOfClassName, state, KindSelector.VAL_TYP);
       // No clashing name: import it and return.
-      if (found == null) {
+      if (found == null
+          || found.getQualifiedName().contentEquals(typeName.substring(0, endOfClass))) {
         fix.addImport(typeName.substring(0, endOfClass));
         return className;
       }
