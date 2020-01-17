@@ -266,11 +266,13 @@ public final class UnusedMethod extends BugChecker implements CompilationUnitTre
   private static boolean exemptedByAnnotation(
       List<? extends AnnotationTree> annotations, VisitorState state) {
     for (AnnotationTree annotation : annotations) {
-      if (((JCAnnotation) annotation).type != null) {
-        TypeSymbol tsym = ((JCAnnotation) annotation).type.tsym;
-        if (EXEMPTING_METHOD_ANNOTATIONS.contains(tsym.getQualifiedName().toString())) {
-          return true;
-        }
+      Type annotationType = getType(annotation);
+      if (annotationType == null) {
+        continue;
+      }
+      TypeSymbol tsym = annotationType.tsym;
+      if (EXEMPTING_METHOD_ANNOTATIONS.contains(tsym.getQualifiedName().toString())) {
+        return true;
       }
     }
     return false;

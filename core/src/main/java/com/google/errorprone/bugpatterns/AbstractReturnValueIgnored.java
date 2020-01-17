@@ -58,7 +58,6 @@ import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
 import com.sun.tools.javac.tree.JCTree.JCIdent;
-import com.sun.tools.javac.tree.JCTree.JCMemberReference;
 import com.sun.tools.javac.tree.JCTree.JCMethodInvocation;
 import java.util.Objects;
 import java.util.stream.Stream;
@@ -98,8 +97,7 @@ public abstract class AbstractReturnValueIgnored extends BugChecker
                       not(
                           (t, s) ->
                               allowInExceptionThrowers()
-                                  && isThrowingFunctionalInterface(
-                                      ((JCMemberReference) t).type, s)),
+                                  && isThrowingFunctionalInterface(ASTHelpers.getType(t), s)),
                       specializedMatcher()));
 
   @Override
@@ -119,7 +117,7 @@ public abstract class AbstractReturnValueIgnored extends BugChecker
 
   private static boolean isVoidReturningMethodReferenceExpression(
       MemberReferenceTree tree, VisitorState state) {
-    return functionalInterfaceReturnsExactlyVoid(((JCMemberReference) tree).type, state);
+    return functionalInterfaceReturnsExactlyVoid(ASTHelpers.getType(tree), state);
   }
 
   private static boolean isVoidReturningLambdaExpression(Tree tree, VisitorState state) {

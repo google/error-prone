@@ -27,7 +27,6 @@ import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.tools.javac.code.Type;
-import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCExpression;
 import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
 
@@ -247,7 +246,7 @@ public class Suppliers {
       new Supplier<Type>() {
         @Override
         public Type get(VisitorState state) {
-          return ((JCTree) state.findEnclosing(ClassTree.class)).type;
+          return ASTHelpers.getType(state.findEnclosing(ClassTree.class));
         }
       };
 

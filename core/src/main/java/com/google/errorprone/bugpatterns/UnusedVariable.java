@@ -90,7 +90,6 @@ import com.sun.tools.javac.code.Symbol.TypeSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.tree.JCTree;
-import com.sun.tools.javac.tree.JCTree.JCAnnotation;
 import com.sun.tools.javac.tree.JCTree.JCAssign;
 import com.sun.tools.javac.tree.JCTree.JCAssignOp;
 import com.sun.tools.javac.util.Position;
@@ -519,11 +518,13 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
   private static boolean exemptedByAnnotation(
       List<? extends AnnotationTree> annotations, VisitorState state) {
     for (AnnotationTree annotation : annotations) {
-      if (((JCAnnotation) annotation).type != null) {
-        TypeSymbol tsym = ((JCAnnotation) annotation).type.tsym;
-        if (EXEMPTING_VARIABLE_ANNOTATIONS.contains(tsym.getQualifiedName().toString())) {
-          return true;
-        }
+      Type annotationType = ASTHelpers.getType(annotation);
+      if (annotationType == null) {
+        continue;
+      }
+      TypeSymbol tsym = annotationType.tsym;
+      if (EXEMPTING_VARIABLE_ANNOTATIONS.contains(tsym.getQualifiedName().toString())) {
+        return true;
       }
     }
     return false;

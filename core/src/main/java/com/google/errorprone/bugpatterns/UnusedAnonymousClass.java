@@ -29,7 +29,6 @@ import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.VariableTree;
 import com.sun.tools.javac.code.Symbol.TypeSymbol;
-import com.sun.tools.javac.tree.JCTree;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
@@ -68,7 +67,7 @@ public class UnusedAnonymousClass extends BugChecker implements NewClassTreeMatc
           break;
       }
     }
-    if (!sideEffectFreeConstructor(((JCTree) newClassTree.getIdentifier()).type.tsym, state)) {
+    if (!sideEffectFreeConstructor(ASTHelpers.getType(newClassTree.getIdentifier()).tsym, state)) {
       return Description.NO_MATCH;
     }
     return describeMatch(newClassTree);

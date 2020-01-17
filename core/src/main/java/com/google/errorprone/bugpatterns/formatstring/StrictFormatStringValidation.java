@@ -37,7 +37,6 @@ import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Types;
-import com.sun.tools.javac.tree.JCTree.JCExpression;
 import java.util.List;
 import java.util.stream.Stream;
 import javax.annotation.Nullable;
@@ -128,7 +127,7 @@ public class StrictFormatStringValidation {
     Types types = state.getTypes();
     ImmutableList.Builder<Type> calleeFormatArgTypesBuilder = ImmutableList.builder();
     for (ExpressionTree formatArgExpression : args) {
-      calleeFormatArgTypesBuilder.add(types.erasure(((JCExpression) formatArgExpression).type));
+      calleeFormatArgTypesBuilder.add(types.erasure(ASTHelpers.getType(formatArgExpression)));
     }
     ImmutableList<Type> calleeFormatArgTypes = calleeFormatArgTypesBuilder.build();
 
