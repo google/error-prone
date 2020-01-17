@@ -30,9 +30,9 @@ import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
+import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
-import com.sun.tools.javac.tree.JCTree.JCExpression;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
@@ -51,8 +51,8 @@ public class InvalidPatternSyntax extends BugChecker implements MethodInvocation
       new Matcher<ExpressionTree>() {
         @Override
         public boolean matches(ExpressionTree tree, VisitorState state) {
-          Object value = ((JCExpression) tree).type.constValue();
-          return value instanceof String && !isValidSyntax((String) value);
+          String value = ASTHelpers.constValue(tree, String.class);
+          return value != null && !isValidSyntax(value);
         }
 
         private boolean isValidSyntax(String regex) {
@@ -105,7 +105,7 @@ public class InvalidPatternSyntax extends BugChecker implements MethodInvocation
     // TODO: Suggest fixes for more situations.
     Description.Builder descriptionBuilder = buildDescription(methodInvocationTree);
     ExpressionTree arg = methodInvocationTree.getArguments().get(0);
-    String value = (String) ((JCExpression) arg).type.constValue();
+    String value = ASTHelpers.constValue(arg, String.class);
     String reasonInvalid = "";
 
     if (".".equals(value)) {

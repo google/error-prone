@@ -46,7 +46,6 @@ import com.sun.source.util.TreePath;
 import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
-import com.sun.tools.javac.tree.JCTree.JCExpression;
 import com.sun.tools.javac.tree.JCTree.JCIdent;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -161,7 +160,7 @@ public class UnnecessaryCheckNotNull extends BugChecker implements MethodInvocat
     if ((arg1 instanceof BinaryTree
             || arg1.getKind() == Kind.METHOD_INVOCATION
             || arg1.getKind() == Kind.LOGICAL_COMPLEMENT)
-        && state.getTypes().isSameType(((JCExpression) arg1).type, state.getSymtab().booleanType)) {
+        && state.getTypes().isSameType(ASTHelpers.getType(arg1), state.getSymtab().booleanType)) {
       return describeMatch(arg1, createCheckArgumentOrStateCall(methodInvocationTree, state, arg1));
     }
 

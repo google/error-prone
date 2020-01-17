@@ -29,12 +29,12 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
+import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.tools.javac.code.Symtab;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Types;
-import com.sun.tools.javac.tree.JCTree;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.type.UnionType;
 
@@ -60,7 +60,7 @@ public class ThrowIfUncheckedKnownChecked extends BugChecker
       new Matcher<ExpressionTree>() {
         @Override
         public boolean matches(ExpressionTree tree, VisitorState state) {
-          Type type = ((JCTree) tree).type;
+          Type type = ASTHelpers.getType(tree);
           if (type.isUnion()) {
             for (TypeMirror alternative : ((UnionType) type).getAlternatives()) {
               if (!isKnownCheckedException(state, (Type) alternative)) {
