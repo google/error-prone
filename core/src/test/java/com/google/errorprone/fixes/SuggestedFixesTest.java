@@ -647,69 +647,6 @@ public class SuggestedFixesTest {
     qualifyDeeplyNestedType(new ReplaceReturnTypeString("pkg.Outer.Inner.Innermost"));
   }
 
-  @Test
-  public void qualifiedName() {
-    BugCheckerRefactoringTestHelper.newInstance(new ReplaceReturnTypeString("foo.A.B"), getClass())
-        .addInputLines(
-            "foo/A.java", //
-            "package foo;",
-            "public class A {",
-            "  public static class B {}",
-            "}")
-        .expectUnchanged()
-        .addInputLines(
-            "bar/A.java", //
-            "package bar;",
-            "public class A extends foo.A {}")
-        .expectUnchanged()
-        .addInputLines(
-            "bar/Test.java", //
-            "package bar;",
-            "public interface Test {",
-            "  A.B foo();",
-            "}")
-        .addOutputLines(
-            "bar/Test.java", //
-            "package bar;",
-            "import foo.A.B;",
-            "public interface Test {",
-            "  B foo();",
-            "}")
-        .doTest();
-  }
-
-  @Test
-  public void qualifiedName2() {
-    BugCheckerRefactoringTestHelper.newInstance(new ReplaceReturnTypeString("foo.A.B"), getClass())
-        .addInputLines(
-            "foo/A.java", //
-            "package foo;",
-            "public class A {",
-            "  public static class B {}",
-            "}")
-        .expectUnchanged()
-        .addInputLines(
-            "bar/A.java", //
-            "package bar;",
-            "public class A extends foo.A {}")
-        .expectUnchanged()
-        .addInputLines("bar/B.java", "package bar;", "public class B {}")
-        .expectUnchanged()
-        .addInputLines(
-            "bar/Test.java", //
-            "package bar;",
-            "public interface Test {",
-            "  A.B foo();",
-            "}")
-        .addOutputLines(
-            "bar/Test.java", //
-            "package bar;",
-            "public interface Test {",
-            "  foo.A.B foo();",
-            "}")
-        .doTest();
-  }
-
   private void qualifyDeeplyNestedType(BugChecker bugChecker) {
     BugCheckerRefactoringTestHelper.newInstance(bugChecker, getClass())
         .addInputLines(
