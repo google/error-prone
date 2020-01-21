@@ -31,6 +31,8 @@ import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.TypeSymbol;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /** Flags types being referred to by their non-canonical name. */
 @BugPattern(
@@ -61,7 +63,30 @@ public final class NonCanonicalType extends BugChecker implements MemberSelectTr
         fixBuilder
             .replace(tree, qualifyType(state, fixBuilder, importInfo.canonicalName()))
             .build();
-    return describeMatch(tree, fix);
+    return buildDescription(tree)
+        .setMessage(createDescription(importInfo.canonicalName(), nonCanonicalName))
+        .addFix(fix)
+        .build();
+  }
+
+  private static final Pattern PACKAGE_CLASS_NAME_SPLITTER = Pattern.compile("(.*?)\\.([A-Z].*)");
+
+  private static final String createDescription(String canonicalName, String nonCanonicalName) {
+    Matcher canonicalNameMatcher = PACKAGE_CLASS_NAME_SPLITTER.matcher(canonicalName);
+    Matcher nonCanonicalNameMatcher = PACKAGE_CLASS_NAME_SPLITTER.matcher(nonCanonicalName);
+
+    if (canonicalNameMatcher.matches() && nonCanonicalNameMatcher.matches()) {
+      if (!canonicalNameMatcher.group(2).equals(nonCanonicalNameMatcher.group(2))) {
+        return String.format(
+            "The type `%s` was referred to by the non-canonical name `%s`. This may be"
+                + " misleading.",
+            canonicalNameMatcher.group(2), nonCanonicalNameMatcher.group(2));
+      }
+    }
+    return String.format(
+        "The type `%s` was referred to by the non-canonical name `%s`. This may be"
+            + " misleading.",
+        canonicalName, nonCanonicalName);
   }
 
   /**

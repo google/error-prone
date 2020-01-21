@@ -35,9 +35,35 @@ public final class NonCanonicalTypeTest {
             "import com.google.common.collect.ImmutableMap;",
             "class Test {",
             "  void test() {",
-            "    // BUG: Diagnostic contains: Map.Entry",
+            "    // BUG: Diagnostic contains: `Map.Entry` was referred to by the"
+                + " non-canonical name `ImmutableMap.Entry`",
             "    ImmutableMap.Entry<?, ?> entry = null;",
             "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void differingOnlyByPackageName() {
+    compilationHelper
+        .addSourceLines(
+            "foo/A.java", //
+            "package foo;",
+            "public class A {",
+            "  public static class B {}",
+            "}")
+        .addSourceLines(
+            "bar/A.java", //
+            "package bar;",
+            "public class A extends foo.A {}")
+        .addSourceLines(
+            "D.java", //
+            "package bar;",
+            "import bar.A;",
+            "public interface D {",
+            "  // BUG: Diagnostic contains: The type `foo.A.B` was referred to by the"
+                + " non-canonical name `bar.A.B`",
+            "  A.B test();",
             "}")
         .doTest();
   }
