@@ -26,7 +26,6 @@ import static com.google.errorprone.util.ASTHelpers.isSameType;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
@@ -143,40 +142,28 @@ public class ReturnValueIgnored extends AbstractReturnValueIgnored {
   private static final Matcher<ExpressionTree> ARRAYS_METHODS =
       staticMethod().onClass("java.util.Arrays");
 
-  private final Matcher<? super ExpressionTree> specializedMatcher;
-
-  public ReturnValueIgnored(ErrorProneFlags flags) {
-    boolean matchContains = flags.getBoolean("ReturnValueIgnored:MatchContains").orElse(true);
-    this.specializedMatcher =
-        matchContains
-            ? anyOf(
-                RETURNS_SAME_TYPE,
-                ReturnValueIgnored::functionalMethod,
-                STREAM_METHOD,
-                ARRAYS_METHODS,
-                ReturnValueIgnored::javaTimeTypes,
-                instanceMethod()
-                    .onDescendantOf("java.util.Collection")
-                    .named("contains")
-                    .withParameters("java.lang.Object"),
-                instanceMethod()
-                    .onDescendantOf("java.util.Collection")
-                    .named("containsAll")
-                    .withParameters("java.util.Collection"),
-                instanceMethod()
-                    .onDescendantOf("java.util.Map")
-                    .namedAnyOf("containsKey", "containsValue")
-                    .withParameters("java.lang.Object"))
-            : anyOf(
-                RETURNS_SAME_TYPE,
-                ReturnValueIgnored::functionalMethod,
-                STREAM_METHOD,
-                ARRAYS_METHODS,
-                ReturnValueIgnored::javaTimeTypes);
-  }
+  private static final Matcher<? super ExpressionTree> SPECIALIZED_MATCHER =
+      anyOf(
+          RETURNS_SAME_TYPE,
+          ReturnValueIgnored::functionalMethod,
+          STREAM_METHOD,
+          ARRAYS_METHODS,
+          ReturnValueIgnored::javaTimeTypes,
+          instanceMethod()
+              .onDescendantOf("java.util.Collection")
+              .named("contains")
+              .withParameters("java.lang.Object"),
+          instanceMethod()
+              .onDescendantOf("java.util.Collection")
+              .named("containsAll")
+              .withParameters("java.util.Collection"),
+          instanceMethod()
+              .onDescendantOf("java.util.Map")
+              .namedAnyOf("containsKey", "containsValue")
+              .withParameters("java.lang.Object"));
 
   @Override
   public Matcher<? super ExpressionTree> specializedMatcher() {
-    return specializedMatcher;
+    return SPECIALIZED_MATCHER;
   }
 }
