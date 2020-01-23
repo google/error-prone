@@ -114,8 +114,17 @@ public final class MoreAnnotations {
         .findFirst();
   }
 
+  /**
+   * Returns the value of the annotation element-value pair with the given name if it is not
+   * explicitly set.
+   */
+  public static Optional<AnnotationValue> getAnnotationValue(
+      Attribute.Compound attribute, String name) {
+    return getValue(attribute, name).map(a -> a);
+  }
+
   /** Converts the given attribute to an integer value. */
-  public static Optional<Integer> asIntegerValue(Attribute a) {
+  public static Optional<Integer> asIntegerValue(AnnotationValue a) {
     class Visitor extends SimpleAnnotationValueVisitor8<Integer, Void> {
       @Override
       public Integer visitInt(int i, Void unused) {
@@ -126,7 +135,7 @@ public final class MoreAnnotations {
   }
 
   /** Converts the given attribute to an string value. */
-  public static Optional<String> asStringValue(Attribute a) {
+  public static Optional<String> asStringValue(AnnotationValue a) {
     class Visitor extends SimpleAnnotationValueVisitor8<String, Void> {
       @Override
       public String visitString(String s, Void unused) {
@@ -137,7 +146,7 @@ public final class MoreAnnotations {
   }
 
   /** Converts the given attribute to an enum value. */
-  public static <T extends Enum<T>> Optional<T> asEnumValue(Class<T> clazz, Attribute a) {
+  public static <T extends Enum<T>> Optional<T> asEnumValue(Class<T> clazz, AnnotationValue a) {
     class Visitor extends SimpleAnnotationValueVisitor8<T, Void> {
       @Override
       public T visitEnumConstant(VariableElement c, Void unused) {
@@ -147,8 +156,8 @@ public final class MoreAnnotations {
     return Optional.ofNullable(a.accept(new Visitor(), null));
   }
 
-  /** Converts the given attribute to one or more strings. */
-  public static Stream<String> asStrings(Attribute v) {
+  /** Converts the given annotation value to one or more strings. */
+  public static Stream<String> asStrings(AnnotationValue v) {
     return MoreObjects.firstNonNull(
         v.accept(
             new SimpleAnnotationValueVisitor8<Stream<String>, Void>() {
@@ -164,6 +173,18 @@ public final class MoreAnnotations {
             },
             null),
         Stream.empty());
+  }
+
+  /**
+   * Converts the given attribute to one or more strings.
+   *
+   * @deprecated Continues to exist only to allow migration to wider {@link
+   *     #asStrings(AnnotationValue)} for targets which have this symbol compiled in. Please invoke
+   *     that target, with an explicit cast if necessary.
+   */
+  @Deprecated
+  public static Stream<String> asStrings(Attribute v) {
+    return asStrings((AnnotationValue) v);
   }
 
   private MoreAnnotations() {}

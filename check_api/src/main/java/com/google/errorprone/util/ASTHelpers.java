@@ -149,7 +149,6 @@ import javax.lang.model.element.AnnotationValue;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.type.TypeKind;
-import javax.lang.model.util.SimpleAnnotationValueVisitor8;
 
 /** This class contains utility methods to work with the javac AST. */
 public class ASTHelpers {
@@ -1320,25 +1319,7 @@ public class ASTHelpers {
     if (!values.isPresent()) {
       return ImmutableSet.of();
     }
-    ImmutableSet.Builder<String> suppressions = ImmutableSet.builder();
-    values
-        .get()
-        .accept(
-            new SimpleAnnotationValueVisitor8<Void, Void>() {
-              @Override
-              public Void visitString(String s, Void aVoid) {
-                suppressions.add(s);
-                return super.visitString(s, aVoid);
-              }
-
-              @Override
-              public Void visitArray(List<? extends AnnotationValue> vals, Void aVoid) {
-                vals.stream().forEachOrdered(v -> v.accept(this, null));
-                return super.visitArray(vals, aVoid);
-              }
-            },
-            null);
-    return suppressions.build();
+    return MoreAnnotations.asStrings((AnnotationValue) values.get()).collect(toImmutableSet());
   }
 
   /** An expression's target type, see {@link #targetType}. */
