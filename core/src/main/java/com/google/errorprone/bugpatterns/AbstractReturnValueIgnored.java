@@ -37,6 +37,7 @@ import static com.google.errorprone.util.ASTHelpers.isSubtype;
 import static com.google.errorprone.util.ASTHelpers.isVoidType;
 
 import com.google.common.base.Suppliers;
+import com.google.common.base.VerifyException;
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MemberReferenceTreeMatcher;
@@ -143,9 +144,7 @@ public abstract class AbstractReturnValueIgnored extends BugChecker
         .filter(t -> t.getKind() == Kind.LAMBDA_EXPRESSION || t.getKind() == Kind.CLASS)
         .findFirst()
         .map(t -> isThrowingFunctionalInterface(getType(t), state))
-        // This shouldn't happen.
-        // TODO(ghm): Throw an exception for this impossible situation.
-        .orElse(false);
+        .orElseThrow(VerifyException::new);
   }
 
   static boolean isThrowingFunctionalInterface(Type clazzType, VisitorState state) {
