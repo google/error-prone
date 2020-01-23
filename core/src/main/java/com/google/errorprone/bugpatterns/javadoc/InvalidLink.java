@@ -175,14 +175,18 @@ public final class InvalidLink extends BugChecker
                 .build());
         return super.visitLink(linkTree, null);
       }
-      state.reportMatch(
-          buildDescription(diagnosticPosition(getCurrentPath(), state))
-              .setMessage(
-                  String.format(
-                      "This reference to `%s` doesn't resolve to anything. If it's a class name"
-                          + " (or otherwise) not visible here, prefer fully qualifying it.",
-                      reference))
-              .build());
+      if (reference.charAt(0) == '#') {
+        state.reportMatch(
+            buildDescription(diagnosticPosition(getCurrentPath(), state))
+                .setMessage(
+                    String.format(
+                        "The reference `%s` to a method doesn't resolve to anything. Is it"
+                            + " misspelt?",
+                        reference))
+                .build());
+      }
+      // TODO(ghm): If this is a method reference, we could check whether class is available but the
+      // method isn't.
       return super.visitLink(linkTree, null);
     }
 
