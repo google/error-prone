@@ -31,6 +31,7 @@ import com.google.common.collect.Streams;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.CanBeStaticAnalyzer;
 import com.google.errorprone.util.ASTHelpers;
+import com.google.errorprone.util.MoreAnnotations;
 import com.sun.source.tree.ClassTree;
 import com.sun.tools.javac.code.Attribute;
 import com.sun.tools.javac.code.Attribute.Compound;
@@ -63,7 +64,6 @@ import javax.annotation.Nullable;
 import javax.lang.model.element.AnnotationValue;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.type.TypeKind;
-import javax.lang.model.util.SimpleAnnotationValueVisitor8;
 import org.pcollections.ConsPStack;
 
 /**
@@ -803,25 +803,7 @@ public final class ThreadSafety {
     if (m == null) {
       return ImmutableList.of();
     }
-    ImmutableList.Builder<String> containerOf = ImmutableList.builder();
-    m.accept(
-        new SimpleAnnotationValueVisitor8<Void, Void>() {
-          @Override
-          public Void visitString(String s, Void unused) {
-            containerOf.add(s);
-            return null;
-          }
-
-          @Override
-          public Void visitArray(List<? extends AnnotationValue> list, Void unused) {
-            for (AnnotationValue value : list) {
-              value.accept(this, null);
-            }
-            return null;
-          }
-        },
-        null);
-    return containerOf.build();
+    return MoreAnnotations.asStrings((AnnotationValue) m).collect(toImmutableList());
   }
 
   /** Gets a human-friendly name for the given {@link Symbol} to use in diagnostics. */

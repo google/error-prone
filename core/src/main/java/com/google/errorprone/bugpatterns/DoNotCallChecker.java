@@ -127,7 +127,7 @@ public class DoNotCallChecker extends BugChecker
       if (!a.type.tsym.getQualifiedName().contentEquals(DO_NOT_CALL)) {
         continue;
       }
-      return MoreAnnotations.getValue(a, "value")
+      return MoreAnnotations.getAnnotationValue(a, "value")
           .flatMap(MoreAnnotations::asStringValue)
           .orElse("");
     }
