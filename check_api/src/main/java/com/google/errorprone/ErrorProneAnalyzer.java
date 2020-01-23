@@ -60,6 +60,7 @@ public class ErrorProneAnalyzer implements TaskListener {
 
   public static ErrorProneAnalyzer createByScanningForPlugins(
       ScannerSupplier scannerSupplier, ErrorProneOptions errorProneOptions, Context context) {
+    context.put(ErrorProneFlags.class, errorProneOptions.getFlags());
     return new ErrorProneAnalyzer(
         scansPlugins(scannerSupplier, errorProneOptions, context),
         errorProneOptions,
@@ -89,6 +90,7 @@ public class ErrorProneAnalyzer implements TaskListener {
       ErrorProneOptions errorProneOptions,
       Context context,
       DescriptionListener.Factory descriptionListenerFactory) {
+    context.put(ErrorProneFlags.class, errorProneOptions.getFlags());
     return new ErrorProneAnalyzer(
         Suppliers.ofInstance(codeTransformer),
         errorProneOptions,
