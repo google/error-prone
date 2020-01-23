@@ -81,7 +81,6 @@ public class CollectionIncompatibleType extends BugChecker
   }
 
   private final FixType fixType;
-  private final boolean matchMethodReferences;
 
   /** Creates a new {@link CollectionIncompatibleType} checker that provides no fix. */
   public CollectionIncompatibleType(ErrorProneFlags flags) {
@@ -91,8 +90,6 @@ public class CollectionIncompatibleType extends BugChecker
   /** Creates a new {@link CollectionIncompatibleType} checker with the given {@code fixType}. */
   public CollectionIncompatibleType(FixType fixType, ErrorProneFlags flags) {
     this.fixType = fixType;
-    this.matchMethodReferences =
-        flags.getBoolean("CollectionIncompatibleType:MatchMethodReferences").orElse(true);
   }
 
   /**
@@ -181,7 +178,7 @@ public class CollectionIncompatibleType extends BugChecker
 
   @Override
   public Description matchMemberReference(MemberReferenceTree tree, VisitorState state) {
-    return matchMethodReferences ? match(tree, state) : NO_MATCH;
+    return match(tree, state);
   }
 
   public Description match(ExpressionTree tree, VisitorState state) {

@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns.collectionincompatibletype;
 
-import com.google.common.collect.ImmutableList;
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode;
 import com.google.errorprone.CompilationTestHelper;
@@ -183,21 +182,6 @@ public class CollectionIncompatibleTypeTest {
             "    return xs.stream().filter(ss::contains);",
             "  }",
             "}")
-        .doTest();
-  }
-
-  @Test
-  public void methodReference_disabled() {
-    compilationHelper
-        .addSourceLines(
-            "Test.java",
-            "import java.util.List;",
-            "public class Test {",
-            "  java.util.stream.Stream filter(List<Integer> xs, List<String> ss) {",
-            "    return xs.stream().filter(ss::contains);",
-            "  }",
-            "}")
-        .setArgs(ImmutableList.of("-XepOpt:CollectionIncompatibleType:MatchMethodReferences=false"))
         .doTest();
   }
 
