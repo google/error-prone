@@ -30,7 +30,6 @@ import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.Tree.Kind;
 
-/** @author seibelsabrina@google.com (Sabrina Seibel), kayco@google.com (Kayla Walker) */
 /** Check for expressions containing {@code this != null} or {@code this == null} */
 @BugPattern(
     name = "ComparingThisWithNull",

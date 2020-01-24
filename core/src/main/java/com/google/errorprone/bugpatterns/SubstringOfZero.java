@@ -32,7 +32,6 @@ import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import java.util.Objects;
 
-/** @author seibelsabrina@google.com (Sabrina Seibel) */
 /** Check for calls to String's {@code foo.substring(0)}. */
 @BugPattern(
     name = "SubstringOfZero",

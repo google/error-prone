@@ -372,7 +372,6 @@ public class DiagnosticTestHelper {
    * @param reader A reader for the test file
    * @param matchString The bug marker comment match string.
    * @return A list of patterns that the diagnostic is expected to contain
-   * @throws IOException
    */
   private static List<String> extractPatterns(
       String line, BufferedReader reader, String matchString) throws IOException {

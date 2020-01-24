@@ -363,7 +363,7 @@ public class ImmutableChecker extends BugChecker
    * cases like:
    *
    * <pre>
-   * @Immutable(containerOf="T") class C<T> {
+   * {@code @}Immutable(containerOf="T") class C<T> {
    *   class Inner extends ImmutableCollection<T> {}
    * }
    * </pre>

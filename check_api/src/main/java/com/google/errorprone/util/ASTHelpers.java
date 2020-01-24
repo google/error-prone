@@ -899,7 +899,7 @@ public class ASTHelpers {
       if (sym instanceof VarSymbol) {
         VarSymbol var = (VarSymbol) sym;
         if ((var.flags() & Flags.ENUM) != 0) {
-          /**
+          /*
            * Javac gives us the members backwards, apparently. It's worth making an effort to
            * preserve declaration order because it's useful for diagnostics (e.g. in {@link
            * MissingCasesInEnumSwitch}).
@@ -1834,7 +1834,6 @@ public class ASTHelpers {
   /**
    * Return a mirror of this annotation.
    *
-   * @param annotationTree
    * @return an {@code AnnotationMirror} for the annotation represented by {@code annotationTree}.
    */
   public static AnnotationMirror getAnnotationMirror(AnnotationTree annotationTree) {

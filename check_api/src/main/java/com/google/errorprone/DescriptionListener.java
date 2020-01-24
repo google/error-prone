@@ -27,11 +27,7 @@ import com.sun.tools.javac.util.Log;
  */
 public interface DescriptionListener {
 
-  /**
-   * Reports a suggested modification to the code.
-   *
-   * @param description
-   */
+  /** Reports a suggested modification to the code. */
   void onDescribed(Description description);
 
   /** Factory for creating DescriptionListeners while compiling each file. */

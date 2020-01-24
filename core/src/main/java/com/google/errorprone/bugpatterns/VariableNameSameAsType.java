@@ -29,7 +29,6 @@ import com.sun.source.tree.VariableTree;
 import com.sun.tools.javac.code.Symbol;
 import javax.lang.model.element.Name;
 
-/** @author kayco@google.com (Kayla Walker) & seibelsabrina@google.com (Sabrina Seibel) */
 /** Check for variables and types with the same name */
 @BugPattern(
     name = "VariableNameSameAsType",
