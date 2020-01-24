@@ -84,7 +84,7 @@ public class CollectionIncompatibleType extends BugChecker
 
   /** Creates a new {@link CollectionIncompatibleType} checker that provides no fix. */
   public CollectionIncompatibleType(ErrorProneFlags flags) {
-    this(FixType.SUPPRESS_WARNINGS, flags);
+    this(FixType.NONE, flags);
   }
 
   /** Creates a new {@link CollectionIncompatibleType} checker with the given {@code fixType}. */
