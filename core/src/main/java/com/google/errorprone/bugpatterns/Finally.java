@@ -115,7 +115,7 @@ public class Finally extends BugChecker
     /**
      * Matches a StatementTree type by walking that statement's ancestor chain.
      *
-     * @returns true if an error is found.
+     * @return true if an error is found.
      */
     @Override
     public boolean matches(T tree, VisitorState state) {

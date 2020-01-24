@@ -37,7 +37,7 @@ public class OverridesJavaxInjectableMethodPositiveCases {
 
   /**
    * Class with a method foo() that is not annotated, but overrides a method annotated with
-   * @javax.inject.Inject.
+   * {@code @}javax.inject.Inject.
    */
   public class TestClass2 extends TestClass1 {
     // BUG: Diagnostic contains: @Inject

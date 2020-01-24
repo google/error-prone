@@ -17,8 +17,8 @@ package com.google.errorprone.bugpatterns.testdata;
 
 /** @author sulku@google.com (Marsela Sulku) */
 public class MultipleUnaryOperatorsInMethodCallPositiveCases {
+  /** these cases do not have suggested fixes */
   public static void tests(int a, int b) {
-    /** these cases do not have suggested fixes */
 
     // BUG: Diagnostic contains: Avoid having multiple unary operators acting
     twoArgs(a++, a--);
