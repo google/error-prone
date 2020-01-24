@@ -19,16 +19,13 @@ import com.google.auto.value.AutoValue;
 /**
  * Flags that control the behavior of threadsafety utils to facilitate rolling out new
  * functionality.
+ *
+ * <p>This has no flags for now, but is still plumbed through to make it easier to flag guard
+ * changes to {@link GuardedByChecker} in the future. Otherwise, it's rather difficult.
  */
 @AutoValue
 public abstract class GuardedByFlags {
-  public abstract boolean matchMethodSymbols();
-
-  public static GuardedByFlags of(boolean matchMethodSymbols) {
-    return new AutoValue_GuardedByFlags(matchMethodSymbols);
-  }
-
   public static GuardedByFlags allOn() {
-    return of(true);
+    return new AutoValue_GuardedByFlags();
   }
 }
