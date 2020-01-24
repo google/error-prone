@@ -21,7 +21,6 @@ import static com.google.errorprone.matchers.Description.NO_MATCH;
 
 import com.google.common.base.Joiner;
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.LambdaExpressionTreeMatcher;
@@ -52,11 +51,7 @@ public class GuardedByChecker extends BugChecker
 
   private static final String JUC_READ_WRITE_LOCK = "java.util.concurrent.locks.ReadWriteLock";
 
-  private final GuardedByFlags flags;
-
-  public GuardedByChecker(ErrorProneFlags flags) {
-    this.flags = GuardedByFlags.of(flags.getBoolean("GuardedByChecker:MatchOnErrors").orElse(true));
-  }
+  private final GuardedByFlags flags = GuardedByFlags.allOn();
 
   @Override
   public Description matchMethod(MethodTree tree, final VisitorState state) {
@@ -113,11 +108,6 @@ public class GuardedByChecker extends BugChecker
     }
 
     if (locks.allLocks().contains(guard)) {
-      return NO_MATCH;
-    }
-
-    // TODO(b/144776758): remove flag once the clean-up is done
-    if (!flags.matchMethodSymbols() && guard.kind() == GuardedByExpression.Kind.ERROR) {
       return NO_MATCH;
     }
 
