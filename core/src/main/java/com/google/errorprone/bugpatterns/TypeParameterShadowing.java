@@ -19,7 +19,6 @@ package com.google.errorprone.bugpatterns;
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 
-import com.google.common.base.Objects;
 import com.google.common.collect.MoreCollectors;
 import com.google.common.collect.Streams;
 import com.google.errorprone.BugPattern;
@@ -29,22 +28,15 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
+import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
-import com.sun.source.doctree.ParamTree;
 import com.sun.source.tree.ClassTree;
-import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.TypeParameterTree;
-import com.sun.source.util.DocSourcePositions;
-import com.sun.source.util.DocTreeScanner;
-import com.sun.tools.javac.api.JavacTrees;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.TypeVariableSymbol;
-import com.sun.tools.javac.tree.DCTree.DCDocComment;
-import com.sun.tools.javac.tree.JCTree;
-import com.sun.tools.javac.tree.TreeScanner;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -122,7 +114,7 @@ public class TypeParameterShadowing extends BugChecker
     conflictingTypeSymbols.stream()
         .map(
             v ->
-                renameTypeVariable(
+                SuggestedFixes.renameTypeParameter(
                     typeParameterInList(typeParameters, v),
                     tree,
                     replacementTypeVarName(v.name, typeVarsInScope),
@@ -163,74 +155,6 @@ public class TypeParameterShadowing extends BugChecker
     }
 
     return replacementName;
-  }
-
-  static SuggestedFix renameTypeVariable(
-      TypeParameterTree typeParameter,
-      Tree owningTree,
-      String typeVarReplacement,
-      VisitorState state) {
-
-    Symbol typeVariableSymbol = ASTHelpers.getSymbol(typeParameter);
-
-    // replace only the type parameter name (and not any upper bounds)
-    String name = typeParameter.getName().toString();
-    int pos = ((JCTree) typeParameter).getStartPosition();
-    SuggestedFix.Builder fixBuilder =
-        SuggestedFix.builder().replace(pos, pos + name.length(), typeVarReplacement);
-
-    ((JCTree) owningTree)
-        .accept(
-            new TreeScanner() {
-              @Override
-              public void visitIdent(JCTree.JCIdent tree) {
-                Symbol identSym = ASTHelpers.getSymbol(tree);
-                if (Objects.equal(identSym, typeVariableSymbol)) {
-                  // Lambda parameters can be desugared early, so we need to make sure the source
-                  // is there. In the example below, we would try to suggest replacing the node 't'
-                  // with T2, since the compiler desugars to g((T t) -> false). The extra condition
-                  // prevents us from doing that.
-
-                  // Foo<T> {
-                  //   <G> void g(Predicate<G> p) {},
-                  //   <T> void blah() {
-                  //     g(t -> false);
-                  //   }
-                  // }
-                  if (Objects.equal(state.getSourceForNode(tree), name)) {
-                    fixBuilder.replace(tree, typeVarReplacement);
-                  }
-                }
-              }
-            });
-    DCDocComment docCommentTree =
-        (DCDocComment) JavacTrees.instance(state.context).getDocCommentTree(state.getPath());
-    if (docCommentTree != null) {
-      docCommentTree.accept(
-          new DocTreeScanner<Void, Void>() {
-            @Override
-            public Void visitParam(ParamTree paramTree, Void unused) {
-              if (paramTree.isTypeParameter()
-                  && paramTree.getName().getName().contentEquals(name)) {
-                DocSourcePositions positions =
-                    JavacTrees.instance(state.context).getSourcePositions();
-                CompilationUnitTree compilationUnitTree = state.getPath().getCompilationUnit();
-                int startPos =
-                    (int)
-                        positions.getStartPosition(
-                            compilationUnitTree, docCommentTree, paramTree.getName());
-                int endPos =
-                    (int)
-                        positions.getEndPosition(
-                            compilationUnitTree, docCommentTree, paramTree.getName());
-                fixBuilder.replace(startPos, endPos, typeVarReplacement);
-              }
-              return super.visitParam(paramTree, null);
-            }
-          },
-          null);
-    }
-    return fixBuilder.build();
   }
 
   // Get list of type params of every enclosing class
