@@ -30,6 +30,7 @@ import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.bugpatterns.TypeParameterNaming.TypeParameterNamingClassification;
 import com.google.errorprone.fixes.SuggestedFix;
+import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ClassTree;
@@ -157,7 +158,7 @@ public class TypeNameShadowing extends BugChecker implements MethodTreeMatcher, 
         .filter(tv -> TypeParameterNamingClassification.classify(tv.name.toString()).isValidName())
         .map(
             tv ->
-                TypeParameterShadowing.renameTypeVariable(
+                SuggestedFixes.renameTypeParameter(
                     TypeParameterShadowing.typeParameterInList(typeParameters, tv),
                     tree,
                     TypeParameterShadowing.replacementTypeVarName(tv.name, visibleNames),

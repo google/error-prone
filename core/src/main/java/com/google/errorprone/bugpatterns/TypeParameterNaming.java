@@ -30,6 +30,7 @@ import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.BugPattern.StandardTags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.TypeParameterTreeMatcher;
+import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.names.NamingConventions;
 import com.google.errorprone.util.ASTHelpers;
@@ -144,7 +145,7 @@ public class TypeParameterNaming extends BugChecker implements TypeParameterTree
 
     if (classification != TypeParameterNamingClassification.NON_CLASS_NAME_WITH_T_SUFFIX) {
       descriptionBuilder.addFix(
-          TypeParameterShadowing.renameTypeVariable(
+          SuggestedFixes.renameTypeParameter(
               tree,
               state.getPath().getParentPath().getLeaf(),
               suggestedNameFollowedWithT(tree.getName().toString()),
@@ -153,7 +154,7 @@ public class TypeParameterNaming extends BugChecker implements TypeParameterTree
 
     return descriptionBuilder
         .addFix(
-            TypeParameterShadowing.renameTypeVariable(
+            SuggestedFixes.renameTypeParameter(
                 tree,
                 state.getPath().getParentPath().getLeaf(),
                 suggestedSingleLetter(tree.getName().toString(), tree),
