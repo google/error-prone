@@ -29,12 +29,12 @@ import java.util.HashMap;
 import java.util.Map;
 import javax.annotation.Nullable;
 import javax.lang.model.element.Element;
-import org.checkerframework.dataflow.analysis.AbstractValue;
-import org.checkerframework.dataflow.analysis.FlowExpressions;
-import org.checkerframework.dataflow.analysis.Store;
-import org.checkerframework.dataflow.cfg.CFGVisualizer;
-import org.checkerframework.dataflow.cfg.node.LocalVariableNode;
-import org.checkerframework.javacutil.trees.DetachedVarSymbol;
+import org.checkerframework.shaded.dataflow.analysis.AbstractValue;
+import org.checkerframework.shaded.dataflow.analysis.FlowExpressions;
+import org.checkerframework.shaded.dataflow.analysis.Store;
+import org.checkerframework.shaded.dataflow.cfg.CFGVisualizer;
+import org.checkerframework.shaded.dataflow.cfg.node.LocalVariableNode;
+import org.checkerframework.shaded.javacutil.trees.DetachedVarSymbol;
 
 /**
  * Immutable map from each local variable to its {@link AbstractValue}. Note that, while the
@@ -72,8 +72,8 @@ public final class LocalStore<V extends AbstractValue<V>>
   /**
    * Returns the value for the given variable. {@code element} must come from a call to {@link
    * LocalVariableNode#getElement()} or {@link
-   * org.checkerframework.javacutil.TreeUtils#elementFromDeclaration} ({@link
-   * org.checkerframework.dataflow.cfg.node.VariableDeclarationNode#getTree()}).
+   * org.checkerframework.shaded.javacutil.TreeUtils#elementFromDeclaration} ({@link
+   * org.checkerframework.shaded.dataflow.cfg.node.VariableDeclarationNode#getTree()}).
    */
   @Nullable
   private V getInformation(Element element) {
@@ -100,8 +100,8 @@ public final class LocalStore<V extends AbstractValue<V>>
     /**
      * Sets the value for the given variable. {@code element} must come from a call to {@link
      * LocalVariableNode#getElement()} or {@link
-     * org.checkerframework.javacutil.TreeUtils#elementFromDeclaration} ({@link
-     * org.checkerframework.dataflow.cfg.node.VariableDeclarationNode#getTree()}).
+     * org.checkerframework.shaded.javacutil.TreeUtils#elementFromDeclaration} ({@link
+     * org.checkerframework.shaded.dataflow.cfg.node.VariableDeclarationNode#getTree()}).
      */
     public Builder<V> setInformation(Element element, V value) {
       checkElementType(element);

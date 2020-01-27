@@ -32,12 +32,12 @@ import javax.annotation.Nullable;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
-import org.checkerframework.dataflow.cfg.node.AssignmentNode;
-import org.checkerframework.dataflow.cfg.node.FieldAccessNode;
-import org.checkerframework.dataflow.cfg.node.LocalVariableNode;
-import org.checkerframework.dataflow.cfg.node.Node;
-import org.checkerframework.dataflow.cfg.node.VariableDeclarationNode;
-import org.checkerframework.javacutil.TreeUtils;
+import org.checkerframework.shaded.dataflow.cfg.node.AssignmentNode;
+import org.checkerframework.shaded.dataflow.cfg.node.FieldAccessNode;
+import org.checkerframework.shaded.dataflow.cfg.node.LocalVariableNode;
+import org.checkerframework.shaded.dataflow.cfg.node.Node;
+import org.checkerframework.shaded.dataflow.cfg.node.VariableDeclarationNode;
+import org.checkerframework.shaded.javacutil.TreeUtils;
 
 /**
  * A sequence of field names or autovalue accessors, along with a receiver: either a variable or a

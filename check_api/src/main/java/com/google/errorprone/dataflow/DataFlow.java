@@ -36,16 +36,16 @@ import com.sun.tools.javac.processing.JavacProcessingEnvironment;
 import com.sun.tools.javac.util.Context;
 import javax.annotation.Nullable;
 import javax.annotation.processing.ProcessingEnvironment;
-import org.checkerframework.dataflow.analysis.AbstractValue;
-import org.checkerframework.dataflow.analysis.Analysis;
-import org.checkerframework.dataflow.analysis.Store;
-import org.checkerframework.dataflow.analysis.TransferFunction;
-import org.checkerframework.dataflow.cfg.CFGBuilder;
-import org.checkerframework.dataflow.cfg.ControlFlowGraph;
-import org.checkerframework.dataflow.cfg.UnderlyingAST;
+import org.checkerframework.shaded.dataflow.analysis.AbstractValue;
+import org.checkerframework.shaded.dataflow.analysis.Analysis;
+import org.checkerframework.shaded.dataflow.analysis.Store;
+import org.checkerframework.shaded.dataflow.analysis.TransferFunction;
+import org.checkerframework.shaded.dataflow.cfg.CFGBuilder;
+import org.checkerframework.shaded.dataflow.cfg.ControlFlowGraph;
+import org.checkerframework.shaded.dataflow.cfg.UnderlyingAST;
 
 /**
- * Provides a wrapper around {@link org.checkerframework.dataflow.analysis.Analysis}.
+ * Provides a wrapper around {@link org.checkerframework.shaded.dataflow.analysis.Analysis}.
  *
  * @author konne@google.com (Konstantin Weitz)
  */
@@ -81,7 +81,7 @@ public final class DataFlow {
                   final TransferFunction<?, ?> transfer = key.transferFunction();
 
                   @SuppressWarnings({"unchecked", "rawtypes"})
-                  final Analysis<?, ?, ?> analysis = new Analysis(transfer, env);
+                  final Analysis<?, ?, ?> analysis = new Analysis(transfer);
                   analysis.performAnalysis(cfg);
                   return analysis;
                 }
