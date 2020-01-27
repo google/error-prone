@@ -151,4 +151,32 @@ public class UnnecessaryAnonymousClassTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void invokingDefaultMethod() {
+    testHelper
+        .addInputLines(
+            "Test.java",
+            "import java.util.function.Function;",
+            "class Test {",
+            "  interface Foo {",
+            "    int foo(int a);",
+            "    default void bar() {",
+            "      foo(1);",
+            "    }",
+            "  }",
+            "  private static final Foo FOO = new Foo() {",
+            "    @Override public int foo(int a) {",
+            "      return 2 * a;",
+            "    }",
+            "  };",
+            "  public static void test() {",
+            "    FOO.bar();",
+            "    useFoo(FOO);",
+            "  }",
+            "  public static void useFoo(Foo foo) {}",
+            "}")
+        .expectUnchanged()
+        .doTest();
+  }
 }
