@@ -35,10 +35,12 @@ import com.google.common.base.Function;
 import com.google.common.base.Joiner;
 import com.google.common.base.Objects;
 import com.google.common.base.Predicates;
+import com.google.common.base.Splitter;
 import com.google.common.base.Verify;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.google.common.io.CharStreams;
@@ -350,32 +352,42 @@ public class SuggestedFixes {
         fix);
   }
 
+  private static final Splitter COMPONENT_SPLITTER = Splitter.on('.');
+
   /**
    * Returns a human-friendly name of the given {@code typeName} for use in fixes.
    *
    * <p>This should be used if the type may not be loaded.
+   *
+   * @param typeName a qualified canonical type name, e.g. {@code java.util.Map.Entry}.
    */
   public static String qualifyType(VisitorState state, SuggestedFix.Builder fix, String typeName) {
-    for (int startOfClass = typeName.indexOf('.');
-        startOfClass > 0;
-        startOfClass = typeName.indexOf('.', startOfClass + 1)) {
-      int endOfClass = typeName.indexOf('.', startOfClass + 1);
-      if (endOfClass < 0) {
-        endOfClass = typeName.length();
-      }
-      if (!Character.isUpperCase(typeName.charAt(startOfClass + 1))) {
+    List<String> components = COMPONENT_SPLITTER.splitToList(typeName);
+    // Check if the simple name is already visible.
+    String simpleName = Iterables.getLast(components);
+    Symbol simpleNameSymbol = FindIdentifiers.findIdent(simpleName, state, KindSelector.VAL_TYP);
+    if (simpleNameSymbol != null && simpleNameSymbol.getQualifiedName().contentEquals(typeName)) {
+      return simpleName;
+    }
+
+    for (int i = 0; i < components.size(); ++i) {
+      String component = components.get(i);
+      // If it's lowercase, probably a package name.
+      if (!Character.isUpperCase(component.charAt(0))) {
         continue;
       }
-      String className = typeName.substring(startOfClass + 1);
-      Symbol found = FindIdentifiers.findIdent(className, state, KindSelector.VAL_TYP);
+      // The qualified name up to (and including) the component we're currently dealing with.
+      String qualifiedName = components.subList(0, i + 1).stream().collect(joining("."));
+
+      Symbol found = FindIdentifiers.findIdent(component, state, KindSelector.VAL_TYP);
       // No clashing name: import it and return.
       if (found == null) {
-        fix.addImport(typeName.substring(0, endOfClass));
-        return className;
+        fix.addImport(qualifiedName);
+        return components.subList(i, components.size()).stream().collect(joining("."));
       }
-      // Type already imported.
-      if (found.getQualifiedName().contentEquals(typeName)) {
-        return className;
+      // Type already imported or otherwise visible.
+      if (found.getQualifiedName().contentEquals(qualifiedName)) {
+        return components.subList(i, components.size()).stream().collect(joining("."));
       }
     }
     return typeName;
