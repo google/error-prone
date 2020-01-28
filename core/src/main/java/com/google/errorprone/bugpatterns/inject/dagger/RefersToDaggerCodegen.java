@@ -16,8 +16,7 @@
 
 package com.google.errorprone.bugpatterns.inject.dagger;
 
-import static com.google.auto.common.AnnotationMirrors.getAnnotationValue;
-import static com.google.common.collect.Iterables.getOnlyElement;
+import static com.google.errorprone.util.ASTHelpers.getGeneratedBy;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 
 import com.google.common.collect.ImmutableSet;
@@ -30,14 +29,9 @@ import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.MethodInvocationTree;
-import com.sun.tools.javac.code.Attribute;
-import com.sun.tools.javac.code.Attribute.Compound;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Type;
-import com.sun.tools.javac.util.Name;
-import java.util.List;
-import javax.lang.model.element.AnnotationValue;
 
 /**
  * Checks that the only code that refers to Dagger generated code is other Dagger generated code.
@@ -114,19 +108,9 @@ public final class RefersToDaggerCodegen extends BugChecker implements MethodInv
       return true;
     }
 
-    for (Compound annotation : rootCallingClass.getAnnotationMirrors()) {
-      Name annotationName =
-          ((ClassSymbol) annotation.getAnnotationType().asElement()).getQualifiedName();
-      if (annotationName.contentEquals("javax.annotation.Generated")
-          || annotationName.contentEquals("javax.annotation.processing.Generated")) {
-        AnnotationValue valueAttribute = getAnnotationValue(annotation, "value");
-        @SuppressWarnings("unchecked")
-        List<Attribute> valuesList = (List<Attribute>) valueAttribute.getValue();
-        return valuesList.size() == 1
-            && getOnlyElement(valuesList)
-                .getValue()
-                .equals("dagger.internal.codegen.ComponentProcessor");
-      }
+    ImmutableSet<String> generatedBy = getGeneratedBy(rootCallingClass, state);
+    if (!generatedBy.isEmpty()) {
+      return generatedBy.contains("dagger.internal.codegen.ComponentProcessor");
     }
 
     if (DAGGER_1_GENERATED_BASE_TYPES.stream()
