@@ -16,10 +16,8 @@
 
 package com.google.errorprone.bugpatterns;
 
-import com.google.common.collect.ImmutableList;
 import com.google.errorprone.CompilationTestHelper;
 import com.google.errorprone.annotations.CompileTimeConstant;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -27,14 +25,8 @@ import org.junit.runners.JUnit4;
 /** {@link CompileTimeConstantChecker}Test */
 @RunWith(JUnit4.class)
 public class CompileTimeConstantCheckerTest {
-
-  private CompilationTestHelper compilationHelper;
-
-  @Before
-  public void setUp() {
-    compilationHelper =
-        CompilationTestHelper.newInstance(CompileTimeConstantChecker.class, getClass());
-  }
+  private final CompilationTestHelper compilationHelper =
+      CompilationTestHelper.newInstance(CompileTimeConstantChecker.class, getClass());
 
   @Test
   public void test_SuppressWarningsDoesntWork() {
@@ -292,23 +284,6 @@ public class CompileTimeConstantCheckerTest {
             "    Holder.m(s, \"foo\", s);",
             "  }",
             "}")
-        .doTest();
-  }
-
-  @Test
-  public void testMatches_varargsInDifferentCompilationUnit_fixDisabled() {
-    compilationHelper
-        .addSourceLines(
-            "test/CompileTimeConstantTestCase.java",
-            "package test;",
-            "import com.google.errorprone.annotations.CompileTimeConstant;",
-            "import " + Holder.class.getCanonicalName() + ";",
-            "public class CompileTimeConstantTestCase {",
-            "  public static void r(String s) {",
-            "    Holder.m(s, \"foo\", s);",
-            "  }",
-            "}")
-        .setArgs(ImmutableList.of("-XepOpt:CompileTimeConstantChecker:FixVarArgsCheck=false"))
         .doTest();
   }
 
