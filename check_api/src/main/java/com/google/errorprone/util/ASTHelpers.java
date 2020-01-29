@@ -1283,15 +1283,17 @@ public class ASTHelpers {
     }
   }
 
-  /** Returns the value of the {@code @Generated} annotation on the top-level class, if present. */
+  /**
+   * Returns the value of the {@code @Generated} annotation on encosing classes, if present.
+   *
+   * <p>Although {@code @Generated} can be applied to non-class progam elements, there are no known
+   * cases of that happening, so it isn't supported here.
+   */
   public static ImmutableSet<String> getGeneratedBy(VisitorState state) {
-    ClassTree outerClass = null;
-    for (Tree enclosing : state.getPath()) {
-      if (enclosing instanceof ClassTree) {
-        outerClass = (ClassTree) enclosing;
-      }
-    }
-    return outerClass == null ? ImmutableSet.of() : getGeneratedBy(getSymbol(outerClass), state);
+    return Streams.stream(state.getPath())
+        .filter(ClassTree.class::isInstance)
+        .flatMap(enclosing -> getGeneratedBy(getSymbol(enclosing), state).stream())
+        .collect(toImmutableSet());
   }
 
 
