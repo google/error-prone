@@ -83,13 +83,13 @@ public class DefaultCharset extends BugChecker
     implements MethodInvocationTreeMatcher, NewClassTreeMatcher {
 
   enum CharsetFix {
-    UTF_8_FIX("UTF_8") {
+    UTF_8_FIX("UTF_8", "Specify UTF-8") {
       @Override
       void addImport(SuggestedFix.Builder fix, VisitorState state) {
         fix.addStaticImport("java.nio.charset.StandardCharsets.UTF_8");
       }
     },
-    DEFAULT_CHARSET_FIX("Charset.defaultCharset()") {
+    DEFAULT_CHARSET_FIX("Charset.defaultCharset()", "Specify default charset") {
       @Override
       void addImport(SuggestedFix.Builder fix, VisitorState state) {
         fix.addImport("java.nio.charset.Charset");
@@ -97,9 +97,11 @@ public class DefaultCharset extends BugChecker
     };
 
     final String replacement;
+    final String title;
 
-    CharsetFix(String replacement) {
+    CharsetFix(String replacement, String title) {
       this.replacement = replacement;
+      this.title = title;
     }
 
     String replacement() {
@@ -522,6 +524,7 @@ public class DefaultCharset extends BugChecker
       fix.postfixWith(Iterables.getLast(arguments), ", " + charset.replacement());
     }
     charset.addImport(fix, state);
+    fix.setShortDescription(charset.title);
     return fix.build();
   }
 
