@@ -287,7 +287,7 @@ public class FormatStringAnnotationCheckerTest {
             "test/FormatStringTestCase.java",
             "package test;",
             "import static org.mockito.ArgumentMatchers.any;",
-            "import static org.mockito.Matchers.eq;",
+            "import static org.mockito.ArgumentMatchers.eq;",
             "import static org.mockito.Mockito.verify;",
             "import com.google.errorprone.annotations.FormatMethod;",
             "import com.google.errorprone.annotations.FormatString;",
