@@ -46,7 +46,7 @@ import com.sun.source.tree.MethodTree;
 @BugPattern(
     name = "InjectOnConstructorOfAbstractClass",
     summary =
-        "Constructors on abstract classes are never directly @Injected, only the constructors"
+        "Constructors on abstract classes are never directly @Inject'ed, only the constructors"
             + " of their subclasses can be @Inject'ed.",
     severity = WARNING,
     providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
