@@ -69,6 +69,29 @@ public final class NonCanonicalTypeTest {
   }
 
   @Test
+  public void notVisibleFromUsageSite() {
+    compilationHelper
+        .addSourceLines(
+            "foo/A.java", //
+            "package foo;",
+            "class A {",
+            "  public static class C {}",
+            "}")
+        .addSourceLines(
+            "foo/B.java", //
+            "package foo;",
+            "public class B extends A {}")
+        .addSourceLines(
+            "D.java", //
+            "package bar;",
+            "import foo.B;",
+            "public interface D {",
+            "  B.C test();",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void positiveWithGenerics() {
     compilationHelper
         .addSourceLines(

@@ -19,6 +19,7 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.fixes.SuggestedFixes.qualifyType;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
+import static com.google.errorprone.util.ASTHelpers.enclosingClass;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 
 import com.google.errorprone.BugPattern;
@@ -27,6 +28,7 @@ import com.google.errorprone.bugpatterns.BugChecker.MemberSelectTreeMatcher;
 import com.google.errorprone.bugpatterns.StaticImports.StaticImportInfo;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
+import com.google.errorprone.util.Visibility;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.tools.javac.code.Symbol;
@@ -58,6 +60,11 @@ public final class NonCanonicalType extends BugChecker implements MemberSelectTr
     if (importInfo.canonicalName().equals(nonCanonicalName)) {
       return NO_MATCH;
     }
+    for (Symbol symbol = getSymbol(tree); symbol != null; symbol = enclosingClass(symbol)) {
+      if (!Visibility.fromModifiers(symbol.getModifiers()).shouldBeVisible(tree, state)) {
+        return NO_MATCH;
+      }
+    }
     SuggestedFix.Builder fixBuilder = SuggestedFix.builder();
     SuggestedFix fix =
         fixBuilder
@@ -71,7 +78,7 @@ public final class NonCanonicalType extends BugChecker implements MemberSelectTr
 
   private static final Pattern PACKAGE_CLASS_NAME_SPLITTER = Pattern.compile("(.*?)\\.([A-Z].*)");
 
-  private static final String createDescription(String canonicalName, String nonCanonicalName) {
+  private static String createDescription(String canonicalName, String nonCanonicalName) {
     Matcher canonicalNameMatcher = PACKAGE_CLASS_NAME_SPLITTER.matcher(canonicalName);
     Matcher nonCanonicalNameMatcher = PACKAGE_CLASS_NAME_SPLITTER.matcher(nonCanonicalName);
 
