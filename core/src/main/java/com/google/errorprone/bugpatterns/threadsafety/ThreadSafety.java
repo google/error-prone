@@ -23,7 +23,7 @@ import static com.google.common.collect.ImmutableList.toImmutableList;
 import com.google.auto.value.AutoValue;
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
@@ -54,7 +54,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -825,31 +824,36 @@ public final class ThreadSafety {
     return superType.tsym.getSimpleName().toString();
   }
 
-  /** Checks that any thread-safe type parameters are instantiated with thread-safe types. */
   public Violation checkInstantiation(
       Collection<TypeVariableSymbol> typeParameters, Collection<Type> typeArguments) {
     return Streams.zip(
             typeParameters.stream(),
             typeArguments.stream(),
-            (sym, type) -> {
-              if (!hasThreadSafeTypeParameterAnnotation(sym)) {
-                return Violation.absent();
-              }
-              Violation info =
-                  isThreadSafeType(
-                      /* allowContainerTypeParameters= */ true,
-                      /* containerTypeParameters= */ ImmutableSet.of(),
-                      type);
-              if (!info.isPresent()) {
-                return Violation.absent();
-              }
-              return info.plus(
-                  String.format(
-                      "instantiation of '%s' is %s", sym, purpose.mutableOrNotThreadSafe()));
-            })
+            (sym, type) -> checkInstantiation(sym, ImmutableList.of(type)))
         .filter(Violation::isPresent)
         .findFirst()
         .orElse(Violation.absent());
+  }
+
+  /** Checks that any thread-safe type parameters are instantiated with thread-safe types. */
+  public Violation checkInstantiation(
+      TypeVariableSymbol typeParameter, Collection<Type> instantiations) {
+    if (!hasThreadSafeTypeParameterAnnotation(typeParameter)) {
+      return Violation.absent();
+    }
+    for (Type instantiation : instantiations) {
+      Violation info =
+          isThreadSafeType(
+              /* allowContainerTypeParameters= */ true,
+              /* containerTypeParameters= */ ImmutableSet.of(),
+              instantiation);
+      if (info.isPresent()) {
+        return info.plus(
+            String.format(
+                "instantiation of '%s' is %s", typeParameter, purpose.mutableOrNotThreadSafe()));
+      }
+    }
+    return Violation.absent();
   }
 
   /** Checks the instantiation of any thread-safe type parameters in the current invocation. */
@@ -862,35 +866,25 @@ public final class ThreadSafety {
       // fast path
       return Violation.absent();
     }
-    ImmutableMap<TypeVariableSymbol, Type> instantiation =
-        getInstantiation(state.getTypes(), methodType);
+    ImmutableMultimap<TypeVariableSymbol, Type> instantiation = getInstantiation(methodType);
 
-    // javac does not instantiate all types, so filter out ones that were not instantiated.  Ideally
-    // we wouldn't have to do this.
-    typeParameters =
-        typeParameters.stream().filter(instantiation::containsKey).collect(toImmutableList());
-
-    return checkInstantiation(
-        typeParameters, typeParameters.stream().map(instantiation::get).collect(toImmutableList()));
+    for (TypeVariableSymbol typeParameter : typeParameters) {
+      Violation violation = checkInstantiation(typeParameter, instantiation.get(typeParameter));
+      if (violation.isPresent()) {
+        return violation;
+      }
+    }
+    return Violation.absent();
   }
 
-  private static ImmutableMap<TypeVariableSymbol, Type> getInstantiation(
-      Types types, Type methodType) {
+  private static ImmutableMultimap<TypeVariableSymbol, Type> getInstantiation(Type methodType) {
     List<Type> to = new ArrayList<>();
     ArrayList<Type> from = new ArrayList<>();
     getSubst(getMapping(methodType), from, to);
-    Map<TypeVariableSymbol, Type> mapping = new LinkedHashMap<>();
+    ImmutableMultimap.Builder<TypeVariableSymbol, Type> mapping = ImmutableMultimap.builder();
     Streams.forEachPair(
-        from.stream(),
-        to.stream(),
-        (f, t) -> {
-          Type existing = mapping.put((TypeVariableSymbol) f.asElement(), t);
-          if (existing != null && !types.isSameType(t, existing)) {
-            throw new AssertionError(
-                String.format("%s instantiated as both %s and %s", f.asElement(), t, existing));
-          }
-        });
-    return ImmutableMap.copyOf(mapping);
+        from.stream(), to.stream(), (f, t) -> mapping.put((TypeVariableSymbol) f.asElement(), t));
+    return mapping.build();
   }
 
   private static Type getMapping(Type type) {
