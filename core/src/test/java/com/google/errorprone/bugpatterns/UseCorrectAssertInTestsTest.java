@@ -32,17 +32,7 @@ public final class UseCorrectAssertInTestsTest {
   private static final String INPUT = "in/FooTest.java";
   private static final String OUTPUT = "out/FooTest.java";
 
-  private static final String[] INPUT_SRC_NO_TEST =
-      new String[] {
-        "import org.junit.runner.RunWith;",
-        "import org.junit.runners.JUnit4;",
-        "@RunWith(JUnit4.class)",
-        "public class FooTest {",
-        "  void foo() {",
-        "    assert true;",
-        "  }",
-        "}"
-      };
+  private static final String TEST_ONLY = "-XepCompilingTestOnlyCode";
 
   private final BugCheckerRefactoringTestHelper helper =
       BugCheckerRefactoringTestHelper.newInstance(new UseCorrectAssertInTests(), getClass());
@@ -63,7 +53,65 @@ public final class UseCorrectAssertInTestsTest {
 
   @Test
   public void assertInNonTestMethod() {
-    helper.addInputLines(INPUT, INPUT_SRC_NO_TEST).expectUnchanged().doTest();
+    helper
+        .addInputLines(
+            INPUT,
+            "import org.junit.runner.RunWith;",
+            "import org.junit.runners.JUnit4;",
+            "@RunWith(JUnit4.class)",
+            "public class FooTest {",
+            "  void foo() {",
+            "    assert true;",
+            "  }",
+            "}")
+        .addOutputLines(
+            OUTPUT,
+            "import static com.google.common.truth.Truth.assertThat;",
+            "import org.junit.runner.RunWith;",
+            "import org.junit.runners.JUnit4;",
+            "@RunWith(JUnit4.class)",
+            "public class FooTest {",
+            "  void foo() {",
+            "    assertThat(true).isTrue();",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void assertInTestOnlyCode() {
+    helper
+        .addInputLines(
+            INPUT,
+            "public class FooTest {", //
+            "  void foo() {",
+            "    assert true;",
+            "  }",
+            "}")
+        .addOutputLines(
+            OUTPUT,
+            "import static com.google.common.truth.Truth.assertThat;",
+            "public class FooTest {",
+            "  void foo() {",
+            "    assertThat(true).isTrue();",
+            "  }",
+            "}")
+        .setArgs(TEST_ONLY)
+        .doTest();
+  }
+
+  @Test
+  public void assertInNonTestCode() {
+    helper
+        .addInputLines(
+            INPUT,
+            "public class FooTest {", //
+            "  void foo() {",
+            "    assert true;",
+            "  }",
+            "}")
+        .expectUnchanged()
+        .doTest();
   }
 
   @Test
@@ -126,7 +174,11 @@ public final class UseCorrectAssertInTestsTest {
   @Test
   public void wrongAssertFalseCase() {
     helper
-        .addInputLines(INPUT, inputWithExpressions("boolean a = false;", "assert (!a);"))
+        .addInputLines(
+            INPUT,
+            inputWithExpressions(
+                "boolean a = false;", //
+                "assert (!a);"))
         .addOutputLines(
             OUTPUT,
             inputWithExpressionsAndImport(
@@ -138,7 +190,10 @@ public final class UseCorrectAssertInTestsTest {
   public void wrongAssertEqualsCase() {
     helper
         .addInputLines(
-            INPUT, inputWithExpressions("String a = \"test\";", "assert a.equals(\"test\");"))
+            INPUT,
+            inputWithExpressions(
+                "String a = \"test\";", //
+                "assert a.equals(\"test\");"))
         .addOutputLines(
             OUTPUT,
             inputWithExpressionsAndImport(
@@ -149,22 +204,34 @@ public final class UseCorrectAssertInTestsTest {
   @Test
   public void wrongAssertEqualsNullCase() {
     helper
-        .addInputLines(INPUT, inputWithExpressions("Integer a = null;", "assert a == null;"))
+        .addInputLines(
+            INPUT,
+            inputWithExpressions(
+                "Integer a = null;", //
+                "assert a == null;"))
         .addOutputLines(
             OUTPUT,
             inputWithExpressionsAndImport(
-                "Integer a = null;", "assertThat(a).isNull();", ASSERT_THAT_IMPORT))
+                "Integer a = null;", //
+                "assertThat(a).isNull();",
+                ASSERT_THAT_IMPORT))
         .doTest();
   }
 
   @Test
   public void wrongAssertEqualsNullCaseLeftSide() {
     helper
-        .addInputLines(INPUT, inputWithExpressions("Integer a = null;", "assert null == a;"))
+        .addInputLines(
+            INPUT,
+            inputWithExpressions(
+                "Integer a = null;", //
+                "assert null == a;"))
         .addOutputLines(
             OUTPUT,
             inputWithExpressionsAndImport(
-                "Integer a = null;", "assertThat(a).isNull();", ASSERT_THAT_IMPORT))
+                "Integer a = null;", //
+                "assertThat(a).isNull();",
+                ASSERT_THAT_IMPORT))
         .doTest();
   }
 
@@ -172,7 +239,10 @@ public final class UseCorrectAssertInTestsTest {
   public void wrongAssertEqualsNullCaseWithDetail() {
     helper
         .addInputLines(
-            INPUT, inputWithExpressions("Integer a = null;", "assert a == null : \"detail\";"))
+            INPUT,
+            inputWithExpressions(
+                "Integer a = null;", //
+                "assert a == null : \"detail\";"))
         .addOutputLines(
             OUTPUT,
             inputWithExpressionsAndImport(
@@ -185,51 +255,79 @@ public final class UseCorrectAssertInTestsTest {
   @Test
   public void wrongAssertNotEqualsNullCase() {
     helper
-        .addInputLines(INPUT, inputWithExpressions("Integer a = 1;", "assert a != null;"))
+        .addInputLines(
+            INPUT,
+            inputWithExpressions(
+                "Integer a = 1;", //
+                "assert a != null;"))
         .addOutputLines(
             OUTPUT,
             inputWithExpressionsAndImport(
-                "Integer a = 1;", "assertThat(a).isNotNull();", ASSERT_THAT_IMPORT))
+                "Integer a = 1;", //
+                "assertThat(a).isNotNull();",
+                ASSERT_THAT_IMPORT))
         .doTest();
   }
 
   @Test
   public void wrongAssertReferenceSameCase() {
     helper
-        .addInputLines(INPUT, inputWithExpressions("Integer a = 1;", "assert a == 1;"))
+        .addInputLines(
+            INPUT,
+            inputWithExpressions(
+                "Integer a = 1;", //
+                "assert a == 1;"))
         .addOutputLines(
             OUTPUT,
             inputWithExpressionsAndImport(
-                "Integer a = 1;", "assertThat(a).isSameInstanceAs(1);", ASSERT_THAT_IMPORT))
+                "Integer a = 1;", //
+                "assertThat(a).isSameInstanceAs(1);",
+                ASSERT_THAT_IMPORT))
         .doTest();
   }
 
   @Test
   public void wrongAssertReferenceWithParensCase() {
     helper
-        .addInputLines(INPUT, inputWithExpressions("Integer a = 1;", "assert (a == 1);"))
+        .addInputLines(
+            INPUT,
+            inputWithExpressions(
+                "Integer a = 1;", //
+                "assert (a == 1);"))
         .addOutputLines(
             OUTPUT,
             inputWithExpressionsAndImport(
-                "Integer a = 1;", "assertThat(a).isSameInstanceAs(1);", ASSERT_THAT_IMPORT))
+                "Integer a = 1;", //
+                "assertThat(a).isSameInstanceAs(1);",
+                ASSERT_THAT_IMPORT))
         .doTest();
   }
 
   @Test
   public void wrongAssertReferenceNotSameCase() {
     helper
-        .addInputLines(INPUT, inputWithExpressions("Integer a = 1;", "assert a != 1;"))
+        .addInputLines(
+            INPUT,
+            inputWithExpressions(
+                "Integer a = 1;", //
+                "assert a != 1;"))
         .addOutputLines(
             OUTPUT,
             inputWithExpressionsAndImport(
-                "Integer a = 1;", "assertThat(a).isNotSameInstanceAs(1);", ASSERT_THAT_IMPORT))
+                "Integer a = 1;", //
+                "assertThat(a).isNotSameInstanceAs(1);",
+                ASSERT_THAT_IMPORT))
         .doTest();
   }
 
   @Test
   public void wrongAssertReferenceSameCaseWithDetailCase() {
     helper
-        .addInputLines(INPUT, inputWithExpressions("int a = 1;", "assert a == 1 : \"detail\";"))
+        .addInputLines(
+            INPUT,
+            inputWithExpressions(
+                "int a = 1;", //
+                "assert a == 1 : \"detail\";"))
         .addOutputLines(
             OUTPUT,
             inputWithExpressionsAndImport(
