@@ -43,6 +43,7 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+import com.google.common.collect.Streams;
 import com.google.common.io.CharStreams;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.apply.DescriptionBasedDiff;
@@ -229,16 +230,29 @@ public class SuggestedFixes {
     if (toAdd.isEmpty()) {
       return;
     }
-    int pos =
-        state.getEndPosition(originalModifiers) != Position.NOPOS
-            ? state.getEndPosition(originalModifiers) + 1
-            : ((JCTree) tree).getStartPosition();
+    int pos = -1;
+    if (tree.getKind() == Tree.Kind.ANNOTATION_TYPE) {
+      // For annotation types, the modifiers tree include the '@' of @interface. And all modifiers
+      // must appear before @interface.
+      pos =
+          Streams.findLast(
+                  state.getOffsetTokensForNode(originalModifiers).stream()
+                      .filter(tok -> tok.kind().equals(TokenKind.MONKEYS_AT)))
+              .get()
+              .pos();
+    } else {
+      pos =
+          state.getEndPosition(originalModifiers) != Position.NOPOS
+              ? state.getEndPosition(originalModifiers) + 1
+              : ((JCTree) tree).getStartPosition();
+    }
+    int minPositionForNewModifiers = pos;
     int insertPos =
         state.getOffsetTokensForNode(tree).stream()
             .mapToInt(ErrorProneToken::pos)
-            .filter(thisPos -> thisPos >= pos)
+            .filter(thisPos -> thisPos >= minPositionForNewModifiers)
             .findFirst()
-            .orElse(pos); // shouldn't ever be able to get to the else
+            .orElse(minPositionForNewModifiers); // shouldn't ever be able to get to the else
     fix.replace(insertPos, insertPos, Joiner.on(' ').join(toAdd) + " ");
   }
 
