@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.matchers.Matchers.contains;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 import static com.sun.source.tree.Tree.Kind.LOGICAL_COMPLEMENT;
 import static com.sun.source.tree.Tree.Kind.NULL_LITERAL;
@@ -29,8 +28,6 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
-import com.google.errorprone.matchers.JUnitMatchers;
-import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.predicates.type.Any;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.AssertTree;
@@ -54,9 +51,6 @@ import com.sun.tools.javac.tree.TreeInfo;
     severity = SeverityLevel.WARNING,
     providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class UseCorrectAssertInTests extends BugChecker implements MethodTreeMatcher {
-
-  private static final Matcher<Tree> CONTAINS_ASSERT =
-      contains((tree, state) -> tree instanceof AssertTree);
   private static final String STATIC_ASSERT_THAT_IMPORT =
       "static com.google.common.truth.Truth.assertThat";
   private static final String STATIC_ASSERT_WITH_MESSAGE_IMPORT =
@@ -81,19 +75,21 @@ public class UseCorrectAssertInTests extends BugChecker implements MethodTreeMat
       return Description.NO_MATCH;
     }
 
-    if (ASTHelpers.isJUnitTestCode(state)
-        && JUnitMatchers.wouldRunInJUnit4.matches(methodTree, state)
-        && CONTAINS_ASSERT.matches(methodTree.getBody(), state)) {
-
-      SuggestedFix.Builder fix = SuggestedFix.builder();
-
-      for (AssertTree foundAssert : scanAsserts(methodTree)) {
-        replaceAssert(fix, foundAssert, state);
-      }
-
-      return describeMatch(methodTree, fix.build());
+    // Match either JUnit tests or test-only code.
+    if (!(ASTHelpers.isJUnitTestCode(state) || state.errorProneOptions().isTestOnlyTarget())) {
+      return Description.NO_MATCH;
     }
-    return Description.NO_MATCH;
+
+    ImmutableList<AssertTree> assertions = scanAsserts(methodTree);
+    if (assertions.isEmpty()) {
+      return Description.NO_MATCH;
+    }
+
+    SuggestedFix.Builder fix = SuggestedFix.builder();
+    for (AssertTree foundAssert : assertions) {
+      replaceAssert(fix, foundAssert, state);
+    }
+    return describeMatch(methodTree, fix.build());
   }
 
   private static void replaceAssert(
