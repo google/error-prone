@@ -3,6 +3,7 @@
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 # DontDoThis
 
 __Don&#39;t do this; do List&lt;Foo&gt; instead__
