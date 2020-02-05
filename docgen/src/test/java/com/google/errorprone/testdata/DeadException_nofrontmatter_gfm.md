@@ -3,6 +3,7 @@
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 # DeadException
 
 __Exception created but not thrown__
