@@ -10,7 +10,6 @@ __Exception created but not thrown__
 <div style="float:right;"><table id="metadata">
 <tr><td>Severity</td><td>ERROR</td></tr>
 <tr><td>Tags</td><td>LikelyError</td></tr>
-<div class=".more-info" data-qualified-name=com.google.errorprone.bugpatterns.DeadException></div>
 </table></div>
 
 
@@ -21,6 +20,7 @@ The exception is created with new, but is not thrown, and the reference is lost.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("DeadException")` to the enclosing element.
+
 
 ----------
 
