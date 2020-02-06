@@ -51,7 +51,7 @@ management:
 The preferred solution is to not inject closable resources, but instead, objects
 that can expose short-lived closable resources that are used as necessary. The
 following example uses Guava's
-[CharSource](https://github.com/google/guava/wiki/IOExplained#sources-and-sinks)
+[CharSink](https://github.com/google/guava/wiki/IOExplained#sources-and-sinks)
 as the resource manager object:
 
 ```java
