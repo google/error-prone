@@ -205,7 +205,8 @@ class Transaction {
 
   public void handle() {
     runHandler(new Handler() {
-      void apply() {
+      @Override
+      public void apply() {
         x++;  // Error: access of 'x' not guarded by 'Transaction.this'
       }
     });
