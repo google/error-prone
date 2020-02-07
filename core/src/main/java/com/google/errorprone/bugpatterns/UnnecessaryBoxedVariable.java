@@ -68,8 +68,9 @@ import javax.lang.model.element.ElementKind;
     name = "UnnecessaryBoxedVariable",
     summary = "It is unnecessary for this variable to be boxed. Use the primitive instead.",
     explanation =
-        "This variable is of boxed type, but is always unboxed before use. Make it primitive"
-            + " instead",
+        "This variable is of boxed type, but equivalent semantics can be achieved using the"
+            + " corresponding primitive type, which avoids the cost of constructing an unnecessary"
+            + " object.",
     providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION,
     severity = SeverityLevel.SUGGESTION)
 public class UnnecessaryBoxedVariable extends BugChecker implements VariableTreeMatcher {
@@ -134,9 +135,10 @@ public class UnnecessaryBoxedVariable extends BugChecker implements VariableTree
       fixBuilder.replace(nullableAnnotation, "");
       return buildDescription(tree)
           .setMessage(
-              "This @Nullable is always unboxed when used, which will result in a NPE if it is"
-                  + " actually null. Use a primitive if this variable should never be null, or"
-                  + " else fix the code to avoid unboxing it.")
+              "All usages of this @Nullable variable would result in a NullPointerException when it"
+                  + " actually is null. Use the primitive type if this variable should never be"
+                  + " null, or else fix the code to avoid unboxing or invoking its instance"
+                  + " methods.")
           .addFix(fixBuilder.build())
           .build();
     } else {
