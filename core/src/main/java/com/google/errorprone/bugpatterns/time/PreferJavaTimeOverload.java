@@ -112,6 +112,7 @@ public final class PreferJavaTimeOverload extends BugChecker
 
   private static final Matcher<ExpressionTree> IGNORED_APIS =
       anyOf(
+          staticMethod().onClass("org.jooq.impl.DSL").named("inline"),
           // any static method under org.assertj.*
           staticMethod()
               .onClass((type, state) -> type.toString().startsWith("org.assertj."))
