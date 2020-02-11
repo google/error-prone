@@ -125,7 +125,7 @@ public class BundleDeserializationCast extends BugChecker implements TypeCastTre
   }
 
   private Description getDescriptionForType(TypeCastTree tree, String baseType) {
-    String targetType = tree.getType().toString();
+    String targetType = getType(tree.getType()).toString();
     return buildDescription(tree)
         .setMessage(
             String.format(

@@ -123,14 +123,15 @@ public class IncompatibleArgumentType extends BugChecker implements MethodInvoca
         EqualsIncompatibleType.TypeCompatibilityReport report =
             EqualsIncompatibleType.compatibilityOfTypes(requiredType.type(), argType, state);
         if (!report.compatible()) {
-          state.reportMatch(describeViolation(argument, argType, requiredType.type(), types));
+          state.reportMatch(
+              describeViolation(argument, argType, requiredType.type(), types, state));
         }
       }
     }
   }
 
   private Description describeViolation(
-      ExpressionTree argument, Type argType, Type requiredType, Types types) {
+      ExpressionTree argument, Type argType, Type requiredType, Types types, VisitorState state) {
     // For the error message, use simple names instead of fully qualified names unless they are
     // identical.
     String sourceType = Signatures.prettyType(argType);
@@ -144,7 +145,7 @@ public class IncompatibleArgumentType extends BugChecker implements MethodInvoca
         String.format(
             "Argument '%s' should not be passed to this method. Its type %s is not"
                 + " compatible with the required type: %s.",
-            argument, sourceType, targetType);
+            state.getSourceForNode(argument), sourceType, targetType);
 
     return buildDescription(argument).setMessage(msg).build();
   }
