@@ -99,7 +99,8 @@ public class MockitoUsage extends BugChecker implements MethodInvocationTreeMatc
       builder.addFix(
           SuggestedFix.builder()
               .addStaticImport("org.mockito.Mockito.verifyZeroInteractions")
-              .replace(tree, String.format("verifyZeroInteractions(%s)", mock))
+              .replace(
+                  tree, String.format("verifyZeroInteractions(%s)", state.getSourceForNode(mock)))
               .build());
     }
     // Always suggest the naive semantics-preserving option, which is just to

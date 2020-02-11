@@ -193,7 +193,7 @@ public class ComparisonOutOfRange extends BugChecker implements BinaryTreeMatche
               "byte",
               (int) Byte.MIN_VALUE,
               (int) Byte.MAX_VALUE,
-              literal,
+              state.getSourceForNode(literal),
               Boolean.toString(willEvaluateTo));
     } else {
       fix = SuggestedFix.replace(tree, Boolean.toString(willEvaluateTo));
@@ -203,7 +203,7 @@ public class ComparisonOutOfRange extends BugChecker implements BinaryTreeMatche
               "char",
               (int) Character.MIN_VALUE,
               (int) Character.MAX_VALUE,
-              literal,
+              state.getSourceForNode(literal),
               Boolean.toString(willEvaluateTo));
     }
     return buildDescription(tree).addFix(fix).setMessage(customDiagnosticMessage).build();

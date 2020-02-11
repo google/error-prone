@@ -174,7 +174,7 @@ public class UseCorrectAssertInTests extends BugChecker implements MethodTreeMat
           (JCExpression) expr1,
           foundAssert,
           state,
-          String.format(isEqual ? IS_SAME_AS : IS_NOT_SAME_AS, expr2));
+          String.format(isEqual ? IS_SAME_AS : IS_NOT_SAME_AS, state.getSourceForNode(expr2)));
     }
   }
 

@@ -86,7 +86,7 @@ public class NullableDereference extends BugChecker
             qual ->
                 String.format(
                     "Dereferencing method/field \"%s\" of %s null receiver %s",
-                    tree.getIdentifier(), qual, receiverTree));
+                    tree.getIdentifier(), qual, state.getSourceForNode(receiverTree)));
     return result != null ? result : Description.NO_MATCH;
   }
 
@@ -107,7 +107,9 @@ public class NullableDereference extends BugChecker
               qual ->
                   String.format(
                       "Outer object %s for %s is %s null",
-                      receiverTree, tree.getIdentifier(), qual));
+                      state.getSourceForNode(receiverTree),
+                      state.getSourceForNode(tree.getIdentifier()),
+                      qual));
       if (result != null) {
         return result;
       }
@@ -143,7 +145,7 @@ public class NullableDereference extends BugChecker
               qual ->
                   String.format(
                       "argument %s is %s null but %s expects it to be non-null",
-                      arg, qual, sym.getSimpleName()));
+                      state.getSourceForNode(arg), qual, sym.getSimpleName()));
       if (result != null) {
         return result;
       }

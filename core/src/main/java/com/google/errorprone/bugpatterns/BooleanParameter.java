@@ -41,6 +41,7 @@ import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
+import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.TypeTag;
@@ -149,8 +150,8 @@ public class BooleanParameter extends BugChecker
     // Consider single-argument booleans for classes whose names contain "Boolean" to be self-
     // documenting. This is aimed at classes like AtomicBoolean which simply wrap a value.
     if (tree instanceof NewClassTree) {
-      return Ascii.toLowerCase(((NewClassTree) tree).getIdentifier().toString())
-          .contains("boolean");
+      Symbol symbol = ASTHelpers.getSymbol(((NewClassTree) tree).getIdentifier());
+      return symbol != null && Ascii.toLowerCase(symbol.getSimpleName()).contains("boolean");
     }
     return true;
   }

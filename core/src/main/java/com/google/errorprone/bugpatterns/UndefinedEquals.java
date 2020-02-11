@@ -129,7 +129,9 @@ public final class UndefinedEquals extends BugChecker implements MethodInvocatio
               return Optional.of(
                   SuggestedFix.replace(
                       tree,
-                      String.format("%s.%s(%s)", assertThatWithArg, replacementMethod, receiver)));
+                      String.format(
+                          "%s.%s(%s)",
+                          assertThatWithArg, replacementMethod, state.getSourceForNode(receiver))));
             }
             return Optional.empty();
           };

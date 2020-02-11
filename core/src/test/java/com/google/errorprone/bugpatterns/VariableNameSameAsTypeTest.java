@@ -50,7 +50,7 @@ public class VariableNameSameAsTypeTest {
             "import java.util.function.Predicate;",
             "class Test {",
             "  void f() {",
-            "    // BUG: Diagnostic contains: Variable named String has the type java.lang.String",
+            "    // BUG: Diagnostic contains: Variable named String has the type String",
             "    Predicate<String> p = (String) -> String.isEmpty(); ",
             "  }",
             "}")
