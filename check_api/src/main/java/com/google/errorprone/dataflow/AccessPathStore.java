@@ -24,11 +24,11 @@ import com.google.common.collect.ImmutableMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import javax.annotation.Nullable;
-import org.checkerframework.dataflow.analysis.AbstractValue;
-import org.checkerframework.dataflow.analysis.FlowExpressions;
-import org.checkerframework.dataflow.analysis.Store;
-import org.checkerframework.dataflow.cfg.CFGVisualizer;
-import org.checkerframework.dataflow.cfg.node.LocalVariableNode;
+import org.checkerframework.shaded.dataflow.analysis.AbstractValue;
+import org.checkerframework.shaded.dataflow.analysis.FlowExpressions;
+import org.checkerframework.shaded.dataflow.analysis.Store;
+import org.checkerframework.shaded.dataflow.cfg.CFGVisualizer;
+import org.checkerframework.shaded.dataflow.cfg.node.LocalVariableNode;
 
 /**
  * Immutable map from local variables or heap access paths to their {@link AbstractValue}
