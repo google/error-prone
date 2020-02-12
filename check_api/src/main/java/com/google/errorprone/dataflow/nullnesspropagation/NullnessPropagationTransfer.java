@@ -25,8 +25,8 @@ import static com.google.errorprone.dataflow.nullnesspropagation.Nullness.NULL;
 import static com.google.errorprone.dataflow.nullnesspropagation.Nullness.NULLABLE;
 import static com.sun.tools.javac.code.TypeTag.BOOLEAN;
 import static javax.lang.model.element.ElementKind.EXCEPTION_PARAMETER;
-import static org.checkerframework.javacutil.TreeUtils.elementFromDeclaration;
-import static org.checkerframework.javacutil.TreeUtils.enclosingOfClass;
+import static org.checkerframework.shaded.javacutil.TreeUtils.elementFromDeclaration;
+import static org.checkerframework.shaded.javacutil.TreeUtils.enclosingOfClass;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
@@ -89,23 +89,23 @@ import java.util.Set;
 import javax.annotation.Nullable;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeVariable;
-import org.checkerframework.dataflow.analysis.Analysis;
-import org.checkerframework.dataflow.cfg.CFGBuilder;
-import org.checkerframework.dataflow.cfg.ControlFlowGraph;
-import org.checkerframework.dataflow.cfg.UnderlyingAST;
-import org.checkerframework.dataflow.cfg.node.ArrayAccessNode;
-import org.checkerframework.dataflow.cfg.node.ArrayCreationNode;
-import org.checkerframework.dataflow.cfg.node.AssignmentNode;
-import org.checkerframework.dataflow.cfg.node.EqualToNode;
-import org.checkerframework.dataflow.cfg.node.FieldAccessNode;
-import org.checkerframework.dataflow.cfg.node.FunctionalInterfaceNode;
-import org.checkerframework.dataflow.cfg.node.InstanceOfNode;
-import org.checkerframework.dataflow.cfg.node.LocalVariableNode;
-import org.checkerframework.dataflow.cfg.node.MethodInvocationNode;
-import org.checkerframework.dataflow.cfg.node.Node;
-import org.checkerframework.dataflow.cfg.node.NotEqualNode;
-import org.checkerframework.dataflow.cfg.node.TypeCastNode;
-import org.checkerframework.dataflow.cfg.node.VariableDeclarationNode;
+import org.checkerframework.shaded.dataflow.analysis.Analysis;
+import org.checkerframework.shaded.dataflow.cfg.CFGBuilder;
+import org.checkerframework.shaded.dataflow.cfg.ControlFlowGraph;
+import org.checkerframework.shaded.dataflow.cfg.UnderlyingAST;
+import org.checkerframework.shaded.dataflow.cfg.node.ArrayAccessNode;
+import org.checkerframework.shaded.dataflow.cfg.node.ArrayCreationNode;
+import org.checkerframework.shaded.dataflow.cfg.node.AssignmentNode;
+import org.checkerframework.shaded.dataflow.cfg.node.EqualToNode;
+import org.checkerframework.shaded.dataflow.cfg.node.FieldAccessNode;
+import org.checkerframework.shaded.dataflow.cfg.node.FunctionalInterfaceNode;
+import org.checkerframework.shaded.dataflow.cfg.node.InstanceOfNode;
+import org.checkerframework.shaded.dataflow.cfg.node.LocalVariableNode;
+import org.checkerframework.shaded.dataflow.cfg.node.MethodInvocationNode;
+import org.checkerframework.shaded.dataflow.cfg.node.Node;
+import org.checkerframework.shaded.dataflow.cfg.node.NotEqualNode;
+import org.checkerframework.shaded.dataflow.cfg.node.TypeCastNode;
+import org.checkerframework.shaded.dataflow.cfg.node.VariableDeclarationNode;
 
 /**
  * The {@code TransferFunction} for our nullability analysis. This analysis determines, for all
@@ -832,7 +832,7 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
               /*assumeAssertionsDisabled=*/ false,
               javacEnv);
       Analysis<Nullness, AccessPathStore<Nullness>, NullnessPropagationTransfer> analysis =
-          new Analysis<>(this, javacEnv);
+          new Analysis<>(this);
       analysis.performAnalysis(cfg);
       return analysis.getValue(initializerPath.getLeaf());
     } finally {

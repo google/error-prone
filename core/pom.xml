@@ -111,7 +111,7 @@
     <dependency>
       <!-- GPLv2 with Classpath Exception -->
       <groupId>org.checkerframework</groupId>
-      <artifactId>dataflow</artifactId>
+      <artifactId>dataflow-shaded</artifactId>
       <version>${dataflow.version}</version>
     </dependency>
     <dependency>

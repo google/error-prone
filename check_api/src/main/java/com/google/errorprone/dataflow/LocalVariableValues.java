@@ -16,7 +16,7 @@
 
 package com.google.errorprone.dataflow;
 
-import org.checkerframework.dataflow.cfg.node.LocalVariableNode;
+import org.checkerframework.shaded.dataflow.cfg.node.LocalVariableNode;
 
 /** Read-only access to {@link LocalStore} for convenience. */
 public interface LocalVariableValues<T> {
