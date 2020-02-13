@@ -16,6 +16,7 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.common.collect.Streams.stream;
 import static com.google.errorprone.BugPattern.ProvidesFix.NO_FIX;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.predicates.TypePredicates.allOf;
@@ -24,14 +25,11 @@ import static com.google.errorprone.predicates.TypePredicates.isExactType;
 import static com.google.errorprone.predicates.TypePredicates.not;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
-import static com.google.errorprone.util.ASTHelpers.getType;
 
 import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Streams;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.Fix;
-import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.predicates.TypePredicate;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
@@ -66,6 +64,7 @@ public final class LiteProtoToString extends AbstractToString {
       allOf(
           isDescendantOf("com.google.protobuf.Internal.EnumLite"),
           not(isDescendantOf("com.google.protobuf.ProtocolMessageEnum")),
+          not(isDescendantOf("com.google.protobuf.Descriptors.EnumValueDescriptor")),
           not(isDescendantOf("com.google.protobuf.AbstractMessageLite.InternalOneOfEnum")));
 
   private static final ImmutableSet<String> METHODS_STRIPPED_BY_OPTIMIZER =
@@ -90,7 +89,7 @@ public final class LiteProtoToString extends AbstractToString {
   }
 
   private static boolean isStrippedLogMessage(VisitorState state) {
-    return Streams.stream(state.getPath()).anyMatch(LiteProtoToString::isStrippedLogMessage);
+    return stream(state.getPath()).anyMatch(LiteProtoToString::isStrippedLogMessage);
   }
 
   private static boolean isStrippedLogMessage(Tree tree) {
@@ -109,17 +108,11 @@ public final class LiteProtoToString extends AbstractToString {
 
   @Override
   protected Optional<Fix> implicitToStringFix(ExpressionTree tree, VisitorState state) {
-    return IS_LITE_ENUM.apply(getType(tree), state)
-        ? Optional.of(SuggestedFix.postfixWith(tree, ".getNumber()"))
-        : Optional.empty();
+    return Optional.empty();
   }
 
   @Override
   protected Optional<Fix> toStringFix(Tree parent, ExpressionTree tree, VisitorState state) {
-    return IS_LITE_ENUM.apply(getType(tree), state)
-        ? Optional.of(
-            SuggestedFix.replace(
-                parent, String.format("%s.getNumber()", state.getSourceForNode(tree))))
-        : Optional.empty();
+    return Optional.empty();
   }
 }
