@@ -915,9 +915,12 @@ public class SuggestedFixes {
         .filter(
             tree ->
                 tree instanceof MethodTree
+                    // Anonymous classes can't be suppressed
                     || (tree instanceof ClassTree
                         && ((ClassTree) tree).getSimpleName().length() != 0)
-                    || tree instanceof VariableTree)
+                    // Lambda parameters can't be suppressed unless they have Type decls
+                    || (tree instanceof VariableTree
+                        && ((JCTree) ((VariableTree) tree).getType()).getStartPosition() != -1))
         .findFirst()
         .orElse(null);
   }
