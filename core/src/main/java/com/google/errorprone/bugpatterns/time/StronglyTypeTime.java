@@ -224,7 +224,9 @@ public final class StronglyTypeTime extends BugChecker implements CompilationUni
             && isConsideredFinal(symbol)
             && variableTree.getInitializer() != null
             && (isSameType(type, state.getSymtab().intType, state)
-                || isSameType(type, state.getSymtab().longType, state))
+                || isSameType(type, state.getSymtab().longType, state)
+                || isSameType(type, state.getSymtab().floatType, state)
+                || isSameType(type, state.getSymtab().doubleType, state))
             && !isSuppressed(variableTree)) {
           fields.put(symbol, getCurrentPath());
         }
