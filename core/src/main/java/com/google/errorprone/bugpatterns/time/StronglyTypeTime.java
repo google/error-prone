@@ -72,7 +72,7 @@ public final class StronglyTypeTime extends BugChecker implements CompilationUni
           // Java time.
           staticMethod()
               .onClass("java.time.Duration")
-              .namedAnyOf("ofDays", "ofHours", "ofMillis", "ofMinutes", "ofNanos", "ofSeconds")
+              .namedAnyOf("ofNanos", "ofMillis", "ofSeconds", "ofMinutes", "ofHours", "ofDays")
               .withParameters("long"),
           staticMethod()
               .onClass("java.time.Instant")
