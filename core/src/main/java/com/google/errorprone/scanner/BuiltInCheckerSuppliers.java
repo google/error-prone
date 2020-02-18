@@ -209,6 +209,7 @@ import com.google.errorprone.bugpatterns.NonCanonicalType;
 import com.google.errorprone.bugpatterns.NonFinalCompileTimeConstant;
 import com.google.errorprone.bugpatterns.NonOverridingEquals;
 import com.google.errorprone.bugpatterns.NonRuntimeAnnotation;
+import com.google.errorprone.bugpatterns.NullOptional;
 import com.google.errorprone.bugpatterns.NullTernary;
 import com.google.errorprone.bugpatterns.NullableConstructor;
 import com.google.errorprone.bugpatterns.NullablePrimitive;
@@ -739,6 +740,7 @@ public class BuiltInCheckerSuppliers {
           NullableConstructor.class,
           NullablePrimitive.class,
           NullableVoid.class,
+          NullOptional.class,
           ObjectsHashCodePrimitive.class,
           ObjectToString.class,
           OperatorPrecedence.class,

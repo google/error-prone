@@ -16,8 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.common.collect.ImmutableSet.toImmutableSet;
-import static com.google.common.collect.Streams.stream;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.anyOf;
@@ -33,12 +31,9 @@ import static com.google.errorprone.matchers.method.MethodMatchers.instanceMetho
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
-import static com.google.errorprone.util.ASTHelpers.isSubtype;
 import static com.google.errorprone.util.ASTHelpers.isVoidType;
 
 import com.google.common.base.Suppliers;
-import com.google.common.base.VerifyException;
-import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MemberReferenceTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
@@ -46,6 +41,7 @@ import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
+import com.google.errorprone.matchers.Matchers;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.LambdaExpressionTree;
@@ -60,8 +56,6 @@ import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
 import com.sun.tools.javac.tree.JCTree.JCIdent;
 import com.sun.tools.javac.tree.JCTree.JCMethodInvocation;
-import java.util.Objects;
-import java.util.stream.Stream;
 import javax.lang.model.type.TypeKind;
 
 /**
@@ -98,7 +92,8 @@ public abstract class AbstractReturnValueIgnored extends BugChecker
                       not(
                           (t, s) ->
                               allowInExceptionThrowers()
-                                  && isThrowingFunctionalInterface(ASTHelpers.getType(t), s)),
+                                  && Matchers.isThrowingFunctionalInterface(
+                                      ASTHelpers.getType(t), s)),
                       specializedMatcher()));
 
   @Override
@@ -136,46 +131,6 @@ public abstract class AbstractReturnValueIgnored extends BugChecker
     return state.getTypes().findDescriptorType(interfaceType).getReturnType().getKind()
         == TypeKind.VOID;
   }
-
-  private static boolean methodCallInDeclarationOfThrowingRunnable(VisitorState state) {
-    return stream(state.getPath())
-        // Find the nearest definitional context for this method invocation
-        // (i.e.: the nearest surrounding class or lambda)
-        .filter(t -> t.getKind() == Kind.LAMBDA_EXPRESSION || t.getKind() == Kind.CLASS)
-        .findFirst()
-        .map(t -> isThrowingFunctionalInterface(getType(t), state))
-        .orElseThrow(VerifyException::new);
-  }
-
-  static boolean isThrowingFunctionalInterface(Type clazzType, VisitorState state) {
-    return CLASSES_CONSIDERED_THROWING.get(state).stream()
-        .anyMatch(t -> isSubtype(clazzType, t, state));
-  }
-
-  /**
-   * {@link FunctionalInterface}s that are generally used as a lambda expression for 'a block of
-   * code that's going to fail', e.g.:
-   *
-   * <p>{@code assertThrows(FooException.class, () -> myCodeThatThrowsAnException());
-   * errorCollector.checkThrows(FooException.class, () -> myCodeThatThrowsAnException()); }
-   */
-  // TODO(glorioso): Consider a meta-annotation like @LikelyToThrow instead/in addition?
-  private static final com.google.errorprone.suppliers.Supplier<ImmutableSet<Type>>
-      CLASSES_CONSIDERED_THROWING =
-          VisitorState.memoize(
-              state ->
-                  Stream.of(
-                          "org.junit.function.ThrowingRunnable",
-                          "org.junit.jupiter.api.function.Executable",
-                          "org.assertj.core.api.ThrowableAssert$ThrowingCallable",
-                          "com.google.devtools.build.lib.testutil.MoreAsserts$ThrowingRunnable",
-                          "com.google.truth.ExpectFailure.AssertionCallback",
-                          "com.google.truth.ExpectFailure.DelegatedAssertionCallback",
-                          "com.google.truth.ExpectFailure.StandardSubjectBuilderCallback",
-                          "com.google.truth.ExpectFailure.SimpleSubjectBuilderCallback")
-                      .map(state::getTypeFromString)
-                      .filter(Objects::nonNull)
-                      .collect(toImmutableSet()));
 
   /**
    * Match whatever additional conditions concrete subclasses want to match (a list of known
@@ -267,7 +222,7 @@ public abstract class AbstractReturnValueIgnored extends BugChecker
           allOf(
               anyOf(isLastStatementInBlock(), parentNode(kindIs(Kind.LAMBDA_EXPRESSION))),
               // Within the context of a ThrowingRunnable/Executable:
-              (t, s) -> methodCallInDeclarationOfThrowingRunnable(s)));
+              (t, s) -> Matchers.methodCallInDeclarationOfThrowingRunnable(s)));
 
   /** Allow return values to be ignored in tests that expect an exception to be thrown. */
   static boolean expectedExceptionTest(Tree tree, VisitorState state) {

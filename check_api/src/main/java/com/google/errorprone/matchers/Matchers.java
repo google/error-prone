@@ -16,7 +16,9 @@
 
 package com.google.errorprone.matchers;
 
+import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.common.collect.Iterables.getLast;
+import static com.google.common.collect.Streams.stream;
 import static com.google.errorprone.suppliers.Suppliers.BOOLEAN_TYPE;
 import static com.google.errorprone.suppliers.Suppliers.INT_TYPE;
 import static com.google.errorprone.suppliers.Suppliers.JAVA_LANG_BOOLEAN_TYPE;
@@ -29,6 +31,7 @@ import static com.google.errorprone.util.ASTHelpers.isSubtype;
 import static com.google.errorprone.util.ASTHelpers.stripParentheses;
 import static java.util.Objects.requireNonNull;
 
+import com.google.common.base.VerifyException;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.VisitorState;
@@ -81,9 +84,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.function.BiPredicate;
 import java.util.regex.Pattern;
+import java.util.stream.Stream;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.NestingKind;
@@ -1239,6 +1244,44 @@ public class Matchers {
     }
     return anyOf(matchers);
   }
+
+  public static boolean methodCallInDeclarationOfThrowingRunnable(VisitorState state) {
+    return stream(state.getPath())
+        // Find the nearest definitional context for this method invocation
+        // (i.e.: the nearest surrounding class or lambda)
+        .filter(t -> t.getKind() == Kind.LAMBDA_EXPRESSION || t.getKind() == Kind.CLASS)
+        .findFirst()
+        .map(t -> isThrowingFunctionalInterface(getType(t), state))
+        .orElseThrow(VerifyException::new);
+  }
+
+  public static boolean isThrowingFunctionalInterface(Type clazzType, VisitorState state) {
+    return CLASSES_CONSIDERED_THROWING.get(state).stream()
+        .anyMatch(t -> isSubtype(clazzType, t, state));
+  }
+  /**
+   * {@link FunctionalInterface}s that are generally used as a lambda expression for 'a block of
+   * code that's going to fail', e.g.:
+   *
+   * <p>{@code assertThrows(FooException.class, () -> myCodeThatThrowsAnException());
+   * errorCollector.checkThrows(FooException.class, () -> myCodeThatThrowsAnException()); }
+   */
+  // TODO(glorioso): Consider a meta-annotation like @LikelyToThrow instead/in addition?
+  private static final Supplier<ImmutableSet<Type>> CLASSES_CONSIDERED_THROWING =
+      VisitorState.memoize(
+          state ->
+              Stream.of(
+                      "org.junit.function.ThrowingRunnable",
+                      "org.junit.jupiter.api.function.Executable",
+                      "org.assertj.core.api.ThrowableAssert$ThrowingCallable",
+                      "com.google.devtools.build.lib.testutil.MoreAsserts$ThrowingRunnable",
+                      "com.google.truth.ExpectFailure.AssertionCallback",
+                      "com.google.truth.ExpectFailure.DelegatedAssertionCallback",
+                      "com.google.truth.ExpectFailure.StandardSubjectBuilderCallback",
+                      "com.google.truth.ExpectFailure.SimpleSubjectBuilderCallback")
+                  .map(state::getTypeFromString)
+                  .filter(Objects::nonNull)
+                  .collect(toImmutableSet()));
 
   private static class IsDirectImplementationOf extends ChildMultiMatcher<ClassTree, Tree> {
     public IsDirectImplementationOf(Matcher<Tree> classMatcher) {

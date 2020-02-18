@@ -36,6 +36,7 @@ import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import com.google.errorprone.bugpatterns.BugChecker.ReturnTreeMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
+import com.google.errorprone.matchers.Matchers;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.LambdaExpressionTree;
@@ -339,7 +340,7 @@ public final class FutureReturnValueIgnored extends AbstractReturnValueIgnored
               (t, s) -> t.getMode() == ReferenceMode.INVOKE,
               FutureReturnValueIgnored::isObjectReturningMethodReferenceExpression,
               not((t, s) -> isWhitelistedInterfaceType(ASTHelpers.getType(t), s)),
-              not((t, s) -> isThrowingFunctionalInterface(ASTHelpers.getType(t), s)),
+              not((t, s) -> Matchers.isThrowingFunctionalInterface(ASTHelpers.getType(t), s)),
               specializedMatcher())
           .matches(tree, state)) {
         return describeMatch(tree);
