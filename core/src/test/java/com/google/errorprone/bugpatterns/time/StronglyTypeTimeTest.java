@@ -270,4 +270,28 @@ public final class StronglyTypeTimeTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void milliseconds() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            "import java.time.Duration;",
+            "class Test {",
+            "  private static final long F1_RETRY_MILLISECONDS = 5000;",
+            "  public Duration frobber() {",
+            "    return Duration.ofMillis(F1_RETRY_MILLISECONDS);",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "import java.time.Duration;",
+            "class Test {",
+            "  private static final Duration F1_RETRY = Duration.ofMillis(5000);",
+            "  public Duration frobber() {",
+            "    return F1_RETRY;",
+            "  }",
+            "}")
+        .doTest();
+  }
 }
