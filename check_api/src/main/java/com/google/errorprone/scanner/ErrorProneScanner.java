@@ -135,6 +135,9 @@ import com.sun.source.tree.UnionTypeTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.tree.WhileLoopTree;
 import com.sun.source.tree.WildcardTree;
+import com.sun.source.util.TreePath;
+import com.sun.tools.javac.code.Symbol.CompletionFailure;
+import com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition;
 import com.sun.tools.javac.util.Name;
 
 import java.io.FileOutputStream;
@@ -464,7 +467,7 @@ public class ErrorProneScanner extends Scanner {
               processingFunction.process(matcher, tree, stateWithSuppressionInformation),
               stateWithSuppressionInformation);
         } catch (Throwable t) {
-          handleError(matcher, t);
+          handleError(matcher, t, errorProneOptions);
         }
       }
     }
@@ -915,20 +918,34 @@ public class ErrorProneScanner extends Scanner {
     return super.visitWildcard(tree, state);
   }
 
+  private void handleError(Suppressible s, Throwable t, ErrorProneOptions options) {
+    if (options.getFlags().getBoolean("hubspot:error-reporting").orElse(false)) {
+      CHECK_FAILURES.add(s.canonicalName());
+      flushErrors();
+    } else {
+      handleError(s, t);
+    }
+  }
+
   /**
    * Handles an exception thrown by an individual BugPattern. By default, wraps the exception in an
    * {@link ErrorProneError} and rethrows. May be overridden by subclasses, for example to log the
    * error and continue.
    */
   @Override
-  protected void handleError(Suppressible s, Throwable t) {
-    handleError(s.canonicalName());
-  }
-
-  private void handleError(String checkName) {
-    CHECK_FAILURES.add(checkName);
-
-    flushErrors();
+  protected void handleError(Suppressible s, Throwable t)  {
+    if (t instanceof ErrorProneError) {
+      throw (ErrorProneError) t;
+    }
+    if (t instanceof CompletionFailure) {
+      throw (CompletionFailure) t;
+    }
+    TreePath path = getCurrentPath();
+    throw new ErrorProneError(
+        s.canonicalName(),
+        t,
+        (DiagnosticPosition) path.getLeaf(),
+        path.getCompilationUnit().getSourceFile());
   }
 
   @Override
