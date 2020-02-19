@@ -34,8 +34,9 @@ import static javax.lang.model.element.Modifier.STATIC;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.ProvidesFix;
+import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
-import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
+import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
@@ -45,9 +46,12 @@ import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
+import com.sun.source.tree.Tree;
 import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import javax.lang.model.element.Modifier;
 
@@ -59,29 +63,76 @@ import javax.lang.model.element.Modifier;
             + " is a helper method, reduce its visibility.",
     severity = ERROR,
     providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
-public class JUnit4TestNotRun extends BugChecker implements MethodTreeMatcher {
+public class JUnit4TestNotRun extends BugChecker implements ClassTreeMatcher {
 
   private static final String TEST_CLASS = "org.junit.Test";
   private static final String IGNORE_CLASS = "org.junit.Ignore";
   private static final String TEST_ANNOTATION = "@Test ";
   private static final String IGNORE_ANNOTATION = "@Ignore ";
 
+  private static final Matcher<MethodTree> OLD_POSSIBLE_TEST_METHOD =
+      allOf(
+          hasModifier(PUBLIC),
+          methodReturns(VOID_TYPE),
+          methodHasParameters(),
+          not(JUnitMatchers::hasJUnitAnnotation),
+          // Use old logic to determine if this is a JUnit4 test class.
+          // Only classes with @RunWith, don't check for other @Test methods.
+          not(enclosingClass(hasModifier(Modifier.ABSTRACT))),
+          not(enclosingClass(JUnitMatchers.isTestCaseDescendant)),
+          enclosingClass(JUnitMatchers.hasJUnit4TestRunner));
 
-  /**
-   * Looks for methods that are structured like tests but aren't run. Matches public, void, no-param
-   * methods in JUnit4 test classes that aren't annotated with any JUnit4 annotations.
-   */
-  private final Matcher<MethodTree> possibleTestMethod;
+  private static final Matcher<MethodTree> POSSIBLE_TEST_METHOD =
+      allOf(
+          hasModifier(PUBLIC),
+          methodReturns(VOID_TYPE),
+          methodHasParameters(),
+          not(JUnitMatchers::hasJUnitAnnotation));
+
+  private static final Matcher<Tree> NOT_STATIC = not(hasModifier(STATIC));
 
 
-  public JUnit4TestNotRun() {
-    possibleTestMethod =
-        allOf(
-            hasModifier(PUBLIC),
-            methodReturns(VOID_TYPE),
-            methodHasParameters(),
-            not(JUnitMatchers::hasJUnitAnnotation),
-            enclosingClass(isJUnit4TestClass));
+  private final boolean improvedHeuristic;
+
+  public JUnit4TestNotRun(ErrorProneFlags flags) {
+    improvedHeuristic = flags.getBoolean("JUnit4TestNotRun:DoNotRequireRunWith").orElse(true);
+  }
+
+  @Override
+  public Description matchClass(ClassTree tree, VisitorState state) {
+    if (improvedHeuristic && !isJUnit4TestClass.matches(tree, state)) {
+      return NO_MATCH;
+    }
+    Matcher<MethodTree> matcher =
+        improvedHeuristic ? POSSIBLE_TEST_METHOD : OLD_POSSIBLE_TEST_METHOD;
+    Map<MethodSymbol, MethodTree> suspiciousMethods = new HashMap<>();
+    for (Tree member : tree.getMembers()) {
+      if (!(member instanceof MethodTree)) {
+        continue;
+      }
+      MethodTree methodTree = (MethodTree) member;
+      if (matcher.matches(methodTree, state) && !isSuppressed(tree)) {
+        suspiciousMethods.put(getSymbol(methodTree), methodTree);
+      }
+    }
+    if (suspiciousMethods.isEmpty()) {
+      return NO_MATCH;
+    }
+    tree.accept(
+        new TreeScanner<Void, Void>() {
+          @Override
+          public Void visitMethodInvocation(
+              MethodInvocationTree methodInvocationTree, Void unused) {
+            suspiciousMethods.remove(getSymbol(methodInvocationTree));
+            return super.visitMethodInvocation(methodInvocationTree, null);
+          }
+        },
+        null);
+
+    for (MethodTree methodTree : suspiciousMethods.values()) {
+      handleMethod(methodTree, state).ifPresent(state::reportMatch);
+    }
+    return NO_MATCH;
   }
 
   /**
@@ -105,60 +156,25 @@ public class JUnit4TestNotRun extends BugChecker implements MethodTreeMatcher {
    *       </ol>
    * </ol>
    */
-  @Override
-  public Description matchMethod(MethodTree methodTree, VisitorState state) {
-    if (!possibleTestMethod.matches(methodTree, state)) {
-      return NO_MATCH;
-    }
-
+  private Optional<Description> handleMethod(MethodTree methodTree, VisitorState state) {
     // Method appears to be a JUnit 3 test case (name prefixed with "test"), probably a test.
     if (isJunit3TestCase.matches(methodTree, state)) {
-      return describeFixes(methodTree, state);
+      return Optional.of(describeFixes(methodTree, state));
     }
 
 
     // Method is annotated, probably not a test.
     List<? extends AnnotationTree> annotations = methodTree.getModifiers().getAnnotations();
     if (annotations != null && !annotations.isEmpty()) {
-      return NO_MATCH;
+      return Optional.empty();
     }
 
     // Method non-static and contains call(s) to testing method, probably a test,
     // unless it is called elsewhere in the class, in which case it is a helper method.
-    if (not(hasModifier(STATIC)).matches(methodTree, state)
-        && containsTestMethod(methodTree)
-        && !calledElsewhere(methodTree, state)) {
-      return describeFixes(methodTree, state);
+    if (NOT_STATIC.matches(methodTree, state) && containsTestMethod(methodTree)) {
+      return Optional.of(describeFixes(methodTree, state));
     }
-    return NO_MATCH;
-  }
-
-  /** Whether the given method is called elsewhere in the enclosing class. */
-  private static boolean calledElsewhere(MethodTree methodTree, VisitorState state) {
-    MethodSymbol methodSymbol = getSymbol(methodTree);
-    if (methodSymbol == null) {
-      return false;
-    }
-    return state
-        .findEnclosing(ClassTree.class)
-        .accept(
-            new TreeScanner<Boolean, Void>() {
-              @Override
-              public Boolean visitMethodInvocation(MethodInvocationTree callTree, Void unused) {
-                if (methodSymbol.equals(getSymbol(callTree.getMethodSelect()))) {
-                  return true;
-                }
-                return super.visitMethodInvocation(callTree, unused);
-              }
-
-              @Override
-              public Boolean reduce(Boolean r1, Boolean r2) {
-                r1 = (r1 == null) ? false : r1;
-                r2 = (r2 == null) ? false : r2;
-                return r1 || r2;
-              }
-            },
-            null);
+    return Optional.empty();
   }
 
   /**
