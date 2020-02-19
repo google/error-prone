@@ -940,7 +940,6 @@ public class ErrorProneScanner extends Scanner {
     return this.bugCheckers;
   }
 
-
   private static void flushErrors() {
     Optional<Path> output = getOutput();
     if (!output.isPresent()) {
