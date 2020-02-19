@@ -17,6 +17,9 @@
 package com.google.errorprone.scanner;
 
 
+import com.fasterxml.jackson.databind.JavaType;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
@@ -132,16 +135,25 @@ import com.sun.source.tree.UnionTypeTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.tree.WhileLoopTree;
 import com.sun.source.tree.WildcardTree;
-import com.sun.source.util.TreePath;
-import com.sun.tools.javac.code.Symbol.CompletionFailure;
-import com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition;
 import com.sun.tools.javac.util.Name;
+
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.lang.annotation.Annotation;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Scans the parsed AST, looking for violations of any of the enabled checks.
@@ -149,6 +161,8 @@ import java.util.Set;
  * @author Alex Eagle (alexeagle@google.com)
  */
 public class ErrorProneScanner extends Scanner {
+  private static final ObjectMapper MAPPER = new ObjectMapper();
+  private static final Set<String> CHECK_FAILURES = loadExistingData();
 
   private final com.google.errorprone.suppliers.Supplier<? extends Set<? extends Name>>
       customSuppressionAnnotations;
@@ -908,18 +922,13 @@ public class ErrorProneScanner extends Scanner {
    */
   @Override
   protected void handleError(Suppressible s, Throwable t) {
-    if (t instanceof ErrorProneError) {
-      throw (ErrorProneError) t;
-    }
-    if (t instanceof CompletionFailure) {
-      throw (CompletionFailure) t;
-    }
-    TreePath path = getCurrentPath();
-    throw new ErrorProneError(
-        s.canonicalName(),
-        t,
-        (DiagnosticPosition) path.getLeaf(),
-        path.getCompilationUnit().getSourceFile());
+    handleError(s.canonicalName());
+  }
+
+  private void handleError(String checkName) {
+    CHECK_FAILURES.add(checkName);
+
+    flushErrors();
   }
 
   @Override
@@ -929,5 +938,86 @@ public class ErrorProneScanner extends Scanner {
 
   public ImmutableSet<BugChecker> getBugCheckers() {
     return this.bugCheckers;
+  }
+
+
+  private static void flushErrors() {
+    Optional<Path> output = getOutput();
+    if (!output.isPresent()) {
+      return;
+    }
+
+    try (OutputStream stream = new FileOutputStream(output.get().toFile())) {
+      MAPPER.writeValue(stream, getData());
+    } catch (IOException e) {
+      throw new RuntimeException(
+          String.format("Failed to write errorprone metadata to %s", output)
+      );
+    }
+  }
+
+  private static Set<String> loadExistingData() {
+    return getOutput()
+        .map(ErrorProneScanner::loadData)
+        .map(m -> m.getOrDefault("errorprone-exceptions", Collections.emptySet()))
+        .map(ErrorProneScanner::toDataSet)
+        .orElseGet(ConcurrentHashMap::newKeySet);
+  }
+
+  private static Set<String> toDataSet(Set<String> set) {
+    Set<String> concurrentSet = ConcurrentHashMap.newKeySet(set.size());
+    concurrentSet.addAll(set);
+    return concurrentSet;
+  }
+
+  private static Map<String, Set<String>> getData() {
+    return ImmutableMap.of("errorprone-exceptions", CHECK_FAILURES);
+  }
+
+  private static Map<String, Set<String>> loadData(Path path) {
+    if (!Files.exists(path)) {
+      return ImmutableMap.of();
+    }
+
+    JavaType type = MAPPER
+        .getTypeFactory()
+        .constructMapType(
+            HashMap.class,
+            MAPPER.getTypeFactory().constructType(String.class),
+            MAPPER
+                .getTypeFactory()
+                .constructMapType(HashMap.class, String.class, Integer.class)
+        );
+
+    try {
+      return MAPPER.readValue(path.toFile(), type);
+    } catch (IOException e) {
+      throw new RuntimeException("Failed to read existing file to load data", e);
+    }
+  }
+
+  private static Optional<Path> getOutput() {
+    return getOutputDir().map(o -> o.resolve("error-prone-exceptions.json"));
+  }
+
+  private static Optional<Path> getOutputDir() {
+    String dir = System.getenv("MAVEN_PROJECTBASEDIR");
+    if (Strings.isNullOrEmpty(dir)) {
+      return Optional.empty();
+    }
+
+    Path res = Paths.get(dir).resolve("target/overwatch-metadata");
+    if (!Files.exists(res)) {
+      try {
+        Files.createDirectories(res);
+      } catch (IOException e) {
+        throw new RuntimeException(
+            String.format("Failed to create directory: %s", res),
+            e
+        );
+      }
+    }
+
+    return Optional.of(res);
   }
 }
