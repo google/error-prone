@@ -7,7 +7,7 @@ depends:
 
 env:
   SET_VERSION_OVERRIDE: "2.3.4-$GIT_BRANCH-SNAPSHOT"
-  MAVEN_OPTS: -Xmx1024
+  MAVEN_OPTS: -Xmx2048
 
 buildpack:
   host: git.hubteam.com
