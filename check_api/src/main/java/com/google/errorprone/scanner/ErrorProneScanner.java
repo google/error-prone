@@ -164,8 +164,6 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @author Alex Eagle (alexeagle@google.com)
  */
 public class ErrorProneScanner extends Scanner {
-  private static final ObjectMapper MAPPER = new ObjectMapper();
-  private static final Set<String> CHECK_FAILURES = loadExistingData();
 
   private final com.google.errorprone.suppliers.Supplier<? extends Set<? extends Name>>
       customSuppressionAnnotations;
@@ -919,9 +917,8 @@ public class ErrorProneScanner extends Scanner {
   }
 
   private void handleError(Suppressible s, Throwable t, ErrorProneOptions options) {
-    if (options.getFlags().getBoolean("hubspot:error-reporting").orElse(false)) {
-      CHECK_FAILURES.add(s.canonicalName());
-      flushErrors();
+    if (HubSpotErrorHandler.isEnabled(options)) {
+      HubSpotErrorHandler.recordError(s);
     } else {
       handleError(s, t);
     }
@@ -957,83 +954,4 @@ public class ErrorProneScanner extends Scanner {
     return this.bugCheckers;
   }
 
-  private static void flushErrors() {
-    Optional<Path> output = getOutput();
-    if (!output.isPresent()) {
-      return;
-    }
-
-    try (OutputStream stream = new FileOutputStream(output.get().toFile())) {
-      MAPPER.writeValue(stream, getData());
-    } catch (IOException e) {
-      throw new RuntimeException(
-          String.format("Failed to write errorprone metadata to %s", output)
-      );
-    }
-  }
-
-  private static Set<String> loadExistingData() {
-    return getOutput()
-        .map(ErrorProneScanner::loadData)
-        .map(m -> m.getOrDefault("errorprone-exceptions", Collections.emptySet()))
-        .map(ErrorProneScanner::toDataSet)
-        .orElseGet(ConcurrentHashMap::newKeySet);
-  }
-
-  private static Set<String> toDataSet(Set<String> set) {
-    Set<String> concurrentSet = ConcurrentHashMap.newKeySet(set.size());
-    concurrentSet.addAll(set);
-    return concurrentSet;
-  }
-
-  private static Map<String, Set<String>> getData() {
-    return ImmutableMap.of("errorprone-exceptions", CHECK_FAILURES);
-  }
-
-  private static Map<String, Set<String>> loadData(Path path) {
-    if (!Files.exists(path)) {
-      return ImmutableMap.of();
-    }
-
-    JavaType type = MAPPER
-        .getTypeFactory()
-        .constructMapType(
-            HashMap.class,
-            MAPPER.getTypeFactory().constructType(String.class),
-            MAPPER
-                .getTypeFactory()
-                .constructMapType(HashMap.class, String.class, Integer.class)
-        );
-
-    try {
-      return MAPPER.readValue(path.toFile(), type);
-    } catch (IOException e) {
-      throw new RuntimeException("Failed to read existing file to load data", e);
-    }
-  }
-
-  private static Optional<Path> getOutput() {
-    return getOutputDir().map(o -> o.resolve("error-prone-exceptions.json"));
-  }
-
-  private static Optional<Path> getOutputDir() {
-    String dir = System.getenv("MAVEN_PROJECTBASEDIR");
-    if (Strings.isNullOrEmpty(dir)) {
-      return Optional.empty();
-    }
-
-    Path res = Paths.get(dir).resolve("target/overwatch-metadata");
-    if (!Files.exists(res)) {
-      try {
-        Files.createDirectories(res);
-      } catch (IOException e) {
-        throw new RuntimeException(
-            String.format("Failed to create directory: %s", res),
-            e
-        );
-      }
-    }
-
-    return Optional.of(res);
-  }
 }
