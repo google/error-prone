@@ -95,7 +95,7 @@ public class HubSpotErrorHandler {
             MAPPER.getTypeFactory().constructType(String.class),
             MAPPER
                 .getTypeFactory()
-                .constructMapType(HashMap.class, String.class, Integer.class)
+                .constructCollectionType(Set.class, String.class)
         );
 
     try {
