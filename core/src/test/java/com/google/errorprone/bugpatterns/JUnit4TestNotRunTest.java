@@ -487,6 +487,21 @@ public class JUnit4TestNotRunTest {
   }
 
   @Test
+  public void suppression() {
+    compilationHelper
+        .addSourceLines(
+            "TestStuff.java",
+            "import org.junit.Test;",
+            "public class TestStuff {",
+            "  @SuppressWarnings(\"JUnit4TestNotRun\")",
+            "  public void testDoesSomething() {}",
+            "  @Test",
+            "  public void foo() {}",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void testNegativeCase1() {
     compilationHelper
         .addSourceFile("JUnit4TestNotRunNegativeCase1.java")
