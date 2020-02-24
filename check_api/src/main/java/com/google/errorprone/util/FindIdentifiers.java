@@ -85,14 +85,18 @@ public final class FindIdentifiers {
   /** Finds a declaration with the given name and type that is in scope at the current location. */
   @Nullable
   public static Symbol findIdent(String name, VisitorState state, KindSelector kind) {
-    ClassType enclosingClass = ASTHelpers.getType(state.findEnclosing(ClassTree.class));
+    ClassType enclosingClass = ASTHelpers.getType(getEnclosingClass(state.getPath()));
+    Env<AttrContext> env;
     if (enclosingClass == null || enclosingClass.tsym == null) {
-      return null;
-    }
-    Env<AttrContext> env = Enter.instance(state.context).getClassEnv(enclosingClass.tsym);
-    MethodTree enclosingMethod = state.findEnclosing(MethodTree.class);
-    if (enclosingMethod != null) {
-      env = MemberEnter.instance(state.context).getMethodEnv((JCMethodDecl) enclosingMethod, env);
+      env =
+          Enter.instance(state.context)
+              .getTopLevelEnv((JCCompilationUnit) state.getPath().getCompilationUnit());
+    } else {
+      env = Enter.instance(state.context).getClassEnv(enclosingClass.tsym);
+      MethodTree enclosingMethod = state.findEnclosing(MethodTree.class);
+      if (enclosingMethod != null) {
+        env = MemberEnter.instance(state.context).getMethodEnv((JCMethodDecl) enclosingMethod, env);
+      }
     }
     try {
       Method method =
@@ -104,6 +108,23 @@ public final class FindIdentifiers {
     } catch (ReflectiveOperationException e) {
       throw new LinkageError(e.getMessage(), e);
     }
+  }
+
+  @Nullable
+  private static ClassTree getEnclosingClass(TreePath treePath) {
+    while (treePath != null) {
+      TreePath parent = treePath.getParentPath();
+      if (parent == null) {
+        return null;
+      }
+      Tree leaf = parent.getLeaf();
+      if (leaf instanceof ClassTree
+          && ((ClassTree) leaf).getMembers().contains(treePath.getLeaf())) {
+        return (ClassTree) leaf;
+      }
+      treePath = parent;
+    }
+    return null;
   }
 
   /**
