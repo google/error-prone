@@ -16,6 +16,7 @@
 
 package com.google.errorprone.bugpatterns;
 
+import com.google.common.collect.ImmutableList;
 import com.google.errorprone.CompilationTestHelper;
 import com.google.errorprone.annotations.DoNotCall;
 import org.junit.Test;
@@ -177,6 +178,46 @@ public class DoNotCallCheckerTest {
             "  }",
             "}")
         .withClasspath(DNCTest.class, DoNotCallCheckerTest.class)
+        .doTest();
+  }
+
+  @Test
+  public void thirdParty() {
+    testHelper
+        .setArgs(ImmutableList.of("-XepOpt:DoNotCallChecker:CheckThirdPartyMethods"))
+        .addSourceLines(
+            "Test.java",
+            "import org.junit.Assert;",
+            "public class Test {",
+            "  public void foo() {",
+            "    // BUG: Diagnostic contains: DoNotCall",
+            "    Assert.assertEquals(2.0, 2.0);",
+            "    // BUG: Diagnostic contains: DoNotCall",
+            "    Assert.assertEquals(\"msg\", 2.0, 2.0);",
+            // These are OK since they pass a tolerance
+            "    Assert.assertEquals(2.0, 2.0, 0.01);",
+            "    Assert.assertEquals(\"msg\", 2.0, 2.0, 0.01);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void thirdParty_falseSetToFalse() {
+    testHelper
+        .setArgs(ImmutableList.of("-XepOpt:DoNotCallChecker:CheckThirdPartyMethods=false"))
+        .addSourceLines(
+            "Test.java",
+            "import org.junit.Assert;",
+            "public class Test {",
+            "  public void foo() {",
+            "    Assert.assertEquals(2.0, 2.0);",
+            "    Assert.assertEquals(\"msg\", 2.0, 2.0);",
+            // These are OK since they pass a tolerance
+            "    Assert.assertEquals(2.0, 2.0, 0.01);",
+            "    Assert.assertEquals(\"msg\", 2.0, 2.0, 0.01);",
+            "  }",
+            "}")
         .doTest();
   }
 }
