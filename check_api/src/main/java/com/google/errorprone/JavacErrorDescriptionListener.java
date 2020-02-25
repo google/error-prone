@@ -17,7 +17,9 @@
 package com.google.errorprone;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.collect.ImmutableList.toImmutableList;
 
+import com.google.common.collect.ImmutableList;
 import com.google.errorprone.fixes.AppliedFix;
 import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.matchers.Description;
@@ -29,11 +31,9 @@ import com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition;
 import com.sun.tools.javac.util.Log;
 import java.io.IOException;
 import java.io.UncheckedIOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 import javax.tools.JavaFileObject;
 
 /**
@@ -76,12 +76,12 @@ public class JavacErrorDescriptionListener implements DescriptionListener {
 
   @Override
   public void onDescribed(Description description) {
-    List<AppliedFix> appliedFixes =
+    ImmutableList<AppliedFix> appliedFixes =
         description.fixes.stream()
             .filter(f -> !shouldSkipImportTreeFix(description.position, f))
             .map(fixToAppliedFix)
             .filter(Objects::nonNull)
-            .collect(Collectors.toCollection(ArrayList::new));
+            .collect(toImmutableList());
 
     String message = messageForFixes(description, appliedFixes);
     // Swap the log's source and the current file's source; then be sure to swap them back later.

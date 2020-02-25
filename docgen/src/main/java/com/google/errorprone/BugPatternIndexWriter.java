@@ -16,6 +16,7 @@
 
 package com.google.errorprone;
 
+import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.common.primitives.Booleans.trueFirst;
 import static java.util.Comparator.comparing;
 
@@ -23,6 +24,7 @@ import com.github.mustachejava.DefaultMustacheFactory;
 import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheFactory;
 import com.google.auto.value.AutoValue;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Multimaps;
 import com.google.common.collect.SortedSetMultimap;
@@ -32,14 +34,11 @@ import com.google.errorprone.DocGenTool.Target;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
 
@@ -89,13 +88,13 @@ public class BugPatternIndexWriter {
 
     Map<String, Object> templateData = new HashMap<>();
 
-    List<Map<String, Object>> bugpatternData =
+    ImmutableList<Map<String, Object>> bugpatternData =
         Multimaps.asMap(sorted).entrySet().stream()
             .map(
                 e ->
                     ImmutableMap.of(
                         "category", e.getKey().asCategoryHeader(), "checks", e.getValue()))
-            .collect(Collectors.toCollection(ArrayList::new));
+            .collect(toImmutableList());
 
     templateData.put("bugpatterns", bugpatternData);
 

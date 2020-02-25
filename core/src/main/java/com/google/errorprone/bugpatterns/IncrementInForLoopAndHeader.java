@@ -16,6 +16,7 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 
 import com.google.common.collect.ImmutableList;
@@ -32,11 +33,9 @@ import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.UnaryTree;
 import com.sun.tools.javac.code.Symbol;
-import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 /** @author mariasam@google.com (Maria Sam) */
 @BugPattern(
@@ -54,14 +53,15 @@ public class IncrementInForLoopAndHeader extends BugChecker implements ForLoopTr
     List<? extends ExpressionStatementTree> updates = forLoopTree.getUpdate();
 
     // keep track of all the symbols that are updated in the for loop header
-    final Set<Symbol> incrementedSymbols =
+    ImmutableSet<Symbol> incrementedSymbols =
         updates.stream()
             .filter(expStateTree -> expStateTree.getExpression() instanceof UnaryTree)
             .map(
                 expStateTree ->
                     ASTHelpers.getSymbol(
                         ((UnaryTree) expStateTree.getExpression()).getExpression()))
-            .collect(Collectors.toCollection(HashSet::new));
+            .filter(Objects::nonNull)
+            .collect(toImmutableSet());
 
     // track if they are updated in the body without a conditional surrounding them
     StatementTree body = forLoopTree.getStatement();

@@ -16,6 +16,8 @@
 
 package com.google.errorprone.util;
 
+import static com.google.common.collect.ImmutableList.toImmutableList;
+import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.errorprone.util.ASTHelpers.isConsideredFinal;
 
 import com.google.common.collect.ImmutableList;
@@ -61,14 +63,11 @@ import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 import com.sun.tools.javac.tree.JCTree.JCMethodDecl;
 import com.sun.tools.javac.util.Name;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.function.BiPredicate;
-import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 import javax.annotation.Nullable;
 import javax.lang.model.element.ElementKind;
@@ -137,7 +136,7 @@ public final class FindIdentifiers {
    * <p>We do not report variables that would require a qualified access. We also do not handle
    * wildcard imports.
    */
-  public static LinkedHashSet<VarSymbol> findAllIdents(VisitorState state) {
+  public static ImmutableSet<VarSymbol> findAllIdents(VisitorState state) {
     ImmutableSet.Builder<VarSymbol> result = new ImmutableSet.Builder<>();
     Tree prev = state.getPath().getLeaf();
     for (Tree curr : state.getPath().getParentPath()) {
@@ -246,10 +245,9 @@ public final class FindIdentifiers {
       prev = curr;
     }
 
-    // TODO(eaftan): switch out collector for ImmutableSet.toImmutableSet()
     return result.build().stream()
         .filter(var -> isVisible(var, state.getPath()))
-        .collect(Collectors.toCollection(LinkedHashSet::new));
+        .collect(toImmutableSet());
   }
 
   /**
@@ -298,8 +296,7 @@ public final class FindIdentifiers {
   }
 
   /** Finds all the visible fields declared or inherited in the target class */
-  public static List<VarSymbol> findAllFields(Type classType, VisitorState state) {
-    // TODO(andrewrice): Switch collector to ImmutableList.toImmutableList() when released
+  public static ImmutableList<VarSymbol> findAllFields(Type classType, VisitorState state) {
     return state.getTypes().closure(classType).stream()
         .flatMap(
             type -> {
@@ -317,7 +314,7 @@ public final class FindIdentifiers {
                   .map(v -> (VarSymbol) v)
                   .filter(v -> isVisible(v, state.getPath()));
             })
-        .collect(Collectors.toCollection(ArrayList::new));
+        .collect(toImmutableList());
   }
 
   /**
@@ -362,13 +359,12 @@ public final class FindIdentifiers {
     switch (var.getKind()) {
       case ENUM_CONSTANT:
       case FIELD:
-        // TODO(eaftan): Switch collector to ImmutableList.toImmutableList() when released
-        List<ClassSymbol> enclosingClasses =
+        ImmutableList<ClassSymbol> enclosingClasses =
             StreamSupport.stream(path.spliterator(), false)
-                .filter(tree -> tree instanceof ClassTree)
+                .filter(ClassTree.class::isInstance)
                 .map(ClassTree.class::cast)
                 .map(ASTHelpers::getSymbol)
-                .collect(Collectors.toCollection(ArrayList::new));
+                .collect(toImmutableList());
 
         if (!var.isStatic()) {
           // Instance fields are not visible if we are in a static context...
