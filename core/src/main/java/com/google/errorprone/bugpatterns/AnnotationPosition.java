@@ -205,37 +205,37 @@ public final class AnnotationPosition extends BugChecker
         }
       }
     }
-    if (annotationProblem) {
-      for (AnnotationTree annotation : moveBefore) {
-        builder.delete(annotation);
-      }
-      for (AnnotationTree annotation : moveAfter) {
-        builder.delete(annotation);
-      }
-      String javadoc =
-          danglingJavadoc == null ? "" : removeJavadoc(state, danglingJavadoc, builder);
-      builder
-          .replace(
-              firstModifierPos,
-              firstModifierPos,
-              String.format("%s%s ", javadoc, joinSource(state, moveBefore)))
-          .replace(
-              lastModifierPos, lastModifierPos, String.format("%s ", joinSource(state, moveAfter)));
-      ImmutableList<String> names =
-          annotations.stream()
-              .map(ASTHelpers::getSymbol)
-              .filter(Objects::nonNull)
-              .map(Symbol::getSimpleName)
-              .map(a -> "@" + a)
-              .collect(toImmutableList());
-      String flattened = names.stream().collect(joining(", "));
-      String isAre = names.size() > 1 ? "are not type annotations" : "is not a type annotation";
-      String message =
-          String.format(
-              "%s %s, so should appear before any modifiers and after Javadocs.", flattened, isAre);
-      return buildDescription(tree).setMessage(message).addFix(builder.build()).build();
+    if (!annotationProblem) {
+      return NO_MATCH;
     }
-    return NO_MATCH;
+    for (AnnotationTree annotation : moveBefore) {
+      builder.delete(annotation);
+    }
+    for (AnnotationTree annotation : moveAfter) {
+      builder.delete(annotation);
+    }
+    String javadoc = danglingJavadoc == null ? "" : removeJavadoc(state, danglingJavadoc, builder);
+    builder
+        .replace(
+            firstModifierPos,
+            firstModifierPos,
+            String.format("%s%s ", javadoc, joinSource(state, moveBefore)))
+        .replace(
+            lastModifierPos, lastModifierPos, String.format("%s ", joinSource(state, moveAfter)));
+    ImmutableList<String> names =
+        annotations.stream()
+            .map(ASTHelpers::getSymbol)
+            .filter(Objects::nonNull)
+            .map(Symbol::getSimpleName)
+            .map(a -> "@" + a)
+            .collect(toImmutableList());
+    String flattened = names.stream().collect(joining(", "));
+    String isAre =
+        names.size() > 1 ? "are not TYPE_USE annotations" : "is not a TYPE_USE annotation";
+    String message =
+        String.format(
+            "%s %s, so should appear before any modifiers and after Javadocs.", flattened, isAre);
+    return buildDescription(tree).setMessage(message).addFix(builder.build()).build();
   }
 
   private static String joinSource(VisitorState state, List<AnnotationTree> moveBefore) {

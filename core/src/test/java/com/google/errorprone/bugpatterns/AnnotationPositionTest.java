@@ -291,9 +291,9 @@ public final class AnnotationPositionTest {
         .addSourceLines(
             "Test.java",
             "interface Test {",
-            "  // BUG: Diagnostic contains: @Override is not a type annotation",
+            "  // BUG: Diagnostic contains: @Override is not a TYPE_USE annotation",
             "  public @Override boolean equals(Object o);",
-            "  // BUG: Diagnostic contains: @Override, @NonTypeUse are not type annotations",
+            "  // BUG: Diagnostic contains: @Override, @NonTypeUse are not TYPE_USE annotations",
             "  public @Override @NonTypeUse int hashCode();",
             "  // BUG: Diagnostic contains: Javadocs should appear before any modifiers",
             "  @NonTypeUse /** Javadoc */ public boolean bar();",
