@@ -488,4 +488,20 @@ public final class InterruptedExceptionSwallowedTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void declaredInMain() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.util.concurrent.ExecutionException;",
+            "import java.util.concurrent.Future;",
+            "public class Test {",
+            "  private static final Future<?> future = null;",
+            "  public static void main(String[] argv) throws Exception {",
+            "    future.get();",
+            "  }",
+            "}")
+        .doTest();
+  }
 }
