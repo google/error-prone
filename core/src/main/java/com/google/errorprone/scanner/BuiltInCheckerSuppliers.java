@@ -247,6 +247,7 @@ import com.google.errorprone.bugpatterns.ProvidesFixChecker;
 import com.google.errorprone.bugpatterns.RandomCast;
 import com.google.errorprone.bugpatterns.RandomModInteger;
 import com.google.errorprone.bugpatterns.ReachabilityFenceUsage;
+import com.google.errorprone.bugpatterns.RedundantCondition;
 import com.google.errorprone.bugpatterns.RedundantOverride;
 import com.google.errorprone.bugpatterns.RedundantThrows;
 import com.google.errorprone.bugpatterns.ReferenceEquality;
@@ -885,6 +886,7 @@ public class BuiltInCheckerSuppliers {
           ProtosAsKeyOfSetOrMap.class,
           ProvidesFixChecker.class,
           QualifierWithTypeUse.class,
+          RedundantCondition.class,
           RedundantOverride.class,
           RedundantThrows.class,
           RemoveUnusedImports.class,
