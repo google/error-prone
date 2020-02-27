@@ -466,6 +466,13 @@ public class Matchers {
         (type, state) -> state.getTypes().unboxedTypeOrType(type).isPrimitive());
   }
 
+  /** Matches an AST node if its type is a boxed primitive type. */
+  public static Matcher<ExpressionTree> isBoxedPrimitiveType() {
+    return typePredicateMatcher(
+        (type, state) ->
+            !state.getTypes().isSameType(state.getTypes().unboxedType(type), Type.noType));
+  }
+
   /** Matches an AST node which is enclosed by a block node that matches the given matcher. */
   public static <T extends Tree> Enclosing.Block<T> enclosingBlock(Matcher<BlockTree> matcher) {
     return new Enclosing.Block<>(matcher);
@@ -1282,6 +1289,7 @@ public class Matchers {
                   .map(state::getTypeFromString)
                   .filter(Objects::nonNull)
                   .collect(toImmutableSet()));
+
 
   private static class IsDirectImplementationOf extends ChildMultiMatcher<ClassTree, Tree> {
     public IsDirectImplementationOf(Matcher<Tree> classMatcher) {
