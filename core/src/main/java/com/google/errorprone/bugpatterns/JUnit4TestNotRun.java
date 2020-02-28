@@ -22,7 +22,6 @@ import static com.google.errorprone.matchers.JUnitMatchers.containsTestMethod;
 import static com.google.errorprone.matchers.JUnitMatchers.isJUnit4TestClass;
 import static com.google.errorprone.matchers.JUnitMatchers.isJunit3TestCase;
 import static com.google.errorprone.matchers.Matchers.allOf;
-import static com.google.errorprone.matchers.Matchers.enclosingClass;
 import static com.google.errorprone.matchers.Matchers.hasModifier;
 import static com.google.errorprone.matchers.Matchers.methodHasParameters;
 import static com.google.errorprone.matchers.Matchers.methodReturns;
@@ -34,7 +33,6 @@ import static javax.lang.model.element.Modifier.STATIC;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.ProvidesFix;
-import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
@@ -70,18 +68,6 @@ public class JUnit4TestNotRun extends BugChecker implements ClassTreeMatcher {
   private static final String TEST_ANNOTATION = "@Test ";
   private static final String IGNORE_ANNOTATION = "@Ignore ";
 
-  private static final Matcher<MethodTree> OLD_POSSIBLE_TEST_METHOD =
-      allOf(
-          hasModifier(PUBLIC),
-          methodReturns(VOID_TYPE),
-          methodHasParameters(),
-          not(JUnitMatchers::hasJUnitAnnotation),
-          // Use old logic to determine if this is a JUnit4 test class.
-          // Only classes with @RunWith, don't check for other @Test methods.
-          not(enclosingClass(hasModifier(Modifier.ABSTRACT))),
-          not(enclosingClass(JUnitMatchers.isTestCaseDescendant)),
-          enclosingClass(JUnitMatchers.hasJUnit4TestRunner));
-
   private static final Matcher<MethodTree> POSSIBLE_TEST_METHOD =
       allOf(
           hasModifier(PUBLIC),
@@ -92,26 +78,18 @@ public class JUnit4TestNotRun extends BugChecker implements ClassTreeMatcher {
   private static final Matcher<Tree> NOT_STATIC = not(hasModifier(STATIC));
 
 
-  private final boolean improvedHeuristic;
-
-  public JUnit4TestNotRun(ErrorProneFlags flags) {
-    improvedHeuristic = flags.getBoolean("JUnit4TestNotRun:DoNotRequireRunWith").orElse(true);
-  }
-
   @Override
   public Description matchClass(ClassTree tree, VisitorState state) {
-    if (improvedHeuristic && !isJUnit4TestClass.matches(tree, state)) {
+    if (!isJUnit4TestClass.matches(tree, state)) {
       return NO_MATCH;
     }
-    Matcher<MethodTree> matcher =
-        improvedHeuristic ? POSSIBLE_TEST_METHOD : OLD_POSSIBLE_TEST_METHOD;
     Map<MethodSymbol, MethodTree> suspiciousMethods = new HashMap<>();
     for (Tree member : tree.getMembers()) {
       if (!(member instanceof MethodTree) || isSuppressed(member)) {
         continue;
       }
       MethodTree methodTree = (MethodTree) member;
-      if (matcher.matches(methodTree, state) && !isSuppressed(tree)) {
+      if (POSSIBLE_TEST_METHOD.matches(methodTree, state) && !isSuppressed(tree)) {
         suspiciousMethods.put(getSymbol(methodTree), methodTree);
       }
     }
@@ -142,19 +120,15 @@ public class JUnit4TestNotRun extends BugChecker implements ClassTreeMatcher {
    *   <li>The method is public, void, and has no parameters;
    *   <li>the method is not already annotated with {@code @Test}, {@code @Before}, {@code @After},
    *       {@code @BeforeClass}, or {@code @AfterClass};
-   *   <li>the enclosing class appears to be intended to run in JUnit4, that is:
-   *       <ol type="a">
-   *         <li>it is non-abstract,
-   *         <li>it does not extend JUnit3 {@code TestCase},
-   *         <li>it has an {@code @RunWith} annotation or at least one other method annotated
-   *             {@code @Test};
-   *       </ol>
    *   <li>and, the method appears to be a test method, that is:
    *       <ol type="a">
    *         <li>or, the method body contains a method call with a name that contains "assert",
    *             "verify", "check", "fail", or "expect".
    *       </ol>
    * </ol>
+   *
+   * Assumes that we have reason to believe we're in a test class (i.e. has a {@code RunWith}
+   * annotation; has other {@code @Test} methods, etc).
    */
   private Optional<Description> handleMethod(MethodTree methodTree, VisitorState state) {
     // Method appears to be a JUnit 3 test case (name prefixed with "test"), probably a test.

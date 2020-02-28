@@ -16,11 +16,9 @@
 
 package com.google.errorprone.bugpatterns;
 
-import com.google.common.collect.ImmutableList;
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.BugCheckerRefactoringTestHelper.FixChoosers;
 import com.google.errorprone.CompilationTestHelper;
-import com.google.errorprone.ErrorProneFlags;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -33,8 +31,7 @@ public class JUnit4TestNotRunTest {
       CompilationTestHelper.newInstance(JUnit4TestNotRun.class, getClass());
 
   private final BugCheckerRefactoringTestHelper refactoringHelper =
-      BugCheckerRefactoringTestHelper.newInstance(
-          new JUnit4TestNotRun(ErrorProneFlags.empty()), getClass());
+      BugCheckerRefactoringTestHelper.newInstance(new JUnit4TestNotRun(), getClass());
 
   @Test
   public void testPositiveCase1() {
@@ -317,7 +314,6 @@ public class JUnit4TestNotRunTest {
             "public abstract class Test {",
             "  public void testDoSomething() {}",
             "}")
-        .setArgs(ImmutableList.of("-XepOpt:JUnit4TestNotRun:DoNotRequireRunWith=false"))
         .doTest();
   }
 
@@ -505,7 +501,6 @@ public class JUnit4TestNotRunTest {
   public void testNegativeCase1() {
     compilationHelper
         .addSourceFile("JUnit4TestNotRunNegativeCase1.java")
-        .setArgs(ImmutableList.of("-XepOpt:JUnit4TestNotRun:DoNotRequireRunWith=false"))
         .doTest();
   }
 
@@ -513,7 +508,6 @@ public class JUnit4TestNotRunTest {
   public void testNegativeCase2() {
     compilationHelper
         .addSourceFile("JUnit4TestNotRunNegativeCase2.java")
-        .setArgs(ImmutableList.of("-XepOpt:JUnit4TestNotRun:DoNotRequireRunWith=false"))
         .doTest();
   }
 
@@ -526,7 +520,6 @@ public class JUnit4TestNotRunTest {
   public void testNegativeCase4() {
     compilationHelper
         .addSourceFile("JUnit4TestNotRunNegativeCase4.java")
-        .setArgs(ImmutableList.of("-XepOpt:JUnit4TestNotRun:DoNotRequireRunWith=false"))
         .doTest();
   }
 
