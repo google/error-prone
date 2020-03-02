@@ -42,7 +42,6 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
-import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
@@ -187,7 +186,7 @@ public final class MixedMutabilityReturnType extends BugChecker
     }
   }
 
-  private final class ReturnTypesScanner extends TreePathScanner<Void, Void> {
+  private final class ReturnTypesScanner extends SuppressibleTreePathScanner<Void, Void> {
     private final VisitorState state;
 
     private final Set<VarSymbol> mutable;
@@ -201,14 +200,8 @@ public final class MixedMutabilityReturnType extends BugChecker
     }
 
     @Override
-    public Void visitClass(ClassTree classTree, Void unused) {
-      return isSuppressed(classTree) ? null : super.visitClass(classTree, null);
-    }
-
-    @Override
     public Void visitMethod(MethodTree methodTree, Void unused) {
-      if (isSuppressed(methodTree)
-          || !RETURNS_COLLECTION.matches(methodTree.getReturnType(), state)) {
+      if (!RETURNS_COLLECTION.matches(methodTree.getReturnType(), state)) {
         return super.visitMethod(methodTree, unused);
       }
       MethodScanner scanner = new MethodScanner();

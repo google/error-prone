@@ -77,14 +77,13 @@ public final class FieldCanBeLocal extends BugChecker implements CompilationUnit
     Multimap<VarSymbol, TreePath> unconditionalAssignments = HashMultimap.create();
     Multimap<VarSymbol, Tree> uses = HashMultimap.create();
 
-    new TreePathScanner<Void, Void>() {
+    new SuppressibleTreePathScanner<Void, Void>() {
       @Override
       public Void visitVariable(VariableTree variableTree, Void unused) {
         VarSymbol symbol = getSymbol(variableTree);
         if (symbol != null
             && symbol.getKind() == ElementKind.FIELD
             && symbol.isPrivate()
-            && !isSuppressed(variableTree)
             && canBeLocal(variableTree)
         ) {
           potentialFields.put(symbol, getCurrentPath());

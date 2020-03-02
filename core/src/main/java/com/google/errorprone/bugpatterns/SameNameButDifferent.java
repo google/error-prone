@@ -36,11 +36,8 @@ import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.MemberSelectTree;
-import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
-import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
-import com.sun.source.util.TreePathScanner;
 import com.sun.tools.javac.code.Kinds.KindSelector;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
@@ -64,22 +61,7 @@ public final class SameNameButDifferent extends BugChecker implements Compilatio
   @Override
   public Description matchCompilationUnit(CompilationUnitTree tree, VisitorState state) {
     Table<String, TypeSymbol, List<TreePath>> table = HashBasedTable.create();
-    new TreePathScanner<Void, Void>() {
-      @Override
-      public Void visitClass(ClassTree classTree, Void unused) {
-        return isSuppressed(classTree) ? null : super.visitClass(classTree, null);
-      }
-
-      @Override
-      public Void visitMethod(MethodTree methodTree, Void unused) {
-        return isSuppressed(methodTree) ? null : super.visitMethod(methodTree, null);
-      }
-
-      @Override
-      public Void visitVariable(VariableTree variableTree, Void unused) {
-        return isSuppressed(variableTree) ? null : super.visitVariable(variableTree, null);
-      }
-
+    new SuppressibleTreePathScanner<Void, Void>() {
       @Override
       public Void visitMemberSelect(MemberSelectTree memberSelectTree, Void unused) {
         if (!shouldIgnore()) {

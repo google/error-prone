@@ -18,7 +18,6 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
-import static com.google.errorprone.util.ASTHelpers.getGeneratedBy;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
@@ -34,9 +33,7 @@ import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.MemberSelectTree;
-import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
-import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
@@ -69,48 +66,29 @@ public final class AutoValueSubclassLeaked extends BugChecker
       CompilationUnitTree tree,
       ImmutableSet<Type> autoValueClassesFromThisFile,
       VisitorState state) {
-    tree.accept(
-        new TreeScanner<Void, Void>() {
-          @Override
-          public Void visitClass(ClassTree classTree, Void unused) {
-            return isSuppressed(classTree) || !getGeneratedBy(getSymbol(classTree), state).isEmpty()
-                ? null
-                : super.visitClass(classTree, null);
-          }
+    new SuppressibleTreePathScanner<Void, Void>() {
+      @Override
+      public Void visitMemberSelect(MemberSelectTree memberSelectTree, Void unused) {
+        handle(memberSelectTree);
+        return super.visitMemberSelect(memberSelectTree, null);
+      }
 
-          @Override
-          public Void visitMethod(MethodTree methodTree, Void unused) {
-            return isSuppressed(methodTree) ? null : super.visitMethod(methodTree, null);
-          }
+      @Override
+      public Void visitIdentifier(IdentifierTree identifierTree, Void unused) {
+        handle(identifierTree);
+        return super.visitIdentifier(identifierTree, null);
+      }
 
-          @Override
-          public Void visitVariable(VariableTree variableTree, Void unused) {
-            return isSuppressed(variableTree) ? null : super.visitVariable(variableTree, null);
-          }
-
-          @Override
-          public Void visitMemberSelect(MemberSelectTree memberSelectTree, Void unused) {
-            handle(memberSelectTree);
-            return super.visitMemberSelect(memberSelectTree, null);
-          }
-
-          @Override
-          public Void visitIdentifier(IdentifierTree identifierTree, Void unused) {
-            handle(identifierTree);
-            return super.visitIdentifier(identifierTree, null);
-          }
-
-          private void handle(Tree tree) {
-            Symbol symbol = getSymbol(tree);
-            if (symbol instanceof ClassSymbol
-                && symbol.getSimpleName().toString().startsWith("AutoValue_")
-                && autoValueClassesFromThisFile.stream()
-                    .noneMatch(av -> isSubtype(symbol.type, av, state))) {
-              state.reportMatch(describeMatch(tree));
-            }
-          }
-        },
-        null);
+      private void handle(Tree tree) {
+        Symbol symbol = getSymbol(tree);
+        if (symbol instanceof ClassSymbol
+            && symbol.getSimpleName().toString().startsWith("AutoValue_")
+            && autoValueClassesFromThisFile.stream()
+                .noneMatch(av -> isSubtype(symbol.type, av, state))) {
+          state.reportMatch(describeMatch(tree));
+        }
+      }
+    }.scan(tree, null);
   }
 
   private static ImmutableSet<Type> findAutoValueClasses(

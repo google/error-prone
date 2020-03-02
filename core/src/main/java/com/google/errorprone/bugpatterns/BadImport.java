@@ -35,12 +35,9 @@ import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.ImportTree;
-import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
-import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
-import com.sun.source.util.TreePathScanner;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.PackageSymbol;
 import java.lang.annotation.ElementType;
@@ -163,34 +160,10 @@ public class BadImport extends BugChecker implements ImportTreeMatcher {
     CompilationUnitTree compilationUnit = state.getPath().getCompilationUnit();
     TreePath path = TreePath.getPath(compilationUnit, compilationUnit);
     IdentifierTree firstFound =
-        new TreePathScanner<IdentifierTree, Void>() {
+        new SuppressibleTreePathScanner<IdentifierTree, Void>() {
           @Override
           public IdentifierTree reduce(IdentifierTree r1, IdentifierTree r2) {
             return (r2 != null) ? r2 : r1;
-          }
-
-          @Override
-          public IdentifierTree visitClass(ClassTree classTree, Void aVoid) {
-            if (isSuppressed(classTree)) {
-              return null;
-            }
-            return super.visitClass(classTree, aVoid);
-          }
-
-          @Override
-          public IdentifierTree visitMethod(MethodTree methodTree, Void aVoid) {
-            if (isSuppressed(methodTree)) {
-              return null;
-            }
-            return super.visitMethod(methodTree, aVoid);
-          }
-
-          @Override
-          public IdentifierTree visitVariable(VariableTree variableTree, Void aVoid) {
-            if (isSuppressed(variableTree)) {
-              return null;
-            }
-            return super.visitVariable(variableTree, aVoid);
           }
 
           @Override

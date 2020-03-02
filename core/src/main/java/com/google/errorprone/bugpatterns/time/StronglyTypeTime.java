@@ -37,13 +37,11 @@ import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
-import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
-import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
@@ -204,17 +202,7 @@ public final class StronglyTypeTime extends BugChecker implements CompilationUni
   // TODO(b/147006492): Consider extracting a helper to find all fields that match a Matcher.
   private Map<VarSymbol, TreePath> findPathToPotentialFields(VisitorState state) {
     Map<VarSymbol, TreePath> fields = new HashMap<>();
-    new TreePathScanner<Void, Void>() {
-      @Override
-      public Void visitClass(ClassTree classTree, Void unused) {
-        return isSuppressed(classTree) ? null : super.visitClass(classTree, null);
-      }
-
-      @Override
-      public Void visitMethod(MethodTree methodTree, Void unused) {
-        return isSuppressed(methodTree) ? null : super.visitMethod(methodTree, null);
-      }
-
+    new SuppressibleTreePathScanner<Void, Void>() {
       @Override
       public Void visitVariable(VariableTree variableTree, Void unused) {
         VarSymbol symbol = getSymbol(variableTree);
