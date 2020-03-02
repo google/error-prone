@@ -40,7 +40,6 @@ import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
-import com.sun.source.util.TreePathScanner;
 import com.sun.tools.javac.parser.Tokens.Comment;
 import com.sun.tools.javac.tree.JCTree;
 import java.util.regex.Pattern;
@@ -98,7 +97,7 @@ public final class AlmostJavadoc extends BugChecker implements CompilationUnitTr
   private ImmutableMap<Integer, Tree> getJavadocableTrees(
       CompilationUnitTree tree, VisitorState state) {
     ImmutableMap.Builder<Integer, Tree> javadoccablePositions = ImmutableMap.builder();
-    new TreePathScanner<Void, Void>() {
+    new SuppressibleTreePathScanner<Void, Void>() {
       @Override
       public Void visitClass(ClassTree classTree, Void unused) {
         if (!shouldMatch()) {
@@ -143,9 +142,6 @@ public final class AlmostJavadoc extends BugChecker implements CompilationUnitTr
       }
 
       private boolean shouldMatch() {
-        if (isSuppressed(getCurrentPath().getLeaf())) {
-          return false;
-        }
         // Check there isn't already a Javadoc for the element under question, otherwise we might
         // suggest double Javadoc.
         return Utils.getDocTreePath(state.withPath(getCurrentPath())) == null;
