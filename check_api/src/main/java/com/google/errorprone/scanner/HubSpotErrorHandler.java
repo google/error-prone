@@ -21,7 +21,6 @@ import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -37,7 +36,9 @@ import com.google.errorprone.matchers.Suppressible;
 
 public class HubSpotErrorHandler {
   private static final ObjectMapper MAPPER = new ObjectMapper();
-  private static final Set<String> CHECK_FAILURES = loadExistingData();
+  private static final String EXCEPTIONS = "errorprone-exceptions";
+  private static final String MISSING = "errorprone-missing-checks";
+  private static final Map<String, Set<String>> DATA = loadExistingData();
 
   public static boolean isEnabled(ErrorProneOptions options) {
     return options.getFlags()
@@ -46,7 +47,16 @@ public class HubSpotErrorHandler {
   }
 
   public static void recordError(Suppressible s) {
-    CHECK_FAILURES.add(s.canonicalName());
+    DATA.computeIfAbsent(EXCEPTIONS, ignored -> ConcurrentHashMap.newKeySet())
+        .add(s.canonicalName());
+
+    flushErrors();
+  }
+
+  public static void recordMissingCheck(String checkName) {
+    DATA.computeIfAbsent(MISSING, ignored -> ConcurrentHashMap.newKeySet())
+        .add(checkName);
+
     flushErrors();
   }
 
@@ -57,7 +67,7 @@ public class HubSpotErrorHandler {
     }
 
     try (OutputStream stream = Files.newOutputStream(output.get())) {
-      MAPPER.writeValue(stream, getData());
+      MAPPER.writeValue(stream, DATA);
     } catch (IOException e) {
       throw new RuntimeException(
           String.format("Failed to write errorprone metadata to %s", output)
@@ -65,22 +75,22 @@ public class HubSpotErrorHandler {
     }
   }
 
-  private static Set<String> loadExistingData() {
+  private static Map<String, Set<String>> loadExistingData() {
     return getOutput()
         .map(HubSpotErrorHandler::loadData)
-        .map(m -> m.getOrDefault("errorprone-exceptions", Collections.emptySet()))
         .map(HubSpotErrorHandler::toDataSet)
-        .orElseGet(ConcurrentHashMap::newKeySet);
+        .orElseGet(ConcurrentHashMap::new);
   }
 
-  private static Set<String> toDataSet(Set<String> set) {
-    Set<String> concurrentSet = ConcurrentHashMap.newKeySet(set.size());
-    concurrentSet.addAll(set);
-    return concurrentSet;
-  }
+  private static Map<String, Set<String>> toDataSet(Map<String, Set<String>> data) {
+    ConcurrentHashMap<String, Set<String>> map = new ConcurrentHashMap<>();
+    data.forEach((k, v) -> {
+      Set<String> set = ConcurrentHashMap.newKeySet(v.size());
+      set.addAll(v);
+      map.put(k, set);
+    });
 
-  private static Map<String, Set<String>> getData() {
-    return ImmutableMap.of("errorprone-exceptions", CHECK_FAILURES);
+    return map;
   }
 
   private static Map<String, Set<String>> loadData(Path path) {

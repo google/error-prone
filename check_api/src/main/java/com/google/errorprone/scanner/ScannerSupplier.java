@@ -181,6 +181,7 @@ public abstract class ScannerSupplier implements Supplier<Scanner> {
           BugCheckerInfo check = getAllChecks().get(checkName);
           if (check == null) {
             if (errorProneOptions.ignoreUnknownChecks()) {
+              HubSpotErrorHandler.recordMissingCheck(checkName);
               return;
             }
             throw new InvalidCommandLineOptionException(checkName + " is not a valid checker name");
