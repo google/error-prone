@@ -21,6 +21,7 @@ import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.method.MethodMatchers.constructor;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
 
+import com.google.common.collect.ImmutableList;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
@@ -58,19 +59,23 @@ public class InsecureCipherMode extends BugChecker
 
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
-    Description description = checkMethodInvocation(tree, state);
+    ImmutableList<Description> descriptionList = checkMethodInvocation(tree, state);
 
 
-    return description;
+    for (Description description : descriptionList) {
+      state.reportMatch(description);
+    }
+    return Description.NO_MATCH;
   }
 
-  Description checkMethodInvocation(MethodInvocationTree tree, VisitorState state) {
+  ImmutableList<Description> checkMethodInvocation(MethodInvocationTree tree, VisitorState state) {
+    ImmutableList.Builder<Description> descriptionList = ImmutableList.builder();
     if (BLOCKED_CRYPTO_EXPRESSIONS.matches(tree, state)) {
       String message = "Use of these APIs is considered insecure";
-      state.reportMatch(buildDescription(tree).setMessage(message).build());
+      descriptionList.add(buildDescription(tree).setMessage(message).build());
     }
 
-    return Description.NO_MATCH;
+    return descriptionList.build();
   }
 
   @Override
@@ -84,7 +89,7 @@ public class InsecureCipherMode extends BugChecker
   Description checkClassInvocation(NewClassTree tree, VisitorState state) {
     if (BLOCKED_CRYPTO_CLASSES.matches(tree, state)) {
       String message = "Use of these APIs is considered insecure";
-      state.reportMatch(buildDescription(tree).setMessage(message).build());
+      return buildDescription(tree).setMessage(message).build();
     }
 
     return Description.NO_MATCH;
