@@ -37,7 +37,7 @@ import javax.lang.model.element.Modifier;
 @BugPattern(
     name = "MutablePublicArray",
     summary =
-        "Nonzero-length arrays are mutable, so this `public static final` array is not a constant"
+        "Non-empty arrays are mutable, so this `public static final` array is not a constant"
             + " and can be modified by clients of this class.  Prefer an ImmutableList, or provide"
             + " an accessor method that returns a defensive copy.",
     severity = WARNING,
