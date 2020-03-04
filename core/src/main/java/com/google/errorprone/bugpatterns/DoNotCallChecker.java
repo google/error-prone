@@ -25,7 +25,6 @@ import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
 import com.google.common.collect.ImmutableMap;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.ProvidesFix;
-import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MemberReferenceTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
@@ -76,13 +75,6 @@ public class DoNotCallChecker extends BugChecker
 
   private static final String DO_NOT_CALL = "com.google.errorprone.annotations.DoNotCall";
 
-  private final boolean checkThirdPartyMethods;
-
-  public DoNotCallChecker(ErrorProneFlags flags) {
-    this.checkThirdPartyMethods =
-        flags.getBoolean("DoNotCallChecker:CheckThirdPartyMethods").orElse(true);
-  }
-
   @Override
   public Description matchMethod(MethodTree tree, VisitorState state) {
     MethodSymbol symbol = ASTHelpers.getSymbol(tree);
@@ -130,11 +122,9 @@ public class DoNotCallChecker extends BugChecker
 
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
-    if (checkThirdPartyMethods) {
-      for (Map.Entry<Matcher<ExpressionTree>, String> matcher : THIRD_PARTY_METHODS.entrySet()) {
-        if (matcher.getKey().matches(tree, state)) {
-          return buildDescription(tree).setMessage(matcher.getValue()).build();
-        }
+    for (Map.Entry<Matcher<ExpressionTree>, String> matcher : THIRD_PARTY_METHODS.entrySet()) {
+      if (matcher.getKey().matches(tree, state)) {
+        return buildDescription(tree).setMessage(matcher.getValue()).build();
       }
     }
     return checkTree(tree, ASTHelpers.getSymbol(tree), state);
