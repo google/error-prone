@@ -298,7 +298,7 @@
       <!-- Apache 2.0 -->
       <groupId>com.google.auto.service</groupId>
       <artifactId>auto-service</artifactId>
-      <version>1.0-rc4</version>
+      <version>1.0-rc6</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
