@@ -16,20 +16,12 @@
 
 package com.google.errorprone.bugpatterns.testdata;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+import java.security.KeyFactory;
 import java.security.KeyPairGenerator;
-import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
-import java.security.Signature;
 import javax.crypto.Cipher;
-import javax.crypto.CipherInputStream;
-import javax.crypto.CipherOutputStream;
 import javax.crypto.KeyAgreement;
-import javax.crypto.Mac;
 import javax.crypto.NoSuchPaddingException;
 
 /** @author avenet@google.com (Arnaud J. Venet) */
@@ -38,9 +30,24 @@ public class InsecureCipherModePositiveCases {
 
   static {
     try {
-      // BUG: Diagnostic contains: Use of these APIs is considered insecure
+      // BUG: Diagnostic contains: the mode and padding must be explicitly specified
       defaultAesCipher = Cipher.getInstance("AES");
-    } catch (NoSuchAlgorithmException | NoSuchPaddingException e) {
+    } catch (NoSuchAlgorithmException e) {
+      // We don't handle any exception as this code is not meant to be executed.
+    } catch (NoSuchPaddingException e) {
+      // We don't handle any exception as this code is not meant to be executed.
+    }
+  }
+
+  static Cipher defaultRsaCipher;
+
+  static {
+    try {
+      // BUG: Diagnostic contains: the mode and padding must be explicitly specified
+      defaultRsaCipher = Cipher.getInstance("RSA");
+    } catch (NoSuchAlgorithmException e) {
+      // We don't handle any exception as this code is not meant to be executed.
+    } catch (NoSuchPaddingException e) {
       // We don't handle any exception as this code is not meant to be executed.
     }
   }
@@ -50,9 +57,37 @@ public class InsecureCipherModePositiveCases {
 
   static {
     try {
-      // BUG: Diagnostic contains: Use of these APIs is considered insecure
+      // BUG: Diagnostic contains: the mode and padding must be explicitly specified
       defaultAesCipherWithConstantString = Cipher.getInstance(AES_STRING);
-    } catch (NoSuchAlgorithmException | NoSuchPaddingException e) {
+    } catch (NoSuchAlgorithmException e) {
+      // We don't handle any exception as this code is not meant to be executed.
+    } catch (NoSuchPaddingException e) {
+      // We don't handle any exception as this code is not meant to be executed.
+    }
+  }
+
+  static Cipher explicitAesCipher;
+
+  static {
+    try {
+      // BUG: Diagnostic contains: ECB mode must not be used
+      explicitAesCipher = Cipher.getInstance("AES/ECB/NoPadding");
+    } catch (NoSuchAlgorithmException e) {
+      // We don't handle any exception as this code is not meant to be executed.
+    } catch (NoSuchPaddingException e) {
+      // We don't handle any exception as this code is not meant to be executed.
+    }
+  }
+
+  static Cipher explicitDesCipher;
+
+  static {
+    try {
+      // BUG: Diagnostic contains: ECB mode must not be used
+      explicitDesCipher = Cipher.getInstance("DES/ECB/NoPadding");
+    } catch (NoSuchAlgorithmException e) {
+      // We don't handle any exception as this code is not meant to be executed.
+    } catch (NoSuchPaddingException e) {
       // We don't handle any exception as this code is not meant to be executed.
     }
   }
@@ -61,9 +96,38 @@ public class InsecureCipherModePositiveCases {
 
   static {
     try {
-      // BUG: Diagnostic contains: Use of these APIs is considered insecure
+      // BUG: Diagnostic contains: ECB mode must not be used
       explicitDesCipherWithProvider = Cipher.getInstance("DES/ECB/NoPadding", "My Provider");
-    } catch (NoSuchAlgorithmException | NoSuchPaddingException | NoSuchProviderException e) {
+    } catch (NoSuchAlgorithmException e) {
+      // We don't handle any exception as this code is not meant to be executed.
+    } catch (NoSuchPaddingException e) {
+      // We don't handle any exception as this code is not meant to be executed.
+    } catch (NoSuchProviderException e) {
+      // We don't handle any exception as this code is not meant to be executed.
+    }
+  }
+
+  static String transformation;
+
+  static {
+    try {
+      transformation = "DES/CBC/NoPadding";
+      // BUG: Diagnostic contains: the transformation is not a compile-time constant
+      Cipher cipher = Cipher.getInstance(transformation);
+    } catch (NoSuchAlgorithmException e) {
+      // We don't handle any exception as this code is not meant to be executed.
+    } catch (NoSuchPaddingException e) {
+      // We don't handle any exception as this code is not meant to be executed.
+    }
+  }
+
+  static void transformationAsParameter(String transformation) {
+    try {
+      // BUG: Diagnostic contains: the transformation is not a compile-time constant
+      Cipher cipher = Cipher.getInstance(transformation);
+    } catch (NoSuchAlgorithmException e) {
+      // We don't handle any exception as this code is not meant to be executed.
+    } catch (NoSuchPaddingException e) {
       // We don't handle any exception as this code is not meant to be executed.
     }
   }
@@ -74,7 +138,7 @@ public class InsecureCipherModePositiveCases {
     // Make sure that the checker is enabled inside constructors.
     public CipherWrapper() {
       try {
-        // BUG: Diagnostic contains: Use of these APIs is considered insecure
+        // BUG: Diagnostic contains: the mode and padding must be explicitly specified
         cipher = Cipher.getInstance("AES");
       } catch (NoSuchAlgorithmException e) {
         // We don't handle any exception as this code is not meant to be executed.
@@ -84,91 +148,90 @@ public class InsecureCipherModePositiveCases {
     }
   }
 
-  static Mac mac;
+  static Cipher complexCipher1;
 
   static {
     try {
-      // BUG: Diagnostic contains: Use of these APIs is considered insecure
-      mac = Mac.getInstance("HmacSHA1");
+      String algorithm = "AES";
+      // BUG: Diagnostic contains: the transformation is not a compile-time constant
+      complexCipher1 = Cipher.getInstance(algorithm);
+    } catch (NoSuchAlgorithmException e) {
+      // We don't handle any exception as this code is not meant to be executed.
+    } catch (NoSuchPaddingException e) {
+      // We don't handle any exception as this code is not meant to be executed.
+    }
+  }
 
+  static Cipher complexCipher2;
+
+  static {
+    try {
+      String transformation = "AES";
+      transformation += "/ECB";
+      transformation += "/NoPadding";
+      // BUG: Diagnostic contains: the transformation is not a compile-time constant
+      complexCipher2 = Cipher.getInstance(transformation);
+    } catch (NoSuchAlgorithmException e) {
+      // We don't handle any exception as this code is not meant to be executed.
+    } catch (NoSuchPaddingException e) {
+      // We don't handle any exception as this code is not meant to be executed.
+    }
+  }
+
+  static Cipher IesCipher;
+
+  static {
+    try {
+      // BUG: Diagnostic contains: the mode and padding must be explicitly specified
+      IesCipher = Cipher.getInstance("ECIES");
+      // BUG: Diagnostic contains: IES
+      IesCipher = Cipher.getInstance("ECIES/DHAES/NoPadding");
+      // BUG: Diagnostic contains: IES
+      IesCipher = Cipher.getInstance("ECIESWITHAES/NONE/PKCS5Padding");
+      // BUG: Diagnostic contains: IES
+      IesCipher = Cipher.getInstance("DHIESWITHAES/DHAES/PKCS7Padding");
+      // BUG: Diagnostic contains: IES
+      IesCipher = Cipher.getInstance("ECIESWITHDESEDE/NONE/NOPADDING");
+      // BUG: Diagnostic contains: IES
+      IesCipher = Cipher.getInstance("DHIESWITHDESEDE/DHAES/PKCS5PADDING");
+      // BUG: Diagnostic contains: IES
+      IesCipher = Cipher.getInstance("ECIESWITHAES/CBC/PKCS7PADDING");
+      // BUG: Diagnostic contains: IES
+      IesCipher = Cipher.getInstance("ECIESWITHAES-CBC/NONE/PKCS5PADDING");
+      // BUG: Diagnostic contains: IES
+      IesCipher = Cipher.getInstance("ECIESwithDESEDE-CBC/DHAES/NOPADDING");
+
+    } catch (NoSuchAlgorithmException e) {
+      // We don't handle any exception as this code is not meant to be executed.
+    } catch (NoSuchPaddingException e) {
+      // We don't handle any exception as this code is not meant to be executed.
+    }
+  }
+
+  interface StringProvider {
+    String get();
+  }
+
+  public void keyOperations(StringProvider provider) {
+    KeyFactory keyFactory;
+    KeyAgreement keyAgreement;
+    KeyPairGenerator keyPairGenerator;
+    final String dh = "DH";
+    try {
+      // BUG: Diagnostic contains: compile-time constant
+      keyFactory = KeyFactory.getInstance(provider.get());
+      // BUG: Diagnostic contains: Diffie-Hellman on prime fields
+      keyFactory = KeyFactory.getInstance(dh);
+      // BUG: Diagnostic contains: DSA
+      keyAgreement = KeyAgreement.getInstance("DSA");
+      // BUG: Diagnostic contains: compile-time constant
+      keyAgreement = KeyAgreement.getInstance(provider.get());
+      // BUG: Diagnostic contains: Diffie-Hellman on prime fields
+      keyPairGenerator = KeyPairGenerator.getInstance(dh);
+      // BUG: Diagnostic contains: compile-time constant
+      keyPairGenerator = KeyPairGenerator.getInstance(provider.get());
     } catch (NoSuchAlgorithmException e) {
       // We don't handle any exception as this code is not meant to be executed.
     }
   }
-
-  static MessageDigest messageDigest;
-
-  static {
-    try {
-      // BUG: Diagnostic contains: Use of these APIs is considered insecure
-      messageDigest = MessageDigest.getInstance("SHA");
-
-    } catch (NoSuchAlgorithmException e) {
-      // We don't handle any exception as this code is not meant to be executed.
-    }
-  }
-
-  static Signature sig;
-
-  static {
-    try {
-      // BUG: Diagnostic contains: Use of these APIs is considered insecure
-      sig = Signature.getInstance("SHA1withRSA");
-    } catch (NoSuchAlgorithmException e) {
-      // We don't handle any exception as this code is not meant to be executed.
-    }
-  }
-
-  static KeyAgreement keyAgreement;
-
-  static {
-    try {
-      // BUG: Diagnostic contains: Use of these APIs is considered insecure
-      keyAgreement = KeyAgreement.getInstance("ECDH");
-    } catch (NoSuchAlgorithmException e) {
-      // We don't handle any exception as this code is not meant to be executed.
-    }
-  }
-
-  static KeyPairGenerator keyPairGenerator;
-
-  static {
-    try {
-      // BUG: Diagnostic contains: Use of these APIs is considered insecure
-      keyPairGenerator = KeyPairGenerator.getInstance("EC" + "DH");
-    } catch (NoSuchAlgorithmException e) {
-      // We don't handle any exception as this code is not meant to be executed.
-    }
-  }
-
-  static CipherInputStream inputStream;
-
-  static {
-    try {
-      // BUG: Diagnostic contains: Use of these APIs is considered insecure
-      Cipher cipher = Cipher.getInstance("AES");
-      File file = new File("ok");
-      FileInputStream in = new FileInputStream(file);
-      // BUG: Diagnostic contains: Use of these APIs is considered insecure
-      inputStream = new CipherInputStream(in, cipher);
-    } catch (FileNotFoundException | NoSuchAlgorithmException | NoSuchPaddingException e) {
-      // We don't handle any exception as this code is not meant to be executed.
-    }
-  }
-
-  static CipherOutputStream outputStream;
-
-  static {
-    try {
-      // BUG: Diagnostic contains: Use of these APIs is considered insecure
-      Cipher cipher = Cipher.getInstance("AES");
-      ByteArrayOutputStream os = new ByteArrayOutputStream();
-      // BUG: Diagnostic contains: Use of these APIs is considered insecure
-      outputStream = new CipherOutputStream(os, cipher);
-    } catch (NoSuchAlgorithmException | NoSuchPaddingException e) {
-      // We don't handle any exception as this code is not meant to be executed.
-    }
-  }
-
-
 }
