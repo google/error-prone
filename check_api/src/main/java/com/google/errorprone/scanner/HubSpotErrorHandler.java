@@ -36,8 +36,8 @@ import com.google.errorprone.matchers.Suppressible;
 
 public class HubSpotErrorHandler {
   private static final ObjectMapper MAPPER = new ObjectMapper();
-  private static final String EXCEPTIONS = "errorprone-exceptions";
-  private static final String MISSING = "errorprone-missing-checks";
+  private static final String EXCEPTIONS = "errorProneExceptions";
+  private static final String MISSING = "errorProneMissingChecks";
   private static final Map<String, Set<String>> DATA = loadExistingData();
 
   public static boolean isEnabled(ErrorProneOptions options) {
