@@ -10,7 +10,7 @@ is usually a mistake:
 If the expression has side-effects, consider refactoring one of the expressions
 with side effects into a local. For example, prefer this:
 
-```.java {.good}
+```java
 // check twice, just to be sure
 boolean isTrue = foo.isTrue();
 if (isTrue && foo.isTrue()) {
@@ -20,7 +20,7 @@ if (isTrue && foo.isTrue()) {
 
 to this:
 
-```.java {.bad}
+```java
 if (foo.isTrue() && foo.isTrue()) {
   // ...
 }

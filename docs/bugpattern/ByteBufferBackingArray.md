@@ -21,7 +21,7 @@ backing array normally, without checking the above.
 
 Do this:
 
-``` {.good}
+```java
 // Use `.get(...)` to copy the byte[] without changing the current position.
 public void foo(ByteBuffer buffer) throws Exception {
    byte[] bytes = new byte[buffer.remaining()];
@@ -33,7 +33,7 @@ public void foo(ByteBuffer buffer) throws Exception {
 
 or this:
 
-``` {.good}
+```java
 // Use `.array()` only if you also check `.hasArray()`, `.arrayOffset()`, and `.remaining()`.
 public void foo(ByteBuffer buffer) throws Exception {
   if (buffer.hasArray()) {
@@ -47,7 +47,7 @@ public void foo(ByteBuffer buffer) throws Exception {
 
 or this:
 
-``` {.good}
+```java
 // No checking necessary when the buffer was constructed locally with `allocate(...)`.
 public void foo() throws Exception {
       ByteBuffer buffer = ByteBuffer.allocate(Long.SIZE / Byte.SIZE);
@@ -60,7 +60,7 @@ public void foo() throws Exception {
 
 or this:
 
-``` {.good}
+```java
 // No checking necessary when the buffer was constructed locally with `wrap(...)`.
 public void foo(byte[] bytes) throws Exception {
    ByteBuffer buffer = ByteBuffer.wrap(bytes);
@@ -72,7 +72,7 @@ public void foo(byte[] bytes) throws Exception {
 
 Not this:
 
-``` {.bad}
+```java
 public void foo(ByteBuffer buffer) {
    byte[] dataAsBytesArray = buffer.array();
    // ...

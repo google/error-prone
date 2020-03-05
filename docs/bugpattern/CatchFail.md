@@ -4,8 +4,9 @@ useful, since the exception's message and stack trace is lost.
 
 Do this:
 
-``` {.good}
-@Test public void testFoo() throws Exception {
+```java
+@Test
+public void testFoo() throws Exception {
    int x = foos(); // the test fails if this throws
    assertThat(x).isEqualTo(42);
 }
@@ -13,8 +14,9 @@ Do this:
 
 or this:
 
-``` {.good}
-@Test public void testFoo() throws Exception {
+```java
+@Test
+public void testFoo() throws Exception {
    int x;
    try {
      x = foos();
@@ -27,8 +29,9 @@ or this:
 
 Not this:
 
-``` {.bad}
-@Test public void testFoo() {
+```java
+@Test
+public void testFoo() {
    int x;
    try {
      x = foos();
