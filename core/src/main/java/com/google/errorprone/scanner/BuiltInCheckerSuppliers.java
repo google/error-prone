@@ -304,6 +304,7 @@ import com.google.errorprone.bugpatterns.SwigMemoryLeak;
 import com.google.errorprone.bugpatterns.SwitchDefault;
 import com.google.errorprone.bugpatterns.SymbolToString;
 import com.google.errorprone.bugpatterns.SystemExitOutsideMain;
+import com.google.errorprone.bugpatterns.SystemOut;
 import com.google.errorprone.bugpatterns.TestExceptionChecker;
 import com.google.errorprone.bugpatterns.TheoryButNoTheories;
 import com.google.errorprone.bugpatterns.ThreadJoinLoop;
@@ -1011,6 +1012,7 @@ public class BuiltInCheckerSuppliers {
           SwitchDefault.class,
           SymbolToString.class,
           SystemExitOutsideMain.class,
+          SystemOut.class,
           TestExceptionChecker.class,
           ThrowSpecificExceptions.class,
           ThrowsUncheckedException.class,
