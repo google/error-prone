@@ -30,6 +30,7 @@ import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.MemberReferenceTreeMatcher;
+import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.NewClassTreeMatcher;
 import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.SuggestedFix;
@@ -69,7 +70,10 @@ import javax.annotation.Nullable;
     summary = "Suggests alternatives to obsolete JDK classes.",
     severity = WARNING)
 public class JdkObsolete extends BugChecker
-    implements NewClassTreeMatcher, ClassTreeMatcher, MemberReferenceTreeMatcher {
+    implements NewClassTreeMatcher,
+        ClassTreeMatcher,
+        MemberReferenceTreeMatcher,
+        MethodInvocationTreeMatcher {
 
   static class Obsolete {
     final String qualifiedName;
@@ -105,6 +109,10 @@ public class JdkObsolete extends BugChecker
                   return linkedListFix(tree, state);
                 }
               },
+              new Obsolete(
+                  "java.util.Date",
+                  "Date has a bad API that leads to bugs; prefer java.time.Instant or LocalDate."
+                  ),
               new Obsolete(
                   "java.util.Vector",
                   "Vector performs synchronization that is usually unnecessary; prefer ArrayList."),
@@ -217,6 +225,22 @@ public class JdkObsolete extends BugChecker
       return NO_MATCH;
     }
     return describeIfObsolete(tree.getQualifierExpression(), ImmutableList.of(type), state);
+  }
+
+  @Override
+  public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
+    if (MATCHER_STRINGBUFFER.matches(tree, state)) {
+      return NO_MATCH;
+    }
+    Symbol owner = ASTHelpers.getSymbol(tree).owner;
+    if (owner == null) {
+      return NO_MATCH;
+    }
+    Type type = owner.type;
+    if (type == null) {
+      return NO_MATCH;
+    }
+    return describeIfObsolete(tree, ImmutableList.of(type), state);
   }
 
   private Description describeIfObsolete(

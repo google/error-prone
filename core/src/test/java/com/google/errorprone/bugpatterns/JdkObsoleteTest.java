@@ -280,4 +280,47 @@ public class JdkObsoleteTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void javaUtilDate_constructors() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.util.Date;",
+            "class Test {",
+            "  // BUG: Diagnostic contains: Date has a bad API",
+            "  private static final Date date1 = new Date();",
+            "  // BUG: Diagnostic contains: Date has a bad API",
+            "  private static final Date date2 = new Date(123456789L);",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void javaUtilDate_staticMethods() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.util.Date;",
+            "class Test {",
+            "  // BUG: Diagnostic contains: Date has a bad API",
+            "  private static final long date = Date.parse(\"Sat, 12 Aug 1995 13:30:00 GMT\");",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void javaUtilDate_instanceMethods() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.util.Date;",
+            "class Test {",
+            "  public void doSomething(Date date) {",
+            "    // BUG: Diagnostic contains: Date has a bad API",
+            "    long time = date.getTime();",
+            "  }",
+            "}")
+        .doTest();
+  }
 }
