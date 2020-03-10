@@ -133,13 +133,16 @@ boolean isOn(State state) {
 
 ## Cases with UNRECOGNIZED
 
-In situations where a switch handles all values of a proto-generated enum except
-for UNRECOGNIZED, UNRECOGNIZED is explicitly handled and the default is removed.
-This is preferred practice because it will catch unexpected enum types at
-compiletime instead of runtime.
+When a switch statement handles all values of a proto-generated enum except for
+UNRECOGNIZED, the UNRECOGNIZED case should be explicitly handled and the default
+should be removed. This is preferred so that `MissingCasesInEnumSwitch` will
+catch unexpected enum types at compile-time instead of runtime.
 
-If the switch statement cannot complete normally, the default is deleted and its
-statements are moved after the switch statement. Case UNRECOGNIZED is added with
-a break.
+If the switch statement cannot [complete normally], the default should be
+deleted and its statements moved after the switch statement. The UNRECOGNIZED
+case should be added with a break.
 
-If it can complete, we merge the default with an added UNRECOGNIZED case.
+If it can complete normally, the default should be merged with an added
+UNRECOGNIZED case.
+
+[complete normally]: https://docs.oracle.com/javase/specs/jls/se10/html/jls-14.html#jls-14.1
