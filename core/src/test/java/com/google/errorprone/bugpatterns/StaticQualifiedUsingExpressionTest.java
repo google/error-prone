@@ -18,7 +18,6 @@ package com.google.errorprone.bugpatterns;
 
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -27,13 +26,10 @@ import org.junit.runners.JUnit4;
 @RunWith(JUnit4.class)
 public class StaticQualifiedUsingExpressionTest {
 
-  private CompilationTestHelper compilationHelper;
-
-  @Before
-  public void setUp() {
-    compilationHelper =
-        CompilationTestHelper.newInstance(StaticQualifiedUsingExpression.class, getClass());
-  }
+  private final CompilationTestHelper compilationHelper =
+      CompilationTestHelper.newInstance(StaticQualifiedUsingExpression.class, getClass());
+  private final BugCheckerRefactoringTestHelper refactoringHelper =
+      BugCheckerRefactoringTestHelper.newInstance(new StaticQualifiedUsingExpression(), getClass());
 
   @Test
   public void testPositiveCase1() {
@@ -52,7 +48,7 @@ public class StaticQualifiedUsingExpressionTest {
 
   @Test
   public void clash() {
-    BugCheckerRefactoringTestHelper.newInstance(new StaticQualifiedUsingExpression(), getClass())
+    refactoringHelper
         .addInputLines(
             "a/Lib.java", //
             "package a;",
@@ -84,7 +80,7 @@ public class StaticQualifiedUsingExpressionTest {
 
   @Test
   public void expr() {
-    BugCheckerRefactoringTestHelper.newInstance(new StaticQualifiedUsingExpression(), getClass())
+    refactoringHelper
         .addInputLines(
             "I.java", //
             "interface I {",
@@ -114,7 +110,7 @@ public class StaticQualifiedUsingExpressionTest {
 
   @Test
   public void superAccess() {
-    BugCheckerRefactoringTestHelper.newInstance(new StaticQualifiedUsingExpression(), getClass())
+    refactoringHelper
         .addInputLines(
             "I.java", //
             "interface I {",
@@ -134,6 +130,32 @@ public class StaticQualifiedUsingExpressionTest {
             "  }",
             "}")
         .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
+  public void enumConstantAccessedViaInstance() {
+    refactoringHelper
+        .addInputLines(
+            "Enum.java", //
+            "enum Enum {",
+            "A, B;",
+            "}")
+        .expectUnchanged()
+        .addInputLines(
+            "Test.java", //
+            "class Test {",
+            "  Enum foo(Enum e) {",
+            "    return e.B;",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java", //
+            "class Test {",
+            "  Enum foo(Enum e) {",
+            "    return Enum.B;",
+            "  }",
+            "}")
         .doTest();
   }
 }
