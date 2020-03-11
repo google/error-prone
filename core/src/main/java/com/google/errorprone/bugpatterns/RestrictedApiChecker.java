@@ -47,7 +47,7 @@ import javax.lang.model.type.MirroredTypesException;
 /** Check for non-whitelisted callers to RestrictedApiChecker. */
 @BugPattern(
     name = "RestrictedApiChecker",
-    summary = " Check for non-whitelisted callers to RestrictedApiChecker.",
+    summary = "Check for non-whitelisted callers to RestrictedApiChecker.",
     severity = SeverityLevel.ERROR,
     suppressionAnnotations = {},
     disableable = false,
@@ -57,6 +57,12 @@ public class RestrictedApiChecker extends BugChecker
         NewClassTreeMatcher,
         AnnotationTreeMatcher,
         MemberReferenceTreeMatcher {
+  /**
+   * The name to use when reporting findings. It's important that this DOES NOT match {@link
+   * #canonicalName()}, because otherwise changing the severity won't work.
+   */
+  // TODO(b/151087021): rationalize this.
+  private static final String CHECK_NAME = "RestrictedApi";
 
   /**
    * Validates a {@code @RestrictedApi} annotation and that the declared restriction makes sense.
@@ -137,9 +143,7 @@ public class RestrictedApiChecker extends BugChecker
       // TODO(bangert): Clarify this message if possible.
       return buildDescription(where)
           .setMessage(
-              "The Restricted API (["
-                  + restriction.checkerName()
-                  + "]"
+              "The Restricted API ("
                   + restriction.explanation()
                   + ") call here is both whitelisted-as-warning and "
                   + "silently whitelisted. "
@@ -153,7 +157,7 @@ public class RestrictedApiChecker extends BugChecker
 
     Description.Builder description =
         Description.builder(
-            where, restriction.checkerName(), restriction.link(), level, restriction.explanation());
+            where, CHECK_NAME, restriction.link(), level, restriction.explanation());
     return description.build();
   }
 

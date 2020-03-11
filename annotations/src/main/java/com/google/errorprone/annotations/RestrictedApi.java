@@ -82,7 +82,12 @@ import java.lang.annotation.Target;
  */
 @Target({ElementType.CONSTRUCTOR, ElementType.METHOD})
 public @interface RestrictedApi {
-  /** Very short name for the diagnostic message. Used in error-prone. */
+  /**
+   * Very short name for the diagnostic message. Used in error-prone.
+   *
+   * @deprecated providing a different checker name is confusing; this field is ignored.
+   */
+  @Deprecated
   public String checkerName() default "RestrictedApi";
 
   /** Explanation why the API is restricted, to be inserted into the compiler output. */
