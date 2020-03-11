@@ -61,6 +61,7 @@ public class StaticQualifiedUsingExpression extends BugChecker implements Member
           return NO_MATCH;
         }
         // fall through
+      case ENUM_CONSTANT:
       case METHOD:
         if (!sym.isStatic()) {
           return NO_MATCH;
