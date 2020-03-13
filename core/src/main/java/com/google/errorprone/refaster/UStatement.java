@@ -34,7 +34,7 @@ public interface UStatement
         Function<UnifierWithUnconsumedStatements, Choice<UnifierWithUnconsumedStatements>> {
   /** Tuple of a Unifier and a list of statements that are still waiting to be matched. */
   @AutoValue
-  public abstract static class UnifierWithUnconsumedStatements {
+  abstract class UnifierWithUnconsumedStatements {
     public static UnifierWithUnconsumedStatements create(
         Unifier unifier, List<? extends StatementTree> unconsumedStatements) {
       return new AutoValue_UStatement_UnifierWithUnconsumedStatements(

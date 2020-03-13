@@ -89,7 +89,7 @@ public class EqualsIncompatibleTypePositiveCases {
   }
 
   interface I {
-    public boolean equals(Object o);
+    boolean equals(Object o);
   }
 
   class D {}

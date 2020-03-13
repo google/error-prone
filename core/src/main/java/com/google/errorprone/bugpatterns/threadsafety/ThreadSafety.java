@@ -314,10 +314,10 @@ public final class ThreadSafety {
     /**
      * Types that are known to be safe even if they're not annotated with an expected annotation.
      */
-    public Map<String, AnnotationInfo> getKnownSafeClasses();
+    Map<String, AnnotationInfo> getKnownSafeClasses();
 
     /** Types that are known to be unsafe and don't need testing. */
-    public Set<String> getKnownUnsafeClasses();
+    Set<String> getKnownUnsafeClasses();
   }
 
   /**

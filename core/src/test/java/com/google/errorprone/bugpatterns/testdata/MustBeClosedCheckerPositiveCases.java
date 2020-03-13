@@ -63,7 +63,7 @@ public class MustBeClosedCheckerPositiveCases {
     }
   }
 
-  static interface Lambda {
+  interface Lambda {
 
     Closeable expression();
   }
