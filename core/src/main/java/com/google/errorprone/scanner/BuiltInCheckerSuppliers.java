@@ -165,6 +165,7 @@ import com.google.errorprone.bugpatterns.LiteByteStringUtf8;
 import com.google.errorprone.bugpatterns.LiteEnumValueOf;
 import com.google.errorprone.bugpatterns.LiteProtoToString;
 import com.google.errorprone.bugpatterns.LockNotBeforeTry;
+import com.google.errorprone.bugpatterns.LockOnBoxedPrimitive;
 import com.google.errorprone.bugpatterns.LogicalAssignment;
 import com.google.errorprone.bugpatterns.LongLiteralLowerCaseSuffix;
 import com.google.errorprone.bugpatterns.LoopConditionChecker;
@@ -720,6 +721,7 @@ public class BuiltInCheckerSuppliers {
           LiteEnumValueOf.class,
           LiteProtoToString.class,
           LockNotBeforeTry.class,
+          LockOnBoxedPrimitive.class,
           LogicalAssignment.class,
           MathAbsoluteRandom.class,
           MissingCasesInEnumSwitch.class,
