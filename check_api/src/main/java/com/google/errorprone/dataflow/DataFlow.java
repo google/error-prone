@@ -52,7 +52,7 @@ import org.checkerframework.shaded.dataflow.cfg.UnderlyingAST;
 public final class DataFlow {
 
   /** A pair of Analysis and ControlFlowGraph. */
-  public static interface Result<
+  public interface Result<
       A extends AbstractValue<A>, S extends Store<S>, T extends TransferFunction<A, S>> {
     Analysis<A, S, T> getAnalysis();
 

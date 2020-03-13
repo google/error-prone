@@ -127,7 +127,7 @@ public class EqualsIncompatibleTypeNegativeCases {
   }
 
   interface I {
-    public boolean equals(Object o);
+    boolean equals(Object o);
   }
 
   class E1 implements I {}

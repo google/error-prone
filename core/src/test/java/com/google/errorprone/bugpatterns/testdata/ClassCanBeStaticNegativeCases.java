@@ -78,7 +78,7 @@ public class ClassCanBeStaticNegativeCases {
   }
 
   // inner class references a method from inheritance
-  public static interface OuterInter {
+  public interface OuterInter {
     int outerInterMethod();
   }
 

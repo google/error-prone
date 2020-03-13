@@ -334,7 +334,7 @@ public class SuggestedFix implements Fix {
   }
 
   /** Models a single fix operation. */
-  private static interface FixOperation {
+  private interface FixOperation {
     /** Calculate the replacement operation once end positions are available. */
     Replacement getReplacement(EndPosTable endPositions);
   }

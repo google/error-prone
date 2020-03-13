@@ -88,23 +88,23 @@ public @interface RestrictedApi {
    * @deprecated providing a different checker name is confusing; this field is ignored.
    */
   @Deprecated
-  public String checkerName() default "RestrictedApi";
+  String checkerName() default "RestrictedApi";
 
   /** Explanation why the API is restricted, to be inserted into the compiler output. */
-  public String explanation();
+  String explanation();
 
   /** Link explaining why the API is restricted */
-  public String link();
+  String link();
 
   /**
    * Allow the restricted API on paths matching this regular expression.
    *
    * <p>Leave empty (the default) to enforce the API restrictions on all paths.
    */
-  public String allowedOnPath() default "";
+  String allowedOnPath() default "";
 
   /** Allow calls to the restricted API in methods or classes with this annotation. */
-  public Class<? extends Annotation>[] whitelistAnnotations() default {};
+  Class<? extends Annotation>[] whitelistAnnotations() default {};
 
   /**
    * Emit warnings, not errors, on calls to the restricted API for callers with this annotation.
@@ -113,6 +113,6 @@ public @interface RestrictedApi {
    * to a whitelist annotation after review). Too many warnings will lead to ALL warnings being
    * ignored, so tread very carefully.
    */
-  public Class<? extends Annotation>[] whitelistWithWarningAnnotations() default {};
+  Class<? extends Annotation>[] whitelistWithWarningAnnotations() default {};
 
 }
