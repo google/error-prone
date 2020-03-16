@@ -238,6 +238,7 @@ import com.google.errorprone.bugpatterns.PrimitiveArrayPassedToVarargsMethod;
 import com.google.errorprone.bugpatterns.PrimitiveAtomicReference;
 import com.google.errorprone.bugpatterns.PrivateConstructorForUtilityClass;
 import com.google.errorprone.bugpatterns.PrivateSecurityContractProtoAccess;
+import com.google.errorprone.bugpatterns.ProtectedMembersInFinalClass;
 import com.google.errorprone.bugpatterns.ProtoFieldNullComparison;
 import com.google.errorprone.bugpatterns.ProtoRedundantSet;
 import com.google.errorprone.bugpatterns.ProtoStringFieldReferenceEquality;
@@ -758,6 +759,7 @@ public class BuiltInCheckerSuppliers {
           PreconditionsCheckNotNullRepeated.class,
           PreconditionsInvalidPlaceholder.class,
           PrimitiveAtomicReference.class,
+          ProtectedMembersInFinalClass.class,
           ProtoRedundantSet.class,
           ProtoDurationGetSecondsGetNano.class,
           ProtoTimestampGetSecondsGetNano.class,
