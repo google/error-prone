@@ -323,8 +323,9 @@ public class VisitorState {
    * Given the binary name of a class, returns the {@link Type}.
    *
    * <p>Prefer not to use this method for constant strings, or strings otherwise known at compile
-   * time. Instead, save the result of {@link Suppliers#typeFromString} as a class constant, and use
-   * its {@link Supplier#get} method to look up the Type when needed. This lookup will be faster,
+   * time. Instead, save the result of {@link
+   * com.google.errorprone.suppliers.Suppliers#typeFromString} as a class constant, and use its
+   * {@link Supplier#get} method to look up the Type when needed. This lookup will be faster,
    * improving Error Prone's analysis time.
    *
    * <p>If this method returns null, the compiler doesn't have access to this type, which means that
