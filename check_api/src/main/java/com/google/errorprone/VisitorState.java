@@ -322,6 +322,11 @@ public class VisitorState {
   /**
    * Given the binary name of a class, returns the {@link Type}.
    *
+   * <p>Prefer not to use this method for constant strings, or strings otherwise known at compile
+   * time. Instead, save the result of {@link Suppliers#typeFromString} as a class constant, and use
+   * its {@link Supplier#get} method to look up the Type when needed. This lookup will be faster,
+   * improving Error Prone's analysis time.
+   *
    * <p>If this method returns null, the compiler doesn't have access to this type, which means that
    * if you are comparing other types to this for equality or the subtype relation, your result
    * would always be false even if it could create the type. Thus it might be best to bail out early
