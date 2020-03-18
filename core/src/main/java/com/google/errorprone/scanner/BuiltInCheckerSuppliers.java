@@ -77,6 +77,7 @@ import com.google.errorprone.bugpatterns.ComplexBooleanConstant;
 import com.google.errorprone.bugpatterns.ConditionalExpressionNumericPromotion;
 import com.google.errorprone.bugpatterns.ConstantField;
 import com.google.errorprone.bugpatterns.ConstantOverflow;
+import com.google.errorprone.bugpatterns.ConstantPatternCompile;
 import com.google.errorprone.bugpatterns.ConstructorInvokesOverridable;
 import com.google.errorprone.bugpatterns.ConstructorLeaksThis;
 import com.google.errorprone.bugpatterns.DateFormatConstant;
@@ -826,6 +827,7 @@ public class BuiltInCheckerSuppliers {
           ClassNamedLikeTypeParameter.class,
           ComparisonContractViolated.class,
           ConstantField.class,
+          ConstantPatternCompile.class,
           ConstructorInvokesOverridable.class,
           ConstructorLeaksThis.class,
           DeduplicateConstants.class,
