@@ -265,6 +265,7 @@ import com.google.errorprone.bugpatterns.SelfEquals;
 import com.google.errorprone.bugpatterns.ShortCircuitBoolean;
 import com.google.errorprone.bugpatterns.ShouldHaveEvenArgs;
 import com.google.errorprone.bugpatterns.SizeGreaterThanOrEqualsZero;
+import com.google.errorprone.bugpatterns.StaticAssignmentInConstructor;
 import com.google.errorprone.bugpatterns.StaticQualifiedUsingExpression;
 import com.google.errorprone.bugpatterns.StreamResourceLeak;
 import com.google.errorprone.bugpatterns.StreamToString;
@@ -771,6 +772,7 @@ public class BuiltInCheckerSuppliers {
           SameNameButDifferent.class,
           ShortCircuitBoolean.class,
           StringSplitter.class,
+          StaticAssignmentInConstructor.class,
           StaticGuardedByInstance.class,
           StreamResourceLeak.class,
           SwigMemoryLeak.class,
