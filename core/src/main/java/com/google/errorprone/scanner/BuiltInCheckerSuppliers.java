@@ -403,7 +403,6 @@ import com.google.errorprone.bugpatterns.nullness.EqualsBrokenForNull;
 import com.google.errorprone.bugpatterns.nullness.FieldMissingNullable;
 import com.google.errorprone.bugpatterns.nullness.NullableDereference;
 import com.google.errorprone.bugpatterns.nullness.ParameterNotNullable;
-import com.google.errorprone.bugpatterns.nullness.ReturnMissingNullable;
 import com.google.errorprone.bugpatterns.nullness.UnnecessaryCheckNotNull;
 import com.google.errorprone.bugpatterns.overloading.InconsistentOverloads;
 import com.google.errorprone.bugpatterns.threadsafety.DoubleCheckedLocking;
@@ -899,7 +898,6 @@ public class BuiltInCheckerSuppliers {
           RedundantThrows.class,
           RemoveUnusedImports.class,
           ReturnFromVoid.class,
-          ReturnMissingNullable.class,
           ScopeAnnotationOnInterfaceOrAbstractClass.class,
           ScopeOnModule.class,
           ScopeOrQualifierAnnotationRetention.class,
