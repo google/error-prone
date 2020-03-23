@@ -129,8 +129,10 @@ public class ExpectedExceptionCheckerTest {
             "  @Test",
             "  public void test() throws Exception {",
             "    Path p = Paths.get(\"NOSUCH\");",
-            "    Files.readAllBytes(p);",
-            "    Throwable thrown = assertThrows(Throwable.class, () -> Files.readAllBytes(p));",
+            "    Throwable thrown = assertThrows(Throwable.class, () -> {",
+            "      Files.readAllBytes(p);",
+            "      Files.readAllBytes(p);",
+            "    });",
             "    assertThat(thrown, CoreMatchers.is(CoreMatchers.instanceOf(IOException.class)));",
             "  }",
             "}")
@@ -217,8 +219,8 @@ public class ExpectedExceptionCheckerTest {
             "  @Test",
             "  public void test() throws Exception {",
             "    Path p = Paths.get(\"NOSUCH\");",
-            "    Files.readAllBytes(p);",
             "    assertThrows(IOException.class, () -> {",
+            "      Files.readAllBytes(p);",
             "      if (true) Files.readAllBytes(p);",
             "    });",
             "  }",
@@ -351,7 +353,6 @@ public class ExpectedExceptionCheckerTest {
         .addOutputLines(
             "out/ExceptionTest.java",
             "import static com.google.common.truth.Truth.assertThat;",
-            "import static org.junit.Assert.assertThrows;",
             "import org.junit.Rule;",
             "import org.junit.Test;",
             "import org.junit.rules.ExpectedException;",
@@ -360,7 +361,7 @@ public class ExpectedExceptionCheckerTest {
             "  @Test",
             "  public void test() throws Exception {",
             "    assertThat(false).isFalse();",
-            "    assertThrows(RuntimeException.class, () -> assertThat(true).isTrue());",
+            "    assertThat(true).isTrue();",
             "  }",
             "}")
         .doTest();
@@ -417,8 +418,6 @@ public class ExpectedExceptionCheckerTest {
             "  @Rule ExpectedException thrown = ExpectedException.none();",
             "  @Test",
             "  public void testThrow() throws Exception {",
-            "    thrown.expect(IOException.class);",
-            "    throw new IOException();",
             "  }",
             "  @Test",
             "  public void one() throws Exception {",
