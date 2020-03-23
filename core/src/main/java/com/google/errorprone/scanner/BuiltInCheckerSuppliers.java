@@ -104,7 +104,6 @@ import com.google.errorprone.bugpatterns.EqualsUnsafeCast;
 import com.google.errorprone.bugpatterns.EqualsUsingHashCode;
 import com.google.errorprone.bugpatterns.EqualsWrongThing;
 import com.google.errorprone.bugpatterns.ExpectedExceptionChecker;
-import com.google.errorprone.bugpatterns.ExpectedExceptionRefactoring;
 import com.google.errorprone.bugpatterns.ExtendingJUnitAssert;
 import com.google.errorprone.bugpatterns.ExtendsAutoValue;
 import com.google.errorprone.bugpatterns.FallThrough;
@@ -279,7 +278,6 @@ import com.google.errorprone.bugpatterns.SwigMemoryLeak;
 import com.google.errorprone.bugpatterns.SwitchDefault;
 import com.google.errorprone.bugpatterns.SystemExitOutsideMain;
 import com.google.errorprone.bugpatterns.TestExceptionChecker;
-import com.google.errorprone.bugpatterns.TestExceptionRefactoring;
 import com.google.errorprone.bugpatterns.TheoryButNoTheories;
 import com.google.errorprone.bugpatterns.ThreadJoinLoop;
 import com.google.errorprone.bugpatterns.ThreadLocalUsage;
@@ -840,7 +838,6 @@ public class BuiltInCheckerSuppliers {
           EqualsBrokenForNull.class,
           EscapedEntity.class,
           ExpectedExceptionChecker.class,
-          ExpectedExceptionRefactoring.class,
           FieldCanBeFinal.class,
           FieldCanBeLocal.class,
           FieldMissingNullable.class,
@@ -908,7 +905,6 @@ public class BuiltInCheckerSuppliers {
           SwitchDefault.class,
           SystemExitOutsideMain.class,
           TestExceptionChecker.class,
-          TestExceptionRefactoring.class,
           ThrowSpecificExceptions.class,
           ThrowsUncheckedException.class,
           TimeUnitMismatch.class,
