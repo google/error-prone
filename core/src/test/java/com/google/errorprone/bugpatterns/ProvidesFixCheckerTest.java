@@ -220,33 +220,4 @@ public class ProvidesFixCheckerTest {
             "}")
         .doTest();
   }
-
-  @Test
-  public void nestedNewClass() {
-    testHelper
-        .addSourceLines(
-            "ExampleChecker.java",
-            "import com.google.errorprone.BugPattern;",
-            "import com.google.errorprone.BugPattern.SeverityLevel;",
-            "import com.google.errorprone.VisitorState;",
-            "import com.google.errorprone.bugpatterns.BugChecker;",
-            "import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;",
-            "import com.google.errorprone.fixes.SuggestedFix;",
-            "import com.google.errorprone.matchers.Description;",
-            "import com.sun.source.tree.ClassTree;",
-            "// BUG: Diagnostic contains: ProvidesFix",
-            "@BugPattern(name = \"Example\", summary = \"\", severity = SeverityLevel.ERROR)",
-            "public class ExampleChecker extends BugChecker implements ClassTreeMatcher {",
-            "  @Override public Description matchClass(ClassTree tree, VisitorState s) {",
-            "    Helper wrapper = new Helper(new Description(",
-            "        tree, \"\", SuggestedFix.builder().build(), SeverityLevel.ERROR));",
-            "    return wrapper.d;",
-            "  }",
-            "  static class Helper {",
-            "    public Description d;",
-            "    public Helper(Description d) { this.d = d; }",
-            "  }",
-            "}")
-        .doTest();
-  }
 }

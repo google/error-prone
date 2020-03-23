@@ -18,12 +18,17 @@ import static com.google.common.truth.Truth.assertThat;
 import static org.junit.Assert.assertThrows;
 
 import com.google.common.collect.Iterables;
+import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.apply.DescriptionBasedDiff;
 import com.google.errorprone.apply.ImportOrganizer;
+import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
+import com.sun.tools.javac.tree.EndPosTable;
+import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
+import com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -70,9 +75,7 @@ public class DescriptionBasedDiffTest extends CompilerBasedTest {
   @Test
   public void oneDiff() {
     DescriptionBasedDiff diff = createDescriptionBasedDiff();
-    diff.onDescribed(
-        new Description(
-            null, "message", SuggestedFix.replace(137, 140, "bar"), SeverityLevel.SUGGESTION));
+    diff.onDescribed(dummyDescription(SuggestedFix.replace(137, 140, "bar")));
     diff.applyDifferences(sourceFile);
     assertThat(sourceFile.getLines())
         .containsExactly(
@@ -91,9 +94,7 @@ public class DescriptionBasedDiffTest extends CompilerBasedTest {
   @Test
   public void prefixDiff() {
     DescriptionBasedDiff diff = createDescriptionBasedDiff();
-    diff.onDescribed(
-        new Description(
-            null, "message", SuggestedFix.replace(140, 140, "bar"), SeverityLevel.SUGGESTION));
+    diff.onDescribed(dummyDescription(SuggestedFix.replace(140, 140, "bar")));
     diff.applyDifferences(sourceFile);
     assertThat(sourceFile.getLines())
         .containsExactly(
@@ -113,11 +114,8 @@ public class DescriptionBasedDiffTest extends CompilerBasedTest {
   public void twoDiffs() {
     DescriptionBasedDiff diff = createDescriptionBasedDiff();
     diff.onDescribed(
-        new Description(
-            null,
-            "message",
-            SuggestedFix.builder().replace(124, 127, "longer").replace(137, 140, "bar").build(),
-            SeverityLevel.SUGGESTION));
+        dummyDescription(
+            SuggestedFix.builder().replace(124, 127, "longer").replace(137, 140, "bar").build()));
     diff.applyDifferences(sourceFile);
     assertThat(sourceFile.getLines())
         .containsExactly(
@@ -140,49 +138,27 @@ public class DescriptionBasedDiffTest extends CompilerBasedTest {
         IllegalArgumentException.class,
         () ->
             diff.onDescribed(
-                new Description(
-                    null,
-                    "message",
+                dummyDescription(
                     SuggestedFix.builder()
                         .replace(137, 140, "baz")
                         .replace(137, 140, "bar")
-                        .build(),
-                    SeverityLevel.SUGGESTION)));
+                        .build())));
 
     DescriptionBasedDiff diff2 = createDescriptionBasedDiff();
-    diff2.onDescribed(
-        new Description(
-            null,
-            "bah",
-            SuggestedFix.builder().replace(137, 140, "baz").build(),
-            SeverityLevel.SUGGESTION));
+    diff2.onDescribed(dummyDescription(SuggestedFix.builder().replace(137, 140, "baz").build()));
 
     assertThrows(
         IllegalArgumentException.class,
         () ->
             diff2.onDescribed(
-                new Description(
-                    null,
-                    "message",
-                    SuggestedFix.builder().replace(137, 140, "bar").build(),
-                    SeverityLevel.SUGGESTION)));
+                dummyDescription(SuggestedFix.builder().replace(137, 140, "bar").build())));
 
     DescriptionBasedDiff diff3 =
         DescriptionBasedDiff.createIgnoringOverlaps(
             compilationUnit, ImportOrganizer.STATIC_FIRST_ORGANIZER);
-    diff3.onDescribed(
-        new Description(
-            null,
-            "bah",
-            SuggestedFix.builder().replace(137, 140, "baz").build(),
-            SeverityLevel.SUGGESTION));
+    diff3.onDescribed(dummyDescription(SuggestedFix.builder().replace(137, 140, "baz").build()));
     // No throw, since it's lenient. Refactors to the first "baz" replacement and ignores this.
-    diff3.onDescribed(
-        new Description(
-            null,
-            "message",
-            SuggestedFix.builder().replace(137, 140, "bar").build(),
-            SeverityLevel.SUGGESTION));
+    diff3.onDescribed(dummyDescription(SuggestedFix.builder().replace(137, 140, "bar").build()));
     diff3.applyDifferences(sourceFile);
 
     assertThat(sourceFile.getLines())
@@ -203,11 +179,7 @@ public class DescriptionBasedDiffTest extends CompilerBasedTest {
   public void applyDifferences_addsImportAndSorts_whenAddingNewImport() {
     DescriptionBasedDiff diff = createDescriptionBasedDiff();
     diff.onDescribed(
-        new Description(
-            null,
-            "message",
-            SuggestedFix.builder().addImport("com.google.foo.Bar").build(),
-            SeverityLevel.SUGGESTION));
+        dummyDescription(SuggestedFix.builder().addImport("com.google.foo.Bar").build()));
     diff.applyDifferences(sourceFile);
     assertThat(sourceFile.getLines())
         .containsExactly(
@@ -227,12 +199,7 @@ public class DescriptionBasedDiffTest extends CompilerBasedTest {
   @Test
   public void applyDifferences_preservesImportOrder_whenAddingExistingImport() {
     DescriptionBasedDiff diff = createDescriptionBasedDiff();
-    diff.onDescribed(
-        new Description(
-            null,
-            "message",
-            SuggestedFix.builder().addImport("com.foo.Bar").build(),
-            SeverityLevel.SUGGESTION));
+    diff.onDescribed(dummyDescription(SuggestedFix.builder().addImport("com.foo.Bar").build()));
     diff.applyDifferences(sourceFile);
     assertThat(sourceFile.getLines())
         .containsExactly(
@@ -252,11 +219,11 @@ public class DescriptionBasedDiffTest extends CompilerBasedTest {
   public void removeImport() {
     DescriptionBasedDiff diff = createDescriptionBasedDiff();
     diff.onDescribed(
-        new Description(
-            null,
-            "message",
-            SuggestedFix.builder().removeImport("com.foo.Bar").removeImport("org.bar.Baz").build(),
-            SeverityLevel.SUGGESTION));
+        dummyDescription(
+            SuggestedFix.builder()
+                .removeImport("com.foo.Bar")
+                .removeImport("org.bar.Baz")
+                .build()));
     diff.applyDifferences(sourceFile);
     assertThat(sourceFile.getLines())
         .containsExactly(
@@ -275,11 +242,7 @@ public class DescriptionBasedDiffTest extends CompilerBasedTest {
   public void applyDifferences_preservesOrder_whenRemovingNonExistentImport() {
     DescriptionBasedDiff diff = createDescriptionBasedDiff();
     diff.onDescribed(
-        new Description(
-            null,
-            "message",
-            SuggestedFix.builder().removeImport("com.google.foo.Bar").build(),
-            SeverityLevel.SUGGESTION));
+        dummyDescription(SuggestedFix.builder().removeImport("com.google.foo.Bar").build()));
     diff.applyDifferences(sourceFile);
     assertThat(sourceFile.getLines())
         .containsExactly(
@@ -299,15 +262,12 @@ public class DescriptionBasedDiffTest extends CompilerBasedTest {
   public void twoDiffsWithImport() {
     DescriptionBasedDiff diff = createDescriptionBasedDiff();
     diff.onDescribed(
-        new Description(
-            null,
-            "message",
+        dummyDescription(
             SuggestedFix.builder()
                 .replace(124, 127, "longer")
                 .replace(137, 140, "bar")
                 .addImport("com.google.foo.Bar")
-                .build(),
-            SeverityLevel.SUGGESTION));
+                .build()));
     diff.applyDifferences(sourceFile);
     assertThat(sourceFile.getLines())
         .containsExactly(
@@ -322,5 +282,36 @@ public class DescriptionBasedDiffTest extends CompilerBasedTest {
             "  }",
             "}")
         .inOrder();
+  }
+
+  @BugPattern(name = "Test", summary = "", severity = SeverityLevel.WARNING)
+  static final class DummyChecker extends BugChecker {}
+
+  private static Description dummyDescription(SuggestedFix fix) {
+    return BugChecker.buildDescriptionFromChecker(
+            new DiagnosticPosition() {
+              @Override
+              public JCTree getTree() {
+                return null;
+              }
+
+              @Override
+              public int getStartPosition() {
+                return 0;
+              }
+
+              @Override
+              public int getPreferredPosition() {
+                return 0;
+              }
+
+              @Override
+              public int getEndPosition(EndPosTable endPosTable) {
+                return 0;
+              }
+            },
+            new DummyChecker())
+        .addFix(fix)
+        .build();
   }
 }
