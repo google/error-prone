@@ -1284,9 +1284,9 @@ public class ASTHelpers {
   }
 
   /**
-   * Returns the value of the {@code @Generated} annotation on encosing classes, if present.
+   * Returns the value of the {@code @Generated} annotation on enclosing classes, if present.
    *
-   * <p>Although {@code @Generated} can be applied to non-class progam elements, there are no known
+   * <p>Although {@code @Generated} can be applied to non-class program elements, there are no known
    * cases of that happening, so it isn't supported here.
    */
   public static ImmutableSet<String> getGeneratedBy(VisitorState state) {
