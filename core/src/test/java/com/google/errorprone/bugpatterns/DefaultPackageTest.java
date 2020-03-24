@@ -67,4 +67,15 @@ public class DefaultPackageTest {
             "}")
         .doTest();
   }
+
+  // see b/2276473
+  @Test
+  public void trailingComma() {
+    compilationHelper
+        .addSourceLines(
+            "T.java", //
+            "package a;",
+            "class T {};")
+        .doTest();
+  }
 }
