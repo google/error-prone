@@ -23,6 +23,7 @@ import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
+import static com.google.errorprone.util.ASTHelpers.getReceiverType;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -232,11 +233,7 @@ public class JdkObsolete extends BugChecker
     if (MATCHER_STRINGBUFFER.matches(tree, state)) {
       return NO_MATCH;
     }
-    Symbol owner = ASTHelpers.getSymbol(tree).owner;
-    if (owner == null) {
-      return NO_MATCH;
-    }
-    Type type = owner.type;
+    Type type = getReceiverType(tree.getMethodSelect());
     if (type == null) {
       return NO_MATCH;
     }

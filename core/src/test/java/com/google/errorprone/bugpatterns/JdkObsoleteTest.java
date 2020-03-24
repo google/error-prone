@@ -323,4 +323,21 @@ public class JdkObsoleteTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void navigableMapInheritedMethod() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.util.Map;",
+            "import java.util.Set;",
+            "import java.util.NavigableMap;",
+            "class Test {",
+            "  void f(NavigableMap<String, Integer> m) {",
+            "    for (Integer e : m.values()) {",
+            "    }",
+            "  }",
+            "}")
+        .doTest();
+  }
 }
