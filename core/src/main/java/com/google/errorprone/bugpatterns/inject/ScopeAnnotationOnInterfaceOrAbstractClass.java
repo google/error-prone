@@ -16,7 +16,7 @@
 
 package com.google.errorprone.bugpatterns.inject;
 
-import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.InjectMatchers.GUICE_SCOPE_ANNOTATION;
 import static com.google.errorprone.matchers.InjectMatchers.IS_DAGGER_COMPONENT;
 import static com.google.errorprone.matchers.InjectMatchers.JAVAX_SCOPE_ANNOTATION;
@@ -42,7 +42,7 @@ import com.sun.tools.javac.code.Flags;
 @BugPattern(
     name = "InjectScopeAnnotationOnInterfaceOrAbstractClass",
     summary = "Scope annotation on an interface or abstract class is not allowed",
-    severity = ERROR,
+    severity = WARNING,
     providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class ScopeAnnotationOnInterfaceOrAbstractClass extends BugChecker
     implements AnnotationTreeMatcher {

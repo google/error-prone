@@ -16,7 +16,7 @@
 package com.google.errorprone.bugpatterns.inject.dagger;
 
 import static com.google.common.base.Preconditions.checkState;
-import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
+import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.bugpatterns.inject.dagger.DaggerAnnotations.ELEMENTS_INTO_SET_CLASS_NAME;
 import static com.google.errorprone.bugpatterns.inject.dagger.DaggerAnnotations.INTO_MAP_CLASS_NAME;
 import static com.google.errorprone.bugpatterns.inject.dagger.DaggerAnnotations.INTO_SET_CLASS_NAME;
@@ -67,7 +67,7 @@ import javax.lang.model.element.Modifier;
 @BugPattern(
     name = "UseBinds",
     summary = "@Binds is a more efficient and declarative mechanism for delegating a binding.",
-    severity = SUGGESTION,
+    severity = WARNING,
     providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class UseBinds extends BugChecker implements MethodTreeMatcher {
   private static final Matcher<MethodTree> SIMPLE_METHOD =

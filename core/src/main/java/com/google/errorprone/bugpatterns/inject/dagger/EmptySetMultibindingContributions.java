@@ -15,7 +15,7 @@
  */
 package com.google.errorprone.bugpatterns.inject.dagger;
 
-import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
+import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.anyOf;
@@ -69,7 +69,7 @@ import java.util.TreeSet;
     summary =
         "@Multibinds is a more efficient and declarative mechanism for ensuring that a set"
             + " multibinding is present in the graph.",
-    severity = SUGGESTION,
+    severity = WARNING,
     providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public final class EmptySetMultibindingContributions extends BugChecker
     implements MethodTreeMatcher {
