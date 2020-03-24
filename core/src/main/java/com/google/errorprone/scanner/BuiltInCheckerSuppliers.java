@@ -85,6 +85,7 @@ import com.google.errorprone.bugpatterns.DeadException;
 import com.google.errorprone.bugpatterns.DeadThread;
 import com.google.errorprone.bugpatterns.DeduplicateConstants;
 import com.google.errorprone.bugpatterns.DefaultCharset;
+import com.google.errorprone.bugpatterns.DefaultPackage;
 import com.google.errorprone.bugpatterns.DepAnn;
 import com.google.errorprone.bugpatterns.DescribeMatch;
 import com.google.errorprone.bugpatterns.DiscardedPostfixExpression;
@@ -676,6 +677,7 @@ public class BuiltInCheckerSuppliers {
           ComplexBooleanConstant.class,
           DateFormatConstant.class,
           DefaultCharset.class,
+          DefaultPackage.class,
           DoubleBraceInitialization.class,
           DoubleCheckedLocking.class,
           EmptySetMultibindingContributions.class,

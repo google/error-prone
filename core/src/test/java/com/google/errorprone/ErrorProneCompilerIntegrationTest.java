@@ -326,7 +326,14 @@ public class ErrorProneCompilerIntegrationTest {
 
   @Test
   public void flagEnablesCheck() {
-    String[] testFile = {"public class Test {", "  public Test() {", "    if (true);", "  }", "}"};
+    String[] testFile = {
+      "package test;", //
+      "public class Test {",
+      "  public Test() {",
+      "    if (true);",
+      "  }",
+      "}"
+    };
     List<JavaFileObject> fileObjects =
         Arrays.asList(compiler.fileManager().forSourceLines("Test.java", testFile));
     Result exitCode = compiler.compile(fileObjects);
@@ -370,7 +377,14 @@ public class ErrorProneCompilerIntegrationTest {
 
   @Test
   public void maturityIsResetOnNextCompilation() {
-    String[] testFile = {"public class Test {", "  public Test() {", "    if (true);", "  }", "}"};
+    String[] testFile = {
+      "package test;", //
+      "public class Test {",
+      "  public Test() {",
+      "    if (true);",
+      "  }",
+      "}"
+    };
     List<JavaFileObject> fileObjects =
         Arrays.asList(compiler.fileManager().forSourceLines("Test.java", testFile));
     String[] args = {"-Xep:EmptyIf"};
