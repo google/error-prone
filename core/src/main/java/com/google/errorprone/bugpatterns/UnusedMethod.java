@@ -80,6 +80,8 @@ public final class UnusedMethod extends BugChecker implements CompilationUnitTre
       ImmutableSet.of(
           "com.google.inject.Provides",
           "com.google.inject.Inject",
+          "com.google.inject.multibindings.ProvidesIntoMap",
+          "com.google.inject.multibindings.ProvidesIntoSet",
           "javax.inject.Inject");
 
   /** The set of types exempting a type that is extending or implementing them. */
