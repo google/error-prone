@@ -15,7 +15,7 @@
 package com.google.errorprone.bugpatterns.inject;
 
 import static com.google.common.collect.Sets.immutableEnumSet;
-import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.ChildMultiMatcher.MatchType.AT_LEAST_ONE;
 import static com.google.errorprone.matchers.InjectMatchers.GUICE_SCOPE_ANNOTATION;
 import static com.google.errorprone.matchers.InjectMatchers.JAVAX_SCOPE_ANNOTATION;
@@ -56,7 +56,7 @@ import java.util.Set;
 @BugPattern(
     name = "InjectInvalidTargetingOnScopingAnnotation",
     summary = "A scoping annotation's Target should include TYPE and METHOD.",
-    severity = ERROR,
+    severity = WARNING,
     providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class InvalidTargetingOnScopingAnnotation extends BugChecker implements ClassTreeMatcher {
 
