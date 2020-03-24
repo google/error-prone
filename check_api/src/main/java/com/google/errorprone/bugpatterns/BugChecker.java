@@ -176,7 +176,7 @@ public abstract class BugChecker implements Suppressible, Serializable {
    * message or multiple fixes.
    */
   @CheckReturnValue
-  protected Description.Builder buildDescription(Tree node) {
+  public Description.Builder buildDescription(Tree node) {
     return buildDescriptionFromChecker(node, this);
   }
 
@@ -185,7 +185,7 @@ public abstract class BugChecker implements Suppressible, Serializable {
    * message or multiple fixes.
    */
   @CheckReturnValue
-  protected Description.Builder buildDescription(DiagnosticPosition position) {
+  public Description.Builder buildDescription(DiagnosticPosition position) {
     return buildDescriptionFromChecker(position, this);
   }
 
@@ -195,7 +195,7 @@ public abstract class BugChecker implements Suppressible, Serializable {
    */
   // This overload exists purely to disambiguate for JCTree.
   @CheckReturnValue
-  protected Description.Builder buildDescription(JCTree tree) {
+  public Description.Builder buildDescription(JCTree tree) {
     return buildDescriptionFromChecker((DiagnosticPosition) tree, this);
   }
 
@@ -204,8 +204,10 @@ public abstract class BugChecker implements Suppressible, Serializable {
    *
    * @param node the node where the error is
    * @param checker the {@code BugChecker} instance that is producing this {@code Description}
+   * @deprecated use {@link #buildDescription} directly
    */
   @CheckReturnValue
+  @Deprecated
   public static Description.Builder buildDescriptionFromChecker(Tree node, BugChecker checker) {
     return Description.builder(
         Preconditions.checkNotNull(node),
@@ -220,8 +222,10 @@ public abstract class BugChecker implements Suppressible, Serializable {
    *
    * @param position the position of the error
    * @param checker the {@code BugChecker} instance that is producing this {@code Description}
+   * @deprecated use {@link #buildDescription} directly
    */
   @CheckReturnValue
+  @Deprecated
   public static Description.Builder buildDescriptionFromChecker(
       DiagnosticPosition position, BugChecker checker) {
     return Description.builder(
@@ -237,8 +241,10 @@ public abstract class BugChecker implements Suppressible, Serializable {
    *
    * @param tree the tree where the error is
    * @param checker the {@code BugChecker} instance that is producing this {@code Description}
+   * @deprecated use {@link #buildDescription} directly
    */
   @CheckReturnValue
+  @Deprecated
   public static Description.Builder buildDescriptionFromChecker(JCTree tree, BugChecker checker) {
     return Description.builder(
         (DiagnosticPosition) tree,
