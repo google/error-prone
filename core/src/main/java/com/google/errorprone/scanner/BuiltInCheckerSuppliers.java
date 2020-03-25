@@ -398,6 +398,7 @@ import com.google.errorprone.bugpatterns.javadoc.InvalidThrows;
 import com.google.errorprone.bugpatterns.javadoc.MissingSummary;
 import com.google.errorprone.bugpatterns.javadoc.ReturnFromVoid;
 import com.google.errorprone.bugpatterns.javadoc.UnescapedEntity;
+import com.google.errorprone.bugpatterns.javadoc.UrlInSee;
 import com.google.errorprone.bugpatterns.nullness.EqualsBrokenForNull;
 import com.google.errorprone.bugpatterns.nullness.FieldMissingNullable;
 import com.google.errorprone.bugpatterns.nullness.NullableDereference;
@@ -930,6 +931,7 @@ public class BuiltInCheckerSuppliers {
           UnnecessarySetDefault.class,
           UnnecessaryStaticImport.class,
           UnusedException.class,
+          UrlInSee.class,
           VarChecker.class,
           WildcardImport.class,
           WrongParameterPackage.class
