@@ -20,6 +20,7 @@ import static com.google.common.base.Preconditions.checkState;
 
 import com.google.auto.value.AutoValue;
 import com.google.common.base.Function;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterables;
 import com.google.errorprone.refaster.PlaceholderUnificationVisitor.State;
@@ -32,6 +33,7 @@ import com.sun.source.tree.BinaryTree;
 import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.CaseTree;
 import com.sun.source.tree.CatchTree;
+import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompoundAssignmentTree;
 import com.sun.source.tree.ConditionalExpressionTree;
 import com.sun.source.tree.DoWhileLoopTree;
@@ -47,6 +49,7 @@ import com.sun.source.tree.LambdaExpressionTree;
 import com.sun.source.tree.MemberReferenceTree;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
+import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.NewArrayTree;
 import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.ParenthesizedTree;
@@ -72,6 +75,7 @@ import com.sun.tools.javac.tree.JCTree.JCBinary;
 import com.sun.tools.javac.tree.JCTree.JCBlock;
 import com.sun.tools.javac.tree.JCTree.JCCase;
 import com.sun.tools.javac.tree.JCTree.JCCatch;
+import com.sun.tools.javac.tree.JCTree.JCClassDecl;
 import com.sun.tools.javac.tree.JCTree.JCConditional;
 import com.sun.tools.javac.tree.JCTree.JCDoWhileLoop;
 import com.sun.tools.javac.tree.JCTree.JCEnhancedForLoop;
@@ -108,6 +112,7 @@ import java.util.EnumSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.BiFunction;
+
 import javax.annotation.Nullable;
 
 /**
@@ -472,15 +477,35 @@ abstract class PlaceholderUnificationVisitor
   @Override
   public Choice<State<JCNewClass>> visitNewClass(final NewClassTree node, State<?> state) {
     if (node.getEnclosingExpression() != null
-        || (node.getTypeArguments() != null && !node.getTypeArguments().isEmpty())
-        || node.getClassBody() != null) {
+        || (node.getTypeArguments() != null && !node.getTypeArguments().isEmpty())) {
       return Choice.none();
     }
+
     return chooseSubtrees(
         state,
         s -> unifyExpression(node.getIdentifier(), s),
         s -> unifyExpressions(node.getArguments(), s),
-        (ident, args) -> maker().NewClass(null, null, ident, args, null));
+        (ident, args) -> maker().NewClass(null, null, ident, args, fixupAnonClassBody(node.getClassBody())));
+  }
+
+  private JCClassDecl fixupAnonClassBody(ClassTree classBody) {
+    if (classBody == null) {
+      return null;
+    }
+
+    JCClassDecl classDecl = (JCClassDecl) classBody;
+
+    List<JCTree> classMembers = classDecl.defs.stream()
+        .filter(existingMember -> !(existingMember instanceof MethodTree && ASTHelpers.isGeneratedConstructor((MethodTree) existingMember)))
+        .collect(List.collector());
+
+    return maker().ClassDef(
+        classDecl.mods,
+        classDecl.name,
+        classDecl.typarams,
+        classDecl.extending,
+        classDecl.implementing,
+        classMembers);
   }
 
   @Override

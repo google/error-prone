@@ -237,6 +237,11 @@ public class TemplateIntegrationTest extends CompilerBasedTest {
   }
 
   @Test
+  public void expressionPlaceholderAllowsAnonymousClasses() throws IOException {
+    runTest("PlaceholderSupportsAnonymousClassTemplate");
+  }
+
+  @Test
   public void blockPlaceholder() throws IOException {
     runTest("BlockPlaceholderTemplate");
   }
