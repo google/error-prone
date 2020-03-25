@@ -36,9 +36,6 @@ import java.util.stream.Collectors;
     name = "AndroidJdkLibsChecker",
     altNames = {"Java7ApiChecker", "AndroidApiChecker"},
     summary = "Use of class, field, or method that is not compatible with legacy Android devices",
-    explanation =
-        "Code that needs to be compatible with Android cannot use types or members that "
-            + "only the latest or unreleased devices can handle",
     severity = ERROR)
 // TODO(b/32513850): Allow Android N+ APIs, e.g., by computing API diff using android.jar
 public class AndroidJdkLibsChecker extends ApiDiffChecker {
