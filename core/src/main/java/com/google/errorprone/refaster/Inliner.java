@@ -84,8 +84,7 @@ public final class Inliner {
       throws CouldNotResolveImportException {
     try {
       Symbol symbol =
-          JavaCompiler.instance(context)
-              .resolveIdent(symtab().java_base, qualifiedClass.toString());
+          JavaCompiler.instance(context).resolveBinaryNameOrIdent(qualifiedClass.toString());
       if (symbol.equals(symtab().errSymbol) || !(symbol instanceof ClassSymbol)) {
         throw new CouldNotResolveImportException(qualifiedClass);
       } else {
