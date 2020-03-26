@@ -501,13 +501,11 @@ public class ProtoFieldNullComparison extends BugChecker implements CompilationU
             .map(
                 r -> {
                   MethodInvocationTree receiver = (MethodInvocationTree) getReceiver(tree);
-                  return SuggestedFix.builder()
-                      .replace(
-                          tree,
-                          String.format(
-                              "%s(%s).isTrue()",
-                              state.getSourceForNode(receiver.getMethodSelect()), r))
-                      .build();
+                  return SuggestedFix.replace(
+                      tree,
+                      String.format(
+                          "%s(%s).isTrue()",
+                          state.getSourceForNode(receiver.getMethodSelect()), r));
                 })
             .orElse(SuggestedFix.builder().build());
       }

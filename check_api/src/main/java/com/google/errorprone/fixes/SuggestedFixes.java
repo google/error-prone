@@ -630,7 +630,7 @@ public class SuggestedFixes {
     List<ErrorProneToken> methodTokens = state.getOffsetTokens(basePos, endPos);
     for (ErrorProneToken token : methodTokens) {
       if (token.kind() == TokenKind.IDENTIFIER && token.name().equals(tree.getName())) {
-        return SuggestedFix.builder().replace(token.pos(), token.endPos(), replacement).build();
+        return SuggestedFix.replace(token.pos(), token.endPos(), replacement);
       }
     }
     // Method name not found.
