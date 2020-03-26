@@ -145,20 +145,18 @@ public class DescriptionBasedDiffTest extends CompilerBasedTest {
                         .build())));
 
     DescriptionBasedDiff diff2 = createDescriptionBasedDiff();
-    diff2.onDescribed(dummyDescription(SuggestedFix.builder().replace(137, 140, "baz").build()));
+    diff2.onDescribed(dummyDescription(SuggestedFix.replace(137, 140, "baz")));
 
     assertThrows(
         IllegalArgumentException.class,
-        () ->
-            diff2.onDescribed(
-                dummyDescription(SuggestedFix.builder().replace(137, 140, "bar").build())));
+        () -> diff2.onDescribed(dummyDescription(SuggestedFix.replace(137, 140, "bar"))));
 
     DescriptionBasedDiff diff3 =
         DescriptionBasedDiff.createIgnoringOverlaps(
             compilationUnit, ImportOrganizer.STATIC_FIRST_ORGANIZER);
-    diff3.onDescribed(dummyDescription(SuggestedFix.builder().replace(137, 140, "baz").build()));
+    diff3.onDescribed(dummyDescription(SuggestedFix.replace(137, 140, "baz")));
     // No throw, since it's lenient. Refactors to the first "baz" replacement and ignores this.
-    diff3.onDescribed(dummyDescription(SuggestedFix.builder().replace(137, 140, "bar").build()));
+    diff3.onDescribed(dummyDescription(SuggestedFix.replace(137, 140, "bar")));
     diff3.applyDifferences(sourceFile);
 
     assertThat(sourceFile.getLines())
