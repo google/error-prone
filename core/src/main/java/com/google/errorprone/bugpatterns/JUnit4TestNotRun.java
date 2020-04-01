@@ -122,6 +122,7 @@ public class JUnit4TestNotRun extends BugChecker implements ClassTreeMatcher {
    *       {@code @BeforeClass}, or {@code @AfterClass};
    *   <li>and, the method appears to be a test method, that is:
    *       <ol type="a">
+   *         <li>The method is named like a JUnit 3 test case,
    *         <li>or, the method body contains a method call with a name that contains "assert",
    *             "verify", "check", "fail", or "expect".
    *       </ol>
