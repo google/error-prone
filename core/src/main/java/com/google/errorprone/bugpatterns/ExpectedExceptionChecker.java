@@ -67,8 +67,7 @@ import javax.annotation.Nullable;
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
     name = "ExpectedExceptionChecker",
-    summary =
-        "Calls to ExpectedException#expect should always be followed by exactly one statement.",
+    summary = "Prefer assertThrows to ExpectedException",
     severity = WARNING)
 public class ExpectedExceptionChecker extends BugChecker implements MethodTreeMatcher {
 
