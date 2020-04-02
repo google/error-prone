@@ -46,6 +46,7 @@ import com.sun.source.tree.SynchronizedTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.code.Symbol;
+import java.util.Optional;
 
 /** Detects locks on boxed primitives. */
 @BugPattern(
@@ -137,7 +138,8 @@ public class LockOnBoxedPrimitive extends BugChecker
       @Override
       public Void visitAssignment(AssignmentTree assignmentTree, Void unused) {
         if (PRIMITIVE_TO_OBJECT_ASSIGNMENT.matches(assignmentTree, state)) {
-          knownBoxedVariables.add(ASTHelpers.getSymbol(assignmentTree.getVariable()));
+          Optional.ofNullable(ASTHelpers.getSymbol(assignmentTree.getVariable()))
+              .ifPresent(knownBoxedVariables::add);
         }
         return super.visitAssignment(assignmentTree, null);
       }
@@ -145,7 +147,8 @@ public class LockOnBoxedPrimitive extends BugChecker
       @Override
       public Void visitVariable(VariableTree variableTree, Void unused) {
         if (PRIMITIVE_TO_OBJECT_INITIALIZER.matches(variableTree, state)) {
-          knownBoxedVariables.add(ASTHelpers.getSymbol(variableTree));
+          Optional.ofNullable(ASTHelpers.getSymbol(variableTree))
+              .ifPresent(knownBoxedVariables::add);
         }
         return super.visitVariable(variableTree, null);
       }
