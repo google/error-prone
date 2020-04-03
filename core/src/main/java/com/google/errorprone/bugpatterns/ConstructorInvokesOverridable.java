@@ -83,7 +83,9 @@ public class ConstructorInvokesOverridable extends ConstructorLeakChecker {
               .filter(
                   variableTree ->
                       variableTree.getModifiers().getFlags().containsAll(ENUM_CONSTANT_MODIFIERS))
-              .filter(variableTree -> classSym.type.equals(ASTHelpers.getType(variableTree)))
+              .filter(
+                  variableTree ->
+                      state.getTypes().isSameType(classSym.type, ASTHelpers.getType(variableTree)))
               .map(VariableTree::getInitializer)
               .filter(NewClassTree.class::isInstance)
               .map(NewClassTree.class::cast)
