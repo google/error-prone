@@ -88,7 +88,7 @@ public class BigDecimalLiteralDouble extends BugChecker implements NewClassTreeM
     if (literalNumber == null) {
       return Description.NO_MATCH;
     }
-    Double literal = literalNumber.doubleValue();
+    double literal = literalNumber.doubleValue();
 
     // Strip off 'd', 'f' suffixes and _ separators from the source.
     String literalString = state.getSourceForNode(arg).replaceAll("[_dDfF]", "");
