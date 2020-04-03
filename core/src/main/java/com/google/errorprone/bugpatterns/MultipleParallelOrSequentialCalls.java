@@ -64,8 +64,8 @@ public class MultipleParallelOrSequentialCalls extends BugChecker
         MethodInvocationTree methodInvocationTree = (MethodInvocationTree) pathToMet.getLeaf();
         // this check makes it so that we stop iterating up once it's done
         if (methodInvocationTree.getArguments().stream()
-            .map(m -> m.toString())
-            .anyMatch(m -> m.contains(t.toString()))) {
+            .map(m -> state.getSourceForNode(m))
+            .anyMatch(m -> m.contains(state.getSourceForNode(t)))) {
           break;
         }
         if (methodInvocationTree.getMethodSelect() instanceof MemberSelectTree) {
