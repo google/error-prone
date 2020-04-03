@@ -203,7 +203,8 @@ public class ImmutableAnalysis {
             new ViolationReporter() {
               @Override
               public Description.Builder describe(Tree tree, Violation info) {
-                return BugChecker.buildDescriptionFromChecker(tree, bugChecker)
+                return bugChecker
+                    .buildDescription(tree)
                     .setMessage(info.plus(info.message()).message());
               }
             });
