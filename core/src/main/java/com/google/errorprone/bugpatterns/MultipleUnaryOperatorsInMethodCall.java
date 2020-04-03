@@ -15,7 +15,7 @@
  */
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
+import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
@@ -33,7 +33,7 @@ import java.util.stream.Collectors;
 @BugPattern(
     name = "MultipleUnaryOperatorsInMethodCall",
     summary = "Avoid having multiple unary operators acting on the same variable in a method call",
-    severity = SUGGESTION)
+    severity = WARNING)
 public class MultipleUnaryOperatorsInMethodCall extends BugChecker
     implements MethodInvocationTreeMatcher {
 
