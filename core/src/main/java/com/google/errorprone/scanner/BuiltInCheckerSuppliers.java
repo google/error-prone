@@ -78,8 +78,6 @@ import com.google.errorprone.bugpatterns.ConditionalExpressionNumericPromotion;
 import com.google.errorprone.bugpatterns.ConstantField;
 import com.google.errorprone.bugpatterns.ConstantOverflow;
 import com.google.errorprone.bugpatterns.ConstantPatternCompile;
-import com.google.errorprone.bugpatterns.ConstructorInvokesOverridable;
-import com.google.errorprone.bugpatterns.ConstructorLeaksThis;
 import com.google.errorprone.bugpatterns.DateFormatConstant;
 import com.google.errorprone.bugpatterns.DeadException;
 import com.google.errorprone.bugpatterns.DeadThread;
@@ -855,8 +853,6 @@ public class BuiltInCheckerSuppliers {
           ComparisonContractViolated.class,
           ConstantField.class,
           ConstantPatternCompile.class,
-          ConstructorInvokesOverridable.class,
-          ConstructorLeaksThis.class,
           DeduplicateConstants.class,
           DepAnn.class,
           DescribeMatch.class,
