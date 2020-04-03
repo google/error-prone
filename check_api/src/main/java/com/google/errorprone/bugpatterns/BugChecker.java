@@ -19,7 +19,6 @@ package com.google.errorprone.bugpatterns;
 import static com.google.common.base.MoreObjects.firstNonNull;
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
 
-import com.google.common.base.Preconditions;
 import com.google.common.collect.Iterables;
 import com.google.errorprone.BugCheckerInfo;
 import com.google.errorprone.BugPattern.SeverityLevel;
@@ -177,7 +176,7 @@ public abstract class BugChecker implements Suppressible, Serializable {
    */
   @CheckReturnValue
   public Description.Builder buildDescription(Tree node) {
-    return buildDescriptionFromChecker(node, this);
+    return Description.builder(node, canonicalName(), linkUrl(), defaultSeverity(), message());
   }
 
   /**
@@ -186,7 +185,7 @@ public abstract class BugChecker implements Suppressible, Serializable {
    */
   @CheckReturnValue
   public Description.Builder buildDescription(DiagnosticPosition position) {
-    return buildDescriptionFromChecker(position, this);
+    return Description.builder(position, canonicalName(), linkUrl(), defaultSeverity(), message());
   }
 
   /**
@@ -196,62 +195,7 @@ public abstract class BugChecker implements Suppressible, Serializable {
   // This overload exists purely to disambiguate for JCTree.
   @CheckReturnValue
   public Description.Builder buildDescription(JCTree tree) {
-    return buildDescriptionFromChecker((DiagnosticPosition) tree, this);
-  }
-
-  /**
-   * Returns a new builder for {@link Description}s.
-   *
-   * @param node the node where the error is
-   * @param checker the {@code BugChecker} instance that is producing this {@code Description}
-   * @deprecated use {@link #buildDescription} directly
-   */
-  @CheckReturnValue
-  @Deprecated
-  public static Description.Builder buildDescriptionFromChecker(Tree node, BugChecker checker) {
-    return Description.builder(
-        Preconditions.checkNotNull(node),
-        checker.canonicalName(),
-        checker.linkUrl(),
-        checker.defaultSeverity(),
-        checker.message());
-  }
-
-  /**
-   * Returns a new builder for {@link Description}s.
-   *
-   * @param position the position of the error
-   * @param checker the {@code BugChecker} instance that is producing this {@code Description}
-   * @deprecated use {@link #buildDescription} directly
-   */
-  @CheckReturnValue
-  @Deprecated
-  public static Description.Builder buildDescriptionFromChecker(
-      DiagnosticPosition position, BugChecker checker) {
-    return Description.builder(
-        position,
-        checker.canonicalName(),
-        checker.linkUrl(),
-        checker.defaultSeverity(),
-        checker.message());
-  }
-
-  /**
-   * Returns a new builder for {@link Description}s.
-   *
-   * @param tree the tree where the error is
-   * @param checker the {@code BugChecker} instance that is producing this {@code Description}
-   * @deprecated use {@link #buildDescription} directly
-   */
-  @CheckReturnValue
-  @Deprecated
-  public static Description.Builder buildDescriptionFromChecker(JCTree tree, BugChecker checker) {
-    return Description.builder(
-        (DiagnosticPosition) tree,
-        checker.canonicalName(),
-        checker.linkUrl(),
-        checker.defaultSeverity(),
-        checker.message());
+    return Description.builder(tree, canonicalName(), linkUrl(), defaultSeverity(), message());
   }
 
   @Override

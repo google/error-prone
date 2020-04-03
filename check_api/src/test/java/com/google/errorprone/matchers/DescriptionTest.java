@@ -93,7 +93,8 @@ public class DescriptionTest {
   @Test
   public void testCustomDescription() {
     Description description =
-        BugChecker.buildDescriptionFromChecker((DiagnosticPosition) new MockTree(), new MyChecker())
+        new MyChecker()
+            .buildDescription((DiagnosticPosition) new MockTree())
             .setMessage("custom message")
             .build();
     assertThat(description.checkName).isEqualTo("DeadException");
@@ -117,8 +118,8 @@ public class DescriptionTest {
   @Test
   public void testCustomLink() {
     Description description =
-        BugChecker.buildDescriptionFromChecker(
-                (DiagnosticPosition) new MockTree(), new CustomLinkChecker())
+        new CustomLinkChecker()
+            .buildDescription((DiagnosticPosition) new MockTree())
             .setMessage("custom message")
             .build();
     assertThat(description.getMessage())
@@ -128,8 +129,8 @@ public class DescriptionTest {
   @Test
   public void testCustomLinkOverride() {
     Description description =
-        BugChecker.buildDescriptionFromChecker(
-                (DiagnosticPosition) new MockTree(), new CustomLinkChecker())
+        new CustomLinkChecker()
+            .buildDescription((DiagnosticPosition) new MockTree())
             .setMessage("custom message")
             .setLinkUrl("http://foo")
             .build();

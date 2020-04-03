@@ -286,7 +286,8 @@ public class DescriptionBasedDiffTest extends CompilerBasedTest {
   static final class DummyChecker extends BugChecker {}
 
   private static Description dummyDescription(SuggestedFix fix) {
-    return BugChecker.buildDescriptionFromChecker(
+    return new DummyChecker()
+        .buildDescription(
             new DiagnosticPosition() {
               @Override
               public JCTree getTree() {
@@ -307,8 +308,7 @@ public class DescriptionBasedDiffTest extends CompilerBasedTest {
               public int getEndPosition(EndPosTable endPosTable) {
                 return 0;
               }
-            },
-            new DummyChecker())
+            })
         .addFix(fix)
         .build();
   }
