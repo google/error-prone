@@ -194,7 +194,7 @@ public class WildcardImport extends BugChecker implements CompilationUnitTreeMat
         typesToImport.stream().collect(Collectors.groupingBy(TypeToImport::owner));
     final SuggestedFix.Builder fix = SuggestedFix.builder();
     for (ImportTree importToDelete : wildcardImports) {
-      String importSpecification = importToDelete.getQualifiedIdentifier().toString();
+      String importSpecification = state.getSourceForNode(importToDelete.getQualifiedIdentifier());
       if (importToDelete.isStatic()) {
         fix.removeStaticImport(importSpecification);
       } else {
