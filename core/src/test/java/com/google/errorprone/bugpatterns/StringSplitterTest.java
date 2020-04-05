@@ -27,7 +27,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** {@link StringSplitter}Test */
+/** Unit tests for {@link StringSplitter} check. */
 @RunWith(JUnit4.class)
 public class StringSplitterTest {
   private final BugCheckerRefactoringTestHelper testHelper =
@@ -406,14 +406,14 @@ public class StringSplitterTest {
   @Test
   public void testStringSplitPositive() {
     CompilationTestHelper.newInstance(StringSplitter.class, getClass())
-        .addSourceFile("StringSplitPositiveCases.java")
+        .addSourceFile("StringSplitterPositiveCases.java")
         .doTest();
   }
 
   @Test
   public void testStringSplitNegative() {
     CompilationTestHelper.newInstance(StringSplitter.class, getClass())
-        .addSourceFile("StringSplitNegativeCases.java")
+        .addSourceFile("StringSplitterNegativeCases.java")
         .doTest();
   }
 
