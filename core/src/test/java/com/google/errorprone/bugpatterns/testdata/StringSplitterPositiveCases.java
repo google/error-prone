@@ -17,18 +17,15 @@
 package com.google.errorprone.bugpatterns.testdata;
 
 /**
- * Negative test cases for StringSplit check.
+ * Positive test cases for StringSplitter check.
  *
  * @author dturner@twosigma.com (David Turner)
  */
-public class StringSplitNegativeCases {
-  public void StringSplitTwoArgs() {
-    String foo = "a:b";
-    foo.split(":", 1);
-  }
+public class StringSplitterPositiveCases {
 
-  public void StringSplitTwoArgsOneNegative() {
+  public void StringSplitOneArg() {
     String foo = "a:b";
-    foo.split(":", -1);
+    // BUG: Diagnostic contains:
+    String[] xs = foo.split(":");
   }
 }
