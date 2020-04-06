@@ -17,9 +17,11 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
+import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.hasModifier;
 import static com.google.errorprone.matchers.Matchers.isArrayType;
+import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.ProvidesFix;
@@ -44,40 +46,38 @@ import javax.lang.model.element.Modifier;
     providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class MutablePublicArray extends BugChecker implements VariableTreeMatcher {
 
-  private static final Matcher<VariableTree> NON_EMPTY_PUBLIC_STATIC_FINAL_ARRAY_DECLARATION =
+  private static final Matcher<VariableTree> MATCHER =
       allOf(
           hasModifier(Modifier.PUBLIC),
           hasModifier(Modifier.STATIC),
           hasModifier(Modifier.FINAL),
-          new NonEmptyArrayMatcher());
+          MutablePublicArray::nonEmptyArrayMatcher);
 
   @Override
   public Description matchVariable(VariableTree tree, VisitorState state) {
-    if (NON_EMPTY_PUBLIC_STATIC_FINAL_ARRAY_DECLARATION.matches(tree, state)) {
-      return describeMatch(tree);
+    if (!MATCHER.matches(tree, state)) {
+      return NO_MATCH;
     }
-    return Description.NO_MATCH;
+    if (hasAnnotation(tree, "org.junit.experimental.theories.DataPoints", state)) {
+      return NO_MATCH;
+    }
+    return describeMatch(tree);
   }
 
-  private static class NonEmptyArrayMatcher implements Matcher<VariableTree> {
-    @Override
-    public boolean matches(VariableTree arrayExpression, VisitorState state) {
-      if (isArrayType().matches(arrayExpression, state)) {
-        JCNewArray newArray = (JCNewArray) arrayExpression.getInitializer();
-        if (!newArray.getDimensions().isEmpty()) {
-          return newArray.getDimensions().stream()
-              .allMatch(
-                  jcExpression -> {
-                    JCLiteral literal = (JCLiteral) jcExpression;
-                    return literal.getKind() == Kind.INT_LITERAL
-                        && (Integer) literal.getValue() > 0;
-                  });
-        } else {
-          // For in line array initializer.
-          return newArray.getInitializers() != null && !newArray.getInitializers().isEmpty();
-        }
-      }
+  private static boolean nonEmptyArrayMatcher(VariableTree arrayExpression, VisitorState state) {
+    if (!isArrayType().matches(arrayExpression, state)) {
       return false;
     }
+    JCNewArray newArray = (JCNewArray) arrayExpression.getInitializer();
+    if (!newArray.getDimensions().isEmpty()) {
+      return newArray.getDimensions().stream()
+          .allMatch(
+              jcExpression -> {
+                JCLiteral literal = (JCLiteral) jcExpression;
+                return literal.getKind() == Kind.INT_LITERAL && (Integer) literal.getValue() > 0;
+              });
+    }
+    // For in line array initializer.
+    return newArray.getInitializers() != null && !newArray.getInitializers().isEmpty();
   }
 }
