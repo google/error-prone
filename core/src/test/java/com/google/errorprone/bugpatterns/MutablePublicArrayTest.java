@@ -146,4 +146,17 @@ public class MutablePublicArrayTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void negative_datapoints() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import org.junit.experimental.theories.DataPoints;",
+            "class Test {",
+            "  @DataPoints",
+            "  public static final int[] array = new int[10];",
+            "}")
+        .doTest();
+  }
 }
