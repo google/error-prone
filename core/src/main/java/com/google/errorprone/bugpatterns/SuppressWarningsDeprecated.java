@@ -42,7 +42,7 @@ import java.util.List;
     providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
 public class SuppressWarningsDeprecated extends AbstractSuppressWarningsMatcher {
 
-  @SuppressWarnings({"varargs", "unchecked"})
+  @SuppressWarnings("varargs")
   private static final Matcher<AnnotationTree> matcher =
       allOf(
           isType("java.lang.SuppressWarnings"),
