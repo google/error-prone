@@ -19,7 +19,6 @@ package com.google.errorprone.util;
 import com.sun.source.tree.CompoundAssignmentTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
-import com.sun.source.tree.NewArrayTree;
 import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.UnaryTree;
 import com.sun.source.util.TreeScanner;
@@ -36,7 +35,6 @@ import com.sun.tools.javac.tree.JCTree.JCUnary;
  *   <li>Any function call: toString(), hashCode(), setX(value), etc.
  *   <li>Unary expression: i += 1, i++, --j
  *   <li>New expression: new SomeClass()
- *   <li>New array: new int[10]
  * </ul>
  *
  * <p>Everything besides the above examples is considered side-effect free.
@@ -71,12 +69,6 @@ public final class SideEffectAnalysis extends TreeScanner<Void, Void> {
 
   @Override
   public Void visitMethodInvocation(MethodInvocationTree tree, Void unused) {
-    hasSideEffect = true;
-    return null;
-  }
-
-  @Override
-  public Void visitNewArray(NewArrayTree tree, Void unused) {
     hasSideEffect = true;
     return null;
   }
