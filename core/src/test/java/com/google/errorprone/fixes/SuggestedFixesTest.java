@@ -1114,6 +1114,103 @@ public class SuggestedFixesTest {
         .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
   }
 
+  @BugPattern(
+      name = "RemoveSuppressFromMe",
+      summary = "",
+      severity = ERROR,
+      providesFix = REQUIRES_HUMAN_ATTENTION)
+  static final class RemoveSuppressFromMe extends BugChecker implements LiteralTreeMatcher {
+
+    @Override
+    public Description matchLiteral(LiteralTree tree, VisitorState state) {
+      SuggestedFix.Builder fixBuilder = SuggestedFix.builder();
+      SuggestedFixes.removeSuppressWarnings(fixBuilder, state, "RemoveMe");
+      return describeMatch(tree, fixBuilder.build());
+    }
+  }
+
+  @Test
+  public void removeSuppressWarnings_singleWarning_removesEntireAnnotation() {
+    BugCheckerRefactoringTestHelper refactorTestHelper =
+        BugCheckerRefactoringTestHelper.newInstance(new RemoveSuppressFromMe(), getClass());
+    refactorTestHelper
+        .addInputLines(
+            "in/Test.java",
+            "public class Test {",
+            "  @SuppressWarnings(\"RemoveMe\") int BEST = 42;",
+            "}")
+        .addOutputLines("out/Test.java", "public class Test {", "  int BEST = 42;", "}")
+        .doTest(TestMode.AST_MATCH);
+  }
+
+  @Test
+  public void removeSuppressWarnings_twoWarning_removesWarningAndNewArray() {
+    BugCheckerRefactoringTestHelper refactorTestHelper =
+        BugCheckerRefactoringTestHelper.newInstance(new RemoveSuppressFromMe(), getClass());
+    refactorTestHelper
+        .addInputLines(
+            "in/Test.java",
+            "public class Test {",
+            "  @SuppressWarnings({\"RemoveMe\", \"KeepMe\"}) int BEST = 42;",
+            "}")
+        .addOutputLines(
+            "out/Test.java",
+            "public class Test {",
+            "  @SuppressWarnings(\"KeepMe\") int BEST = 42;",
+            "}")
+        .doTest(TestMode.AST_MATCH);
+  }
+
+  @Test
+  public void removeSuppressWarnings_threeWarning_removesOnlyOneAndKeepsArray() {
+    BugCheckerRefactoringTestHelper refactorTestHelper =
+        BugCheckerRefactoringTestHelper.newInstance(new RemoveSuppressFromMe(), getClass());
+    refactorTestHelper
+        .addInputLines(
+            "in/Test.java",
+            "public class Test {",
+            "  @SuppressWarnings({\"RemoveMe\", \"KeepMe1\", \"KeepMe2\"}) int BEST = 42;",
+            "}")
+        .addOutputLines(
+            "out/Test.java",
+            "public class Test {",
+            "  @SuppressWarnings({\"KeepMe1\", \"KeepMe2\"}) int BEST = 42;",
+            "}")
+        .doTest(TestMode.AST_MATCH);
+  }
+
+  @Test
+  public void removeSuppressWarnings_oneWarningInArray_removesWholeAnnotation() {
+    BugCheckerRefactoringTestHelper refactorTestHelper =
+        BugCheckerRefactoringTestHelper.newInstance(new RemoveSuppressFromMe(), getClass());
+    refactorTestHelper
+        .addInputLines(
+            "in/Test.java",
+            "public class Test {",
+            "  @SuppressWarnings({\"RemoveMe\"}) int BEST = 42;",
+            "}")
+        .addOutputLines("out/Test.java", "public class Test {", "  int BEST = 42;", "}")
+        .doTest(TestMode.AST_MATCH);
+  }
+
+  @Test
+  public void removeSuppressWarnings_withValueInit_retainsValue() {
+    BugCheckerRefactoringTestHelper refactorTestHelper =
+        BugCheckerRefactoringTestHelper.newInstance(new RemoveSuppressFromMe(), getClass());
+    refactorTestHelper
+        .addInputLines(
+            "in/Test.java",
+            "public class Test {",
+            "  @SuppressWarnings(value={\"RemoveMe\", \"KeepMe\"}) int BEST = 42;",
+            "}")
+        .addOutputLines(
+            "out/Test.java",
+            "public class Test {",
+            "  @SuppressWarnings(value=\"KeepMe\") int BEST = 42;",
+            "}")
+        .doTest(TestMode.AST_MATCH);
+  }
+
   /** A test bugchecker that deletes any field whose removal doesn't break the compilation. */
   @BugPattern(
       name = "CompilesWithFixChecker",
