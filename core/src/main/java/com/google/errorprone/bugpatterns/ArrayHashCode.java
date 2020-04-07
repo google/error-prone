@@ -65,7 +65,6 @@ public class ArrayHashCode extends BugChecker implements MethodInvocationTreeMat
    * Matches calls to the JDK7 method {@link java.util.Objects#hashCode} with an argument of array
    * type. This method is not varargs, so we don't need to check the number of arguments.
    */
-  @SuppressWarnings({"unchecked"})
   private static final Matcher<MethodInvocationTree> jdk7HashCodeMethodMatcher =
       allOf(
           staticMethod().onClass("java.util.Objects").named("hashCode"),
