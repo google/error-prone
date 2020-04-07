@@ -19,6 +19,7 @@ package com.google.errorprone.fixes;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.ImmutableList.toImmutableList;
+import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.common.collect.Iterables.getLast;
 import static com.google.errorprone.util.ASTHelpers.getAnnotation;
 import static com.google.errorprone.util.ASTHelpers.getAnnotationWithSimpleName;
@@ -838,6 +839,45 @@ public class SuggestedFixes {
       String warningToSuppress,
       @Nullable String lineComment) {
     addSuppressWarnings(fixBuilder, state, warningToSuppress, lineComment, true);
+  }
+  /**
+   * Modifies {@code fixBuilder} to either remove a {@code warningToRemove} warning from the closest
+   * {@code SuppressWarning} node or remove the entire {@code SuppressWarning} node if {@code
+   * warningToRemove} is the only warning in that node.
+   */
+  public static void removeSuppressWarnings(
+      SuggestedFix.Builder fixBuilder, VisitorState state, String warningToRemove) {
+    // Find the nearest tree to remove @SuppressWarnings from.
+    Tree suppressibleNode = suppressibleNode(state.getPath());
+    if (suppressibleNode == null) {
+      return;
+    }
+
+    AnnotationTree suppressAnnotationTree =
+        getAnnotationWithSimpleName(
+            findAnnotationsTree(suppressibleNode), SuppressWarnings.class.getSimpleName());
+    if (suppressAnnotationTree == null) {
+      return;
+    }
+
+    SuppressWarnings annotation = getAnnotation(suppressibleNode, SuppressWarnings.class);
+    ImmutableSet<String> warningsSuppressed = ImmutableSet.copyOf(annotation.value());
+    ImmutableSet<String> newWarningSet =
+        warningsSuppressed.stream()
+            .filter(warning -> !warning.equals(warningToRemove))
+            .map(warningToKeep -> state.getElements().getConstantExpression(warningToKeep))
+            .collect(toImmutableSet());
+    if (newWarningSet.size() == warningsSuppressed.size()) {
+      // no matches found. Nothing to delete.
+      return;
+    }
+    if (newWarningSet.isEmpty()) {
+      // No warning left to suppress. Delete entire annotation.
+      fixBuilder.delete(suppressAnnotationTree);
+      return;
+    }
+    fixBuilder.merge(
+        updateAnnotationArgumentValues(suppressAnnotationTree, "value", newWarningSet));
   }
 
   /**
