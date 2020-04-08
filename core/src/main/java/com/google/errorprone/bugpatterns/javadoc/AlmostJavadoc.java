@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns.javadoc;
 
-import static com.google.errorprone.BugPattern.ProvidesFix.REQUIRES_HUMAN_ATTENTION;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.BugPattern.StandardTags.STYLE;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
@@ -56,7 +55,6 @@ import javax.lang.model.element.ElementKind;
             + " (/**); is it meant to be Javadoc?",
     severity = WARNING,
     tags = STYLE,
-    providesFix = REQUIRES_HUMAN_ATTENTION,
     documentSuppression = false)
 public final class AlmostJavadoc extends BugChecker implements CompilationUnitTreeMatcher {
   private static final Pattern HAS_TAG =

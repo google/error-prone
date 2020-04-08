@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.ProvidesFix.NO_FIX;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
@@ -48,8 +47,7 @@ import java.util.Optional;
     summary =
         "Tree#toString shouldn't be used for Trees deriving from the code being compiled, as it"
             + " discards whitespace and comments.",
-    severity = WARNING,
-    providesFix = NO_FIX)
+    severity = WARNING)
 public class TreeToString extends AbstractToString {
 
   private static final Matcher<ClassTree> IS_BUGCHECKER =

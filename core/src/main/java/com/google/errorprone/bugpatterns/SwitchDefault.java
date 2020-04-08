@@ -21,7 +21,6 @@ import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.SwitchTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
@@ -39,8 +38,7 @@ import java.util.Optional;
 @BugPattern(
     name = "SwitchDefault",
     summary = "The default case of a switch should appear at the end of the last statement group",
-    severity = SUGGESTION,
-    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
+    severity = SUGGESTION)
 public class SwitchDefault extends BugChecker implements SwitchTreeMatcher {
 
   @Override

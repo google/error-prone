@@ -26,7 +26,6 @@ import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.collect.Range;
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.NewClassTreeMatcher;
@@ -58,8 +57,7 @@ import java.util.regex.Matcher;
     summary =
         "Detects `/* name= */`-style comments on actual parameters where the name doesn't match the"
             + " formal parameter",
-    severity = WARNING,
-    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
+    severity = WARNING)
 public class ParameterName extends BugChecker
     implements MethodInvocationTreeMatcher, NewClassTreeMatcher {
 

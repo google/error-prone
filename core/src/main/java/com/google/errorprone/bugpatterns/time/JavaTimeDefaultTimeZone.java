@@ -15,7 +15,6 @@
  */
 package com.google.errorprone.bugpatterns.time;
 
-import static com.google.errorprone.BugPattern.ProvidesFix.REQUIRES_HUMAN_ATTENTION;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 
 import com.google.common.collect.ImmutableSet;
@@ -43,8 +42,7 @@ import com.google.errorprone.fixes.SuggestedFixes;
             + "The default system time-zone can vary from machine to machine or JVM to JVM. "
             + "You must choose an explicit ZoneId."
     ,
-    severity = WARNING,
-    providesFix = REQUIRES_HUMAN_ATTENTION)
+    severity = WARNING)
 public final class JavaTimeDefaultTimeZone extends BugChecker
     implements MethodInvocationTreeMatcher {
 

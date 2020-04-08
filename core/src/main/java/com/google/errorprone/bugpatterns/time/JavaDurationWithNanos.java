@@ -15,7 +15,6 @@
  */
 package com.google.errorprone.bugpatterns.time;
 
-import static com.google.errorprone.BugPattern.ProvidesFix.REQUIRES_HUMAN_ATTENTION;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.not;
@@ -45,8 +44,7 @@ import com.sun.tools.javac.tree.JCTree;
             + "the current Duration instance, but _only_ the nano field is mutated (the seconds "
             + "field is copied directly). Use Duration.ofSeconds(duration.getSeconds(), nanos) "
             + "instead.",
-    severity = WARNING,
-    providesFix = REQUIRES_HUMAN_ATTENTION)
+    severity = WARNING)
 public final class JavaDurationWithNanos extends BugChecker implements MethodInvocationTreeMatcher {
 
   private static final Matcher<ExpressionTree> MATCHER =

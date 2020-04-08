@@ -20,7 +20,6 @@ import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
@@ -39,8 +38,7 @@ import java.util.regex.Pattern;
     summary =
         "Invalid time zone identifier. TimeZone.getTimeZone(String) will silently return GMT"
             + " instead of the time zone you intended.",
-    severity = ERROR,
-    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
+    severity = ERROR)
 public class InvalidTimeZoneID extends BugChecker implements MethodInvocationTreeMatcher {
   private static final ImmutableSet<String> AVAILABLE_IDS =
       ImmutableSet.copyOf(TimeZone.getAvailableIDs());

@@ -25,7 +25,6 @@ import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.ListMultimap;
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.BugPattern.StandardTags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
@@ -52,8 +51,7 @@ import java.util.regex.Pattern;
     name = "ProtoRedundantSet",
     summary = "A field on a protocol buffer was set twice in the same chained expression.",
     severity = WARNING,
-    tags = StandardTags.FRAGILE_CODE,
-    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
+    tags = StandardTags.FRAGILE_CODE)
 public final class ProtoRedundantSet extends BugChecker implements MethodInvocationTreeMatcher {
 
   /** Matches a chainable proto builder method. */

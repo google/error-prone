@@ -24,7 +24,6 @@ import static com.google.errorprone.matchers.Matchers.equalsMethodDeclaration;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.BugPattern.StandardTags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
@@ -48,8 +47,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
         "Implementing #equals by just comparing hashCodes is fragile. Hashes collide "
             + "frequently, and this will lead to false positives in #equals.",
     severity = WARNING,
-    tags = StandardTags.FRAGILE_CODE,
-    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
+    tags = StandardTags.FRAGILE_CODE)
 public final class EqualsUsingHashCode extends BugChecker implements MethodInvocationTreeMatcher {
 
   private static final Matcher<ExpressionTree> MATCHER =

@@ -22,7 +22,6 @@ import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.isConsideredFinal;
 
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
@@ -61,8 +60,7 @@ import javax.annotation.Nullable;
 @BugPattern(
     name = "EqualsBrokenForNull",
     summary = "equals() implementation may throw NullPointerException when given null",
-    severity = SeverityLevel.WARNING,
-    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
+    severity = SeverityLevel.WARNING)
 public class EqualsBrokenForNull extends BugChecker implements MethodTreeMatcher {
 
   @Override

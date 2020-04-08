@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.ProvidesFix.REQUIRES_HUMAN_ATTENTION;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.ChildMultiMatcher.MatchType.AT_LEAST_ONE;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
@@ -57,8 +56,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 @BugPattern(
     name = "AssignmentToMock",
     summary = "Fields annotated with @Mock should not be manually assigned to.",
-    severity = WARNING,
-    providesFix = REQUIRES_HUMAN_ATTENTION)
+    severity = WARNING)
 public final class AssignmentToMock extends BugChecker
     implements AssignmentTreeMatcher, VariableTreeMatcher {
 

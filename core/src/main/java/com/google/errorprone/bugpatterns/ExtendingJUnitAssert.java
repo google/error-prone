@@ -20,7 +20,6 @@ import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
 
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
@@ -43,8 +42,7 @@ import java.util.List;
     summary =
         "When only using JUnit Assert's static methods, "
             + "you should import statically instead of extending.",
-    severity = WARNING,
-    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
+    severity = WARNING)
 public class ExtendingJUnitAssert extends BugChecker implements ClassTreeMatcher {
 
   private static final Matcher<ExpressionTree> STATIC_ASSERT =

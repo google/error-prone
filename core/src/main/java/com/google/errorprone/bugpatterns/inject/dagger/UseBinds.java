@@ -35,7 +35,6 @@ import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
@@ -67,8 +66,7 @@ import javax.lang.model.element.Modifier;
 @BugPattern(
     name = "UseBinds",
     summary = "@Binds is a more efficient and declarative mechanism for delegating a binding.",
-    severity = WARNING,
-    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
+    severity = WARNING)
 public class UseBinds extends BugChecker implements MethodTreeMatcher {
   private static final Matcher<MethodTree> SIMPLE_METHOD =
       new Matcher<MethodTree>() {

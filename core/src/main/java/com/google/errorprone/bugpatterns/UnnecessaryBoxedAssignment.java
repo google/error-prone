@@ -19,7 +19,6 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
 
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.AssignmentTreeMatcher;
@@ -47,7 +46,6 @@ import com.sun.tools.javac.code.TypeTag;
     summary = "This expression can be implicitly boxed.",
     explanation =
         "It is unnecessary for this assignment or return expression to be boxed explicitly.",
-    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION,
     severity = SeverityLevel.SUGGESTION)
 public class UnnecessaryBoxedAssignment extends BugChecker
     implements AssignmentTreeMatcher, ReturnTreeMatcher, VariableTreeMatcher {

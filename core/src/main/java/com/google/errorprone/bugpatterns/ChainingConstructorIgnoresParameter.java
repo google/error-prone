@@ -29,7 +29,6 @@ import static java.util.Collections.unmodifiableList;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.CompilationUnitTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
@@ -71,8 +70,7 @@ import java.util.Map;
     summary =
         "The called constructor accepts a parameter with the same name and type as one of "
             + "its caller's parameters, but its caller doesn't pass that parameter to it.  It's "
-            + "likely that it was intended to.",
-    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
+            + "likely that it was intended to.")
 public final class ChainingConstructorIgnoresParameter extends BugChecker
     implements CompilationUnitTreeMatcher, MethodInvocationTreeMatcher, MethodTreeMatcher {
   private final Map<MethodSymbol, List<VariableTree>> paramTypesForMethod = newHashMap();

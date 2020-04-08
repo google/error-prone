@@ -32,7 +32,6 @@ import static javax.lang.model.element.Modifier.PUBLIC;
 import static javax.lang.model.element.Modifier.STATIC;
 
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
@@ -59,8 +58,7 @@ import javax.lang.model.element.Modifier;
     summary =
         "This looks like a test method but is not run; please add @Test and @Ignore, or, if this"
             + " is a helper method, reduce its visibility.",
-    severity = ERROR,
-    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
+    severity = ERROR)
 public class JUnit4TestNotRun extends BugChecker implements ClassTreeMatcher {
 
   private static final String TEST_CLASS = "org.junit.Test";

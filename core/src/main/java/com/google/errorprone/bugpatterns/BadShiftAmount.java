@@ -22,7 +22,6 @@ import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.kindIs;
 
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.BinaryTreeMatcher;
 import com.google.errorprone.fixes.Fix;
@@ -45,8 +44,7 @@ import com.sun.tools.javac.code.Types;
 @BugPattern(
     name = "BadShiftAmount",
     summary = "Shift by an amount that is out of range",
-    severity = ERROR,
-    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
+    severity = ERROR)
 public class BadShiftAmount extends BugChecker implements BinaryTreeMatcher {
 
   /**

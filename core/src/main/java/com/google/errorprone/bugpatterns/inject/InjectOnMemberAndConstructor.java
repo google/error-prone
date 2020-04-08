@@ -26,7 +26,6 @@ import static com.google.errorprone.matchers.Matchers.constructor;
 import static com.google.errorprone.matchers.Matchers.isField;
 
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
@@ -59,8 +58,7 @@ import javax.lang.model.element.ElementKind;
     name = "InjectOnMemberAndConstructor",
     summary =
         "Members shouldn't be annotated with @Inject if constructor is already annotated @Inject",
-    severity = ERROR,
-    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
+    severity = ERROR)
 public class InjectOnMemberAndConstructor extends BugChecker implements ClassTreeMatcher {
 
   private static final Matcher<ClassTree> HAS_CONSTRUCTORS_WITH_INJECT =

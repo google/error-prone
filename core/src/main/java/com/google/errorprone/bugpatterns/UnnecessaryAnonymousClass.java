@@ -20,7 +20,6 @@ import static com.google.common.base.CaseFormat.LOWER_CAMEL;
 import static com.google.common.base.CaseFormat.UPPER_UNDERSCORE;
 import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.common.collect.Iterables.getOnlyElement;
-import static com.google.errorprone.BugPattern.ProvidesFix.REQUIRES_HUMAN_ATTENTION;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
@@ -65,8 +64,7 @@ import javax.lang.model.element.Modifier;
     summary =
         "Implementing a functional interface is unnecessary; prefer to implement the functional"
             + " interface method directly and use a method reference instead.",
-    severity = WARNING,
-    providesFix = REQUIRES_HUMAN_ATTENTION)
+    severity = WARNING)
 public class UnnecessaryAnonymousClass extends BugChecker implements VariableTreeMatcher {
 
   @Override

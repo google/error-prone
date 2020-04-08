@@ -32,7 +32,6 @@ import static com.google.errorprone.util.ASTHelpers.isSameType;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.CompilationUnitTreeMatcher;
@@ -73,8 +72,7 @@ import javax.annotation.Nullable;
 @BugPattern(
     name = "ProtoFieldNullComparison",
     summary = "Protobuf fields cannot be null.",
-    severity = ERROR,
-    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
+    severity = ERROR)
 public class ProtoFieldNullComparison extends BugChecker implements CompilationUnitTreeMatcher {
 
   private static final String PROTO_SUPER_CLASS = "com.google.protobuf.GeneratedMessage";

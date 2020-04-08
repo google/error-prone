@@ -22,7 +22,6 @@ import static com.google.errorprone.matchers.method.MethodMatchers.instanceMetho
 
 import com.google.common.collect.Iterables;
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.fixes.Fix;
@@ -43,8 +42,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @BugPattern(
     name = "HashtableContains",
     summary = "contains() is a legacy method that is equivalent to containsValue()",
-    severity = ERROR,
-    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
+    severity = ERROR)
 public class HashtableContains extends BugChecker implements MethodInvocationTreeMatcher {
 
   static final Matcher<ExpressionTree> CONTAINS_MATCHER =

@@ -14,7 +14,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.ProvidesFix.REQUIRES_HUMAN_ATTENTION;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
@@ -43,7 +42,6 @@ import java.util.List;
 @BugPattern(
     name = "UnnecessaryMethodInvocationMatcher",
     summary = "It is not necessary to wrap a MethodMatcher with methodInvocation().",
-    providesFix = REQUIRES_HUMAN_ATTENTION,
     severity = WARNING)
 public class UnnecessaryMethodInvocationMatcher extends BugChecker
     implements MethodInvocationTreeMatcher {

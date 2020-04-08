@@ -18,7 +18,6 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.common.collect.ImmutableMap.toImmutableMap;
 import static com.google.common.collect.Iterables.getOnlyElement;
-import static com.google.errorprone.BugPattern.ProvidesFix.REQUIRES_HUMAN_ATTENTION;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
@@ -57,8 +56,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 @BugPattern(
     name = "CanonicalDuration",
     summary = "Duration can be expressed more clearly with different units",
-    severity = WARNING,
-    providesFix = REQUIRES_HUMAN_ATTENTION)
+    severity = WARNING)
 public class CanonicalDuration extends BugChecker implements MethodInvocationTreeMatcher {
 
   enum Api {

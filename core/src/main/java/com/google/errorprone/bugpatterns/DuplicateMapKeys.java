@@ -19,7 +19,6 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.matchers.Description;
@@ -40,8 +39,7 @@ import java.util.Set;
     name = "DuplicateMapKeys",
     summary =
         "Map#ofEntries will throw an IllegalArgumentException if there are any duplicate keys",
-    severity = ERROR,
-    providesFix = ProvidesFix.NO_FIX)
+    severity = ERROR)
 public class DuplicateMapKeys extends BugChecker implements MethodInvocationTreeMatcher {
 
   private static final Matcher<ExpressionTree> METHOD_MATCHER =

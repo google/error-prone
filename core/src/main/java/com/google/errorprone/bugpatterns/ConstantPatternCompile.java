@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.ProvidesFix.REQUIRES_HUMAN_ATTENTION;
 import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
@@ -57,8 +56,7 @@ import javax.lang.model.element.NestingKind;
 @BugPattern(
     name = "ConstantPatternCompile",
     summary = "Variables initialized with Pattern#compile calls on constants can be constants",
-    severity = SUGGESTION,
-    providesFix = REQUIRES_HUMAN_ATTENTION)
+    severity = SUGGESTION)
 public final class ConstantPatternCompile extends BugChecker implements VariableTreeMatcher {
 
   private static final String PATTERN_CLASS = "java.util.regex.Pattern";

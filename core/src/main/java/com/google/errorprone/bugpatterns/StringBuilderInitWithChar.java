@@ -17,7 +17,6 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.NewClassTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
@@ -36,8 +35,7 @@ import javax.lang.model.type.TypeKind;
 @BugPattern(
     name = "StringBuilderInitWithChar",
     severity = ERROR,
-    summary = "StringBuilder does not have a char constructor; this invokes the int constructor.",
-    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
+    summary = "StringBuilder does not have a char constructor; this invokes the int constructor.")
 public class StringBuilderInitWithChar extends BugChecker implements NewClassTreeMatcher {
   @Override
   public Description matchNewClass(NewClassTree tree, VisitorState state) {

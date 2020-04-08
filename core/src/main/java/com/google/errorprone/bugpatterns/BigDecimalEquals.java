@@ -27,7 +27,6 @@ import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.isSameType;
 
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.matchers.Description;
@@ -47,8 +46,7 @@ import java.util.List;
 @BugPattern(
     name = "BigDecimalEquals",
     summary = "BigDecimal#equals has surprising behavior: it also compares scale.",
-    severity = WARNING,
-    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
+    severity = WARNING)
 public final class BigDecimalEquals extends BugChecker implements MethodInvocationTreeMatcher {
   private static final String BIG_DECIMAL = "java.math.BigDecimal";
 

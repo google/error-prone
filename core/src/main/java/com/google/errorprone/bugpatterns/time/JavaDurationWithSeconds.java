@@ -15,7 +15,6 @@
  */
 package com.google.errorprone.bugpatterns.time;
 
-import static com.google.errorprone.BugPattern.ProvidesFix.REQUIRES_HUMAN_ATTENTION;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 
 import com.google.common.collect.Iterables;
@@ -41,8 +40,7 @@ import com.sun.source.tree.MethodInvocationTree;
             + "of the current Duration instance, but _only_ the seconds field is mutated (the "
             + "nanos field is copied directly). Use Duration.ofSeconds(seconds, "
             + "duration.getNano()) instead.",
-    severity = WARNING,
-    providesFix = REQUIRES_HUMAN_ATTENTION)
+    severity = WARNING)
 public final class JavaDurationWithSeconds extends BugChecker
     implements MethodInvocationTreeMatcher {
   private static final Matcher<ExpressionTree> MATCHER =

@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.common.collect.Iterables.getOnlyElement;
-import static com.google.errorprone.BugPattern.ProvidesFix.REQUIRES_HUMAN_ATTENTION;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.equalsMethodDeclaration;
@@ -54,7 +53,6 @@ import java.util.List;
     summary =
         "The contract of #equals states that it should return false for incompatible types, "
             + "while this implementation may throw ClassCastException.",
-    providesFix = REQUIRES_HUMAN_ATTENTION,
     severity = WARNING)
 public final class EqualsUnsafeCast extends BugChecker implements MethodTreeMatcher {
 

@@ -22,7 +22,6 @@ import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.BugPattern.StandardTags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.annotations.RequiredModifiers;
@@ -44,8 +43,7 @@ import javax.lang.model.element.Modifier;
             + "@RequiredModifiers annotation",
     linkType = NONE,
     severity = WARNING,
-    tags = StandardTags.LIKELY_ERROR,
-    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
+    tags = StandardTags.LIKELY_ERROR)
 public class RequiredModifiersChecker extends BugChecker implements AnnotationTreeMatcher {
 
   private static final String MESSAGE_TEMPLATE =

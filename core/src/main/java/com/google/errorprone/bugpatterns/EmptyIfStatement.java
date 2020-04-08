@@ -21,7 +21,6 @@ import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.isLastStatementInBlock;
 
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.EmptyStatementTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
@@ -44,8 +43,7 @@ import com.sun.source.util.TreePath;
     name = "EmptyIf",
     altNames = {"empty"},
     summary = "Empty statement after if",
-    severity = ERROR,
-    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
+    severity = ERROR)
 public class EmptyIfStatement extends BugChecker implements EmptyStatementTreeMatcher {
 
   /**

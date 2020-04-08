@@ -28,7 +28,6 @@ import static com.google.errorprone.matchers.Matchers.variableInitializer;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.CompilationUnitTreeMatcher;
@@ -59,8 +58,7 @@ import java.util.Optional;
             + " method. This method is used for autoboxing. This means that using a boxed"
             + " primitive as a lock can result in unintentionally sharing a lock with another"
             + " piece of code.",
-    severity = SeverityLevel.WARNING,
-    providesFix = ProvidesFix.NO_FIX)
+    severity = SeverityLevel.WARNING)
 public class LockOnBoxedPrimitive extends BugChecker
     implements CompilationUnitTreeMatcher, SynchronizedTreeMatcher, MethodInvocationTreeMatcher {
 

@@ -21,7 +21,6 @@ import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFixes;
@@ -41,8 +40,7 @@ import com.sun.source.tree.MethodTree;
     summary =
         "To return a custom message with a Throwable class, one should "
             + "override getMessage() instead of toString().",
-    severity = WARNING,
-    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
+    severity = WARNING)
 public final class OverrideThrowableToString extends BugChecker implements ClassTreeMatcher {
 
   @Override

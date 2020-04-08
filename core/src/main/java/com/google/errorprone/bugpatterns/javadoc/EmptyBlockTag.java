@@ -21,7 +21,6 @@ import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.bugpatterns.javadoc.Utils.diagnosticPosition;
 
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.BugPattern.StandardTags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
@@ -58,7 +57,6 @@ import java.util.List;
     linkType = CUSTOM,
     link = "http://google.github.io/styleguide/javaguide.html#s7.1.3-javadoc-block-tags",
     tags = StandardTags.STYLE,
-    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION,
     documentSuppression = false)
 public final class EmptyBlockTag extends BugChecker
     implements ClassTreeMatcher, MethodTreeMatcher, VariableTreeMatcher {

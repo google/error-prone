@@ -23,7 +23,6 @@ import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.CompilationUnitTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
@@ -57,8 +56,7 @@ import javax.lang.model.element.ElementKind;
 @BugPattern(
     name = "MockitoCast",
     summary = "A bug in Mockito will cause this test to fail at runtime with a ClassCastException",
-    severity = ERROR,
-    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
+    severity = ERROR)
 public class MockitoCast extends BugChecker implements CompilationUnitTreeMatcher {
 
   private static final String MOCKITO_CLASS = "org.mockito.Mockito";

@@ -24,7 +24,6 @@ import static com.google.errorprone.matchers.method.MethodMatchers.instanceMetho
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
 
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
@@ -40,8 +39,7 @@ import java.util.regex.PatternSyntaxException;
 @BugPattern(
     name = "InvalidPatternSyntax",
     summary = "Invalid syntax used for a regular expression",
-    severity = ERROR,
-    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
+    severity = ERROR)
 public class InvalidPatternSyntax extends BugChecker implements MethodInvocationTreeMatcher {
 
   private static final String MESSAGE_BASE = "Invalid syntax used for a regular expression: ";

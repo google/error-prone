@@ -22,7 +22,6 @@ import static com.google.errorprone.util.ASTHelpers.isConsideredFinal;
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.CompilationUnitTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
@@ -52,8 +51,7 @@ import java.util.Set;
     summary =
         "This expression was previously declared as a constant;"
             + " consider replacing this occurrence.",
-    severity = ERROR,
-    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
+    severity = ERROR)
 public class DeduplicateConstants extends BugChecker implements CompilationUnitTreeMatcher {
 
   /** A lexical scope for constant declarations. */

@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.ProvidesFix.REQUIRES_HUMAN_ATTENTION;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.constValue;
@@ -42,8 +41,7 @@ import java.util.regex.Pattern;
     summary =
         "Setting CSS outline style to none or 0 (while not otherwise providing visual focus "
             + "indicators) is inaccessible for users navigating a web page without a mouse.",
-    severity = WARNING,
-    providesFix = REQUIRES_HUMAN_ATTENTION)
+    severity = WARNING)
 public class OutlineNone extends BugChecker
     implements MethodInvocationTreeMatcher, AnnotationTreeMatcher {
 

@@ -23,7 +23,6 @@ import static com.google.errorprone.matchers.Matchers.instanceMethod;
 import static com.google.errorprone.matchers.Matchers.isSameType;
 
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.BinaryTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
@@ -37,8 +36,7 @@ import com.sun.source.tree.Tree.Kind;
 @BugPattern(
     name = "ProtoStringFieldReferenceEquality",
     severity = ERROR,
-    summary = "Comparing protobuf fields of type String using reference equality",
-    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
+    summary = "Comparing protobuf fields of type String using reference equality")
 public class ProtoStringFieldReferenceEquality extends BugChecker implements BinaryTreeMatcher {
 
   private static final String PROTO_SUPER_CLASS = "com.google.protobuf.GeneratedMessage";

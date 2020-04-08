@@ -24,7 +24,6 @@ import static com.google.errorprone.matchers.Matchers.hasAnnotation;
 import static javax.lang.model.element.Modifier.ABSTRACT;
 
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.AnnotationTreeMatcher;
@@ -42,8 +41,7 @@ import com.sun.tools.javac.code.Flags;
 @BugPattern(
     name = "InjectScopeAnnotationOnInterfaceOrAbstractClass",
     summary = "Scope annotation on an interface or abstract class is not allowed",
-    severity = WARNING,
-    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
+    severity = WARNING)
 public class ScopeAnnotationOnInterfaceOrAbstractClass extends BugChecker
     implements AnnotationTreeMatcher {
 

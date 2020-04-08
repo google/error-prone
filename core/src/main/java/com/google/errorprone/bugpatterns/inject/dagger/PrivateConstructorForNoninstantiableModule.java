@@ -28,7 +28,6 @@ import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 import com.google.common.collect.FluentIterable;
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
@@ -44,8 +43,7 @@ import com.sun.source.tree.Tree;
 @BugPattern(
     name = "PrivateConstructorForNoninstantiableModule",
     summary = "Add a private constructor to modules that will not be instantiated by Dagger.",
-    severity = SUGGESTION,
-    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
+    severity = SUGGESTION)
 public class PrivateConstructorForNoninstantiableModule extends BugChecker
     implements ClassTreeMatcher {
   private static final Predicate<Tree> IS_CONSTRUCTOR =

@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.ProvidesFix.REQUIRES_HUMAN_ATTENTION;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.BugPattern.StandardTags.STYLE;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
@@ -39,7 +38,6 @@ import com.sun.tools.javac.tree.JCTree;
         "These grouping parentheses are unnecessary; it is unlikely the code will"
             + " be misinterpreted without them",
     severity = WARNING,
-    providesFix = REQUIRES_HUMAN_ATTENTION,
     tags = STYLE)
 public class UnnecessaryParentheses extends BugChecker implements ParenthesizedTreeMatcher {
 

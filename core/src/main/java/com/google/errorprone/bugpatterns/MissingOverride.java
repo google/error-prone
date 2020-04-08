@@ -19,7 +19,6 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.BugPattern.StandardTags;
 import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
@@ -40,8 +39,7 @@ import javax.lang.model.element.Modifier;
     name = "MissingOverride",
     summary = "method overrides method in supertype; expected @Override",
     severity = WARNING,
-    tags = StandardTags.STYLE,
-    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
+    tags = StandardTags.STYLE)
 public class MissingOverride extends BugChecker implements MethodTreeMatcher {
 
   /** if true, don't warn on missing {@code @Override} annotations inside interfaces */

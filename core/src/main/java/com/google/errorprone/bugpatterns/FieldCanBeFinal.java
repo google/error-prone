@@ -21,7 +21,6 @@ import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.CompilationUnitTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFixes;
@@ -56,8 +55,7 @@ import javax.lang.model.element.Modifier;
 @BugPattern(
     name = "FieldCanBeFinal",
     summary = "This field is only assigned during initialization; consider making it final",
-    severity = SUGGESTION,
-    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
+    severity = SUGGESTION)
 public class FieldCanBeFinal extends BugChecker implements CompilationUnitTreeMatcher {
 
   /** Annotations that imply a field is non-constant. */

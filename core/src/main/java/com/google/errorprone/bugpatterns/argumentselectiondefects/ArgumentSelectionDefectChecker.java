@@ -20,7 +20,6 @@ import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
@@ -55,8 +54,7 @@ import java.util.function.Function;
 @BugPattern(
     name = "ArgumentSelectionDefectChecker",
     summary = "Arguments are in the wrong order or could be commented for clarity.",
-    severity = WARNING,
-    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
+    severity = WARNING)
 public class ArgumentSelectionDefectChecker extends BugChecker
     implements MethodInvocationTreeMatcher, NewClassTreeMatcher {
 

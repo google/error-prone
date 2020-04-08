@@ -15,7 +15,6 @@
  */
 package com.google.errorprone.bugpatterns.time;
 
-import static com.google.errorprone.BugPattern.ProvidesFix.REQUIRES_HUMAN_ATTENTION;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.anyOf;
@@ -47,8 +46,7 @@ import java.util.List;
     summary =
         "This may have surprising semantics, e.g. new Period(LocalDate.parse(\"1970-01-01\"), "
             + "LocalDate.parse(\"1970-02-02\")).getDays() == 1, not 32.",
-    severity = WARNING,
-    providesFix = REQUIRES_HUMAN_ATTENTION)
+    severity = WARNING)
 public final class JodaNewPeriod extends BugChecker implements MethodInvocationTreeMatcher {
 
   private static final String READABLE_PARTIAL = "org.joda.time.ReadablePartial";

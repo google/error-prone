@@ -20,7 +20,6 @@ import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.sun.tools.javac.code.Flags.DEPRECATED;
 
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
@@ -43,8 +42,7 @@ import com.sun.tools.javac.code.Symbol;
     name = "DepAnn",
     altNames = "dep-ann",
     summary = "Item documented with a @deprecated javadoc note is not annotated with @Deprecated",
-    severity = ERROR,
-    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
+    severity = ERROR)
 public class DepAnn extends BugChecker
     implements MethodTreeMatcher, ClassTreeMatcher, VariableTreeMatcher {
 

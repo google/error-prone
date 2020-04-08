@@ -23,7 +23,6 @@ import static com.google.errorprone.matchers.Matchers.not;
 
 import com.google.common.collect.Iterables;
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
@@ -52,8 +51,7 @@ import javax.lang.model.element.Modifier;
 @BugPattern(
     name = "ParcelableCreator",
     summary = "Detects classes which implement Parcelable but don't have CREATOR",
-    severity = SeverityLevel.ERROR,
-    providesFix = ProvidesFix.NO_FIX)
+    severity = SeverityLevel.ERROR)
 public class ParcelableCreator extends BugChecker implements ClassTreeMatcher {
 
   /** Matches if a non-public non-abstract class/interface is subtype of android.os.Parcelable */

@@ -28,7 +28,6 @@ import static com.google.errorprone.matchers.Matchers.methodIsConstructor;
 import static com.google.errorprone.matchers.Matchers.symbolHasAnnotation;
 
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
@@ -42,8 +41,7 @@ import com.sun.source.tree.MethodTree;
 @BugPattern(
     name = "InjectedConstructorAnnotations",
     summary = "Injected constructors cannot be optional nor have binding annotations",
-    severity = WARNING,
-    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
+    severity = WARNING)
 public class InjectedConstructorAnnotations extends BugChecker implements MethodTreeMatcher {
 
   // A matcher of @Inject{optional=true}

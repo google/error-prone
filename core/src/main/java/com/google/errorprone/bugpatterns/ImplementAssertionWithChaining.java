@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.common.collect.Iterables.getOnlyElement;
-import static com.google.errorprone.BugPattern.ProvidesFix.REQUIRES_HUMAN_ATTENTION;
 import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
 import static com.google.errorprone.fixes.SuggestedFix.replace;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
@@ -74,8 +73,7 @@ import java.util.regex.Pattern;
 @BugPattern(
     name = "ImplementAssertionWithChaining",
     summary = "Prefer check(...), which usually generates more readable failure messages.",
-    severity = SUGGESTION,
-    providesFix = REQUIRES_HUMAN_ATTENTION)
+    severity = SUGGESTION)
 public final class ImplementAssertionWithChaining extends BugChecker implements IfTreeMatcher {
   @Override
   public Description matchIf(IfTree ifTree, VisitorState state) {

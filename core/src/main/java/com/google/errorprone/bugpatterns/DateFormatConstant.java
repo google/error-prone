@@ -25,7 +25,6 @@ import static com.google.errorprone.util.ASTHelpers.isSubtype;
 import com.google.common.base.Ascii;
 import com.google.common.base.CaseFormat;
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.BugPattern.StandardTags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.VariableTreeMatcher;
@@ -47,8 +46,7 @@ import javax.lang.model.element.Modifier;
     name = "DateFormatConstant",
     summary = "DateFormat is not thread-safe, and should not be used as a constant field.",
     severity = WARNING,
-    tags = StandardTags.FRAGILE_CODE,
-    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
+    tags = StandardTags.FRAGILE_CODE)
 public class DateFormatConstant extends BugChecker implements VariableTreeMatcher {
 
   @Override

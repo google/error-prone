@@ -23,7 +23,6 @@ import static com.google.errorprone.matchers.Matchers.instanceMethod;
 import com.google.auto.value.AutoValue;
 import com.google.common.collect.Iterables;
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
@@ -42,8 +41,7 @@ import com.sun.tools.javac.tree.JCTree;
 @BugPattern(
     name = "IsInstanceOfClass",
     summary = "The argument to Class#isInstance(Object) should not be a Class",
-    severity = ERROR,
-    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
+    severity = ERROR)
 public class IsInstanceOfClass extends BugChecker implements MethodInvocationTreeMatcher {
 
   private static final Matcher<MethodInvocationTree> INSTANCE_OF_CLASS =

@@ -19,7 +19,6 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.CompilationUnitTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
@@ -33,8 +32,7 @@ import java.util.List;
 @BugPattern(
     name = "EmptyTopLevelDeclaration",
     summary = "Empty top-level type declaration",
-    severity = WARNING,
-    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
+    severity = WARNING)
 public class EmptyTopLevelDeclaration extends BugChecker implements CompilationUnitTreeMatcher {
 
   @Override

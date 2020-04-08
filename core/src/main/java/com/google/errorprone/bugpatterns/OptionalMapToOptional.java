@@ -14,7 +14,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.ProvidesFix.REQUIRES_HUMAN_ATTENTION;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.allOf;
@@ -43,8 +42,7 @@ import com.sun.tools.javac.util.List;
 @BugPattern(
     name = "OptionalMapToOptional",
     summary = "Mapping to another Optional will yield a nested Optional. Did you mean flatMap?",
-    severity = WARNING,
-    providesFix = REQUIRES_HUMAN_ATTENTION)
+    severity = WARNING)
 public final class OptionalMapToOptional extends BugChecker implements MethodInvocationTreeMatcher {
 
   private static final Matcher<ExpressionTree> MAP =

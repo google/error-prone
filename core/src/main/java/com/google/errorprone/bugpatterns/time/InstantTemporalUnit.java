@@ -16,7 +16,6 @@
 package com.google.errorprone.bugpatterns.time;
 
 import static com.google.common.collect.Sets.toImmutableEnumSet;
-import static com.google.errorprone.BugPattern.ProvidesFix.NO_FIX;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.bugpatterns.time.DurationGetTemporalUnit.getInvalidChronoUnit;
 import static com.google.errorprone.matchers.Matchers.allOf;
@@ -46,8 +45,7 @@ import java.util.Arrays;
     summary =
         "Instant APIs only work for NANOS, MICROS, MILLIS, SECONDS, MINUTES, HOURS, HALF_DAYS and"
             + " DAYS.",
-    severity = ERROR,
-    providesFix = NO_FIX)
+    severity = ERROR)
 public final class InstantTemporalUnit extends BugChecker implements MethodInvocationTreeMatcher {
 
   private static final String INSTANT = "java.time.Instant";

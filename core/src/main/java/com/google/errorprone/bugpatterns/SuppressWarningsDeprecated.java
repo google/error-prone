@@ -23,7 +23,6 @@ import static com.google.errorprone.matchers.Matchers.isType;
 import static com.google.errorprone.matchers.Matchers.stringLiteral;
 
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
@@ -38,8 +37,7 @@ import java.util.List;
 @BugPattern(
     name = "SuppressWarningsDeprecated",
     summary = "Suppressing \"deprecated\" is probably a typo for \"deprecation\"",
-    severity = ERROR,
-    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
+    severity = ERROR)
 public class SuppressWarningsDeprecated extends AbstractSuppressWarningsMatcher {
 
   @SuppressWarnings("varargs")

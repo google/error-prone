@@ -30,7 +30,6 @@ import static javax.lang.model.element.Modifier.STATIC;
 
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
 import com.google.errorprone.matchers.Description;
@@ -47,8 +46,7 @@ import com.sun.source.tree.VariableTree;
         "Classes which are not intended to be instantiated should be made non-instantiable with a"
             + " private constructor. This includes utility classes (classes with only static"
             + " members), and the main class.",
-    severity = SUGGESTION,
-    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
+    severity = SUGGESTION)
 public final class PrivateConstructorForUtilityClass extends BugChecker
     implements ClassTreeMatcher {
 

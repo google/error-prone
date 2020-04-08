@@ -20,7 +20,6 @@ import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.BugPattern.StandardTags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
@@ -40,8 +39,7 @@ import javax.lang.model.element.NestingKind;
     name = "ClassCanBeStatic",
     summary = "Inner class is non-static but does not reference enclosing class",
     severity = WARNING,
-    tags = {StandardTags.STYLE, StandardTags.PERFORMANCE},
-    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
+    tags = {StandardTags.STYLE, StandardTags.PERFORMANCE})
 public class ClassCanBeStatic extends BugChecker implements ClassTreeMatcher {
 
   @Override

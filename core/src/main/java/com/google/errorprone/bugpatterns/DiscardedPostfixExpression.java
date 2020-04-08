@@ -19,7 +19,6 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.UnaryTreeMatcher;
@@ -36,8 +35,7 @@ import com.sun.tools.javac.tree.JCTree.JCLambda;
 @BugPattern(
     name = "DiscardedPostfixExpression",
     summary = "The result of this unary operation on a lambda parameter is discarded",
-    severity = SeverityLevel.ERROR,
-    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
+    severity = SeverityLevel.ERROR)
 public class DiscardedPostfixExpression extends BugChecker implements UnaryTreeMatcher {
 
   @Override

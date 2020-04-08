@@ -26,7 +26,6 @@ import com.google.common.base.Ascii;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Range;
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.NewClassTreeMatcher;
@@ -54,8 +53,7 @@ import java.util.List;
 @BugPattern(
     name = "BooleanParameter",
     summary = "Use parameter comments to document ambiguous literals",
-    severity = SUGGESTION,
-    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
+    severity = SUGGESTION)
 public class BooleanParameter extends BugChecker
     implements MethodInvocationTreeMatcher, NewClassTreeMatcher {
 

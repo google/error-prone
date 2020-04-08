@@ -19,7 +19,6 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.ProvidesFix;
 import java.util.Optional;
 
 /**
@@ -34,8 +33,7 @@ import java.util.Optional;
     summary =
         "Use of \"YYYY\" (week year) in a date pattern without \"ww\" (week in year). "
             + "You probably meant to use \"yyyy\" (year) instead.",
-    severity = ERROR,
-    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
+    severity = ERROR)
 public final class MisusedWeekYear extends MisusedDateFormat {
   @Override
   Optional<String> rewriteTo(String pattern) {

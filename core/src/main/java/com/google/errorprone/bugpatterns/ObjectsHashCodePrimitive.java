@@ -21,7 +21,6 @@ import static com.google.errorprone.matchers.Matchers.isPrimitiveType;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
 
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.fixes.Fix;
@@ -40,8 +39,7 @@ import java.util.Objects;
 @BugPattern(
     name = "ObjectsHashCodePrimitive",
     summary = "Objects.hashCode(Object o) should not be passed a primitive value",
-    severity = WARNING,
-    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
+    severity = WARNING)
 public final class ObjectsHashCodePrimitive extends BugChecker
     implements MethodInvocationTreeMatcher {
   private static final Matcher<MethodInvocationTree> OBJECTS_HASHCODE_CALLS =

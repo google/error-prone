@@ -28,7 +28,6 @@ import static com.google.errorprone.names.LevenshteinEditDistance.getEditDistanc
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.BugPattern.StandardTags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
@@ -59,7 +58,6 @@ import java.util.regex.Pattern;
     summary = "This @param tag doesn't refer to a parameter of the method.",
     severity = WARNING,
     tags = StandardTags.STYLE,
-    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION,
     documentSuppression = false)
 public final class InvalidParam extends BugChecker implements ClassTreeMatcher, MethodTreeMatcher {
 

@@ -27,7 +27,6 @@ import static com.sun.source.tree.Tree.Kind.METHOD;
 
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.AnnotationTreeMatcher;
@@ -43,8 +42,7 @@ import com.sun.source.tree.Tree;
 @BugPattern(
     name = "AutoFactoryAtInject",
     summary = "@AutoFactory and @Inject should not be used in the same type.",
-    severity = ERROR,
-    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
+    severity = ERROR)
 public class AutoFactoryAtInject extends BugChecker implements AnnotationTreeMatcher {
 
   private static final Matcher<Tree> HAS_AUTO_FACTORY_ANNOTATION =

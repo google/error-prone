@@ -27,7 +27,6 @@ import static com.google.errorprone.matchers.Matchers.toType;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
 
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.fixes.Fix;
@@ -53,8 +52,7 @@ import javax.annotation.Nullable;
 @BugPattern(
     name = "SelfEquals",
     summary = "Testing an object for equality with itself will always be true.",
-    severity = ERROR,
-    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
+    severity = ERROR)
 public class SelfEquals extends BugChecker implements MethodInvocationTreeMatcher {
 
   private static final Matcher<Tree> ASSERTION =

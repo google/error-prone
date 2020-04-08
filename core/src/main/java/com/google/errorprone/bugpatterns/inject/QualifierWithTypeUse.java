@@ -28,7 +28,6 @@ import static com.sun.source.tree.Tree.Kind.ANNOTATION_TYPE;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.BugPattern.StandardTags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
@@ -57,8 +56,7 @@ import java.util.Set;
         "Injection frameworks currently don't understand Qualifiers in TYPE_PARAMETER or"
             + " TYPE_USE contexts.",
     severity = WARNING,
-    tags = StandardTags.FRAGILE_CODE,
-    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
+    tags = StandardTags.FRAGILE_CODE)
 public class QualifierWithTypeUse extends BugChecker implements ClassTreeMatcher {
 
   private static final MultiMatcher<ClassTree, AnnotationTree> HAS_TARGET_ANNOTATION =

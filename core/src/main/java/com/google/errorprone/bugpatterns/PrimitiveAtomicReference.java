@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.ProvidesFix.REQUIRES_HUMAN_ATTENTION;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
@@ -41,7 +40,6 @@ import javax.lang.model.type.TypeKind;
         "Using compareAndSet with boxed primitives is dangerous, as reference rather than value"
             + " equality is used. Consider using AtomicInteger, AtomicLong, or AtomicBoolean"
             + " instead.",
-    providesFix = REQUIRES_HUMAN_ATTENTION,
     severity = WARNING)
 public final class PrimitiveAtomicReference extends BugChecker
     implements MethodInvocationTreeMatcher {

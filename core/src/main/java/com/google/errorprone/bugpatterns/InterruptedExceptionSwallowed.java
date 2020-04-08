@@ -18,7 +18,6 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.common.base.Verify.verify;
 import static com.google.common.collect.Iterables.getLast;
-import static com.google.errorprone.BugPattern.ProvidesFix.REQUIRES_HUMAN_ATTENTION;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.allOf;
@@ -90,7 +89,6 @@ import javax.annotation.Nullable;
         "This catch block appears to be catching an explicitly declared InterruptedException as an"
             + " Exception/Throwable and not handling the interruption separately.",
     severity = WARNING,
-    providesFix = REQUIRES_HUMAN_ATTENTION,
     documentSuppression = false)
 public final class InterruptedExceptionSwallowed extends BugChecker
     implements MethodTreeMatcher, TryTreeMatcher {

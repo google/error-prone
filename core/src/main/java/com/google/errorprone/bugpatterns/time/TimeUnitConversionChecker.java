@@ -15,7 +15,6 @@
  */
 package com.google.errorprone.bugpatterns.time;
 
-import static com.google.errorprone.BugPattern.ProvidesFix.REQUIRES_HUMAN_ATTENTION;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Matchers.instanceMethod;
 
@@ -48,8 +47,7 @@ import java.util.concurrent.TimeUnit;
             + "2) conversions that are converting from a given unit back to the same unit; "
             + "3) conversions that are converting from a smaller unit to a larger unit and passing "
             + "a constant value",
-    severity = WARNING,
-    providesFix = REQUIRES_HUMAN_ATTENTION)
+    severity = WARNING)
 public final class TimeUnitConversionChecker extends BugChecker
     implements MethodInvocationTreeMatcher {
 

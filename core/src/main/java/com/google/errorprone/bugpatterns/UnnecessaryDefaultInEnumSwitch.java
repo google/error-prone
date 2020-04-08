@@ -27,7 +27,6 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import com.google.common.collect.Sets.SetView;
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.SwitchTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
@@ -52,8 +51,7 @@ import javax.lang.model.element.ElementKind;
     summary =
         "Switch handles all enum values: an explicit default case is unnecessary and defeats error"
             + " checking for non-exhaustive switches.",
-    severity = WARNING,
-    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
+    severity = WARNING)
 public class UnnecessaryDefaultInEnumSwitch extends BugChecker implements SwitchTreeMatcher {
 
   private static final String DESCRIPTION_MOVED_DEFAULT =

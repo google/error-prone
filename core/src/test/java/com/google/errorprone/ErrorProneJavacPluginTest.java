@@ -31,7 +31,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Streams;
 import com.google.common.jimfs.Configuration;
 import com.google.common.jimfs.Jimfs;
-import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.ReturnTreeMatcher;
@@ -317,11 +316,7 @@ public class ErrorProneJavacPluginTest {
   }
 
   /** A bugpattern for testing. */
-  @BugPattern(
-      name = "TestCompilesWithFix",
-      summary = "",
-      severity = SeverityLevel.ERROR,
-      providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
+  @BugPattern(name = "TestCompilesWithFix", summary = "", severity = SeverityLevel.ERROR)
   public static class TestCompilesWithFix extends BugChecker implements ReturnTreeMatcher {
 
     @Override

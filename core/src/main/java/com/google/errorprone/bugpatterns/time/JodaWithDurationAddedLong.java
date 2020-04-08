@@ -15,7 +15,6 @@
  */
 package com.google.errorprone.bugpatterns.time;
 
-import static com.google.errorprone.BugPattern.ProvidesFix.REQUIRES_HUMAN_ATTENTION;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.anyOf;
@@ -50,8 +49,7 @@ import com.sun.source.tree.MethodInvocationTree;
         "JodaTime's type.withDurationAdded(long, int) is often a source of bugs "
             + "because the units of the parameters are ambiguous. Please use "
             + "type.withDurationAdded(Duration.millis(long), int) instead.",
-    severity = WARNING,
-    providesFix = REQUIRES_HUMAN_ATTENTION)
+    severity = WARNING)
 public final class JodaWithDurationAddedLong extends BugChecker
     implements MethodInvocationTreeMatcher {
 

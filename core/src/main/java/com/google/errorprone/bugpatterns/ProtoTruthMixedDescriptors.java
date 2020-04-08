@@ -18,7 +18,6 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.common.collect.Iterables.getOnlyElement;
-import static com.google.errorprone.BugPattern.ProvidesFix.REQUIRES_HUMAN_ATTENTION;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
@@ -54,8 +53,7 @@ import java.util.Optional;
     summary =
         "The arguments passed to `ignoringFields` are inconsistent with the proto which is "
             + "the subject of the assertion.",
-    severity = ERROR,
-    providesFix = REQUIRES_HUMAN_ATTENTION)
+    severity = ERROR)
 public final class ProtoTruthMixedDescriptors extends BugChecker
     implements MethodInvocationTreeMatcher {
 

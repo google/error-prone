@@ -23,7 +23,6 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.BugPattern.StandardTags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.annotations.IncompatibleModifiers;
@@ -48,8 +47,7 @@ import javax.lang.model.element.TypeElement;
             + "@IncompatibleModifiers annotation",
     linkType = NONE,
     severity = ERROR,
-    tags = StandardTags.LIKELY_ERROR,
-    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
+    tags = StandardTags.LIKELY_ERROR)
 
 // TODO(cushon): merge the implementation with RequiredModifiersChecker
 public class IncompatibleModifiersChecker extends BugChecker implements AnnotationTreeMatcher {

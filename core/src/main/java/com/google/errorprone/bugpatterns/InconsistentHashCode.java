@@ -30,7 +30,6 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.BugPattern.StandardTags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
@@ -66,8 +65,7 @@ import javax.lang.model.element.ElementKind;
         "Including fields in hashCode which are not compared in equals violates "
             + "the contract of hashCode.",
     severity = WARNING,
-    tags = StandardTags.FRAGILE_CODE,
-    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
+    tags = StandardTags.FRAGILE_CODE)
 public final class InconsistentHashCode extends BugChecker implements ClassTreeMatcher {
 
   public static final String MESSAGE =

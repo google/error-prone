@@ -24,7 +24,6 @@ import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MemberReferenceTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
@@ -48,11 +47,7 @@ import javax.lang.model.element.Modifier;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 // TODO(cushon): this should subsume ImmutableModification and LocalizableWrongToString
-@BugPattern(
-    name = "DoNotCall",
-    summary = "This method should not be called.",
-    severity = ERROR,
-    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
+@BugPattern(name = "DoNotCall", summary = "This method should not be called.", severity = ERROR)
 public class DoNotCallChecker extends BugChecker
     implements MethodTreeMatcher, MethodInvocationTreeMatcher, MemberReferenceTreeMatcher {
 

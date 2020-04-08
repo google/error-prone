@@ -20,7 +20,6 @@ import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.NewClassTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
@@ -44,8 +43,7 @@ import java.util.Optional;
 @BugPattern(
     name = "BigDecimalLiteralDouble",
     summary = "new BigDecimal(double) loses precision in this case.",
-    severity = WARNING,
-    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
+    severity = WARNING)
 public class BigDecimalLiteralDouble extends BugChecker implements NewClassTreeMatcher {
 
   private static final String ACTUAL_VALUE = " The exact value here is `new BigDecimal(\"%s\")`.";

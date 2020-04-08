@@ -24,7 +24,6 @@ import static com.google.errorprone.matchers.method.MethodMatchers.instanceMetho
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
 
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.BugPattern.StandardTags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
@@ -54,8 +53,7 @@ import java.util.Optional;
         "This fuzzy equality check is using a tolerance less than the gap to the next number. "
             + "You may want a less restrictive tolerance, or to assert equality.",
     severity = WARNING,
-    tags = StandardTags.SIMPLIFICATION,
-    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
+    tags = StandardTags.SIMPLIFICATION)
 public final class FloatingPointAssertionWithinEpsilon extends BugChecker
     implements MethodInvocationTreeMatcher {
 

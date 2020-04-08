@@ -35,7 +35,6 @@ import static com.google.errorprone.util.ASTHelpers.isSubtype;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
@@ -58,8 +57,7 @@ import java.util.function.BiFunction;
 @BugPattern(
     name = "UndefinedEquals",
     summary = "This type is not guaranteed to implement a useful #equals method.",
-    severity = WARNING,
-    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
+    severity = WARNING)
 public final class UndefinedEquals extends BugChecker implements MethodInvocationTreeMatcher {
 
   private static final Matcher<ExpressionTree> IS_EQUAL_TO =

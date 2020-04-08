@@ -24,7 +24,6 @@ import static com.google.errorprone.matchers.method.MethodMatchers.instanceMetho
 import static com.google.errorprone.util.Regexes.convertRegexToLiteral;
 
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.fixes.Fix;
@@ -55,8 +54,7 @@ import java.util.Optional;
 @BugPattern(
     name = "StringSplitter",
     summary = "String.split(String) has surprising behavior",
-    severity = WARNING,
-    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
+    severity = WARNING)
 public class StringSplitter extends BugChecker implements MethodInvocationTreeMatcher {
 
   private static final Matcher<ExpressionTree> MATCHER =

@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.ProvidesFix.REQUIRES_HUMAN_ATTENTION;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 
 import com.google.auto.value.AutoValue;
@@ -40,7 +39,6 @@ import com.sun.source.tree.ThrowTree;
         "Consider throwing more specific exceptions rather than (e.g.) RuntimeException. Throwing"
             + " generic exceptions forces any users of the API that wish to handle the failure"
             + " mode to catch very non-specific exceptions that convey little information.",
-    providesFix = REQUIRES_HUMAN_ATTENTION,
     severity = WARNING)
 public final class ThrowSpecificExceptions extends BugChecker implements NewClassTreeMatcher {
   private static final ImmutableList<AbstractLikeException> ABSTRACT_LIKE_EXCEPTIONS =

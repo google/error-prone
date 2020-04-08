@@ -21,7 +21,6 @@ import static com.google.errorprone.matchers.Matchers.annotations;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.ImportTreeMatcher;
 import com.google.errorprone.bugpatterns.StaticImports.StaticImportInfo;
@@ -55,8 +54,7 @@ import javax.lang.model.element.Name;
             + "code harder to read, because it may not be clear from the context exactly which "
             + "type is being referred to. Qualifying the name with that of the containing class "
             + "can make the code clearer.",
-    severity = WARNING,
-    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
+    severity = WARNING)
 public class BadImport extends BugChecker implements ImportTreeMatcher {
 
   private static final ImmutableSet<String> BAD_NESTED_CLASSES =

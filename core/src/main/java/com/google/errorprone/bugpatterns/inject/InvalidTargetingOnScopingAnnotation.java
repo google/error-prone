@@ -33,7 +33,6 @@ import static java.lang.annotation.ElementType.TYPE;
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
@@ -56,8 +55,7 @@ import java.util.Set;
 @BugPattern(
     name = "InjectInvalidTargetingOnScopingAnnotation",
     summary = "A scoping annotation's Target should include TYPE and METHOD.",
-    severity = WARNING,
-    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
+    severity = WARNING)
 public class InvalidTargetingOnScopingAnnotation extends BugChecker implements ClassTreeMatcher {
 
   private static final String TARGET_ANNOTATION = "java.lang.annotation.Target";

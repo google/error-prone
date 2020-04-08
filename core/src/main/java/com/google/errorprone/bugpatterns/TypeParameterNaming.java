@@ -26,7 +26,6 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Streams;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.LinkType;
-import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.BugPattern.StandardTags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.TypeParameterTreeMatcher;
@@ -63,7 +62,6 @@ import javax.lang.model.element.Name;
     severity = SUGGESTION,
     tags = StandardTags.STYLE,
     linkType = LinkType.CUSTOM,
-    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION,
     link = "https://google.github.io/styleguide/javaguide.html#s5.2.8-type-variable-names"
     )
 public class TypeParameterNaming extends BugChecker implements TypeParameterTreeMatcher {

@@ -22,7 +22,6 @@ import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
 
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFixes;
@@ -42,8 +41,7 @@ import java.util.List;
     name = "ThrowsUncheckedException",
     summary = "Unchecked exceptions do not need to be declared in the method signature.",
     severity = SUGGESTION,
-    generateExamplesFromTestCases = false,
-    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
+    generateExamplesFromTestCases = false)
 public class ThrowsUncheckedException extends BugChecker implements MethodTreeMatcher {
   @Override
   public Description matchMethod(MethodTree tree, VisitorState state) {

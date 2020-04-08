@@ -25,7 +25,6 @@ import static com.google.errorprone.matchers.Matchers.annotations;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.BugPattern.StandardTags;
 import com.google.errorprone.VisitorState;
@@ -51,8 +50,7 @@ import java.util.List;
         "Qualifiers/Scope annotations on @Inject methods don't have any effect."
             + " Move the qualifier annotation to the binding location.",
     severity = SeverityLevel.WARNING,
-    tags = StandardTags.LIKELY_ERROR,
-    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
+    tags = StandardTags.LIKELY_ERROR)
 public class QualifierOrScopeOnInjectMethod extends BugChecker implements MethodTreeMatcher {
 
   private static final MultiMatcher<MethodTree, AnnotationTree> QUALIFIER_ANNOTATION_FINDER =

@@ -28,7 +28,6 @@ import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
 import static java.util.stream.Collectors.joining;
 
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
@@ -65,7 +64,6 @@ import javax.lang.model.element.Modifier;
     tags = STYLE,
     linkType = CUSTOM,
     link = "http://google.github.io/styleguide/javaguide.html#s7.2-summary-fragment",
-    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION,
     documentSuppression = false)
 public final class MissingSummary extends BugChecker
     implements ClassTreeMatcher, MethodTreeMatcher, VariableTreeMatcher {

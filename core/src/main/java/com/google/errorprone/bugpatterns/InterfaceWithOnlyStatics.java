@@ -21,7 +21,6 @@ import static com.google.errorprone.bugpatterns.inject.dagger.DaggerAnnotations.
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
@@ -50,8 +49,7 @@ import javax.lang.model.element.Modifier;
     summary =
         "This interface only contains static fields and methods; consider making it a final class "
             + "instead to prevent subclassing.",
-    severity = SeverityLevel.WARNING,
-    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
+    severity = SeverityLevel.WARNING)
 public final class InterfaceWithOnlyStatics extends BugChecker implements ClassTreeMatcher {
   @Override
   public Description matchClass(ClassTree tree, VisitorState state) {

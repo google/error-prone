@@ -30,7 +30,6 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
-import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.bugpatterns.ArrayEquals;
 import com.google.errorprone.bugpatterns.BadShiftAmount;
 import com.google.errorprone.bugpatterns.BugChecker;
@@ -367,8 +366,7 @@ public class ErrorProneJavaCompilerTest {
               + " function by flipping bits in a single long[].",
       explanation = "",
       severity = ERROR,
-      disableable = false,
-      providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
+      disableable = false)
   public static class DeleteMethod extends BugChecker implements ClassTreeMatcher {
     @Override
     public Description matchClass(ClassTree tree, VisitorState state) {

@@ -34,7 +34,6 @@ import com.google.common.collect.ImmutableCollection;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.CompilationUnitTreeMatcher;
@@ -80,8 +79,7 @@ import javax.lang.model.type.TypeKind;
     summary =
         "This method returns both mutable and immutable collections or maps from different "
             + "paths. This may be confusing for users of the method.",
-    severity = SeverityLevel.WARNING,
-    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
+    severity = SeverityLevel.WARNING)
 public final class MixedMutabilityReturnType extends BugChecker
     implements CompilationUnitTreeMatcher {
 

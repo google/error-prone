@@ -23,7 +23,6 @@ import static com.google.errorprone.matchers.Matchers.isType;
 
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.AnnotationTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
@@ -49,8 +48,7 @@ import javax.lang.model.element.Modifier;
 @BugPattern(
     name = "MissingSuperCall",
     summary = "Overriding method is missing a call to overridden super method",
-    severity = ERROR,
-    providesFix = ProvidesFix.NO_FIX)
+    severity = ERROR)
 // TODO(eaftan): Add support for JDK methods that cannot be annotated, such as
 // java.lang.Object#finalize and java.lang.Object#clone.
 public class MissingSuperCall extends BugChecker

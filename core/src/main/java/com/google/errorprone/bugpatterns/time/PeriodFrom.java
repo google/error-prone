@@ -20,7 +20,6 @@ import static com.google.errorprone.matchers.Matchers.isSameType;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
 
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
@@ -44,8 +43,7 @@ import java.time.Duration;
     explanation =
         "Period.from(TemporalAmount) will always throw a DateTimeException when "
             + "passed a Duration and return itself when passed a Period.",
-    severity = ERROR,
-    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
+    severity = ERROR)
 public final class PeriodFrom extends BugChecker implements MethodInvocationTreeMatcher {
 
   private static final Matcher<ExpressionTree> PERIOD_FROM =

@@ -15,7 +15,6 @@
  */
 package com.google.errorprone.bugpatterns.time;
 
-import static com.google.errorprone.BugPattern.ProvidesFix.NO_FIX;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.not;
@@ -38,8 +37,7 @@ import com.sun.source.tree.MethodInvocationTree;
         "Joda-Time's ConverterManager makes the semantics of DateTime/Instant/etc construction"
             + " subject to global static state. If you need to define your own converters, use"
             + " a helper.",
-    severity = WARNING,
-    providesFix = NO_FIX)
+    severity = WARNING)
 public final class JodaTimeConverterManager extends BugChecker
     implements MethodInvocationTreeMatcher {
 

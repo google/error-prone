@@ -19,7 +19,6 @@ package com.google.errorprone.bugpatterns.inject.dagger;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.ReturnTreeMatcher;
@@ -43,8 +42,7 @@ import com.sun.tools.javac.code.Symbol.MethodSymbol;
 @BugPattern(
     name = "DaggerProvidesNull",
     summary = "Dagger @Provides methods may not return null unless annotated with @Nullable",
-    severity = ERROR,
-    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
+    severity = ERROR)
 public class ProvidesNull extends BugChecker implements ReturnTreeMatcher {
 
   /**

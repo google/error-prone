@@ -21,7 +21,6 @@ import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
 import static org.junit.Assert.fail;
 
 import com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode;
-import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.AnnotationTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.CompilationUnitTreeMatcher;
@@ -191,8 +190,7 @@ public class BugCheckerRefactoringTestHelperTest {
       name = "ReturnNullRefactoring",
       summary = "Mock refactoring that replaces all returns with 'return null;' statement.",
       explanation = "For test purposes only.",
-      severity = SUGGESTION,
-      providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
+      severity = SUGGESTION)
   public static class ReturnNullRefactoring extends BugChecker implements ReturnTreeMatcher {
     @Override
     public Description matchReturn(ReturnTree tree, VisitorState state) {
@@ -204,8 +202,7 @@ public class BugCheckerRefactoringTestHelperTest {
       name = "RemoveAnnotationRefactoring",
       summary = "Mock refactoring that removes all annotations declared in package bar ",
       explanation = "For test purposes only.",
-      severity = SUGGESTION,
-      providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
+      severity = SUGGESTION)
   public static class RemoveAnnotationRefactoring extends BugChecker
       implements AnnotationTreeMatcher {
 
@@ -252,8 +249,7 @@ public class BugCheckerRefactoringTestHelperTest {
       name = "ImportArrayList",
       summary = "Mock refactoring that imports an ArrayList",
       explanation = "For test purposes only.",
-      severity = SUGGESTION,
-      providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
+      severity = SUGGESTION)
   public static class ImportArrayList extends BugChecker implements CompilationUnitTreeMatcher {
 
     @Override

@@ -15,7 +15,6 @@
  */
 package com.google.errorprone.bugpatterns.time;
 
-import static com.google.errorprone.BugPattern.ProvidesFix.REQUIRES_HUMAN_ATTENTION;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 
 import com.google.common.collect.Iterables;
@@ -41,8 +40,7 @@ import com.sun.tools.javac.tree.JCTree;
         "Joda-Time's 'instant.withMillis(long)' method is often a source of bugs because it "
             + "doesn't mutate the current instance but rather returns a new immutable Instant "
             + "instance. Please use new Instant(long) instead.",
-    severity = WARNING,
-    providesFix = REQUIRES_HUMAN_ATTENTION)
+    severity = WARNING)
 public final class JodaInstantWithMillis extends BugChecker implements MethodInvocationTreeMatcher {
   private static final Matcher<ExpressionTree> MATCHER =
       Matchers.allOf(
