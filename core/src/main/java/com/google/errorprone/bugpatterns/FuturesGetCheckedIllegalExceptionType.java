@@ -30,7 +30,6 @@ import static javax.lang.model.element.Modifier.PUBLIC;
 import com.google.common.collect.Iterables;
 import com.google.common.util.concurrent.Futures;
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.fixes.Fix;
@@ -56,8 +55,7 @@ import java.util.List;
 @BugPattern(
     name = "FuturesGetCheckedIllegalExceptionType",
     summary = "Futures.getChecked requires a checked exception type with a standard constructor.",
-    severity = ERROR,
-    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
+    severity = ERROR)
 public final class FuturesGetCheckedIllegalExceptionType extends BugChecker
     implements MethodInvocationTreeMatcher {
   @Override

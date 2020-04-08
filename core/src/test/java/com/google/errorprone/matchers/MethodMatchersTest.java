@@ -23,7 +23,6 @@ import static com.google.errorprone.matchers.Matchers.staticMethod;
 import static com.google.errorprone.matchers.method.MethodMatchers.constructor;
 
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.CompilationTestHelper;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
@@ -45,11 +44,7 @@ import org.junit.runners.JUnit4;
 public class MethodMatchersTest {
 
   /** A bugchecker to test constructor matching. */
-  @BugPattern(
-      name = "ConstructorDeleter",
-      summary = "Deletes constructors",
-      severity = ERROR,
-      providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
+  @BugPattern(name = "ConstructorDeleter", summary = "Deletes constructors", severity = ERROR)
   public static class ConstructorDeleter extends BugChecker
       implements BugChecker.MethodInvocationTreeMatcher,
           BugChecker.NewClassTreeMatcher,

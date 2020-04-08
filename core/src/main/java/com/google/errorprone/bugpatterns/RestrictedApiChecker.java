@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.annotations.RestrictedApi;
@@ -50,8 +49,7 @@ import javax.lang.model.type.MirroredTypesException;
     summary = "Check for non-whitelisted callers to RestrictedApiChecker.",
     severity = SeverityLevel.ERROR,
     suppressionAnnotations = {},
-    disableable = false,
-    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
+    disableable = false)
 public class RestrictedApiChecker extends BugChecker
     implements MethodInvocationTreeMatcher,
         NewClassTreeMatcher,

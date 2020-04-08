@@ -22,7 +22,6 @@ import static com.google.errorprone.matchers.method.MethodMatchers.instanceMetho
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
 
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.VariableTreeMatcher;
@@ -71,7 +70,6 @@ import javax.lang.model.element.ElementKind;
         "This variable is of boxed type, but equivalent semantics can be achieved using the"
             + " corresponding primitive type, which avoids the cost of constructing an unnecessary"
             + " object.",
-    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION,
     severity = SeverityLevel.SUGGESTION)
 public class UnnecessaryBoxedVariable extends BugChecker implements VariableTreeMatcher {
   private static final Matcher<ExpressionTree> VALUE_OF_MATCHER =

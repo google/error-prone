@@ -14,7 +14,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.ProvidesFix.REQUIRES_HUMAN_ATTENTION;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.instanceMethod;
@@ -45,7 +44,6 @@ import java.util.stream.Collectors;
 @BugPattern(
     name = "WithSignatureDiscouraged",
     summary = "withSignature is discouraged. Prefer .named and/or .withParameters where possible.",
-    providesFix = REQUIRES_HUMAN_ATTENTION,
     severity = WARNING)
 public class WithSignatureDiscouraged extends BugChecker implements MethodInvocationTreeMatcher {
   private static final Matcher<ExpressionTree> WITH_SIGNATURE =

@@ -24,7 +24,6 @@ import static com.google.errorprone.matchers.Matchers.isArrayType;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
 
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.VariableTreeMatcher;
 import com.google.errorprone.matchers.Description;
@@ -42,8 +41,7 @@ import javax.lang.model.element.Modifier;
         "Non-empty arrays are mutable, so this `public static final` array is not a constant"
             + " and can be modified by clients of this class.  Prefer an ImmutableList, or provide"
             + " an accessor method that returns a defensive copy.",
-    severity = WARNING,
-    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
+    severity = WARNING)
 public class MutablePublicArray extends BugChecker implements VariableTreeMatcher {
 
   private static final Matcher<VariableTree> MATCHER =

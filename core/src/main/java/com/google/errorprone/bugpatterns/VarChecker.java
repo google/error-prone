@@ -20,7 +20,6 @@ import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.util.ASTHelpers.isConsideredFinal;
 
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.annotations.Var;
 import com.google.errorprone.bugpatterns.BugChecker.VariableTreeMatcher;
@@ -46,8 +45,7 @@ import javax.lang.model.element.Modifier;
 @BugPattern(
     name = "Var",
     summary = "Non-constant variable missing @Var annotation",
-    severity = WARNING,
-    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
+    severity = WARNING)
 public class VarChecker extends BugChecker implements VariableTreeMatcher {
 
   private static final String UNNECESSARY_FINAL = "Unnecessary 'final' modifier.";

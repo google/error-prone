@@ -15,7 +15,6 @@
  */
 package com.google.errorprone.bugpatterns.time;
 
-import static com.google.errorprone.BugPattern.ProvidesFix.REQUIRES_HUMAN_ATTENTION;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 
 import com.google.common.collect.Iterables;
@@ -45,8 +44,7 @@ import com.sun.tools.javac.tree.JCTree;
             + "Please use Duration.millis(long) instead. If your Duration is better expressed in "
             + "terms of other units, use standardSeconds(long), standardMinutes(long), "
             + "standardHours(long), or standardDays(long) instead.",
-    severity = WARNING,
-    providesFix = REQUIRES_HUMAN_ATTENTION)
+    severity = WARNING)
 public final class JodaDurationWithMillis extends BugChecker
     implements MethodInvocationTreeMatcher {
   private static final Matcher<ExpressionTree> MATCHER =

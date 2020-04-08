@@ -18,7 +18,6 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.common.collect.Iterables.getOnlyElement;
-import static com.google.errorprone.BugPattern.ProvidesFix.REQUIRES_HUMAN_ATTENTION;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.bugpatterns.ImplementAssertionWithChaining.makeCheckDescription;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
@@ -72,8 +71,7 @@ import javax.annotation.Nullable;
     summary =
         "Inside a Subject, use check(...) instead of assert*() to preserve user-supplied messages"
             + " and other settings.",
-    severity = WARNING,
-    providesFix = REQUIRES_HUMAN_ATTENTION)
+    severity = WARNING)
 public final class ChainedAssertionLosesContext extends BugChecker
     implements MethodInvocationTreeMatcher {
   @Override

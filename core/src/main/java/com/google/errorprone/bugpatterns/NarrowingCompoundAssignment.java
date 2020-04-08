@@ -22,7 +22,6 @@ import static com.google.errorprone.util.Signatures.prettyType;
 
 import com.google.common.base.Optional;
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.BugPattern.StandardTags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.CompoundAssignmentTreeMatcher;
@@ -43,8 +42,7 @@ import com.sun.tools.javac.tree.JCTree.JCBinary;
     name = "NarrowingCompoundAssignment",
     summary = "Compound assignments may hide dangerous casts",
     severity = WARNING,
-    tags = StandardTags.FRAGILE_CODE,
-    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
+    tags = StandardTags.FRAGILE_CODE)
 public class NarrowingCompoundAssignment extends BugChecker
     implements CompoundAssignmentTreeMatcher {
 

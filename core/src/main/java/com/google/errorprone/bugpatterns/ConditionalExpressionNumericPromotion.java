@@ -21,7 +21,6 @@ import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.ConditionalExpressionTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
@@ -40,8 +39,7 @@ import com.sun.tools.javac.code.Type;
         "A conditional expression with numeric operands of differing types will perform binary "
             + "numeric promotion of the operands; when these operands are of reference types, "
             + "the expression's result may not be of the expected type.",
-    severity = ERROR,
-    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
+    severity = ERROR)
 public class ConditionalExpressionNumericPromotion extends BugChecker
     implements ConditionalExpressionTreeMatcher {
 

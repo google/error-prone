@@ -26,7 +26,6 @@ import static javax.lang.model.element.Modifier.PROTECTED;
 
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
@@ -48,8 +47,7 @@ import javax.lang.model.element.Modifier;
 @BugPattern(
     name = "ProtectedMembersInFinalClass",
     summary = "Protected members in final classes can be package-private",
-    severity = WARNING,
-    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
+    severity = WARNING)
 public class ProtectedMembersInFinalClass extends BugChecker implements ClassTreeMatcher {
 
   private static final Matcher<ClassTree> HAS_FINAL = hasModifier(FINAL);

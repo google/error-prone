@@ -30,7 +30,6 @@ import static com.sun.source.tree.Tree.Kind.IF;
 
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.NewClassTreeMatcher;
 import com.google.errorprone.fixes.Fix;
@@ -52,8 +51,7 @@ import com.sun.source.tree.Tree;
     name = "DeadException",
     altNames = "ThrowableInstanceNeverThrown",
     summary = "Exception created but not thrown",
-    severity = ERROR,
-    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
+    severity = ERROR)
 public class DeadException extends BugChecker implements NewClassTreeMatcher {
 
   public static final Matcher<Tree> MATCHER =

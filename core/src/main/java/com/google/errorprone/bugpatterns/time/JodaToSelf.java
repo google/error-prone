@@ -17,7 +17,6 @@ package com.google.errorprone.bugpatterns.time;
 
 import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.common.collect.Iterables.getOnlyElement;
-import static com.google.errorprone.BugPattern.ProvidesFix.REQUIRES_HUMAN_ATTENTION;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 
 import com.google.common.collect.ImmutableSet;
@@ -46,8 +45,7 @@ import com.sun.source.tree.NewClassTree;
         "Joda-Time's DateTime.toDateTime(), Duration.toDuration(), Instant.toInstant(), "
             + "Interval.toInterval(), and Period.toPeriod() are always unnecessary, since they "
             + "simply 'return this'. There is no reason to ever call them.",
-    severity = ERROR,
-    providesFix = REQUIRES_HUMAN_ATTENTION)
+    severity = ERROR)
 public final class JodaToSelf extends BugChecker
     implements MethodInvocationTreeMatcher, NewClassTreeMatcher {
 

@@ -19,7 +19,6 @@ package com.google.errorprone.bugpatterns.nullness;
 import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
 
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.ArrayAccessTreeMatcher;
@@ -46,8 +45,7 @@ import javax.lang.model.element.ElementKind;
 @BugPattern(
     name = "ParameterNotNullable",
     summary = "Method parameters that aren't checked for null shouldn't be annotated @Nullable",
-    severity = SUGGESTION,
-    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
+    severity = SUGGESTION)
 public class ParameterNotNullable extends BugChecker
     implements MemberSelectTreeMatcher, ArrayAccessTreeMatcher {
 

@@ -15,7 +15,6 @@
  */
 package com.google.errorprone.bugpatterns.time;
 
-import static com.google.errorprone.BugPattern.ProvidesFix.NO_FIX;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.argument;
@@ -42,8 +41,7 @@ import com.sun.source.tree.MethodInvocationTree;
         "LocalDate.plus() and minus() does not work with Durations. LocalDate represents civil"
             + " time (years/months/days), so java.time.Period is the appropriate thing to add or"
             + " subtract instead.",
-    severity = ERROR,
-    providesFix = NO_FIX)
+    severity = ERROR)
 public final class LocalDateTemporalAmount extends BugChecker
     implements MethodInvocationTreeMatcher {
 

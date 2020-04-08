@@ -24,7 +24,6 @@ import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.isSameType;
 
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.BugPattern.StandardTags;
 import com.google.errorprone.VisitorState;
@@ -52,8 +51,7 @@ import com.sun.tools.javac.util.Context;
     name = "BoxedPrimitiveConstructor",
     summary = "valueOf or autoboxing provides better time and space performance",
     severity = SeverityLevel.WARNING,
-    tags = StandardTags.PERFORMANCE,
-    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
+    tags = StandardTags.PERFORMANCE)
 public class BoxedPrimitiveConstructor extends BugChecker implements NewClassTreeMatcher {
 
   private static final Matcher<Tree> TO_STRING =

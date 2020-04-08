@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.common.collect.Iterables.getLast;
-import static com.google.errorprone.BugPattern.ProvidesFix.NO_FIX;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
@@ -58,8 +57,7 @@ import javax.lang.model.element.ElementKind;
 @BugPattern(
     name = "MissingTestCall",
     summary = "A terminating method call is required for a test helper to have any effect.",
-    severity = ERROR,
-    providesFix = NO_FIX)
+    severity = ERROR)
 public final class MissingTestCall extends BugChecker implements MethodTreeMatcher {
 
   private static final MethodClassMatcher EQUALS_TESTER =

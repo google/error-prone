@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.common.collect.Streams.stream;
-import static com.google.errorprone.BugPattern.ProvidesFix.NO_FIX;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.predicates.TypePredicates.allOf;
 import static com.google.errorprone.predicates.TypePredicates.isDescendantOf;
@@ -44,8 +43,7 @@ import java.util.Optional;
         "toString() on lite protos will not generate a useful representation of the proto from"
             + " optimized builds. Consider whether using some subset of fields instead would"
             + " provide useful information.",
-    severity = WARNING,
-    providesFix = NO_FIX)
+    severity = WARNING)
 public final class LiteProtoToString extends AbstractToString {
   private static final String LITE_ENUM_MESSAGE =
       "toString() on lite proto enums will generate different representations of the value from"

@@ -24,7 +24,6 @@ import static com.google.errorprone.matchers.Matchers.argumentCount;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
 
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.matchers.Description;
@@ -42,8 +41,7 @@ import javax.lang.model.type.UnionType;
 @BugPattern(
     name = "ThrowIfUncheckedKnownChecked",
     summary = "throwIfUnchecked(knownCheckedException) is a no-op.",
-    severity = ERROR,
-    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
+    severity = ERROR)
 public class ThrowIfUncheckedKnownChecked extends BugChecker
     implements MethodInvocationTreeMatcher {
 

@@ -22,7 +22,6 @@ import static com.google.errorprone.matchers.method.MethodMatchers.instanceMetho
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
 
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.BugPattern.StandardTags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
@@ -43,8 +42,7 @@ import java.util.regex.Pattern;
     name = "TruthConstantAsserts",
     summary = "Truth Library assert is called on a constant.",
     severity = WARNING,
-    tags = StandardTags.FRAGILE_CODE,
-    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
+    tags = StandardTags.FRAGILE_CODE)
 public class TruthConstantAsserts extends BugChecker implements MethodInvocationTreeMatcher {
 
   private static final Matcher<ExpressionTree> ASSERT_THAT =

@@ -24,7 +24,6 @@ import static com.google.errorprone.matchers.Matchers.not;
 
 import com.google.common.base.Joiner;
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
@@ -51,8 +50,7 @@ import javax.lang.model.element.Modifier;
     summary =
         "Make toString(), hashCode() and equals() final in AutoValue classes"
             + ", so it is clear to readers that AutoValue is not overriding them",
-    severity = WARNING,
-    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
+    severity = WARNING)
 public class AutoValueFinalMethods extends BugChecker implements ClassTreeMatcher {
 
   private static final String MEMOIZED = "com.google.auto.value.extension.memoized.Memoized";

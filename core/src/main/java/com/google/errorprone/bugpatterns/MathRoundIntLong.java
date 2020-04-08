@@ -25,7 +25,6 @@ import static com.google.errorprone.matchers.Matchers.staticMethod;
 
 import com.google.common.collect.Iterables;
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
@@ -47,8 +46,7 @@ import com.sun.source.tree.MethodInvocationTree;
         "Math.round() called with an integer or long type results in truncation"
             + " because Math.round only accepts floats or doubles and some integers and longs can't"
             + " be represented with float.",
-    severity = ERROR,
-    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
+    severity = ERROR)
 public final class MathRoundIntLong extends BugChecker implements MethodInvocationTreeMatcher {
   private static final Matcher<ExpressionTree> MATH_ROUND_CALLS =
       staticMethod().onClass("java.lang.Math").named("round");

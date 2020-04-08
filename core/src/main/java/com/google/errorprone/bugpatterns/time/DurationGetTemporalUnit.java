@@ -20,7 +20,6 @@ import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterables;
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
@@ -51,8 +50,7 @@ import java.util.Optional;
             + "`duration.get(ChronoUnit)`. Instead, please use `duration.toNanos()`, "
             + "`Durations.toMicros(duration)`, `duration.toMillis()`, `duration.getSeconds()`, "
             + "`duration.toMinutes()`, `duration.toHours()`, or `duration.toDays()`.",
-    severity = ERROR,
-    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
+    severity = ERROR)
 public final class DurationGetTemporalUnit extends BugChecker
     implements MethodInvocationTreeMatcher {
   private static final EnumSet<ChronoUnit> INVALID_TEMPORAL_UNITS =

@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.ProvidesFix.REQUIRES_HUMAN_ATTENTION;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 
@@ -34,8 +33,7 @@ import com.sun.source.tree.Tree;
 @BugPattern(
     name = "XorPower",
     summary = "The `^` operator is binary XOR, not a power operator.",
-    severity = ERROR,
-    providesFix = REQUIRES_HUMAN_ATTENTION)
+    severity = ERROR)
 public class XorPower extends BugChecker implements BinaryTreeMatcher {
   @Override
   public Description matchBinary(BinaryTree tree, VisitorState state) {

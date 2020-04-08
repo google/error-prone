@@ -22,7 +22,6 @@ import static com.google.errorprone.matchers.InjectMatchers.IS_APPLICATION_OF_JA
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.AnnotationTreeMatcher;
@@ -34,8 +33,7 @@ import com.sun.source.tree.AnnotationTree;
 @BugPattern(
     name = "JavaxInjectOnFinalField",
     summary = "@javax.inject.Inject cannot be put on a final field.",
-    severity = WARNING,
-    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
+    severity = WARNING)
 public class JavaxInjectOnFinalField extends BugChecker implements AnnotationTreeMatcher {
 
   @Override

@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
-import static com.google.errorprone.BugPattern.ProvidesFix.REQUIRES_HUMAN_ATTENTION;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.findSuperMethod;
@@ -52,8 +51,7 @@ import javax.lang.model.element.Modifier;
 @BugPattern(
     name = "RedundantOverride",
     summary = "This overriding method is redundant, and can be removed.",
-    severity = WARNING,
-    providesFix = REQUIRES_HUMAN_ATTENTION)
+    severity = WARNING)
 public final class RedundantOverride extends BugChecker implements MethodTreeMatcher {
 
   @Override

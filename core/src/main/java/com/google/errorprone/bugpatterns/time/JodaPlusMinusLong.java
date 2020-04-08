@@ -15,7 +15,6 @@
  */
 package com.google.errorprone.bugpatterns.time;
 
-import static com.google.errorprone.BugPattern.ProvidesFix.REQUIRES_HUMAN_ATTENTION;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 
 import com.google.common.collect.ImmutableSet;
@@ -49,8 +48,7 @@ import java.util.List;
         "JodaTime's type.plus(long) and type.minus(long) methods are often a source of bugs "
             + "because the units of the parameters are ambiguous. Please use "
             + "type.plus(Duration.millis(long)) or type.minus(Duration.millis(long)) instead.",
-    severity = WARNING,
-    providesFix = REQUIRES_HUMAN_ATTENTION)
+    severity = WARNING)
 public final class JodaPlusMinusLong extends BugChecker implements MethodInvocationTreeMatcher {
 
   private static final ImmutableSet<String> TYPES =

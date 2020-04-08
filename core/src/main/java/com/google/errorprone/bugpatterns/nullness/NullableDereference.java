@@ -20,7 +20,6 @@ import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.MemberSelectTreeMatcher;
@@ -58,8 +57,7 @@ import javax.lang.model.type.TypeVariable;
 @BugPattern(
     name = "NullableDereference",
     summary = "Dereference of possibly-null value",
-    severity = WARNING,
-    providesFix = ProvidesFix.NO_FIX)
+    severity = WARNING)
 public class NullableDereference extends BugChecker
     implements MemberSelectTreeMatcher, MethodInvocationTreeMatcher, NewClassTreeMatcher {
 

@@ -18,7 +18,6 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.common.collect.Iterables.getLast;
 import static com.google.common.collect.MoreCollectors.toOptional;
-import static com.google.errorprone.BugPattern.ProvidesFix.REQUIRES_HUMAN_ATTENTION;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.BugPattern.StandardTags.FRAGILE_CODE;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
@@ -52,9 +51,8 @@ import javax.annotation.Nullable;
         "This method passes a pair of parameters through to String.format, but the enclosing"
             + " method wasn't annotated @FormatMethod. Doing so gives compile-time rather than"
             + " run-time protection against malformed format strings.",
-    severity = WARNING,
     tags = FRAGILE_CODE,
-    providesFix = REQUIRES_HUMAN_ATTENTION)
+    severity = WARNING)
 public final class AnnotateFormatMethod extends BugChecker implements MethodInvocationTreeMatcher {
 
   private static final String REORDER =

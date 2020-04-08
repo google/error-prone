@@ -41,7 +41,6 @@ import static com.google.errorprone.matchers.method.MethodMatchers.anyMethod;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
 
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.TryTreeMatcher;
 import com.google.errorprone.fixes.Fix;
@@ -84,8 +83,7 @@ import javax.lang.model.element.Name;
     name = "MissingFail",
     altNames = "missing-fail",
     summary = "Not calling fail() when expecting an exception masks bugs",
-    severity = WARNING,
-    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
+    severity = WARNING)
 public class MissingFail extends BugChecker implements TryTreeMatcher {
 
   // Many test writers don't seem to know about `fail()`. They instead use synonyms of varying

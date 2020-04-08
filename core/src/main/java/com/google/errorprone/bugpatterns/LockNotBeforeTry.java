@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.ProvidesFix.REQUIRES_HUMAN_ATTENTION;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.BugPattern.StandardTags.FRAGILE_CODE;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
@@ -51,8 +50,7 @@ import com.sun.source.util.TreeScanner;
     summary =
         "Calls to Lock#lock should be immediately followed by a try block which releases the lock.",
     severity = WARNING,
-    tags = FRAGILE_CODE,
-    providesFix = REQUIRES_HUMAN_ATTENTION)
+    tags = FRAGILE_CODE)
 public final class LockNotBeforeTry extends BugChecker implements MethodInvocationTreeMatcher {
 
   private static final Matcher<ExpressionTree> LOCK =

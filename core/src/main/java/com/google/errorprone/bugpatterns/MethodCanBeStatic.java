@@ -24,7 +24,6 @@ import static com.google.errorprone.matchers.Matchers.SERIALIZATION_METHODS;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.CompilationUnitTreeMatcher;
@@ -56,8 +55,7 @@ import javax.lang.model.element.Modifier;
     name = "MethodCanBeStatic",
     altNames = "static-method",
     summary = "A private method that does not reference the enclosing instance can be static",
-    severity = SUGGESTION,
-    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
+    severity = SUGGESTION)
 public class MethodCanBeStatic extends BugChecker implements CompilationUnitTreeMatcher {
   private final FindingOutputStyle findingOutputStyle;
 

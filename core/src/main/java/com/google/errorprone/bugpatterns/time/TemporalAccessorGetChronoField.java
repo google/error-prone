@@ -15,7 +15,6 @@
  */
 package com.google.errorprone.bugpatterns.time;
 
-import static com.google.errorprone.BugPattern.ProvidesFix.NO_FIX;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 
 import com.google.common.collect.ImmutableList;
@@ -74,8 +73,7 @@ import java.util.Optional;
         "TemporalAccessor.get(ChronoField) only works for certain values of ChronoField. E.g., "
             + "DayOfWeek only supports DAY_OF_WEEK. All other values are guaranteed to throw an "
             + "UnsupportedTemporalTypeException.",
-    severity = ERROR,
-    providesFix = NO_FIX)
+    severity = ERROR)
 public final class TemporalAccessorGetChronoField extends BugChecker
     implements MethodInvocationTreeMatcher {
 

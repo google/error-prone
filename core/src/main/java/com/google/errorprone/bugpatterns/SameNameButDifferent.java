@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.ProvidesFix.REQUIRES_HUMAN_ATTENTION;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.findPathFromEnclosingNodeToTopLevel;
@@ -55,7 +54,6 @@ import javax.lang.model.element.ElementKind;
 @BugPattern(
     name = "SameNameButDifferent",
     summary = "This type name shadows another in a way that may be confusing.",
-    providesFix = REQUIRES_HUMAN_ATTENTION,
     severity = WARNING)
 public final class SameNameButDifferent extends BugChecker implements CompilationUnitTreeMatcher {
   @Override

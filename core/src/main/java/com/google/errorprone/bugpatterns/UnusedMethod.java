@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.common.collect.Iterables.getLast;
-import static com.google.errorprone.BugPattern.ProvidesFix.REQUIRES_HUMAN_ATTENTION;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Matchers.SERIALIZATION_METHODS;
 import static com.google.errorprone.suppliers.Suppliers.typeFromString;
@@ -66,7 +65,6 @@ import javax.lang.model.element.Name;
     name = "UnusedMethod",
     altNames = {"Unused", "unused", "UnusedParameters"},
     summary = "Unused.",
-    providesFix = REQUIRES_HUMAN_ATTENTION,
     severity = WARNING,
     documentSuppression = false)
 public final class UnusedMethod extends BugChecker implements CompilationUnitTreeMatcher {

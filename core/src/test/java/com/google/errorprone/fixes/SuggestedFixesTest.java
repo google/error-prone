@@ -18,7 +18,6 @@ package com.google.errorprone.fixes;
 
 import static com.google.common.truth.Truth.assertThat;
 import static com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH;
-import static com.google.errorprone.BugPattern.ProvidesFix.REQUIRES_HUMAN_ATTENTION;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.isSameType;
@@ -31,7 +30,6 @@ import com.google.common.collect.ImmutableMap;
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode;
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.CompilationTestHelper;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
@@ -92,11 +90,7 @@ public class SuggestedFixesTest {
   }
 
   /** Test checker that adds or removes modifiers. */
-  @BugPattern(
-      name = "EditModifiers",
-      summary = "Edits modifiers",
-      severity = ERROR,
-      providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
+  @BugPattern(name = "EditModifiers", summary = "Edits modifiers", severity = ERROR)
   public static class EditModifiersChecker extends BugChecker
       implements VariableTreeMatcher, MethodTreeMatcher {
 
@@ -263,11 +257,7 @@ public class SuggestedFixesTest {
   }
 
   /** Test checker that casts returned expression. */
-  @BugPattern(
-      name = "CastReturn",
-      severity = ERROR,
-      summary = "Adds casts to returned expressions",
-      providesFix = REQUIRES_HUMAN_ATTENTION)
+  @BugPattern(name = "CastReturn", severity = ERROR, summary = "Adds casts to returned expressions")
   public static class CastReturn extends BugChecker implements ReturnTreeMatcher {
 
     @Override
@@ -286,11 +276,7 @@ public class SuggestedFixesTest {
   }
 
   /** Test checker that casts returned expression. */
-  @BugPattern(
-      name = "CastReturn",
-      severity = ERROR,
-      summary = "Adds casts to returned expressions",
-      providesFix = REQUIRES_HUMAN_ATTENTION)
+  @BugPattern(name = "CastReturn", severity = ERROR, summary = "Adds casts to returned expressions")
   public static class CastReturnFullType extends BugChecker implements ReturnTreeMatcher {
 
     @Override
@@ -423,11 +409,7 @@ public class SuggestedFixesTest {
   }
 
   /** A test check that adds an annotation to all return types. */
-  @BugPattern(
-      name = "AddAnnotation",
-      summary = "Add an annotation",
-      severity = ERROR,
-      providesFix = REQUIRES_HUMAN_ATTENTION)
+  @BugPattern(name = "AddAnnotation", summary = "Add an annotation", severity = ERROR)
   public static class AddAnnotation extends BugChecker implements BugChecker.MethodTreeMatcher {
     @Override
     public Description matchMethod(MethodTree tree, VisitorState state) {
@@ -586,8 +568,7 @@ public class SuggestedFixesTest {
   @BugPattern(
       name = "ReplaceReturnType",
       summary = "Change the method return type",
-      severity = ERROR,
-      providesFix = REQUIRES_HUMAN_ATTENTION)
+      severity = ERROR)
   public static class ReplaceReturnType extends BugChecker implements BugChecker.MethodTreeMatcher {
     private final String newReturnType;
 
@@ -619,8 +600,7 @@ public class SuggestedFixesTest {
   @BugPattern(
       name = "ReplaceReturnTypeString",
       summary = "Change the method return type",
-      severity = ERROR,
-      providesFix = REQUIRES_HUMAN_ATTENTION)
+      severity = ERROR)
   public static class ReplaceReturnTypeString extends BugChecker
       implements BugChecker.MethodTreeMatcher {
     private final String newReturnType;
@@ -786,8 +766,7 @@ public class SuggestedFixesTest {
   @BugPattern(
       name = "ReplaceMethodInvocations",
       summary = "Replaces checkNotNull with verifyNotNull.",
-      severity = ERROR,
-      providesFix = REQUIRES_HUMAN_ATTENTION)
+      severity = ERROR)
   public static class ReplaceMethodInvocations extends BugChecker
       implements BugChecker.MethodInvocationTreeMatcher {
     private static final Matcher<ExpressionTree> CHECK_NOT_NULL =
@@ -893,8 +872,7 @@ public class SuggestedFixesTest {
   @BugPattern(
       name = "JavadocQualifier",
       summary = "all javadoc links should be qualified",
-      severity = ERROR,
-      providesFix = REQUIRES_HUMAN_ATTENTION)
+      severity = ERROR)
   public static class JavadocQualifier extends BugChecker implements BugChecker.ClassTreeMatcher {
     @Override
     public Description matchClass(ClassTree tree, final VisitorState state) {
@@ -943,11 +921,7 @@ public class SuggestedFixesTest {
         .doTest(TEXT_MATCH);
   }
 
-  @BugPattern(
-      name = "SuppressMe",
-      summary = "",
-      severity = ERROR,
-      providesFix = REQUIRES_HUMAN_ATTENTION)
+  @BugPattern(name = "SuppressMe", summary = "", severity = ERROR)
   static final class SuppressMe extends BugChecker
       implements LiteralTreeMatcher, VariableTreeMatcher {
     @Override
@@ -1022,11 +996,7 @@ public class SuggestedFixesTest {
         .doTest();
   }
 
-  @BugPattern(
-      name = "SuppressMeWithComment",
-      summary = "",
-      severity = ERROR,
-      providesFix = REQUIRES_HUMAN_ATTENTION)
+  @BugPattern(name = "SuppressMeWithComment", summary = "", severity = ERROR)
   static final class SuppressMeWithComment extends BugChecker implements LiteralTreeMatcher {
     private final String lineComment;
 
@@ -1114,11 +1084,7 @@ public class SuggestedFixesTest {
         .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
   }
 
-  @BugPattern(
-      name = "RemoveSuppressFromMe",
-      summary = "",
-      severity = ERROR,
-      providesFix = REQUIRES_HUMAN_ATTENTION)
+  @BugPattern(name = "RemoveSuppressFromMe", summary = "", severity = ERROR)
   static final class RemoveSuppressFromMe extends BugChecker implements LiteralTreeMatcher {
 
     @Override
@@ -1212,11 +1178,7 @@ public class SuggestedFixesTest {
   }
 
   /** A test bugchecker that deletes any field whose removal doesn't break the compilation. */
-  @BugPattern(
-      name = "CompilesWithFixChecker",
-      summary = "",
-      severity = ERROR,
-      providesFix = REQUIRES_HUMAN_ATTENTION)
+  @BugPattern(name = "CompilesWithFixChecker", summary = "", severity = ERROR)
   public static class CompilesWithFixChecker extends BugChecker implements VariableTreeMatcher {
     @Override
     public Description matchVariable(VariableTree tree, VisitorState state) {
@@ -1251,11 +1213,7 @@ public class SuggestedFixesTest {
   }
 
   /** A test bugchecker that deletes an exception from throws. */
-  @BugPattern(
-      name = "RemovesExceptionChecker",
-      summary = "",
-      severity = ERROR,
-      providesFix = REQUIRES_HUMAN_ATTENTION)
+  @BugPattern(name = "RemovesExceptionChecker", summary = "", severity = ERROR)
   public static class RemovesExceptionsChecker extends BugChecker implements MethodTreeMatcher {
 
     private final int index;
@@ -1352,11 +1310,7 @@ public class SuggestedFixesTest {
   }
 
   /** Test checker that renames variables. */
-  @BugPattern(
-      name = "RenamesVariableChecker",
-      summary = "",
-      severity = ERROR,
-      providesFix = REQUIRES_HUMAN_ATTENTION)
+  @BugPattern(name = "RenamesVariableChecker", summary = "", severity = ERROR)
   public static class RenamesVariableChecker extends BugChecker implements VariableTreeMatcher {
 
     private final String toReplace;
@@ -1554,11 +1508,7 @@ public class SuggestedFixesTest {
   }
 
   /** Test checker that removes and adds modifiers in the same fix. */
-  @BugPattern(
-      name = "RemoveAddModifier",
-      summary = "",
-      severity = ERROR,
-      providesFix = REQUIRES_HUMAN_ATTENTION)
+  @BugPattern(name = "RemoveAddModifier", summary = "", severity = ERROR)
   public static class RemoveAddModifier extends BugChecker implements ClassTreeMatcher {
 
     @Override
@@ -1584,8 +1534,7 @@ public class SuggestedFixesTest {
   @BugPattern(
       name = "PrefixAddImportCheck",
       summary = "A bugchecker for testing suggested fixes.",
-      severity = ERROR,
-      providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
+      severity = ERROR)
   public static class PrefixAddImportCheck extends BugChecker implements ClassTreeMatcher {
     @Override
     public Description matchClass(ClassTree tree, VisitorState state) {
@@ -1622,11 +1571,7 @@ public class SuggestedFixesTest {
         .isEqualTo(URI.create("file:/com/google/Foo.java"));
   }
 
-  @BugPattern(
-      name = "RenameMethodChecker",
-      summary = "RenameMethodChecker",
-      severity = ERROR,
-      providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
+  @BugPattern(name = "RenameMethodChecker", summary = "RenameMethodChecker", severity = ERROR)
   private static class RenameMethodChecker extends BugChecker
       implements MethodInvocationTreeMatcher {
     @Override
@@ -1670,8 +1615,7 @@ public class SuggestedFixesTest {
   @BugPattern(
       name = "QualifyTypeLocalClassChecker",
       summary = "QualifyTypeLocalClassChecker",
-      severity = ERROR,
-      providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
+      severity = ERROR)
   public static class QualifyTypeLocalClassChecker extends BugChecker
       implements NewClassTreeMatcher {
 

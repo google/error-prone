@@ -23,7 +23,6 @@ import static com.google.errorprone.matchers.Matchers.isSameType;
 import static com.google.errorprone.matchers.Matchers.not;
 
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
@@ -40,8 +39,7 @@ import com.sun.source.tree.MethodInvocationTree;
     explanation =
         "Period.(plus|minus)(TemporalAmount) will always throw a DateTimeException when passed a "
             + "Duration.",
-    severity = ERROR,
-    providesFix = ProvidesFix.NO_FIX)
+    severity = ERROR)
 public final class PeriodTimeMath extends BugChecker implements MethodInvocationTreeMatcher {
 
   private final Matcher<MethodInvocationTree> matcherToCheck;

@@ -16,7 +16,6 @@
 package com.google.errorprone.bugpatterns.time;
 
 import static com.google.common.collect.Sets.toImmutableEnumSet;
-import static com.google.errorprone.BugPattern.ProvidesFix.NO_FIX;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.bugpatterns.time.DurationGetTemporalUnit.getInvalidChronoUnit;
 import static com.google.errorprone.matchers.Matchers.allOf;
@@ -49,8 +48,7 @@ import java.util.Arrays;
         "Duration APIs only work for TemporalUnits with exact durations or"
             + " ChronoUnit.DAYS. E.g., Duration.of(1, ChronoUnit.YEARS) is guaranteed to throw a"
             + " DateTimeException.",
-    severity = ERROR,
-    providesFix = NO_FIX)
+    severity = ERROR)
 public final class DurationTemporalUnit extends BugChecker implements MethodInvocationTreeMatcher {
 
   private static final String DURATION = "java.time.Duration";

@@ -27,7 +27,6 @@ import static com.google.errorprone.matchers.Matchers.not;
 import static com.google.errorprone.matchers.method.MethodMatchers.constructor;
 
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.annotations.MustBeClosed;
 import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
@@ -58,8 +57,7 @@ import java.util.List;
     name = "MustBeClosedChecker",
     summary = "The result of this method must be closed.",
     severity = ERROR,
-    generateExamplesFromTestCases = false,
-    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
+    generateExamplesFromTestCases = false)
 public class MustBeClosedChecker extends AbstractMustBeClosedChecker
     implements MethodTreeMatcher,
         MethodInvocationTreeMatcher,

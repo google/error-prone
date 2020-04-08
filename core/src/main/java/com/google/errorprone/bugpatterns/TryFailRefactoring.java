@@ -27,7 +27,6 @@ import static com.sun.source.tree.Tree.Kind.UNION_TYPE;
 
 import com.google.common.collect.Iterables;
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.TryTreeMatcher;
 import com.google.errorprone.fixes.Fix;
@@ -50,8 +49,7 @@ import java.util.Optional;
     name = "TryFailRefactoring",
     summary = "Prefer assertThrows to try/fail",
     severity = SUGGESTION,
-    tags = REFACTORING,
-    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
+    tags = REFACTORING)
 public class TryFailRefactoring extends BugChecker implements TryTreeMatcher {
 
   private static final Matcher<StatementTree> FAIL_METHOD =

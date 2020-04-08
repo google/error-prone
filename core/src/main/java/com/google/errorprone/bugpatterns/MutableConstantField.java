@@ -23,7 +23,6 @@ import static com.google.errorprone.matchers.Matchers.isSameType;
 
 import com.google.common.base.Ascii;
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.VariableTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
@@ -46,8 +45,7 @@ import javax.lang.model.element.Modifier;
     summary =
         "Constant field declarations should use the immutable type (such as ImmutableList) instead"
             + " of the general collection interface type (such as List)",
-    severity = WARNING,
-    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
+    severity = WARNING)
 public final class MutableConstantField extends BugChecker implements VariableTreeMatcher {
 
   private static final String BIND = "com.google.inject.testing.fieldbinder.Bind";

@@ -28,7 +28,6 @@ import static java.util.stream.Collectors.joining;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.TryTreeMatcher;
 import com.google.errorprone.fixes.Fix;
@@ -67,8 +66,7 @@ import java.util.stream.Stream;
     name = "CatchFail",
     summary =
         "Ignoring exceptions and calling fail() is unnecessary, and makes test output less useful",
-    severity = WARNING,
-    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
+    severity = WARNING)
 public class CatchFail extends BugChecker implements TryTreeMatcher {
 
   public static final Matcher<ExpressionTree> ASSERT_WITH_MESSAGE =

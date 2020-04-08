@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.ProvidesFix.REQUIRES_HUMAN_ATTENTION;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
@@ -52,8 +51,7 @@ import java.util.Map;
 @BugPattern(
     name = "CheckNotNullMultipleTimes",
     severity = ERROR,
-    summary = "A variable was checkNotNulled multiple times. Did you mean to check something else?",
-    providesFix = REQUIRES_HUMAN_ATTENTION)
+    summary = "A variable was checkNotNulled multiple times. Did you mean to check something else?")
 public final class CheckNotNullMultipleTimes extends BugChecker implements MethodTreeMatcher {
 
   private static final Matcher<ExpressionTree> CHECK_NOT_NULL =

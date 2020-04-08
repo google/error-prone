@@ -21,7 +21,6 @@ import static com.google.errorprone.matchers.method.MethodMatchers.instanceMetho
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
 
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.BugPattern.StandardTags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.TypeCastTreeMatcher;
@@ -51,8 +50,7 @@ import java.lang.reflect.Constructor;
             + "This way, if the class is of the incorrect type,"
             + "it will throw an exception before invoking its constructor.",
     severity = WARNING,
-    tags = StandardTags.FRAGILE_CODE,
-    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
+    tags = StandardTags.FRAGILE_CODE)
 public class UnsafeReflectiveConstructionCast extends BugChecker implements TypeCastTreeMatcher {
 
   private static final Matcher<ExpressionTree> CLASS_FOR_NAME =

@@ -21,7 +21,6 @@ import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
@@ -40,8 +39,7 @@ import java.util.TimeZone;
 @BugPattern(
     name = "ThreeLetterTimeZoneID",
     summary = ThreeLetterTimeZoneID.SUMMARY,
-    severity = WARNING,
-    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
+    severity = WARNING)
 public class ThreeLetterTimeZoneID extends BugChecker implements MethodInvocationTreeMatcher {
   static final String SUMMARY =
       "Three-letter time zone identifiers are deprecated, may be ambiguous, and might not do what "

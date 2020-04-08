@@ -22,7 +22,6 @@ import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import com.google.common.collect.MoreCollectors;
 import com.google.common.collect.Streams;
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.BugPattern.StandardTags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
@@ -49,8 +48,7 @@ import javax.lang.model.element.Name;
     name = "TypeParameterShadowing",
     summary = "Type parameter declaration overrides another type parameter already declared",
     severity = WARNING,
-    tags = StandardTags.STYLE,
-    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
+    tags = StandardTags.STYLE)
 public class TypeParameterShadowing extends BugChecker
     implements MethodTreeMatcher, ClassTreeMatcher {
 

@@ -21,7 +21,6 @@ import static com.sun.source.tree.Tree.Kind.STRING_LITERAL;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.LiteralTreeMatcher;
@@ -41,8 +40,7 @@ import java.util.Map;
     name = "HardCodedSdCardPath",
     altNames = {"SdCardPath"},
     summary = "Hardcoded reference to /sdcard",
-    severity = WARNING,
-    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
+    severity = WARNING)
 public class HardCodedSdCardPath extends BugChecker implements LiteralTreeMatcher {
   // The proper ways of retrieving the "/sdcard" and "/data/data" directories.
   static final String SDCARD = "Environment.getExternalStorageDirectory().getPath()";

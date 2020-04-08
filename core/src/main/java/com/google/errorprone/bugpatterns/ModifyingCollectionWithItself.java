@@ -31,7 +31,6 @@ import static com.sun.source.tree.Tree.Kind.MEMBER_SELECT;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.fixes.Fix;
@@ -52,8 +51,7 @@ import javax.lang.model.element.ElementKind;
 @BugPattern(
     name = "ModifyingCollectionWithItself",
     summary = "Using a collection function with itself as the argument.",
-    severity = ERROR,
-    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
+    severity = ERROR)
 public class ModifyingCollectionWithItself extends BugChecker
     implements MethodInvocationTreeMatcher {
 

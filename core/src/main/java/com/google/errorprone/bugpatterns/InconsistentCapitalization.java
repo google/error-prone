@@ -23,7 +23,6 @@ import com.google.common.base.Ascii;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
@@ -49,8 +48,7 @@ import javax.lang.model.element.ElementKind;
         "It is confusing to have a field and a parameter under the same scope that differ only in "
             + "capitalization.",
     severity = WARNING,
-    generateExamplesFromTestCases = false,
-    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
+    generateExamplesFromTestCases = false)
 public class InconsistentCapitalization extends BugChecker implements ClassTreeMatcher {
 
   @Override

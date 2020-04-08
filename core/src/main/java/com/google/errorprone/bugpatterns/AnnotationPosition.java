@@ -31,7 +31,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
@@ -74,8 +73,8 @@ import javax.lang.model.element.Name;
     severity = WARNING,
     tags = STYLE,
     linkType = CUSTOM,
-    link = "https://google.github.io/styleguide/javaguide.html#s4.8.5-annotations",
-    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
+    link = "https://google.github.io/styleguide/javaguide.html#s4.8.5-annotations"
+    )
 public final class AnnotationPosition extends BugChecker
     implements ClassTreeMatcher, MethodTreeMatcher, VariableTreeMatcher {
 

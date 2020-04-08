@@ -26,7 +26,6 @@ import static com.google.errorprone.matchers.Matchers.staticEqualsInvocation;
 import static com.google.errorprone.predicates.TypePredicates.isArray;
 
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.fixes.Fix;
@@ -40,8 +39,7 @@ import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
 @BugPattern(
     name = "ArrayEquals",
     summary = "Reference equality used to compare arrays",
-    severity = ERROR,
-    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
+    severity = ERROR)
 public class ArrayEquals extends BugChecker implements MethodInvocationTreeMatcher {
   /** Matches when the equals instance method is used to compare two arrays. */
   private static final Matcher<MethodInvocationTree> instanceEqualsMatcher =

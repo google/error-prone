@@ -25,7 +25,6 @@ import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
 
 import com.google.common.base.Ascii;
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.BugPattern.StandardTags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
@@ -57,8 +56,7 @@ import javax.annotation.Nullable;
         "The actual and expected values appear to be swapped, which results in poor assertion "
             + "failure messages. The actual value should come first.",
     severity = WARNING,
-    tags = StandardTags.STYLE,
-    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
+    tags = StandardTags.STYLE)
 public final class TruthAssertExpected extends BugChecker implements MethodInvocationTreeMatcher {
 
   private static final String TRUTH = "com.google.common.truth.Truth";

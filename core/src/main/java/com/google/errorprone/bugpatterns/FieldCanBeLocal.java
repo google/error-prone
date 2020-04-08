@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.common.collect.Iterables.getLast;
-import static com.google.errorprone.BugPattern.ProvidesFix.REQUIRES_HUMAN_ATTENTION;
 import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
 import static com.google.errorprone.util.ASTHelpers.getAnnotation;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
@@ -65,7 +64,6 @@ import javax.lang.model.element.ElementKind;
     altNames = {"unused", "Unused"},
     summary = "This field can be replaced with a local variable in the methods that use it.",
     severity = SUGGESTION,
-    providesFix = REQUIRES_HUMAN_ATTENTION,
     documentSuppression = false)
 public final class FieldCanBeLocal extends BugChecker implements CompilationUnitTreeMatcher {
   private static final ImmutableSet<ElementType> VALID_ON_LOCAL_VARIABLES =

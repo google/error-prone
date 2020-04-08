@@ -23,7 +23,6 @@ import static com.sun.source.tree.Tree.Kind.STRING_LITERAL;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
@@ -62,8 +61,7 @@ import java.util.Set;
     name = "UnnecessaryCheckNotNull",
     summary = "This null check is unnecessary; the expression can never be null",
     severity = ERROR,
-    altNames = {"PreconditionsCheckNotNull", "PreconditionsCheckNotNullPrimitive"},
-    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
+    altNames = {"PreconditionsCheckNotNull", "PreconditionsCheckNotNullPrimitive"})
 public class UnnecessaryCheckNotNull extends BugChecker implements MethodInvocationTreeMatcher {
 
   private static final Matcher<MethodInvocationTree> CHECK_NOT_NULL_MATCHER =

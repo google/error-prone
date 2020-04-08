@@ -30,7 +30,6 @@ import static com.google.errorprone.matchers.Matchers.hasAnnotation;
 import static com.google.errorprone.matchers.Matchers.methodHasParameters;
 
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
@@ -55,8 +54,7 @@ import com.sun.source.tree.MethodTree;
 @BugPattern(
     name = "GuiceAssistedInjectScoping",
     summary = "Scope annotation on implementation class of AssistedInject factory is not allowed",
-    severity = ERROR,
-    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
+    severity = ERROR)
 public class AssistedInjectScoping extends BugChecker implements ClassTreeMatcher {
 
   /** Matches classes that have an annotation that itself is annotated with @ScopeAnnotation. */

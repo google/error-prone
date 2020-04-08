@@ -20,7 +20,6 @@ import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.BugPattern.StandardTags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.AnnotatedTypeTreeMatcher;
@@ -43,8 +42,7 @@ import java.util.List;
     name = "NullablePrimitive",
     summary = "@Nullable should not be used for primitive types since they cannot be null",
     severity = WARNING,
-    tags = StandardTags.STYLE,
-    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
+    tags = StandardTags.STYLE)
 public class NullablePrimitive extends BugChecker
     implements AnnotatedTypeTreeMatcher, VariableTreeMatcher, MethodTreeMatcher {
 

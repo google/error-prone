@@ -25,7 +25,6 @@ import static com.google.errorprone.suppliers.Suppliers.typeFromString;
 
 import com.google.common.collect.ImmutableListMultimap;
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
 import com.google.errorprone.matchers.Description;
@@ -47,7 +46,6 @@ import javax.lang.model.element.Modifier;
     altNames = "mutable",
     summary = "AutoValue recommends using immutable collections",
     severity = WARNING,
-    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION,
     documentSuppression = false)
 public class AutoValueImmutableFields extends BugChecker implements ClassTreeMatcher {
 

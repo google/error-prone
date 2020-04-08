@@ -19,7 +19,6 @@ package com.google.errorprone.bugpatterns.argumentselectiondefects;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
@@ -46,8 +45,7 @@ import javax.lang.model.element.ElementKind;
 @BugPattern(
     name = "AssertEqualsArgumentOrderChecker",
     summary = "Arguments are swapped in assertEquals-like call",
-    severity = WARNING,
-    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
+    severity = WARNING)
 public class AssertEqualsArgumentOrderChecker extends BugChecker
     implements MethodInvocationTreeMatcher {
 

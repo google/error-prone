@@ -24,7 +24,6 @@ import static com.google.errorprone.util.ASTHelpers.isSameType;
 import com.google.common.math.IntMath;
 import com.google.common.math.LongMath;
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.BinaryTreeMatcher;
 import com.google.errorprone.fixes.Fix;
@@ -53,8 +52,7 @@ import javax.lang.model.type.TypeKind;
 @BugPattern(
     name = "ConstantOverflow",
     summary = "Compile-time constant expression overflows",
-    severity = ERROR,
-    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
+    severity = ERROR)
 public class ConstantOverflow extends BugChecker implements BinaryTreeMatcher {
 
   @Override

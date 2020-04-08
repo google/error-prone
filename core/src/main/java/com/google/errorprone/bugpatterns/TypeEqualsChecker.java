@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.ProvidesFix.NO_FIX;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.anyOf;
@@ -46,8 +45,7 @@ import com.sun.source.tree.MethodInvocationTree;
         "com.sun.tools.javac.code.Type doesn't override Object.equals and instances are not"
             + " interned by javac, so testing types for equality should be done with"
             + " Types#isSameType instead",
-    severity = WARNING,
-    providesFix = NO_FIX)
+    severity = WARNING)
 public class TypeEqualsChecker extends BugChecker implements MethodInvocationTreeMatcher {
 
   private static final TypePredicate TYPE_MIRROR =

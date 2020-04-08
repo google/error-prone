@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.ProvidesFix.REQUIRES_HUMAN_ATTENTION;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.enclosingClass;
@@ -46,7 +45,6 @@ import java.util.Set;
     name = "UnusedNestedClass",
     altNames = "unused",
     summary = "This nested class is unused, and can be removed.",
-    providesFix = REQUIRES_HUMAN_ATTENTION,
     severity = WARNING,
     documentSuppression = false)
 public final class UnusedNestedClass extends BugChecker implements CompilationUnitTreeMatcher {

@@ -22,7 +22,6 @@ import static com.google.errorprone.matchers.Matchers.methodReturns;
 import static com.google.errorprone.matchers.Matchers.not;
 
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
@@ -36,8 +35,7 @@ import com.sun.source.tree.MethodTree;
 @BugPattern(
     name = "CloseableProvides",
     summary = "Providing Closeable resources makes their lifecycle unclear",
-    severity = WARNING,
-    providesFix = ProvidesFix.NO_FIX)
+    severity = WARNING)
 public class CloseableProvides extends BugChecker implements MethodTreeMatcher {
 
   private static final Matcher<MethodTree> CLOSEABLE_PROVIDES_MATCHER =

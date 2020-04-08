@@ -15,7 +15,6 @@
  */
 package com.google.errorprone.bugpatterns.time;
 
-import static com.google.errorprone.BugPattern.ProvidesFix.REQUIRES_HUMAN_ATTENTION;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.constructor;
@@ -74,8 +73,7 @@ import javax.annotation.Nullable;
         "Prefer using java.time-based APIs when available. Note that this checker does"
             + " not and cannot guarantee that the overloads have equivalent semantics, but that is"
             + " generally the case with overloaded methods.",
-    severity = WARNING,
-    providesFix = REQUIRES_HUMAN_ATTENTION)
+    severity = WARNING)
 public final class PreferJavaTimeOverload extends BugChecker
     implements MethodInvocationTreeMatcher {
 

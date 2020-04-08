@@ -20,7 +20,6 @@ import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 
 import com.google.common.collect.Iterables;
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.SuggestedFixes;
@@ -44,8 +43,7 @@ import java.util.Optional;
     summary =
         "Calling toString on Objects that don't override toString() doesn't"
             + " provide useful information",
-    severity = WARNING,
-    providesFix = ProvidesFix.NO_FIX)
+    severity = WARNING)
 public class ObjectToString extends AbstractToString {
 
   private static boolean finalNoOverrides(Type type, VisitorState state) {

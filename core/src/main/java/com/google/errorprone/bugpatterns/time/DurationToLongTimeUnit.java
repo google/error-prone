@@ -15,7 +15,6 @@
  */
 package com.google.errorprone.bugpatterns.time;
 
-import static com.google.errorprone.BugPattern.ProvidesFix.REQUIRES_HUMAN_ATTENTION;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.instanceMethod;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
@@ -54,8 +53,7 @@ import java.util.concurrent.TimeUnit;
 @BugPattern(
     name = "DurationToLongTimeUnit",
     summary = "Unit mismatch when decomposing a Duration or Instant to call a <long, TimeUnit> API",
-    severity = ERROR,
-    providesFix = REQUIRES_HUMAN_ATTENTION)
+    severity = ERROR)
 // TODO(kak): we should probably rename this as it works for Instants/Timestamps too
 public final class DurationToLongTimeUnit extends BugChecker
     implements MethodInvocationTreeMatcher {

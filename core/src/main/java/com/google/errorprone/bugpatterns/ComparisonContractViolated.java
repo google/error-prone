@@ -26,7 +26,6 @@ import static com.google.errorprone.matchers.MethodVisibility.Visibility.PUBLIC;
 import static com.google.errorprone.suppliers.Suppliers.INT_TYPE;
 
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
@@ -60,8 +59,7 @@ import java.util.Set;
 @BugPattern(
     name = "ComparisonContractViolated",
     summary = "This comparison method violates the contract",
-    severity = SeverityLevel.ERROR,
-    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
+    severity = SeverityLevel.ERROR)
 public class ComparisonContractViolated extends BugChecker implements MethodTreeMatcher {
   /** Matcher for the overriding method of 'int java.lang.Comparable.compareTo(T other)' */
   private static final Matcher<MethodTree> COMPARABLE_METHOD_MATCHER =

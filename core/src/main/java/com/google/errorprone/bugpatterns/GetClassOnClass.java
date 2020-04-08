@@ -20,7 +20,6 @@ import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.instanceMethod;
 
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.fixes.Fix;
@@ -40,8 +39,7 @@ import com.sun.source.tree.MethodInvocationTree;
     summary =
         "Calling getClass() on an object of type Class returns the Class object for "
             + "java.lang.Class; you probably meant to operate on the object directly",
-    severity = ERROR,
-    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
+    severity = ERROR)
 public class GetClassOnClass extends BugChecker implements MethodInvocationTreeMatcher {
 
   private static final Matcher<ExpressionTree> getClassMethodMatcher =

@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
-import static com.google.errorprone.BugPattern.ProvidesFix.NO_FIX;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.anyOf;
@@ -60,7 +59,6 @@ import javax.lang.model.element.ElementKind;
     summary =
         "Comparing different pairs of fields/getters in an equals implementation is probably "
             + "a mistake.",
-    providesFix = NO_FIX,
     severity = ERROR)
 public final class EqualsWrongThing extends BugChecker implements MethodTreeMatcher {
 

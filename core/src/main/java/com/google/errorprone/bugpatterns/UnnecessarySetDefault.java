@@ -46,7 +46,6 @@ import com.google.common.collect.Range;
 import com.google.common.io.ByteSource;
 import com.google.common.io.CharSource;
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
@@ -66,8 +65,7 @@ import java.util.OptionalLong;
 @BugPattern(
     name = "UnnecessarySetDefault",
     summary = "Unnecessary call to NullPointerTester#setDefault",
-    severity = SUGGESTION,
-    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
+    severity = SUGGESTION)
 public class UnnecessarySetDefault extends BugChecker implements MethodInvocationTreeMatcher {
 
   private static final Matcher<ExpressionTree> SET_DEFAULT =

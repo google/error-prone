@@ -18,7 +18,6 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.common.collect.Iterables.getLast;
-import static com.google.errorprone.BugPattern.ProvidesFix.REQUIRES_HUMAN_ATTENTION;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.BugPattern.StandardTags.STYLE;
 import static com.google.errorprone.util.ASTHelpers.isSameType;
@@ -66,7 +65,6 @@ import javax.lang.model.element.Modifier;
             + " exception rather than setting it as a cause. This can make debugging harder.",
     severity = WARNING,
     tags = STYLE,
-    providesFix = REQUIRES_HUMAN_ATTENTION,
     documentSuppression = false)
 public final class UnusedException extends BugChecker implements CatchTreeMatcher {
 

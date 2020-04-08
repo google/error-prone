@@ -19,7 +19,6 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.BinaryTreeMatcher;
 import com.google.errorprone.matchers.Description;
@@ -37,8 +36,7 @@ import com.sun.source.tree.Tree.Kind;
     explanation =
         "The boolean expression this != null always returns true"
             + " and similarly this == null always returns false.",
-    severity = ERROR,
-    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
+    severity = ERROR)
 public class ComparingThisWithNull extends BugChecker implements BinaryTreeMatcher {
 
   private static final Matcher<BinaryTree> EQUAL_OR_NOT_EQUAL =

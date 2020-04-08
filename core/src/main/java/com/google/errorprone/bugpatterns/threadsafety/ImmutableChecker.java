@@ -25,7 +25,6 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import com.google.common.collect.Sets.SetView;
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.annotations.Immutable;
@@ -64,8 +63,7 @@ import java.util.Optional;
     name = "Immutable",
     summary = "Type declaration annotated with @Immutable is not immutable",
     severity = ERROR,
-    documentSuppression = false,
-    providesFix = ProvidesFix.REQUIRES_HUMAN_ATTENTION)
+    documentSuppression = false)
 public class ImmutableChecker extends BugChecker
     implements ClassTreeMatcher,
         NewClassTreeMatcher,
