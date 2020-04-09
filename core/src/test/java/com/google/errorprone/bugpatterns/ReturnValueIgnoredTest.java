@@ -141,6 +141,22 @@ public class ReturnValueIgnoredTest {
   }
 
   @Test
+  public void issue1565_enumDeclaration() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.util.function.Function;",
+            "enum Test {",
+            "  A;",
+            "  void f(Function<Integer, Integer> f) {",
+            "    // BUG: Diagnostic contains: ReturnValueIgnored",
+            "    f.apply(0);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void issue1363_dateTimeFormatterBuilder() {
     compilationHelper
         .addSourceLines(
