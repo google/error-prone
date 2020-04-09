@@ -1256,7 +1256,11 @@ public class Matchers {
     return stream(state.getPath())
         // Find the nearest definitional context for this method invocation
         // (i.e.: the nearest surrounding class or lambda)
-        .filter(t -> t.getKind() == Kind.LAMBDA_EXPRESSION || t.getKind() == Kind.CLASS)
+        .filter(
+            t ->
+                t.getKind() == Kind.LAMBDA_EXPRESSION
+                    || t.getKind() == Kind.CLASS
+                    || t.getKind() == Kind.ENUM)
         .findFirst()
         .map(t -> isThrowingFunctionalInterface(getType(t), state))
         .orElseThrow(VerifyException::new);
