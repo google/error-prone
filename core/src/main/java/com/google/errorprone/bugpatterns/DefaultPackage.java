@@ -42,6 +42,9 @@ public final class DefaultPackage extends BugChecker implements CompilationUnitT
     if (state.errorProneOptions().isTestOnlyTarget()) {
       return Description.NO_MATCH;
     }
+    if (tree.getTypeDecls().stream().anyMatch(s -> isSuppressed(s))) {
+      return Description.NO_MATCH;
+    }
     if (tree.getTypeDecls().stream()
         .map(ASTHelpers::getSymbol)
         .filter(x -> x != null)

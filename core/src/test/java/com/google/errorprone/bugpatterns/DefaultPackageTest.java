@@ -58,6 +58,17 @@ public class DefaultPackageTest {
   }
 
   @Test
+  public void testNegativeCases_classWithWarningSuppressed() {
+    compilationHelper
+        .addSourceLines(
+            "in/Test.java", //
+            "@SuppressWarnings(\"DefaultPackage\")",
+            "class Test {",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void testNegativeCases_classWithPackage() {
     compilationHelper
         .addSourceLines(
