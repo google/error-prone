@@ -208,7 +208,7 @@ public final class InvalidInlineTag extends BugChecker
                     getDiagnosticPosition(beforeAt, getCurrentPath().getTreePath().getLeaf()))
                 .setMessage(
                     String.format(
-                        "Curly braces should be used for inline Javadoc tags: {%s ...}",
+                        "Curly braces should be used for inline Javadoc tags: {@%s ...}",
                         matcher.group(1)))
                 .addFix(fix.build())
                 .build());
