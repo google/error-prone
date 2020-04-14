@@ -37,7 +37,7 @@ import java.util.Objects;
     summary = "String.substring(0) returns the original String",
     explanation =
         "String.substring(int) gives you the substring from the index to the end, inclusive."
-            + "Calling that method with an index of 0 will return the same String.",
+            + " Calling that method with an index of 0 will return the same String.",
     severity = ERROR)
 public final class SubstringOfZero extends BugChecker implements MethodInvocationTreeMatcher {
   private static final Matcher<ExpressionTree> SUBSTRING_CALLS =
