@@ -63,9 +63,6 @@ public class ProtectedMembersInFinalClass extends BugChecker implements ClassTre
     if (!HAS_FINAL.matches(tree, state)) {
       return NO_MATCH;
     }
-    if (tree.getMembers().isEmpty()) {
-      return NO_MATCH;
-    }
 
     ImmutableList<Tree> relevantMembers =
         tree.getMembers().stream()
@@ -73,6 +70,7 @@ public class ProtectedMembersInFinalClass extends BugChecker implements ClassTre
             .filter(m -> HAS_PROTECTED.matches(m, state))
             .filter(
                 m -> !(m instanceof MethodTree) || methodHasNoParentMethod((MethodTree) m, state))
+            .filter(m -> !isSuppressed(m))
             .collect(toImmutableList());
     if (relevantMembers.isEmpty()) {
       return NO_MATCH;

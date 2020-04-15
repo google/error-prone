@@ -99,4 +99,16 @@ public class ProtectedMembersInFinalClassTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void methodSuppression() {
+    compilationHelper
+        .addSourceLines(
+            "in/Test.java",
+            "final class Test {",
+            "  @SuppressWarnings(\"ProtectedMembersInFinalClass\")",
+            "  protected void methodOne() {}",
+            "}")
+        .doTest();
+  }
 }
