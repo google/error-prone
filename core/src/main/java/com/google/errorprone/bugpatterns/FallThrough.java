@@ -61,10 +61,16 @@ public class FallThrough extends BugChecker implements SwitchTreeMatcher {
       // reported an error if that statement wasn't reachable, and the answer is
       // independent of any preceding statements.
       boolean completes = Reachability.canCompleteNormally(getLast(caseTree.stats));
+      int endPos = caseEndPosition(state, caseTree);
+      if (endPos < 0) {
+        // endPos is -1 when there is no matching source for this statement. This means
+        // we are looking at generated/mutated AST nodes (e.g. Lombok), skip.
+        break;
+      }
       String comments =
           state
               .getSourceCode()
-              .subSequence(caseEndPosition(state, caseTree), next.getStartPosition())
+              .subSequence(endPos, next.getStartPosition())
               .toString()
               .trim();
       if (completes && !FALL_THROUGH_PATTERN.matcher(comments).find()) {
