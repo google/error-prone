@@ -393,4 +393,29 @@ public class MutableMethodReturnTypeTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void overridingMethod_specialNotice() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.common.collect.ImmutableList;",
+            "import com.google.inject.Provider;",
+            "import java.util.List;",
+            "class Test {",
+            "  private static final int getFooLength() {",
+            "    final Provider<List<String>> fooProvider = ",
+            "      new Provider<List<String>>() {",
+            "        @Override",
+            "        // BUG: Diagnostic contains: narrow the return type",
+            "        public List<String> get() {",
+            "          return ImmutableList.of(\"foo\", \"bar\");",
+            "        }",
+            "      };",
+            "    List<String> foo = fooProvider.get();",
+            "    return foo.size();",
+            "  }",
+            "}")
+        .doTest();
+  }
 }
