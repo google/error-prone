@@ -125,6 +125,7 @@ public class AndroidJdkLibsChecker extends ApiDiffChecker {
         ImmutableSet.<String>builder()
             .addAll(BASE_ALLOWED_CLASSES)
             .add("java/io/UncheckedIOException")
+            .add("java/util/ArrayList")
             .add("java/util/Collection")
             .add("java/util/Comparator")
             .add("java/util/DoubleSummaryStatistics")
