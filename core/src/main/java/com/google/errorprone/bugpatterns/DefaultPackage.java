@@ -33,7 +33,6 @@ import com.sun.source.tree.CompilationUnitTree;
 @BugPattern(
     name = "DefaultPackage",
     summary = "Java classes shouldn't use default package",
-    documentSuppression = false,
     severity = WARNING)
 public final class DefaultPackage extends BugChecker implements CompilationUnitTreeMatcher {
 
