@@ -19,6 +19,11 @@ package com.google.errorprone.bugpatterns;
 import static com.google.common.base.Preconditions.checkState;
 import static com.google.common.base.Verify.verify;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
+import static com.google.errorprone.util.ASTHelpers.findSuperMethods;
+import static com.google.errorprone.util.ASTHelpers.getErasedTypeTree;
+import static com.google.errorprone.util.ASTHelpers.getSymbol;
+import static com.google.errorprone.util.ASTHelpers.getType;
+import static com.google.errorprone.util.ASTHelpers.methodCanBeOverridden;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
@@ -30,7 +35,6 @@ import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.InjectMatchers;
 import com.google.errorprone.matchers.Matcher;
-import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.LambdaExpressionTree;
 import com.sun.source.tree.MethodTree;
@@ -48,22 +52,27 @@ import java.util.function.Predicate;
     name = "MutableMethodReturnType",
     summary =
         "Method return type should use the immutable type (such as ImmutableList) instead of"
-            + " the general collection interface type (such as List)",
+            + " the general collection interface type (such as List).",
     severity = WARNING)
 public final class MutableMethodReturnType extends BugChecker implements MethodTreeMatcher {
 
   private static final Matcher<MethodTree> ANNOTATED_WITH_PRODUCES_OR_PROVIDES =
       InjectMatchers.hasProvidesAnnotation();
 
+  private static final String OVERRIDE_NOTE =
+      " Note that it is legal to narrow the return type when overriding a parent method. And"
+          + " because this method cannot be overridden, doing so cannot cause problems for any"
+          + " subclasses.";
+
   @Override
   public Description matchMethod(MethodTree methodTree, VisitorState state) {
-    MethodSymbol methodSymbol = ASTHelpers.getSymbol(methodTree);
+    MethodSymbol methodSymbol = getSymbol(methodTree);
 
     if (methodSymbol.isConstructor()) {
       return Description.NO_MATCH;
     }
 
-    if (ASTHelpers.methodCanBeOverridden(methodSymbol)) {
+    if (methodCanBeOverridden(methodSymbol)) {
       return Description.NO_MATCH;
     }
 
@@ -98,13 +107,20 @@ public final class MutableMethodReturnType extends BugChecker implements MethodT
 
     Type newReturnType = state.getTypeFromString(immutableReturnType.get());
     SuggestedFix.Builder fixBuilder = SuggestedFix.builder();
-    Tree typeTree = ASTHelpers.getErasedTypeTree(methodTree.getReturnType());
+    Tree typeTree = getErasedTypeTree(methodTree.getReturnType());
     verify(typeTree != null, "Could not find return type of %s", methodTree);
     fixBuilder.replace(
         typeTree, SuggestedFixes.qualifyType(state, fixBuilder, newReturnType.asElement()));
-    SuggestedFix fix = fixBuilder.build();
 
-    return describeMatch(methodTree.getReturnType(), fix);
+    String message =
+        message()
+            + (findSuperMethods(getSymbol(methodTree), state.getTypes()).isEmpty()
+                ? ""
+                : OVERRIDE_NOTE);
+    return buildDescription(methodTree.getReturnType())
+        .setMessage(message)
+        .addFix(fixBuilder.build())
+        .build();
   }
 
   private static Optional<String> getCommonImmutableTypeForAllReturnStatementsTypes(
@@ -151,7 +167,7 @@ public final class MutableMethodReturnType extends BugChecker implements MethodT
         new TreeScanner<Void, Void>() {
           @Override
           public Void visitReturn(ReturnTree node, Void unused) {
-            Type type = ASTHelpers.getType(node.getExpression());
+            Type type = getType(node.getExpression());
             if (type instanceof ClassType) {
               returnTypes.add((ClassType) type);
             }
