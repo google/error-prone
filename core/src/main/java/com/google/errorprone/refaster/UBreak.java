@@ -18,7 +18,6 @@ package com.google.errorprone.refaster;
 
 import com.google.auto.value.AutoValue;
 import com.sun.source.tree.BreakTree;
-import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.TreeVisitor;
 import com.sun.tools.javac.tree.JCTree.JCBreak;
 import javax.annotation.Nullable;
@@ -31,13 +30,8 @@ import javax.annotation.Nullable;
 @AutoValue
 abstract class UBreak extends USimpleStatement implements BreakTree {
   static UBreak create(@Nullable CharSequence label) {
-    return new AutoValue_UBreak(null, (label == null) ? null : StringName.of(label));
+    return new AutoValue_UBreak((label == null) ? null : StringName.of(label));
   }
-
-  // Required for Java 12 compatibility:
-  // https://docs.oracle.com/en/java/javase/12/docs/api/jdk.compiler/com/sun/source/tree/BreakTree.html#getValue()
-  @Nullable
-  public abstract ExpressionTree getValue();
 
   @Override
   @Nullable
