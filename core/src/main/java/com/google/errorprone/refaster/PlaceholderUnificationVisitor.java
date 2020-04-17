@@ -665,7 +665,8 @@ abstract class PlaceholderUnificationVisitor
     return chooseSubtrees(
         state,
         s -> unifyStatements(node.getStatements(), s),
-        stmts -> maker().Case((JCExpression) node.getExpression(), stmts));
+        s -> unify(node.getBody(), s),
+        (stmts, body) -> maker().Case(CaseTree.CaseKind.STATEMENT, List.<JCExpression>of((JCExpression) node.getExpression()), stmts, body));
   }
 
   @Override
