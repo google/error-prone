@@ -61,6 +61,7 @@ import com.sun.tools.javac.comp.MemberEnter;
 import com.sun.tools.javac.comp.Resolve;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 import com.sun.tools.javac.tree.JCTree.JCMethodDecl;
+import com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition;
 import com.sun.tools.javac.util.Name;
 import java.lang.reflect.Method;
 import java.util.Collections;
@@ -98,14 +99,45 @@ public final class FindIdentifiers {
       }
     }
     try {
-      Method method =
-          Resolve.class.getDeclaredMethod("findIdent", Env.class, Name.class, KindSelector.class);
-      method.setAccessible(true);
-      Symbol result =
-          (Symbol) method.invoke(Resolve.instance(state.context), env, state.getName(name), kind);
+      Symbol result = (Symbol) FindIdent.method.invoke(
+              Resolve.instance(state.context),
+              FindIdent.args.of(env, state.getName(name), kind));
       return result.exists() ? result : null;
     } catch (ReflectiveOperationException e) {
       throw new LinkageError(e.getMessage(), e);
+    }
+  }
+
+  private static final class FindIdent {
+    static final Method method;
+    static final Args args;
+    static {
+      Method m;
+      Args a;
+      try {
+        // Java 13
+        m = Resolve.class.getDeclaredMethod(
+            "findIdent", DiagnosticPosition.class, Env.class, Name.class, KindSelector.class);
+        a = (env, name, kind) -> new Object[] { null, env, name, kind };
+      } catch (NoSuchMethodException e1) {
+        try {
+          // Java 12 and below
+          m = Resolve.class.getDeclaredMethod(
+              "findIdent", Env.class, Name.class, KindSelector.class);
+          a = (env, name, kind) -> new Object[] { env, name, kind };
+        } catch (NoSuchMethodException e2) {
+          LinkageError linkageError = new LinkageError(e1.getMessage(), e1);
+          linkageError.addSuppressed(e2);
+          throw linkageError;
+        }
+      }
+      m.setAccessible(true);
+      method = m;
+      args = a;
+    }
+
+    interface Args {
+      Object[] of(Env<AttrContext> env, Name name, KindSelector kind);
     }
   }
 
