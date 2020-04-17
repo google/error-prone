@@ -282,7 +282,7 @@ public abstract class ExpressionTemplate extends Template<ExpressionTemplateMatc
       return (typeCast.expr == leaf) ? TreeInfo.prefixPrec : TreeInfo.noPrec;
     } else if (parent instanceof JCInstanceOf) {
       JCInstanceOf instanceOf = (JCInstanceOf) parent;
-      return TreeInfo.ordPrec + ((instanceOf.clazz == leaf) ? 1 : 0);
+      return TreeInfo.ordPrec + ((instanceOf.getType() == leaf) ? 1 : 0);
     } else if (parent instanceof JCArrayAccess) {
       JCArrayAccess arrayAccess = (JCArrayAccess) parent;
       return (arrayAccess.indexed == leaf) ? TreeInfo.postfixPrec : TreeInfo.noPrec;
