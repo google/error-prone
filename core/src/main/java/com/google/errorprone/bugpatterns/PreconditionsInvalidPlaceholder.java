@@ -16,7 +16,7 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
+import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
@@ -41,7 +41,7 @@ import java.util.regex.Pattern;
 @BugPattern(
     name = "PreconditionsInvalidPlaceholder",
     summary = "Preconditions only accepts the %s placeholder in error message strings",
-    severity = WARNING,
+    severity = ERROR,
     tags = StandardTags.LIKELY_ERROR)
 public class PreconditionsInvalidPlaceholder extends BugChecker
     implements MethodInvocationTreeMatcher {
