@@ -18,6 +18,7 @@ package com.google.errorprone.util;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.base.Verify.verify;
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.errorprone.matchers.JUnitMatchers.JUNIT4_RUN_WITH_ANNOTATION;
 import static com.sun.tools.javac.code.Scope.LookupKind.NON_RECURSIVE;
@@ -29,14 +30,17 @@ import com.google.auto.value.AutoValue;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.CharMatcher;
 import com.google.common.base.Predicate;
+import com.google.common.collect.HashMultimap;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.SetMultimap;
 import com.google.common.collect.Streams;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.dataflow.nullnesspropagation.Nullness;
 import com.google.errorprone.dataflow.nullnesspropagation.NullnessAnalysis;
 import com.google.errorprone.matchers.JUnitMatchers;
 import com.google.errorprone.matchers.Matcher;
+import com.google.errorprone.suppliers.Supplier;
 import com.google.errorprone.suppliers.Suppliers;
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.ArrayAccessTree;
@@ -44,6 +48,7 @@ import com.sun.source.tree.AssertTree;
 import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.BinaryTree;
 import com.sun.source.tree.CaseTree;
+import com.sun.source.tree.CatchTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.CompoundAssignmentTree;
@@ -73,6 +78,7 @@ import com.sun.source.tree.SynchronizedTree;
 import com.sun.source.tree.ThrowTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
+import com.sun.source.tree.TryTree;
 import com.sun.source.tree.TypeCastTree;
 import com.sun.source.tree.TypeParameterTree;
 import com.sun.source.tree.UnaryTree;
@@ -80,6 +86,7 @@ import com.sun.source.tree.VariableTree;
 import com.sun.source.tree.WhileLoopTree;
 import com.sun.source.util.SimpleTreeVisitor;
 import com.sun.source.util.TreePath;
+import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.api.JavacTrees;
 import com.sun.tools.javac.code.Attribute;
 import com.sun.tools.javac.code.Attribute.Compound;
@@ -98,6 +105,7 @@ import com.sun.tools.javac.code.Symtab;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Type.ClassType;
 import com.sun.tools.javac.code.Type.TypeVar;
+import com.sun.tools.javac.code.Type.UnionClassType;
 import com.sun.tools.javac.code.Type.WildcardType;
 import com.sun.tools.javac.code.TypeAnnotations;
 import com.sun.tools.javac.code.TypeAnnotations.AnnotationType;
@@ -1868,5 +1876,162 @@ public class ASTHelpers {
   /** Returns whether {@code symbol} is final or effectively final. */
   public static boolean isConsideredFinal(Symbol symbol) {
     return (symbol.flags() & (Flags.FINAL | Flags.EFFECTIVELY_FINAL)) != 0;
+  }
+
+  /** Returns the exceptions thrown by {@code tree}. */
+  public static ImmutableSet<Type> getThrownExceptions(Tree tree, VisitorState state) {
+    ScanThrownTypes scanner = new ScanThrownTypes(state);
+    scanner.scan(tree, null);
+    return ImmutableSet.copyOf(scanner.getThrownTypes());
+  }
+
+  /** Scanner for determining what types are thrown by a tree. */
+  public static final class ScanThrownTypes extends TreeScanner<Void, Void> {
+    boolean inResources = false;
+    ArrayDeque<Set<Type>> thrownTypes = new ArrayDeque<>();
+    SetMultimap<VarSymbol, Type> thrownTypesByVariable = HashMultimap.create();
+
+    private final VisitorState state;
+    private final Types types;
+
+    public ScanThrownTypes(VisitorState state) {
+      this.state = state;
+      this.types = state.getTypes();
+      thrownTypes.push(new HashSet<>());
+    }
+
+    public Set<Type> getThrownTypes() {
+      return thrownTypes.peek();
+    }
+
+    @Override
+    public Void visitMethodInvocation(MethodInvocationTree invocation, Void unused) {
+      MethodSymbol symbol = getSymbol(invocation);
+      if (symbol != null) {
+        getThrownTypes().addAll(symbol.getThrownTypes());
+      }
+      return super.visitMethodInvocation(invocation, null);
+    }
+
+    @Override
+    public Void visitTry(TryTree tree, Void unused) {
+      thrownTypes.push(new HashSet<>());
+      scanResources(tree);
+      scan(tree.getBlock(), null);
+      // Make two passes over the `catch` blocks: once to remove caught exceptions, and once to
+      // add thrown ones. We can't do this in one step as an exception could be caught but later
+      // thrown.
+      for (CatchTree catchTree : tree.getCatches()) {
+        Type type = getType(catchTree.getParameter());
+        ImmutableList<Type> thrownTypes = extractTypes(type);
+        thrownTypesByVariable.putAll(getSymbol(catchTree.getParameter()), getThrownTypes());
+        for (Type unionMember : thrownTypes) {
+          getThrownTypes().removeIf(thrownType -> this.types.isAssignable(thrownType, unionMember));
+        }
+      }
+      for (CatchTree catchTree : tree.getCatches()) {
+        scan(catchTree.getBlock(), null);
+      }
+      scan(tree.getFinallyBlock(), null);
+      Set<Type> fromBlock = thrownTypes.pop();
+      getThrownTypes().addAll(fromBlock);
+      return null;
+    }
+
+    public void scanResources(TryTree tree) {
+      inResources = true;
+      scan(tree.getResources(), null);
+      inResources = false;
+    }
+
+    @Override
+    public Void visitThrow(ThrowTree tree, Void unused) {
+      if (tree.getExpression() instanceof IdentifierTree) {
+        Symbol symbol = getSymbol(tree.getExpression());
+        if (thrownTypesByVariable.containsKey(symbol)) {
+          getThrownTypes().addAll(thrownTypesByVariable.get((VarSymbol) symbol));
+          return super.visitThrow(tree, null);
+        }
+      }
+      getThrownTypes().addAll(extractTypes(getType(tree.getExpression())));
+      return super.visitThrow(tree, null);
+    }
+
+    @Override
+    public Void visitNewClass(NewClassTree tree, Void unused) {
+      MethodSymbol symbol = getSymbol(tree);
+      if (symbol != null) {
+        getThrownTypes().addAll(symbol.getThrownTypes());
+      }
+      return super.visitNewClass(tree, null);
+    }
+
+    @Override
+    public Void visitVariable(VariableTree tree, Void unused) {
+      if (inResources) {
+        Symbol symbol = getSymbol(tree.getType());
+        if (symbol instanceof ClassSymbol) {
+          getCloseMethod((ClassSymbol) symbol, state)
+              .ifPresent(methodSymbol -> getThrownTypes().addAll(methodSymbol.getThrownTypes()));
+        }
+      }
+      return super.visitVariable(tree, null);
+    }
+
+    // We don't need to account for anything thrown by declarations.
+    @Override
+    public Void visitLambdaExpression(LambdaExpressionTree tree, Void unused) {
+      return null;
+    }
+
+    @Override
+    public Void visitClass(ClassTree tree, Void unused) {
+      return null;
+    }
+
+    @Override
+    public Void visitMethod(MethodTree tree, Void unused) {
+      return null;
+    }
+
+    private static final Supplier<Type> AUTOCLOSEABLE =
+        Suppliers.typeFromString("java.lang.AutoCloseable");
+    private static final Supplier<Name> CLOSE =
+        VisitorState.memoize(state -> state.getName("close"));
+
+    private static Optional<MethodSymbol> getCloseMethod(ClassSymbol symbol, VisitorState state) {
+      Types types = state.getTypes();
+      if (!types.isAssignable(symbol.type, AUTOCLOSEABLE.get(state))) {
+        return Optional.empty();
+      }
+      Type voidType = state.getSymtab().voidType;
+      Optional<MethodSymbol> declaredCloseMethod =
+          ASTHelpers.matchingMethods(
+                  CLOSE.get(state),
+                  s ->
+                      !s.isConstructor()
+                          && s.params.isEmpty()
+                          && types.isSameType(s.getReturnType(), voidType),
+                  symbol.type,
+                  types)
+              .findFirst();
+      verify(
+          declaredCloseMethod.isPresent(),
+          "%s implements AutoCloseable but no method named close() exists, even inherited",
+          symbol);
+
+      return declaredCloseMethod;
+    }
+
+    private static ImmutableList<Type> extractTypes(@Nullable Type type) {
+      if (type == null) {
+        return ImmutableList.of();
+      }
+      if (type.isUnion()) {
+        UnionClassType unionType = (UnionClassType) type;
+        return ImmutableList.copyOf(unionType.getAlternativeTypes());
+      }
+      return ImmutableList.of(type);
+    }
   }
 }
