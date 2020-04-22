@@ -160,6 +160,10 @@ public final class RefasterRuleBuilderScanner extends SimpleTreeVisitor<Void, Vo
       if (annotationMap.containsKey(AllowCodeBetweenLines.class)) {
         List<UBlank> blanks = new ArrayList<>();
         for (int i = 0; i < beforeTemplates.size(); i++) {
+          if (beforeTemplates.get(i) instanceof ExpressionTemplate) {
+            throw new IllegalArgumentException(
+                "@AllowCodeBetweenLines may not be specified for expression templates.");
+          }
           BlockTemplate before = (BlockTemplate) beforeTemplates.get(i);
           List<UStatement> stmtsWithBlanks = new ArrayList<>();
           for (UStatement stmt : before.templateStatements()) {
