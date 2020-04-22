@@ -273,6 +273,7 @@ import com.google.errorprone.bugpatterns.StringEquality;
 import com.google.errorprone.bugpatterns.StringSplitter;
 import com.google.errorprone.bugpatterns.SubstringOfZero;
 import com.google.errorprone.bugpatterns.SuppressWarningsDeprecated;
+import com.google.errorprone.bugpatterns.SuppressWarningsWithoutExplanation;
 import com.google.errorprone.bugpatterns.SwigMemoryLeak;
 import com.google.errorprone.bugpatterns.SwitchDefault;
 import com.google.errorprone.bugpatterns.SystemExitOutsideMain;
@@ -910,6 +911,7 @@ public class BuiltInCheckerSuppliers {
           StaticQualifiedUsingExpression.class,
           StringEquality.class,
           StronglyTypeTime.class,
+          SuppressWarningsWithoutExplanation.class,
           SwitchDefault.class,
           SystemExitOutsideMain.class,
           TestExceptionChecker.class,
