@@ -20,6 +20,7 @@ import static com.google.common.truth.Truth.assertThat;
 import static com.google.common.truth.Truth.assert_;
 import static com.google.errorprone.util.RuntimeVersion.isAtLeast9;
 import static com.google.testing.compile.JavaSourceSubjectFactory.javaSource;
+import static org.junit.Assert.assertThrows;
 import static org.junit.Assume.assumeFalse;
 
 import com.google.common.base.CharMatcher;
@@ -158,6 +159,16 @@ public class TemplateIntegrationTest extends CompilerBasedTest {
   @Test
   public void ifTemplate() throws IOException {
     runTest("IfTemplate");
+  }
+
+  @Test
+  public void expressionForbidsAllowCodeBetweenLines() throws IOException {
+    IllegalArgumentException ex =
+        assertThrows(
+            IllegalArgumentException.class,
+            () -> runTest("ExpressionForbidsAllowCodeBetweenLinesTemplate"));
+    assertThat(ex).hasMessageThat().contains("@AllowCodeBetweenLines");
+    assertThat(ex).hasMessageThat().contains("expression templates");
   }
 
   @Test
