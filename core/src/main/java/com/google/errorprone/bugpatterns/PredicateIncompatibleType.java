@@ -52,7 +52,7 @@ public class PredicateIncompatibleType extends BugChecker implements MemberRefer
     Type receiverType = ASTHelpers.getReceiverType(tree);
 
     if (tree.getName().contentEquals("equals")
-        && !EqualsIncompatibleType.compatibilityOfTypes(receiverType, predicateType, state)
+        && !TypeCompatibilityUtils.compatibilityOfTypes(receiverType, predicateType, state)
             .compatible()) {
       return buildMessage(receiverType, predicateType, tree);
     }
@@ -62,7 +62,7 @@ public class PredicateIncompatibleType extends BugChecker implements MemberRefer
         && !receiverType.getTypeArguments().isEmpty()) {
       Type argumentType = receiverType.getTypeArguments().get(0);
       Type upperBound = ASTHelpers.getUpperBound(predicateType, state.getTypes());
-      if (!EqualsIncompatibleType.compatibilityOfTypes(upperBound, argumentType, state)
+      if (!TypeCompatibilityUtils.compatibilityOfTypes(upperBound, argumentType, state)
           .compatible()) {
         return buildMessage(upperBound, argumentType, tree);
       }
