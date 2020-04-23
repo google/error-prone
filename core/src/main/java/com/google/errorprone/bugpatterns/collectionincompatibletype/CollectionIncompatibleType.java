@@ -29,8 +29,8 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.MemberReferenceTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
-import com.google.errorprone.bugpatterns.EqualsIncompatibleType;
-import com.google.errorprone.bugpatterns.EqualsIncompatibleType.TypeCompatibilityReport;
+import com.google.errorprone.bugpatterns.TypeCompatibilityUtils;
+import com.google.errorprone.bugpatterns.TypeCompatibilityUtils.TypeCompatibilityReport;
 import com.google.errorprone.bugpatterns.collectionincompatibletype.AbstractCollectionIncompatibleTypeMatcher.MatchResult;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
@@ -191,7 +191,7 @@ public class CollectionIncompatibleType extends BugChecker
 
     Types types = state.getTypes();
     TypeCompatibilityReport compatibilityReport =
-        EqualsIncompatibleType.compatibilityOfTypes(
+        TypeCompatibilityUtils.compatibilityOfTypes(
             result.targetType(), result.sourceType(), state);
     if (compatibilityReport.compatible()) {
       return NO_MATCH;
