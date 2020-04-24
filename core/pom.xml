@@ -125,7 +125,6 @@
       <groupId>com.google.auto.value</groupId>
       <artifactId>auto-value</artifactId>
       <version>${autovalue.version}</version>
-      <scope>provided</scope>
     </dependency>
     <dependency>
       <!-- Apache 2.0 -->
@@ -389,6 +388,7 @@
                   <include>org.pcollections:pcollections</include>
                   <include>com.google.guava:guava</include>
                   <include>com.google.guava:failureaccess</include>
+                  <include>com.github.ben-manes.caffeine:caffeine</include>
                   <include>com.google.auto:auto-common</include>
                   <include>com.google.code.findbugs:jsr305</include>
                   <include>com.google.protobuf:protobuf-java</include>
