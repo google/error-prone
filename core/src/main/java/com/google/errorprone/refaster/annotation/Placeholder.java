@@ -75,8 +75,9 @@ import java.lang.annotation.Target;
  * is not permitted to reassign the contents of {@code resource}.
  *
  * <p>Placeholder methods are not permitted to refer to any local variables or parameters of the
- * {@code @BeforeTemplate} that are not passed to them as arguments, and must currently contain
- * references to all arguments that <em>are</em> passed to them.
+ * {@code @BeforeTemplate} that are not passed to them as arguments. Additionally, they
+ * <em>must</em> contain references to all arguments that <em>are</em> passed to them -- except
+ * those corresponding to parameters annotated with {@link MayOptionallyUse}.
  *
  * @author lowasser@google.com (Louis Wasserman)
  */
