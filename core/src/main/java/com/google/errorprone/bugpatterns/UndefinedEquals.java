@@ -33,7 +33,6 @@ import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.isSameType;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
 
-import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
@@ -96,7 +95,7 @@ public final class UndefinedEquals extends BugChecker implements MethodInvocatio
       return Description.NO_MATCH;
     }
 
-    return Arrays.stream(BadClass.values())
+    return Arrays.stream(TypesWithUndefinedEquality.values())
         .filter(
             b -> b.matchesType(getType(receiver), state) || b.matchesType(getType(argument), state))
         .findFirst()
@@ -136,7 +135,7 @@ public final class UndefinedEquals extends BugChecker implements MethodInvocatio
 
       // If both are subtypes of Iterable, rewrite
       Type iterableType = state.getSymtab().iterableType;
-      Type multimapType = state.getTypeFromString(getOnlyElement(BadClass.MULTIMAP.typeNames));
+      Type multimapType = state.getTypeFromString("com.google.common.collect.Multimap");
       Optional<SuggestedFix> fix =
           firstPresent(
               generateTruthFix.apply(iterableType, "containsExactlyElementsIn"),
@@ -147,8 +146,7 @@ public final class UndefinedEquals extends BugChecker implements MethodInvocatio
     }
 
     // Generate fix for CharSequence
-    Type charSequenceType =
-        state.getTypeFromString(getOnlyElement(BadClass.CHAR_SEQUENCE.typeNames));
+    Type charSequenceType = state.getTypeFromString("java.lang.CharSequence");
     BiFunction<Tree, Tree, Optional<SuggestedFix>> generateCharSequenceFix =
         (maybeCharSequence, maybeString) -> {
           if (charSequenceType != null
@@ -172,39 +170,4 @@ public final class UndefinedEquals extends BugChecker implements MethodInvocatio
     return Optional.empty();
   }
 
-  private enum BadClass {
-    LONG_SPARSE_ARRAY(
-        "LongSparseArray",
-        "android.util.LongSparseArray",
-        "android.support.v4.util.LongSparseArrayCompat",
-        "androidx.collection.LongSparseArrayCompat"),
-    SPARSE_ARRAY(
-        "SparseArray",
-        "android.util.SparseArray",
-        "android.support.v4.util.SparseArrayCompat",
-        "androidx.collection.SparseArrayCompat"),
-    MULTIMAP("Multimap", "com.google.common.collect.Multimap"),
-    CHAR_SEQUENCE("CharSequence", "java.lang.CharSequence"),
-    ITERABLE("Iterable", "java.lang.Iterable", "com.google.common.collect.FluentIterable"),
-    COLLECTION("Collection", "java.util.Collection"),
-    IMMUTABLE_COLLECTION("ImmutableCollection", "com.google.common.collect.ImmutableCollection"),
-    QUEUE("Queue", "java.util.Queue");
-
-    private final String shortName;
-    private final ImmutableSet<String> typeNames;
-
-    BadClass(String shortName, String... typeNames) {
-      this.shortName = shortName;
-      this.typeNames = ImmutableSet.copyOf(typeNames);
-    }
-
-    private boolean matchesType(Type type, VisitorState state) {
-      return typeNames.stream()
-          .anyMatch(typeName -> isSameType(type, state.getTypeFromString(typeName), state));
-    }
-
-    private String shortName() {
-      return shortName;
-    }
-  }
 }
