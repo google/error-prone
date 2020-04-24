@@ -67,7 +67,7 @@ public class MutablePublicArray extends BugChecker implements VariableTreeMatche
       return false;
     }
     JCNewArray newArray = (JCNewArray) arrayExpression.getInitializer();
-    if (!newArray.getDimensions().isEmpty()) {
+    if (newArray != null && !newArray.getDimensions().isEmpty()) {
       return newArray.getDimensions().stream()
           .allMatch(
               jcExpression -> {
@@ -76,6 +76,6 @@ public class MutablePublicArray extends BugChecker implements VariableTreeMatche
               });
     }
     // For in line array initializer.
-    return newArray.getInitializers() != null && !newArray.getInitializers().isEmpty();
+    return newArray != null && newArray.getInitializers() != null && !newArray.getInitializers().isEmpty();
   }
 }
