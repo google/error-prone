@@ -33,7 +33,7 @@ public class RuntimeVersion {
     }
 
     int version = (int) Double.parseDouble(System.getProperty("java.class.version"));
-    if (49 <= version && version <= 58) {
+    if (49 <= version && version <= 52) {
       return version - (49 - 5);
     }
     return 5;
