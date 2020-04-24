@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns.javadoc;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
-import static com.google.errorprone.BugPattern.StandardTags.STYLE;
 import static com.google.errorprone.bugpatterns.javadoc.Utils.diagnosticPosition;
 import static com.google.errorprone.bugpatterns.javadoc.Utils.getDiagnosticPosition;
 import static com.google.errorprone.bugpatterns.javadoc.Utils.getEndPosition;
@@ -68,7 +67,6 @@ import javax.annotation.Nullable;
     name = "UnescapedEntity",
     summary = "Javadoc is interpreted as HTML, so HTML entities such as &, <, > must be escaped.",
     severity = WARNING,
-    tags = STYLE,
     documentSuppression = false)
 public final class UnescapedEntity extends BugChecker
     implements ClassTreeMatcher, MethodTreeMatcher, VariableTreeMatcher {
