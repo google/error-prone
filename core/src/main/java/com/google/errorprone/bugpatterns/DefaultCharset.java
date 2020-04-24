@@ -376,7 +376,7 @@ public class DefaultCharset extends BugChecker
         .accept(
             new TreeScanner<Void, Void>() {
               @Override
-              public Void visitVariable(VariableTree node, Void aVoid) {
+              public Void visitVariable(VariableTree node, Void unused) {
                 if (sym.equals(ASTHelpers.getSymbol(node))) {
                   fix.replace(node.getType(), replacement.getSimpleName())
                       .addImport(replacement.getCanonicalName());

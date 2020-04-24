@@ -276,15 +276,15 @@ public class CanonicalDuration extends BugChecker implements MethodInvocationTre
     List<MethodInvocationTree> sameMethodInvocations = new ArrayList<>();
     new TreeScanner<Void, Void>() {
       @Override
-      public Void scan(Tree node, Void aVoid) {
+      public Void scan(Tree node, Void unused) {
         if (notFirst.get()) {
           return null;
         }
-        return super.scan(node, aVoid);
+        return super.scan(node, unused);
       }
 
       @Override
-      public Void visitMethodInvocation(MethodInvocationTree node, Void aVoid) {
+      public Void visitMethodInvocation(MethodInvocationTree node, Void unused) {
         if (Objects.equals(methodSymbol, ASTHelpers.getSymbol(node))) {
           if (sameMethodInvocations.isEmpty()) {
             if (!Objects.equals(node, tree)) {
@@ -294,9 +294,9 @@ public class CanonicalDuration extends BugChecker implements MethodInvocationTre
           }
 
           sameMethodInvocations.add(node);
-          return super.visitMethodInvocation(node, aVoid);
+          return super.visitMethodInvocation(node, unused);
         }
-        return super.visitMethodInvocation(node, aVoid);
+        return super.visitMethodInvocation(node, unused);
       }
     }.scan(expressionPath.getLeaf(), null);
 

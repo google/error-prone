@@ -208,11 +208,11 @@ public class ModifiedButNotUsed extends BugChecker
     if (tree.getInitializer() == null) {
       new TreePathScanner<Void, Void>() {
         @Override
-        public Void visitAssignment(AssignmentTree node, Void aVoid) {
+        public Void visitAssignment(AssignmentTree node, Void unused) {
           if (symbol.equals(getSymbol(node.getVariable()))) {
             initializers.add(new TreePath(getCurrentPath(), node.getExpression()));
           }
-          return super.visitAssignment(node, aVoid);
+          return super.visitAssignment(node, unused);
         }
       }.scan(state.getPath().getParentPath(), null);
     } else {

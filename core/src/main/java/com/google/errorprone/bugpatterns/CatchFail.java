@@ -237,11 +237,11 @@ public class CatchFail extends BugChecker implements TryTreeMatcher {
         .accept(
             new TreeScanner<Void, Void>() {
               @Override
-              public Void visitIdentifier(IdentifierTree node, Void aVoid) {
+              public Void visitIdentifier(IdentifierTree node, Void unused) {
                 if (Objects.equals(sym, ASTHelpers.getSymbol(node))) {
                   found[0] = true;
                 }
-                return super.visitIdentifier(node, aVoid);
+                return super.visitIdentifier(node, unused);
               }
             },
             null);

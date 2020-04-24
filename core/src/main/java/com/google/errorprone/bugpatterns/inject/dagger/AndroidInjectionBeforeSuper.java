@@ -126,7 +126,7 @@ public final class AndroidInjectionBeforeSuper extends BugChecker implements Met
     private boolean foundSuper = false;
 
     @Override
-    public Description visitMethodInvocation(MethodInvocationTree node, Void aVoid) {
+    public Description visitMethodInvocation(MethodInvocationTree node, Void unused) {
       if (foundSuper && matchType.injectMethodMatcher.matches(node, state)) {
         return buildDescription(node)
             .setMessage(
@@ -141,7 +141,7 @@ public final class AndroidInjectionBeforeSuper extends BugChecker implements Met
     }
 
     @Override
-    public Description visitMethod(MethodTree node, Void aVoid) {
+    public Description visitMethod(MethodTree node, Void unused) {
       BlockTree methodBody = node.getBody();
       if (methodBody == null) {
         return Description.NO_MATCH;
@@ -155,7 +155,7 @@ public final class AndroidInjectionBeforeSuper extends BugChecker implements Met
     }
 
     @Override
-    public Description visitExpressionStatement(ExpressionStatementTree node, Void aVoid) {
+    public Description visitExpressionStatement(ExpressionStatementTree node, Void unused) {
       return node.getExpression().accept(this, null);
     }
   }

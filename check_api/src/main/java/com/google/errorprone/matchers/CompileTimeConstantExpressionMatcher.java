@@ -83,7 +83,7 @@ public class CompileTimeConstantExpressionMatcher implements Matcher<ExpressionT
                 }
 
                 @Override
-                protected Boolean defaultAction(Tree node, Void aVoid) {
+                protected Boolean defaultAction(Tree node, Void unused) {
                   Object constValue = ASTHelpers.constValue(node);
                   return constValue != null;
                 }

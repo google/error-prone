@@ -165,7 +165,7 @@ public class BadImport extends BugChecker implements ImportTreeMatcher {
           }
 
           @Override
-          public IdentifierTree visitIdentifier(IdentifierTree node, Void aVoid) {
+          public IdentifierTree visitIdentifier(IdentifierTree node, Void unused) {
             Symbol nodeSymbol = ASTHelpers.getSymbol(node);
             if (symbols.contains(nodeSymbol) && !isSuppressed(node)) {
               if (getCurrentPath().getParentPath().getLeaf().getKind() != Kind.CASE) {
@@ -174,7 +174,7 @@ public class BadImport extends BugChecker implements ImportTreeMatcher {
                 return node;
               }
             }
-            return super.visitIdentifier(node, aVoid);
+            return super.visitIdentifier(node, unused);
           }
 
           // We need to move any type annotation inside the qualified usage to preserve semantics,

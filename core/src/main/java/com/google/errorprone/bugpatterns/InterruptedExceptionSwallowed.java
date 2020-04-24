@@ -189,7 +189,7 @@ public final class InterruptedExceptionSwallowed extends BugChecker
           }
 
           @Override
-          public Boolean visitInstanceOf(InstanceOfTree instanceOfTree, Void aVoid) {
+          public Boolean visitInstanceOf(InstanceOfTree instanceOfTree, Void unused) {
             return isSubtype(
                 getType(instanceOfTree.getType()),
                 state.getSymtab().interruptedExceptionType,

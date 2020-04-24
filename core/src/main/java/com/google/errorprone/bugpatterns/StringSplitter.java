@@ -191,7 +191,7 @@ public class StringSplitter extends BugChecker implements MethodInvocationTreeMa
         }
 
         @Override
-        public Boolean visitMemberSelect(MemberSelectTree tree, Void aVoid) {
+        public Boolean visitMemberSelect(MemberSelectTree tree, Void unused) {
           // replace `pieces.length` with `pieces.size`
           if (sym.equals(ASTHelpers.getSymbol(tree.getExpression()))
               && tree.getIdentifier().contentEquals("length")) {
