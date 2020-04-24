@@ -19,7 +19,6 @@ package com.google.errorprone.bugpatterns.collectionincompatibletype;
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode;
 import com.google.errorprone.CompilationTestHelper;
-import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.bugpatterns.collectionincompatibletype.CollectionIncompatibleType.FixType;
 import com.google.errorprone.scanner.ErrorProneScanner;
 import com.google.errorprone.scanner.ScannerSupplier;
@@ -59,8 +58,7 @@ public class CollectionIncompatibleTypeTest {
     CompilationTestHelper compilationHelperWithCastFix =
         CompilationTestHelper.newInstance(
             ScannerSupplier.fromScanner(
-                new ErrorProneScanner(
-                    new CollectionIncompatibleType(FixType.CAST, ErrorProneFlags.empty()))),
+                new ErrorProneScanner(new CollectionIncompatibleType(FixType.CAST))),
             getClass());
     compilationHelperWithCastFix
         .addSourceLines(
@@ -81,8 +79,7 @@ public class CollectionIncompatibleTypeTest {
   public void testSuppressWarningsFix() {
     BugCheckerRefactoringTestHelper refactorTestHelper =
         BugCheckerRefactoringTestHelper.newInstance(
-            new CollectionIncompatibleType(FixType.SUPPRESS_WARNINGS, ErrorProneFlags.empty()),
-            getClass());
+            new CollectionIncompatibleType(FixType.SUPPRESS_WARNINGS), getClass());
     refactorTestHelper
         .addInputLines(
             "in/Test.java",
