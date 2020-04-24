@@ -78,6 +78,7 @@ public class ErrorProneJavacPluginTest {
     Files.write(
         source,
         ImmutableList.of(
+            "package test;",
             "import java.util.HashSet;",
             "import java.util.Set;",
             "class Test {",
@@ -268,6 +269,7 @@ public class ErrorProneJavacPluginTest {
     Files.write(
         one,
         ImmutableList.of(
+            "package test;",
             "import java.util.HashSet;",
             "import java.util.Set;",
             "class One {",
@@ -284,6 +286,7 @@ public class ErrorProneJavacPluginTest {
     Files.write(
         two,
         ImmutableList.of(
+            "package test;",
             "class Two {",
             "  public static void main(String[] args) {",
             "    new Exception();",
