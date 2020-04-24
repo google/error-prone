@@ -87,19 +87,19 @@ class CreatesDuplicateCallHeuristic implements Heuristic {
     ImmutableList.Builder<List<Parameter>> resultBuilder = ImmutableList.builder();
     new TreeScanner<Void, Void>() {
       @Override
-      public Void visitMethodInvocation(MethodInvocationTree methodInvocationTree, Void aVoid) {
+      public Void visitMethodInvocation(MethodInvocationTree methodInvocationTree, Void unused) {
         addToResult(ASTHelpers.getSymbol(methodInvocationTree), methodInvocationTree);
-        return super.visitMethodInvocation(methodInvocationTree, aVoid);
+        return super.visitMethodInvocation(methodInvocationTree, unused);
       }
 
       @Override
-      public Void visitNewClass(NewClassTree newClassTree, Void aVoid) {
+      public Void visitNewClass(NewClassTree newClassTree, Void unused) {
         addToResult(ASTHelpers.getSymbol(newClassTree), newClassTree);
-        return super.visitNewClass(newClassTree, aVoid);
+        return super.visitNewClass(newClassTree, unused);
       }
 
       @Override
-      public Void visitMethod(MethodTree methodTree, Void aVoid) {
+      public Void visitMethod(MethodTree methodTree, Void unused) {
         MethodSymbol methodSymbol = ASTHelpers.getSymbol(methodTree);
         if (methodSymbol != null) {
           // if the method declared here is the one we are calling then add it
@@ -111,7 +111,7 @@ class CreatesDuplicateCallHeuristic implements Heuristic {
             addToResult(superSymbol, methodTree);
           }
         }
-        return super.visitMethod(methodTree, aVoid);
+        return super.visitMethod(methodTree, unused);
       }
 
       private void addToResult(MethodSymbol foundSymbol, Tree tree) {

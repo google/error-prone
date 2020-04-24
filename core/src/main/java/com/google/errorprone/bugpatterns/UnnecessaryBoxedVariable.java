@@ -446,7 +446,7 @@ public class UnnecessaryBoxedVariable extends BugChecker implements VariableTree
     }
 
     @Override
-    public Void visitMemberReference(MemberReferenceTree node, Void aVoid) {
+    public Void visitMemberReference(MemberReferenceTree node, Void unused) {
       ExpressionTree qualifierExpression = node.getQualifierExpression();
       if (qualifierExpression.getKind() == Kind.IDENTIFIER) {
         Symbol symbol = ASTHelpers.getSymbol(qualifierExpression);
@@ -456,7 +456,7 @@ public class UnnecessaryBoxedVariable extends BugChecker implements VariableTree
           return null;
         }
       }
-      return super.visitMemberReference(node, aVoid);
+      return super.visitMemberReference(node, unused);
     }
   }
 }

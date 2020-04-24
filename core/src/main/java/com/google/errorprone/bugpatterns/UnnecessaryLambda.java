@@ -259,7 +259,7 @@ public class UnnecessaryLambda extends BugChecker
         }
 
         @Override
-        public LambdaExpressionTree visitBlock(BlockTree node, Void aVoid) {
+        public LambdaExpressionTree visitBlock(BlockTree node, Void unused) {
           // when processing a method body, only consider methods with a single `return` statement
           // that returns a method
           return node.getStatements().size() == 1
@@ -268,17 +268,17 @@ public class UnnecessaryLambda extends BugChecker
         }
 
         @Override
-        public LambdaExpressionTree visitReturn(ReturnTree node, Void aVoid) {
+        public LambdaExpressionTree visitReturn(ReturnTree node, Void unused) {
           return node.getExpression() != null ? node.getExpression().accept(this, null) : null;
         }
 
         @Override
-        public LambdaExpressionTree visitTypeCast(TypeCastTree node, Void aVoid) {
+        public LambdaExpressionTree visitTypeCast(TypeCastTree node, Void unused) {
           return node.getExpression().accept(this, null);
         }
 
         @Override
-        public LambdaExpressionTree visitParenthesized(ParenthesizedTree node, Void aVoid) {
+        public LambdaExpressionTree visitParenthesized(ParenthesizedTree node, Void unused) {
           return node.getExpression().accept(this, null);
         }
       };

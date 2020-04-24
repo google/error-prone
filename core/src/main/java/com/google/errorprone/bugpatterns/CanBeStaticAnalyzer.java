@@ -120,13 +120,13 @@ public class CanBeStaticAnalyzer extends TreeScanner {
   // }
   private class TypeVariableScanner extends Types.SimpleVisitor<Void, Void> {
     @Override
-    public Void visitTypeVar(Type.TypeVar t, Void aVoid) {
+    public Void visitTypeVar(Type.TypeVar t, Void unused) {
       canPossiblyBeStatic = false;
       return null;
     }
 
     @Override
-    public Void visitClassType(Type.ClassType t, Void aVoid) {
+    public Void visitClassType(Type.ClassType t, Void unused) {
       for (Type a : t.getTypeArguments()) {
         a.accept(this, null);
       }

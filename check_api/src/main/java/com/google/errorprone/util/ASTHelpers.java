@@ -1474,7 +1474,7 @@ public class ASTHelpers {
 
     @Nullable
     @Override
-    public Type visitArrayAccess(ArrayAccessTree node, Void aVoid) {
+    public Type visitArrayAccess(ArrayAccessTree node, Void unused) {
       if (current.equals(node.getIndex())) {
         return state.getSymtab().intType;
       } else {
@@ -1483,7 +1483,7 @@ public class ASTHelpers {
     }
 
     @Override
-    public Type visitAssert(AssertTree node, Void aVoid) {
+    public Type visitAssert(AssertTree node, Void unused) {
       return current.equals(node.getCondition())
           ? state.getSymtab().booleanType
           : state.getSymtab().stringType;
@@ -1507,7 +1507,7 @@ public class ASTHelpers {
     }
 
     @Override
-    public Type visitClass(ClassTree node, Void aVoid) {
+    public Type visitClass(ClassTree node, Void unused) {
       return null;
     }
 
@@ -1547,7 +1547,7 @@ public class ASTHelpers {
     }
 
     @Override
-    public Type visitEnhancedForLoop(EnhancedForLoopTree node, Void aVoid) {
+    public Type visitEnhancedForLoop(EnhancedForLoopTree node, Void unused) {
       Type variableType = ASTHelpers.getType(node.getVariable());
       if (state.getTypes().isArray(ASTHelpers.getType(node.getExpression()))) {
         // For iterating an array, the target type is LoopVariableType[].
@@ -1562,7 +1562,7 @@ public class ASTHelpers {
     }
 
     @Override
-    public Type visitInstanceOf(InstanceOfTree node, Void aVoid) {
+    public Type visitInstanceOf(InstanceOfTree node, Void unused) {
       return state.getSymtab().objectType;
     }
 
@@ -1572,7 +1572,7 @@ public class ASTHelpers {
     }
 
     @Override
-    public Type visitMethod(MethodTree node, Void aVoid) {
+    public Type visitMethod(MethodTree node, Void unused) {
       return null;
     }
 
@@ -1598,18 +1598,18 @@ public class ASTHelpers {
     }
 
     @Override
-    public Type visitSynchronized(SynchronizedTree node, Void aVoid) {
+    public Type visitSynchronized(SynchronizedTree node, Void unused) {
       // The null occurs if you've asked for the type of the parentheses around the expression.
       return Objects.equals(current, node.getExpression()) ? state.getSymtab().objectType : null;
     }
 
     @Override
-    public Type visitThrow(ThrowTree node, Void aVoid) {
+    public Type visitThrow(ThrowTree node, Void unused) {
       return ASTHelpers.getType(current);
     }
 
     @Override
-    public Type visitTypeCast(TypeCastTree node, Void aVoid) {
+    public Type visitTypeCast(TypeCastTree node, Void unused) {
       return getType(node.getType());
     }
 
@@ -1787,7 +1787,7 @@ public class ASTHelpers {
 
     @Nullable
     @Override
-    public Type visitNewArray(NewArrayTree node, Void aVoid) {
+    public Type visitNewArray(NewArrayTree node, Void unused) {
       if (Objects.equals(node.getType(), current)) {
         return null;
       }
@@ -1802,7 +1802,7 @@ public class ASTHelpers {
 
     @Nullable
     @Override
-    public Type visitMemberSelect(MemberSelectTree node, Void aVoid) {
+    public Type visitMemberSelect(MemberSelectTree node, Void unused) {
       if (current.equals(node.getExpression())) {
         return ASTHelpers.getType(node.getExpression());
       }
@@ -1810,7 +1810,7 @@ public class ASTHelpers {
     }
 
     @Override
-    public Type visitMemberReference(MemberReferenceTree node, Void aVoid) {
+    public Type visitMemberReference(MemberReferenceTree node, Void unused) {
       return state.getTypes().findDescriptorType(getType(node)).getReturnType();
     }
 

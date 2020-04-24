@@ -80,7 +80,7 @@ public final class UrlInSee extends BugChecker
     }
 
     @Override
-    public Void visitErroneous(ErroneousTree erroneousTree, Void aVoid) {
+    public Void visitErroneous(ErroneousTree erroneousTree, Void unused) {
       if (erroneousTree.getBody().startsWith("@see http")) {
         state.reportMatch(
             describeMatch(
@@ -88,7 +88,7 @@ public final class UrlInSee extends BugChecker
                 replace(
                     erroneousTree, erroneousTree.getBody().replaceFirst("@see", "See"), state)));
       }
-      return super.visitErroneous(erroneousTree, aVoid);
+      return super.visitErroneous(erroneousTree, unused);
     }
   }
 }

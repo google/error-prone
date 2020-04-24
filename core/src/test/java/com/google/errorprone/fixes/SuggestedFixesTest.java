@@ -885,7 +885,7 @@ public class SuggestedFixesTest {
       final SuggestedFix.Builder fix = SuggestedFix.builder();
       new DocTreePathScanner<Void, Void>() {
         @Override
-        public Void visitLink(LinkTree node, Void aVoid) {
+        public Void visitLink(LinkTree node, Void unused) {
           SuggestedFixes.qualifyDocReference(
               fix, new DocTreePath(getCurrentPath(), node.getReference()), state);
           return null;

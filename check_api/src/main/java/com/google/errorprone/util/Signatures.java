@@ -115,7 +115,7 @@ public class Signatures {
   private static final Type.Visitor<String, Void> PRETTY_TYPE_VISITOR =
       new DefaultTypeVisitor<String, Void>() {
         @Override
-        public String visitWildcardType(Type.WildcardType t, Void aVoid) {
+        public String visitWildcardType(Type.WildcardType t, Void unused) {
           StringBuilder sb = new StringBuilder();
           sb.append(t.kind);
           if (t.kind != BoundKind.UNBOUND) {
@@ -145,7 +145,7 @@ public class Signatures {
         }
 
         @Override
-        public String visitArrayType(Type.ArrayType t, Void aVoid) {
+        public String visitArrayType(Type.ArrayType t, Void unused) {
           return t.elemtype.accept(this, null) + "[]";
         }
 
