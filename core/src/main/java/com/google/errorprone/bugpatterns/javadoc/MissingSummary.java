@@ -18,7 +18,6 @@ package com.google.errorprone.bugpatterns.javadoc;
 
 import static com.google.errorprone.BugPattern.LinkType.CUSTOM;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
-import static com.google.errorprone.BugPattern.StandardTags.STYLE;
 import static com.google.errorprone.bugpatterns.javadoc.Utils.diagnosticPosition;
 import static com.google.errorprone.bugpatterns.javadoc.Utils.getDocTreePath;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
@@ -61,7 +60,6 @@ import javax.lang.model.element.Modifier;
     name = "MissingSummary",
     summary = "A summary line is required on public/protected Javadocs.",
     severity = WARNING,
-    tags = STYLE,
     linkType = CUSTOM,
     link = "http://google.github.io/styleguide/javaguide.html#s7.2-summary-fragment",
     documentSuppression = false)
