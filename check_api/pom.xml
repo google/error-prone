@@ -80,13 +80,6 @@
     <dependency>
       <!-- Apache 2.0 -->
       <groupId>com.google.auto.value</groupId>
-      <artifactId>auto-value</artifactId>
-      <version>${autovalue.version}</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <!-- Apache 2.0 -->
-      <groupId>com.google.auto.value</groupId>
       <artifactId>auto-value-annotations</artifactId>
       <version>${autovalue.version}</version>
       <scope>compile</scope>

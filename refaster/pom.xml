@@ -51,9 +51,8 @@
         <dependency>
             <!-- Apache 2.0 -->
             <groupId>com.google.auto.service</groupId>
-            <artifactId>auto-service</artifactId>
-            <version>1.0-rc6</version>
-            <scope>provided</scope>
+            <artifactId>auto-service-annotations</artifactId>
+            <version>${autoservice.version}</version>
         </dependency>
     </dependencies>
 

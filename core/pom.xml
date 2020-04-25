@@ -123,13 +123,6 @@
     <dependency>
       <!-- Apache 2.0 -->
       <groupId>com.google.auto.value</groupId>
-      <artifactId>auto-value</artifactId>
-      <version>${autovalue.version}</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <!-- Apache 2.0 -->
-      <groupId>com.google.auto.value</groupId>
       <artifactId>auto-value-annotations</artifactId>
       <version>${autovalue.version}</version>
       <scope>compile</scope>
@@ -304,9 +297,9 @@
     <dependency>
       <!-- Apache 2.0 -->
       <groupId>com.google.auto.service</groupId>
-      <artifactId>auto-service</artifactId>
-      <version>1.0-rc6</version>
-      <scope>provided</scope>
+      <artifactId>auto-service-annotations</artifactId>
+      <version>${autoservice.version}</version>
+      <scope>compile</scope>
     </dependency>
     <dependency>
       <!-- Apache 2.0 -->
@@ -399,6 +392,8 @@
                   <include>com.github.ben-manes.caffeine:caffeine</include>
                   <include>com.googlecode.java-diff-utils:diffutils</include>
                   <include>com.google.auto:auto-common</include>
+                  <include>com.google.auto.value:auto-value-annotations</include>
+                  <include>com.google.auto.service:auto-service-annotations</include>
                   <include>com.google.code.findbugs:jsr305</include>
                   <include>com.google.protobuf:protobuf-java</include>
                 </includes>

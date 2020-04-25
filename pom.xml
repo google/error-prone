@@ -36,6 +36,7 @@
     <gwt.version>2.8.2</gwt.version>
     <truth.version>0.45</truth.version>
     <javac.version>9+181-r4173-1</javac.version>
+    <autoservice.version>1.0-rc6</autoservice.version>
     <autovalue.version>1.7</autovalue.version>
     <junit.version>4.13-beta-1</junit.version>
     <dataflow.version>3.1.2</dataflow.version>
@@ -131,6 +132,18 @@
           <testExcludes>
             <exclude>**/testdata/**</exclude>
           </testExcludes>
+          <annotationProcessorPaths>
+            <path>
+              <groupId>com.google.auto.value</groupId>
+              <artifactId>auto-value</artifactId>
+              <version>${autovalue.version}</version>
+            </path>
+            <path>
+              <groupId>com.google.auto.service</groupId>
+              <artifactId>auto-service</artifactId>
+              <version>${autoservice.version}</version>
+            </path>
+          </annotationProcessorPaths>
         </configuration>
       </plugin>
       <plugin>
