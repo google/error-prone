@@ -109,14 +109,35 @@
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-enforcer-plugin</artifactId>
+        <version>3.0.0-M3</version>
+        <executions>
+          <execution>
+            <id>enforce-maven</id>
+            <goals>
+              <goal>enforce</goal>
+            </goals>
+            <configuration>
+              <rules>
+                <requireMavenVersion>
+                  <version>3.0.5</version>
+                </requireMavenVersion>
+              </rules>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jar-plugin</artifactId>
         <version>2.5</version>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-javadoc-plugin</artifactId>
-        <version>3.0.0</version>
+        <version>3.2.0</version>
         <configuration>
+          <source>8</source>
           <notimestamp>true</notimestamp>
           <doctitle>Error Prone ${project.version} API</doctitle>
         </configuration>
@@ -151,7 +172,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-site-plugin</artifactId>
-        <version>3.3</version>
+        <version>3.9.0</version>
         <executions>
           <execution>
             <id>attach-descriptor</id>
@@ -160,10 +181,6 @@
             </goals>
           </execution>
         </executions>
-      </plugin>
-      <plugin>
-        <artifactId>maven-project-info-reports-plugin</artifactId>
-        <version>2.9</version>
       </plugin>
     </plugins>
   </build>

@@ -43,7 +43,7 @@
     <dependency>
       <groupId>com.google.auto.service</groupId>
       <artifactId>auto-service-annotations</artifactId>
-      <version>1.0-rc2</version>
+      <version>1.0-rc6</version>
     </dependency>
   </dependencies>
 
@@ -56,6 +56,13 @@
         <configuration>
           <source>1.8</source>
           <target>1.8</target>
+          <annotationProcessorPaths>
+            <path>
+              <groupId>com.google.auto.service</groupId>
+              <artifactId>auto-service</artifactId>
+              <version>1.0-rc6</version>
+            </path>
+          </annotationProcessorPaths>
         </configuration>
       </plugin>
     </plugins>

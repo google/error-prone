@@ -470,6 +470,33 @@
           <version>${guava.version}</version>
         </dependency>
       </dependencies>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <configuration>
+              <annotationProcessorPaths>
+                <path>
+                  <groupId>com.google.auto.value</groupId>
+                  <artifactId>auto-value</artifactId>
+                  <version>${autovalue.version}</version>
+                </path>
+                <path>
+                  <groupId>com.google.auto.service</groupId>
+                  <artifactId>auto-service</artifactId>
+                  <version>${autoservice.version}</version>
+                </path>
+                <path>
+                  <groupId>com.google.errorprone</groupId>
+                  <artifactId>error_prone_docgen_processor</artifactId>
+                  <version>${project.version}</version>
+                </path>
+              </annotationProcessorPaths>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
     </profile>
     <profile>
       <id>java-8</id>

@@ -98,12 +98,6 @@
       <version>1.35</version>
     </dependency>
     <dependency>
-      <groupId>com.google.auto.service</groupId>
-      <artifactId>auto-service-annotations</artifactId>
-      <version>${autoservice.version}</version>
-      <optional>true</optional>
-    </dependency>
-    <dependency>
       <groupId>com.google.auto.value</groupId>
       <artifactId>auto-value-annotations</artifactId>
       <version>${autovalue.version}</version>
