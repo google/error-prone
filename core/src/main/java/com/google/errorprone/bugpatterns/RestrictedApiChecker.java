@@ -99,19 +99,29 @@ public class RestrictedApiChecker extends BugChecker
   }
 
   private Description checkMethodUse(ExpressionTree tree, VisitorState state) {
-    RestrictedApi annotation = ASTHelpers.getAnnotation(tree, RestrictedApi.class);
+    Symbol symbol = ASTHelpers.getSymbol(tree);
+
+    // Check if the class that method is belong to have restriction
+    if (symbol != null) {
+      Symbol.ClassSymbol classSymbol = (Symbol.ClassSymbol) symbol.owner;
+      RestrictedApi ownerAnnotation = ASTHelpers.getAnnotation(classSymbol, RestrictedApi.class);
+      if (ownerAnnotation != null) {
+        return checkRestriction(ownerAnnotation, tree, state);
+      }
+    }
+
+    RestrictedApi annotation = ASTHelpers.getAnnotation(symbol, RestrictedApi.class);
     if (annotation != null) {
       return checkRestriction(annotation, tree, state);
     }
 
-    Symbol sym = ASTHelpers.getSymbol(tree);
-    if (!(sym instanceof MethodSymbol)) {
+    if (!(symbol instanceof MethodSymbol)) {
       return Description.NO_MATCH; // This shouldn't happen, but has. (See b/33758055)
     }
 
     // Try each super method for @RestrictedApi
     Optional<MethodSymbol> superWithRestrictedApi =
-        ASTHelpers.findSuperMethods((MethodSymbol) sym, state.getTypes()).stream()
+        ASTHelpers.findSuperMethods((MethodSymbol) symbol, state.getTypes()).stream()
             .filter((t) -> ASTHelpers.hasAnnotation(t, RestrictedApi.class, state))
             .findFirst();
     if (!superWithRestrictedApi.isPresent()) {

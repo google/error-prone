@@ -86,6 +86,11 @@ interface IFaceWithRestriction {
   void dontCallMe();
 }
 
+@RestrictedApi(explanation = "type restriction", link = "nothing")
+interface EntireClassRestriction {
+  void cantTouchThis();
+}
+
 @Target({ElementType.METHOD, ElementType.CONSTRUCTOR})
 @interface Whitelist {}
 

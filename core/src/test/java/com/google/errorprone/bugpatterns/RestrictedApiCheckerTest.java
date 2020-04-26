@@ -138,6 +138,22 @@ public class RestrictedApiCheckerTest {
   }
 
   @Test
+  public void testRestrictedClassProhibited() {
+    helper
+            .addSourceLines(
+                    "Testcase.java",
+                    "package com.google.errorprone.bugpatterns.testdata;",
+                    "class RestrictedApiTestSample {",
+                    "    RestrictedApiTestSample(EntireClassRestriction entireClassRestriction) {",
+                    "        // BUG: Diagnostic contains: type restriction",
+                    "        entireClassRestriction.cantTouchThis();",
+                    "    }",
+                    "}")
+            .expectResult(Result.ERROR)
+            .doTest();
+  }
+
+  @Test
   public void testImplicitRestrictedConstructorProhibited() {
     helper
         .addSourceLines(

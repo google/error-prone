@@ -20,7 +20,6 @@ import java.lang.annotation.Annotation;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Target;
 
-// TODO(b/157082874): Allow restricting entire classes.
 /**
  * Restrict this method to callsites with a whitelist annotation.
  *
@@ -80,7 +79,7 @@ import java.lang.annotation.Target;
  * }
  * }</pre>
  */
-@Target({ElementType.CONSTRUCTOR, ElementType.METHOD})
+@Target({ElementType.CONSTRUCTOR, ElementType.METHOD, ElementType.TYPE})
 public @interface RestrictedApi {
   /** Explanation why the API is restricted, to be inserted into the compiler output. */
   String explanation();
