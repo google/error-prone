@@ -72,7 +72,8 @@ public enum ImportPolicy {
       List<String> topLevelPath = Splitter.on('.').splitToList(topLevelClazz);
       String topClazz = Iterables.getLast(topLevelPath);
       List<String> qualifiedPath = Splitter.on('.').splitToList(fullyQualifiedClazz);
-      boolean importTopLevelClazz = false, conflictTopLevelClazz = false;
+      boolean importTopLevelClazz = false;
+      boolean conflictTopLevelClazz = false;
       for (String importName : allImports) {
         if (importName.contentEquals(fullyQualifiedClazz)) {
           // fullyQualifiedClazz already imported
