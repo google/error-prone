@@ -28,6 +28,7 @@ import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static java.util.stream.Collectors.joining;
 
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Streams;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -161,6 +162,14 @@ public class UnnecessaryLambda extends BugChecker
     return describeMatch(tree, fix.build());
   }
 
+  // Allowlist of core packages to emit fixes for functional interfaces in. User-defined functional
+  // interfaces are slightly more likely to have documentation value.
+  private static final ImmutableSet<String> PACKAGES_TO_FIX =
+      ImmutableSet.of(
+          "com.google.common.base",
+          "com.google.errorprone.matchers",
+          "java.util.function",
+          "java.lang");
   /**
    * Check if the only methods invoked on the functional interface type are the descriptor method,
    * e.g. don't rewrite uses of {@link Predicate} in compilation units that call other methods like
@@ -168,6 +177,9 @@ public class UnnecessaryLambda extends BugChecker
    */
   boolean canFix(Tree type, Symbol sym, VisitorState state) {
     Symbol descriptor = state.getTypes().findDescriptorSymbol(getType(type).asElement());
+    if (!PACKAGES_TO_FIX.contains(descriptor.packge().getQualifiedName().toString())) {
+      return false;
+    }
     class Scanner extends TreePathScanner<Void, Void> {
 
       boolean fixable = true;
