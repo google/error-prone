@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import com.google.errorprone.CompilationTestHelper;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -25,13 +24,8 @@ import org.junit.runners.JUnit4;
 /** @author lowasser@google.com (Louis Wasserman) */
 @RunWith(JUnit4.class)
 public class ComparisonContractViolatedTest {
-  private CompilationTestHelper compilationHelper;
-
-  @Before
-  public void setUp() {
-    compilationHelper =
-        CompilationTestHelper.newInstance(ComparisonContractViolated.class, getClass());
-  }
+  private final CompilationTestHelper compilationHelper =
+      CompilationTestHelper.newInstance(ComparisonContractViolated.class, getClass());
 
   @Test
   public void testPositiveCase() {

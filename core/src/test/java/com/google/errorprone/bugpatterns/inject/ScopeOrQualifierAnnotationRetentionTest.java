@@ -18,7 +18,6 @@ package com.google.errorprone.bugpatterns.inject;
 
 import com.google.errorprone.CompilationTestHelper;
 import java.util.Collections;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -26,13 +25,8 @@ import org.junit.runners.JUnit4;
 /** @author sgoldfeder@google.com (Steven Goldfeder) */
 @RunWith(JUnit4.class)
 public class ScopeOrQualifierAnnotationRetentionTest {
-  private CompilationTestHelper compilationHelper;
-
-  @Before
-  public void setUp() {
-    compilationHelper =
-        CompilationTestHelper.newInstance(ScopeOrQualifierAnnotationRetention.class, getClass());
-  }
+  private final CompilationTestHelper compilationHelper =
+      CompilationTestHelper.newInstance(ScopeOrQualifierAnnotationRetention.class, getClass());
 
   @Test
   public void testPositiveCase() {

@@ -19,7 +19,6 @@ package com.google.errorprone.bugpatterns;
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode;
 import com.google.errorprone.CompilationTestHelper;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -28,15 +27,10 @@ import org.junit.runners.JUnit4;
 @RunWith(JUnit4.class)
 public class TypeParameterShadowingTest {
 
-  private CompilationTestHelper compilationHelper;
-  private BugCheckerRefactoringTestHelper refactoring;
-
-  @Before
-  public void setUp() {
-    compilationHelper = CompilationTestHelper.newInstance(TypeParameterShadowing.class, getClass());
-    refactoring =
-        BugCheckerRefactoringTestHelper.newInstance(new TypeParameterShadowing(), getClass());
-  }
+  private final CompilationTestHelper compilationHelper =
+      CompilationTestHelper.newInstance(TypeParameterShadowing.class, getClass());
+  private final BugCheckerRefactoringTestHelper refactoring =
+      BugCheckerRefactoringTestHelper.newInstance(new TypeParameterShadowing(), getClass());
 
   @Test
   public void singleLevel() {

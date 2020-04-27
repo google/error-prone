@@ -29,14 +29,10 @@ import org.junit.runners.ParentRunner;
 @RunWith(JUnit4.class)
 public class JUnit4SetUpNotRunTest {
 
-  private CompilationTestHelper compilationHelper;
+  private final CompilationTestHelper compilationHelper =
+      CompilationTestHelper.newInstance(JUnit4SetUpNotRun.class, getClass());
   private final BugCheckerRefactoringTestHelper refactoringTestHelper =
       BugCheckerRefactoringTestHelper.newInstance(new JUnit4SetUpNotRun(), getClass());
-
-  @Before
-  public void setUp() {
-    compilationHelper = CompilationTestHelper.newInstance(JUnit4SetUpNotRun.class, getClass());
-  }
 
   @Test
   public void testPositiveCases() {

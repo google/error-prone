@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns.threadsafety;
 
 import com.google.errorprone.CompilationTestHelper;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -25,13 +24,8 @@ import org.junit.runners.JUnit4;
 /** {@link SynchronizeOnNonFinalFieldTest}Test */
 @RunWith(JUnit4.class)
 public class SynchronizeOnNonFinalFieldTest {
-  private CompilationTestHelper compilationHelper;
-
-  @Before
-  public void setUp() {
-    compilationHelper =
-        CompilationTestHelper.newInstance(SynchronizeOnNonFinalField.class, getClass());
-  }
+  private final CompilationTestHelper compilationHelper =
+      CompilationTestHelper.newInstance(SynchronizeOnNonFinalField.class, getClass());
 
   @Test
   public void testPositive1() {

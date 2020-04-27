@@ -18,7 +18,6 @@ package com.google.errorprone.bugpatterns;
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode;
 import com.google.errorprone.CompilationTestHelper;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -26,13 +25,8 @@ import org.junit.runners.JUnit4;
 /** @author mariasam@google.com (Maria Sam) */
 @RunWith(JUnit4.class)
 public class OverrideThrowableToStringTest {
-  private CompilationTestHelper compilationHelper;
-
-  @Before
-  public void setUp() {
-    compilationHelper =
-        CompilationTestHelper.newInstance(OverrideThrowableToString.class, getClass());
-  }
+  private final CompilationTestHelper compilationHelper =
+      CompilationTestHelper.newInstance(OverrideThrowableToString.class, getClass());
 
   @Test
   public void positiveCases() {

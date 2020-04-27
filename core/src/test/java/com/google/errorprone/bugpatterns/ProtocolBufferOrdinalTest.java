@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import com.google.errorprone.CompilationTestHelper;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -30,12 +29,8 @@ import org.junit.runners.JUnit4;
 @RunWith(JUnit4.class)
 public class ProtocolBufferOrdinalTest {
 
-  private CompilationTestHelper compilationHelper;
-
-  @Before
-  public void setUp() {
-    compilationHelper = CompilationTestHelper.newInstance(ProtocolBufferOrdinal.class, getClass());
-  }
+  private final CompilationTestHelper compilationHelper =
+      CompilationTestHelper.newInstance(ProtocolBufferOrdinal.class, getClass());
 
   @Test
   public void testPositiveCase() {
