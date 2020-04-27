@@ -348,6 +348,7 @@ import com.google.errorprone.bugpatterns.argumentselectiondefects.ArgumentSelect
 import com.google.errorprone.bugpatterns.argumentselectiondefects.AssertEqualsArgumentOrderChecker;
 import com.google.errorprone.bugpatterns.argumentselectiondefects.AutoValueConstructorOrderChecker;
 import com.google.errorprone.bugpatterns.collectionincompatibletype.CollectionIncompatibleType;
+import com.google.errorprone.bugpatterns.collectionincompatibletype.CollectionUndefinedEquality;
 import com.google.errorprone.bugpatterns.collectionincompatibletype.CompatibleWithMisuse;
 import com.google.errorprone.bugpatterns.collectionincompatibletype.IncompatibleArgumentType;
 import com.google.errorprone.bugpatterns.collectionincompatibletype.TruthIncompatibleType;
@@ -673,6 +674,7 @@ public class BuiltInCheckerSuppliers {
           ClassCanBeStatic.class,
           ClassNewInstance.class,
           CloseableProvides.class,
+          CollectionUndefinedEquality.class,
           CollectorShouldNotUseState.class,
           ComparableAndComparator.class,
           CompareToZero.class,
