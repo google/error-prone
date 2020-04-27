@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns.threadsafety;
 
 import com.google.errorprone.CompilationTestHelper;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -25,12 +24,8 @@ import org.junit.runners.JUnit4;
 /** {@link UnlockMethodChecker}Test */
 @RunWith(JUnit4.class)
 public class UnlockMethodCheckerTest {
-  private CompilationTestHelper compilationHelper;
-
-  @Before
-  public void setUp() {
-    compilationHelper = CompilationTestHelper.newInstance(UnlockMethodChecker.class, getClass());
-  }
+  private final CompilationTestHelper compilationHelper =
+      CompilationTestHelper.newInstance(UnlockMethodChecker.class, getClass());
 
   @Test
   public void testUnlocked() {

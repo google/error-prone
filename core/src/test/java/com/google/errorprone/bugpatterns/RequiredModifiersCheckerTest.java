@@ -19,7 +19,6 @@ package com.google.errorprone.bugpatterns;
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
 import javax.tools.JavaFileObject;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -32,33 +31,28 @@ import org.junit.runners.JUnit4;
 @RunWith(JUnit4.class)
 public class RequiredModifiersCheckerTest {
 
-  private CompilationTestHelper compilationHelper;
+  private final CompilationTestHelper compilationHelper =
+      CompilationTestHelper.newInstance(RequiredModifiersChecker.class, getClass())
+          .addSourceLines(
+              "test/AbstractRequired.java",
+              "package test;",
+              "import static javax.lang.model.element.Modifier.ABSTRACT;",
+              "import com.google.errorprone.annotations.RequiredModifiers;",
+              "@RequiredModifiers(ABSTRACT)",
+              "public @interface AbstractRequired {",
+              "}")
+          .addSourceLines(
+              "test/PublicAndFinalRequired.java",
+              "package test;",
+              "import static javax.lang.model.element.Modifier.FINAL;",
+              "import static javax.lang.model.element.Modifier.PUBLIC;",
+              "import com.google.errorprone.annotations.RequiredModifiers;",
+              "@RequiredModifiers({PUBLIC, FINAL})",
+              "public @interface PublicAndFinalRequired {",
+              "}");
 
   JavaFileObject abstractRequired;
   JavaFileObject publicAndFinalRequired;
-
-  @Before
-  public void setUp() {
-    compilationHelper =
-        CompilationTestHelper.newInstance(RequiredModifiersChecker.class, getClass())
-            .addSourceLines(
-                "test/AbstractRequired.java",
-                "package test;",
-                "import static javax.lang.model.element.Modifier.ABSTRACT;",
-                "import com.google.errorprone.annotations.RequiredModifiers;",
-                "@RequiredModifiers(ABSTRACT)",
-                "public @interface AbstractRequired {",
-                "}")
-            .addSourceLines(
-                "test/PublicAndFinalRequired.java",
-                "package test;",
-                "import static javax.lang.model.element.Modifier.FINAL;",
-                "import static javax.lang.model.element.Modifier.PUBLIC;",
-                "import com.google.errorprone.annotations.RequiredModifiers;",
-                "@RequiredModifiers({PUBLIC, FINAL})",
-                "public @interface PublicAndFinalRequired {",
-                "}");
-  }
 
   @Test
   public void testAnnotationWithRequiredModifiersMissingOnClassFails() {

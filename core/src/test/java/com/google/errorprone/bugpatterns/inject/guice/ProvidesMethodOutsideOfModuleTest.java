@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns.inject.guice;
 
 import com.google.errorprone.CompilationTestHelper;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -25,13 +24,8 @@ import org.junit.runners.JUnit4;
 /** @author glorioso@google.com (Nick Glorioso) */
 @RunWith(JUnit4.class)
 public class ProvidesMethodOutsideOfModuleTest {
-  private CompilationTestHelper compilationHelper;
-
-  @Before
-  public void setUp() {
-    compilationHelper =
-        CompilationTestHelper.newInstance(ProvidesMethodOutsideOfModule.class, getClass());
-  }
+  private final CompilationTestHelper compilationHelper =
+      CompilationTestHelper.newInstance(ProvidesMethodOutsideOfModule.class, getClass());
 
   @Test
   public void testPositiveCase() {

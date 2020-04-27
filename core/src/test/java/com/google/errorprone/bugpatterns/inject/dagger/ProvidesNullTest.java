@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns.inject.dagger;
 
 import com.google.errorprone.CompilationTestHelper;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -25,12 +24,8 @@ import org.junit.runners.JUnit4;
 /** Tests for {@link ProvidesNull}. */
 @RunWith(JUnit4.class)
 public class ProvidesNullTest {
-  private CompilationTestHelper compilationHelper;
-
-  @Before
-  public void setUp() {
-    compilationHelper = CompilationTestHelper.newInstance(ProvidesNull.class, getClass());
-  }
+  private final CompilationTestHelper compilationHelper =
+      CompilationTestHelper.newInstance(ProvidesNull.class, getClass());
 
   // Positive cases
 
@@ -42,7 +37,8 @@ public class ProvidesNullTest {
             "import dagger.Provides;",
             "public class Test {",
             "  @Provides public Object providesObject() {",
-            "    // BUG: Diagnostic contains: Did you mean '@Nullable' or 'throw new RuntimeException();'",
+            "    // BUG: Diagnostic contains: Did you mean '@Nullable' or 'throw new"
+                + " RuntimeException();'",
             "    return null;",
             "  }",
             "}")
@@ -114,7 +110,8 @@ public class ProvidesNullTest {
             "    try {",
             "      return new Object();",
             "    } catch (Exception e) {",
-            "      // BUG: Diagnostic contains: Did you mean 'throw new RuntimeException(e);' or '@Nullable'",
+            "      // BUG: Diagnostic contains: Did you mean 'throw new RuntimeException(e);' or"
+                + " '@Nullable'",
             "      return null;",
             "    }",
             "  }",
@@ -131,7 +128,8 @@ public class ProvidesNullTest {
             "public class Test {",
             "  @Provides public Object providesObject() {",
             "    try {",
-            "      // BUG: Diagnostic contains: Did you mean '@Nullable' or 'throw new RuntimeException();'",
+            "      // BUG: Diagnostic contains: Did you mean '@Nullable' or 'throw new"
+                + " RuntimeException();'",
             "      return null;",
             "    } catch (Exception e) {",
             "      return new Object();",

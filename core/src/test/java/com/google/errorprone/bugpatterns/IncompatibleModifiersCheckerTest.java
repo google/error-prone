@@ -18,7 +18,6 @@ package com.google.errorprone.bugpatterns;
 
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -31,39 +30,34 @@ import org.junit.runners.JUnit4;
 @RunWith(JUnit4.class)
 public class IncompatibleModifiersCheckerTest {
 
-  private CompilationTestHelper compilationHelper;
-
-  @Before
-  public void setUp() {
-    compilationHelper =
-        CompilationTestHelper.newInstance(IncompatibleModifiersChecker.class, getClass())
-            .addSourceLines(
-                "test/NotPrivateOrFinal.java",
-                "package test;",
-                "import static javax.lang.model.element.Modifier.FINAL;",
-                "import static javax.lang.model.element.Modifier.PRIVATE;",
-                "import com.google.errorprone.annotations.IncompatibleModifiers;",
-                "@IncompatibleModifiers({PRIVATE, FINAL})",
-                "public @interface NotPrivateOrFinal {",
-                "}")
-            .addSourceLines(
-                "test/NotPublicOrFinal.java",
-                "package test;",
-                "import static javax.lang.model.element.Modifier.FINAL;",
-                "import static javax.lang.model.element.Modifier.PUBLIC;",
-                "import com.google.errorprone.annotations.IncompatibleModifiers;",
-                "@IncompatibleModifiers({PUBLIC, FINAL})",
-                "public @interface NotPublicOrFinal {",
-                "}")
-            .addSourceLines(
-                "test/NotAbstract.java",
-                "package test;",
-                "import static javax.lang.model.element.Modifier.ABSTRACT;",
-                "import com.google.errorprone.annotations.IncompatibleModifiers;",
-                "@IncompatibleModifiers(ABSTRACT)",
-                "public @interface NotAbstract {",
-                "}");
-  }
+  private final CompilationTestHelper compilationHelper =
+      CompilationTestHelper.newInstance(IncompatibleModifiersChecker.class, getClass())
+          .addSourceLines(
+              "test/NotPrivateOrFinal.java",
+              "package test;",
+              "import static javax.lang.model.element.Modifier.FINAL;",
+              "import static javax.lang.model.element.Modifier.PRIVATE;",
+              "import com.google.errorprone.annotations.IncompatibleModifiers;",
+              "@IncompatibleModifiers({PRIVATE, FINAL})",
+              "public @interface NotPrivateOrFinal {",
+              "}")
+          .addSourceLines(
+              "test/NotPublicOrFinal.java",
+              "package test;",
+              "import static javax.lang.model.element.Modifier.FINAL;",
+              "import static javax.lang.model.element.Modifier.PUBLIC;",
+              "import com.google.errorprone.annotations.IncompatibleModifiers;",
+              "@IncompatibleModifiers({PUBLIC, FINAL})",
+              "public @interface NotPublicOrFinal {",
+              "}")
+          .addSourceLines(
+              "test/NotAbstract.java",
+              "package test;",
+              "import static javax.lang.model.element.Modifier.ABSTRACT;",
+              "import com.google.errorprone.annotations.IncompatibleModifiers;",
+              "@IncompatibleModifiers(ABSTRACT)",
+              "public @interface NotAbstract {",
+              "}");
 
   @Test
   public void testAnnotationWithIncompatibleModifierOnClassFails() {

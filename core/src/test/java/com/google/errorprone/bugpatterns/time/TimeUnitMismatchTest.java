@@ -24,7 +24,6 @@ import static java.util.concurrent.TimeUnit.NANOSECONDS;
 import static java.util.concurrent.TimeUnit.SECONDS;
 
 import com.google.errorprone.CompilationTestHelper;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -32,12 +31,8 @@ import org.junit.runners.JUnit4;
 /** @author cpovirk@google.com (Chris Povirk) */
 @RunWith(JUnit4.class)
 public class TimeUnitMismatchTest {
-  private CompilationTestHelper compilationHelper;
-
-  @Before
-  public void setUp() {
-    compilationHelper = CompilationTestHelper.newInstance(TimeUnitMismatch.class, getClass());
-  }
+  private final CompilationTestHelper compilationHelper =
+      CompilationTestHelper.newInstance(TimeUnitMismatch.class, getClass());
 
   @Test
   public void testPositiveCase() {

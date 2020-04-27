@@ -19,7 +19,6 @@ package com.google.errorprone.bugpatterns;
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.BugCheckerRefactoringTestHelper.FixChoosers;
 import com.google.errorprone.CompilationTestHelper;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -28,12 +27,8 @@ import org.junit.runners.JUnit4;
 @RunWith(JUnit4.class)
 public class DefaultCharsetTest {
 
-  private CompilationTestHelper compilationHelper;
-
-  @Before
-  public void setUp() {
-    compilationHelper = CompilationTestHelper.newInstance(DefaultCharset.class, getClass());
-  }
+  private final CompilationTestHelper compilationHelper =
+      CompilationTestHelper.newInstance(DefaultCharset.class, getClass());
 
   private BugCheckerRefactoringTestHelper refactoringTest() {
     return BugCheckerRefactoringTestHelper.newInstance(new DefaultCharset(), getClass());

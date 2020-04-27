@@ -25,13 +25,12 @@ import org.junit.runners.JUnit4;
 /** @author avenet@google.com (Arnaud J. Venet) */
 @RunWith(JUnit4.class)
 public class RectIntersectReturnValueIgnoredTest {
-  private CompilationTestHelper compilationHelper;
+  private final CompilationTestHelper compilationHelper =
+      CompilationTestHelper.newInstance(RectIntersectReturnValueIgnored.class, getClass())
+          .addSourceFile("testdata/stubs/android/graphics/Rect.java");
 
   @Before
   public void setUp() {
-    compilationHelper =
-        CompilationTestHelper.newInstance(RectIntersectReturnValueIgnored.class, getClass())
-            .addSourceFile("testdata/stubs/android/graphics/Rect.java");
   }
 
   @Test

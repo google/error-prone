@@ -16,7 +16,6 @@
 package com.google.errorprone.bugpatterns;
 
 import com.google.errorprone.CompilationTestHelper;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -24,12 +23,8 @@ import org.junit.runners.JUnit4;
 /** @author jsjeon@google.com (Jinseong Jeon) */
 @RunWith(JUnit4.class)
 public class IterableAndIteratorTest {
-  private CompilationTestHelper compilationHelper;
-
-  @Before
-  public void setUp() {
-    compilationHelper = CompilationTestHelper.newInstance(IterableAndIterator.class, getClass());
-  }
+  private final CompilationTestHelper compilationHelper =
+      CompilationTestHelper.newInstance(IterableAndIterator.class, getClass());
 
   @Test
   public void testPositiveCase() {

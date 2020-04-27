@@ -17,8 +17,6 @@
 package com.google.errorprone.bugpatterns.overloading;
 
 import com.google.errorprone.CompilationTestHelper;
-import com.google.errorprone.bugpatterns.BugChecker;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -30,14 +28,8 @@ import org.junit.runners.JUnit4;
  */
 @RunWith(JUnit4.class)
 public final class InconsistentOverloadsTest {
-
-  private CompilationTestHelper compilationHelper;
-
-  @Before
-  public void createCompilationHelper() {
-    Class<? extends BugChecker> bugCheckerClass = InconsistentOverloads.class;
-    compilationHelper = CompilationTestHelper.newInstance(bugCheckerClass, getClass());
-  }
+  private final CompilationTestHelper compilationHelper =
+      CompilationTestHelper.newInstance(InconsistentOverloads.class, getClass());
 
   @Test
   public void inconsistentOverloadsNegativeCases() {

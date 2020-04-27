@@ -32,7 +32,6 @@ import com.sun.tools.javac.tree.EndPosTable;
 import com.sun.tools.javac.tree.JCTree;
 import java.util.ArrayList;
 import java.util.List;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -41,14 +40,10 @@ import org.junit.runners.JUnit4;
 @RunWith(JUnit4.class)
 public class MissingFailTest {
 
-  private CompilationTestHelper compilationHelper;
-  private BugCheckerRefactoringTestHelper refactoringHelper;
-
-  @Before
-  public void setUp() {
-    compilationHelper = CompilationTestHelper.newInstance(MissingFail.class, getClass());
-    refactoringHelper = BugCheckerRefactoringTestHelper.newInstance(new MissingFail(), getClass());
-  }
+  private final CompilationTestHelper compilationHelper =
+      CompilationTestHelper.newInstance(MissingFail.class, getClass());
+  private final BugCheckerRefactoringTestHelper refactoringHelper =
+      BugCheckerRefactoringTestHelper.newInstance(new MissingFail(), getClass());
 
   @Test
   public void testPositiveCases() {

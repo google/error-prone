@@ -19,7 +19,6 @@ import static org.junit.Assume.assumeFalse;
 
 import com.google.errorprone.CompilationTestHelper;
 import com.google.errorprone.util.RuntimeVersion;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -27,13 +26,8 @@ import org.junit.runners.JUnit4;
 /** @author mariasam@google.com (Maria Sam) on 6/27/17. */
 @RunWith(JUnit4.class)
 public class CollectionToArraySafeParameterTest {
-  private CompilationTestHelper compilationHelper;
-
-  @Before
-  public void setUp() {
-    compilationHelper =
-        CompilationTestHelper.newInstance(CollectionToArraySafeParameter.class, getClass());
-  }
+  private final CompilationTestHelper compilationHelper =
+      CompilationTestHelper.newInstance(CollectionToArraySafeParameter.class, getClass());
 
   @Test
   public void testPositiveCases() {
