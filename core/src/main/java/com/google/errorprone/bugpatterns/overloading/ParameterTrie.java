@@ -26,8 +26,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.NavigableSet;
 import java.util.Optional;
-import java.util.SortedSet;
 import java.util.TreeSet;
 import javax.lang.model.element.Name;
 
@@ -84,7 +84,7 @@ class ParameterTrie {
 
     private final MethodTree methodTree;
 
-    private final SortedSet<Parameter> inputParameters;
+    private final NavigableSet<Parameter> inputParameters;
     private final List<Parameter> outputParameters;
 
     public ParameterTrieExtender(MethodTree methodTree) {
