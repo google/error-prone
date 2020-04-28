@@ -110,6 +110,13 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jar-plugin</artifactId>
         <version>2.5</version>
+        <configuration>
+          <archive>
+            <manifestEntries>
+              <Multi-Release>true</Multi-Release>
+            </manifestEntries>
+          </archive>
+        </configuration>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -131,6 +138,30 @@
           <testExcludes>
             <exclude>**/testdata/**</exclude>
           </testExcludes>
+          <excludes>
+            <exclude>com/google/errorprone/refaster/UInstanceOf.java</exclude>
+          </excludes>
+          <executions>
+            <!-- for Java 14 -->
+            <execution>
+              <id>java14</id>
+              <phase>compile</phase>
+              <goals>
+                <goal>compile</goal>
+              </goals>
+              <configuration>
+                <release>14</release>
+                <jdkToolchain>
+                  <version>14</version>
+                </jdkToolchain>
+                <compileSourceRoots>
+                  <compileSourceRoot>${project.basedir}/src/main/java14</compileSourceRoot>
+                </compileSourceRoots>
+                <outputDirectory>${project.build.outputDirectory}/META-INF/versions/14</outputDirectory>
+                <multiReleaseOutput>true</multiReleaseOutput>
+              </configuration>
+            </execution>
+          </executions>
         </configuration>
       </plugin>
       <plugin>
@@ -166,4 +197,26 @@
       </plugin>
     </plugins>
   </build>
+  <profiles>
+    <profile>
+      <id>compile-java14</id>
+      <activation>
+        <jdk>[14,)</jdk>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>java14</id>
+                <phase>compile</phase>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 </project>
