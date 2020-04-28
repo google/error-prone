@@ -303,6 +303,7 @@ import com.google.errorprone.bugpatterns.TypeParameterUnusedInFormals;
 import com.google.errorprone.bugpatterns.URLEqualsHashCode;
 import com.google.errorprone.bugpatterns.UndefinedEquals;
 import com.google.errorprone.bugpatterns.UngroupedOverloads;
+import com.google.errorprone.bugpatterns.UnnecessarilyFullyQualified;
 import com.google.errorprone.bugpatterns.UnnecessaryAnonymousClass;
 import com.google.errorprone.bugpatterns.UnnecessaryBoxedAssignment;
 import com.google.errorprone.bugpatterns.UnnecessaryBoxedVariable;
@@ -840,8 +841,8 @@ public class BuiltInCheckerSuppliers {
 
   /** A list of all checks that are off by default. */
   public static final ImmutableSet<BugCheckerInfo> DISABLED_CHECKS =
-      // start
       getSuppliers(
+          // start
           AndroidJdkLibsChecker.class,
           AnnotationPosition.class,
           AssertFalse.class,
@@ -925,6 +926,7 @@ public class BuiltInCheckerSuppliers {
           TypeParameterNaming.class,
           UngroupedOverloads.class,
           UnlockMethodChecker.class,
+          UnnecessarilyFullyQualified.class,
           UnnecessaryBoxedAssignment.class,
           UnnecessaryBoxedVariable.class,
           UnnecessaryDefaultInEnumSwitch.class,
