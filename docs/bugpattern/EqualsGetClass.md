@@ -5,6 +5,8 @@ Such code should be modified to use an `instanceof` test instead of `getClass`.
 
 ## Extending a value class to add attributes
 
+TL;DR: use composition rather than inheritance to add fields to value types.
+
 The most common objection objection to this rule arises from a scenario like the
 following:
 
