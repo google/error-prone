@@ -33,7 +33,7 @@ import javax.annotation.Nullable;
 @AutoValue
 abstract class UInstanceOf extends UExpression implements InstanceOfTree {
   public static UInstanceOf create(UExpression expression, UTree<?> type) {
-    return new AutoValue_UIns tanceOf(null, expression, type);
+    return new AutoValue_UInstanceOf(null, expression, type);
   }
 
   public abstract JCPattern getPattern();

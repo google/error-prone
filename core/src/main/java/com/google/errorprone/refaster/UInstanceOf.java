@@ -22,7 +22,6 @@ import com.google.auto.value.AutoValue;
 import com.sun.source.tree.InstanceOfTree;
 import com.sun.source.tree.TreeVisitor;
 import com.sun.tools.javac.tree.JCTree.JCInstanceOf;
-import com.sun.tools.javac.tree.JCTree.JCPattern;
 import javax.annotation.Nullable;
 
 /**
@@ -33,10 +32,8 @@ import javax.annotation.Nullable;
 @AutoValue
 abstract class UInstanceOf extends UExpression implements InstanceOfTree {
   public static UInstanceOf create(UExpression expression, UTree<?> type) {
-    return new AutoValue_UInstanceOf(null, expression, type);
+    return new AutoValue_UInstanceOf(expression, type);
   }
-
-  public abstract JCPattern getPattern();
 
   @Override
   public abstract UExpression getExpression();
