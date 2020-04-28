@@ -32,3 +32,6 @@ bazel-error-prone
 bazel-genfiles
 bazel-out
 bazel-testlogs
+
+# Generated during tests
+core/AutoValue_Test.java
