@@ -43,7 +43,6 @@ public class CompileTimeConstantExpressionMatcherTest {
   public void testMatches_matchesLiteralsAndStaticFinals() {
     String[] lines = {
       "package test;",
-      "import com.google.errorprone.annotations.CompileTimeConstant;",
       "public class CompileTimeConstantExpressionMatcherTestCase {",
       "  private final String final_string = \"bap\";",
       "  private final int final_int = 29;",
@@ -69,7 +68,6 @@ public class CompileTimeConstantExpressionMatcherTest {
   public void testMatches_nullLiteral() {
     String[] lines = {
       "package test;",
-      "import com.google.errorprone.annotations.CompileTimeConstant;",
       "public class CompileTimeConstantExpressionMatcherTestCase {",
       "  private static final String static_final_string = null;",
       "  public void m() { ",
@@ -91,7 +89,6 @@ public class CompileTimeConstantExpressionMatcherTest {
   public void testMatches_doesNotMatchNonLiterals() {
     String[] lines = {
       "package test;",
-      "import com.google.errorprone.annotations.CompileTimeConstant;",
       "public class CompileTimeConstantExpressionMatcherTestCase {",
       "  private final int nonfinal_int;",
       "  public CompileTimeConstantExpressionMatcherTestCase(int i) { ",
@@ -208,15 +205,17 @@ public class CompileTimeConstantExpressionMatcherTest {
   // Helper methods.
   private void assertCompilerMatchesOnAssignment(
       final Map<String, Boolean> expectedMatches, String... lines) {
+    Map<String, Boolean> unmatched = new HashMap<>(expectedMatches);
     final Matcher<ExpressionTree> matcher = new CompileTimeConstantExpressionMatcher();
     final Scanner scanner =
         new Scanner() {
           @Override
           public Void visitAssignment(AssignmentTree t, VisitorState state) {
-            ExpressionTree lhs = t.getVariable();
-            if (expectedMatches.containsKey(lhs.toString())) {
+            String lhs = t.getVariable().toString();
+            if (expectedMatches.containsKey(lhs)) {
+              unmatched.remove(lhs);
               boolean matches = matcher.matches(t.getExpression(), state);
-              if (expectedMatches.get(lhs.toString())) {
+              if (expectedMatches.get(lhs)) {
                 assertWithMessage("Matcher should match expression" + t.getExpression())
                     .that(matches)
                     .isTrue();
@@ -234,5 +233,6 @@ public class CompileTimeConstantExpressionMatcherTest {
         .expectResult(Result.OK)
         .addSourceLines("test/CompileTimeConstantExpressionMatcherTestCase.java", lines)
         .doTest();
+    assertWithMessage("Not all matches were found").that(unmatched).isEmpty();
   }
 }
