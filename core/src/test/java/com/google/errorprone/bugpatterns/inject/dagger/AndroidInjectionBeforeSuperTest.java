@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns.inject.dagger;
 
 import com.google.errorprone.CompilationTestHelper;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -26,20 +25,15 @@ import org.junit.runners.JUnit4;
 @RunWith(JUnit4.class)
 public final class AndroidInjectionBeforeSuperTest {
 
-  private CompilationTestHelper compilationHelper;
-
-  @Before
-  public void setUp() {
-    compilationHelper =
-        CompilationTestHelper.newInstance(AndroidInjectionBeforeSuper.class, getClass())
-            .addSourceFile("testdata/stubs/android/app/Activity.java")
-            .addSourceFile("testdata/stubs/android/app/Fragment.java")
-            .addSourceFile("testdata/stubs/android/app/Service.java")
-            .addSourceFile("testdata/stubs/android/content/Context.java")
-            .addSourceFile("testdata/stubs/android/content/Intent.java")
-            .addSourceFile("testdata/stubs/android/os/Bundle.java")
-            .addSourceFile("testdata/stubs/android/os/IBinder.java");
-  }
+  private final CompilationTestHelper compilationHelper =
+      CompilationTestHelper.newInstance(AndroidInjectionBeforeSuper.class, getClass())
+          .addSourceFile("testdata/stubs/android/app/Activity.java")
+          .addSourceFile("testdata/stubs/android/app/Fragment.java")
+          .addSourceFile("testdata/stubs/android/app/Service.java")
+          .addSourceFile("testdata/stubs/android/content/Context.java")
+          .addSourceFile("testdata/stubs/android/content/Intent.java")
+          .addSourceFile("testdata/stubs/android/os/Bundle.java")
+          .addSourceFile("testdata/stubs/android/os/IBinder.java");
 
   @Test
   public void testPositiveCase() {

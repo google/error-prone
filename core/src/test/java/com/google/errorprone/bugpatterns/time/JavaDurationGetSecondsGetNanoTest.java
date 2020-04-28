@@ -19,7 +19,6 @@ import static org.junit.Assume.assumeFalse;
 
 import com.google.errorprone.CompilationTestHelper;
 import com.google.errorprone.util.RuntimeVersion;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -32,13 +31,8 @@ import org.junit.runners.JUnit4;
 @RunWith(JUnit4.class)
 public class JavaDurationGetSecondsGetNanoTest {
 
-  private CompilationTestHelper compilationHelper;
-
-  @Before
-  public void setUp() {
-    compilationHelper =
-        CompilationTestHelper.newInstance(JavaDurationGetSecondsGetNano.class, getClass());
-  }
+  private final CompilationTestHelper compilationHelper =
+      CompilationTestHelper.newInstance(JavaDurationGetSecondsGetNano.class, getClass());
 
   @Test
   public void testGetSecondsWithGetNanos() {

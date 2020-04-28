@@ -248,7 +248,6 @@ public class ScannerSupplierTest {
   }
 
   @Test
-  @SuppressWarnings("unchecked")
   public void applyOverridesWorksOnEmptySeverityMap() {
     ScannerSupplier ss =
         ScannerSupplier.fromBugCheckerClasses(

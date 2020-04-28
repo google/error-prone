@@ -62,7 +62,9 @@ import com.sun.tools.javac.comp.MemberEnter;
 import com.sun.tools.javac.comp.Resolve;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 import com.sun.tools.javac.tree.JCTree.JCMethodDecl;
+import com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition;
 import com.sun.tools.javac.util.Name;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.List;
@@ -99,28 +101,29 @@ public final class FindIdentifiers {
       }
     }
     try {
-      Symbol result;
-      if (RuntimeVersion.isAtLeast14()) {
-        Method method =
-          Resolve.class.getDeclaredMethod(
-              "findIdent", DiagnosticPosition.class, Env.class, Name.class, KindSelector.class);
-      method.setAccessible(true);
-        result =
-            (Symbol)
-                method.invoke(
-                    Resolve.instance(state.context), null, env, state.getName(name), kind);
-      } else {
-        Method method =
-          Resolve.class.getDeclaredMethod(
-              "findIdent", Env.class, Name.class, KindSelector.class);
-      method.setAccessible(true);
-        result =
-            (Symbol) method.invoke(Resolve.instance(state.context), env, state.getName(name), kind);
-      }
+      Symbol result = findIdent(name, state, kind, env);
       return result.exists() ? result : null;
     } catch (ReflectiveOperationException e) {
       throw new LinkageError(e.getMessage(), e);
     }
+  }
+
+  // Signature was changed in Java 13: https://bugs.openjdk.java.net/browse/JDK-8223305
+  private static Symbol findIdent(
+      String name, VisitorState state, KindSelector kind, Env<AttrContext> env)
+      throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
+    if (RuntimeVersion.isAtLeast13()) {
+      Method method =
+          Resolve.class.getDeclaredMethod(
+              "findIdent", DiagnosticPosition.class, Env.class, Name.class, KindSelector.class);
+      method.setAccessible(true);
+      return (Symbol)
+          method.invoke(Resolve.instance(state.context), null, env, state.getName(name), kind);
+    }
+    Method method =
+        Resolve.class.getDeclaredMethod("findIdent", Env.class, Name.class, KindSelector.class);
+    method.setAccessible(true);
+    return (Symbol) method.invoke(Resolve.instance(state.context), env, state.getName(name), kind);
   }
 
   @Nullable

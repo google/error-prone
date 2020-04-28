@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import com.google.errorprone.CompilationTestHelper;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -26,13 +25,8 @@ import org.junit.runners.JUnit4;
 @RunWith(JUnit4.class)
 public class ClassNamedLikeTypeParameterTest {
 
-  private CompilationTestHelper compilationHelper;
-
-  @Before
-  public final void setUp() {
-    compilationHelper =
-        CompilationTestHelper.newInstance(ClassNamedLikeTypeParameter.class, getClass());
-  }
+  private final CompilationTestHelper compilationHelper =
+      CompilationTestHelper.newInstance(ClassNamedLikeTypeParameter.class, getClass());
 
   @Test
   public void positiveCases() {

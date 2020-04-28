@@ -45,7 +45,8 @@ public abstract class MatcherChecker extends BugChecker implements ExpressionSta
 
   @Override
   public Description matchExpressionStatement(ExpressionStatementTree tree, VisitorState state) {
-    return (tree.toString().equals(expressionStatement) && matcher.matches(tree, state))
+    return (expressionStatement.equals(state.getSourceForNode(tree))
+            && matcher.matches(tree, state))
         ? describeMatch(tree)
         : Description.NO_MATCH;
   }

@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import com.google.errorprone.CompilationTestHelper;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -26,25 +25,20 @@ import org.junit.runners.JUnit4;
 @RunWith(JUnit4.class)
 public class ForOverrideCheckerTest {
 
-  private CompilationTestHelper compilationHelper;
-
-  @Before
-  public void setUp() {
-    compilationHelper =
-        CompilationTestHelper.newInstance(ForOverrideChecker.class, getClass())
-            .addSourceLines(
-                "test/ExtendMe.java",
-                "package test;",
-                "import com.google.errorprone.annotations.ForOverride;",
-                "public class ExtendMe {",
-                "  @ForOverride",
-                "  protected int overrideMe() { return 1; }",
-                "",
-                "  public final void callMe() {",
-                "    overrideMe();",
-                "  }",
-                "}");
-  }
+  private final CompilationTestHelper compilationHelper =
+      CompilationTestHelper.newInstance(ForOverrideChecker.class, getClass())
+          .addSourceLines(
+              "test/ExtendMe.java",
+              "package test;",
+              "import com.google.errorprone.annotations.ForOverride;",
+              "public class ExtendMe {",
+              "  @ForOverride",
+              "  protected int overrideMe() { return 1; }",
+              "",
+              "  public final void callMe() {",
+              "    overrideMe();",
+              "  }",
+              "}");
 
   @Test
   public void testCanApplyForOverrideToProtectedMethod() {

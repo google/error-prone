@@ -33,13 +33,15 @@ import com.sun.source.tree.CompilationUnitTree;
 @BugPattern(
     name = "DefaultPackage",
     summary = "Java classes shouldn't use default package",
-    documentSuppression = false,
     severity = WARNING)
 public final class DefaultPackage extends BugChecker implements CompilationUnitTreeMatcher {
 
   @Override
   public Description matchCompilationUnit(CompilationUnitTree tree, VisitorState state) {
     if (state.errorProneOptions().isTestOnlyTarget()) {
+      return Description.NO_MATCH;
+    }
+    if (tree.getTypeDecls().stream().anyMatch(s -> isSuppressed(s))) {
       return Description.NO_MATCH;
     }
     if (tree.getTypeDecls().stream()

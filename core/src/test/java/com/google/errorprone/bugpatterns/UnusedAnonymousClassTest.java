@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import com.google.errorprone.CompilationTestHelper;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -25,12 +24,8 @@ import org.junit.runners.JUnit4;
 /** {@link UnusedAnonymousClass}Test */
 @RunWith(JUnit4.class)
 public class UnusedAnonymousClassTest {
-  private CompilationTestHelper compilationHelper;
-
-  @Before
-  public void setUp() {
-    compilationHelper = CompilationTestHelper.newInstance(UnusedAnonymousClass.class, getClass());
-  }
+  private final CompilationTestHelper compilationHelper =
+      CompilationTestHelper.newInstance(UnusedAnonymousClass.class, getClass());
 
   @Test
   public void deadObject() {

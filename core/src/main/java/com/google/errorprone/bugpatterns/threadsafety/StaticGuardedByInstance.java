@@ -116,13 +116,13 @@ public class StaticGuardedByInstance extends BugChecker implements SynchronizedT
     }
 
     @Override
-    public Void visitSynchronized(SynchronizedTree node, Void aVoid) {
+    public Void visitSynchronized(SynchronizedTree node, Void unused) {
       // don't descend into nested synchronized blocks
       return null;
     }
 
     @Override
-    public Void visitNewClass(NewClassTree node, Void aVoid) {
+    public Void visitNewClass(NewClassTree node, Void unused) {
       // don't descend into nested synchronized blocks
       return null;
     }

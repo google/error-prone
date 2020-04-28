@@ -30,7 +30,6 @@ import com.google.errorprone.matchers.Description;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.ReturnTree;
 import com.sun.tools.javac.main.Main.Result;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -39,12 +38,8 @@ import org.junit.runners.JUnit4;
 @RunWith(JUnit4.class)
 public class CompilationTestHelperTest {
 
-  private CompilationTestHelper compilationHelper;
-
-  @Before
-  public void setUp() {
-    compilationHelper = CompilationTestHelper.newInstance(ReturnTreeChecker.class, getClass());
-  }
+  private final CompilationTestHelper compilationHelper =
+      CompilationTestHelper.newInstance(ReturnTreeChecker.class, getClass());
 
   @Test
   public void fileWithNoBugMarkersAndNoErrorsShouldPass() {

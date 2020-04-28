@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import com.google.errorprone.CompilationTestHelper;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -25,13 +24,8 @@ import org.junit.runners.JUnit4;
 @RunWith(JUnit4.class)
 public class TypeParameterUnusedInFormalsTest {
 
-  private CompilationTestHelper compilationHelper;
-
-  @Before
-  public void setUp() {
-    compilationHelper =
-        CompilationTestHelper.newInstance(TypeParameterUnusedInFormals.class, getClass());
-  }
+  private final CompilationTestHelper compilationHelper =
+      CompilationTestHelper.newInstance(TypeParameterUnusedInFormals.class, getClass());
 
   @Test
   public void evilCastImpl() {
@@ -80,7 +74,8 @@ public class TypeParameterUnusedInFormalsTest {
             "package foo.bar;",
             "class Test {",
             "  // BUG: Diagnostic contains:",
-            "  static <V extends Object, T, U extends Object> T doCast(U o, V v) { T t = (T) o; return t; }",
+            "  static <V extends Object, T, U extends Object> T doCast(U o, V v) { T t = (T) o;"
+                + " return t; }",
             "}")
         .doTest();
   }

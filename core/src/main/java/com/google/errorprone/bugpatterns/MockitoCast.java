@@ -118,15 +118,15 @@ public class MockitoCast extends BugChecker implements CompilationUnitTreeMatche
     }
 
     @Override
-    public Void visitVariable(VariableTree node, Void aVoid) {
+    public Void visitVariable(VariableTree node, Void unused) {
       recordInitialization(node, node.getInitializer());
-      return super.visitVariable(node, aVoid);
+      return super.visitVariable(node, unused);
     }
 
     @Override
-    public Void visitAssignment(AssignmentTree node, Void aVoid) {
+    public Void visitAssignment(AssignmentTree node, Void unused) {
       recordInitialization(node.getVariable(), node.getExpression());
-      return super.visitAssignment(node, aVoid);
+      return super.visitAssignment(node, unused);
     }
 
     private void recordInitialization(Tree varTree, ExpressionTree initializer) {
@@ -257,7 +257,7 @@ public class MockitoCast extends BugChecker implements CompilationUnitTreeMatche
     }
 
     @Override
-    public Boolean scan(Tree tree, Void aVoid) {
+    public Boolean scan(Tree tree, Void unused) {
       Symbol sym = ASTHelpers.getSymbol(tree);
       if (sym instanceof VarSymbol) {
         VarSymbol varSym = (VarSymbol) sym;
@@ -274,7 +274,7 @@ public class MockitoCast extends BugChecker implements CompilationUnitTreeMatche
           return true;
         }
       }
-      return super.scan(tree, aVoid);
+      return super.scan(tree, unused);
     }
 
     @Override

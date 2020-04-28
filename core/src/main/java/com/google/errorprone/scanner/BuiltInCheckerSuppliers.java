@@ -245,7 +245,6 @@ import com.google.errorprone.bugpatterns.ProtoStringFieldReferenceEquality;
 import com.google.errorprone.bugpatterns.ProtoTruthMixedDescriptors;
 import com.google.errorprone.bugpatterns.ProtocolBufferOrdinal;
 import com.google.errorprone.bugpatterns.ProtosAsKeyOfSetOrMap;
-import com.google.errorprone.bugpatterns.ProvidesFixChecker;
 import com.google.errorprone.bugpatterns.RandomCast;
 import com.google.errorprone.bugpatterns.RandomModInteger;
 import com.google.errorprone.bugpatterns.ReachabilityFenceUsage;
@@ -274,6 +273,7 @@ import com.google.errorprone.bugpatterns.StringEquality;
 import com.google.errorprone.bugpatterns.StringSplitter;
 import com.google.errorprone.bugpatterns.SubstringOfZero;
 import com.google.errorprone.bugpatterns.SuppressWarningsDeprecated;
+import com.google.errorprone.bugpatterns.SuppressWarningsWithoutExplanation;
 import com.google.errorprone.bugpatterns.SwigMemoryLeak;
 import com.google.errorprone.bugpatterns.SwitchDefault;
 import com.google.errorprone.bugpatterns.SystemExitOutsideMain;
@@ -303,6 +303,7 @@ import com.google.errorprone.bugpatterns.TypeParameterUnusedInFormals;
 import com.google.errorprone.bugpatterns.URLEqualsHashCode;
 import com.google.errorprone.bugpatterns.UndefinedEquals;
 import com.google.errorprone.bugpatterns.UngroupedOverloads;
+import com.google.errorprone.bugpatterns.UnnecessarilyFullyQualified;
 import com.google.errorprone.bugpatterns.UnnecessaryAnonymousClass;
 import com.google.errorprone.bugpatterns.UnnecessaryBoxedAssignment;
 import com.google.errorprone.bugpatterns.UnnecessaryBoxedVariable;
@@ -348,6 +349,7 @@ import com.google.errorprone.bugpatterns.argumentselectiondefects.ArgumentSelect
 import com.google.errorprone.bugpatterns.argumentselectiondefects.AssertEqualsArgumentOrderChecker;
 import com.google.errorprone.bugpatterns.argumentselectiondefects.AutoValueConstructorOrderChecker;
 import com.google.errorprone.bugpatterns.collectionincompatibletype.CollectionIncompatibleType;
+import com.google.errorprone.bugpatterns.collectionincompatibletype.CollectionUndefinedEquality;
 import com.google.errorprone.bugpatterns.collectionincompatibletype.CompatibleWithMisuse;
 import com.google.errorprone.bugpatterns.collectionincompatibletype.IncompatibleArgumentType;
 import com.google.errorprone.bugpatterns.collectionincompatibletype.TruthIncompatibleType;
@@ -598,6 +600,7 @@ public class BuiltInCheckerSuppliers {
           PeriodFrom.class,
           PeriodGetTemporalUnit.class,
           PeriodTimeMath.class,
+          PreconditionsInvalidPlaceholder.class,
           PredicateIncompatibleType.class,
           PrivateSecurityContractProtoAccess.class,
           ProtoFieldNullComparison.class,
@@ -672,6 +675,7 @@ public class BuiltInCheckerSuppliers {
           ClassCanBeStatic.class,
           ClassNewInstance.class,
           CloseableProvides.class,
+          CollectionUndefinedEquality.class,
           CollectorShouldNotUseState.class,
           ComparableAndComparator.class,
           CompareToZero.class,
@@ -779,7 +783,6 @@ public class BuiltInCheckerSuppliers {
           OverridesGuiceInjectableMethod.class,
           ParameterName.class,
           PreconditionsCheckNotNullRepeated.class,
-          PreconditionsInvalidPlaceholder.class,
           PrimitiveAtomicReference.class,
           ProtectedMembersInFinalClass.class,
           ProtoDurationGetSecondsGetNano.class,
@@ -838,8 +841,8 @@ public class BuiltInCheckerSuppliers {
 
   /** A list of all checks that are off by default. */
   public static final ImmutableSet<BugCheckerInfo> DISABLED_CHECKS =
-      // start
       getSuppliers(
+          // start
           AndroidJdkLibsChecker.class,
           AnnotationPosition.class,
           AssertFalse.class,
@@ -900,7 +903,6 @@ public class BuiltInCheckerSuppliers {
           PrivateConstructorForNoninstantiableModule.class,
           PrivateConstructorForUtilityClass.class,
           ProtosAsKeyOfSetOrMap.class,
-          ProvidesFixChecker.class,
           QualifierWithTypeUse.class,
           RedundantCondition.class,
           RedundantOverride.class,
@@ -912,6 +914,7 @@ public class BuiltInCheckerSuppliers {
           StaticQualifiedUsingExpression.class,
           StringEquality.class,
           StronglyTypeTime.class,
+          SuppressWarningsWithoutExplanation.class,
           SwitchDefault.class,
           SystemExitOutsideMain.class,
           TestExceptionChecker.class,
@@ -923,6 +926,7 @@ public class BuiltInCheckerSuppliers {
           TypeParameterNaming.class,
           UngroupedOverloads.class,
           UnlockMethodChecker.class,
+          UnnecessarilyFullyQualified.class,
           UnnecessaryBoxedAssignment.class,
           UnnecessaryBoxedVariable.class,
           UnnecessaryDefaultInEnumSwitch.class,

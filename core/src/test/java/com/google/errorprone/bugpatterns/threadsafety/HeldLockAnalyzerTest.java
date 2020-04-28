@@ -26,7 +26,6 @@ import com.sun.source.tree.Tree;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -34,13 +33,8 @@ import org.junit.runners.JUnit4;
 /** {@link GuardedByLockSetAnalyzer}Test */
 @RunWith(JUnit4.class)
 public class HeldLockAnalyzerTest {
-  private CompilationTestHelper compilationHelper;
-
-  @Before
-  public void setUp() {
-    compilationHelper =
-        CompilationTestHelper.newInstance(GuardedByLockSetAnalyzer.class, getClass());
-  }
+  private final CompilationTestHelper compilationHelper =
+      CompilationTestHelper.newInstance(GuardedByLockSetAnalyzer.class, getClass());
 
   @Test
   public void testInstance() {

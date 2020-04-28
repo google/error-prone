@@ -116,7 +116,7 @@ public final class TrustingNullnessAnalysis implements Serializable {
           .setCompilationUnit(fieldDeclPath.getCompilationUnit());
 
       Analysis<Nullness, AccessPathStore<Nullness>, TrustingNullnessPropagation> analysis =
-          new Analysis<>(nullnessPropagation, javacEnv);
+          new Analysis<>(nullnessPropagation);
       analysis.performAnalysis(cfg);
       return analysis.getValue(initializer);
     } finally {

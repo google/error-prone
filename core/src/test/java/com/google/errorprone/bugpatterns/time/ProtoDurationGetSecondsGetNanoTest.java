@@ -16,7 +16,6 @@
 package com.google.errorprone.bugpatterns.time;
 
 import com.google.errorprone.CompilationTestHelper;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -32,13 +31,8 @@ import org.junit.Ignore;
 @Ignore("b/130667208")
 public class ProtoDurationGetSecondsGetNanoTest {
 
-  private CompilationTestHelper compilationHelper;
-
-  @Before
-  public void setUp() {
-    compilationHelper =
-        CompilationTestHelper.newInstance(ProtoDurationGetSecondsGetNano.class, getClass());
-  }
+  private final CompilationTestHelper compilationHelper =
+      CompilationTestHelper.newInstance(ProtoDurationGetSecondsGetNano.class, getClass());
 
   @Test
   public void testGetSecondsWithGetNanos() {

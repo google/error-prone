@@ -40,5 +40,5 @@ public abstract class Match {
     return new AutoValue_Match(ImmutableMap.copyOf(bindings));
   }
 
-  abstract Map<String, String> bindings();
+  abstract ImmutableMap<String, String> bindings();
 }

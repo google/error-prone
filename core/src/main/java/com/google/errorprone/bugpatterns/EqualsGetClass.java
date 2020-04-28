@@ -62,9 +62,7 @@ import javax.lang.model.element.Modifier;
  */
 @BugPattern(
     name = "EqualsGetClass",
-    summary =
-        "Overriding Object#equals in a non-final class by using getClass rather than instanceof "
-            + "breaks substitutability of subclasses.",
+    summary = "Prefer instanceof to getClass when implementing Object#equals.",
     severity = WARNING,
     tags = StandardTags.FRAGILE_CODE)
 public final class EqualsGetClass extends BugChecker implements MethodInvocationTreeMatcher {

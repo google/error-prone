@@ -24,8 +24,8 @@ import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
-import com.google.errorprone.bugpatterns.EqualsIncompatibleType;
-import com.google.errorprone.bugpatterns.EqualsIncompatibleType.TypeCompatibilityReport;
+import com.google.errorprone.bugpatterns.TypeCompatibilityUtils;
+import com.google.errorprone.bugpatterns.TypeCompatibilityUtils.TypeCompatibilityReport;
 import com.google.errorprone.bugpatterns.collectionincompatibletype.AbstractCollectionIncompatibleTypeMatcher.MatchResult;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
@@ -141,7 +141,7 @@ public class TruthIncompatibleType extends BugChecker implements MethodInvocatio
       return Description.NO_MATCH;
     }
     TypeCompatibilityReport compatibilityReport =
-        EqualsIncompatibleType.compatibilityOfTypes(
+        TypeCompatibilityUtils.compatibilityOfTypes(
             result.targetType(), result.sourceType(), state);
     if (compatibilityReport.compatible()) {
       return Description.NO_MATCH;

@@ -127,24 +127,19 @@ public @interface BugPattern {
    */
   String[] tags() default {};
 
-  /** Whether and what type of fix this check provides. */
+  /**
+   * Whether and what type of fix this check provides.
+   *
+   * @deprecated this field is not used
+   */
+  @Deprecated
   ProvidesFix providesFix() default ProvidesFix.UNSPECIFIED;
 
   /** Types of fixes BugCheckers can provide. */
   enum ProvidesFix {
-    NO_FIX("No"),
-    REQUIRES_HUMAN_ATTENTION("Yes, requires human attention"),
-    UNSPECIFIED("");
-
-    private final String displayInfo;
-
-    ProvidesFix(String displayInfo) {
-      this.displayInfo = displayInfo;
-    }
-
-    public String displayInfo() {
-      return this.displayInfo;
-    }
+    NO_FIX,
+    REQUIRES_HUMAN_ATTENTION,
+    UNSPECIFIED;
   }
 
   /**

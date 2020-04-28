@@ -134,12 +134,12 @@ public class LoopConditionChecker extends BugChecker
     }
 
     @Override
-    public Boolean visitUnary(UnaryTree node, Void aVoid) {
+    public Boolean visitUnary(UnaryTree node, Void unused) {
       return node.getExpression().accept(this, null);
     }
 
     @Override
-    public Boolean visitBinary(BinaryTree node, Void aVoid) {
+    public Boolean visitBinary(BinaryTree node, Void unused) {
       return firstNonNull(node.getLeftOperand().accept(this, null), false)
           && firstNonNull(node.getRightOperand().accept(this, null), false);
     }

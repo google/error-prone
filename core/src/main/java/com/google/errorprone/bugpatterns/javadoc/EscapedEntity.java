@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns.javadoc;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
-import static com.google.errorprone.BugPattern.StandardTags.STYLE;
 import static com.google.errorprone.bugpatterns.javadoc.Utils.diagnosticPosition;
 import static com.google.errorprone.bugpatterns.javadoc.Utils.getDocTreePath;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
@@ -48,7 +47,6 @@ import javax.annotation.Nullable;
     name = "EscapedEntity",
     summary = "HTML entities in @code/@literal tags will appear literally in the rendered javadoc.",
     severity = WARNING,
-    tags = STYLE,
     documentSuppression = false)
 public final class EscapedEntity extends BugChecker
     implements ClassTreeMatcher, MethodTreeMatcher, VariableTreeMatcher {

@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import com.google.errorprone.CompilationTestHelper;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -25,12 +24,8 @@ import org.junit.runners.JUnit4;
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @RunWith(JUnit4.class)
 public class OverridesTest {
-  private CompilationTestHelper compilationHelper;
-
-  @Before
-  public void setUp() {
-    compilationHelper = CompilationTestHelper.newInstance(Overrides.class, getClass());
-  }
+  private final CompilationTestHelper compilationHelper =
+      CompilationTestHelper.newInstance(Overrides.class, getClass());
 
   @Test
   public void testPositiveCase1() {

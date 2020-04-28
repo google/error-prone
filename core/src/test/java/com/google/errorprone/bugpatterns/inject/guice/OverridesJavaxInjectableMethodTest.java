@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns.inject.guice;
 
 import com.google.errorprone.CompilationTestHelper;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -25,13 +24,8 @@ import org.junit.runners.JUnit4;
 /** @author sgoldfeder@google.com (Steven Goldfeder) */
 @RunWith(JUnit4.class)
 public class OverridesJavaxInjectableMethodTest {
-  private CompilationTestHelper compilationHelper;
-
-  @Before
-  public void setUp() {
-    compilationHelper =
-        CompilationTestHelper.newInstance(OverridesJavaxInjectableMethod.class, getClass());
-  }
+  private final CompilationTestHelper compilationHelper =
+      CompilationTestHelper.newInstance(OverridesJavaxInjectableMethod.class, getClass());
 
   @Test
   public void testPositiveCase() {

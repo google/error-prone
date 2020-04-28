@@ -19,7 +19,6 @@ import static com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode.TEX
 
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -27,13 +26,8 @@ import org.junit.runners.JUnit4;
 /** @author yulissa@google.com (Yulissa Arroyo-Paredes) */
 @RunWith(JUnit4.class)
 public final class ThrowsUncheckedExceptionTest {
-  private CompilationTestHelper compilationHelper;
-
-  @Before
-  public void setUp() {
-    compilationHelper =
-        CompilationTestHelper.newInstance(ThrowsUncheckedException.class, getClass());
-  }
+  private final CompilationTestHelper compilationHelper =
+      CompilationTestHelper.newInstance(ThrowsUncheckedException.class, getClass());
 
   @Test
   public void testPositiveCase() {
