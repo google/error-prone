@@ -70,7 +70,7 @@ public final class UnnecessarilyFullyQualified extends BugChecker
     Set<Name> identifiersSeen = new HashSet<>();
     new SuppressibleTreePathScanner<Void, Void>() {
       @Override
-      public Void visitImport(ImportTree importTree, Void aVoid) {
+      public Void visitImport(ImportTree importTree, Void unused) {
         return null;
       }
 
@@ -109,16 +109,18 @@ public final class UnnecessarilyFullyQualified extends BugChecker
           return;
         }
         Symbol symbol = getSymbol(tree);
-        if (symbol instanceof ClassSymbol) {
-          List<TreePath> treePaths = table.get(tree.getIdentifier(), symbol.type.tsym);
-          if (treePaths == null) {
-            treePaths = new ArrayList<>();
-            table.put(tree.getIdentifier(), symbol.type.tsym, treePaths);
-          }
-          if (state.getEndPosition(tree) != Position.NOPOS) {
-            treePaths.add(path);
-          }
+        if (!(symbol instanceof ClassSymbol)) {
+          return;
         }
+        if (state.getEndPosition(tree) == Position.NOPOS) {
+          return;
+        }
+        List<TreePath> treePaths = table.get(tree.getIdentifier(), symbol.type.tsym);
+        if (treePaths == null) {
+          treePaths = new ArrayList<>();
+          table.put(tree.getIdentifier(), symbol.type.tsym, treePaths);
+        }
+        treePaths.add(path);
       }
 
       private boolean isFullyQualified(MemberSelectTree tree) {
@@ -160,12 +162,15 @@ public final class UnnecessarilyFullyQualified extends BugChecker
           .anyMatch(path -> findIdent(name.toString(), state, VAL_TYP) != null)) {
         continue;
       }
-      SuggestedFix.Builder fix = SuggestedFix.builder();
-      fix.addImport(getOnlyElement(types.keySet()).getQualifiedName().toString());
+      SuggestedFix.Builder fixBuilder = SuggestedFix.builder();
+      fixBuilder.addImport(getOnlyElement(types.keySet()).getQualifiedName().toString());
       for (TreePath path : pathsToFix) {
-        fix.replace(path.getLeaf(), name.toString());
+        fixBuilder.replace(path.getLeaf(), name.toString());
       }
-      state.reportMatch(describeMatch(pathsToFix.get(0).getLeaf(), fix.build()));
+      SuggestedFix fix = fixBuilder.build();
+      for (TreePath path : pathsToFix) {
+        state.reportMatch(describeMatch(path.getLeaf(), fix));
+      }
     }
     return NO_MATCH;
   }
