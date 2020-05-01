@@ -291,6 +291,7 @@ import com.google.errorprone.bugpatterns.TransientMisuse;
 import com.google.errorprone.bugpatterns.TreeToString;
 import com.google.errorprone.bugpatterns.TruthAssertExpected;
 import com.google.errorprone.bugpatterns.TruthConstantAsserts;
+import com.google.errorprone.bugpatterns.TruthGetOrDefault;
 import com.google.errorprone.bugpatterns.TruthSelfEquals;
 import com.google.errorprone.bugpatterns.TryFailRefactoring;
 import com.google.errorprone.bugpatterns.TryFailThrowable;
@@ -812,6 +813,7 @@ public class BuiltInCheckerSuppliers {
           TreeToString.class,
           TruthAssertExpected.class,
           TruthConstantAsserts.class,
+          TruthGetOrDefault.class,
           TruthIncompatibleType.class,
           TypeEqualsChecker.class,
           TypeNameShadowing.class,
