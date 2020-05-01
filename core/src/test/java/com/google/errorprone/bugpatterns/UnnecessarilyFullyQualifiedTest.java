@@ -48,7 +48,9 @@ public final class UnnecessarilyFullyQualifiedTest {
   @Test
   public void wouldBeAmbiguous() {
     helper
-        .addInputLines("List.java", "class List {}")
+        .addInputLines(
+            "List.java", //
+            "class List {}")
         .expectUnchanged()
         .addInputLines(
             "Test.java", //
@@ -73,6 +75,29 @@ public final class UnnecessarilyFullyQualifiedTest {
             "interface Test {",
             "  java.util.List foo();",
             "  a.List bar();",
+            "}")
+        .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
+  public void clashesWithTypeInSuperType() {
+    helper
+        .addInputLines(
+            "A.java", //
+            "package a;",
+            "public interface A {",
+            "  public static class List {}",
+            "}")
+        .expectUnchanged()
+        .addInputLines(
+            "Test.java",
+            "package b;",
+            "import a.A;",
+            "class Test implements A {",
+            "  java.util.List foo() {",
+            "    return null;",
+            "  }",
             "}")
         .expectUnchanged()
         .doTest();
