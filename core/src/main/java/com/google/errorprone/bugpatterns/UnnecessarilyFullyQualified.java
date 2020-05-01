@@ -159,7 +159,7 @@ public final class UnnecessarilyFullyQualified extends BugChecker
       }
       List<TreePath> pathsToFix = getOnlyElement(types.values());
       if (pathsToFix.stream()
-          .anyMatch(path -> findIdent(name.toString(), state, VAL_TYP) != null)) {
+          .anyMatch(path -> findIdent(name.toString(), state.withPath(path), VAL_TYP) != null)) {
         continue;
       }
       SuggestedFix.Builder fixBuilder = SuggestedFix.builder();
