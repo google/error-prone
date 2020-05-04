@@ -1067,11 +1067,15 @@ public class ASTHelpers {
     return types.isSubtype(types.erasure(s), types.erasure(t));
   }
 
-  /** Returns true if {@code t} is a subtype of Exception but not a subtype of RuntimeException. */
+  /**
+   * Returns true if {@code t} is a subtype of Throwable but not a subtype of RuntimeException or
+   * Error.
+   */
   public static boolean isCheckedExceptionType(Type t, VisitorState state) {
     Symtab symtab = state.getSymtab();
-    return isSubtype(t, symtab.exceptionType, state)
-        && !isSubtype(t, symtab.runtimeExceptionType, state);
+    return isSubtype(t, symtab.throwableType, state)
+        && !isSubtype(t, symtab.runtimeExceptionType, state)
+        && !isSubtype(t, symtab.errorType, state);
   }
 
   /** Returns true if {@code erasure(s)} is castable to {@code erasure(t)}. */
