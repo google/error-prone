@@ -111,7 +111,7 @@ public final class ContainmentMatchers {
           .build();
 
   @Nullable
-  static MatchResult firstNonNullMatchResult(ExpressionTree tree, VisitorState state) {
+  public static MatchResult firstNonNullMatchResult(ExpressionTree tree, VisitorState state) {
     if (!FIRST_ORDER_MATCHER.matches(tree, state)) {
       return null;
     }
