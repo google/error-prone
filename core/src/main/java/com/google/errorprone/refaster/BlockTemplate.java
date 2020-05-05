@@ -178,7 +178,7 @@ public abstract class BlockTemplate extends Template<BlockTemplateMatch> {
     try {
       pretty(context, writer).printStat(statement);
     } catch (IOException e) {
-      throw new AssertionError("StringWriter cannot throw IOExceptions");
+      throw new AssertionError("StringWriter cannot throw IOExceptions", e);
     }
     return writer.toString();
   }
@@ -192,7 +192,7 @@ public abstract class BlockTemplate extends Template<BlockTemplateMatch> {
     try {
       pretty(context, writer).printStats(com.sun.tools.javac.util.List.from(statements));
     } catch (IOException e) {
-      throw new AssertionError("StringWriter cannot throw IOExceptions");
+      throw new AssertionError("StringWriter cannot throw IOExceptions", e);
     }
     return writer.toString();
   }
