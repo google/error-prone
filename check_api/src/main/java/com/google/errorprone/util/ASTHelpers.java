@@ -1910,9 +1910,9 @@ public class ASTHelpers {
 
     @Override
     public Void visitMethodInvocation(MethodInvocationTree invocation, Void unused) {
-      MethodSymbol symbol = getSymbol(invocation);
-      if (symbol != null) {
-        getThrownTypes().addAll(symbol.getThrownTypes());
+      Type type = getType(invocation.getMethodSelect());
+      if (type != null) {
+        getThrownTypes().addAll(type.getThrownTypes());
       }
       return super.visitMethodInvocation(invocation, null);
     }
