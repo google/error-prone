@@ -38,7 +38,6 @@ import java.io.Serializable;
 import java.lang.annotation.Annotation;
 import java.util.Collection;
 import java.util.List;
-import javax.annotation.Nullable;
 import javax.tools.JavaFileManager;
 
 /**
@@ -111,7 +110,6 @@ public abstract class RefasterRule<M extends TemplateMatch, T extends Template<M
 
   abstract ImmutableList<T> beforeTemplates();
 
-  @Nullable
   abstract ImmutableList<T> afterTemplates();
 
   @Override
