@@ -422,6 +422,7 @@ import com.google.errorprone.bugpatterns.time.DurationFrom;
 import com.google.errorprone.bugpatterns.time.DurationGetTemporalUnit;
 import com.google.errorprone.bugpatterns.time.DurationTemporalUnit;
 import com.google.errorprone.bugpatterns.time.DurationToLongTimeUnit;
+import com.google.errorprone.bugpatterns.time.FromTemporalAccessor;
 import com.google.errorprone.bugpatterns.time.InstantTemporalUnit;
 import com.google.errorprone.bugpatterns.time.InvalidJavaTimeConstant;
 import com.google.errorprone.bugpatterns.time.JavaDurationGetSecondsGetNano;
@@ -539,6 +540,7 @@ public class BuiltInCheckerSuppliers {
           ForOverrideChecker.class,
           FormatString.class,
           FormatStringAnnotationChecker.class,
+          FromTemporalAccessor.class,
           FunctionalInterfaceMethodChanged.class,
           FuturesGetCheckedIllegalExceptionType.class,
           GetClassOnAnnotation.class,
