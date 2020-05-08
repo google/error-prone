@@ -25,6 +25,7 @@ import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.hasAnnotation;
 import static com.google.errorprone.matchers.Matchers.kindIs;
+import static com.google.errorprone.matchers.Matchers.not;
 import static com.sun.source.tree.Tree.Kind.ANNOTATION_TYPE;
 
 import com.google.errorprone.BugPattern;
@@ -75,7 +76,10 @@ public class ScopeOrQualifierAnnotationRetention extends BugChecker implements C
       if (!state.isAndroidCompatible() && doesNotHaveRuntimeRetention(classSymbol)) {
         // Is this in a dagger component?
         ClassTree outer = ASTHelpers.findEnclosingNode(state.getPath(), ClassTree.class);
-        if (outer != null && InjectMatchers.IS_DAGGER_COMPONENT_OR_MODULE.matches(outer, state)) {
+        if (outer != null
+            && allOf(
+                    InjectMatchers.IS_DAGGER_COMPONENT_OR_MODULE)
+                .matches(outer, state)) {
           return Description.NO_MATCH;
         }
         return describe(classTree, state, ASTHelpers.getAnnotation(classSymbol, Retention.class));
