@@ -246,6 +246,19 @@ public final class StronglyTypeTimeTest {
   }
 
   @Test
+  public void unusedField_noMatch() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.io.Serializable;",
+            "class Test implements Serializable {",
+            "  private static final long serialVersionUID = 1L;",
+            "}")
+        .expectNoDiagnostics()
+        .doTest();
+  }
+
+  @Test
   public void whenJodaAndJavaInstantUsed_fullyQualifiesName() {
     refactoringHelper
         .addInputLines(

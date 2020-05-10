@@ -133,7 +133,10 @@ public final class StronglyTypeTime extends BugChecker implements CompilationUni
     }.scan(tree, null);
 
     for (Map.Entry<VarSymbol, TreePath> entry : fields.entrySet()) {
-      state.reportMatch(describeMatch(entry.getValue(), usages.get(entry.getKey()), state));
+      Description description = describeMatch(entry.getValue(), usages.get(entry.getKey()), state);
+      if (description != NO_MATCH) {
+        state.reportMatch(description);
+      }
     }
     return NO_MATCH;
   }
