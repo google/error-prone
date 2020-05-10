@@ -23,7 +23,6 @@ import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
 
-import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -98,7 +97,7 @@ public final class AutoValueSubclassLeaked extends BugChecker
         new TreeScanner<Void, Void>() {
           @Override
           public Void visitClass(ClassTree classTree, Void unused) {
-            if (hasAnnotation(classTree, AutoValue.class, state)) {
+            if (hasAnnotation(classTree, "com.google.auto.value.AutoValue", state)) {
               types.add(getType(classTree));
             }
             return super.visitClass(classTree, null);
