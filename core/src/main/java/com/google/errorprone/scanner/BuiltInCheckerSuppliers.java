@@ -126,6 +126,7 @@ import com.google.errorprone.bugpatterns.GetClassOnEnum;
 import com.google.errorprone.bugpatterns.HashtableContains;
 import com.google.errorprone.bugpatterns.HidingField;
 import com.google.errorprone.bugpatterns.IdentityBinaryExpression;
+import com.google.errorprone.bugpatterns.IdentityHashMapBoxing;
 import com.google.errorprone.bugpatterns.IgnoredPureGetter;
 import com.google.errorprone.bugpatterns.ImmutableModification;
 import com.google.errorprone.bugpatterns.ImplementAssertionWithChaining;
@@ -550,6 +551,7 @@ public class BuiltInCheckerSuppliers {
           GuardedByChecker.class,
           HashtableContains.class,
           IdentityBinaryExpression.class,
+          IdentityHashMapBoxing.class,
           ImmutableChecker.class,
           ImmutableModification.class,
           Incomparable.class,
