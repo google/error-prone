@@ -80,9 +80,9 @@
     <dependency>
       <!-- Apache 2.0 -->
       <groupId>com.google.auto.value</groupId>
-      <artifactId>auto-value</artifactId>
+      <artifactId>auto-value-annotations</artifactId>
       <version>${autovalue.version}</version>
-      <scope>provided</scope>
+      <scope>compile</scope>
     </dependency>
     <dependency>
       <!-- Apache 2.0 -->
@@ -146,5 +146,23 @@
       <version>${caffeine.version}</version>
     </dependency>
   </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <annotationProcessorPaths>
+            <path>
+              <groupId>com.google.auto.value</groupId>
+              <artifactId>auto-value</artifactId>
+              <version>${autovalue.version}</version>
+            </path>
+          </annotationProcessorPaths>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
 
 </project>

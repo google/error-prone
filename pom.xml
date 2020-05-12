@@ -36,7 +36,8 @@
     <gwt.version>2.8.2</gwt.version>
     <truth.version>0.45</truth.version>
     <javac.version>9+181-r4173-1</javac.version>
-    <autovalue.version>1.5.3</autovalue.version>
+    <autoservice.version>1.0-rc6</autoservice.version>
+    <autovalue.version>1.7</autovalue.version>
     <junit.version>4.13-beta-1</junit.version>
     <dataflow.version>3.1.2</dataflow.version>
     <mockito.version>2.25.0</mockito.version>
@@ -108,14 +109,35 @@
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-enforcer-plugin</artifactId>
+        <version>3.0.0-M3</version>
+        <executions>
+          <execution>
+            <id>enforce-maven</id>
+            <goals>
+              <goal>enforce</goal>
+            </goals>
+            <configuration>
+              <rules>
+                <requireMavenVersion>
+                  <version>3.0.5</version>
+                </requireMavenVersion>
+              </rules>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jar-plugin</artifactId>
         <version>2.5</version>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-javadoc-plugin</artifactId>
-        <version>3.0.0</version>
+        <version>3.1.1</version>
         <configuration>
+          <source>8</source>
           <notimestamp>true</notimestamp>
           <doctitle>Error Prone ${project.version} API</doctitle>
         </configuration>
@@ -150,7 +172,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-site-plugin</artifactId>
-        <version>3.3</version>
+        <version>3.7.1</version>
         <executions>
           <execution>
             <id>attach-descriptor</id>
@@ -159,10 +181,6 @@
             </goals>
           </execution>
         </executions>
-      </plugin>
-      <plugin>
-        <artifactId>maven-project-info-reports-plugin</artifactId>
-        <version>2.9</version>
       </plugin>
     </plugins>
   </build>
