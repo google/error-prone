@@ -47,15 +47,8 @@
     </dependency>
     <dependency>
       <groupId>com.google.auto.service</groupId>
-      <artifactId>auto-service</artifactId>
-      <version>1.0-rc6</version>
-      <optional>true</optional>
-    </dependency>
-    <dependency>
-      <groupId>com.google.auto.value</groupId>
-      <artifactId>auto-value</artifactId>
-      <version>${autovalue.version}</version>
-      <scope>provided</scope>
+      <artifactId>auto-service-annotations</artifactId>
+      <version>${autoservice.version}</version>
     </dependency>
     <dependency>
       <groupId>com.google.code.gson</groupId>
@@ -63,4 +56,23 @@
       <version>2.3.1</version>
     </dependency>
   </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <annotationProcessorPaths>
+            <path>
+              <groupId>com.google.auto.service</groupId>
+              <artifactId>auto-service</artifactId>
+              <version>${autoservice.version}</version>
+            </path>
+          </annotationProcessorPaths>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
 </project>

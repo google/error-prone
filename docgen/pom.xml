@@ -35,6 +35,21 @@
   </licenses>
 
   <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <annotationProcessorPaths>
+            <path>
+              <groupId>com.google.auto.value</groupId>
+              <artifactId>auto-value</artifactId>
+              <version>${autovalue.version}</version>
+            </path>
+          </annotationProcessorPaths>
+        </configuration>
+      </plugin>
+    </plugins>
     <resources>
       <resource>
         <directory>src/main/java</directory>
@@ -83,14 +98,8 @@
       <version>1.35</version>
     </dependency>
     <dependency>
-      <groupId>com.google.auto.service</groupId>
-      <artifactId>auto-service</artifactId>
-      <version>1.0-rc6</version>
-      <optional>true</optional>
-    </dependency>
-    <dependency>
       <groupId>com.google.auto.value</groupId>
-      <artifactId>auto-value</artifactId>
+      <artifactId>auto-value-annotations</artifactId>
       <version>${autovalue.version}</version>
       <scope>provided</scope>
     </dependency>
