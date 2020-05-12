@@ -357,6 +357,7 @@ import com.google.errorprone.bugpatterns.collectionincompatibletype.Incompatible
 import com.google.errorprone.bugpatterns.collectionincompatibletype.TruthIncompatibleType;
 import com.google.errorprone.bugpatterns.formatstring.FormatString;
 import com.google.errorprone.bugpatterns.formatstring.FormatStringAnnotationChecker;
+import com.google.errorprone.bugpatterns.formatstring.InlineFormatString;
 import com.google.errorprone.bugpatterns.inject.AssistedInjectAndInjectOnConstructors;
 import com.google.errorprone.bugpatterns.inject.AssistedInjectAndInjectOnSameConstructor;
 import com.google.errorprone.bugpatterns.inject.AutoFactoryAtInject;
@@ -716,6 +717,7 @@ public class BuiltInCheckerSuppliers {
           InheritDoc.class,
           InjectOnConstructorOfAbstractClass.class,
           InjectedConstructorAnnotations.class,
+          InlineFormatString.class,
           InputStreamSlowMultibyteRead.class,
           InstanceOfAndCastMatchWrongType.class,
           IntLongMath.class,
