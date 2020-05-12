@@ -60,6 +60,7 @@ import com.google.errorprone.bugpatterns.ChainedAssertionLosesContext;
 import com.google.errorprone.bugpatterns.ChainingConstructorIgnoresParameter;
 import com.google.errorprone.bugpatterns.CheckNotNullMultipleTimes;
 import com.google.errorprone.bugpatterns.CheckReturnValue;
+import com.google.errorprone.bugpatterns.CheckedExceptionNotThrown;
 import com.google.errorprone.bugpatterns.ClassCanBeStatic;
 import com.google.errorprone.bugpatterns.ClassName;
 import com.google.errorprone.bugpatterns.ClassNamedLikeTypeParameter;
@@ -855,6 +856,7 @@ public class BuiltInCheckerSuppliers {
           BinderIdentityRestoredDangerously.class, // TODO: enable this by default.
           BindingToUnqualifiedCommonType.class,
           BooleanParameter.class,
+          CheckedExceptionNotThrown.class,
           ClassName.class,
           ClassNamedLikeTypeParameter.class,
           ComparisonContractViolated.class,
