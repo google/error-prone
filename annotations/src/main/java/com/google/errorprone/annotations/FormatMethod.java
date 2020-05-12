@@ -32,10 +32,10 @@ import java.lang.annotation.Target;
  * FormatMethod} without a {@link FormatString} parameter, the first {@code String} parameter is
  * assumed to be the format string. For example, the following two methods are equivalent:
  *
- * <pre>{@code
- * @FormatMethod void log(Locale l, @FormatString String logMessage, Object... args) {}
- * @FormatMethod void log(Locale l, String logMessage, Object... args) {}
- * }</pre>
+ * <pre>
+ * &#064;FormatMethod void log(Locale l, &#064;FormatString String logMessage, Object... args) {}
+ * &#064;FormatMethod void log(Locale l, String logMessage, Object... args) {}
+ * </pre>
  *
  * <p>Using {@link FormatMethod} on a method header will ensure the following for the parameters
  * passed to the method:
@@ -45,40 +45,37 @@ import java.lang.annotation.Target;
  *       <ul>
  *         <li>A compile time constant value (see {@link CompileTimeConstant} for more info).
  *             <p>The following example is valid:
- *             <pre>{@code
+ *             <pre>
  * public class Foo {
  *   static final String staticFinalLogMessage = "foo";
- *   @FormatMethod void log(@FormatString String format, Object... args) {}
+ *   &#064;FormatMethod void log(&#064;FormatString String format, Object... args) {}
  *   void validLogs() {
  *     log("String literal");
  *     log(staticFinalLogMessage);
  *   }
- * }
  * }</pre>
  *             <p>However the following would be invalid:
- *             <pre>{@code
+ *             <pre>
  * public class Foo{
- *   @FormatMethod void log(@FormatString String format, Object... args) {}
+ *   &#064;FormatMethod void log(&#064;FormatString String format, Object... args) {}
  *   void invalidLog(String notCompileTimeConstant) {
  *     log(notCompileTimeConstant);
  *   }
- * }
  * }</pre>
  *         <li>An effectively final variable that was assigned to a compile time constant value.
  *             This is to permit the following common case:
- *             <pre>{@code
+ *             <pre>
  * String format = "Some long format string: %s";
  * log(format, arg);
- * }</pre>
+ * </pre>
  *         <li>Another {@link FormatString} annotated parameter. Ex:
- *             <pre>{@code
+ *             <pre>
  * public class Foo {
  *   static final String staticFinalLogMessage = "foo";
- *   @FormatMethod void log(@FormatString String format, Object... args) {}
- *   @FormatMethod void validLog(@FormatString String format, Object... args) {
+ *   &#064;FormatMethod void log(&#064;FormatString String format, Object... args) {}
+ *   &#064;FormatMethod void validLog(&#064;FormatString String format, Object... args) {
  *     log(format, args);
  *   }
- * }
  * }</pre>
  *       </ul>
  *   <li>The format string will be valid for the input format arguments. In the case that the actual

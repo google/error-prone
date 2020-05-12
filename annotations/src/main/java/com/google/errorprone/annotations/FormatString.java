@@ -33,11 +33,10 @@ import java.lang.annotation.Target;
  * snippet declares that {@code logMessage} will be used as a format string with {@code args} passed
  * as arguments to the format string:
  *
- * <pre>{@code
+ * <pre>
  * public class Foo {
- *   @FormatMethod void doBarAndLogFailure(@FormatString String logMessage,
+ *   &#064;FormatMethod void doBarAndLogFailure(&#064;FormatString String logMessage,
  *       Object... args) {...}
- * }
  * }</pre>
  *
  * <p>See {@link FormatMethod} for more information.
