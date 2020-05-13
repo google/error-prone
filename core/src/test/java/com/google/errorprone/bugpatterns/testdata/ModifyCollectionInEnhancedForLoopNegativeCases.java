@@ -15,8 +15,10 @@
 package com.google.errorprone.bugpatterns;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -62,6 +64,31 @@ public class ModifyCollectionInEnhancedForLoopNegativeCases {
       xs.remove(x);
       System.err.println();
       break;
+    }
+  }
+
+  public static void testMapKeySet(HashMap<Integer, Integer> map1, HashMap<Integer, Integer> map2) {
+    for (Integer a : map1.keySet()) {
+      map2.putIfAbsent(new Integer("42"), new Integer("43"));
+      map2.clear();
+      map2.remove(a);
+    }
+  }
+
+  public static void testMapValues(HashMap<Integer, Integer> map1, HashMap<Integer, Integer> map2) {
+    for (Integer a : map1.values()) {
+      map2.putIfAbsent(new Integer("42"), a);
+      map2.clear();
+      map2.remove(new Integer("42"));
+    }
+  }
+
+  public static void testMapEntrySet(
+      HashMap<Integer, Integer> map1, HashMap<Integer, Integer> map2) {
+    for (Map.Entry<Integer, Integer> a : map1.entrySet()) {
+      map2.putIfAbsent(new Integer("42"), new Integer("43"));
+      map2.clear();
+      map2.remove(a.getKey());
     }
   }
 
