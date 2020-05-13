@@ -121,9 +121,6 @@ public class Scanner extends TreePathScanner<Void, VisitorState> {
   }
 
   protected void reportMatch(Description description, VisitorState state) {
-    if (description == null || description == Description.NO_MATCH) {
-      return;
-    }
     state.reportMatch(description);
   }
 
