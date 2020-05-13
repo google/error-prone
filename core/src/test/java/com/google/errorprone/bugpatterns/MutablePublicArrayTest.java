@@ -154,4 +154,18 @@ public class MutablePublicArrayTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void publicStaticFinalStaticInitializeBlock() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  public static final long[] l;",
+            "  static {",
+            "    l = new long[1];",
+            "  }",
+            "}")
+        .doTest();
+  }
 }
