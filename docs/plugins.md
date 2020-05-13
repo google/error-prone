@@ -75,6 +75,9 @@ dependencies {
 }
 ```
 
+For a complete example using the `net.ltgt.apt` plugin, see:
+[examples/plugin/gradle](https://github.com/google/error-prone/tree/master/examples/plugin/gradle).
+
 ## Command-Line Arguments
 
 Plugin checkers can accept additional configuration flags by defining
