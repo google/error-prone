@@ -15,8 +15,10 @@
 package com.google.errorprone.bugpatterns;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.Map;
 
 /** @author anishvisaria98@gmail.com (Anish Visaria) */
 public class ModifyCollectionInEnhancedForLoopPositiveCases {
@@ -66,6 +68,39 @@ public class ModifyCollectionInEnhancedForLoopPositiveCases {
         // BUG: Diagnostic contains:
         list.retainAll(arr);
       }
+    }
+  }
+
+  public static void testMapKeySet(HashMap<Integer, Integer> map) {
+    for (Integer a : map.keySet()) {
+      // BUG: Diagnostic contains:
+      map.putIfAbsent(new Integer("42"), new Integer("43"));
+      // BUG: Diagnostic contains:
+      map.clear();
+      // BUG: Diagnostic contains:
+      map.remove(a);
+    }
+  }
+
+  public static void testMapValues(HashMap<Integer, Integer> map) {
+    for (Integer a : map.values()) {
+      // BUG: Diagnostic contains:
+      map.putIfAbsent(new Integer("42"), new Integer("43"));
+      // BUG: Diagnostic contains:
+      map.putIfAbsent(new Integer("42"), a);
+      // BUG: Diagnostic contains:
+      map.clear();
+    }
+  }
+
+  public static void testMapEntrySet(HashMap<Integer, Integer> map) {
+    for (Map.Entry<Integer, Integer> a : map.entrySet()) {
+      // BUG: Diagnostic contains:
+      map.putIfAbsent(new Integer("42"), new Integer("43"));
+      // BUG: Diagnostic contains:
+      map.clear();
+      // BUG: Diagnostic contains:
+      map.remove(a.getKey());
     }
   }
 }
