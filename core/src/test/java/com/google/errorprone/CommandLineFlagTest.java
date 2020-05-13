@@ -74,7 +74,7 @@ public class CommandLineFlagTest {
   @BugPattern(
       name = "WarningChecker",
       summary = "Checker that flags all return statements as warnings",
-      explanation = "Checker that flags all return statements as warningss",
+      explanation = "Checker that flags all return statements as warnings",
       severity = WARNING)
   public static class WarningChecker extends BugChecker implements ReturnTreeMatcher {
     @Override
