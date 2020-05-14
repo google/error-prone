@@ -16,6 +16,7 @@
 
 package com.google.errorprone;
 
+import static com.google.common.base.Preconditions.checkState;
 import static com.google.common.truth.Truth.assertAbout;
 import static com.google.common.truth.Truth.assertThat;
 import static com.google.testing.compile.JavaSourceSubjectFactory.javaSource;
@@ -140,6 +141,8 @@ public class BugCheckerRefactoringTestHelper {
   private boolean allowBreakingChanges = false;
   private String importOrder = "static-first";
 
+  private boolean run = false;
+
   private BugCheckerRefactoringTestHelper(BugChecker refactoringBugChecker, Class<?> clazz) {
     this.refactoringBugChecker = refactoringBugChecker;
     this.fileManager = new ErrorProneInMemoryFileManager(clazz);
@@ -186,6 +189,8 @@ public class BugCheckerRefactoringTestHelper {
   }
 
   public void doTest(TestMode testMode) {
+    checkState(!run, "doTest should only be called once");
+    this.run = true;
     for (Map.Entry<JavaFileObject, JavaFileObject> entry : sources.entrySet()) {
       try {
         runTestOnPair(entry.getKey(), entry.getValue(), testMode);

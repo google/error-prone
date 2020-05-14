@@ -30,8 +30,12 @@ public class ComparableAndComparatorTest {
       CompilationTestHelper.newInstance(ComparableAndComparator.class, getClass());
 
   @Test
-  public void testCases() {
+  public void positive() {
     compilationHelper.addSourceFile("ComparableAndComparatorPositiveCases.java").doTest();
+  }
+
+  @Test
+  public void negative() {
     compilationHelper.addSourceFile("ComparableAndComparatorNegativeCases.java").doTest();
   }
 }

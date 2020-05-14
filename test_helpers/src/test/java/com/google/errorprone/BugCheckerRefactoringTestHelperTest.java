@@ -18,6 +18,7 @@ package com.google.errorprone;
 
 import static com.google.common.truth.Truth.assertThat;
 import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
+import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.fail;
 
 import com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode;
@@ -257,5 +258,13 @@ public class BugCheckerRefactoringTestHelperTest {
       SuggestedFix fix = SuggestedFix.builder().addImport("java.util.ArrayList").build();
       return describeMatch(tree, fix);
     }
+  }
+
+  @Test
+  public void onlyCallDoTestOnce() {
+    helper.addInputLines("Test.java", "public class Test {}").expectUnchanged().doTest();
+    IllegalStateException expected =
+        assertThrows(IllegalStateException.class, () -> helper.doTest());
+    assertThat(expected).hasMessageThat().contains("doTest");
   }
 }
