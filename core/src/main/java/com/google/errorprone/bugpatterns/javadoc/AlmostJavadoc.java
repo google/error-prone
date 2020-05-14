@@ -41,6 +41,7 @@ import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
 import com.sun.tools.javac.parser.Tokens.Comment;
 import com.sun.tools.javac.tree.JCTree;
+import java.util.Optional;
 import java.util.regex.Pattern;
 import javax.lang.model.element.ElementKind;
 
@@ -79,17 +80,43 @@ public final class AlmostJavadoc extends BugChecker implements CompilationUnitTr
         if (!javadocableTrees.containsKey(token.pos())) {
           continue;
         }
-        if (!comment.getText().startsWith("/*") || comment.getText().startsWith("/**")) {
-          continue;
-        }
-        if (HAS_TAG.matcher(comment.getText()).find()) {
-          int pos = comment.getSourcePos(1);
-          SuggestedFix fix = SuggestedFix.replace(pos, pos, "*");
-          state.reportMatch(describeMatch(javadocableTrees.get(token.pos()), fix));
-        }
+        generateFix(comment)
+            .ifPresent(
+                fix -> state.reportMatch(describeMatch(javadocableTrees.get(token.pos()), fix)));
       }
     }
     return NO_MATCH;
+  }
+
+  private static Optional<SuggestedFix> generateFix(Comment comment) {
+    String text = comment.getText();
+    if (text.startsWith("/*") && !text.startsWith("/**")) {
+      if (HAS_TAG.matcher(text).find()) {
+        int pos = comment.getSourcePos(1);
+        return Optional.of(SuggestedFix.replace(pos, pos, "*"));
+      }
+    }
+    if (text.startsWith("//") && text.endsWith("*/")) {
+      if (text.startsWith("// /**")) {
+        return Optional.of(
+            SuggestedFix.replace(comment.getSourcePos(0), comment.getSourcePos(2), ""));
+      }
+      int endReplacement = 2;
+      while (endReplacement < text.length()) {
+        char c = text.charAt(endReplacement);
+        if (c == '/') {
+          return Optional.empty();
+        }
+        if (c != '*' && c != ' ') {
+          break;
+        }
+        ++endReplacement;
+      }
+      return Optional.of(
+          SuggestedFix.replace(
+              comment.getSourcePos(1), comment.getSourcePos(endReplacement), "**"));
+    }
+    return Optional.empty();
   }
 
   private ImmutableMap<Integer, Tree> getJavadocableTrees(
