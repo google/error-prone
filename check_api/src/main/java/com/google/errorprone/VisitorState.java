@@ -264,7 +264,7 @@ public class VisitorState {
   }
 
   public void reportMatch(Description description) {
-    if (description == null || description == Description.NO_MATCH) {
+    if (description == Description.NO_MATCH) {
       return;
     }
     // TODO(cushon): creating Descriptions with the default severity and updating them here isn't
