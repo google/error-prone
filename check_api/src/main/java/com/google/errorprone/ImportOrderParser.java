@@ -36,6 +36,8 @@ public class ImportOrderParser {
         return ImportOrganizer.ANDROID_STATIC_FIRST_ORGANIZER;
       case "android-static-last":
         return ImportOrganizer.ANDROID_STATIC_LAST_ORGANIZER;
+      case "idea":
+        return ImportOrganizer.IDEA_ORGANIZER;
       default:
         throw new IllegalStateException("Unknown import order: '" + importOrder + "'");
     }
