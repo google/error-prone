@@ -36,8 +36,10 @@ public class HidingFieldTest {
 
   @Test
   public void testHidingFieldPositiveCases() {
-    compilationHelper.addSourceFile("HidingFieldPositiveCases1.java").doTest();
-    compilationHelper.addSourceFile("HidingFieldPositiveCases2.java").doTest();
+    compilationHelper
+        .addSourceFile("HidingFieldPositiveCases1.java")
+        .addSourceFile("HidingFieldPositiveCases2.java")
+        .doTest();
   }
 
   @Test

@@ -550,4 +550,12 @@ public class CompilationTestHelperTest {
         .expectResult(Result.ERROR)
         .doTest();
   }
+
+  @Test
+  public void onlyCallDoTestOnce() {
+    compilationHelper.addSourceLines("Test.java", "public class Test {}").doTest();
+    IllegalStateException expected =
+        assertThrows(IllegalStateException.class, () -> compilationHelper.doTest());
+    assertThat(expected).hasMessageThat().contains("doTest");
+  }
 }

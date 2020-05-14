@@ -16,12 +16,12 @@
 
 package com.google.errorprone;
 
+import static com.google.common.base.Preconditions.checkState;
 import static com.google.common.truth.Truth.assertWithMessage;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.junit.Assert.fail;
 
 import com.google.common.base.Joiner;
-import com.google.common.base.Preconditions;
 import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableList;
 import com.google.common.io.ByteStreams;
@@ -80,6 +80,8 @@ public class CompilationTestHelper {
   private boolean checkWellFormed = true;
   private LookForCheckNameInDiagnostic lookForCheckNameInDiagnostic =
       LookForCheckNameInDiagnostic.YES;
+
+  private boolean run = false;
 
   private CompilationTestHelper(ScannerSupplier scannerSupplier, String checkName, Class<?> clazz) {
     this.fileManager = new ErrorProneInMemoryFileManager(clazz);
@@ -276,7 +278,9 @@ public class CompilationTestHelper {
 
   /** Performs a compilation and checks that the diagnostics and result match the expectations. */
   public void doTest() {
-    Preconditions.checkState(!sources.isEmpty(), "No source files to compile");
+    checkState(!sources.isEmpty(), "No source files to compile");
+    checkState(!run, "doTest should only be called once");
+    this.run = true;
     Result result = compile();
     for (Diagnostic<? extends JavaFileObject> diagnostic : diagnosticHelper.getDiagnostics()) {
       if (diagnostic.getCode().contains("error.prone.crash")) {
