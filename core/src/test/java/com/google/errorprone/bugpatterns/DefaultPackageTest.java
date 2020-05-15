@@ -16,6 +16,8 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static org.junit.Assume.assumeTrue;
+
 import com.google.errorprone.CompilationTestHelper;
 import com.google.errorprone.util.RuntimeVersion;
 import org.junit.Test;
@@ -87,6 +89,18 @@ public class DefaultPackageTest {
             "T.java", //
             "package a;",
             "class T {};")
+        .doTest();
+  }
+
+  @Test
+  public void moduleInfo() {
+    assumeTrue(RuntimeVersion.isAtLeast9());
+
+    compilationHelper
+        .addSourceLines(
+            "module-info.java", //
+            "module testmodule {",
+            "}")
         .doTest();
   }
 }
