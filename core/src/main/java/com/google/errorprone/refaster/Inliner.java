@@ -24,6 +24,7 @@ import com.google.errorprone.SubContext;
 import com.google.errorprone.refaster.Bindings.Key;
 import com.google.errorprone.refaster.UTypeVar.TypeWithExpression;
 import com.google.errorprone.util.ASTHelpers;
+import com.google.errorprone.util.RuntimeVersion;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.TypeSymbol;
@@ -228,9 +229,22 @@ public final class Inliner {
     sym.type = typeVar;
     typeVarCache.put(var.getName(), typeVar);
     // Any recursive uses of var will point to the same TypeVar object generated above.
-    typeVar.bound = var.getUpperBound().inline(this);
+    setUpperBound(typeVar, var.getUpperBound().inline(this));
     typeVar.lower = var.getLowerBound().inline(this);
     return typeVar;
+  }
+
+  private static void setUpperBound(TypeVar typeVar, Type bound) {
+    try {
+      // https://bugs.openjdk.java.net/browse/JDK-8193367
+      if (RuntimeVersion.isAtLeast13()) {
+        TypeVar.class.getMethod("setUpperBound", Type.class).invoke(typeVar, bound);
+      } else {
+        TypeVar.class.getField("bound").set(typeVar, bound);
+      }
+    } catch (ReflectiveOperationException e) {
+      throw new LinkageError(e.getMessage(), e);
+    }
   }
 
   Type inlineTypeVar(UTypeVar var) throws CouldNotResolveImportException {

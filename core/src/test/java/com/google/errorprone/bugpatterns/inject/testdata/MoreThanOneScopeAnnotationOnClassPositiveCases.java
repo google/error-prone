@@ -26,14 +26,14 @@ public class MoreThanOneScopeAnnotationOnClassPositiveCases {
   /** Class has two scope annotations */
   @Singleton
   @SessionScoped
-  // BUG: Diagnostic contains: @Singleton(), @SessionScoped().
+  // BUG: Diagnostic contains:
   class TestClass1 {}
 
   /** Class has three annotations, two of which are scope annotations. */
   @Singleton
   @SuppressWarnings("foo")
   @SessionScoped
-  // BUG: Diagnostic contains: @Singleton(), @SessionScoped().
+  // BUG: Diagnostic contains:
   class TestClass2 {}
 
   @Scope
@@ -42,6 +42,6 @@ public class MoreThanOneScopeAnnotationOnClassPositiveCases {
   @Singleton
   @CustomScope
   @SessionScoped
-  // BUG: Diagnostic contains: @Singleton(), @CustomScope(), @SessionScoped().
+  // BUG: Diagnostic contains:
   class TestClass3 {}
 }
