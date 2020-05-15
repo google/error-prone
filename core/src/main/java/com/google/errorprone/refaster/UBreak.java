@@ -16,10 +16,15 @@
 
 package com.google.errorprone.refaster;
 
-import com.google.auto.value.AutoValue;
+import com.google.errorprone.util.RuntimeVersion;
 import com.sun.source.tree.BreakTree;
+import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.TreeVisitor;
 import com.sun.tools.javac.tree.JCTree.JCBreak;
+import com.sun.tools.javac.tree.JCTree.JCExpression;
+import com.sun.tools.javac.tree.TreeMaker;
+import com.sun.tools.javac.util.Name;
+import java.util.Objects;
 import javax.annotation.Nullable;
 
 /**
@@ -27,15 +32,28 @@ import javax.annotation.Nullable;
  *
  * @author lowasser@google.com (Louis Wasserman)
  */
-@AutoValue
-abstract class UBreak extends USimpleStatement implements BreakTree {
+final class UBreak extends USimpleStatement implements BreakTree {
+
+  private final StringName label;
+
+  UBreak(StringName label) {
+    this.label = label;
+  }
+
   static UBreak create(@Nullable CharSequence label) {
-    return new AutoValue_UBreak((label == null) ? null : StringName.of(label));
+    return new UBreak((label == null) ? null : StringName.of(label));
+  }
+
+  // @Override for JDK 12 only
+  public ExpressionTree getValue() {
+    return null;
   }
 
   @Override
   @Nullable
-  public abstract StringName getLabel();
+  public StringName getLabel() {
+    return label;
+  }
 
   @Override
   public Kind getKind() {
@@ -53,7 +71,23 @@ abstract class UBreak extends USimpleStatement implements BreakTree {
 
   @Override
   public JCBreak inline(Inliner inliner) {
-    return inliner.maker().Break(ULabeledStatement.inlineLabel(getLabel(), inliner));
+    return makeBreak(ULabeledStatement.inlineLabel(getLabel(), inliner), inliner);
+  }
+
+  private static JCBreak makeBreak(Name label, Inliner inliner) {
+    try {
+      if (RuntimeVersion.isAtLeast12()) {
+        return (JCBreak)
+            TreeMaker.class
+                .getMethod("Break", JCExpression.class)
+                .invoke(inliner.maker(), inliner.maker().Ident(label));
+      } else {
+        return (JCBreak)
+            TreeMaker.class.getMethod("Break", Name.class).invoke(inliner.maker(), label);
+      }
+    } catch (ReflectiveOperationException e) {
+      throw new LinkageError(e.getMessage(), e);
+    }
   }
 
   @Override
@@ -65,5 +99,19 @@ abstract class UBreak extends USimpleStatement implements BreakTree {
       return Choice.condition(
           boundName != null && node.getLabel().contentEquals(boundName), unifier);
     }
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hashCode(label);
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (!(obj instanceof UBreak)) {
+      return false;
+    }
+    UBreak other = (UBreak) obj;
+    return Objects.equals(label, other.label);
   }
 }

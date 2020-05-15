@@ -1175,7 +1175,7 @@ public class SuggestedFixes {
         // recompiles to avoid infinite recursion.
         continue;
       }
-      if ((key.equals("-source") || key.equals("-target")) && originalOptions.isSet("--release")) {
+      if (SOURCE_TARGET_OPTIONS.contains(key) && originalOptions.isSet("--release")) {
         // javac does not allow -source and -target to be specified explicitly when --release is,
         // but does add them in response to passing --release. Here we invert that operation.
         continue;
@@ -1233,6 +1233,9 @@ public class SuggestedFixes {
     }
     return true;
   }
+
+  private static final ImmutableSet<String> SOURCE_TARGET_OPTIONS =
+      ImmutableSet.of("-source", "--source", "-target", "--target");
 
   /** Create a plausible URI to use in {@link #compilesWithFix}. */
   @VisibleForTesting
