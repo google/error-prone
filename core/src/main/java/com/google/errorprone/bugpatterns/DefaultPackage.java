@@ -18,6 +18,7 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 
+import com.google.common.io.Files;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.CompilationUnitTreeMatcher;
@@ -51,6 +52,10 @@ public final class DefaultPackage extends BugChecker implements CompilationUnitT
       return Description.NO_MATCH;
     }
     if (tree.getPackageName() != null) {
+      return Description.NO_MATCH;
+    }
+    // module-info.* is a special file name so whitelisting it.
+    if (Files.getNameWithoutExtension(ASTHelpers.getFileName(tree)).equals("module-info")) {
       return Description.NO_MATCH;
     }
     return describeMatch(tree);
