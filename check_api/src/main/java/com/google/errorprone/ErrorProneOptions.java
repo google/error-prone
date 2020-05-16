@@ -56,6 +56,7 @@ public class ErrorProneOptions {
   private static final String ENABLE_ALL_CHECKS = "-XepAllDisabledChecksAsWarnings";
   private static final String IGNORE_SUPPRESSION_ANNOTATIONS = "-XepIgnoreSuppressionAnnotations";
   private static final String DISABLE_ALL_CHECKS = "-XepDisableAllChecks";
+  private static final String DISABLE_ALL_WARNINGS = "-XepDisableAllWarnings";
   private static final String IGNORE_UNKNOWN_CHECKS_FLAG = "-XepIgnoreUnknownCheckNames";
   private static final String DISABLE_WARNINGS_IN_GENERATED_CODE_FLAG =
       "-XepDisableWarningsInGeneratedCode";
@@ -75,7 +76,8 @@ public class ErrorProneOptions {
             || option.equals(ENABLE_ALL_CHECKS)
             || option.equals(DISABLE_ALL_CHECKS)
             || option.equals(IGNORE_SUPPRESSION_ANNOTATIONS)
-            || option.equals(COMPILING_TEST_ONLY_CODE);
+            || option.equals(COMPILING_TEST_ONLY_CODE)
+            || option.equals(DISABLE_ALL_WARNINGS);
     return isSupported ? 0 : -1;
   }
 
@@ -156,6 +158,7 @@ public class ErrorProneOptions {
   private final ImmutableMap<String, Severity> severityMap;
   private final boolean ignoreUnknownChecks;
   private final boolean disableWarningsInGeneratedCode;
+  private final boolean disableAllWarnings;
   private final boolean dropErrorsToWarnings;
   private final boolean enableAllChecksAsWarnings;
   private final boolean disableAllChecks;
@@ -171,6 +174,7 @@ public class ErrorProneOptions {
       ImmutableList<String> remainingArgs,
       boolean ignoreUnknownChecks,
       boolean disableWarningsInGeneratedCode,
+      boolean disableAllWarnings,
       boolean dropErrorsToWarnings,
       boolean enableAllChecksAsWarnings,
       boolean disableAllChecks,
@@ -184,6 +188,7 @@ public class ErrorProneOptions {
     this.remainingArgs = remainingArgs;
     this.ignoreUnknownChecks = ignoreUnknownChecks;
     this.disableWarningsInGeneratedCode = disableWarningsInGeneratedCode;
+    this.disableAllWarnings = disableAllWarnings;
     this.dropErrorsToWarnings = dropErrorsToWarnings;
     this.enableAllChecksAsWarnings = enableAllChecksAsWarnings;
     this.disableAllChecks = disableAllChecks;
@@ -209,6 +214,10 @@ public class ErrorProneOptions {
 
   public boolean disableWarningsInGeneratedCode() {
     return disableWarningsInGeneratedCode;
+  }
+
+  public boolean isDisableAllWarnings() {
+    return disableAllWarnings;
   }
 
   public boolean isDropErrorsToWarnings() {
@@ -241,6 +250,7 @@ public class ErrorProneOptions {
 
   private static class Builder {
     private boolean ignoreUnknownChecks = false;
+    private boolean disableAllWarnings = false;
     private boolean disableWarningsInGeneratedCode = false;
     private boolean dropErrorsToWarnings = false;
     private boolean enableAllChecksAsWarnings = false;
@@ -298,6 +308,13 @@ public class ErrorProneOptions {
       this.dropErrorsToWarnings = dropErrorsToWarnings;
     }
 
+    public void setDisableAllWarnings(boolean disableAllWarnings) {
+      severityMap.entrySet().stream()
+          .filter(e -> e.getValue() == Severity.WARN)
+          .forEach(e -> e.setValue(Severity.OFF));
+      this.disableAllWarnings = disableAllWarnings;
+    }
+
     public void setEnableAllChecksAsWarnings(boolean enableAllChecksAsWarnings) {
       // Checks manually disabled before this flag are reset to warning-level
       severityMap.entrySet().stream()
@@ -330,6 +347,7 @@ public class ErrorProneOptions {
           remainingArgs,
           ignoreUnknownChecks,
           disableWarningsInGeneratedCode,
+          disableAllWarnings,
           dropErrorsToWarnings,
           enableAllChecksAsWarnings,
           disableAllChecks,
@@ -394,6 +412,9 @@ public class ErrorProneOptions {
           break;
         case COMPILING_TEST_ONLY_CODE:
           builder.setTestOnlyTarget(true);
+          break;
+        case DISABLE_ALL_WARNINGS:
+          builder.setDisableAllWarnings(true);
           break;
         default:
           if (arg.startsWith(SEVERITY_PREFIX)) {
