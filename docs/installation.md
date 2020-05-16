@@ -52,7 +52,7 @@ Edit your `pom.xml` file to add settings to the maven-compiler-plugin:
           <target>8</target>
           <compilerArgs>
             <arg>-XDcompilePolicy=simple</arg>
-            <arg>-Xplugin:ErrorProne -Xep:DeadException:ERROR</arg>
+            <arg>-Xplugin:ErrorProne</arg>
           </compilerArgs>
           <annotationProcessorPaths>
             <path>
@@ -119,6 +119,9 @@ directory for a working example:
 [INFO] BUILD FAILURE
 [INFO] ------------------------------------------------------------------------
 ```
+
+See the [flags documentation](http://errorprone.info/docs/flags#maven) for details on
+how to customize the plugin's behavior.
 
 ## Gradle
 

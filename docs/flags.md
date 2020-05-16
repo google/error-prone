@@ -131,4 +131,14 @@ parameter must also be set:
 ```
 
 Be aware that when running on JDK 8 the flags cannot be wrapped across multiple
-lines. JDK 9 and above do allow the flags to be separated by newlines.
+lines. JDK 9 and above do allow the flags to be separated by newlines. That is,
+the second `<arg>` element above can also be formatted as follows on JDK 9+,
+but *not* on JDK 8:
+
+```xml
+<arg>
+  -Xplugin:ErrorProne
+  -Xep:DeadException:WARN
+  -Xep:GuardedBy:OFF
+</arg>
+```
