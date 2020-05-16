@@ -71,7 +71,7 @@ public class CanBeStaticAnalyzer extends TreeScanner {
     // in an enclosing scope
     Symbol sym = tree.sym;
     if (sym == null) {
-      // return;
+      return;
     }
     if (sym.isStatic()) {
       return;
