@@ -69,23 +69,27 @@ public class CanBeStaticAnalyzer extends TreeScanner {
   public void visitIdent(JCTree.JCIdent tree) {
     // check for unqualified references to instance members (fields and methods) declared
     // in an enclosing scope
-    if (tree.sym.isStatic()) {
+    Symbol sym = tree.sym;
+    if (sym == null) {
+      // return;
+    }
+    if (sym.isStatic()) {
       return;
     }
-    switch (tree.sym.getKind()) {
+    switch (sym.getKind()) {
       case TYPE_PARAMETER:
         // declaring a class as non-static just to access a type parameter is silly -
         // why not just re-declare the type parameter instead of capturing it?
         // TODO(cushon): consider making the suggestion anyways, maybe with a fix?
         // fall through
       case FIELD:
-        if (!isOwnedBy(tree.sym, owner, state.getTypes())) {
+        if (!isOwnedBy(sym, owner, state.getTypes())) {
           canPossiblyBeStatic = false;
         }
         break;
       case METHOD:
-        if (!isOwnedBy(tree.sym, owner, state.getTypes())) {
-          outerReferences.add((MethodSymbol) tree.sym);
+        if (!isOwnedBy(sym, owner, state.getTypes())) {
+          outerReferences.add((MethodSymbol) sym);
         }
         break;
       case CLASS:
