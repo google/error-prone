@@ -358,4 +358,23 @@ public class ClassCanBeStaticTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void labelledBreak() {
+    compilationHelper
+        .addSourceLines(
+            "A.java",
+            "public class A {",
+            "  // BUG: Diagnostic contains:",
+            "  class Inner {",
+            "    void f() {",
+            "      OUTER:",
+            "      while (true) {",
+            "        break OUTER;",
+            "      }",
+            "    }",
+            "  }",
+            "}")
+        .doTest();
+  }
 }
