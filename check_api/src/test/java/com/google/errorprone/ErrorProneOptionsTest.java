@@ -162,6 +162,13 @@ public class ErrorProneOptionsTest {
   }
 
   @Test
+  public void recognizesDisableAllWarnings() {
+    ErrorProneOptions options =
+        ErrorProneOptions.processArgs(new String[] {"-XepDisableAllWarnings"});
+    assertThat(options.isDisableAllWarnings()).isTrue();
+  }
+
+  @Test
   public void recognizesVisitSuppressedCode() {
     ErrorProneOptions options =
         ErrorProneOptions.processArgs(new String[] {"-XepIgnoreSuppressionAnnotations"});
