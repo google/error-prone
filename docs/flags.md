@@ -35,7 +35,16 @@ There are also a few blanket severity-changing flags:
 *   `-XepAllErrorsAsWarnings`
 *   `-XepAllDisabledChecksAsWarnings`
 *   `-XepDisableAllChecks`
+*   `-XepDisableAllWarnings`
 *   `-XepDisableWarningsInGeneratedCode` : Disables warnings in classes annotated with @javax.annotation.Generated
+
+With any of the blanket flags, you can pass additional flags afterward to
+tweak the level of individual checks.  E.g., this flag combination disables
+all checks except for ReferenceEquality:
+
+```bash
+-XepDisableAllChecks -Xep:ReferenceEquality:ERROR
+```
 
 Additionally, you can completely exclude certain paths
 from any Error Prone checking via the `-XepExcludedPaths` flag.  The
