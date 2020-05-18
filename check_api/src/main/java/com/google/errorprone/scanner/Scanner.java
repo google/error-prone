@@ -121,6 +121,12 @@ public class Scanner extends TreePathScanner<Void, VisitorState> {
   }
 
   protected void reportMatch(Description description, VisitorState state) {
+    // Null descriptions are not expected here, but they were previously treated identically to
+    // NO_MATCH.
+    // TODO(ghm): Find the violations and remove this check.
+    if (description == null) {
+      return;
+    }
     state.reportMatch(description);
   }
 

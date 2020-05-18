@@ -17,6 +17,7 @@
 package com.google.errorprone;
 
 import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableMap;
@@ -264,7 +265,8 @@ public class VisitorState {
   }
 
   public void reportMatch(Description description) {
-    if (description == null || description == Description.NO_MATCH) {
+    checkNotNull(description, "Use Description.NO_MATCH to denote an absent finding.");
+    if (description == Description.NO_MATCH) {
       return;
     }
     // TODO(cushon): creating Descriptions with the default severity and updating them here isn't
