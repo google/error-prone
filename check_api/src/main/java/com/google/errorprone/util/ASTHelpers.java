@@ -1927,11 +1927,17 @@ public class ASTHelpers {
       // thrown.
       for (CatchTree catchTree : tree.getCatches()) {
         Type type = getType(catchTree.getParameter());
-        ImmutableList<Type> thrownTypes = extractTypes(type);
-        thrownTypesByVariable.putAll(getSymbol(catchTree.getParameter()), getThrownTypes());
-        for (Type unionMember : thrownTypes) {
-          getThrownTypes().removeIf(thrownType -> this.types.isAssignable(thrownType, unionMember));
+
+        Set<Type> matchingTypes = new HashSet<>();
+        for (Type unionMember : extractTypes(type)) {
+          for (Type thrownType : getThrownTypes()) {
+            if (types.isSubtype(thrownType, unionMember)) {
+              matchingTypes.add(thrownType);
+            }
+          }
         }
+        getThrownTypes().removeAll(matchingTypes);
+        thrownTypesByVariable.putAll(getSymbol(catchTree.getParameter()), matchingTypes);
       }
       for (CatchTree catchTree : tree.getCatches()) {
         scan(catchTree.getBlock(), null);
