@@ -93,6 +93,7 @@ import com.google.errorprone.bugpatterns.DoNotCallChecker;
 import com.google.errorprone.bugpatterns.DoNotMockChecker;
 import com.google.errorprone.bugpatterns.DoubleBraceInitialization;
 import com.google.errorprone.bugpatterns.DuplicateMapKeys;
+import com.google.errorprone.bugpatterns.EmptyCatch;
 import com.google.errorprone.bugpatterns.EmptyIfStatement;
 import com.google.errorprone.bugpatterns.EmptyTopLevelDeclaration;
 import com.google.errorprone.bugpatterns.EqualsGetClass;
@@ -691,6 +692,7 @@ public class BuiltInCheckerSuppliers {
           DoubleBraceInitialization.class,
           DoubleCheckedLocking.class,
           EmptyBlockTag.class,
+          EmptyCatch.class,
           EmptySetMultibindingContributions.class,
           EqualsGetClass.class,
           EqualsIncompatibleType.class,
