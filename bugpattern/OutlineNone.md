@@ -11,6 +11,7 @@ severity: WARNING
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 The `outline` CSS property provides visual indicators as to which element is
 currently selected within a web page. These are the dotted lines you see
@@ -30,3 +31,4 @@ make them visually distinct. Learn more & get alternative suggestions at
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("OutlineNone")` to the enclosing element.
+

@@ -11,6 +11,7 @@ severity: WARNING
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 Class names from `java.lang` should never be reused. From
 [Java Puzzlers](http://www.javapuzzlers.com/java-puzzlers-sampler.pdf):
@@ -24,3 +25,4 @@ Class names from `java.lang` should never be reused. From
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("JavaLangClash")` to the enclosing element.
+

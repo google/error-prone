@@ -11,6 +11,7 @@ severity: ERROR
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 Compile-time constant expressions that overflow are a potential source of bugs.
 
@@ -38,3 +39,4 @@ scale, see [`TimeUnit.convert`].
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("ConstantOverflow")` to the enclosing element.
+

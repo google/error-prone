@@ -11,6 +11,7 @@ severity: ERROR
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 Several of the methods in `java.util.Collections`, such as `sort` and `shuffle`,
 modify collections in place. If you call one of these methods on a
@@ -40,3 +41,4 @@ public Collection<String> sort(Collection<String> foos) {
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("UnusedCollectionModifiedInPlace")` to the enclosing element.
+

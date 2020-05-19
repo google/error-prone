@@ -12,6 +12,7 @@ severity: WARNING
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 Possible fixes:
 
@@ -25,3 +26,4 @@ Possible fixes:
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("SynchronizeOnNonFinalField")` to the enclosing element.
+

@@ -11,6 +11,7 @@ severity: SUGGESTION
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 The [Google Java Style Guide §5.2.4][style] requires constant names to use
 `CONSTANT_CASE`.
@@ -27,3 +28,4 @@ strongly discouraged.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("ConstantField")` to the enclosing element.
+

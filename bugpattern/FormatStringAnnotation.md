@@ -11,6 +11,7 @@ severity: ERROR
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 Methods can be annotated with Error Prone's `@FormatMethod` annotation to
 indicate that calls to this function should be treated similarly to
@@ -58,3 +59,4 @@ Suppress false positives by adding the suppression annotation
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("FormatStringAnnotation")` to the enclosing element.
+

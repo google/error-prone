@@ -11,6 +11,7 @@ severity: ERROR
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 A method or constructor with one or more parameters whose declaration is
 annotated with the `@CompileTimeConstant` type annotation must only be invoked
@@ -27,3 +28,4 @@ For the same reason, it's also disallowed to create lambda expressions with
 
 ## Suppression
 This check may not be suppressed.
+

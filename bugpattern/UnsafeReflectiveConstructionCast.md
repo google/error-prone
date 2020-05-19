@@ -11,6 +11,7 @@ severity: WARNING
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 Prefer `asSubclass` instead of casting the result of `newInstance` to detect
 classes of incorrect type before invoking their constructors. This way, if the
@@ -33,6 +34,7 @@ CVE-2014-7911 - http://seclists.org/fulldisclosure/2014/Nov/51
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("UnsafeReflectiveConstructionCast")` to the enclosing element.
+
 
 ----------
 

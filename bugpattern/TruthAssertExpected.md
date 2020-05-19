@@ -11,6 +11,7 @@ severity: WARNING
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 Arguments to a fluent [Truth][truth] assertion appear to be reversed based on
 the argument names.
@@ -42,6 +43,7 @@ See https://truth.dev/faq#order for more details.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("TruthAssertExpected")` to the enclosing element.
+
 
 ----------
 

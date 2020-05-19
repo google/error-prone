@@ -11,6 +11,7 @@ severity: WARNING
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 Types being referred to by non-canonical names can be confusing. For example,
 
@@ -32,3 +33,4 @@ safe to store indefinitely, when really it offers no more safety than
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("NonCanonicalType")` to the enclosing element.
+

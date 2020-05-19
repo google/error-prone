@@ -11,6 +11,7 @@ severity: WARNING
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 It is confusing to have two or more variables under the same scope that differ
 only in capitalization. Make sure that both of these follow the casing guide
@@ -24,3 +25,4 @@ that can be accessed from the parameter's scope.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("InconsistentCapitalization")` to the enclosing element.
+

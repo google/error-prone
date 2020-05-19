@@ -11,6 +11,7 @@ severity: WARNING
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 Discarding an exception after calling `printStackTrace` should usually be
 avoided.
@@ -42,3 +43,4 @@ try {
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("CatchAndPrintStackTrace")` to the enclosing element.
+

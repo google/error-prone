@@ -11,6 +11,7 @@ severity: SUGGESTION
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 Effective Java 3rd Edition Item 82 says:
 
@@ -20,3 +21,4 @@ Effective Java 3rd Edition Item 82 says:
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("ThrowsUncheckedException")` to the enclosing element.
+

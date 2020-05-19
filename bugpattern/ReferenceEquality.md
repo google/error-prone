@@ -11,6 +11,7 @@ severity: WARNING
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 Reference types that declare an `equals()` method, or that inherit `equals()`
 from a type other than `Object`, should not be compared for reference equality
@@ -97,3 +98,4 @@ Use `Optional<V>` as the value type of your map instead.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("ReferenceEquality")` to the enclosing element.
+

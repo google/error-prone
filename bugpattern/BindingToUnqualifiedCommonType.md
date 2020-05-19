@@ -11,6 +11,7 @@ severity: WARNING
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 Guice bindings are keyed by a pair of (optional Annotation, Type).
 
@@ -55,6 +56,7 @@ when binding simple value types.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("BindingToUnqualifiedCommonType")` to the enclosing element.
+
 
 ----------
 

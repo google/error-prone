@@ -11,6 +11,7 @@ severity: WARNING
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 It is dangerous for a method to return a mutable instance in some circumstances,
 but immutable in others. Doing so may lead users of your API to make incorrect
@@ -46,3 +47,4 @@ exception for primes.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("MixedMutabilityReturnType")` to the enclosing element.
+

@@ -11,6 +11,7 @@ severity: WARNING
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 Most references are never modified, and accidentally modifying a reference is a
 potential source of bugs.
@@ -35,3 +36,4 @@ deliberately non-final, but the use of @Var on fields is not required.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("Var")` to the enclosing element.
+

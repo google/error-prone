@@ -11,6 +11,7 @@ severity: ERROR
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 Using `Foo::equals` as a `Predicate` for any type that is not compatible with
 `Foo` is almost certainly a bug, since the predicate will always return false.
@@ -25,3 +26,4 @@ See also [EqualsIncompatibleType](EqualsIncompatibleType.md).
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("PredicateIncompatibleType")` to the enclosing element.
+

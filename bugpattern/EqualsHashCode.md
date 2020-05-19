@@ -11,6 +11,7 @@ severity: ERROR
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 The contract for `Object.hashCode` states that if two objects are equal, then
 calling the `hashCode()` method on each of the two objects must produce the same
@@ -22,3 +23,4 @@ to correctly implement `hashCode()`.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("EqualsHashCode")` to the enclosing element.
+

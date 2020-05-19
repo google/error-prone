@@ -11,6 +11,7 @@ severity: ERROR
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 This check validates that all classes annotated with Error Prone's `@Immutable`
 annotation (`com.google.errorprone.annotations.Immutable`) are deeply immutable.
@@ -151,4 +152,5 @@ class MyAutoValue {
   ...
 }
 ```
+
 

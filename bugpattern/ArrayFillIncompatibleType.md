@@ -11,6 +11,7 @@ severity: ERROR
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 `Arrays.fill(Object[], Object)` is used to copy a reference into every slot of
 an array.
@@ -46,3 +47,4 @@ foo.add(42); // Compile time error: Integer is not assignable to String
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("ArrayFillIncompatibleType")` to the enclosing element.
+

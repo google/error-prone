@@ -2,7 +2,7 @@
 title: MissingSummary
 summary: A summary line is required on public/protected Javadocs.
 layout: bugpattern
-tags: Style
+tags: ''
 severity: WARNING
 ---
 
@@ -11,6 +11,8 @@ severity: WARNING
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
+
 
 

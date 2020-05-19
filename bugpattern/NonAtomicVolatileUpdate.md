@@ -11,6 +11,7 @@ severity: WARNING
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 The volatile modifier ensures that updates to a variable are propagated
 predictably to other threads. A read of a volatile variable always returns the
@@ -30,6 +31,7 @@ integer, you could use an AtomicInteger instead of a volatile int.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("NonAtomicVolatileUpdate")` to the enclosing element.
+
 
 ----------
 

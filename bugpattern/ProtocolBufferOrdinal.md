@@ -11,6 +11,7 @@ severity: ERROR
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 The generated Java source files for Protocol Buffer enums have `getNumber()` as
 accessors for the tag number in the protobuf file.
@@ -32,6 +33,7 @@ mismatches if the ordinal was persisted elsewhere.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("ProtocolBufferOrdinal")` to the enclosing element.
+
 
 ----------
 

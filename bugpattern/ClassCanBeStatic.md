@@ -11,6 +11,7 @@ severity: WARNING
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 An inner class should be static unless it references members of its enclosing
 class. An inner class that is made non-static unnecessarily uses more memory and
@@ -18,6 +19,7 @@ does not make the intent of the class clear.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("ClassCanBeStatic")` to the enclosing element.
+
 
 ----------
 
@@ -215,7 +217,7 @@ public class ClassCanBeStaticNegativeCases {
   }
 
   // inner class references a method from inheritance
-  public static interface OuterInter {
+  public interface OuterInter {
     int outerInterMethod();
   }
 

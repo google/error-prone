@@ -3,13 +3,14 @@ title: InjectInvalidTargetingOnScopingAnnotation
 summary: A scoping annotation's Target should include TYPE and METHOD.
 layout: bugpattern
 tags: ''
-severity: ERROR
+severity: WARNING
 ---
 
 <!--
 *** AUTO-GENERATED, DO NOT MODIFY ***
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
+
 
 ## The problem
 `@Scope` annotations should be applicable to TYPE (annotating classes that
@@ -22,6 +23,7 @@ used.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("InjectInvalidTargetingOnScopingAnnotation")` to the enclosing element.
+
 
 ----------
 

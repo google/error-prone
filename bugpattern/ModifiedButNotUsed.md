@@ -11,6 +11,7 @@ severity: WARNING
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 Collections and proto builders which are created and mutated but never used may
 be a sign of a bug, for example:
@@ -53,3 +54,4 @@ or the Builder modified in place:
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("ModifiedButNotUsed")` to the enclosing element.
+

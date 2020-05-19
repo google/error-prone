@@ -11,6 +11,7 @@ severity: ERROR
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 JUnit 3 provides the overridable method tearDown(), to be overridden by
 subclasses when the test needs to perform some post-test de-initialization. In
@@ -30,6 +31,7 @@ of tearDown().
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("JUnit4TearDownNotRun")` to the enclosing element.
+
 
 ----------
 

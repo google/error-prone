@@ -11,6 +11,7 @@ severity: SUGGESTION
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 The [Google Java Style Guide §3.4.2.1][style] requires overloads to be grouped
 together:
@@ -35,3 +36,4 @@ overloads of that method.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("UngroupedOverloads")` to the enclosing element.
+

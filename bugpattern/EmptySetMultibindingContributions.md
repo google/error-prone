@@ -4,13 +4,14 @@ summary: '@Multibinds is a more efficient and declarative mechanism for ensuring
   a set multibinding is present in the graph.'
 layout: bugpattern
 tags: ''
-severity: SUGGESTION
+severity: WARNING
 ---
 
 <!--
 *** AUTO-GENERATED, DO NOT MODIFY ***
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
+
 
 ## The problem
 When using [Dagger Multibinding][dmb], you can use methods like the below to
@@ -32,3 +33,4 @@ However, there's a slightly easier way to express this:
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("EmptySetMultibindingContributions")` to the enclosing element.
+

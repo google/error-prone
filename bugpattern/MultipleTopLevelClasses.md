@@ -11,6 +11,7 @@ severity: SUGGESTION
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 _Alternate names: TopLevel_
 
 ## The problem
@@ -22,4 +23,5 @@ one top-level class.
 Since `@SuppressWarnings` cannot be applied to package declarations, this
 warning can be suppressed by annotating any top-level class in the compilation
 unit with `@SuppressWarnings("MultipleTopLevelClasses")`.
+
 

@@ -13,6 +13,7 @@ severity: WARNING
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 A method's type parameters should always be referenced in the declaration of one
 or more formal parameters. Type parameters that are only used in the return type
@@ -50,3 +51,4 @@ This invocation will be ambiguous:
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("TypeParameterUnusedInFormals")` to the enclosing element.
+

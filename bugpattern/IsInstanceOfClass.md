@@ -11,6 +11,7 @@ severity: ERROR
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 Passing an argument of type `Class` to `Class#instanceOf(Class)` is usually a
 mistake.
@@ -43,3 +44,4 @@ instead:
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("IsInstanceOfClass")` to the enclosing element.
+

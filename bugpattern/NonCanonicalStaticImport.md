@@ -11,6 +11,7 @@ severity: ERROR
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 Types should always be imported by their canonical name. The canonical name of a
 top-level class is the fully-qualified name of the package, followed by a '.',
@@ -49,4 +50,5 @@ class Two extends One {}
 
 An import of `Inner` should always refer to it using the canonical name
 `a.One.Inner`, not `a.Two.Inner`.
+
 

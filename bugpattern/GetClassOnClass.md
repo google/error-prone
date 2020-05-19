@@ -11,6 +11,7 @@ severity: ERROR
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 Calling `getClass()` on an object of type Class returns the Class object for
 java.lang.Class. Usually this is a mistake, and people intend to operate on the
@@ -20,6 +21,7 @@ instead for clarity.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("GetClassOnClass")` to the enclosing element.
+
 
 ----------
 

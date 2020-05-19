@@ -11,6 +11,7 @@ severity: ERROR
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 Calling a method that modifies a collection on an immutable implementation (e.g.
 `ImmutableList.add`) is guaranteed to always throw an
@@ -18,3 +19,4 @@ Calling a method that modifies a collection on an immutable implementation (e.g.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("ImmutableModification")` to the enclosing element.
+

@@ -11,6 +11,7 @@ severity: WARNING
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 Both JUnit and Truth allow for asserting equality of floating point numbers with
 an absolute tolerance. For example, the following statements are equivalent,
@@ -40,6 +41,7 @@ floating point errors, or, if not, `isEqualTo` makes the intention more clear.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("FloatingPointAssertionWithinEpsilon")` to the enclosing element.
+
 
 ----------
 

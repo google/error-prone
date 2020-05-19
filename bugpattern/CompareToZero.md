@@ -13,6 +13,7 @@ severity: WARNING
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 The contract for `Comparator#compare` and `Comparable#compareTo` states that the
 result is an integer which is `< 0` for less than, `== 0` for equality and `> 0`
@@ -51,3 +52,4 @@ code if turned into a comparison to `0`, e.g.:
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("CompareToZero")` to the enclosing element.
+

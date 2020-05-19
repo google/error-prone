@@ -11,6 +11,7 @@ severity: WARNING
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 Java assert statements may or may not be evaluated depending on runtime flags to
 the JVM invocation. When used in tests, this means that the test assertions may
@@ -20,3 +21,4 @@ use one of the assertion libraries that are always enabled, such as JUnit's
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("UseCorrectAssertInTests")` to the enclosing element.
+

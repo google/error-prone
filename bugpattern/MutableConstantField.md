@@ -11,6 +11,7 @@ severity: WARNING
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 A field initialized to hold an [immutable collection][javadoc] should be
 declared using the `Immutable*` type itself (such as `ImmutableList`), not the
@@ -55,3 +56,4 @@ prevent accidental attempts to modify the collection at compile-time (see
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("MutableConstantField")` to the enclosing element.
+

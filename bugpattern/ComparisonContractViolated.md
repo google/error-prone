@@ -11,6 +11,7 @@ severity: ERROR
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 The comparison contract states that `sgn(compare(x, y)) == -sgn(compare(y, x))`.
 (An immediate corollary is that `compare(x, x) == 0`.) This comparison
@@ -28,6 +29,7 @@ course, only work for correctly implemented Comparators.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("ComparisonContractViolated")` to the enclosing element.
+
 
 ----------
 

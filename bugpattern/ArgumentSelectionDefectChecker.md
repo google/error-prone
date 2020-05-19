@@ -11,6 +11,7 @@ severity: WARNING
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 If permuting the arguments of a method call means that the argument names are a
 better match for the parameter names than the original ordering then this might
@@ -23,3 +24,4 @@ warning.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("ArgumentSelectionDefectChecker")` to the enclosing element.
+

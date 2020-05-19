@@ -11,6 +11,7 @@ severity: ERROR
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 _Alternate names: PreconditionsCheckNotNull, PreconditionsCheckNotNullPrimitive_
 
 ## The problem
@@ -18,6 +19,7 @@ _Alternate names: PreconditionsCheckNotNull, PreconditionsCheckNotNullPrimitive_
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("UnnecessaryCheckNotNull")` to the enclosing element.
+
 
 ----------
 

@@ -11,6 +11,7 @@ severity: WARNING
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 Protecting writes to a static field by synchronizing on an instance lock is not
 thread-safe.
@@ -57,3 +58,4 @@ instead of incrementing a static `int` field.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("StaticGuardedByInstance")` to the enclosing element.
+

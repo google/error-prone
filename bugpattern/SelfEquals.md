@@ -11,6 +11,7 @@ severity: ERROR
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 The arguments to equals method are the same object, so it always returns true.
 Either change the arguments to point to different objects or substitute true.
@@ -20,6 +21,7 @@ For test cases, instead of explicitly testing equals, use
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("SelfEquals")` to the enclosing element.
+
 
 ----------
 

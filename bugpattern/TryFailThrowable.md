@@ -11,6 +11,7 @@ severity: ERROR
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 When testing that a line of code throws an expected exception, it is typical to
 execute that line in a try block with a `fail()` or `assert*()` on the line
@@ -29,6 +30,7 @@ caught is not the same one thrown by the call to `fail()` or `assert*()`.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("TryFailThrowable")` to the enclosing element.
+
 
 ----------
 

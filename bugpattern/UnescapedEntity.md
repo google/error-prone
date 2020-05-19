@@ -2,7 +2,7 @@
 title: UnescapedEntity
 summary: Javadoc is interpreted as HTML, so HTML entities such as &, <, > must be escaped.
 layout: bugpattern
-tags: Style
+tags: ''
 severity: WARNING
 ---
 
@@ -11,6 +11,8 @@ severity: WARNING
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
+
 
 

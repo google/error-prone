@@ -11,6 +11,7 @@ severity: WARNING
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 When declaring type parameters, it's possible to declare a type parameter with
 the same name as another type parameter in scope causing unintended
@@ -72,3 +73,4 @@ class BoxingBox<T> {
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("TypeParameterShadowing")` to the enclosing element.
+

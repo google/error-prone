@@ -11,6 +11,7 @@ severity: WARNING
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 _Alternate names: PreferDurationOverload_
 
 ## The problem
@@ -36,3 +37,4 @@ APIs that require a `long, TimeUnit` pair suffer from a number of problems
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("PreferJavaTimeOverload")` to the enclosing element.
+

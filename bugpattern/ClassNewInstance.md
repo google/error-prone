@@ -11,6 +11,7 @@ severity: WARNING
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 The documentation for [`Class#newInstance`][javadoc] includes the following
 warning:
@@ -38,3 +39,4 @@ requires handling three new exceptions: [`IllegalArgumentException`][iae],
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("ClassNewInstance")` to the enclosing element.
+

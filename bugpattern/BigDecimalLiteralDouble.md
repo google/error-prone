@@ -11,10 +11,11 @@ severity: WARNING
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 BigDecimal's `double` can lose precision in surprising ways.
 
-```java {bad}
+```java
   // these are the same:
   new BigDecimal(0.1)
   new BigDecimal("0.1000000000000000055511151231257827021181583404541015625")
@@ -31,3 +32,4 @@ generate a warning, `BigDecimal.valueOf` is safe.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("BigDecimalLiteralDouble")` to the enclosing element.
+

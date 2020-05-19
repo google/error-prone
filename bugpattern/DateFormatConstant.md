@@ -11,6 +11,7 @@ severity: WARNING
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 [`DateFormat`][] is not thread-safe. The documentation recommends creating
 separate format instances for each thread. If multiple threads access a format
@@ -52,3 +53,4 @@ private static final DateFormat dateFormat =
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("DateFormatConstant")` to the enclosing element.
+

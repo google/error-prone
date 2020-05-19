@@ -11,6 +11,7 @@ severity: ERROR
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 This check prevents calls to methods annotated with Error Prone's `@DoNotCall`
 annotation (`com.google.errorprone.annotations.DoNotCall`).
@@ -57,3 +58,4 @@ class ImmutableList<E> implements List<E> {
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("DoNotCall")` to the enclosing element.
+

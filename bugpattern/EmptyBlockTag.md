@@ -2,7 +2,7 @@
 title: EmptyBlockTag
 summary: A block tag (@param, @return, @throws, @deprecated) has an empty description. Block tags without descriptions don't add much value for future readers of the code; consider removing the tag entirely or adding a description.
 layout: bugpattern
-tags: Style
+tags: ''
 severity: WARNING
 ---
 
@@ -11,6 +11,8 @@ severity: WARNING
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
+
 
 

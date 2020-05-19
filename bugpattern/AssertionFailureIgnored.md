@@ -11,6 +11,7 @@ severity: WARNING
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 JUnit's `fail()` and `assert*` methods throw an `AssertionError`, so using the
 try/fail/catch pattern to test for `AssertionError` (or any of its super-types)
@@ -44,3 +45,4 @@ public void testFailsWithAssertionError() {
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("AssertionFailureIgnored")` to the enclosing element.
+

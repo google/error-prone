@@ -11,6 +11,7 @@ severity: WARNING
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 The following code is fine in Java 7, but poses a problem in Java 8.
 
@@ -42,3 +43,4 @@ Consider renaming one of the methods to avoid the ambiguity.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("AmbiguousMethodReference")` to the enclosing element.
+

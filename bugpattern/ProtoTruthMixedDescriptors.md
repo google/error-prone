@@ -11,6 +11,7 @@ severity: ERROR
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 ProtoTruth's `#ignoringFields` method accepts integer field numbers, so
 supplying field numbers from the wrong protocol buffers is possible. For
@@ -47,3 +48,4 @@ void assertOnFoo(Foo foo) {
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("ProtoTruthMixedDescriptors")` to the enclosing element.
+

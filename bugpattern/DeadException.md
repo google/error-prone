@@ -11,6 +11,7 @@ severity: ERROR
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 _Alternate names: ThrowableInstanceNeverThrown_
 
 ## The problem
@@ -22,6 +23,7 @@ that you wanted to throw the exception.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("DeadException")` to the enclosing element.
+
 
 ----------
 

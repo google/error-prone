@@ -11,6 +11,7 @@ severity: ERROR
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 Dagger `@Provides` methods may not return null unless annotated with
 `@Nullable`. Such a method will cause a `NullPointerException` at runtime if the
@@ -22,3 +23,4 @@ If you believe the `return null` path can never be taken, please throw a
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("DaggerProvidesNull")` to the enclosing element.
+

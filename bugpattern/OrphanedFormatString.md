@@ -11,6 +11,7 @@ severity: WARNING
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 Passing a string that contains format specifiers to a method that does not
 perform string formatting is usually a mistake.
@@ -40,3 +41,4 @@ doesn't orphan a format string).
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("OrphanedFormatString")` to the enclosing element.
+

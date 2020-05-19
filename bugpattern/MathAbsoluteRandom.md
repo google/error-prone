@@ -11,6 +11,7 @@ severity: WARNING
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 [`Math.abs`](https://docs.oracle.com/javase/8/docs/api/java/lang/Math.html#abs-long-)
 returns a negative number when called with the largest negative number.
@@ -47,3 +48,4 @@ lng = (lng == Long.MIN_VALUE) ? 0 : Math.abs(lng);
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("MathAbsoluteRandom")` to the enclosing element.
+

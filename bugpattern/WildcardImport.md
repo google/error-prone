@@ -11,6 +11,7 @@ severity: SUGGESTION
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 Wildcard imports are forbidden by §3.3.1 of the Google Java Style Guide.
 
@@ -50,4 +51,5 @@ public class D {
   }
 }
 ```
+
 

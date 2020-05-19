@@ -11,6 +11,7 @@ severity: ERROR
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 Computing a hashcode for an array is tricky. Typically you want a hashcode that
 depends on the value of each element in the array, but many of the common ways
@@ -46,3 +47,4 @@ compute the identity hash code, consider using
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("ArrayHashCode")` to the enclosing element.
+

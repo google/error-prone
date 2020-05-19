@@ -11,6 +11,7 @@ severity: ERROR
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 Generally when comparing arrays for equality, the programmer intends to check
 that the the contents of the arrays are equal rather than that they are actually
@@ -25,6 +26,7 @@ Otherwise, use java.util.Arrays#equals() to compare the contents of the arrays.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("ArrayEquals")` to the enclosing element.
+
 
 ----------
 

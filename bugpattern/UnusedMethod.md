@@ -11,6 +11,7 @@ severity: WARNING
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 _Alternate names: Unused, unused, UnusedParameters_
 
 ## The problem
@@ -24,4 +25,5 @@ the impact on other source files.
 
 All false positives can be suppressed by annotating the method with
 `@SuppressWarnings("unused")`.
+
 

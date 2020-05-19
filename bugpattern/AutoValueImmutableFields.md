@@ -11,6 +11,7 @@ severity: WARNING
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 _Alternate names: mutable_
 
 ## The problem
@@ -23,4 +24,5 @@ https://github.com/google/auto/blob/master/value/userguide/builders-howto.md#-us
 
 Suppress violations by using `@SuppressWarnings("AutoValueImmutableFields")` on
 the relevant `abstract` getter.
+
 

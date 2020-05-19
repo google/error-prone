@@ -11,6 +11,7 @@ severity: ERROR
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 [JLS §15.12.2.1] allows non-generic methods to be invoked with type arguments:
 
@@ -33,3 +34,4 @@ override of a generic method.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("UnnecessaryTypeArgument")` to the enclosing element.
+

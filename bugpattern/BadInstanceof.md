@@ -11,6 +11,7 @@ severity: WARNING
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 Flags `instanceof` checks where the expression can be determined to be a
 supertype of the type it is compared to.
@@ -44,3 +45,4 @@ foo != null
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("BadInstanceof")` to the enclosing element.
+

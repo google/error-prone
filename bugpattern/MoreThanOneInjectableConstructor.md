@@ -11,6 +11,7 @@ severity: ERROR
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 _Alternate names: inject-constructors, InjectMultipleAtInjectConstructors_
 
 ## The problem
@@ -22,6 +23,7 @@ them.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("MoreThanOneInjectableConstructor")` to the enclosing element.
+
 
 ----------
 

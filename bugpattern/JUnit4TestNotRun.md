@@ -11,6 +11,7 @@ severity: ERROR
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 Unlike in JUnit 3, JUnit 4 tests will not be run unless annotated with @Test.
 The test method that triggered this error looks like it was meant to be a test,
@@ -21,6 +22,7 @@ test, consider reducing its visibility to non-public, if possible.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("JUnit4TestNotRun")` to the enclosing element.
+
 
 ----------
 

@@ -11,8 +11,10 @@ severity: ERROR
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 Code that needs to be compatible with Java 7 cannot use types or members that are only present in the JDK 8 class libraries
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("Java7ApiChecker")` to the enclosing element.
+

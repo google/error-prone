@@ -11,6 +11,7 @@ severity: WARNING
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 For JUnit3-style tests, behavior is defined in `junit.framework.TestCase` and
 tests add behavior by overriding methods. For JUnit4-style tests, special
@@ -32,3 +33,4 @@ annotation and implementations of `TestRule` and `MethodRule`).
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("JUnitAmbiguousTestClass")` to the enclosing element.
+

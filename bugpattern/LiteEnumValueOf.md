@@ -11,6 +11,7 @@ severity: WARNING
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 Byte code optimizers can change the implementation of `toString()` in lite
 runtime and thus using `valueOf(String)` is discouraged. Instead of converting
@@ -19,3 +20,4 @@ stable part of the protocol defined by the enum.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("LiteEnumValueOf")` to the enclosing element.
+

@@ -11,6 +11,7 @@ severity: SUGGESTION
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 _Alternate names: unused, Unused_
 
 ## The problem
@@ -51,4 +52,5 @@ class Frobnicator {
 This check is suppressed by `@SuppressWarnings("FieldCanBeLocal")` as well as
 the same suppression mechanisms as `UnusedVariable`
 (`@SuppressWarnings("unused")`.
+
 

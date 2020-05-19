@@ -11,6 +11,7 @@ severity: WARNING
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 The compound assignment `E1 op= E2` could be mistaken for being equivalent to
 `E1 = E1 op E2`. However, this is not the case: compound assignment operators
@@ -64,3 +65,4 @@ information.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("NarrowingCompoundAssignment")` to the enclosing element.
+

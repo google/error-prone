@@ -11,6 +11,7 @@ severity: SUGGESTION
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 When documenting the name of the corresponding formal parameter for a method
 argument, prefer the `f(/* foo= */ value)` style of comment.
@@ -29,3 +30,4 @@ the parameter comment matches the formal parameter name.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("ParameterComment")` to the enclosing element.
+

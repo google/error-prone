@@ -1,6 +1,6 @@
 ---
 title: EqualsGetClass
-summary: Overriding Object#equals in a non-final class by using getClass rather than instanceof breaks substitutability of subclasses.
+summary: Prefer instanceof to getClass when implementing Object#equals.
 layout: bugpattern
 tags: FragileCode
 severity: WARNING
@@ -11,6 +11,7 @@ severity: WARNING
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 Requiring the argument to `equals` to be of a specific concrete type is
 incorrect, because it precludes any subtype of this class from obeying the
@@ -18,6 +19,8 @@ incorrect, because it precludes any subtype of this class from obeying the
 Such code should be modified to use an `instanceof` test instead of `getClass`.
 
 ## Extending a value class to add attributes
+
+TL;DR: use composition rather than inheritance to add fields to value types.
 
 The most common objection objection to this rule arises from a scenario like the
 following:
@@ -88,3 +91,4 @@ when overriding equals").
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("EqualsGetClass")` to the enclosing element.
+

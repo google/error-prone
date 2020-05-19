@@ -11,6 +11,7 @@ severity: ERROR
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 [`java.file.nio.Path`] implements `Iterable<Path>`, and provides an iterator
 over the name elements of the path. Declaring a parameter of type
@@ -41,3 +42,4 @@ printPaths(ImmutableList.of(Paths.get("/tmp/hello")));
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("IterablePathParameter")` to the enclosing element.
+

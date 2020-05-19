@@ -11,6 +11,7 @@ severity: ERROR
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 JUnit4 provides two annotations ([`@BeforeClass`][beforeclass] and
 [`@AfterClass`][afterclass]) that are applied to methods that are run once per
@@ -26,3 +27,4 @@ to run any `@BeforeClass` or `@AfterClass` method that isn't also `static`.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("JUnit4ClassAnnotationNonStatic")` to the enclosing element.
+

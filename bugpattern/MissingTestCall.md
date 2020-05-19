@@ -11,6 +11,7 @@ severity: ERROR
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 Some test helpers such as `EqualsTester` require a terminating method call to be
 of any use.
@@ -28,3 +29,4 @@ of any use.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("MissingTestCall")` to the enclosing element.
+

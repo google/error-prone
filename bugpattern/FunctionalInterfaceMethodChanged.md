@@ -11,6 +11,7 @@ severity: ERROR
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 There are only two correct ways to have one [`@FunctionalInterface`] extend
 another [`@FunctionalInterface`]—the way where you leave the abstract method
@@ -52,3 +53,4 @@ static Runnable crashTerminating(Runnable r) {
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("FunctionalInterfaceMethodChanged")` to the enclosing element.
+

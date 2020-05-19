@@ -11,6 +11,7 @@ severity: ERROR
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 Qualifier and Scope annotations are used by dependency injection frameworks to
 adjust their behavior. Not having runtime retention on scoping or qualifier
@@ -46,6 +47,7 @@ retention for both [`Qualifier`] and [`Scope`].
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("InjectScopeOrQualifierAnnotationRetention")` to the enclosing element.
+
 
 ----------
 

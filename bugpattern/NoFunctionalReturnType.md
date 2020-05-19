@@ -11,8 +11,10 @@ severity: WARNING
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 Returning the actual type that the returned function would return instead of a functional type creates a more versatile method
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("NoFunctionalReturnType")` to the enclosing element.
+

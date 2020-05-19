@@ -11,6 +11,7 @@ severity: WARNING
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 Consider that other developers will try to read and understand your value class
 while looking only at your hand-written class, not the actual (generated)
@@ -27,3 +28,4 @@ the check doesn't flag them.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("AutoValueFinalMethods")` to the enclosing element.
+

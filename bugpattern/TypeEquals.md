@@ -11,6 +11,7 @@ severity: WARNING
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 [`TypeMirror`](https://docs.oracle.com/en/java/javase/11/docs/api/java.compiler/javax/lang/model/type/TypeMirror.html)
 doesn't override `Object.equals` and instances are not interned by javac, so
@@ -26,3 +27,4 @@ from `javax.annotation.processing.ProcessingEnvironment`.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("TypeEquals")` to the enclosing element.
+

@@ -11,6 +11,7 @@ severity: ERROR
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 A method that overrides a @ForOverride method should not be invoked directly.
 Instead, it should be invoked only from the class in which it was declared. For
@@ -20,3 +21,4 @@ separate method.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("ForOverride")` to the enclosing element.
+

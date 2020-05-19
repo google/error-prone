@@ -11,6 +11,7 @@ severity: WARNING
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 `Tree#toString` shouldn't be used for Trees deriving from the code being
 compiled, as it discards whitespace and comments.
@@ -25,3 +26,4 @@ compiled, as it discards whitespace and comments.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("TreeToString")` to the enclosing element.
+

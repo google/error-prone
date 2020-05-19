@@ -11,6 +11,7 @@ severity: ERROR
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 If a method's formal parameter is annotated with `@CompileTimeConstant`, the
 method will always be invoked with an argument that is a static constant. If the
@@ -27,3 +28,4 @@ void g(@CompileTimeConstant x) {
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("NonFinalCompileTimeConstant")` to the enclosing element.
+

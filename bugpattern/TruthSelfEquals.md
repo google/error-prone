@@ -11,6 +11,7 @@ severity: ERROR
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 If a test subject and the argument to `isEqualTo` are the same instance (e.g.
 `assertThat(x).isEqualTo(x)`), then the assertion will always pass. Truth
@@ -27,6 +28,7 @@ To test the implementation of an `equals` method, use
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("TruthSelfEquals")` to the enclosing element.
+
 
 ----------
 

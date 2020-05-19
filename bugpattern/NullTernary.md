@@ -11,6 +11,7 @@ severity: ERROR
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 If a conditional expression evalutes to `null`, unboxing it will result in a
 `NullPointerException`.
@@ -26,3 +27,4 @@ resulting in a NullPointerException.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("NullTernary")` to the enclosing element.
+

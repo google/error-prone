@@ -11,6 +11,7 @@ severity: WARNING
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 Catching an exception and throwing another is a common pattern. This is often
 used to supply additional information, or to turn a checked exception into an
@@ -49,4 +50,5 @@ should not be propagated.
     throw new IllegalStateException();
   }
 ```
+
 

@@ -11,6 +11,7 @@ severity: WARNING
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 When a boolean expression is a compile-time constant (e.g.: `2 < 1`, `1 == 1`,
 `'a' < 'A'`), these expressions can be directly replaced with `true` or `false`,
@@ -54,3 +55,4 @@ for (int i = 0; i < 100; i++) {
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("ComplexBooleanConstant")` to the enclosing element.
+

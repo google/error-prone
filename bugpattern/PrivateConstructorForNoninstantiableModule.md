@@ -11,6 +11,7 @@ severity: SUGGESTION
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 Modules that contain abstract binding methods (@Binds, @Multibinds) or only
 static @Provides methods will not be instantiated by Dagger when they are
@@ -19,3 +20,4 @@ module will not be used as an instance.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("PrivateConstructorForNoninstantiableModule")` to the enclosing element.
+

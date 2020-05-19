@@ -11,6 +11,7 @@ severity: WARNING
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 Inconsistently ordered parameters in method overloads can be very confusing to
 the users. For example, the following overloads are considered to be consistent:
@@ -37,9 +38,10 @@ public void foo(Bar bar, String prefix, String suffix) { ... }
 ```
 
 If the caller has a code like `foo(bar, "quux")` and wants to add custom prefix
-support he will most likely do it like `foo(bar, "quux", "norf")`. The compiler
-will accept this because the types match perfectly. However, this is clearly a
-bug caused by unintuitive API and method overloading.
+support they will most likely do it like `foo(bar, "quux", "norf")`. The
+compiler will accept this because the types match perfectly. However, this is
+clearly a bug caused by unintuitive API and method overloading.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("InconsistentOverloads")` to the enclosing element.
+

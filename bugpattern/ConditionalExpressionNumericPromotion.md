@@ -11,6 +11,7 @@ severity: ERROR
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 A conditional expression with numeric second and third operands of differing
 types may give surprising results.
@@ -54,3 +55,4 @@ Or use if/else:
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("ConditionalExpressionNumericPromotion")` to the enclosing element.
+

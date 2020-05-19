@@ -11,6 +11,7 @@ severity: WARNING
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 Constructors of primitive wrapper objects (e.g. `new Boolean(true)` will be
 [deprecated][8145468] in Java 9. The `valueOf` factory methods (e.g.
@@ -31,3 +32,4 @@ treated as identity-less value types, even in their boxed representations.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("BoxedPrimitiveConstructor")` to the enclosing element.
+

@@ -11,6 +11,7 @@ severity: WARNING
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 Methods that return `java.util.concurrent.Future` and its subclasses generally
 indicate errors by returning a future that eventually fails.
@@ -25,6 +26,7 @@ for details.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("FutureReturnValueIgnored")` to the enclosing element.
+
 
 ----------
 

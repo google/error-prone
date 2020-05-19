@@ -12,6 +12,7 @@ severity: WARNING
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 A proto's `Descriptor` was created by mixing the `Descriptors` class from one
 proto with the field number from another. E.g.:
@@ -30,3 +31,4 @@ Bar.getDescriptors().findFieldByNumber(Bar.ID_FIELD_NUMBER)
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("MixedDescriptors")` to the enclosing element.
+

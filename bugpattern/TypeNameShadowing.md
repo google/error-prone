@@ -11,6 +11,7 @@ severity: WARNING
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 When declaring type parameters, it's possible to declare a type parameter with
 the same name as another type in scope, "shadowing" that type and potentially
@@ -40,3 +41,4 @@ where the type parameter is always instantiated with the same type.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("TypeNameShadowing")` to the enclosing element.
+

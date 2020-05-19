@@ -11,6 +11,7 @@ severity: WARNING
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 When invoking `static native` methods from objects that override
 [`finalize`](https://docs.oracle.com/javase/9/docs/api/java/lang/Object.html#finalize--),
@@ -86,3 +87,4 @@ object instead.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("UnsafeFinalization")` to the enclosing element.
+

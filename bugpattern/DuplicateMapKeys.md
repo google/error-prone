@@ -11,6 +11,7 @@ severity: ERROR
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 JDK 9 has
 [`Map#ofEntries`](https://docs.oracle.com/javase/9/docs/api/java/util/Map.html#ofEntries-java.util.Map.Entry...-)
@@ -29,3 +30,4 @@ Map<String, String> map = Map.ofEntries(
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("DuplicateMapKeys")` to the enclosing element.
+

@@ -11,6 +11,7 @@ severity: WARNING
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 _Alternate names: unused, UnusedParameters_
 
 ## The problem
@@ -33,4 +34,5 @@ private static void authenticate(User user, Application unusedApplication) {
 
 All false positives can be suppressed by annotating the variable with
 `@SuppressWarnings("unused")`.
+
 

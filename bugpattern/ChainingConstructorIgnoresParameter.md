@@ -11,6 +11,7 @@ severity: ERROR
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 When a class exposes multiple constructors, they're generally used as a means of
 initializing default parameters. If a chaining constructor ignores a parameter,
@@ -30,6 +31,7 @@ MissileLauncher(Location target, boolean askForConfirmation) {
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("ChainingConstructorIgnoresParameter")` to the enclosing element.
+
 
 ----------
 

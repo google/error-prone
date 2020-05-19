@@ -11,6 +11,7 @@ severity: WARNING
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 _Alternate names: static, static-access, StaticAccessedFromInstance_
 
 ## The problem
@@ -63,3 +64,4 @@ never an expression.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("StaticQualifiedUsingExpression")` to the enclosing element.
+

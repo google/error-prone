@@ -11,6 +11,7 @@ severity: ERROR
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 For shift operations on int types, only the five lowest-order bits of the shift
 amount are used as the shift distance. This means that shift amounts that are
@@ -22,6 +23,7 @@ See JLS 15.19, "Shift Operators", for more details.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("BadShiftAmount")` to the enclosing element.
+
 
 ----------
 

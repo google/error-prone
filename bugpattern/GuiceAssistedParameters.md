@@ -11,6 +11,7 @@ severity: ERROR
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 From the [javadoc of FactoryModuleBuilder][fmb]:
 
@@ -48,6 +49,7 @@ public class RealPayment implements Payment {
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("GuiceAssistedParameters")` to the enclosing element.
+
 
 ----------
 

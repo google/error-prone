@@ -11,6 +11,7 @@ severity: ERROR
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 `Hashtable.contains(Object)` and `ConcurrentHashMap.contains(Object)` are legacy
 methods for testing if the given object is a value in the hash table. They are
@@ -23,3 +24,4 @@ object is a value in the hash table, use `containsValue` for clarity.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("HashtableContains")` to the enclosing element.
+

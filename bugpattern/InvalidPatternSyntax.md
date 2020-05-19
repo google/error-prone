@@ -11,6 +11,7 @@ severity: ERROR
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 This error is triggered by calls to regex-accepting methods with invalid string
 literals. These calls would cause a PatternSyntaxException at runtime.
@@ -21,6 +22,7 @@ regex.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("InvalidPatternSyntax")` to the enclosing element.
+
 
 ----------
 

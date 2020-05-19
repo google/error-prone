@@ -11,6 +11,7 @@ severity: ERROR
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 From the [Guice wiki][wiki]:
 
@@ -21,6 +22,7 @@ From the [Guice wiki][wiki]:
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("GuiceInjectOnFinalField")` to the enclosing element.
+
 
 ----------
 

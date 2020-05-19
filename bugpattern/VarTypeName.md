@@ -11,6 +11,7 @@ severity: ERROR
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 As of JDK 10 `var` is a restricted local variable type and cannot be used for
 type declarations (see [JEP 286][]).
@@ -19,3 +20,4 @@ type declarations (see [JEP 286][]).
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("VarTypeName")` to the enclosing element.
+

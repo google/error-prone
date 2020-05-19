@@ -11,6 +11,7 @@ severity: WARNING
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 Thread-safe methods should never be overridden by methods that are not
 thread-safe. Doing so violates behavioural subtyping, and can result in bugs if
@@ -60,3 +61,4 @@ class MyCounter extends Counter {
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("UnsynchronizedOverridesSynchronized")` to the enclosing element.
+

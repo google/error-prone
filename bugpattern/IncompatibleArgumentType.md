@@ -11,6 +11,7 @@ severity: ERROR
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 The called method is annotated with `@CompatibleWith`, which enforces that the
 parameter passed to the method can potentially be [cast][jls] to the appropriate
@@ -53,3 +54,4 @@ void containmentCheck(Container<? extends Number> container) {
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("IncompatibleArgumentType")` to the enclosing element.
+

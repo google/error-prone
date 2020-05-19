@@ -11,6 +11,7 @@ severity: ERROR
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 _Alternate names: GuardedBy_
 
 ## The problem
@@ -19,3 +20,4 @@ locks. The caller will hold the locks when the function finishes execution.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("LockMethodChecker")` to the enclosing element.
+

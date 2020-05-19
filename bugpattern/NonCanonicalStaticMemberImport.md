@@ -11,6 +11,7 @@ severity: WARNING
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 Fields and methods should always be imported by their canonical name. The
 canonical name of a top-level class is the fully-qualified name of the package,
@@ -50,4 +51,5 @@ class Two extends One {}
 
 An import of `CONST` should always refer to it using the canonical name
 `a.One.CONST`, not `a.Two.CONST`.
+
 

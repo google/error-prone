@@ -11,6 +11,7 @@ severity: ERROR
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 Certain resources in `android.R.string` have names that do not match their
 content: `android.R.string.yes` is actually "OK" and `android.R.string.no` is
@@ -20,3 +21,4 @@ resources.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("MislabeledAndroidString")` to the enclosing element.
+

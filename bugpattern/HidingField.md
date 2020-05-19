@@ -11,6 +11,7 @@ severity: WARNING
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 _Alternate names: hiding, OvershadowingSubclassFields_
 
 ## The problem
@@ -45,6 +46,7 @@ class Main {
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("HidingField")` to the enclosing element.
+
 
 ----------
 

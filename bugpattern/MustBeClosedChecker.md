@@ -11,6 +11,7 @@ severity: ERROR
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 Methods or constructors annotated with `@MustBeClosed` require that the returned
 resource is closed. This is enforced by checking that invocations occur within
@@ -44,3 +45,4 @@ try {
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("MustBeClosedChecker")` to the enclosing element.
+

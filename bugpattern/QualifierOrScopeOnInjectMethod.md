@@ -11,6 +11,7 @@ severity: WARNING
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 The `@Inject` annotation is applied to **injection points** - methods,
 constructors, or fields that a dependency injection tool like Guice or Dagger
@@ -87,3 +88,4 @@ class MyModule extends AbstractModule {
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("QualifierOrScopeOnInjectMethod")` to the enclosing element.
+

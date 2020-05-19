@@ -11,6 +11,7 @@ severity: ERROR
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 When serializing bytes from a `MessageLite`, one can use `toByteString` to get a
 `ByteString`, effectively an immutable wrapper over a `byte[]`. This ByteString
@@ -38,3 +39,4 @@ container for arbitrary binary data.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("LiteByteStringUtf8")` to the enclosing element.
+

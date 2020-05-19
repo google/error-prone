@@ -11,6 +11,7 @@ severity: WARNING
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 After bytecode optimization, Lite protos do not generate a meaningful
 `#toString()`. This can be acceptable for debugging, as development builds will
@@ -38,3 +39,4 @@ would increase code size.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("LiteProtoToString")` to the enclosing element.
+

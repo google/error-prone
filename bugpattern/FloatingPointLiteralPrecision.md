@@ -11,6 +11,7 @@ severity: WARNING
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 `double` and `float` literals that can't be precisely represented should be
 avoided.
@@ -24,3 +25,4 @@ System.err.println(d); // prints 2.0
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("FloatingPointLiteralPrecision")` to the enclosing element.
+

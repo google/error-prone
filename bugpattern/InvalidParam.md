@@ -2,7 +2,7 @@
 title: InvalidParam
 summary: This @param tag doesn't refer to a parameter of the method.
 layout: bugpattern
-tags: Style
+tags: ''
 severity: WARNING
 ---
 
@@ -11,6 +11,8 @@ severity: WARNING
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
+
 
 

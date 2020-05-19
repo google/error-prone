@@ -11,6 +11,7 @@ severity: SUGGESTION
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 Fields that may be `null` should be annotated with `@Nullable`. For example, do
 this:
@@ -37,3 +38,4 @@ public class Foo {
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("FieldMissingNullable")` to the enclosing element.
+

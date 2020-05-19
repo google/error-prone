@@ -11,6 +11,7 @@ severity: SUGGESTION
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 Java files should be located in a directory that
 ends with the fully qualified name of the package.
@@ -34,4 +35,5 @@ package com.google.my.pkg;
 
 Note that package annotations must be located in a `package-info.java` file that
 must be built together with the package.
+
 

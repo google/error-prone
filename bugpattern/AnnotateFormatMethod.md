@@ -11,6 +11,7 @@ severity: WARNING
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 This method passes a pair of parameters through to `String#format`, but the
 enclosing method wasn't annotated `@FormatMethod`. Doing so gives compile-time
@@ -47,3 +48,4 @@ this code still compiles after applying.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("AnnotateFormatMethod")` to the enclosing element.
+

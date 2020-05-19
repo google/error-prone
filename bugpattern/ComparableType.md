@@ -11,6 +11,7 @@ severity: ERROR
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 The type argument of `Comparable` should always be the type of the current
 class.
@@ -37,6 +38,7 @@ are different types, this behaviour can't be guaranteed.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("ComparableType")` to the enclosing element.
+
 
 ----------
 

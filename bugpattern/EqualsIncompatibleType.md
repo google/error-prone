@@ -11,6 +11,7 @@ severity: WARNING
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 Consider the following code:
 
@@ -167,6 +168,7 @@ if (set.contains(hi)) {
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("EqualsIncompatibleType")` to the enclosing element.
 
+
 ----------
 
 ### Positive examples
@@ -264,7 +266,7 @@ public class EqualsIncompatibleTypePositiveCases {
   }
 
   interface I {
-    public boolean equals(Object o);
+    boolean equals(Object o);
   }
 
   class D {}
@@ -479,7 +481,7 @@ public class EqualsIncompatibleTypeNegativeCases {
   }
 
   interface I {
-    public boolean equals(Object o);
+    boolean equals(Object o);
   }
 
   class E1 implements I {}

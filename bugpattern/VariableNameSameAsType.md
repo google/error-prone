@@ -11,6 +11,7 @@ severity: WARNING
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 When a field/variable name is the same as the field/variable type, it is
 difficult to determine which to use at which time.
@@ -35,3 +36,4 @@ private static String string;
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("VariableNameSameAsType")` to the enclosing element.
+

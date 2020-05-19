@@ -11,6 +11,7 @@ severity: ERROR
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 _Alternate names: InsecureCipherMode_
 
 ## The problem
@@ -38,6 +39,7 @@ classes of problems that are covered by this checker:
 *   Using DSA for digital signatures. Some widely used crypto libraries accept
     invalid DSA signatures in specific configurations. The checker will flag all
     cryptographic operations that may involve DSA.
+
 
 
 ----------
@@ -307,12 +309,10 @@ __InsecureCipherModeNegativeCases.java__
 
 package com.google.errorprone.bugpatterns.testdata;
 
-
 import java.security.KeyFactory;
 import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
-
 import javax.crypto.Cipher;
 import javax.crypto.KeyAgreement;
 import javax.crypto.NoSuchPaddingException;
@@ -322,6 +322,7 @@ import javax.crypto.NoSuchPaddingException;
  */
 public class InsecureCipherModeNegativeCases {
   static Cipher aesCipher;
+
   static {
     // We don't handle any exception as this code is not meant to be executed.
     try {
@@ -335,6 +336,7 @@ public class InsecureCipherModeNegativeCases {
 
   static final String AES_STRING = "AES/CBC/NoPadding";
   static Cipher aesCipherWithConstantString;
+
   static {
     try {
       aesCipherWithConstantString = Cipher.getInstance(AES_STRING);
@@ -346,6 +348,7 @@ public class InsecureCipherModeNegativeCases {
   }
 
   static Cipher aesCipherWithProvider;
+
   static {
     try {
       aesCipherWithProvider = Cipher.getInstance("AES/CBC/NoPadding", "My Provider");
@@ -359,6 +362,7 @@ public class InsecureCipherModeNegativeCases {
   }
 
   static Cipher arc4CipherConscrypt;
+
   static {
     try {
       arc4CipherConscrypt = Cipher.getInstance("ARC4", "Conscrypt");
@@ -372,6 +376,7 @@ public class InsecureCipherModeNegativeCases {
   }
 
   static Cipher rc4CipherJsch;
+
   static {
     try {
       rc4CipherJsch = Cipher.getInstance("RC4", "JSch");
@@ -385,6 +390,7 @@ public class InsecureCipherModeNegativeCases {
   }
 
   static Cipher arcfourCipherSunJce;
+
   static {
     try {
       arcfourCipherSunJce = Cipher.getInstance("ARCFOUR/ECB/NoPadding");
@@ -396,6 +402,7 @@ public class InsecureCipherModeNegativeCases {
   }
 
   static Cipher desCipher;
+
   static {
     try {
       desCipher = Cipher.getInstance("DES/CBC/NoPadding");
@@ -407,6 +414,7 @@ public class InsecureCipherModeNegativeCases {
   }
 
   static Cipher rsaCipher;
+
   static {
     try {
       rsaCipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
@@ -418,6 +426,7 @@ public class InsecureCipherModeNegativeCases {
   }
 
   static Cipher aesWrapCipher;
+
   static {
     try {
       aesWrapCipher = Cipher.getInstance("AESWrap/ECB/NoPadding");

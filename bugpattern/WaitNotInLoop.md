@@ -11,6 +11,7 @@ severity: WARNING
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 `Object.wait()` is supposed to block until either another thread invokes the
 `Object.notify()` or `Object.notifyAll()` method, or a specified amount of time
@@ -181,6 +182,7 @@ and the "Implementation Considerations" section in
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("WaitNotInLoop")` to the enclosing element.
+
 
 ----------
 

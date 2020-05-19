@@ -11,6 +11,7 @@ severity: WARNING
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 Calling `toString` on objects that don't override `toString()` doesn't provide
 useful information (just the class name and the `hashCode()`).
@@ -20,6 +21,7 @@ the object.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("ObjectToString")` to the enclosing element.
+
 
 ----------
 

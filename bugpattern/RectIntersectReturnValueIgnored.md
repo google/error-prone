@@ -11,6 +11,7 @@ severity: ERROR
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 `android.graphics.Rect.intersect(Rect r)` and
 `android.graphics.Rect.intersect(int, int, int, int)` do not always modify the
@@ -23,6 +24,7 @@ wrong rectangle.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("RectIntersectReturnValueIgnored")` to the enclosing element.
+
 
 ----------
 

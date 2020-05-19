@@ -11,6 +11,7 @@ severity: WARNING
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 The boolean operators `&&` and `||` should almost always be used instead of `&`
 and `|`.
@@ -39,3 +40,4 @@ if (lhs & hasSideEffects()) {
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("ShortCircuitBoolean")` to the enclosing element.
+

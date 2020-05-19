@@ -11,6 +11,7 @@ severity: WARNING
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 Enum values that declare methods are a subclass of the actual enum type, so
 calling `getClass()` returns a synthetic subclass of the enum. To retrieve the
@@ -60,3 +61,4 @@ class Binop
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("GetClassOnEnum")` to the enclosing element.
+

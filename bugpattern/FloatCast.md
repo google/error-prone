@@ -11,6 +11,7 @@ severity: WARNING
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 Casts have higher precedence than binary expressions, so `(int) 0.5f * 100` is
 equivalent to `((int) 0.5f) * 100` = `0 * 100` = `0`, not `(int) (0.5f * 100)` =
@@ -36,3 +37,4 @@ long rand = (long) (new Random().nextDouble() * 1000000000);
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("FloatCast")` to the enclosing element.
+

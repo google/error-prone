@@ -11,6 +11,7 @@ severity: WARNING
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 Java assertions do not necessarily execute at runtime; they may be enabled and
 disabled depending on which options are passed to the JVM invocation. An assert
@@ -21,6 +22,7 @@ regardless of runtime configuration.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("AssertFalse")` to the enclosing element.
+
 
 ----------
 

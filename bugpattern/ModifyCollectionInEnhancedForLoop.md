@@ -1,6 +1,6 @@
 ---
 title: ModifyCollectionInEnhancedForLoop
-summary: Modifying a collection while iterating over it in a loop may cause a ConcurrentModificationException to be thrown.
+summary: Modifying a collection while iterating over it in a loop may cause a ConcurrentModificationException to be thrown or lead to undefined behavior.
 layout: bugpattern
 tags: ''
 severity: WARNING
@@ -10,6 +10,7 @@ severity: WARNING
 *** AUTO-GENERATED, DO NOT MODIFY ***
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
+
 
 ## The problem
 From the javadoc for
@@ -51,6 +52,7 @@ ids.removeIf(id -> shouldRemove(id));
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("ModifyCollectionInEnhancedForLoop")` to the enclosing element.
 
+
 ----------
 
 ### Positive examples
@@ -74,8 +76,10 @@ __ModifyCollectionInEnhancedForLoopPositiveCases.java__
 package com.google.errorprone.bugpatterns;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.Map;
 
 /** @author anishvisaria98@gmail.com (Anish Visaria) */
 public class ModifyCollectionInEnhancedForLoopPositiveCases {
@@ -127,6 +131,39 @@ public class ModifyCollectionInEnhancedForLoopPositiveCases {
       }
     }
   }
+
+  public static void testMapKeySet(HashMap<Integer, Integer> map) {
+    for (Integer a : map.keySet()) {
+      // BUG: Diagnostic contains:
+      map.putIfAbsent(new Integer("42"), new Integer("43"));
+      // BUG: Diagnostic contains:
+      map.clear();
+      // BUG: Diagnostic contains:
+      map.remove(a);
+    }
+  }
+
+  public static void testMapValues(HashMap<Integer, Integer> map) {
+    for (Integer a : map.values()) {
+      // BUG: Diagnostic contains:
+      map.putIfAbsent(new Integer("42"), new Integer("43"));
+      // BUG: Diagnostic contains:
+      map.putIfAbsent(new Integer("42"), a);
+      // BUG: Diagnostic contains:
+      map.clear();
+    }
+  }
+
+  public static void testMapEntrySet(HashMap<Integer, Integer> map) {
+    for (Map.Entry<Integer, Integer> a : map.entrySet()) {
+      // BUG: Diagnostic contains:
+      map.putIfAbsent(new Integer("42"), new Integer("43"));
+      // BUG: Diagnostic contains:
+      map.clear();
+      // BUG: Diagnostic contains:
+      map.remove(a.getKey());
+    }
+  }
 }
 {% endhighlight %}
 
@@ -151,8 +188,10 @@ __ModifyCollectionInEnhancedForLoopNegativeCases.java__
 package com.google.errorprone.bugpatterns;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -198,6 +237,31 @@ public class ModifyCollectionInEnhancedForLoopNegativeCases {
       xs.remove(x);
       System.err.println();
       break;
+    }
+  }
+
+  public static void testMapKeySet(HashMap<Integer, Integer> map1, HashMap<Integer, Integer> map2) {
+    for (Integer a : map1.keySet()) {
+      map2.putIfAbsent(new Integer("42"), new Integer("43"));
+      map2.clear();
+      map2.remove(a);
+    }
+  }
+
+  public static void testMapValues(HashMap<Integer, Integer> map1, HashMap<Integer, Integer> map2) {
+    for (Integer a : map1.values()) {
+      map2.putIfAbsent(new Integer("42"), a);
+      map2.clear();
+      map2.remove(new Integer("42"));
+    }
+  }
+
+  public static void testMapEntrySet(
+      HashMap<Integer, Integer> map1, HashMap<Integer, Integer> map2) {
+    for (Map.Entry<Integer, Integer> a : map1.entrySet()) {
+      map2.putIfAbsent(new Integer("42"), new Integer("43"));
+      map2.clear();
+      map2.remove(a.getKey());
     }
   }
 

@@ -11,6 +11,7 @@ severity: WARNING
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 Passing lambdas to an overloaded method may be ambiguous if two overloads have
 parameters that are functional interfaces with equivalent methods.
@@ -86,3 +87,4 @@ doIt(x -> {x.toString();}); // statement body, calls f(Consumer)
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("FunctionalInterfaceClash")` to the enclosing element.
+

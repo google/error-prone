@@ -11,6 +11,7 @@ severity: ERROR
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 `Math.random()`, `Random#nextFloat`, and `Random#nextDouble` return results in
 the range `[0.0, 1.0)`. Therefore, casting the result to `(int)` or `(long)`
@@ -18,3 +19,4 @@ the range `[0.0, 1.0)`. Therefore, casting the result to `(int)` or `(long)`
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("RandomCast")` to the enclosing element.
+

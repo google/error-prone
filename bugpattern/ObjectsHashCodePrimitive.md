@@ -11,6 +11,7 @@ severity: WARNING
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 `Objects.hashCode` takes an `Object` parameter, and will either return `0` when
 the parameter is `null`, or call the underlying `hashCode` function of the
@@ -51,3 +52,4 @@ public int hashCode() {
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("ObjectsHashCodePrimitive")` to the enclosing element.
+

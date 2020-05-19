@@ -11,6 +11,7 @@ severity: WARNING
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 Implementations of `java.lang.annotation.Annotation` must override `equals` and
 `hashCode`, otherwise they inherit the implementations from `java.lang.Object`,
@@ -23,3 +24,4 @@ to generate the correct code automatically.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("BadAnnotationImplementation")` to the enclosing element.
+

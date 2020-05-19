@@ -3,13 +3,14 @@ title: UseBinds
 summary: '@Binds is a more efficient and declarative mechanism for delegating a binding.'
 layout: bugpattern
 tags: ''
-severity: SUGGESTION
+severity: WARNING
 ---
 
 <!--
 *** AUTO-GENERATED, DO NOT MODIFY ***
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
+
 
 ## The problem
 A @Provides or @Produces method that returns its single parameter has long been
@@ -22,3 +23,4 @@ preferred over @Provides or @Produces for delegation.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("UseBinds")` to the enclosing element.
+

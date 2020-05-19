@@ -2,7 +2,7 @@
 title: TestExceptionChecker
 summary: Using @Test(expected=...) is discouraged, since the test will pass if *any* statement in the test method throws the expected exception
 layout: bugpattern
-tags: FragileCode
+tags: ''
 severity: WARNING
 ---
 
@@ -10,6 +10,7 @@ severity: WARNING
 *** AUTO-GENERATED, DO NOT MODIFY ***
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
+
 
 ## The problem
 The use of `@Test(expected = FooException.class)` is strongly discouraged, since
@@ -46,3 +47,4 @@ public void testRemoveFails() {
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("TestExceptionChecker")` to the enclosing element.
+

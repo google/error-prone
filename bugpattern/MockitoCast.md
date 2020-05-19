@@ -11,6 +11,7 @@ severity: ERROR
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 The JDK9 javac fixes a bug
 ([JDK-8058199](https://bugs.openjdk.java.net/browse/JDK-8058199)) that was
@@ -82,3 +83,4 @@ returns `Object` the checkcast fails.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("MockitoCast")` to the enclosing element.
+

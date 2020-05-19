@@ -11,6 +11,7 @@ severity: ERROR
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 _Alternate names: SelfEquality_
 
 ## The problem
@@ -26,7 +27,7 @@ is usually a mistake:
 If the expression has side-effects, consider refactoring one of the expressions
 with side effects into a local. For example, prefer this:
 
-```.java {.good}
+```java
 // check twice, just to be sure
 boolean isTrue = foo.isTrue();
 if (isTrue && foo.isTrue()) {
@@ -36,7 +37,7 @@ if (isTrue && foo.isTrue()) {
 
 to this:
 
-```.java {.bad}
+```java
 if (foo.isTrue() && foo.isTrue()) {
   // ...
 }
@@ -44,3 +45,4 @@ if (foo.isTrue() && foo.isTrue()) {
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("IdentityBinaryExpression")` to the enclosing element.
+

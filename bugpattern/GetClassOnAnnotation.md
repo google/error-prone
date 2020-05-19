@@ -11,6 +11,7 @@ severity: ERROR
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 Instances of an annotation interface generally return a random proxy class when
 `getClass()` is called on them; to get the actual annotation type use
@@ -43,3 +44,4 @@ interface java.lang.Deprecated
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("GetClassOnAnnotation")` to the enclosing element.
+

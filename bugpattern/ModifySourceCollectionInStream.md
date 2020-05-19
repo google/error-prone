@@ -11,6 +11,7 @@ severity: WARNING
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 From the javadoc for
 [`java.util.stream: Non-interference`](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/stream/package-summary.html#NonInterference):
@@ -43,6 +44,7 @@ mutableValues.stream()
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("ModifySourceCollectionInStream")` to the enclosing element.
+
 
 ----------
 

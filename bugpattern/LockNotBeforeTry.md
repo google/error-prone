@@ -11,6 +11,7 @@ severity: WARNING
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 Wherever possible, calls to Lock#lock should be immediately followed by a `try`
 block with a `finally` clause which releases the lock,
@@ -58,3 +59,4 @@ it.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("LockNotBeforeTry")` to the enclosing element.
+

@@ -11,6 +11,7 @@ severity: ERROR
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 Format strings for the printf family of functions must follow the specification
 in the documentation for [java.util.Formatter][formatter].
@@ -108,3 +109,4 @@ String.format("%r", "hello");
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("FormatString")` to the enclosing element.
+

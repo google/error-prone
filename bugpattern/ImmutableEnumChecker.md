@@ -11,6 +11,7 @@ severity: WARNING
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 _Alternate names: Immutable_
 
 ## The problem
@@ -32,6 +33,11 @@ To make enums immutable, ensure:
         that are built in to Error Prone (e.g. `java.lang.String`,
         `java.util.UUID`), or are annotated with
         `com.google.errorprone.annotations.Immutable`.
+
+        Other versions of the annotation, such as
+        `javax.annotation.concurrent.Immutable`, are currently *not* recognized.
+        See https://errorprone.info/bugpattern/Immutable for additional discussion.
+
     *   If the type you're using inside the enum can be annotated with
         `@Immutable`, you should do that:
 
@@ -148,3 +154,4 @@ works for one interface type.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("ImmutableEnumChecker")` to the enclosing element.
+

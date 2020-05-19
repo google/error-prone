@@ -11,6 +11,7 @@ severity: WARNING
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 Defining a method that looks like `Object#equals` but doesn't actually override
 `Object#equals` is dangerous. The result of the comparison could differ
@@ -54,3 +55,4 @@ consider rewriting this class to use
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("NonOverridingEquals")` to the enclosing element.
+

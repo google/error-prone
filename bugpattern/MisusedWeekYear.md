@@ -11,6 +11,7 @@ severity: ERROR
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 "YYYY" in a date pattern means "week year". The week year is defined to begin at
 the beginning of the week that contains the year's first Thursday. For example,
@@ -25,6 +26,7 @@ instead.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("MisusedWeekYear")` to the enclosing element.
+
 
 ----------
 

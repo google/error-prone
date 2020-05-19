@@ -11,6 +11,7 @@ severity: ERROR
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 Google Java Style Guide §2.1 states, "The source file name consists of the
 case-sensitive name of the top-level class it contains, plus the .java
@@ -21,4 +22,5 @@ extension."
 Since `@SuppressWarnings` cannot be applied to package declarations, this
 warning can be suppressed by annotating any top-level class in the compilation
 unit with `@SuppressWarnings("ClassName")`.
+
 

@@ -11,6 +11,7 @@ severity: WARNING
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 `ByteBuffer` provides a view of an underlying bytes storage. The two most common
 implementations are the non-direct byte buffers, which are backed by a bytes
@@ -35,7 +36,7 @@ backing array normally, without checking the above.
 
 Do this:
 
-``` {.good}
+```java
 // Use `.get(...)` to copy the byte[] without changing the current position.
 public void foo(ByteBuffer buffer) throws Exception {
    byte[] bytes = new byte[buffer.remaining()];
@@ -47,7 +48,7 @@ public void foo(ByteBuffer buffer) throws Exception {
 
 or this:
 
-``` {.good}
+```java
 // Use `.array()` only if you also check `.hasArray()`, `.arrayOffset()`, and `.remaining()`.
 public void foo(ByteBuffer buffer) throws Exception {
   if (buffer.hasArray()) {
@@ -61,7 +62,7 @@ public void foo(ByteBuffer buffer) throws Exception {
 
 or this:
 
-``` {.good}
+```java
 // No checking necessary when the buffer was constructed locally with `allocate(...)`.
 public void foo() throws Exception {
       ByteBuffer buffer = ByteBuffer.allocate(Long.SIZE / Byte.SIZE);
@@ -74,7 +75,7 @@ public void foo() throws Exception {
 
 or this:
 
-``` {.good}
+```java
 // No checking necessary when the buffer was constructed locally with `wrap(...)`.
 public void foo(byte[] bytes) throws Exception {
    ByteBuffer buffer = ByteBuffer.wrap(bytes);
@@ -86,7 +87,7 @@ public void foo(byte[] bytes) throws Exception {
 
 Not this:
 
-``` {.bad}
+```java
 public void foo(ByteBuffer buffer) {
    byte[] dataAsBytesArray = buffer.array();
    // ...
@@ -95,3 +96,4 @@ public void foo(ByteBuffer buffer) {
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("ByteBufferBackingArray")` to the enclosing element.
+

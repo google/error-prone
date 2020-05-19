@@ -11,6 +11,7 @@ severity: ERROR
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 `@AutoValue` classes are intended to be closed, with a single implementation
 with known semantics. Implementing them by hand is extremely dangerous.
@@ -34,3 +35,4 @@ classes and recommendations for what to do instead:
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("ExtendsAutoValue")` to the enclosing element.
+

@@ -11,6 +11,7 @@ severity: ERROR
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 _Alternate names: dep-ann_
 
 ## The problem
@@ -20,6 +21,7 @@ Please add an `@Deprecated` annotation to this declaration in addition to the
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("DepAnn")` to the enclosing element.
+
 
 ----------
 

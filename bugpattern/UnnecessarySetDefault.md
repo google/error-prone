@@ -11,6 +11,7 @@ severity: SUGGESTION
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 NullPointerTester comes with built-in support for some well known types like
 `Optional` and `ImmutableList` via guava's
@@ -19,3 +20,4 @@ class. Explicitly calling `setDefault` for these types is unnecessary.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("UnnecessarySetDefault")` to the enclosing element.
+

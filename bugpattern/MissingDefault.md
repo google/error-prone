@@ -11,6 +11,7 @@ severity: WARNING
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 The [Google Java Style Guide §4.8.4.3][style] requires each switch statement to
 include a `default` statement group, even if it contains no code.
@@ -27,6 +28,8 @@ If the unhandled cases should be impossible, add a `default` clause that throws
 `AssertionError`:
 
 ```java
+enum State { READY, DONE, RUNNING, BLOCKED }
+
 switch (state) {
   case READY:
     return true;
@@ -41,13 +44,14 @@ If having execution fall out of the switch is intentional, add a `default`
 clause with a comment:
 
 ```java
+enum State { READY, DONE, RUNNING, BLOCKED }
+
 switch (state) {
   case READY:
     return true;
   case DONE:
     return false;
-  default:
-    // fall out
+  default: // continue below to handle RUNNING/BLOCKED/etc.
 }
 ```
 
@@ -57,3 +61,4 @@ switch (state) {
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("MissingDefault")` to the enclosing element.
+

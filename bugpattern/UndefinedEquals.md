@@ -11,6 +11,7 @@ severity: WARNING
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 This code uses `Object.equals` (or similar method) with a type that does not
 have well-defined `equals` behavior: [`Collection`], [`Iterable`], [`Multimap`],
@@ -78,3 +79,4 @@ These must be iterated over and compared manually, element by element.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("UndefinedEquals")` to the enclosing element.
+

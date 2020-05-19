@@ -11,6 +11,7 @@ severity: ERROR
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 _Alternate names: ResultOfMethodCallIgnored, CheckReturnValue_
 
 ## The problem
@@ -22,6 +23,7 @@ are not.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("ReturnValueIgnored")` to the enclosing element.
+
 
 ----------
 

@@ -11,6 +11,7 @@ severity: WARNING
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 Unlike with `@javax.inject.Inject`, if a method overrides a method annotated
 with `@com.google.inject.Inject`, Guice will inject it even if it itself is not
@@ -22,6 +23,7 @@ difference, it is recommended that you annotate this method explicitly.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("OverridesGuiceInjectableMethod")` to the enclosing element.
+
 
 ----------
 

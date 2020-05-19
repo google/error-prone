@@ -11,6 +11,7 @@ severity: WARNING
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 Consider a switch statement that doesn't handle all possible values and doesn't
 have a default:
@@ -46,3 +47,4 @@ have a default statement group.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("MissingCasesInEnumSwitch")` to the enclosing element.
+

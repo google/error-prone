@@ -11,6 +11,7 @@ severity: ERROR
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 Invoking a collection method with the same collection as the argument is likely
 incorrect.
@@ -24,6 +25,7 @@ incorrect.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("ModifyingCollectionWithItself")` to the enclosing element.
+
 
 ----------
 

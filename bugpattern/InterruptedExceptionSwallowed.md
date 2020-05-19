@@ -11,6 +11,7 @@ severity: WARNING
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 This check warns when an `InterruptedException` could be thrown but isn't being
 individually handled.
@@ -40,4 +41,5 @@ try {
   throw new IllegalStateException(e);
 }
 ```
+
 

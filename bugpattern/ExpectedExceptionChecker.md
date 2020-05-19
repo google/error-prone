@@ -1,8 +1,8 @@
 ---
 title: ExpectedExceptionChecker
-summary: Calls to ExpectedException#expect should always be followed by exactly one statement.
+summary: Prefer assertThrows to ExpectedException
 layout: bugpattern
-tags: FragileCode
+tags: ''
 severity: WARNING
 ---
 
@@ -10,6 +10,7 @@ severity: WARNING
 *** AUTO-GENERATED, DO NOT MODIFY ***
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
+
 
 ## The problem
 Any additional statements after the statement that is expected to throw will
@@ -53,3 +54,4 @@ public void testRemoveFails() {
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("ExpectedExceptionChecker")` to the enclosing element.
+

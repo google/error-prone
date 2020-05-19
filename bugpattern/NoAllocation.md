@@ -12,6 +12,7 @@ severity: ERROR
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 Like many other languages, Java provides automatic memory management. In Java,
 this feature incurs an runtime cost, and can also lead to unpredictable
@@ -32,6 +33,7 @@ annotated with @NoAllocation, those methods will be disallowed from allocating.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("NoAllocation")` to the enclosing element.
+
 
 ----------
 

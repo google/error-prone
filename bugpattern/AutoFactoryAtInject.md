@@ -11,6 +11,7 @@ severity: ERROR
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 @AutoFactory classes should not be @Inject-ed, inject the generated factory
 instead. Classes that are annotated with @AutoFactory are intended to be
@@ -21,6 +22,7 @@ prefer to inject that instead.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("AutoFactoryAtInject")` to the enclosing element.
+
 
 ----------
 

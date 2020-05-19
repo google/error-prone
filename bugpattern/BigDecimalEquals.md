@@ -11,6 +11,7 @@ severity: WARNING
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 `BigDecimal`'s equals method compares the scale of the representation as well as
 the numeric value, which may not be expected.
@@ -23,3 +24,4 @@ a.equals(b); // false!
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("BigDecimalEquals")` to the enclosing element.
+

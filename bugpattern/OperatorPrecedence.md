@@ -11,6 +11,7 @@ severity: WARNING
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 The [Google Java Style Guide §4.7][style] states:
 
@@ -28,3 +29,4 @@ Use grouping parentheses to disambiguate expressions that contain both `||` and
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("OperatorPrecedence")` to the enclosing element.
+

@@ -11,6 +11,7 @@ severity: WARNING
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 _Alternate names: fallthrough_
 
 ## The problem
@@ -41,6 +42,7 @@ switch (input) {
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("FallThrough")` to the enclosing element.
+
 
 ----------
 

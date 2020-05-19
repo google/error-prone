@@ -11,6 +11,7 @@ severity: SUGGESTION
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 In the [Google Style Guide][gsg], type parameters are named in one of two
 patterns:
@@ -45,3 +46,4 @@ class.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("ClassNamedLikeTypeParameter")` to the enclosing element.
+

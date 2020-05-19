@@ -3,13 +3,14 @@ title: PreconditionsInvalidPlaceholder
 summary: Preconditions only accepts the %s placeholder in error message strings
 layout: bugpattern
 tags: LikelyError
-severity: WARNING
+severity: ERROR
 ---
 
 <!--
 *** AUTO-GENERATED, DO NOT MODIFY ***
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
+
 
 ## The problem
 The Guava Preconditions checks take error message template strings that look
@@ -20,6 +21,7 @@ placeholders.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("PreconditionsInvalidPlaceholder")` to the enclosing element.
+
 
 ----------
 
@@ -48,6 +50,7 @@ package com.google.errorprone.bugpatterns.testdata;
 import static com.google.common.base.Preconditions.checkArgument;
 
 import com.google.common.base.Preconditions;
+import com.google.common.base.Verify;
 
 public class PreconditionsInvalidPlaceholderPositiveCase1 {
   int foo;
@@ -60,6 +63,11 @@ public class PreconditionsInvalidPlaceholderPositiveCase1 {
   public void checkFoo() {
     // BUG: Diagnostic contains: foo must be equal to 0 but was %s
     Preconditions.checkState(foo == 0, "foo must be equal to 0 but was {0}", foo);
+  }
+
+  public void verifyFoo(int x) {
+    // BUG: Diagnostic contains:
+    Verify.verify(x > 0, "%d > 0", x);
   }
 }
 {% endhighlight %}

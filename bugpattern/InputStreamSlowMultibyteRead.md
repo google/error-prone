@@ -11,6 +11,7 @@ severity: WARNING
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 `java.io.InputStream` defines a single abstract method: `int read()`, which
 subclasses implement to return bytes from the logical input stream.
@@ -29,3 +30,4 @@ the default behavior of the multibyte read method.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("InputStreamSlowMultibyteRead")` to the enclosing element.
+

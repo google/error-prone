@@ -11,6 +11,7 @@ severity: ERROR
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 Querying a collection for an element it cannot possibly contain is almost
 certainly a bug.
@@ -136,6 +137,7 @@ difference to our arguments above.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("CollectionIncompatibleType")` to the enclosing element.
+
 
 ----------
 

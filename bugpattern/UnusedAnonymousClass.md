@@ -11,6 +11,7 @@ severity: ERROR
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 Creating a side-effect-free anonymous class and never using it is usually a
 mistake.
@@ -29,3 +30,4 @@ public static void main(String[] args) {
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("UnusedAnonymousClass")` to the enclosing element.
+

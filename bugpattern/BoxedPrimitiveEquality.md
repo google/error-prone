@@ -11,6 +11,7 @@ severity: WARNING
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 Comparison using reference equality instead of value equality. The inputs to
 this comparison are boxed primitive types, where reference equality is
@@ -23,3 +24,4 @@ immutable types whose equals() method fully compares their values.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("BoxedPrimitiveEquality")` to the enclosing element.
+

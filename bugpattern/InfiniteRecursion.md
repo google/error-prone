@@ -11,6 +11,7 @@ severity: ERROR
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 A method that always calls itself will cause a StackOverflowError.
 
@@ -55,3 +56,4 @@ class Delegate implements Processor {
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("InfiniteRecursion")` to the enclosing element.
+

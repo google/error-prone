@@ -11,6 +11,7 @@ severity: WARNING
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 Proto builders provide a pleasant fluent interface for constructing instances.
 Unlike argument lists, however, they do not prevent the user from providing
@@ -29,3 +30,4 @@ return MyProto.newBuilder()
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("ProtoRedundantSet")` to the enclosing element.
+

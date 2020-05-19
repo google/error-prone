@@ -11,6 +11,7 @@ severity: WARNING
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 The [double-brace initialization pattern][dbi] should be avoided—especially in
 non-static contexts.
@@ -61,3 +62,4 @@ initializers into a helper method.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("DoubleBraceInitialization")` to the enclosing element.
+

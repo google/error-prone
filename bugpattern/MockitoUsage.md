@@ -11,6 +11,7 @@ severity: ERROR
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 Calls to `Mockito.when` should always be accompanied by a call to a method like
 `thenReturn`.
@@ -34,3 +35,4 @@ For more information, see the [Mockito documentation][docs].
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("MockitoUsage")` to the enclosing element.
+

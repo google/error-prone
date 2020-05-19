@@ -11,6 +11,7 @@ severity: WARNING
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 Prefer method references to anonymous classes that implement functional
 interfaces.
@@ -68,3 +69,4 @@ reference equality, but if you are doing so, consider not making this change.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("UnnecessaryAnonymousClass")` to the enclosing element.
+

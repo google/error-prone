@@ -11,6 +11,7 @@ severity: WARNING
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 `ThreadLocal`s should be stored in `static` variables to avoid memory leaks. If
 a `ThreadLocal` is stored in an instance (non-static) variable, there will be
@@ -43,3 +44,4 @@ private static final ThreadLocal<D> local = new ThreadLocal<D>();
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("ThreadLocalUsage")` to the enclosing element.
+

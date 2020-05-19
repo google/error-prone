@@ -11,6 +11,7 @@ severity: WARNING
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 Assertions made _inside the implementation of another [Truth] assertion_ should
 use [`check`], not `assertThat`.
@@ -58,6 +59,7 @@ Benefits of `check` include:
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("ChainedAssertionLosesContext")` to the enclosing element.
+
 
 ----------
 

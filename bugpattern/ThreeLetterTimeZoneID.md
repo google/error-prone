@@ -11,6 +11,7 @@ severity: WARNING
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 According to the Javadoc of `java.util.TimeZone`:
 
@@ -41,3 +42,4 @@ the ID appears in `ZoneId.getAvailableZoneIds()`, e.g. "UTC", "GMT", "PRC".
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("ThreeLetterTimeZoneID")` to the enclosing element.
+

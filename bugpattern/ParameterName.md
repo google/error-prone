@@ -11,6 +11,7 @@ severity: WARNING
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 In certain contexts literal arguments - such as `0`, `""`, `true` and `false`,
 or `null` - can make it difficult for readers to know what a method will do.
@@ -36,3 +37,4 @@ regular block comment without the `=` is recommended: `/* enableFoo */`.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("ParameterName")` to the enclosing element.
+

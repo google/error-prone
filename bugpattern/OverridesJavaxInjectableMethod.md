@@ -11,6 +11,7 @@ severity: ERROR
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 When classes declare that they have an `@javax.inject.Inject`ed method,
 dependency injection tools must call those methods after first calling any
@@ -41,6 +42,7 @@ assumptions. Possible resolutions to this error include:
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("OverridesJavaxInjectableMethod")` to the enclosing element.
+
 
 ----------
 
@@ -87,7 +89,7 @@ public class OverridesJavaxInjectableMethodPositiveCases {
 
   /**
    * Class with a method foo() that is not annotated, but overrides a method annotated with
-   * @javax.inject.Inject.
+   * {@code @}javax.inject.Inject.
    */
   public class TestClass2 extends TestClass1 {
     // BUG: Diagnostic contains: @Inject

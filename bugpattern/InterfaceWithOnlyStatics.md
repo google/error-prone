@@ -11,6 +11,7 @@ severity: WARNING
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 Interfaces should be used to define types. Using an interface as a collection of
 static methods and fields violates that, and can lead to confusing type
@@ -35,3 +36,4 @@ public final class Constants {
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("InterfaceWithOnlyStatics")` to the enclosing element.
+

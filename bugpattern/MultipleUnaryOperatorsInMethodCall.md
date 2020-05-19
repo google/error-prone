@@ -3,13 +3,14 @@ title: MultipleUnaryOperatorsInMethodCall
 summary: Avoid having multiple unary operators acting on the same variable in a method call
 layout: bugpattern
 tags: ''
-severity: SUGGESTION
+severity: WARNING
 ---
 
 <!--
 *** AUTO-GENERATED, DO NOT MODIFY ***
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
+
 
 ## The problem
 Increment operators in method calls are dubious and while argument lists are
@@ -19,6 +20,7 @@ most one side effect.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("MultipleUnaryOperatorsInMethodCall")` to the enclosing element.
+
 
 ----------
 
@@ -45,8 +47,8 @@ package com.google.errorprone.bugpatterns.testdata;
 
 /** @author sulku@google.com (Marsela Sulku) */
 public class MultipleUnaryOperatorsInMethodCallPositiveCases {
+  /** these cases do not have suggested fixes */
   public static void tests(int a, int b) {
-    /** these cases do not have suggested fixes */
 
     // BUG: Diagnostic contains: Avoid having multiple unary operators acting
     twoArgs(a++, a--);

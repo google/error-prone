@@ -11,6 +11,7 @@ severity: ERROR
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 Classes should not be declared inside `package-info.java` files.
 
@@ -25,3 +26,4 @@ Classes should not be declared inside `package-info.java` files.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("PackageInfo")` to the enclosing element.
+

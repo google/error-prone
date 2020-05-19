@@ -3,13 +3,14 @@ title: InjectedConstructorAnnotations
 summary: Injected constructors cannot be optional nor have binding annotations
 layout: bugpattern
 tags: ''
-severity: ERROR
+severity: WARNING
 ---
 
 <!--
 *** AUTO-GENERATED, DO NOT MODIFY ***
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
+
 
 ## The problem
 The constructor is annotated with @Inject(optional=true), or it is annotated
@@ -19,6 +20,7 @@ See [https://code.google.com/p/google-guice/wiki/InjectionPoints] for details.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("InjectedConstructorAnnotations")` to the enclosing element.
+
 
 ----------
 

@@ -11,6 +11,7 @@ severity: WARNING
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 SWIG is a tool that will automatically generate Java bindings to C++ code. It is
 possible to %ignore in SWIG a C++ object's destructor, this is trivially
@@ -28,6 +29,7 @@ SWIG input code to tell it not to %ignore the C++ code's destructor.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("SwigMemoryLeak")` to the enclosing element.
+
 
 ----------
 

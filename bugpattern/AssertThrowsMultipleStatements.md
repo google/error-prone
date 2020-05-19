@@ -11,6 +11,7 @@ severity: WARNING
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 If the body of the lambda passed to `assertThrows` contains multiple statements,
 execution of the lambda will stop at the first statement that throws an
@@ -49,3 +50,4 @@ assertThat(list).containsExactly("a");
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("AssertThrowsMultipleStatements")` to the enclosing element.
+

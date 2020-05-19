@@ -11,6 +11,7 @@ severity: ERROR
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 This checker looks for comparisons of protocol buffer fields with null. If a
 proto field is not specified, its field accessor will return a non-null default
@@ -69,3 +70,4 @@ retrieved using `myMessage.getMyString().getValue()`.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("ProtoFieldNullComparison")` to the enclosing element.
+

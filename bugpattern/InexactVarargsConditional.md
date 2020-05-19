@@ -11,6 +11,7 @@ severity: ERROR
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 When calling a varargs method, you can either pass an explicit array of
 arguments, or individual arguments:
@@ -59,3 +60,4 @@ f(flag ? new Object[][] {{1, 2}} : new Object[] {3}); // prints [[1, 2]] or [3]
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("InexactVarargsConditional")` to the enclosing element.
+

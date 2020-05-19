@@ -11,12 +11,14 @@ severity: ERROR
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 From documentation: DoubleMath.fuzzyEquals is not transitive, so it is not
 suitable for use in Object#equals implementations.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("FuzzyEqualsShouldNotBeUsedInEqualsMethod")` to the enclosing element.
+
 
 ----------
 

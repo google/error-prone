@@ -11,6 +11,7 @@ severity: WARNING
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 Allowing a qualifier annotation in [`TYPE_PARAMETER`] or [`TYPE_USE`] contexts
 allows end users to write code like:
@@ -32,6 +33,7 @@ type annotations in this context, so the above code is equivalent to:
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("QualifierWithTypeUse")` to the enclosing element.
+
 
 ----------
 

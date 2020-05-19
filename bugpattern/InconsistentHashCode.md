@@ -11,6 +11,7 @@ severity: WARNING
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 Implementations of `Object#hashCode` should not incorporate fields which the
 implementation of `Object#equals` does not. This violates the contract of
@@ -49,3 +50,4 @@ method, or remove `b` from `#hashCode`. The former is more likely to be correct.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("InconsistentHashCode")` to the enclosing element.
+

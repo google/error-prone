@@ -11,6 +11,7 @@ severity: SUGGESTION
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 Utility classes are classes that only include static members and are not
 designed to be instantiated, for example `java.lang.Math` or `java.util.Arrays`.
@@ -38,3 +39,4 @@ See:
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("PrivateConstructorForUtilityClass")` to the enclosing element.
+

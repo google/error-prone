@@ -11,6 +11,7 @@ severity: ERROR
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 _Alternate names: MoreThanOneScopeAnnotationOnClass_
 
 ## The problem
@@ -19,6 +20,7 @@ the JSR-330 specification.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("InjectMoreThanOneScopeAnnotationOnClass")` to the enclosing element.
+
 
 ----------
 
@@ -54,14 +56,14 @@ public class MoreThanOneScopeAnnotationOnClassPositiveCases {
   /** Class has two scope annotations */
   @Singleton
   @SessionScoped
-  // BUG: Diagnostic contains: @Singleton(), @SessionScoped().
+  // BUG: Diagnostic contains:
   class TestClass1 {}
 
   /** Class has three annotations, two of which are scope annotations. */
   @Singleton
   @SuppressWarnings("foo")
   @SessionScoped
-  // BUG: Diagnostic contains: @Singleton(), @SessionScoped().
+  // BUG: Diagnostic contains:
   class TestClass2 {}
 
   @Scope
@@ -70,7 +72,7 @@ public class MoreThanOneScopeAnnotationOnClassPositiveCases {
   @Singleton
   @CustomScope
   @SessionScoped
-  // BUG: Diagnostic contains: @Singleton(), @CustomScope(), @SessionScoped().
+  // BUG: Diagnostic contains:
   class TestClass3 {}
 }
 {% endhighlight %}

@@ -11,6 +11,7 @@ severity: WARNING
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 Using double-checked locking on mutable objects in non-volatile fields is not
 thread-safe.
@@ -118,3 +119,4 @@ object is published.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("DoubleCheckedLocking")` to the enclosing element.
+

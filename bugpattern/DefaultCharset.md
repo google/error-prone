@@ -11,6 +11,7 @@ severity: WARNING
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 A [`Charset`][charset] is a mapping between sequences of
 [16-bit Unicode code units][codeunit] and sequences of bytes. Charsets are used
@@ -36,3 +37,4 @@ When in doubt, use [UTF-8].
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("DefaultCharset")` to the enclosing element.
+

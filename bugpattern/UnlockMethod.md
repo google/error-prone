@@ -11,6 +11,7 @@ severity: ERROR
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 _Alternate names: GuardedBy_
 
 ## The problem
@@ -20,3 +21,4 @@ hold them when it completes.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("UnlockMethod")` to the enclosing element.
+

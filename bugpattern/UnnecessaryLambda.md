@@ -11,6 +11,7 @@ severity: WARNING
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 Prefer method references to constant lambda expressions, or to a helper method
 that does nothing but return a lambda.
@@ -64,3 +65,4 @@ this change.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("UnnecessaryLambda")` to the enclosing element.
+

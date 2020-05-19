@@ -12,6 +12,7 @@ severity: WARNING
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 Implementations of `#equals` should return `false` for different types, not
 throw.
@@ -30,3 +31,4 @@ class Data {
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("EqualsUnsafeCast")` to the enclosing element.
+

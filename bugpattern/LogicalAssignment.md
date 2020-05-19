@@ -11,6 +11,7 @@ severity: WARNING
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 When an assignment expression is used as the condition of a loop, it isn't clear
 to the reader whether the assignment was deliberate or it was intended to be an
@@ -31,3 +32,4 @@ Prefer `while ((x = checkSomething())) {` or `while (x == checkSomething()) {`.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("LogicalAssignment")` to the enclosing element.
+

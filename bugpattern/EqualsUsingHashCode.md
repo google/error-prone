@@ -12,6 +12,7 @@ severity: WARNING
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 ## The problem
 Don't implement `#equals` using just a `hashCode` comparison:
 
@@ -40,3 +41,4 @@ equality) is only ~77k.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("EqualsUsingHashCode")` to the enclosing element.
+

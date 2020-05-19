@@ -11,6 +11,7 @@ severity: ERROR
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+
 _Alternate names: GuardedByChecker_
 
 ## The problem
@@ -208,35 +209,43 @@ public void increment() {
 
 #### Limitations
 
-Locks are resolved lexically
+Anonymous classes and lambdas need to re-acquire locks that may be held by an
+enclosing block. For example, consider:
 
 ```java
 class Transaction {
   @GuardedBy("this")
   int x;
 
-  interface Handler {
-    void apply();
-  }
-
-  public void handle() {
-    runHandler(new Handler() {
-      void apply() {
-        x++;  // Error: access of 'x' not guarded by 'Transaction.this'
-      }
+  public synchronized void handle() {
+    doSomething(() -> {
+      x++;  // Error: access of 'x' not guarded by 'Transaction.this'
     });
-  }
-
-  private synchronized void runHandler(Handler handler) {
-    handler.apply();
   }
 }
 ```
 
-In this example, the analysis is unable to guarantee that callers of the Handler
-created in 'handle' will be holding the required lock. The analysis is purely
-intra-procedural, so it is unable to observe that the only caller (runHandler)
-does in fact hold the necessary lock.
+The analysis is intra-procedural, meaning it doesn't consider the implementation
+of `doSomething`.
+
+The checker doesn't know if `doSomething` immediately calls the provided lambda
+while the lock is still held by the enclosing method `handle`, for example:
+
+```java
+private void doSomething(Runnable r) {
+  r.run();
+}
+```
+
+... or whether the lambda could be called later after `handle` has released the
+lock, for example:
+
+```java
+private void doSomething(Runnable r) {
+  // runs `r` at some point in the future
+  someExecutor.execute(r);
+}
+```
 
 #### False negatives with aliasing
 
@@ -263,3 +272,4 @@ required lock is not held.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("GuardedBy")` to the enclosing element.
+
