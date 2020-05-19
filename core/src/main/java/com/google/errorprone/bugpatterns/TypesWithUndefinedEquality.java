@@ -39,7 +39,8 @@ public enum TypesWithUndefinedEquality {
   ITERABLE("Iterable", "java.lang.Iterable", "com.google.common.collect.FluentIterable"),
   COLLECTION("Collection", "java.util.Collection"),
   IMMUTABLE_COLLECTION("ImmutableCollection", "com.google.common.collect.ImmutableCollection"),
-  QUEUE("Queue", "java.util.Queue");
+  QUEUE("Queue", "java.util.Queue"),
+  DATE("Date", "java.util.Date");
 
   private final String shortName;
   private final ImmutableSet<String> typeNames;
