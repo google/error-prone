@@ -247,6 +247,7 @@ import com.google.errorprone.bugpatterns.ProtoStringFieldReferenceEquality;
 import com.google.errorprone.bugpatterns.ProtoTruthMixedDescriptors;
 import com.google.errorprone.bugpatterns.ProtocolBufferOrdinal;
 import com.google.errorprone.bugpatterns.ProtosAsKeyOfSetOrMap;
+import com.google.errorprone.bugpatterns.PublicConstructorForAbstractClass;
 import com.google.errorprone.bugpatterns.RandomCast;
 import com.google.errorprone.bugpatterns.RandomModInteger;
 import com.google.errorprone.bugpatterns.ReachabilityFenceUsage;
@@ -793,6 +794,7 @@ public class BuiltInCheckerSuppliers {
           ProtoDurationGetSecondsGetNano.class,
           ProtoRedundantSet.class,
           ProtoTimestampGetSecondsGetNano.class,
+          PublicConstructorForAbstractClass.class,
           QualifierOrScopeOnInjectMethod.class,
           ReachabilityFenceUsage.class,
           ReferenceEquality.class,
