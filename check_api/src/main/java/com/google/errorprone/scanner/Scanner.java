@@ -16,6 +16,8 @@
 
 package com.google.errorprone.scanner;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.ErrorProneOptions;
@@ -121,12 +123,7 @@ public class Scanner extends TreePathScanner<Void, VisitorState> {
   }
 
   protected void reportMatch(Description description, VisitorState state) {
-    // Null descriptions are not expected here, but they were previously treated identically to
-    // NO_MATCH.
-    // TODO(ghm): Find the violations and remove this check.
-    if (description == null) {
-      return;
-    }
+    checkNotNull(description, "Use Description.NO_MATCH to denote an absent finding.");
     state.reportMatch(description);
   }
 
