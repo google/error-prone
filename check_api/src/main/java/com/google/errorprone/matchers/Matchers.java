@@ -34,6 +34,7 @@ import static java.util.Objects.requireNonNull;
 import com.google.common.base.VerifyException;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Sets;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.dataflow.nullnesspropagation.Nullness;
 import com.google.errorprone.matchers.ChildMultiMatcher.MatchType;
@@ -1252,15 +1253,14 @@ public class Matchers {
     return anyOf(matchers);
   }
 
+  private static final ImmutableSet<Kind> DECLARATION =
+      Sets.immutableEnumSet(Kind.LAMBDA_EXPRESSION, Kind.CLASS, Kind.ENUM, Kind.INTERFACE);
+
   public static boolean methodCallInDeclarationOfThrowingRunnable(VisitorState state) {
     return stream(state.getPath())
         // Find the nearest definitional context for this method invocation
         // (i.e.: the nearest surrounding class or lambda)
-        .filter(
-            t ->
-                t.getKind() == Kind.LAMBDA_EXPRESSION
-                    || t.getKind() == Kind.CLASS
-                    || t.getKind() == Kind.ENUM)
+        .filter(t -> DECLARATION.contains(t.getKind()))
         .findFirst()
         .map(t -> isThrowingFunctionalInterface(getType(t), state))
         .orElseThrow(VerifyException::new);
