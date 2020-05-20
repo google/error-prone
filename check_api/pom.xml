@@ -159,6 +159,11 @@
               <artifactId>auto-value</artifactId>
               <version>${autovalue.version}</version>
             </path>
+            <path>
+              <groupId>com.google.auto.service</groupId>
+              <artifactId>auto-service</artifactId>
+              <version>${autoservice.version}</version>
+            </path>
           </annotationProcessorPaths>
         </configuration>
       </plugin>
