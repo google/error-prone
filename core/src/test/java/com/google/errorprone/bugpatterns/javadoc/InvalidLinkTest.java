@@ -140,4 +140,21 @@ public final class InvalidLinkTest {
             "}")
         .doTest(TEXT_MATCH);
   }
+
+  @Test
+  public void multiField() {
+    helper
+        .addSourceLines(
+            "Param.java", //
+            "@interface Param {",
+            "  String name() default \"\";",
+            "}")
+        .addSourceLines(
+            "Test.java", //
+            "@interface Test {",
+            "  /** Pass in a {@link Tuple<Object>} */",
+            "  Param extraPositionals() default @Param(name = \"\");",
+            "}")
+        .doTest();
+  }
 }
