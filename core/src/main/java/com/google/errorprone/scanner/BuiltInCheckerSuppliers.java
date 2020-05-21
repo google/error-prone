@@ -408,7 +408,6 @@ import com.google.errorprone.bugpatterns.javadoc.UnescapedEntity;
 import com.google.errorprone.bugpatterns.javadoc.UrlInSee;
 import com.google.errorprone.bugpatterns.nullness.EqualsBrokenForNull;
 import com.google.errorprone.bugpatterns.nullness.FieldMissingNullable;
-import com.google.errorprone.bugpatterns.nullness.NullableDereference;
 import com.google.errorprone.bugpatterns.nullness.ParameterNotNullable;
 import com.google.errorprone.bugpatterns.nullness.UnnecessaryCheckNotNull;
 import com.google.errorprone.bugpatterns.overloading.InconsistentOverloads;
@@ -906,7 +905,6 @@ public class BuiltInCheckerSuppliers {
           NoAllocationChecker.class,
           NoFunctionalReturnType.class,
           NonCanonicalStaticMemberImport.class,
-          NullableDereference.class,
           NumericEquality.class,
           PackageLocation.class,
           ParameterComment.class,
