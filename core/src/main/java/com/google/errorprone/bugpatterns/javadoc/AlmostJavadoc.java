@@ -41,6 +41,8 @@ import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
 import com.sun.tools.javac.parser.Tokens.Comment;
 import com.sun.tools.javac.tree.JCTree;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 import java.util.regex.Pattern;
 import javax.lang.model.element.ElementKind;
@@ -121,7 +123,7 @@ public final class AlmostJavadoc extends BugChecker implements CompilationUnitTr
 
   private ImmutableMap<Integer, Tree> getJavadocableTrees(
       CompilationUnitTree tree, VisitorState state) {
-    ImmutableMap.Builder<Integer, Tree> javadoccablePositions = ImmutableMap.builder();
+    Map<Integer, Tree> javadoccablePositions = new HashMap<>();
     new SuppressibleTreePathScanner<Void, Void>() {
       @Override
       public Void visitClass(ClassTree classTree, Void unused) {
@@ -176,6 +178,6 @@ public final class AlmostJavadoc extends BugChecker implements CompilationUnitTr
         return ((JCTree) tree).getStartPosition();
       }
     }.scan(tree, null);
-    return javadoccablePositions.build();
+    return ImmutableMap.copyOf(javadoccablePositions);
   }
 }
