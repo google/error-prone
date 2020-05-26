@@ -31,7 +31,7 @@ import com.sun.tools.javac.util.Context;
 /** Loads custom Error Prone checks from the annotation processor classpath. */
 public final class ErrorPronePlugins {
 
-  public static ScannerSupplier loadPlugins(ScannerSupplier scannerSupplier, Context context) {
+  public static ScannerSupplier loadPlugins(ScannerSupplier scannerSupplier, ErrorProneOptions options, Context context) {
     JavaFileManager fileManager = context.get(JavaFileManager.class);
 
     ClassLoader loader;
@@ -49,7 +49,7 @@ public final class ErrorPronePlugins {
       return scannerSupplier;
     }
 
-    if (HubSpotErrorHandler.isEnabled(context)) {
+    if (HubSpotErrorHandler.isEnabled(options)) {
       return HubSpotErrorHandler.createScannerSupplier(extraBugCheckers);
     }
 

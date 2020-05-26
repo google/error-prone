@@ -76,7 +76,7 @@ public class ErrorProneAnalyzer implements TaskListener {
           // initialized, so do it lazily
           try {
             return ErrorProneScannerTransformer.create(
-                ErrorPronePlugins.loadPlugins(scannerSupplier, context)
+                ErrorPronePlugins.loadPlugins(scannerSupplier, errorProneOptions, context)
                     .applyOverrides(errorProneOptions)
                     .get());
           } catch (InvalidCommandLineOptionException e) {

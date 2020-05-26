@@ -64,12 +64,6 @@ public class HubSpotErrorHandler {
     return ScannerSupplier.fromBugCheckerInfos(builder.build());
   }
 
-  public static boolean isEnabled(Context context) {
-    return Optional.ofNullable(context.get(ErrorProneOptions.class))
-        .map(HubSpotErrorHandler::isEnabled)
-        .orElse(false);
-  }
-
   public static boolean isEnabled(ErrorProneOptions options) {
     return options.getFlags()
         .getBoolean("hubspot:error-reporting")
