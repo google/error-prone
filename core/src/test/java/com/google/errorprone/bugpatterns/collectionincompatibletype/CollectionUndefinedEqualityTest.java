@@ -56,4 +56,19 @@ public final class CollectionUndefinedEqualityTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void treeMap_noFinding() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            "import java.util.Collection;",
+            "import java.util.TreeMap;",
+            "class Test {",
+            "  boolean foo(TreeMap<Collection<Integer>, Integer> xs, Collection<Integer> x) {",
+            "    return xs.containsKey(x);",
+            "  }",
+            "}")
+        .doTest();
+  }
 }

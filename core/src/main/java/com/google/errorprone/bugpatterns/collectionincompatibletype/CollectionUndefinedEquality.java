@@ -18,7 +18,10 @@ package com.google.errorprone.bugpatterns.collectionincompatibletype;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
+import static com.google.errorprone.matchers.Matchers.anyMethod;
+import static com.google.errorprone.predicates.TypePredicates.isDescendantOfAny;
 
+import com.google.common.collect.ImmutableList;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.StandardTags;
 import com.google.errorprone.VisitorState;
@@ -28,6 +31,7 @@ import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.bugpatterns.TypesWithUndefinedEquality;
 import com.google.errorprone.bugpatterns.collectionincompatibletype.AbstractCollectionIncompatibleTypeMatcher.MatchResult;
 import com.google.errorprone.matchers.Description;
+import com.google.errorprone.matchers.Matcher;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MemberReferenceTree;
 import com.sun.source.tree.MethodInvocationTree;
@@ -44,6 +48,16 @@ import java.util.Arrays;
     severity = WARNING)
 public final class CollectionUndefinedEquality extends BugChecker
     implements MethodInvocationTreeMatcher, MemberReferenceTreeMatcher {
+  // NOTE: this is a bit crude; methods like `containsValue` are still likely to be subject to
+  // equality constraints on the value type.
+  private static final Matcher<ExpressionTree> TYPES_NOT_DEPENDING_ON_OBJECT_EQUALITY =
+      anyMethod()
+          .onClass(
+              isDescendantOfAny(
+                  ImmutableList.of(
+                      "java.util.IdentityHashMap",
+                      "java.util.IdentityHashSet",
+                      "java.util.TreeMap")));
 
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
@@ -58,6 +72,9 @@ public final class CollectionUndefinedEquality extends BugChecker
   public Description match(ExpressionTree tree, VisitorState state) {
     MatchResult result = ContainmentMatchers.firstNonNullMatchResult(tree, state);
     if (result == null) {
+      return NO_MATCH;
+    }
+    if (TYPES_NOT_DEPENDING_ON_OBJECT_EQUALITY.matches(tree, state)) {
       return NO_MATCH;
     }
 
