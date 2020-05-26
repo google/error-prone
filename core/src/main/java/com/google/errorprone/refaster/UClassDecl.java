@@ -22,6 +22,7 @@ import com.google.common.collect.ContiguousSet;
 import com.google.common.collect.DiscreteDomain;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Range;
+import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.ModifiersTree;
@@ -112,11 +113,12 @@ abstract class UClassDecl extends USimpleStatement implements ClassTree {
     Choice<UnifierWithRemainingMembers> path =
         Choice.of(UnifierWithRemainingMembers.create(unifier, getMembers()));
     for (Tree targetMember : node.getMembers()) {
-      if (!(targetMember instanceof MethodTree)
-          || ((MethodTree) targetMember).getReturnType() != null) {
+      if (targetMember instanceof MethodTree
+          && ASTHelpers.isGeneratedConstructor((MethodTree) targetMember)) {
         // skip synthetic constructors
-        path = path.thenChoose(match(targetMember));
+        continue;
       }
+      path = path.thenChoose(match(targetMember));
     }
     return path.condition(s -> s.remainingMembers().isEmpty())
         .transform(UnifierWithRemainingMembers::unifier);

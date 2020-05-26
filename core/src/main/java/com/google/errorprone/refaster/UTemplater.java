@@ -515,9 +515,11 @@ public class UTemplater extends SimpleTreeVisitor<Tree, Void> {
   public UClassDecl visitClass(ClassTree tree, Void v) {
     ImmutableList.Builder<UMethodDecl> decls = ImmutableList.builder();
     for (MethodTree decl : Iterables.filter(tree.getMembers(), MethodTree.class)) {
-      if (decl.getReturnType() != null) {
-        decls.add(visitMethod(decl, null));
+      if (ASTHelpers.isGeneratedConstructor(decl)) {
+        // skip synthetic constructors
+        continue;
       }
+      decls.add(visitMethod(decl, null));
     }
     return UClassDecl.create(decls.build());
   }
