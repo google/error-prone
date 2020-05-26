@@ -34,8 +34,10 @@ import java.io.UncheckedIOException;
 import java.nio.file.FileSystem;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Arrays;
 import java.util.List;
 import javax.tools.JavaFileObject;
+import javax.tools.StandardLocation;
 
 /** An in-memory file manager for testing that uses {@link JavacFileManager} and {@link Jimfs}. */
 public class ErrorProneInMemoryFileManager extends JavacFileManager {
@@ -167,5 +169,25 @@ public class ErrorProneInMemoryFileManager extends JavacFileManager {
 
   public FileSystem fileSystem() {
     return fileSystem;
+  }
+
+  void createAndInstallTempFolderForOutput() {
+    Path tempDirectory;
+    try {
+      tempDirectory =
+          Files.createTempDirectory(fileSystem().getRootDirectories().iterator().next(), "");
+    } catch (IOException e) {
+      throw new UncheckedIOException(e);
+    }
+    Arrays.stream(StandardLocation.values())
+        .filter(StandardLocation::isOutputLocation)
+        .forEach(
+            outputLocation -> {
+              try {
+                setLocationFromPaths(outputLocation, ImmutableList.of(tempDirectory));
+              } catch (IOException e) {
+                throw new UncheckedIOException(e);
+              }
+            });
   }
 }
