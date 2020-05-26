@@ -337,7 +337,7 @@ public class CompilationTestHelper {
     if (checkWellFormed) {
       checkWellFormed(sources, processedArgs);
     }
-    createAndInstallTempFolderForOutput(fileManager);
+    fileManager.createAndInstallTempFolderForOutput();
     return compiler
             .getTask(
                 new PrintWriter(
@@ -353,30 +353,8 @@ public class CompilationTestHelper {
         : Result.ERROR;
   }
 
-  private static void createAndInstallTempFolderForOutput(
-      ErrorProneInMemoryFileManager fileManager) {
-    Path tempDirectory;
-    try {
-      tempDirectory =
-          Files.createTempDirectory(
-              fileManager.fileSystem().getRootDirectories().iterator().next(), "");
-    } catch (IOException e) {
-      throw new UncheckedIOException(e);
-    }
-    Arrays.stream(StandardLocation.values())
-        .filter(StandardLocation::isOutputLocation)
-        .forEach(
-            outputLocation -> {
-              try {
-                fileManager.setLocationFromPaths(outputLocation, ImmutableList.of(tempDirectory));
-              } catch (IOException e) {
-                throw new UncheckedIOException(e);
-              }
-            });
-  }
-
   private void checkWellFormed(Iterable<JavaFileObject> sources, List<String> args) {
-    createAndInstallTempFolderForOutput(fileManager);
+    fileManager.createAndInstallTempFolderForOutput();
     JavaCompiler compiler = JavacTool.create();
     OutputStream outputStream = new ByteArrayOutputStream();
     List<String> remainingArgs = null;

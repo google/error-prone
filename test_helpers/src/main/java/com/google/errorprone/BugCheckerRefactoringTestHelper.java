@@ -230,6 +230,7 @@ public class BugCheckerRefactoringTestHelper {
       throw new IllegalArgumentException("Exception during argument processing: " + e);
     }
     context.put(ErrorProneOptions.class, errorProneOptions);
+    fileManager.createAndInstallTempFolderForOutput();
     JavacTaskImpl task =
         (JavacTaskImpl)
             tool.getTask(
