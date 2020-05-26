@@ -23,6 +23,7 @@ import javax.tools.StandardLocation;
 
 import com.google.common.collect.Iterables;
 import com.google.errorprone.bugpatterns.BugChecker;
+import com.google.errorprone.scanner.HubSpotErrorHandler;
 import com.google.errorprone.scanner.ScannerSupplier;
 import com.sun.tools.javac.processing.JavacProcessingEnvironment;
 import com.sun.tools.javac.util.Context;
@@ -46,6 +47,10 @@ public final class ErrorPronePlugins {
     Iterable<BugChecker> extraBugCheckers = ServiceLoader.load(BugChecker.class, loader);
     if (Iterables.isEmpty(extraBugCheckers)) {
       return scannerSupplier;
+    }
+
+    if (HubSpotErrorHandler.isEnabled(context)) {
+      return HubSpotErrorHandler.createScannerSupplier(extraBugCheckers);
     }
 
     return scannerSupplier.plus(

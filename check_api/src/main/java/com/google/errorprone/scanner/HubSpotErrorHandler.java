@@ -22,7 +22,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -30,15 +32,43 @@ import java.util.concurrent.ConcurrentHashMap;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Strings;
+import com.google.common.base.Throwables;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Iterables;
+import com.google.errorprone.BugCheckerInfo;
 import com.google.errorprone.ErrorProneOptions;
+import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.matchers.Suppressible;
+import com.sun.tools.javac.util.Context;
 
 public class HubSpotErrorHandler {
   private static final ObjectMapper MAPPER = new ObjectMapper();
   private static final String EXCEPTIONS = "errorProneExceptions";
   private static final String MISSING = "errorProneMissingChecks";
+  private static final String INIT_ERROR = "errorProneInitErrors";
   private static final Map<String, Set<String>> DATA = loadExistingData();
+
+  public static ScannerSupplier createScannerSupplier(Iterable<BugChecker> extraBugCheckers) {
+    ImmutableList.Builder<BugCheckerInfo> builder = ImmutableList.builder();
+    Iterator<BugChecker> iter = extraBugCheckers.iterator();
+    while (iter.hasNext()) {
+      try {
+        Class<? extends BugChecker> checker = iter.next().getClass();
+        builder.add(BugCheckerInfo.create(checker));
+      } catch (Exception e) {
+        recordCheckLoadError(e);
+      }
+    }
+
+    return ScannerSupplier.fromBugCheckerInfos(builder.build());
+  }
+
+  public static boolean isEnabled(Context context) {
+    return Optional.ofNullable(context.get(ErrorProneOptions.class))
+        .map(HubSpotErrorHandler::isEnabled)
+        .orElse(false);
+  }
 
   public static boolean isEnabled(ErrorProneOptions options) {
     return options.getFlags()
@@ -58,6 +88,21 @@ public class HubSpotErrorHandler {
         .add(checkName);
 
     flushErrors();
+  }
+
+  private static void recordCheckLoadError(Exception e) {
+    DATA.computeIfAbsent(INIT_ERROR, ignored -> ConcurrentHashMap.newKeySet())
+        .add(toInitErrorMessage(e));
+
+    flushErrors();
+  }
+
+  private static String toInitErrorMessage(Exception e) {
+    if (Strings.isNullOrEmpty(e.getMessage())) {
+      return "Unknown error";
+    } else {
+      return e.getMessage();
+    }
   }
 
   private static void flushErrors() {
