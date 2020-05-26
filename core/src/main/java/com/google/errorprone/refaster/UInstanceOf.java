@@ -22,6 +22,7 @@ import com.google.auto.value.AutoValue;
 import com.sun.source.tree.InstanceOfTree;
 import com.sun.source.tree.TreeVisitor;
 import com.sun.tools.javac.tree.JCTree.JCInstanceOf;
+import java.lang.reflect.Proxy;
 import javax.annotation.Nullable;
 
 /**
@@ -30,20 +31,40 @@ import javax.annotation.Nullable;
  * @author lowasser@google.com (Louis Wasserman)
  */
 @AutoValue
-abstract class UInstanceOf extends UExpression implements InstanceOfTree {
+abstract class UInstanceOf extends UExpression {
   public static UInstanceOf create(UExpression expression, UTree<?> type) {
     return new AutoValue_UInstanceOf(expression, type);
   }
 
-  @Override
   public abstract UExpression getExpression();
 
-  @Override
   public abstract UTree<?> getType();
 
   @Override
   public <R, D> R accept(TreeVisitor<R, D> visitor, D data) {
-    return visitor.visitInstanceOf(this, data);
+    InstanceOfTree proxy =
+        (InstanceOfTree)
+            Proxy.newProxyInstance(
+                getClass().getClassLoader(),
+                new Class<?>[] {InstanceOfTree.class},
+                (unused, method, args) -> {
+                  switch (method.getName()) {
+                    case "getPattern":
+                      // TOOD(cushon): support refaster template matching on instanceof patterns
+                      return null;
+                    case "getExpression":
+                      return getExpression();
+                    case "getType":
+                      return getType();
+                    default:
+                      try {
+                        return method.invoke(UInstanceOf.this, args);
+                      } catch (IllegalArgumentException e) {
+                        throw new LinkageError(method.getName(), e);
+                      }
+                  }
+                });
+    return visitor.visitInstanceOf(proxy, data);
   }
 
   @Override
