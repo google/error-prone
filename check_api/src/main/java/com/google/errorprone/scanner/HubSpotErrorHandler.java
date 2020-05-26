@@ -56,7 +56,7 @@ public class HubSpotErrorHandler {
       try {
         Class<? extends BugChecker> checker = iter.next().getClass();
         builder.add(BugCheckerInfo.create(checker));
-      } catch (Exception e) {
+      } catch (Throwable e) {
         recordCheckLoadError(e);
       }
     }
@@ -84,14 +84,14 @@ public class HubSpotErrorHandler {
     flushErrors();
   }
 
-  private static void recordCheckLoadError(Exception e) {
+  private static void recordCheckLoadError(Throwable e) {
     DATA.computeIfAbsent(INIT_ERROR, ignored -> ConcurrentHashMap.newKeySet())
         .add(toInitErrorMessage(e));
 
     flushErrors();
   }
 
-  private static String toInitErrorMessage(Exception e) {
+  private static String toInitErrorMessage(Throwable e) {
     if (Strings.isNullOrEmpty(e.getMessage())) {
       return "Unknown error";
     } else {
