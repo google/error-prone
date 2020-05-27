@@ -57,7 +57,8 @@ public final class CollectionUndefinedEquality extends BugChecker
                   ImmutableList.of(
                       "java.util.IdentityHashMap",
                       "java.util.IdentityHashSet",
-                      "java.util.TreeMap")));
+                      "java.util.SortedMap",
+                      "java.util.SortedSet")));
 
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
