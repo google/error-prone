@@ -168,4 +168,17 @@ public class MutablePublicArrayTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void notAnArray() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  // BUG: Diagnostic contains: MutablePublicArray",
+            "  public static final long[] y = {0};",
+            "  public static final long[] l = y;",
+            "}")
+        .doTest();
+  }
 }
