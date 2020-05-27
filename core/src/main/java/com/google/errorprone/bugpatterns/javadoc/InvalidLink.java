@@ -141,6 +141,9 @@ public final class InvalidLink extends BugChecker
 
     @Override
     public Void visitLink(LinkTree linkTree, Void unused) {
+      if (linkTree.getReference() == null) {
+        return super.visitLink(linkTree, null);
+      }
       String reference = linkTree.getReference().getSignature();
       Element element = null;
       try {

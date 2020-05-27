@@ -157,4 +157,16 @@ public final class InvalidLinkTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void emptyLinkTest() {
+    helper
+        .addSourceLines(
+            "Test.java", //
+            "interface Test {",
+            "  /** {@link} */",
+            "  void foo();",
+            "}")
+        .doTest();
+  }
 }
