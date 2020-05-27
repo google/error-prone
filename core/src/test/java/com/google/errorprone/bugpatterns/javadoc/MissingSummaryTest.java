@@ -209,4 +209,17 @@ public final class MissingSummaryTest {
             "public interface Test {}")
         .doTest();
   }
+
+  @Test
+  public void emptyReturn() {
+    helper
+        .addSourceLines(
+            "Test.java", //
+            "interface Test {",
+            "  // BUG: Diagnostic contains:",
+            "  /** @return */",
+            "  int test(int n);",
+            "}")
+        .doTest();
+  }
 }

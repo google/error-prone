@@ -106,7 +106,10 @@ public final class MissingSummary extends BugChecker
     }
     ReturnTree returnTree = findFirst(docTreePath, ReturnTree.class);
     if (returnTree != null) {
-      return generateReturnFix(docTreePath, returnTree, state);
+      Description description = generateReturnFix(docTreePath, returnTree, state);
+      if (!description.equals(NO_MATCH)) {
+        return description;
+      }
     }
     SeeTree seeTree = findFirst(docTreePath, SeeTree.class);
     if (seeTree != null) {
@@ -127,6 +130,9 @@ public final class MissingSummary extends BugChecker
       DocTreePath docTreePath, ReturnTree returnTree, VisitorState state) {
     int pos = ((DCDocComment) docTreePath.getDocComment()).comment.getSourcePos(0);
     String description = returnTree.toString().replaceAll("^@return ", "");
+    if (description.isEmpty()) {
+      return NO_MATCH;
+    }
     SuggestedFix fix =
         SuggestedFix.builder()
             .merge(Utils.replace(returnTree, "", state))
