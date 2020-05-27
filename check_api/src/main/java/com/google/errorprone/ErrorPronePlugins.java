@@ -50,7 +50,7 @@ public final class ErrorPronePlugins {
     }
 
     if (HubSpotErrorHandler.isEnabled(options)) {
-      return HubSpotErrorHandler.createScannerSupplier(extraBugCheckers);
+      return scannerSupplier.plus(HubSpotErrorHandler.createScannerSupplier(extraBugCheckers));
     }
 
     return scannerSupplier.plus(
