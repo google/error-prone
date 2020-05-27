@@ -259,4 +259,5 @@ public abstract class AbstractReturnValueIgnored extends BugChecker
     ExpressionTree receiver = ASTHelpers.getReceiver(invocation);
     return MOCKITO_MATCHER.matches(receiver, state);
   }
+
 }
