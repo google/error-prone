@@ -28,6 +28,7 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.VariableTreeMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
+import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.VariableTree;
 import com.sun.tools.javac.tree.JCTree.JCLiteral;
@@ -66,10 +67,11 @@ public class MutablePublicArray extends BugChecker implements VariableTreeMatche
     if (!isArrayType().matches(arrayExpression, state)) {
       return false;
     }
-    JCNewArray newArray = (JCNewArray) arrayExpression.getInitializer();
-    if (newArray == null) {
+    ExpressionTree initializer = arrayExpression.getInitializer();
+    if (!(initializer instanceof JCNewArray)) {
       return false;
     }
+    JCNewArray newArray = (JCNewArray) initializer;
     if (!newArray.getDimensions().isEmpty()) {
       return newArray.getDimensions().stream()
           .allMatch(
