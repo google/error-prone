@@ -108,6 +108,14 @@ public final class PreferJavaTimeOverload extends BugChecker
   private static final Matcher<ExpressionTree> JODA_INSTANT_CONSTRUCTOR_MATCHER =
       constructor().forClass(JODA_INSTANT).withParameters("long");
 
+  private static final String JAVA_TIME_CONVERSIONS =
+      "com.google.thirdparty.jodatime.JavaTimeConversions";
+
+  private static final Matcher<ExpressionTree> TO_JODA_DURATION =
+      staticMethod().onClass(JAVA_TIME_CONVERSIONS).named("toJodaDuration");
+  private static final Matcher<ExpressionTree> TO_JODA_INSTANT =
+      staticMethod().onClass(JAVA_TIME_CONVERSIONS).named("toJodaInstant");
+
   private static final Matcher<ExpressionTree> IGNORED_APIS =
       anyOf(
           staticMethod().onClass("org.jooq.impl.DSL").named("inline"),
@@ -240,13 +248,20 @@ public final class PreferJavaTimeOverload extends BugChecker
           }
         }
 
+        // If we're converting to a JodaTime Duration (from a java.time Duration) to call the
+        // JodaTime overload, just unwrap it!
+        if (TO_JODA_DURATION.matches(arg0, state)) {
+          fix.replace(
+              arg0, state.getSourceForNode(((MethodInvocationTree) arg0).getArguments().get(0)));
+          return describeMatch(tree, fix.build());
+        }
+
         // We could suggest using JavaTimeConversions.toJavaDuration(jodaDuration), but that
         // requires an additional dependency and isn't open-sourced.
         fix.replace(
-            arguments.get(0),
+            arg0,
             String.format(
-                "%s.ofMillis(%s.getMillis())",
-                qualifiedDuration, state.getSourceForNode(arguments.get(0))));
+                "%s.ofMillis(%s.getMillis())", qualifiedDuration, state.getSourceForNode(arg0)));
         return describeMatch(tree, fix.build());
       }
     }
@@ -270,13 +285,20 @@ public final class PreferJavaTimeOverload extends BugChecker
           }
         }
 
+        // If we're converting to a JodaTime Instant (from a java.time Instant) to call the JodaTime
+        // overload, just unwrap it!
+        if (TO_JODA_INSTANT.matches(arg0, state)) {
+          fix.replace(
+              arg0, state.getSourceForNode(((MethodInvocationTree) arg0).getArguments().get(0)));
+          return describeMatch(tree, fix.build());
+        }
+
         // We could suggest using JavaTimeConversions.toJavaInstant(jodaInstant), but that
         // requires an additional dependency and isn't open-sourced.
         fix.replace(
-            arguments.get(0),
+            arg0,
             String.format(
-                "%s.ofEpochMilli(%s.getMillis())",
-                qualifiedInstant, state.getSourceForNode(arguments.get(0))));
+                "%s.ofEpochMilli(%s.getMillis())", qualifiedInstant, state.getSourceForNode(arg0)));
         return describeMatch(tree, fix.build());
       }
     }
