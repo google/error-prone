@@ -71,4 +71,34 @@ public final class CollectionUndefinedEqualityTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void sortedMap_noFinding() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            "import java.util.Collection;",
+            "import java.util.SortedMap;",
+            "class Test {",
+            "  boolean foo(SortedMap<Collection<Integer>, Integer> xs, Collection<Integer> x) {",
+            "    return xs.containsKey(x);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void sortedSet_noFinding() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            "import java.util.Collection;",
+            "import java.util.SortedSet;",
+            "class Test {",
+            "  boolean foo(SortedSet<Collection<Integer>> xs, Collection<Integer> x) {",
+            "    return xs.contains(x);",
+            "  }",
+            "}")
+        .doTest();
+  }
 }
