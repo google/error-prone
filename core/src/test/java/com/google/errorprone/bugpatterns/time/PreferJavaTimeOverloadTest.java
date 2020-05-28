@@ -187,6 +187,25 @@ public class PreferJavaTimeOverloadTest {
   }
 
   @Test
+  public void callingJodaInstantMethodWithInstantOverload_privateMethod() {
+    helper
+        .addSourceLines(
+            "TestClass.java",
+            "import java.time.Instant;",
+            "public class TestClass {",
+            "  private void bar(org.joda.time.Instant i) {",
+            "  }",
+            "  private void bar(Instant i) {",
+            "  }",
+            "  public void foo(org.joda.time.Instant jodaInstant) {",
+            "    // BUG: Diagnostic contains: bar(Instant.ofEpochMilli(jodaInstant.getMillis()));",
+            "    bar(jodaInstant);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void callingJodaDurationMethodWithDurationOverload_privateMethod_jodaDurationMillis() {
     helper
         .addSourceLines(
@@ -296,19 +315,19 @@ public class PreferJavaTimeOverloadTest {
   }
 
   @Test
-  public void callingJodaReadableDurationMethodWithDurationOverload_privateMethod() {
+  public void callingJodaReadableInstantMethodWithInstantOverload_privateMethod() {
     helper
         .addSourceLines(
             "TestClass.java",
-            "import java.time.Duration;",
+            "import java.time.Instant;",
             "public class TestClass {",
-            "  private void bar(org.joda.time.ReadableDuration d) {",
+            "  private void bar(org.joda.time.ReadableInstant i) {",
             "  }",
-            "  private void bar(Duration d) {",
+            "  private void bar(Instant i) {",
             "  }",
-            "  public void foo(org.joda.time.Duration jodaDuration) {",
-            "    // BUG: Diagnostic contains: bar(Duration.ofMillis(jodaDuration.getMillis()));",
-            "    bar(jodaDuration);",
+            "  public void foo(org.joda.time.Instant jodaInstant) {",
+            "    // BUG: Diagnostic contains: bar(Instant.ofEpochMilli(jodaInstant.getMillis()));",
+            "    bar(jodaInstant);",
             "  }",
             "}")
         .doTest();
