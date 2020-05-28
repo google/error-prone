@@ -256,8 +256,6 @@ public final class PreferJavaTimeOverload extends BugChecker
           return describeMatch(tree, fix.build());
         }
 
-        // We could suggest using JavaTimeConversions.toJavaDuration(jodaDuration), but that
-        // requires an additional dependency and isn't open-sourced.
         fix.replace(
             arg0,
             String.format(
@@ -293,8 +291,6 @@ public final class PreferJavaTimeOverload extends BugChecker
           return describeMatch(tree, fix.build());
         }
 
-        // We could suggest using JavaTimeConversions.toJavaInstant(jodaInstant), but that
-        // requires an additional dependency and isn't open-sourced.
         fix.replace(
             arg0,
             String.format(
