@@ -381,7 +381,9 @@ public class SuggestedFixes {
     // Check if the simple name is already visible.
     String simpleName = Iterables.getLast(components);
     Symbol simpleNameSymbol = FindIdentifiers.findIdent(simpleName, state, KindSelector.VAL_TYP);
-    if (simpleNameSymbol != null && simpleNameSymbol.getQualifiedName().contentEquals(typeName)) {
+    if (simpleNameSymbol != null
+        && !simpleNameSymbol.getKind().equals(ElementKind.OTHER)
+        && simpleNameSymbol.getQualifiedName().contentEquals(typeName)) {
       return simpleName;
     }
 

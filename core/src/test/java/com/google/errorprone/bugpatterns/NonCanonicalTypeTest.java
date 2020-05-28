@@ -126,4 +126,29 @@ public final class NonCanonicalTypeTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void qualifiedName_ambiguous() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "interface A {",
+            "  interface N {}",
+            "}",
+            "interface B extends A {}",
+            "class C implements D {}",
+            "interface E extends D {",
+            "  interface N extends D.N {}",
+            "}",
+            "interface D {",
+            "  interface N {}",
+            "}",
+            "class Test extends C implements E {",
+            "  // BUG: Diagnostic contains: A.N",
+            "  private B.N f() {",
+            "    return null;",
+            "  }",
+            "}")
+        .doTest();
+  }
 }
