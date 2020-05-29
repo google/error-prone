@@ -131,9 +131,6 @@ __[EqualsReference](bugpattern/EqualsReference)__<br>
 __[EqualsWrongThing](bugpattern/EqualsWrongThing)__<br>
 Comparing different pairs of fields/getters in an equals implementation is probably a mistake.
 
-__[ExtendsAutoValue](bugpattern/ExtendsAutoValue)__<br>
-Do not extend an @AutoValue/@AutoOneOf class in non-generated code.
-
 __[ForOverride](bugpattern/ForOverride)__<br>
 Method annotated @ForOverride must be protected or package-private and only invoked from declaring class, or from an override of the method
 
@@ -284,9 +281,6 @@ Use of &#39;DD&#39; (day of year) in a date pattern with &#39;MM&#39; (month of 
 __[MisusedWeekYear](bugpattern/MisusedWeekYear)__<br>
 Use of &quot;YYYY&quot; (week year) in a date pattern without &quot;ww&quot; (week in year). You probably meant to use &quot;yyyy&quot; (year) instead.
 
-__[MockitoCast](bugpattern/MockitoCast)__<br>
-A bug in Mockito will cause this test to fail at runtime with a ClassCastException
-
 __[MockitoUsage](bugpattern/MockitoUsage)__<br>
 Missing method call for verify(mock) here
 
@@ -373,9 +367,6 @@ Use Random.nextInt(int).  Random.nextInt() % n can have negative results
 
 __[RectIntersectReturnValueIgnored](bugpattern/RectIntersectReturnValueIgnored)__<br>
 Return value of android.graphics.Rect.intersect() must be checked
-
-__[RefersToDaggerCodegen](bugpattern/RefersToDaggerCodegen)__<br>
-Don&#39;t refer to Dagger&#39;s internal or generated code
 
 __[RestrictedApiChecker](bugpattern/RestrictedApiChecker)__<br>
 Check for non-whitelisted callers to RestrictedApiChecker.
@@ -576,6 +567,9 @@ Double-checked locking on non-volatile fields is unsafe
 
 __[EmptyBlockTag](bugpattern/EmptyBlockTag)__<br>
 A block tag (@param, @return, @throws, @deprecated) has an empty description. Block tags without descriptions don&#39;t add much value for future readers of the code; consider removing the tag entirely or adding a description.
+
+__[EmptyCatch](bugpattern/EmptyCatch)__<br>
+Caught exceptions should not be ignored
 
 __[EmptySetMultibindingContributions](bugpattern/EmptySetMultibindingContributions)__<br>
 @Multibinds is a more efficient and declarative mechanism for ensuring that a set multibinding is present in the graph.
@@ -889,6 +883,9 @@ A field on a protocol buffer was set twice in the same chained expression.
 __[ProtoTimestampGetSecondsGetNano](bugpattern/ProtoTimestampGetSecondsGetNano)__<br>
 getNanos() only accesses the underlying nanosecond-adjustment of the instant.
 
+__[PublicConstructorForAbstractClass](bugpattern/PublicConstructorForAbstractClass)__<br>
+Constructors of on an abstract class can be declared protected as there is never a need for them to be public
+
 __[QualifierOrScopeOnInjectMethod](bugpattern/QualifierOrScopeOnInjectMethod)__<br>
 Qualifiers/Scope annotations on @Inject methods don&#39;t have any effect. Move the qualifier annotation to the binding location.
 
@@ -1062,6 +1059,9 @@ Division by integer literal zero
 __[EmptyIf](bugpattern/EmptyIf)__<br>
 Empty statement after if
 
+__[ExtendsAutoValue](bugpattern/ExtendsAutoValue)__<br>
+Do not extend an @AutoValue/@AutoOneOf class in non-generated code.
+
 __[FuzzyEqualsShouldNotBeUsedInEqualsMethod](bugpattern/FuzzyEqualsShouldNotBeUsedInEqualsMethod)__<br>
 DoubleMath.fuzzyEquals should never be used in an Object.equals() method
 
@@ -1097,6 +1097,9 @@ Numeric comparison using reference equality instead of value equality
 
 __[ParameterPackage](bugpattern/ParameterPackage)__<br>
 Method parameter has wrong package
+
+__[RefersToDaggerCodegen](bugpattern/RefersToDaggerCodegen)__<br>
+Don&#39;t refer to Dagger&#39;s internal or generated code
 
 __[StaticOrDefaultInterfaceMethod](bugpattern/StaticOrDefaultInterfaceMethod)__<br>
 Static and default interface methods are not natively supported on older Android devices. 
@@ -1159,9 +1162,6 @@ Instead of returning a functional type, return the actual type that the returned
 
 __[NonCanonicalStaticMemberImport](bugpattern/NonCanonicalStaticMemberImport)__<br>
 Static import of member uses non-canonical name
-
-__[NullableDereference](bugpattern/NullableDereference)__<br>
-Dereference of possibly-null value
 
 __[PreferJavaTimeOverload](bugpattern/PreferJavaTimeOverload)__<br>
 Prefer using java.time-based APIs when available. Note that this checker does not and cannot guarantee that the overloads have equivalent semantics, but that is generally the case with overloaded methods.
@@ -1245,6 +1245,9 @@ This field is only assigned during initialization; consider making it final
 
 __[FieldCanBeLocal](bugpattern/FieldCanBeLocal)__<br>
 This field can be replaced with a local variable in the methods that use it.
+
+__[FieldCanBeStatic](bugpattern/FieldCanBeStatic)__<br>
+A final field initialized at compile-time with an instance of an immutable type can be static.
 
 __[FieldMissingNullable](bugpattern/FieldMissingNullable)__<br>
 Fields that can be null should be annotated @Nullable
