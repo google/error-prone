@@ -17,7 +17,7 @@ package com.google.errorprone.bugpatterns.testdata;
 
 /** @author sulku@google.com (Marsela Sulku) */
 public class MultipleUnaryOperatorsInMethodCallNegativeCases {
-  public static void tests(int a, int b) {
+  public static void tests(int a, int b, int[] xs) {
     testMethod(a, b);
     testMethod(a + 1, b);
     testMethod(b, a + 1);
@@ -25,6 +25,7 @@ public class MultipleUnaryOperatorsInMethodCallNegativeCases {
     testMethod(--a, b);
     testMethod(a, b--);
     testMethod(a, ++b);
+    testMethod(xs[0]++, xs[0]++);
   }
 
   public static void testMethod(int one, int two) {}
