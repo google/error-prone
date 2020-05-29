@@ -16,8 +16,11 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
+import static com.google.errorprone.matchers.Description.NO_MATCH;
+import static java.util.stream.Collectors.groupingBy;
 
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Sets;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
@@ -38,7 +41,7 @@ public class MultipleUnaryOperatorsInMethodCall extends BugChecker
     implements MethodInvocationTreeMatcher {
 
   private static final ImmutableSet<Kind> UNARY_OPERATORS =
-      ImmutableSet.of(
+      Sets.immutableEnumSet(
           Kind.POSTFIX_DECREMENT,
           Kind.POSTFIX_INCREMENT,
           Kind.PREFIX_DECREMENT,
@@ -47,16 +50,16 @@ public class MultipleUnaryOperatorsInMethodCall extends BugChecker
   @Override
   public Description matchMethodInvocation(
       MethodInvocationTree methodInvocationTree, VisitorState visitorState) {
-
     if (methodInvocationTree.getArguments().stream()
         .filter(arg -> UNARY_OPERATORS.contains(arg.getKind()))
         .map(arg -> ASTHelpers.getSymbol(((UnaryTree) arg).getExpression()))
-        .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()))
+        .filter(sym -> sym != null)
+        .collect(groupingBy(Function.identity(), Collectors.counting()))
         .entrySet()
         .stream()
         .anyMatch(e -> e.getValue() > 1)) {
       return describeMatch(methodInvocationTree);
     }
-    return Description.NO_MATCH;
+    return NO_MATCH;
   }
 }
