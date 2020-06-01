@@ -32,3 +32,17 @@ code if turned into a comparison to `0`, e.g.:
     return comparator.compare(a, b) > 0;
   }
 ```
+
+In addition this bug pattern also helps to detect real bugs in cases of mistakenly simply wrong comparisons to impossible return values:
+
+```java
+  boolean <T> greaterThan(Comparator<T> comparator, T a, T b) {
+    return comparator.compare(a, b) > 1; // BUG! compare() *never* returns > 1... :-(
+  }
+```
+
+```java
+  boolean <T> greaterThan(Comparator<T> comparator, T a, T b) {
+    return comparator.compare(a, b) > 0; // correct
+  }
+```
