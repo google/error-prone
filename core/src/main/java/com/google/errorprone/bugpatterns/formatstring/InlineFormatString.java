@@ -177,23 +177,21 @@ public class InlineFormatString extends BugChecker implements CompilationUnitTre
         },
         null);
     // find the field declarations
-    tree.accept(
-        new TreeScanner<Void, Void>() {
-          @Override
-          public Void visitVariable(VariableTree tree, Void unused) {
-            VarSymbol sym = getSymbol(tree);
-            if (sym != null && uses.containsKey(sym)) {
-              declarations.put(sym, tree);
-            }
-            return super.visitVariable(tree, null);
-          }
-        },
-        null);
+    new SuppressibleTreePathScanner<Void, Void>() {
+      @Override
+      public Void visitVariable(VariableTree tree, Void unused) {
+        VarSymbol sym = getSymbol(tree);
+        if (sym != null && uses.containsKey(sym)) {
+          declarations.put(sym, tree);
+        }
+        return super.visitVariable(tree, null);
+      }
+    }.scan(state.getPath(), null);
     for (Map.Entry<Symbol, Collection<Tree>> e : uses.asMap().entrySet()) {
       Symbol sym = e.getKey();
       Collection<Tree> use = e.getValue();
       VariableTree def = declarations.get(sym);
-      if (!(def.getInitializer() instanceof LiteralTree)) {
+      if (def == null || !(def.getInitializer() instanceof LiteralTree)) {
         // only inline the constant if its initializer is a literal String
         continue;
       }

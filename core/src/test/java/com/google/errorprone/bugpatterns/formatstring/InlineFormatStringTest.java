@@ -137,4 +137,34 @@ public class InlineFormatStringTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void suppression() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  @SuppressWarnings(\"InlineFormatString\")",
+            "  private static final String FORMAT = \"hello %s\";",
+            "  void f() {",
+            "    System.err.printf(FORMAT, 42);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void suppressionClass() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "@SuppressWarnings(\"InlineFormatString\")",
+            "class Test {",
+            "  private static final String FORMAT = \"hello %s\";",
+            "  void f() {",
+            "    System.err.printf(FORMAT, 42);",
+            "  }",
+            "}")
+        .doTest();
+  }
 }
