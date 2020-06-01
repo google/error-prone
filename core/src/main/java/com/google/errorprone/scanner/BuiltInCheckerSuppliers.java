@@ -56,6 +56,7 @@ import com.google.errorprone.bugpatterns.CannotMockFinalClass;
 import com.google.errorprone.bugpatterns.CanonicalDuration;
 import com.google.errorprone.bugpatterns.CatchAndPrintStackTrace;
 import com.google.errorprone.bugpatterns.CatchFail;
+import com.google.errorprone.bugpatterns.CatchingUnchecked;
 import com.google.errorprone.bugpatterns.ChainedAssertionLosesContext;
 import com.google.errorprone.bugpatterns.ChainingConstructorIgnoresParameter;
 import com.google.errorprone.bugpatterns.CheckNotNullMultipleTimes;
@@ -860,6 +861,7 @@ public class BuiltInCheckerSuppliers {
           BinderIdentityRestoredDangerously.class, // TODO: enable this by default.
           BindingToUnqualifiedCommonType.class,
           BooleanParameter.class,
+          CatchingUnchecked.class,
           CheckedExceptionNotThrown.class,
           ClassName.class,
           ClassNamedLikeTypeParameter.class,
