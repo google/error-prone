@@ -28,11 +28,11 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.VariableTreeMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
+import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
-import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.VariableTree;
-import com.sun.tools.javac.tree.JCTree.JCLiteral;
 import com.sun.tools.javac.tree.JCTree.JCNewArray;
+import java.util.Objects;
 import javax.lang.model.element.Modifier;
 
 /** Check for public static final declaration of Arrays. */
@@ -73,12 +73,8 @@ public class MutablePublicArray extends BugChecker implements VariableTreeMatche
     }
     JCNewArray newArray = (JCNewArray) initializer;
     if (!newArray.getDimensions().isEmpty()) {
-      return newArray.getDimensions().stream()
-          .allMatch(
-              jcExpression -> {
-                JCLiteral literal = (JCLiteral) jcExpression;
-                return literal.getKind() == Kind.INT_LITERAL && (Integer) literal.getValue() > 0;
-              });
+      return !newArray.getDimensions().stream()
+          .allMatch(e -> Objects.equals(0, ASTHelpers.constValue(e, Integer.class)));
     }
     // For in line array initializer.
     return newArray.getInitializers() != null && !newArray.getInitializers().isEmpty();

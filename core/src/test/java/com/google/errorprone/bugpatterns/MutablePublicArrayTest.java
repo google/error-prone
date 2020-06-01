@@ -181,4 +181,22 @@ public class MutablePublicArrayTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void i1645() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  public static final int zero = 0;",
+            "  public static final int one = 1;",
+            "  public static final long[] z1 = new long[zero];",
+            "  public static final long[][] z2 = new long[zero][zero];",
+            "  // BUG: Diagnostic contains: MutablePublicArray",
+            "  public static final long[] o1 = new long[one];",
+            "  // BUG: Diagnostic contains: MutablePublicArray",
+            "  public static final long[][] o2 = new long[one][zero];",
+            "}")
+        .doTest();
+  }
 }
