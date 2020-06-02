@@ -78,6 +78,7 @@ import com.sun.source.util.DocTreePath;
 import com.sun.source.util.DocTreeScanner;
 import com.sun.source.util.JavacTask;
 import com.sun.source.util.TreePath;
+import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.api.BasicJavacTask;
 import com.sun.tools.javac.api.JavacTool;
 import com.sun.tools.javac.api.JavacTrees;
@@ -96,8 +97,6 @@ import com.sun.tools.javac.tree.DCTree;
 import com.sun.tools.javac.tree.DCTree.DCDocComment;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
-import com.sun.tools.javac.tree.JCTree.JCIdent;
-import com.sun.tools.javac.tree.TreeScanner;
 import com.sun.tools.javac.util.Context;
 import com.sun.tools.javac.util.Options;
 import com.sun.tools.javac.util.Position;
@@ -418,22 +417,29 @@ public class SuggestedFixes {
       String qualifiedName, SuggestedFix.Builder fix, VisitorState state) {
     String name = qualifiedName.substring(qualifiedName.lastIndexOf(".") + 1);
     AtomicBoolean foundConflict = new AtomicBoolean(false);
-    new TreeScanner() {
+    new TreeScanner<Void, Void>() {
+
       @Override
-      public void visitIdent(JCIdent ident) {
-        if (ident.name.contentEquals(name)) {
-          Symbol symbol = getSymbol(ident);
-          if (symbol == null) {
-            return;
-          }
-          String identifierQualifiedName =
-              symbol.owner.getQualifiedName() + "." + symbol.getSimpleName();
-          if (!qualifiedName.equals(identifierQualifiedName)) {
-            foundConflict.set(true);
-          }
+      public Void visitIdentifier(IdentifierTree ident, Void unused) {
+        process(ident);
+        return super.visitIdentifier(ident, null);
+      }
+
+      private void process(IdentifierTree ident) {
+        if (!ident.getName().contentEquals(name)) {
+          return;
+        }
+        Symbol symbol = getSymbol(ident);
+        if (symbol == null) {
+          return;
+        }
+        String identifierQualifiedName =
+            symbol.owner.getQualifiedName() + "." + symbol.getSimpleName();
+        if (!qualifiedName.equals(identifierQualifiedName)) {
+          foundConflict.set(true);
         }
       }
-    }.scan((JCCompilationUnit) state.getPath().getCompilationUnit());
+    }.scan(state.getPath().getCompilationUnit(), null);
     if (foundConflict.get()) {
       String className = qualifiedName.substring(0, qualifiedName.lastIndexOf("."));
       return qualifyType(state, fix, className) + "." + name;
@@ -597,27 +603,26 @@ public class SuggestedFixes {
     final SuggestedFix.Builder fix =
         SuggestedFix.builder().replace(pos, pos + name.length(), replacement);
     final Symbol.VarSymbol sym = getSymbol(tree);
-    ((JCTree) state.getPath().getCompilationUnit())
-        .accept(
-            new TreeScanner() {
-              @Override
-              public void visitIdent(JCTree.JCIdent tree) {
-                if (sym.equals(getSymbol(tree))) {
-                  fix.replace(tree, replacement);
-                }
-              }
+    new TreeScanner<Void, Void>() {
+      @Override
+      public Void visitIdentifier(IdentifierTree tree, Void unused) {
+        if (sym.equals(getSymbol(tree))) {
+          fix.replace(tree, replacement);
+        }
+        return super.visitIdentifier(tree, null);
+      }
 
-              @Override
-              public void visitSelect(JCTree.JCFieldAccess tree) {
-                if (sym.equals(getSymbol(tree))) {
-                  fix.replace(
-                      state.getEndPosition(tree.getExpression()),
-                      state.getEndPosition(tree),
-                      "." + replacement);
-                }
-                super.visitSelect(tree);
-              }
-            });
+      @Override
+      public Void visitMemberSelect(MemberSelectTree tree, Void unused) {
+        if (sym.equals(getSymbol(tree))) {
+          fix.replace(
+              state.getEndPosition(tree.getExpression()),
+              state.getEndPosition(tree),
+              "." + replacement);
+        }
+        return super.visitMemberSelect(tree, null);
+      }
+    }.scan(state.getPath().getCompilationUnit(), null);
     return fix.build();
   }
 
@@ -691,30 +696,29 @@ public class SuggestedFixes {
     Builder fixBuilder =
         SuggestedFix.builder().replace(pos, pos + name.length(), typeVarReplacement);
 
-    ((JCTree) owningTree)
-        .accept(
-            new TreeScanner() {
-              @Override
-              public void visitIdent(JCIdent tree) {
-                Symbol identSym = getSymbol(tree);
-                if (Objects.equal(identSym, typeParameterSymbol)) {
-                  // Lambda parameters can be desugared early, so we need to make sure the source
-                  // is there. In the example below, we would try to suggest replacing the node 't'
-                  // with T2, since the compiler desugars to g((T t) -> false). The extra condition
-                  // prevents us from doing that.
+    new TreeScanner<Void, Void>() {
+      @Override
+      public Void visitIdentifier(IdentifierTree tree, Void unused) {
+        Symbol identSym = getSymbol(tree);
+        if (Objects.equal(identSym, typeParameterSymbol)) {
+          // Lambda parameters can be desugared early, so we need to make sure the source
+          // is there. In the example below, we would try to suggest replacing the node 't'
+          // with T2, since the compiler desugars to g((T t) -> false). The extra condition
+          // prevents us from doing that.
 
-                  // Foo<T> {
-                  //   <G> void g(Predicate<G> p) {},
-                  //   <T> void blah() {
-                  //     g(t -> false);
-                  //   }
-                  // }
-                  if (Objects.equal(state.getSourceForNode(tree), name)) {
-                    fixBuilder.replace(tree, typeVarReplacement);
-                  }
-                }
-              }
-            });
+          // Foo<T> {
+          //   <G> void g(Predicate<G> p) {},
+          //   <T> void blah() {
+          //     g(t -> false);
+          //   }
+          // }
+          if (Objects.equal(state.getSourceForNode(tree), name)) {
+            fixBuilder.replace(tree, typeVarReplacement);
+          }
+        }
+        return super.visitIdentifier(tree, null);
+      }
+    }.scan(owningTree, null);
     DCDocComment docCommentTree =
         (DCDocComment) JavacTrees.instance(state.context).getDocCommentTree(state.getPath());
     if (docCommentTree != null) {
