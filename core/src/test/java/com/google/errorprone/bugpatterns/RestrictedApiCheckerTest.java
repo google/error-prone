@@ -160,9 +160,9 @@ public class RestrictedApiCheckerTest {
             "class Testcase {",
             "  @WhitelistWithWarning",
             "  void foo(RestrictedApiMethods m) {",
-            "    // BUG: Diagnostic contains: [RestrictedApi]",
+            "    // BUG: Diagnostic contains: lorem",
             "    m.restrictedMethod();",
-            "    // BUG: Diagnostic contains: [RestrictedApi]",
+            "    // BUG: Diagnostic contains: lorem",
             "    m.accept(m::restrictedMethod);",
             "  }",
             "}")
