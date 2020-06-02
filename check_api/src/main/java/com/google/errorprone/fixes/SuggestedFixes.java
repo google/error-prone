@@ -287,11 +287,12 @@ public class SuggestedFixes {
   }
 
   /**
-   * Returns a human-friendly name of the given {@link Symbol.TypeSymbol} for use in fixes.
+   * Returns a human-friendly name of the given {@link Symbol} for use in fixes.
    *
    * <ul>
-   *   <li>If the type is already imported, its simple name is used.
-   *   <li>If an enclosing type is imported, that enclosing type is used as a qualified.
+   *   <li>If the symbol is already in scope, its simple name is used.
+   *   <li>If the symbol is a {@link Symbol.TypeSymbol} and an enclosing type is imported, that
+   *       enclosing type is used as a qualified.
    *   <li>Otherwise the outermost enclosing type is imported and used as a qualifier.
    * </ul>
    */
@@ -306,6 +307,9 @@ public class SuggestedFixes {
         }
         sym = ((ClassSymbol) sym).getSuperclass().tsym;
       }
+    }
+    if (variableClashInScope(state, sym)) {
+      return qualifyType(state, fix, sym.owner) + "." + sym.getSimpleName();
     }
     Deque<String> names = new ArrayDeque<>();
     for (Symbol curr = sym; curr != null; curr = curr.owner) {
@@ -327,6 +331,27 @@ public class SuggestedFixes {
       }
     }
     return Joiner.on('.').join(names);
+  }
+
+  private static boolean variableClashInScope(VisitorState state, Symbol sym) {
+    if (!sym.getKind().isField()) {
+      return false;
+    }
+    MethodTree method = state.findEnclosing(MethodTree.class);
+    if (method == null) {
+      return false;
+    }
+    boolean[] result = {false};
+    new TreeScanner<Void, Void>() {
+      @Override
+      public Void visitVariable(VariableTree tree, Void unused) {
+        if (tree.getName().contentEquals(sym.getSimpleName())) {
+          result[0] = true;
+        }
+        return super.visitVariable(tree, null);
+      }
+    }.scan(method, null);
+    return result[0];
   }
 
   /** Returns a human-friendly name of the given type for use in fixes. */

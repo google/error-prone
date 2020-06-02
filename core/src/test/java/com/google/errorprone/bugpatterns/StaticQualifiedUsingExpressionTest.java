@@ -158,4 +158,32 @@ public class StaticQualifiedUsingExpressionTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void qualified() {
+    refactoringHelper
+        .addInputLines(
+            "C.java",
+            "class C {",
+            " static Object x;",
+            " void f() {",
+            "   Object x = this.x;",
+            " }",
+            " void g() {",
+            "   Object y = this.x;",
+            " }",
+            "}")
+        .addOutputLines(
+            "C.java",
+            "class C {",
+            " static Object x;",
+            " void f() {",
+            "   Object x = C.x;",
+            " }",
+            " void g() {",
+            "   Object y = x;",
+            " }",
+            "}")
+        .doTest();
+  }
 }
