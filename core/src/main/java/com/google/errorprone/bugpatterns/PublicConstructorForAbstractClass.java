@@ -40,7 +40,7 @@ import javax.lang.model.element.Modifier;
 @BugPattern(
     name = "PublicConstructorForAbstractClass",
     summary =
-        "Constructors of on an abstract class can be declared protected as there is never a need"
+        "Constructors of an abstract class can be declared protected as there is never a need"
             + " for them to be public",
     explanation =
         "Abstract classes' constructors are only ever called by subclasses, never directly by"
