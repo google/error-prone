@@ -273,6 +273,7 @@ import com.google.errorprone.bugpatterns.StaticAssignmentInConstructor;
 import com.google.errorprone.bugpatterns.StaticMockMember;
 import com.google.errorprone.bugpatterns.StaticQualifiedUsingExpression;
 import com.google.errorprone.bugpatterns.StreamResourceLeak;
+import com.google.errorprone.bugpatterns.StreamToIterable;
 import com.google.errorprone.bugpatterns.StreamToString;
 import com.google.errorprone.bugpatterns.StringBuilderInitWithChar;
 import com.google.errorprone.bugpatterns.StringEquality;
@@ -811,6 +812,7 @@ public class BuiltInCheckerSuppliers {
           StaticGuardedByInstance.class,
           StaticMockMember.class,
           StreamResourceLeak.class,
+          StreamToIterable.class,
           StringSplitter.class,
           SwigMemoryLeak.class,
           SynchronizeOnNonFinalField.class,
