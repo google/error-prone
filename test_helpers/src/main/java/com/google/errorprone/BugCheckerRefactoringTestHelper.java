@@ -153,6 +153,17 @@ public class BugCheckerRefactoringTestHelper {
     return new BugCheckerRefactoringTestHelper(refactoringBugChecker, clazz);
   }
 
+  public static BugCheckerRefactoringTestHelper newInstance(
+      Class<? extends BugChecker> checkerClass, Class<?> clazz) {
+    BugChecker checker;
+    try {
+      checker = checkerClass.getDeclaredConstructor().newInstance();
+    } catch (ReflectiveOperationException e) {
+      throw new LinkageError(e.getMessage(), e);
+    }
+    return newInstance(checker, clazz);
+  }
+
   public BugCheckerRefactoringTestHelper.ExpectOutput addInput(String inputFilename) {
     return new ExpectOutput(fileManager.forResource(inputFilename));
   }
