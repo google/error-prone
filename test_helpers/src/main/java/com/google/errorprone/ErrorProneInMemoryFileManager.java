@@ -130,7 +130,7 @@ public class ErrorProneInMemoryFileManager extends JavacFileManager {
     if (is != null) {
       return is;
     }
-    throw new AssertionError("could not find resource: " + name);
+    throw new AssertionError("could not find resource: " + name + " for: " + clazz);
   }
 
   /** Loads a resource of the class passed into the constructor into a {@link JavaFileObject}. */
