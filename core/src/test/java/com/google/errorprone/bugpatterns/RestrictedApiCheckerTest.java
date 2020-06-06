@@ -16,6 +16,7 @@
 
 package com.google.errorprone.bugpatterns;
 
+import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
 import com.sun.tools.javac.main.Main.Result;
 import org.junit.Test;
@@ -25,10 +26,21 @@ import org.junit.runners.JUnit4;
 /** Unit test for {@link RestrictedApiChecker} */
 @RunWith(JUnit4.class)
 public class RestrictedApiCheckerTest {
-  private final CompilationTestHelper helper =
-      CompilationTestHelper.newInstance(RestrictedApiChecker.class, getClass())
-          .addSourceFile("RestrictedApiMethods.java")
-          .matchAllDiagnostics();
+  private final CompilationTestHelper helper;
+  private final BugCheckerRefactoringTestHelper refactoringTest;
+
+  public RestrictedApiCheckerTest() {
+    this(RestrictedApiChecker.class);
+  }
+
+  protected RestrictedApiCheckerTest(Class<? extends BugChecker> checker) {
+    helper =
+        CompilationTestHelper.newInstance(checker, RestrictedApiCheckerTest.class)
+            .addSourceFile("RestrictedApiMethods.java")
+            .matchAllDiagnostics();
+    refactoringTest =
+        BugCheckerRefactoringTestHelper.newInstance(checker, RestrictedApiCheckerTest.class);
+  }
 
   @Test
   public void testNormalCallAllowed() {
