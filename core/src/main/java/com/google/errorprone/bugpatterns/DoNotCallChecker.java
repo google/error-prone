@@ -18,12 +18,14 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
+import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
 import static com.google.errorprone.util.ASTHelpers.findSuperMethods;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MemberReferenceTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
@@ -56,19 +58,35 @@ public class DoNotCallChecker extends BugChecker
   private static final ImmutableMap<Matcher<ExpressionTree>, String> THIRD_PARTY_METHODS =
       ImmutableMap.of(
           staticMethod()
-                  .onClass("org.junit.Assert")
-                  .named("assertEquals")
-                  .withParameters("double", "double"),
-              "This method always throws java.lang.AssertionError. Use assertEquals("
-                  + "expected, actual, delta) to compare floating-point numbers",
+              .onClass("org.junit.Assert")
+              .named("assertEquals")
+              .withParameters("double", "double"),
+          "This method always throws java.lang.AssertionError. Use assertEquals("
+              + "expected, actual, delta) to compare floating-point numbers",
           staticMethod()
-                  .onClass("org.junit.Assert")
-                  .named("assertEquals")
-                  .withParameters("java.lang.String", "double", "double"),
-              "This method always throws java.lang.AssertionError. Use assertEquals("
-                  + "String, expected, actual, delta) to compare floating-point numbers");
+              .onClass("org.junit.Assert")
+              .named("assertEquals")
+              .withParameters("java.lang.String", "double", "double"),
+          "This method always throws java.lang.AssertionError. Use assertEquals("
+              + "String, expected, actual, delta) to compare floating-point numbers",
+          instanceMethod()
+              .onExactClass("java.sql.Date")
+              .namedAnyOf(
+                  "getHours", "getMinutes", "getSeconds", "setHours", "setMinutes", "setSeconds"),
+          "The hour/minute/second getters and setters on java.sql.Date are guaranteed to throw"
+              + " IllegalArgumentException because java.sql.Date does not have a time"
+              + " component.",
+          instanceMethod().onExactClass("java.sql.Date").named("toInstant"),
+          "sqlDate.toInstant() is not supported. Did you mean to call toLocalDate() instead?");
 
   private static final String DO_NOT_CALL = "com.google.errorprone.annotations.DoNotCall";
+
+  private final boolean checkThirdPartyMethods;
+
+  public DoNotCallChecker(ErrorProneFlags flags) {
+    this.checkThirdPartyMethods =
+        flags.getBoolean("DoNotCallChecker:CheckThirdPartyMethods").orElse(true);
+  }
 
   @Override
   public Description matchMethod(MethodTree tree, VisitorState state) {
@@ -117,9 +135,11 @@ public class DoNotCallChecker extends BugChecker
 
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
-    for (Map.Entry<Matcher<ExpressionTree>, String> matcher : THIRD_PARTY_METHODS.entrySet()) {
-      if (matcher.getKey().matches(tree, state)) {
-        return buildDescription(tree).setMessage(matcher.getValue()).build();
+    if (checkThirdPartyMethods) {
+      for (Map.Entry<Matcher<ExpressionTree>, String> matcher : THIRD_PARTY_METHODS.entrySet()) {
+        if (matcher.getKey().matches(tree, state)) {
+          return buildDescription(tree).setMessage(matcher.getValue()).build();
+        }
       }
     }
     return checkTree(tree, ASTHelpers.getSymbol(tree), state);
