@@ -33,7 +33,7 @@ try (InputStream in = openInputStream()) {
 ```
 
 If Java 7 is not available, we recommend Guava's
-[Closer API](http://google.github.io/guava/releases/snapshot/api/docs/com/google/common/io/Closer.html).
+[Closer API](https://guava.dev/releases/snapshot/api/docs/com/google/common/io/Closer.html).
 
 ```java
 Closer closer = Closer.create();

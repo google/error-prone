@@ -4,7 +4,7 @@ implements `isEqualTo` using [`Objects#equal`] , which tests its arguments for
 reference equality and returns true without calling `equals()` if both arguments
 are the same instance.
 
-[`Objects#equals`]: https://google.github.io/guava/releases/21.0/api/docs/com/google/common/base/Objects.html#equal-java.lang.Object-java.lang.Object-
+[`Objects#equals`]: https://guava.dev/releases/21.0/api/docs/com/google/common/base/Objects.html#equal-java.lang.Object-java.lang.Object-
 
 To test the implementation of an `equals` method, use
 [Guava's EqualsTester][javadoc].

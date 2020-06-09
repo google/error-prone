@@ -33,4 +33,4 @@ prevent accidental attempts to modify the collection at compile-time (see
 
 [ej3e-64]: https://books.google.com/books?id=BIpDDwAAQBAJ
 
-[javadoc]: https://google.github.io/guava/releases/21.0/api/docs/com/google/common/collect/ImmutableCollection.html
+[javadoc]: https://guava.dev/releases/21.0/api/docs/com/google/common/collect/ImmutableCollection.html

@@ -61,7 +61,7 @@ import javax.lang.model.element.Modifier;
     summary = "A summary line is required on public/protected Javadocs.",
     severity = WARNING,
     linkType = CUSTOM,
-    link = "http://google.github.io/styleguide/javaguide.html#s7.2-summary-fragment",
+    link = "https://google.github.io/styleguide/javaguide.html#s7.2-summary-fragment",
     documentSuppression = false)
 public final class MissingSummary extends BugChecker
     implements ClassTreeMatcher, MethodTreeMatcher, VariableTreeMatcher {
