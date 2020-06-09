@@ -148,6 +148,14 @@ public class JdkObsolete extends BugChecker
           .stream()
           .collect(toImmutableMap(Obsolete::qualifiedName, x -> x));
 
+  private static final Matcher<ExpressionTree> DATE_CONVERSION =
+      anyOf(
+          instanceMethod().onExactClass("java.util.Date").named("toInstant"),
+          staticMethod()
+              .onClass("java.util.Date")
+              .named("from")
+              .withParameters("java.time.Instant"));
+
   static final Matcher<ExpressionTree> MATCHER_STRINGBUFFER =
       anyOf(
           // a pre-JDK-8039124 concession
@@ -168,6 +176,9 @@ public class JdkObsolete extends BugChecker
               .onExactClass("com.google.re2j.Matcher")
               .named("appendReplacement")
               .withParameters("java.lang.StringBuffer", "java.lang.String"));
+
+  private static final Matcher<ExpressionTree> ALLOWED_METHODS =
+      anyOf(DATE_CONVERSION, MATCHER_STRINGBUFFER);
 
   @Override
   public Description matchNewClass(NewClassTree tree, VisitorState state) {
@@ -230,7 +241,7 @@ public class JdkObsolete extends BugChecker
 
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
-    if (MATCHER_STRINGBUFFER.matches(tree, state)) {
+    if (ALLOWED_METHODS.matches(tree, state)) {
       return NO_MATCH;
     }
     Type type = getReceiverType(tree.getMethodSelect());

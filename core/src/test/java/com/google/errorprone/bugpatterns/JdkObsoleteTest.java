@@ -325,6 +325,22 @@ public class JdkObsoleteTest {
   }
 
   @Test
+  public void javaUtilDate_allowedApis() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.time.Instant;",
+            "import java.util.Date;",
+            "class Test {",
+            "  public void doSomething(Date date) {",
+            "    Instant instant = date.toInstant();",
+            "    Date date2 = Date.from(instant);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void navigableMapInheritedMethod() {
     testHelper
         .addSourceLines(
