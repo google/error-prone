@@ -16,6 +16,7 @@
 
 package com.google.errorprone.bugpatterns;
 
+import com.google.common.collect.ImmutableList;
 import com.google.errorprone.CompilationTestHelper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -28,7 +29,7 @@ public class IdentityHashMapBoxingTest {
       CompilationTestHelper.newInstance(IdentityHashMapBoxing.class, getClass());
 
   @Test
-  public void testPositiveCases() {
+  public void testConstructorPositiveCases() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -50,7 +51,7 @@ public class IdentityHashMapBoxingTest {
   }
 
   @Test
-  public void testNegativeCases() {
+  public void testConstructorNegativeCases() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -64,6 +65,71 @@ public class IdentityHashMapBoxingTest {
             "    Map<String, Long> map4 = new IdentityHashMap<>();",
             "    Map<String, Object> map5 = new IdentityHashMap<>();",
             "    Map<Object, String> map6 = new IdentityHashMap<>();",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void testMapsPositiveCases_flagOn() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.common.collect.Maps;",
+            "import java.util.IdentityHashMap;",
+            "import java.util.Map;",
+            "class Test {",
+            "  void test() {",
+            "    // BUG: Diagnostic contains: IdentityHashMapBoxing",
+            "    Map<Integer, String> map1 = Maps.newIdentityHashMap();",
+            "    // BUG: Diagnostic contains: IdentityHashMapBoxing",
+            "    Map<Float, String> map2 = Maps.newIdentityHashMap();",
+            "    // BUG: Diagnostic contains: IdentityHashMapBoxing",
+            "    Map<Double, String> map3 = Maps.newIdentityHashMap();",
+            "    // BUG: Diagnostic contains: IdentityHashMapBoxing",
+            "    Map<Long, String> map4 = Maps.newIdentityHashMap();",
+            "  }",
+            "}")
+        .setArgs(ImmutableList.of("-XepOpt:IdentityHashMapBoxing:checkMapsNewIHM=true"))
+        .doTest();
+  }
+
+  @Test
+  public void testMapsPositiveCases_flagOff() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.common.collect.Maps;",
+            "import java.util.IdentityHashMap;",
+            "import java.util.Map;",
+            "class Test {",
+            "  void test() {",
+            "    Map<Integer, String> map1 = Maps.newIdentityHashMap();",
+            "    Map<Float, String> map2 = Maps.newIdentityHashMap();",
+            "    Map<Double, String> map3 = Maps.newIdentityHashMap();",
+            "    Map<Long, String> map4 = Maps.newIdentityHashMap();",
+            "  }",
+            "}")
+        .setArgs(ImmutableList.of("-XepOpt:IdentityHashMapBoxing:checkMapsNewIHM=false"))
+        .doTest();
+  }
+
+  @Test
+  public void testMapsNegativeCases() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.common.collect.Maps;",
+            "import java.util.IdentityHashMap;",
+            "import java.util.Map;",
+            "class Test {",
+            "  void test() {",
+            "    Map<String, Integer> map1 = Maps.newIdentityHashMap();",
+            "    Map<String, Float> map2 = Maps.newIdentityHashMap();",
+            "    Map<String, Double> map3 = Maps.newIdentityHashMap();",
+            "    Map<String, Long> map4 = Maps.newIdentityHashMap();",
+            "    Map<String, Object> map5 = Maps.newIdentityHashMap();",
+            "    Map<Object, String> map6 = Maps.newIdentityHashMap();",
             "  }",
             "}")
         .doTest();
