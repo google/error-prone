@@ -54,7 +54,7 @@ import java.util.List;
             + " removing the tag entirely or adding a description.",
     severity = WARNING,
     linkType = CUSTOM,
-    link = "http://google.github.io/styleguide/javaguide.html#s7.1.3-javadoc-block-tags",
+    link = "https://google.github.io/styleguide/javaguide.html#s7.1.3-javadoc-block-tags",
     documentSuppression = false)
 public final class EmptyBlockTag extends BugChecker
     implements ClassTreeMatcher, MethodTreeMatcher, VariableTreeMatcher {
