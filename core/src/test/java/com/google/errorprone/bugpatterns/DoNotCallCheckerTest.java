@@ -16,8 +16,11 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static org.junit.Assert.assertThrows;
+
 import com.google.errorprone.CompilationTestHelper;
 import com.google.errorprone.annotations.DoNotCall;
+import java.sql.Date;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -195,6 +198,97 @@ public class DoNotCallCheckerTest {
             // These are OK since they pass a tolerance
             "    Assert.assertEquals(2.0, 2.0, 0.01);",
             "    Assert.assertEquals(\"msg\", 2.0, 2.0, 0.01);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @SuppressWarnings("DoNotCall")
+  @Test
+  public void testFailures() {
+    Date date = new Date(1234567890L);
+    assertThrows(UnsupportedOperationException.class, () -> date.toInstant());
+    assertThrows(IllegalArgumentException.class, () -> date.getHours());
+    assertThrows(IllegalArgumentException.class, () -> date.setHours(1));
+    assertThrows(IllegalArgumentException.class, () -> date.getMinutes());
+    assertThrows(IllegalArgumentException.class, () -> date.setMinutes(1));
+    assertThrows(IllegalArgumentException.class, () -> date.getSeconds());
+    assertThrows(IllegalArgumentException.class, () -> date.setSeconds(1));
+  }
+
+  @Test
+  public void javaSqlDate_toInstant() {
+    testHelper
+        .addSourceLines(
+            "TestClass.java",
+            "import java.sql.Date;",
+            "import java.time.Instant;",
+            "public class TestClass {",
+            "  public void badApis(Date date) {",
+            "    // BUG: Diagnostic contains: toLocalDate()",
+            "    Instant instant = date.toInstant();",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void javaSqlDate_timeGetters() {
+    testHelper
+        .addSourceLines(
+            "TestClass.java",
+            "import java.sql.Date;",
+            "import java.time.Instant;",
+            "public class TestClass {",
+            "  public void badApis(Date date) {",
+            "    // BUG: Diagnostic contains: DoNotCall",
+            "    int hour = date.getHours();",
+            "    // BUG: Diagnostic contains: DoNotCall",
+            "    int mins = date.getMinutes();",
+            "    // BUG: Diagnostic contains: DoNotCall",
+            "    int secs = date.getSeconds();",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void javaSqlDate_timeSetters() {
+    testHelper
+        .addSourceLines(
+            "TestClass.java",
+            "import java.sql.Date;",
+            "import java.time.Instant;",
+            "public class TestClass {",
+            "  public void badApis(Date date) {",
+            "    // BUG: Diagnostic contains: DoNotCall",
+            "    date.setHours(1);",
+            "    // BUG: Diagnostic contains: DoNotCall",
+            "    date.setMinutes(1);",
+            "    // BUG: Diagnostic contains: DoNotCall",
+            "    date.setSeconds(1);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void javaSqlDate_staticallyTypedAsJavaUtilDate() {
+    testHelper
+        .addSourceLines(
+            "TestClass.java",
+            "import java.time.Instant;",
+            "import java.util.Date;",
+            "public class TestClass {",
+            "  public void badApis() {",
+            "    Date date = new java.sql.Date(1234567890L);",
+            "    Instant instant = date.toInstant();",
+            "    int hour = date.getHours();",
+            "    int mins = date.getMinutes();",
+            "    int secs = date.getSeconds();",
+            "    date.setHours(1);",
+            "    date.setMinutes(1);",
+            "    date.setSeconds(1);",
             "  }",
             "}")
         .doTest();
