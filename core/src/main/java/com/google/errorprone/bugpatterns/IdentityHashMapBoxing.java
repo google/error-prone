@@ -19,14 +19,18 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.method.MethodMatchers.constructor;
+import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
 
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
+import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.NewClassTreeMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
+import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.NewClassTree;
 import com.sun.tools.javac.code.Type;
 import java.util.List;
@@ -38,16 +42,40 @@ import java.util.List;
         "Using IdentityHashMap with a boxed type as the key is risky since boxing may produce"
             + " distinct instances",
     severity = ERROR)
-public class IdentityHashMapBoxing extends BugChecker implements NewClassTreeMatcher {
+public class IdentityHashMapBoxing extends BugChecker
+    implements NewClassTreeMatcher, MethodInvocationTreeMatcher {
+
+  private final Boolean checkMapsNewIHM;
+
+  public IdentityHashMapBoxing(ErrorProneFlags flags) {
+    checkMapsNewIHM = flags.getBoolean("IdentityHashMapBoxing:checkMapsNewIHM").orElse(false);
+  }
 
   private static final Matcher<ExpressionTree> NEW_IDENTITY_HASH_MAP =
       constructor().forClass("java.util.IdentityHashMap");
+  private static final Matcher<ExpressionTree> MAPS_NEW_IDENTITY_HASH_MAP =
+      staticMethod().onClass("com.google.common.collect.Maps").named("newIdentityHashMap");
 
   @Override
   public Description matchNewClass(NewClassTree tree, VisitorState state) {
     if (!NEW_IDENTITY_HASH_MAP.matches(tree, state)) {
       return NO_MATCH;
     }
+    return checkTypes(tree, state);
+  }
+
+  @Override
+  public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
+    if (!checkMapsNewIHM) {
+      return Description.NO_MATCH;
+    }
+    if (!MAPS_NEW_IDENTITY_HASH_MAP.matches(tree, state)) {
+      return NO_MATCH;
+    }
+    return checkTypes(tree, state);
+  }
+
+  private Description checkTypes(ExpressionTree tree, VisitorState state) {
     List<Type> argumentTypes = ASTHelpers.getResultType(tree).getTypeArguments();
     if (argumentTypes.size() != 2) {
       return Description.NO_MATCH;
