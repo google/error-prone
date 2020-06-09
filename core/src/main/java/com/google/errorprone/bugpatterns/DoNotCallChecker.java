@@ -56,28 +56,48 @@ public class DoNotCallChecker extends BugChecker
   // If your method cannot be annotated with @DoNotCall (e.g., it's a JDK or thirdparty method),
   // then add it to this Map with an explanation.
   private static final ImmutableMap<Matcher<ExpressionTree>, String> THIRD_PARTY_METHODS =
-      ImmutableMap.of(
-          staticMethod()
-              .onClass("org.junit.Assert")
-              .named("assertEquals")
-              .withParameters("double", "double"),
-          "This method always throws java.lang.AssertionError. Use assertEquals("
-              + "expected, actual, delta) to compare floating-point numbers",
-          staticMethod()
-              .onClass("org.junit.Assert")
-              .named("assertEquals")
-              .withParameters("java.lang.String", "double", "double"),
-          "This method always throws java.lang.AssertionError. Use assertEquals("
-              + "String, expected, actual, delta) to compare floating-point numbers",
-          instanceMethod()
-              .onExactClass("java.sql.Date")
-              .namedAnyOf(
-                  "getHours", "getMinutes", "getSeconds", "setHours", "setMinutes", "setSeconds"),
-          "The hour/minute/second getters and setters on java.sql.Date are guaranteed to throw"
-              + " IllegalArgumentException because java.sql.Date does not have a time"
-              + " component.",
-          instanceMethod().onExactClass("java.sql.Date").named("toInstant"),
-          "sqlDate.toInstant() is not supported. Did you mean to call toLocalDate() instead?");
+      new ImmutableMap.Builder<Matcher<ExpressionTree>, String>()
+          .put(
+              staticMethod()
+                  .onClass("org.junit.Assert")
+                  .named("assertEquals")
+                  .withParameters("double", "double"),
+              "This method always throws java.lang.AssertionError. Use assertEquals("
+                  + "expected, actual, delta) to compare floating-point numbers")
+          .put(
+              staticMethod()
+                  .onClass("org.junit.Assert")
+                  .named("assertEquals")
+                  .withParameters("java.lang.String", "double", "double"),
+              "This method always throws java.lang.AssertionError. Use assertEquals("
+                  + "String, expected, actual, delta) to compare floating-point numbers")
+          .put(
+              instanceMethod()
+                  .onExactClass("java.sql.Date")
+                  .namedAnyOf(
+                      "getHours",
+                      "getMinutes",
+                      "getSeconds",
+                      "setHours",
+                      "setMinutes",
+                      "setSeconds"),
+              "The hour/minute/second getters and setters on java.sql.Date are guaranteed to throw"
+                  + " IllegalArgumentException because java.sql.Date does not have a time"
+                  + " component.")
+          .put(
+              instanceMethod().onExactClass("java.sql.Date").named("toInstant"),
+              "sqlDate.toInstant() is not supported. Did you mean to call toLocalDate() instead?")
+          .put(
+              instanceMethod()
+                  .onExactClass("java.util.concurrent.ThreadLocalRandom")
+                  .named("setSeed"),
+              "ThreadLocalRandom does not support setting a seed.")
+          .put(
+              instanceMethod()
+                  .onExactClass("java.util.concurrent.locks.ReentrantReadWriteLock.ReadLock")
+                  .named("newCondition"),
+              "ReadLocks do not support conditions.")
+          .build();
 
   private static final String DO_NOT_CALL = "com.google.errorprone.annotations.DoNotCall";
 
