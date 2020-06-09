@@ -22,7 +22,6 @@ In this case, an appropriate fix may be,
 
 ```java
 boolean containsTest(Collection<CharSequence>> charSequences) {
-  // True if `charSequences` actually contains Strings, but otherwise not necessarily.
   return charSequences.stream().anyMatch("test"::contentEquals);
 }
 ```
