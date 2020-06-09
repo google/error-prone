@@ -21,11 +21,14 @@ import static org.junit.Assert.assertThrows;
 import com.google.errorprone.CompilationTestHelper;
 import com.google.errorprone.annotations.DoNotCall;
 import java.sql.Date;
+import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
 /** {@link DoNotCallChecker}Test */
+@SuppressWarnings("DoNotCall")
 @RunWith(JUnit4.class)
 public class DoNotCallCheckerTest {
 
@@ -203,21 +206,10 @@ public class DoNotCallCheckerTest {
         .doTest();
   }
 
-  @SuppressWarnings("DoNotCall")
-  @Test
-  public void testFailures() {
-    Date date = new Date(1234567890L);
-    assertThrows(UnsupportedOperationException.class, () -> date.toInstant());
-    assertThrows(IllegalArgumentException.class, () -> date.getHours());
-    assertThrows(IllegalArgumentException.class, () -> date.setHours(1));
-    assertThrows(IllegalArgumentException.class, () -> date.getMinutes());
-    assertThrows(IllegalArgumentException.class, () -> date.setMinutes(1));
-    assertThrows(IllegalArgumentException.class, () -> date.getSeconds());
-    assertThrows(IllegalArgumentException.class, () -> date.setSeconds(1));
-  }
-
   @Test
   public void javaSqlDate_toInstant() {
+    Date date = new Date(1234567890L);
+    assertThrows(UnsupportedOperationException.class, () -> date.toInstant());
     testHelper
         .addSourceLines(
             "TestClass.java",
@@ -234,6 +226,10 @@ public class DoNotCallCheckerTest {
 
   @Test
   public void javaSqlDate_timeGetters() {
+    Date date = new Date(1234567890L);
+    assertThrows(IllegalArgumentException.class, () -> date.getHours());
+    assertThrows(IllegalArgumentException.class, () -> date.getMinutes());
+    assertThrows(IllegalArgumentException.class, () -> date.getSeconds());
     testHelper
         .addSourceLines(
             "TestClass.java",
@@ -254,6 +250,10 @@ public class DoNotCallCheckerTest {
 
   @Test
   public void javaSqlDate_timeSetters() {
+    Date date = new Date(1234567890L);
+    assertThrows(IllegalArgumentException.class, () -> date.setHours(1));
+    assertThrows(IllegalArgumentException.class, () -> date.setMinutes(1));
+    assertThrows(IllegalArgumentException.class, () -> date.setSeconds(1));
     testHelper
         .addSourceLines(
             "TestClass.java",
@@ -289,6 +289,43 @@ public class DoNotCallCheckerTest {
             "    date.setHours(1);",
             "    date.setMinutes(1);",
             "    date.setSeconds(1);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void readLock_newCondition() {
+    assertThrows(
+        UnsupportedOperationException.class,
+        () -> new ReentrantReadWriteLock().readLock().newCondition());
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.util.concurrent.locks.ReentrantReadWriteLock;",
+            "public class Test {",
+            "  public void foo() {",
+            "    ReentrantReadWriteLock.ReadLock lock = new ReentrantReadWriteLock().readLock();",
+            "    // BUG: Diagnostic contains: DoNotCall",
+            "    lock.newCondition();",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void threadLocalRandom_setSeed() {
+    assertThrows(
+        UnsupportedOperationException.class, () -> ThreadLocalRandom.current().setSeed(42));
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.util.concurrent.ThreadLocalRandom;",
+            "public class Test {",
+            "  public void foo() {",
+            "    ThreadLocalRandom random = ThreadLocalRandom.current();",
+            "    // BUG: Diagnostic contains: DoNotCall",
+            "    random.setSeed(42L);",
             "  }",
             "}")
         .doTest();
