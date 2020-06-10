@@ -18,7 +18,6 @@ package com.google.errorprone.bugpatterns;
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode;
 import com.google.errorprone.CompilationTestHelper;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -26,12 +25,10 @@ import org.junit.runners.JUnit4;
 /** Unit tests for {@link BadImport}. */
 @RunWith(JUnit4.class)
 public final class BadImportTest {
-  CompilationTestHelper compilationTestHelper;
-
-  @Before
-  public void setup() {
-    compilationTestHelper = CompilationTestHelper.newInstance(BadImport.class, getClass());
-  }
+  private final CompilationTestHelper compilationTestHelper =
+      CompilationTestHelper.newInstance(BadImport.class, getClass());
+  private final BugCheckerRefactoringTestHelper refactoringTestHelper =
+      BugCheckerRefactoringTestHelper.newInstance(new BadImport(), getClass());
 
   @Test
   public void positive_static_simpleCase() {
@@ -64,7 +61,7 @@ public final class BadImportTest {
 
   @Test
   public void positive_static_locallyDefinedMethod() {
-    BugCheckerRefactoringTestHelper.newInstance(new BadImport(), getClass())
+    refactoringTestHelper
         .addInputLines(
             "in/Test.java",
             "import static com.google.common.collect.ImmutableList.of;",
@@ -196,7 +193,7 @@ public final class BadImportTest {
 
   @Test
   public void test_nested_fixes() {
-    BugCheckerRefactoringTestHelper.newInstance(new BadImport(), getClass())
+    refactoringTestHelper
         .addInput("BadImportPositiveCases.java")
         .addOutput("BadImportPositiveCases_expected.java")
         .doTest(TestMode.AST_MATCH);
@@ -204,7 +201,7 @@ public final class BadImportTest {
 
   @Test
   public void test_nested_typeUseAnnotation() {
-    BugCheckerRefactoringTestHelper.newInstance(new BadImport(), getClass())
+    refactoringTestHelper
         .addInputLines(
             "input/TypeUseAnnotation.java",
             "package test;",
@@ -294,6 +291,50 @@ public final class BadImportTest {
             "    // BUG: Diagnostic contains: ImmutableList.of()",
             "    ImmutableList<?> list2 = of();",
             "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void enumWithinSameCompilationUnitImported_noFinding() {
+    compilationTestHelper
+        .addSourceLines(
+            "Test.java", //
+            "package pkg;",
+            "import pkg.Test.Type;",
+            "class Test {",
+            "  enum Type {",
+            "    A,",
+            "    B;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void enumWithinDifferentCompilationUnitImported_finding() {
+    refactoringTestHelper
+        .addInputLines(
+            "E.java", //
+            "package a;",
+            "public enum E {",
+            "  INSTANCE;",
+            "}")
+        .expectUnchanged()
+        .addInputLines(
+            "Test.java", //
+            "package pkg;",
+            "import static a.E.INSTANCE;",
+            "class Test {",
+            "  Object e = INSTANCE;",
+            "}")
+        .addOutputLines(
+            "Test.java", //
+            "package pkg;",
+            "import static a.E.INSTANCE;",
+            "import a.E;",
+            "class Test {",
+            "  Object e = E.INSTANCE;",
             "}")
         .doTest();
   }
