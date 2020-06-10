@@ -15,8 +15,6 @@
  */
 package com.google.errorprone.bugpatterns.testdata;
 
-import static com.google.errorprone.bugpatterns.testdata.BadImportPositiveCases.Example.INSTANCE;
-
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -72,19 +70,5 @@ class BadImportPositiveCases {
 
   void classLiteral() {
     System.out.println(Builder.class);
-  }
-
-  public void enumSwitch() {
-    // BUG: Diagnostic contains: Example.INSTANCE
-    Example object = INSTANCE;
-
-    switch (object) {
-      case INSTANCE: // This line should be left alone.
-        break;
-    }
-  }
-
-  enum Example {
-    INSTANCE
   }
 }

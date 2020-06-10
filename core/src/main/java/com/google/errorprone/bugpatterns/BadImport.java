@@ -18,6 +18,7 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.ChildMultiMatcher.MatchType.AT_LEAST_ONE;
 import static com.google.errorprone.matchers.Matchers.annotations;
+import static com.google.errorprone.util.ASTHelpers.getSymbol;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
@@ -28,7 +29,6 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.MultiMatcher;
-import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
@@ -90,7 +90,7 @@ public class BadImport extends BugChecker implements ImportTreeMatcher {
     ImmutableSet<Symbol> symbols;
 
     if (!tree.isStatic()) {
-      symbol = ASTHelpers.getSymbol(tree.getQualifiedIdentifier());
+      symbol = getSymbol(tree.getQualifiedIdentifier());
       if (symbol == null || isAcceptableImport(symbol, BAD_NESTED_CLASSES)) {
         return Description.NO_MATCH;
       }
@@ -109,6 +109,10 @@ public class BadImport extends BugChecker implements ImportTreeMatcher {
       if (isAcceptableImport(symbol, BAD_STATIC_IDENTIFIERS)) {
         return Description.NO_MATCH;
       }
+    }
+    if (state.getPath().getCompilationUnit().getTypeDecls().stream()
+        .anyMatch(c -> symbol.outermostClass().equals(getSymbol(c)))) {
+      return Description.NO_MATCH;
     }
 
     if (symbol.getEnclosingElement() instanceof PackageSymbol) {
@@ -166,7 +170,7 @@ public class BadImport extends BugChecker implements ImportTreeMatcher {
 
           @Override
           public IdentifierTree visitIdentifier(IdentifierTree node, Void unused) {
-            Symbol nodeSymbol = ASTHelpers.getSymbol(node);
+            Symbol nodeSymbol = getSymbol(node);
             if (symbols.contains(nodeSymbol) && !isSuppressed(node)) {
               if (getCurrentPath().getParentPath().getLeaf().getKind() != Kind.CASE) {
                 builder.prefixWith(node, enclosingReplacement);
@@ -220,7 +224,7 @@ public class BadImport extends BugChecker implements ImportTreeMatcher {
   }
 
   private static boolean isTypeAnnotation(AnnotationTree t) {
-    Symbol annotationSymbol = ASTHelpers.getSymbol(t.getAnnotationType());
+    Symbol annotationSymbol = getSymbol(t.getAnnotationType());
     if (annotationSymbol == null) {
       return false;
     }
