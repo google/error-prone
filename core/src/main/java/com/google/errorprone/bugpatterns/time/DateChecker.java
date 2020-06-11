@@ -177,7 +177,7 @@ public final class DateChecker extends BugChecker
   private static void checkBounds(
       ExpressionTree tree, String type, Range<Integer> range, List<String> errors) {
     Integer value = ASTHelpers.constValue(tree, Integer.class);
-    if (!range.contains(value)) {
+    if (value != null && !range.contains(value)) {
       errors.add(String.format("The %s value (%s) is out of bounds %s.", type, value, range));
     }
   }
