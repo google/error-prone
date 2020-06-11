@@ -49,6 +49,14 @@ string representation: `lhs.toString().contentEquals(rhs)`.
 
 These must be iterated over and compared manually, element by element.
 
+## For [`java.util.Date`]
+
+Subtypes of `Date` (like `java.sql.Timestamp`) break substitutability, so
+comparing `Date`s with `equals` is unreliable.
+
+TIP: `java.util.Date` is a legacy, bug-prone API. Prefer `java.time.Instant` or
+`java.time.LocalDateTime`.
+
 [`Collection`]: https://docs.oracle.com/javase/8/docs/api/java/util/Collection.html
 [`Iterable`]: https://docs.oracle.com/javase/8/docs/api/java/lang/Iterable.html
 [`Iterables.elementsEqual`]: https://guava.dev/releases/snapshot/api/docs/com/google/common/collect/Iterables.html#elementsEqual-java.lang.Iterable-java.lang.Iterable-
@@ -61,3 +69,4 @@ These must be iterated over and compared manually, element by element.
 [`SparseArray`]: https://developer.android.com/reference/android/util/SparseArray
 [`Queue`]: http://docs.oracle.com/javase/8/docs/api/java/util/Queue.html
 [`CharSequence`]: http://docs.oracle.com/javase/8/docs/api/java/lang/CharSequence.html
+[`Date`]: http://docs.oracle.com/javase/8/docs/api/java/util/Date.html
