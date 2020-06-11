@@ -425,6 +425,7 @@ import com.google.errorprone.bugpatterns.threadsafety.StaticGuardedByInstance;
 import com.google.errorprone.bugpatterns.threadsafety.SynchronizeOnNonFinalField;
 import com.google.errorprone.bugpatterns.threadsafety.ThreadPriorityCheck;
 import com.google.errorprone.bugpatterns.threadsafety.UnlockMethodChecker;
+import com.google.errorprone.bugpatterns.time.DateChecker;
 import com.google.errorprone.bugpatterns.time.DurationFrom;
 import com.google.errorprone.bugpatterns.time.DurationGetTemporalUnit;
 import com.google.errorprone.bugpatterns.time.DurationTemporalUnit;
@@ -688,6 +689,7 @@ public class BuiltInCheckerSuppliers {
           ComparableAndComparator.class,
           CompareToZero.class,
           ComplexBooleanConstant.class,
+          DateChecker.class,
           DateFormatConstant.class,
           DefaultCharset.class,
           DefaultPackage.class,
