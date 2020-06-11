@@ -3,7 +3,6 @@
 > prone to errors if one expects the state change on the original instance to be
 > reflected on the method with its forked instance.
 
-
 ```java
 Location location = new Location("gps");
 Bundle bundle = new Bundle();

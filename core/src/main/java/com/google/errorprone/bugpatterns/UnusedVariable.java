@@ -119,7 +119,6 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
 
   private static final ImmutableSet<String> EXEMPT_NAMES = ImmutableSet.of("ignored");
 
-
   /**
    * The set of annotation full names which exempt annotated element from being reported as unused.
    */
@@ -621,7 +620,6 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
           return false;
         }
       }
-
 
       return enclosingMethod.getModifiers().contains(Modifier.PRIVATE);
     }

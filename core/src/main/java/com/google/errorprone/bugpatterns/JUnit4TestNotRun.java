@@ -75,7 +75,6 @@ public class JUnit4TestNotRun extends BugChecker implements ClassTreeMatcher {
 
   private static final Matcher<Tree> NOT_STATIC = not(hasModifier(STATIC));
 
-
   @Override
   public Description matchClass(ClassTree tree, VisitorState state) {
     if (!isJUnit4TestClass.matches(tree, state)) {
@@ -134,7 +133,6 @@ public class JUnit4TestNotRun extends BugChecker implements ClassTreeMatcher {
     if (isJunit3TestCase.matches(methodTree, state)) {
       return Optional.of(describeFixes(methodTree, state));
     }
-
 
     // Method is annotated, probably not a test.
     List<? extends AnnotationTree> annotations = methodTree.getModifiers().getAnnotations();

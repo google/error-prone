@@ -39,7 +39,6 @@ public class FutureReturnValueIgnoredTest {
     compilationHelper.addSourceFile("FutureReturnValueIgnoredNegativeCases.java").doTest();
   }
 
-
   @Test
   public void testClassAnnotationButCanIgnoreReturnValue() {
     compilationHelper

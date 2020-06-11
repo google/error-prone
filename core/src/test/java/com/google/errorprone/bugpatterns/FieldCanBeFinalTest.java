@@ -312,7 +312,6 @@ public class FieldCanBeFinalTest {
         .doTest();
   }
 
-
   @Test
   public void allowNonFinal_nonFinalForTesting() {
     compilationHelper

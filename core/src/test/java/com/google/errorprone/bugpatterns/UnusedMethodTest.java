@@ -30,8 +30,6 @@ public final class UnusedMethodTest {
   private final BugCheckerRefactoringTestHelper refactoringHelper =
       BugCheckerRefactoringTestHelper.newInstance(new UnusedMethod(), getClass());
 
-
-
   @Test
   public void unusedNative() {
     helper
@@ -43,7 +41,6 @@ public final class UnusedMethodTest {
             "}")
         .doTest();
   }
-
 
   @Test
   public void unuseds() {

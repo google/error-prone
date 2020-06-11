@@ -239,5 +239,4 @@ public class UseBindsTest {
         .expectUnchanged()
         .doTest();
   }
-
 }

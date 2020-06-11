@@ -63,7 +63,6 @@ public final class StronglyTypeTimeTest {
         .doTest();
   }
 
-
   @Test
   public void jodaInstant() {
     refactoringHelper

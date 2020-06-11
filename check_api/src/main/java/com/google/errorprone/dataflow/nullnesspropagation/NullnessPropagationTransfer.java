@@ -419,7 +419,7 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
    */
   @Override
   Nullness visitStringConcatenate() {
-    // TODO(user): Mark the inputs as dereferenced.
+    // TODO(konne): Mark the inputs as dereferenced.
     return NONNULL;
   }
 

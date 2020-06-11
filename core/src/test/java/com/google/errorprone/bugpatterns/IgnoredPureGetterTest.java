@@ -79,7 +79,6 @@ public final class IgnoredPureGetterTest {
         .doTest();
   }
 
-
   @Test
   public void protoReturnValueIgnored_noFinding() {
     helper

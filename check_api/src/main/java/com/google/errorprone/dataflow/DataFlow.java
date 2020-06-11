@@ -68,7 +68,7 @@ public final class DataFlow {
    * <li> multiple dataflow analyses for the same method are executed in arbitrary order
    * </ul>
    *
-   * TODO(user): Write a test that checks these assumptions
+   * TODO(konne): Write a test that checks these assumptions
    */
   private static final LoadingCache<AnalysisParams, Analysis<?, ?, ?>> analysisCache =
       CacheBuilder.newBuilder()
@@ -115,12 +115,12 @@ public final class DataFlow {
 
                   analysisCache.invalidateAll();
                   CompilationUnitTree root = methodPath.getCompilationUnit();
-                  // TODO(user), replace with faster build(bodyPath, env, ast, false, false);
+                  // TODO(konne), replace with faster build(bodyPath, env, ast, false, false);
                   return CFGBuilder.build(root, ast, false, false, env);
                 }
               });
 
-  // TODO(user), remove once we merge jdk8 specific's with core
+  // TODO(konne), remove once we merge jdk8 specific's with core
   @Nullable
   private static <T> TreePath findEnclosingMethodOrLambdaOrInitializer(TreePath path) {
     while (path != null) {

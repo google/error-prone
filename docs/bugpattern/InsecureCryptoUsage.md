@@ -22,4 +22,3 @@ classes of problems that are covered by this checker:
 *   Using DSA for digital signatures. Some widely used crypto libraries accept
     invalid DSA signatures in specific configurations. The checker will flag all
     cryptographic operations that may involve DSA.
-

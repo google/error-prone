@@ -1,5 +1,4 @@
 
-
 Methods that may return `null` should be annotated with `@Nullable`. For
 example, do this:
 

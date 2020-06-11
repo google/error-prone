@@ -21,7 +21,6 @@ import com.google.errorprone.CompilationTestHelper;
 import com.google.errorprone.annotations.Immutable;
 import com.google.errorprone.annotations.concurrent.LazyInit;
 import java.util.Arrays;
-import java.util.List;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -1200,7 +1199,6 @@ public class ImmutableCheckerTest {
             "}")
         .doTest();
   }
-
 
   // any final null reference constant is immutable, but do we actually care?
   //

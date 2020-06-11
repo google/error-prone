@@ -71,7 +71,6 @@ public final class InvalidLinkTest {
         .doTest(TEXT_MATCH);
   }
 
-
   @Test
   public void badMethodLink() {
     helper

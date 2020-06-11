@@ -26,4 +26,3 @@ If the caller has a code like `foo(bar, "quux")` and wants to add custom prefix
 support they will most likely do it like `foo(bar, "quux", "norf")`. The
 compiler will accept this because the types match perfectly. However, this is
 clearly a bug caused by unintuitive API and method overloading.
-

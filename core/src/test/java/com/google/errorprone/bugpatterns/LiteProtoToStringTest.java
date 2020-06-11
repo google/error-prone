@@ -121,7 +121,6 @@ public final class LiteProtoToStringTest {
         .doTest();
   }
 
-
   @Test
   public void androidLogAtInfoOrFiner_noWarning() {
     compilationHelper

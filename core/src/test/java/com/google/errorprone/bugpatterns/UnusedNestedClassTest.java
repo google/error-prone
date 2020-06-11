@@ -105,7 +105,6 @@ public class UnusedNestedClassTest {
         .doTest();
   }
 
-
   @Test
   public void refactoring() {
     BugCheckerRefactoringTestHelper.newInstance(new UnusedNestedClass(), getClass())

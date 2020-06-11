@@ -1,5 +1,4 @@
 
-
 Most references are never modified, and accidentally modifying a reference is a
 potential source of bugs.
 
@@ -20,4 +19,3 @@ explicitly marking local variables and parameters as `final` is discouraged.
 
 The annotation can also be applied to fields to indicate that the field is
 deliberately non-final, but the use of @Var on fields is not required.
-

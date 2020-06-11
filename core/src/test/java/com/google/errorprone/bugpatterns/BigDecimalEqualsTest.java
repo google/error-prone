@@ -48,7 +48,6 @@ public final class BigDecimalEqualsTest {
         .doTest();
   }
 
-
   @Test
   public void negative() {
     CompilationTestHelper.newInstance(BigDecimalEquals.class, getClass())

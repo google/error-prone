@@ -19,4 +19,3 @@ states...= */ true, true, false);`
 
 If the comment deliberately does not match the formal parameter name, using a
 regular block comment without the `=` is recommended: `/* enableFoo */`.
-
