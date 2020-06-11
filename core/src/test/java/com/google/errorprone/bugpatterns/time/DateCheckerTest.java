@@ -86,6 +86,21 @@ public class DateCheckerTest {
   }
 
   @Test
+  public void constructor_nonConstants() {
+    helper
+        .addSourceLines(
+            "TestClass.java",
+            "import java.util.Date;",
+            "public class TestClass {",
+            "  Date good = new Date(getYear(), getMonth(), getDay());",
+            "  int getYear() { return 120; }",
+            "  int getMonth() { return 0; }",
+            "  int getDay() { return 1; }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void constructor_allBad() {
     helper
         .addSourceLines(
