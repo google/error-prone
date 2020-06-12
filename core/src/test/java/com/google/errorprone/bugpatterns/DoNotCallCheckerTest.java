@@ -17,10 +17,13 @@
 package com.google.errorprone.bugpatterns;
 
 import static org.junit.Assert.assertThrows;
+import static org.junit.Assume.assumeTrue;
 
 import com.google.errorprone.CompilationTestHelper;
 import com.google.errorprone.annotations.DoNotCall;
+import com.google.errorprone.util.RuntimeVersion;
 import java.sql.Date;
+import java.sql.Time;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import org.junit.Test;
@@ -208,8 +211,7 @@ public class DoNotCallCheckerTest {
 
   @Test
   public void javaSqlDate_toInstant() {
-    Date date = new Date(1234567890L);
-    assertThrows(UnsupportedOperationException.class, () -> date.toInstant());
+    assertThrows(UnsupportedOperationException.class, () -> new Date(1234567890L).toInstant());
     testHelper
         .addSourceLines(
             "TestClass.java",
@@ -234,7 +236,6 @@ public class DoNotCallCheckerTest {
         .addSourceLines(
             "TestClass.java",
             "import java.sql.Date;",
-            "import java.time.Instant;",
             "public class TestClass {",
             "  public void badApis(Date date) {",
             "    // BUG: Diagnostic contains: DoNotCall",
@@ -258,7 +259,6 @@ public class DoNotCallCheckerTest {
         .addSourceLines(
             "TestClass.java",
             "import java.sql.Date;",
-            "import java.time.Instant;",
             "public class TestClass {",
             "  public void badApis(Date date) {",
             "    // BUG: Diagnostic contains: DoNotCall",
@@ -289,6 +289,95 @@ public class DoNotCallCheckerTest {
             "    date.setHours(1);",
             "    date.setMinutes(1);",
             "    date.setSeconds(1);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void javaSqlTime_toInstant() {
+    assertThrows(UnsupportedOperationException.class, () -> new Time(1234567890L).toInstant());
+    testHelper
+        .addSourceLines(
+            "TestClass.java",
+            "import java.sql.Time;",
+            "import java.time.Instant;",
+            "public class TestClass {",
+            "  public void badApis(Time time) {",
+            "    // BUG: Diagnostic contains: toLocalTime()",
+            "    Instant instant = time.toInstant();",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void javaSqlTime_dateGetters() {
+    Time time = new Time(1234567890L);
+    assertThrows(IllegalArgumentException.class, () -> time.getYear());
+    assertThrows(IllegalArgumentException.class, () -> time.getMonth());
+    assertThrows(IllegalArgumentException.class, () -> time.getDay());
+    assertThrows(IllegalArgumentException.class, () -> time.getDate());
+    testHelper
+        .addSourceLines(
+            "TestClass.java",
+            "import java.sql.Time;",
+            "public class TestClass {",
+            "  public void badApis(Time time) {",
+            "    // BUG: Diagnostic contains: DoNotCall",
+            "    int year = time.getYear();",
+            "    // BUG: Diagnostic contains: DoNotCall",
+            "    int month = time.getMonth();",
+            "    // BUG: Diagnostic contains: DoNotCall",
+            "    int day = time.getDay();",
+            "    // BUG: Diagnostic contains: DoNotCall",
+            "    int date = time.getDate();",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void javaSqlTime_dateSetters() {
+    Time time = new Time(1234567890L);
+    assertThrows(IllegalArgumentException.class, () -> time.setYear(1));
+    assertThrows(IllegalArgumentException.class, () -> time.setMonth(1));
+    assertThrows(IllegalArgumentException.class, () -> time.setDate(1));
+    testHelper
+        .addSourceLines(
+            "TestClass.java",
+            "import java.sql.Time;",
+            "public class TestClass {",
+            "  public void badApis(Time time) {",
+            "    // BUG: Diagnostic contains: DoNotCall",
+            "    time.setYear(1);",
+            "    // BUG: Diagnostic contains: DoNotCall",
+            "    time.setMonth(1);",
+            "    // BUG: Diagnostic contains: DoNotCall",
+            "    time.setDate(1);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void javaSqlTime_staticallyTypedAsJavaUtilDate() {
+    testHelper
+        .addSourceLines(
+            "TestClass.java",
+            "import java.time.Instant;",
+            "import java.util.Date;",
+            "public class TestClass {",
+            "  public void badApis() {",
+            "    Date time = new java.sql.Time(1234567890L);",
+            "    Instant instant = time.toInstant();",
+            "    int year = time.getYear();",
+            "    int month = time.getMonth();",
+            "    int date = time.getDate();",
+            "    int day = time.getDay();",
+            "    time.setYear(1);",
+            "    time.setMonth(1);",
+            "    time.setDate(1);",
             "  }",
             "}")
         .doTest();
@@ -326,6 +415,23 @@ public class DoNotCallCheckerTest {
             "    ThreadLocalRandom random = ThreadLocalRandom.current();",
             "    // BUG: Diagnostic contains: DoNotCall",
             "    random.setSeed(42L);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void thread_stop() {
+    // Thread.stop(Throwable) was removed in JDK11:
+    //   https://bugs.openjdk.java.net/browse/JDK-8204243
+    assumeTrue(RuntimeVersion.isAtMost10());
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "public class Test {",
+            "  public void foo() {",
+            "    // BUG: Diagnostic contains: DoNotCall",
+            "    Thread.currentThread().stop(new Throwable());",
             "  }",
             "}")
         .doTest();
