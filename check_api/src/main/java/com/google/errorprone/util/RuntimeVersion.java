@@ -55,6 +55,11 @@ public class RuntimeVersion {
     return MAJOR >= 10;
   }
 
+  /** Returns true if the current runtime is JDK 10 or earlier. */
+  public static boolean isAtMost10() {
+    return MAJOR <= 10;
+  }
+
   /** Returns true if the current runtime is JDK 11 or newer. */
   public static boolean isAtLeast11() {
     return MAJOR >= 11;

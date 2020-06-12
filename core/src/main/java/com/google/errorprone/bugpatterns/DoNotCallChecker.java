@@ -73,6 +73,12 @@ public class DoNotCallChecker extends BugChecker
                   + "String, expected, actual, delta) to compare floating-point numbers")
           .put(
               instanceMethod()
+                  .onExactClass("java.lang.Thread")
+                  .named("stop")
+                  .withParameters("java.lang.Throwable"),
+              "Thread.stop(Throwable) always throws an UnsupportedOperationException")
+          .put(
+              instanceMethod()
                   .onExactClass("java.sql.Date")
                   .namedAnyOf(
                       "getHours",
@@ -87,6 +93,17 @@ public class DoNotCallChecker extends BugChecker
           .put(
               instanceMethod().onExactClass("java.sql.Date").named("toInstant"),
               "sqlDate.toInstant() is not supported. Did you mean to call toLocalDate() instead?")
+          .put(
+              instanceMethod()
+                  .onExactClass("java.sql.Time")
+                  .namedAnyOf(
+                      "getYear", "getMonth", "getDay", "getDate", "setYear", "setMonth", "setDate"),
+              "The year/month/day getters and setters on java.sql.Time are guaranteed to throw"
+                  + " IllegalArgumentException because java.sql.Time does not have a date"
+                  + " component.")
+          .put(
+              instanceMethod().onExactClass("java.sql.Time").named("toInstant"),
+              "sqlTime.toInstant() is not supported. Did you mean to call toLocalTime() instead?")
           .put(
               instanceMethod()
                   .onExactClass("java.util.concurrent.ThreadLocalRandom")
