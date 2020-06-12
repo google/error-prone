@@ -99,7 +99,7 @@ public class DoNotCallChecker extends BugChecker
               "ReadLocks do not support conditions.")
           .build();
 
-  private static final String DO_NOT_CALL = "com.google.errorprone.annotations.DoNotCall";
+  static final String DO_NOT_CALL = "com.google.errorprone.annotations.DoNotCall";
 
   private final boolean checkThirdPartyMethods;
 

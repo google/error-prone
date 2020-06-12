@@ -92,6 +92,7 @@ import com.google.errorprone.bugpatterns.DifferentNameButSame;
 import com.google.errorprone.bugpatterns.DiscardedPostfixExpression;
 import com.google.errorprone.bugpatterns.DivZero;
 import com.google.errorprone.bugpatterns.DoNotCallChecker;
+import com.google.errorprone.bugpatterns.DoNotCallSuggester;
 import com.google.errorprone.bugpatterns.DoNotMockChecker;
 import com.google.errorprone.bugpatterns.DoubleBraceInitialization;
 import com.google.errorprone.bugpatterns.DuplicateMapKeys;
@@ -694,6 +695,7 @@ public class BuiltInCheckerSuppliers {
           DateFormatConstant.class,
           DefaultCharset.class,
           DefaultPackage.class,
+          DoNotCallSuggester.class,
           DoubleBraceInitialization.class,
           DoubleCheckedLocking.class,
           EmptyBlockTag.class,
