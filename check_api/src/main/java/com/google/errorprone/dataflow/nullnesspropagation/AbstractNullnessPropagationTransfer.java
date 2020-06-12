@@ -28,7 +28,6 @@ import com.google.errorprone.dataflow.LocalVariableValues;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import org.checkerframework.shaded.dataflow.analysis.ConditionalTransferResult;
 import org.checkerframework.shaded.dataflow.analysis.RegularTransferResult;
 import org.checkerframework.shaded.dataflow.analysis.TransferFunction;
@@ -1039,7 +1038,7 @@ abstract class AbstractNullnessPropagationTransfer
       AccessPathStore<Nullness> oldStore, ReadableUpdates... updates) {
     AccessPathStore.Builder<Nullness> builder = oldStore.toBuilder();
     for (ReadableUpdates update : updates) {
-      for (Entry<AccessPath, Nullness> entry : update.values.entrySet()) {
+      for (Map.Entry<AccessPath, Nullness> entry : update.values.entrySet()) {
 
         builder.setInformation(entry.getKey(), entry.getValue());
       }
