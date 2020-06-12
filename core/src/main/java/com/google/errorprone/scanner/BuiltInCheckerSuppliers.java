@@ -143,6 +143,7 @@ import com.google.errorprone.bugpatterns.IncrementInForLoopAndHeader;
 import com.google.errorprone.bugpatterns.IndexOfChar;
 import com.google.errorprone.bugpatterns.InexactVarargsConditional;
 import com.google.errorprone.bugpatterns.InfiniteRecursion;
+import com.google.errorprone.bugpatterns.InitializeInline;
 import com.google.errorprone.bugpatterns.InputStreamSlowMultibyteRead;
 import com.google.errorprone.bugpatterns.InsecureCipherMode;
 import com.google.errorprone.bugpatterns.InstanceOfAndCastMatchWrongType;
@@ -898,6 +899,7 @@ public class BuiltInCheckerSuppliers {
           ImmutableRefactoring.class,
           ImplementAssertionWithChaining.class,
           InconsistentOverloads.class,
+          InitializeInline.class,
           InsecureCipherMode.class,
           InterfaceWithOnlyStatics.class,
           InterruptedExceptionSwallowed.class,
