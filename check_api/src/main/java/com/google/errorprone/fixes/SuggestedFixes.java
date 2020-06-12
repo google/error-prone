@@ -256,7 +256,7 @@ public class SuggestedFixes {
     fix.replace(insertPos, insertPos, Joiner.on(' ').join(toAdd) + " ");
   }
 
-  /** Remove modifiers from the given class, method, or field declaration. */
+  /** Removes modifiers from the given class, method, or field declaration. */
   public static Optional<SuggestedFix> removeModifiers(
       Tree tree, VisitorState state, Modifier... modifiers) {
     Set<Modifier> toRemove = ImmutableSet.copyOf(modifiers);
@@ -267,7 +267,7 @@ public class SuggestedFixes {
     return removeModifiers(originalModifiers, state, toRemove);
   }
 
-  /** Adds modifiers to the given declaration and corresponding modifiers tree. */
+  /** Removes modifiers to the given declaration and corresponding modifiers tree. */
   public static Optional<SuggestedFix> removeModifiers(
       ModifiersTree originalModifiers, VisitorState state, Set<Modifier> toRemove) {
     SuggestedFix.Builder fix = SuggestedFix.builder();
