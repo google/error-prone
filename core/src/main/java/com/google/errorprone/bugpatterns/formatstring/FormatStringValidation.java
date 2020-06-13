@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns.formatstring;
 
-import static com.google.common.collect.Iterables.getOnlyElement;
 
 import com.google.auto.value.AutoValue;
 import com.google.common.base.Preconditions;

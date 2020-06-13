@@ -133,7 +133,6 @@ public class DocGenTool {
     }
   }
 
-
   private static ImmutableSet<String> enabledCheckNames() {
     return StreamSupport.stream(
             Iterables.concat(

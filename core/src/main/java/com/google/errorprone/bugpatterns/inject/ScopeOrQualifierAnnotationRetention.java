@@ -25,7 +25,6 @@ import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.hasAnnotation;
 import static com.google.errorprone.matchers.Matchers.kindIs;
-import static com.google.errorprone.matchers.Matchers.not;
 import static com.sun.source.tree.Tree.Kind.ANNOTATION_TYPE;
 
 import com.google.errorprone.BugPattern;

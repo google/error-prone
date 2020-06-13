@@ -10,4 +10,3 @@ void g(@CompileTimeConstant x) {
   x = f(x); // x is not a constant
 }
 ```
-

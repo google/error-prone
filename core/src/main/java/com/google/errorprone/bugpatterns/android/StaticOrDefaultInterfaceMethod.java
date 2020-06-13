@@ -39,7 +39,8 @@ import com.sun.source.tree.Tree;
 @BugPattern(
     name = "StaticOrDefaultInterfaceMethod",
     summary =
-        "Static and default interface methods are not natively supported on older Android devices. ",
+        "Static and default interface methods are not natively supported on older Android devices. "
+            ,
     severity = ERROR,
     documentSuppression = false // for slightly customized suppression documentation
     )

@@ -134,4 +134,3 @@ This has several advantages on top of sidestepping this checker, e.g. not tying
 you to a particular functional interface type -- your callers should e.g. use
 `STRING::hasCompatibleType` instead of `STRING.hasCompatibleType` which only
 works for one interface type.
-

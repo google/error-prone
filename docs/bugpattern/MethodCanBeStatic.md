@@ -19,4 +19,3 @@ normally be removed. This situation with `static` is fairly similar: in either
 case there is one additional instance the caller needs to have in order to
 access the method. So, adding `static` is conceptually similar to removing that
 unused parameter.
-

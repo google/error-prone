@@ -38,7 +38,6 @@ public class ByteBufferBackingArrayTest {
     compilationHelper.addSourceFile("ByteBufferBackingArrayNegativeCases.java").doTest();
   }
 
-
   @Test
   public void i1004() {
     compilationHelper

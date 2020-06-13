@@ -32,7 +32,6 @@ This does not hold for `WakeLock`s that are
 OS does not check whether the `WakeLock` has been released too many times, and
 no `RuntimeException` is thrown.
 
-
 This check will flag any call of any overload of `wakelock.release()` that is:
 
 *   not in a try block that has a clause to catch `RuntimeException`

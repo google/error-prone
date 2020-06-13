@@ -59,7 +59,6 @@ public class PrivateSecurityContractProtoAccess extends BugChecker
               createFieldMatcher("com.google.common.html.types.SafeStyleSheetProto")),
           not(packageStartsWith("com.google.common.html.types")));
 
-
   private static final String MESSAGE = "Forbidden access to a private proto field. See ";
   private static final String SAFEHTML_LINK = "https://github.com/google/safe-html-types/blob/master/doc/safehtml-types.md#protocol-buffer-conversion";
 

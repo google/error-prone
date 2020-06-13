@@ -66,4 +66,3 @@ there is at least a visual cue that this has happened.
 equals sign, and the clang-tidy
 [bugprone-argument-comment](https://clang.llvm.org/extra/clang-tidy/checks/bugprone-argument-comment.html)
 check uses block-comments with equals signs.
-

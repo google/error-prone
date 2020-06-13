@@ -50,7 +50,6 @@ public class InsecureCipherMode extends BugChecker implements MethodInvocationTr
           staticMethod().onClass("java.security.KeyFactory").named("getInstance"),
           staticMethod().onClass("javax.crypto.KeyAgreement").named("getInstance"));
 
-
   private Description buildErrorMessage(MethodInvocationTree tree, String explanation) {
     Description.Builder description = buildDescription(tree);
     String message = MESSAGE_BASE + explanation + ".";
@@ -133,7 +132,6 @@ public class InsecureCipherMode extends BugChecker implements MethodInvocationTr
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
     Description description = checkInvocation(tree, state);
-
 
     return description;
   }

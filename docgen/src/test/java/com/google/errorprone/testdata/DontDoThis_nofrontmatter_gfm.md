@@ -18,4 +18,3 @@ This is a bad idea, you want `List<Foo>` instead
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("DontDoThis")` to the enclosing element.
-

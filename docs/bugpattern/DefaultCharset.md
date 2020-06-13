@@ -19,4 +19,3 @@ If you need stable encoding/decoding, you must specify an explicit charset. The
 When in doubt, use [UTF-8].
 
 [UTF-8]: http://www.utf8everywhere.org/
-

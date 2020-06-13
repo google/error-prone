@@ -643,5 +643,4 @@ public class CheckReturnValueTest {
         .withClasspath(CRVTest.class, CheckReturnValueTest.class)
         .doTest();
   }
-
 }

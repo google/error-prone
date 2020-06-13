@@ -20,7 +20,6 @@ import static com.google.errorprone.util.ASTHelpers.enclosingClass;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
 
-import com.google.common.annotations.VisibleForTesting;
 import com.google.errorprone.VisitorState;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ExpressionTree;
@@ -217,7 +216,6 @@ public enum Visibility implements Comparable<Visibility> {
     }
     return Visibility.PACKAGE_PRIVATE;
   }
-
 
   public boolean isAtLeastAsRestrictiveAs(Visibility visibility) {
     return compareTo(visibility) <= 0;

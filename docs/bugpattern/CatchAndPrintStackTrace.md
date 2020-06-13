@@ -1,7 +1,6 @@
 Discarding an exception after calling `printStackTrace` should usually be
 avoided.
 
-
 ```java
 try {
   // ...

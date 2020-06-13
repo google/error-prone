@@ -264,7 +264,6 @@ public class JUnit4TestNotRunTest {
         .doTest();
   }
 
-
   @Test
   public void hasOtherAnnotation_notATest() {
     compilationHelper

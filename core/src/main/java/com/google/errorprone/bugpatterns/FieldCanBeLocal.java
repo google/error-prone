@@ -108,7 +108,6 @@ public final class FieldCanBeLocal extends BugChecker implements CompilationUnit
         return !Sets.intersection(VALID_ON_LOCAL_VARIABLES, ImmutableSet.copyOf(target.value()))
             .isEmpty();
       }
-
     }.scan(state.getPath(), null);
 
     new TreePathScanner<Void, Void>() {

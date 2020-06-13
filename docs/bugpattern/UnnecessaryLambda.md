@@ -47,4 +47,3 @@ Secondly, if the correctness of your program depends on reference equality of
 your lambda, inlining it may break you. Ideally, you should *not* depend on
 reference equality for a lambda, but if you are doing so, consider not making
 this change.
-

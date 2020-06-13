@@ -17,7 +17,6 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
-import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
@@ -311,7 +310,6 @@ public class FieldCanBeFinal extends BugChecker implements CompilationUnitTreeMa
         return null;
       }
 
-
       for (String annotation : IMPLICIT_VAR_CLASS_ANNOTATIONS) {
         if (ASTHelpers.hasAnnotation(getSymbol(node), annotation, state)) {
           return null;
@@ -338,5 +336,4 @@ public class FieldCanBeFinal extends BugChecker implements CompilationUnitTreeMa
       return super.visitUnary(node, init);
     }
   }
-
 }

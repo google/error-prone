@@ -59,7 +59,6 @@ public class MathAbsoluteRandomTest {
         .doTest();
   }
 
-
   @Test
   public void negativeNumber() {
     helper

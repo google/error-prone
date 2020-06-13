@@ -106,5 +106,4 @@ public @interface RestrictedApi {
    * ignored, so tread very carefully.
    */
   Class<? extends Annotation>[] whitelistWithWarningAnnotations() default {};
-
 }

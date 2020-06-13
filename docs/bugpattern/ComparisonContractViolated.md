@@ -11,4 +11,3 @@ arbitrarily.
 In the long term, essentially all Comparators should be rewritten to use the
 Java 8 Comparator factory methods, but our automated migration tools will, of
 course, only work for correctly implemented Comparators.
-

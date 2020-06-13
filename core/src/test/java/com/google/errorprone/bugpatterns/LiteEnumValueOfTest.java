@@ -76,7 +76,6 @@ public final class LiteEnumValueOfTest {
         .doTest();
   }
 
-
   @Test
   public void testNegativeCaseJDK8OrEarlier() {
     assumeFalse(RuntimeVersion.isAtLeast9());

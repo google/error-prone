@@ -19,7 +19,6 @@ package com.google.errorprone.bugpatterns.inject;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.methodReturns;
-import static com.google.errorprone.matchers.Matchers.not;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
