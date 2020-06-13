@@ -82,5 +82,4 @@ public final class ParametersButNotParameterizedTest {
             "}")
         .doTest();
   }
-
 }

@@ -47,7 +47,6 @@ public final class WellKnownMutability implements ThreadSafety.KnownTypes {
   /** Types that are known to be mutable. */
   private final ImmutableSet<String> knownUnsafeClasses;
 
-
   private WellKnownMutability(List<String> knownImmutable, List<String> knownUnsafe) {
     knownImmutableClasses = buildImmutableClasses(knownImmutable);
     knownUnsafeClasses = buildUnsafeClasses(knownUnsafe);

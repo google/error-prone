@@ -6,4 +6,3 @@ BigDecimal a = new BigDecimal("1.0");
 BigDecimal b = new BigDecimal("1.00");
 a.equals(b); // false!
 ```
-

@@ -58,7 +58,6 @@ public final class StreamToIterableTest {
         .doTest();
   }
 
-
   @Test
   public void methodReferenceRefactoredToExplicitCollection() {
     refactoring

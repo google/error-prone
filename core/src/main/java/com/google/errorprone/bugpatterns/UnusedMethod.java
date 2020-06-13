@@ -73,7 +73,6 @@ public final class UnusedMethod extends BugChecker implements CompilationUnitTre
   private static final String JUNIT_PARAMS_VALUE = "value";
   private static final String JUNIT_PARAMS_ANNOTATION_TYPE = "junitparams.Parameters";
 
-
   private static final ImmutableSet<String> EXEMPTING_METHOD_ANNOTATIONS =
       ImmutableSet.of(
           "com.google.inject.Provides",

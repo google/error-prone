@@ -468,5 +468,4 @@ public final class FieldCanBeLocalTest {
             "}")
         .doTest();
   }
-
 }

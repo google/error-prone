@@ -17,7 +17,6 @@
 package com.google.errorprone.scanner;
 
 
-import com.google.common.base.Supplier;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;

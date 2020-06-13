@@ -1,5 +1,4 @@
 
-
 Fields that may be `null` should be annotated with `@Nullable`. For example, do
 this:
 

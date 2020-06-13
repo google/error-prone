@@ -62,7 +62,6 @@ public class RestrictedApiMethods implements IFaceWithRestriction {
     return 2;
   }
 
-
   @Override
   public void dontCallMe() {}
 

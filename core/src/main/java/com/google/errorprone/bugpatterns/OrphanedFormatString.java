@@ -73,7 +73,6 @@ public class OrphanedFormatString extends BugChecker implements LiteralTreeMatch
                   .named("append")
                   .withParameters("java.lang.CharSequence", "int", "int")));
 
-
   @Override
   public Description matchLiteral(LiteralTree tree, VisitorState state) {
     Object value = tree.getValue();

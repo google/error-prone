@@ -51,4 +51,3 @@ matters to you.
 Secondly, if the correctness of your program depends on reference equality,
 inlining the method reference may break you. Ideally, you should *not* depend on
 reference equality, but if you are doing so, consider not making this change.
-

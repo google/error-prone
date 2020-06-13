@@ -1,5 +1,4 @@
 
-
 Any additional statements after the statement that is expected to throw will
 never be executed in a passing test. This can lead to inappropriately passing
 tests where later incorrect assertions are skipped by the thrown exception. For

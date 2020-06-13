@@ -35,7 +35,6 @@ public class UnusedVariableTest {
       BugCheckerRefactoringTestHelper.newInstance(
           new UnusedVariable(ErrorProneFlags.empty()), getClass());
 
-
   @Test
   public void exemptedByReceiverParameter() {
     helper
@@ -57,7 +56,6 @@ public class UnusedVariableTest {
             "}")
         .doTest();
   }
-
 
   @Test
   public void unicodeBytes() {

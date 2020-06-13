@@ -3,4 +3,3 @@ The `@Mock` annotation is used to automatically initialize mocks using
 
 Variables annotated this way should not be explicitly initialized, as this will
 be overwritten by automatic initialization.
-
