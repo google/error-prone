@@ -3,7 +3,6 @@
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
-
 # DeadException
 
 __Exception created but not thrown__
@@ -12,7 +11,6 @@ __Exception created but not thrown__
 <tr><td>Severity</td><td>ERROR</td></tr>
 <tr><td>Tags</td><td>LikelyError</td></tr>
 </table></div>
-
 
 _Alternate names: ThrowableInstanceNeverThrown_
 
