@@ -403,6 +403,26 @@ public class StringSplitterTest {
         .doTest();
   }
 
+  @Ignore("TODO")
+  @Test
+  public void patternSplit() {
+    testHelper
+        .addInputLines(
+            "Test.java",
+            "import java.util.regex.Pattern;",
+            "class Test {",
+            "  void f() {",
+            "    String x = Pattern.compile(\"\").split(\"c\")[0];",
+            "    for (String s : Pattern.compile(\"\").split(\":\")) {}",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "class Test {",
+            "}")
+        .doTest(TestMode.TEXT_MATCH);
+  }
+
   @Test
   public void testStringSplitPositive() {
     CompilationTestHelper.newInstance(StringSplitter.class, getClass())

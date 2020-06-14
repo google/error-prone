@@ -20,6 +20,7 @@ import static com.google.common.base.MoreObjects.firstNonNull;
 import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
+import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 import static com.google.errorprone.util.Regexes.convertRegexToLiteral;
 
@@ -57,11 +58,15 @@ import java.util.Optional;
     severity = WARNING)
 public class StringSplitter extends BugChecker implements MethodInvocationTreeMatcher {
 
-  private static final Matcher<ExpressionTree> MATCHER =
+  private static final Matcher<ExpressionTree> MATCHER = anyOf(
       instanceMethod()
           .onExactClass("java.lang.String")
           .named("split")
-          .withParameters("java.lang.String");
+          .withParameters("java.lang.String"),
+      instanceMethod()
+          .onExactClass("java.util.regex.Pattern")
+          .named("split")
+          .withParameters("java.lang.String"));
 
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
