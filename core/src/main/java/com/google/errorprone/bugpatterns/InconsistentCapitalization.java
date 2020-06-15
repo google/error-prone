@@ -38,7 +38,7 @@ import com.sun.source.util.TreePath;
 import com.sun.source.util.TreePathScanner;
 import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.code.Symbol;
-import java.util.Map.Entry;
+import java.util.Map;
 import javax.lang.model.element.ElementKind;
 
 /** Checker for variables under the same scope that only differ in capitalization. */
@@ -71,7 +71,7 @@ public class InconsistentCapitalization extends BugChecker implements ClassTreeM
       return Description.NO_MATCH;
     }
 
-    for (Entry<TreePath, Symbol> entry : matchedParameters.entrySet()) {
+    for (Map.Entry<TreePath, Symbol> entry : matchedParameters.entrySet()) {
       TreePath parameterPath = entry.getKey();
       Symbol field = entry.getValue();
       String fieldName = field.getSimpleName().toString();

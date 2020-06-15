@@ -31,7 +31,6 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
-import com.google.errorprone.fixes.SuggestedFix.Builder;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.MultiMatcher;
@@ -70,7 +69,7 @@ public class QualifierOrScopeOnInjectMethod extends BugChecker implements Method
       return Description.NO_MATCH;
     }
 
-    Builder fixBuilder = SuggestedFix.builder();
+    SuggestedFix.Builder fixBuilder = SuggestedFix.builder();
     List<AnnotationTree> matchingAnnotations = qualifierAnnotations.matchingNodes();
 
     // If we're looking at an @Inject constructor, move the scope annotation to the class instead,
@@ -104,7 +103,7 @@ public class QualifierOrScopeOnInjectMethod extends BugChecker implements Method
     return describeMatch(matchingAnnotations.get(0), fixBuilder.build());
   }
 
-  private static void deleteAll(List<AnnotationTree> scopes, Builder fixBuilder) {
+  private static void deleteAll(List<AnnotationTree> scopes, SuggestedFix.Builder fixBuilder) {
     scopes.forEach(fixBuilder::delete);
   }
 }

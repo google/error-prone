@@ -34,7 +34,6 @@ import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.NewClassTreeMatcher;
 import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.SuggestedFix;
-import com.google.errorprone.fixes.SuggestedFix.Builder;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.suppliers.Suppliers;
@@ -235,7 +234,7 @@ public class DefaultCharset extends BugChecker
       String prefix,
       String suffix) {
     Tree parentReceiver = ASTHelpers.getReceiver(parent);
-    Builder fix = SuggestedFix.builder();
+    SuggestedFix.Builder fix = SuggestedFix.builder();
     if (parentReceiver != null) {
       fix.replace(
           /*startPos=*/ state.getEndPosition(parentReceiver),

@@ -39,7 +39,6 @@ import com.google.errorprone.bugpatterns.threadsafety.ThreadSafety.Violation;
 import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
-import com.google.errorprone.matchers.Description.Builder;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.MemberReferenceTree;
@@ -55,7 +54,6 @@ import com.sun.tools.javac.tree.JCTree.JCMemberReference;
 import com.sun.tools.javac.tree.JCTree.JCNewClass;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Optional;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
@@ -205,7 +203,7 @@ public class ImmutableChecker extends BugChecker
                 e ->
                     annotation.containerOf().contains(e.getKey())
                         && analysis.hasThreadSafeTypeParameterAnnotation(e.getValue()))
-            .map(Entry::getKey)
+            .map(Map.Entry::getKey)
             .collect(toImmutableSet());
     if (!immutableAndContainer.isEmpty()) {
       return buildDescription(tree)
@@ -283,7 +281,7 @@ public class ImmutableChecker extends BugChecker
             ASTHelpers.getType(tree),
             new ViolationReporter() {
               @Override
-              public Builder describe(Tree tree, Violation info) {
+              public Description.Builder describe(Tree tree, Violation info) {
                 return describeAnonymous(tree, superType, info);
               }
             });

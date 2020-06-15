@@ -42,7 +42,7 @@ import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.tools.javac.code.Type;
 import java.util.List;
-import java.util.Map.Entry;
+import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
@@ -127,7 +127,7 @@ public final class DurationToLongTimeUnit extends BugChecker
           Optional<TimeUnit> timeUnitInArgument = getTimeUnit(timeUnitTree);
           if (timeUnitInArgument.isPresent()) {
 
-            for (Entry<Matcher<ExpressionTree>, TimeUnit> entry : MATCHERS.entrySet()) {
+            for (Map.Entry<Matcher<ExpressionTree>, TimeUnit> entry : MATCHERS.entrySet()) {
               TimeUnit timeUnitExpressedInConversion = entry.getValue();
               if (entry.getKey().matches(arg0, state)
                   && timeUnitInArgument.get() != timeUnitExpressedInConversion) {

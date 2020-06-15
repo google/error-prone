@@ -38,7 +38,6 @@ import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
 import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.SuggestedFix;
-import com.google.errorprone.fixes.SuggestedFix.Builder;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.MultiMatcher;
@@ -102,7 +101,7 @@ public class InvalidTargetingOnScopingAnnotation extends BugChecker implements C
   }
 
   static Fix replaceTargetAnnotation(AnnotationTree targetAnnotationTree, Set<ElementType> types) {
-    Builder builder =
+    SuggestedFix.Builder builder =
         SuggestedFix.builder()
             .replace(targetAnnotationTree, "@Target({" + Joiner.on(", ").join(types) + "})");
 

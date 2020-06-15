@@ -55,7 +55,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import javax.lang.model.element.TypeElement;
 
 /** @author sgoldfeder@google.com (Steven Goldfeder) */
@@ -125,7 +124,7 @@ public class AssistedParameters extends BugChecker implements MethodTreeMatcher 
       ImmutableListMultimap<String, VariableTree> keyForAssistedVariable =
           Multimaps.index(parametersForThisType, VALUE_FROM_ASSISTED_ANNOTATION);
 
-      for (Entry<String, List<VariableTree>> assistedValueToParameters :
+      for (Map.Entry<String, List<VariableTree>> assistedValueToParameters :
           Multimaps.asMap(keyForAssistedVariable).entrySet()) {
         if (assistedValueToParameters.getValue().size() > 1) {
           conflicts.add(

@@ -24,7 +24,7 @@ import com.google.common.collect.ImmutableSetMultimap;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.bugpatterns.apidiff.ApiDiff.ClassMemberKey;
-import java.util.Map.Entry;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -98,7 +98,7 @@ public class AndroidJdkLibsChecker extends ApiDiffChecker {
       bannedMembers = allowJava8 ? DESUGAR_BANNED_MEMBERS : ImmutableSetMultimap.of();
     }
 
-    private boolean memberIsWhitelisted(Entry<String, ClassMemberKey> member) {
+    private boolean memberIsWhitelisted(Map.Entry<String, ClassMemberKey> member) {
       return allowedMembers.containsEntry(member.getKey(), member.getValue())
           || allowedMembers.get(member.getKey()).stream()
               .anyMatch(

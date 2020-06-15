@@ -60,7 +60,7 @@ import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.util.Filter;
 import com.sun.tools.javac.util.Name;
 import java.util.List;
-import java.util.Map.Entry;
+import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import javax.annotation.Nullable;
@@ -223,7 +223,7 @@ public final class PreferJavaTimeOverload extends BugChecker
         // TODO(kak): Add support for org.joda.time.Duration.ZERO -> java.time.Duration.ZERO
 
         // If the Joda Duration is being constructed inline, then unwrap it.
-        for (Entry<Matcher<ExpressionTree>, TimeUnit> entry :
+        for (Map.Entry<Matcher<ExpressionTree>, TimeUnit> entry :
             JODA_DURATION_FACTORY_MATCHERS.entrySet()) {
           if (entry.getKey().matches(arg0, state)) {
             String value = null;

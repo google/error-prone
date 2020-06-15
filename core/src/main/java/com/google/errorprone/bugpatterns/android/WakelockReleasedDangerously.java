@@ -25,7 +25,6 @@ import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
 
 import com.google.common.collect.ImmutableMultimap;
-import com.google.common.collect.ImmutableMultimap.Builder;
 import com.google.common.collect.Streams;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.SeverityLevel;
@@ -192,7 +191,7 @@ public class WakelockReleasedDangerously extends BugChecker implements MethodInv
    */
   private ImmutableMultimap<String, MethodInvocationTree> methodCallsForSymbol(
       Symbol sym, ClassTree classTree) {
-    Builder<String, MethodInvocationTree> methodMap = ImmutableMultimap.builder();
+    ImmutableMultimap.Builder<String, MethodInvocationTree> methodMap = ImmutableMultimap.builder();
     // Populate map builder with names of method called : the tree in which it is called.
     classTree.accept(
         new TreeScanner<Void, Void>() {
