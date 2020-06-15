@@ -1162,6 +1162,21 @@ public class ASTHelpers {
     return null;
   }
 
+  /**
+   * Returns a list of {@link AnnotationTree} with the given simple name. This is useful for {@link
+   * java.lang.annotation.Repeatable} annotations
+   */
+  public static List<AnnotationTree> getAnnotationsWithSimpleName(
+      List<? extends AnnotationTree> annotations, String name) {
+    List<AnnotationTree> matches = new ArrayList<>();
+    for (AnnotationTree annotation : annotations) {
+      if (hasSimpleName(annotation, name)) {
+        matches.add(annotation);
+      }
+    }
+    return matches;
+  }
+
   private static boolean hasSimpleName(AnnotationTree annotation, String name) {
     Tree annotationType = annotation.getAnnotationType();
     javax.lang.model.element.Name simpleName;
