@@ -146,7 +146,7 @@ public final class DateChecker extends BugChecker
         ? Description.NO_MATCH
         : buildDescription(tree)
             .setMessage(
-                "This call to new Date(...) looks suspect for the following reason(s): "
+                "This Date usage looks suspect for the following reason(s): "
                     + Joiner.on("  ").join(errors))
             .build();
   }
