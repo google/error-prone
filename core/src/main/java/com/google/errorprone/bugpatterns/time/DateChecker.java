@@ -16,7 +16,6 @@
 package com.google.errorprone.bugpatterns.time;
 
 import static com.google.common.base.Verify.verify;
-import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.constructor;
@@ -33,8 +32,11 @@ import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
+import com.sun.source.tree.LiteralTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.NewClassTree;
+import java.time.DateTimeException;
+import java.time.Month;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -110,9 +112,7 @@ public final class DateChecker extends BugChecker
         checkSeconds(arg0, errors);
       }
     }
-    return errors.isEmpty()
-        ? Description.NO_MATCH
-        : buildDescription(tree).setMessage(getOnlyElement(errors)).build();
+    return buildDescription(tree, errors);
   }
 
   @Override
@@ -138,6 +138,10 @@ public final class DateChecker extends BugChecker
       }
     }
 
+    return buildDescription(tree, errors);
+  }
+
+  private Description buildDescription(ExpressionTree tree, List<String> errors) {
     return errors.isEmpty()
         ? Description.NO_MATCH
         : buildDescription(tree)
@@ -153,6 +157,18 @@ public final class DateChecker extends BugChecker
 
   private static void checkMonth(ExpressionTree tree, List<String> errors) {
     checkBounds(tree, "0-based month", MONTH_RANGE, errors);
+
+    if (tree instanceof LiteralTree) {
+      int monthValue = (int) ((LiteralTree) tree).getValue();
+      try {
+        errors.add(
+            String.format(
+                "Use Calendar.%s instead of %s to represent the month.",
+                Month.of(monthValue + 1), monthValue));
+      } catch (DateTimeException badMonth) {
+        // this is an out of bounds month, and thus already caught by the checkBounds() call above!
+      }
+    }
   }
 
   private static void checkDay(ExpressionTree tree, List<String> errors) {

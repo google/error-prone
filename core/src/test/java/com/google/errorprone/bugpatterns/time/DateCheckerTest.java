@@ -78,9 +78,37 @@ public class DateCheckerTest {
     helper
         .addSourceLines(
             "TestClass.java",
+            "import static java.util.Calendar.JULY;",
             "import java.util.Date;",
             "public class TestClass {",
-            "  Date good = new Date(120, 6, 10);",
+            "  Date good = new Date(120, JULY, 10);",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void constructor_nonConstantMonth() {
+    helper
+        .addSourceLines(
+            "TestClass.java",
+            "import java.util.Date;",
+            "public class TestClass {",
+            "  // BUG: Diagnostic contains: Use Calendar.MAY instead of 4 to represent the month.",
+            "  Date good = new Date(120, 4, 10);",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void constructor_constants() {
+    // TODO(kak): We may want to consider warning on this case as well.
+    helper
+        .addSourceLines(
+            "TestClass.java",
+            "import java.util.Date;",
+            "public class TestClass {",
+            "  private static final int MAY = 4;",
+            "  Date good = new Date(120, MAY, 31);",
             "}")
         .doTest();
   }
@@ -133,11 +161,12 @@ public class DateCheckerTest {
     helper
         .addSourceLines(
             "TestClass.java",
+            "import static java.util.Calendar.JULY;",
             "import java.util.Date;",
             "public class TestClass {",
             "  // BUG: Diagnostic contains: "
                 + "The 1900-based year value (2020) is out of bounds [1..150].",
-            "  Date bad = new Date(2020, 6, 10);",
+            "  Date bad = new Date(2020, JULY, 10);",
             "}")
         .doTest();
   }
@@ -158,6 +187,8 @@ public class DateCheckerTest {
             "  // BUG: Diagnostic contains: The 0-based month value (-13) is out of bounds"
                 + " [0..11].",
             "  Date bad4 = new Date(120, -13, 10);",
+            "  // BUG: Diagnostic contains: Use Calendar.MAY instead of 4 to represent the month.",
+            "  Date bad5 = new Date(120, 4, 10);",
             "}")
         .doTest();
   }
@@ -167,14 +198,15 @@ public class DateCheckerTest {
     helper
         .addSourceLines(
             "TestClass.java",
+            "import static java.util.Calendar.JULY;",
             "import java.util.Date;",
             "public class TestClass {",
             "  // BUG: Diagnostic contains: The day value (32) is out of bounds [1..31].",
-            "  Date bad1 = new Date(120, 6, 32);",
+            "  Date bad1 = new Date(120, JULY, 32);",
             "  // BUG: Diagnostic contains: The day value (0) is out of bounds [1..31].",
-            "  Date bad2 = new Date(120, 6, 0);",
+            "  Date bad2 = new Date(120, JULY, 0);",
             "  // BUG: Diagnostic contains: The day value (-32) is out of bounds [1..31].",
-            "  Date bad3 = new Date(120, 6, -32);",
+            "  Date bad3 = new Date(120, JULY, -32);",
             "}")
         .doTest();
   }
@@ -184,24 +216,25 @@ public class DateCheckerTest {
     helper
         .addSourceLines(
             "TestClass.java",
+            "import static java.util.Calendar.*;",
             "import java.util.Date;",
             "public class TestClass {",
             "  public void foo(Date date) {",
             "    date.setYear(1);",
             "    date.setYear(120);",
             "    date.setYear(150);",
-            "    date.setMonth(0);",
-            "    date.setMonth(1);",
-            "    date.setMonth(2);",
-            "    date.setMonth(3);",
-            "    date.setMonth(4);",
-            "    date.setMonth(5);",
-            "    date.setMonth(6);",
-            "    date.setMonth(7);",
-            "    date.setMonth(8);",
-            "    date.setMonth(9);",
-            "    date.setMonth(10);",
-            "    date.setMonth(11);",
+            "    date.setMonth(JANUARY);",
+            "    date.setMonth(FEBRUARY);",
+            "    date.setMonth(MARCH);",
+            "    date.setMonth(APRIL);",
+            "    date.setMonth(MAY);",
+            "    date.setMonth(JUNE);",
+            "    date.setMonth(JULY);",
+            "    date.setMonth(AUGUST);",
+            "    date.setMonth(SEPTEMBER);",
+            "    date.setMonth(OCTOBER);",
+            "    date.setMonth(NOVEMBER);",
+            "    date.setMonth(DECEMBER);",
             "    date.setDate(1);",
             "    date.setDate(15);",
             "    date.setDate(31);",
