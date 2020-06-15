@@ -249,7 +249,7 @@ public abstract class GuardedByExpression {
   }
 
   /** {@link GuardedByExpression} kind. */
-  public static enum Kind {
+  public enum Kind {
     THIS,
     CLASS_LITERAL,
     TYPE_LITERAL,

@@ -66,7 +66,7 @@ abstract class PlaceholderMethod implements Serializable {
         annotations.containsKey(OfKind.class)
             ? Predicates.<Tree.Kind>in(Arrays.asList(annotations.getInstance(OfKind.class).value()))
             : Predicates.<Tree.Kind>alwaysTrue();
-    class PlaceholderMatcher implements Serializable, Matcher<ExpressionTree> {
+    class PlaceholderMatcher implements Matcher<ExpressionTree> {
 
       @Override
       public boolean matches(ExpressionTree t, VisitorState state) {

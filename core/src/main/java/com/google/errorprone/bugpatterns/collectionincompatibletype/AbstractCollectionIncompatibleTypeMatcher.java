@@ -181,7 +181,7 @@ public abstract class AbstractCollectionIncompatibleTypeMatcher {
    * @return the type argument, if defined, or null otherwise
    */
   @Nullable
-  protected static final Type extractTypeArgAsMemberOfSupertype(
+  protected static Type extractTypeArgAsMemberOfSupertype(
       Type type, Symbol superTypeSym, int typeArgIndex, Types types) {
     Type collectionType = types.asSuper(type, superTypeSym);
     if (collectionType == null) {

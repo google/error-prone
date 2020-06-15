@@ -61,7 +61,7 @@ abstract class UClassDecl extends USimpleStatement implements ClassTree {
 
     abstract ImmutableList<UMethodDecl> remainingMembers();
 
-    static final Function<Unifier, UnifierWithRemainingMembers> withRemaining(
+    static Function<Unifier, UnifierWithRemainingMembers> withRemaining(
         final Iterable<UMethodDecl> remainingMembers) {
       return (Unifier unifier) -> create(unifier, remainingMembers);
     }

@@ -337,7 +337,7 @@ public final class FindIdentifiers {
    * Finds all identifiers in a tree. Takes an optional stop point as its argument: the depth-first
    * walk will stop if this node is encountered.
    */
-  private static final TreeScanner<Void, Void> createFindIdentifiersScanner(
+  private static TreeScanner<Void, Void> createFindIdentifiersScanner(
       ImmutableSet.Builder<Symbol> builder, @Nullable Tree stoppingPoint) {
     return new TreeScanner<Void, Void>() {
       @Override

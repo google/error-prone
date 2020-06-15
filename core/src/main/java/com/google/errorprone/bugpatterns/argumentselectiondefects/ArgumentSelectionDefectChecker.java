@@ -135,7 +135,7 @@ public class ArgumentSelectionDefectChecker extends BugChecker
    * normalised NeedlemanWunschEditDistance. Otherwise, one of the names is unknown and so we return
    * 0 distance between it and its original parameter and infinite distance between all others.
    */
-  private static final Function<ParameterPair, Double> buildDefaultDistanceFunction() {
+  private static Function<ParameterPair, Double> buildDefaultDistanceFunction() {
     return new Function<ParameterPair, Double>() {
       @Override
       public Double apply(ParameterPair pair) {

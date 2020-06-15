@@ -38,7 +38,6 @@ import com.google.errorprone.matchers.method.MethodMatchers.ConstructorClassMatc
 import com.google.errorprone.matchers.method.MethodMatchers.ConstructorMatcher;
 import com.google.errorprone.matchers.method.MethodMatchers.InstanceMethodMatcher;
 import com.google.errorprone.matchers.method.MethodMatchers.MethodClassMatcher;
-import com.google.errorprone.matchers.method.MethodMatchers.MethodMatcher;
 import com.google.errorprone.matchers.method.MethodMatchers.MethodNameMatcher;
 import com.google.errorprone.matchers.method.MethodMatchers.MethodSignatureMatcher;
 import com.google.errorprone.matchers.method.MethodMatchers.ParameterMatcher;
@@ -57,8 +56,7 @@ import java.util.Set;
 import java.util.regex.Pattern;
 
 final class MethodMatcherImpl
-    implements MethodMatcher,
-        InstanceMethodMatcher,
+    implements InstanceMethodMatcher,
         StaticMethodMatcher,
         AnyMethodMatcher,
         MethodClassMatcher,

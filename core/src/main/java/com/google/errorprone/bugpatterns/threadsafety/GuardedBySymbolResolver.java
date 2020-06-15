@@ -198,7 +198,7 @@ public class GuardedBySymbolResolver implements GuardedByBinder.Resolver {
     return null;
   }
 
-  private static enum SearchSuperTypes {
+  private enum SearchSuperTypes {
     YES,
     NO
   }

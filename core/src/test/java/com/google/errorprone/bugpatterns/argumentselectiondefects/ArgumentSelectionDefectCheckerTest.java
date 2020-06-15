@@ -286,7 +286,7 @@ public class ArgumentSelectionDefectCheckerTest {
         .doTest();
   }
 
-  private static final Function<ParameterPair, Double> buildEqualityFunction() {
+  private static Function<ParameterPair, Double> buildEqualityFunction() {
     return new Function<ParameterPair, Double>() {
       @Override
       public Double apply(ParameterPair parameterPair) {

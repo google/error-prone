@@ -98,7 +98,7 @@ public class Finally extends BugChecker
     return Description.NO_MATCH;
   }
 
-  private static enum MatchResult {
+  private enum MatchResult {
     KEEP_LOOKING,
     NO_MATCH,
     FOUND_ERROR;
