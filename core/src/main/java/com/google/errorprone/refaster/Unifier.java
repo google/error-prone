@@ -20,7 +20,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import com.google.common.base.Function;
 import com.google.common.base.Optional;
 import com.google.errorprone.SubContext;
-import com.google.errorprone.refaster.Bindings.Key;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Types;
 import com.sun.tools.javac.tree.JCTree;
@@ -73,21 +72,21 @@ public final class Unifier {
   }
 
   @Nullable
-  public <V> V getBinding(Key<V> key) {
+  public <V> V getBinding(Bindings.Key<V> key) {
     return bindings.getBinding(key);
   }
 
-  public <V> V putBinding(Key<V> key, V value) {
+  public <V> V putBinding(Bindings.Key<V> key, V value) {
     checkArgument(!bindings.containsKey(key), "Cannot bind %s more than once", key);
     return bindings.putBinding(key, value);
   }
 
-  public <V> V replaceBinding(Key<V> key, V value) {
+  public <V> V replaceBinding(Bindings.Key<V> key, V value) {
     checkArgument(bindings.containsKey(key), "Binding for %s does not exist", key);
     return bindings.putBinding(key, value);
   }
 
-  public void clearBinding(Key<?> key) {
+  public void clearBinding(Bindings.Key<?> key) {
     bindings.remove(key);
   }
 

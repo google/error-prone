@@ -19,7 +19,7 @@ package com.google.errorprone.refaster.annotation;
 import com.google.errorprone.annotations.FormatMethod;
 import com.google.errorprone.annotations.FormatString;
 import java.util.List;
-import java.util.Map.Entry;
+import java.util.Map;
 import java.util.Set;
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.RoundEnvironment;
@@ -60,7 +60,7 @@ public final class RequiredAnnotationProcessor extends AbstractProcessor {
   }
 
   private AnnotationValue getAnnotationValue(AnnotationMirror mirror, String key) {
-    for (Entry<? extends ExecutableElement, ? extends AnnotationValue> entry :
+    for (Map.Entry<? extends ExecutableElement, ? extends AnnotationValue> entry :
         mirror.getElementValues().entrySet()) {
       if (entry.getKey().getSimpleName().contentEquals(key)) {
         return entry.getValue();

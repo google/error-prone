@@ -21,7 +21,6 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.google.errorprone.SubContext;
-import com.google.errorprone.refaster.Bindings.Key;
 import com.google.errorprone.refaster.UTypeVar.TypeWithExpression;
 import com.google.errorprone.util.ASTHelpers;
 import com.google.errorprone.util.RuntimeVersion;
@@ -173,7 +172,7 @@ public final class Inliner {
     return INLINE_AS_TREE.visit(type, this);
   }
 
-  public <V> V getBinding(Key<V> key) {
+  public <V> V getBinding(Bindings.Key<V> key) {
     V value = bindings.getBinding(key);
     if (value == null) {
       throw new IllegalStateException("No binding for " + key);
@@ -181,7 +180,7 @@ public final class Inliner {
     return value;
   }
 
-  public <V> Optional<V> getOptionalBinding(Key<V> key) {
+  public <V> Optional<V> getOptionalBinding(Bindings.Key<V> key) {
     return Optional.fromNullable(bindings.getBinding(key));
   }
 
