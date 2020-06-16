@@ -189,6 +189,24 @@ public class RemoveUnusedImportsTest {
   }
 
   @Test
+  public void diagnosticListsUnusedImports() {
+    CompilationTestHelper.newInstance(RemoveUnusedImports.class, getClass())
+        .addSourceLines(
+            "Test.java",
+            "package test;",
+            "import java.util.ArrayList;",
+            "import java.util.List;",
+            "// BUG: Diagnostic contains: java.util.LinkedList, java.util.Map, java.util.Set",
+            "import java.util.LinkedList;",
+            "import java.util.Map;",
+            "import java.util.Set;",
+            "public class Test {",
+            "  List<String> xs = new ArrayList<>();",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void useInJavadocParameter() {
     testHelper
         .addInputLines(
