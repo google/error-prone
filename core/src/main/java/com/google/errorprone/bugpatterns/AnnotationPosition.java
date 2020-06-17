@@ -221,20 +221,38 @@ public final class AnnotationPosition extends BugChecker
             String.format("%s%s ", javadoc, joinSource(state, moveBefore)))
         .replace(
             lastModifierPos, lastModifierPos, String.format("%s ", joinSource(state, moveAfter)));
-    ImmutableList<String> names =
-        annotations.stream()
-            .map(ASTHelpers::getSymbol)
-            .filter(Objects::nonNull)
-            .map(Symbol::getSimpleName)
-            .map(a -> "@" + a)
-            .collect(toImmutableList());
-    String flattened = names.stream().collect(joining(", "));
-    String isAre =
-        names.size() > 1 ? "are not TYPE_USE annotations" : "is not a TYPE_USE annotation";
-    String message =
-        String.format(
-            "%s %s, so should appear before any modifiers and after Javadocs.", flattened, isAre);
-    return buildDescription(tree).setMessage(message).addFix(builder.build()).build();
+    List<String> messages = new ArrayList<>();
+    if (!moveBefore.isEmpty()) {
+      ImmutableList<String> names = annotationNames(moveBefore);
+      String flattened = String.join(", ", names);
+      String isAre =
+          names.size() > 1 ? "are not TYPE_USE annotations" : "is not a TYPE_USE annotation";
+      messages.add(
+          String.format(
+              "%s %s, so should appear before any modifiers and after Javadocs.",
+              flattened, isAre));
+    }
+    if (!moveAfter.isEmpty()) {
+      ImmutableList<String> names = annotationNames(moveAfter);
+      String flattened = String.join(", ", names);
+      String isAre = names.size() > 1 ? "are TYPE_USE annotations" : "is a TYPE_USE annotation";
+      messages.add(
+          String.format(
+              "%s %s, so can appear after modifiers and before the type.", flattened, isAre));
+    }
+    return buildDescription(tree)
+        .setMessage(String.join(" ", messages))
+        .addFix(builder.build())
+        .build();
+  }
+
+  private ImmutableList<String> annotationNames(List<AnnotationTree> annotations) {
+    return annotations.stream()
+        .map(ASTHelpers::getSymbol)
+        .filter(Objects::nonNull)
+        .map(Symbol::getSimpleName)
+        .map(a -> "@" + a)
+        .collect(toImmutableList());
   }
 
   private static String joinSource(VisitorState state, List<AnnotationTree> moveBefore) {

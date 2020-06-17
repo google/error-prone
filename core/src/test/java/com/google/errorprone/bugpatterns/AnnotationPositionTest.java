@@ -300,4 +300,16 @@ public final class AnnotationPositionTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void diagnostic() {
+    helper
+        .addSourceLines(
+            "Test.java", //
+            "interface Test {",
+            "  // BUG: Diagnostic contains: is a TYPE_USE",
+            "  public @TypeUse static int foo = 1;",
+            "}")
+        .doTest();
+  }
 }
