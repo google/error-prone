@@ -32,7 +32,7 @@ public enum TypesWithUndefinedEquality {
   SPARSE_ARRAY(
       "SparseArray",
       "android.util.SparseArray",
-      "android.support.v4.util.SparseArrayCompat",
+      "androidx.collection.SparseArrayCompat",
       "androidx.collection.SparseArrayCompat"),
   MULTIMAP("Multimap", "com.google.common.collect.Multimap"),
   CHAR_SEQUENCE("CharSequence", "java.lang.CharSequence"),
