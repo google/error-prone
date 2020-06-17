@@ -230,29 +230,35 @@ public class SuggestedFixes {
     if (toAdd.isEmpty()) {
       return;
     }
-    int pos = -1;
+    int insertPos;
     if (tree.getKind() == Tree.Kind.ANNOTATION_TYPE) {
       // For annotation types, the modifiers tree include the '@' of @interface. And all modifiers
       // must appear before @interface.
-      pos =
+      int pos =
           Streams.findLast(
                   state.getOffsetTokensForNode(originalModifiers).stream()
                       .filter(tok -> tok.kind().equals(TokenKind.MONKEYS_AT)))
               .get()
               .pos();
+      insertPos =
+          state.getOffsetTokensForNode(tree).stream()
+              .mapToInt(ErrorProneToken::pos)
+              .filter(thisPos -> thisPos >= pos)
+              .findFirst()
+              .orElse(pos); // shouldn't ever be able to get to the else
     } else {
-      pos =
-          state.getEndPosition(originalModifiers) != Position.NOPOS
-              ? state.getEndPosition(originalModifiers) + 1
-              : ((JCTree) tree).getStartPosition();
+      int pos =
+          state.getEndPosition(originalModifiers) == Position.NOPOS
+              ? ((JCTree) tree).getStartPosition()
+              : state.getEndPosition(originalModifiers) + 1;
+      insertPos =
+          state.getOffsetTokensForNode(originalModifiers).stream()
+              .filter(t -> getTokModifierKind(t) != null)
+              .mapToInt(t -> t.endPos() + 1)
+              .max()
+              .orElse(pos);
     }
-    int minPositionForNewModifiers = pos;
-    int insertPos =
-        state.getOffsetTokensForNode(tree).stream()
-            .mapToInt(ErrorProneToken::pos)
-            .filter(thisPos -> thisPos >= minPositionForNewModifiers)
-            .findFirst()
-            .orElse(minPositionForNewModifiers); // shouldn't ever be able to get to the else
+
     fix.replace(insertPos, insertPos, Joiner.on(' ').join(toAdd) + " ");
   }
 

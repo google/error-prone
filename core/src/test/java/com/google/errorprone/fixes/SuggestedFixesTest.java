@@ -184,6 +184,8 @@ public class SuggestedFixesTest {
             "  @Nullable public Object three;",
             "  // BUG: Diagnostic contains: public final Object four",
             "  public Object four;",
+            "  // BUG: Diagnostic contains: public final @Nullable Object five",
+            "  public @Nullable Object five;",
             "}")
         .doTest();
   }
