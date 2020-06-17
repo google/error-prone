@@ -37,6 +37,8 @@ public class Replacements {
   /**
    * We apply replacements in reverse order of start position, so that replacements that change the
    * length of the input don't affect the position of earlier replacements.
+   *
+   * Test change.  Another test change.
    */
   private static final Comparator<Range<Integer>> DESCENDING =
       new Comparator<Range<Integer>>() {
