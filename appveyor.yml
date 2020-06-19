@@ -1,3 +1,8 @@
+# Don't build branches that are not PRs, to avoid double builds.
+branches:
+  only:
+    - master
+
 os: Visual Studio 2015
 
 install:
