@@ -22,7 +22,6 @@ import static com.google.errorprone.matchers.method.MethodMatchers.constructor;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
 
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.NewClassTreeMatcher;
@@ -45,12 +44,6 @@ import java.util.List;
 public class IdentityHashMapBoxing extends BugChecker
     implements NewClassTreeMatcher, MethodInvocationTreeMatcher {
 
-  private final Boolean checkMapsNewIHM;
-
-  public IdentityHashMapBoxing(ErrorProneFlags flags) {
-    checkMapsNewIHM = flags.getBoolean("IdentityHashMapBoxing:checkMapsNewIHM").orElse(false);
-  }
-
   private static final Matcher<ExpressionTree> NEW_IDENTITY_HASH_MAP =
       constructor().forClass("java.util.IdentityHashMap");
   private static final Matcher<ExpressionTree> MAPS_NEW_IDENTITY_HASH_MAP =
@@ -66,9 +59,6 @@ public class IdentityHashMapBoxing extends BugChecker
 
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
-    if (!checkMapsNewIHM) {
-      return Description.NO_MATCH;
-    }
     if (!MAPS_NEW_IDENTITY_HASH_MAP.matches(tree, state)) {
       return NO_MATCH;
     }

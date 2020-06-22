@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import com.google.common.collect.ImmutableList;
 import com.google.errorprone.CompilationTestHelper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -71,7 +70,7 @@ public class IdentityHashMapBoxingTest {
   }
 
   @Test
-  public void testMapsPositiveCases_flagOn() {
+  public void testMapsPositiveCases() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -90,27 +89,6 @@ public class IdentityHashMapBoxingTest {
             "    Map<Long, String> map4 = Maps.newIdentityHashMap();",
             "  }",
             "}")
-        .setArgs(ImmutableList.of("-XepOpt:IdentityHashMapBoxing:checkMapsNewIHM=true"))
-        .doTest();
-  }
-
-  @Test
-  public void testMapsPositiveCases_flagOff() {
-    compilationHelper
-        .addSourceLines(
-            "Test.java",
-            "import com.google.common.collect.Maps;",
-            "import java.util.IdentityHashMap;",
-            "import java.util.Map;",
-            "class Test {",
-            "  void test() {",
-            "    Map<Integer, String> map1 = Maps.newIdentityHashMap();",
-            "    Map<Float, String> map2 = Maps.newIdentityHashMap();",
-            "    Map<Double, String> map3 = Maps.newIdentityHashMap();",
-            "    Map<Long, String> map4 = Maps.newIdentityHashMap();",
-            "  }",
-            "}")
-        .setArgs(ImmutableList.of("-XepOpt:IdentityHashMapBoxing:checkMapsNewIHM=false"))
         .doTest();
   }
 
