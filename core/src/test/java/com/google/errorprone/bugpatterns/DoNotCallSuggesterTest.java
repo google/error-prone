@@ -277,4 +277,11 @@ public class DoNotCallSuggesterTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void abstractClass() {
+    testHelper
+        .addSourceLines("Test.java", "abstract class Test {", "  abstract void test();", "}")
+        .doTest();
+  }
 }

@@ -97,6 +97,11 @@ public class DoNotCallSuggester extends BugChecker implements MethodTreeMatcher 
       return NO_MATCH;
     }
 
+    // if the method is abstract, exit
+    if (tree.getBody() == null) {
+      return NO_MATCH;
+    }
+
     // if the body does not contain exactly 1 statement, exit
     if (tree.getBody().getStatements().size() != 1) {
       return NO_MATCH;
