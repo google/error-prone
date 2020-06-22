@@ -24,6 +24,7 @@ import static com.sun.tools.javac.code.Kinds.KindSelector.VAL_TYP;
 
 import com.google.common.base.Ascii;
 import com.google.common.collect.HashBasedTable;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Table;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.SeverityLevel;
@@ -55,9 +56,13 @@ import javax.lang.model.element.Name;
 @BugPattern(
     name = "UnnecessarilyFullyQualified",
     severity = SeverityLevel.WARNING,
-    summary = "This fully qualified name is unambiguous if imported.")
+    summary = "This fully qualified name is unambiguous to the compiler if imported.")
 public final class UnnecessarilyFullyQualified extends BugChecker
     implements CompilationUnitTreeMatcher {
+
+  private static final ImmutableSet<String> EXEMPTED_NAMES =
+      ImmutableSet.of(
+          );
 
   @Override
   public Description matchCompilationUnit(CompilationUnitTree tree, VisitorState state) {
@@ -157,15 +162,19 @@ public final class UnnecessarilyFullyQualified extends BugChecker
       if (identifiersSeen.contains(name)) {
         continue;
       }
+      String nameString = name.toString();
+      if (EXEMPTED_NAMES.contains(nameString)) {
+        continue;
+      }
       List<TreePath> pathsToFix = getOnlyElement(types.values());
       if (pathsToFix.stream()
-          .anyMatch(path -> findIdent(name.toString(), state.withPath(path), VAL_TYP) != null)) {
+          .anyMatch(path -> findIdent(nameString, state.withPath(path), VAL_TYP) != null)) {
         continue;
       }
       SuggestedFix.Builder fixBuilder = SuggestedFix.builder();
       fixBuilder.addImport(getOnlyElement(types.keySet()).getQualifiedName().toString());
       for (TreePath path : pathsToFix) {
-        fixBuilder.replace(path.getLeaf(), name.toString());
+        fixBuilder.replace(path.getLeaf(), nameString);
       }
       SuggestedFix fix = fixBuilder.build();
       for (TreePath path : pathsToFix) {
