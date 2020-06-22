@@ -413,7 +413,7 @@
                   <include>com.google.guava:guava</include>
                   <include>com.google.guava:failureaccess</include>
                   <include>com.github.ben-manes.caffeine:caffeine</include>
-                  <include>com.googlecode.java-diff-utils:diffutils</include>
+                  <include>io.github.java-diff-utils:java-diff-utils</include>
                   <include>com.google.auto:auto-common</include>
                   <include>com.google.auto.value:auto-value-annotations</include>
                   <include>com.google.auto.service:auto-service-annotations</include>

@@ -73,9 +73,9 @@
     </dependency>
     <dependency>
       <!-- Apache 2.0 -->
-      <groupId>com.googlecode.java-diff-utils</groupId>
-      <artifactId>diffutils</artifactId>
-      <version>1.3.0</version>
+      <groupId>io.github.java-diff-utils</groupId>
+      <artifactId>java-diff-utils</artifactId>
+      <version>4.0</version>
     </dependency>
     <dependency>
       <!-- Apache 2.0 -->
