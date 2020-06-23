@@ -66,7 +66,12 @@ public class CompilationTestHelper {
           // print stack traces for completion failures
           "-XDdev",
           "-parameters",
-          "-XDcompilePolicy=simple");
+          "-XDcompilePolicy=simple",
+          // Don't limit errors/warnings for tests to the default of 100
+          "-Xmaxerrs",
+          "500",
+          "-Xmaxwarns",
+          "500");
 
   private final DiagnosticTestHelper diagnosticHelper;
   private final BaseErrorProneJavaCompiler compiler;
