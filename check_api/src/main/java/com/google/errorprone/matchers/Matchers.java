@@ -70,6 +70,7 @@ import com.sun.source.tree.TypeCastTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
 import com.sun.tools.javac.code.Symbol;
+import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type;
@@ -369,7 +370,7 @@ public class Matchers {
    * parentNode(kindIs(Kind.RETURN))} would match the {@code this} expression in {@code return
    * this;}
    */
-  public static Matcher<Tree> parentNode(Matcher<Tree> treeMatcher) {
+  public static <T extends Tree> Matcher<T> parentNode(Matcher<Tree> treeMatcher) {
     return (tree, state) -> {
       TreePath parent = requireNonNull(state.getPath().getParentPath());
       return treeMatcher.matches(parent.getLeaf(), state.withPath(parent));
@@ -971,6 +972,11 @@ public class Matchers {
     return (variableTree, state) -> ElementKind.FIELD == getSymbol(variableTree).getKind();
   }
 
+  /** Matches if a {@link ClassTree} is an enum declaration. */
+  public static Matcher<ClassTree> isEnum() {
+    return (classTree, state) -> getSymbol(classTree).getKind() == ElementKind.ENUM;
+  }
+
   /**
    * Matches an class based on whether it is nested in another class or method.
    *
@@ -1440,4 +1446,10 @@ public class Matchers {
               allOf(
                   methodIsNamed("writeReplace"),
                   methodReturns(typeFromString("java.lang.Object")))));
+
+  public static final Matcher<Tree> IS_INTERFACE =
+      (t, s) -> {
+        Symbol symbol = getSymbol(t);
+        return symbol instanceof ClassSymbol && symbol.isInterface();
+      };
 }
