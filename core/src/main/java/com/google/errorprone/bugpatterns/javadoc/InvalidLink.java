@@ -46,6 +46,7 @@ import com.sun.source.util.DocTreePathScanner;
 import com.sun.tools.javac.api.JavacTrees;
 import com.sun.tools.javac.tree.DCTree.DCDocComment;
 import com.sun.tools.javac.tree.DCTree.DCText;
+import com.sun.tools.javac.util.Log;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.lang.model.element.Element;
@@ -146,6 +147,11 @@ public final class InvalidLink extends BugChecker
       }
       String reference = linkTree.getReference().getSignature();
       Element element = null;
+      Log log = Log.instance(state.context);
+      // Install a deferred diagnostic handler before calling DocTrees.getElement(DocTreePath)
+      // TODO(cushon): revert if https://bugs.openjdk.java.net/browse/JDK-8248117 is fixed
+      Log.DeferredDiagnosticHandler deferredDiagnosticHandler =
+          new Log.DeferredDiagnosticHandler(log);
       try {
         element =
             JavacTrees.instance(state.context)
@@ -153,6 +159,8 @@ public final class InvalidLink extends BugChecker
       } catch (NullPointerException e) {
         // TODO(cushon): remove once JDK 12 is the minimum supported version
         // https://bugs.openjdk.java.net/browse/JDK-8200432
+      } finally {
+        log.popDiagnosticHandler(deferredDiagnosticHandler);
       }
       // Don't warn about fully qualified types; they won't always be known at compile-time.
       if (element != null || reference.contains(".")) {
