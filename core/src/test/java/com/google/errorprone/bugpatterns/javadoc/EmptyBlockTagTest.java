@@ -102,33 +102,24 @@ public final class EmptyBlockTagTest {
             "   */",
             "  int foo();",
             "}")
-        .addOutputLines(
-            "Test.java", //
-            "interface Test {",
-            "  /** */",
-            "  int foo();",
-            "}")
+        .expectUnchanged()
         .doTest(TestMode.TEXT_MATCH);
   }
 
   @Test
   public void removes_emptyDeprecatedOnClass() {
-    refactoring
-        .addInputLines(
+    compilationTestHelper
+        .addSourceLines(
             "Test.java", //
             "/**",
+            "  // BUG: Diagnostic contains:",
             " * @deprecated",
             " */",
+            "@Deprecated",
             "interface Test {",
             "  void foo();",
             "}")
-        .addOutputLines(
-            "Test.java", //
-            "/** */",
-            "interface Test {",
-            "  void foo();",
-            "}")
-        .doTest(TestMode.TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -161,7 +152,6 @@ public final class EmptyBlockTagTest {
             "   * @param p",
             "   * @return",
             "   * @throws Exception",
-            "   * @deprecated",
             "   */",
             "  @Deprecated",
             "  int foo(int p) throws Exception;",

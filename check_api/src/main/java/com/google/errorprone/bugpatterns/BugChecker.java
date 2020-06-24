@@ -170,6 +170,12 @@ public abstract class BugChecker implements Suppressible, Serializable {
     return buildDescription(node).addFix(fix).build();
   }
 
+  /** Helper to create a Description for the common case where there is an {@link Optional} fix. */
+  @CheckReturnValue
+  protected Description describeMatch(DiagnosticPosition position, Optional<? extends Fix> fix) {
+    return buildDescription(position).addFix(fix).build();
+  }
+
   /**
    * Returns a Description builder, which allows you to customize the diagnostic with a custom
    * message or multiple fixes.

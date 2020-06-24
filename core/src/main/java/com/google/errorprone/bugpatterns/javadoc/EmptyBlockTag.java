@@ -39,6 +39,7 @@ import com.sun.source.tree.VariableTree;
 import com.sun.source.util.DocTreePath;
 import com.sun.source.util.DocTreePathScanner;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Matches block tags ({@literal @}param, {@literal @}return, {@literal @}throws,
@@ -121,7 +122,11 @@ public final class EmptyBlockTag extends BugChecker
         state.reportMatch(
             describeMatch(
                 diagnosticPosition(getCurrentPath(), state),
-                Utils.replace(blockTagTree, "", state)));
+                // Don't generate a fix for deprecated; this will be annoying in conjunction with
+                // the check which requires a @deprecated tag for @Deprecated elements.
+                blockTagTree.getTagName().equals("deprecated")
+                    ? Optional.empty()
+                    : Optional.of(Utils.replace(blockTagTree, "", state))));
       }
     }
   }
