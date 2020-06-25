@@ -338,4 +338,23 @@ public final class BadImportTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void doesNotMatchProtos() {
+    compilationTestHelper
+        .addSourceLines(
+            "ProtoOuterClass.java",
+            "package pkg;",
+            "import com.google.protobuf.MessageLite;",
+            "public class ProtoOuterClass {",
+            "  public static abstract class Provider implements MessageLite {}",
+            "}")
+        .addSourceLines(
+            "Test.java",
+            "import pkg.ProtoOuterClass.Provider;",
+            "class Test {",
+            "  public void test(Provider p) {}",
+            "}")
+        .doTest();
+  }
 }

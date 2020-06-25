@@ -19,6 +19,7 @@ import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.ChildMultiMatcher.MatchType.AT_LEAST_ONE;
 import static com.google.errorprone.matchers.Matchers.annotations;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
+import static com.google.errorprone.util.ASTHelpers.isSubtype;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
@@ -84,6 +85,8 @@ public class BadImport extends BugChecker implements ImportTreeMatcher {
   private static final MultiMatcher<Tree, AnnotationTree> HAS_TYPE_USE_ANNOTATION =
       annotations(AT_LEAST_ONE, (t, state) -> isTypeAnnotation(t));
 
+  private static final String MESSAGE_LITE = "com.google.protobuf.MessageLite";
+
   @Override
   public Description matchImport(ImportTree tree, VisitorState state) {
     Symbol symbol;
@@ -116,6 +119,10 @@ public class BadImport extends BugChecker implements ImportTreeMatcher {
     }
 
     if (symbol.getEnclosingElement() instanceof PackageSymbol) {
+      return Description.NO_MATCH;
+    }
+
+    if (isSubtype(symbol.type, state.getTypeFromString(MESSAGE_LITE), state)) {
       return Description.NO_MATCH;
     }
 
