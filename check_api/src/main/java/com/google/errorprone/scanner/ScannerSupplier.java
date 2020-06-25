@@ -200,6 +200,10 @@ public abstract class ScannerSupplier implements Supplier<Scanner> {
               severities.put(check.canonicalName(), check.defaultSeverity());
               disabled.remove(check.canonicalName());
               break;
+            case HIDDEN:
+              severities.put(check.canonicalName(), SeverityLevel.HIDDEN);
+              disabled.remove(check.canonicalName());
+              break;
             case WARN:
               // Demoting an enabled check from an error to a warning is a form of disabling
               if (!disabled().contains(check.canonicalName())

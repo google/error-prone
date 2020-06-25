@@ -116,6 +116,9 @@ public class JavacErrorDescriptionListener implements DescriptionListener {
         case SUGGESTION:
           type = JCDiagnostic.DiagnosticType.NOTE;
           break;
+        case HIDDEN:
+          // we don't log anything for hidden level
+          return;
       }
       log.report(
           factory.create(
