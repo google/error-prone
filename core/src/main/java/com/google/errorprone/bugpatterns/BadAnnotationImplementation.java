@@ -16,7 +16,7 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
+import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.isSubtypeOf;
@@ -55,7 +55,7 @@ import java.lang.annotation.Annotation;
     summary =
         "Classes that implement Annotation must override equals and hashCode. Consider "
             + "using AutoAnnotation instead of implementing Annotation by hand.",
-    severity = WARNING,
+    severity = ERROR,
     tags = StandardTags.LIKELY_ERROR)
 public class BadAnnotationImplementation extends BugChecker implements ClassTreeMatcher {
 
