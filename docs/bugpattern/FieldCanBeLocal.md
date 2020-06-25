@@ -32,6 +32,4 @@ class Frobnicator {
 
 ## Suppression
 
-This check is suppressed by `@SuppressWarnings("FieldCanBeLocal")` as well as
-the same suppression mechanisms as `UnusedVariable`
-(`@SuppressWarnings("unused")`.
+This check is suppressed by `@SuppressWarnings("FieldCanBeLocal")`.
