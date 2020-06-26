@@ -69,4 +69,4 @@ TIP: `java.util.Date` is a legacy, bug-prone API. Prefer `java.time.Instant` or
 [`SparseArray`]: https://developer.android.com/reference/android/util/SparseArray
 [`Queue`]: http://docs.oracle.com/javase/8/docs/api/java/util/Queue.html
 [`CharSequence`]: http://docs.oracle.com/javase/8/docs/api/java/lang/CharSequence.html
-[`Date`]: http://docs.oracle.com/javase/8/docs/api/java/util/Date.html
+[`java.util.Date`]: http://docs.oracle.com/javase/8/docs/api/java/util/Date.html
