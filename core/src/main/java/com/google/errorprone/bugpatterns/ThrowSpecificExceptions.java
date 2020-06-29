@@ -19,6 +19,7 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 
 import com.google.auto.value.AutoValue;
+import com.google.common.base.VerifyException;
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -43,7 +44,7 @@ import com.sun.source.tree.ThrowTree;
 public final class ThrowSpecificExceptions extends BugChecker implements NewClassTreeMatcher {
   private static final ImmutableList<AbstractLikeException> ABSTRACT_LIKE_EXCEPTIONS =
       ImmutableList.of(
-          AbstractLikeException.of(RuntimeException.class, IllegalStateException.class),
+          AbstractLikeException.of(RuntimeException.class, VerifyException.class),
           AbstractLikeException.of(Throwable.class, AssertionError.class),
           AbstractLikeException.of(Error.class, AssertionError.class));
 

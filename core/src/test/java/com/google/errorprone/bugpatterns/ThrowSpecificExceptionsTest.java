@@ -34,7 +34,7 @@ public final class ThrowSpecificExceptionsTest {
             "Test.java",
             "public class Test {",
             "  void test() {",
-            "    // BUG: Diagnostic contains: new IllegalStateException",
+            "    // BUG: Diagnostic contains: new VerifyException",
             "    throw new RuntimeException();",
             "  }",
             "}")
