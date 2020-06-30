@@ -336,6 +336,7 @@ import com.google.errorprone.bugpatterns.UnusedMethod;
 import com.google.errorprone.bugpatterns.UnusedNestedClass;
 import com.google.errorprone.bugpatterns.UnusedVariable;
 import com.google.errorprone.bugpatterns.UseCorrectAssertInTests;
+import com.google.errorprone.bugpatterns.UseTimeInScope;
 import com.google.errorprone.bugpatterns.VarChecker;
 import com.google.errorprone.bugpatterns.VarTypeName;
 import com.google.errorprone.bugpatterns.VariableNameSameAsType;
@@ -854,6 +855,7 @@ public class BuiltInCheckerSuppliers {
           UnusedVariable.class,
           UseBinds.class,
           UseCorrectAssertInTests.class,
+          UseTimeInScope.class,
           VariableNameSameAsType.class,
           WaitNotInLoop.class,
           WakelockReleasedDangerously.class,
