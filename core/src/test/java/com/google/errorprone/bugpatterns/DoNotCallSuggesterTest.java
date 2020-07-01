@@ -281,7 +281,31 @@ public class DoNotCallSuggesterTest {
   @Test
   public void abstractClass() {
     testHelper
-        .addSourceLines("Test.java", "abstract class Test {", "  abstract void test();", "}")
+        .addSourceLines(
+            "Test.java", //
+            "abstract class Test {",
+            "  abstract void test();",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void annotatedMethod() {
+    testHelper
+        .addSourceLines(
+            "StarlarkMethod.java",
+            "package net.starlark.java.annot;",
+            "public @interface StarlarkMethod {",
+            "}")
+        .addSourceLines(
+            "Test.java",
+            "import net.starlark.java.annot.StarlarkMethod;",
+            "final class Test {",
+            "  @StarlarkMethod",
+            "  public static void foo() {",
+            "    throw new RuntimeException();",
+            "  }",
+            "}")
         .doTest();
   }
 }

@@ -77,7 +77,9 @@ public class DoNotCallSuggester extends BugChecker implements MethodTreeMatcher 
           "java.lang.Override",
           // dagger provider / producers
           "dagger.Provides",
-          "dagger.producers.Produces");
+          "dagger.producers.Produces",
+          // starlark API boundary
+          "net.starlark.java.annot.StarlarkMethod");
 
   private static final ImmutableSet<String> PARENT_CLASS_TO_IGNORE =
       ImmutableSet.of(
