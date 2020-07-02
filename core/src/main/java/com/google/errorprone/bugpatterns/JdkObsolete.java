@@ -23,7 +23,6 @@ import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
-import static com.google.errorprone.util.ASTHelpers.getReceiverType;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -31,7 +30,6 @@ import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.MemberReferenceTreeMatcher;
-import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.NewClassTreeMatcher;
 import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.SuggestedFix;
@@ -71,10 +69,7 @@ import javax.annotation.Nullable;
     summary = "Suggests alternatives to obsolete JDK classes.",
     severity = WARNING)
 public class JdkObsolete extends BugChecker
-    implements NewClassTreeMatcher,
-        ClassTreeMatcher,
-        MemberReferenceTreeMatcher,
-        MethodInvocationTreeMatcher {
+    implements NewClassTreeMatcher, ClassTreeMatcher, MemberReferenceTreeMatcher {
 
   static class Obsolete {
     final String qualifiedName;
@@ -111,10 +106,6 @@ public class JdkObsolete extends BugChecker
                 }
               },
               new Obsolete(
-                  "java.util.Date",
-                  "Date has a bad API that leads to bugs; prefer java.time.Instant or LocalDate."
-                  ),
-              new Obsolete(
                   "java.util.Vector",
                   "Vector performs synchronization that is usually unnecessary; prefer ArrayList."),
               new Obsolete(
@@ -148,14 +139,6 @@ public class JdkObsolete extends BugChecker
           .stream()
           .collect(toImmutableMap(Obsolete::qualifiedName, x -> x));
 
-  private static final Matcher<ExpressionTree> DATE_CONVERSION =
-      anyOf(
-          instanceMethod().onExactClass("java.util.Date").named("toInstant"),
-          staticMethod()
-              .onClass("java.util.Date")
-              .named("from")
-              .withParameters("java.time.Instant"));
-
   static final Matcher<ExpressionTree> MATCHER_STRINGBUFFER =
       anyOf(
           // a pre-JDK-8039124 concession
@@ -176,9 +159,6 @@ public class JdkObsolete extends BugChecker
               .onExactClass("com.google.re2j.Matcher")
               .named("appendReplacement")
               .withParameters("java.lang.StringBuffer", "java.lang.String"));
-
-  private static final Matcher<ExpressionTree> ALLOWED_METHODS =
-      anyOf(DATE_CONVERSION, MATCHER_STRINGBUFFER);
 
   @Override
   public Description matchNewClass(NewClassTree tree, VisitorState state) {
@@ -237,18 +217,6 @@ public class JdkObsolete extends BugChecker
       return NO_MATCH;
     }
     return describeIfObsolete(tree.getQualifierExpression(), ImmutableList.of(type), state);
-  }
-
-  @Override
-  public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
-    if (ALLOWED_METHODS.matches(tree, state)) {
-      return NO_MATCH;
-    }
-    Type type = getReceiverType(tree.getMethodSelect());
-    if (type == null) {
-      return NO_MATCH;
-    }
-    return describeIfObsolete(tree, ImmutableList.of(type), state);
   }
 
   private Description describeIfObsolete(

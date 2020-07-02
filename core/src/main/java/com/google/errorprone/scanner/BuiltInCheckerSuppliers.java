@@ -168,6 +168,7 @@ import com.google.errorprone.bugpatterns.JUnit4TestNotRun;
 import com.google.errorprone.bugpatterns.JUnitAmbiguousTestClass;
 import com.google.errorprone.bugpatterns.JUnitAssertSameCheck;
 import com.google.errorprone.bugpatterns.JavaLangClash;
+import com.google.errorprone.bugpatterns.JavaUtilDateChecker;
 import com.google.errorprone.bugpatterns.JdkObsolete;
 import com.google.errorprone.bugpatterns.LambdaFunctionalInterface;
 import com.google.errorprone.bugpatterns.LiteByteStringUtf8;
@@ -753,6 +754,7 @@ public class BuiltInCheckerSuppliers {
           JavaLocalTimeGetNano.class,
           JavaPeriodGetDays.class,
           JavaTimeDefaultTimeZone.class,
+          JavaUtilDateChecker.class,
           JavaxInjectOnFinalField.class,
           JdkObsolete.class,
           JodaDurationConstructor.class,
