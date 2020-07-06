@@ -5,3 +5,17 @@ overhead for such a conceptually simple operation. @Binds was introduced to
 provide a declarative way of delegating from one binding to another in a way
 that allows for minimal overhead in the implementation. @Binds should always be
 preferred over @Provides or @Produces for delegation.
+
+For instance, the following `@Provides` method
+
+```java
+@Provides static Heater provideHeater(ElectricHeater heater) {
+  return heater;
+}
+```
+
+is equivalent to the following preferred `@Binds` method.
+
+```java
+@Binds abstract Heater bindHeater(ElectricHeater impl);
+```
