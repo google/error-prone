@@ -21,10 +21,10 @@ import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
 import static com.google.errorprone.util.ASTHelpers.getAnnotation;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 
-import com.google.common.collect.HashMultimap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Multimap;
+import com.google.common.collect.MultimapBuilder;
 import com.google.common.collect.Sets;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -51,8 +51,8 @@ import com.sun.tools.javac.tree.JCTree;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Target;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -71,9 +71,10 @@ public final class FieldCanBeLocal extends BugChecker implements CompilationUnit
 
   @Override
   public Description matchCompilationUnit(CompilationUnitTree tree, VisitorState state) {
-    Map<VarSymbol, TreePath> potentialFields = new HashMap<>();
-    Multimap<VarSymbol, TreePath> unconditionalAssignments = HashMultimap.create();
-    Multimap<VarSymbol, Tree> uses = HashMultimap.create();
+    Map<VarSymbol, TreePath> potentialFields = new LinkedHashMap<>();
+    Multimap<VarSymbol, TreePath> unconditionalAssignments =
+        MultimapBuilder.linkedHashKeys().linkedHashSetValues().build();
+    Multimap<VarSymbol, Tree> uses = MultimapBuilder.linkedHashKeys().linkedHashSetValues().build();
 
     new SuppressibleTreePathScanner<Void, Void>() {
       @Override
@@ -240,6 +241,7 @@ public final class FieldCanBeLocal extends BugChecker implements CompilationUnit
       String annotations = getAnnotationSource(state, variableTree);
       fix.delete(declarationSite.getLeaf());
       Set<Tree> deletedTrees = new HashSet<>();
+      Set<Tree> scopesDeclared = new HashSet<>();
       for (TreePath assignmentSite : assignmentLocations) {
         AssignmentTree assignmentTree = (AssignmentTree) assignmentSite.getLeaf();
         Symbol rhsSymbol = getSymbol(assignmentTree.getExpression());
@@ -253,7 +255,10 @@ public final class FieldCanBeLocal extends BugChecker implements CompilationUnit
           deletedTrees.add(assignmentTree.getVariable());
           fix.delete(assignmentSite.getParentPath().getLeaf());
         } else {
-          fix.prefixWith(assignmentSite.getLeaf(), annotations + " " + type + " ");
+          Tree scope = assignmentSite.getParentPath().getParentPath().getLeaf();
+          if (scopesDeclared.add(scope)) {
+            fix.prefixWith(assignmentSite.getLeaf(), annotations + " " + type + " ");
+          }
         }
       }
       // Strip "this." off any uses of the field.

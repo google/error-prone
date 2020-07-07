@@ -49,6 +49,31 @@ public final class FieldCanBeLocalTest {
   }
 
   @Test
+  public void multipleAssignments() {
+    refactoringTestHelper
+        .addInputLines(
+            "Test.java",
+            "class Test {",
+            "  private int a;",
+            "  int foo() {",
+            "    a = 1;",
+            "    a = 2;",
+            "    return a;",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "class Test {",
+            "  int foo() {",
+            "    int a = 1;",
+            "    a = 2;",
+            "    return a;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void hasFieldAnnotation_noMatch() {
     helper
         .addSourceLines(
