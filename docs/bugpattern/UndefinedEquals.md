@@ -57,6 +57,11 @@ comparing `Date`s with `equals` is unreliable.
 TIP: `java.util.Date` is a legacy, bug-prone API. Prefer `java.time.Instant` or
 `java.time.LocalDateTime`.
 
+## For [`ImmutableCollection`]
+
+Prefer subtypes such as `ImmutableSet` or `ImmutableList`, which have
+well-defined `equals`.
+
 [`Collection`]: https://docs.oracle.com/javase/8/docs/api/java/util/Collection.html
 [`Iterable`]: https://docs.oracle.com/javase/8/docs/api/java/lang/Iterable.html
 [`Iterables.elementsEqual`]: https://guava.dev/releases/snapshot/api/docs/com/google/common/collect/Iterables.html#elementsEqual-java.lang.Iterable-java.lang.Iterable-
@@ -70,3 +75,4 @@ TIP: `java.util.Date` is a legacy, bug-prone API. Prefer `java.time.Instant` or
 [`Queue`]: http://docs.oracle.com/javase/8/docs/api/java/util/Queue.html
 [`CharSequence`]: http://docs.oracle.com/javase/8/docs/api/java/lang/CharSequence.html
 [`java.util.Date`]: http://docs.oracle.com/javase/8/docs/api/java/util/Date.html
+[`ImmutableCollection`]: https://guava.dev/releases/snapshot-jre/api/docs/com/google/common/collect/ImmutableCollection.html
