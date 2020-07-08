@@ -150,6 +150,58 @@ public class RestrictedApiCheckerTest {
   }
 
   @Test
+  public void testRestrictedConstructorViaAnonymousClassProhibited() {
+    helper
+        .addSourceLines(
+            "Testcase.java",
+            "package com.google.errorprone.bugpatterns.testdata;",
+            "class Testcase {",
+            "  void foo() {",
+            "    // BUG: Diagnostic contains: lorem",
+            "    new RestrictedApiMethods() {};",
+            "  }",
+            "}")
+        .expectResult(Result.ERROR)
+        .doTest();
+  }
+
+  @Test
+  public void testRestrictedConstructorViaAnonymousClassAllowed() {
+    helper
+        .addSourceLines(
+            "Testcase.java",
+            "package com.google.errorprone.bugpatterns.testdata;",
+            "class Testcase {",
+            "  @Whitelist    ",
+            "  void foo() {",
+            "    new RestrictedApiMethods() {};",
+            "  }",
+            "}")
+        .expectResult(Result.OK)
+        .doTest();
+  }
+
+  @Test
+  public void testRestrictedCallAnonymousClassFromInterface() {
+    helper
+        .addSourceLines(
+            "Testcase.java",
+            "package com.google.errorprone.bugpatterns.testdata;",
+            "class Testcase {",
+            "  void foo() {",
+            "    new IFaceWithRestriction() {",
+            "      @Override",
+            "      public void dontCallMe() {}",
+            "    }",
+            "    // BUG: Diagnostic contains: ipsum",
+            "    .dontCallMe();",
+            "  }",
+            "}")
+        .expectResult(Result.ERROR)
+        .doTest();
+  }
+
+  @Test
   public void testImplicitRestrictedConstructorProhibited() {
     helper
         .addSourceLines(
