@@ -25,6 +25,8 @@ import java.lang.annotation.Retention;
  * Describes a bug pattern detected by error-prone. Used to generate compiler error messages, for
  * {@code @}SuppressWarnings, and to generate the documentation that we host on our web site.
  *
+ * <p>{@link NoSuch}
+ *
  * @author eaftan@google.com (Eddie Aftandilian)
  */
 @Retention(RUNTIME)
