@@ -202,6 +202,11 @@ public enum ImportPolicy {
             .maker()
             .Select(inliner.maker().Ident(inliner.asName("Refaster")), inliner.asName(member));
       }
+      // Foo.class tokens are considered static members :(.
+      if (member.toString().equals("class")) {
+        return IMPORT_TOP_LEVEL.staticReference(
+            inliner, topLevelClazz, fullyQualifiedClazz, member);
+      }
       inliner.addStaticImport(fullyQualifiedClazz + "." + member);
       return inliner.maker().Ident(inliner.asName(member));
     }

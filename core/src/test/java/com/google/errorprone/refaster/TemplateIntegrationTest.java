@@ -353,4 +353,9 @@ public class TemplateIntegrationTest extends CompilerBasedTest {
   public void nonJdkType() throws IOException {
     runTest("NonJdkTypeTemplate");
   }
+
+  @Test
+  public void staticImportClassToken() throws IOException {
+    runTest("StaticImportClassTokenTemplate");
+  }
 }
