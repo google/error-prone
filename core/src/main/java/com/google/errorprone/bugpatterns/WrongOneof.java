@@ -84,6 +84,10 @@ public final class WrongOneof extends BugChecker implements SwitchTreeMatcher {
     // Keep track of which getters might be set.
     Set<String> allowableGetters = new HashSet<>();
     for (CaseTree caseTree : tree.getCases()) {
+      // Break out once we reach a default.
+      if (caseTree.getExpression() == null) {
+        break;
+      }
       allowableGetters.add(
           getter(((IdentifierTree) caseTree.getExpression()).getName().toString()));
 
