@@ -62,7 +62,11 @@ public final class WrongOneof extends BugChecker implements SwitchTreeMatcher {
     if (!ONE_OF_ENUM.apply(getType(tree.getExpression()), state)) {
       return NO_MATCH;
     }
-    ExpressionTree receiver = getReceiver(stripParentheses(tree.getExpression()));
+    ExpressionTree expression = stripParentheses(tree.getExpression());
+    if (!(expression instanceof MethodInvocationTree)) {
+      return NO_MATCH;
+    }
+    ExpressionTree receiver = getReceiver(expression);
     if (receiver == null) {
       return NO_MATCH;
     }
@@ -74,7 +78,7 @@ public final class WrongOneof extends BugChecker implements SwitchTreeMatcher {
 
     ImmutableSet<String> getters =
         enumValues(getType(tree.getExpression()).tsym).stream()
-            .map(c -> getter(c))
+            .map(WrongOneof::getter)
             .collect(toImmutableSet());
 
     // Keep track of which getters might be set.
