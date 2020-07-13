@@ -36,6 +36,7 @@ message TestOneOfMessage {
   oneof OneOf {
     string foo = 1;
     string bar = 2;
+    string baz = 3;
   }
 }
 
