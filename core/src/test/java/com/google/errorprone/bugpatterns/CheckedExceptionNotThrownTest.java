@@ -19,6 +19,7 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH;
 
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
+import com.google.errorprone.CompilationTestHelper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -27,7 +28,10 @@ import org.junit.runners.JUnit4;
 @RunWith(JUnit4.class)
 public final class CheckedExceptionNotThrownTest {
   private final BugCheckerRefactoringTestHelper helper =
-      BugCheckerRefactoringTestHelper.newInstance(new CheckedExceptionNotThrown(), getClass());
+      BugCheckerRefactoringTestHelper.newInstance(CheckedExceptionNotThrown.class, getClass());
+
+  private final CompilationTestHelper compilationHelper =
+      CompilationTestHelper.newInstance(CheckedExceptionNotThrown.class, getClass());
 
   @Test
   public void noExceptionThrown_entireThrowsBlockRemoved() {
@@ -130,6 +134,18 @@ public final class CheckedExceptionNotThrownTest {
             "Test.java", //
             "public final class Test {",
             "  void test() throws IllegalStateException {}",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void oneCheckedOneUnchecked_finding() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java", //
+            "public final class Test {",
+            "  // BUG: Diagnostic contains: (Exception)",
+            "  void test() throws IllegalStateException, Exception {}",
             "}")
         .doTest();
   }

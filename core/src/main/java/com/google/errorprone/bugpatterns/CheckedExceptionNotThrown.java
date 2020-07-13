@@ -100,6 +100,19 @@ public final class CheckedExceptionNotThrown extends BugChecker implements Metho
             .filter(Objects::nonNull)
             .collect(toImmutableSet());
 
+    String unthrown =
+        tree.getThrows().stream()
+            .filter(et -> !canActuallyBeThrown.contains(et))
+            .map(state::getSourceForNode)
+            .sorted()
+            .collect(joining(", ", "(", ")"));
+    String description =
+        String.format(
+            "This method does not throw checked exceptions %s despite claiming to. This may cause"
+                + " consumers of the API to incorrectly attempt to handle, or propagate, this"
+                + " exception.",
+            unthrown);
+
     SuggestedFix throwsFix =
         canActuallyBeThrown.isEmpty()
             ? deleteEntireThrowsClause(tree, state)
@@ -109,7 +122,7 @@ public final class CheckedExceptionNotThrown extends BugChecker implements Metho
                 canActuallyBeThrown.stream().map(state::getSourceForNode).collect(joining(", ")));
     SuggestedFix fix =
         SuggestedFix.builder().merge(fixJavadoc(thrownTypes, state)).merge(throwsFix).build();
-    return describeMatch(tree.getThrows().get(0), fix);
+    return buildDescription(tree.getThrows().get(0)).setMessage(description).addFix(fix).build();
   }
 
   private SuggestedFix fixJavadoc(ImmutableSet<Type> actuallyThrownTypes, VisitorState state) {
