@@ -32,7 +32,6 @@ import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ExpressionTree;
-import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.LambdaExpressionTree;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
@@ -198,7 +197,7 @@ public class MissingSuperCall extends BugChecker
         if (methodSelect.getKind() == Kind.MEMBER_SELECT) {
           MemberSelectTree memberSelect = (MemberSelectTree) methodSelect;
           result =
-              isSuper(memberSelect.getExpression())
+              ASTHelpers.isSuper(memberSelect.getExpression())
                   && memberSelect.getIdentifier().contentEquals(overridingMethodName);
         }
       }
@@ -220,14 +219,4 @@ public class MissingSuperCall extends BugChecker
     return String.format("%s#%s", methodSym.owner, methodSym.getSimpleName());
   }
 
-  private static boolean isSuper(ExpressionTree tree) {
-    switch (tree.getKind()) {
-      case IDENTIFIER:
-        return ((IdentifierTree) tree).getName().contentEquals("super");
-      case MEMBER_SELECT:
-        return ((MemberSelectTree) tree).getIdentifier().contentEquals("super");
-      default:
-        return false;
-    }
-  }
 }

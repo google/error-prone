@@ -441,9 +441,9 @@ public class ASTHelpers {
 
   /**
    * Returns the type that this expression tree will evaluate to. If its a literal, an identifier,
-   * or a member select this is the actual type, if its a method invocation then its the return type
-   * of the method (after instantiating generic types), if its a constructor then its the type of
-   * the returned class.
+   * or a member select this is the actual type, if it's a method invocation then it's the return
+   * type of the method (after instantiating generic types), if it's a constructor then it's the
+   * type of the returned class.
    *
    * <p>TODO(andrewrice) consider replacing {@code getReturnType} with this method
    *
@@ -1348,6 +1348,17 @@ public class ASTHelpers {
       return ImmutableSet.of();
     }
     return MoreAnnotations.asStrings((AnnotationValue) values.get()).collect(toImmutableSet());
+  }
+
+  public static boolean isSuper(Tree tree) {
+    switch (tree.getKind()) {
+      case IDENTIFIER:
+        return ((IdentifierTree) tree).getName().contentEquals("super");
+      case MEMBER_SELECT:
+        return ((MemberSelectTree) tree).getIdentifier().contentEquals("super");
+      default:
+        return false;
+    }
   }
 
   /** An expression's target type, see {@link #targetType}. */
