@@ -17,7 +17,7 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.common.collect.Iterables.getOnlyElement;
-import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
+import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
 import static com.google.errorprone.predicates.TypePredicates.isDescendantOf;
@@ -54,7 +54,7 @@ import java.util.Optional;
     summary =
         "The field number passed into #getFieldByNumber belongs to a different proto"
             + " to the Descriptor.",
-    severity = WARNING)
+    severity = ERROR)
 public final class MixedDescriptors extends BugChecker implements MethodInvocationTreeMatcher {
 
   private static final Matcher<ExpressionTree> GET_DESCRIPTOR =
