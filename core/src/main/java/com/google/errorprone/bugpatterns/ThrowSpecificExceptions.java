@@ -33,13 +33,21 @@ import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.ThrowTree;
 
-/** Bugpattern to discourage throwing base exception classes.. */
+/** Bugpattern to discourage throwing base exception classes. */
 @BugPattern(
     name = "ThrowSpecificExceptions",
     summary =
-        "Consider throwing more specific exceptions rather than (e.g.) RuntimeException. Throwing"
-            + " generic exceptions forces any users of the API that wish to handle the failure"
-            + " mode to catch very non-specific exceptions that convey little information.",
+        "Base exception classes should be treated as abstract. If the exception is intended to be"
+            + " caught, throw a domain-specific exception. Otherwise, prefer a more specific"
+            + " exception for clarity. Common alternatives include: AssertionError,"
+            + " IllegalArgumentException, IllegalStateException, and (Guava's) VerifyException.",
+    explanation =
+        "1. Defensive coding: Using a generic exception would force a caller that wishes to catch"
+            + " it to potentially catch unrelated exceptions as well."
+            + "\n\n"
+            + "2. Clarity: Base exception classes offer no information on the nature of the"
+            + " failure.",
+
     severity = WARNING)
 public final class ThrowSpecificExceptions extends BugChecker implements NewClassTreeMatcher {
   private static final ImmutableList<AbstractLikeException> ABSTRACT_LIKE_EXCEPTIONS =
