@@ -126,11 +126,32 @@ public class EmptyCatchNegativeCases {
   }
 
   @Test
-  public void expectedException() {
+  public void expectedExceptionInTest() {
     try {
       System.err.println();
       fail();
     } catch (Exception expected) {
+    }
+  }
+
+  public void expectedException() {
+    try {
+      System.err.println();
+    } catch (Exception expected) {
+    }
+  }
+
+  public void ignoredException() {
+    try {
+      System.err.println();
+    } catch (Exception ignored) {
+    }
+  }
+
+  public void okException() {
+    try {
+      System.err.println();
+    } catch (Exception ok) {
     }
   }
 }

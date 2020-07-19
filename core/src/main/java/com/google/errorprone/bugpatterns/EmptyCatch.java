@@ -20,6 +20,7 @@ import static com.google.errorprone.BugPattern.LinkType.CUSTOM;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 
+import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.CatchTreeMatcher;
@@ -27,6 +28,7 @@ import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.CatchTree;
+import com.sun.source.tree.VariableTree;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
@@ -39,6 +41,9 @@ import com.sun.source.tree.CatchTree;
     )
 public class EmptyCatch extends BugChecker implements CatchTreeMatcher {
 
+  private static final ImmutableSet<String> EXEMPTED_PARAMETER_NAMES =
+      ImmutableSet.of("expected", "ok", "ignored");
+
   @Override
   public Description matchCatch(CatchTree tree, VisitorState state) {
     BlockTree block = tree.getBlock();
@@ -49,6 +54,11 @@ public class EmptyCatch extends BugChecker implements CatchTreeMatcher {
       return NO_MATCH;
     }
     if (ASTHelpers.isJUnitTestCode(state)) {
+      return NO_MATCH;
+    }
+    VariableTree param = tree.getParameter();
+    if (EXEMPTED_PARAMETER_NAMES.stream()
+        .anyMatch(paramName -> param.getName().contentEquals(paramName))) {
       return NO_MATCH;
     }
     return describeMatch(tree);
