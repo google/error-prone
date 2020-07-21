@@ -42,5 +42,6 @@ irrelevant. To prove this, set the variable to `null` and run again. The program
 will *still* print `1`, not throw a `NullPointerException`!
 
 Qualifying a static reference in this way creates an unnecessarily confusing
-situation. To prevent it, always qualify static method calls using a class name,
-never an expression.
+situation. To prevent it, only qualify static method calls using a class name,
+never an expression (that is, `TheClass.theMethod()` or `theMethod()`, but not
+`anInstanceOfTheClass.theMethod()`).
