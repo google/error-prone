@@ -87,6 +87,7 @@ import com.sun.tools.javac.code.Flags;
 import com.sun.tools.javac.code.Kinds.KindSelector;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
+import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Types.DefaultTypeVisitor;
 import com.sun.tools.javac.main.Arguments;
@@ -674,6 +675,37 @@ public class SuggestedFixes {
     }
     // Method name not found.
     throw new AssertionError();
+  }
+
+  /**
+   * Renames the given {@link MethodTree} and its usages in the current compilation unit to {@code
+   * replacement}.
+   */
+  public static SuggestedFix renameMethodWithInvocations(
+      MethodTree tree, final String replacement, VisitorState state) {
+    SuggestedFix.Builder fix = SuggestedFix.builder().merge(renameMethod(tree, replacement, state));
+    MethodSymbol sym = getSymbol(tree);
+    new TreeScanner<Void, Void>() {
+      @Override
+      public Void visitIdentifier(IdentifierTree tree, Void unused) {
+        if (sym.equals(getSymbol(tree))) {
+          fix.replace(tree, replacement);
+        }
+        return super.visitIdentifier(tree, null);
+      }
+
+      @Override
+      public Void visitMemberSelect(MemberSelectTree tree, Void unused) {
+        if (sym.equals(getSymbol(tree))) {
+          fix.replace(
+              state.getEndPosition(tree.getExpression()),
+              state.getEndPosition(tree),
+              "." + replacement);
+        }
+        return super.visitMemberSelect(tree, null);
+      }
+    }.scan(state.getPath().getCompilationUnit(), null);
+    return fix.build();
   }
 
   /** Replaces the name of the method being invoked in {@code tree} with {@code replacement}. */

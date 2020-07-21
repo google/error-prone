@@ -182,6 +182,7 @@ import com.google.errorprone.bugpatterns.LoopConditionChecker;
 import com.google.errorprone.bugpatterns.LossyPrimitiveCompare;
 import com.google.errorprone.bugpatterns.MathAbsoluteRandom;
 import com.google.errorprone.bugpatterns.MathRoundIntLong;
+import com.google.errorprone.bugpatterns.MemberNaming;
 import com.google.errorprone.bugpatterns.MethodCanBeStatic;
 import com.google.errorprone.bugpatterns.MissingCasesInEnumSwitch;
 import com.google.errorprone.bugpatterns.MissingDefault;
@@ -917,6 +918,7 @@ public class BuiltInCheckerSuppliers {
           LambdaFunctionalInterface.class,
           LockMethodChecker.class,
           LongLiteralLowerCaseSuffix.class,
+          MemberNaming.class,
           MethodCanBeStatic.class,
           MissingDefault.class,
           MixedArrayDimensions.class,

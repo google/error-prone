@@ -66,6 +66,7 @@ import javax.lang.model.element.Modifier;
  */
 public class JUnitMatchers {
   public static final String JUNIT4_TEST_ANNOTATION = "org.junit.Test";
+  public static final String JUNIT4_THEORY_ANNOTATION = "org.junit.experimental.theories.Theory";
   public static final String JUNIT_BEFORE_ANNOTATION = "org.junit.Before";
   public static final String JUNIT_AFTER_ANNOTATION = "org.junit.After";
   public static final String JUNIT_BEFORE_CLASS_ANNOTATION = "org.junit.BeforeClass";
@@ -203,7 +204,10 @@ public class JUnitMatchers {
 
   /** Matches a JUnit 3 or 4 test case. */
   public static final Matcher<MethodTree> TEST_CASE =
-      anyOf(isJunit3TestCase, hasAnnotation(JUNIT4_TEST_ANNOTATION));
+      anyOf(
+          isJunit3TestCase,
+          hasAnnotation(JUNIT4_TEST_ANNOTATION),
+          hasAnnotation(JUNIT4_THEORY_ANNOTATION));
   /**
    * A list of test runners that this matcher should look for in the @RunWith annotation. Subclasses
    * of the test runners are also matched.
