@@ -19,6 +19,7 @@ package com.google.errorprone.bugpatterns;
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
 import com.sun.tools.javac.main.Main.Result;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -211,6 +212,19 @@ public class RestrictedApiCheckerTest {
             "  // BUG: Diagnostic contains: lorem",
             "  public Testcase() {}",
             "}")
+        .expectResult(Result.ERROR)
+        .doTest();
+  }
+
+  @Ignore("Doesn't work yet")
+  @Test
+  public void testImplicitRestrictedConstructorProhibited_implicitConstructor() {
+    helper
+        .addSourceLines(
+            "Testcase.java",
+            "package com.google.errorprone.bugpatterns.testdata;",
+            "  // BUG: Diagnostic contains: lorem",
+            "class Testcase extends RestrictedApiMethods {}")
         .expectResult(Result.ERROR)
         .doTest();
   }
