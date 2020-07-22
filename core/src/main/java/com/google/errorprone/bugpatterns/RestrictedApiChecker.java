@@ -105,9 +105,7 @@ public class RestrictedApiChecker extends BugChecker
    * this implicit parameter.
    */
   private static Type dropImplicitEnclosingInstanceParameter(
-      NewClassTree tree,
-      VisitorState state,
-      com.sun.tools.javac.code.Symbol.MethodSymbol anonymousClassConstructor) {
+      NewClassTree tree, VisitorState state, MethodSymbol anonymousClassConstructor) {
     if (tree.getEnclosingExpression() == null) {
       return anonymousClassConstructor.asType();
     }
@@ -121,13 +119,13 @@ public class RestrictedApiChecker extends BugChecker
   }
 
   private static MethodSymbol superclassConstructorSymbol(NewClassTree tree, VisitorState state) {
-    com.sun.tools.javac.code.Symbol.MethodSymbol constructor = ASTHelpers.getSymbol(tree);
+    MethodSymbol constructor = ASTHelpers.getSymbol(tree);
     Types types = state.getTypes();
     TypeSymbol superclass = types.supertype(constructor.enclClass().asType()).asElement();
     Type anonymousClassType = constructor.enclClass().asType();
     Type matchingConstructorType = dropImplicitEnclosingInstanceParameter(tree, state, constructor);
 
-    return (com.sun.tools.javac.code.Symbol.MethodSymbol)
+    return (MethodSymbol)
         getOnlyElement(
             superclass
                 .members()
@@ -144,7 +142,6 @@ public class RestrictedApiChecker extends BugChecker
     if (tree.getClassBody() != null) {
       return checkMethodUse(superclassConstructorSymbol(tree, state), tree, state);
     } else {
-      // TODO(bangert): Handle implicit super() calls in generated constructors
       return checkRestriction(ASTHelpers.getAnnotation(tree, RestrictedApi.class), tree, state);
     }
   }
