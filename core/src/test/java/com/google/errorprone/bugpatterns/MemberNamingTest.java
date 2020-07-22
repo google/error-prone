@@ -114,4 +114,15 @@ public class MemberNamingTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void upperCamelCaseAndStatic_noFinding() {
+    helper
+        .addSourceLines(
+            "Test.java", //
+            "class Test {",
+            "  private static final int FOO_BAR = 1;",
+            "}")
+        .doTest();
+  }
 }

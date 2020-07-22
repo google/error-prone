@@ -95,6 +95,11 @@ public final class MemberNaming extends BugChecker
     if (symbol == null) {
       return NO_MATCH;
     }
+    // TODO(ghm): We could validate static variables too; they can contain underscores, but should
+    // be either UPPER_UNDERSCORE or lowerCamel, not some mix of both.
+    if (symbol.isStatic()) {
+      return NO_MATCH;
+    }
     String name = tree.getName().toString();
     // Try to avoid dual-matching with ConstantCaseForConstants.
     if (UPPER_UNDERSCORE_PATTERN.matcher(name).matches() && !symbol.isStatic()) {
