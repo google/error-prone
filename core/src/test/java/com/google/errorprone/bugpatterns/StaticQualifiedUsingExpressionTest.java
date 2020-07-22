@@ -67,13 +67,18 @@ public class StaticQualifiedUsingExpressionTest {
             "in/Test.java",
             "import a.Lib;",
             "class Test {",
-            "  int x = Lib.CONST + new b.Lib().CONST;",
+            "  void test() {",
+            "    int x = Lib.CONST + new b.Lib().CONST;",
+            "  }",
             "}")
         .addOutputLines(
             "out/Test.java",
             "import a.Lib;",
             "class Test {",
-            "  int x = Lib.CONST + b.Lib.CONST;",
+            "  void test() {",
+            "    new b.Lib();",
+            "    int x = Lib.CONST + b.Lib.CONST;",
+            "  }",
             "}")
         .doTest();
   }

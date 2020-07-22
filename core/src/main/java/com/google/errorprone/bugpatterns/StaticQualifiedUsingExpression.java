@@ -28,8 +28,10 @@ import com.google.errorprone.bugpatterns.BugChecker.MemberSelectTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.sun.source.tree.ClassTree;
+import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
+import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.StatementTree;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
@@ -69,13 +71,14 @@ public class StaticQualifiedUsingExpression extends BugChecker implements Member
         return NO_MATCH;
     }
     ClassSymbol owner = sym.owner.enclClass();
-    switch (tree.getExpression().getKind()) {
+    ExpressionTree expression = tree.getExpression();
+    switch (expression.getKind()) {
       case MEMBER_SELECT:
       case IDENTIFIER:
         // References to static variables should be qualified by the type name of the owning type,
         // or a sub-type. e.g.: if CONST is declared in Foo, and SubFoo extends Foo,
         // allow `Foo.CONST` and `SubFoo.CONST` (but not, say, `new Foo().CONST`.
-        Symbol base = getSymbol(tree.getExpression());
+        Symbol base = getSymbol(expression);
         if (base instanceof ClassSymbol && base.isSubClass(owner, state.getTypes())) {
           return NO_MATCH;
         }
@@ -96,10 +99,10 @@ public class StaticQualifiedUsingExpression extends BugChecker implements Member
     // This doesn't preserve order of operations for non-trivial expressions, but we don't have
     // letexprs and hopefully it'll call attention to the fact that just deleting the qualifier
     // might not always be the right fix.
-    if (tree.getExpression() instanceof MethodInvocationTree) {
+    if (expression instanceof MethodInvocationTree || expression instanceof NewClassTree) {
       StatementTree statement = state.findEnclosing(StatementTree.class);
       if (statement != null) {
-        fix.prefixWith(statement, state.getSourceForNode(tree.getExpression()) + ";");
+        fix.prefixWith(statement, state.getSourceForNode(expression) + ";");
       }
     }
 
