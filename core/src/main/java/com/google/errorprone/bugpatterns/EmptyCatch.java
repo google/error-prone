@@ -51,6 +51,9 @@ public class EmptyCatch extends BugChecker implements CatchTreeMatcher {
     if (ASTHelpers.isJUnitTestCode(state)) {
       return NO_MATCH;
     }
+    if (ASTHelpers.isTestNgTestCode(state)) {
+      return NO_MATCH;
+    }
     return describeMatch(tree);
   }
 }

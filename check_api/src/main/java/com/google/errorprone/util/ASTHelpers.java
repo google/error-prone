@@ -40,6 +40,7 @@ import com.google.errorprone.dataflow.nullnesspropagation.Nullness;
 import com.google.errorprone.dataflow.nullnesspropagation.NullnessAnalysis;
 import com.google.errorprone.matchers.JUnitMatchers;
 import com.google.errorprone.matchers.Matcher;
+import com.google.errorprone.matchers.TestNgMatchers;
 import com.google.errorprone.suppliers.Supplier;
 import com.google.errorprone.suppliers.Suppliers;
 import com.sun.source.tree.AnnotationTree;
@@ -1144,6 +1145,20 @@ public class ASTHelpers {
       if (ancestor instanceof ClassTree
           && (JUnitMatchers.isTestCaseDescendant.matches((ClassTree) ancestor, state)
               || hasAnnotation(getSymbol(ancestor), JUNIT4_RUN_WITH_ANNOTATION, state))) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  /**
+   * Returns true if the leaf node in the {@link TreePath} from {@code state} sits somewhere
+   * underneath a class or method that is marked as TestNG test code.
+   */
+  public static boolean isTestNgTestCode(VisitorState state) {
+    for (Tree ancestor : state.getPath()) {
+      if (ancestor instanceof MethodTree
+          && TestNgMatchers.hasTestNgAnnotation((MethodTree) ancestor, state)) {
         return true;
       }
     }
