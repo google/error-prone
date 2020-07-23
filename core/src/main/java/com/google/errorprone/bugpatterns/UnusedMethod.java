@@ -81,7 +81,8 @@ public final class UnusedMethod extends BugChecker implements CompilationUnitTre
           "com.google.inject.multibindings.ProvidesIntoSet",
           "javax.annotation.PreDestroy",
           "javax.annotation.PostConstruct",
-          "javax.inject.Inject");
+          "javax.inject.Inject",
+          "org.testng.annotations.DataProvider");
 
   /** The set of types exempting a type that is extending or implementing them. */
   private static final ImmutableSet<String> EXEMPTING_SUPER_TYPES =
