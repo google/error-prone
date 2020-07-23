@@ -42,4 +42,27 @@ public class EmptyCatchTest {
   public void testNegativeCase() throws Exception {
     compilationHelper.addSourceFile("EmptyCatchNegativeCases.java").doTest();
   }
+
+  @Test
+  public void addTestNgTest() {
+    compilationHelper
+        .addSourceLines(
+            "org/testng/annotations/Test.java",
+            "package org.testng.annotations;",
+            "public @interface Test {",
+            "}")
+        .addSourceLines(
+            "in/SomeTest.java",
+            "import org.testng.annotations.Test;",
+            "public class SomeTest {",
+            "  @Test",
+            "  public void testNG() {",
+            "    try {",
+            "      System.err.println();",
+            "    } catch (Exception doNotCare) {",
+            "    }",
+            "  }",
+            "}")
+        .doTest();
+  }
 }
