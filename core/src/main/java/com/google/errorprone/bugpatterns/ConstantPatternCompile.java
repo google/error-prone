@@ -107,12 +107,13 @@ public final class ConstantPatternCompile extends BugChecker implements Variable
             .replace(pos, pos + varName.length(), upperUnderscoreVarName)
             .toString();
 
-    String modifiers = canUseStatic ? "static final " : "final ";
-    String variableTreeString = modifiers + variableReplacedString;
+    String modifiers = "private " + (canUseStatic ? "static " : "") + "final ";
+    String variableTreeString = "\n" + modifiers + variableReplacedString + "\n";
+
     SuggestedFix fix =
         SuggestedFix.builder()
             .merge(renameVariableOccurrences(tree, upperUnderscoreVarName, state))
-            .prefixWith(outerMethodTree, variableTreeString)
+            .postfixWith(outerMethodTree, variableTreeString)
             .delete(tree)
             .build();
     return describeMatch(tree, fix);

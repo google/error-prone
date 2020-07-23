@@ -70,8 +70,8 @@ public class ConstantPatternCompileTest {
             "class Test {",
             "  private static final String MY_COOL_PATTERN = \"a+\";",
             "  public static void myPopularStaticMethod() {",
-            "    Pattern attern = Pattern.compile(MY_COOL_PATTERN);",
-            "    Matcher m = attern.matcher(\"aaaaab\");",
+            "    Pattern somePattern = Pattern.compile(MY_COOL_PATTERN);",
+            "    Matcher m = somePattern.matcher(\"aaaaab\");",
             "  }",
             "}")
         .addOutputLines(
@@ -80,10 +80,38 @@ public class ConstantPatternCompileTest {
             "import java.util.regex.Pattern;",
             "class Test {",
             "  private static final String MY_COOL_PATTERN = \"a+\";",
-            "  static final Pattern ATTERN = Pattern.compile(MY_COOL_PATTERN);",
             "  public static void myPopularStaticMethod() {",
-            "    Matcher m = ATTERN.matcher(\"aaaaab\");",
+            "    Matcher m = SOME_PATTERN.matcher(\"aaaaab\");",
             "  }",
+            "  private static final Pattern SOME_PATTERN = Pattern.compile(MY_COOL_PATTERN);",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void testFixGenerationWithJavadoc() {
+    testHelper
+        .addInputLines(
+            "in/Test.java",
+            "import java.util.regex.Matcher;",
+            "import java.util.regex.Pattern;",
+            "class Test {",
+            "  /** This is a javadoc. **/ ",
+            "  public static void myPopularStaticMethod() {",
+            "    Pattern myPattern = Pattern.compile(\"a+\");",
+            "    Matcher m = myPattern.matcher(\"aaaaab\");",
+            "  }",
+            "}")
+        .addOutputLines(
+            "in/Test.java",
+            "import java.util.regex.Matcher;",
+            "import java.util.regex.Pattern;",
+            "class Test {",
+            "  /** This is a javadoc. **/ ",
+            "  public static void myPopularStaticMethod() {",
+            "    Matcher m = MY_PATTERN.matcher(\"aaaaab\");",
+            "  }",
+            "  private static final Pattern MY_PATTERN = Pattern.compile(\"a+\");",
             "}")
         .doTest();
   }
@@ -99,8 +127,8 @@ public class ConstantPatternCompileTest {
             "  private static final String MY_COOL_PATTERN = \"a+\";",
             "  class Inner {",
             "  public void myPopularStaticMethod() {",
-            "      Pattern attern = Pattern.compile(MY_COOL_PATTERN);",
-            "      Matcher m = attern.matcher(\"aaaaab\");",
+            "      Pattern myPattern = Pattern.compile(MY_COOL_PATTERN);",
+            "      Matcher m = myPattern.matcher(\"aaaaab\");",
             "    }",
             "  }",
             "}")
@@ -111,10 +139,10 @@ public class ConstantPatternCompileTest {
             "class Test {",
             "  private static final String MY_COOL_PATTERN = \"a+\";",
             "  class Inner {",
-            "  final Pattern ATTERN = Pattern.compile(MY_COOL_PATTERN);",
             "  public void myPopularStaticMethod() {",
-            "      Matcher m = ATTERN.matcher(\"aaaaab\");",
+            "      Matcher m = MY_PATTERN.matcher(\"aaaaab\");",
             "    }",
+            "  private final Pattern MY_PATTERN = Pattern.compile(MY_COOL_PATTERN);",
             "  }",
             "}")
         .doTest();
