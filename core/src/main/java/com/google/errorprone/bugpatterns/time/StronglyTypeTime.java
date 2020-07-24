@@ -185,7 +185,7 @@ public final class StronglyTypeTime extends BugChecker implements CompilationUni
 
   private static final Pattern TIME_UNIT_REMOVER =
       Pattern.compile(
-          "((_?IN)?_?(NANO|NANOSECOND|NSEC|_NS|MICRO|MSEC|MICROSECOND|MILLI|MILLISECOND|_MS|SEC|SECOND|MINUTE|MIN|HOUR|DAY)S?)?$",
+          "((_?IN)?_?(NANO|NANOSECOND|NSEC|_NS|MICRO|MSEC|USEC|MICROSECOND|MILLI|MILLISECOND|_MS|SEC|SECOND|MINUTE|MIN|HOUR|DAY)S?)?$",
           Pattern.CASE_INSENSITIVE);
 
   /** Tries to strip any time-related suffix off the field name. */
