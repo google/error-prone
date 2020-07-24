@@ -18,6 +18,7 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
+import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.StandardTags;
@@ -30,7 +31,6 @@ import com.sun.source.tree.BinaryTree;
 import com.sun.source.tree.ParenthesizedTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
-import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCBinary;
 import com.sun.tools.javac.tree.TreeInfo;
 import java.util.EnumSet;
@@ -96,8 +96,8 @@ public class OperatorPrecedence extends BugChecker implements BinaryTreeMatcher 
     String prefix = "(";
     String postfix = ")";
     if (tree.getRightOperand() instanceof ParenthesizedTree) {
-      startPos = ((JCTree) tree.getRightOperand()).getStartPosition();
-      endPos = ((JCTree) tree.getRightOperand()).getStartPosition() + 1;
+      startPos = getStartPosition(tree.getRightOperand());
+      endPos = getStartPosition(tree.getRightOperand()) + 1;
       postfix = "";
     } else {
       startPos = state.getEndPosition(tree.getLeftOperand()) - 1;

@@ -17,6 +17,7 @@
 package com.google.errorprone.bugpatterns.threadsafety;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
+import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static com.google.errorprone.util.ASTHelpers.stripParentheses;
 
 import com.google.auto.value.AutoValue;
@@ -155,7 +156,7 @@ public class DoubleCheckedLocking extends BugChecker implements IfTreeMatcher {
     if (expr == null) {
       return Description.NO_MATCH;
     }
-    if (expr.getStartPosition() > ((JCTree) info.innerIf()).getStartPosition()) {
+    if (expr.getStartPosition() > getStartPosition(info.innerIf())) {
       return Description.NO_MATCH;
     }
     if (!(expr.getExpression() instanceof JCAssign)) {

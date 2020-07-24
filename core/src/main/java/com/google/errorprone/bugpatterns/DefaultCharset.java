@@ -24,6 +24,7 @@ import static com.google.errorprone.matchers.Matchers.toType;
 import static com.google.errorprone.matchers.method.MethodMatchers.constructor;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
+import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
@@ -48,7 +49,6 @@ import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Type;
-import com.sun.tools.javac.tree.JCTree;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -238,12 +238,12 @@ public class DefaultCharset extends BugChecker
     if (parentReceiver != null) {
       fix.replace(
           /*startPos=*/ state.getEndPosition(parentReceiver),
-          /*endPos=*/ ((JCTree) tree).getStartPosition(),
+          /*endPos=*/ getStartPosition(tree),
           /*replaceWith=*/ "." + prefix);
     } else {
       fix.replace(
-          /*startPos=*/ ((JCTree) parent).getStartPosition(),
-          /*endPos=*/ ((JCTree) tree).getStartPosition(),
+          /*startPos=*/ getStartPosition(parent),
+          /*endPos=*/ getStartPosition(tree),
           /*replaceWith=*/ prefix);
     }
     fix.replace(

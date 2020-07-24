@@ -18,8 +18,10 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
+import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.isSameType;
+import static com.sun.source.tree.Tree.Kind.AND;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.StandardTags;
@@ -31,7 +33,6 @@ import com.sun.source.tree.BinaryTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.util.TreeScanner;
-import com.sun.tools.javac.tree.JCTree;
 import java.util.Iterator;
 
 /**
@@ -87,8 +88,8 @@ public class ShortCircuitBoolean extends BugChecker implements BinaryTreeMatcher
       if (tree.getKind() == Kind.AND || tree.getKind() == Kind.OR) {
         p.replace(
             /* startPos= */ state.getEndPosition(tree.getLeftOperand()),
-            /* endPos= */ ((JCTree) tree.getRightOperand()).getStartPosition(),
-            tree.getKind() == Tree.Kind.AND ? " && " : " || ");
+            /* endPos= */ getStartPosition(tree.getRightOperand()),
+            tree.getKind() == AND ? " && " : " || ");
       }
 
       return super.visitBinary(tree, p);

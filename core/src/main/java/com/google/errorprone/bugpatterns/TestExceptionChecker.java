@@ -20,6 +20,7 @@ import static com.google.common.collect.Iterables.getLast;
 import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
+import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -34,7 +35,6 @@ import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Type;
-import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCAnnotation;
 import com.sun.tools.javac.tree.JCTree.JCAssign;
 import com.sun.tools.javac.tree.JCTree.JCExpression;
@@ -154,10 +154,7 @@ public class TestExceptionChecker extends BugChecker implements MethodTreeMatche
           state.getEndPosition(tree),
           "");
     } else {
-      fix.replace(
-          ((JCTree) tree).getStartPosition(),
-          ((JCTree) arguments.get(idx + 1)).getStartPosition(),
-          "");
+      fix.replace(getStartPosition(tree), getStartPosition(arguments.get(idx + 1)), "");
     }
   }
 }

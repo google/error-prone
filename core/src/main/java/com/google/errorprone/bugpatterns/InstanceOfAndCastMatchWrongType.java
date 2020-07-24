@@ -17,6 +17,7 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
+import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 
 import com.google.common.base.Objects;
 import com.google.common.collect.Iterables;
@@ -42,7 +43,6 @@ import com.sun.source.tree.UnaryTree;
 import com.sun.source.util.TreePath;
 import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.code.Types;
-import com.sun.tools.javac.tree.JCTree;
 import javax.annotation.Nullable;
 
 /**
@@ -123,7 +123,7 @@ public class InstanceOfAndCastMatchWrongType extends BugChecker implements TypeC
         treeScannerInstanceOfWrongType.scan(
             ifTree.getThenStatement(), instanceOfTree.getExpression());
         int pos = treeScannerInstanceOfWrongType.earliestStart;
-        if (pos < ((JCTree) tree).getStartPosition()) {
+        if (pos < getStartPosition(tree)) {
           return false;
         }
 

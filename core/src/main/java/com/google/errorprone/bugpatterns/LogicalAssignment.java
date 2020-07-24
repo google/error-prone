@@ -18,6 +18,7 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
+import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.StandardTags;
@@ -35,7 +36,6 @@ import com.sun.source.tree.ForLoopTree;
 import com.sun.source.tree.IfTree;
 import com.sun.source.tree.ParenthesizedTree;
 import com.sun.source.tree.WhileLoopTree;
-import com.sun.tools.javac.tree.JCTree;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
@@ -86,7 +86,7 @@ public class LogicalAssignment extends BugChecker
         .addFix(
             SuggestedFix.replace(
                 /*startPos=*/ state.getEndPosition(assign.getVariable()),
-                /*endPos=*/ ((JCTree) assign.getExpression()).getStartPosition(),
+                /*endPos=*/ getStartPosition(assign.getExpression()),
                 " == "))
         .build();
   }

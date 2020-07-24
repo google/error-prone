@@ -159,6 +159,6 @@ public final class InconsistentOverloads extends BugChecker implements ClassTree
    * <p>The only purpose of this method is to avoid doing a hacky casting to {@link JCTree}.
    */
   private static int getStartPosition(Tree tree) {
-    return ((JCTree) tree).getStartPosition();
+    return ASTHelpers.getStartPosition(tree);
   }
 }

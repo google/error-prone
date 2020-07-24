@@ -20,6 +20,7 @@ import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.not;
 import static com.google.errorprone.matchers.Matchers.packageStartsWith;
+import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 
 import com.google.common.collect.Iterables;
 import com.google.errorprone.BugPattern;
@@ -32,7 +33,6 @@ import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.NewClassTree;
-import com.sun.tools.javac.tree.JCTree;
 
 /** Check for calls to new Duration(long). */
 @BugPattern(
@@ -62,8 +62,8 @@ public final class JodaDurationConstructor extends BugChecker implements NewClas
     ExpressionTree millisArg = Iterables.getOnlyElement(tree.getArguments());
     SuggestedFix fix =
         SuggestedFix.replace(
-            ((JCTree) tree).getStartPosition(),
-            ((JCTree) millisArg).getStartPosition(),
+            getStartPosition(tree),
+            getStartPosition(millisArg),
             state.getSourceForNode(tree.getIdentifier()) + ".millis(");
     return describeMatch(tree, fix);
   }

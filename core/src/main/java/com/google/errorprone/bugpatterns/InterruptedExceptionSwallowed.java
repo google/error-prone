@@ -18,6 +18,7 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.common.collect.Iterables.getLast;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
+import static com.google.errorprone.fixes.SuggestedFixes.qualifyType;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.hasModifier;
@@ -27,6 +28,7 @@ import static com.google.errorprone.matchers.Matchers.methodHasVisibility;
 import static com.google.errorprone.matchers.Matchers.methodIsNamed;
 import static com.google.errorprone.matchers.Matchers.methodReturns;
 import static com.google.errorprone.matchers.MethodVisibility.Visibility.PUBLIC;
+import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.isSameType;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
@@ -42,7 +44,6 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.TryTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
-import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.suppliers.Suppliers;
@@ -57,7 +58,6 @@ import com.sun.source.tree.TryTree;
 import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Type.UnionClassType;
-import com.sun.tools.javac.tree.JCTree;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -138,12 +138,9 @@ public final class InterruptedExceptionSwallowed extends BugChecker
       MethodTree tree, Set<Type> exceptions, VisitorState state) {
     SuggestedFix.Builder fix = SuggestedFix.builder();
     fix.replace(
-        ((JCTree) tree.getThrows().get(0)).getStartPosition(),
+        getStartPosition(tree.getThrows().get(0)),
         state.getEndPosition(getLast(tree.getThrows())),
-        exceptions.stream()
-            .map(t -> SuggestedFixes.qualifyType(state, fix, t))
-            .sorted()
-            .collect(joining(", ")));
+        exceptions.stream().map(t -> qualifyType(state, fix, t)).sorted().collect(joining(", ")));
     return fix.build();
   }
 

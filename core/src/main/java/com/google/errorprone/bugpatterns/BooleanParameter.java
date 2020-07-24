@@ -20,6 +20,7 @@ import static com.google.common.collect.Iterables.getLast;
 import static com.google.common.collect.Streams.forEachPair;
 import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
+import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static com.sun.tools.javac.parser.Tokens.Comment.CommentStyle.BLOCK;
 
 import com.google.common.base.Ascii;
@@ -44,7 +45,6 @@ import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.TypeTag;
-import com.sun.tools.javac.tree.JCTree;
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.List;
@@ -85,7 +85,7 @@ public class BooleanParameter extends BugChecker
     if (NamedParameterComment.containsSyntheticParameterName(sym)) {
       return;
     }
-    int start = ((JCTree) tree).getStartPosition();
+    int start = getStartPosition(tree);
     int end = state.getEndPosition(getLast(arguments));
     Deque<ErrorProneToken> tokens = new ArrayDeque<>(state.getOffsetTokens(start, end));
     forEachPair(
@@ -111,14 +111,13 @@ public class BooleanParameter extends BugChecker
     if (EXCLUDED_NAMES.contains(name)) {
       return;
     }
-    while (!tokens.isEmpty() && tokens.peekFirst().pos() < ((JCTree) a).getStartPosition()) {
+    while (!tokens.isEmpty() && tokens.peekFirst().pos() < getStartPosition(a)) {
       tokens.removeFirst();
     }
     if (tokens.isEmpty()) {
       return;
     }
-    Range<Integer> argRange =
-        Range.closedOpen(((JCTree) a).getStartPosition(), state.getEndPosition(a));
+    Range<Integer> argRange = Range.closedOpen(getStartPosition(a), state.getEndPosition(a));
     if (!argRange.contains(tokens.peekFirst().pos())) {
       return;
     }

@@ -19,6 +19,7 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.BugPattern.StandardTags.STYLE;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
+import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -29,7 +30,6 @@ import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.ParenthesizedTree;
 import com.sun.source.tree.StatementTree;
-import com.sun.tools.javac.tree.JCTree;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
@@ -53,8 +53,7 @@ public class UnnecessaryParentheses extends BugChecker implements ParenthesizedT
     return describeMatch(
         tree,
         SuggestedFix.builder()
-            .replace(
-                ((JCTree) tree).getStartPosition(), ((JCTree) expression).getStartPosition(), "")
+            .replace(getStartPosition(tree), getStartPosition(expression), "")
             .replace(state.getEndPosition(expression), state.getEndPosition(tree), "")
             .build());
   }

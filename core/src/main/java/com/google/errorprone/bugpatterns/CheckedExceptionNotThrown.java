@@ -21,6 +21,7 @@ import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.common.collect.Iterables.getLast;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
+import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getThrownExceptions;
 import static com.google.errorprone.util.ASTHelpers.getType;
@@ -51,7 +52,6 @@ import com.sun.source.util.DocTreePathScanner;
 import com.sun.tools.javac.api.JavacTrees;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.parser.Tokens.TokenKind;
-import com.sun.tools.javac.tree.JCTree;
 import java.util.Objects;
 import javax.lang.model.element.Element;
 
@@ -117,7 +117,7 @@ public final class CheckedExceptionNotThrown extends BugChecker implements Metho
         canActuallyBeThrown.isEmpty()
             ? deleteEntireThrowsClause(tree, state)
             : SuggestedFix.replace(
-                ((JCTree) tree.getThrows().get(0)).getStartPosition(),
+                getStartPosition(tree.getThrows().get(0)),
                 state.getEndPosition(getLast(tree.getThrows())),
                 canActuallyBeThrown.stream().map(state::getSourceForNode).collect(joining(", ")));
     SuggestedFix fix =
@@ -159,7 +159,7 @@ public final class CheckedExceptionNotThrown extends BugChecker implements Metho
 
   private static SuggestedFix deleteEntireThrowsClause(MethodTree tree, VisitorState state) {
     int endPos = state.getEndPosition(getLast(tree.getThrows()));
-    int methodStartPos = ((JCTree) tree).getStartPosition();
+    int methodStartPos = getStartPosition(tree);
 
     int startPos =
         ErrorProneTokens.getTokens(

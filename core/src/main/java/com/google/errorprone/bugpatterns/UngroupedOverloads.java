@@ -22,6 +22,7 @@ import static com.google.errorprone.BugPattern.LinkType.CUSTOM;
 import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
 import static com.google.errorprone.BugPattern.StandardTags.STYLE;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
+import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static java.util.stream.Collectors.joining;
 
 import com.google.auto.value.AutoValue;
@@ -39,7 +40,6 @@ import com.sun.source.tree.LineMap;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
-import com.sun.tools.javac.tree.JCTree;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -178,7 +178,7 @@ public class UngroupedOverloads extends BugChecker implements ClassTreeMatcher {
     String ungroupedLines =
         overloads.stream()
             .filter(o -> !groups.get(o).equals(groups.get(current)))
-            .map(t -> lineMap.getLineNumber(((JCTree) t.tree()).getStartPosition()))
+            .map(t -> lineMap.getLineNumber(getStartPosition(t.tree())))
             .map(String::valueOf)
             .collect(joining(", "));
     MethodSymbol symbol = ASTHelpers.getSymbol(tree);

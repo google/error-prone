@@ -23,6 +23,7 @@ import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.hasArgumentWithValue;
 import static com.google.errorprone.matchers.Matchers.isSameType;
 import static com.google.errorprone.matchers.Matchers.stringLiteral;
+import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 
 import com.google.common.collect.ImmutableRangeSet;
 import com.google.common.collect.Range;
@@ -42,7 +43,6 @@ import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.LineMap;
 import com.sun.source.tree.Tree;
 import com.sun.tools.javac.parser.Tokens.Comment;
-import com.sun.tools.javac.tree.JCTree;
 import java.util.Optional;
 
 /**
@@ -96,7 +96,7 @@ public final class SuppressWarningsWithoutExplanation extends BugChecker
         // Expand by +/- one to accept comments either before or after the suppression.
         Range<Long> linesCovered =
             Range.closed(
-                lineMap.getLineNumber(((JCTree) parent).getStartPosition()) - 1,
+                lineMap.getLineNumber(getStartPosition(parent)) - 1,
                 lineMap.getLineNumber(state.getEndPosition(parent)) + 1);
         if (!linesWithComments.intersects(linesCovered)) {
           state.reportMatch(

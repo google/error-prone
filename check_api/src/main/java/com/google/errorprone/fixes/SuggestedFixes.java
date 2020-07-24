@@ -24,11 +24,13 @@ import static com.google.common.collect.Iterables.getLast;
 import static com.google.errorprone.util.ASTHelpers.getAnnotation;
 import static com.google.errorprone.util.ASTHelpers.getAnnotationWithSimpleName;
 import static com.google.errorprone.util.ASTHelpers.getModifiers;
+import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.sun.source.tree.Tree.Kind.ASSIGNMENT;
 import static com.sun.source.tree.Tree.Kind.CONDITIONAL_EXPRESSION;
 import static com.sun.source.tree.Tree.Kind.NEW_ARRAY;
 import static com.sun.tools.javac.code.TypeTag.CLASS;
+import static com.sun.tools.javac.util.Position.NOPOS;
 import static java.util.stream.Collectors.joining;
 
 import com.google.common.annotations.VisibleForTesting;
@@ -249,8 +251,8 @@ public class SuggestedFixes {
               .orElse(pos); // shouldn't ever be able to get to the else
     } else {
       int pos =
-          state.getEndPosition(originalModifiers) == Position.NOPOS
-              ? ((JCTree) tree).getStartPosition()
+          state.getEndPosition(originalModifiers) == NOPOS
+              ? getStartPosition(tree)
               : state.getEndPosition(originalModifiers) + 1;
       insertPos =
           state.getOffsetTokensForNode(originalModifiers).stream()
@@ -534,14 +536,14 @@ public class SuggestedFixes {
       @Override
       int pos(ClassTree tree, VisitorState state) {
         // We scan backwards from the first member, looking for the class's opening { token.
-        int classStart = ((JCTree) tree).getStartPosition();
+        int classStart = getStartPosition(tree);
         List<? extends Tree> members =
             tree.getMembers().stream()
                 /* Throw away generated members, which may be synthetic, or whose start
                 position may be the same as the class's. We only want to look at members defined
                 in the source, so we can find a source position which is after the opening {.*/
                 .filter(AdditionPosition::definedInSourceFile)
-                .filter(member -> ((JCTree) member).getStartPosition() > classStart)
+                .filter(member -> getStartPosition(member) > classStart)
                 .collect(toImmutableList());
         if (members.isEmpty()) {
           // The approach for inserting first only works if there's a member, but if not then LAST
@@ -628,10 +630,8 @@ public class SuggestedFixes {
     String name = tree.getName().toString();
     int typeEndPos = state.getEndPosition(tree.getType());
     // handle implicit lambda parameter types
-    int searchOffset = typeEndPos == -1 ? 0 : (typeEndPos - ((JCTree) tree).getStartPosition());
-    int pos =
-        ((JCTree) tree).getStartPosition()
-            + state.getSourceForNode(tree).indexOf(name, searchOffset);
+    int searchOffset = typeEndPos == -1 ? 0 : (typeEndPos - getStartPosition(tree));
+    int pos = getStartPosition(tree) + state.getSourceForNode(tree).indexOf(name, searchOffset);
     final SuggestedFix.Builder fix =
         SuggestedFix.builder().replace(pos, pos + name.length(), replacement);
     final Symbol.VarSymbol sym = getSymbol(tree);
@@ -662,11 +662,9 @@ public class SuggestedFixes {
   public static SuggestedFix renameMethod(
       MethodTree tree, final String replacement, VisitorState state) {
     // Search tokens from beginning of method tree to beginning of method body.
-    int basePos = ((JCTree) tree).getStartPosition();
+    int basePos = getStartPosition(tree);
     int endPos =
-        tree.getBody() != null
-            ? ((JCTree) tree.getBody()).getStartPosition()
-            : state.getEndPosition(tree);
+        tree.getBody() != null ? getStartPosition(tree.getBody()) : state.getEndPosition(tree);
     List<ErrorProneToken> methodTokens = state.getOffsetTokens(basePos, endPos);
     for (ErrorProneToken token : methodTokens) {
       if (token.kind() == TokenKind.IDENTIFIER && token.name().equals(tree.getName())) {
@@ -719,14 +717,14 @@ public class SuggestedFixes {
       startPos = state.getEndPosition(((MemberSelectTree) methodSelect).getExpression());
     } else if (methodSelect instanceof IdentifierTree) {
       identifier = ((IdentifierTree) methodSelect).getName();
-      startPos = ((JCTree) tree).getStartPosition();
+      startPos = getStartPosition(tree);
     } else {
       throw malformedMethodInvocationTree(tree);
     }
     int endPos =
         tree.getArguments().isEmpty()
             ? state.getEndPosition(tree)
-            : ((JCTree) tree.getArguments().get(0)).getStartPosition();
+            : getStartPosition(tree.getArguments().get(0));
     List<ErrorProneToken> tokens = state.getOffsetTokens(startPos, endPos);
     for (ErrorProneToken token : Lists.reverse(tokens)) {
       if (token.kind() == TokenKind.IDENTIFIER && token.name().equals(identifier)) {
@@ -754,7 +752,7 @@ public class SuggestedFixes {
 
     // replace only the type parameter name (and not any upper bounds)
     String name = typeParameter.getName().toString();
-    int pos = ((JCTree) typeParameter).getStartPosition();
+    int pos = getStartPosition(typeParameter);
     Builder fixBuilder =
         SuggestedFix.builder().replace(pos, pos + name.length(), typeVarReplacement);
 
@@ -832,7 +830,7 @@ public class SuggestedFixes {
                 })
             .join(Joiner.on(", "));
     return SuggestedFix.replace(
-        ((JCTree) tree.getThrows().get(0)).getStartPosition(),
+        getStartPosition(tree.getThrows().get(0)),
         state.getEndPosition(getLast(tree.getThrows())),
         replacement);
   }
@@ -1028,7 +1026,7 @@ public class SuggestedFixes {
                         && ((ClassTree) tree).getSimpleName().length() != 0)
                     // Lambda parameters can't be suppressed unless they have Type decls
                     || (tree instanceof VariableTree
-                        && ((JCTree) ((VariableTree) tree).getType()).getStartPosition() != -1))
+                        && getStartPosition(((VariableTree) tree).getType()) != -1))
         .findFirst()
         .orElse(null);
   }
@@ -1503,7 +1501,7 @@ public class SuggestedFixes {
     if (previousMember != null) {
       startTokenization = state.getEndPosition(previousMember);
     } else if (state.getEndPosition(classTree.getModifiers()) == Position.NOPOS) {
-      startTokenization = ((JCTree) classTree).getStartPosition();
+      startTokenization = getStartPosition(classTree);
     } else {
       startTokenization = state.getEndPosition(classTree.getModifiers());
     }
@@ -1522,7 +1520,7 @@ public class SuggestedFixes {
         ImmutableList.sortedCopyOf(
             Comparator.<Comment>comparingInt(c -> c.getSourcePos(0)).reversed(),
             tokens.get(0).comments());
-    int startPos = ((JCTree) tree).getStartPosition();
+    int startPos = getStartPosition(tree);
     // This can happen for desugared expressions like `int a, b;`.
     if (startPos < startTokenization) {
       return SuggestedFix.builder().build();

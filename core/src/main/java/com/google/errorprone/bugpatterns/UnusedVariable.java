@@ -24,6 +24,7 @@ import static com.google.common.collect.Iterables.getLast;
 import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Matchers.SERIALIZATION_METHODS;
+import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
@@ -472,7 +473,7 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
         }
         if (trees.size() == 1) {
           Tree tree = getOnlyElement(trees);
-          if (((JCTree) tree).getStartPosition() == -1 || state.getEndPosition(tree) == -1) {
+          if (getStartPosition(tree) == -1 || state.getEndPosition(tree) == -1) {
             // TODO(b/118437729): handle bogus source positions in enum declarations
             return;
           }
@@ -485,8 +486,8 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
           startPos = state.getEndPosition(trees.get(index - 1));
           endPos = state.getEndPosition(trees.get(index));
         } else {
-          startPos = ((JCTree) trees.get(index)).getStartPosition();
-          endPos = ((JCTree) trees.get(index + 1)).getStartPosition();
+          startPos = getStartPosition(trees.get(index));
+          endPos = getStartPosition(trees.get(index + 1));
         }
         if (index == methodSymbol.params().size() - 1 && methodSymbol.isVarArgs()) {
           endPos = state.getEndPosition(getLast(trees));

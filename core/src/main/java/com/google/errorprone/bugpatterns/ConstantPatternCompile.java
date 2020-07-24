@@ -18,6 +18,7 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
+import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
 
@@ -100,7 +101,7 @@ public final class ConstantPatternCompile extends BugChecker implements Variable
 
     int typeEndPos = state.getEndPosition(tree.getType());
     // handle implicit lambda parameter types
-    int searchOffset = typeEndPos == -1 ? 0 : (typeEndPos - ((JCTree) tree).getStartPosition());
+    int searchOffset = typeEndPos == -1 ? 0 : (typeEndPos - getStartPosition(tree));
     int pos = state.getSourceForNode(tree).indexOf(varName, searchOffset);
     String variableReplacedString =
         new StringBuilder(originalVariableTreeString)

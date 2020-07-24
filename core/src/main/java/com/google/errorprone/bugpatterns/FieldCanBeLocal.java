@@ -19,6 +19,7 @@ package com.google.errorprone.bugpatterns;
 import static com.google.common.collect.Iterables.getLast;
 import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
 import static com.google.errorprone.util.ASTHelpers.getAnnotation;
+import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 
 import com.google.common.collect.ImmutableSet;
@@ -47,7 +48,6 @@ import com.sun.source.util.TreePath;
 import com.sun.source.util.TreePathScanner;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
-import com.sun.tools.javac.tree.JCTree;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Target;
 import java.util.Collection;
@@ -274,7 +274,7 @@ public final class FieldCanBeLocal extends BugChecker implements CompilationUnit
         }
         IdentifierTree ident = (IdentifierTree) selected;
         if (ident.getName().contentEquals("this")) {
-          fix.replace(((JCTree) ident).getStartPosition(), state.getEndPosition(ident) + 1, "");
+          fix.replace(getStartPosition(ident), state.getEndPosition(ident) + 1, "");
         }
       }
       state.reportMatch(describeMatch(declarationSite.getLeaf(), fix.build()));
@@ -290,8 +290,7 @@ public final class FieldCanBeLocal extends BugChecker implements CompilationUnit
     return state
         .getSourceCode()
         .subSequence(
-            ((JCTree) annotations.get(0)).getStartPosition(),
-            state.getEndPosition(getLast(annotations)))
+            getStartPosition(annotations.get(0)), state.getEndPosition(getLast(annotations)))
         .toString();
   }
 }

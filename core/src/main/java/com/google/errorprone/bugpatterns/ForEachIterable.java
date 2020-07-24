@@ -21,6 +21,7 @@ import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.instanceMethod;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
+import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.getUpperBound;
@@ -48,7 +49,6 @@ import com.sun.source.util.TreePathScanner;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.TypeTag;
-import com.sun.tools.javac.tree.JCTree;
 import java.util.List;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
@@ -100,11 +100,7 @@ public class ForEachIterable extends BugChecker implements VariableTreeMatcher {
       return NO_MATCH;
     }
     return match(
-        tree,
-        state,
-        ((JCTree) forTree).getStartPosition(),
-        forTree.getCondition(),
-        forTree.getStatement());
+        tree, state, getStartPosition(forTree), forTree.getCondition(), forTree.getStatement());
   }
 
   private Description matchWhile(VariableTree tree, BlockTree blockTree, VisitorState state) {
@@ -125,11 +121,7 @@ public class ForEachIterable extends BugChecker implements VariableTreeMatcher {
     }
     WhileLoopTree whileLoop = (WhileLoopTree) next;
     return match(
-        tree,
-        state,
-        ((JCTree) tree).getStartPosition(),
-        whileLoop.getCondition(),
-        whileLoop.getStatement());
+        tree, state, getStartPosition(tree), whileLoop.getCondition(), whileLoop.getStatement());
   }
 
   private Description match(
@@ -181,7 +173,7 @@ public class ForEachIterable extends BugChecker implements VariableTreeMatcher {
     }
     fix.replace(
         startPosition,
-        ((JCTree) body).getStartPosition(),
+        getStartPosition(body),
         String.format(
             "for (%s %s : %s) ",
             SuggestedFixes.prettyType(state, fix, elementType),

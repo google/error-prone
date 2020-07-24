@@ -19,6 +19,7 @@ package com.google.errorprone.bugpatterns;
 import static com.google.common.collect.Iterables.getLast;
 import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
+import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -28,7 +29,6 @@ import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.Reachability;
 import com.sun.source.tree.CaseTree;
 import com.sun.source.tree.SwitchTree;
-import com.sun.tools.javac.tree.JCTree;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -73,16 +73,15 @@ public class SwitchDefault extends BugChecker implements SwitchTreeMatcher {
       // If there are trailing cases after the default statement group, move the default to the end.
       // Only emit a fix if the default doesn't fall through.
       if (!Reachability.canCompleteNormally(getLast(defaultStatementGroup))) {
-        int start = ((JCTree) defaultStatementGroup.get(0)).getStartPosition();
+        int start = getStartPosition(defaultStatementGroup.get(0));
         int end = state.getEndPosition(getLast(defaultStatementGroup));
         String replacement;
         String source = state.getSourceCode().toString();
 
         // If the default case isn't the last case in its statement group, move it to the end.
         if (idx != defaultStatementGroup.size() - 1) {
-          int caseEnd =
-              ((JCTree) getLast(defaultStatementGroup).getStatements().get(0)).getStartPosition();
-          int cutStart = ((JCTree) defaultTree).getStartPosition();
+          int caseEnd = getStartPosition(getLast(defaultStatementGroup).getStatements().get(0));
+          int cutStart = getStartPosition(defaultTree);
           int cutEnd = state.getEndPosition(defaultTree);
           replacement =
               source.substring(start, cutStart)

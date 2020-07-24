@@ -18,6 +18,7 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.common.base.Verify.verify;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -83,7 +84,7 @@ public class UnnecessaryTypeArgument extends BugChecker
 
     JCTree node = (JCTree) tree;
     int startAbsolute = node.getStartPosition();
-    int lower = ((JCTree) arguments.get(0)).getStartPosition() - startAbsolute;
+    int lower = getStartPosition(arguments.get(0)) - startAbsolute;
     int upper = state.getEndPosition(arguments.get(arguments.size() - 1)) - startAbsolute;
 
     CharSequence source = state.getSourceForNode(node);

@@ -23,6 +23,7 @@ import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.equalsMethodDeclaration;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
+import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 
 import com.google.errorprone.BugPattern;
@@ -51,7 +52,6 @@ import com.sun.source.util.TreePathScanner;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
-import com.sun.tools.javac.tree.JCTree;
 import javax.lang.model.element.Modifier;
 
 /**
@@ -262,8 +262,8 @@ public final class EqualsGetClass extends BugChecker implements MethodInvocation
         } else {
           int stripExtra = ifTree.getElseStatement() instanceof BlockTree ? 1 : 0;
           fix.replace(
-                  ((JCTree) ifTree).getStartPosition(),
-                  ((JCTree) ifTree.getElseStatement()).getStartPosition() + stripExtra,
+                  getStartPosition(ifTree),
+                  getStartPosition(ifTree.getElseStatement()) + stripExtra,
                   "")
               .replace(
                   state.getEndPosition(ifTree.getElseStatement()) - stripExtra,
@@ -297,8 +297,8 @@ public final class EqualsGetClass extends BugChecker implements MethodInvocation
 
     private void removeLeftOperand(BinaryTree superBinary) {
       fix.replace(
-          ((JCTree) superBinary.getLeftOperand()).getStartPosition(),
-          ((JCTree) superBinary.getRightOperand()).getStartPosition(),
+          getStartPosition(superBinary.getLeftOperand()),
+          getStartPosition(superBinary.getRightOperand()),
           "");
     }
 

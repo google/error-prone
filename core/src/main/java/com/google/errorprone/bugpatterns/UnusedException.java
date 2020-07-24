@@ -20,6 +20,7 @@ import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.common.collect.Iterables.getLast;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.BugPattern.StandardTags.STYLE;
+import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static com.google.errorprone.util.ASTHelpers.isSameType;
 
 import com.google.common.collect.ImmutableList;
@@ -175,7 +176,7 @@ public final class UnusedException extends BugChecker implements CatchTreeMatche
       // Skip past the opening '(' of the constructor.
 
       String source = state.getSourceForNode(constructor);
-      int startPosition = ((JCTree) constructor).getStartPosition();
+      int startPosition = getStartPosition(constructor);
       int pos =
           source.indexOf('(', state.getEndPosition(constructor.getIdentifier()) - startPosition)
               + startPosition

@@ -18,6 +18,7 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.common.collect.Iterables.getLast;
 import static com.google.common.collect.Iterables.getOnlyElement;
+import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 
 import com.google.common.collect.Iterables;
 import com.google.errorprone.VisitorState;
@@ -30,7 +31,6 @@ import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.TryTree;
-import com.sun.tools.javac.tree.JCTree;
 import java.util.List;
 import java.util.Optional;
 
@@ -109,8 +109,8 @@ public class AssertThrowsUtils {
       fixPrefix.append("{");
     }
     fix.replace(
-        ((JCTree) tryTree).getStartPosition(),
-        ((JCTree) throwingStatements.iterator().next()).getStartPosition(),
+        getStartPosition(tryTree),
+        getStartPosition(throwingStatements.iterator().next()),
         fixPrefix.toString());
     if (useExpressionLambda) {
       fix.postfixWith(
@@ -124,7 +124,7 @@ public class AssertThrowsUtils {
     } else {
       fix.replace(
           /* startPos= */ state.getEndPosition(getLast(throwingStatements)),
-          /* endPos= */ ((JCTree) catchStatements.get(0)).getStartPosition(),
+          /* endPos= */ getStartPosition(catchStatements.get(0)),
           "\n");
       fix.replace(
           state.getEndPosition(getLast(catchStatements)), state.getEndPosition(tryTree), "");

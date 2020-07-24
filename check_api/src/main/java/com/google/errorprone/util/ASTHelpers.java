@@ -2084,4 +2084,9 @@ public class ASTHelpers {
       return ImmutableList.of(type);
     }
   }
+
+  /** Returns the start position of the node. */
+  public static int getStartPosition(Tree tree) {
+    return ((JCTree) tree).getStartPosition();
+  }
 }

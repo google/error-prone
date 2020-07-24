@@ -23,6 +23,7 @@ import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
+import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.isGeneratedConstructor;
@@ -149,7 +150,7 @@ public class UnnecessaryAnonymousClass extends BugChecker implements VariableTre
       VariableTree varDefinitionTree, VisitorState state, MethodTree implementation) {
     int methodModifiersEndPos = state.getEndPosition(implementation.getModifiers());
     if (methodModifiersEndPos == -1) {
-      methodModifiersEndPos = ((JCTree) implementation).getStartPosition();
+      methodModifiersEndPos = getStartPosition(implementation);
     }
     int methodDefEndPos = state.getEndPosition(implementation);
     int varModifiersEndPos = state.getEndPosition(varDefinitionTree.getModifiers()) + 1;
@@ -251,7 +252,7 @@ public class UnnecessaryAnonymousClass extends BugChecker implements VariableTre
         }
         Tree receiver = node.getKind() == Tree.Kind.IDENTIFIER ? null : getReceiver(node);
         return SuggestedFix.replace(
-            receiver != null ? state.getEndPosition(receiver) : ((JCTree) node).getStartPosition(),
+            receiver != null ? state.getEndPosition(receiver) : getStartPosition(node),
             state.getEndPosition(parent),
             newName);
       } else {

@@ -19,6 +19,7 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
+import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.StandardTags;
@@ -34,7 +35,6 @@ import com.sun.source.tree.TypeCastTree;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Types;
-import com.sun.tools.javac.tree.JCTree;
 import java.lang.reflect.Constructor;
 
 /**
@@ -98,9 +98,7 @@ public class UnsafeReflectiveConstructionCast extends BugChecker implements Type
     if (types.isSameType(typeCastTreeType, erasedType)) {
       // remove the type
       fix.replace(
-          ((JCTree) typeCastTree).getStartPosition(),
-          ((JCTree) typeCastTree.getExpression()).getStartPosition(),
-          "");
+          getStartPosition(typeCastTree), getStartPosition(typeCastTree.getExpression()), "");
     }
     return describeMatch(classForName, fix.build());
   }

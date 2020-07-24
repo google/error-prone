@@ -21,7 +21,9 @@ import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
+import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static com.google.errorprone.util.Regexes.convertRegexToLiteral;
+import static java.lang.String.format;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -44,7 +46,6 @@ import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
 import com.sun.source.util.TreePathScanner;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
-import com.sun.tools.javac.tree.JCTree;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -102,13 +103,13 @@ public class StringSplitter extends BugChecker implements MethodInvocationTreeMa
           SuggestedFix.builder()
               .addImport("com.google.common.collect.Iterables")
               .replace(
-                  ((JCTree) arrayAccessTree).getStartPosition(),
-                  ((JCTree) arrayAccessTree).getStartPosition(),
+                  getStartPosition(arrayAccessTree),
+                  getStartPosition(arrayAccessTree),
                   "Iterables.get(")
               .replace(
                   /* startPos= */ state.getEndPosition(arrayAccessTree.getExpression()),
-                  /* endPos= */ ((JCTree) arrayAccessTree.getIndex()).getStartPosition(),
-                  String.format(", "))
+                  /* endPos= */ getStartPosition(arrayAccessTree.getIndex()),
+                  format(", "))
               .replace(
                   state.getEndPosition(arrayAccessTree.getIndex()),
                   state.getEndPosition(arrayAccessTree),
@@ -170,18 +171,18 @@ public class StringSplitter extends BugChecker implements MethodInvocationTreeMa
             AssignmentTree assignmentTree = (AssignmentTree) parent;
             fix.replace(
                     /* startPos= */ state.getEndPosition(expression),
-                    /* endPos= */ ((JCTree) index).getStartPosition(),
+                    /* endPos= */ getStartPosition(index),
                     ".set(")
                 .replace(
                     /* startPos= */ state.getEndPosition(index),
-                    /* endPos= */ ((JCTree) assignmentTree.getExpression()).getStartPosition(),
+                    /* endPos= */ getStartPosition(assignmentTree.getExpression()),
                     ", ")
                 .postfixWith(assignmentTree, ")");
             needsMutableList[0] = true;
           } else {
             fix.replace(
                     /* startPos= */ state.getEndPosition(expression),
-                    /* endPos= */ ((JCTree) index).getStartPosition(),
+                    /* endPos= */ getStartPosition(index),
                     ".get(")
                 .replace(state.getEndPosition(index), state.getEndPosition(tree), ")");
           }
@@ -212,7 +213,7 @@ public class StringSplitter extends BugChecker implements MethodInvocationTreeMa
     // Note that the .isImplicitlyTyped() method on JCVariableDecl returns the wrong answer after
     // type attribution has occurred.
     Tree varType = varTree.getType();
-    boolean isImplicitlyTyped = ((JCTree) varType).getStartPosition() < 0;
+    boolean isImplicitlyTyped = getStartPosition(varType) < 0;
     if (needsList[0]) {
       if (!isImplicitlyTyped) {
         fix.replace(varType, "List<String>").addImport("java.util.List");

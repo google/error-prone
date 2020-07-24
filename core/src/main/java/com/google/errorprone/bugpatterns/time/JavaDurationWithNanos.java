@@ -19,6 +19,7 @@ import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.not;
 import static com.google.errorprone.matchers.Matchers.packageStartsWith;
+import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 
 import com.google.common.collect.Iterables;
 import com.google.errorprone.BugPattern;
@@ -33,7 +34,6 @@ import com.google.errorprone.matchers.Matchers;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
-import com.sun.tools.javac.tree.JCTree;
 
 /** Check for calls to {@code duration.withNanos(int)}. */
 @BugPattern(
@@ -71,8 +71,7 @@ public final class JavaDurationWithNanos extends BugChecker implements MethodInv
             + state.getSourceForNode(receiver)
             + ".getSeconds(), ";
 
-    builder.replace(
-        ((JCTree) tree).getStartPosition(), ((JCTree) nanosArg).getStartPosition(), replacement);
+    builder.replace(getStartPosition(tree), getStartPosition(nanosArg), replacement);
     return describeMatch(tree, builder.build());
   }
 }

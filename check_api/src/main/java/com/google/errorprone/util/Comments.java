@@ -16,6 +16,7 @@
 package com.google.errorprone.util;
 
 import static com.google.common.collect.ImmutableList.toImmutableList;
+import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.CharMatcher;
@@ -34,7 +35,6 @@ import com.sun.source.tree.Tree;
 import com.sun.source.util.TreePath;
 import com.sun.tools.javac.parser.Tokens.Comment;
 import com.sun.tools.javac.parser.Tokens.TokenKind;
-import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.util.Position.LineMap;
 import java.util.Iterator;
 import java.util.List;
@@ -60,7 +60,7 @@ public class Comments {
    */
   public static ImmutableList<Commented<ExpressionTree>> findCommentsForArguments(
       NewClassTree newClassTree, VisitorState state) {
-    int startPosition = ((JCTree) newClassTree).getStartPosition();
+    int startPosition = getStartPosition(newClassTree);
     return findCommentsForArguments(
         newClassTree, newClassTree.getArguments(), startPosition, state);
   }
@@ -134,7 +134,7 @@ public class Comments {
         arg ->
             exclude.add(
                 Range.closed(
-                    ((JCTree) arg).getStartPosition() - invocationStart,
+                    getStartPosition(arg) - invocationStart,
                     state.getEndPosition(arg) - invocationStart)));
 
     ErrorProneTokens errorProneTokens = new ErrorProneTokens(source.toString(), state.context);
@@ -391,7 +391,7 @@ public class Comments {
 
       currentArgumentEndPosition = state.getEndPosition(nextArgument) - offset;
       previousArgumentEndPosition = currentArgumentStartPosition;
-      currentArgumentStartPosition = ((JCTree) nextArgument).getStartPosition() - offset;
+      currentArgumentStartPosition = getStartPosition(nextArgument) - offset;
 
       if (previousCommentedResultBuilder != null) {
         resultBuilder.add(previousCommentedResultBuilder.build());

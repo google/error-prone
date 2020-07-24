@@ -19,6 +19,7 @@ package com.google.errorprone.bugpatterns;
 import static com.google.common.collect.Iterables.getLast;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
+import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.SeverityLevel;
@@ -34,7 +35,6 @@ import com.sun.source.tree.LambdaExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree;
-import com.sun.tools.javac.tree.JCTree;
 import java.util.List;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
@@ -66,7 +66,7 @@ public class AssertThrowsMultipleStatements extends BugChecker
       return NO_MATCH;
     }
     StatementTree last = getLast(statements);
-    int startPosition = ((JCTree) statements.get(0)).getStartPosition();
+    int startPosition = getStartPosition(statements.get(0));
     int endPosition = state.getEndPosition(statements.get(statements.size() - 2));
     SuggestedFix.Builder fix = SuggestedFix.builder();
     // if the last statement is an expression, convert from a block to expression lambda

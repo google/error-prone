@@ -24,6 +24,7 @@ import static com.google.errorprone.fixes.SuggestedFixes.prettyType;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.getModifiers;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
+import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static java.util.stream.Collectors.joining;
@@ -57,7 +58,6 @@ import com.sun.source.util.TreePathScanner;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.TypeTag;
-import com.sun.tools.javac.tree.JCTree;
 import java.util.Objects;
 import java.util.function.Predicate;
 import javax.lang.model.element.ElementKind;
@@ -251,7 +251,7 @@ public class UnnecessaryLambda extends BugChecker
         && ((MemberSelectTree) parent).getExpression().equals(node)) {
       Tree receiver = node.getKind() == Tree.Kind.IDENTIFIER ? null : getReceiver(node);
       fix.replace(
-          receiver != null ? state.getEndPosition(receiver) : ((JCTree) node).getStartPosition(),
+          receiver != null ? state.getEndPosition(receiver) : getStartPosition(node),
           state.getEndPosition(parent),
           (receiver != null ? "." : "") + newName);
     } else {

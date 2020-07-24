@@ -16,6 +16,7 @@
 package com.google.errorprone.bugpatterns.time;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
+import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 
 import com.google.common.collect.Iterables;
 import com.google.errorprone.BugPattern;
@@ -29,7 +30,6 @@ import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
-import com.sun.tools.javac.tree.JCTree;
 
 /** Check for calls to {@code duration.withMillis(long)}. */
 @BugPattern(
@@ -67,8 +67,7 @@ public final class JodaDurationWithMillis extends BugChecker
         SuggestedFixes.qualifyType(state, builder, "org.joda.time.Duration") + ".millis(";
     ExpressionTree millisArg = Iterables.getOnlyElement(tree.getArguments());
 
-    builder.replace(
-        ((JCTree) tree).getStartPosition(), ((JCTree) millisArg).getStartPosition(), replacement);
+    builder.replace(getStartPosition(tree), getStartPosition(millisArg), replacement);
     return describeMatch(tree, builder.build());
   }
 }

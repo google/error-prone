@@ -18,6 +18,7 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.common.collect.Iterables.getLast;
 import static com.google.errorprone.bugpatterns.inject.dagger.DaggerAnnotations.isAnyModule;
+import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 
 import com.google.errorprone.BugPattern;
@@ -35,7 +36,6 @@ import com.sun.source.tree.VariableTree;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.parser.Tokens.TokenKind;
-import com.sun.tools.javac.tree.JCTree;
 import java.util.List;
 import javax.lang.model.element.Modifier;
 
@@ -101,8 +101,8 @@ public final class InterfaceWithOnlyStatics extends BugChecker implements ClassT
   }
 
   private static SuggestedFix fixClass(ClassTree classTree, VisitorState state) {
-    int startPos = ((JCTree) classTree).getStartPosition();
-    int endPos = ((JCTree) classTree.getMembers().get(0)).getStartPosition();
+    int startPos = getStartPosition(classTree);
+    int endPos = getStartPosition(classTree.getMembers().get(0));
     List<ErrorProneToken> tokens = state.getOffsetTokens(startPos, endPos);
     String modifiers =
         getSymbol(classTree).owner.enclClass() == null ? "final class" : "static final class";

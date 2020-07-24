@@ -19,6 +19,7 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.LinkType.CUSTOM;
 import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
+import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static java.util.stream.Collectors.joining;
 
 import com.google.common.collect.Iterables;
@@ -36,7 +37,6 @@ import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
-import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCAnnotation;
 import com.sun.tools.javac.tree.JCTree.JCVariableDecl;
 import com.sun.tools.javac.tree.Pretty;
@@ -84,8 +84,7 @@ public class MultiVariableDeclaration extends BugChecker
       // a distinct end position from the previous declaration.
       while (it.hasNext()
           && it.peek().getKind() == Tree.Kind.VARIABLE
-          && ((JCTree) variableTree).getStartPosition()
-              == ((JCTree) it.peek()).getStartPosition()) {
+          && getStartPosition(variableTree) == getStartPosition(it.peek())) {
         fragments.add((JCVariableDecl) it.next());
       }
       if (fragments.size() == 1) {

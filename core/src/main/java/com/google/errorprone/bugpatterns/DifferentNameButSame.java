@@ -21,6 +21,7 @@ import static com.google.common.collect.Iterables.getLast;
 import static com.google.errorprone.matchers.ChildMultiMatcher.MatchType.AT_LEAST_ONE;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.annotations;
+import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.FindIdentifiers.findIdent;
 
@@ -53,7 +54,6 @@ import com.sun.tools.javac.code.Kinds.KindSelector;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
-import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.util.Position;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Target;
@@ -211,7 +211,7 @@ public final class DifferentNameButSame extends BugChecker implements Compilatio
     if (canHaveTypeUseAnnotations(parent)) {
       for (AnnotationTree annotation :
           HAS_TYPE_USE_ANNOTATION.multiMatchResult(parent, state).matchingNodes()) {
-        if (state.getEndPosition(annotation) < ((JCTree) site).getStartPosition()) {
+        if (state.getEndPosition(annotation) < getStartPosition(site)) {
           fixBuilder.delete(annotation);
         }
         stringBuilder.append(state.getSourceForNode(annotation)).append(" ");

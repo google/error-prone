@@ -18,6 +18,7 @@ package com.google.errorprone;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableMap;
@@ -573,7 +574,7 @@ public class VisitorState {
    * be used if a fix is already going to be emitted.
    */
   public List<ErrorProneToken> getOffsetTokensForNode(Tree tree) {
-    int start = ((JCTree) tree).getStartPosition();
+    int start = getStartPosition(tree);
     return ErrorProneTokens.getTokens(getSourceForNode(tree), start, context);
   }
 

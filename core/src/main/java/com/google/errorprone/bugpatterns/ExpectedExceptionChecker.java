@@ -29,6 +29,7 @@ import static com.google.errorprone.matchers.Matchers.toType;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
+import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
 
 import com.google.common.base.Joiner;
@@ -56,7 +57,6 @@ import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symtab;
 import com.sun.tools.javac.code.Type;
-import com.sun.tools.javac.tree.JCTree;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
@@ -249,9 +249,7 @@ public class ExpectedExceptionChecker extends BugChecker implements MethodTreeMa
     }
     // remove all interactions with the ExpectedException rule
     fix.replace(
-        ((JCTree) expectations.get(0)).getStartPosition(),
-        state.getEndPosition(getLast(expectations)),
-        "");
+        getStartPosition(expectations.get(0)), state.getEndPosition(getLast(expectations)), "");
     if (failure != null) {
       fix.delete(failure);
     }

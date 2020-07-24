@@ -20,6 +20,7 @@ import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.constructor;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
+import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.isSameType;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
@@ -56,7 +57,6 @@ import com.sun.tools.javac.code.Symbol.TypeSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Types;
-import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.util.Filter;
 import com.sun.tools.javac.util.Name;
 import java.util.List;
@@ -204,7 +204,7 @@ public final class PreferJavaTimeOverload extends BugChecker
             }
 
             fix.replace(
-                ((JCTree) arguments.get(0)).getStartPosition(),
+                getStartPosition(arguments.get(0)),
                 state.getEndPosition(arguments.get(1)),
                 replacement);
             return describeMatch(tree, fix.build());

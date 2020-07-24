@@ -24,6 +24,7 @@ import static com.google.errorprone.BugPattern.LinkType.CUSTOM;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.BugPattern.StandardTags.STYLE;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
+import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static java.util.stream.Collectors.joining;
 
@@ -49,7 +50,6 @@ import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.TypeAnnotations.AnnotationType;
 import com.sun.tools.javac.parser.Tokens.Comment;
 import com.sun.tools.javac.parser.Tokens.TokenKind;
-import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCClassDecl;
 import com.sun.tools.javac.tree.JCTree.JCMethodDecl;
 import com.sun.tools.javac.tree.JCTree.JCVariableDecl;
@@ -111,7 +111,7 @@ public final class AnnotationPosition extends BugChecker
       return NO_MATCH;
     }
 
-    int treePos = ((JCTree) tree).getStartPosition();
+    int treePos = getStartPosition(tree);
     List<ErrorProneToken> tokens = annotationTokens(tree, state, treePos);
     Comment danglingJavadoc = findOrphanedJavadoc(name, tokens);
 
@@ -182,7 +182,7 @@ public final class AnnotationPosition extends BugChecker
 
     boolean annotationProblem = false;
     for (AnnotationTree annotation : annotations) {
-      int annotationPos = ((JCTree) annotation).getStartPosition();
+      int annotationPos = getStartPosition(annotation);
       if (annotationPos <= firstModifierPos) {
         continue;
       }

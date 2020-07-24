@@ -25,6 +25,7 @@ import static com.google.errorprone.matchers.Matchers.instanceMethod;
 import static com.google.errorprone.matchers.Matchers.receiverOfInvocation;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
+import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.isConsideredFinal;
 import static com.google.errorprone.util.ASTHelpers.isSameType;
@@ -57,7 +58,6 @@ import com.sun.source.util.TreePathScanner;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Type;
-import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
 import java.util.Arrays;
 import java.util.EnumSet;
@@ -517,7 +517,7 @@ public class ProtoFieldNullComparison extends BugChecker implements CompilationU
             .getHazzer(/* negated= */ false, state)
             .map(
                 r -> {
-                  int startPos = ((JCTree) methodInvocationTree).getStartPosition();
+                  int startPos = getStartPosition(methodInvocationTree);
                   return SuggestedFix.builder()
                       .replace(getLast(methodInvocationTree.getArguments()), r)
                       .replace(startPos, startPos + "assertNotNull".length(), "assertTrue")

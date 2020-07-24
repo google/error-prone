@@ -20,6 +20,7 @@ import static com.google.common.collect.Iterables.getLast;
 import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
+import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 
 import com.google.common.collect.Iterators;
 import com.google.common.collect.PeekingIterator;
@@ -100,7 +101,7 @@ public class FallThrough extends BugChecker implements SwitchTreeMatcher {
       if (only instanceof BlockTree) {
         BlockTree blockTree = (BlockTree) only;
         return blockTree.getStatements().isEmpty()
-            ? ((JCTree) blockTree).getStartPosition()
+            ? getStartPosition(blockTree)
             : state.getEndPosition(getLast(blockTree.getStatements()));
       }
     }

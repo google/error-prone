@@ -21,6 +21,7 @@ import static com.google.common.collect.Iterables.getLast;
 import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
+import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static com.google.errorprone.util.Reachability.canCompleteNormally;
 
 import com.google.common.collect.ImmutableSet;
@@ -39,7 +40,6 @@ import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.SwitchTree;
 import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Symbol.TypeSymbol;
-import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCSwitch;
 import java.util.List;
 import java.util.Set;
@@ -241,7 +241,7 @@ public class UnnecessaryDefaultInEnumSwitch extends BugChecker implements Switch
     String defaultSource =
         sourceCode
             .subSequence(
-                ((JCTree) defaultStatements.get(0)).getStartPosition(),
+                getStartPosition(defaultStatements.get(0)),
                 state.getEndPosition(getLast(defaultStatements)))
             .toString();
     String initialComments = comments(defaultCase, defaultStatements, sourceCode);
@@ -261,8 +261,8 @@ public class UnnecessaryDefaultInEnumSwitch extends BugChecker implements Switch
     // To extract the comments, we have to get the source code from
     // "default:" to the first statement, and then strip off "default:", because
     // we have no way of identifying the end position of just the "default:" statement.
-    int defaultStart = ((JCTree) defaultCase).getStartPosition();
-    int statementStart = ((JCTree) defaultStatements.get(0)).getStartPosition();
+    int defaultStart = getStartPosition(defaultCase);
+    int statementStart = getStartPosition(defaultStatements.get(0));
     String defaultAndComments = sourceCode.subSequence(defaultStart, statementStart).toString();
     String comments =
         defaultAndComments

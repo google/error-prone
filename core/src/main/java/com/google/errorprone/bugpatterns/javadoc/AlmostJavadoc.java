@@ -19,6 +19,7 @@ package com.google.errorprone.bugpatterns.javadoc;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.BugPattern.StandardTags.STYLE;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
+import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static java.util.stream.Collectors.joining;
 
@@ -40,7 +41,6 @@ import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
 import com.sun.tools.javac.parser.Tokens.Comment;
-import com.sun.tools.javac.tree.JCTree;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -175,7 +175,7 @@ public final class AlmostJavadoc extends BugChecker implements CompilationUnitTr
       }
 
       private int startPos(Tree tree) {
-        return ((JCTree) tree).getStartPosition();
+        return getStartPosition(tree);
       }
     }.scan(tree, null);
     return ImmutableMap.copyOf(javadoccablePositions);
