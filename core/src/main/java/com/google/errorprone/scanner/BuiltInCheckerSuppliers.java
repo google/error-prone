@@ -76,6 +76,7 @@ import com.google.errorprone.bugpatterns.ComparisonContractViolated;
 import com.google.errorprone.bugpatterns.ComparisonOutOfRange;
 import com.google.errorprone.bugpatterns.CompileTimeConstantChecker;
 import com.google.errorprone.bugpatterns.ComplexBooleanConstant;
+import com.google.errorprone.bugpatterns.ComputeIfAbsentAmbiguousReference;
 import com.google.errorprone.bugpatterns.ConditionalExpressionNumericPromotion;
 import com.google.errorprone.bugpatterns.ConstantField;
 import com.google.errorprone.bugpatterns.ConstantOverflow;
@@ -537,6 +538,7 @@ public class BuiltInCheckerSuppliers {
           ComparisonOutOfRange.class,
           CompatibleWithMisuse.class,
           CompileTimeConstantChecker.class,
+          ComputeIfAbsentAmbiguousReference.class,
           ConditionalExpressionNumericPromotion.class,
           ConstantOverflow.class,
           DeadException.class,
