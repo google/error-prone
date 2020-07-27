@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.common.collect.Iterables.getLast;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.BugPattern.StandardTags.STYLE;
@@ -131,12 +130,7 @@ public final class UnusedException extends BugChecker implements CatchTreeMatche
     if (!(symbol instanceof ClassSymbol)) {
       return Optional.empty();
     }
-    ClassSymbol classSymbol = (ClassSymbol) symbol;
-    ImmutableList<MethodSymbol> constructors =
-        classSymbol.getEnclosedElements().stream()
-            .filter(Symbol::isConstructor)
-            .map(e -> (MethodSymbol) e)
-            .collect(toImmutableList());
+    ImmutableList<MethodSymbol> constructors = ASTHelpers.getConstructors((ClassSymbol) symbol);
     MethodSymbol constructorSymbol = ASTHelpers.getSymbol(constructor);
     if (constructorSymbol == null) {
       return Optional.empty();

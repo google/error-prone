@@ -19,6 +19,7 @@ package com.google.errorprone.util;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Verify.verify;
+import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.errorprone.matchers.JUnitMatchers.JUNIT4_RUN_WITH_ANNOTATION;
 import static com.sun.tools.javac.code.Scope.LookupKind.NON_RECURSIVE;
@@ -940,6 +941,14 @@ public class ASTHelpers {
       }
     }
     return constructors;
+  }
+
+  /** Returns the list of all constructors defined in the class. */
+  public static ImmutableList<MethodSymbol> getConstructors(ClassSymbol classSymbol) {
+    return classSymbol.getEnclosedElements().stream()
+        .filter(Symbol::isConstructor)
+        .map(e -> (MethodSymbol) e)
+        .collect(toImmutableList());
   }
 
   /**
