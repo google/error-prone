@@ -127,6 +127,7 @@ public final class WellKnownMutability implements ThreadSafety.KnownTypes {
         .addStrings(extraKnownImmutables)
         .addClasses(Primitives.allPrimitiveTypes())
         .addClasses(Primitives.allWrapperTypes())
+        .add("com.github.zafarkhaja.semver.Version")
         .add("com.google.protobuf.ByteString")
         .add("com.google.protobuf.Descriptors$Descriptor")
         .add("com.google.protobuf.Descriptors$EnumDescriptor")
