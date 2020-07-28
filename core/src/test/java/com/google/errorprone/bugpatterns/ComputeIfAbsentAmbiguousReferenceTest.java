@@ -16,7 +16,10 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static org.junit.Assume.assumeTrue;
+
 import com.google.errorprone.CompilationTestHelper;
+import com.google.errorprone.util.RuntimeVersion;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -85,6 +88,28 @@ public class ComputeIfAbsentAmbiguousReferenceTest {
             "  class InnerClass2 {",
             "    InnerClass2(int i) {}",
             "    InnerClass2(String s) {}",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void testNegativeCase_parameterNameMatch() {
+    assumeTrue(RuntimeVersion.isAtLeast9());
+    compilationHelper
+        .addSourceLines(
+            "in/Test.java",
+            "import java.util.HashMap;",
+            "import java.util.Map;",
+            "import java.util.concurrent.atomic.AtomicLong;",
+            "class Test {",
+            "  private void doWorkAtomicLong(Map<Long, AtomicLong> map) {",
+            "    Long initialValue = 4L;",
+            "    map.computeIfAbsent(initialValue, AtomicLong::new);",
+            "  }",
+            "  private void doWork(Map<Integer, HashMap> map) {",
+            "    Integer initialCapacity = 4;",
+            "    map.computeIfAbsent(initialCapacity, HashMap::new);",
             "  }",
             "}")
         .doTest();

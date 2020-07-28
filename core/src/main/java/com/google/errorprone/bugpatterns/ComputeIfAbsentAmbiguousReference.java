@@ -28,12 +28,14 @@ import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
+import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.MemberReferenceTree;
 import com.sun.source.tree.MemberReferenceTree.ReferenceMode;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
+import com.sun.tools.javac.util.Name;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -82,9 +84,17 @@ public final class ComputeIfAbsentAmbiguousReference extends BugChecker
         constructors.stream()
             .filter(methodSymbol -> methodSymbol.type.getParameterTypes().size() == 1)
             .collect(Collectors.toList());
-    if (oneArgConstructors.size() >= 1) {
-      return describeMatch(memberReferenceTree);
+    if (oneArgConstructors.isEmpty()) {
+      return NO_MATCH;
     }
-    return NO_MATCH;
+    ExpressionTree onlyArgument = tree.getArguments().get(0);
+    if (onlyArgument instanceof IdentifierTree) {
+      IdentifierTree onlyArgumentIdentifier = (IdentifierTree) onlyArgument;
+      Name constructorParamName = oneArgConstructors.get(0).getParameters().get(0).getSimpleName();
+      if (constructorParamName.equals(onlyArgumentIdentifier.getName())) {
+        return NO_MATCH;
+      }
+    }
+    return describeMatch(memberReferenceTree);
   }
 }
