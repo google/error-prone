@@ -17,6 +17,7 @@
 package com.google.errorprone;
 
 import static com.google.common.base.Preconditions.checkState;
+import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.common.truth.Truth.assertWithMessage;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.junit.Assert.fail;
@@ -29,6 +30,7 @@ import com.google.errorprone.DiagnosticTestHelper.LookForCheckNameInDiagnostic;
 import com.google.errorprone.annotations.CheckReturnValue;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.scanner.ScannerSupplier;
+import com.google.errorprone.util.RuntimeVersion;
 import com.sun.tools.javac.api.JavacTool;
 import com.sun.tools.javac.main.Main.Result;
 import java.io.BufferedWriter;
@@ -214,11 +216,22 @@ public class CompilationTestHelper {
     return this;
   }
 
+  public CompilationTestHelper addModules(String... modules) {
+    if (!RuntimeVersion.isAtLeast9()) {
+      return this;
+    }
+    return setArgs(
+        Arrays.stream(modules)
+            .map(m -> String.format("--add-exports=%s=ALL-UNNAMED", m))
+            .collect(toImmutableList()));
+  }
+
   /**
    * Sets custom command-line arguments for the compilation. These will be appended to the default
    * compilation arguments.
    */
   public CompilationTestHelper setArgs(List<String> args) {
+    checkState(extraArgs.isEmpty());
     this.extraArgs = ImmutableList.copyOf(args);
     return this;
   }

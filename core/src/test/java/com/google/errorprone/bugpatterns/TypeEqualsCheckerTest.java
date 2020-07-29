@@ -46,6 +46,7 @@ public class TypeEqualsCheckerTest {
             "    return Description.NO_MATCH;",
             "  }",
             "}")
+        .addModules("jdk.compiler/com.sun.tools.javac.code")
         .doTest();
   }
 
@@ -87,6 +88,8 @@ public class TypeEqualsCheckerTest {
             "    return Description.NO_MATCH;",
             "  }",
             "}")
+        .addModules(
+            "jdk.compiler/com.sun.tools.javac.code", "jdk.compiler/com.sun.tools.javac.util")
         .doTest();
   }
 }

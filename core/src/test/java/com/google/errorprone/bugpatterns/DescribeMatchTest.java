@@ -52,6 +52,8 @@ public class DescribeMatchTest {
             "    return describeMatch(tree, fix);",
             "  }",
             "}")
+        .addModules(
+            "jdk.compiler/com.sun.tools.javac.util", "jdk.compiler/com.sun.tools.javac.tree")
         .doTest();
   }
 

@@ -46,6 +46,7 @@ public class TreeToStringTest {
             "    return Description.NO_MATCH;",
             "  }",
             "}")
+        .addModules("jdk.compiler/com.sun.tools.javac.code")
         .doTest();
   }
 
@@ -77,6 +78,7 @@ public class TreeToStringTest {
             "    return Description.NO_MATCH;",
             "  }",
             "}")
+        .addModules("jdk.compiler/com.sun.tools.javac.code")
         .doTest();
   }
 }

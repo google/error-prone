@@ -283,6 +283,7 @@ public final class ProtoFieldNullComparisonTest {
             " return extensionList.build();",
             "}",
             "}")
+        .addModules("jdk.compiler/com.sun.tools.javac.code")
         .doTest();
   }
 
