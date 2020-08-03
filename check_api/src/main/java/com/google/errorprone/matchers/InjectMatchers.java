@@ -23,6 +23,7 @@ import static com.google.errorprone.matchers.Matchers.enclosingClass;
 import static com.google.errorprone.matchers.Matchers.hasAnnotation;
 import static com.google.errorprone.matchers.Matchers.isSubtypeOf;
 import static com.google.errorprone.matchers.Matchers.isType;
+import static com.google.errorprone.matchers.Matchers.symbolHasAnnotation;
 
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.ClassTree;
@@ -86,12 +87,15 @@ public final class InjectMatchers {
   public static final String GUICE_SCOPE_ANNOTATION = "com.google.inject.ScopeAnnotation";
   public static final String JAVAX_SCOPE_ANNOTATION = "javax.inject.Scope";
   public static final Matcher<AnnotationTree> IS_SCOPING_ANNOTATION =
-      anyOf(hasAnnotation(GUICE_SCOPE_ANNOTATION), hasAnnotation(JAVAX_SCOPE_ANNOTATION));
+      anyOf(
+          symbolHasAnnotation(GUICE_SCOPE_ANNOTATION), symbolHasAnnotation(JAVAX_SCOPE_ANNOTATION));
 
   public static final String GUICE_BINDING_ANNOTATION = "com.google.inject.BindingAnnotation";
   public static final String JAVAX_QUALIFIER_ANNOTATION = "javax.inject.Qualifier";
   public static final Matcher<AnnotationTree> IS_BINDING_ANNOTATION =
-      anyOf(hasAnnotation(JAVAX_QUALIFIER_ANNOTATION), hasAnnotation(GUICE_BINDING_ANNOTATION));
+      anyOf(
+          symbolHasAnnotation(JAVAX_QUALIFIER_ANNOTATION),
+          symbolHasAnnotation(GUICE_BINDING_ANNOTATION));
 
   public static final Matcher<ClassTree> IS_DAGGER_COMPONENT =
       anyOf(

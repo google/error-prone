@@ -20,7 +20,7 @@ import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.InjectMatchers.GUICE_SCOPE_ANNOTATION;
 import static com.google.errorprone.matchers.InjectMatchers.IS_DAGGER_COMPONENT;
 import static com.google.errorprone.matchers.InjectMatchers.JAVAX_SCOPE_ANNOTATION;
-import static com.google.errorprone.matchers.Matchers.hasAnnotation;
+import static com.google.errorprone.matchers.Matchers.symbolHasAnnotation;
 import static javax.lang.model.element.Modifier.ABSTRACT;
 
 import com.google.errorprone.BugPattern;
@@ -51,7 +51,7 @@ public class ScopeAnnotationOnInterfaceOrAbstractClass extends BugChecker
    */
   private static final Matcher<AnnotationTree> SCOPE_ANNOTATION_MATCHER =
       Matchers.<AnnotationTree>anyOf(
-          hasAnnotation(GUICE_SCOPE_ANNOTATION), hasAnnotation(JAVAX_SCOPE_ANNOTATION));
+          symbolHasAnnotation(GUICE_SCOPE_ANNOTATION), symbolHasAnnotation(JAVAX_SCOPE_ANNOTATION));
 
   private static final Matcher<ClassTree> INTERFACE_AND_ABSTRACT_TYPE_MATCHER =
       new Matcher<ClassTree>() {

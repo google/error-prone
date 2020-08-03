@@ -21,7 +21,6 @@ import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.annotations;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.classLiteral;
-import static com.google.errorprone.matchers.Matchers.hasAnnotation;
 import static com.google.errorprone.matchers.Matchers.instanceMethod;
 import static com.google.errorprone.matchers.Matchers.isPrimitiveOrBoxedPrimitiveType;
 import static com.google.errorprone.matchers.Matchers.isSameType;
@@ -30,6 +29,7 @@ import static com.google.errorprone.matchers.Matchers.methodInvocation;
 import static com.google.errorprone.matchers.Matchers.methodReturns;
 import static com.google.errorprone.matchers.Matchers.not;
 import static com.google.errorprone.matchers.Matchers.receiverOfInvocation;
+import static com.google.errorprone.matchers.Matchers.symbolHasAnnotation;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -70,8 +70,8 @@ public class BindingToUnqualifiedCommonType extends BugChecker
               annotations(
                   AT_LEAST_ONE,
                   Matchers.<AnnotationTree>anyOf(
-                      hasAnnotation(InjectMatchers.GUICE_BINDING_ANNOTATION),
-                      hasAnnotation(InjectMatchers.JAVAX_QUALIFIER_ANNOTATION)))),
+                      symbolHasAnnotation(InjectMatchers.GUICE_BINDING_ANNOTATION),
+                      symbolHasAnnotation(InjectMatchers.JAVAX_QUALIFIER_ANNOTATION)))),
           methodReturns(IS_SIMPLE_TYPE));
 
   private static final Matcher<MethodInvocationTree> BIND_TO_UNQUALIFIED_CONSTANT =

@@ -210,9 +210,6 @@ public class ASTHelpers {
    */
   @Nullable
   public static Symbol getDeclaredSymbol(Tree tree) {
-    if (tree instanceof AnnotationTree) {
-      return getSymbol(((AnnotationTree) tree).getAnnotationType());
-    }
     if (tree instanceof PackageTree) {
       return getSymbol((PackageTree) tree);
     }
@@ -239,6 +236,9 @@ public class ASTHelpers {
    */
   // TODO(eaftan): refactor other code that accesses symbols to use this method
   public static Symbol getSymbol(Tree tree) {
+    if (tree instanceof AnnotationTree) {
+      return getSymbol(((AnnotationTree) tree).getAnnotationType());
+    }
     if (tree instanceof JCFieldAccess) {
       return ((JCFieldAccess) tree).sym;
     }
