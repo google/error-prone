@@ -18,3 +18,9 @@ public final class Constants {
   private Constants() {}
 }
 ```
+
+See
+[Effective Java 3rd Edition §22: Use interfaces only to define types][ej3e-22]
+for more details.
+
+[ej3e-22]: https://books.google.com/books?id=BIpDDwAAQBAJ

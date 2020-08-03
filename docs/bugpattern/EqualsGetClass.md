@@ -69,7 +69,7 @@ and not worth propagating and legitimizing.
 
 ## More information
 
-See [Effective Java, 3rd Edition, Item 10][ej3e-10] ("Obey the general contract
-when overriding equals").
+See [Effective Java 3rd Edition §10][ej3e-10] ("Obey the general contract when
+overriding equals").
 
 [ej3e-10]: https://books.google.com/books?id=BIpDDwAAQBAJ

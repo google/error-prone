@@ -18,6 +18,6 @@ public class UtilityClass {
 
 See:
 
-*   [Effective Java, Third Edition, Item 4][ej3e-4]
+*   [Effective Java 3rd Edition §4][ej3e-4]
 
 [ej3e-4]: https://books.google.com/books?id=BIpDDwAAQBAJ
