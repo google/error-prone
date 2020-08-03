@@ -27,9 +27,9 @@ import java.lang.annotation.Target;
 @Retention(CLASS)
 public @interface GuardedBy {
   /**
-   * The lock that should be held, specified in the format <a
-   * href="http://jcip.net/annotations/doc/net/jcip/annotations/GuardedBy.html">given in Java
-   * Concurrency in Practice</a>.
+   * The lock that should be held, specified in the format given in <a
+   * href="https://errorprone.info/bugpattern/GuardedBy">the documentation for the corresponding Error Prone
+   * check</a>.
    */
   String value();
 }
