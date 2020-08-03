@@ -231,7 +231,11 @@ public class CompilationTestHelper {
    * compilation arguments.
    */
   public CompilationTestHelper setArgs(List<String> args) {
-    checkState(extraArgs.isEmpty());
+    checkState(
+        extraArgs.isEmpty(),
+        "Extra args already set: old value: %s, new value: %s",
+        extraArgs,
+        args);
     this.extraArgs = ImmutableList.copyOf(args);
     return this;
   }
