@@ -99,22 +99,21 @@ public final class DataFlow {
                   final TreePath methodPath = key.methodPath();
                   final UnderlyingAST ast;
                   ClassTree classTree = null;
-                  MethodTree method = null;
+                  MethodTree methodTree = null;
                   for (Tree parent : methodPath) {
+                    if (parent instanceof MethodTree) {
+                      methodTree = (MethodTree) parent;
+                    }
                     if (parent instanceof ClassTree) {
                       classTree = (ClassTree) parent;
                       break;
                     }
-                    if (parent instanceof MethodTree) {
-                      method = (MethodTree) parent;
-                      break;
-                    }
                   }
                   if (methodPath.getLeaf() instanceof LambdaExpressionTree) {
-                    ast = new UnderlyingAST.CFGLambda((LambdaExpressionTree) methodPath.getLeaf(), classTree, method);
+                    ast = new UnderlyingAST.CFGLambda((LambdaExpressionTree) methodPath.getLeaf(), classTree, methodTree);
                   } else if (methodPath.getLeaf() instanceof MethodTree) {
-                    method = (MethodTree) methodPath.getLeaf();
-                    ast = new UnderlyingAST.CFGMethod(method, classTree);
+                    methodTree = (MethodTree) methodPath.getLeaf();
+                    ast = new UnderlyingAST.CFGMethod(methodTree, classTree);
                   } else {
                     // must be an initializer per findEnclosingMethodOrLambdaOrInitializer
                     ast = new UnderlyingAST.CFGStatement(methodPath.getLeaf(), classTree);
