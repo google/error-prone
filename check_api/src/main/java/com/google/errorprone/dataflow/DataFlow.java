@@ -38,11 +38,14 @@ import javax.annotation.Nullable;
 import javax.annotation.processing.ProcessingEnvironment;
 import org.checkerframework.shaded.dataflow.analysis.AbstractValue;
 import org.checkerframework.shaded.dataflow.analysis.Analysis;
+import org.checkerframework.shaded.dataflow.analysis.ForwardAnalysisImpl;
+import org.checkerframework.shaded.dataflow.analysis.ForwardTransferFunction;
 import org.checkerframework.shaded.dataflow.analysis.Store;
 import org.checkerframework.shaded.dataflow.analysis.TransferFunction;
 import org.checkerframework.shaded.dataflow.cfg.CFGBuilder;
 import org.checkerframework.shaded.dataflow.cfg.ControlFlowGraph;
 import org.checkerframework.shaded.dataflow.cfg.UnderlyingAST;
+import org.checkerframework.shaded.javacutil.TreeUtils;
 
 /**
  * Provides a wrapper around {@link org.checkerframework.shaded.dataflow.analysis.Analysis}.
@@ -77,10 +80,10 @@ public final class DataFlow {
                 @Override
                 public Analysis<?, ?, ?> load(AnalysisParams key) {
                   final ControlFlowGraph cfg = key.cfg();
-                  final TransferFunction<?, ?> transfer = key.transferFunction();
+                  final ForwardTransferFunction<?, ?> transfer = key.transferFunction();
 
                   @SuppressWarnings({"unchecked", "rawtypes"})
-                  final Analysis<?, ?, ?> analysis = new Analysis(transfer);
+                  final Analysis<?, ?, ?> analysis = new ForwardAnalysisImpl(transfer);
                   analysis.performAnalysis(cfg);
                   return analysis;
                 }
@@ -103,7 +106,8 @@ public final class DataFlow {
                     }
                   }
                   if (methodPath.getLeaf() instanceof LambdaExpressionTree) {
-                    ast = new UnderlyingAST.CFGLambda((LambdaExpressionTree) methodPath.getLeaf());
+                    MethodTree method = TreeUtils.enclosingMethod(methodPath);
+                    ast = new UnderlyingAST.CFGLambda((LambdaExpressionTree) methodPath.getLeaf(), classTree, method);
                   } else if (methodPath.getLeaf() instanceof MethodTree) {
                     MethodTree method = (MethodTree) methodPath.getLeaf();
                     ast = new UnderlyingAST.CFGMethod(method, classTree);
@@ -158,7 +162,7 @@ public final class DataFlow {
    * run over the same control flow graph, the analysis result is the same. - for all contexts, the
    * analysis result is the same.
    */
-  private static <A extends AbstractValue<A>, S extends Store<S>, T extends TransferFunction<A, S>>
+  private static <A extends AbstractValue<A>, S extends Store<S>, T extends ForwardTransferFunction<A, S>>
       Result<A, S, T> methodDataflow(TreePath methodPath, Context context, T transfer) {
     final ProcessingEnvironment env = JavacProcessingEnvironment.instance(context);
 
@@ -200,7 +204,7 @@ public final class DataFlow {
    *     of a method, lambda or initializer
    */
   @Nullable
-  public static <A extends AbstractValue<A>, S extends Store<S>, T extends TransferFunction<A, S>>
+  public static <A extends AbstractValue<A>, S extends Store<S>, T extends ForwardTransferFunction<A, S>>
       A expressionDataflow(TreePath exprPath, Context context, T transfer) {
     final Tree leaf = exprPath.getLeaf();
     Preconditions.checkArgument(
@@ -247,7 +251,7 @@ public final class DataFlow {
   @AutoValue
   abstract static class AnalysisParams {
 
-    abstract TransferFunction<?, ?> transferFunction();
+    abstract ForwardTransferFunction<?, ?> transferFunction();
 
     abstract ControlFlowGraph cfg();
 
@@ -255,7 +259,7 @@ public final class DataFlow {
     private ProcessingEnvironment environment;
 
     private static AnalysisParams create(
-        TransferFunction<?, ?> transferFunction,
+        ForwardTransferFunction<?, ?> transferFunction,
         ControlFlowGraph cfg,
         ProcessingEnvironment environment) {
       AnalysisParams ap = new AutoValue_DataFlow_AnalysisParams(transferFunction, cfg);

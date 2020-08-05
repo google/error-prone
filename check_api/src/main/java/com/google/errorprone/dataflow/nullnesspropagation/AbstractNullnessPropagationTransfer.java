@@ -29,8 +29,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.checkerframework.shaded.dataflow.analysis.ConditionalTransferResult;
+import org.checkerframework.shaded.dataflow.analysis.ForwardTransferFunction;
 import org.checkerframework.shaded.dataflow.analysis.RegularTransferResult;
-import org.checkerframework.shaded.dataflow.analysis.TransferFunction;
 import org.checkerframework.shaded.dataflow.analysis.TransferInput;
 import org.checkerframework.shaded.dataflow.analysis.TransferResult;
 import org.checkerframework.shaded.dataflow.cfg.UnderlyingAST;
@@ -125,7 +125,7 @@ import org.checkerframework.shaded.dataflow.cfg.node.WideningConversionNode;
  * @author cpovirk@google.com (Chris Povirk)
  */
 abstract class AbstractNullnessPropagationTransfer
-    implements TransferFunction<Nullness, AccessPathStore<Nullness>> {
+    implements ForwardTransferFunction<Nullness, AccessPathStore<Nullness>> {
   @Override
   public AccessPathStore<Nullness> initialStore(
       UnderlyingAST underlyingAST, List<LocalVariableNode> parameters) {

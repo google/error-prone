@@ -90,6 +90,7 @@ import javax.annotation.Nullable;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeVariable;
 import org.checkerframework.shaded.dataflow.analysis.Analysis;
+import org.checkerframework.shaded.dataflow.analysis.ForwardAnalysisImpl;
 import org.checkerframework.shaded.dataflow.cfg.CFGBuilder;
 import org.checkerframework.shaded.dataflow.cfg.ControlFlowGraph;
 import org.checkerframework.shaded.dataflow.cfg.UnderlyingAST;
@@ -832,7 +833,7 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
               /*assumeAssertionsDisabled=*/ false,
               javacEnv);
       Analysis<Nullness, AccessPathStore<Nullness>, NullnessPropagationTransfer> analysis =
-          new Analysis<>(this);
+          new ForwardAnalysisImpl<>(this);
       analysis.performAnalysis(cfg);
       return analysis.getValue(initializerPath.getLeaf());
     } finally {
