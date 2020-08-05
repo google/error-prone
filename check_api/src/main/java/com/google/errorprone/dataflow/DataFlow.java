@@ -45,7 +45,6 @@ import org.checkerframework.shaded.dataflow.analysis.TransferFunction;
 import org.checkerframework.shaded.dataflow.cfg.CFGBuilder;
 import org.checkerframework.shaded.dataflow.cfg.ControlFlowGraph;
 import org.checkerframework.shaded.dataflow.cfg.UnderlyingAST;
-import org.checkerframework.shaded.javacutil.TreeUtils;
 
 /**
  * Provides a wrapper around {@link org.checkerframework.shaded.dataflow.analysis.Analysis}.
