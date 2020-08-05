@@ -108,6 +108,9 @@ public final class PreferJavaTimeOverload extends BugChecker
   private static final Matcher<ExpressionTree> JODA_INSTANT_CONSTRUCTOR_MATCHER =
       constructor().forClass(JODA_INSTANT).withParameters("long");
 
+  private static final String TIME_SOURCE = "com.google.common.time.TimeSource";
+  private static final String JODA_CLOCK = "com.google.common.time.Clock";
+
   private static final String JAVA_TIME_CONVERSIONS =
       "com.google.thirdparty.jodatime.JavaTimeConversions";
 
@@ -354,13 +357,18 @@ public final class PreferJavaTimeOverload extends BugChecker
     if (calledMethod == null) {
       return false;
     }
+    return hasJavaTimeOverload(state, typeName, calledMethod, calledMethod.name);
+  }
+
+  private static boolean hasJavaTimeOverload(
+      VisitorState state, String typeName, MethodSymbol calledMethod, Name methodName) {
 
     MethodTree t = state.findEnclosing(MethodTree.class);
     @Nullable MethodSymbol enclosingMethod = t == null ? null : getSymbol(t);
 
     Type type = state.getTypeFromString(typeName);
     return hasMatchingMethods(
-        calledMethod.name,
+        methodName,
         input ->
             !input.equals(calledMethod)
                 // Make sure we're not currently *inside* that overload, to avoid
@@ -375,6 +383,16 @@ public final class PreferJavaTimeOverload extends BugChecker
                 && isSameType(input.getReturnType(), calledMethod.getReturnType(), state),
         ASTHelpers.enclosingClass(calledMethod).asType(),
         state.getTypes());
+  }
+
+  private static boolean hasTimeSourceMethod(MethodInvocationTree tree, VisitorState state) {
+    MethodSymbol calledMethod = getSymbol(tree);
+    if (calledMethod == null) {
+      return false;
+    }
+    String timeSourceBasedName = calledMethod.name.toString().replace("Clock", "TimeSource");
+    return hasJavaTimeOverload(
+        state, TIME_SOURCE, calledMethod, state.getName(timeSourceBasedName));
   }
 
   // Adapted from ASTHelpers.findMatchingMethods(); but this short-circuits
