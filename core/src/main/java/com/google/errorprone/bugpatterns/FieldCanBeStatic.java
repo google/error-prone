@@ -18,12 +18,14 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.common.base.CaseFormat.LOWER_CAMEL;
 import static com.google.common.base.CaseFormat.UPPER_UNDERSCORE;
+import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
 import static com.google.errorprone.fixes.SuggestedFixes.addModifiers;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.method.MethodMatchers.constructor;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
+import static com.google.errorprone.util.ASTHelpers.annotationsAmong;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.isConsideredFinal;
@@ -43,6 +45,7 @@ import com.google.errorprone.bugpatterns.threadsafety.WellKnownMutability;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
+import com.google.errorprone.suppliers.Supplier;
 import com.sun.source.tree.BinaryTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
@@ -57,8 +60,10 @@ import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.tree.JCTree;
+import com.sun.tools.javac.util.Name;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.regex.Pattern;
+import java.util.stream.Stream;
 
 /** Finds fields which can be safely made static. */
 @BugPattern(
@@ -159,6 +164,13 @@ public final class FieldCanBeStatic extends BugChecker implements VariableTreeMa
           staticMethod().onClass("org.joda.time.Period"),
           staticMethod().onClass("org.joda.time.format.DateTimeFormatter"));
 
+  private static final Supplier<ImmutableSet<Name>> EXEMPTING_VARIABLE_ANNOTATIONS =
+      VisitorState.memoize(
+          s ->
+              Stream.of("com.google.inject.testing.fieldbinder.Bind")
+                  .map(s::getName)
+                  .collect(toImmutableSet()));
+
   private final WellKnownMutability wellKnownMutability;
 
   public FieldCanBeStatic(ErrorProneFlags flags) {
@@ -179,6 +191,9 @@ public final class FieldCanBeStatic extends BugChecker implements VariableTreeMa
       return NO_MATCH;
     }
     if (!isPure(tree.getInitializer(), state)) {
+      return NO_MATCH;
+    }
+    if (!annotationsAmong(symbol, EXEMPTING_VARIABLE_ANNOTATIONS.get(state), state).isEmpty()) {
       return NO_MATCH;
     }
     SuggestedFix fix =

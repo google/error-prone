@@ -158,6 +158,20 @@ public class FieldCanBeStaticTest {
   }
 
   @Test
+  public void exemptedAnnotation_noMatch() {
+    helper
+        .addInputLines(
+            "Test.java",
+            "import com.google.inject.testing.fieldbinder.Bind;",
+            "import java.time.Duration;",
+            "class Test {",
+            "  @Bind private final Duration d = Duration.ofMillis(1);",
+            "}")
+        .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
   public void possibleImpureInitializer_noMatch() {
     helper
         .addInputLines(
