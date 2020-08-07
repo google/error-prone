@@ -330,6 +330,7 @@ import com.google.errorprone.bugpatterns.UnnecessarySetDefault;
 import com.google.errorprone.bugpatterns.UnnecessaryStaticImport;
 import com.google.errorprone.bugpatterns.UnnecessaryTypeArgument;
 import com.google.errorprone.bugpatterns.UnsafeFinalization;
+import com.google.errorprone.bugpatterns.UnsafeLocaleUsage;
 import com.google.errorprone.bugpatterns.UnsafeReflectiveConstructionCast;
 import com.google.errorprone.bugpatterns.UnsynchronizedOverridesSynchronized;
 import com.google.errorprone.bugpatterns.UnusedAnonymousClass;
@@ -970,6 +971,7 @@ public class BuiltInCheckerSuppliers {
           UnnecessaryDefaultInEnumSwitch.class,
           UnnecessarySetDefault.class,
           UnnecessaryStaticImport.class,
+          UnsafeLocaleUsage.class,
           UnusedException.class,
           UrlInSee.class,
           VarChecker.class,
