@@ -125,4 +125,15 @@ public class MemberNamingTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void methodNamedParametersFor_noFinding() {
+    helper
+        .addSourceLines(
+            "Test.java", //
+            "class Test {",
+            "  public void parametersForMyFavouriteTest_whichHasUnderscores() {}",
+            "}")
+        .doTest();
+  }
 }

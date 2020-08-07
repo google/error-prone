@@ -72,6 +72,11 @@ public final class MemberNaming extends BugChecker
     if (!annotationsAmong(symbol.owner, EXEMPTED_CLASS_ANNOTATIONS.get(state), state).isEmpty()) {
       return NO_MATCH;
     }
+    // JUnitParams reflectively accesses methods starting with "parametersFor" to provide parameters
+    // for tests (which may then contain underscores).
+    if (symbol.getSimpleName().toString().startsWith("parametersFor")) {
+      return NO_MATCH;
+    }
     if (findSuperMethods(symbol, state.getTypes()).stream()
         .anyMatch(m -> !getGeneratedBy(m, state).isEmpty())) {
       return NO_MATCH;
