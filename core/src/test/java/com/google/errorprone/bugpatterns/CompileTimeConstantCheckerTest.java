@@ -616,4 +616,19 @@ public class CompileTimeConstantCheckerTest {
         .setArgs(ImmutableList.of("-XepOpt:CompileTimeConstantChecker:CheckFieldInitializers=true"))
         .doTest();
   }
+
+  @Test
+  public void constantField_immutableList() {
+    compilationHelper
+        .addSourceLines(
+            "test/CompileTimeConstantTestCase.java",
+            "package test;",
+            "import com.google.common.collect.ImmutableList;",
+            "import com.google.errorprone.annotations.CompileTimeConstant;",
+            "public abstract class CompileTimeConstantTestCase {",
+            "  @CompileTimeConstant final ImmutableList<String> x = ImmutableList.of(\"a\");",
+            "}")
+        .setArgs(ImmutableList.of("-XepOpt:CompileTimeConstantChecker:CheckFieldInitializers=true"))
+        .doTest();
+  }
 }
