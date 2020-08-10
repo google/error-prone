@@ -37,6 +37,7 @@ import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.VariableTreeMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.suppliers.Supplier;
+import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.tools.javac.code.Symbol;
@@ -70,6 +71,11 @@ public final class MemberNaming extends BugChecker
       return NO_MATCH;
     }
     if (!annotationsAmong(symbol.owner, EXEMPTED_CLASS_ANNOTATIONS.get(state), state).isEmpty()) {
+      return NO_MATCH;
+    }
+    if (tree.getModifiers().getAnnotations().stream()
+        .map(ASTHelpers::getSymbol)
+        .anyMatch(s -> s != null && s.getSimpleName().toString().contains("Test"))) {
       return NO_MATCH;
     }
     // JUnitParams reflectively accesses methods starting with "parametersFor" to provide parameters

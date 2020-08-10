@@ -136,4 +136,17 @@ public class MemberNamingTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void methodAnnotatedWithAnnotationContainingTest_exempted() {
+    helper
+        .addSourceLines(
+            "Test.java", //
+            "class Test {",
+            "  @IAmATest",
+            "  public void possibly_a_test_name() {}",
+            "  private @interface IAmATest {}",
+            "}")
+        .doTest();
+  }
 }
