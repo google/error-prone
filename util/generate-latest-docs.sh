@@ -17,7 +17,7 @@
 set -eu
 
 if [ "$TRAVIS_REPO_SLUG" == "google/error-prone" ] && \
-   [ "$TRAVIS_JDK_VERSION" == "oraclejdk8" ] && \
+   [ "$TRAVIS_JDK_VERSION" == "openjdk11" ] && \
    [ "$TRAVIS_PULL_REQUEST" == "false" ] && \
    [ "$TRAVIS_BRANCH" == "master" ]; then
   echo -e "Publishing docs...\n"
