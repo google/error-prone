@@ -194,6 +194,25 @@ public class ParameterCommentTest {
   }
 
   @Test
+  public void negative_multiLineTernary() {
+    compilationTestHelper
+        .addSourceLines(
+            "Test.java",
+            "public class Test {",
+            "  public static int foo(int x) {",
+            "    int y = true ? ",
+            "      foo(/* x= */ x) : foo(/* x= */ x);",
+            "    int z = true ? ",
+            "      foo(/* x= */ x) :",
+            "      foo(/* x= */ x);",
+            "    return 0;",
+            "  }",
+            "}")
+        .expectNoDiagnostics()
+        .doTest();
+  }
+
+  @Test
   public void negative_nestedLambda() {
     compilationTestHelper
         .addSourceLines(

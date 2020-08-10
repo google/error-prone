@@ -33,6 +33,7 @@ import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.util.TreePath;
+import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.parser.Tokens.Comment;
 import com.sun.tools.javac.parser.Tokens.TokenKind;
 import com.sun.tools.javac.util.Position.LineMap;
@@ -257,7 +258,35 @@ public class Comments {
       return Optional.of(invocationEnd);
     }
 
-    return Optional.of(nextNodeEnd);
+    MethodScanner scanner = new MethodScanner(invocationEnd, nextNodeEnd);
+    scanner.scan(state.getPath().getParentPath().getLeaf(), null);
+
+    return Optional.of(
+        scanner.startOfNextMethodInvocation == -1
+            ? nextNodeEnd
+            : scanner.startOfNextMethodInvocation);
+  }
+
+  static class MethodScanner extends TreeScanner<Void, Void> {
+    public int startOfNextMethodInvocation = -1;
+    int invocationEnd;
+    int nextNodeEnd;
+
+    MethodScanner(int invocationEnd, int nextNodeEnd) {
+      this.invocationEnd = invocationEnd;
+      this.nextNodeEnd = nextNodeEnd;
+    }
+
+    @Override
+    public Void visitMethodInvocation(MethodInvocationTree methodInvocationTree, Void unused) {
+      int start = ASTHelpers.getStartPosition(methodInvocationTree);
+      if (invocationEnd < start
+          && start < nextNodeEnd
+          && (start < startOfNextMethodInvocation || startOfNextMethodInvocation == -1)) {
+        startOfNextMethodInvocation = start;
+      }
+      return super.visitMethodInvocation(methodInvocationTree, null);
+    }
   }
 
   /**
