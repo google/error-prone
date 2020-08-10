@@ -59,3 +59,9 @@ env:
 after_success:
   - util/publish-snapshot-on-commit.sh
   - util/generate-latest-docs.sh
+
+# https://docs.travis-ci.com/user/web-ui/#build-pushed-branches
+# safelist
+branches:
+  only:
+  - master
