@@ -27,4 +27,3 @@ method.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("MissingOverride")` to the enclosing element.
-

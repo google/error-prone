@@ -34,7 +34,6 @@ annotated with @NoAllocation, those methods will be disallowed from allocating.
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("NoAllocation")` to the enclosing element.
 
-
 ----------
 
 ### Positive examples

@@ -21,7 +21,6 @@ incorrect and unstable sort orders.
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("BadComparable")` to the enclosing element.
 
-
 ----------
 
 ### Positive examples

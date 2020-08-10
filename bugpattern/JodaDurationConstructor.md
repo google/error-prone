@@ -17,4 +17,3 @@ Joda-Time's 'new Duration(long)' constructor is ambiguous with respect to time u
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("JodaDurationConstructor")` to the enclosing element.
-

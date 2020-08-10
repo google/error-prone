@@ -31,7 +31,6 @@ caught is not the same one thrown by the call to `fail()` or `assert*()`.
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("TryFailThrowable")` to the enclosing element.
 
-
 ----------
 
 ### Positive examples

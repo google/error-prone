@@ -20,4 +20,3 @@ stable part of the protocol defined by the enum.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("LiteEnumValueOf")` to the enclosing element.
-

@@ -32,7 +32,6 @@ of tearDown().
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("JUnit4TearDownNotRun")` to the enclosing element.
 
-
 ----------
 
 ### Positive examples

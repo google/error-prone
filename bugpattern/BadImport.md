@@ -18,7 +18,6 @@ To make changes, edit the @BugPattern annotation or the explanation in docs/bugp
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("BadImport")` to the enclosing element.
 
-
 ----------
 
 ### Positive examples
@@ -41,8 +40,6 @@ __BadImportPositiveCases.java__
  * limitations under the License.
  */
 package com.google.errorprone.bugpatterns.testdata;
-
-import static com.google.errorprone.bugpatterns.testdata.BadImportPositiveCases.Example.INSTANCE;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
@@ -100,20 +97,6 @@ class BadImportPositiveCases {
   void classLiteral() {
     System.out.println(Builder.class);
   }
-
-  public void enumSwitch() {
-    // BUG: Diagnostic contains: Example.INSTANCE
-    Example object = INSTANCE;
-
-    switch (object) {
-      case INSTANCE: // This line should be left alone.
-        break;
-    }
-  }
-
-  enum Example {
-    INSTANCE
-  }
 }
 {% endhighlight %}
 
@@ -136,8 +119,6 @@ __BadImportPositiveCases_expected.java__
  * limitations under the License.
  */
 package com.google.errorprone.bugpatterns.testdata;
-
-import static com.google.errorprone.bugpatterns.testdata.BadImportPositiveCases.Example.INSTANCE;
 
 import com.google.common.collect.ImmutableList;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -192,19 +173,6 @@ class BadImportPositiveCases {
 
   void classLiteral() {
     System.out.println(ImmutableList.Builder.class);
-  }
-
-  public void enumSwitch() {
-    Example object = Example.INSTANCE;
-
-    switch (object) {
-      case INSTANCE: // This line should be left alone.
-        break;
-    }
-  }
-
-  enum Example {
-    INSTANCE
   }
 }
 {% endhighlight %}

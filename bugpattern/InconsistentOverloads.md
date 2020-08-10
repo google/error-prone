@@ -44,4 +44,3 @@ clearly a bug caused by unintuitive API and method overloading.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("InconsistentOverloads")` to the enclosing element.
-

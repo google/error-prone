@@ -21,4 +21,3 @@ be overwritten by automatic initialization.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("AssignmentToMock")` to the enclosing element.
-

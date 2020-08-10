@@ -33,4 +33,3 @@ However, there's a slightly easier way to express this:
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("EmptySetMultibindingContributions")` to the enclosing element.
-

@@ -45,4 +45,3 @@ try {
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("MustBeClosedChecker")` to the enclosing element.
-

@@ -28,4 +28,3 @@ void g(@CompileTimeConstant x) {
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("NonFinalCompileTimeConstant")` to the enclosing element.
-

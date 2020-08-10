@@ -20,7 +20,6 @@ getChecked will reject any other type with an IllegalArgumentException.
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("FuturesGetCheckedIllegalExceptionType")` to the enclosing element.
 
-
 ----------
 
 ### Positive examples

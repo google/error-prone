@@ -29,4 +29,3 @@ Use grouping parentheses to disambiguate expressions that contain both `||` and
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("OperatorPrecedence")` to the enclosing element.
-

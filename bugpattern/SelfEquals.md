@@ -22,7 +22,6 @@ For test cases, instead of explicitly testing equals, use
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("SelfEquals")` to the enclosing element.
 
-
 ----------
 
 ### Positive examples

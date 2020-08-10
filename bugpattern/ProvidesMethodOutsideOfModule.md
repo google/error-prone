@@ -20,7 +20,6 @@ these modules are not used for binding declaration.
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("ProvidesMethodOutsideOfModule")` to the enclosing element.
 
-
 ----------
 
 ### Positive examples

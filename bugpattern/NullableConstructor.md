@@ -17,4 +17,3 @@ Constructors never return null.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("NullableConstructor")` to the enclosing element.
-

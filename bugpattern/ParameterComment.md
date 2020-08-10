@@ -30,4 +30,3 @@ the parameter comment matches the formal parameter name.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("ParameterComment")` to the enclosing element.
-

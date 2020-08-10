@@ -24,4 +24,3 @@ immutable types whose equals() method fully compares their values.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("BoxedPrimitiveEquality")` to the enclosing element.
-

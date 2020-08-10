@@ -20,4 +20,3 @@ This checker flags potential problems with TimeUnit conversions: 1) conversions 
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("TimeUnitConversionChecker")` to the enclosing element.
-

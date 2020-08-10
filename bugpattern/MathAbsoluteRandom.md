@@ -48,4 +48,3 @@ lng = (lng == Long.MIN_VALUE) ? 0 : Math.abs(lng);
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("MathAbsoluteRandom")` to the enclosing element.
-

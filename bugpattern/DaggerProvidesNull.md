@@ -23,4 +23,3 @@ If you believe the `return null` path can never be taken, please throw a
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("DaggerProvidesNull")` to the enclosing element.
-

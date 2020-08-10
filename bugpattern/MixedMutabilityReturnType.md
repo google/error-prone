@@ -47,4 +47,3 @@ exception for primes.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("MixedMutabilityReturnType")` to the enclosing element.
-

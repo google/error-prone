@@ -26,4 +26,3 @@ Classes should not be declared inside `package-info.java` files.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("PackageInfo")` to the enclosing element.
-

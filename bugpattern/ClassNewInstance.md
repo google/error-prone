@@ -39,4 +39,3 @@ requires handling three new exceptions: [`IllegalArgumentException`][iae],
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("ClassNewInstance")` to the enclosing element.
-

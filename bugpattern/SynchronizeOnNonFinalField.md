@@ -26,4 +26,3 @@ Possible fixes:
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("SynchronizeOnNonFinalField")` to the enclosing element.
-

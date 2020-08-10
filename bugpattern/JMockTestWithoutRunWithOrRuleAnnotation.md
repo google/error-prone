@@ -20,4 +20,3 @@ Your tests will pass even if they shouldn't.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("JMockTestWithoutRunWithOrRuleAnnotation")` to the enclosing element.
-

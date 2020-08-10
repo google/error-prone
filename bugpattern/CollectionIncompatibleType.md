@@ -138,7 +138,6 @@ difference to our arguments above.
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("CollectionIncompatibleType")` to the enclosing element.
 
-
 ----------
 
 ### Positive examples

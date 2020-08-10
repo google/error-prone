@@ -19,7 +19,6 @@ RetentionPolicy.RUNTIME will always return null.
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("NonRuntimeAnnotation")` to the enclosing element.
 
-
 ----------
 
 ### Positive examples

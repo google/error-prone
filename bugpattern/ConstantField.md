@@ -28,4 +28,3 @@ strongly discouraged.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("ConstantField")` to the enclosing element.
-

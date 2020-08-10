@@ -125,7 +125,6 @@ close them safely.
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("CloseableProvides")` to the enclosing element.
 
-
 ----------
 
 ### Positive examples

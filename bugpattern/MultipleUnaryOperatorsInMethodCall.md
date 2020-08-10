@@ -21,7 +21,6 @@ most one side effect.
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("MultipleUnaryOperatorsInMethodCall")` to the enclosing element.
 
-
 ----------
 
 ### Positive examples

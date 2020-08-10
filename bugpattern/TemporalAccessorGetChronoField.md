@@ -17,4 +17,3 @@ TemporalAccessor.get(ChronoField) only works for certain values of ChronoField. 
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("TemporalAccessorGetChronoField")` to the enclosing element.
-

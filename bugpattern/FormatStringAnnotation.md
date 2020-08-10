@@ -51,7 +51,6 @@ The import for `@FormatMethod` is:
 import com.google.errorprone.annotations.FormatMethod;
 ```
 
-
 ## Suppression
 
 Suppress false positives by adding the suppression annotation
@@ -59,4 +58,3 @@ Suppress false positives by adding the suppression annotation
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("FormatStringAnnotation")` to the enclosing element.
-

@@ -29,4 +29,3 @@ of any use.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("MissingTestCall")` to the enclosing element.
-

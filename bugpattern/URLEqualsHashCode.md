@@ -19,7 +19,6 @@ use java.net.URI or if that isn't possible, use Collection<URL> or List<URL>.
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("URLEqualsHashCode")` to the enclosing element.
 
-
 ----------
 
 ### Positive examples

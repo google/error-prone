@@ -46,4 +46,3 @@ throw new IllegalArgumentException(errorMessage(badArgA, badArgB));
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("InlineFormatString")` to the enclosing element.
-

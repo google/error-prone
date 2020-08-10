@@ -20,7 +20,6 @@ If you don’t check the return value of these methods, the observables may neve
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("RxReturnValueIgnored")` to the enclosing element.
 
-
 ----------
 
 ### Positive examples

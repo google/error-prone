@@ -11,7 +11,6 @@ severity: WARNING
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
-
 _Alternate names: missing-fail_
 
 ## The problem
@@ -80,7 +79,6 @@ characteristics are present:
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("MissingFail")` to the enclosing element.
-
 
 ----------
 

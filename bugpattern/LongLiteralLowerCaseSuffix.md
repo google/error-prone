@@ -19,7 +19,6 @@ be confused with a '1' in most fonts.
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("LongLiteralLowerCaseSuffix")` to the enclosing element.
 
-
 ----------
 
 ### Positive examples

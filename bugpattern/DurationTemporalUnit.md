@@ -17,4 +17,3 @@ Duration APIs only work for TemporalUnits with exact durations or ChronoUnit.DAY
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("DurationTemporalUnit")` to the enclosing element.
-

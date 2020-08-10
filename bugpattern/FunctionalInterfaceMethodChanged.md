@@ -53,4 +53,3 @@ static Runnable crashTerminating(Runnable r) {
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("FunctionalInterfaceMethodChanged")` to the enclosing element.
-

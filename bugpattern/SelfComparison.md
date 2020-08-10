@@ -19,7 +19,6 @@ Either change the arguments to point to different objects or substitute 0.
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("SelfComparison")` to the enclosing element.
 
-
 ----------
 
 ### Positive examples

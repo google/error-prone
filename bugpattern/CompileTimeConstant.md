@@ -22,10 +22,8 @@ Getting Java 8 references to methods with `@CompileTimeConstant` parameters is
 disallowed because we couldn't check if the method reference is later applied to
 a compile-time constant. Use the methods directly instead.
 
-
 For the same reason, it's also disallowed to create lambda expressions with
 `@CompileTimeConstant` parameters.
 
 ## Suppression
 This check may not be suppressed.
-

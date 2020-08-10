@@ -20,7 +20,6 @@ This checker currently supports checking for bad byte and character comparisons.
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("ComparisonOutOfRange")` to the enclosing element.
 
-
 ----------
 
 ### Positive examples

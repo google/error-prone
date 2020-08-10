@@ -34,4 +34,3 @@ override of a generic method.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("UnnecessaryTypeArgument")` to the enclosing element.
-

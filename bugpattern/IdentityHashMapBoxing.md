@@ -42,4 +42,3 @@ But:
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("IdentityHashMapBoxing")` to the enclosing element.
-

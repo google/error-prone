@@ -11,7 +11,6 @@ severity: SUGGESTION
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
-
 _Alternate names: static-method_
 
 ## The problem
@@ -39,4 +38,3 @@ unused parameter.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("MethodCanBeStatic")` to the enclosing element.
-

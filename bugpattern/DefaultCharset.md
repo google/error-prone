@@ -37,4 +37,3 @@ When in doubt, use [UTF-8].
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("DefaultCharset")` to the enclosing element.
-

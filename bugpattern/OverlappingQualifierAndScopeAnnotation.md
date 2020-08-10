@@ -58,7 +58,6 @@ implemented by a single `DailyAllowance` instance per day.
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("OverlappingQualifierAndScopeAnnotation")` to the enclosing element.
 
-
 ----------
 
 ### Positive examples

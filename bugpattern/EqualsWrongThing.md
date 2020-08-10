@@ -34,4 +34,3 @@ class Frobnicator {
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("EqualsWrongThing")` to the enclosing element.
-

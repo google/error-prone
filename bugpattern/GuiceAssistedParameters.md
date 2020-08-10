@@ -50,7 +50,6 @@ public class RealPayment implements Payment {
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("GuiceAssistedParameters")` to the enclosing element.
 
-
 ----------
 
 ### Positive examples

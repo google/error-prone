@@ -50,4 +50,3 @@ assertThat(list).containsExactly("a");
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("AssertThrowsMultipleStatements")` to the enclosing element.
-

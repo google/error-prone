@@ -31,7 +31,6 @@ See the [Guice wiki] page on JSR-330 for more.
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("JavaxInjectOnAbstractMethod")` to the enclosing element.
 
-
 ----------
 
 ### Positive examples

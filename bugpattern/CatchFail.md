@@ -59,4 +59,3 @@ public void testFoo() {
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("CatchFail")` to the enclosing element.
-

@@ -22,4 +22,3 @@ signal failure.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("SystemExitOutsideMain")` to the enclosing element.
-

@@ -20,7 +20,6 @@ assertThat(methodCall()).isEqualTo(1).
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("TruthConstantAsserts")` to the enclosing element.
 
-
 ----------
 
 ### Positive examples

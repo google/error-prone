@@ -183,7 +183,6 @@ and the "Implementation Considerations" section in
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("WaitNotInLoop")` to the enclosing element.
 
-
 ----------
 
 ### Positive examples

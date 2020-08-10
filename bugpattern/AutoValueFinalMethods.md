@@ -28,4 +28,3 @@ the check doesn't flag them.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("AutoValueFinalMethods")` to the enclosing element.
-

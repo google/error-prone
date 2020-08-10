@@ -19,4 +19,3 @@ confusing error message if the assertion fails.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("AssertEqualsArgumentOrderChecker")` to the enclosing element.
-

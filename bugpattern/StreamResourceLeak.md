@@ -11,7 +11,6 @@ severity: WARNING
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
-
 _Alternate names: FilesLinesLeak_
 
 ## The problem
@@ -82,4 +81,3 @@ callers remember to close the stream.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("StreamResourceLeak")` to the enclosing element.
-

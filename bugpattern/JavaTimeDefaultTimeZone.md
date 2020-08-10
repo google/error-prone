@@ -17,4 +17,3 @@ Using APIs that silently use the default system time-zone is dangerous. The defa
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("JavaTimeDefaultTimeZone")` to the enclosing element.
-

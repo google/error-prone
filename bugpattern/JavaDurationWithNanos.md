@@ -17,4 +17,3 @@ Duration's withNanos(int) method is often a source of bugs because it returns a 
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("JavaDurationWithNanos")` to the enclosing element.
-

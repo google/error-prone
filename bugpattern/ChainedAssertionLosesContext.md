@@ -60,7 +60,6 @@ Benefits of `check` include:
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("ChainedAssertionLosesContext")` to the enclosing element.
 
-
 ----------
 
 ### Positive examples

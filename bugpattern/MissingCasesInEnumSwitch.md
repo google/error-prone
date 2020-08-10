@@ -47,4 +47,3 @@ have a default statement group.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("MissingCasesInEnumSwitch")` to the enclosing element.
-

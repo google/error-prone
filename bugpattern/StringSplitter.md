@@ -37,7 +37,7 @@ input    | `input.split(":")`  | `Splitter.on(':').split(input)`
 Prefer either:
 
 *   Guava's
-    [`Splitter`](http://google.github.io/guava/releases/23.0/api/docs/com/google/common/base/Splitter.html),
+    [`Splitter`](https://guava.dev/releases/23.0/api/docs/com/google/common/base/Splitter.html),
     which has less surprising behaviour and provides explicit control over the
     handling of empty strings and the trimming of whitespace with `trimResults`
     and `omitEmptyStrings`.
@@ -51,7 +51,6 @@ TIP: if you use `Splitter`, consider extracting the instance to a `static`
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("StringSplitter")` to the enclosing element.
-
 
 ----------
 

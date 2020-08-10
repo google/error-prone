@@ -27,7 +27,6 @@ Otherwise, use java.util.Arrays#equals() to compare the contents of the arrays.
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("ArrayEquals")` to the enclosing element.
 
-
 ----------
 
 ### Positive examples

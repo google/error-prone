@@ -39,4 +39,3 @@ container for arbitrary binary data.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("LiteByteStringUtf8")` to the enclosing element.
-

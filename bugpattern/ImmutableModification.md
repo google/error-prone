@@ -19,4 +19,3 @@ Calling a method that modifies a collection on an immutable implementation (e.g.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("ImmutableModification")` to the enclosing element.
-

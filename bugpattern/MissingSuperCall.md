@@ -20,4 +20,3 @@ methods invoke the super method. This check enforces those annotations.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("MissingSuperCall")` to the enclosing element.
-

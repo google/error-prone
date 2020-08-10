@@ -47,4 +47,3 @@ public void testRemoveFails() {
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("TestExceptionChecker")` to the enclosing element.
-

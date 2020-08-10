@@ -4,7 +4,7 @@ summary: 'The field number passed into #getFieldByNumber belongs to a different 
   to the Descriptor.'
 layout: bugpattern
 tags: ''
-severity: WARNING
+severity: ERROR
 ---
 
 <!--
@@ -31,4 +31,3 @@ Bar.getDescriptors().findFieldByNumber(Bar.ID_FIELD_NUMBER)
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("MixedDescriptors")` to the enclosing element.
-

@@ -22,7 +22,6 @@ report] for details.
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("GuiceAssistedInjectScoping")` to the enclosing element.
 
-
 ----------
 
 ### Positive examples

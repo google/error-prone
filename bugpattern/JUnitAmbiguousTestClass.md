@@ -33,4 +33,3 @@ annotation and implementations of `TestRule` and `MethodRule`).
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("JUnitAmbiguousTestClass")` to the enclosing element.
-

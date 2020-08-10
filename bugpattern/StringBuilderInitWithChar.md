@@ -19,7 +19,6 @@ StringBuilder with initial size equal to the code point of the specified char.
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("StringBuilderInitWithChar")` to the enclosing element.
 
-
 ----------
 
 ### Positive examples

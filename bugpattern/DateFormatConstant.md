@@ -53,4 +53,3 @@ private static final DateFormat dateFormat =
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("DateFormatConstant")` to the enclosing element.
-

@@ -17,4 +17,3 @@ JodaTime's type.plus(long) and type.minus(long) methods are often a source of bu
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("JodaPlusMinusLong")` to the enclosing element.
-

@@ -11,7 +11,6 @@ severity: WARNING
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
-
 _Alternate names: SdCardPath_
 
 ## The problem
@@ -19,7 +18,6 @@ _Alternate names: SdCardPath_
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("HardCodedSdCardPath")` to the enclosing element.
-
 
 ----------
 

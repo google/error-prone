@@ -17,4 +17,3 @@ Joda-Time's 'instant.withMillis(long)' method is often a source of bugs because 
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("JodaInstantWithMillis")` to the enclosing element.
-

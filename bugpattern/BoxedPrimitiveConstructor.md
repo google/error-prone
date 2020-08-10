@@ -32,4 +32,3 @@ treated as identity-less value types, even in their boxed representations.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("BoxedPrimitiveConstructor")` to the enclosing element.
-

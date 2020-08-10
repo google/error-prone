@@ -30,7 +30,6 @@ SWIG input code to tell it not to %ignore the C++ code's destructor.
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("SwigMemoryLeak")` to the enclosing element.
 
-
 ----------
 
 ### Positive examples

@@ -21,4 +21,3 @@ resources.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("MislabeledAndroidString")` to the enclosing element.
-

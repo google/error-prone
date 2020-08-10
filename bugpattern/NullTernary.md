@@ -27,4 +27,3 @@ resulting in a NullPointerException.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("NullTernary")` to the enclosing element.
-

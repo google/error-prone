@@ -35,4 +35,3 @@ classes and recommendations for what to do instead:
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("ExtendsAutoValue")` to the enclosing element.
-

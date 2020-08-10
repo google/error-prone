@@ -25,4 +25,3 @@ that can be accessed from the parameter's scope.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("InconsistentCapitalization")` to the enclosing element.
-

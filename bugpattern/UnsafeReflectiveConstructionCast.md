@@ -35,7 +35,6 @@ CVE-2014-7911 - http://seclists.org/fulldisclosure/2014/Nov/51
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("UnsafeReflectiveConstructionCast")` to the enclosing element.
 
-
 ----------
 
 ### Negative examples

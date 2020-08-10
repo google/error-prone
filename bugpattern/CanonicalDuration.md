@@ -18,4 +18,3 @@ Prefer to express durations using the largest possible unit, e.g.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("CanonicalDuration")` to the enclosing element.
-

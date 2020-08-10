@@ -44,4 +44,3 @@ public static boolean doSomething(String input) {
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("ConstantPatternCompile")` to the enclosing element.
-

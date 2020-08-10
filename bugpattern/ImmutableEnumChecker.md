@@ -11,7 +11,6 @@ severity: WARNING
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
-
 _Alternate names: Immutable_
 
 ## The problem
@@ -154,4 +153,3 @@ works for one interface type.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("ImmutableEnumChecker")` to the enclosing element.
-

@@ -23,7 +23,6 @@ regardless of runtime configuration.
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("AssertFalse")` to the enclosing element.
 
-
 ----------
 
 ### Positive examples

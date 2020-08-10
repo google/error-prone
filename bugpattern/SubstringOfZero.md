@@ -17,4 +17,3 @@ String.substring(int) gives you the substring from the index to the end, inclusi
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("SubstringOfZero")` to the enclosing element.
-

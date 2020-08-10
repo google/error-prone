@@ -11,7 +11,6 @@ severity: ERROR
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
-
 _Alternate names: empty_
 
 ## The problem
@@ -20,7 +19,6 @@ have been inserted by accident.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("EmptyIf")` to the enclosing element.
-
 
 ----------
 

@@ -17,4 +17,3 @@ Declaring classes in the default package is discouraged.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("DefaultPackage")` to the enclosing element.
-

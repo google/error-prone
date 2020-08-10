@@ -23,4 +23,3 @@ Since `@SuppressWarnings` cannot be applied to package declarations, this
 warning can be suppressed by annotating any top-level class in the compilation
 unit with `@SuppressWarnings("ClassName")`.
 
-

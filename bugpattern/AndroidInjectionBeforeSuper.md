@@ -21,7 +21,6 @@ framework type is injected in the appropriate order.
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("AndroidInjectionBeforeSuper")` to the enclosing element.
 
-
 ----------
 
 ### Positive examples

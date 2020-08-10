@@ -35,4 +35,3 @@ final int number = 42;
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("FieldCanBeStatic")` to the enclosing element.
-

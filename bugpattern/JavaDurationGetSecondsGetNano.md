@@ -17,4 +17,3 @@ If you call duration.getNano(), you must also call duration.getSeconds() in 'nea
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("JavaDurationGetSecondsGetNano")` to the enclosing element.
-

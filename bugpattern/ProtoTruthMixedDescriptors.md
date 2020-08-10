@@ -48,4 +48,3 @@ void assertOnFoo(Foo foo) {
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("ProtoTruthMixedDescriptors")` to the enclosing element.
-

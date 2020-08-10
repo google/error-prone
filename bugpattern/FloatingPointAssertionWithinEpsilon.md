@@ -42,7 +42,6 @@ floating point errors, or, if not, `isEqualTo` makes the intention more clear.
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("FloatingPointAssertionWithinEpsilon")` to the enclosing element.
 
-
 ----------
 
 ### Positive examples

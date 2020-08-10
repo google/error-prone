@@ -20,4 +20,3 @@ primitive array, use Collections.singletonList to make your intent clearer.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("ArraysAsListPrimitiveArray")` to the enclosing element.
-

@@ -96,4 +96,3 @@ public void foo(ByteBuffer buffer) {
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("ByteBufferBackingArray")` to the enclosing element.
-

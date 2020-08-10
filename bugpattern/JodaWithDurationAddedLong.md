@@ -17,4 +17,3 @@ JodaTime's type.withDurationAdded(long, int) is often a source of bugs because t
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("JodaWithDurationAddedLong")` to the enclosing element.
-

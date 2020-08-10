@@ -23,7 +23,6 @@ regex.
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("InvalidPatternSyntax")` to the enclosing element.
 
-
 ----------
 
 ### Positive examples

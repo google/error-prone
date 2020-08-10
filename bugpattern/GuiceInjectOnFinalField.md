@@ -23,7 +23,6 @@ From the [Guice wiki][wiki]:
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("GuiceInjectOnFinalField")` to the enclosing element.
 
-
 ----------
 
 ### Positive examples

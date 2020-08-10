@@ -20,4 +20,3 @@ To fix the problem, replace the variable with `true` in inner statement.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("RedundantCondition")` to the enclosing element.
-

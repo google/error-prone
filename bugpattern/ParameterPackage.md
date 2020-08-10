@@ -21,7 +21,6 @@ probably meant to override the superclass method.
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("ParameterPackage")` to the enclosing element.
 
-
 ----------
 
 ### Positive examples

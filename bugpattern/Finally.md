@@ -11,7 +11,6 @@ severity: WARNING
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
-
 _Alternate names: finally, ThrowFromFinallyBlock_
 
 ## The problem
@@ -50,7 +49,7 @@ try (InputStream in = openInputStream()) {
 ```
 
 If Java 7 is not available, we recommend Guava's
-[Closer API](http://google.github.io/guava/releases/snapshot/api/docs/com/google/common/io/Closer.html).
+[Closer API](https://guava.dev/releases/snapshot/api/docs/com/google/common/io/Closer.html).
 
 ```java
 Closer closer = Closer.create();
@@ -66,4 +65,3 @@ try {
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("Finally")` to the enclosing element.
-

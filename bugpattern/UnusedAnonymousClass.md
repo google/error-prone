@@ -30,4 +30,3 @@ public static void main(String[] args) {
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("UnusedAnonymousClass")` to the enclosing element.
-

@@ -17,4 +17,3 @@ Implicit widening conversions when comparing two primitives with methods like Fl
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("LossyPrimitiveCompare")` to the enclosing element.
-

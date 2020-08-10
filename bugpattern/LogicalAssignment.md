@@ -32,4 +32,3 @@ Prefer `while ((x = checkSomething())) {` or `while (x == checkSomething()) {`.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("LogicalAssignment")` to the enclosing element.
-

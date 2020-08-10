@@ -11,7 +11,6 @@ severity: ERROR
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
-
 _Alternate names: GuardedByChecker_
 
 ## The problem
@@ -272,4 +271,3 @@ required lock is not held.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("GuardedBy")` to the enclosing element.
-

@@ -20,4 +20,3 @@ type declarations (see [JEP 286][]).
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("VarTypeName")` to the enclosing element.
-

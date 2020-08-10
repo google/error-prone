@@ -19,4 +19,3 @@ intended.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("StreamToString")` to the enclosing element.
-

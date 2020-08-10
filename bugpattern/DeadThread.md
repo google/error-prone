@@ -20,4 +20,3 @@ Threads must be started with `start()` to actually execute.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("DeadThread")` to the enclosing element.
-

@@ -61,4 +61,3 @@ class MyCounter extends Counter {
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("UnsynchronizedOverridesSynchronized")` to the enclosing element.
-

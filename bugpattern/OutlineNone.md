@@ -31,4 +31,3 @@ make them visually distinct. Learn more & get alternative suggestions at
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("OutlineNone")` to the enclosing element.
-

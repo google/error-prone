@@ -19,7 +19,6 @@ toString() completely.
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("OverrideThrowableToString")` to the enclosing element.
 
-
 ----------
 
 ### Positive examples

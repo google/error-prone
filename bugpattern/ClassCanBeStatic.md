@@ -20,7 +20,6 @@ does not make the intent of the class clear.
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("ClassCanBeStatic")` to the enclosing element.
 
-
 ----------
 
 ### Positive examples

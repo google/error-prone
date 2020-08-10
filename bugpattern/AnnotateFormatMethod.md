@@ -48,4 +48,3 @@ this code still compiles after applying.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("AnnotateFormatMethod")` to the enclosing element.
-

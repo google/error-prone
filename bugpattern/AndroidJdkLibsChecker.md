@@ -11,7 +11,6 @@ severity: ERROR
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
-
 _Alternate names: Java7ApiChecker, AndroidApiChecker_
 
 ## The problem
@@ -35,4 +34,3 @@ To suppress for a particular statement, method, or class, use
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("AndroidJdkLibsChecker")` to the enclosing element.
-

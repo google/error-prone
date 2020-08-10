@@ -18,4 +18,3 @@ null check). `propagateIfPossible(knownCheckedException)` is a complete no-op.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("ThrowIfUncheckedKnownChecked")` to the enclosing element.
-

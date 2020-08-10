@@ -57,9 +57,7 @@ avoided for collections that contain null. Consider using `Arrays.asList` to
 initialize `List`s and `Set`s with `null` values, and refactoring `Map`
 initializers into a helper method.
 
-
 [dbi]: https://stackoverflow.com/questions/1958636/what-is-double-brace-initialization-in-java
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("DoubleBraceInitialization")` to the enclosing element.
-

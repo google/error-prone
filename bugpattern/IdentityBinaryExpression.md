@@ -11,7 +11,6 @@ severity: ERROR
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
-
 _Alternate names: SelfEquality_
 
 ## The problem
@@ -45,4 +44,3 @@ if (foo.isTrue() && foo.isTrue()) {
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("IdentityBinaryExpression")` to the enclosing element.
-

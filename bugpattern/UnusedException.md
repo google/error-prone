@@ -51,4 +51,3 @@ should not be propagated.
   }
 ```
 
-

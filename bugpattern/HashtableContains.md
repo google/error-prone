@@ -24,4 +24,3 @@ object is a value in the hash table, use `containsValue` for clarity.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("HashtableContains")` to the enclosing element.
-

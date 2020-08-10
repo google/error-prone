@@ -21,4 +21,3 @@ use one of the assertion libraries that are always enabled, such as JUnit's
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("UseCorrectAssertInTests")` to the enclosing element.
-

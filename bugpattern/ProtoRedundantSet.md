@@ -30,4 +30,3 @@ return MyProto.newBuilder()
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("ProtoRedundantSet")` to the enclosing element.
-

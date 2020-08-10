@@ -18,7 +18,6 @@ An element can be qualified by at most one qualifier.
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("InjectMoreThanOneQualifier")` to the enclosing element.
 
-
 ----------
 
 ### Positive examples

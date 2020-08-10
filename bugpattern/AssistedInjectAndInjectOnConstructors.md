@@ -21,7 +21,6 @@ https://google.github.io/guice/api-docs/latest/javadoc/com/google/inject/assiste
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("AssistedInjectAndInjectOnConstructors")` to the enclosing element.
 
-
 ----------
 
 ### Positive examples

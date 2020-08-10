@@ -11,7 +11,6 @@ severity: ERROR
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
-
 _Alternate names: InsecureCipherMode_
 
 ## The problem
@@ -39,7 +38,6 @@ classes of problems that are covered by this checker:
 *   Using DSA for digital signatures. Some widely used crypto libraries accept
     invalid DSA signatures in specific configurations. The checker will flag all
     cryptographic operations that may involve DSA.
-
 
 
 ----------
@@ -450,7 +448,6 @@ public class InsecureCipherModeNegativeCases {
       // We don't handle any exception as this code is not meant to be executed.
     }
   }
-
 }
 {% endhighlight %}
 

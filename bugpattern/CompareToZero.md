@@ -52,4 +52,3 @@ code if turned into a comparison to `0`, e.g.:
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("CompareToZero")` to the enclosing element.
-

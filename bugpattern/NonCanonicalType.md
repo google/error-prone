@@ -33,4 +33,3 @@ safe to store indefinitely, when really it offers no more safety than
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("NonCanonicalType")` to the enclosing element.
-

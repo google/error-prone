@@ -42,4 +42,3 @@ the ID appears in `ZoneId.getAvailableZoneIds()`, e.g. "UTC", "GMT", "PRC".
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("ThreeLetterTimeZoneID")` to the enclosing element.
-

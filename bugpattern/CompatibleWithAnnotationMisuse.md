@@ -20,4 +20,3 @@ details.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("CompatibleWithAnnotationMisuse")` to the enclosing element.
-

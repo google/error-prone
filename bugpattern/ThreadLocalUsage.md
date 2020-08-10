@@ -44,4 +44,3 @@ private static final ThreadLocal<D> local = new ThreadLocal<D>();
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("ThreadLocalUsage")` to the enclosing element.
-

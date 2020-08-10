@@ -17,4 +17,3 @@ Not all java.time types can be created via from(TemporalAccessor). For example, 
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("FromTemporalAccessor")` to the enclosing element.
-

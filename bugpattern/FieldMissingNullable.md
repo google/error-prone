@@ -38,4 +38,3 @@ public class Foo {
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("FieldMissingNullable")` to the enclosing element.
-

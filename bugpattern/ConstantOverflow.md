@@ -39,4 +39,3 @@ scale, see [`TimeUnit.convert`].
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("ConstantOverflow")` to the enclosing element.
-

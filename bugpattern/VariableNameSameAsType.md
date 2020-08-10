@@ -36,4 +36,3 @@ private static String string;
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("VariableNameSameAsType")` to the enclosing element.
-

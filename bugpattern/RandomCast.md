@@ -19,4 +19,3 @@ the range `[0.0, 1.0)`. Therefore, casting the result to `(int)` or `(long)`
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("RandomCast")` to the enclosing element.
-

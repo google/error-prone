@@ -27,13 +27,11 @@ type annotations in this context, so the above code is equivalent to:
 @Inject Foo(List<String> strings)
 ```
 
-
 [`TYPE_PARAMETER`]: https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/ElementType.html#TYPE_PARAMETER
 [`TYPE_USE`]: https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/ElementType.html#TYPE_USE
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("QualifierWithTypeUse")` to the enclosing element.
-
 
 ----------
 

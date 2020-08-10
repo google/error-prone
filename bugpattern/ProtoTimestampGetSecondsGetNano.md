@@ -17,4 +17,3 @@ If you call timestamp.getNanos(), you must also call timestamp.getSeconds() in '
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("ProtoTimestampGetSecondsGetNano")` to the enclosing element.
-

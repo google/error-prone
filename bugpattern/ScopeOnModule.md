@@ -19,4 +19,3 @@ annotations from any class annotated with `@Module` or `@ProducerModule`.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("ScopeOnModule")` to the enclosing element.
-

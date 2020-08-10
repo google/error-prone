@@ -165,4 +165,3 @@ UNRECOGNIZED case.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("UnnecessaryDefaultInEnumSwitch")` to the enclosing element.
-

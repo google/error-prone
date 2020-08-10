@@ -24,4 +24,3 @@ a.equals(b); // false!
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("BigDecimalEquals")` to the enclosing element.
-

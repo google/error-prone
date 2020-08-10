@@ -17,4 +17,3 @@ Duration's withSeconds(long) method is often a source of bugs because it returns
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("JavaDurationWithSeconds")` to the enclosing element.
-

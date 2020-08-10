@@ -50,4 +50,3 @@ method, or remove `b` from `#hashCode`. The former is more likely to be correct.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("InconsistentHashCode")` to the enclosing element.
-

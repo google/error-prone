@@ -25,7 +25,6 @@ don't need an `@Test` annotation, but if you want to keep it, add `@Ignore` too.
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("JUnit3TestNotRun")` to the enclosing element.
 
-
 ----------
 
 ### Positive examples

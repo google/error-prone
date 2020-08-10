@@ -37,4 +37,3 @@ long rand = (long) (new Random().nextDouble() * 1000000000);
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("FloatCast")` to the enclosing element.
-

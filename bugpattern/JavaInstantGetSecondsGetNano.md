@@ -17,4 +17,3 @@ If you call instant.getNano(), you must also call instant.getEpochSecond() in 'n
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("JavaInstantGetSecondsGetNano")` to the enclosing element.
-

@@ -52,7 +52,6 @@ ids.removeIf(id -> shouldRemove(id));
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("ModifyCollectionInEnhancedForLoop")` to the enclosing element.
 
-
 ----------
 
 ### Positive examples

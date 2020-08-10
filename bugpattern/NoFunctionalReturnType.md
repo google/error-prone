@@ -17,4 +17,3 @@ Returning the actual type that the returned function would return instead of a f
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("NoFunctionalReturnType")` to the enclosing element.
-

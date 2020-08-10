@@ -3,14 +3,13 @@ title: StaticQualifiedUsingExpression
 summary: A static variable or method should be qualified with a class name, not expression
 layout: bugpattern
 tags: FragileCode
-severity: WARNING
+severity: ERROR
 ---
 
 <!--
 *** AUTO-GENERATED, DO NOT MODIFY ***
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
-
 
 _Alternate names: static, static-access, StaticAccessedFromInstance_
 
@@ -59,9 +58,9 @@ irrelevant. To prove this, set the variable to `null` and run again. The program
 will *still* print `1`, not throw a `NullPointerException`!
 
 Qualifying a static reference in this way creates an unnecessarily confusing
-situation. To prevent it, always qualify static method calls using a class name,
-never an expression.
+situation. To prevent it, only qualify static method calls using a class name,
+never an expression (that is, `TheClass.theMethod()` or `theMethod()`, but not
+`anInstanceOfTheClass.theMethod()`).
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("StaticQualifiedUsingExpression")` to the enclosing element.
-

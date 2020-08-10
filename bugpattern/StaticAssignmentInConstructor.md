@@ -28,4 +28,3 @@ Common reasons are:
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("StaticAssignmentInConstructor")` to the enclosing element.
-

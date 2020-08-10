@@ -70,4 +70,3 @@ retrieved using `myMessage.getMyString().getValue()`.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("ProtoFieldNullComparison")` to the enclosing element.
-

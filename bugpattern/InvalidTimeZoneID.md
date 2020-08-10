@@ -18,4 +18,3 @@ identifier is passed in.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("InvalidTimeZoneID")` to the enclosing element.
-

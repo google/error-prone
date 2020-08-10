@@ -43,4 +43,3 @@ Consider renaming one of the methods to avoid the ambiguity.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("AmbiguousMethodReference")` to the enclosing element.
-

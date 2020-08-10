@@ -47,4 +47,3 @@ compute the identity hash code, consider using
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("ArrayHashCode")` to the enclosing element.
-

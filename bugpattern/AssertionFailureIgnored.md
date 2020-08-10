@@ -45,4 +45,3 @@ public void testFailsWithAssertionError() {
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("AssertionFailureIgnored")` to the enclosing element.
-

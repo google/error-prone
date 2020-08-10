@@ -61,4 +61,3 @@ switch (state) {
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("MissingDefault")` to the enclosing element.
-

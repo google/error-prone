@@ -51,4 +51,3 @@ This invocation will be ambiguous:
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("TypeParameterUnusedInFormals")` to the enclosing element.
-

@@ -17,4 +17,3 @@ Period.from(TemporalAmount) will always throw a DateTimeException when passed a 
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("PeriodFrom")` to the enclosing element.
-

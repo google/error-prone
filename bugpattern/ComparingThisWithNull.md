@@ -17,4 +17,3 @@ The boolean expression this != null always returns true and similarly this == nu
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("ComparingThisWithNull")` to the enclosing element.
-

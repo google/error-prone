@@ -32,7 +32,6 @@ MissileLauncher(Location target, boolean askForConfirmation) {
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("ChainingConstructorIgnoresParameter")` to the enclosing element.
 
-
 ----------
 
 ### Positive examples

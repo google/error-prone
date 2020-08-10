@@ -20,4 +20,3 @@ module will not be used as an instance.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("PrivateConstructorForNoninstantiableModule")` to the enclosing element.
-

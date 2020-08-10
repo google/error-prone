@@ -24,4 +24,3 @@ warning.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("ArgumentSelectionDefectChecker")` to the enclosing element.
-

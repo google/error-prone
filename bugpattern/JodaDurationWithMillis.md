@@ -17,4 +17,3 @@ Joda-Time's 'duration.withMillis(long)' method is often a source of bugs because
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("JodaDurationWithMillis")` to the enclosing element.
-

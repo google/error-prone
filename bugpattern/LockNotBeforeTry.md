@@ -59,4 +59,3 @@ it.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("LockNotBeforeTry")` to the enclosing element.
-

@@ -58,4 +58,3 @@ instead of incrementing a static `int` field.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("StaticGuardedByInstance")` to the enclosing element.
-

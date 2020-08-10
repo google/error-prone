@@ -32,4 +32,3 @@ generate a warning, `BigDecimal.valueOf` is safe.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("BigDecimalLiteralDouble")` to the enclosing element.
-

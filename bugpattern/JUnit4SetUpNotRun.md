@@ -33,7 +33,6 @@ of setUp()
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("JUnit4SetUpNotRun")` to the enclosing element.
 
-
 ----------
 
 ### Positive examples

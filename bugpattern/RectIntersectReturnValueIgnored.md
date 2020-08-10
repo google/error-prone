@@ -25,7 +25,6 @@ wrong rectangle.
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("RectIntersectReturnValueIgnored")` to the enclosing element.
 
-
 ----------
 
 ### Positive examples

@@ -21,4 +21,3 @@ separate method.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("ForOverride")` to the enclosing element.
-

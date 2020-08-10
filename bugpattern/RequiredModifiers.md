@@ -19,4 +19,3 @@ element that is missing one or more required modifiers.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("RequiredModifiers")` to the enclosing element.
-

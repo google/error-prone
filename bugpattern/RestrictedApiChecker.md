@@ -18,4 +18,3 @@ whitelist annotation.
 
 ## Suppression
 This check may not be suppressed.
-

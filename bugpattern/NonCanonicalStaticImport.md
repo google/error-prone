@@ -51,4 +51,3 @@ class Two extends One {}
 An import of `Inner` should always refer to it using the canonical name
 `a.One.Inner`, not `a.Two.Inner`.
 
-

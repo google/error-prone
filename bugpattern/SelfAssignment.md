@@ -25,7 +25,6 @@ Preconditions.checkNotNull() as a bare statement.
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("SelfAssignment")` to the enclosing element.
 
-
 ----------
 
 ### Positive examples

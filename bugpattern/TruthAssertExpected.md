@@ -44,7 +44,6 @@ See https://truth.dev/faq#order for more details.
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("TruthAssertExpected")` to the enclosing element.
 
-
 ----------
 
 ### Positive examples

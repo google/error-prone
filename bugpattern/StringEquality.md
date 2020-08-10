@@ -19,7 +19,6 @@ for value equality using .equals()
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("StringEquality")` to the enclosing element.
 
-
 ----------
 
 ### Positive examples

@@ -26,4 +26,3 @@ compiled, as it discards whitespace and comments.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("TreeToString")` to the enclosing element.
-

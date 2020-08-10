@@ -44,4 +44,3 @@ interface java.lang.Deprecated
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("GetClassOnAnnotation")` to the enclosing element.
-

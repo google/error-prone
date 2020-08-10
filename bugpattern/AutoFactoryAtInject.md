@@ -23,7 +23,6 @@ prefer to inject that instead.
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("AutoFactoryAtInject")` to the enclosing element.
 
-
 ----------
 
 ### Positive examples

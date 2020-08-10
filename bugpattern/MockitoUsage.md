@@ -35,4 +35,3 @@ For more information, see the [Mockito documentation][docs].
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("MockitoUsage")` to the enclosing element.
-

@@ -45,4 +45,3 @@ foo != null
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("BadInstanceof")` to the enclosing element.
-

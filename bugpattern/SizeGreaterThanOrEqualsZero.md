@@ -20,7 +20,6 @@ check if the size is greater than or equal to 0, which is always true.
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("SizeGreaterThanOrEqualsZero")` to the enclosing element.
 
-
 ----------
 
 ### Positive examples

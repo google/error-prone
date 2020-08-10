@@ -19,4 +19,3 @@ annotations respect their @IncompatibleModifiers specifications.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("IncompatibleModifiers")` to the enclosing element.
-

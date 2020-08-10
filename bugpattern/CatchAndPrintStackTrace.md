@@ -16,7 +16,6 @@ To make changes, edit the @BugPattern annotation or the explanation in docs/bugp
 Discarding an exception after calling `printStackTrace` should usually be
 avoided.
 
-
 ```java
 try {
   // ...
@@ -43,4 +42,3 @@ try {
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("CatchAndPrintStackTrace")` to the enclosing element.
-

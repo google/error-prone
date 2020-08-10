@@ -65,4 +65,3 @@ information.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("NarrowingCompoundAssignment")` to the enclosing element.
-

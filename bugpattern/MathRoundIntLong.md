@@ -17,4 +17,3 @@ Math.round() called with an integer or long type results in truncation because M
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("MathRoundIntLong")` to the enclosing element.
-

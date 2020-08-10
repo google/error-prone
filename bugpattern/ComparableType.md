@@ -39,7 +39,6 @@ are different types, this behaviour can't be guaranteed.
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("ComparableType")` to the enclosing element.
 
-
 ----------
 
 ### Positive examples

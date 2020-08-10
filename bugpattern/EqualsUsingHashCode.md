@@ -41,4 +41,3 @@ equality) is only ~77k.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("EqualsUsingHashCode")` to the enclosing element.
-

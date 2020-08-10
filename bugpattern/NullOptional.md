@@ -35,4 +35,3 @@ if the parameter is explicitly annotated `@Nullable`.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("NullOptional")` to the enclosing element.
-

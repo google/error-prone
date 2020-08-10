@@ -32,7 +32,6 @@ integer, you could use an AtomicInteger instead of a volatile int.
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("NonAtomicVolatileUpdate")` to the enclosing element.
 
-
 ----------
 
 ### Positive examples

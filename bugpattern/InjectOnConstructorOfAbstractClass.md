@@ -21,4 +21,3 @@ annotation has no effect.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("InjectOnConstructorOfAbstractClass")` to the enclosing element.
-

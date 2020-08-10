@@ -36,4 +36,3 @@ public ImmutableList<Object> performScaryCast(ImmutableList<String> strings) {
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("SuppressWarningsWithoutExplanation")` to the enclosing element.
-

@@ -16,7 +16,6 @@ To make changes, edit the @BugPattern annotation or the explanation in docs/bugp
 
 
 
-
 ----------
 
 ### Positive examples

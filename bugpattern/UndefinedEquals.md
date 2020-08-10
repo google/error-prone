@@ -64,19 +64,33 @@ string representation: `lhs.toString().contentEquals(rhs)`.
 
 These must be iterated over and compared manually, element by element.
 
+## For [`java.util.Date`]
+
+Subtypes of `Date` (like `java.sql.Timestamp`) break substitutability, so
+comparing `Date`s with `equals` is unreliable.
+
+TIP: `java.util.Date` is a legacy, bug-prone API. Prefer `java.time.Instant` or
+`java.time.LocalDateTime`.
+
+## For [`ImmutableCollection`]
+
+Prefer subtypes such as `ImmutableSet` or `ImmutableList`, which have
+well-defined `equals`.
+
 [`Collection`]: https://docs.oracle.com/javase/8/docs/api/java/util/Collection.html
 [`Iterable`]: https://docs.oracle.com/javase/8/docs/api/java/lang/Iterable.html
-[`Iterables.elementsEqual`]: https://google.github.io/guava/releases/snapshot/api/docs/com/google/common/collect/Iterables.html#elementsEqual-java.lang.Iterable-java.lang.Iterable-
+[`Iterables.elementsEqual`]: https://guava.dev/releases/snapshot/api/docs/com/google/common/collect/Iterables.html#elementsEqual-java.lang.Iterable-java.lang.Iterable-
 [`LinkedList`]: http://docs.oracle.com/javase/8/docs/api/java/util/LinkedList.html
-[`ListMultimap`]: https://google.github.io/guava/releases/snapshot/api/docs/com/google/common/collect/ListMultimap.html
+[`ListMultimap`]: https://guava.dev/releases/snapshot/api/docs/com/google/common/collect/ListMultimap.html
 [`LongSparseArray`]: https://developer.android.com/reference/android/util/LongSparseArray
-[`Multimap`]: https://google.github.io/guava/releases/snapshot/api/docs/com/google/common/collect/Multimap.html
-[`Multiset`]: https://google.github.io/guava/releases/snapshot/api/docs/com/google/common/collect/Multiset.html
-[`SetMultimap`]: https://google.github.io/guava/releases/snapshot/api/docs/com/google/common/collect/SetMultimap.html
+[`Multimap`]: https://guava.dev/releases/snapshot/api/docs/com/google/common/collect/Multimap.html
+[`Multiset`]: https://guava.dev/releases/snapshot/api/docs/com/google/common/collect/Multiset.html
+[`SetMultimap`]: https://guava.dev/releases/snapshot/api/docs/com/google/common/collect/SetMultimap.html
 [`SparseArray`]: https://developer.android.com/reference/android/util/SparseArray
 [`Queue`]: http://docs.oracle.com/javase/8/docs/api/java/util/Queue.html
 [`CharSequence`]: http://docs.oracle.com/javase/8/docs/api/java/lang/CharSequence.html
+[`java.util.Date`]: http://docs.oracle.com/javase/8/docs/api/java/util/Date.html
+[`ImmutableCollection`]: https://guava.dev/releases/snapshot-jre/api/docs/com/google/common/collect/ImmutableCollection.html
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("UndefinedEquals")` to the enclosing element.
-

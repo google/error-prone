@@ -18,4 +18,3 @@ argument is more than 23 characters long.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("IsLoggableTagLength")` to the enclosing element.
-

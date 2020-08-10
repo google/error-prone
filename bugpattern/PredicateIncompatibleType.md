@@ -26,4 +26,3 @@ See also [EqualsIncompatibleType](EqualsIncompatibleType.md).
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("PredicateIncompatibleType")` to the enclosing element.
-

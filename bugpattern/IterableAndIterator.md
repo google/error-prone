@@ -21,7 +21,6 @@ while an `Iterable` is a representation of literally iterable elements. An
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("IterableAndIterator")` to the enclosing element.
 
-
 ----------
 
 ### Positive examples

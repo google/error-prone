@@ -19,4 +19,3 @@ assertEquals(expected, actual, 0.0) if the delta must be 0.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("JUnit3FloatingPointComparisonWithoutDelta")` to the enclosing element.
-

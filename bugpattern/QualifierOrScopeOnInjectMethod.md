@@ -88,4 +88,3 @@ class MyModule extends AbstractModule {
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("QualifierOrScopeOnInjectMethod")` to the enclosing element.
-

@@ -18,7 +18,6 @@ Scoping annotations are not allowed on abstract types.
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("InjectScopeAnnotationOnInterfaceOrAbstractClass")` to the enclosing element.
 
-
 ----------
 
 ### Positive examples

@@ -87,4 +87,3 @@ object instead.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("UnsafeFinalization")` to the enclosing element.
-

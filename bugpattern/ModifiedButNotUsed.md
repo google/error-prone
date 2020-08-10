@@ -54,4 +54,3 @@ or the Builder modified in place:
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("ModifiedButNotUsed")` to the enclosing element.
-

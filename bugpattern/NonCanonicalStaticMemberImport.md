@@ -52,4 +52,3 @@ class Two extends One {}
 An import of `CONST` should always refer to it using the canonical name
 `a.One.CONST`, not `a.Two.CONST`.
 
-

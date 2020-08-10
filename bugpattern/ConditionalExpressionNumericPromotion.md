@@ -55,4 +55,3 @@ Or use if/else:
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("ConditionalExpressionNumericPromotion")` to the enclosing element.
-

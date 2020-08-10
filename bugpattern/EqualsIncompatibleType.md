@@ -168,7 +168,6 @@ if (set.contains(hi)) {
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("EqualsIncompatibleType")` to the enclosing element.
 
-
 ----------
 
 ### Positive examples

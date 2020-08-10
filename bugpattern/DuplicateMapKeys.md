@@ -30,4 +30,3 @@ Map<String, String> map = Map.ofEntries(
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("DuplicateMapKeys")` to the enclosing element.
-

@@ -27,7 +27,6 @@ for details.
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("FutureReturnValueIgnored")` to the enclosing element.
 
-
 ----------
 
 ### Positive examples

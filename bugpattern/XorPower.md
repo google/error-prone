@@ -20,4 +20,3 @@ Consider expressing powers of `2` using a bit shift instead.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("XorPower")` to the enclosing element.
-

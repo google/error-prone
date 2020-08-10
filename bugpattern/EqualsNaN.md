@@ -19,7 +19,6 @@ Instead, use the isNaN methods to check for NaN.
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("EqualsNaN")` to the enclosing element.
 
-
 ----------
 
 ### Positive examples

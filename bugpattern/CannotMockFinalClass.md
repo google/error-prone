@@ -19,7 +19,6 @@ https://github.com/mockito/mockito/wiki/FAQ for details.
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("CannotMockFinalClass")` to the enclosing element.
 
-
 ----------
 
 ### Positive examples

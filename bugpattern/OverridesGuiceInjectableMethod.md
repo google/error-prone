@@ -24,7 +24,6 @@ difference, it is recommended that you annotate this method explicitly.
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("OverridesGuiceInjectableMethod")` to the enclosing element.
 
-
 ----------
 
 ### Positive examples

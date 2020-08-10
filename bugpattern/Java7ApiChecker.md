@@ -17,4 +17,3 @@ Code that needs to be compatible with Java 7 cannot use types or members that ar
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("Java7ApiChecker")` to the enclosing element.
-

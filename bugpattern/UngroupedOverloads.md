@@ -36,4 +36,3 @@ overloads of that method.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("UngroupedOverloads")` to the enclosing element.
-

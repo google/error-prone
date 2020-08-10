@@ -60,4 +60,3 @@ f(flag ? new Object[][] {{1, 2}} : new Object[] {3}); // prints [[1, 2]] or [3]
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("InexactVarargsConditional")` to the enclosing element.
-

@@ -11,7 +11,6 @@ severity: ERROR
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
-
 _Alternate names: MoreThanOneScopeAnnotationOnClass_
 
 ## The problem
@@ -20,7 +19,6 @@ the JSR-330 specification.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("InjectMoreThanOneScopeAnnotationOnClass")` to the enclosing element.
-
 
 ----------
 

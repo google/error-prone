@@ -109,4 +109,3 @@ String.format("%r", "hello");
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("FormatString")` to the enclosing element.
-

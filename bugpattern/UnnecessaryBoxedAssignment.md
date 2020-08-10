@@ -17,4 +17,3 @@ It is unnecessary for this assignment or return expression to be boxed explicitl
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("UnnecessaryBoxedAssignment")` to the enclosing element.
-

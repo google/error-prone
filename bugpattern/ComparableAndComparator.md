@@ -20,7 +20,6 @@ the same type.
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("ComparableAndComparator")` to the enclosing element.
 
-
 ----------
 
 ### Positive examples

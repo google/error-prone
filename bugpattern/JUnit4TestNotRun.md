@@ -23,7 +23,6 @@ test, consider reducing its visibility to non-public, if possible.
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("JUnit4TestNotRun")` to the enclosing element.
 
-
 ----------
 
 ### Positive examples

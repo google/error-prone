@@ -41,4 +41,3 @@ where the type parameter is always instantiated with the same type.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("TypeNameShadowing")` to the enclosing element.
-

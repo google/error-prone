@@ -57,7 +57,7 @@ will allow your class to be included in other `@Immutable` classes.
 For more information about immutability, see:
 
 *   Java Concurrency in Practice §3.4
-*   Effective Java 3rd Edition §17
+*   [Effective Java 3rd Edition §17][ej3e-17]
 
 ## Type Parameters
 
@@ -153,4 +153,5 @@ class MyAutoValue {
 }
 ```
 
+[ej3e-17]: https://books.google.com/books?id=BIpDDwAAQBAJ
 

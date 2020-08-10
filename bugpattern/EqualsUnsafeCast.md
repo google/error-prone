@@ -31,4 +31,3 @@ class Data {
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("EqualsUnsafeCast")` to the enclosing element.
-

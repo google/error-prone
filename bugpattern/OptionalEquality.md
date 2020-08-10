@@ -18,4 +18,3 @@ reference equality using `==` and `!=`.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("OptionalEquality")` to the enclosing element.
-

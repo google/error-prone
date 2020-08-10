@@ -26,4 +26,3 @@ random.nextInt(n)`.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("RandomModInteger")` to the enclosing element.
-

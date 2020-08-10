@@ -17,4 +17,3 @@ This variable is of boxed type, but equivalent semantics can be achieved using t
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("UnnecessaryBoxedVariable")` to the enclosing element.
-

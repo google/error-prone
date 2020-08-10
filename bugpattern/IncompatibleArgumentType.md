@@ -54,4 +54,3 @@ void containmentCheck(Container<? extends Number> container) {
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("IncompatibleArgumentType")` to the enclosing element.
-

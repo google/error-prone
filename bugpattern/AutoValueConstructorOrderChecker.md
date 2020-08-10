@@ -19,4 +19,3 @@ ordering.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("AutoValueConstructorOrderChecker")` to the enclosing element.
-

@@ -11,7 +11,6 @@ severity: ERROR
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
-
 _Alternate names: ResultOfMethodCallIgnored, ReturnValueIgnored_
 
 ## The problem
@@ -93,7 +92,6 @@ from having to use either an `unused` variable or `@SuppressWarnings`):
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("CheckReturnValue")` to the enclosing element.
-
 
 ----------
 

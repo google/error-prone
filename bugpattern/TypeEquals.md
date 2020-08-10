@@ -27,4 +27,3 @@ from `javax.annotation.processing.ProcessingEnvironment`.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("TypeEquals")` to the enclosing element.
-

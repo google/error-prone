@@ -48,7 +48,6 @@ retention for both [`Qualifier`] and [`Scope`].
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("InjectScopeOrQualifierAnnotationRetention")` to the enclosing element.
 
-
 ----------
 
 ### Positive examples

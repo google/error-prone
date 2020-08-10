@@ -17,4 +17,3 @@ Joda-Time's DateTime.toDateTime(), Duration.toDuration(), Instant.toInstant(), I
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("JodaToSelf")` to the enclosing element.
-

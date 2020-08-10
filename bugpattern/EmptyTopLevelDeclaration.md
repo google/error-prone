@@ -18,4 +18,3 @@ declaration in the grammar, but it's confusing and unnecessary.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("EmptyTopLevelDeclaration")` to the enclosing element.
-

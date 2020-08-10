@@ -24,7 +24,6 @@ See JLS 15.19, "Shift Operators", for more details.
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("BadShiftAmount")` to the enclosing element.
 
-
 ----------
 
 ### Positive examples

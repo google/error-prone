@@ -33,4 +33,3 @@ by its canonical name `Message.Builder` instead.
 
 ## Suppression
 This check may not be suppressed.
-

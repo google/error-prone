@@ -17,4 +17,3 @@ Period.(plus|minus)(TemporalAmount) will always throw a DateTimeException when p
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("PeriodTimeMath")` to the enclosing element.
-

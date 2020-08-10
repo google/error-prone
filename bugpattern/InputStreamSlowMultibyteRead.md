@@ -30,4 +30,3 @@ the default behavior of the multibyte read method.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("InputStreamSlowMultibyteRead")` to the enclosing element.
-

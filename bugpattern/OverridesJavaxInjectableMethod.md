@@ -43,7 +43,6 @@ assumptions. Possible resolutions to this error include:
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("OverridesJavaxInjectableMethod")` to the enclosing element.
 
-
 ----------
 
 ### Positive examples

@@ -44,4 +44,3 @@ public static void doSomething(Map<String, String> map, String key, String defau
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("TruthGetOrDefault")` to the enclosing element.
-

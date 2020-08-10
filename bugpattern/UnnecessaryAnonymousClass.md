@@ -69,4 +69,3 @@ reference equality, but if you are doing so, consider not making this change.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("UnnecessaryAnonymousClass")` to the enclosing element.
-

@@ -39,4 +39,3 @@ would increase code size.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("LiteProtoToString")` to the enclosing element.
-

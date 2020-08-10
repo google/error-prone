@@ -17,4 +17,3 @@ Instances of boxed primitive types may be cached by the standard library `valueO
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("LockOnBoxedPrimitive")` to the enclosing element.
-

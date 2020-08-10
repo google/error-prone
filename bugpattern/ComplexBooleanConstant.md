@@ -55,4 +55,3 @@ for (int i = 0; i < 100; i++) {
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("ComplexBooleanConstant")` to the enclosing element.
-

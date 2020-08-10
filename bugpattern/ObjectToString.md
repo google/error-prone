@@ -22,7 +22,6 @@ the object.
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("ObjectToString")` to the enclosing element.
 
-
 ----------
 
 ### Positive examples

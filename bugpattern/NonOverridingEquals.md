@@ -55,4 +55,3 @@ consider rewriting this class to use
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("NonOverridingEquals")` to the enclosing element.
-

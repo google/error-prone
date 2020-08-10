@@ -98,4 +98,3 @@ Use `Optional<V>` as the value type of your map instead.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("ReferenceEquality")` to the enclosing element.
-

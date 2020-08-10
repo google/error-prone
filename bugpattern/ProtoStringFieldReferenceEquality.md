@@ -19,4 +19,3 @@ fields cannot be null, so Object.equals(Object) is always more correct.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("ProtoStringFieldReferenceEquality")` to the enclosing element.
-

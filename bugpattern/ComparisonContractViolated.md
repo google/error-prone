@@ -30,7 +30,6 @@ course, only work for correctly implemented Comparators.
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("ComparisonContractViolated")` to the enclosing element.
 
-
 ----------
 
 ### Positive examples

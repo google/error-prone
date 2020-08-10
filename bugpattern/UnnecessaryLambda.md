@@ -65,4 +65,3 @@ this change.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("UnnecessaryLambda")` to the enclosing element.
-

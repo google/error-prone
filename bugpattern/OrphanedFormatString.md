@@ -41,4 +41,3 @@ doesn't orphan a format string).
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("OrphanedFormatString")` to the enclosing element.
-

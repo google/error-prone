@@ -20,4 +20,3 @@ class. Explicitly calling `setDefault` for these types is unnecessary.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("UnnecessarySetDefault")` to the enclosing element.
-

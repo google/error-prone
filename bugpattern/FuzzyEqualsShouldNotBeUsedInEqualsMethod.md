@@ -19,7 +19,6 @@ suitable for use in Object#equals implementations.
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("FuzzyEqualsShouldNotBeUsedInEqualsMethod")` to the enclosing element.
 
-
 ----------
 
 ### Positive examples

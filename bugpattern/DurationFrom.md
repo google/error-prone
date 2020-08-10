@@ -17,4 +17,3 @@ Duration.from(TemporalAmount) will always throw a UnsupportedTemporalTypeExcepti
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("DurationFrom")` to the enclosing element.
-

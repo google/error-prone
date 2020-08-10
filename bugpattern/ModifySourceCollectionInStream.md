@@ -45,7 +45,6 @@ mutableValues.stream()
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("ModifySourceCollectionInStream")` to the enclosing element.
 
-
 ----------
 
 ### Positive examples
