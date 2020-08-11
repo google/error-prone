@@ -23,6 +23,7 @@ import static com.google.errorprone.matchers.CompileTimeConstantExpressionMatche
 
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.AssignmentTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.LambdaExpressionTreeMatcher;
@@ -112,6 +113,13 @@ public class CompileTimeConstantChecker extends BugChecker
 
   private final Matcher<ExpressionTree> compileTimeConstExpressionMatcher =
       new CompileTimeConstantExpressionMatcher();
+
+  private final boolean checkFieldInitializers;
+
+  public CompileTimeConstantChecker(ErrorProneFlags flags) {
+    this.checkFieldInitializers =
+        flags.getBoolean("CompileTimeConstantChecker:CheckFieldInitializers").orElse(false);
+  }
 
   /**
    * Matches formal parameters with {@link com.google.errorprone.annotations.CompileTimeConstant}
@@ -273,7 +281,8 @@ public class CompileTimeConstantChecker extends BugChecker
                   + String.format(DID_YOU_MEAN_FINAL_FMT_MESSAGE, symbol.getSimpleName()))
           .build();
     }
-    if (node.getInitializer() != null
+    if (checkFieldInitializers
+        && node.getInitializer() != null
         && !compileTimeConstExpressionMatcher.matches(node.getInitializer(), state)) {
       return describeMatch(node.getInitializer());
     }
