@@ -598,6 +598,8 @@ public class CompileTimeConstantCheckerTest {
             "  abstract String something();",
             "  @CompileTimeConstant final String x = something();",
             "}")
+        .setArgs(
+            ImmutableList.of("-XepOpt:CompileTimeConstantChecker:CheckFieldInitializers=false"))
         .doTest();
   }
 

@@ -118,7 +118,7 @@ public class CompileTimeConstantChecker extends BugChecker
 
   public CompileTimeConstantChecker(ErrorProneFlags flags) {
     this.checkFieldInitializers =
-        flags.getBoolean("CompileTimeConstantChecker:CheckFieldInitializers").orElse(false);
+        flags.getBoolean("CompileTimeConstantChecker:CheckFieldInitializers").orElse(true);
   }
 
   /**
