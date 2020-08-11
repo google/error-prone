@@ -15,6 +15,7 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
+import static com.google.errorprone.BugPattern.StandardTags.FRAGILE_CODE;
 import static com.google.errorprone.fixes.SuggestedFixes.qualifyStaticImport;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
@@ -24,17 +25,18 @@ import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.isSameType;
 
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.StandardTags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.LambdaExpressionTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.MemberReferenceTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
+import com.sun.source.tree.EnhancedForLoopTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.LambdaExpressionTree;
 import com.sun.source.tree.LambdaExpressionTree.BodyKind;
 import com.sun.source.tree.MemberReferenceTree;
+import com.sun.source.tree.TypeCastTree;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 
 /** Discourage {@code stream::iterator} to create {@link Iterable}s. */
@@ -43,7 +45,7 @@ import com.sun.tools.javac.code.Symbol.VarSymbol;
     summary =
         "Using stream::iterator creates a one-shot Iterable, which may cause surprising failures.",
     severity = WARNING,
-    tags = StandardTags.FRAGILE_CODE)
+    tags = FRAGILE_CODE)
 public final class StreamToIterable extends BugChecker
     implements LambdaExpressionTreeMatcher, MemberReferenceTreeMatcher {
   private static final Matcher<ExpressionTree> STREAM_ITERATOR =
@@ -82,6 +84,11 @@ public final class StreamToIterable extends BugChecker
 
   private Description describeMatch(
       ExpressionTree tree, ExpressionTree invocation, VisitorState state) {
+    if (state.getPath().getParentPath().getLeaf() instanceof TypeCastTree
+        && state.getPath().getParentPath().getParentPath().getLeaf()
+            instanceof EnhancedForLoopTree) {
+      return NO_MATCH;
+    }
     SuggestedFix.Builder fix = SuggestedFix.builder();
     fix.replace(
         tree,

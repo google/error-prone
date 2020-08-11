@@ -43,7 +43,7 @@ public final class StreamToIterableTest {
   }
 
   @Test
-  public void withinEnhancedForLoop() {
+  public void withinEnhancedForLoop_noFinding() {
     helper
         .addSourceLines(
             "Test.java",
@@ -51,7 +51,6 @@ public final class StreamToIterableTest {
             "class Test {",
             "  void test() {",
             "    Stream<Integer> stream = Stream.of(1, 2, 3);",
-            "    // BUG: Diagnostic contains:",
             "    for (int i : (Iterable<Integer>) () -> stream.iterator()) {}",
             "  }",
             "}")
