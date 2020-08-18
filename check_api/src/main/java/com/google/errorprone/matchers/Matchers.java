@@ -140,6 +140,22 @@ public class Matchers {
   }
 
   /**
+   * Compose several matchers together, such that the composite matches an AST node iff all the
+   * given matchers do.
+   */
+  public static <T extends Tree> Matcher<T> allOf(
+      final Iterable<? extends Matcher<? super T>> matchers) {
+    return (t, state) -> {
+      for (Matcher<? super T> matcher : matchers) {
+        if (!matcher.matches(t, state)) {
+          return false;
+        }
+      }
+      return true;
+    };
+  }
+
+  /**
    * Compose several matchers together, such that the composite matches an AST node if any of the
    * given matchers do.
    */
@@ -1299,7 +1315,6 @@ public class Matchers {
                   .map(state::getTypeFromString)
                   .filter(Objects::nonNull)
                   .collect(toImmutableSet()));
-
 
   private static class IsDirectImplementationOf extends ChildMultiMatcher<ClassTree, Tree> {
     public IsDirectImplementationOf(Matcher<Tree> classMatcher) {
