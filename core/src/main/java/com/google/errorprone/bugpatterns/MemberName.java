@@ -54,8 +54,7 @@ import javax.lang.model.element.ElementKind;
     summary = "Methods and non-static variables should be named in lowerCamelCase.",
     linkType = CUSTOM,
     link = "https://google.github.io/styleguide/javaguide.html#s5.2-specific-identifier-names")
-public final class MemberNaming extends BugChecker
-    implements MethodTreeMatcher, VariableTreeMatcher {
+public final class MemberName extends BugChecker implements MethodTreeMatcher, VariableTreeMatcher {
   private static final Supplier<ImmutableSet<Name>> EXEMPTED_CLASS_ANNOTATIONS =
       VisitorState.memoize(
           s ->

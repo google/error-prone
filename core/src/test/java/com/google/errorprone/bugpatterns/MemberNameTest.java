@@ -22,13 +22,13 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** Tests for {@link MemberNaming}. */
+/** Tests for {@link MemberName}. */
 @RunWith(JUnit4.class)
-public class MemberNamingTest {
+public class MemberNameTest {
   private final CompilationTestHelper helper =
-      CompilationTestHelper.newInstance(MemberNaming.class, getClass());
+      CompilationTestHelper.newInstance(MemberName.class, getClass());
   private final BugCheckerRefactoringTestHelper refactoringHelper =
-      BugCheckerRefactoringTestHelper.newInstance(MemberNaming.class, getClass());
+      BugCheckerRefactoringTestHelper.newInstance(MemberName.class, getClass());
 
   @Test
   public void nameWithUnderscores() {
