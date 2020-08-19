@@ -189,6 +189,7 @@ public final class WellKnownMutability implements ThreadSafety.KnownTypes {
         .add(java.math.BigInteger.class)
         .add(java.net.InetAddress.class)
         .add(java.net.URI.class)
+        .add(java.nio.ByteOrder.class)
         .add(java.nio.charset.Charset.class)
         .add(java.nio.file.Path.class)
         .add(java.nio.file.WatchEvent.class)
