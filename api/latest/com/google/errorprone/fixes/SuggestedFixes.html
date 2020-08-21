@@ -511,14 +511,14 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 </tr>
 <tr id="i31" class="rowColor">
 <td class="colFirst"><code>static boolean</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#suggestedWhitelistAnnotationSupported(javax.lang.model.element.Element)">suggestedWhitelistAnnotationSupported</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/javax/lang/model/element/Element.html?is-external=true" title="class or interface in javax.lang.model.element" class="externalLink">Element</a>&nbsp;whitelistAnnotation)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#suggestedExemptingAnnotationSupported(javax.lang.model.element.Element)">suggestedExemptingAnnotationSupported</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/javax/lang/model/element/Element.html?is-external=true" title="class or interface in javax.lang.model.element" class="externalLink">Element</a>&nbsp;exemptingAnnotation)</code></th>
 <td class="colLast">
-<div class="block">Returns true iff <code>suggestWhitelistAnnotation()</code> supports this annotation.</div>
+<div class="block">Returns true iff <code>suggestExemptingAnnotation()</code> supports this annotation.</div>
 </td>
 </tr>
 <tr id="i32" class="altColor">
 <td class="colFirst"><code>static <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util" class="externalLink">Optional</a>&lt;<a href="SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a>&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#suggestWhitelistAnnotation(java.lang.String,com.sun.source.util.TreePath,com.google.errorprone.VisitorState)">suggestWhitelistAnnotation</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;whitelistAnnotation,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#suggestExemptingAnnotation(java.lang.String,com.sun.source.util.TreePath,com.google.errorprone.VisitorState)">suggestExemptingAnnotation</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;exemptingAnnotation,
                           com.sun.source.util.TreePath&nbsp;where,
                           <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
 <td class="colLast">
@@ -1040,13 +1040,13 @@ public static&nbsp;<a href="Fix.html" title="interface in com.google.errorprone.
 <div class="block">Pretty-prints a Type for use in fixes, qualifying any enclosed type names using <a href="#qualifyType(com.google.errorprone.VisitorState,com.google.errorprone.fixes.SuggestedFix.Builder,com.sun.tools.javac.code.Symbol)"><code>qualifyType(com.google.errorprone.VisitorState, com.google.errorprone.fixes.SuggestedFix.Builder, com.sun.tools.javac.code.Symbol)</code></a>}.</div>
 </li>
 </ul>
-<a id="suggestWhitelistAnnotation(java.lang.String,com.sun.source.util.TreePath,com.google.errorprone.VisitorState)">
+<a id="suggestExemptingAnnotation(java.lang.String,com.sun.source.util.TreePath,com.google.errorprone.VisitorState)">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
-<h4>suggestWhitelistAnnotation</h4>
-<pre class="methodSignature">public static&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util" class="externalLink">Optional</a>&lt;<a href="SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a>&gt;&nbsp;suggestWhitelistAnnotation&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;whitelistAnnotation,
+<h4>suggestExemptingAnnotation</h4>
+<pre class="methodSignature">public static&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util" class="externalLink">Optional</a>&lt;<a href="SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a>&gt;&nbsp;suggestExemptingAnnotation&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;exemptingAnnotation,
                                                                 com.sun.source.util.TreePath&nbsp;where,
                                                                 <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</pre>
 <div class="block">Create a fix to add a suppression annotation on the surrounding class.
@@ -1057,14 +1057,14 @@ public static&nbsp;<a href="Fix.html" title="interface in com.google.errorprone.
  <p>If the suggested annotation is <code>DontSuggestFixes</code>, return empty.</div>
 </li>
 </ul>
-<a id="suggestedWhitelistAnnotationSupported(javax.lang.model.element.Element)">
+<a id="suggestedExemptingAnnotationSupported(javax.lang.model.element.Element)">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
-<h4>suggestedWhitelistAnnotationSupported</h4>
-<pre class="methodSignature">public static&nbsp;boolean&nbsp;suggestedWhitelistAnnotationSupported&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/javax/lang/model/element/Element.html?is-external=true" title="class or interface in javax.lang.model.element" class="externalLink">Element</a>&nbsp;whitelistAnnotation)</pre>
-<div class="block">Returns true iff <code>suggestWhitelistAnnotation()</code> supports this annotation.</div>
+<h4>suggestedExemptingAnnotationSupported</h4>
+<pre class="methodSignature">public static&nbsp;boolean&nbsp;suggestedExemptingAnnotationSupported&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/javax/lang/model/element/Element.html?is-external=true" title="class or interface in javax.lang.model.element" class="externalLink">Element</a>&nbsp;exemptingAnnotation)</pre>
+<div class="block">Returns true iff <code>suggestExemptingAnnotation()</code> supports this annotation.</div>
 </li>
 </ul>
 <a id="replaceIncludingComments(com.sun.source.util.TreePath,java.lang.String,com.google.errorprone.VisitorState)">

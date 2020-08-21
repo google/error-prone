@@ -8515,7 +8515,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/matchers/Matchers.html#methodReturnsNonNull()">methodReturnsNonNull()</a></span> - Static method in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/Matchers.html" title="class in com.google.errorprone.matchers">Matchers</a></dt>
 <dd>
-<div class="block">Matches a whitelisted method invocation that is known to never return null</div>
+<div class="block">Matches a method invocation that is known to never return null.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/matchers/Matchers.html#methodReturnsNonPrimitiveType()">methodReturnsNonPrimitiveType()</a></span> - Static method in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/Matchers.html" title="class in com.google.errorprone.matchers">Matchers</a></dt>
 <dd>
@@ -9667,7 +9667,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/PrivateSecurityContractProtoAccess.html" title="class in com.google.errorprone.bugpatterns"><span class="typeNameLink">PrivateSecurityContractProtoAccess</span></a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
 <dd>
-<div class="block">Check for non-whitelisted access to private_do_not_access_or_else proto fields.</div>
+<div class="block">Check for disallowed access to private_do_not_access_or_else proto fields.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/PrivateSecurityContractProtoAccess.html#%3Cinit%3E()">PrivateSecurityContractProtoAccess()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/PrivateSecurityContractProtoAccess.html" title="class in com.google.errorprone.bugpatterns">PrivateSecurityContractProtoAccess</a></dt>
 <dd>&nbsp;</dd>
@@ -10792,6 +10792,10 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/bugpatterns/SubstringOfZero.html#%3Cinit%3E()">SubstringOfZero()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/SubstringOfZero.html" title="class in com.google.errorprone.bugpatterns">SubstringOfZero</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/fixes/SuggestedFixes.html#suggestedExemptingAnnotationSupported(javax.lang.model.element.Element)">suggestedExemptingAnnotationSupported(Element)</a></span> - Static method in class com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/SuggestedFixes.html" title="class in com.google.errorprone.fixes">SuggestedFixes</a></dt>
+<dd>
+<div class="block">Returns true iff <code>suggestExemptingAnnotation()</code> supports this annotation.</div>
+</dd>
 <dt><a href="com/google/errorprone/fixes/SuggestedFix.html" title="class in com.google.errorprone.fixes"><span class="typeNameLink">SuggestedFix</span></a> - Class in <a href="com/google/errorprone/fixes/package-summary.html">com.google.errorprone.fixes</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/fixes/SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes"><span class="typeNameLink">SuggestedFix.Builder</span></a> - Class in <a href="com/google/errorprone/fixes/package-summary.html">com.google.errorprone.fixes</a></dt>
@@ -10809,18 +10813,14 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">Instructs <a href="com/google/errorprone/fixes/SuggestedFixes.html#addMembers(com.sun.source.tree.ClassTree,com.google.errorprone.VisitorState,com.google.errorprone.fixes.SuggestedFixes.AdditionPosition,java.lang.String,java.lang.String...)"><code>SuggestedFixes.addMembers(ClassTree, VisitorState, AdditionPosition, String, String...)</code></a>
  whether to add the new member(s) at the beginning of the class, or at the end.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/google/errorprone/fixes/SuggestedFixes.html#suggestedWhitelistAnnotationSupported(javax.lang.model.element.Element)">suggestedWhitelistAnnotationSupported(Element)</a></span> - Static method in class com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/SuggestedFixes.html" title="class in com.google.errorprone.fixes">SuggestedFixes</a></dt>
+<dt><span class="memberNameLink"><a href="com/google/errorprone/fixes/SuggestedFixes.html#suggestExemptingAnnotation(java.lang.String,com.sun.source.util.TreePath,com.google.errorprone.VisitorState)">suggestExemptingAnnotation(String, TreePath, VisitorState)</a></span> - Static method in class com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/SuggestedFixes.html" title="class in com.google.errorprone.fixes">SuggestedFixes</a></dt>
 <dd>
-<div class="block">Returns true iff <code>suggestWhitelistAnnotation()</code> supports this annotation.</div>
+<div class="block">Create a fix to add a suppression annotation on the surrounding class.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/BugPattern.SeverityLevel.html#SUGGESTION">SUGGESTION</a></span> - com.google.errorprone.<a href="com/google/errorprone/BugPattern.SeverityLevel.html" title="enum in com.google.errorprone">BugPattern.SeverityLevel</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/DiagnosticTestHelper.html#suggestsRemovalOfLine(java.net.URI,int)">suggestsRemovalOfLine(URI, int)</a></span> - Static method in class com.google.errorprone.<a href="com/google/errorprone/DiagnosticTestHelper.html" title="class in com.google.errorprone">DiagnosticTestHelper</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="com/google/errorprone/fixes/SuggestedFixes.html#suggestWhitelistAnnotation(java.lang.String,com.sun.source.util.TreePath,com.google.errorprone.VisitorState)">suggestWhitelistAnnotation(String, TreePath, VisitorState)</a></span> - Static method in class com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/SuggestedFixes.html" title="class in com.google.errorprone.fixes">SuggestedFixes</a></dt>
-<dd>
-<div class="block">Create a fix to add a suppression annotation on the surrounding class.</div>
-</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/BugPatternInstance.html#summary">summary</a></span> - Variable in class com.google.errorprone.<a href="com/google/errorprone/BugPatternInstance.html" title="class in com.google.errorprone">BugPatternInstance</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/google/errorprone/BugPattern.html#summary()">summary()</a></span> - Method in annotation type com.google.errorprone.<a href="com/google/errorprone/BugPattern.html" title="annotation in com.google.errorprone">BugPattern</a></dt>
