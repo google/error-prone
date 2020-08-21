@@ -158,7 +158,7 @@ public class CanonicalDurationTest {
   }
 
   @Test
-  public void blacklist() {
+  public void ignoredMethod() {
     CompilationTestHelper.newInstance(CanonicalDuration.class, getClass())
         .addSourceLines(
             "A.java",

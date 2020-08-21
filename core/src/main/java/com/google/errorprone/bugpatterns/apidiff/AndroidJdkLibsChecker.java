@@ -70,7 +70,7 @@ public class AndroidJdkLibsChecker extends ApiDiffChecker {
                 Java7ApiChecker.API_DIFF.unsupportedMembersByClass().entries().stream()
                     .filter(e -> !support.allowedPackages.contains(packageName(e.getKey())))
                     .filter(e -> !support.allowedClasses.contains(e.getKey()))
-                    .filter(e -> support.bannedMembers.isEmpty() || !support.memberIsWhitelisted(e))
+                    .filter(e -> support.bannedMembers.isEmpty() || !support.memberIsAllowed(e))
                     .collect(Collectors.toSet()))
             .putAll(support.bannedMembers)
             .build();
@@ -98,7 +98,7 @@ public class AndroidJdkLibsChecker extends ApiDiffChecker {
       bannedMembers = allowJava8 ? DESUGAR_BANNED_MEMBERS : ImmutableSetMultimap.of();
     }
 
-    private boolean memberIsWhitelisted(Map.Entry<String, ClassMemberKey> member) {
+    private boolean memberIsAllowed(Map.Entry<String, ClassMemberKey> member) {
       return allowedMembers.containsEntry(member.getKey(), member.getValue())
           || allowedMembers.get(member.getKey()).stream()
               .anyMatch(

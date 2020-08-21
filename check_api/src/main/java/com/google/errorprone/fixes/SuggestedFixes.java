@@ -1389,35 +1389,36 @@ public class SuggestedFixes {
    *
    * <p>If the suggested annotation is {@code DontSuggestFixes}, return empty.
    */
-  public static Optional<SuggestedFix> suggestWhitelistAnnotation(
-      String whitelistAnnotation, TreePath where, VisitorState state) {
+  public static Optional<SuggestedFix> suggestExemptingAnnotation(
+      String exemptingAnnotation, TreePath where, VisitorState state) {
     // TODO(bangert): Support annotations that do not have @Target(CLASS).
-    if (whitelistAnnotation.equals("com.google.errorprone.annotations.DontSuggestFixes")) {
+    if (exemptingAnnotation.equals("com.google.errorprone.annotations.DontSuggestFixes")) {
       return Optional.empty();
     }
     SuggestedFix.Builder builder = SuggestedFix.builder();
-    Type whitelistAnnotationType = state.getTypeFromString(whitelistAnnotation);
-    ImmutableSet<Tree.Kind> supportedWhitelistLocationKinds;
+    Type exemptingAnnotationType = state.getTypeFromString(exemptingAnnotation);
+    ImmutableSet<Tree.Kind> supportedExemptingAnnotationLocationKinds;
     String annotationName;
 
-    if (whitelistAnnotationType != null) {
-      supportedWhitelistLocationKinds = supportedTreeTypes(whitelistAnnotationType.asElement());
-      annotationName = qualifyType(state, builder, whitelistAnnotationType);
+    if (exemptingAnnotationType != null) {
+      supportedExemptingAnnotationLocationKinds =
+          supportedTreeTypes(exemptingAnnotationType.asElement());
+      annotationName = qualifyType(state, builder, exemptingAnnotationType);
     } else {
       // If we can't resolve the type, fall back to an approximation.
-      int idx = whitelistAnnotation.lastIndexOf('.');
-      Verify.verify(idx > 0 && idx + 1 < whitelistAnnotation.length());
-      supportedWhitelistLocationKinds = TREE_TYPE_UNKNOWN_ANNOTATION;
-      annotationName = whitelistAnnotation.substring(idx + 1);
-      builder.addImport(whitelistAnnotation);
+      int idx = exemptingAnnotation.lastIndexOf('.');
+      Verify.verify(idx > 0 && idx + 1 < exemptingAnnotation.length());
+      supportedExemptingAnnotationLocationKinds = TREE_TYPE_UNKNOWN_ANNOTATION;
+      annotationName = exemptingAnnotation.substring(idx + 1);
+      builder.addImport(exemptingAnnotation);
     }
-    Optional<Tree> whitelistLocation =
+    Optional<Tree> exemptingAnnotationLocation =
         StreamSupport.stream(where.spliterator(), false)
-            .filter(tree -> supportedWhitelistLocationKinds.contains(tree.getKind()))
+            .filter(tree -> supportedExemptingAnnotationLocationKinds.contains(tree.getKind()))
             .filter(Predicates.not(SuggestedFixes::isAnonymousClassTree))
             .findFirst();
 
-    return whitelistLocation.map(
+    return exemptingAnnotationLocation.map(
         location -> builder.prefixWith(location, "@" + annotationName + " ").build());
   }
 
@@ -1432,8 +1433,8 @@ public class SuggestedFixes {
   /**
    * We assume annotations with an unknown type can be used on these Tree kinds.
    *
-   * <p>These are reasonable for whitelist-type annotations which annotate a block of code, e.g.
-   * they don't usually make sense on a variable declaration.
+   * <p>These are reasonable for exempting annotations which annotate a block of code, e.g. they
+   * don't usually make sense on a variable declaration.
    */
   private static final ImmutableSet<Tree.Kind> TREE_TYPE_UNKNOWN_ANNOTATION =
       ImmutableSet.of(
@@ -1443,13 +1444,13 @@ public class SuggestedFixes {
           Tree.Kind.ANNOTATION_TYPE,
           Tree.Kind.METHOD);
 
-  /** Returns true iff {@code suggestWhitelistAnnotation()} supports this annotation. */
-  public static boolean suggestedWhitelistAnnotationSupported(Element whitelistAnnotation) {
-    return !supportedTreeTypes(whitelistAnnotation).isEmpty();
+  /** Returns true iff {@code suggestExemptingAnnotation()} supports this annotation. */
+  public static boolean suggestedExemptingAnnotationSupported(Element exemptingAnnotation) {
+    return !supportedTreeTypes(exemptingAnnotation).isEmpty();
   }
 
-  private static ImmutableSet<Tree.Kind> supportedTreeTypes(Element whitelistAnnotation) {
-    Target targetAnnotation = whitelistAnnotation.getAnnotation(Target.class);
+  private static ImmutableSet<Tree.Kind> supportedTreeTypes(Element exemptingAnnotation) {
+    Target targetAnnotation = exemptingAnnotation.getAnnotation(Target.class);
     if (targetAnnotation == null) {
       // in the absence of further information, we assume the annotation is supported on classes and
       // methods.

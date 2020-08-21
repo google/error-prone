@@ -54,7 +54,7 @@ public class ImmutableAnnotationChecker extends BugChecker implements ClassTreeM
       "annotations are immutable by default; annotating them with"
           + " @com.google.errorprone.annotations.Immutable is unnecessary";
 
-  private static final ImmutableSet<String> PROCESSOR_BLACKLIST =
+  private static final ImmutableSet<String> IGNORED_PROCESSORS =
       ImmutableSet.of(
           "com.google.auto.value.processor.AutoAnnotationProcessor"
           );
@@ -78,7 +78,7 @@ public class ImmutableAnnotationChecker extends BugChecker implements ClassTreeM
         || !WellKnownMutability.isAnnotation(state, symbol.type)) {
       return NO_MATCH;
     }
-    if (!Collections.disjoint(getGeneratedBy(symbol, state), PROCESSOR_BLACKLIST)) {
+    if (!Collections.disjoint(getGeneratedBy(symbol, state), IGNORED_PROCESSORS)) {
       return NO_MATCH;
     }
 

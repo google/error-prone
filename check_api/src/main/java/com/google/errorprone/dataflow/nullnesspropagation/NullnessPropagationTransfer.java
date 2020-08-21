@@ -119,8 +119,8 @@ import org.checkerframework.shaded.dataflow.cfg.node.VariableDeclarationNode;
  * exception). For example, if {@code foo.toString()} is successfully evaluated, we know two things:
  *
  * <ol>
- *   <li>The expression itself is non-null (because {@code toString()} is in our whitelist of
- *       methods known to return non-null values)
+ *   <li>The expression itself is non-null (because {@code toString()} is in our list of methods
+ *       known to return non-null values)
  *   <li>{@code foo} is non-null (because it has been dereferenced without producing a {@code
  *       NullPointerException})
  * </ol>

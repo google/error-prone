@@ -32,7 +32,7 @@ import com.google.errorprone.matchers.Matcher;
 import com.sun.source.tree.MethodInvocationTree;
 import java.util.regex.Pattern;
 
-/** Check for non-whitelisted access to private_do_not_access_or_else proto fields. */
+/** Check for disallowed access to private_do_not_access_or_else proto fields. */
 @BugPattern(
     name = "PrivateSecurityContractProtoAccess",
     summary =

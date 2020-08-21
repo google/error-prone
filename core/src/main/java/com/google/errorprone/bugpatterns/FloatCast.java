@@ -52,7 +52,7 @@ public class FloatCast extends BugChecker implements TypeCastTreeMatcher {
 
   static final Set<TypeKind> INTEGRAL = EnumSet.of(TypeKind.LONG, TypeKind.INT);
 
-  static final Matcher<ExpressionTree> BLACKLIST =
+  static final Matcher<ExpressionTree> IGNORED_METHODS =
       staticMethod().onClass("java.lang.Math").namedAnyOf("floor", "ceil", "signum", "rint");
 
   static final Matcher<ExpressionTree> POW = staticMethod().onClass("java.lang.Math").named("pow");
@@ -99,7 +99,7 @@ public class FloatCast extends BugChecker implements TypeCastTreeMatcher {
       default:
         return NO_MATCH;
     }
-    if (BLACKLIST.matches(tree.getExpression(), state)) {
+    if (IGNORED_METHODS.matches(tree.getExpression(), state)) {
       return NO_MATCH;
     }
     if (POW.matches(tree.getExpression(), state)) {

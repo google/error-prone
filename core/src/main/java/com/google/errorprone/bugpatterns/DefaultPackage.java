@@ -54,7 +54,7 @@ public final class DefaultPackage extends BugChecker implements CompilationUnitT
     if (tree.getPackageName() != null) {
       return Description.NO_MATCH;
     }
-    // module-info.* is a special file name so whitelisting it.
+    // module-info.* is a special file name so ignore it.
     if (Files.getNameWithoutExtension(ASTHelpers.getFileName(tree)).equals("module-info")) {
       return Description.NO_MATCH;
     }

@@ -101,7 +101,7 @@ public class AndroidJdkLibsCheckerTest extends Java7ApiCheckerTest {
   }
 
   @Test
-  public void allowJava8Flag_packageWhitelist() {
+  public void allowJava8Flag_packageAllowed() {
     allowJava8Helper
         .addSourceLines(
             "Test.java",
@@ -119,7 +119,7 @@ public class AndroidJdkLibsCheckerTest extends Java7ApiCheckerTest {
   }
 
   @Test
-  public void allowJava8Flag_memberWhitelist() {
+  public void allowJava8Flag_memberAllowed() {
     allowJava8Helper
         .addSourceLines(
             "Test.java",
@@ -133,7 +133,7 @@ public class AndroidJdkLibsCheckerTest extends Java7ApiCheckerTest {
   }
 
   @Test
-  public void allowJava8Flag_memberBlacklist() {
+  public void allowJava8Flag_memberBanned() {
     allowJava8Helper
         .addSourceLines(
             "Test.java",

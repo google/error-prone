@@ -814,7 +814,7 @@ public class Matchers {
     };
   }
 
-  /** Matches a whitelisted method invocation that is known to never return null */
+  /** Matches a method invocation that is known to never return null. */
   public static Matcher<ExpressionTree> methodReturnsNonNull() {
     return anyOf(
         instanceMethod().onDescendantOf("java.lang.Object").named("toString"),

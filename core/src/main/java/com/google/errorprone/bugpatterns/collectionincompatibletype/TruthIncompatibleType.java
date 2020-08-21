@@ -61,7 +61,7 @@ public class TruthIncompatibleType extends BugChecker implements MethodInvocatio
 
         public final Matcher<ExpressionTree> isEqualTo =
             MethodMatchers.instanceMethod()
-                // TODO(cpovirk): Extend to subclasses, blacklisting any with unusual behavior.
+                // TODO(cpovirk): Extend to subclasses, ignoring any with unusual behavior.
                 .onExactClass("com.google.common.truth.Subject")
                 .named("isEqualTo")
                 .withParameters("java.lang.Object");

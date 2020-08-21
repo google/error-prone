@@ -467,7 +467,7 @@ public class NoAllocationCheckerPositiveCases {
     return clone();
   }
 
-  // Throwing doesn't whitelist through method declarations.
+  // Throwing doesn't exempt through method declarations.
   @NoAllocation
   public String throwForeach(final Iterable<Object> a) {
     throw new RuntimeException() {

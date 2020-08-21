@@ -71,11 +71,11 @@ public class NonOverridingEqualsTest {
             "Test.java",
             "public class Test {",
             "  boolean isInVersion;",
-            "  String whitelist;",
+            "  String str;",
             "  // BUG: Diagnostic contains: Did you mean '@Override'",
             "  public boolean equals(Test that) {",
             "    return (this.isInVersion == that.isInVersion)",
-            "        && this.whitelist.equals(that.whitelist);",
+            "        && this.str.equals(that.str);",
             "  }",
             "}")
         .doTest();

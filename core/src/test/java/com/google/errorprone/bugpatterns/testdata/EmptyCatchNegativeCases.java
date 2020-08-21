@@ -32,8 +32,8 @@ public class EmptyCatchNegativeCases {
   }
 
   public void close() throws IllegalArgumentException {
-    /* close() is a whitelisted method, so any exceptions
-     * thrown by this method can be ignored! */
+    // close() is an allowed method, so any exceptions
+    // thrown by this method can be ignored!
     throw new IllegalArgumentException("Fake exception.");
   }
 
@@ -97,12 +97,12 @@ public class EmptyCatchNegativeCases {
     }
   }
 
-  public void whitelistedMethod() {
+  public void exemptedMethod() {
     try {
       close();
     } catch (Exception e) {
-      /* Although the exception is ignored, we can allow this b/c
-       * it is thrown by a white listed method. */
+      // Although the exception is ignored, we can allow this b/c
+      // it is thrown by an exempted method.
     }
   }
 

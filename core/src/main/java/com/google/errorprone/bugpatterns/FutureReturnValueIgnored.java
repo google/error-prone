@@ -75,7 +75,7 @@ import javax.lang.model.type.TypeKind;
 public final class FutureReturnValueIgnored extends AbstractReturnValueIgnored
     implements ReturnTreeMatcher {
 
-  private static final Matcher<ExpressionTree> BLACKLIST =
+  private static final Matcher<ExpressionTree> IGNORED_METHODS =
       anyOf(
           // ForkJoinTask#fork has side-effects and returns 'this', so it's reasonable to ignore
           // the return value.
@@ -143,7 +143,7 @@ public final class FutureReturnValueIgnored extends AbstractReturnValueIgnored
               return false;
             }
           }
-          if (BLACKLIST.matches(tree, state)) {
+          if (IGNORED_METHODS.matches(tree, state)) {
             return false;
           }
           Type returnType = sym.getReturnType();
@@ -310,8 +310,7 @@ public final class FutureReturnValueIgnored extends AbstractReturnValueIgnored
     }
 
     Type type = ASTHelpers.getType(tree);
-    return functionalInterfaceReturnsObject(type, state)
-        && !isWhitelistedInterfaceType(type, state);
+    return functionalInterfaceReturnsObject(type, state) && !isExemptedInterfaceType(type, state);
   }
 
   /**
@@ -339,7 +338,7 @@ public final class FutureReturnValueIgnored extends AbstractReturnValueIgnored
       if (allOf(
               (t, s) -> t.getMode() == ReferenceMode.INVOKE,
               FutureReturnValueIgnored::isObjectReturningMethodReferenceExpression,
-              not((t, s) -> isWhitelistedInterfaceType(ASTHelpers.getType(t), s)),
+              not((t, s) -> isExemptedInterfaceType(ASTHelpers.getType(t), s)),
               not((t, s) -> Matchers.isThrowingFunctionalInterface(ASTHelpers.getType(t), s)),
               specializedMatcher())
           .matches(tree, state)) {
@@ -349,7 +348,7 @@ public final class FutureReturnValueIgnored extends AbstractReturnValueIgnored
     return description;
   }
 
-  private static final ImmutableSet<String> WHITELISTED_TYPES =
+  private static final ImmutableSet<String> EXEMPTED_TYPES =
       ImmutableSet.of(
           "org.mockito.stubbing.Answer",
           "graphql.schema.DataFetcher",
@@ -358,14 +357,14 @@ public final class FutureReturnValueIgnored extends AbstractReturnValueIgnored
           "org.aopalliance.intercept.MethodInterceptor",
           InvocationHandler.class.getName());
 
-  private static boolean isWhitelistedInterfaceType(Type type, VisitorState state) {
-    return WHITELISTED_TYPES.stream()
+  private static boolean isExemptedInterfaceType(Type type, VisitorState state) {
+    return EXEMPTED_TYPES.stream()
         .map(state::getTypeFromString)
-        .anyMatch(whitelistedType -> ASTHelpers.isSubtype(type, whitelistedType, state));
+        .anyMatch(t -> ASTHelpers.isSubtype(type, t, state));
   }
 
-  private static boolean isWhitelistedInterfaceMethod(MethodSymbol symbol, VisitorState state) {
-    return isWhitelistedInterfaceType(ASTHelpers.enclosingClass(symbol).type, state);
+  private static boolean isExemptedInterfaceMethod(MethodSymbol symbol, VisitorState state) {
+    return isExemptedInterfaceType(ASTHelpers.enclosingClass(symbol).type, state);
   }
 
   /**
@@ -393,7 +392,7 @@ public final class FutureReturnValueIgnored extends AbstractReturnValueIgnored
           MethodTree methodTree = (MethodTree) enclosing;
           MethodSymbol symbol = ASTHelpers.getSymbol(methodTree);
           if (ASTHelpers.isSubtype(objectType, symbol.getReturnType(), state)
-              && !isWhitelistedInterfaceMethod(symbol, state)) {
+              && !isExemptedInterfaceMethod(symbol, state)) {
             return buildDescription(tree)
                 .setMessage(
                     String.format(

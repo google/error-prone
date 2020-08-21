@@ -98,7 +98,7 @@ public class DoubleCheckedLocking extends BugChecker implements IfTreeMatcher {
     return builder.build();
   }
 
-  private static final ImmutableSet<String> IMMUTABLE_WHITELIST =
+  private static final ImmutableSet<String> IMMUTABLE_PRIMITIVES =
       ImmutableSet.of(
           java.lang.Boolean.class.getName(),
           java.lang.Byte.class.getName(),
@@ -128,7 +128,7 @@ public class DoubleCheckedLocking extends BugChecker implements IfTreeMatcher {
       default:
         break;
     }
-    return IMMUTABLE_WHITELIST.contains(
+    return IMMUTABLE_PRIMITIVES.contains(
         state.getTypes().erasure(type).tsym.getQualifiedName().toString());
   }
 

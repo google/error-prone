@@ -73,15 +73,14 @@ public class UnusedAnonymousClass extends BugChecker implements NewClassTreeMatc
     return describeMatch(newClassTree);
   }
 
-  // Types that are known to have side effect free constructors.
-  private static final ImmutableList<String> TYPE_WHITELIST =
+  private static final ImmutableList<String> TYPES_WITH_SIDE_EFFECT_FREE_CONSTRUCTORS =
       ImmutableList.of(Thread.class.getName());
 
   private boolean sideEffectFreeConstructor(TypeSymbol classType, VisitorState state) {
     if (classType.isInterface()) {
       return true;
     }
-    for (String typeName : TYPE_WHITELIST) {
+    for (String typeName : TYPES_WITH_SIDE_EFFECT_FREE_CONSTRUCTORS) {
       if (ASTHelpers.isSameType(classType.type, state.getTypeFromString(typeName), state)) {
         return true;
       }
