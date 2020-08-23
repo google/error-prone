@@ -332,6 +332,13 @@
     </dependency>
     <dependency>
       <!-- Apache 2.0 -->
+      <groupId>io.projectreactor</groupId>
+      <artifactId>reactor-core</artifactId>
+      <version>3.3.9.RELEASE</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <!-- Apache 2.0 -->
       <groupId>org.assertj</groupId>
       <artifactId>assertj-core</artifactId>
       <version>3.9.0</version>

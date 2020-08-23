@@ -125,7 +125,8 @@ public final class PreferJavaTimeOverload extends BugChecker
           // any static method under org.assertj.*
           staticMethod()
               .onClass((type, state) -> type.toString().startsWith("org.assertj."))
-              .withAnyName());
+              .withAnyName(),
+          instanceMethod().onDescendantOf("reactor.core.publisher.Flux").withAnyName());
 
   private static final Matcher<ExpressionTree> JAVA_DURATION_DECOMPOSITION_MATCHER =
       instanceMethod()

@@ -451,4 +451,33 @@ public class PreferJavaTimeOverloadTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void reactor() {
+    helper
+        .addSourceLines(
+            "TestClass.java",
+            "import reactor.core.publisher.Flux;",
+            "public class TestClass {",
+            "  public void testFluxBuffer() {",
+            "    Flux.empty().buffer(1);",
+            "  }",
+            "  public void testFluxCache() {",
+            "    Flux.empty().cache(1);",
+            "  }",
+            "  public void testFluxReplay() {",
+            "    Flux.empty().replay(1);",
+            "  }",
+            "  public void testFluxSkip() {",
+            "    Flux.empty().skip(1);",
+            "  }",
+            "  public void testFluxTake() {",
+            "    Flux.empty().take(1);",
+            "  }",
+            "  public void testFluxWindow() {",
+            "    Flux.empty().window(1);",
+            "  }",
+            "}")
+        .doTest();
+  }
 }
