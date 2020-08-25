@@ -19,6 +19,7 @@ package com.google.errorprone.bugpatterns;
 import static com.google.common.base.MoreObjects.firstNonNull;
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
 
+import com.google.common.base.Preconditions;
 import com.google.common.collect.Iterables;
 import com.google.errorprone.BugCheckerInfo;
 import com.google.errorprone.BugPattern.SeverityLevel;
@@ -202,6 +203,16 @@ public abstract class BugChecker implements Suppressible, Serializable {
   @CheckReturnValue
   public Description.Builder buildDescription(JCTree tree) {
     return Description.builder(tree, canonicalName(), linkUrl(), defaultSeverity(), message());
+  }
+
+  @Deprecated
+  public static Description.Builder buildDescriptionFromChecker(Tree node, BugChecker checker) {
+    return Description.builder(
+        Preconditions.checkNotNull(node),
+        checker.canonicalName(),
+        checker.linkUrl(),
+        checker.defaultSeverity(),
+        checker.message());
   }
 
   @Override
