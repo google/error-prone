@@ -88,11 +88,21 @@ public final class MixedDescriptors extends BugChecker implements MethodInvocati
     }
     Optional<TypeSymbol> descriptorType = protoType(getOnlyElement(arguments), state);
     Optional<TypeSymbol> receiverType = protoType(receiver, state);
-    return !descriptorType.isPresent()
-            || !receiverType.isPresent()
-            || descriptorType.get().equals(receiverType.get())
-        ? Description.NO_MATCH
-        : describeMatch(tree);
+    return typesDiffer(
+            descriptorType.filter(MixedDescriptors::shouldConsider),
+            receiverType.filter(MixedDescriptors::shouldConsider))
+        ? describeMatch(tree)
+        : Description.NO_MATCH;
+  }
+
+  /** Ignore packages specifically qualified as proto1 or proto2. */
+  private static boolean shouldConsider(TypeSymbol symbol) {
+    String packge = symbol.packge().toString();
+    return !(packge.contains(".proto1api") || packge.contains(".proto2api"));
+  }
+
+  private static boolean typesDiffer(Optional<TypeSymbol> a, Optional<TypeSymbol> b) {
+    return a.isPresent() && b.isPresent() && !a.get().equals(b.get());
   }
 
   private static Optional<TypeSymbol> protoType(Tree tree, VisitorState state) {
