@@ -7,7 +7,7 @@ depends:
   - check_api
 
 env:
-  SET_VERSION_OVERRIDE: "2.3.4-$GIT_BRANCH-SNAPSHOT"
+  SET_VERSION_OVERRIDE: "2.4.1-$GIT_BRANCH-SNAPSHOT"
 
 buildpack:
   host: git.hubteam.com
