@@ -40,6 +40,25 @@ public class TruthIncompatibleTypeTest {
             "  public void f(A a, B b) {",
             "    // BUG: Diagnostic contains:",
             "    assertThat(a).isEqualTo(b);",
+            "    // BUG: Diagnostic contains:",
+            "    assertThat(a).isNotEqualTo(b);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void assume() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import static com.google.common.truth.TruthJUnit.assume;",
+            "public class Test {",
+            "  static final class A {}",
+            "  static final class B {}",
+            "  public void f(A a, B b) {",
+            "    // BUG: Diagnostic contains:",
+            "    assume().that(a).isEqualTo(b);",
             "  }",
             "}")
         .doTest();
@@ -58,6 +77,65 @@ public class TruthIncompatibleTypeTest {
             "    assertThat(a).isEqualTo(a);",
             "    assertThat(b).isEqualTo(b);",
             "    assertThat(\"a\").isEqualTo(\"b\");",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void mixedNumberTypes_noMatch() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import static com.google.common.truth.Truth.assertThat;",
+            "public class Test {",
+            "  public void f() {",
+            "    assertThat(2L).isEqualTo(2);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void mixedBoxedNumberTypes_noMatch() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import static com.google.common.truth.Truth.assertThat;",
+            "public class Test {",
+            "  public void f() {",
+            "    assertThat(Byte.valueOf((byte) 2)).isEqualTo(2);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void chainedThrowAssertion_noMatch() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import static com.google.common.truth.Truth.assertThat;",
+            "public class Test {",
+            "  public void f(Exception e) {",
+            "    assertThat(e).hasMessageThat().isEqualTo(\"foo\");",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void clazz() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import static com.google.common.truth.Truth.assertThat;",
+            "public class Test {",
+            "  public void f(Class<InterruptedException> a, Class<? extends Throwable> b) {",
+            "    try {",
+            "    } catch (Exception e) {",
+            "      assertThat(e.getCause().getClass()).isEqualTo(IllegalArgumentException.class);",
+            "    }",
             "  }",
             "}")
         .doTest();

@@ -18,8 +18,17 @@ package com.google.errorprone.bugpatterns.collectionincompatibletype;
 
 import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
+import static com.google.errorprone.matchers.Description.NO_MATCH;
+import static com.google.errorprone.matchers.Matchers.allOf;
+import static com.google.errorprone.matchers.Matchers.anyOf;
+import static com.google.errorprone.matchers.Matchers.not;
+import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
+import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
+import static com.google.errorprone.util.ASTHelpers.getReceiver;
+import static com.google.errorprone.util.ASTHelpers.getSymbol;
+import static com.google.errorprone.util.ASTHelpers.getType;
+import static com.google.errorprone.util.ASTHelpers.isSubtype;
 
-import com.google.common.collect.Iterables;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
@@ -29,8 +38,6 @@ import com.google.errorprone.bugpatterns.TypeCompatibilityUtils.TypeCompatibilit
 import com.google.errorprone.bugpatterns.collectionincompatibletype.AbstractCollectionIncompatibleTypeMatcher.MatchResult;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
-import com.google.errorprone.matchers.method.MethodMatchers;
-import com.google.errorprone.util.ASTHelpers;
 import com.google.errorprone.util.Signatures;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MemberReferenceTree;
@@ -39,6 +46,8 @@ import com.sun.source.tree.ParenthesizedTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.TypeCastTree;
 import com.sun.source.util.SimpleTreeVisitor;
+import com.sun.tools.javac.code.Symbol.MethodSymbol;
+import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type;
 import javax.annotation.Nullable;
 
@@ -49,32 +58,33 @@ import javax.annotation.Nullable;
     severity = WARNING)
 public class TruthIncompatibleType extends BugChecker implements MethodInvocationTreeMatcher {
 
+  // TODO(cushon): expand to other assertThat methods to handle e.g. ListSubject
+  private static final Matcher<ExpressionTree> START_OF_ASSERTION =
+      allOf(
+          anyOf(
+              staticMethod().onClass("com.google.common.truth.Truth").named("assertThat"),
+              instanceMethod()
+                  .onDescendantOf("com.google.common.truth.StandardSubjectBuilder")
+                  .named("that")),
+          not(TruthIncompatibleType::isSpecialCasedSubject));
+
+  public static final Matcher<ExpressionTree> IS_EQUAL_TO =
+      instanceMethod()
+          .onDescendantOf("com.google.common.truth.Subject")
+          .namedAnyOf("isEqualTo", "isNotEqualTo");
+
   private static final AbstractCollectionIncompatibleTypeMatcher MATCHER =
       new AbstractCollectionIncompatibleTypeMatcher() {
 
-        // TODO(cushon): expand to other assertThat methods to handle e.g. ListSubject
-        private final Matcher<ExpressionTree> assertThatObject =
-            MethodMatchers.staticMethod()
-                .onClass("com.google.common.truth.Truth")
-                .named("assertThat")
-                .withParameters("java.lang.Object");
-
-        public final Matcher<ExpressionTree> isEqualTo =
-            MethodMatchers.instanceMethod()
-                // TODO(cpovirk): Extend to subclasses, ignoring any with unusual behavior.
-                .onExactClass("com.google.common.truth.Subject")
-                .named("isEqualTo")
-                .withParameters("java.lang.Object");
-
         @Override
         Matcher<ExpressionTree> methodMatcher() {
-          return isEqualTo;
+          return IS_EQUAL_TO;
         }
 
         @Nullable
         @Override
         Type extractSourceType(MethodInvocationTree tree, VisitorState state) {
-          return ASTHelpers.getType(getOnlyElement(tree.getArguments()));
+          return getType(getOnlyElement(tree.getArguments()));
         }
 
         @Nullable
@@ -98,33 +108,31 @@ public class TruthIncompatibleType extends BugChecker implements MethodInvocatio
         @Nullable
         @Override
         Type extractTargetType(MethodInvocationTree tree, VisitorState state) {
-          for (ExpressionTree curr = tree;
-              curr instanceof MethodInvocationTree;
-              curr = ASTHelpers.getReceiver(curr)) {
-            if (assertThatObject.matches(curr, state)) {
-              return ASTHelpers.getType(
-                  Iterables.getOnlyElement(((MethodInvocationTree) curr).getArguments())
-                      .accept(
-                          new SimpleTreeVisitor<Tree, Void>() {
-                            @Override
-                            protected Tree defaultAction(Tree node, Void unused) {
-                              return node;
-                            }
-
-                            @Override
-                            public Tree visitTypeCast(TypeCastTree node, Void unused) {
-                              return node.getExpression().accept(this, null);
-                            }
-
-                            @Override
-                            public Tree visitParenthesized(ParenthesizedTree node, Void unused) {
-                              return node.getExpression().accept(this, null);
-                            }
-                          },
-                          null));
-            }
+          ExpressionTree receiver = getReceiver(tree);
+          if (!START_OF_ASSERTION.matches(receiver, state)) {
+            return null;
           }
-          return null;
+          Tree argument =
+              getOnlyElement(((MethodInvocationTree) receiver).getArguments())
+                  .accept(
+                      new SimpleTreeVisitor<Tree, Void>() {
+                        @Override
+                        protected Tree defaultAction(Tree node, Void unused) {
+                          return node;
+                        }
+
+                        @Override
+                        public Tree visitTypeCast(TypeCastTree node, Void unused) {
+                          return node.getExpression().accept(this, null);
+                        }
+
+                        @Override
+                        public Tree visitParenthesized(ParenthesizedTree node, Void unused) {
+                          return node.getExpression().accept(this, null);
+                        }
+                      },
+                      null);
+          return getType(argument);
         }
 
         @Nullable
@@ -138,13 +146,15 @@ public class TruthIncompatibleType extends BugChecker implements MethodInvocatio
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
     MatchResult result = MATCHER.matches(tree, state);
     if (result == null) {
-      return Description.NO_MATCH;
+      return NO_MATCH;
     }
     TypeCompatibilityReport compatibilityReport =
         TypeCompatibilityUtils.compatibilityOfTypes(
             result.targetType(), result.sourceType(), state);
-    if (compatibilityReport.compatible()) {
-      return Description.NO_MATCH;
+    if (compatibilityReport.compatible()
+        || (isNumericType(result.sourceType(), state)
+            && isNumericType(result.targetType(), state))) {
+      return NO_MATCH;
     }
     String sourceType = Signatures.prettyType(result.sourceType());
     String targetType = Signatures.prettyType(result.targetType());
@@ -152,8 +162,20 @@ public class TruthIncompatibleType extends BugChecker implements MethodInvocatio
       sourceType = result.sourceType().toString();
       targetType = result.targetType().toString();
     }
-    Description.Builder description = buildDescription(tree);
-    description.setMessage(result.message(sourceType, targetType));
-    return description.build();
+    return buildDescription(tree).setMessage(result.message(sourceType, targetType)).build();
+  }
+
+  private static boolean isSpecialCasedSubject(ExpressionTree tree, VisitorState state) {
+    if (!(tree instanceof MethodInvocationTree)) {
+      return false;
+    }
+    MethodSymbol symbol = getSymbol((MethodInvocationTree) tree);
+    VarSymbol parameter = symbol.params().get(0);
+    return isNumericType(parameter.type, state);
+  }
+
+  private static boolean isNumericType(Type parameter, VisitorState state) {
+    return parameter.isNumeric()
+        || isSubtype(parameter, state.getTypeFromString("java.lang.Number"), state);
   }
 }
