@@ -140,4 +140,158 @@ public class TruthIncompatibleTypeTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void containment() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import static com.google.common.truth.Truth.assertThat;",
+            "public class Test {",
+            "  public void f(Iterable<Long> xs, String x) {",
+            "    // BUG: Diagnostic contains:",
+            "    assertThat(xs).contains(x);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void containment_noMatch() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import static com.google.common.truth.Truth.assertThat;",
+            "public class Test {",
+            "  public void f(Iterable<Long> xs, Number x) {",
+            "    assertThat(xs).contains(x);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void vectorContainment() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import static com.google.common.truth.Truth.assertThat;",
+            "import com.google.common.collect.ImmutableList;",
+            "public class Test {",
+            "  public void f(Iterable<Long> xs, String x) {",
+            "    // BUG: Diagnostic contains:",
+            "    assertThat(xs).containsExactlyElementsIn(ImmutableList.of(x));",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void vectorContainment_noMatch() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import static com.google.common.truth.Truth.assertThat;",
+            "import com.google.common.collect.ImmutableList;",
+            "public class Test {",
+            "  public void f(Iterable<Long> xs, Number x) {",
+            "    assertThat(xs).containsExactlyElementsIn(ImmutableList.of(x));",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void variadicCall_noMatch() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import static com.google.common.truth.Truth.assertThat;",
+            "import com.google.common.collect.ImmutableList;",
+            "public class Test {",
+            "  public void f(Iterable<Long> xs, Number... x) {",
+            "    assertThat(xs).containsExactly((Object[]) x);",
+            "  }",
+            "}")
+        .ignoreJavacErrors()
+        .doTest();
+  }
+
+  @Test
+  public void variadicCall_checked() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import static com.google.common.truth.Truth.assertThat;",
+            "import com.google.common.collect.ImmutableList;",
+            "public class Test {",
+            "  public void f(Iterable<Long> xs, String... x) {",
+            "    // BUG: Diagnostic contains:",
+            "    assertThat(xs).containsExactly(x);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void variadicCall_primitiveArray() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import static com.google.common.truth.Truth.assertThat;",
+            "import com.google.common.collect.ImmutableList;",
+            "public class Test {",
+            "  public void f(Iterable<byte[]> xs, byte[] ys) {",
+            "    assertThat(xs).containsExactly(ys);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void containsExactlyElementsIn_withArray_match() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import static com.google.common.truth.Truth.assertThat;",
+            "import com.google.common.collect.ImmutableList;",
+            "public class Test {",
+            "  public void f(Iterable<String> xs, Object... x) {",
+            "    assertThat(xs).containsExactlyElementsIn(x);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void containsExactlyElementsIn_withArray_mismatched() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import static com.google.common.truth.Truth.assertThat;",
+            "import com.google.common.collect.ImmutableList;",
+            "public class Test {",
+            "  public void f(Iterable<Long> xs, String... x) {",
+            "    // BUG: Diagnostic contains:",
+            "    assertThat(xs).containsExactlyElementsIn(x);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void containsExactlyElementsIn_numericTypes_notSpecialCased() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import static com.google.common.truth.Truth.assertThat;",
+            "import com.google.common.collect.ImmutableList;",
+            "public class Test {",
+            "  public void f(Iterable<Long> xs, ImmutableList<Integer> ys) {",
+            "    // BUG: Diagnostic contains:",
+            "    assertThat(xs).containsExactlyElementsIn(ys);",
+            "  }",
+            "}")
+        .doTest();
+  }
 }
