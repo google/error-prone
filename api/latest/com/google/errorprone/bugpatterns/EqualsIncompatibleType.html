@@ -27,7 +27,7 @@
     catch(err) {
     }
 //-->
-var data = {"i0":10};
+var data = {"i0":10,"i1":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -138,12 +138,12 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <li class="blockList">
 <dl>
 <dt>All Implemented Interfaces:</dt>
-<dd><code><a href="BugChecker.MethodInvocationTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.MethodInvocationTreeMatcher</a></code>, <code><a href="../matchers/Suppressible.html" title="interface in com.google.errorprone.matchers">Suppressible</a></code>, <code><a href="https://docs.oracle.com/javase/8/docs/api/java/io/Serializable.html?is-external=true" title="class or interface in java.io" class="externalLink">Serializable</a></code></dd>
+<dd><code><a href="BugChecker.MemberReferenceTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.MemberReferenceTreeMatcher</a></code>, <code><a href="BugChecker.MethodInvocationTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.MethodInvocationTreeMatcher</a></code>, <code><a href="../matchers/Suppressible.html" title="interface in com.google.errorprone.matchers">Suppressible</a></code>, <code><a href="https://docs.oracle.com/javase/8/docs/api/java/io/Serializable.html?is-external=true" title="class or interface in java.io" class="externalLink">Serializable</a></code></dd>
 </dl>
 <hr>
 <pre>public class <span class="typeNameLabel">EqualsIncompatibleType</span>
 extends <a href="BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a>
-implements <a href="BugChecker.MethodInvocationTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.MethodInvocationTreeMatcher</a></pre>
+implements <a href="BugChecker.MethodInvocationTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.MethodInvocationTreeMatcher</a>, <a href="BugChecker.MemberReferenceTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.MemberReferenceTreeMatcher</a></pre>
 <dl>
 <dt><span class="simpleTagLabel">Author:</span></dt>
 <dd>avenet@google.com (Arnaud J. Venet)</dd>
@@ -187,7 +187,7 @@ implements <a href="BugChecker.MethodInvocationTreeMatcher.html" title="interfac
 <th class="colLast" scope="col">Description</th>
 </tr>
 <tr class="altColor">
-<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E()">EqualsIncompatibleType</a></span>()</code></th>
+<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(com.google.errorprone.ErrorProneFlags)">EqualsIncompatibleType</a></span>&#8203;(<a href="../ErrorProneFlags.html" title="class in com.google.errorprone">ErrorProneFlags</a>&nbsp;flags)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 </table>
@@ -209,6 +209,12 @@ implements <a href="BugChecker.MethodInvocationTreeMatcher.html" title="interfac
 <th class="colLast" scope="col">Description</th>
 </tr>
 <tr id="i0" class="altColor">
+<td class="colFirst"><code><a href="../matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#matchMemberReference(com.sun.source.tree.MemberReferenceTree,com.google.errorprone.VisitorState)">matchMemberReference</a></span>&#8203;(com.sun.source.tree.MemberReferenceTree&nbsp;tree,
+                    <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr id="i1" class="rowColor">
 <td class="colFirst"><code><a href="../matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#matchMethodInvocation(com.sun.source.tree.MethodInvocationTree,com.google.errorprone.VisitorState)">matchMethodInvocation</a></span>&#8203;(com.sun.source.tree.MethodInvocationTree&nbsp;invocationTree,
                      <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
@@ -252,13 +258,13 @@ implements <a href="BugChecker.MethodInvocationTreeMatcher.html" title="interfac
 <!--   -->
 </a>
 <h3>Constructor Detail</h3>
-<a id="&lt;init&gt;()">
+<a id="&lt;init&gt;(com.google.errorprone.ErrorProneFlags)">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>EqualsIncompatibleType</h4>
-<pre>public&nbsp;EqualsIncompatibleType()</pre>
+<pre>public&nbsp;EqualsIncompatibleType&#8203;(<a href="../ErrorProneFlags.html" title="class in com.google.errorprone">ErrorProneFlags</a>&nbsp;flags)</pre>
 </li>
 </ul>
 </li>
@@ -274,7 +280,7 @@ implements <a href="BugChecker.MethodInvocationTreeMatcher.html" title="interfac
 <a id="matchMethodInvocation(com.sun.source.tree.MethodInvocationTree,com.google.errorprone.VisitorState)">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>matchMethodInvocation</h4>
 <pre class="methodSignature">public&nbsp;<a href="../matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a>&nbsp;matchMethodInvocation&#8203;(com.sun.source.tree.MethodInvocationTree&nbsp;invocationTree,
@@ -282,6 +288,20 @@ implements <a href="BugChecker.MethodInvocationTreeMatcher.html" title="interfac
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="BugChecker.MethodInvocationTreeMatcher.html#matchMethodInvocation(com.sun.source.tree.MethodInvocationTree,com.google.errorprone.VisitorState)">matchMethodInvocation</a></code>&nbsp;in interface&nbsp;<code><a href="BugChecker.MethodInvocationTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.MethodInvocationTreeMatcher</a></code></dd>
+</dl>
+</li>
+</ul>
+<a id="matchMemberReference(com.sun.source.tree.MemberReferenceTree,com.google.errorprone.VisitorState)">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>matchMemberReference</h4>
+<pre class="methodSignature">public&nbsp;<a href="../matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a>&nbsp;matchMemberReference&#8203;(com.sun.source.tree.MemberReferenceTree&nbsp;tree,
+                                        <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</pre>
+<dl>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code><a href="BugChecker.MemberReferenceTreeMatcher.html#matchMemberReference(com.sun.source.tree.MemberReferenceTree,com.google.errorprone.VisitorState)">matchMemberReference</a></code>&nbsp;in interface&nbsp;<code><a href="BugChecker.MemberReferenceTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.MemberReferenceTreeMatcher</a></code></dd>
 </dl>
 </li>
 </ul>
