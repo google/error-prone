@@ -49,7 +49,7 @@ import javax.lang.model.element.ElementKind;
 
 /** Flags a few ways in which member names may violate the style guide. */
 @BugPattern(
-    name = "MemberNaming",
+    name = "MemberName",
     severity = WARNING,
     summary = "Methods and non-static variables should be named in lowerCamelCase.",
     linkType = CUSTOM,
