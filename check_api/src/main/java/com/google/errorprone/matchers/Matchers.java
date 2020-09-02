@@ -1342,44 +1342,51 @@ public class Matchers {
     return compilationUnit.packge.fullname.toString();
   }
 
-  private static final Matcher<MethodInvocationTree> STATIC_EQUALS =
+  private static final Matcher<ExpressionTree> STATIC_EQUALS =
       anyOf(
           allOf(
               staticMethod()
                   .onClass("android.support.v4.util.ObjectsCompat")
                   .named("equals")
                   .withParameters("java.lang.Object", "java.lang.Object"),
-              isSameType(BOOLEAN_TYPE)),
+              Matchers::methodReturnsBoolean),
           allOf(
               staticMethod()
                   .onClass("java.util.Objects")
                   .named("equals")
                   .withParameters("java.lang.Object", "java.lang.Object"),
-              isSameType(BOOLEAN_TYPE)),
+              Matchers::methodReturnsBoolean),
           allOf(
               staticMethod()
                   .onClass("com.google.common.base.Objects")
                   .named("equal")
                   .withParameters("java.lang.Object", "java.lang.Object"),
-              isSameType(BOOLEAN_TYPE)));
+              Matchers::methodReturnsBoolean));
 
   /**
    * Matches an invocation of a recognized static object equality method such as {@link
    * java.util.Objects#equals}. These are simple facades to {@link Object#equals} that accept null
    * for either argument.
    */
-  public static Matcher<MethodInvocationTree> staticEqualsInvocation() {
-    return STATIC_EQUALS;
+  @SuppressWarnings("unchecked") // safe covariant cast
+  public static <T extends ExpressionTree> Matcher<T> staticEqualsInvocation() {
+    return (Matcher<T>) STATIC_EQUALS;
   }
 
   private static final Matcher<ExpressionTree> INSTANCE_EQUALS =
       allOf(
           instanceMethod().anyClass().named("equals").withParameters("java.lang.Object"),
-          isSameType(BOOLEAN_TYPE));
+          Matchers::methodReturnsBoolean);
+
+  private static boolean methodReturnsBoolean(ExpressionTree tree, VisitorState state) {
+    return ASTHelpers.isSameType(
+        getSymbol(tree).type.getReturnType(), state.getSymtab().booleanType, state);
+  }
 
   /** Matches calls to the method {@link Object#equals(Object)} or any override of that method. */
-  public static Matcher<ExpressionTree> instanceEqualsInvocation() {
-    return INSTANCE_EQUALS;
+  @SuppressWarnings("unchecked") // safe covariant cast
+  public static <T extends ExpressionTree> Matcher<T> instanceEqualsInvocation() {
+    return (Matcher<T>) INSTANCE_EQUALS;
   }
 
   private static final Matcher<ExpressionTree> ASSERT_EQUALS =
