@@ -23,6 +23,7 @@ import static com.google.errorprone.util.ASTHelpers.isConsideredFinal;
 
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.annotations.CompileTimeConstant;
+import com.google.errorprone.suppliers.Supplier;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ConditionalExpressionTree;
 import com.sun.source.tree.ExpressionTree;
@@ -47,8 +48,8 @@ import javax.lang.model.element.ElementKind;
  */
 public class CompileTimeConstantExpressionMatcher implements Matcher<ExpressionTree> {
 
-  private static final String COMPILE_TIME_CONSTANT_ANNOTATION =
-      CompileTimeConstant.class.getName();
+  private static final Supplier<Symbol> COMPILE_TIME_CONSTANT_ANNOTATION =
+      VisitorState.memoize(state -> state.getSymbolFromString(CompileTimeConstant.class.getName()));
 
   private final Matcher<ExpressionTree> matcher =
       Matchers.anyOf(
@@ -151,15 +152,11 @@ public class CompileTimeConstantExpressionMatcher implements Matcher<ExpressionT
     }
   }
 
-  private static boolean hasAttribute(Symbol symbol, String name, VisitorState state) {
-    Symbol annotation = state.getSymbolFromString(name);
+  // public since this is also used by CompileTimeConstantChecker.
+  public static boolean hasCompileTimeConstantAnnotation(VisitorState state, Symbol symbol) {
+    Symbol annotation = COMPILE_TIME_CONSTANT_ANNOTATION.get(state);
     // If we can't look up the annotation in the current VisitorState, then presumably it couldn't
     // be present on a Symbol we're inspecting.
     return annotation != null && symbol.attribute(annotation) != null;
-  }
-
-  // public since this is also used by CompileTimeConstantChecker.
-  public static boolean hasCompileTimeConstantAnnotation(VisitorState state, Symbol symbol) {
-    return hasAttribute(symbol, COMPILE_TIME_CONSTANT_ANNOTATION, state);
   }
 }
