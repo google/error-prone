@@ -420,7 +420,6 @@ import com.google.errorprone.bugpatterns.javadoc.ReturnFromVoid;
 import com.google.errorprone.bugpatterns.javadoc.UnescapedEntity;
 import com.google.errorprone.bugpatterns.javadoc.UrlInSee;
 import com.google.errorprone.bugpatterns.nullness.EqualsBrokenForNull;
-import com.google.errorprone.bugpatterns.nullness.FieldMissingNullable;
 import com.google.errorprone.bugpatterns.nullness.ParameterNotNullable;
 import com.google.errorprone.bugpatterns.nullness.UnnecessaryCheckNotNull;
 import com.google.errorprone.bugpatterns.overloading.InconsistentOverloads;
@@ -903,7 +902,6 @@ public class BuiltInCheckerSuppliers {
           FieldCanBeFinal.class,
           FieldCanBeLocal.class,
           FieldCanBeStatic.class,
-          FieldMissingNullable.class,
           ForEachIterable.class,
           FunctionalInterfaceClash.class,
           FuzzyEqualsShouldNotBeUsedInEqualsMethod.class,
