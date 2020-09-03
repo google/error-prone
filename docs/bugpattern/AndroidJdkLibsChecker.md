@@ -13,5 +13,5 @@ To suppress for a particular statement, method, or class, use
 `@SuppressWarnings`:
 
 ```
-@SuppressWarnings("AndroidJdkLibsChecker") // TODO({{USERNAME}}): document suppression
+@SuppressWarnings("AndroidJdkLibsChecker") // TODO(user): document suppression
 ```

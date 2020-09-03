@@ -149,4 +149,20 @@ public class MemberNameTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void methodAnnotatedWithExemptedMethod_noMatch() {
+    helper
+        .addSourceLines(
+            "Property.java", //
+            "package com.pholser.junit.quickcheck;",
+            "public @interface Property {}")
+        .addSourceLines(
+            "Test.java", //
+            "class Test {",
+            "  @com.pholser.junit.quickcheck.Property",
+            "  public void possibly_a_test_name() {}",
+            "}")
+        .doTest();
+  }
 }

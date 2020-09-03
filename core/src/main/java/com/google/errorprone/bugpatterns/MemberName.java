@@ -63,6 +63,13 @@ public final class MemberName extends BugChecker implements MethodTreeMatcher, V
                   .map(s::getName)
                   .collect(toImmutableSet()));
 
+  private static final Supplier<ImmutableSet<Name>> EXEMPTED_METHOD_ANNOTATIONS =
+      VisitorState.memoize(
+          s ->
+              Stream.of("com.pholser.junit.quickcheck.Property")
+                  .map(s::getName)
+                  .collect(toImmutableSet()));
+
   @Override
   public Description matchMethod(MethodTree tree, VisitorState state) {
     MethodSymbol symbol = getSymbol(tree);
@@ -70,6 +77,9 @@ public final class MemberName extends BugChecker implements MethodTreeMatcher, V
       return NO_MATCH;
     }
     if (!annotationsAmong(symbol.owner, EXEMPTED_CLASS_ANNOTATIONS.get(state), state).isEmpty()) {
+      return NO_MATCH;
+    }
+    if (!annotationsAmong(symbol, EXEMPTED_METHOD_ANNOTATIONS.get(state), state).isEmpty()) {
       return NO_MATCH;
     }
     if (tree.getModifiers().getAnnotations().stream()

@@ -31,7 +31,7 @@ import com.sun.source.tree.LiteralTree;
 import java.util.Map;
 
 /**
- * TODO(avenet): Restrict this check to Android code once the capability is available in Error
+ * TODO(user): Restrict this check to Android code once the capability is available in Error
  * Prone. See b/27967984.
  *
  * @author avenet@google.com (Arnaud J. Venet)
