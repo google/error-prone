@@ -17,6 +17,7 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
+import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
@@ -24,8 +25,11 @@ import static javax.lang.model.element.Modifier.ABSTRACT;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
+import com.google.errorprone.fixes.SuggestedFix;
+import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.sun.source.tree.ExpressionTree;
+import com.sun.source.tree.MethodInvocationTree;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 
@@ -44,6 +48,27 @@ public final class IgnoredPureGetter extends AbstractReturnValueIgnored {
   @Override
   protected Matcher<? super ExpressionTree> specializedMatcher() {
     return IgnoredPureGetter::isPureGetter;
+  }
+
+  @Override
+  protected Description describeReturnValueIgnored(
+      MethodInvocationTree methodInvocationTree, VisitorState state) {
+    Description.Builder builder =
+        buildDescription(methodInvocationTree)
+            .addFix(
+                SuggestedFix.builder()
+                    .setShortDescription("Delete entire statement")
+                    .delete(methodInvocationTree)
+                    .build());
+    ExpressionTree receiver = getReceiver(methodInvocationTree);
+    if (receiver instanceof MethodInvocationTree) {
+      builder.addFix(
+          SuggestedFix.builder()
+              .setShortDescription("Delete getter only")
+              .replace(methodInvocationTree, state.getSourceForNode(receiver))
+              .build());
+    }
+    return builder.build();
   }
 
   private static boolean isPureGetter(ExpressionTree tree, VisitorState state) {

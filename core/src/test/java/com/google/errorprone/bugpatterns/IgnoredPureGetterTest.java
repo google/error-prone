@@ -16,6 +16,8 @@
 
 package com.google.errorprone.bugpatterns;
 
+import com.google.errorprone.BugCheckerRefactoringTestHelper;
+import com.google.errorprone.BugCheckerRefactoringTestHelper.FixChoosers;
 import com.google.errorprone.CompilationTestHelper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,6 +28,8 @@ import org.junit.runners.JUnit4;
 public final class IgnoredPureGetterTest {
   private final CompilationTestHelper helper =
       CompilationTestHelper.newInstance(IgnoredPureGetter.class, getClass());
+  private final BugCheckerRefactoringTestHelper refactoringHelper =
+      BugCheckerRefactoringTestHelper.newInstance(IgnoredPureGetter.class, getClass());
 
   @Test
   public void autoValueCase() {
@@ -45,6 +49,38 @@ public final class IgnoredPureGetterTest {
             "    a.foo();",
             "  }",
             "}")
+        .doTest();
+  }
+
+  @Test
+  public void autoValueCase_secondFix() {
+    refactoringHelper
+        .addInputLines(
+            "A.java", //
+            "import com.google.auto.value.AutoValue;",
+            "@AutoValue",
+            "abstract class A {",
+            "  abstract int foo();",
+            "  static A of(int foo) {",
+            "    return null;",
+            "  }",
+            "}")
+        .expectUnchanged()
+        .addInputLines(
+            "B.java", //
+            "class B {",
+            "  void test() {",
+            "    A.of(1).foo();",
+            "  }",
+            "}")
+        .addOutputLines(
+            "B.java", //
+            "class B {",
+            "  void test() {",
+            "    A.of(1);",
+            "  }",
+            "}")
+        .setFixChooser(FixChoosers.SECOND)
         .doTest();
   }
 
