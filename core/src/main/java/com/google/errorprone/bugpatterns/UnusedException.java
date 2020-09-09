@@ -34,6 +34,7 @@ import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.CatchTree;
 import com.sun.source.tree.NewClassTree;
+import com.sun.source.tree.VariableTree;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
@@ -73,7 +74,7 @@ public final class UnusedException extends BugChecker implements CatchTreeMatche
 
   @Override
   public Description matchCatch(CatchTree tree, VisitorState state) {
-    if (isSuppressed(tree.getParameter())) {
+    if (isSuppressed(tree.getParameter()) || isSuppressedViaName(tree.getParameter())) {
       return Description.NO_MATCH;
     }
     VarSymbol exceptionSymbol = ASTHelpers.getSymbol(tree.getParameter());
@@ -122,6 +123,10 @@ public final class UnusedException extends BugChecker implements CatchTreeMatche
                 fixConstructor((NewClassTree) badThrow.getExpression(), exceptionSymbol, state)
                     .ifPresent(allFixes::merge));
     return describeMatch(tree, allFixes.build());
+  }
+
+  private static boolean isSuppressedViaName(VariableTree parameter) {
+    return parameter.getName().toString().startsWith("unused");
   }
 
   private static Optional<SuggestedFix> fixConstructor(
