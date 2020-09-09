@@ -99,28 +99,6 @@ public final class ProtoFieldNullComparisonTest {
   }
 
   @Test
-  public void intermediateVariable_disabled() {
-    compilationHelper
-        .addSourceLines(
-            "Test.java",
-            "import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;",
-            "import com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage;",
-            "import java.util.List;",
-            "class Test {",
-            "  void test() {",
-            "    TestProtoMessage message = TestProtoMessage.newBuilder().build();",
-            "    TestFieldProtoMessage field = message.getMessage();",
-            "    List<TestFieldProtoMessage> fields = message.getMultiFieldList();",
-            "    if (field != null) {}",
-            "    if (fields != null) {}",
-            "  }",
-            "}")
-        .setArgs(
-            ImmutableList.of("-XepOpt:ProtoFieldNullComparison:TrackServerProtoAssignments=false"))
-        .doTest();
-  }
-
-  @Test
   public void negativeCases() {
     compilationHelper
         .addSourceLines(

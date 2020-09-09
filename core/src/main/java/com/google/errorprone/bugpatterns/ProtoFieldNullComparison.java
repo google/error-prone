@@ -30,7 +30,6 @@ import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.isConsideredFinal;
 import static com.google.errorprone.util.ASTHelpers.isSameType;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.ErrorProneFlags;
@@ -74,10 +73,6 @@ import javax.annotation.Nullable;
     summary = "Protobuf fields cannot be null.",
     severity = ERROR)
 public class ProtoFieldNullComparison extends BugChecker implements CompilationUnitTreeMatcher {
-
-  private static final String PROTO_SUPER_CLASS = "com.google.protobuf.GeneratedMessage";
-
-  private static final String PROTO_LITE_SUPER_CLASS = "com.google.protobuf.GeneratedMessageLite";
 
   // TODO(b/111109484): Try to consolidate these with NullnessPropagationTransfer.
   private static final Matcher<ExpressionTree> CHECK_NOT_NULL =
@@ -138,33 +133,18 @@ public class ProtoFieldNullComparison extends BugChecker implements CompilationU
 
   /** Matcher for generated protobufs. */
   private static final Matcher<ExpressionTree> PROTO_RECEIVER =
-      instanceMethod().onDescendantOfAny(PROTO_SUPER_CLASS, PROTO_LITE_SUPER_CLASS);
+      instanceMethod()
+          .onDescendantOfAny(
+              "com.google.protobuf.GeneratedMessageLite", "com.google.protobuf.GeneratedMessage");
 
-  /** Only track assignments of variables matching this. */
-  private final Matcher<ExpressionTree> trackAssignments;
-
-  private final boolean matchListGetters;
   private final boolean matchTestAssertions;
-  private final boolean descendIntoInitializers;
   private final boolean matchOptionals;
 
   public ProtoFieldNullComparison(ErrorProneFlags flags) {
-    boolean trackServerProtoAssignments =
-        flags.getBoolean("ProtoFieldNullComparison:TrackServerProtoAssignments").orElse(true);
-    this.matchListGetters =
-        flags.getBoolean("ProtoFieldNullComparison:MatchListGetters").orElse(true);
     this.matchTestAssertions =
         flags.getBoolean("ProtoFieldNullComparison:MatchTestAssertions").orElse(false);
-    this.descendIntoInitializers =
-        flags.getBoolean("ProtoFieldNullComparison:DescendIntoInitializers").orElse(true);
     this.matchOptionals = flags.getBoolean("ProtoFieldNullComparison:MatchOptionals").orElse(true);
 
-    ImmutableList.Builder<String> toTrack =
-        ImmutableList.<String>builder().add(PROTO_LITE_SUPER_CLASS);
-    if (trackServerProtoAssignments) {
-      toTrack.add(PROTO_SUPER_CLASS);
-    }
-    trackAssignments = instanceMethod().onDescendantOfAny(toTrack.build());
   }
 
   @Override
@@ -196,14 +176,8 @@ public class ProtoFieldNullComparison extends BugChecker implements CompilationU
     public Void visitVariable(VariableTree variable, Void unused) {
       Symbol symbol = ASTHelpers.getSymbol(variable);
       if (variable.getInitializer() != null && symbol != null && isConsideredFinal(symbol)) {
-        if (descendIntoInitializers) {
-          getInitializer(variable.getInitializer())
-              .ifPresent(e -> effectivelyFinalValues.put(symbol, e));
-        } else {
-          if (trackAssignments.matches(variable.getInitializer(), state)) {
-            effectivelyFinalValues.put(symbol, variable.getInitializer());
-          }
-        }
+        getInitializer(variable.getInitializer())
+            .ifPresent(e -> effectivelyFinalValues.put(symbol, e));
       }
       return isSuppressed(variable) ? null : super.visitVariable(variable, null);
     }
@@ -213,7 +187,7 @@ public class ProtoFieldNullComparison extends BugChecker implements CompilationU
           new SimpleTreeVisitor<ExpressionTree, Void>() {
             @Override
             public ExpressionTree visitMethodInvocation(MethodInvocationTree node, Void unused) {
-              return trackAssignments.matches(node, state) ? node : null;
+              return PROTO_RECEIVER.matches(node, state) ? node : null;
             }
 
             @Override
@@ -280,7 +254,6 @@ public class ProtoFieldNullComparison extends BugChecker implements CompilationU
         return Optional.empty();
       }
       return Arrays.stream(GetterTypes.values())
-          .filter(g -> matchListGetters || g != GetterTypes.VECTOR_INDEXED)
           .map(type -> type.match(resolvedTree, state))
           .filter(Objects::nonNull)
           .findFirst();
