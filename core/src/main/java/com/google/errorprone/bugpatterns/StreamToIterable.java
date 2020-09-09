@@ -45,7 +45,8 @@ import com.sun.tools.javac.code.Symbol.VarSymbol;
     summary =
         "Using stream::iterator creates a one-shot Iterable, which may cause surprising failures.",
     severity = WARNING,
-    tags = FRAGILE_CODE)
+    tags = FRAGILE_CODE,
+    documentSuppression = false)
 public final class StreamToIterable extends BugChecker
     implements LambdaExpressionTreeMatcher, MemberReferenceTreeMatcher {
   private static final Matcher<ExpressionTree> STREAM_ITERATOR =
@@ -89,7 +90,11 @@ public final class StreamToIterable extends BugChecker
             instanceof EnhancedForLoopTree) {
       return NO_MATCH;
     }
-    SuggestedFix.Builder fix = SuggestedFix.builder();
+    SuggestedFix.Builder fix =
+        SuggestedFix.builder()
+            .setShortDescription(
+                "Collect to an ImmutableList (caveat: this materializes the contents into memory"
+                    + " at once)");
     fix.replace(
         tree,
         String.format(

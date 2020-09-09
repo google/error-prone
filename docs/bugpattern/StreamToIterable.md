@@ -30,7 +30,20 @@ MyProto construct(Stream<Integer> ints) {
 }
 ```
 
-To avoid such pitfalls, the `Stream` can either be collected
+To avoid such pitfalls, the `Stream` can either be terminated with
+`forEachOrdered`
+
+```java
+MyProto construct(Stream<Integer> ints) {
+  MyProto.Builder builder = MyProto.newBuilder();
+  ints.map(i -> SubMessage.newBuilder().setVal(i).build())
+      .forEachOrdered(builder::addSubMessage);
+  return builder.build();
+}
+```
+
+or collected (with the caveat that the contents of the `Stream` will now be
+materialized into memory at once),
 
 ```java
 MyProto construct(Stream<Integer> ints) {
@@ -42,13 +55,6 @@ MyProto construct(Stream<Integer> ints) {
 }
 ```
 
-or terminated with `forEachOrdered`
-
-```java
-MyProto construct(Stream<Integer> ints) {
-  MyProto.Builder builder = MyProto.newBuilder();
-  ints.map(i -> SubMessage.newBuilder().setVal(i).build())
-      .forEachOrdered(builder::addSubMessage);
-  return builder.build();
-}
-```
+or suppressed using `@SuppressWarnings("StreamToIterable")`. Only suppress if
+you're sure the API you're using will only iterate the resulting one-shot
+`Iterable` once, and can't accept a `Stream` or an `Iterator`.
