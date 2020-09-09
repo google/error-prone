@@ -315,6 +315,17 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <tbody>
 <tr class="altColor">
 <td class="colFirst"><code>static <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util" class="externalLink">Optional</a>&lt;<a href="../SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a>&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">SuggestedFixes.</span><code><span class="memberNameLink"><a href="../SuggestedFixes.html#addMembers(com.sun.source.tree.ClassTree,com.google.errorprone.VisitorState,com.google.errorprone.fixes.SuggestedFixes.AdditionPosition,java.lang.Iterable)">addMembers</a></span>&#8203;(com.sun.source.tree.ClassTree&nbsp;classTree,
+          <a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
+          <a href="../SuggestedFixes.AdditionPosition.html" title="enum in com.google.errorprone.fixes">SuggestedFixes.AdditionPosition</a>&nbsp;where,
+          <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Iterable.html?is-external=true" title="class or interface in java.lang" class="externalLink">Iterable</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&gt;&nbsp;members)</code></th>
+<td class="colLast">
+<div class="block">Returns a <a href="../Fix.html" title="interface in com.google.errorprone.fixes"><code>Fix</code></a> that adds members defined by <code>members</code> to the class referenced by
+ <code>classTree</code>.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>static <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util" class="externalLink">Optional</a>&lt;<a href="../SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a>&gt;</code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">SuggestedFixes.</span><code><span class="memberNameLink"><a href="../SuggestedFixes.html#addModifiers(com.sun.source.tree.Tree,com.google.errorprone.VisitorState,javax.lang.model.element.Modifier...)">addModifiers</a></span>&#8203;(com.sun.source.tree.Tree&nbsp;tree,
             <a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
             <a href="https://docs.oracle.com/javase/8/docs/api/javax/lang/model/element/Modifier.html?is-external=true" title="class or interface in javax.lang.model.element" class="externalLink">Modifier</a>...&nbsp;modifiers)</code></th>
@@ -322,7 +333,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">Adds modifiers to the given class, method, or field declaration.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>static <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util" class="externalLink">Optional</a>&lt;<a href="../SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a>&gt;</code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">SuggestedFixes.</span><code><span class="memberNameLink"><a href="../SuggestedFixes.html#addModifiers(com.sun.source.tree.Tree,com.sun.source.tree.ModifiersTree,com.google.errorprone.VisitorState,java.util.Set)">addModifiers</a></span>&#8203;(com.sun.source.tree.Tree&nbsp;tree,
             com.sun.source.tree.ModifiersTree&nbsp;originalModifiers,
@@ -332,12 +343,12 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">Adds modifiers to the given declaration and corresponding modifiers tree.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>com.google.common.collect.ImmutableList&lt;<a href="../SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a>&gt;</code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">BranchedSuggestedFixes.</span><code><span class="memberNameLink"><a href="../BranchedSuggestedFixes.html#getFixes()">getFixes</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>static <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util" class="externalLink">Optional</a>&lt;<a href="../SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a>&gt;</code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">SuggestedFixes.</span><code><span class="memberNameLink"><a href="../SuggestedFixes.html#removeModifiers(com.sun.source.tree.ModifiersTree,com.google.errorprone.VisitorState,java.util.Set)">removeModifiers</a></span>&#8203;(com.sun.source.tree.ModifiersTree&nbsp;originalModifiers,
                <a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
@@ -346,7 +357,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">Removes modifiers to the given declaration and corresponding modifiers tree.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>static <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util" class="externalLink">Optional</a>&lt;<a href="../SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a>&gt;</code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">SuggestedFixes.</span><code><span class="memberNameLink"><a href="../SuggestedFixes.html#removeModifiers(com.sun.source.tree.Tree,com.google.errorprone.VisitorState,javax.lang.model.element.Modifier...)">removeModifiers</a></span>&#8203;(com.sun.source.tree.Tree&nbsp;tree,
                <a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
@@ -355,7 +366,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">Removes modifiers from the given class, method, or field declaration.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>static <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util" class="externalLink">Optional</a>&lt;<a href="../SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a>&gt;</code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">SuggestedFixes.</span><code><span class="memberNameLink"><a href="../SuggestedFixes.html#suggestExemptingAnnotation(java.lang.String,com.sun.source.util.TreePath,com.google.errorprone.VisitorState)">suggestExemptingAnnotation</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;exemptingAnnotation,
                           com.sun.source.util.TreePath&nbsp;where,
