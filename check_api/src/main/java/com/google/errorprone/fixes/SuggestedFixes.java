@@ -115,6 +115,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Deque;
+import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
@@ -612,13 +613,31 @@ public class SuggestedFixes {
       String firstMember,
       String... otherMembers) {
     checkNotNull(classTree);
-    StringBuilder stringBuilder = new StringBuilder();
-    for (String memberSnippet : Lists.asList(firstMember, otherMembers)) {
-      stringBuilder.append("\n\n").append(memberSnippet);
+    List<String> members = Lists.asList(firstMember, otherMembers);
+    return addMembers(classTree, state, where, members).get();
+  }
+
+  /**
+   * Returns a {@link Fix} that adds members defined by {@code members} to the class referenced by
+   * {@code classTree}. This method should only be called once per {@link ClassTree} as the
+   * suggestions will otherwise collide. It will return {@code Optional.empty()} if and only if
+   * {@code members} is empty.
+   */
+  public static Optional<SuggestedFix> addMembers(
+      ClassTree classTree, VisitorState state, AdditionPosition where, Iterable<String> members) {
+    // Manually desugaring a foreach over members so that we can behave differently if it's empty.
+    Iterator<String> items = members.iterator();
+    if (!items.hasNext()) {
+      return Optional.empty();
     }
+    StringBuilder stringBuilder = new StringBuilder();
+    do {
+      String item = items.next();
+      stringBuilder.append("\n\n").append(item);
+    } while (items.hasNext());
     stringBuilder.append('\n');
     int pos = where.pos(classTree, state);
-    return SuggestedFix.replace(pos, pos, stringBuilder.toString());
+    return Optional.of(SuggestedFix.replace(pos, pos, stringBuilder.toString()));
   }
 
   /**
