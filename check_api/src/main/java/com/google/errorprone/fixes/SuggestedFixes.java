@@ -612,13 +612,28 @@ public class SuggestedFixes {
       String firstMember,
       String... otherMembers) {
     checkNotNull(classTree);
+    List<String> members = Lists.asList(firstMember, otherMembers);
+    return addMembers(classTree, state, where, members).get();
+  }
+
+  /**
+   * Returns a {@link Fix} that adds members defined by {@code members} to the class referenced by
+   * {@code classTree}. This method should only be called once per {@link ClassTree} as the
+   * suggestions will otherwise collide. It will return {@code Optional.empty()} if and only if
+   * {@code members} is empty.
+   */
+  public static Optional<SuggestedFix> addMembers(
+      ClassTree classTree, VisitorState state, AdditionPosition where, Collection<String> members) {
+    if (members.isEmpty()) {
+      return Optional.empty();
+    }
     StringBuilder stringBuilder = new StringBuilder();
-    for (String memberSnippet : Lists.asList(firstMember, otherMembers)) {
+    for (String memberSnippet : members) {
       stringBuilder.append("\n\n").append(memberSnippet);
     }
     stringBuilder.append('\n');
     int pos = where.pos(classTree, state);
-    return SuggestedFix.replace(pos, pos, stringBuilder.toString());
+    return Optional.of(SuggestedFix.replace(pos, pos, stringBuilder.toString()));
   }
 
   /**
