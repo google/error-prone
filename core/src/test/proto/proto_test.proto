@@ -40,6 +40,10 @@ message TestOneOfMessage {
   }
 }
 
+message TestMessageContainingOneOfMessage {
+  optional TestOneOfMessage message = 1;
+}
+
 enum TestEnum {
   UNSPECIFIED = 0;
   TEST_ENUM_VAL = 1;
