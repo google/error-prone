@@ -319,7 +319,7 @@ public final class FutureReturnValueIgnored extends AbstractReturnValueIgnored
    * void-returning functions silently ignore return values of any type.
    */
   private static boolean functionalInterfaceReturnsObject(Type interfaceType, VisitorState state) {
-    Type objectType = state.getTypeFromString("java.lang.Object");
+    Type objectType = state.getSymtab().objectType;
     return ASTHelpers.isSubtype(
         objectType,
         ASTHelpers.getUpperBound(
@@ -373,7 +373,7 @@ public final class FutureReturnValueIgnored extends AbstractReturnValueIgnored
    */
   @Override
   public Description matchReturn(ReturnTree tree, VisitorState state) {
-    Type objectType = state.getTypeFromString("java.lang.Object");
+    Type objectType = state.getSymtab().objectType;
     Type futureType = state.getTypeFromString("java.util.concurrent.Future");
     if (futureType == null) {
       return Description.NO_MATCH;

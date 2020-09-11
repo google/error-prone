@@ -82,7 +82,7 @@ public class FragmentInjection extends BugChecker implements ClassTreeMatcher {
               state,
               getSymbol(tree),
               state.getName("isValidFragment"),
-              ImmutableList.<Type>of(state.getTypeFromString("java.lang.String")),
+              ImmutableList.of(state.getSymtab().stringType),
               ImmutableList.<Type>of());
       methodNotImplemented = isValidFragmentMethodSymbol.owner.equals(preferenceActivityTypeSymbol);
     } catch (FatalError e) {

@@ -411,9 +411,7 @@ public class ProtoFieldNullComparison extends BugChecker implements CompilationU
           // If the second element within the generic argument is a subtype of list,
           // that means it is a repeated field and therefore we cannot make a fix.
           if (ASTHelpers.isSubtype(
-              genericsArgument.getTypeArguments().get(1),
-              state.getTypeFromString("java.util.List"),
-              state)) {
+              genericsArgument.getTypeArguments().get(1), state.getSymtab().listType, state)) {
             return GetterTypes::emptyFix;
           }
           // Now that it is guaranteed that there is not a repeated field, providing a fix is safe

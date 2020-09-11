@@ -112,7 +112,7 @@ class Matchers {
             return false;
           }
           return ASTHelpers.isSameType(
-                  parameters.get(0).asType(), state.getTypeFromString("java.lang.String"), state)
+                  parameters.get(0).asType(), state.getSymtab().stringType, state)
               && ASTHelpers.isSameType(
                   parameters.get(1).asType(), parameters.get(2).asType(), state);
         }

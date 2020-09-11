@@ -171,7 +171,7 @@ public final class ImplementAssertionWithChaining extends BugChecker implements 
   }
 
   private static boolean isEnum(ExpressionTree tree, VisitorState state) {
-    return isSubtype(getType(tree), state.getTypeFromString("java.lang.Enum"), state);
+    return isSubtype(getType(tree), state.getSymtab().enumSym.type, state);
   }
 
   /**
