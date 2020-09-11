@@ -23,15 +23,17 @@ import static com.google.errorprone.matchers.JUnitMatchers.isJUnit4TestClass;
 import static com.google.errorprone.matchers.JUnitMatchers.isJunit3TestCase;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.hasModifier;
-import static com.google.errorprone.matchers.Matchers.methodHasParameters;
 import static com.google.errorprone.matchers.Matchers.methodReturns;
 import static com.google.errorprone.matchers.Matchers.not;
 import static com.google.errorprone.suppliers.Suppliers.VOID_TYPE;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
+import static com.google.errorprone.util.ASTHelpers.getType;
+import static com.google.errorprone.util.ASTHelpers.isSameType;
 import static javax.lang.model.element.Modifier.PUBLIC;
 import static javax.lang.model.element.Modifier.STATIC;
 
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
@@ -39,6 +41,8 @@ import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.JUnitMatchers;
 import com.google.errorprone.matchers.Matcher;
+import com.google.errorprone.suppliers.Supplier;
+import com.google.errorprone.suppliers.Suppliers;
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.MethodInvocationTree;
@@ -46,6 +50,7 @@ import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
+import com.sun.tools.javac.code.Type;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -66,14 +71,40 @@ public class JUnit4TestNotRun extends BugChecker implements ClassTreeMatcher {
   private static final String TEST_ANNOTATION = "@Test ";
   private static final String IGNORE_ANNOTATION = "@Ignore ";
 
-  private static final Matcher<MethodTree> POSSIBLE_TEST_METHOD =
+  private final Matcher<MethodTree> possibleTestMethod =
       allOf(
           hasModifier(PUBLIC),
           methodReturns(VOID_TYPE),
-          methodHasParameters(),
+          (t, s) ->
+              t.getParameters().stream()
+                  .allMatch(
+                      v ->
+                          v.getModifiers().getAnnotations().stream()
+                              .anyMatch(a -> isParameterAnnotation(a, s))),
           not(JUnitMatchers::hasJUnitAnnotation));
 
+  private boolean isParameterAnnotation(AnnotationTree annotation, VisitorState state) {
+    if (!allowParameterizingAnnotations) {
+      return false;
+    }
+    Type annotationType = getType(annotation);
+    if (isSameType(annotationType, FROM_DATA_POINTS.get(state), state)) {
+      return true;
+    }
+    return false;
+  }
+
+  private static final Supplier<Type> FROM_DATA_POINTS =
+      Suppliers.typeFromString("org.junit.experimental.theories.FromDataPoints");
+
   private static final Matcher<Tree> NOT_STATIC = not(hasModifier(STATIC));
+
+  private final boolean allowParameterizingAnnotations;
+
+  public JUnit4TestNotRun(ErrorProneFlags flags) {
+    this.allowParameterizingAnnotations =
+        flags.getBoolean("JUnit4TestNotRun:AllowParameterizingAnnotations").orElse(true);
+  }
 
   @Override
   public Description matchClass(ClassTree tree, VisitorState state) {
@@ -86,7 +117,7 @@ public class JUnit4TestNotRun extends BugChecker implements ClassTreeMatcher {
         continue;
       }
       MethodTree methodTree = (MethodTree) member;
-      if (POSSIBLE_TEST_METHOD.matches(methodTree, state) && !isSuppressed(tree)) {
+      if (possibleTestMethod.matches(methodTree, state) && !isSuppressed(tree)) {
         suspiciousMethods.put(getSymbol(methodTree), methodTree);
       }
     }
