@@ -28,6 +28,7 @@ import static com.google.errorprone.util.ASTHelpers.annotationsAmong;
 import static com.google.errorprone.util.ASTHelpers.findSuperMethods;
 import static com.google.errorprone.util.ASTHelpers.getGeneratedBy;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
+import static com.google.errorprone.util.ASTHelpers.outermostClass;
 
 import com.google.common.base.CaseFormat;
 import com.google.common.collect.ImmutableSet;
@@ -93,7 +94,7 @@ public final class MemberName extends BugChecker implements MethodTreeMatcher, V
       return NO_MATCH;
     }
     if (findSuperMethods(symbol, state.getTypes()).stream()
-        .anyMatch(m -> !getGeneratedBy(m, state).isEmpty())) {
+        .anyMatch(m -> !getGeneratedBy(outermostClass(m), state).isEmpty())) {
       return NO_MATCH;
     }
     if (TEST_CASE.matches(tree, state)) {

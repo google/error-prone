@@ -165,4 +165,45 @@ public class MemberNameTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void methodWithUnderscores_overridenFromGeneratedSupertype_noFinding() {
+    helper
+        .addSourceLines(
+            "Base.java",
+            "import javax.annotation.Generated;",
+            "@Generated(\"Hands\")",
+            "abstract class Base {",
+            "  @SuppressWarnings(\"MemberName\")", // We only care about the subtype in this test.
+            "  abstract int get_some();",
+            "}")
+        .addSourceLines(
+            "Test.java",
+            "class Test extends Base {",
+            "  @Override",
+            "  public int get_some() {",
+            "    return 0;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void methodWithUnderscores_notOverridenFromGeneratedSupertype_bug() {
+    helper
+        .addSourceLines(
+            "Base.java",
+            "import javax.annotation.Generated;",
+            "@Generated(\"Hands\")",
+            "abstract class Base {}")
+        .addSourceLines(
+            "Test.java",
+            "class Test extends Base {",
+            "  // BUG: Diagnostic contains:",
+            "  public int get_more() {",
+            "    return 0;",
+            "  }",
+            "}")
+        .doTest();
+  }
 }
