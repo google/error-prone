@@ -55,7 +55,7 @@ import com.sun.tools.javac.util.Name;
 import com.sun.tools.javac.util.Names;
 import com.sun.tools.javac.util.Options;
 import java.io.IOException;
-import java.lang.ref.WeakReference;
+import java.lang.ref.SoftReference;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -661,7 +661,7 @@ public class VisitorState {
     (relying on the per-file cache in typeCache) if we don't have a result. If you want to cache a
     computation which can return null, wrap it in an Optional at the call site.*/
 
-    private WeakReference<T> cache = new WeakReference<>(null);
+    private SoftReference<T> cache = new SoftReference<>(null);
     private JavacInvocationInstance provenance;
 
     private Cache(Supplier<T> impl) {
@@ -678,14 +678,14 @@ public class VisitorState {
       if (value == null) {
         value = impl.get(state);
         if (value != null) {
-          cache = new WeakReference<>(value);
+          cache = new SoftReference<>(value);
           provenance = state.sharedState.javacInvocationInstance;
         }
       } else {
         JavacInvocationInstance current = state.sharedState.javacInvocationInstance;
         if (provenance != current) {
           value = impl.get(state);
-          cache = new WeakReference<>(value);
+          cache = new SoftReference<>(value);
           provenance = current;
         }
       }
