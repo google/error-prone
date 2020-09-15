@@ -81,12 +81,12 @@ public @interface <span class="type-name-label">Matches</span></pre>
 
  <pre><code>
  class SingletonList {
-   {@literal @}BeforeTemplate
-   public &lt;E&gt; List&lt;E&gt; before({@literal @}Matches(IsNonNullMatcher.class) E e) {
+   @BeforeTemplate
+   public &lt;E&gt; List&lt;E&gt; before(@Matches(IsNonNullMatcher.class) E e) {
      return Collections.singletonList(e);
    }
 
-   {@literal @}AfterTemplate
+   @AfterTemplate
    public &lt;E&gt; List&lt;E&gt; after(E e) {
      return ImmutableList.of(e);
    }

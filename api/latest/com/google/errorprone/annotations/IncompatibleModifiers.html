@@ -77,16 +77,16 @@ public @interface <span class="type-name-label">IncompatibleModifiers</span></pr
 <div class="block">Annotation declaring that the target annotation is incompatible with any one of the provided
  modifiers. For example, an annotation declared as:
 
- <pre>
+ <pre><code>
  @IncompatibleModifiers(Modifier.PUBLIC)
  @interface MyAnnotation {}
- </pre>
+ </code></pre>
 
  <p>will be considered illegal when used as:
 
- <pre>
+ <pre><code>
  @MyAnnotation public void foo() {}
- </pre></div>
+ </code></pre></div>
 <dl class="notes">
 <dt>Author:</dt>
 <dd>benyu@google.com (Jige Yu)</dd>

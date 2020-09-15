@@ -77,16 +77,16 @@ public @interface <span class="type-name-label">RequiredModifiers</span></pre>
 <div class="block">Annotation declaring that the target annotation requires all the specified modifiers. For
  example, an annotation declared as:
 
- <pre>
+ <pre><code>
  @RequiredModifiers(Modifier.PUBLIC)
  @interface MyAnnotation {}
- </pre>
+ </code></pre>
 
  <p>will be considered illegal when used on non-public elements such as:
 
- <pre>
+ <pre><code>
  @MyAnnotation void foo() {}
- </pre></div>
+ </code></pre></div>
 <dl class="notes">
 <dt>Author:</dt>
 <dd>benyu@google.com (Jige Yu)</dd>

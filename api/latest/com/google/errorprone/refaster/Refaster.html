@@ -195,9 +195,9 @@ T&nbsp;expression)</code></th>
  <p>For example, you might write
 
  <pre><code>
-    @BeforeTemplate void something(@Repeated T arg) {
-     Stream.of(asVarargs(arg)); // doesn't use the Stream.of(T) overload, but Stream.of(T...)
-    }
+ @BeforeTemplate void something(@Repeated T arg) {
+  Stream.of(asVarargs(arg)); // doesn't use the Stream.of(T) overload, but Stream.of(T...)
+ }
  </code></pre></div>
 </section>
 </li>
