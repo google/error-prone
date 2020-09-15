@@ -5,6 +5,7 @@ dist: trusty
 jdk:
   - oraclejdk8
   - oraclejdk9
+  - openjdk11
   - openjdk12
   - openjdk13
   - openjdk14
@@ -17,7 +18,7 @@ matrix:
         # https://github.com/travis-ci/travis-ci/issues/9368#issuecomment-395354755
         - rm "${JAVA_HOME}/lib/security/cacerts"
         - ln -s /etc/ssl/certs/java/cacerts "${JAVA_HOME}/lib/security/cacerts"
-    - jdk: openjdk11
+    - jdk: openjdk15
       script:
         # default Maven command
         - mvn test -B
