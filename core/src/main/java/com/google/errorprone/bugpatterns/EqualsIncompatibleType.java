@@ -29,7 +29,6 @@ import static com.google.errorprone.util.ASTHelpers.getReceiverType;
 import static com.google.errorprone.util.ASTHelpers.getType;
 
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MemberReferenceTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
@@ -62,13 +61,6 @@ public class EqualsIncompatibleType extends BugChecker
               instanceMethod().anyClass().named("assertFalse"),
               staticMethod().anyClass().named("assertFalse")));
 
-  private final boolean matchMemberReferences;
-
-  public EqualsIncompatibleType(ErrorProneFlags flags) {
-    this.matchMemberReferences =
-        flags.getBoolean("EqualsIncompatibleType:MatchMemberReferences").orElse(true);
-  }
-
   @Override
   public Description matchMethodInvocation(
       MethodInvocationTree invocationTree, final VisitorState state) {
@@ -99,9 +91,6 @@ public class EqualsIncompatibleType extends BugChecker
 
   @Override
   public Description matchMemberReference(MemberReferenceTree tree, VisitorState state) {
-    if (!matchMemberReferences) {
-      return NO_MATCH;
-    }
     if (!STATIC_EQUALS_MATCHER.matches(tree, state)
         && !INSTANCE_EQUALS_MATCHER.matches(tree, state)) {
       return NO_MATCH;
