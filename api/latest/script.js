@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2018, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2020, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -29,72 +29,13 @@ var typeSearchIndex;
 var memberSearchIndex;
 var tagSearchIndex;
 function loadScripts(doc, tag) {
-    createElem(doc, tag, 'jquery/jszip/dist/jszip.js');
-    createElem(doc, tag, 'jquery/jszip-utils/dist/jszip-utils.js');
-    if (window.navigator.userAgent.indexOf('MSIE ') > 0 || window.navigator.userAgent.indexOf('Trident/') > 0 ||
-            window.navigator.userAgent.indexOf('Edge/') > 0) {
-        createElem(doc, tag, 'jquery/jszip-utils/dist/jszip-utils-ie.js');
-    }
     createElem(doc, tag, 'search.js');
-    
-    $.get(pathtoroot + "module-search-index.zip")
-            .done(function() {
-                JSZipUtils.getBinaryContent(pathtoroot + "module-search-index.zip", function(e, data) {
-                    var zip = new JSZip(data);
-                    zip.load(data);
-                    moduleSearchIndex = JSON.parse(zip.file("module-search-index.json").asText());
-                });
-            });
-    $.get(pathtoroot + "package-search-index.zip")
-            .done(function() {
-                JSZipUtils.getBinaryContent(pathtoroot + "package-search-index.zip", function(e, data) {
-                    var zip = new JSZip(data);
-                    zip.load(data);
-                    packageSearchIndex = JSON.parse(zip.file("package-search-index.json").asText());
-                });
-            });
-    $.get(pathtoroot + "type-search-index.zip")
-            .done(function() {
-                JSZipUtils.getBinaryContent(pathtoroot + "type-search-index.zip", function(e, data) {
-                    var zip = new JSZip(data);
-                    zip.load(data);
-                    typeSearchIndex = JSON.parse(zip.file("type-search-index.json").asText());
-                });
-            });
-    $.get(pathtoroot + "member-search-index.zip")
-            .done(function() {
-                JSZipUtils.getBinaryContent(pathtoroot + "member-search-index.zip", function(e, data) {
-                    var zip = new JSZip(data);
-                    zip.load(data);
-                    memberSearchIndex = JSON.parse(zip.file("member-search-index.json").asText());
-                });
-            });
-    $.get(pathtoroot + "tag-search-index.zip")
-            .done(function() {
-                JSZipUtils.getBinaryContent(pathtoroot + "tag-search-index.zip", function(e, data) {
-                    var zip = new JSZip(data);
-                    zip.load(data);
-                    tagSearchIndex = JSON.parse(zip.file("tag-search-index.json").asText());
-                });
-            });
-    if (!moduleSearchIndex) {
-        createElem(doc, tag, 'module-search-index.js');
-    }
-    if (!packageSearchIndex) {
-        createElem(doc, tag, 'package-search-index.js');
-    }
-    if (!typeSearchIndex) {
-        createElem(doc, tag, 'type-search-index.js');
-    }
-    if (!memberSearchIndex) {
-        createElem(doc, tag, 'member-search-index.js');
-    }
-    if (!tagSearchIndex) {
-        createElem(doc, tag, 'tag-search-index.js');
-    }
-    $(window).resize(function() {
-        $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
-    });
+
+    createElem(doc, tag, 'module-search-index.js');
+    createElem(doc, tag, 'package-search-index.js');
+    createElem(doc, tag, 'type-search-index.js');
+    createElem(doc, tag, 'member-search-index.js');
+    createElem(doc, tag, 'tag-search-index.js');
 }
 
 function createElem(doc, tag, path) {
@@ -119,21 +60,44 @@ function show(type) {
 }
 
 function updateTabs(type) {
+    var firstRow = document.getElementById(Object.keys(data)[0]);
+    var table = firstRow.closest('table');
     for (var value in tabs) {
-        var sNode = document.getElementById(tabs[value][0]);
-        var spanNode = sNode.firstChild;
+        var tab = document.getElementById(tabs[value][0]);
         if (value == type) {
-            sNode.className = activeTableTab;
-            spanNode.innerHTML = tabs[value][1];
+            tab.className = activeTableTab;
+            tab.innerHTML = tabs[value][1];
+            tab.setAttribute('aria-selected', true);
+            tab.setAttribute('tabindex',0);
+            table.setAttribute('aria-labelledby', tabs[value][0]);
         }
         else {
-            sNode.className = tableTab;
-            spanNode.innerHTML = "<a href=\"javascript:show("+ value + ");\">" + tabs[value][1] + "</a>";
+            tab.className = tableTab;
+            tab.setAttribute('aria-selected', false);
+            tab.setAttribute('tabindex',-1);
+            tab.setAttribute('onclick', "show("+ value + ")");
+            tab.innerHTML = tabs[value][1];
         }
     }
 }
 
-function updateModuleFrame(pFrame, cFrame) {
-    top.packageFrame.location = pFrame;
-    top.classFrame.location = cFrame;
+function switchTab(e) {
+    if (e.keyCode == 37 || e.keyCode == 38) {
+        $("[aria-selected=true]").prev().click().focus();
+        e.preventDefault();
+    }
+    if (e.keyCode == 39 || e.keyCode == 40) {
+        $("[aria-selected=true]").next().click().focus();
+        e.preventDefault();
+    }
+}
+
+var updateSearchResults = function() {};
+
+function indexFilesLoaded() {
+    return moduleSearchIndex
+        && packageSearchIndex
+        && typeSearchIndex
+        && memberSearchIndex
+        && tagSearchIndex;
 }
