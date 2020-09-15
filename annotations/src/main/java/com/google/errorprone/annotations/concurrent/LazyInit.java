@@ -33,7 +33,7 @@ import java.lang.annotation.Target;
  *
  * <pre>{@code
  * private final String source;
- * {@literal @}LazyInit private String data;
+ * @LazyInit private String data;
  *
  * public String getData() {
  *   String local = data;

@@ -32,12 +32,12 @@ import java.lang.annotation.Target;
  *
  * <pre>{@code
  * class SingletonList {
- *   {@literal @}BeforeTemplate
- *   public <E> List<E> before({@literal @}Matches(IsNonNullMatcher.class) E e) {
+ *   @BeforeTemplate
+ *   public <E> List<E> before(@Matches(IsNonNullMatcher.class) E e) {
  *     return Collections.singletonList(e);
  *   }
  *
- *   {@literal @}AfterTemplate
+ *   @AfterTemplate
  *   public <E> List<E> after(E e) {
  *     return ImmutableList.of(e);
  *   }
