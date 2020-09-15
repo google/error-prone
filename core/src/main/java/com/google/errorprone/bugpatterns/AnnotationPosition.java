@@ -84,6 +84,8 @@ public final class AnnotationPosition extends BugChecker
   private static final ImmutableSet<TokenKind> MODIFIERS =
       Arrays.stream(Modifier.values())
           .map(m -> TOKEN_KIND_BY_NAME.get(m.name()))
+          // TODO(b/168625474): sealed doesn't have a token kind in Java 15
+          .filter(m -> m != null)
           .collect(toImmutableSet());
 
   @Override

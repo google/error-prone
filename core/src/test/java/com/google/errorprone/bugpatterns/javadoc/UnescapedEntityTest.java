@@ -16,9 +16,12 @@
 
 package com.google.errorprone.bugpatterns.javadoc;
 
+import static org.junit.Assume.assumeFalse;
+
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode;
 import com.google.errorprone.CompilationTestHelper;
+import com.google.errorprone.util.RuntimeVersion;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -108,6 +111,7 @@ public final class UnescapedEntityTest {
 
   @Test
   public void withinPre_alreadyEscaped() {
+    assumeFalse(RuntimeVersion.isAtLeast15()); // https://bugs.openjdk.java.net/browse/JDK-8241780
     refactoring
         .addInputLines(
             "Test.java",
@@ -127,6 +131,7 @@ public final class UnescapedEntityTest {
 
   @Test
   public void withinPre_hasAnnotations() {
+    assumeFalse(RuntimeVersion.isAtLeast15()); // https://bugs.openjdk.java.net/browse/JDK-8241780
     refactoring
         .addInputLines(
             "Test.java",
@@ -155,6 +160,7 @@ public final class UnescapedEntityTest {
 
   @Test
   public void escapesWithoutAddingCodeBlock_withinPreBlockWithAnnotation() {
+    assumeFalse(RuntimeVersion.isAtLeast15()); // https://bugs.openjdk.java.net/browse/JDK-8241780
     refactoring
         .addInputLines(
             "Test.java",

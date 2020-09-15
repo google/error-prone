@@ -74,4 +74,9 @@ public class RuntimeVersion {
   public static boolean isAtLeast13() {
     return MAJOR >= 13;
   }
+
+  /** Returns true if the current runtime is JDK 15 or newer. */
+  public static boolean isAtLeast15() {
+    return MAJOR >= 15;
+  }
 }

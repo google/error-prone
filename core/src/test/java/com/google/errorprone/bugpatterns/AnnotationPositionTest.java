@@ -17,9 +17,11 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH;
+import static org.junit.Assume.assumeTrue;
 
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
+import com.google.errorprone.util.RuntimeVersion;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -311,5 +313,26 @@ public final class AnnotationPositionTest {
             "  public @TypeUse static int foo = 1;",
             "}")
         .doTest();
+  }
+
+  // TODO(b/168625474): 'sealed' doesn't have a TokenKind
+  @Test
+  public void sealedInterface() {
+    assumeTrue(RuntimeVersion.isAtLeast15());
+    refactoringHelper
+        .addInputLines(
+            "Test.java", //
+            "/** Javadoc! */",
+            "sealed @Deprecated interface Test {",
+            "  final class A implements Test {}",
+            "}")
+        .addOutputLines(
+            "Test.java", //
+            "/** Javadoc! */",
+            "sealed @Deprecated interface Test {",
+            "  final class A implements Test {}",
+            "}")
+        .setArgs("--enable-preview", "--release=15")
+        .doTest(TEXT_MATCH);
   }
 }
