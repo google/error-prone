@@ -25,9 +25,11 @@ import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.not;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
+import static com.google.errorprone.suppliers.Suppliers.typeFromString;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
+import static com.google.errorprone.util.ASTHelpers.isCastable;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
 
 import com.google.common.collect.Streams;
@@ -39,6 +41,7 @@ import com.google.errorprone.bugpatterns.TypeCompatibilityUtils;
 import com.google.errorprone.bugpatterns.TypeCompatibilityUtils.TypeCompatibilityReport;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
+import com.google.errorprone.suppliers.Supplier;
 import com.google.errorprone.util.Signatures;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
@@ -58,7 +61,6 @@ import java.util.stream.Stream;
     severity = WARNING)
 public class TruthIncompatibleType extends BugChecker implements MethodInvocationTreeMatcher {
 
-  // TODO(cushon): expand to other assertThat methods to handle e.g. ListSubject
   private static final Matcher<ExpressionTree> START_OF_ASSERTION =
       anyOf(
           staticMethod().onClass("com.google.common.truth.Truth").named("assertThat"),
@@ -66,18 +68,18 @@ public class TruthIncompatibleType extends BugChecker implements MethodInvocatio
               .onDescendantOf("com.google.common.truth.StandardSubjectBuilder")
               .named("that"));
 
-  public static final Matcher<ExpressionTree> IS_EQUAL_TO =
+  private static final Matcher<ExpressionTree> IS_EQUAL_TO =
       instanceMethod()
           .onDescendantOf("com.google.common.truth.Subject")
           .namedAnyOf("isEqualTo", "isNotEqualTo");
 
-  public static final Matcher<ExpressionTree> SCALAR_CONTAINS =
+  private static final Matcher<ExpressionTree> SCALAR_CONTAINS =
       instanceMethod()
           .onDescendantOf("com.google.common.truth.IterableSubject")
           .namedAnyOf(
               "contains", "containsExactly", "doesNotContain", "containsAnyOf", "containsNoneOf");
 
-  public static final Matcher<ExpressionTree> VECTOR_CONTAINS =
+  private static final Matcher<ExpressionTree> VECTOR_CONTAINS =
       instanceMethod()
           .onDescendantOf("com.google.common.truth.IterableSubject")
           .namedAnyOf(
@@ -87,7 +89,12 @@ public class TruthIncompatibleType extends BugChecker implements MethodInvocatio
               "containsNoneIn")
           .withParameters("java.lang.Iterable");
 
-  public static final Matcher<ExpressionTree> ARRAY_CONTAINS =
+  private static final Matcher<ExpressionTree> COMPARING_ELEMENTS_USING =
+      instanceMethod()
+          .onDescendantOf("com.google.common.truth.IterableSubject")
+          .named("comparingElementsUsing");
+
+  private static final Matcher<ExpressionTree> ARRAY_CONTAINS =
       allOf(
           instanceMethod()
               .onDescendantOf("com.google.common.truth.IterableSubject")
@@ -98,11 +105,15 @@ public class TruthIncompatibleType extends BugChecker implements MethodInvocatio
                   "containsNoneIn"),
           not(VECTOR_CONTAINS));
 
+  private static final Supplier<Type> CORRESPONDENCE =
+      typeFromString("com.google.common.truth.Correspondence");
+
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
     Streams.concat(
             matchEquality(tree, state),
             matchVectorContains(tree, state),
+            matchCorrespondence(tree, state),
             matchArrayContains(tree, state),
             matchScalarContains(tree, state))
         .forEach(state::reportMatch);
@@ -141,6 +152,41 @@ public class TruthIncompatibleType extends BugChecker implements MethodInvocatio
             ignoringCasts(getOnlyElement(((MethodInvocationTree) receiver).getArguments())), state);
     Type sourceType = getIterableTypeArg(getOnlyElement(tree.getArguments()), state);
     return checkCompatibility(getOnlyElement(tree.getArguments()), targetType, sourceType, state);
+  }
+
+  private Stream<Description> matchCorrespondence(MethodInvocationTree tree, VisitorState state) {
+    if (!COMPARING_ELEMENTS_USING.matches(tree, state)) {
+      return Stream.empty();
+    }
+    ExpressionTree receiver = getReceiver(tree);
+    if (!START_OF_ASSERTION.matches(receiver, state)) {
+      return Stream.empty();
+    }
+
+    Type targetType =
+        getIterableTypeArg(
+            ignoringCasts(getOnlyElement(((MethodInvocationTree) receiver).getArguments())), state);
+    ExpressionTree argument = getOnlyElement(tree.getArguments());
+    Type sourceType = getCorrespondenceTypeArg(argument, state);
+    // This is different to the others: we're checking for castability, not possible equality.
+    if (isCastable(targetType, sourceType, state)) {
+      return Stream.empty();
+    }
+    String sourceTypeName = Signatures.prettyType(sourceType);
+    String targetTypeName = Signatures.prettyType(targetType);
+    if (sourceTypeName.equals(targetTypeName)) {
+      sourceTypeName = sourceType.toString();
+      targetTypeName = targetType.toString();
+    }
+
+    return Stream.of(
+        buildDescription(argument)
+            .setMessage(
+                String.format(
+                    "Argument '%s' should not be passed to this method: its type `%s` is"
+                        + " not compatible with `%s`",
+                    state.getSourceForNode(argument), sourceTypeName, targetTypeName))
+            .build());
   }
 
   private Stream<Description> matchArrayContains(MethodInvocationTree tree, VisitorState state) {
@@ -241,6 +287,14 @@ public class TruthIncompatibleType extends BugChecker implements MethodInvocatio
     return extractTypeArgAsMemberOfSupertype(
         getType(onlyElement),
         state.getSymtab().iterableType.tsym,
+        /* typeArgIndex= */ 0,
+        state.getTypes());
+  }
+
+  private static Type getCorrespondenceTypeArg(Tree onlyElement, VisitorState state) {
+    return extractTypeArgAsMemberOfSupertype(
+        getType(onlyElement),
+        CORRESPONDENCE.get(state).tsym,
         /* typeArgIndex= */ 0,
         state.getTypes());
   }

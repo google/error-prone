@@ -294,4 +294,37 @@ public class TruthIncompatibleTypeTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void comparingElementsUsing_typeMismatch() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import static com.google.common.truth.Truth.assertThat;",
+            "import com.google.common.collect.ImmutableList;",
+            "import com.google.common.truth.Correspondence;",
+            "public class Test {",
+            "  public void f(Iterable<Long> xs, Correspondence<Integer, String> c) {",
+            "    // BUG: Diagnostic contains:",
+            "    assertThat(xs).comparingElementsUsing(c).doesNotContain(\"\");",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void comparingElementsUsing_typesMatch() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import static com.google.common.truth.Truth.assertThat;",
+            "import com.google.common.collect.ImmutableList;",
+            "import com.google.common.truth.Correspondence;",
+            "public class Test {",
+            "  public void f(Iterable<Long> xs, Correspondence<Long, String> c) {",
+            "    assertThat(xs).comparingElementsUsing(c).doesNotContain(\"\");",
+            "  }",
+            "}")
+        .doTest();
+  }
 }
