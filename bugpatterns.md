@@ -1226,6 +1226,9 @@ This overriding method is redundant, and can be removed.
 __[RedundantThrows](bugpattern/RedundantThrows)__<br>
 Thrown exception is a subtype of another
 
+__[RestrictInjectVisibility](bugpattern/RestrictInjectVisibility)__<br>
+Some methods (such as those annotated with @Inject or @Provides) are only intended to be called by a framework, and so should have default visibility
+
 __[StringEquality](bugpattern/StringEquality)__<br>
 String comparison using reference equality instead of value equality
 
