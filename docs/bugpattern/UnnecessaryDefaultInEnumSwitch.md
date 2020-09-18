@@ -2,6 +2,9 @@ Including a default case is redundant when switching on an enum type if the
 switch handles all possible values of the enum, and execution cannot continue
 below the switch from any of the non-default statement groups.
 
+Note: This check does not apply to pseudo-enums such as Android `@IntDef`s,
+which are integers that are treated specially by other tools.
+
 TIP: Removing the unnecessary default allows Error Prone to enforce that the
 switch continues to handle all cases, even if new values are added to the enum,
 see: [MissingCasesInEnumSwitch](MissingCasesInEnumSwitch.md). After the
