@@ -3,7 +3,7 @@ title: PublicConstructorForAbstractClass
 summary: Constructors of an abstract class can be declared protected as there is never a need for them to be public
 layout: bugpattern
 tags: ''
-severity: WARNING
+severity: SUGGESTION
 ---
 
 <!--

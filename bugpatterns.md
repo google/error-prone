@@ -901,9 +901,6 @@ A field on a protocol buffer was set twice in the same chained expression.
 __[ProtoTimestampGetSecondsGetNano](bugpattern/ProtoTimestampGetSecondsGetNano)__<br>
 getNanos() only accesses the underlying nanosecond-adjustment of the instant.
 
-__[PublicConstructorForAbstractClass](bugpattern/PublicConstructorForAbstractClass)__<br>
-Constructors of an abstract class can be declared protected as there is never a need for them to be public
-
 __[QualifierOrScopeOnInjectMethod](bugpattern/QualifierOrScopeOnInjectMethod)__<br>
 Qualifiers/Scope annotations on @Inject methods don&#39;t have any effect. Move the qualifier annotation to the binding location.
 
@@ -1332,6 +1329,9 @@ Add a private constructor to modules that will not be instantiated by Dagger.
 
 __[PrivateConstructorForUtilityClass](bugpattern/PrivateConstructorForUtilityClass)__<br>
 Classes which are not intended to be instantiated should be made non-instantiable with a private constructor. This includes utility classes (classes with only static members), and the main class.
+
+__[PublicConstructorForAbstractClass](bugpattern/PublicConstructorForAbstractClass)__<br>
+Constructors of an abstract class can be declared protected as there is never a need for them to be public
 
 __[RemoveUnusedImports](bugpattern/RemoveUnusedImports)__<br>
 Unused imports
