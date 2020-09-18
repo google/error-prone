@@ -16,7 +16,7 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
+import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.enclosingClass;
@@ -46,7 +46,7 @@ import javax.lang.model.element.Modifier;
         "Abstract classes' constructors are only ever called by subclasses, never directly by"
             + " another class. Therefore they never need public constructors: protected is"
             + " accessible enough.",
-    severity = WARNING)
+    severity = SUGGESTION)
 public class PublicConstructorForAbstractClass extends BugChecker implements MethodTreeMatcher {
 
   private static final Matcher<MethodTree> PUBLIC_ABSTRACT_CONSTRUCTOR =
