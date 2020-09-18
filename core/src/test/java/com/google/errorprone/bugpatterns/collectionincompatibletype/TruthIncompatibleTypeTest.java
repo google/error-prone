@@ -327,4 +327,83 @@ public class TruthIncompatibleTypeTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void mapContainsExactlyEntriesIn_keyTypesDiffer() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import static com.google.common.truth.Truth.assertThat;",
+            "import java.util.Map;",
+            "public class Test {",
+            "  public void f(Map<String, Long> xs, Map<Long, Long> ys) {",
+            "    // BUG: Diagnostic contains:",
+            "    assertThat(xs).containsExactlyEntriesIn(ys);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void mapContainsExactlyEntriesIn_valueTypesDiffer() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import static com.google.common.truth.Truth.assertThat;",
+            "import java.util.Map;",
+            "public class Test {",
+            "  public void f(Map<String, Long> xs, Map<String, String> ys) {",
+            "    // BUG: Diagnostic contains:",
+            "    assertThat(xs).containsExactlyEntriesIn(ys);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void mapContainsExactly() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import static com.google.common.truth.Truth.assertThat;",
+            "import java.util.Map;",
+            "public class Test {",
+            "  public void f(Map<String, Long> xs) {",
+            "    // BUG: Diagnostic contains:",
+            "    assertThat(xs).containsExactly(\"\", 1L, \"foo\", 2L, \"bar\", 3);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void mapContainsExactly_varargs() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import static com.google.common.truth.Truth.assertThat;",
+            "import java.util.Map;",
+            "public class Test {",
+            "  public void f(Map<String, Long> xs, String a, Long b, Object... rest) {",
+            "    assertThat(xs).containsExactly(a, b, rest);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void multimapContainsExactly() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import static com.google.common.truth.Truth.assertThat;",
+            "import com.google.common.collect.Multimap;",
+            "public class Test {",
+            "  public void f(Multimap<String, Long> xs) {",
+            "    // BUG: Diagnostic contains:",
+            "    assertThat(xs).containsExactly(\"\", 1L, \"foo\", 2L, \"bar\", 3);",
+            "  }",
+            "}")
+        .doTest();
+  }
 }
