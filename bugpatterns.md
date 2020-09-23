@@ -227,6 +227,9 @@ Invalid time zone identifier. TimeZone.getTimeZone(String) will silently return 
 __[InvalidZoneId](bugpattern/InvalidZoneId)__<br>
 Invalid zone identifier. ZoneId.of(String) will throw exception at runtime.
 
+__[IsInstanceIncompatibleType](bugpattern/IsInstanceIncompatibleType)__<br>
+This use of isInstance will always evaluate to false.
+
 __[IsInstanceOfClass](bugpattern/IsInstanceOfClass)__<br>
 The argument to Class#isInstance(Object) should not be a Class
 
@@ -346,9 +349,6 @@ When adding or subtracting from a Period, Duration is incompatible.
 
 __[PreconditionsInvalidPlaceholder](bugpattern/PreconditionsInvalidPlaceholder)__<br>
 Preconditions only accepts the %s placeholder in error message strings
-
-__[PredicateIncompatibleType](bugpattern/PredicateIncompatibleType)__<br>
-Using ::equals or ::isInstance as an incompatible Predicate; the predicate will always return false
 
 __[PrivateSecurityContractProtoAccess](bugpattern/PrivateSecurityContractProtoAccess)__<br>
 Access to a private protocol buffer field is forbidden. This protocol buffer carries a security contract, and can only be created using an approved library. Direct access to the fields is forbidden.
