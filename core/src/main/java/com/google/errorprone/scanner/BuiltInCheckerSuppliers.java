@@ -155,6 +155,7 @@ import com.google.errorprone.bugpatterns.InterruptedExceptionSwallowed;
 import com.google.errorprone.bugpatterns.InvalidPatternSyntax;
 import com.google.errorprone.bugpatterns.InvalidTimeZoneID;
 import com.google.errorprone.bugpatterns.InvalidZoneId;
+import com.google.errorprone.bugpatterns.IsInstanceIncompatibleType;
 import com.google.errorprone.bugpatterns.IsInstanceOfClass;
 import com.google.errorprone.bugpatterns.IterableAndIterator;
 import com.google.errorprone.bugpatterns.IterablePathParameter;
@@ -244,7 +245,6 @@ import com.google.errorprone.bugpatterns.ParameterName;
 import com.google.errorprone.bugpatterns.ParametersButNotParameterized;
 import com.google.errorprone.bugpatterns.PreconditionsCheckNotNullRepeated;
 import com.google.errorprone.bugpatterns.PreconditionsInvalidPlaceholder;
-import com.google.errorprone.bugpatterns.PredicateIncompatibleType;
 import com.google.errorprone.bugpatterns.PrimitiveArrayPassedToVarargsMethod;
 import com.google.errorprone.bugpatterns.PrimitiveAtomicReference;
 import com.google.errorprone.bugpatterns.PrivateConstructorForUtilityClass;
@@ -583,6 +583,7 @@ public class BuiltInCheckerSuppliers {
           InvalidPatternSyntax.class,
           InvalidTimeZoneID.class,
           InvalidZoneId.class,
+          IsInstanceIncompatibleType.class,
           IsInstanceOfClass.class,
           IsLoggableTagLength.class,
           JUnit3TestNotRun.class,
@@ -624,7 +625,6 @@ public class BuiltInCheckerSuppliers {
           PeriodGetTemporalUnit.class,
           PeriodTimeMath.class,
           PreconditionsInvalidPlaceholder.class,
-          PredicateIncompatibleType.class,
           PrivateSecurityContractProtoAccess.class,
           ProtoFieldNullComparison.class,
           ProtoStringFieldReferenceEquality.class,
