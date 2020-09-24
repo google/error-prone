@@ -191,16 +191,7 @@ public @interface BugPattern {
    */
   boolean documentSuppression() default true;
 
-  /**
-   * Generate examples from test cases.
-   *
-   * <p>By default, any positive or negative test inputs are included in the generated documentation
-   * as examples. That behaviour can be disabled if the test inputs aren't good documentation (for
-   * example, because they're testing implementation details of the check and aren't representative
-   * of real code).
-   *
-   * <p>If this feature is disabled, make sure to include some representative examples in the
-   * explanation.
-   */
+  /** @deprecated this is a no-op that will be removed in the future */
+  @Deprecated
   boolean generateExamplesFromTestCases() default true;
 }

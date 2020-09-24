@@ -22,30 +22,21 @@ import com.github.mustachejava.DefaultMustacheFactory;
 import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheFactory;
 import com.google.common.base.Joiner;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableListMultimap;
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Multimaps;
 import com.google.common.io.LineProcessor;
 import com.google.errorprone.BugPattern.SeverityLevel;
-import com.google.errorprone.ExampleInfo.ExampleKind;
 import com.google.gson.Gson;
 import java.io.IOException;
 import java.io.StringWriter;
-import java.io.UncheckedIOException;
 import java.io.Writer;
-import java.nio.file.DirectoryStream;
-import java.nio.file.DirectoryStream.Filter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import javax.annotation.Nullable;
 import org.yaml.snakeyaml.DumperOptions;
@@ -62,15 +53,8 @@ import org.yaml.snakeyaml.representer.Representer;
 class BugPatternFileGenerator implements LineProcessor<List<BugPatternInstance>> {
 
   private final Path outputDir;
-  private final Path exampleDirBase;
   private final Path explanationDir;
   private final List<BugPatternInstance> result;
-
-  /**
-   * Enables pygments-style code highlighting blocks instead of github flavoured markdown style code
-   * fences, because the latter make jekyll unhappy.
-   */
-  private final boolean usePygments;
 
   private final Function<BugPatternInstance, SeverityLevel> severityRemapper;
 
@@ -82,68 +66,16 @@ class BugPatternFileGenerator implements LineProcessor<List<BugPatternInstance>>
 
   public BugPatternFileGenerator(
       Path bugpatternDir,
-      Path exampleDirBase,
       Path explanationDir,
       boolean generateFrontMatter,
-      boolean usePygments,
       String baseUrl,
       Function<BugPatternInstance, SeverityLevel> severityRemapper) {
     this.outputDir = bugpatternDir;
-    this.exampleDirBase = exampleDirBase;
     this.explanationDir = explanationDir;
     this.severityRemapper = severityRemapper;
     this.generateFrontMatter = generateFrontMatter;
-    this.usePygments = usePygments;
     this.baseUrl = baseUrl;
     result = new ArrayList<>();
-  }
-
-  private static class ExampleFilter implements DirectoryStream.Filter<Path> {
-    private final Pattern matchPattern;
-
-    public ExampleFilter(String checkerName) {
-      this.matchPattern = Pattern.compile(checkerName + "(Positive|Negative)Case.*");
-    }
-
-    @Override
-    public boolean accept(Path entry) throws IOException {
-      return Files.isDirectory(entry)
-          || matchPattern.matcher(entry.getFileName().toString()).matches();
-    }
-  }
-
-  /** A function to convert a test case file into an {@link ExampleInfo}. */
-  private static class PathToExampleInfo implements Function<Path, ExampleInfo> {
-
-    private final String checkerClass;
-
-    public PathToExampleInfo(String checkerClass) {
-      this.checkerClass = checkerClass;
-    }
-
-    @Override
-    public ExampleInfo apply(Path path) {
-      ExampleInfo.ExampleKind posOrNeg;
-      String fileName = path.getFileName().toString();
-      if (fileName.contains("Positive")) {
-        posOrNeg = ExampleInfo.ExampleKind.POSITIVE;
-      } else if (fileName.contains("Negative")) {
-        posOrNeg = ExampleInfo.ExampleKind.NEGATIVE;
-      } else {
-        // ExampleFilter enforces this
-        throw new AssertionError(
-            "Example filename must contain \"Positive\" or \"Negative\", but was " + fileName);
-      }
-
-      String code;
-      try {
-        code = new String(Files.readAllBytes(path), UTF_8).trim();
-      } catch (IOException e) {
-        throw new UncheckedIOException(e);
-      }
-
-      return ExampleInfo.create(posOrNeg, checkerClass, fileName, code);
-    }
   }
 
   @Override
@@ -228,42 +160,6 @@ class BugPatternFileGenerator implements LineProcessor<List<BugPatternInstance>>
       MustacheFactory mf = new DefaultMustacheFactory();
       Mustache mustache = mf.compile("com/google/errorprone/resources/bugpattern.mustache");
       mustache.execute(writer, templateData.build());
-
-      if (pattern.generateExamplesFromTestCases) {
-        // Example filename must match example pattern.
-        List<Path> examplePaths = new ArrayList<>();
-        Filter<Path> filter =
-            new ExampleFilter(pattern.className.substring(pattern.className.lastIndexOf('.') + 1));
-        findExamples(examplePaths, exampleDirBase, filter);
-
-        List<ExampleInfo> exampleInfo =
-            examplePaths.stream()
-                .map(new PathToExampleInfo(pattern.className))
-                .sorted(Comparator.comparing(ExampleInfo::name))
-                .collect(Collectors.toList());
-        ImmutableListMultimap<Boolean, ExampleInfo> byPositivity =
-            Multimaps.index(exampleInfo, info -> info.type() == ExampleKind.POSITIVE);
-        ImmutableList<ExampleInfo> positiveExamples = byPositivity.get(true);
-        ImmutableList<ExampleInfo> negativeExamples = byPositivity.get(false);
-
-        if (!exampleInfo.isEmpty()) {
-          writer.write("\n----------\n\n");
-
-          if (!positiveExamples.isEmpty()) {
-            writer.write("### Positive examples\n");
-            for (ExampleInfo positiveExample : positiveExamples) {
-              writeExample(positiveExample, writer);
-            }
-          }
-
-          if (!negativeExamples.isEmpty()) {
-            writer.write("### Negative examples\n");
-            for (ExampleInfo negativeExample : negativeExamples) {
-              writeExample(negativeExample, writer);
-            }
-          }
-        }
-      }
     }
     return true;
   }
@@ -277,35 +173,6 @@ class BugPatternFileGenerator implements LineProcessor<List<BugPatternInstance>>
       annotationName = SuppressWarnings.class.getSimpleName() + "(\"" + patternName + "\")";
     }
     return "`@" + annotationName + "`";
-  }
-
-  private void writeExample(ExampleInfo example, Writer writer) throws IOException {
-    writer.write("__" + example.name() + "__\n\n");
-    if (usePygments) {
-      writer.write("{% highlight java %}\n");
-    } else {
-      writer.write("```java\n");
-    }
-    writer.write(example.code() + "\n");
-    if (usePygments) {
-      writer.write("{% endhighlight %}\n");
-    } else {
-      writer.write("```\n");
-    }
-    writer.write("\n");
-  }
-
-  private static void findExamples(
-      List<Path> examples, Path dir, DirectoryStream.Filter<Path> filter) throws IOException {
-    try (DirectoryStream<Path> stream = Files.newDirectoryStream(dir, filter)) {
-      for (Path entry : stream) {
-        if (Files.isDirectory(entry)) {
-          findExamples(examples, entry, filter);
-        } else {
-          examples.add(entry);
-        }
-      }
-    }
   }
 
   @Override

@@ -38,22 +38,13 @@ public class BugPatternFileGeneratorTest {
 
   @Rule public TemporaryFolder tmpfolder = new TemporaryFolder();
 
-  private Path exampleDir;
   private Path wikiDir;
-  private Path exampleDirBase;
   private Path explanationDirBase;
 
   @Before
   public void setUp() throws Exception {
     wikiDir = tmpfolder.newFolder("wiki").toPath();
-    exampleDirBase = tmpfolder.newFolder("examples").toPath();
     explanationDirBase = tmpfolder.newFolder("explanations").toPath();
-    exampleDir = exampleDirBase.resolve("com/google/errorprone/bugpatterns");
-    Files.createDirectories(exampleDir);
-    Files.write(
-        exampleDir.resolve("DeadExceptionPositiveCase.java"),
-        Arrays.asList("here is an example"),
-        UTF_8);
   }
 
   private static BugPatternInstance deadExceptionTestInfo() {
@@ -93,7 +84,7 @@ public class BugPatternFileGeneratorTest {
   public void regressionTest_frontmatter_pygments() throws Exception {
     BugPatternFileGenerator generator =
         new BugPatternFileGenerator(
-            wikiDir, exampleDirBase, explanationDirBase, true, true, null, input -> input.severity);
+            wikiDir, explanationDirBase, true, null, input -> input.severity);
     generator.processLine(BUGPATTERN_LINE);
     String expected =
         CharStreams.toString(
@@ -110,9 +101,7 @@ public class BugPatternFileGeneratorTest {
     BugPatternFileGenerator generator =
         new BugPatternFileGenerator(
             wikiDir,
-            exampleDirBase,
             explanationDirBase,
-            false,
             false,
             null,
             input -> input.severity);
@@ -131,9 +120,7 @@ public class BugPatternFileGeneratorTest {
     BugPatternFileGenerator generator =
         new BugPatternFileGenerator(
             wikiDir,
-            exampleDirBase,
             explanationDirBase,
-            false,
             false,
             null,
             input -> input.severity);
@@ -169,9 +156,7 @@ public class BugPatternFileGeneratorTest {
     BugPatternFileGenerator generator =
         new BugPatternFileGenerator(
             wikiDir,
-            exampleDirBase,
             explanationDirBase,
-            false,
             false,
             null,
             input -> input.severity);

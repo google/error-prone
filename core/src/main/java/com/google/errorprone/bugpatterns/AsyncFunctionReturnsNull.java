@@ -25,8 +25,7 @@ import com.google.errorprone.BugPattern;
 @BugPattern(
     name = "AsyncFunctionReturnsNull",
     summary = "AsyncFunction should not return a null Future, only a Future whose result is null.",
-    severity = ERROR,
-    generateExamplesFromTestCases = false)
+    severity = ERROR)
 public final class AsyncFunctionReturnsNull extends AbstractAsyncTypeReturnsNull {
   public AsyncFunctionReturnsNull() {
     super(AsyncFunction.class);

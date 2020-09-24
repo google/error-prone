@@ -56,8 +56,7 @@ import java.util.List;
 @BugPattern(
     name = "MustBeClosedChecker",
     summary = "The result of this method must be closed.",
-    severity = ERROR,
-    generateExamplesFromTestCases = false)
+    severity = ERROR)
 public class MustBeClosedChecker extends AbstractMustBeClosedChecker
     implements MethodTreeMatcher,
         MethodInvocationTreeMatcher,

@@ -19,13 +19,3 @@ The exception is created with new, but is not thrown, and the reference is lost.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("DeadException")` to the enclosing element.
-
-----------
-
-### Positive examples
-__DeadExceptionPositiveCase.java__
-
-```java
-here is an example
-```
-

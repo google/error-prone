@@ -53,8 +53,7 @@ import javax.lang.model.element.Modifier;
         "Casting a lambda to this @FunctionalInterface can cause a behavior change from casting to"
             + " a functional superinterface, which is surprising to users.  Prefer decorator"
             + " methods to this surprising behavior.",
-    severity = SeverityLevel.ERROR,
-    generateExamplesFromTestCases = false)
+    severity = SeverityLevel.ERROR)
 public class FunctionalInterfaceMethodChanged extends BugChecker implements MethodTreeMatcher {
 
   private static final Matcher<Tree> IS_FUNCTIONAL_INTERFACE =

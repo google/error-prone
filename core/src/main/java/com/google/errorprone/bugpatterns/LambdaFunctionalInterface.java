@@ -50,7 +50,6 @@ import javax.lang.model.element.Modifier;
     name = "LambdaFunctionalInterface",
     summary =
         "Use Java's utility functional interfaces instead of Function<A, B> for primitive types.",
-    generateExamplesFromTestCases = false,
     severity = SUGGESTION)
 public class LambdaFunctionalInterface extends BugChecker implements MethodTreeMatcher {
   private static final String JAVA_UTIL_FUNCTION_FUNCTION = "java.util.function.Function";

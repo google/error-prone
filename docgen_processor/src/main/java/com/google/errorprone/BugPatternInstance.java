@@ -39,7 +39,6 @@ public final class BugPatternInstance {
   public SeverityLevel severity;
   public String[] suppressionAnnotations;
   public boolean documentSuppression = true;
-  public boolean generateExamplesFromTestCases = true;
 
   public static BugPatternInstance fromElement(Element element) {
     BugPatternInstance instance = new BugPatternInstance();
@@ -65,10 +64,6 @@ public final class BugPatternInstance {
       instance.suppressionAnnotations =
           resultList.stream().map(AnnotationValue::toString).toArray(String[]::new);
     }
-
-    instance.generateExamplesFromTestCases =
-        !keyValues.containsKey("generateExamplesFromTestCases")
-            || (boolean) keyValues.get("generateExamplesFromTestCases");
 
     return instance;
   }

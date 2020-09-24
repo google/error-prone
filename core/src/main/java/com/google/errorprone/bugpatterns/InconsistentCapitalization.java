@@ -47,8 +47,7 @@ import javax.lang.model.element.ElementKind;
     summary =
         "It is confusing to have a field and a parameter under the same scope that differ only in "
             + "capitalization.",
-    severity = WARNING,
-    generateExamplesFromTestCases = false)
+    severity = WARNING)
 public class InconsistentCapitalization extends BugChecker implements ClassTreeMatcher {
 
   @Override

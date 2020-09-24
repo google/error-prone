@@ -64,7 +64,6 @@ import java.util.Optional;
     summary =
         "The ordering of parameters in overloaded methods should be as consistent as possible (when"
             + " viewed from left to right)",
-    generateExamplesFromTestCases = false,
     severity = SeverityLevel.WARNING)
 public final class InconsistentOverloads extends BugChecker implements ClassTreeMatcher {
 

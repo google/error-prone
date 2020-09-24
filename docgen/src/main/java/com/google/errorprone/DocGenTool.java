@@ -58,21 +58,12 @@ public class DocGenTool {
     @Parameter(names = "-docs_repository", description = "Path to docs repository", required = true)
     private String docsRepository;
 
-    @Parameter(names = "-examplesDir", description = "Path to examples directory", required = true)
-    private String examplesDir;
-
     @Parameter(
         names = "-target",
         description = "Whether to target the internal or external site",
         converter = TargetEnumConverter.class,
         required = true)
     private Target target;
-
-    @Parameter(
-        names = "-use_pygments_highlighting",
-        description = "Use pygments for highlighting",
-        arity = 1)
-    private boolean usePygments = true;
 
     @Parameter(
         names = "-base_url",
@@ -107,10 +98,6 @@ public class DocGenTool {
     }
     Path wikiDir = Paths.get(options.docsRepository);
     Files.createDirectories(wikiDir);
-    Path exampleDirBase = Paths.get(options.examplesDir);
-    if (!Files.exists(exampleDirBase)) {
-      usage("Cannot find example directory: " + options.examplesDir);
-    }
     Path bugpatternDir = wikiDir.resolve("bugpattern");
     if (!Files.exists(bugpatternDir)) {
       Files.createDirectories(bugpatternDir);
@@ -119,10 +106,8 @@ public class DocGenTool {
     BugPatternFileGenerator generator =
         new BugPatternFileGenerator(
             bugpatternDir,
-            exampleDirBase,
             explanationDir,
             options.target == Target.EXTERNAL,
-            options.usePygments,
             options.baseUrl,
                 input -> input.severity);
     try (Writer w =

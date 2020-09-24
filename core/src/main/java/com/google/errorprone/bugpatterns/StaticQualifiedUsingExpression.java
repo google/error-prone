@@ -44,7 +44,6 @@ import java.util.Objects;
     summary = "A static variable or method should be qualified with a class name, not expression",
     severity = ERROR,
     altNames = {"static", "static-access", "StaticAccessedFromInstance"},
-    generateExamplesFromTestCases = false,
     tags = StandardTags.FRAGILE_CODE)
 public class StaticQualifiedUsingExpression extends BugChecker implements MemberSelectTreeMatcher {
 

@@ -52,8 +52,7 @@ import java.util.Optional;
     summary =
         "ByteBuffer.array() shouldn't be called unless ByteBuffer.arrayOffset() is used or "
             + "if the ByteBuffer was initialized using ByteBuffer.wrap() or ByteBuffer.allocate().",
-    severity = WARNING,
-    generateExamplesFromTestCases = false)
+    severity = WARNING)
 public class ByteBufferBackingArray extends BugChecker implements MethodInvocationTreeMatcher {
 
   private static final Matcher<ExpressionTree> BYTE_BUFFER_ARRAY_MATCHER =

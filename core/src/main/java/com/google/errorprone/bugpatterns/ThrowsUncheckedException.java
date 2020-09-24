@@ -40,8 +40,7 @@ import java.util.List;
 @BugPattern(
     name = "ThrowsUncheckedException",
     summary = "Unchecked exceptions do not need to be declared in the method signature.",
-    severity = SUGGESTION,
-    generateExamplesFromTestCases = false)
+    severity = SUGGESTION)
 public class ThrowsUncheckedException extends BugChecker implements MethodTreeMatcher {
   @Override
   public Description matchMethod(MethodTree tree, VisitorState state) {

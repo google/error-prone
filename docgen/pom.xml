@@ -146,7 +146,6 @@
                   <arguments>
                     <argument>-bug_patterns=${basedir}/../core/target/generated-sources/annotations/bugPatterns.txt</argument>
                     <argument>-docs_repository=${basedir}/target/generated-wiki/</argument>
-                    <argument>-examplesDir=${basedir}/../core/src/test/java/</argument>
                     <argument>-explanations=${basedir}/../docs/bugpattern/</argument>
                     <argument>-target=external</argument>
                   </arguments>

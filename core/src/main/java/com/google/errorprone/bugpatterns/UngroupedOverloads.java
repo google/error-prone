@@ -52,7 +52,6 @@ import javax.lang.model.element.Name;
     summary =
         "Constructors and methods with the same name should appear sequentially"
             + " with no other code in between. Please re-order or re-name methods.",
-    generateExamplesFromTestCases = false,
     severity = SUGGESTION,
     linkType = CUSTOM,
     tags = STYLE,
