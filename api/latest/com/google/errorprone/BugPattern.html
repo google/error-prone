@@ -215,7 +215,9 @@ public @interface <span class="type-name-label">BugPattern</span></pre>
 <td class="col-first"><code>boolean</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#generateExamplesFromTestCases()">generateExamplesFromTestCases</a></span></code></th>
 <td class="col-last">
-<div class="block">Generate examples from test cases.</div>
+<div class="block"><span class="deprecated-label">Deprecated.</span>
+<div class="deprecation-comment">this is a no-op that will be removed in the future</div>
+</div>
 </td>
 </tr>
 <tr class="row-color">
@@ -425,16 +427,11 @@ public @interface <span class="type-name-label">BugPattern</span></pre>
 <li>
 <section class="detail" id="generateExamplesFromTestCases()">
 <h3>generateExamplesFromTestCases</h3>
-<div class="member-signature"><span class="return-type">boolean</span>&nbsp;<span class="member-name">generateExamplesFromTestCases</span></div>
-<div class="block">Generate examples from test cases.
-
- <p>By default, any positive or negative test inputs are included in the generated documentation
- as examples. That behaviour can be disabled if the test inputs aren't good documentation (for
- example, because they're testing implementation details of the check and aren't representative
- of real code).
-
- <p>If this feature is disabled, make sure to include some representative examples in the
- explanation.</div>
+<div class="member-signature"><span class="annotations"><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Deprecated.html" title="class or interface in java.lang" class="external-link">@Deprecated</a>
+</span><span class="return-type">boolean</span>&nbsp;<span class="member-name">generateExamplesFromTestCases</span></div>
+<div class="deprecation-block"><span class="deprecated-label">Deprecated.</span>
+<div class="deprecation-comment">this is a no-op that will be removed in the future</div>
+</div>
 <dl class="notes">
 <dt>Default:</dt>
 <dd>true</dd>
