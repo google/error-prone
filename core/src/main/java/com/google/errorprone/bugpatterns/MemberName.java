@@ -28,6 +28,7 @@ import static com.google.errorprone.util.ASTHelpers.annotationsAmong;
 import static com.google.errorprone.util.ASTHelpers.findSuperMethods;
 import static com.google.errorprone.util.ASTHelpers.getGeneratedBy;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
+import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
 import static com.google.errorprone.util.ASTHelpers.outermostClass;
 
 import com.google.common.base.CaseFormat;
@@ -38,7 +39,6 @@ import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.VariableTreeMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.suppliers.Supplier;
-import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.tools.javac.code.Symbol;
@@ -47,6 +47,7 @@ import com.sun.tools.javac.util.Name;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 import javax.lang.model.element.ElementKind;
+import javax.lang.model.element.Modifier;
 
 /** Flags a few ways in which member names may violate the style guide. */
 @BugPattern(
@@ -83,9 +84,16 @@ public final class MemberName extends BugChecker implements MethodTreeMatcher, V
     if (!annotationsAmong(symbol, EXEMPTED_METHOD_ANNOTATIONS.get(state), state).isEmpty()) {
       return NO_MATCH;
     }
-    if (tree.getModifiers().getAnnotations().stream()
-        .map(ASTHelpers::getSymbol)
-        .anyMatch(s -> s != null && s.getSimpleName().toString().contains("Test"))) {
+    if (hasTestAnnotation(symbol)
+        || findSuperMethods(symbol, state.getTypes()).stream()
+            .anyMatch(s -> hasTestAnnotation(s))) {
+      return NO_MATCH;
+    }
+    // It is a surprisingly common error to replace @Test with @Ignore to ignore a test.
+    if (hasAnnotation(symbol, "org.junit.Ignore", state)) {
+      return NO_MATCH;
+    }
+    if (tree.getModifiers().getFlags().contains(Modifier.NATIVE)) {
       return NO_MATCH;
     }
     // JUnitParams reflectively accesses methods starting with "parametersFor" to provide parameters
@@ -108,6 +116,11 @@ public final class MemberName extends BugChecker implements MethodTreeMatcher, V
     return suggested.equals(name) || !symbol.isPrivate()
         ? describeMatch(tree)
         : describeMatch(tree, renameMethodWithInvocations(tree, suggested, state));
+  }
+
+  private static boolean hasTestAnnotation(MethodSymbol symbol) {
+    return symbol.getRawAttributes().stream()
+        .anyMatch(c -> c.type.tsym.getSimpleName().toString().contains("Test"));
   }
 
   @Override

@@ -151,6 +151,49 @@ public class MemberNameTest {
   }
 
   @Test
+  public void ignoreTestMissingTestAnnotation_exempted() {
+    helper
+        .addSourceLines(
+            "Test.java", //
+            "import org.junit.Ignore;",
+            "class Test {",
+            "  @Ignore",
+            "  public void possibly_a_test_name() {}",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void superMethodAnnotatedWithAnnotationContainingTest_exempted() {
+    helper
+        .addSourceLines(
+            "Test.java", //
+            "class Test {",
+            "  @IAmATest",
+            "  public void possibly_a_test_name() {}",
+            "  private @interface IAmATest {}",
+            "}")
+        .addSourceLines(
+            "Test2.java",
+            "class Test2 extends Test {",
+            "  @Override",
+            "  public void possibly_a_test_name() {}",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void nativeMethod_ignored() {
+    helper
+        .addSourceLines(
+            "Test.java", //
+            "class Test {",
+            "  public native void possibly_a_test_name();",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void methodAnnotatedWithExemptedMethod_noMatch() {
     helper
         .addSourceLines(
@@ -167,7 +210,7 @@ public class MemberNameTest {
   }
 
   @Test
-  public void methodWithUnderscores_overridenFromGeneratedSupertype_noFinding() {
+  public void methodWithUnderscores_overriddenFromGeneratedSupertype_noFinding() {
     helper
         .addSourceLines(
             "Base.java",
@@ -189,7 +232,7 @@ public class MemberNameTest {
   }
 
   @Test
-  public void methodWithUnderscores_notOverridenFromGeneratedSupertype_bug() {
+  public void methodWithUnderscores_notOverriddenFromGeneratedSupertype_bug() {
     helper
         .addSourceLines(
             "Base.java",
