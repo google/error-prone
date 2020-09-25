@@ -1263,6 +1263,21 @@ V extends com.sun.source.tree.Tree&gt;<br><a href="../Matcher.html" title="inter
 </td>
 </tr>
 <tr class="row-color">
+<td class="col-first"><code>static <a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.StatementTree&gt;</code></td>
+<th class="col-second" scope="row"><span class="type-name-label">Matchers.</span><code><span class="member-name-link"><a href="../Matchers.html#matchExpressionReturn(com.google.errorprone.matchers.Matcher)">matchExpressionReturn</a></span>&#8203;(<a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.ExpressionTree&gt;&nbsp;expressionTreeMatcher)</code></th>
+<td class="col-last">
+<div class="block">Matches the <code>Tree</code> if it returns an expression matching <code>expressionTreeMatcher</code>.</div>
+</td>
+</tr>
+<tr class="alt-color">
+<td class="col-first"><code>static <a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.BlockTree&gt;</code></td>
+<th class="col-second" scope="row"><span class="type-name-label">Matchers.</span><code><span class="member-name-link"><a href="../Matchers.html#matchSingleStatementBlock(com.google.errorprone.matchers.Matcher)">matchSingleStatementBlock</a></span>&#8203;(<a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.StatementTree&gt;&nbsp;statementMatcher)</code></th>
+<td class="col-last">
+<div class="block">Matches a <code>BlockTree</code> if it single statement block with statement matching <code>
+ statementMatcher</code>.</div>
+</td>
+</tr>
+<tr class="row-color">
 <td class="col-first"><code>static <a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.MethodTree&gt;</code></td>
 <th class="col-second" scope="row"><span class="type-name-label">Matchers.</span><code><span class="member-name-link"><a href="../Matchers.html#methodHasArity(int)">methodHasArity</a></span>&#8203;(int&nbsp;arity)</code></th>
 <td class="col-last">
@@ -1466,61 +1481,69 @@ int&nbsp;index2)</code></th>
 </td>
 </tr>
 <tr class="alt-color">
+<td class="col-first"><code>static <a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.MethodTree&gt;</code></td>
+<th class="col-second" scope="row"><span class="type-name-label">Matchers.</span><code><span class="member-name-link"><a href="../Matchers.html#singleStatementReturnMatcher(com.google.errorprone.matchers.Matcher)">singleStatementReturnMatcher</a></span>&#8203;(<a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.ExpressionTree&gt;&nbsp;expressionTreeMatcher)</code></th>
+<td class="col-last">
+<div class="block">Returns a matcher for <code>MethodTree</code> whose implementation contains a single return
+ statement with expression matching the passed <code>expressionTreeMatcher</code>.</div>
+</td>
+</tr>
+<tr class="row-color">
 <td class="col-first"><code>static &lt;T extends com.sun.source.tree.ExpressionTree&gt;<br><a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;T&gt;</code></td>
 <th class="col-second" scope="row"><span class="type-name-label">Matchers.</span><code><span class="member-name-link"><a href="../Matchers.html#staticEqualsInvocation()">staticEqualsInvocation</a></span>()</code></th>
 <td class="col-last">
 <div class="block">Matches an invocation of a recognized static object equality method such as <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Objects.html#equals(java.lang.Object,java.lang.Object)" title="class or interface in java.util" class="external-link"><code>Objects.equals(java.lang.Object, java.lang.Object)</code></a>.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>static <a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.ExpressionTree&gt;</code></td>
 <th class="col-second" scope="row"><span class="type-name-label">FieldMatchers.</span><code><span class="member-name-link"><a href="../FieldMatchers.html#staticField(java.lang.String,java.lang.String)">staticField</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;className,
 <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;fieldName)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>static <a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.ExpressionTree&gt;</code></td>
 <th class="col-second" scope="row"><span class="type-name-label">Matchers.</span><code><span class="member-name-link"><a href="../Matchers.html#staticFieldAccess()">staticFieldAccess</a></span>()</code></th>
 <td class="col-last">
 <div class="block">Matches an AST node which is an expression yielding the indicated static field access.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>static <a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.ExpressionTree&gt;</code></td>
 <th class="col-second" scope="row"><span class="type-name-label">Matchers.</span><code><span class="member-name-link"><a href="../Matchers.html#stringLiteral(java.lang.String)">stringLiteral</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;value)</code></th>
 <td class="col-last">
 <div class="block">Matches a Literal AST node if it is a string literal with the given value.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>static <a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.ExpressionTree&gt;</code></td>
 <th class="col-second" scope="row"><span class="type-name-label">Matchers.</span><code><span class="member-name-link"><a href="../Matchers.html#stringLiteral(java.util.regex.Pattern)">stringLiteral</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html" title="class or interface in java.util.regex" class="external-link">Pattern</a>&nbsp;pattern)</code></th>
 <td class="col-last">
 <div class="block">Matches a Literal AST node if it is a string literal which matches the given <a href="https://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html" title="class or interface in java.util.regex" class="external-link"><code>Pattern</code></a>.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>static &lt;T extends com.sun.source.tree.Tree&gt;<br><a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;T&gt;</code></td>
 <th class="col-second" scope="row"><span class="type-name-label">Matchers.</span><code><span class="member-name-link"><a href="../Matchers.html#symbolHasAnnotation(java.lang.Class)">symbolHasAnnotation</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;? extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/Annotation.html" title="class or interface in java.lang.annotation" class="external-link">Annotation</a>&gt;&nbsp;inputClass)</code></th>
 <td class="col-last">
 <div class="block">Determines whether an expression refers to a symbol that has an annotation of the given type.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>static &lt;T extends com.sun.source.tree.Tree&gt;<br><a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;T&gt;</code></td>
 <th class="col-second" scope="row"><span class="type-name-label">Matchers.</span><code><span class="member-name-link"><a href="../Matchers.html#symbolHasAnnotation(java.lang.String)">symbolHasAnnotation</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;annotationClass)</code></th>
 <td class="col-last">
 <div class="block">Determines whether an expression refers to a symbol that has an annotation of the given type.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>static &lt;T extends com.sun.source.tree.Tree&gt;<br><a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;T&gt;</code></td>
 <th class="col-second" scope="row"><span class="type-name-label">Matchers.</span><code><span class="member-name-link"><a href="../Matchers.html#symbolMatcher(java.util.function.BiPredicate)">symbolMatcher</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/BiPredicate.html" title="class or interface in java.util.function" class="external-link">BiPredicate</a>&lt;com.sun.tools.javac.code.Symbol,&#8203;<a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&gt;&nbsp;pred)</code></th>
 <td class="col-last">
 <div class="block">Match a Tree based solely on the Symbol produced by <a href="../../util/ASTHelpers.html#getSymbol(com.sun.source.tree.Tree)"><code>ASTHelpers.getSymbol(Tree)</code></a>.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>static <a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.StatementTree&gt;</code></td>
 <th class="col-second" scope="row"><span class="type-name-label">Matchers.</span><code><span class="member-name-link"><a href="../Matchers.html#throwStatement(com.google.errorprone.matchers.Matcher)">throwStatement</a></span>&#8203;(<a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;? super com.sun.source.tree.ExpressionTree&gt;&nbsp;thrownMatcher)</code></th>
 <td class="col-last">
@@ -1528,14 +1551,14 @@ int&nbsp;index2)</code></th>
  thrownMatcher</code>.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>static <a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.MethodTree&gt;</code></td>
 <th class="col-second" scope="row"><span class="type-name-label">Matchers.</span><code><span class="member-name-link"><a href="../Matchers.html#toStringMethodDeclaration()">toStringMethodDeclaration</a></span>()</code></th>
 <td class="col-last">
 <div class="block">Matches <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#toString()" title="class or interface in java.lang" class="external-link"><code>Object.toString()</code></a> method declaration.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>static &lt;S extends T,&#8203;
 T extends com.sun.source.tree.Tree&gt;<br><a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;T&gt;</code></td>
 <th class="col-second" scope="row"><span class="type-name-label">Matchers.</span><code><span class="member-name-link"><a href="../Matchers.html#toType(java.lang.Class,com.google.errorprone.matchers.Matcher)">toType</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;S&gt;&nbsp;type,
@@ -1545,7 +1568,7 @@ T extends com.sun.source.tree.Tree&gt;<br><a href="../Matcher.html" title="inter
  on a tree of <code>type</code> and returns <code>false</code> for all other tree types.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>static <a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.TypeCastTree&gt;</code></td>
 <th class="col-second" scope="row"><span class="type-name-label">Matchers.</span><code><span class="member-name-link"><a href="../Matchers.html#typeCast(com.google.errorprone.matchers.Matcher,com.google.errorprone.matchers.Matcher)">typeCast</a></span>&#8203;(<a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.Tree&gt;&nbsp;typeMatcher,
 <a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.ExpressionTree&gt;&nbsp;expressionMatcher)</code></th>
@@ -1553,21 +1576,21 @@ T extends com.sun.source.tree.Tree&gt;<br><a href="../Matcher.html" title="inter
 <div class="block">Matches a type cast AST node if both of the given matchers match.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>static &lt;T extends com.sun.source.tree.Tree&gt;<br><a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;T&gt;</code></td>
 <th class="col-second" scope="row"><span class="type-name-label">Matchers.</span><code><span class="member-name-link"><a href="../Matchers.html#typePredicateMatcher(com.google.errorprone.predicates.TypePredicate)">typePredicateMatcher</a></span>&#8203;(<a href="../../predicates/TypePredicate.html" title="interface in com.google.errorprone.predicates">TypePredicate</a>&nbsp;pred)</code></th>
 <td class="col-last">
 <div class="block">Match a Tree based solely on the type produced by <a href="../../util/ASTHelpers.html#getType(com.sun.source.tree.Tree)"><code>ASTHelpers.getType(Tree)</code></a>.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>static <a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.VariableTree&gt;</code></td>
 <th class="col-second" scope="row"><span class="type-name-label">Matchers.</span><code><span class="member-name-link"><a href="../Matchers.html#variableInitializer(com.google.errorprone.matchers.Matcher)">variableInitializer</a></span>&#8203;(<a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.ExpressionTree&gt;&nbsp;expressionTreeMatcher)</code></th>
 <td class="col-last">
 <div class="block">Matches on the initializer of a VariableTree AST node.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>static <a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.VariableTree&gt;</code></td>
 <th class="col-second" scope="row"><span class="type-name-label">Matchers.</span><code><span class="member-name-link"><a href="../Matchers.html#variableType(com.google.errorprone.matchers.Matcher)">variableType</a></span>&#8203;(<a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.Tree&gt;&nbsp;treeMatcher)</code></th>
 <td class="col-last">
@@ -1782,6 +1805,21 @@ V extends com.sun.source.tree.Tree&gt;<br><a href="../Matcher.html" title="inter
 </td>
 </tr>
 <tr class="row-color">
+<td class="col-first"><code>static <a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.StatementTree&gt;</code></td>
+<th class="col-second" scope="row"><span class="type-name-label">Matchers.</span><code><span class="member-name-link"><a href="../Matchers.html#matchExpressionReturn(com.google.errorprone.matchers.Matcher)">matchExpressionReturn</a></span>&#8203;(<a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.ExpressionTree&gt;&nbsp;expressionTreeMatcher)</code></th>
+<td class="col-last">
+<div class="block">Matches the <code>Tree</code> if it returns an expression matching <code>expressionTreeMatcher</code>.</div>
+</td>
+</tr>
+<tr class="alt-color">
+<td class="col-first"><code>static <a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.BlockTree&gt;</code></td>
+<th class="col-second" scope="row"><span class="type-name-label">Matchers.</span><code><span class="member-name-link"><a href="../Matchers.html#matchSingleStatementBlock(com.google.errorprone.matchers.Matcher)">matchSingleStatementBlock</a></span>&#8203;(<a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.StatementTree&gt;&nbsp;statementMatcher)</code></th>
+<td class="col-last">
+<div class="block">Matches a <code>BlockTree</code> if it single statement block with statement matching <code>
+ statementMatcher</code>.</div>
+</td>
+</tr>
+<tr class="row-color">
 <td class="col-first"><code>static <a href="../MultiMatcher.html" title="interface in com.google.errorprone.matchers">MultiMatcher</a>&lt;com.sun.source.tree.MethodTree,&#8203;com.sun.source.tree.VariableTree&gt;</code></td>
 <th class="col-second" scope="row"><span class="type-name-label">Matchers.</span><code><span class="member-name-link"><a href="../Matchers.html#methodHasParameters(com.google.errorprone.matchers.ChildMultiMatcher.MatchType,com.google.errorprone.matchers.Matcher)">methodHasParameters</a></span>&#8203;(<a href="../ChildMultiMatcher.MatchType.html" title="enum in com.google.errorprone.matchers">ChildMultiMatcher.MatchType</a>&nbsp;matchType,
 <a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.VariableTree&gt;&nbsp;parameterMatcher)</code></th>
@@ -1868,6 +1906,14 @@ V extends com.sun.source.tree.Tree&gt;<br><a href="../Matcher.html" title="inter
 </td>
 </tr>
 <tr class="row-color">
+<td class="col-first"><code>static <a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.MethodTree&gt;</code></td>
+<th class="col-second" scope="row"><span class="type-name-label">Matchers.</span><code><span class="member-name-link"><a href="../Matchers.html#singleStatementReturnMatcher(com.google.errorprone.matchers.Matcher)">singleStatementReturnMatcher</a></span>&#8203;(<a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.ExpressionTree&gt;&nbsp;expressionTreeMatcher)</code></th>
+<td class="col-last">
+<div class="block">Returns a matcher for <code>MethodTree</code> whose implementation contains a single return
+ statement with expression matching the passed <code>expressionTreeMatcher</code>.</div>
+</td>
+</tr>
+<tr class="alt-color">
 <td class="col-first"><code>static <a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.StatementTree&gt;</code></td>
 <th class="col-second" scope="row"><span class="type-name-label">Matchers.</span><code><span class="member-name-link"><a href="../Matchers.html#throwStatement(com.google.errorprone.matchers.Matcher)">throwStatement</a></span>&#8203;(<a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;? super com.sun.source.tree.ExpressionTree&gt;&nbsp;thrownMatcher)</code></th>
 <td class="col-last">
@@ -1875,7 +1921,7 @@ V extends com.sun.source.tree.Tree&gt;<br><a href="../Matcher.html" title="inter
  thrownMatcher</code>.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>static &lt;S extends T,&#8203;
 T extends com.sun.source.tree.Tree&gt;<br><a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;T&gt;</code></td>
 <th class="col-second" scope="row"><span class="type-name-label">Matchers.</span><code><span class="member-name-link"><a href="../Matchers.html#toType(java.lang.Class,com.google.errorprone.matchers.Matcher)">toType</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;S&gt;&nbsp;type,
@@ -1885,7 +1931,7 @@ T extends com.sun.source.tree.Tree&gt;<br><a href="../Matcher.html" title="inter
  on a tree of <code>type</code> and returns <code>false</code> for all other tree types.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>static <a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.TypeCastTree&gt;</code></td>
 <th class="col-second" scope="row"><span class="type-name-label">Matchers.</span><code><span class="member-name-link"><a href="../Matchers.html#typeCast(com.google.errorprone.matchers.Matcher,com.google.errorprone.matchers.Matcher)">typeCast</a></span>&#8203;(<a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.Tree&gt;&nbsp;typeMatcher,
 <a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.ExpressionTree&gt;&nbsp;expressionMatcher)</code></th>
@@ -1893,14 +1939,14 @@ T extends com.sun.source.tree.Tree&gt;<br><a href="../Matcher.html" title="inter
 <div class="block">Matches a type cast AST node if both of the given matchers match.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>static <a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.VariableTree&gt;</code></td>
 <th class="col-second" scope="row"><span class="type-name-label">Matchers.</span><code><span class="member-name-link"><a href="../Matchers.html#variableInitializer(com.google.errorprone.matchers.Matcher)">variableInitializer</a></span>&#8203;(<a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.ExpressionTree&gt;&nbsp;expressionTreeMatcher)</code></th>
 <td class="col-last">
 <div class="block">Matches on the initializer of a VariableTree AST node.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>static <a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.VariableTree&gt;</code></td>
 <th class="col-second" scope="row"><span class="type-name-label">Matchers.</span><code><span class="member-name-link"><a href="../Matchers.html#variableType(com.google.errorprone.matchers.Matcher)">variableType</a></span>&#8203;(<a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.Tree&gt;&nbsp;treeMatcher)</code></th>
 <td class="col-last">

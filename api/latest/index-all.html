@@ -7154,6 +7154,10 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/TypesWithUndefinedEquality.html#matchesType(com.sun.tools.javac.code.Type,com.google.errorprone.VisitorState)">matchesType(Type, VisitorState)</a></span> - Method in enum com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/TypesWithUndefinedEquality.html" title="enum in com.google.errorprone.bugpatterns">TypesWithUndefinedEquality</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/google/errorprone/matchers/Matchers.html#matchExpressionReturn(com.google.errorprone.matchers.Matcher)">matchExpressionReturn(Matcher&lt;ExpressionTree&gt;)</a></span> - Static method in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/Matchers.html" title="class in com.google.errorprone.matchers">Matchers</a></dt>
+<dd>
+<div class="block">Matches the <code>Tree</code> if it returns an expression matching <code>expressionTreeMatcher</code>.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/BugChecker.ExpressionStatementTreeMatcher.html#matchExpressionStatement(com.sun.source.tree.ExpressionStatementTree,com.google.errorprone.VisitorState)">matchExpressionStatement(ExpressionStatementTree, VisitorState)</a></span> - Method in interface com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/BugChecker.ExpressionStatementTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.ExpressionStatementTreeMatcher</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/ModifiedButNotUsed.html#matchExpressionStatement(com.sun.source.tree.ExpressionStatementTree,com.google.errorprone.VisitorState)">matchExpressionStatement(ExpressionStatementTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/ModifiedButNotUsed.html" title="class in com.google.errorprone.bugpatterns">ModifiedButNotUsed</a></dt>
@@ -7939,6 +7943,11 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/UnnecessaryBoxedAssignment.html#matchReturn(com.sun.source.tree.ReturnTree,com.google.errorprone.VisitorState)">matchReturn(ReturnTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/UnnecessaryBoxedAssignment.html" title="class in com.google.errorprone.bugpatterns">UnnecessaryBoxedAssignment</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/google/errorprone/matchers/Matchers.html#matchSingleStatementBlock(com.google.errorprone.matchers.Matcher)">matchSingleStatementBlock(Matcher&lt;StatementTree&gt;)</a></span> - Static method in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/Matchers.html" title="class in com.google.errorprone.matchers">Matchers</a></dt>
+<dd>
+<div class="block">Matches a <code>BlockTree</code> if it single statement block with statement matching <code>
+ statementMatcher</code>.</div>
+</dd>
 <dt><a href="com/google/errorprone/matchers/method/MatchState.html" title="interface in com.google.errorprone.matchers.method"><span class="type-name-link">MatchState</span></a> - Interface in <a href="com/google/errorprone/matchers/method/package-summary.html">com.google.errorprone.matchers.method</a></dt>
 <dd>
 <div class="block">The state that is propagated across a match operation.</div>
@@ -10464,6 +10473,11 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">This check points out a coding pattern that, while functional, has an easier-to-read or
  faster alternative.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/google/errorprone/matchers/Matchers.html#singleStatementReturnMatcher(com.google.errorprone.matchers.Matcher)">singleStatementReturnMatcher(Matcher&lt;ExpressionTree&gt;)</a></span> - Static method in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/Matchers.html" title="class in com.google.errorprone.matchers">Matchers</a></dt>
+<dd>
+<div class="block">Returns a matcher for <code>MethodTree</code> whose implementation contains a single return
+ statement with expression matching the passed <code>expressionTreeMatcher</code>.</div>
 </dd>
 <dt><a href="com/google/errorprone/bugpatterns/SizeGreaterThanOrEqualsZero.html" title="class in com.google.errorprone.bugpatterns"><span class="type-name-link">SizeGreaterThanOrEqualsZero</span></a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
 <dd>
