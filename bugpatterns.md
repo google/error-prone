@@ -700,6 +700,9 @@ This @param tag doesn&#39;t refer to a parameter of the method.
 __[InvalidThrows](bugpattern/InvalidThrows)__<br>
 The documented method doesn&#39;t actually throw this checked exception.
 
+__[InvalidThrowsLink](bugpattern/InvalidThrowsLink)__<br>
+Javadoc links to exceptions in @throws without a @link tag (@throws Exception, not @throws {@link Exception}).
+
 __[IterableAndIterator](bugpattern/IterableAndIterator)__<br>
 Class should not implement both `Iterable` and `Iterator`
 
