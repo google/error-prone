@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.equalsMethodDeclaration;
@@ -28,16 +27,15 @@ import com.google.errorprone.BugPattern.StandardTags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
 import com.google.errorprone.matchers.Description;
+import com.google.errorprone.matchers.Matcher;
+import com.google.errorprone.matchers.Matchers;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ClassTree;
-import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodTree;
-import com.sun.source.tree.ReturnTree;
 import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.TypeSymbol;
 import com.sun.tools.javac.code.Type;
-import java.util.List;
 import javax.lang.model.element.ElementKind;
 
 /**
@@ -51,6 +49,9 @@ import javax.lang.model.element.ElementKind;
     severity = ERROR,
     tags = StandardTags.FRAGILE_CODE)
 public class EqualsHashCode extends BugChecker implements ClassTreeMatcher {
+
+  private static final Matcher<MethodTree> DIRECTLY_RETURNS_EQUALS_INVOCATION =
+      Matchers.singleStatementReturnMatcher(instanceEqualsInvocation());
 
   @Override
   public Description matchClass(ClassTree classTree, VisitorState state) {
@@ -76,7 +77,7 @@ public class EqualsHashCode extends BugChecker implements ClassTreeMatcher {
     if (equals == null || isSuppressed(equals)) {
       return NO_MATCH;
     }
-    if (callsSuperEquals(equals, state)) {
+    if (DIRECTLY_RETURNS_EQUALS_INVOCATION.matches(equals, state)) {
       return NO_MATCH;
     }
     MethodSymbol hashCodeSym =
@@ -91,24 +92,5 @@ public class EqualsHashCode extends BugChecker implements ClassTreeMatcher {
       return NO_MATCH;
     }
     return describeMatch(equals);
-  }
-
-  private static boolean callsSuperEquals(MethodTree method, VisitorState state) {
-    if (method.getBody() == null) {
-      return false;
-    }
-    List<? extends Tree> statements = method.getBody().getStatements();
-    if (statements.size() != 1) {
-      return false;
-    }
-    Tree statement = getOnlyElement(statements);
-    if (!(statement instanceof ReturnTree)) {
-      return false;
-    }
-    ExpressionTree expression = ((ReturnTree) statement).getExpression();
-    if (expression == null) {
-      return false;
-    }
-    return instanceEqualsInvocation().matches(expression, state);
   }
 }

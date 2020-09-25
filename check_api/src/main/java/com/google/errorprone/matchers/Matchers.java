@@ -18,6 +18,7 @@ package com.google.errorprone.matchers;
 
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.common.collect.Iterables.getLast;
+import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.common.collect.Streams.stream;
 import static com.google.errorprone.suppliers.Suppliers.BOOLEAN_TYPE;
 import static com.google.errorprone.suppliers.Suppliers.INT_TYPE;
@@ -62,6 +63,7 @@ import com.sun.source.tree.LiteralTree;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
+import com.sun.source.tree.ReturnTree;
 import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.SynchronizedTree;
 import com.sun.source.tree.Tree;
@@ -1474,4 +1476,52 @@ public class Matchers {
         Symbol symbol = getSymbol(t);
         return symbol instanceof ClassSymbol && symbol.isInterface();
       };
+
+  /**
+   * Matches the {@code Tree} if it returns an expression matching {@code expressionTreeMatcher}.
+   */
+  public static final Matcher<StatementTree> matchExpressionReturn(
+      Matcher<ExpressionTree> expressionTreeMatcher) {
+    return (statement, state) -> {
+      if (!(statement instanceof ReturnTree)) {
+        return false;
+      }
+      ExpressionTree expression = ((ReturnTree) statement).getExpression();
+      if (expression == null) {
+        return false;
+      }
+      return expressionTreeMatcher.matches(expression, state);
+    };
+  }
+
+  /**
+   * Matches a {@link BlockTree} if it single statement block with statement matching {@code
+   * statementMatcher}.
+   */
+  public static final Matcher<BlockTree> matchSingleStatementBlock(
+      Matcher<StatementTree> statementMatcher) {
+    return (blockTree, state) -> {
+      if (blockTree == null) {
+        return false;
+      }
+      List<? extends StatementTree> statements = blockTree.getStatements();
+      if (statements.size() != 1) {
+        return false;
+      }
+      return statementMatcher.matches(getOnlyElement(statements), state);
+    };
+  }
+
+  /**
+   * Returns a matcher for {@link MethodTree} whose implementation contains a single return
+   * statement with expression matching the passed {@code expressionTreeMatcher}.
+   */
+  public static Matcher<MethodTree> singleStatementReturnMatcher(
+      Matcher<ExpressionTree> expressionTreeMatcher) {
+    Matcher<BlockTree> matcher =
+        matchSingleStatementBlock(matchExpressionReturn(expressionTreeMatcher));
+    return (methodTree, state) -> {
+      return matcher.matches(methodTree.getBody(), state);
+    };
+  }
 }

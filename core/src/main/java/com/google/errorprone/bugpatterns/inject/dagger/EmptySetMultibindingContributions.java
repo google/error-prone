@@ -21,13 +21,11 @@ import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.hasAnnotation;
 import static com.google.errorprone.matchers.Matchers.hasArgumentWithValue;
-import static com.sun.source.tree.Tree.Kind.RETURN;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ImmutableSortedSet;
-import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -40,11 +38,8 @@ import com.google.errorprone.matchers.Matchers;
 import com.google.errorprone.matchers.method.MethodMatchers;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.AnnotationTree;
-import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodTree;
-import com.sun.source.tree.ReturnTree;
-import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
 import com.sun.tools.javac.code.Flags;
@@ -126,6 +121,9 @@ public final class EmptySetMultibindingContributions extends BugChecker
           SET_FACTORY_METHODS,
           ENUM_SET_NONE_OF);
 
+  private static final Matcher<MethodTree> DIRECTLY_RETURNS_EMPTY_SET =
+      Matchers.singleStatementReturnMatcher(EMPTY_SET);
+
   private static final Matcher<MethodTree> RETURNS_EMPTY_SET =
       new Matcher<MethodTree>() {
         @Override
@@ -134,19 +132,7 @@ public final class EmptySetMultibindingContributions extends BugChecker
           if (!parameters.isEmpty()) {
             return false;
           }
-          BlockTree body = method.getBody();
-          if (body == null) {
-            return false;
-          }
-          List<? extends StatementTree> statements = body.getStatements();
-          if (statements.size() != 1) {
-            return false;
-          }
-          StatementTree onlyStatement = Iterables.getOnlyElement(statements);
-          if (!onlyStatement.getKind().equals(RETURN)) {
-            return false;
-          }
-          return EMPTY_SET.matches(((ReturnTree) onlyStatement).getExpression(), state);
+          return DIRECTLY_RETURNS_EMPTY_SET.matches(method, state);
         }
       };
 

@@ -74,6 +74,7 @@ import com.google.errorprone.bugpatterns.BugChecker.VariableTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
+import com.google.errorprone.matchers.Matchers;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.BinaryTree;
@@ -277,18 +278,12 @@ public class NoAllocationChecker extends BugChecker
           typeCast(not(isPrimitiveType()), primitiveExpression));
 
   /** Matches boxing by return. */
-  private static final Matcher<ReturnTree> boxingReturn =
-      new Matcher<ReturnTree>() {
-        @Override
-        public boolean matches(ReturnTree tree, VisitorState state) {
-          return allOf(
-                  not(withinThrowOrAnnotation),
-                  enclosingMethod(
-                      allOf(noAllocationMethodMatcher, methodReturnsNonPrimitiveType())),
-                  isPrimitiveType())
-              .matches(tree.getExpression(), state);
-        }
-      };
+  private static final Matcher<StatementTree> boxingReturn =
+      Matchers.matchExpressionReturn(
+          allOf(
+              not(withinThrowOrAnnotation),
+              enclosingMethod(allOf(noAllocationMethodMatcher, methodReturnsNonPrimitiveType())),
+              isPrimitiveType()));
 
   /** Matches boxing by method invocation, including varargs. */
   private static final Matcher<MethodInvocationTree> boxingInvocation =
