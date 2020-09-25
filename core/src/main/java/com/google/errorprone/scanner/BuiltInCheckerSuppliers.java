@@ -416,6 +416,7 @@ import com.google.errorprone.bugpatterns.javadoc.InvalidInlineTag;
 import com.google.errorprone.bugpatterns.javadoc.InvalidLink;
 import com.google.errorprone.bugpatterns.javadoc.InvalidParam;
 import com.google.errorprone.bugpatterns.javadoc.InvalidThrows;
+import com.google.errorprone.bugpatterns.javadoc.InvalidThrowsLink;
 import com.google.errorprone.bugpatterns.javadoc.MissingSummary;
 import com.google.errorprone.bugpatterns.javadoc.ReturnFromVoid;
 import com.google.errorprone.bugpatterns.javadoc.UnescapedEntity;
@@ -748,6 +749,7 @@ public class BuiltInCheckerSuppliers {
           InvalidParam.class,
           InvalidTargetingOnScopingAnnotation.class,
           InvalidThrows.class,
+          InvalidThrowsLink.class,
           IterableAndIterator.class,
           JUnit3FloatingPointComparisonWithoutDelta.class,
           JUnit4ClassUsedInJUnit3.class,
