@@ -1391,6 +1391,14 @@ public class Matchers {
     return (Matcher<T>) INSTANCE_EQUALS;
   }
 
+  private static final Matcher<ExpressionTree> INSTANCE_HASHCODE =
+      allOf(instanceMethod().anyClass().named("hashCode").withParameters(), isSameType(INT_TYPE));
+
+  /** Matches calls to the method {@link Object#hashCode()} or any override of that method. */
+  public static Matcher<ExpressionTree> instanceHashCodeInvocation() {
+    return INSTANCE_HASHCODE;
+  }
+
   private static final Matcher<ExpressionTree> ASSERT_EQUALS =
       staticMethod()
           .onClassAny("org.junit.Assert", "junit.framework.Assert", "junit.framework.TestCase")
