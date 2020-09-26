@@ -31,9 +31,6 @@ import com.sun.source.tree.LiteralTree;
 import java.util.Map;
 
 /**
- * TODO(user): Restrict this check to Android code once the capability is available in Error
- * Prone. See b/27967984.
- *
  * @author avenet@google.com (Arnaud J. Venet)
  */
 @BugPattern(
@@ -61,6 +58,9 @@ public class HardCodedSdCardPath extends BugChecker implements LiteralTreeMatche
 
   @Override
   public Description matchLiteral(LiteralTree tree, VisitorState state) {
+    if (!state.isAndroidCompatible()) {
+      return Description.NO_MATCH;
+    }
     if (tree.getKind() != STRING_LITERAL) {
       return Description.NO_MATCH;
     }

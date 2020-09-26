@@ -16,6 +16,7 @@
 
 package com.google.errorprone.bugpatterns.android;
 
+import com.google.common.collect.ImmutableList;
 import com.google.errorprone.CompilationTestHelper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -28,12 +29,30 @@ public class HardCodedSdCardPathTest {
       CompilationTestHelper.newInstance(HardCodedSdCardPath.class, getClass());
 
   @Test
-  public void testPositiveCases() {
-    compilationHelper.addSourceFile("HardCodedSdCardPathPositiveCases.java").doTest();
+  public void matchingCode_onAndroid() {
+    compilationHelper
+        .setArgs(ImmutableList.of("-XDandroidCompatible=true"))
+        .addSourceFile("HardCodedSdCardPathPositiveCases.java")
+        .doTest();
+  }
+
+  @Test
+  public void matchingCode_notOnAndroid() {
+    compilationHelper
+        .setArgs(ImmutableList.of("-XDandroidCompatible=false"))
+        .addSourceLines(
+            "HardCodedSdCardPathMatchingCode.java",
+            "public class HardCodedSdCardPathMatchingCode {",
+            "  static final String PATH1 = \"/sdcard\";",
+            "}")
+        .doTest();
   }
 
   @Test
   public void testNegativeCase() {
-    compilationHelper.addSourceFile("HardCodedSdCardPathNegativeCases.java").doTest();
+    compilationHelper
+        .setArgs(ImmutableList.of("-XDandroidCompatible=true"))
+        .addSourceFile("HardCodedSdCardPathNegativeCases.java")
+        .doTest();
   }
 }
