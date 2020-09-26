@@ -1297,6 +1297,9 @@ A final field initialized at compile-time with an instance of an immutable type 
 __[ForEachIterable](bugpattern/ForEachIterable)__<br>
 This loop can be replaced with an enhanced for loop.
 
+__[HashCodeToString](bugpattern/HashCodeToString)__<br>
+Classes that override hashCode should also consider overriding toString.
+
 __[ImmutableRefactoring](bugpattern/ImmutableRefactoring)__<br>
 Refactors uses of the JSR 305 @Immutable to Error Prone&#39;s annotation
 
