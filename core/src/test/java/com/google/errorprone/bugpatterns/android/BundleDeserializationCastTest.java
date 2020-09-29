@@ -17,6 +17,7 @@
 package com.google.errorprone.bugpatterns.android;
 
 import com.google.common.base.Predicates;
+import com.google.common.collect.ImmutableList;
 import com.google.errorprone.CompilationTestHelper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -29,7 +30,8 @@ public class BundleDeserializationCastTest {
       CompilationTestHelper.newInstance(BundleDeserializationCast.class, getClass())
           .addSourceFile("testdata/stubs/android/os/Bundle.java")
           .addSourceFile("testdata/stubs/android/os/Parcel.java")
-          .addSourceFile("testdata/stubs/android/os/Parcelable.java");
+          .addSourceFile("testdata/stubs/android/os/Parcelable.java")
+          .setArgs(ImmutableList.of("-XDandroidCompatible=true"));
 
   @Test
   public void testPositiveCaseGetCustomList() {

@@ -51,6 +51,9 @@ public class StaticOrDefaultInterfaceMethod extends BugChecker implements Method
 
   @Override
   public Description matchMethod(MethodTree tree, VisitorState state) {
+    if (!state.isAndroidCompatible()) {
+      return Description.NO_MATCH;
+    }
     if (IS_STATIC_OR_DEFAULT_METHOD_ON_INTERFACE.matches(tree, state)) {
       return describeMatch(tree);
     }

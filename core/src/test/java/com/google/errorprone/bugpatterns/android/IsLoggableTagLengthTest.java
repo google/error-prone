@@ -16,6 +16,7 @@
 
 package com.google.errorprone.bugpatterns.android;
 
+import com.google.common.collect.ImmutableList;
 import com.google.errorprone.CompilationTestHelper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -27,7 +28,8 @@ public final class IsLoggableTagLengthTest {
 
   private final CompilationTestHelper compilationHelper =
       CompilationTestHelper.newInstance(IsLoggableTagLength.class, getClass())
-          .addSourceFile("testdata/stubs/android/util/Log.java");
+          .addSourceFile("testdata/stubs/android/util/Log.java")
+          .setArgs(ImmutableList.of("-XDandroidCompatible=true"));
 
   @Test
   public void testNegativeCaseLiteral() {

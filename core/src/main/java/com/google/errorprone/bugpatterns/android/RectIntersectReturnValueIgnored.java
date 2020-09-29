@@ -41,6 +41,9 @@ public final class RectIntersectReturnValueIgnored extends AbstractReturnValueIg
   @Override
   protected Description describeReturnValueIgnored(
       MethodInvocationTree methodInvocationTree, VisitorState state) {
+    if (!state.isAndroidCompatible()) {
+      return Description.NO_MATCH;
+    }
     return describeMatch(methodInvocationTree);
   }
 }

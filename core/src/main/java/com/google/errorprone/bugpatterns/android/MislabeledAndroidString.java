@@ -62,6 +62,9 @@ public class MislabeledAndroidString extends BugChecker implements MemberSelectT
 
   @Override
   public Description matchMemberSelect(MemberSelectTree tree, VisitorState state) {
+    if (!state.isAndroidCompatible()) {
+      return Description.NO_MATCH;
+    }
     Symbol symbol = ASTHelpers.getSymbol(tree);
     // Match symbol's owner to android.R.string separately because couldn't get fully qualified
     // "android.R.string.yes" out of symbol, just "yes"

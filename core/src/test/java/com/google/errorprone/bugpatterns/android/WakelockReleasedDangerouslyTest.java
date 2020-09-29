@@ -16,6 +16,7 @@
 
 package com.google.errorprone.bugpatterns.android;
 
+import com.google.common.collect.ImmutableList;
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
 import org.junit.Test;
@@ -28,11 +29,13 @@ public class WakelockReleasedDangerouslyTest {
 
   private final BugCheckerRefactoringTestHelper refactoringHelper =
       BugCheckerRefactoringTestHelper.newInstance(new WakelockReleasedDangerously(), getClass())
+          .setArgs(ImmutableList.of("-XDandroidCompatible=true"))
           .addInput("testdata/stubs/android/os/PowerManager.java")
           .expectUnchanged();
   private final CompilationTestHelper compilationHelper =
       CompilationTestHelper.newInstance(WakelockReleasedDangerously.class, getClass())
-          .addSourceFile("testdata/stubs/android/os/PowerManager.java");
+          .addSourceFile("testdata/stubs/android/os/PowerManager.java")
+          .setArgs(ImmutableList.of("-XDandroidCompatible=true"));
 
   @Test
   public void dangerousWakelockRelease_refactoring() {

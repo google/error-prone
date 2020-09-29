@@ -71,6 +71,9 @@ public class WakelockReleasedDangerously extends BugChecker implements MethodInv
 
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
+    if (!state.isAndroidCompatible()) {
+      return Description.NO_MATCH;
+    }
     // Match on calls to any override of WakeLock.release().
     if (!RELEASE.matches(tree, state)) {
       return NO_MATCH;

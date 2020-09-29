@@ -18,6 +18,7 @@ package com.google.errorprone.bugpatterns.android;
 
 import static com.google.common.truth.Truth.assertThat;
 
+import com.google.common.collect.ImmutableList;
 import com.google.errorprone.CompilationTestHelper;
 import java.util.Map;
 import org.junit.Test;
@@ -105,6 +106,7 @@ public class MislabeledAndroidStringTest {
 
   private CompilationTestHelper createCompilationTestHelper() {
     return CompilationTestHelper.newInstance(MislabeledAndroidString.class, getClass())
-        .addSourceFile("testdata/stubs/android/R.java");
+        .addSourceFile("testdata/stubs/android/R.java")
+        .setArgs(ImmutableList.of("-XDandroidCompatible=true"));
   }
 }

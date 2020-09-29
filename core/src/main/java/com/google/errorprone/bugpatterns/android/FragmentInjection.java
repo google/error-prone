@@ -67,6 +67,9 @@ public class FragmentInjection extends BugChecker implements ClassTreeMatcher {
 
   @Override
   public Description matchClass(ClassTree tree, VisitorState state) {
+    if (!state.isAndroidCompatible()) {
+      return Description.NO_MATCH;
+    }
     // Only examine classes that extend PreferenceActivity.
     Type preferenceActivityType = state.getTypeFromString("android.preference.PreferenceActivity");
     if (!isSubtype(getType(tree), preferenceActivityType, state)) {

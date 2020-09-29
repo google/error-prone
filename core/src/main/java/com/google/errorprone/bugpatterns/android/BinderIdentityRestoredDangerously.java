@@ -50,6 +50,9 @@ public class BinderIdentityRestoredDangerously extends BugChecker
 
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
+    if (!state.isAndroidCompatible()) {
+      return Description.NO_MATCH;
+    }
     if (!RESTORE_IDENTITY_METHOD.matches(tree, state)) {
       return NO_MATCH;
     }

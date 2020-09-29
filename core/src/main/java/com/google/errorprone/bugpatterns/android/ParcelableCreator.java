@@ -66,6 +66,9 @@ public class ParcelableCreator extends BugChecker implements ClassTreeMatcher {
 
   @Override
   public Description matchClass(ClassTree tree, VisitorState state) {
+    if (!state.isAndroidCompatible()) {
+      return Description.NO_MATCH;
+    }
     if (!PARCELABLE_MATCHER.matches(tree, state)) {
       return Description.NO_MATCH;
     }

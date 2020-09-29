@@ -91,6 +91,9 @@ public class FragmentNotInstantiable extends BugChecker implements ClassTreeMatc
 
   @Override
   public Description matchClass(ClassTree classTree, VisitorState state) {
+    if (!state.isAndroidCompatible()) {
+      return Description.NO_MATCH;
+    }
     if (!fragmentMatcher.matches(classTree, state)) {
       return Description.NO_MATCH;
     }

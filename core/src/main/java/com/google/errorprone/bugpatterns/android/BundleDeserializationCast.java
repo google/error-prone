@@ -54,6 +54,9 @@ public class BundleDeserializationCast extends BugChecker implements TypeCastTre
 
   @Override
   public Description matchTypeCast(TypeCastTree tree, VisitorState state) {
+    if (!state.isAndroidCompatible()) {
+      return Description.NO_MATCH;
+    }
     if (!BUNDLE_DESERIALIZATION_CAST_EXPRESSION.matches(tree, state)) {
       return NO_MATCH;
     }

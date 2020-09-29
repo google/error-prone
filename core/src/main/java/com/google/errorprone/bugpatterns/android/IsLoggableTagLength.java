@@ -63,6 +63,9 @@ public class IsLoggableTagLength extends BugChecker implements MethodInvocationT
 
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
+    if (!state.isAndroidCompatible()) {
+      return Description.NO_MATCH;
+    }
     if (!IS_LOGGABLE_CALL.matches(tree, state)) {
       return NO_MATCH;
     }

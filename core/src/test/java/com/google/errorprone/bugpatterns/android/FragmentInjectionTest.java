@@ -16,6 +16,7 @@
 
 package com.google.errorprone.bugpatterns.android;
 
+import com.google.common.collect.ImmutableList;
 import com.google.errorprone.CompilationTestHelper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -27,7 +28,8 @@ public final class FragmentInjectionTest {
 
   private final CompilationTestHelper compilationHelper =
       CompilationTestHelper.newInstance(FragmentInjection.class, getClass())
-          .addSourceFile("testdata/stubs/android/preference/PreferenceActivity.java");
+          .addSourceFile("testdata/stubs/android/preference/PreferenceActivity.java")
+          .setArgs(ImmutableList.of("-XDandroidCompatible=true"));
 
   @Test
   public void isValidFragmentNotImplementedOnPreferenceActivity() {

@@ -18,6 +18,7 @@ package com.google.errorprone.bugpatterns.android;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.CompilationTestHelper;
@@ -77,6 +78,7 @@ public class FragmentNotInstantiableTest {
       Class<? extends FragmentNotInstantiable> bugCheckerClass) {
     return CompilationTestHelper.newInstance(bugCheckerClass, getClass())
         .addSourceFile("testdata/stubs/android/app/Fragment.java")
-        .addSourceFile("testdata/stubs/android/support/v4/app/Fragment.java");
+        .addSourceFile("testdata/stubs/android/support/v4/app/Fragment.java")
+        .setArgs(ImmutableList.of("-XDandroidCompatible=true"));
   }
 }
