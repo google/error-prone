@@ -151,4 +151,21 @@ public class IsInstanceIncompatibleTypeTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void rawTypes() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.util.Optional;",
+            "class Test {",
+            "  boolean f(Object o, Class c) {",
+            "    return c.isInstance(o);",
+            "  }",
+            "  <T> Optional<T> f(Optional<T> t, Class c) {",
+            "    return t.filter(c::isInstance);",
+            "  }",
+            "}")
+        .doTest();
+  }
 }

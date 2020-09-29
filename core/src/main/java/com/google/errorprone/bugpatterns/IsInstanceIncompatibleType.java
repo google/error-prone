@@ -16,6 +16,7 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.instanceMethod;
@@ -36,6 +37,7 @@ import com.sun.source.tree.MemberReferenceTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Type;
+import java.util.Collection;
 
 /**
  * @author cushon@google.com (Liam Miller-Cushon)
@@ -56,7 +58,10 @@ public final class IsInstanceIncompatibleType extends BugChecker
       return NO_MATCH;
     }
 
-    Type receiverType = getType(getReceiver(tree)).getTypeArguments().get(0);
+    Type receiverType = classTypeArgument(tree);
+    if (receiverType == null) {
+      return NO_MATCH;
+    }
     Type argumentType = getType(tree.getArguments().get(0));
 
     return isCastable(argumentType, receiverType, state)
@@ -71,12 +76,20 @@ public final class IsInstanceIncompatibleType extends BugChecker
     }
 
     Type type = state.getTypes().findDescriptorType(getType(tree));
-    Type receiverType = getType(getReceiver(tree)).getTypeArguments().get(0);
+    Type receiverType = classTypeArgument(tree);
+    if (receiverType == null) {
+      return NO_MATCH;
+    }
     Type argumentType = ASTHelpers.getUpperBound(type.getParameterTypes().get(0), state.getTypes());
 
     return isCastable(argumentType, receiverType, state)
         ? NO_MATCH
         : buildMessage(argumentType, receiverType, tree, state);
+  }
+
+  private static Type classTypeArgument(ExpressionTree tree) {
+    Collection<Type> receiverTypeArguments = getType(getReceiver(tree)).getTypeArguments();
+    return !receiverTypeArguments.isEmpty() ? getOnlyElement(receiverTypeArguments) : null;
   }
 
   private Description buildMessage(Type type1, Type type2, Tree tree, VisitorState state) {
