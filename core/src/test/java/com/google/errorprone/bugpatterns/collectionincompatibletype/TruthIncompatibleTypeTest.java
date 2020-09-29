@@ -218,6 +218,21 @@ public class TruthIncompatibleTypeTest {
   }
 
   @Test
+  public void variadicCall_notActuallyAnArray_noMatch() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import static com.google.common.truth.Truth.assertThat;",
+            "import com.google.common.collect.ImmutableList;",
+            "public class Test {",
+            "  public void f(Iterable<Long> xs, Object x) {",
+            "    assertThat(xs).containsExactlyElementsIn((Object[]) x);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void variadicCall_checked() {
     compilationHelper
         .addSourceLines(
@@ -290,6 +305,23 @@ public class TruthIncompatibleTypeTest {
             "  public void f(Iterable<Long> xs, ImmutableList<Integer> ys) {",
             "    // BUG: Diagnostic contains:",
             "    assertThat(xs).containsExactlyElementsIn(ys);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void comparingElementsUsingRawCorrespondence_noFinding() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import static com.google.common.truth.Truth.assertThat;",
+            "import com.google.common.collect.ImmutableList;",
+            "import com.google.common.truth.Correspondence;",
+            "public class Test {",
+            "  @SuppressWarnings(\"unchecked\")",
+            "  public void f(Iterable<Long> xs, Correspondence c) {",
+            "    assertThat(xs).comparingElementsUsing(c).doesNotContain(\"\");",
             "  }",
             "}")
         .doTest();
