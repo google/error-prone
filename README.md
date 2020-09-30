@@ -27,7 +27,7 @@ its type int is not compatible with its collection's type argument Short
 
 ## Getting Started
 
-Our documentation is at [errorprone.info](https://errorprone.info).
+Documentation can be found at [errorprone.info](https://errorprone.info).
 
 Error Prone works with [Bazel](https://bazel.build),
 [Maven](https://maven.apache.org), [Ant](https://ant.apache.org), and
