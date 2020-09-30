@@ -1,6 +1,7 @@
 ---
 title: NoFunctionalReturnType
-summary: Instead of returning a functional type, return the actual type that the returned function would return and use lambdas at use site.
+summary: Instead of returning a functional type, return the actual type that the returned
+  function would return and use lambdas at use site.
 layout: bugpattern
 tags: ''
 severity: WARNING

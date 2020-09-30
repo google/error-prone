@@ -1,6 +1,7 @@
 ---
 title: OverrideThrowableToString
-summary: To return a custom message with a Throwable class, one should override getMessage() instead of toString().
+summary: To return a custom message with a Throwable class, one should override getMessage()
+  instead of toString().
 layout: bugpattern
 tags: ''
 severity: WARNING

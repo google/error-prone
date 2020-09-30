@@ -1,6 +1,7 @@
 ---
 title: ExtendingJUnitAssert
-summary: When only using JUnit Assert's static methods, you should import statically instead of extending.
+summary: When only using JUnit Assert's static methods, you should import statically
+  instead of extending.
 layout: bugpattern
 tags: ''
 severity: WARNING

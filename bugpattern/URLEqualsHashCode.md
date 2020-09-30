@@ -1,6 +1,7 @@
 ---
 title: URLEqualsHashCode
-summary: Avoid hash-based containers of java.net.URL--the containers rely on equals() and hashCode(), which cause java.net.URL to make blocking internet connections.
+summary: Avoid hash-based containers of java.net.URL--the containers rely on equals()
+  and hashCode(), which cause java.net.URL to make blocking internet connections.
 layout: bugpattern
 tags: FragileCode
 severity: WARNING

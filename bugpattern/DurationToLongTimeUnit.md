@@ -1,6 +1,7 @@
 ---
 title: DurationToLongTimeUnit
-summary: Unit mismatch when decomposing a Duration or Instant to call a <long, TimeUnit> API
+summary: Unit mismatch when decomposing a Duration or Instant to call a <long, TimeUnit>
+  API
 layout: bugpattern
 tags: ''
 severity: ERROR

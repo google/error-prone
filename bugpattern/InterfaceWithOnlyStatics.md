@@ -1,6 +1,7 @@
 ---
 title: InterfaceWithOnlyStatics
-summary: This interface only contains static fields and methods; consider making it a final class instead to prevent subclassing.
+summary: This interface only contains static fields and methods; consider making it
+  a final class instead to prevent subclassing.
 layout: bugpattern
 tags: ''
 severity: WARNING

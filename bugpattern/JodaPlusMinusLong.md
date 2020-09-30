@@ -1,6 +1,8 @@
 ---
 title: JodaPlusMinusLong
-summary: Use of JodaTime's type.plus(long) or type.minus(long) is not allowed (where <type> = {Duration,Instant,DateTime,DateMidnight}). Please use type.plus(Duration.millis(long)) or type.minus(Duration.millis(long)) instead.
+summary: Use of JodaTime's type.plus(long) or type.minus(long) is not allowed (where
+  <type> = {Duration,Instant,DateTime,DateMidnight}). Please use type.plus(Duration.millis(long))
+  or type.minus(Duration.millis(long)) instead.
 layout: bugpattern
 tags: ''
 severity: WARNING

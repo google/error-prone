@@ -1,6 +1,7 @@
 ---
 title: StreamToIterable
-summary: Using stream::iterator creates a one-shot Iterable, which may cause surprising failures.
+summary: Using stream::iterator creates a one-shot Iterable, which may cause surprising
+  failures.
 layout: bugpattern
 tags: FragileCode
 severity: WARNING

@@ -1,6 +1,7 @@
 ---
 title: TheoryButNoTheories
-summary: This test has members annotated with @Theory, @DataPoint, or @DataPoints but is using the default JUnit4 runner.
+summary: This test has members annotated with @Theory, @DataPoint, or @DataPoints
+  but is using the default JUnit4 runner.
 layout: bugpattern
 tags: ''
 severity: ERROR

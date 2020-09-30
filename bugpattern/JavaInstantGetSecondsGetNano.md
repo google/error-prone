@@ -1,6 +1,7 @@
 ---
 title: JavaInstantGetSecondsGetNano
-summary: instant.getNano() only accesses the underlying nanosecond adjustment from the whole second.
+summary: instant.getNano() only accesses the underlying nanosecond adjustment from
+  the whole second.
 layout: bugpattern
 tags: ''
 severity: WARNING

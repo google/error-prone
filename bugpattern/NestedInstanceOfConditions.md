@@ -1,6 +1,7 @@
 ---
 title: NestedInstanceOfConditions
-summary: Nested instanceOf conditions of disjoint types create blocks of code that never execute
+summary: Nested instanceOf conditions of disjoint types create blocks of code that
+  never execute
 layout: bugpattern
 tags: ''
 severity: WARNING

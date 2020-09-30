@@ -1,6 +1,8 @@
 ---
 title: PrivateSecurityContractProtoAccess
-summary: Access to a private protocol buffer field is forbidden. This protocol buffer carries a security contract, and can only be created using an approved library. Direct access to the fields is forbidden.
+summary: Access to a private protocol buffer field is forbidden. This protocol buffer
+  carries a security contract, and can only be created using an approved library.
+  Direct access to the fields is forbidden.
 layout: bugpattern
 tags: ''
 severity: ERROR

@@ -1,6 +1,7 @@
 ---
 title: UrlInSee
-summary: URLs should not be used in @see tags; they are designed for Java elements which could be used with @link.
+summary: URLs should not be used in @see tags; they are designed for Java elements
+  which could be used with @link.
 layout: bugpattern
 tags: ''
 severity: WARNING

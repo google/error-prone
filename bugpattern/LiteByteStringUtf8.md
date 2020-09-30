@@ -1,6 +1,7 @@
 ---
 title: LiteByteStringUtf8
-summary: This pattern will silently corrupt certain byte sequences from the serialized protocol message. Use ByteString or byte[] directly
+summary: This pattern will silently corrupt certain byte sequences from the serialized
+  protocol message. Use ByteString or byte[] directly
 layout: bugpattern
 tags: ''
 severity: ERROR

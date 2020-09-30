@@ -1,6 +1,7 @@
 ---
 title: CatchFail
-summary: Ignoring exceptions and calling fail() is unnecessary, and makes test output less useful
+summary: Ignoring exceptions and calling fail() is unnecessary, and makes test output
+  less useful
 layout: bugpattern
 tags: ''
 severity: WARNING

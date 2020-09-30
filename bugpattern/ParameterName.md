@@ -1,6 +1,7 @@
 ---
 title: ParameterName
-summary: Detects `/* name= */`-style comments on actual parameters where the name doesn't match the formal parameter
+summary: Detects `/* name= */`-style comments on actual parameters where the name
+  doesn't match the formal parameter
 layout: bugpattern
 tags: ''
 severity: WARNING

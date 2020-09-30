@@ -1,6 +1,7 @@
 ---
 title: DifferentNameButSame
-summary: This type is referred to in different ways within this file, which may be confusing.
+summary: This type is referred to in different ways within this file, which may be
+  confusing.
 layout: bugpattern
 tags: Style
 severity: WARNING

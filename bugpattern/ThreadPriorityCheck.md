@@ -1,6 +1,7 @@
 ---
 title: ThreadPriorityCheck
-summary: Relying on the thread scheduler is discouraged; see Effective Java 3rd Edition Item 84.
+summary: Relying on the thread scheduler is discouraged; see Effective Java 3rd Edition
+  Item 84.
 layout: bugpattern
 tags: ''
 severity: WARNING

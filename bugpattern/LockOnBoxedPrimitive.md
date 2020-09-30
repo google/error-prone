@@ -1,6 +1,7 @@
 ---
 title: LockOnBoxedPrimitive
-summary: It is dangerous to use a boxed primitive as a lock as it can unintentionally lead to sharing a lock with another piece of code.
+summary: It is dangerous to use a boxed primitive as a lock as it can unintentionally
+  lead to sharing a lock with another piece of code.
 layout: bugpattern
 tags: ''
 severity: WARNING

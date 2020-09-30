@@ -1,6 +1,7 @@
 ---
 title: QualifierOrScopeOnInjectMethod
-summary: Qualifiers/Scope annotations on @Inject methods don't have any effect. Move the qualifier annotation to the binding location.
+summary: Qualifiers/Scope annotations on @Inject methods don't have any effect. Move
+  the qualifier annotation to the binding location.
 layout: bugpattern
 tags: LikelyError
 severity: WARNING

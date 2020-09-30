@@ -1,6 +1,7 @@
 ---
 title: ForOverride
-summary: Method annotated @ForOverride must be protected or package-private and only invoked from declaring class, or from an override of the method
+summary: Method annotated @ForOverride must be protected or package-private and only
+  invoked from declaring class, or from an override of the method
 layout: bugpattern
 tags: ''
 severity: ERROR

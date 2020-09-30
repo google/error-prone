@@ -1,6 +1,8 @@
 ---
 title: BinderIdentityRestoredDangerously
-summary: A call to Binder.clearCallingIdentity() should be followed by Binder.restoreCallingIdentity() in a finally block. Otherwise the wrong Binder identity may be used by subsequent code.
+summary: A call to Binder.clearCallingIdentity() should be followed by Binder.restoreCallingIdentity()
+  in a finally block. Otherwise the wrong Binder identity may be used by subsequent
+  code.
 layout: bugpattern
 tags: FragileCode
 severity: WARNING

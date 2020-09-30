@@ -1,6 +1,7 @@
 ---
 title: DoNotCallSuggester
-summary: Consider annotating methods that always throw with @DoNotCall. Read more at https://errorprone.info/bugpattern/DoNotCall
+summary: Consider annotating methods that always throw with @DoNotCall. Read more
+  at https://errorprone.info/bugpattern/DoNotCall
 layout: bugpattern
 tags: ''
 severity: WARNING

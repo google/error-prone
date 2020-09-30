@@ -1,6 +1,7 @@
 ---
 title: InjectOnMemberAndConstructor
-summary: Members shouldn't be annotated with @Inject if constructor is already annotated @Inject
+summary: Members shouldn't be annotated with @Inject if constructor is already annotated
+  @Inject
 layout: bugpattern
 tags: ''
 severity: ERROR

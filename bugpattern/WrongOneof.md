@@ -1,6 +1,7 @@
 ---
 title: WrongOneof
-summary: This field is guaranteed not to be set given it's within a switch over a one_of.
+summary: This field is guaranteed not to be set given it's within a switch over a
+  one_of.
 layout: bugpattern
 tags: ''
 severity: ERROR

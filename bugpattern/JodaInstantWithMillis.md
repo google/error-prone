@@ -1,6 +1,7 @@
 ---
 title: JodaInstantWithMillis
-summary: Use of instant.withMillis(long) is not allowed. Please use new Instant(long) instead.
+summary: Use of instant.withMillis(long) is not allowed. Please use new Instant(long)
+  instead.
 layout: bugpattern
 tags: ''
 severity: WARNING

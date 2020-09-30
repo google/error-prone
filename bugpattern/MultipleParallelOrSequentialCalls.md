@@ -1,6 +1,7 @@
 ---
 title: MultipleParallelOrSequentialCalls
-summary: Multiple calls to either parallel or sequential are unnecessary and cause confusion.
+summary: Multiple calls to either parallel or sequential are unnecessary and cause
+  confusion.
 layout: bugpattern
 tags: ''
 severity: WARNING

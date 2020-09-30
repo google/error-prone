@@ -1,6 +1,7 @@
 ---
 title: MisusedDayOfYear
-summary: Use of 'DD' (day of year) in a date pattern with 'MM' (month of year) is not likely to be intentional, as it would lead to dates like 'March 73rd'.
+summary: Use of 'DD' (day of year) in a date pattern with 'MM' (month of year) is
+  not likely to be intentional, as it would lead to dates like 'March 73rd'.
 layout: bugpattern
 tags: ''
 severity: ERROR

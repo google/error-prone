@@ -1,6 +1,7 @@
 ---
 title: CollectionToArraySafeParameter
-summary: The type of the array parameter of Collection.toArray needs to be compatible with the array type
+summary: The type of the array parameter of Collection.toArray needs to be compatible
+  with the array type
 layout: bugpattern
 tags: ''
 severity: ERROR

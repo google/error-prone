@@ -1,6 +1,7 @@
 ---
 title: AutoValueFinalMethods
-summary: Make toString(), hashCode() and equals() final in AutoValue classes, so it is clear to readers that AutoValue is not overriding them
+summary: Make toString(), hashCode() and equals() final in AutoValue classes, so it
+  is clear to readers that AutoValue is not overriding them
 layout: bugpattern
 tags: ''
 severity: WARNING

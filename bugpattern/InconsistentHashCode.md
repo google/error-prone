@@ -1,6 +1,7 @@
 ---
 title: InconsistentHashCode
-summary: Including fields in hashCode which are not compared in equals violates the contract of hashCode.
+summary: Including fields in hashCode which are not compared in equals violates the
+  contract of hashCode.
 layout: bugpattern
 tags: FragileCode
 severity: WARNING

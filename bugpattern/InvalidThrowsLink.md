@@ -1,6 +1,7 @@
 ---
 title: InvalidThrowsLink
-summary: Javadoc links to exceptions in @throws without a @link tag (@throws Exception, not @throws {@link Exception}).
+summary: Javadoc links to exceptions in @throws without a @link tag (@throws Exception,
+  not @throws {@link Exception}).
 layout: bugpattern
 tags: Style
 severity: WARNING

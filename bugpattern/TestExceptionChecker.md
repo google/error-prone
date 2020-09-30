@@ -1,6 +1,7 @@
 ---
 title: TestExceptionChecker
-summary: Using @Test(expected=...) is discouraged, since the test will pass if *any* statement in the test method throws the expected exception
+summary: Using @Test(expected=...) is discouraged, since the test will pass if *any*
+  statement in the test method throws the expected exception
 layout: bugpattern
 tags: ''
 severity: WARNING

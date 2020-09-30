@@ -1,6 +1,7 @@
 ---
 title: MislabeledAndroidString
-summary: Certain resources in `android.R.string` have names that do not match their content
+summary: Certain resources in `android.R.string` have names that do not match their
+  content
 layout: bugpattern
 tags: ''
 severity: ERROR

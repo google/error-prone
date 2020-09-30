@@ -1,6 +1,7 @@
 ---
 title: JodaWithDurationAddedLong
-summary: Use of JodaTime's type.withDurationAdded(long, int) (where <type> = {Duration,Instant,DateTime}). Please use type.withDurationAdded(Duration.millis(long), int) instead.
+summary: Use of JodaTime's type.withDurationAdded(long, int) (where <type> = {Duration,Instant,DateTime}).
+  Please use type.withDurationAdded(Duration.millis(long), int) instead.
 layout: bugpattern
 tags: ''
 severity: WARNING

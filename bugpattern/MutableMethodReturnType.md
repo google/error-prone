@@ -1,6 +1,7 @@
 ---
 title: MutableMethodReturnType
-summary: Method return type should use the immutable type (such as ImmutableList) instead of the general collection interface type (such as List).
+summary: Method return type should use the immutable type (such as ImmutableList)
+  instead of the general collection interface type (such as List).
 layout: bugpattern
 tags: ''
 severity: WARNING

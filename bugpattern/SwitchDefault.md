@@ -1,6 +1,7 @@
 ---
 title: SwitchDefault
-summary: The default case of a switch should appear at the end of the last statement group
+summary: The default case of a switch should appear at the end of the last statement
+  group
 layout: bugpattern
 tags: ''
 severity: SUGGESTION

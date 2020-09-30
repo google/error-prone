@@ -1,6 +1,7 @@
 ---
 title: RequiredModifiers
-summary: This annotation is missing required modifiers as specified by its @RequiredModifiers annotation
+summary: This annotation is missing required modifiers as specified by its @RequiredModifiers
+  annotation
 layout: bugpattern
 tags: LikelyError
 severity: WARNING

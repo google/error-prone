@@ -1,6 +1,7 @@
 ---
 title: InstanceOfAndCastMatchWrongType
-summary: Casting inside an if block should be plausibly consistent with the instanceof type
+summary: Casting inside an if block should be plausibly consistent with the instanceof
+  type
 layout: bugpattern
 tags: ''
 severity: WARNING

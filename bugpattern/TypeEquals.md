@@ -1,6 +1,8 @@
 ---
 title: TypeEquals
-summary: com.sun.tools.javac.code.Type doesn't override Object.equals and instances are not interned by javac, so testing types for equality should be done with Types#isSameType instead
+summary: com.sun.tools.javac.code.Type doesn't override Object.equals and instances
+  are not interned by javac, so testing types for equality should be done with Types#isSameType
+  instead
 layout: bugpattern
 tags: ''
 severity: WARNING

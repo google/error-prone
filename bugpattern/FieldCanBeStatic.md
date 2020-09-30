@@ -1,6 +1,7 @@
 ---
 title: FieldCanBeStatic
-summary: A final field initialized at compile-time with an instance of an immutable type can be static.
+summary: A final field initialized at compile-time with an instance of an immutable
+  type can be static.
 layout: bugpattern
 tags: ''
 severity: SUGGESTION

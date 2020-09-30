@@ -1,6 +1,8 @@
 ---
 title: PreferJavaTimeOverload
-summary: Prefer using java.time-based APIs when available. Note that this checker does not and cannot guarantee that the overloads have equivalent semantics, but that is generally the case with overloaded methods.
+summary: Prefer using java.time-based APIs when available. Note that this checker
+  does not and cannot guarantee that the overloads have equivalent semantics, but
+  that is generally the case with overloaded methods.
 layout: bugpattern
 tags: ''
 severity: WARNING

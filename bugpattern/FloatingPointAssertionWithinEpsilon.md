@@ -1,6 +1,7 @@
 ---
 title: FloatingPointAssertionWithinEpsilon
-summary: This fuzzy equality check is using a tolerance less than the gap to the next number. You may want a less restrictive tolerance, or to assert equality.
+summary: This fuzzy equality check is using a tolerance less than the gap to the next
+  number. You may want a less restrictive tolerance, or to assert equality.
 layout: bugpattern
 tags: Simplification
 severity: WARNING

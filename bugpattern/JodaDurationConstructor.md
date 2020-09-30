@@ -1,6 +1,7 @@
 ---
 title: JodaDurationConstructor
-summary: Use of new Duration(long) is not allowed. Please use Duration.millis(long) instead.
+summary: Use of new Duration(long) is not allowed. Please use Duration.millis(long)
+  instead.
 layout: bugpattern
 tags: ''
 severity: WARNING

@@ -1,6 +1,7 @@
 ---
 title: MisusedWeekYear
-summary: Use of "YYYY" (week year) in a date pattern without "ww" (week in year). You probably meant to use "yyyy" (year) instead.
+summary: Use of "YYYY" (week year) in a date pattern without "ww" (week in year).
+  You probably meant to use "yyyy" (year) instead.
 layout: bugpattern
 tags: ''
 severity: ERROR

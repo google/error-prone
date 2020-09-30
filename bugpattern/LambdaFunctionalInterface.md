@@ -1,6 +1,7 @@
 ---
 title: LambdaFunctionalInterface
-summary: Use Java's utility functional interfaces instead of Function<A, B> for primitive types.
+summary: Use Java's utility functional interfaces instead of Function<A, B> for primitive
+  types.
 layout: bugpattern
 tags: ''
 severity: SUGGESTION

@@ -1,6 +1,7 @@
 ---
 title: FieldCanBeLocal
-summary: This field can be replaced with a local variable in the methods that use it.
+summary: This field can be replaced with a local variable in the methods that use
+  it.
 layout: bugpattern
 tags: ''
 severity: SUGGESTION

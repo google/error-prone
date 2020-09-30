@@ -1,6 +1,8 @@
 ---
 title: UnsafeReflectiveConstructionCast
-summary: Prefer `asSubclass` instead of casting the result of `newInstance`, to detect classes of incorrect type before invoking their constructors.This way, if the class is of the incorrect type,it will throw an exception before invoking its constructor.
+summary: Prefer `asSubclass` instead of casting the result of `newInstance`, to detect
+  classes of incorrect type before invoking their constructors.This way, if the class
+  is of the incorrect type,it will throw an exception before invoking its constructor.
 layout: bugpattern
 tags: FragileCode
 severity: WARNING

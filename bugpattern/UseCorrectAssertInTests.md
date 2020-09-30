@@ -1,6 +1,7 @@
 ---
 title: UseCorrectAssertInTests
-summary: Java assert is used in test. For testing purposes Assert.* matchers should be used.
+summary: Java assert is used in test. For testing purposes Assert.* matchers should
+  be used.
 layout: bugpattern
 tags: ''
 severity: WARNING

@@ -1,6 +1,7 @@
 ---
 title: ObjectToString
-summary: Calling toString on Objects that don't override toString() doesn't provide useful information
+summary: Calling toString on Objects that don't override toString() doesn't provide
+  useful information
 layout: bugpattern
 tags: ''
 severity: WARNING

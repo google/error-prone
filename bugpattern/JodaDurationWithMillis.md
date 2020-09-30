@@ -1,6 +1,7 @@
 ---
 title: JodaDurationWithMillis
-summary: Use of duration.withMillis(long) is not allowed. Please use Duration.millis(long) instead.
+summary: Use of duration.withMillis(long) is not allowed. Please use Duration.millis(long)
+  instead.
 layout: bugpattern
 tags: ''
 severity: WARNING

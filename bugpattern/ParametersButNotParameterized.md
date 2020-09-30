@@ -1,6 +1,7 @@
 ---
 title: ParametersButNotParameterized
-summary: This test has @Parameters but is using the default JUnit4 runner. The parameters will have no effect.
+summary: This test has @Parameters but is using the default JUnit4 runner. The parameters
+  will have no effect.
 layout: bugpattern
 tags: ''
 severity: ERROR

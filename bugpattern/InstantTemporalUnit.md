@@ -1,6 +1,7 @@
 ---
 title: InstantTemporalUnit
-summary: Instant APIs only work for NANOS, MICROS, MILLIS, SECONDS, MINUTES, HOURS, HALF_DAYS and DAYS.
+summary: Instant APIs only work for NANOS, MICROS, MILLIS, SECONDS, MINUTES, HOURS,
+  HALF_DAYS and DAYS.
 layout: bugpattern
 tags: ''
 severity: ERROR

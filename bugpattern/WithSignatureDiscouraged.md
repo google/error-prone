@@ -1,6 +1,7 @@
 ---
 title: WithSignatureDiscouraged
-summary: withSignature is discouraged. Prefer .named and/or .withParameters where possible.
+summary: withSignature is discouraged. Prefer .named and/or .withParameters where
+  possible.
 layout: bugpattern
 tags: ''
 severity: WARNING

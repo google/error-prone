@@ -1,6 +1,7 @@
 ---
 title: CatchAndPrintStackTrace
-summary: Logging or rethrowing exceptions should usually be preferred to catching and calling printStackTrace
+summary: Logging or rethrowing exceptions should usually be preferred to catching
+  and calling printStackTrace
 layout: bugpattern
 tags: ''
 severity: WARNING

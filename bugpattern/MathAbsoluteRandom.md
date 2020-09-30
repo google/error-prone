@@ -1,6 +1,7 @@
 ---
 title: MathAbsoluteRandom
-summary: Math.abs does not always give a positive result. Please consider other methods for positive random numbers.
+summary: Math.abs does not always give a positive result. Please consider other methods
+  for positive random numbers.
 layout: bugpattern
 tags: ''
 severity: WARNING

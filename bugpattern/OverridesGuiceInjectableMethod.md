@@ -1,6 +1,8 @@
 ---
 title: OverridesGuiceInjectableMethod
-summary: This method is not annotated with @Inject, but it overrides a method that is annotated with @com.google.inject.Inject. Guice will inject this method, and it is recommended to annotate it explicitly.
+summary: This method is not annotated with @Inject, but it overrides a method that
+  is annotated with @com.google.inject.Inject. Guice will inject this method, and
+  it is recommended to annotate it explicitly.
 layout: bugpattern
 tags: ''
 severity: WARNING

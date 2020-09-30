@@ -1,6 +1,7 @@
 ---
 title: ByteBufferBackingArray
-summary: ByteBuffer.array() shouldn't be called unless ByteBuffer.arrayOffset() is used or if the ByteBuffer was initialized using ByteBuffer.wrap() or ByteBuffer.allocate().
+summary: ByteBuffer.array() shouldn't be called unless ByteBuffer.arrayOffset() is
+  used or if the ByteBuffer was initialized using ByteBuffer.wrap() or ByteBuffer.allocate().
 layout: bugpattern
 tags: ''
 severity: WARNING

@@ -1,6 +1,8 @@
 ---
 title: AnnotateFormatMethod
-summary: This method passes a pair of parameters through to String.format, but the enclosing method wasn't annotated @FormatMethod. Doing so gives compile-time rather than run-time protection against malformed format strings.
+summary: This method passes a pair of parameters through to String.format, but the
+  enclosing method wasn't annotated @FormatMethod. Doing so gives compile-time rather
+  than run-time protection against malformed format strings.
 layout: bugpattern
 tags: FragileCode
 severity: WARNING

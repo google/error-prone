@@ -1,6 +1,7 @@
 ---
 title: FromTemporalAccessor
-summary: Certain combinations of javaTimeType.from(TemporalAccessor) will always throw a DateTimeException or return the parameter directly.
+summary: Certain combinations of javaTimeType.from(TemporalAccessor) will always throw
+  a DateTimeException or return the parameter directly.
 layout: bugpattern
 tags: ''
 severity: ERROR

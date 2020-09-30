@@ -1,6 +1,7 @@
 ---
 title: RxReturnValueIgnored
-summary: Returned Rx objects must be checked. Ignoring a returned Rx value means it is never scheduled for execution
+summary: Returned Rx objects must be checked. Ignoring a returned Rx value means it
+  is never scheduled for execution
 layout: bugpattern
 tags: ''
 severity: WARNING

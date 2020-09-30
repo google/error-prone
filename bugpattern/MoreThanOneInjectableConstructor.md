@@ -1,6 +1,7 @@
 ---
 title: MoreThanOneInjectableConstructor
-summary: This class has more than one @Inject-annotated constructor. Please remove the @Inject annotation from all but one of them.
+summary: This class has more than one @Inject-annotated constructor. Please remove
+  the @Inject annotation from all but one of them.
 layout: bugpattern
 tags: ''
 severity: ERROR

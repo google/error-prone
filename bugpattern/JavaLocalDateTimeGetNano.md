@@ -1,6 +1,7 @@
 ---
 title: JavaLocalDateTimeGetNano
-summary: localDateTime.getNano() only accesss the nanos-of-second field. It's rare to only use getNano() without a nearby getSecond() call.
+summary: localDateTime.getNano() only accesss the nanos-of-second field. It's rare
+  to only use getNano() without a nearby getSecond() call.
 layout: bugpattern
 tags: ''
 severity: WARNING

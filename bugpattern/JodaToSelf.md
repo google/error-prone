@@ -1,6 +1,7 @@
 ---
 title: JodaToSelf
-summary: Use of Joda-Time's DateTime.toDateTime(), Duration.toDuration(), Instant.toInstant(), Interval.toInterval(), and Period.toPeriod() are not allowed.
+summary: Use of Joda-Time's DateTime.toDateTime(), Duration.toDuration(), Instant.toInstant(),
+  Interval.toInterval(), and Period.toPeriod() are not allowed.
 layout: bugpattern
 tags: ''
 severity: ERROR

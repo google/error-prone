@@ -1,6 +1,7 @@
 ---
 title: PreconditionsCheckNotNullRepeated
-summary: Including the first argument of checkNotNull in the failure message is not useful, as it will always be `null`.
+summary: Including the first argument of checkNotNull in the failure message is not
+  useful, as it will always be `null`.
 layout: bugpattern
 tags: ''
 severity: WARNING

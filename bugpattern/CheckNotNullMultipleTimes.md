@@ -1,6 +1,7 @@
 ---
 title: CheckNotNullMultipleTimes
-summary: A variable was checkNotNulled multiple times. Did you mean to check something else?
+summary: A variable was checkNotNulled multiple times. Did you mean to check something
+  else?
 layout: bugpattern
 tags: ''
 severity: ERROR

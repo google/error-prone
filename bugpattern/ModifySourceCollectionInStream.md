@@ -1,6 +1,7 @@
 ---
 title: ModifySourceCollectionInStream
-summary: Modifying the backing source during stream operations may cause unintended results.
+summary: Modifying the backing source during stream operations may cause unintended
+  results.
 layout: bugpattern
 tags: ''
 severity: WARNING

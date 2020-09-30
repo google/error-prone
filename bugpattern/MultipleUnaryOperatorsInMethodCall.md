@@ -1,6 +1,7 @@
 ---
 title: MultipleUnaryOperatorsInMethodCall
-summary: Avoid having multiple unary operators acting on the same variable in a method call
+summary: Avoid having multiple unary operators acting on the same variable in a method
+  call
 layout: bugpattern
 tags: ''
 severity: WARNING

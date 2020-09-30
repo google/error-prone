@@ -1,6 +1,7 @@
 ---
 title: InvalidJavaTimeConstant
-summary: This checker errors on calls to java.time methods using values that are guaranteed to throw a DateTimeException.
+summary: This checker errors on calls to java.time methods using values that are guaranteed
+  to throw a DateTimeException.
 layout: bugpattern
 tags: ''
 severity: ERROR

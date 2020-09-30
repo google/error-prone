@@ -1,6 +1,7 @@
 ---
 title: VariableNameSameAsType
-summary: variableName and type with the same name would refer to the static field instead of the class
+summary: variableName and type with the same name would refer to the static field
+  instead of the class
 layout: bugpattern
 tags: ''
 severity: WARNING

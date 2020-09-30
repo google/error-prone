@@ -1,6 +1,7 @@
 ---
 title: LogicalAssignment
-summary: Assignment where a boolean expression was expected; use == if this assignment wasn't expected or add parentheses for clarity.
+summary: Assignment where a boolean expression was expected; use == if this assignment
+  wasn't expected or add parentheses for clarity.
 layout: bugpattern
 tags: LikelyError
 severity: WARNING

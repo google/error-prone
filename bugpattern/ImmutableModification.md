@@ -1,6 +1,7 @@
 ---
 title: ImmutableModification
-summary: Modifying an immutable collection is guaranteed to throw an exception and leave the collection unmodified
+summary: Modifying an immutable collection is guaranteed to throw an exception and
+  leave the collection unmodified
 layout: bugpattern
 tags: ''
 severity: ERROR

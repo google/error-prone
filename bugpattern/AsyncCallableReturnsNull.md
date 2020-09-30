@@ -1,6 +1,7 @@
 ---
 title: AsyncCallableReturnsNull
-summary: AsyncCallable should not return a null Future, only a Future whose result is null.
+summary: AsyncCallable should not return a null Future, only a Future whose result
+  is null.
 layout: bugpattern
 tags: ''
 severity: ERROR

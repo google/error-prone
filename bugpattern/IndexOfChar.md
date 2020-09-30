@@ -1,6 +1,7 @@
 ---
 title: IndexOfChar
-summary: The first argument to indexOf is a Unicode code point, and the second is the index to start the search from
+summary: The first argument to indexOf is a Unicode code point, and the second is
+  the index to start the search from
 layout: bugpattern
 tags: ''
 severity: ERROR

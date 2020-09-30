@@ -1,6 +1,7 @@
 ---
 title: InconsistentCapitalization
-summary: It is confusing to have a field and a parameter under the same scope that differ only in capitalization.
+summary: It is confusing to have a field and a parameter under the same scope that
+  differ only in capitalization.
 layout: bugpattern
 tags: ''
 severity: WARNING

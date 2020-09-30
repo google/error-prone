@@ -1,6 +1,7 @@
 ---
 title: OutlineNone
-summary: Setting CSS outline style to none or 0 (while not otherwise providing visual focus indicators) is inaccessible for users navigating a web page without a mouse.
+summary: Setting CSS outline style to none or 0 (while not otherwise providing visual
+  focus indicators) is inaccessible for users navigating a web page without a mouse.
 layout: bugpattern
 tags: ''
 severity: WARNING

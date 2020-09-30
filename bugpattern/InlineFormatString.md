@@ -1,6 +1,7 @@
 ---
 title: InlineFormatString
-summary: Prefer to create format strings inline, instead of extracting them to a single-use constant
+summary: Prefer to create format strings inline, instead of extracting them to a single-use
+  constant
 layout: bugpattern
 tags: ''
 severity: WARNING

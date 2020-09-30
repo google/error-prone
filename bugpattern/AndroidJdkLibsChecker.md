@@ -1,6 +1,7 @@
 ---
 title: AndroidJdkLibsChecker
-summary: Use of class, field, or method that is not compatible with legacy Android devices
+summary: Use of class, field, or method that is not compatible with legacy Android
+  devices
 layout: bugpattern
 tags: ''
 severity: ERROR

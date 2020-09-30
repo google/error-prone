@@ -1,6 +1,7 @@
 ---
 title: EscapedEntity
-summary: HTML entities in @code/@literal tags will appear literally in the rendered javadoc.
+summary: HTML entities in @code/@literal tags will appear literally in the rendered
+  javadoc.
 layout: bugpattern
 tags: ''
 severity: WARNING

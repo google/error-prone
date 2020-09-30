@@ -1,6 +1,8 @@
 ---
 title: JodaTimeConverterManager
-summary: Joda-Time's ConverterManager makes the semantics of DateTime/Instant/etc construction subject to global static state. If you need to define your own converters, use a helper.
+summary: Joda-Time's ConverterManager makes the semantics of DateTime/Instant/etc
+  construction subject to global static state. If you need to define your own converters,
+  use a helper.
 layout: bugpattern
 tags: ''
 severity: WARNING

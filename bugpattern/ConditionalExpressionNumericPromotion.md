@@ -1,6 +1,8 @@
 ---
 title: ConditionalExpressionNumericPromotion
-summary: A conditional expression with numeric operands of differing types will perform binary numeric promotion of the operands; when these operands are of reference types, the expression's result may not be of the expected type.
+summary: A conditional expression with numeric operands of differing types will perform
+  binary numeric promotion of the operands; when these operands are of reference types,
+  the expression's result may not be of the expected type.
 layout: bugpattern
 tags: ''
 severity: ERROR

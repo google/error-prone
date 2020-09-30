@@ -1,6 +1,7 @@
 ---
 title: TruthAssertExpected
-summary: The actual and expected values appear to be swapped, which results in poor assertion failure messages. The actual value should come first.
+summary: The actual and expected values appear to be swapped, which results in poor
+  assertion failure messages. The actual value should come first.
 layout: bugpattern
 tags: Style
 severity: WARNING

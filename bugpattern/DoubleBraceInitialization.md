@@ -1,6 +1,7 @@
 ---
 title: DoubleBraceInitialization
-summary: Prefer collection factory methods or builders to the double-brace initialization pattern.
+summary: Prefer collection factory methods or builders to the double-brace initialization
+  pattern.
 layout: bugpattern
 tags: ''
 severity: WARNING

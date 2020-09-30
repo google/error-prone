@@ -1,6 +1,7 @@
 ---
 title: InvalidTimeZoneID
-summary: Invalid time zone identifier. TimeZone.getTimeZone(String) will silently return GMT instead of the time zone you intended.
+summary: Invalid time zone identifier. TimeZone.getTimeZone(String) will silently
+  return GMT instead of the time zone you intended.
 layout: bugpattern
 tags: ''
 severity: ERROR

@@ -1,6 +1,7 @@
 ---
 title: UnnecessaryAnonymousClass
-summary: Implementing a functional interface is unnecessary; prefer to implement the functional interface method directly and use a method reference instead.
+summary: Implementing a functional interface is unnecessary; prefer to implement the
+  functional interface method directly and use a method reference instead.
 layout: bugpattern
 tags: ''
 severity: WARNING

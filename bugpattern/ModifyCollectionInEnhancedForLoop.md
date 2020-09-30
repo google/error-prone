@@ -1,6 +1,7 @@
 ---
 title: ModifyCollectionInEnhancedForLoop
-summary: Modifying a collection while iterating over it in a loop may cause a ConcurrentModificationException to be thrown or lead to undefined behavior.
+summary: Modifying a collection while iterating over it in a loop may cause a ConcurrentModificationException
+  to be thrown or lead to undefined behavior.
 layout: bugpattern
 tags: ''
 severity: WARNING

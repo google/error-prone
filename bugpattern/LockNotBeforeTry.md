@@ -1,6 +1,7 @@
 ---
 title: LockNotBeforeTry
-summary: Calls to Lock#lock should be immediately followed by a try block which releases the lock.
+summary: Calls to Lock#lock should be immediately followed by a try block which releases
+  the lock.
 layout: bugpattern
 tags: FragileCode
 severity: WARNING

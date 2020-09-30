@@ -1,6 +1,8 @@
 ---
 title: MutablePublicArray
-summary: Non-empty arrays are mutable, so this `public static final` array is not a constant and can be modified by clients of this class.  Prefer an ImmutableList, or provide an accessor method that returns a defensive copy.
+summary: Non-empty arrays are mutable, so this `public static final` array is not
+  a constant and can be modified by clients of this class.  Prefer an ImmutableList,
+  or provide an accessor method that returns a defensive copy.
 layout: bugpattern
 tags: ''
 severity: WARNING

@@ -1,6 +1,7 @@
 ---
 title: DuplicateMapKeys
-summary: Map#ofEntries will throw an IllegalArgumentException if there are any duplicate keys
+summary: Map#ofEntries will throw an IllegalArgumentException if there are any duplicate
+  keys
 layout: bugpattern
 tags: ''
 severity: ERROR

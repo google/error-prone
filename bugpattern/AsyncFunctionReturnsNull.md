@@ -1,6 +1,7 @@
 ---
 title: AsyncFunctionReturnsNull
-summary: AsyncFunction should not return a null Future, only a Future whose result is null.
+summary: AsyncFunction should not return a null Future, only a Future whose result
+  is null.
 layout: bugpattern
 tags: ''
 severity: ERROR

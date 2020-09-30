@@ -1,6 +1,7 @@
 ---
 title: TryFailThrowable
-summary: Catching Throwable/Error masks failures from fail() or assert*() in the try block
+summary: Catching Throwable/Error masks failures from fail() or assert*() in the try
+  block
 layout: bugpattern
 tags: ''
 severity: ERROR

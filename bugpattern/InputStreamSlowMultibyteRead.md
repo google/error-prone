@@ -1,6 +1,7 @@
 ---
 title: InputStreamSlowMultibyteRead
-summary: Please also override int read(byte[], int, int), otherwise multi-byte reads from this input stream are likely to be slow.
+summary: Please also override int read(byte[], int, int), otherwise multi-byte reads
+  from this input stream are likely to be slow.
 layout: bugpattern
 tags: Performance
 severity: WARNING

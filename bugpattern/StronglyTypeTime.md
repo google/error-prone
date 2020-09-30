@@ -1,6 +1,7 @@
 ---
 title: StronglyTypeTime
-summary: This primitive integral type is only used to construct time types. It would be clearer to strongly type the field instead.
+summary: This primitive integral type is only used to construct time types. It would
+  be clearer to strongly type the field instead.
 layout: bugpattern
 tags: ''
 severity: WARNING

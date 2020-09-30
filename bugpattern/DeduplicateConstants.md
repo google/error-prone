@@ -1,6 +1,7 @@
 ---
 title: DeduplicateConstants
-summary: This expression was previously declared as a constant; consider replacing this occurrence.
+summary: This expression was previously declared as a constant; consider replacing
+  this occurrence.
 layout: bugpattern
 tags: ''
 severity: ERROR

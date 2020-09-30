@@ -1,6 +1,7 @@
 ---
 title: ProtoTruthMixedDescriptors
-summary: The arguments passed to `ignoringFields` are inconsistent with the proto which is the subject of the assertion.
+summary: The arguments passed to `ignoringFields` are inconsistent with the proto
+  which is the subject of the assertion.
 layout: bugpattern
 tags: ''
 severity: ERROR

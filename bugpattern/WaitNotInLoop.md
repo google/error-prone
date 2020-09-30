@@ -1,6 +1,7 @@
 ---
 title: WaitNotInLoop
-summary: Because of spurious wakeups, Object.wait() and Condition.await() must always be called in a loop
+summary: Because of spurious wakeups, Object.wait() and Condition.await() must always
+  be called in a loop
 layout: bugpattern
 tags: FragileCode
 severity: WARNING

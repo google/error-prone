@@ -1,6 +1,8 @@
 ---
 title: CheckedExceptionNotThrown
-summary: This method cannot throw a checked exception that it claims to. This may cause consumers of the API to incorrectly attempt to handle, or propagate, this exception.
+summary: This method cannot throw a checked exception that it claims to. This may
+  cause consumers of the API to incorrectly attempt to handle, or propagate, this
+  exception.
 layout: bugpattern
 tags: ''
 severity: WARNING

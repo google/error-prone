@@ -1,6 +1,7 @@
 ---
 title: IdentityHashMapBoxing
-summary: Using IdentityHashMap with a boxed type as the key is risky since boxing may produce distinct instances
+summary: Using IdentityHashMap with a boxed type as the key is risky since boxing
+  may produce distinct instances
 layout: bugpattern
 tags: ''
 severity: ERROR
