@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
-import static com.sun.source.tree.Tree.Kind.NULL_LITERAL;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -25,9 +24,11 @@ import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matchers;
 import com.sun.source.tree.ClassTree;
+import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.LambdaExpressionTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.ReturnTree;
+import com.sun.source.tree.Tree;
 import com.sun.source.util.TreeScanner;
 
 /**
@@ -49,31 +50,53 @@ public class ToStringReturnsNull extends BugChecker implements MethodTreeMatcher
       return Description.NO_MATCH;
     }
 
-    boolean hasReturnNull =
-        tree.accept(
-            new TreeScanner<Boolean, Void>() {
-              @Override
-              public Boolean visitLambdaExpression(LambdaExpressionTree node, Void unused) {
-                return false;
-              }
+    return tree.accept(new FindReturnNullLiteralScanner(), null)
+        ? describeMatch(tree)
+        : Description.NO_MATCH;
+  }
 
-              @Override
-              public Boolean visitClass(ClassTree node, Void unused) {
-                return false;
-              }
+  private static class FindReturnNullLiteralScanner extends BooleanScanner {
+    @Override
+    public Boolean visitLambdaExpression(LambdaExpressionTree node, Void unused) {
+      return false;
+    }
 
-              @Override
-              public Boolean visitReturn(ReturnTree node, Void unused) {
-                return node.getExpression().getKind() == NULL_LITERAL;
-              }
+    @Override
+    public Boolean visitClass(ClassTree node, Void unused) {
+      return false;
+    }
 
-              @Override
-              public Boolean reduce(Boolean r1, Boolean r2) {
-                return (r1 != null && r1) || (r2 != null && r2);
-              }
-            },
-            null);
+    @Override
+    public Boolean visitReturn(ReturnTree node, Void unused) {
+      ExpressionTree expression = node.getExpression();
+      return expression != null && new ReturnExpressionScanner().scan(expression, null);
+    }
 
-    return hasReturnNull ? describeMatch(tree) : Description.NO_MATCH;
+    private static class ReturnExpressionScanner extends BooleanScanner {
+      @Override
+      public Boolean scan(Tree tree, Void unused) {
+        switch (tree.getKind()) {
+          case NULL_LITERAL:
+            return true;
+          case PARENTHESIZED:
+          case CONDITIONAL_EXPRESSION:
+            return super.scan(tree, unused);
+          default:
+            return false;
+        }
+      }
+    }
+  }
+
+  private abstract static class BooleanScanner extends TreeScanner<Boolean, Void> {
+    @Override
+    public Boolean scan(Tree tree, Void unused) {
+      return Boolean.TRUE.equals(super.scan(tree, unused));
+    }
+
+    @Override
+    public final Boolean reduce(Boolean a, Boolean b) {
+      return Boolean.TRUE.equals(a) || Boolean.TRUE.equals(b);
+    }
   }
 }

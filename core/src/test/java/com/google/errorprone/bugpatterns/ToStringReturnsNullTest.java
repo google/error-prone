@@ -46,6 +46,21 @@ public final class ToStringReturnsNullTest {
   }
 
   @Test
+  public void conditionalExpression() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  final boolean cond = false;",
+            "  // BUG: Diagnostic contains: ToStringReturnsNull",
+            "  public String toString() {",
+            "    return cond ? null : \"foo\";",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void returnsNonNullString() {
     compilationHelper
         .addSourceLines(
