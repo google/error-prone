@@ -32,12 +32,16 @@ import com.google.common.collect.ImmutableList;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
+import com.google.errorprone.fixes.SuggestedFix;
+import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
 import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
+import java.util.Set;
+import javax.lang.model.element.Modifier;
 
 /** @author gak@google.com (Gregory Kick) */
 @BugPattern(
@@ -70,8 +74,14 @@ public final class PrivateConstructorForUtilityClass extends BugChecker
         || nonSyntheticMembers.stream().anyMatch(PrivateConstructorForUtilityClass::isInstance)) {
       return NO_MATCH;
     }
-    return describeMatch(
-        classTree, addMembers(classTree, state, "private " + classTree.getSimpleName() + "() {}"));
+    SuggestedFix.Builder fix =
+        SuggestedFix.builder()
+            .merge(addMembers(classTree, state, "private " + classTree.getSimpleName() + "() {}"));
+    Set<Modifier> modifiers = classTree.getModifiers().getFlags();
+    if (!modifiers.contains(Modifier.ABSTRACT) && !modifiers.contains(Modifier.FINAL)) {
+      SuggestedFixes.addModifiers(classTree, state, Modifier.FINAL).ifPresent(fix::merge);
+    }
+    return describeMatch(classTree, fix.build());
   }
 
   private static boolean isInPrivateScope(VisitorState state) {
