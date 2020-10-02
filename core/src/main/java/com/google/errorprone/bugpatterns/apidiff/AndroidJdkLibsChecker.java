@@ -134,6 +134,7 @@ public class AndroidJdkLibsChecker extends ApiDiffChecker {
             .add("java/util/List")
             .add("java/util/LongSummaryStatistics")
             .add("java/util/Map")
+            .add("java/util/HashMap")
             .add("java/util/Map\\$$Entry")
             .add("java/util/Objects")
             .add("java/util/Optional")
