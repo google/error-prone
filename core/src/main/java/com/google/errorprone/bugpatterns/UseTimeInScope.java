@@ -39,10 +39,7 @@ import com.sun.tools.javac.code.Symbol;
 @BugPattern(
     name = "UseTimeInScope",
     summary =
-        "There is already a "
-            +
-            "Clock"
-            + " in scope here. Prefer to reuse it rather than creating a new one.  Having multiple"
+        "Prefer to reuse time sources rather than creating new ones. Having multiple"
             + " unsynchronized time sources in scope risks accidents.",
     severity = WARNING)
 public final class UseTimeInScope extends BugChecker implements MethodInvocationTreeMatcher {
@@ -63,8 +60,17 @@ public final class UseTimeInScope extends BugChecker implements MethodInvocation
         .filter(s -> isSameType(s.type, getSymbol(tree).owner.type, state))
         .filter(s -> !s.equals(excludedSymbol))
         .findFirst()
-        .map(s -> SuggestedFix.replace(tree, s.getSimpleName().toString()))
-        .map(fix -> describeMatch(tree, fix))
+        .map(
+            s ->
+                buildDescription(tree)
+                    .addFix(SuggestedFix.replace(tree, s.getSimpleName().toString()))
+                    .setMessage(
+                        String.format(
+                            "There is already a %s in scope here. Prefer to reuse it rather than"
+                                + " creating a new one. Having multiple unsynchronized time"
+                                + " sources in scope risks accidents.",
+                            s.type.tsym.getSimpleName()))
+                    .build())
         .orElse(NO_MATCH);
   }
 }

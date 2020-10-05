@@ -24,12 +24,12 @@ import org.junit.runners.JUnit4;
 /** Tests for {@link UseTimeInScope}. */
 @RunWith(JUnit4.class)
 public final class UseTimeInScopeTest {
-  private final BugCheckerRefactoringTestHelper helper =
+  private final BugCheckerRefactoringTestHelper refactoringTestHelper =
       BugCheckerRefactoringTestHelper.newInstance(UseTimeInScope.class, getClass());
 
   @Test
   public void clockInScope_refactored() {
-    helper
+    refactoringTestHelper
         .addInputLines(
             "Test.java",
             "import java.time.Clock;",
@@ -55,7 +55,7 @@ public final class UseTimeInScopeTest {
 
   @Test
   public void noClockInScope_noFinding() {
-    helper
+    refactoringTestHelper
         .addInputLines(
             "Test.java",
             "import java.time.Clock;",
@@ -70,7 +70,7 @@ public final class UseTimeInScopeTest {
 
   @Test
   public void assignmentToSameVariable_noFinding() {
-    helper
+    refactoringTestHelper
         .addInputLines(
             "Test.java",
             "import java.time.Clock;",
@@ -86,7 +86,7 @@ public final class UseTimeInScopeTest {
 
   @Test
   public void variableInitialization_noFinding() {
-    helper
+    refactoringTestHelper
         .addInputLines(
             "Test.java",
             "import java.time.Clock;",
