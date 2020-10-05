@@ -1,7 +1,7 @@
 ---
 title: UseTimeInScope
-summary: There is already a Clock in scope here. Prefer to reuse it rather than creating
-  a new one.  Having multiple unsynchronized time sources in scope risks accidents.
+summary: Prefer to reuse time sources rather than creating new ones. Having multiple
+  unsynchronized time sources in scope risks accidents.
 layout: bugpattern
 tags: ''
 severity: WARNING
