@@ -15,7 +15,7 @@
 <script type="text/javascript" src="../../../../script-dir/jquery-ui.min.js"></script>
 </head>
 <body class="class-declaration-page">
-<script type="text/javascript">var data = {"i0":10,"i1":10,"i2":10,"i3":10};
+<script type="text/javascript">var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "alt-color";
 var rowColor = "row-color";
@@ -191,13 +191,22 @@ implements <a href="BugChecker.MethodTreeMatcher.html" title="interface in com.g
  resource variable initializer of a try-with-resources statement.</div>
 </td>
 </tr>
+<tr class="alt-color" id="i4">
+<td class="col-first"><code>protected <a href="../matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#matchNewClassOrMethodInvocation(com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)">matchNewClassOrMethodInvocation</a></span>&#8203;(com.sun.source.tree.ExpressionTree&nbsp;tree,
+<a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
+<td class="col-last">
+<div class="block">Check that constructors and methods annotated with <a href="../annotations/MustBeClosed.html" title="annotation in com.google.errorprone.annotations"><code>MustBeClosed</code></a> occur within the
+ resource variable initializer of a try-with-resources statement.</div>
+</td>
+</tr>
 </tbody>
 </table>
 </div>
 </div>
 <div class="inherited-list">
 <h3 id="methods.inherited.from.class.com.google.errorprone.bugpatterns.AbstractMustBeClosedChecker">Methods inherited from class&nbsp;com.google.errorprone.bugpatterns.<a href="AbstractMustBeClosedChecker.html" title="class in com.google.errorprone.bugpatterns">AbstractMustBeClosedChecker</a></h3>
-<code><a href="AbstractMustBeClosedChecker.html#addFix(com.google.errorprone.matchers.Description.Builder,com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)">addFix</a>, <a href="AbstractMustBeClosedChecker.html#matchNewClassOrMethodInvocation(com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)">matchNewClassOrMethodInvocation</a></code></div>
+<code><a href="AbstractMustBeClosedChecker.html#addFix(com.google.errorprone.matchers.Description.Builder,com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)">addFix</a></code></div>
 <div class="inherited-list">
 <h3 id="methods.inherited.from.class.com.google.errorprone.bugpatterns.BugChecker">Methods inherited from class&nbsp;com.google.errorprone.bugpatterns.<a href="BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a></h3>
 <code><a href="BugChecker.html#allNames()">allNames</a>, <a href="BugChecker.html#buildDescription(com.sun.source.tree.Tree)">buildDescription</a>, <a href="BugChecker.html#buildDescription(com.sun.tools.javac.tree.JCTree)">buildDescription</a>, <a href="BugChecker.html#buildDescription(com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition)">buildDescription</a>, <a href="BugChecker.html#canonicalName()">canonicalName</a>, <a href="BugChecker.html#customSuppressionAnnotations()">customSuppressionAnnotations</a>, <a href="BugChecker.html#defaultSeverity()">defaultSeverity</a>, <a href="BugChecker.html#describeMatch(com.sun.source.tree.Tree)">describeMatch</a>, <a href="BugChecker.html#describeMatch(com.sun.source.tree.Tree,com.google.errorprone.fixes.Fix)">describeMatch</a>, <a href="BugChecker.html#describeMatch(com.sun.source.tree.Tree,java.util.Optional)">describeMatch</a>, <a href="BugChecker.html#describeMatch(com.sun.tools.javac.tree.JCTree,com.google.errorprone.fixes.Fix)">describeMatch</a>, <a href="BugChecker.html#describeMatch(com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition,com.google.errorprone.fixes.Fix)">describeMatch</a>, <a href="BugChecker.html#describeMatch(com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition,java.util.Optional)">describeMatch</a>, <a href="BugChecker.html#disableable()">disableable</a>, <a href="BugChecker.html#equals(java.lang.Object)">equals</a>, <a href="BugChecker.html#hashCode()">hashCode</a>, <a href="BugChecker.html#isSuppressed(com.sun.source.tree.Tree)">isSuppressed</a>, <a href="BugChecker.html#isSuppressed(com.sun.tools.javac.code.Symbol)">isSuppressed</a>, <a href="BugChecker.html#linkUrl()">linkUrl</a>, <a href="BugChecker.html#message()">message</a>, <a href="BugChecker.html#severity(java.util.Map)">severity</a>, <a href="BugChecker.html#supportsSuppressWarnings()">supportsSuppressWarnings</a>, <a href="BugChecker.html#suppressedByAnyOf(java.util.Set,com.google.errorprone.VisitorState)">suppressedByAnyOf</a></code></div>
@@ -268,6 +277,20 @@ implements <a href="BugChecker.MethodTreeMatcher.html" title="interface in com.g
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code><a href="BugChecker.NewClassTreeMatcher.html#matchNewClass(com.sun.source.tree.NewClassTree,com.google.errorprone.VisitorState)">matchNewClass</a></code>&nbsp;in interface&nbsp;<code><a href="BugChecker.NewClassTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.NewClassTreeMatcher</a></code></dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="matchNewClassOrMethodInvocation(com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)">
+<h3>matchNewClassOrMethodInvocation</h3>
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type"><a href="../matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></span>&nbsp;<span class="member-name">matchNewClassOrMethodInvocation</span>&#8203;(<span class="parameters">com.sun.source.tree.ExpressionTree&nbsp;tree,
+<a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
+<div class="block"><span class="descfrm-type-label">Description copied from class:&nbsp;<code><a href="AbstractMustBeClosedChecker.html#matchNewClassOrMethodInvocation(com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)">AbstractMustBeClosedChecker</a></code></span></div>
+<div class="block">Check that constructors and methods annotated with <a href="../annotations/MustBeClosed.html" title="annotation in com.google.errorprone.annotations"><code>MustBeClosed</code></a> occur within the
+ resource variable initializer of a try-with-resources statement.</div>
+<dl class="notes">
+<dt>Overrides:</dt>
+<dd><code><a href="AbstractMustBeClosedChecker.html#matchNewClassOrMethodInvocation(com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)">matchNewClassOrMethodInvocation</a></code>&nbsp;in class&nbsp;<code><a href="AbstractMustBeClosedChecker.html" title="class in com.google.errorprone.bugpatterns">AbstractMustBeClosedChecker</a></code></dd>
 </dl>
 </section>
 </li>
