@@ -126,6 +126,15 @@ public class MustBeClosedChecker extends AbstractMustBeClosedChecker
   }
 
   @Override
+  protected Description matchNewClassOrMethodInvocation(ExpressionTree tree, VisitorState state) {
+    Description description = super.matchNewClassOrMethodInvocation(tree, state);
+    if (description.equals(NO_MATCH)) {
+      return NO_MATCH;
+    }
+    return description;
+  }
+
+  @Override
   public Description matchClass(ClassTree tree, VisitorState state) {
     if (!IS_AUTOCLOSEABLE.matches(tree, state)) {
       return NO_MATCH;
