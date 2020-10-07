@@ -1073,9 +1073,9 @@ public class SuggestedFixes {
     Optional<ExpressionTree> maybeExistingArgument = findArgument(annotation, parameterName);
     if (!maybeExistingArgument.isPresent()) {
       return SuggestedFix.builder()
-          .prefixWith(
-              annotation.getArguments().get(0),
-              parameterName + " = " + newArgument(newValues) + ", ");
+          .postfixWith(
+              getLast(annotation.getArguments()),
+              ", " + parameterName + " = " + newArgument(newValues));
     }
 
     ExpressionTree existingArgument = maybeExistingArgument.get();
@@ -1114,9 +1114,9 @@ public class SuggestedFixes {
     Optional<ExpressionTree> maybeExistingArgument = findArgument(annotation, parameterName);
     if (!maybeExistingArgument.isPresent()) {
       return SuggestedFix.builder()
-          .prefixWith(
-              annotation.getArguments().get(0),
-              parameterName + " = " + newArgument(newValues) + ", ");
+          .postfixWith(
+              getLast(annotation.getArguments()),
+              ", " + parameterName + " = " + newArgument(newValues));
     }
 
     ExpressionTree existingArgument = maybeExistingArgument.get();
