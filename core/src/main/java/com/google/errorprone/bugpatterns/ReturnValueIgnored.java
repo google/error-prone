@@ -26,6 +26,7 @@ import static com.google.errorprone.util.ASTHelpers.isSameType;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
@@ -142,6 +143,16 @@ public class ReturnValueIgnored extends AbstractReturnValueIgnored {
   private static final Matcher<ExpressionTree> ARRAYS_METHODS =
       staticMethod().onClass("java.util.Arrays");
 
+  /**
+   * The return values of {@link java.util.Optional} static methods and some instance methods should
+   * always be checked.
+   */
+  private static final Matcher<ExpressionTree> OPTIONAL_METHODS =
+      anyOf(
+          staticMethod().onClass("java.util.Optional"),
+          instanceMethod().onExactClass("java.util.Optional").named("isPresent"),
+          instanceMethod().onExactClass("java.util.Optional").named("isEmpty"));
+
   private static final Matcher<? super ExpressionTree> SPECIALIZED_MATCHER =
       anyOf(
           RETURNS_SAME_TYPE,
@@ -162,8 +173,16 @@ public class ReturnValueIgnored extends AbstractReturnValueIgnored {
               .namedAnyOf("containsKey", "containsValue")
               .withParameters("java.lang.Object"));
 
+  private final Matcher<? super ExpressionTree> matcher;
+
+  public ReturnValueIgnored(ErrorProneFlags flags) {
+    boolean checkOptional = flags.getBoolean("ReturnValueIgnored:CheckOptional").orElse(true);
+    this.matcher =
+        checkOptional ? anyOf(SPECIALIZED_MATCHER, OPTIONAL_METHODS) : SPECIALIZED_MATCHER;
+  }
+
   @Override
   public Matcher<? super ExpressionTree> specializedMatcher() {
-    return SPECIALIZED_MATCHER;
+    return matcher;
   }
 }

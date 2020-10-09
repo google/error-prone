@@ -141,6 +141,43 @@ public class ReturnValueIgnoredTest {
   }
 
   @Test
+  public void optionalStaticMethods() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.util.Optional;",
+            "class Test {",
+            "  void optional() {",
+            "    // BUG: Diagnostic contains: ReturnValueIgnored",
+            "    Optional.empty();",
+            "    // BUG: Diagnostic contains: ReturnValueIgnored",
+            "    Optional.of(42);",
+            "    // BUG: Diagnostic contains: ReturnValueIgnored",
+            "    Optional.ofNullable(null);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void optionalInstanceMethods() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.util.Optional;",
+            "class Test {",
+            "  void optional() {",
+            "    Optional<Integer> optional = Optional.of(42);",
+            "    // BUG: Diagnostic contains: ReturnValueIgnored",
+            "    optional.isPresent();",
+            "    optional.filter(v -> v > 40);",
+            "    optional.map(v -> Integer.toString(v));",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void issue1565_enumDeclaration() {
     compilationHelper
         .addSourceLines(
