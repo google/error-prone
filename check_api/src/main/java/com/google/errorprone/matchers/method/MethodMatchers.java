@@ -97,6 +97,9 @@ public class MethodMatchers {
     /** Match the given type exactly. */
     MethodClassMatcher onClass(TypePredicate predicate);
 
+    /** Match on types with the given fully-qualified name. (e.g. {@code java.lang.String} */
+    MethodClassMatcher onClass(String className);
+
     /** Match on any class. */
     MethodClassMatcher anyClass();
   }
