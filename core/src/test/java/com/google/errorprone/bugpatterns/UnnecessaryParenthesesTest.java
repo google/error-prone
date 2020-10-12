@@ -122,4 +122,16 @@ public class UnnecessaryParenthesesTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void lambdaLambda() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            "import java.util.function.Function;",
+            "class Test {",
+            "  Function<Void, Function<Void, Void>> r = x -> (y -> y);",
+            "}")
+        .doTest();
+  }
 }

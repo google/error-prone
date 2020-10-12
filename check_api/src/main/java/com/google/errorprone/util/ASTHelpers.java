@@ -322,8 +322,12 @@ public class ASTHelpers {
       case PARENTHESIZED:
       case NEW_CLASS:
       case MEMBER_REFERENCE:
-      case LAMBDA_EXPRESSION:
         return false;
+      case LAMBDA_EXPRESSION:
+        // Parenthesizing e.g. `x -> (y -> z)` is unnecessary but helpful
+        Tree parent = state.getPath().getParentPath().getLeaf();
+        return parent.getKind().equals(Kind.LAMBDA_EXPRESSION)
+            && stripParentheses(((LambdaExpressionTree) parent).getBody()).equals(expression);
       default: // continue below
     }
     if (expression instanceof LiteralTree) {
