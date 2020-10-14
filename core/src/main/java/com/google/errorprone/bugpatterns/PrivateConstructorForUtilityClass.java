@@ -60,7 +60,8 @@ public final class PrivateConstructorForUtilityClass extends BugChecker
         || classTree.getExtendsClause() != null
         || !classTree.getImplementsClause().isEmpty()
         || isInPrivateScope(state)
-        || hasAnnotation(getSymbol(classTree), "org.junit.runner.RunWith", state)) {
+        || hasAnnotation(getSymbol(classTree), "org.junit.runner.RunWith", state)
+        || hasAnnotation(getSymbol(classTree), "org.robolectric.annotation.Implements", state)) {
       return NO_MATCH;
     }
 
