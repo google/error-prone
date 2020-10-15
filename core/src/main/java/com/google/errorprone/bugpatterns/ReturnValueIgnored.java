@@ -26,7 +26,6 @@ import static com.google.errorprone.util.ASTHelpers.isSameType;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
@@ -159,6 +158,7 @@ public class ReturnValueIgnored extends AbstractReturnValueIgnored {
           ReturnValueIgnored::functionalMethod,
           STREAM_METHOD,
           ARRAYS_METHODS,
+          OPTIONAL_METHODS,
           ReturnValueIgnored::javaTimeTypes,
           instanceMethod()
               .onDescendantOf("java.util.Collection")
@@ -173,16 +173,8 @@ public class ReturnValueIgnored extends AbstractReturnValueIgnored {
               .namedAnyOf("containsKey", "containsValue")
               .withParameters("java.lang.Object"));
 
-  private final Matcher<? super ExpressionTree> matcher;
-
-  public ReturnValueIgnored(ErrorProneFlags flags) {
-    boolean checkOptional = flags.getBoolean("ReturnValueIgnored:CheckOptional").orElse(true);
-    this.matcher =
-        checkOptional ? anyOf(SPECIALIZED_MATCHER, OPTIONAL_METHODS) : SPECIALIZED_MATCHER;
-  }
-
   @Override
   public Matcher<? super ExpressionTree> specializedMatcher() {
-    return matcher;
+    return SPECIALIZED_MATCHER;
   }
 }
