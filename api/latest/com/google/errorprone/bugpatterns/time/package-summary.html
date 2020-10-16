@@ -180,127 +180,133 @@ loadScripts(document, 'script');</script>
 </td>
 </tr>
 <tr class="alt-color">
+<th class="col-first" scope="row"><a href="JodaConstructors.html" title="class in com.google.errorprone.bugpatterns.time">JodaConstructors</a></th>
+<td class="col-last">
+<div class="block">Check for calls to bad JodaTime constructors.</div>
+</td>
+</tr>
+<tr class="row-color">
 <th class="col-first" scope="row"><a href="JodaDurationConstructor.html" title="class in com.google.errorprone.bugpatterns.time">JodaDurationConstructor</a></th>
 <td class="col-last">
 <div class="block">Check for calls to new Duration(long).</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <th class="col-first" scope="row"><a href="JodaDurationWithMillis.html" title="class in com.google.errorprone.bugpatterns.time">JodaDurationWithMillis</a></th>
 <td class="col-last">
 <div class="block">Check for calls to <code>duration.withMillis(long)</code>.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <th class="col-first" scope="row"><a href="JodaInstantWithMillis.html" title="class in com.google.errorprone.bugpatterns.time">JodaInstantWithMillis</a></th>
 <td class="col-last">
 <div class="block">Check for calls to <code>instant.withMillis(long)</code>.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <th class="col-first" scope="row"><a href="JodaNewPeriod.html" title="class in com.google.errorprone.bugpatterns.time">JodaNewPeriod</a></th>
 <td class="col-last">
 <div class="block">Match possibly incorrect use of Period to obtain a number of (e.g.) days between two dates.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <th class="col-first" scope="row"><a href="JodaPlusMinusLong.html" title="class in com.google.errorprone.bugpatterns.time">JodaPlusMinusLong</a></th>
 <td class="col-last">
 <div class="block">Check for calls to JodaTime's <code>type.plus(long)</code> and <code>type.minus(long)</code> where <code>
  &lt;type&gt; = {Duration,Instant,DateTime,DateMidnight}</code>.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <th class="col-first" scope="row"><a href="JodaTimeConverterManager.html" title="class in com.google.errorprone.bugpatterns.time">JodaTimeConverterManager</a></th>
 <td class="col-last">
 <div class="block">Ban usage of Joda's <code>ConverterManager</code>.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <th class="col-first" scope="row"><a href="JodaToSelf.html" title="class in com.google.errorprone.bugpatterns.time">JodaToSelf</a></th>
 <td class="col-last">
 <div class="block">Check for calls to Joda-Time's <code>foo.toFoo()</code> and <code>new Foo(foo)</code>.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <th class="col-first" scope="row"><a href="JodaWithDurationAddedLong.html" title="class in com.google.errorprone.bugpatterns.time">JodaWithDurationAddedLong</a></th>
 <td class="col-last">
 <div class="block">Check for calls to JodaTime's <code>type.withDurationAdded(long, int)</code> where <code>&lt;type&gt; =
  {Duration,Instant,DateTime}</code>.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <th class="col-first" scope="row"><a href="LocalDateTemporalAmount.html" title="class in com.google.errorprone.bugpatterns.time">LocalDateTemporalAmount</a></th>
 <td class="col-last">
 <div class="block">Bans calls to <code>LocalDate.plus(TemporalAmount)</code> and <code>LocalDate.minus(TemporalAmount)</code>
  where the <a href="https://docs.oracle.com/javase/8/docs/api/java/time/temporal/TemporalAmount.html" title="class or interface in java.time.temporal" class="external-link"><code>TemporalAmount</code></a> is a non-zero <a href="https://docs.oracle.com/javase/8/docs/api/java/time/Duration.html" title="class or interface in java.time" class="external-link"><code>Duration</code></a>.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <th class="col-first" scope="row"><a href="NearbyCallers.html" title="class in com.google.errorprone.bugpatterns.time">NearbyCallers</a></th>
 <td class="col-last">
 <div class="block">Utility class to find calls "nearby" other calls.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <th class="col-first" scope="row"><a href="PeriodFrom.html" title="class in com.google.errorprone.bugpatterns.time">PeriodFrom</a></th>
 <td class="col-last">
 <div class="block">Bans calls to <code>Period.from(temporalAmount)</code> where <code>temporalAmount</code> is a <a href="https://docs.oracle.com/javase/8/docs/api/java/time/Duration.html" title="class or interface in java.time" class="external-link"><code>Duration</code></a>.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <th class="col-first" scope="row"><a href="PeriodGetTemporalUnit.html" title="class in com.google.errorprone.bugpatterns.time">PeriodGetTemporalUnit</a></th>
 <td class="col-last">
 <div class="block">Bans calls to <code>Period.get(temporalUnit)</code> where <code>temporalUnit</code> is not <code>YEARS</code>,
  <code>MONTHS</code>, or <code>DAYS</code>.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <th class="col-first" scope="row"><a href="PeriodTimeMath.html" title="class in com.google.errorprone.bugpatterns.time">PeriodTimeMath</a></th>
 <td class="col-last">
 <div class="block">Bans calls to <code>Period#plus/minus(TemporalAmount)</code> where the argument is a Duration.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <th class="col-first" scope="row"><a href="PreferJavaTimeOverload.html" title="class in com.google.errorprone.bugpatterns.time">PreferJavaTimeOverload</a></th>
 <td class="col-last">
 <div class="block">This check suggests the use of <code>java.time</code>-based APIs, when available.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <th class="col-first" scope="row"><a href="ProtoDurationGetSecondsGetNano.html" title="class in com.google.errorprone.bugpatterns.time">ProtoDurationGetSecondsGetNano</a></th>
 <td class="col-last">
 <div class="block">This checker warns about accessing the underlying nanosecond-adjustment field of a duration
  without a "nearby" access of the underlying seconds field.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <th class="col-first" scope="row"><a href="ProtoTimestampGetSecondsGetNano.html" title="class in com.google.errorprone.bugpatterns.time">ProtoTimestampGetSecondsGetNano</a></th>
 <td class="col-last">
 <div class="block">This checker warns about accessing the underlying nanosecond-adjustment field of a protobuf
  timestamp without a "nearby" access of the underlying seconds field.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <th class="col-first" scope="row"><a href="StronglyTypeTime.html" title="class in com.google.errorprone.bugpatterns.time">StronglyTypeTime</a></th>
 <td class="col-last">
 <div class="block">Flags fields which would be better expressed as time types rather than primitive integers.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <th class="col-first" scope="row"><a href="TemporalAccessorGetChronoField.html" title="class in com.google.errorprone.bugpatterns.time">TemporalAccessorGetChronoField</a></th>
 <td class="col-last">
 <div class="block">Bans calls to <code>TemporalAccessor.get(ChronoField)</code> where the implementation is guaranteed to
  throw an <code>UnsupportedTemporalTypeException</code>.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <th class="col-first" scope="row"><a href="TimeUnitConversionChecker.html" title="class in com.google.errorprone.bugpatterns.time">TimeUnitConversionChecker</a></th>
 <td class="col-last">
 <div class="block">Check for problematic or suspicious TimeUnit conversion calls.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <th class="col-first" scope="row"><a href="TimeUnitMismatch.html" title="class in com.google.errorprone.bugpatterns.time">TimeUnitMismatch</a></th>
 <td class="col-last">
 <div class="block">Checker that detects likely time-unit mismatches by looking at identifier names.</div>

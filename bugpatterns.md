@@ -751,6 +751,9 @@ __[JavaxInjectOnFinalField](bugpattern/JavaxInjectOnFinalField)__<br>
 __[JdkObsolete](bugpattern/JdkObsolete)__<br>
 Suggests alternatives to obsolete JDK classes.
 
+__[JodaConstructors](bugpattern/JodaConstructors)__<br>
+Use of certain JodaTime constructors are not allowed.
+
 __[JodaDurationConstructor](bugpattern/JodaDurationConstructor)__<br>
 Use of new Duration(long) is not allowed. Please use Duration.millis(long) instead.
 
