@@ -44,6 +44,7 @@ import com.sun.source.tree.NewClassTree;
             + "Duration is better expressed in terms of other units, use standardSeconds(long), "
             + "standardMinutes(long), standardHours(long), or standardDays(long) instead.",
     severity = WARNING)
+// TODO(kak): delete this once JodaConstructors is fully enabled
 public final class JodaDurationConstructor extends BugChecker implements NewClassTreeMatcher {
   private static final Matcher<ExpressionTree> MATCHER =
       allOf(

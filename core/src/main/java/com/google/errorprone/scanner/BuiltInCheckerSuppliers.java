@@ -453,6 +453,7 @@ import com.google.errorprone.bugpatterns.time.JavaLocalDateTimeGetNano;
 import com.google.errorprone.bugpatterns.time.JavaLocalTimeGetNano;
 import com.google.errorprone.bugpatterns.time.JavaPeriodGetDays;
 import com.google.errorprone.bugpatterns.time.JavaTimeDefaultTimeZone;
+import com.google.errorprone.bugpatterns.time.JodaConstructors;
 import com.google.errorprone.bugpatterns.time.JodaDurationConstructor;
 import com.google.errorprone.bugpatterns.time.JodaDurationWithMillis;
 import com.google.errorprone.bugpatterns.time.JodaInstantWithMillis;
@@ -767,6 +768,7 @@ public class BuiltInCheckerSuppliers {
           JavaUtilDateChecker.class,
           JavaxInjectOnFinalField.class,
           JdkObsolete.class,
+          JodaConstructors.class,
           JodaDurationConstructor.class,
           JodaDurationWithMillis.class,
           JodaInstantWithMillis.class,
