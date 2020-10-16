@@ -58,6 +58,12 @@ import javax.lang.model.element.Name;
     severity = WARNING)
 public class BadImport extends BugChecker implements ImportTreeMatcher {
 
+  private static final String MESSAGE =
+      "Importing nested classes/static methods/static fields with commonly-used names can make "
+          + "code harder to read, because it may not be clear from the context exactly which "
+          + "type is being referred to. Qualifying the name with that of the containing class "
+          + "can make the code clearer. Here we recommend using qualified class: %s";
+
   static final ImmutableSet<String> BAD_NESTED_CLASSES =
       ImmutableSet.of(
           "Builder",
@@ -227,7 +233,10 @@ public class BadImport extends BugChecker implements ImportTreeMatcher {
       // import fix.
       return Description.NO_MATCH;
     }
-    return describeMatch(firstFound, builder.build());
+    return buildDescription(firstFound)
+        .setMessage(String.format(MESSAGE, enclosingReplacement))
+        .addFix(builder.build())
+        .build();
   }
 
   private static boolean isTypeAnnotation(AnnotationTree t) {

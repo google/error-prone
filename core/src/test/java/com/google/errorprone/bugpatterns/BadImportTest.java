@@ -45,6 +45,20 @@ public final class BadImportTest {
   }
 
   @Test
+  public void testMsg() {
+    compilationTestHelper
+        .addSourceLines(
+            "Test.java",
+            "import static com.google.common.collect.ImmutableList.of;",
+            "import com.google.common.collect.ImmutableList;",
+            "class Test {",
+            "  // BUG: Diagnostic contains: qualified class: ImmutableList",
+            "  ImmutableList<?> list = of();",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void positive_static_differentOverloadsInvoked() {
     compilationTestHelper
         .addSourceLines(
