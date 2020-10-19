@@ -33,8 +33,10 @@ import static com.google.errorprone.util.ASTHelpers.isCastable;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
 import static java.util.stream.Stream.concat;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Streams;
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
@@ -63,12 +65,7 @@ import java.util.stream.Stream;
     severity = WARNING)
 public class TruthIncompatibleType extends BugChecker implements MethodInvocationTreeMatcher {
 
-  private static final Matcher<ExpressionTree> START_OF_ASSERTION =
-      anyOf(
-          staticMethod().onClass("com.google.common.truth.Truth").named("assertThat"),
-          instanceMethod()
-              .onDescendantOf("com.google.common.truth.StandardSubjectBuilder")
-              .named("that"));
+  private final Matcher<ExpressionTree> startOfAssertion;
 
   private static final Matcher<ExpressionTree> IS_EQUAL_TO =
       instanceMethod()
@@ -77,13 +74,15 @@ public class TruthIncompatibleType extends BugChecker implements MethodInvocatio
 
   private static final Matcher<ExpressionTree> SCALAR_CONTAINS =
       instanceMethod()
-          .onDescendantOf("com.google.common.truth.IterableSubject")
+          .onDescendantOfAny(
+              "com.google.common.truth.IterableSubject", "com.google.common.truth.StreamSubject")
           .namedAnyOf(
               "contains", "containsExactly", "doesNotContain", "containsAnyOf", "containsNoneOf");
 
   private static final Matcher<ExpressionTree> VECTOR_CONTAINS =
       instanceMethod()
-          .onDescendantOf("com.google.common.truth.IterableSubject")
+          .onDescendantOfAny(
+              "com.google.common.truth.IterableSubject", "com.google.common.truth.StreamSubject")
           .namedAnyOf(
               "containsExactlyElementsIn",
               "containsAnyIn",
@@ -128,6 +127,22 @@ public class TruthIncompatibleType extends BugChecker implements MethodInvocatio
   private static final Supplier<Type> CORRESPONDENCE =
       typeFromString("com.google.common.truth.Correspondence");
 
+  public TruthIncompatibleType(ErrorProneFlags flags) {
+    boolean handleTruth8 = flags.getBoolean("TruthIncompatibleType:HandleTruth8").orElse(true);
+    this.startOfAssertion =
+        anyOf(
+            staticMethod()
+                .onClassAny(
+                    handleTruth8
+                        ? ImmutableList.of(
+                            "com.google.common.truth.Truth", "com.google.common.truth.Truth8")
+                        : ImmutableList.of("com.google.common.truth.Truth"))
+                .named("assertThat"),
+            instanceMethod()
+                .onDescendantOf("com.google.common.truth.StandardSubjectBuilder")
+                .named("that"));
+  }
+
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
     Streams.concat(
@@ -148,7 +163,7 @@ public class TruthIncompatibleType extends BugChecker implements MethodInvocatio
       return Stream.empty();
     }
     ExpressionTree receiver = getReceiver(tree);
-    if (!START_OF_ASSERTION.matches(receiver, state)) {
+    if (!startOfAssertion.matches(receiver, state)) {
       return Stream.empty();
     }
 
@@ -166,7 +181,7 @@ public class TruthIncompatibleType extends BugChecker implements MethodInvocatio
       return Stream.empty();
     }
     ExpressionTree receiver = getReceiver(tree);
-    if (!START_OF_ASSERTION.matches(receiver, state)) {
+    if (!startOfAssertion.matches(receiver, state)) {
       return Stream.empty();
     }
 
@@ -188,7 +203,7 @@ public class TruthIncompatibleType extends BugChecker implements MethodInvocatio
       return Stream.empty();
     }
     ExpressionTree receiver = getReceiver(tree);
-    if (!START_OF_ASSERTION.matches(receiver, state)) {
+    if (!startOfAssertion.matches(receiver, state)) {
       return Stream.empty();
     }
 
@@ -206,7 +221,7 @@ public class TruthIncompatibleType extends BugChecker implements MethodInvocatio
       return Stream.empty();
     }
     ExpressionTree receiver = getReceiver(tree);
-    if (!START_OF_ASSERTION.matches(receiver, state)) {
+    if (!startOfAssertion.matches(receiver, state)) {
       return Stream.empty();
     }
 
@@ -233,7 +248,7 @@ public class TruthIncompatibleType extends BugChecker implements MethodInvocatio
       return Stream.empty();
     }
     ExpressionTree receiver = getReceiver(tree);
-    if (!START_OF_ASSERTION.matches(receiver, state)) {
+    if (!startOfAssertion.matches(receiver, state)) {
       return Stream.empty();
     }
 
@@ -271,7 +286,7 @@ public class TruthIncompatibleType extends BugChecker implements MethodInvocatio
       return Stream.empty();
     }
     ExpressionTree receiver = getReceiver(tree);
-    if (!START_OF_ASSERTION.matches(receiver, state)) {
+    if (!startOfAssertion.matches(receiver, state)) {
       return Stream.empty();
     }
 
@@ -314,7 +329,7 @@ public class TruthIncompatibleType extends BugChecker implements MethodInvocatio
       return Stream.empty();
     }
     ExpressionTree receiver = getReceiver(tree);
-    if (!START_OF_ASSERTION.matches(receiver, state)) {
+    if (!startOfAssertion.matches(receiver, state)) {
       return Stream.empty();
     }
 
@@ -340,7 +355,7 @@ public class TruthIncompatibleType extends BugChecker implements MethodInvocatio
       return Stream.empty();
     }
     ExpressionTree receiver = getReceiver(tree);
-    if (!START_OF_ASSERTION.matches(receiver, state)) {
+    if (!startOfAssertion.matches(receiver, state)) {
       return Stream.empty();
     }
 
