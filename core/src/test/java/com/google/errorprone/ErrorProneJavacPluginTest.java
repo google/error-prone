@@ -174,7 +174,8 @@ public class ErrorProneJavacPluginTest {
     Files.createDirectories(patchDir);
     Path patchFile = patchDir.resolve("error-prone.patch");
     // verify that any existing content in the patch file is deleted
-    Files.write(patchFile, ImmutableList.of("--- C.java", "--- D.java"), UTF_8);
+    // Ignored - this behavior is not desirable with the addition of HubSpotPatchUtils
+    // Files.write(patchFile, ImmutableList.of("--- C.java", "--- D.java"), UTF_8);
     Path fileA = tmp.resolve("A.java");
     Path fileB = tmp.resolve("B.java");
     Files.write(
