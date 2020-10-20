@@ -95,7 +95,7 @@ class RefactoringCollection implements DescriptionListener.Factory {
                   RefactoringResultType.CHANGED);
     } else {
       Path baseDir = rootPath.resolve(patchingOptions.baseDirectory());
-      Path patchFilePath = baseDir.resolve("error-prone.patch");
+      Path patchFilePath = HubSpotPatchUtils.resolvePatchFile(baseDir);
 
       PatchFileDestination patchFileDestination = new PatchFileDestination(baseDir, rootPath);
       postProcess =
