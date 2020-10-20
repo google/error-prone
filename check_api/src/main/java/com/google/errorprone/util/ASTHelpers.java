@@ -339,7 +339,12 @@ public class ASTHelpers {
           .anyMatch(t -> t.kind() == TokenKind.PLUS);
     }
     if (expression instanceof UnaryTree) {
-      return false;
+      Tree parent = state.getPath().getParentPath().getLeaf();
+      if (!(parent instanceof MemberSelectTree)) {
+        return false;
+      }
+      // eg. (i++).toString();
+      return stripParentheses(((MemberSelectTree) parent).getExpression()).equals(expression);
     }
     return true;
   }
