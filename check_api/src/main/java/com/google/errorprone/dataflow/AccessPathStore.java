@@ -28,7 +28,6 @@ import org.checkerframework.shaded.dataflow.analysis.AbstractValue;
 import org.checkerframework.shaded.dataflow.analysis.FlowExpressions;
 import org.checkerframework.shaded.dataflow.analysis.Store;
 import org.checkerframework.shaded.dataflow.cfg.CFGVisualizer;
-import org.checkerframework.shaded.dataflow.cfg.node.LocalVariableNode;
 
 /**
  * Immutable map from local variables or heap access paths to their {@link AbstractValue}
@@ -40,7 +39,7 @@ import org.checkerframework.shaded.dataflow.cfg.node.LocalVariableNode;
  */
 @AutoValue
 public abstract class AccessPathStore<V extends AbstractValue<V>>
-    implements Store<AccessPathStore<V>>, LocalVariableValues<V>, AccessPathValues<V> {
+    implements Store<AccessPathStore<V>>, AccessPathValues<V> {
 
   public abstract ImmutableMap<AccessPath, V> heap();
 
@@ -56,11 +55,6 @@ public abstract class AccessPathStore<V extends AbstractValue<V>>
   @SuppressWarnings("unchecked") // fully variant
   public static <V extends AbstractValue<V>> AccessPathStore<V> empty() {
     return (AccessPathStore<V>) EMPTY;
-  }
-
-  @Override
-  public V valueOfLocalVariable(LocalVariableNode node, V defaultValue) {
-    return valueOfAccessPath(AccessPath.fromLocalVariable(node), defaultValue);
   }
 
   @Nullable

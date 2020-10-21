@@ -24,7 +24,6 @@ import com.google.errorprone.annotations.CheckReturnValue;
 import com.google.errorprone.dataflow.AccessPath;
 import com.google.errorprone.dataflow.AccessPathStore;
 import com.google.errorprone.dataflow.AccessPathValues;
-import com.google.errorprone.dataflow.LocalVariableValues;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -276,7 +275,7 @@ abstract class AbstractNullnessPropagationTransfer
     return updateRegularStore(result, input, updates);
   }
 
-  Nullness visitLocalVariable(LocalVariableNode node, LocalVariableValues<Nullness> store) {
+  Nullness visitLocalVariable(LocalVariableNode node, AccessPathValues<Nullness> store) {
     return NULLABLE;
   }
 

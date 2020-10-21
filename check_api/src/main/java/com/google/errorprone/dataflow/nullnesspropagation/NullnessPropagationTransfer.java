@@ -43,7 +43,6 @@ import com.google.common.primitives.UnsignedLong;
 import com.google.errorprone.dataflow.AccessPath;
 import com.google.errorprone.dataflow.AccessPathStore;
 import com.google.errorprone.dataflow.AccessPathValues;
-import com.google.errorprone.dataflow.LocalVariableValues;
 import com.google.errorprone.dataflow.nullnesspropagation.inference.InferredNullability;
 import com.google.errorprone.dataflow.nullnesspropagation.inference.NullnessQualifierInference;
 import com.google.errorprone.util.MoreAnnotations;
@@ -520,10 +519,10 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
    * variables will essentially assume whatever default is used in {@link #values}.
    */
   @Override
-  Nullness visitLocalVariable(LocalVariableNode node, LocalVariableValues<Nullness> values) {
+  Nullness visitLocalVariable(LocalVariableNode node, AccessPathValues<Nullness> values) {
     return hasPrimitiveType(node) || hasNonNullConstantValue(node)
         ? NONNULL
-        : values.valueOfLocalVariable(node, defaultAssumption);
+        : values.valueOfAccessPath(AccessPath.fromLocalVariable(node), defaultAssumption);
   }
 
   /**
