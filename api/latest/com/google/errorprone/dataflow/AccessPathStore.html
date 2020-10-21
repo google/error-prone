@@ -15,7 +15,7 @@
 <script type="text/javascript" src="../../../../script-dir/jquery-ui.min.js"></script>
 </head>
 <body class="class-declaration-page">
-<script type="text/javascript">var data = {"i0":10,"i1":10,"i2":9,"i3":6,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10};
+<script type="text/javascript">var data = {"i0":10,"i1":10,"i2":9,"i3":6,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],2:["t2","Instance Methods"],4:["t3","Abstract Methods"],8:["t4","Concrete Methods"]};
 var altColor = "alt-color";
 var rowColor = "row-color";
@@ -82,12 +82,12 @@ loadScripts(document, 'script');</script>
 <section class="description">
 <dl class="notes">
 <dt>All Implemented Interfaces:</dt>
-<dd><code><a href="AccessPathValues.html" title="interface in com.google.errorprone.dataflow">AccessPathValues</a>&lt;V&gt;</code>, <code><a href="LocalVariableValues.html" title="interface in com.google.errorprone.dataflow">LocalVariableValues</a>&lt;V&gt;</code>, <code>org.checkerframework.shaded.dataflow.analysis.Store&lt;<a href="AccessPathStore.html" title="class in com.google.errorprone.dataflow">AccessPathStore</a>&lt;V&gt;&gt;</code></dd>
+<dd><code><a href="AccessPathValues.html" title="interface in com.google.errorprone.dataflow">AccessPathValues</a>&lt;V&gt;</code>, <code>org.checkerframework.shaded.dataflow.analysis.Store&lt;<a href="AccessPathStore.html" title="class in com.google.errorprone.dataflow">AccessPathStore</a>&lt;V&gt;&gt;</code></dd>
 </dl>
 <hr>
 <pre>public abstract class <span class="type-name-label">AccessPathStore&lt;V extends org.checkerframework.shaded.dataflow.analysis.AbstractValue&lt;V&gt;&gt;</span>
 extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>
-implements org.checkerframework.shaded.dataflow.analysis.Store&lt;<a href="AccessPathStore.html" title="class in com.google.errorprone.dataflow">AccessPathStore</a>&lt;V&gt;&gt;, <a href="LocalVariableValues.html" title="interface in com.google.errorprone.dataflow">LocalVariableValues</a>&lt;V&gt;, <a href="AccessPathValues.html" title="interface in com.google.errorprone.dataflow">AccessPathValues</a>&lt;V&gt;</pre>
+implements org.checkerframework.shaded.dataflow.analysis.Store&lt;<a href="AccessPathStore.html" title="class in com.google.errorprone.dataflow">AccessPathStore</a>&lt;V&gt;&gt;, <a href="AccessPathValues.html" title="interface in com.google.errorprone.dataflow">AccessPathValues</a>&lt;V&gt;</pre>
 <div class="block">Immutable map from local variables or heap access paths to their <code>AbstractValue</code>
 
  <p>To derive a new instance, <a href="#toBuilder()">create a builder</a> from an old instance. To
@@ -206,19 +206,11 @@ org.checkerframework.shaded.dataflow.analysis.FlowExpressions.Receiver&nbsp;b)</
 <td class="col-last">&nbsp;</td>
 </tr>
 <tr class="row-color" id="i7">
-<td class="col-first"><code><a href="AccessPathStore.html" title="type parameter in AccessPathStore">V</a></code></td>
-<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#valueOfLocalVariable(org.checkerframework.shaded.dataflow.cfg.node.LocalVariableNode,V)">valueOfLocalVariable</a></span>&#8203;(org.checkerframework.shaded.dataflow.cfg.node.LocalVariableNode&nbsp;node,
-<a href="AccessPathStore.html" title="type parameter in AccessPathStore">V</a>&nbsp;defaultValue)</code></th>
-<td class="col-last">
-<div class="block">Provides the nullness values of local variables (as far as they can be determined).</div>
-</td>
-</tr>
-<tr class="alt-color" id="i8">
 <td class="col-first"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#visualize(org.checkerframework.shaded.dataflow.cfg.CFGVisualizer)">visualize</a></span>&#8203;(org.checkerframework.shaded.dataflow.cfg.CFGVisualizer&lt;?,&#8203;<a href="AccessPathStore.html" title="class in com.google.errorprone.dataflow">AccessPathStore</a>&lt;<a href="AccessPathStore.html" title="type parameter in AccessPathStore">V</a>&gt;,&#8203;?&gt;&nbsp;cfgVisualizer)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color" id="i9">
+<tr class="alt-color" id="i8">
 <td class="col-first"><code><a href="AccessPathStore.html" title="class in com.google.errorprone.dataflow">AccessPathStore</a>&lt;<a href="AccessPathStore.html" title="type parameter in AccessPathStore">V</a>&gt;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#widenedUpperBound(com.google.errorprone.dataflow.AccessPathStore)">widenedUpperBound</a></span>&#8203;(<a href="AccessPathStore.html" title="class in com.google.errorprone.dataflow">AccessPathStore</a>&lt;<a href="AccessPathStore.html" title="type parameter in AccessPathStore">V</a>&gt;&nbsp;vAccessPathStore)</code></th>
 <td class="col-last">&nbsp;</td>
@@ -266,22 +258,6 @@ org.checkerframework.shaded.dataflow.analysis.FlowExpressions.Receiver&nbsp;b)</
 <h3>empty</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="type-parameters-long">&lt;V extends org.checkerframework.shaded.dataflow.analysis.AbstractValue&lt;V&gt;&gt;</span>
 <span class="return-type"><a href="AccessPathStore.html" title="class in com.google.errorprone.dataflow">AccessPathStore</a>&lt;V&gt;</span>&nbsp;<span class="member-name">empty</span>()</div>
-</section>
-</li>
-<li>
-<section class="detail" id="valueOfLocalVariable(org.checkerframework.shaded.dataflow.cfg.node.LocalVariableNode,V)">
-<h3 id="valueOfLocalVariable(org.checkerframework.shaded.dataflow.cfg.node.LocalVariableNode,org.checkerframework.shaded.dataflow.analysis.AbstractValue)">valueOfLocalVariable</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="AccessPathStore.html" title="type parameter in AccessPathStore">V</a></span>&nbsp;<span class="member-name">valueOfLocalVariable</span>&#8203;(<span class="parameters">org.checkerframework.shaded.dataflow.cfg.node.LocalVariableNode&nbsp;node,
-<a href="AccessPathStore.html" title="type parameter in AccessPathStore">V</a>&nbsp;defaultValue)</span></div>
-<div class="block"><span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="LocalVariableValues.html#valueOfLocalVariable(org.checkerframework.shaded.dataflow.cfg.node.LocalVariableNode,T)">LocalVariableValues</a></code></span></div>
-<div class="block">Provides the nullness values of local variables (as far as they can be determined). If the
- nullness value cannot be definitively determined (for example, because the variable is a
- parameter with no assignments within the method and wasn't given an explicit initial value),
- <code>defaultValue</code> will be returned.</div>
-<dl class="notes">
-<dt>Specified by:</dt>
-<dd><code><a href="LocalVariableValues.html#valueOfLocalVariable(org.checkerframework.shaded.dataflow.cfg.node.LocalVariableNode,T)">valueOfLocalVariable</a></code>&nbsp;in interface&nbsp;<code><a href="LocalVariableValues.html" title="interface in com.google.errorprone.dataflow">LocalVariableValues</a>&lt;<a href="AccessPathStore.html" title="type parameter in AccessPathStore">V</a> extends org.checkerframework.shaded.dataflow.analysis.AbstractValue&lt;<a href="AccessPathStore.html" title="type parameter in AccessPathStore">V</a>&gt;&gt;</code></dd>
-</dl>
 </section>
 </li>
 <li>
