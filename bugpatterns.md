@@ -757,9 +757,6 @@ Suggests alternatives to obsolete JDK classes.
 __[JodaConstructors](bugpattern/JodaConstructors)__<br>
 Use of certain JodaTime constructors are not allowed.
 
-__[JodaDurationConstructor](bugpattern/JodaDurationConstructor)__<br>
-Use of new Duration(long) is not allowed. Please use Duration.millis(long) instead.
-
 __[JodaDurationWithMillis](bugpattern/JodaDurationWithMillis)__<br>
 Use of duration.withMillis(long) is not allowed. Please use Duration.millis(long) instead.
 
