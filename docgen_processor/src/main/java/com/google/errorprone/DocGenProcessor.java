@@ -82,7 +82,7 @@ public class DocGenProcessor extends AbstractProcessor {
       // this was the last round, do cleanup
       cleanup();
     }
-    return true;
+    return false;
   }
 
   /** Perform cleanup after last round of annotation processing. */
