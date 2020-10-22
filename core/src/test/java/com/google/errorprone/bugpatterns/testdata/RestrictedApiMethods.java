@@ -86,7 +86,4 @@ interface IFaceWithRestriction {
 }
 
 @Target({ElementType.METHOD, ElementType.CONSTRUCTOR})
-@interface Whitelist {}
-
-@Target({ElementType.METHOD, ElementType.CONSTRUCTOR})
 @interface WhitelistWithWarning {}
