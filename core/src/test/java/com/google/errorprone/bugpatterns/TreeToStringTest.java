@@ -72,7 +72,7 @@ public class TreeToStringTest {
             "@BugPattern(name = \"Example\", summary = \"\", severity = SeverityLevel.ERROR)",
             "public class ExampleChecker extends BugChecker implements ClassTreeMatcher {",
             "  private static Matcher<ClassTree> matches(String name) {",
-            "    // BUG: Diagnostic contains: TreeToString",
+            "    // BUG: Diagnostic contains: state.getSourceForNode(c).equals",
             "    return (Matcher<ClassTree>) (c, state) -> c.toString().equals(name);",
             "  }",
             "  @Override public Description matchClass(ClassTree tree, VisitorState state) {",

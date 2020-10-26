@@ -32,6 +32,7 @@ import com.sun.source.tree.EnhancedForLoopTree;
 import com.sun.source.tree.ForLoopTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.ImportTree;
+import com.sun.source.tree.LambdaExpressionTree;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
@@ -163,6 +164,11 @@ public final class FindIdentifiers {
               break;
             }
             addIfVariable(stmt, result);
+          }
+          break;
+        case LAMBDA_EXPRESSION:
+          for (VariableTree param : ((LambdaExpressionTree) curr).getParameters()) {
+            result.add(ASTHelpers.getSymbol(param));
           }
           break;
         case METHOD:
