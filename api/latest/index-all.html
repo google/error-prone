@@ -4704,7 +4704,7 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/refaster/Inliner.html#getStaticImportsToAdd()">getStaticImportsToAdd()</a></span> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/Inliner.html" title="class in com.google.errorprone.refaster">Inliner</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/FutureReturnValueIgnored.html#getSubst(com.sun.tools.javac.code.Type,java.util.List,java.util.List)">getSubst(Type, List&lt;Type&gt;, List&lt;Type&gt;)</a></span> - Static method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/FutureReturnValueIgnored.html" title="class in com.google.errorprone.bugpatterns">FutureReturnValueIgnored</a></dt>
+<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/AbstractReturnValueIgnored.html#getSubst(com.sun.tools.javac.code.Type,java.util.List,java.util.List)">getSubst(Type, List&lt;Type&gt;, List&lt;Type&gt;)</a></span> - Static method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/AbstractReturnValueIgnored.html" title="class in com.google.errorprone.bugpatterns">AbstractReturnValueIgnored</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/SuppressWarningsDeprecated.html#getSuggestedFix(com.sun.source.tree.AnnotationTree)">getSuggestedFix(AnnotationTree)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/SuppressWarningsDeprecated.html" title="class in com.google.errorprone.bugpatterns">SuppressWarningsDeprecated</a></dt>
 <dd>&nbsp;</dd>
@@ -6656,6 +6656,16 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/LossyPrimitiveCompare.html#%3Cinit%3E()">LossyPrimitiveCompare()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/LossyPrimitiveCompare.html" title="class in com.google.errorprone.bugpatterns">LossyPrimitiveCompare</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/AbstractReturnValueIgnored.html#lostType(com.google.errorprone.VisitorState)">lostType(VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/AbstractReturnValueIgnored.html" title="class in com.google.errorprone.bugpatterns">AbstractReturnValueIgnored</a></dt>
+<dd>
+<div class="block">Check for occurrences of this type being lost, i.e.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/FutureReturnValueIgnored.html#lostType(com.google.errorprone.VisitorState)">lostType(VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/FutureReturnValueIgnored.html" title="class in com.google.errorprone.bugpatterns">FutureReturnValueIgnored</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/AbstractReturnValueIgnored.html#lostTypeMessage(java.lang.String,java.lang.String)">lostTypeMessage(String, String)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/AbstractReturnValueIgnored.html" title="class in com.google.errorprone.bugpatterns">AbstractReturnValueIgnored</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/FutureReturnValueIgnored.html#lostTypeMessage(java.lang.String,java.lang.String)">lostTypeMessage(String, String)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/FutureReturnValueIgnored.html" title="class in com.google.errorprone.bugpatterns">FutureReturnValueIgnored</a></dt>
+<dd>&nbsp;</dd>
 </dl>
 <h2 class="title" id="I:M">M</h2>
 <dl class="index">
@@ -7243,11 +7253,6 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/EqualsIncompatibleType.html#matchMemberReference(com.sun.source.tree.MemberReferenceTree,com.google.errorprone.VisitorState)">matchMemberReference(MemberReferenceTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/EqualsIncompatibleType.html" title="class in com.google.errorprone.bugpatterns">EqualsIncompatibleType</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/FutureReturnValueIgnored.html#matchMemberReference(com.sun.source.tree.MemberReferenceTree,com.google.errorprone.VisitorState)">matchMemberReference(MemberReferenceTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/FutureReturnValueIgnored.html" title="class in com.google.errorprone.bugpatterns">FutureReturnValueIgnored</a></dt>
-<dd>
-<div class="block">Detect member references that implement an interface that return Object, but resolve to a
- method that returns Future.</div>
-</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/ImmutableModification.html#matchMemberReference(com.sun.source.tree.MemberReferenceTree,com.google.errorprone.VisitorState)">matchMemberReference(MemberReferenceTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/ImmutableModification.html" title="class in com.google.errorprone.bugpatterns">ImmutableModification</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/IsInstanceIncompatibleType.html#matchMemberReference(com.sun.source.tree.MemberReferenceTree,com.google.errorprone.VisitorState)">matchMemberReference(MemberReferenceTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/IsInstanceIncompatibleType.html" title="class in com.google.errorprone.bugpatterns">IsInstanceIncompatibleType</a></dt>
@@ -7562,8 +7567,6 @@ loadScripts(document, 'script');</script>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/formatstring/FormatStringAnnotationChecker.html#matchMethodInvocation(com.sun.source.tree.MethodInvocationTree,com.google.errorprone.VisitorState)">matchMethodInvocation(MethodInvocationTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.formatstring.<a href="com/google/errorprone/bugpatterns/formatstring/FormatStringAnnotationChecker.html" title="class in com.google.errorprone.bugpatterns.formatstring">FormatStringAnnotationChecker</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/ForOverrideChecker.html#matchMethodInvocation(com.sun.source.tree.MethodInvocationTree,com.google.errorprone.VisitorState)">matchMethodInvocation(MethodInvocationTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/ForOverrideChecker.html" title="class in com.google.errorprone.bugpatterns">ForOverrideChecker</a></dt>
-<dd>&nbsp;</dd>
-<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/FutureReturnValueIgnored.html#matchMethodInvocation(com.sun.source.tree.MethodInvocationTree,com.google.errorprone.VisitorState)">matchMethodInvocation(MethodInvocationTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/FutureReturnValueIgnored.html" title="class in com.google.errorprone.bugpatterns">FutureReturnValueIgnored</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/FuturesGetCheckedIllegalExceptionType.html#matchMethodInvocation(com.sun.source.tree.MethodInvocationTree,com.google.errorprone.VisitorState)">matchMethodInvocation(MethodInvocationTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/FuturesGetCheckedIllegalExceptionType.html" title="class in com.google.errorprone.bugpatterns">FuturesGetCheckedIllegalExceptionType</a></dt>
 <dd>&nbsp;</dd>
@@ -7924,15 +7927,14 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/AsyncFunctionReturnsNull.html#matchReturn(com.sun.source.tree.ReturnTree,com.google.errorprone.VisitorState)">matchReturn(ReturnTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/AsyncFunctionReturnsNull.html" title="class in com.google.errorprone.bugpatterns">AsyncFunctionReturnsNull</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/AbstractReturnValueIgnored.html#matchReturn(com.sun.source.tree.ReturnTree,com.google.errorprone.VisitorState)">matchReturn(ReturnTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/AbstractReturnValueIgnored.html" title="class in com.google.errorprone.bugpatterns">AbstractReturnValueIgnored</a></dt>
+<dd>
+<div class="block">Returning a type from a lambda or method that returns Object loses the type information.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/BugChecker.ReturnTreeMatcher.html#matchReturn(com.sun.source.tree.ReturnTree,com.google.errorprone.VisitorState)">matchReturn(ReturnTree, VisitorState)</a></span> - Method in interface com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/BugChecker.ReturnTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.ReturnTreeMatcher</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/Finally.html#matchReturn(com.sun.source.tree.ReturnTree,com.google.errorprone.VisitorState)">matchReturn(ReturnTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/Finally.html" title="class in com.google.errorprone.bugpatterns">Finally</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/FutureReturnValueIgnored.html#matchReturn(com.sun.source.tree.ReturnTree,com.google.errorprone.VisitorState)">matchReturn(ReturnTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/FutureReturnValueIgnored.html" title="class in com.google.errorprone.bugpatterns">FutureReturnValueIgnored</a></dt>
-<dd>
-<div class="block">Returning a type of Future from a lambda or method that returns Object loses the Future type,
- which can result in suppressed errors or race conditions.</div>
-</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/inject/dagger/ProvidesNull.html#matchReturn(com.sun.source.tree.ReturnTree,com.google.errorprone.VisitorState)">matchReturn(ReturnTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.inject.dagger.<a href="com/google/errorprone/bugpatterns/inject/dagger/ProvidesNull.html" title="class in com.google.errorprone.bugpatterns.inject.dagger">ProvidesNull</a></dt>
 <dd>
 <div class="block">Matches explicit "return null" statements in methods annotated with <code>@Provides</code> but not
