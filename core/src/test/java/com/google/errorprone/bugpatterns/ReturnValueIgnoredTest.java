@@ -249,4 +249,20 @@ public class ReturnValueIgnoredTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void methodReferenceToObject() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.util.function.Function;",
+            "abstract class Test {",
+            "  void test(Function<Integer, Long> fn) {",
+            "    foo(fn::apply);",
+            "  }",
+            "  void foo(Function<Integer, Object> fn) {",
+            "  }",
+            "}")
+        .doTest();
+  }
 }
