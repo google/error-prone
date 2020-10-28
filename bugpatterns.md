@@ -1229,9 +1229,6 @@ This overriding method is redundant, and can be removed.
 __[RedundantThrows](bugpattern/RedundantThrows)__<br>
 Thrown exception is a subtype of another
 
-__[RestrictInjectVisibility](bugpattern/RestrictInjectVisibility)__<br>
-Some methods (such as those annotated with @Inject or @Provides) are only intended to be called by a framework, and so should have default visibility
-
 __[StringEquality](bugpattern/StringEquality)__<br>
 String comparison using reference equality instead of value equality
 
@@ -1258,6 +1255,9 @@ Static fields are implicitly transient, so the explicit modifier is unnecessary
 
 __[UnnecessarilyFullyQualified](bugpattern/UnnecessarilyFullyQualified)__<br>
 This fully qualified name is unambiguous to the compiler if imported.
+
+__[UnnecessarilyVisible](bugpattern/UnnecessarilyVisible)__<br>
+Some methods (such as those annotated with @Inject or @Provides) are only intended to be called by a framework, and so should have default visibility
 
 __[UnnecessaryDefaultInEnumSwitch](bugpattern/UnnecessaryDefaultInEnumSwitch)__<br>
 Switch handles all enum values: an explicit default case is unnecessary and defeats error checking for non-exhaustive switches.
