@@ -104,4 +104,20 @@ public final class UnnecessarilyVisibleTest {
         .expectUnchanged()
         .doTest();
   }
+
+  @Test
+  public void visibleForTesting_noFinding() {
+    helper
+        .addInputLines(
+            "Test.java", //
+            "import com.google.common.annotations.VisibleForTesting;",
+            "import javax.inject.Inject;",
+            "class Test {",
+            "  @Inject",
+            "  @VisibleForTesting",
+            "  public Test() {}",
+            "}")
+        .expectUnchanged()
+        .doTest();
+  }
 }

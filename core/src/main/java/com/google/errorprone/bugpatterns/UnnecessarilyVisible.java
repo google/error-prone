@@ -24,6 +24,7 @@ import static com.google.errorprone.fixes.SuggestedFixes.removeModifiers;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.annotationsAmong;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
+import static com.google.errorprone.util.ASTHelpers.hasDirectAnnotationWithSimpleName;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
@@ -39,7 +40,8 @@ import javax.lang.model.element.Modifier;
 
 /** Suggests restricting the visibility of methods which should only be called by a framework. */
 @BugPattern(
-    name = "RestrictInjectVisibility",
+    name = "UnnecessarilyVisible",
+    altNames = "RestrictInjectVisibility",
     summary =
         "Some methods (such as those annotated with @Inject or @Provides) are only intended to be"
             + " called by a framework, and so should have default visibility",
@@ -64,6 +66,9 @@ public final class UnnecessarilyVisible extends BugChecker implements MethodTree
   @Override
   public Description matchMethod(MethodTree tree, VisitorState state) {
     if (annotationsAmong(getSymbol(tree), FRAMEWORK_ANNOTATIONS.get(state), state).isEmpty()) {
+      return NO_MATCH;
+    }
+    if (hasDirectAnnotationWithSimpleName(tree, "VisibleForTesting")) {
       return NO_MATCH;
     }
     Set<Modifier> badModifiers = intersection(tree.getModifiers().getFlags(), VISIBILITY_MODIFIERS);
