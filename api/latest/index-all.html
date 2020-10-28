@@ -138,6 +138,12 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/matchers/AbstractTypeMatcher.html#%3Cinit%3E(java.lang.String)">AbstractTypeMatcher(String)</a></span> - Constructor for class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/AbstractTypeMatcher.html" title="class in com.google.errorprone.matchers">AbstractTypeMatcher</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/bugpatterns/AbstractUseSwitch.html" title="class in com.google.errorprone.bugpatterns"><span class="type-name-link">AbstractUseSwitch</span></a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
+<dd>
+<div class="block">Helper for refactoring from if-else chains to switches.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/AbstractUseSwitch.html#%3Cinit%3E()">AbstractUseSwitch()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/AbstractUseSwitch.html" title="class in com.google.errorprone.bugpatterns">AbstractUseSwitch</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/refaster/UAnyOf.html#accept(com.sun.source.tree.TreeVisitor,D)">accept(TreeVisitor&lt;R, D&gt;, D)</a></span> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/UAnyOf.html" title="class in com.google.errorprone.refaster">UAnyOf</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/refaster/UStaticIdent.html#accept(com.sun.source.tree.TreeVisitor,D)">accept(TreeVisitor&lt;R, D&gt;, D)</a></span> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/UStaticIdent.html" title="class in com.google.errorprone.refaster">UStaticIdent</a></dt>
@@ -4211,6 +4217,12 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/refaster/UReturn.html#getExpression()">getExpression()</a></span> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/UReturn.html" title="class in com.google.errorprone.refaster">UReturn</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/AbstractUseSwitch.html#getExpressionForCase(com.google.errorprone.VisitorState,com.sun.source.tree.ExpressionTree)">getExpressionForCase(VisitorState, ExpressionTree)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/AbstractUseSwitch.html" title="class in com.google.errorprone.bugpatterns">AbstractUseSwitch</a></dt>
+<dd>
+<div class="block">Returns the source text that should appear in a <code>case</code> statement in the fix.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/UseEnumSwitch.html#getExpressionForCase(com.google.errorprone.VisitorState,com.sun.source.tree.ExpressionTree)">getExpressionForCase(VisitorState, ExpressionTree)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/UseEnumSwitch.html" title="class in com.google.errorprone.bugpatterns">UseEnumSwitch</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/dataflow/nullnesspropagation/inference/InferredNullability.html#getExprNullness(com.sun.source.tree.ExpressionTree)">getExprNullness(ExpressionTree)</a></span> - Method in class com.google.errorprone.dataflow.nullnesspropagation.inference.<a href="com/google/errorprone/dataflow/nullnesspropagation/inference/InferredNullability.html" title="class in com.google.errorprone.dataflow.nullnesspropagation.inference">InferredNullability</a></dt>
 <dd>
 <div class="block">Get inferred nullness qualifier for an expression, if possible.</div>
@@ -7178,6 +7190,8 @@ loadScripts(document, 'script');</script>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/apidiff/ApiDiffChecker.html#matchIdentifier(com.sun.source.tree.IdentifierTree,com.google.errorprone.VisitorState)">matchIdentifier(IdentifierTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.apidiff.<a href="com/google/errorprone/bugpatterns/apidiff/ApiDiffChecker.html" title="class in com.google.errorprone.bugpatterns.apidiff">ApiDiffChecker</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/BugChecker.IdentifierTreeMatcher.html#matchIdentifier(com.sun.source.tree.IdentifierTree,com.google.errorprone.VisitorState)">matchIdentifier(IdentifierTree, VisitorState)</a></span> - Method in interface com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/BugChecker.IdentifierTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.IdentifierTreeMatcher</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/AbstractUseSwitch.html#matchIf(com.sun.source.tree.IfTree,com.google.errorprone.VisitorState)">matchIf(IfTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/AbstractUseSwitch.html" title="class in com.google.errorprone.bugpatterns">AbstractUseSwitch</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/BugChecker.IfTreeMatcher.html#matchIf(com.sun.source.tree.IfTree,com.google.errorprone.VisitorState)">matchIf(IfTree, VisitorState)</a></span> - Method in interface com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/BugChecker.IfTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.IfTreeMatcher</a></dt>
 <dd>&nbsp;</dd>
@@ -11751,6 +11765,12 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/google/errorprone/bugpatterns/UseCorrectAssertInTests.html" title="class in com.google.errorprone.bugpatterns"><span class="type-name-link">UseCorrectAssertInTests</span></a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/UseCorrectAssertInTests.html#%3Cinit%3E()">UseCorrectAssertInTests()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/UseCorrectAssertInTests.html" title="class in com.google.errorprone.bugpatterns">UseCorrectAssertInTests</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/bugpatterns/UseEnumSwitch.html" title="class in com.google.errorprone.bugpatterns"><span class="type-name-link">UseEnumSwitch</span></a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
+<dd>
+<div class="block">A <a href="com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>; see the associated <a href="com/google/errorprone/BugPattern.html" title="annotation in com.google.errorprone"><code>BugPattern</code></a> annotation for details.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/UseEnumSwitch.html#%3Cinit%3E()">UseEnumSwitch()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/UseEnumSwitch.html" title="class in com.google.errorprone.bugpatterns">UseEnumSwitch</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/refaster/annotation/UseImportPolicy.html" title="annotation in com.google.errorprone.refaster.annotation"><span class="type-name-link">UseImportPolicy</span></a> - Annotation Type in <a href="com/google/errorprone/refaster/annotation/package-summary.html">com.google.errorprone.refaster.annotation</a></dt>
 <dd>

@@ -1375,6 +1375,9 @@ Unnecessary call to NullPointerTester#setDefault
 __[UnnecessaryStaticImport](bugpattern/UnnecessaryStaticImport)__<br>
 Using static imports for types is unnecessary
 
+__[UseEnumSwitch](bugpattern/UseEnumSwitch)__<br>
+Prefer using a switch instead of a chained if-else for enums
+
 __[WildcardImport](bugpattern/WildcardImport)__<br>
 Wildcard imports, static or otherwise, should not be used
 
