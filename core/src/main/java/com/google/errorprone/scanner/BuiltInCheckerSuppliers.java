@@ -343,6 +343,7 @@ import com.google.errorprone.bugpatterns.UnusedMethod;
 import com.google.errorprone.bugpatterns.UnusedNestedClass;
 import com.google.errorprone.bugpatterns.UnusedVariable;
 import com.google.errorprone.bugpatterns.UseCorrectAssertInTests;
+import com.google.errorprone.bugpatterns.UseEnumSwitch;
 import com.google.errorprone.bugpatterns.UseTimeInScope;
 import com.google.errorprone.bugpatterns.VarChecker;
 import com.google.errorprone.bugpatterns.VarTypeName;
@@ -980,6 +981,7 @@ public class BuiltInCheckerSuppliers {
           UnsafeLocaleUsage.class,
           UnusedException.class,
           UrlInSee.class,
+          UseEnumSwitch.class,
           VarChecker.class,
           WildcardImport.class,
           WrongParameterPackage.class
