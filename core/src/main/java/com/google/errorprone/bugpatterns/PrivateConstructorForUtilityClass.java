@@ -20,6 +20,7 @@ import static com.google.common.collect.Streams.stream;
 import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
 import static com.google.errorprone.fixes.SuggestedFixes.addMembers;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
+import static com.google.errorprone.util.ASTHelpers.createPrivateConstructor;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
 import static com.google.errorprone.util.ASTHelpers.isGeneratedConstructor;
@@ -77,7 +78,7 @@ public final class PrivateConstructorForUtilityClass extends BugChecker
     }
     SuggestedFix.Builder fix =
         SuggestedFix.builder()
-            .merge(addMembers(classTree, state, "private " + classTree.getSimpleName() + "() {}"));
+            .merge(addMembers(classTree, state, createPrivateConstructor(classTree)));
     Set<Modifier> modifiers = classTree.getModifiers().getFlags();
     if (!modifiers.contains(Modifier.ABSTRACT) && !modifiers.contains(Modifier.FINAL)) {
       SuggestedFixes.addModifiers(classTree, state, Modifier.FINAL).ifPresent(fix::merge);

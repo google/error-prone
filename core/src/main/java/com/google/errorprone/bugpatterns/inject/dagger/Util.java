@@ -28,6 +28,7 @@ import static com.google.errorprone.matchers.Matchers.hasModifier;
 import static com.google.errorprone.matchers.Matchers.isType;
 import static com.google.errorprone.matchers.Matchers.kindIs;
 import static com.google.errorprone.matchers.Matchers.not;
+import static com.google.errorprone.util.ASTHelpers.createPrivateConstructor;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.isGeneratedConstructor;
 import static com.sun.source.tree.Tree.Kind.INTERFACE;
@@ -196,8 +197,7 @@ final class Util {
     for (Tree member : classTree.getMembers()) {
       if (member.getKind().equals(METHOD) && !isGeneratedConstructor((MethodTree) member)) {
         fix.prefixWith(
-            member,
-            indent + "private " + classTree.getSimpleName() + "() {} // no instances\n" + indent);
+            member, indent + createPrivateConstructor(classTree) + " // no instances\n" + indent);
         break;
       }
       if (!member.getKind().equals(METHOD)) {

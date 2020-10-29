@@ -19,6 +19,7 @@ import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
 import static com.google.errorprone.bugpatterns.inject.dagger.DaggerAnnotations.isBindingDeclarationMethod;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.isStatic;
+import static com.google.errorprone.util.ASTHelpers.createPrivateConstructor;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.isGeneratedConstructor;
 import static com.sun.source.tree.Tree.Kind.CLASS;
@@ -103,8 +104,7 @@ public class PrivateConstructorForNoninstantiableModule extends BugChecker
   }
 
   private Fix addPrivateConstructor(ClassTree classTree, VisitorState state) {
-    return SuggestedFixes.addMembers(
-        classTree, state, "private " + classTree.getSimpleName() + "() {}");
+    return SuggestedFixes.addMembers(classTree, state, createPrivateConstructor(classTree));
   }
 
   private static <T extends Tree> Predicate<T> matcherAsPredicate(

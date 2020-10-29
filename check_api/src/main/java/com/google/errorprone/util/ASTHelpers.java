@@ -2107,4 +2107,9 @@ public class ASTHelpers {
   public static int getStartPosition(Tree tree) {
     return ((JCTree) tree).getStartPosition();
   }
+
+  /** Returns a no arg private constructor for the {@link ClassTree}. */
+  public static String createPrivateConstructor(ClassTree classTree) {
+    return "private " + classTree.getSimpleName() + "() {}";
+  }
 }

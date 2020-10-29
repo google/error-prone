@@ -18,6 +18,7 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.common.collect.Iterables.getLast;
 import static com.google.errorprone.bugpatterns.inject.dagger.DaggerAnnotations.isAnyModule;
+import static com.google.errorprone.util.ASTHelpers.createPrivateConstructor;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 
@@ -96,7 +97,7 @@ public final class InterfaceWithOnlyStatics extends BugChecker implements ClassT
     }
     suggestedFix
         .merge(fixClass(tree, state))
-        .postfixWith(getLast(members), String.format("\nprivate %s() {}", tree.getSimpleName()));
+        .postfixWith(getLast(members), "\n" + createPrivateConstructor(tree));
     return describeMatch(tree, suggestedFix.build());
   }
 
