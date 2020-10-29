@@ -64,9 +64,6 @@ public class CompileTimeConstantExpressionMatcher implements Matcher<ExpressionT
     return matcher.matches(t, state);
   }
 
-  // TODO(xtof): Perhaps some of these matchers could be generally useful, in which case they should
-  // be moved into c.g.errorprone.matchers.
-
   private static final Matcher<ExpressionTree> IMMUTABLE_FACTORY =
       anyOf(
           staticMethod().onClass("com.google.common.collect.ImmutableList").named("of"),
