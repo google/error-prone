@@ -278,6 +278,9 @@ Math.round(Integer) results in truncation
 __[MislabeledAndroidString](bugpattern/MislabeledAndroidString)__<br>
 Certain resources in `android.R.string` have names that do not match their content
 
+__[MisplacedScopeAnnotations](bugpattern/MisplacedScopeAnnotations)__<br>
+Scope annotations used as qualifier annotations don&#39;t have any effect. Move the scope annotation to the binding location or delete it.
+
 __[MissingSuperCall](bugpattern/MissingSuperCall)__<br>
 Overriding method is missing a call to overridden super method
 
