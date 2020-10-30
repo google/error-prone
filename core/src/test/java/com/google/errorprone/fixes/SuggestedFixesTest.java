@@ -1891,4 +1891,34 @@ public class SuggestedFixesTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void addDuplicateImport() {
+    String firstImport = "java.time.Duration";
+    String secondImport = "java.time.Instant";
+    SuggestedFix fix =
+        SuggestedFix.builder()
+            .addImport(firstImport)
+            .addImport(secondImport)
+            .addImport(firstImport)
+            .build();
+    assertThat(fix.getImportsToAdd())
+        .containsExactly("import " + firstImport, "import " + secondImport)
+        .inOrder();
+  }
+
+  @Test
+  public void addDuplicateStaticImport() {
+    String firstImport = "java.util.concurrent.TimeUnit.MILLISECONDS";
+    String secondImport = "java.util.concurrent.TimeUnit.SECONDS";
+    SuggestedFix fix =
+        SuggestedFix.builder()
+            .addStaticImport(firstImport)
+            .addStaticImport(secondImport)
+            .addStaticImport(firstImport)
+            .build();
+    assertThat(fix.getImportsToAdd())
+        .containsExactly("import static " + firstImport, "import static " + secondImport)
+        .inOrder();
+  }
 }
