@@ -388,6 +388,7 @@ import com.google.errorprone.bugpatterns.inject.InjectedConstructorAnnotations;
 import com.google.errorprone.bugpatterns.inject.InvalidTargetingOnScopingAnnotation;
 import com.google.errorprone.bugpatterns.inject.JavaxInjectOnAbstractMethod;
 import com.google.errorprone.bugpatterns.inject.JavaxInjectOnFinalField;
+import com.google.errorprone.bugpatterns.inject.MisplacedScopeAnnotations;
 import com.google.errorprone.bugpatterns.inject.MoreThanOneInjectableConstructor;
 import com.google.errorprone.bugpatterns.inject.MoreThanOneQualifier;
 import com.google.errorprone.bugpatterns.inject.MoreThanOneScopeAnnotationOnClass;
@@ -604,6 +605,7 @@ public class BuiltInCheckerSuppliers {
           LossyPrimitiveCompare.class,
           MathRoundIntLong.class,
           MislabeledAndroidString.class,
+          MisplacedScopeAnnotations.class,
           MissingSuperCall.class,
           MissingTestCall.class,
           MisusedDayOfYear.class,
