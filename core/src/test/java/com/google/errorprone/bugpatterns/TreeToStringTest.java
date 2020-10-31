@@ -67,6 +67,7 @@ public class TreeToStringTest {
             "import com.sun.source.tree.ClassTree;",
             "import com.sun.tools.javac.code.Symbol;",
             "import com.sun.tools.javac.code.Symbol.ClassSymbol;",
+            "import com.sun.tools.javac.tree.TreeMaker;",
             "import com.sun.tools.javac.code.Type;",
             "import com.sun.tools.javac.code.Types;",
             "@BugPattern(name = \"Example\", summary = \"\", severity = SeverityLevel.ERROR)",
@@ -81,6 +82,11 @@ public class TreeToStringTest {
             "      return describeMatch(tree);",
             "    }",
             "    return Description.NO_MATCH;",
+            "  }",
+            "  private String createTree(VisitorState state) {",
+            "     TreeMaker maker = TreeMaker.instance(state.context);",
+            "    // BUG: Diagnostic contains: state.getElements().getConstantExpression(\"val\")",
+            "     return maker.Literal(\"val\").toString();",
             "  }",
             "}")
         .addModules("jdk.compiler/com.sun.tools.javac.code")
