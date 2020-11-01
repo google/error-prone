@@ -17,9 +17,11 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH;
+import static org.junit.Assume.assumeTrue;
 
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
+import com.google.errorprone.util.RuntimeVersion;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -495,9 +497,10 @@ public class ParameterNameTest {
         .doTest();
   }
 
-  @Ignore // TODO(b/67993065): remove @Ignore after the issue is fixed.
   @Test
   public void externalAnnotatedParameterPositive() {
+    // https://bugs.openjdk.java.net/browse/JDK-8007720
+    assumeTrue(RuntimeVersion.isAtLeast11());
     testHelper
         .addSourceLines(
             "Test.java",
