@@ -81,6 +81,7 @@ import com.google.errorprone.bugpatterns.ConditionalExpressionNumericPromotion;
 import com.google.errorprone.bugpatterns.ConstantField;
 import com.google.errorprone.bugpatterns.ConstantOverflow;
 import com.google.errorprone.bugpatterns.ConstantPatternCompile;
+import com.google.errorprone.bugpatterns.DangerousLiteralNullChecker;
 import com.google.errorprone.bugpatterns.DateFormatConstant;
 import com.google.errorprone.bugpatterns.DeadException;
 import com.google.errorprone.bugpatterns.DeadThread;
@@ -548,6 +549,7 @@ public class BuiltInCheckerSuppliers {
           ComputeIfAbsentAmbiguousReference.class,
           ConditionalExpressionNumericPromotion.class,
           ConstantOverflow.class,
+          DangerousLiteralNullChecker.class,
           DeadException.class,
           DeadThread.class,
           DiscardedPostfixExpression.class,
