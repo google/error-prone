@@ -3,7 +3,7 @@ title: IncompatibleModifiers
 summary: This annotation has incompatible modifiers as specified by its @IncompatibleModifiers
   annotation
 layout: bugpattern
-tags: LikelyError
+tags: ''
 severity: ERROR
 ---
 
