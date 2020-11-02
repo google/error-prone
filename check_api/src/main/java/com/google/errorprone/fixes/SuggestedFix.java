@@ -19,6 +19,7 @@ package com.google.errorprone.fixes;
 import static com.google.common.base.Preconditions.checkArgument;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
@@ -28,6 +29,7 @@ import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 import com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import javax.annotation.Nullable;
@@ -37,14 +39,14 @@ public class SuggestedFix implements Fix {
 
   private final String shortDescription;
   private final ImmutableList<FixOperation> fixes;
-  private final ImmutableList<String> importsToAdd;
-  private final ImmutableList<String> importsToRemove;
+  private final ImmutableSet<String> importsToAdd;
+  private final ImmutableSet<String> importsToRemove;
 
   private SuggestedFix(SuggestedFix.Builder builder) {
     this.shortDescription = builder.shortDescription;
     this.fixes = ImmutableList.copyOf(builder.fixes);
-    this.importsToAdd = ImmutableList.copyOf(builder.importsToAdd);
-    this.importsToRemove = ImmutableList.copyOf(builder.importsToRemove);
+    this.importsToAdd = ImmutableSet.copyOf(builder.importsToAdd);
+    this.importsToRemove = ImmutableSet.copyOf(builder.importsToRemove);
   }
 
   @Override
@@ -157,8 +159,8 @@ public class SuggestedFix implements Fix {
   public static class Builder {
 
     private final List<FixOperation> fixes = new ArrayList<>();
-    private final List<String> importsToAdd = new ArrayList<>();
-    private final List<String> importsToRemove = new ArrayList<>();
+    private final Set<String> importsToAdd = new LinkedHashSet<>();
+    private final Set<String> importsToRemove = new LinkedHashSet<>();
     private String shortDescription = "";
 
     protected Builder() {}
