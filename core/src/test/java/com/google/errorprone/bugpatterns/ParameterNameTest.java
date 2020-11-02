@@ -639,6 +639,30 @@ public class ParameterNameTest {
   }
 
   @Test
+  public void varargsTrailing() {
+    BugCheckerRefactoringTestHelper.newInstance(new ParameterName(), getClass())
+        .addInputLines(
+            "in/Test.java",
+            "class Test {",
+            "  void foo(int... args) {}",
+            "",
+            "  void bar() {",
+            "    foo(1, /* foo= */ 2);",
+            "  }",
+            "}")
+        .addOutputLines(
+            "out/Test.java",
+            "class Test {",
+            "  void foo(int... args) {}",
+            "",
+            "  void bar() {",
+            "    foo(1, /* foo */ 2);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void varargsIgnoreNonParameterNameComments() {
     testHelper
         .addSourceLines(

@@ -174,17 +174,10 @@ public class ParameterName extends BugChecker
 
     String fixTemplate = isVarargs(formal) ? "/* %s...= */" : "/* %s= */";
     for (FixInfo match : matches) {
-      int replacementStartPos = match.comment().getSourcePos(0);
-      int replacementEndPos =
-          match.comment().getSourcePos(match.comment().getText().length() - 1) + 1;
       SuggestedFix rewriteCommentFix =
-          SuggestedFix.replace(
-              replacementStartPos,
-              replacementEndPos,
-              String.format(fixTemplate, formal.getSimpleName()));
+          rewriteComment(match.comment(), String.format(fixTemplate, formal.getSimpleName()));
       SuggestedFix rewriteToRegularCommentFix =
-          SuggestedFix.replace(
-              replacementStartPos, replacementEndPos, String.format("/* %s */", match.name()));
+          rewriteComment(match.comment(), String.format("/* %s */", match.name()));
 
       Description description;
       if (match.isFormatCorrect() && !match.isNameCorrect()) {
@@ -226,6 +219,12 @@ public class ParameterName extends BugChecker
     }
   }
 
+  private static SuggestedFix rewriteComment(Comment comment, String format) {
+    int replacementStartPos = comment.getSourcePos(0);
+    int replacementEndPos = comment.getSourcePos(comment.getText().length() - 1) + 1;
+    return SuggestedFix.replace(replacementStartPos, replacementEndPos, format);
+  }
+
   // complains on parameter name comments on varargs past the first one
   private void checkComment(ExpressionTree arg, ErrorProneToken token, VisitorState state) {
     for (Comment comment : token.comments()) {
@@ -233,8 +232,11 @@ public class ParameterName extends BugChecker
           NamedParameterComment.PARAMETER_COMMENT_PATTERN.matcher(
               Comments.getTextFromComment(comment));
       if (m.matches()) {
+        SuggestedFix rewriteCommentFix =
+            rewriteComment(comment, String.format("/* %s%s */", m.group(1), m.group(2)));
         state.reportMatch(
             buildDescription(arg)
+                .addFix(rewriteCommentFix)
                 .setMessage("parameter name comment only allowed on first varargs argument")
                 .build());
       }
