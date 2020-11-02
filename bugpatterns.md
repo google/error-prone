@@ -1265,6 +1265,9 @@ Some methods (such as those annotated with @Inject or @Provides) are only intend
 __[UnnecessaryDefaultInEnumSwitch](bugpattern/UnnecessaryDefaultInEnumSwitch)__<br>
 Switch handles all enum values: an explicit default case is unnecessary and defeats error checking for non-exhaustive switches.
 
+__[UnnecessaryOptionalGet](bugpattern/UnnecessaryOptionalGet)__<br>
+This code can be simplified by directly using the lambda parameters instead of calling get..() on optional.
+
 __[UnsafeLocaleUsage](bugpattern/UnsafeLocaleUsage)__<br>
 Possible unsafe operation related to the java.util.Locale library.
 
