@@ -28,7 +28,6 @@ import static com.sun.source.tree.Tree.Kind.ENUM;
 import com.google.common.base.Predicate;
 import com.google.common.base.Verify;
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.StandardTags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
 import com.google.errorprone.matchers.Description;
@@ -55,8 +54,7 @@ import java.lang.annotation.Annotation;
     summary =
         "Classes that implement Annotation must override equals and hashCode. Consider "
             + "using AutoAnnotation instead of implementing Annotation by hand.",
-    severity = ERROR,
-    tags = StandardTags.LIKELY_ERROR)
+    severity = ERROR)
 public class BadAnnotationImplementation extends BugChecker implements ClassTreeMatcher {
 
   private static final Matcher<ClassTree> CLASS_TREE_MATCHER =
