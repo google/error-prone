@@ -95,6 +95,9 @@ Compile-time constant expression overflows
 __[DaggerProvidesNull](bugpattern/DaggerProvidesNull)__<br>
 Dagger @Provides methods may not return null unless annotated with @Nullable
 
+__[DangerousLiteralNull](bugpattern/DangerousLiteralNull)__<br>
+This method is null-hostile: passing a null literal to it is always wrong
+
 __[DeadException](bugpattern/DeadException)__<br>
 Exception created but not thrown
 
