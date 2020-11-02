@@ -82,6 +82,60 @@ public final class UnnecessaryOptionalGetTest {
   }
 
   @Test
+  public void genericOptionalVars_orElseVariations_replacesWithLambdaArg() {
+    refactoringTestHelper
+        .addInputLines(
+            "Test.java",
+            "import java.util.Optional;",
+            "public class Test {",
+            "  private void home() {",
+            "    Optional<String> op = Optional.of(\"hello\");",
+            "    op.ifPresent(x -> System.out.println(op.orElse(\"other\")));",
+            "    op.ifPresent(x -> System.out.println(op.orElseGet(() -> \"other\")));",
+            "    op.ifPresent(x -> System.out.println(op.orElseThrow(RuntimeException::new)));",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "import java.util.Optional;",
+            "public class Test {",
+            "  private void home() {",
+            "    Optional<String> op = Optional.of(\"hello\");",
+            "    op.ifPresent(x -> System.out.println(x));",
+            "    op.ifPresent(x -> System.out.println(x));",
+            "    op.ifPresent(x -> System.out.println(x));",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void guava_orVariations_replacesWithLambdaArg() {
+    refactoringTestHelper
+        .addInputLines(
+            "Test.java",
+            "import com.google.common.base.Optional;",
+            "public class Test {",
+            "  private void home() {",
+            "    Optional<String> op = Optional.of(\"hello\");",
+            "    op.transform(x -> Long.parseLong(op.or(\"other\")));",
+            "    op.transform(x -> Long.parseLong(op.or(() -> \"other\")));",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "import com.google.common.base.Optional;",
+            "public class Test {",
+            "  private void home() {",
+            "    Optional<String> op = Optional.of(\"hello\");",
+            "    op.transform(x -> Long.parseLong(x));",
+            "    op.transform(x -> Long.parseLong(x));",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void genericOptionalVars_sameVarGet_lamdaBlocks_replacesWithLamdaArg() {
     refactoringTestHelper
         .addInputLines(

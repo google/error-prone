@@ -60,11 +60,21 @@ public final class UnnecessaryOptionalGet extends BugChecker
 
   private static final Matcher<ExpressionTree> OPTIONAL_GET =
       anyOf(
-          instanceMethod().onExactClass("java.util.Optional").named("get"),
-          instanceMethod().onExactClass("java.util.OptionalLong").named("getAsLong"),
-          instanceMethod().onExactClass("java.util.OptionalInt").named("getAsInt"),
-          instanceMethod().onExactClass("java.util.OptionalDouble").named("getAsDouble"),
-          instanceMethod().onExactClass("com.google.common.base.Optional").named("get"));
+          instanceMethod()
+              .onExactClass("java.util.Optional")
+              .namedAnyOf("get", "orElse", "orElseGet", "orElseThrow"),
+          instanceMethod()
+              .onExactClass("java.util.OptionalLong")
+              .namedAnyOf("getAsLong", "orElse", "orElseGet", "orElseThrow"),
+          instanceMethod()
+              .onExactClass("java.util.OptionalInt")
+              .namedAnyOf("getAsInt", "orElse", "orElseGet", "orElseThrow"),
+          instanceMethod()
+              .onExactClass("java.util.OptionalDouble")
+              .namedAnyOf("getAsDouble", "orElse", "orElseGet", "orElseThrow"),
+          instanceMethod()
+              .onExactClass("com.google.common.base.Optional")
+              .namedAnyOf("get", "or", "orNull"));
 
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
