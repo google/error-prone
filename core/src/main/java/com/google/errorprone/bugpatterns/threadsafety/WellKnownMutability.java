@@ -204,6 +204,7 @@ public final class WellKnownMutability implements ThreadSafety.KnownTypes {
         .add("java.util.OptionalDouble")
         .add("java.util.OptionalInt")
         .add("java.util.OptionalLong")
+        .add("java.time.Clock")
         .add("java.time.Duration")
         .add("java.time.Instant")
         .add("java.time.LocalDate")
