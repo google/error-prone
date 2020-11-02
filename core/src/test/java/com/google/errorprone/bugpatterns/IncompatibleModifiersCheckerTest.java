@@ -129,52 +129,6 @@ public class IncompatibleModifiersCheckerTest {
         .doTest();
   }
 
-  @Test
-  public void testGuavaAnnotation() {
-    compilationHelper
-        .addSourceLines(
-            "com/google/common/annotations/IncompatibleModifiers.java",
-            "package com.google.common.annotations;",
-            "import javax.lang.model.element.Modifier;",
-            "import java.lang.annotation.Target;",
-            "import java.lang.annotation.ElementType;",
-            "@Target(ElementType.ANNOTATION_TYPE)",
-            "public @interface IncompatibleModifiers {",
-            "  Modifier[] value();",
-            "}")
-        .addSourceLines(
-            "test/RequiredModifiersTestCase.java",
-            "package test;",
-            "import test.NotAbstract;",
-            "// BUG: Diagnostic contains: The annotation '@NotAbstract' has specified that it"
-                + " should not be used together with the following modifiers: [abstract]",
-            "@NotAbstract public abstract class RequiredModifiersTestCase {",
-            "}")
-        .doTest();
-  }
-
-  @Test
-  public void testGuavaAnnotationOK() {
-    compilationHelper
-        .addSourceLines(
-            "com/google/common/annotations/IncompatibleModifiers.java",
-            "package com.google.common.annotations;",
-            "import javax.lang.model.element.Modifier;",
-            "import java.lang.annotation.Target;",
-            "import java.lang.annotation.ElementType;",
-            "@Target(ElementType.ANNOTATION_TYPE)",
-            "public @interface IncompatibleModifiers {",
-            "  Modifier[] value();",
-            "}")
-        .addSourceLines(
-            "test/RequiredModifiersTestCase.java",
-            "package test;",
-            "import test.NotAbstract;",
-            "@NotAbstract public class RequiredModifiersTestCase {",
-            "}")
-        .doTest();
-  }
-
   // Regression test for #313
   @Test
   public void negativeNestedAnnotations() {
