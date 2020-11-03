@@ -132,6 +132,53 @@ public class TryFailRefactoringTest {
   }
 
   @Test
+  public void tryWithResources() {
+    testHelper
+        .addInputLines(
+            "in/ExceptionTest.java",
+            "import static com.google.common.truth.Truth.assertThat;",
+            "import static org.junit.Assert.fail;",
+            "import com.google.common.io.CharSource;",
+            "import java.io.BufferedReader;",
+            "import java.io.IOException;",
+            "import java.io.PushbackReader;",
+            "import org.junit.Test;",
+            "class ExceptionTest {",
+            "  @Test",
+            "  public void f(String message, CharSource cs) throws IOException {",
+            "    try (BufferedReader buf = cs.openBufferedStream();",
+            "         PushbackReader pbr = new PushbackReader(buf)) {",
+            "      pbr.read();",
+            "      fail(message);",
+            "    } catch (IOException e) {",
+            "      assertThat(e).hasMessageThat().contains(\"NOSUCH\");",
+            "    }",
+            "  }",
+            "}")
+        .addOutputLines(
+            "out/ExceptionTest.java",
+            "import static com.google.common.truth.Truth.assertThat;",
+            "import static org.junit.Assert.assertThrows;",
+            "import static org.junit.Assert.fail;",
+            "import com.google.common.io.CharSource;",
+            "import java.io.BufferedReader;",
+            "import java.io.IOException;",
+            "import java.io.PushbackReader;",
+            "import org.junit.Test;",
+            "class ExceptionTest {",
+            "  @Test",
+            "  public void f(String message, CharSource cs) throws IOException {",
+            "    try (BufferedReader buf = cs.openBufferedStream();",
+            "         PushbackReader pbr = new PushbackReader(buf)) {",
+            "      IOException e = assertThrows(message, IOException.class, () -> pbr.read());",
+            "      assertThat(e).hasMessageThat().contains(\"NOSUCH\");",
+            "    }",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void negative() {
     CompilationTestHelper.newInstance(TryFailRefactoring.class, getClass())
         .addSourceLines(

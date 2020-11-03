@@ -19,6 +19,7 @@ package com.google.errorprone.bugpatterns;
 import static com.google.common.collect.Iterables.getLast;
 import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
+import static java.util.stream.Collectors.joining;
 
 import com.google.common.collect.Iterables;
 import com.google.errorprone.VisitorState;
@@ -82,11 +83,18 @@ public class AssertThrowsUtils {
     CatchTree catchTree = Iterables.getOnlyElement(catchTrees);
     SuggestedFix.Builder fix = SuggestedFix.builder();
     StringBuilder fixPrefix = new StringBuilder();
+    String fixSuffix = "";
     if (throwingStatements.isEmpty()) {
       return Optional.empty();
     }
     List<? extends StatementTree> catchStatements = catchTree.getBlock().getStatements();
     fix.addStaticImport("org.junit.Assert.assertThrows");
+    List<? extends Tree> resources = tryTree.getResources();
+    if (!resources.isEmpty()) {
+      fixPrefix.append(
+          resources.stream().map(state::getSourceForNode).collect(joining("\n", "try (", ") {\n")));
+      fixSuffix = "\n}";
+    }
     if (!catchStatements.isEmpty()) {
       // TODO(cushon): pick a fresh name for the variable, if necessary
       fixPrefix.append(String.format("%s = ", state.getSourceForNode(catchTree.getParameter())));
@@ -120,14 +128,16 @@ public class AssertThrowsUtils {
     }
     if (catchStatements.isEmpty()) {
       fix.replace(
-          state.getEndPosition(getLast(throwingStatements)), state.getEndPosition(tryTree), "");
+          state.getEndPosition(getLast(throwingStatements)),
+          state.getEndPosition(tryTree),
+          fixSuffix);
     } else {
       fix.replace(
           /* startPos= */ state.getEndPosition(getLast(throwingStatements)),
           /* endPos= */ getStartPosition(catchStatements.get(0)),
           "\n");
       fix.replace(
-          state.getEndPosition(getLast(catchStatements)), state.getEndPosition(tryTree), "");
+          state.getEndPosition(getLast(catchStatements)), state.getEndPosition(tryTree), fixSuffix);
     }
     return Optional.of(fix.build());
   }
