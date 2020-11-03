@@ -16,6 +16,7 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.common.collect.Iterables.getLast;
 import static com.google.common.collect.Streams.forEachPair;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
@@ -25,8 +26,10 @@ import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import com.google.auto.value.AutoValue;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Range;
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.NewClassTreeMatcher;
@@ -61,6 +64,24 @@ import java.util.regex.Matcher;
 public class ParameterName extends BugChecker
     implements MethodInvocationTreeMatcher, NewClassTreeMatcher {
 
+  private final ImmutableList<String> exemptPackages;
+
+  public ParameterName() {
+    this(ErrorProneFlags.empty());
+  }
+
+  public ParameterName(ErrorProneFlags errorProneFlags) {
+    this.exemptPackages =
+        errorProneFlags
+            .getList("ParameterName:exemptPackagePrefixes")
+            .orElse(ImmutableList.of())
+            .stream()
+            // add a trailing '.' so that e.g. com.foo matches as a prefix of com.foo.bar, but not
+            // com.foobar
+            .map(p -> p.endsWith(".") ? p : p + ".")
+            .collect(toImmutableList());
+  }
+
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
     checkArguments(tree, tree.getArguments(), state);
@@ -91,6 +112,10 @@ public class ParameterName extends BugChecker
     String source = state.getSourceCode().subSequence(start, end).toString();
     if (!source.contains("/*")) {
       // fast path if the arguments don't contain anything that looks like a comment
+      return;
+    }
+    String enclosingClass = ASTHelpers.enclosingClass(sym).toString();
+    if (exemptPackages.stream().anyMatch(enclosingClass::startsWith)) {
       return;
     }
     Deque<ErrorProneToken> tokens =

@@ -17,11 +17,10 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH;
-import static org.junit.Assume.assumeTrue;
 
+import com.google.common.collect.ImmutableList;
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
-import com.google.errorprone.util.RuntimeVersion;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -497,10 +496,9 @@ public class ParameterNameTest {
         .doTest();
   }
 
+  @Ignore // TODO(b/67993065): remove @Ignore after the issue is fixed.
   @Test
   public void externalAnnotatedParameterPositive() {
-    // https://bugs.openjdk.java.net/browse/JDK-8007720
-    assumeTrue(RuntimeVersion.isAtLeast11());
     testHelper
         .addSourceLines(
             "Test.java",
@@ -728,6 +726,44 @@ public class ParameterNameTest {
             "  }",
             "}")
         .withClasspath(Holder.class, ParameterNameTest.class)
+        .doTest();
+  }
+
+  @Test
+  public void exemptPackage() {
+    CompilationTestHelper.newInstance(ParameterName.class, getClass())
+        .addSourceLines(
+            "test/a/A.java",
+            "package test.a;",
+            "public class A {",
+            "  public static void f(int value) {}",
+            "}")
+        .addSourceLines(
+            "test/b/nested/B.java",
+            "package test.b.nested;",
+            "public class B {",
+            "  public static void f(int value) {}",
+            "}")
+        .addSourceLines(
+            "test/c/C.java",
+            "package test.c;",
+            "public class C {",
+            "  public static void f(int value) {}",
+            "}")
+        .addSourceLines(
+            "Test.java",
+            "import test.a.A;",
+            "import test.b.nested.B;",
+            "import test.c.C;",
+            "class Test {",
+            "  void f() {",
+            "    A.f(/* typo= */ 1);",
+            "    B.f(/* typo= */ 1);",
+            "    // BUG: Diagnostic contains: 'C.f(/* value= */ 1);'",
+            "    C.f(/* typo= */ 1);",
+            "  }",
+            "}")
+        .setArgs(ImmutableList.of("-XepOpt:ParameterName:exemptPackagePrefixes=test.a,test.b"))
         .doTest();
   }
 }
