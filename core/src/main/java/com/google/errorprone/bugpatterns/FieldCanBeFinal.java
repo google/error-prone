@@ -25,7 +25,6 @@ import com.google.errorprone.bugpatterns.BugChecker.CompilationUnitTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
-import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.ClassTree;
@@ -40,6 +39,7 @@ import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.UnaryTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePathScanner;
+import com.sun.tools.javac.code.Attribute;
 import com.sun.tools.javac.code.Flags;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
@@ -49,6 +49,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
+import javax.lang.model.element.TypeElement;
 
 /** @author Liam Miller-Cushon (cushon@google.com) */
 @BugPattern(
@@ -64,11 +65,6 @@ public class FieldCanBeFinal extends BugChecker implements CompilationUnitTreeMa
           "javax.inject.Inject",
           "com.google.inject.Inject",
           "com.google.inject.testing.fieldbinder.Bind",
-          "com.googlecode.objectify.v5.annotation.Collection",
-          "com.googlecode.objectify.v5.annotation.Id",
-          "com.googlecode.objectify.v5.annotation.Index",
-          "com.googlecode.objectify.v5.annotation.Parent",
-          "com.googlecode.objectify.v5.annotation.Subclass",
           "com.google.errorprone.annotations.Var",
           "com.google.common.annotations.NonFinalForGwt",
           "org.kohsuke.args4j.Argument",
@@ -80,13 +76,7 @@ public class FieldCanBeFinal extends BugChecker implements CompilationUnitTreeMa
           "com.beust.jcommander.Parameter",
           "javax.persistence.Id");
 
-  /** Annotations that imply all fields in the annotated class are non-constant. */
-  private static final ImmutableSet<String> IMPLICIT_VAR_CLASS_ANNOTATIONS =
-      ImmutableSet.of(
-          "com.googlecode.objectify.v4.annotation.Entity",
-          "com.googlecode.objectify.v4.annotation.Embed",
-          "com.googlecode.objectify.v5.annotation.Entity",
-          "com.googlecode.objectify.v5.annotation.Embed");
+  private static final String OBJECTIFY_PREFIX = "com.googlecode.objectify.";
 
   /**
    * Annotations that imply a field is non-constant, and that do not have a canonical
@@ -222,12 +212,16 @@ public class FieldCanBeFinal extends BugChecker implements CompilationUnitTreeMa
           continue outer;
         }
       }
-      VariableTree varDecl = var.declaration();
-      for (AnnotationTree anno : varDecl.getModifiers().getAnnotations()) {
-        if (IMPLICIT_VAR_ANNOTATION_SIMPLE_NAMES.contains(ASTHelpers.getAnnotationName(anno))) {
+      for (Attribute.Compound anno : var.sym.getAnnotationMirrors()) {
+        TypeElement annoElement = (TypeElement) anno.getAnnotationType().asElement();
+        if (IMPLICIT_VAR_ANNOTATION_SIMPLE_NAMES.contains(annoElement.getSimpleName().toString())) {
+          return Description.NO_MATCH;
+        }
+        if (annoElement.getQualifiedName().toString().startsWith(OBJECTIFY_PREFIX)) {
           return Description.NO_MATCH;
         }
       }
+      VariableTree varDecl = var.declaration();
       SuggestedFixes.addModifiers(varDecl, state, Modifier.FINAL)
           .ifPresent(
               f -> {
@@ -310,8 +304,9 @@ public class FieldCanBeFinal extends BugChecker implements CompilationUnitTreeMa
         return null;
       }
 
-      for (String annotation : IMPLICIT_VAR_CLASS_ANNOTATIONS) {
-        if (ASTHelpers.hasAnnotation(getSymbol(node), annotation, state)) {
+      for (Attribute.Compound anno : getSymbol(node).getAnnotationMirrors()) {
+        TypeElement annoElement = (TypeElement) anno.getAnnotationType().asElement();
+        if (annoElement.getQualifiedName().toString().startsWith(OBJECTIFY_PREFIX)) {
           return null;
         }
       }
