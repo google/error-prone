@@ -45,6 +45,7 @@ import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.util.TreePath;
 import com.sun.tools.javac.api.JavacTaskImpl;
 import com.sun.tools.javac.api.JavacTool;
+import com.sun.tools.javac.main.JavaCompiler;
 import com.sun.tools.javac.tree.JCTree.JCClassDecl;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 import com.sun.tools.javac.util.Context;
@@ -241,9 +242,12 @@ public class BugCheckerRefactoringTestHelper {
     Context context = new Context();
     JCCompilationUnit tree = doCompile(input, sources.keySet(), context);
     JavaFileObject transformed = applyDiff(input, context, tree);
+    closeCompiler(context);
     testMode.verifyMatch(transformed, output);
     if (!allowBreakingChanges) {
-      doCompile(output, sources.values(), new Context());
+      Context anotherContext = new Context();
+      doCompile(output, sources.values(), anotherContext);
+      closeCompiler(anotherContext);
     }
   }
 
@@ -357,5 +361,12 @@ public class BugCheckerRefactoringTestHelper {
     int insertAt = path.lastIndexOf('/');
     insertAt = insertAt == -1 ? 0 : insertAt + 1;
     return new StringBuilder(path).insert(insertAt, prefix + "/").toString();
+  }
+
+  private static void closeCompiler(Context context) {
+    JavaCompiler compiler = context.get(JavaCompiler.compilerKey);
+    if (compiler != null) {
+      compiler.close();
+    }
   }
 }
