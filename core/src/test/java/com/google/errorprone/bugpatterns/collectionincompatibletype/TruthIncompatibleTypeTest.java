@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns.collectionincompatibletype;
 
-import com.google.common.collect.ImmutableList;
 import com.google.errorprone.CompilationTestHelper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -454,23 +453,6 @@ public class TruthIncompatibleTypeTest {
             "    assertThat(xs).containsExactly(1, 2);",
             "  }",
             "}")
-        .doTest();
-  }
-
-  @Test
-  public void streamContainsExactly_flaggedOff() {
-    compilationHelper
-        .addSourceLines(
-            "Test.java",
-            "import static com.google.common.truth.Truth8.assertThat;",
-            "import com.google.common.collect.Multimap;",
-            "import java.util.stream.Stream;",
-            "public class Test {",
-            "  public void f(Stream<String> xs) {",
-            "    assertThat(xs).containsExactly(1, 2);",
-            "  }",
-            "}")
-        .setArgs(ImmutableList.of("-XepOpt:TruthIncompatibleType:HandleTruth8=false"))
         .doTest();
   }
 }
