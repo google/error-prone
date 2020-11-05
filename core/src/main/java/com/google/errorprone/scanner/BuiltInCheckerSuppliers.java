@@ -139,6 +139,7 @@ import com.google.errorprone.bugpatterns.IdentityHashMapBoxing;
 import com.google.errorprone.bugpatterns.IdentityHashMapUsage;
 import com.google.errorprone.bugpatterns.IgnoredPureGetter;
 import com.google.errorprone.bugpatterns.ImmutableModification;
+import com.google.errorprone.bugpatterns.ImmutableSetForContains;
 import com.google.errorprone.bugpatterns.ImplementAssertionWithChaining;
 import com.google.errorprone.bugpatterns.Incomparable;
 import com.google.errorprone.bugpatterns.IncompatibleModifiersChecker;
@@ -919,6 +920,7 @@ public class BuiltInCheckerSuppliers {
           HardCodedSdCardPath.class,
           HashCodeToString.class,
           ImmutableRefactoring.class,
+          ImmutableSetForContains.class,
           ImplementAssertionWithChaining.class,
           InconsistentOverloads.class,
           InitializeInline.class,
