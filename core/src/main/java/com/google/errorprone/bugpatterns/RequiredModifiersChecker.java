@@ -17,12 +17,11 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.LinkType.NONE;
-import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
+import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.StandardTags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.annotations.RequiredModifiers;
 import com.google.errorprone.bugpatterns.BugChecker.AnnotationTreeMatcher;
@@ -42,8 +41,7 @@ import javax.lang.model.element.Modifier;
         "This annotation is missing required modifiers as specified by its "
             + "@RequiredModifiers annotation",
     linkType = NONE,
-    severity = WARNING,
-    tags = StandardTags.LIKELY_ERROR)
+    severity = ERROR)
 public class RequiredModifiersChecker extends BugChecker implements AnnotationTreeMatcher {
 
   private static final String MESSAGE_TEMPLATE =
