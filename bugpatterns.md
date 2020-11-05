@@ -1315,6 +1315,9 @@ Classes that override hashCode should also consider overriding toString.
 __[ImmutableRefactoring](bugpattern/ImmutableRefactoring)__<br>
 Refactors uses of the JSR 305 @Immutable to Error Prone&#39;s annotation
 
+__[ImmutableSetForContains](bugpattern/ImmutableSetForContains)__<br>
+ImmutableSet is a more efficient type for private static final constants if the constant is only used for contains, containsAll or isEmpty checks.
+
 __[ImplementAssertionWithChaining](bugpattern/ImplementAssertionWithChaining)__<br>
 Prefer check(...), which usually generates more readable failure messages.
 
