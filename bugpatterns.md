@@ -586,6 +586,9 @@ Consider annotating methods that always throw with @DoNotCall. Read more at http
 __[DoNotClaimAnnotations](bugpattern/DoNotClaimAnnotations)__<br>
 Don&#39;t &#39;claim&#39; annotations in annotation processors; Processor#process should unconditionally return `false`
 
+__[DoNotMockAutoValue](bugpattern/DoNotMockAutoValue)__<br>
+AutoValue classes represent pure data classes, so mocking them should not be necessary. Construct a real instance of the class instead.
+
 __[DoubleBraceInitialization](bugpattern/DoubleBraceInitialization)__<br>
 Prefer collection factory methods or builders to the double-brace initialization pattern.
 
