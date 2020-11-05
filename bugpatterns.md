@@ -383,6 +383,9 @@ Use Random.nextInt(int).  Random.nextInt() % n can have negative results
 __[RectIntersectReturnValueIgnored](bugpattern/RectIntersectReturnValueIgnored)__<br>
 Return value of android.graphics.Rect.intersect() must be checked
 
+__[RequiredModifiers](bugpattern/RequiredModifiers)__<br>
+This annotation is missing required modifiers as specified by its @RequiredModifiers annotation
+
 __[RestrictedApiChecker](bugpattern/RestrictedApiChecker)__<br>
 Check for non-whitelisted callers to RestrictedApiChecker.
 
@@ -921,9 +924,6 @@ reachabilityFence should always be called inside a finally block
 
 __[ReferenceEquality](bugpattern/ReferenceEquality)__<br>
 Comparison using reference equality instead of value equality
-
-__[RequiredModifiers](bugpattern/RequiredModifiers)__<br>
-This annotation is missing required modifiers as specified by its @RequiredModifiers annotation
 
 __[ReturnFromVoid](bugpattern/ReturnFromVoid)__<br>
 Void methods should not have a @return tag.
