@@ -47,6 +47,20 @@ import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
 import java.math.BigDecimal;
+import java.time.DayOfWeek;
+import java.time.Duration;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.Month;
+import java.time.MonthDay;
+import java.time.OffsetDateTime;
+import java.time.OffsetTime;
+import java.time.Period;
+import java.time.Year;
+import java.time.YearMonth;
+import java.time.ZonedDateTime;
 
 /** @author glorioso@google.com (Nick Glorioso) */
 @BugPattern(
@@ -60,6 +74,22 @@ public class BindingToUnqualifiedCommonType extends BugChecker
   private static final Matcher<Tree> IS_SIMPLE_TYPE =
       anyOf(
           isPrimitiveOrBoxedPrimitiveType(),
+          // java.time types
+          isSameType(DayOfWeek.class),
+          isSameType(Duration.class),
+          isSameType(Instant.class),
+          isSameType(LocalDate.class),
+          isSameType(LocalDateTime.class),
+          isSameType(LocalTime.class),
+          isSameType(Month.class),
+          isSameType(MonthDay.class),
+          isSameType(OffsetDateTime.class),
+          isSameType(OffsetTime.class),
+          isSameType(Period.class),
+          isSameType(Year.class),
+          isSameType(YearMonth.class),
+          isSameType(ZonedDateTime.class),
+          // other common JDK types
           isSameType(String.class),
           isSameType(BigDecimal.class));
 
