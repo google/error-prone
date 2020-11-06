@@ -149,4 +149,95 @@ public final class ImmutableSetForContainsTest {
         .expectUnchanged()
         .doTest();
   }
+
+  @Test
+  public void immutableList_uniqueElements_iterating_replacesWithSet() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            "import static com.sun.source.tree.Tree.Kind.METHOD_INVOCATION;",
+            "import com.google.common.collect.ImmutableList;",
+            "import com.sun.source.tree.Tree.Kind;",
+            "import java.util.ArrayList;",
+            "class Test {",
+            "  private static final ImmutableList<String> STR_LIST = ImmutableList.of(\"hello\");",
+            "  private static final ImmutableList<Kind> ENUM_LIST =",
+            "                                  ImmutableList.of(Kind.AND, METHOD_INVOCATION);",
+            "  private void myFunc() {",
+            "    STR_LIST.stream().forEach(System.out::println);",
+            "    STR_LIST.forEach(System.out::println);",
+            "    ENUM_LIST.stream().forEach(System.out::println);",
+            "    ENUM_LIST.forEach(System.out::println);",
+            "    for (String myStr : STR_LIST) { System.out.println(myStr); }",
+            "    for (Kind myKind : ENUM_LIST) { System.out.println(myKind); }",
+            "    for (Long lvar : ImmutableList.<Long>of(2L)) { System.out.println(lvar); }",
+            "    ImmutableList<Long> longList = ImmutableList.of(1L);",
+            "    for (Long lvar : longList) { System.out.println(lvar); }",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "import static com.sun.source.tree.Tree.Kind.METHOD_INVOCATION;",
+            "import com.google.common.collect.ImmutableList;",
+            "import com.google.common.collect.ImmutableSet;",
+            "import com.sun.source.tree.Tree.Kind;",
+            "import java.util.ArrayList;",
+            "class Test {",
+            "  private static final ImmutableSet<String> STR_LIST = ImmutableSet.of(\"hello\");",
+            "  private static final ImmutableSet<Kind> ENUM_LIST =",
+            "                                  ImmutableSet.of(Kind.AND, METHOD_INVOCATION);",
+            "  private void myFunc() {",
+            "    STR_LIST.stream().forEach(System.out::println);",
+            "    STR_LIST.forEach(System.out::println);",
+            "    ENUM_LIST.stream().forEach(System.out::println);",
+            "    ENUM_LIST.forEach(System.out::println);",
+            "    for (String myStr : STR_LIST) { System.out.println(myStr); }",
+            "    for (Kind myKind : ENUM_LIST) { System.out.println(myKind); }",
+            "    for (Long lvar : ImmutableList.<Long>of(2L)) { System.out.println(lvar); }",
+            "    ImmutableList<Long> longList = ImmutableList.of(1L);",
+            "    for (Long lvar : longList) { System.out.println(lvar); }",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void immutableList_duplicateElements_iterating_doesNotReplace() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            "import com.google.common.collect.ImmutableList;",
+            "import java.util.ArrayList;",
+            "class Test {",
+            "  private static final ImmutableList<String> STR_LIST_1 = ",
+            "        ImmutableList.of(\"hello\", \"hello\");",
+            "  private static final ImmutableList<String> STR_LIST_2 = ",
+            "        ImmutableList.of(\"hello\", strGenFunc());",
+            "  private void myFunc() {",
+            "    STR_LIST_1.stream().forEach(System.out::println);",
+            "    STR_LIST_2.stream().forEach(System.out::println);",
+            "  }",
+            "  private static String strGenFunc() { return \"\"; }",
+            "}")
+        .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
+  public void immutableList_distinctElementsInBuilder_iterating_doesNotReplace() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            "import com.google.common.collect.ImmutableList;",
+            "import java.util.ArrayList;",
+            "class Test {",
+            "  private static final ImmutableList<String> STR_LIST = ",
+            "        ImmutableList.<String>builder().add(\"hello\").build();",
+            "  private void myFunc() {",
+            "    STR_LIST.stream().forEach(System.out::println);",
+            "  }",
+            "}")
+        .expectUnchanged()
+        .doTest();
+  }
 }
