@@ -37,7 +37,7 @@ import com.sun.source.tree.Tree.Kind;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 
-/** See {@link BugPattern} annotation. */
+/** A {@link BugChecker}; see the associated {@link BugPattern} for details. */
 @BugPattern(
     name = "RxReturnValueIgnored",
     summary =

@@ -36,7 +36,7 @@ import com.sun.source.tree.Tree.Kind;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.util.Name;
 
-/** A {@link BugChecker}; see the associated {@link BugPattern} for details. */
+/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
     name = "DangerousLiteralNull",
     summary = "This method is null-hostile: passing a null literal to it is always wrong",
