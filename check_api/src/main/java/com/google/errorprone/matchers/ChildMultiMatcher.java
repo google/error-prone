@@ -69,7 +69,7 @@ public abstract class ChildMultiMatcher<T extends Tree, N extends Tree>
 
   @AutoValue
   abstract static class MatchResult<T extends Tree> {
-    public abstract List<T> matchingNodes();
+    public abstract ImmutableList<T> matchingNodes();
 
     public abstract boolean matches();
 

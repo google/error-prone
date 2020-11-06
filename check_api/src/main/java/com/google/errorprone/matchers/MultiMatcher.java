@@ -49,7 +49,7 @@ public interface MultiMatcher<T extends Tree, N extends Tree> extends Matcher<T>
      * The list of nodes which matched the MultiMatcher's expectations (could be empty if the match
      * type was ALL and there were no child nodes). Only sensical if {@link #matches()} is true.
      */
-    public abstract List<N> matchingNodes();
+    public abstract ImmutableList<N> matchingNodes();
 
     public final N onlyMatchingNode() {
       return getOnlyElement(matchingNodes());
