@@ -133,6 +133,25 @@ public final class ImmutableSetForContainsTest {
   }
 
   @Test
+  public void fieldAnnotatedWithBind_noMatch() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            "import com.google.common.collect.ImmutableList;",
+            "import com.google.inject.testing.fieldbinder.Bind;",
+            "import java.util.ArrayList;",
+            "class Test {",
+            "  @Bind",
+            "  private static final ImmutableList MY_LIST = ImmutableList.of(\"hello\");",
+            "  private void myFunc() {",
+            "    boolean myBool = MY_LIST.contains(\"he\");",
+            "  }",
+            "}")
+        .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
   public void immutableVarPassedToAFunc_doesNothing() {
     refactoringHelper
         .addInputLines(

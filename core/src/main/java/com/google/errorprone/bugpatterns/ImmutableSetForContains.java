@@ -22,6 +22,8 @@ import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
 import static com.google.errorprone.matchers.Matchers.allOf;
+import static com.google.errorprone.matchers.Matchers.anyOf;
+import static com.google.errorprone.matchers.Matchers.hasAnnotationWithSimpleName;
 import static com.google.errorprone.matchers.Matchers.hasModifier;
 import static com.google.errorprone.matchers.Matchers.instanceMethod;
 import static com.google.errorprone.matchers.Matchers.isSameType;
@@ -79,6 +81,11 @@ public final class ImmutableSetForContains extends BugChecker implements ClassTr
           hasModifier(Modifier.FINAL),
           isSameType(ImmutableList.class));
 
+  private static final Matcher<Tree> EXCLUSIONS =
+      anyOf(
+          hasAnnotationWithSimpleName("Bind"),
+          hasAnnotationWithSimpleName("Inject"));
+
   private static final Matcher<ExpressionTree> IMMUTABLE_LIST_FACTORIES =
       staticMethod().onClass(ImmutableList.class.getName()).namedAnyOf("of", "copyOf");
   private static final Matcher<ExpressionTree> IMMUTABLE_LIST_BUILD =
@@ -93,7 +100,10 @@ public final class ImmutableSetForContains extends BugChecker implements ClassTr
             .filter(member -> member.getKind().equals(Kind.VARIABLE))
             .map(VariableTree.class::cast)
             // TODO(user) : Expand to non-static vars with simple init in constructors.
-            .filter(member -> PRIVATE_STATIC_IMMUTABLE_LIST_MATCHER.matches(member, state))
+            .filter(
+                member ->
+                    PRIVATE_STATIC_IMMUTABLE_LIST_MATCHER.matches(member, state)
+                        && !EXCLUSIONS.matches(member, state))
             .collect(toImmutableSet());
     if (immutableListVar.isEmpty()) {
       return Description.NO_MATCH;
