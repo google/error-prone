@@ -106,7 +106,7 @@ public abstract class AbstractUseSwitch extends BugChecker implements IfTreeMatc
     List<JCBlock> branches = new ArrayList<>();
     IdentifierTree var = null;
     StatementTree statementTree = tree;
-    while (statementTree instanceof IfTree) {
+    do {
       IfTree ifTree = (IfTree) statementTree;
       ExpressionTree cond = TreeInfo.skipParens((JCExpression) ifTree.getCondition());
       ExpressionTree lhs;
@@ -147,7 +147,7 @@ public abstract class AbstractUseSwitch extends BugChecker implements IfTreeMatc
                 0, com.sun.tools.javac.util.List.of((JCStatement) ifTree.getThenStatement())));
       }
       statementTree = ifTree.getElseStatement();
-    }
+    } while (statementTree instanceof IfTree);
     Optional<JCBlock> defaultBranch =
         (statementTree instanceof JCBlock)
             ? Optional.of((JCBlock) statementTree)

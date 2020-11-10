@@ -209,15 +209,15 @@ public class SuggestedFixes {
       }
       // walk the map of all modifiers, and accumulate a list of new modifiers to insert
       // beside an existing modifier
-      for (Modifier mod : modifierPositions.keySet()) {
-        int p = modifierPositions.get(mod);
-        if (p == -1) {
-          modifiersToWrite.add(mod);
-        } else if (!modifiersToWrite.isEmpty()) {
-          fix.replace(p, p, Joiner.on(' ').join(modifiersToWrite) + " ");
-          modifiersToWrite.clear();
-        }
-      }
+      modifierPositions.forEach(
+          (mod, p) -> {
+            if (p == -1) {
+              modifiersToWrite.add(mod);
+            } else if (!modifiersToWrite.isEmpty()) {
+              fix.replace(p, p, Joiner.on(' ').join(modifiersToWrite) + " ");
+              modifiersToWrite.clear();
+            }
+          });
     } else {
       modifiersToWrite.addAll(toAdd);
     }

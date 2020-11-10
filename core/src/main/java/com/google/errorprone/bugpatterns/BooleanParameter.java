@@ -111,14 +111,14 @@ public class BooleanParameter extends BugChecker
     if (EXCLUDED_NAMES.contains(name)) {
       return;
     }
-    while (!tokens.isEmpty() && tokens.peekFirst().pos() < getStartPosition(a)) {
+    while (!tokens.isEmpty() && tokens.getFirst().pos() < getStartPosition(a)) {
       tokens.removeFirst();
     }
     if (tokens.isEmpty()) {
       return;
     }
     Range<Integer> argRange = Range.closedOpen(getStartPosition(a), state.getEndPosition(a));
-    if (!argRange.contains(tokens.peekFirst().pos())) {
+    if (!argRange.contains(tokens.getFirst().pos())) {
       return;
     }
     if (hasParameterComment(tokens.removeFirst())) {

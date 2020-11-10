@@ -143,7 +143,7 @@ public class ParameterName extends BugChecker
 
   private static boolean advanceTokens(
       Deque<ErrorProneToken> tokens, ExpressionTree actual, VisitorState state) {
-    while (!tokens.isEmpty() && tokens.peekFirst().pos() < getStartPosition(actual)) {
+    while (!tokens.isEmpty() && tokens.getFirst().pos() < getStartPosition(actual)) {
       tokens.removeFirst();
     }
     if (tokens.isEmpty()) {
@@ -151,7 +151,7 @@ public class ParameterName extends BugChecker
     }
     Range<Integer> argRange =
         Range.closedOpen(getStartPosition(actual), state.getEndPosition(actual));
-    if (!argRange.contains(tokens.peekFirst().pos())) {
+    if (!argRange.contains(tokens.getFirst().pos())) {
       return false;
     }
     return true;

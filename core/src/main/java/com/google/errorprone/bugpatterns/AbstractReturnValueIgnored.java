@@ -349,7 +349,7 @@ public abstract class AbstractReturnValueIgnored extends BugChecker
         Queue<TypeVariableSymbol> queue = new ArrayDeque<>();
         queue.add(tvs);
         while (!queue.isEmpty()) {
-          TypeVariableSymbol currentTypeParam = queue.poll();
+          TypeVariableSymbol currentTypeParam = queue.remove();
           for (Type typeParam : methodReturnType.getTypeArguments()) {
             if (typeParam.tsym == currentTypeParam) {
               returnTypeChoosing.add(tvs);
