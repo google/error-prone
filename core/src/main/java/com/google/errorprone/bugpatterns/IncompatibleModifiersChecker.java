@@ -18,6 +18,7 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.LinkType.NONE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.matchers.Description.NO_MATCH;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
@@ -42,25 +43,15 @@ import javax.lang.model.element.Modifier;
             + "@IncompatibleModifiers annotation",
     linkType = NONE,
     severity = ERROR)
-
-// TODO(cushon): merge the implementation with RequiredModifiersChecker
 public class IncompatibleModifiersChecker extends BugChecker implements AnnotationTreeMatcher {
-
-  private static final String MESSAGE_TEMPLATE =
-      "%s has specified that it should not be used" + " together with the following modifiers: %s";
-
-  private static ImmutableSet<Modifier> getIncompatibleModifiers(AnnotationTree tree) {
-    IncompatibleModifiers annotation = ASTHelpers.getAnnotation(tree, IncompatibleModifiers.class);
-    if (annotation != null) {
-      return ImmutableSet.copyOf(annotation.value());
-    }
-
-    return ImmutableSet.of();
-  }
 
   @Override
   public Description matchAnnotation(AnnotationTree tree, VisitorState state) {
-    Set<Modifier> incompatibleModifiers = getIncompatibleModifiers(tree);
+    IncompatibleModifiers annotation = ASTHelpers.getAnnotation(tree, IncompatibleModifiers.class);
+    if (annotation == null) {
+      return NO_MATCH;
+    }
+    ImmutableSet<Modifier> incompatibleModifiers = ImmutableSet.copyOf(annotation.value());
     if (incompatibleModifiers.isEmpty()) {
       return Description.NO_MATCH;
     }
@@ -68,14 +59,14 @@ public class IncompatibleModifiersChecker extends BugChecker implements Annotati
     Tree parent = state.getPath().getParentPath().getLeaf();
     if (!(parent instanceof ModifiersTree)) {
       // e.g. An annotated package name
-      return Description.NO_MATCH;
+      return NO_MATCH;
     }
 
     Set<Modifier> incompatible =
         Sets.intersection(incompatibleModifiers, ((ModifiersTree) parent).getFlags());
 
     if (incompatible.isEmpty()) {
-      return Description.NO_MATCH;
+      return NO_MATCH;
     }
 
     String annotationName = ASTHelpers.getAnnotationName(tree);
@@ -83,10 +74,13 @@ public class IncompatibleModifiersChecker extends BugChecker implements Annotati
         annotationName != null
             ? String.format("The annotation '@%s'", annotationName)
             : "This annotation";
-    String customMessage = String.format(MESSAGE_TEMPLATE, nameString, incompatible);
+    String message =
+        String.format(
+            "%s has specified that it should not be used together with the following modifiers: %s",
+            nameString, incompatible);
     return buildDescription(tree)
         .addFix(SuggestedFixes.removeModifiers((ModifiersTree) parent, state, incompatible))
-        .setMessage(customMessage)
+        .setMessage(message)
         .build();
   }
 }
