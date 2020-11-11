@@ -38,7 +38,7 @@ import java.lang.annotation.Target;
  * public String getData() {
  *   String local = data;
  *   if (local == null) {
- *     local = data = expensiveCalculation(source);
+ *     data = local = expensiveCalculation(source);
  *   }
  *   return local;
  *  }
