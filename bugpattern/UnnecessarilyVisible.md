@@ -14,8 +14,6 @@ To make changes, edit the @BugPattern annotation or the explanation in docs/bugp
 
 _Alternate names: RestrictInjectVisibility_
 
-## The problem
-
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("UnnecessarilyVisible")` to the enclosing element.

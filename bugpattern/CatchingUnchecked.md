@@ -14,8 +14,6 @@ To make changes, edit the @BugPattern annotation or the explanation in docs/bugp
 -->
 
 
-## The problem
-
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("CatchingUnchecked")` to the enclosing element.

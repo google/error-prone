@@ -13,6 +13,4 @@ To make changes, edit the @BugPattern annotation or the explanation in docs/bugp
 
 _Alternate names: unused_
 
-## The problem
-
 
