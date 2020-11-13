@@ -74,7 +74,9 @@ public class RestrictedApiChecker extends BugChecker
   @Override
   public Description matchAnnotation(AnnotationTree tree, VisitorState state) {
     // TODO(bangert): Validate all the fields
-    if (!ASTHelpers.getSymbol(tree).toString().equals(RestrictedApi.class.getName())) {
+    if (!ASTHelpers.getSymbol(tree)
+        .getQualifiedName()
+        .contentEquals(RestrictedApi.class.getName())) {
       return Description.NO_MATCH;
     }
     // TODO(bangert): make a more elegant API to get the annotation within an annotation tree.
