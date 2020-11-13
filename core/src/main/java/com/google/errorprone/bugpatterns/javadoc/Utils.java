@@ -67,7 +67,7 @@ final class Utils {
     int endPos =
         (int) positions.getEndPosition(compilationUnitTree, getDocCommentTree(state), docTree);
     if (endPos == Position.NOPOS) {
-      return SuggestedFix.builder().build();
+      return SuggestedFix.emptyFix();
     }
     return SuggestedFix.replace(startPos, endPos, replacement);
   }

@@ -111,7 +111,7 @@ public final class AssignmentToMock extends BugChecker
         return SuggestedFix.replace(token.pos(), state.getEndPosition(tree.getInitializer()), "");
       }
     }
-    return SuggestedFix.builder().build();
+    return SuggestedFix.emptyFix();
   }
 
   private static boolean classContainsInitializer(ClassTree classTree, VisitorState state) {

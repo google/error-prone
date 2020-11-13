@@ -260,7 +260,7 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
       ImmutableList<TreePath> allUsageSites,
       VisitorState state) {
     if (unusedSymbol.getKind() != ElementKind.LOCAL_VARIABLE) {
-      return SuggestedFix.builder().build();
+      return SuggestedFix.emptyFix();
     }
     Optional<VariableTree> removedVariableTree =
         allUsageSites.stream()
@@ -275,7 +275,7 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
             .filter(a -> allUsageSites.stream().noneMatch(tp -> tp.getLeaf().equals(a)))
             .findFirst();
     if (!removedVariableTree.isPresent() || !reassignment.isPresent()) {
-      return SuggestedFix.builder().build();
+      return SuggestedFix.emptyFix();
     }
     return SuggestedFix.prefixWith(
         reassignment.get(), state.getSourceForNode(removedVariableTree.get().getType()) + " ");

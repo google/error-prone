@@ -122,8 +122,7 @@ public class AppliedFixTest {
   @Test
   public void shouldReturnNullOnEmptyFix() {
     AppliedFix fix =
-        AppliedFix.fromSource("public class Foo {}", endPositions)
-            .apply(SuggestedFix.builder().build());
+        AppliedFix.fromSource("public class Foo {}", endPositions).apply(SuggestedFix.emptyFix());
     assertThat(fix).isNull();
   }
 

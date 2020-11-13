@@ -129,7 +129,7 @@ public final class CheckedExceptionNotThrown extends BugChecker implements Metho
     DocCommentTree docCommentTree =
         JavacTrees.instance(state.context).getDocCommentTree(state.getPath());
     if (docCommentTree == null) {
-      return SuggestedFix.builder().build();
+      return SuggestedFix.emptyFix();
     }
     SuggestedFix.Builder fix = SuggestedFix.builder();
     DocTreePath docTreePath = new DocTreePath(state.getPath(), docCommentTree);

@@ -130,7 +130,7 @@ public abstract class MisusedDateFormat extends BugChecker
     }
     Symbol sym = getSymbol(patternArg);
     if (!(sym instanceof VarSymbol) || sym.getKind() != ElementKind.FIELD) {
-      return SuggestedFix.builder().build();
+      return SuggestedFix.emptyFix();
     }
     SuggestedFix.Builder fix = SuggestedFix.builder();
     new TreeScanner<Void, Void>() {

@@ -199,7 +199,7 @@ public final class FieldCanBeStatic extends BugChecker implements VariableTreeMa
     SuggestedFix fix =
         SuggestedFix.builder()
             .merge(renameVariable(tree, state))
-            .merge(addModifiers(tree, state, STATIC).orElse(SuggestedFix.builder().build()))
+            .merge(addModifiers(tree, state, STATIC).orElse(SuggestedFix.emptyFix()))
             .build();
     return describeMatch(tree, fix);
   }
@@ -211,7 +211,7 @@ public final class FieldCanBeStatic extends BugChecker implements VariableTreeMa
   private SuggestedFix renameVariable(VariableTree variableTree, VisitorState state) {
     String name = variableTree.getName().toString();
     if (!LOWER_CAMEL_PATTERN.matcher(name).matches()) {
-      return SuggestedFix.builder().build();
+      return SuggestedFix.emptyFix();
     }
     String replacement = LOWER_CAMEL.to(UPPER_UNDERSCORE, variableTree.getName().toString());
     int typeEndPos = state.getEndPosition(variableTree.getType());

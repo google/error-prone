@@ -151,6 +151,13 @@ public class SuggestedFix implements Fix {
     return builder().swap(node1, node2).build();
   }
 
+  private static final SuggestedFix EMPTY = builder().build();
+
+  /** Creates an empty {@link SuggestedFix}. */
+  public static SuggestedFix emptyFix() {
+    return EMPTY;
+  }
+
   public static Builder builder() {
     return new Builder();
   }

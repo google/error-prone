@@ -151,7 +151,7 @@ public final class InvalidBlockTag extends BugChecker
       SuggestedFix fix =
           validTags.contains(tag)
               ? replace(erroneousTree, String.format("{%s}", erroneousTree), state)
-              : SuggestedFix.builder().build();
+              : SuggestedFix.emptyFix();
       String message =
           String.format(
               "%s is not a valid block tag. Should it be an inline tag instead?", erroneousTree);

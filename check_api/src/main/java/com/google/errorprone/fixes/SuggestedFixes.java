@@ -1543,7 +1543,7 @@ public class SuggestedFixes {
     int startPos = getStartPosition(tree);
     // This can happen for desugared expressions like `int a, b;`.
     if (startPos < startTokenization) {
-      return SuggestedFix.builder().build();
+      return SuggestedFix.emptyFix();
     }
     // Delete backwards for comments which are not separated from our target by a blank line.
     CharSequence sourceCode = state.getSourceCode();

@@ -456,9 +456,7 @@ public class ProtoFieldNullComparison extends BugChecker implements CompilationU
       @Override
       SuggestedFix fix(Fixer fixer, ExpressionTree tree, VisitorState state) {
         Optional<String> replacement = fixer.getHazzer(tree.getKind() == Kind.EQUAL_TO, state);
-        return replacement
-            .map(r -> SuggestedFix.replace(tree, r))
-            .orElse(SuggestedFix.builder().build());
+        return replacement.map(r -> SuggestedFix.replace(tree, r)).orElse(SuggestedFix.emptyFix());
       }
     },
     /** Matches comparisons with Truth, i.e. {@code assertThat(proto.getField()).isNull()}. */
@@ -476,7 +474,7 @@ public class ProtoFieldNullComparison extends BugChecker implements CompilationU
                           "%s(%s).isTrue()",
                           state.getSourceForNode(receiver.getMethodSelect()), r));
                 })
-            .orElse(SuggestedFix.builder().build());
+            .orElse(SuggestedFix.emptyFix());
       }
     },
     /** Matches comparisons with JUnit, i.e. {@code assertNotNull(proto.getField())}. */
@@ -494,7 +492,7 @@ public class ProtoFieldNullComparison extends BugChecker implements CompilationU
                       .replace(startPos, startPos + "assertNotNull".length(), "assertTrue")
                       .build();
                 })
-            .orElse(SuggestedFix.builder().build());
+            .orElse(SuggestedFix.emptyFix());
       }
     },
     /** Matches precondition checks, i.e. {@code checkNotNull(proto.getField())}. */

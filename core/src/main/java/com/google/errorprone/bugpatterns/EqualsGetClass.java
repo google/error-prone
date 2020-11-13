@@ -310,7 +310,7 @@ public final class EqualsGetClass extends BugChecker implements MethodInvocation
     }
 
     private SuggestedFix getFix() {
-      return matchedGetClass && !failed ? fix.build() : SuggestedFix.builder().build();
+      return matchedGetClass && !failed ? fix.build() : SuggestedFix.emptyFix();
     }
   }
 }
