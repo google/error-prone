@@ -29,35 +29,33 @@ public class RestrictedApiMethods implements IFaceWithRestriction {
 
   @RestrictedApi(
       explanation = "lorem",
-      whitelistAnnotations = {Whitelist.class},
-      whitelistWithWarningAnnotations = {WhitelistWithWarning.class},
+      whitelistAnnotations = {Allowlist.class},
+      whitelistWithWarningAnnotations = {AllowlistWithWarning.class},
       link = "")
   public RestrictedApiMethods() {}
 
   @RestrictedApi(
       explanation = "lorem",
-      whitelistAnnotations = {Whitelist.class},
-      whitelistWithWarningAnnotations = {WhitelistWithWarning.class},
+      whitelistAnnotations = {Allowlist.class},
+      whitelistWithWarningAnnotations = {AllowlistWithWarning.class},
       link = "")
   public RestrictedApiMethods(int restricted) {}
 
   @RestrictedApi(
-    explanation = "lorem",
-    whitelistAnnotations = {Whitelist.class},
-    whitelistWithWarningAnnotations = {WhitelistWithWarning.class},
-    link = "",
-    allowedOnPath = ".*testsuite/.*"
-  )
+      explanation = "lorem",
+      whitelistAnnotations = {Allowlist.class},
+      whitelistWithWarningAnnotations = {AllowlistWithWarning.class},
+      link = "",
+      allowedOnPath = ".*testsuite/.*")
   public int restrictedMethod() {
     return 1;
   }
 
   @RestrictedApi(
-    explanation = "lorem",
-    whitelistAnnotations = {Whitelist.class},
-    whitelistWithWarningAnnotations = {WhitelistWithWarning.class},
-    link = ""
-  )
+      explanation = "lorem",
+      whitelistAnnotations = {Allowlist.class},
+      whitelistWithWarningAnnotations = {AllowlistWithWarning.class},
+      link = "")
   public static int restrictedStaticMethod() {
     return 2;
   }
@@ -66,7 +64,7 @@ public class RestrictedApiMethods implements IFaceWithRestriction {
   public void dontCallMe() {}
 
   public static class Subclass extends RestrictedApiMethods {
-    @Whitelist
+    @Allowlist
     public Subclass(int restricted) {
       super(restricted);
     }
@@ -86,4 +84,4 @@ interface IFaceWithRestriction {
 }
 
 @Target({ElementType.METHOD, ElementType.CONSTRUCTOR})
-@interface WhitelistWithWarning {}
+@interface AllowlistWithWarning {}
