@@ -27,12 +27,12 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.LiteralTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
+import com.google.errorprone.matchers.Matchers;
 import com.google.errorprone.suppliers.Supplier;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.LiteralTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.Tree;
-import com.sun.source.tree.Tree.Kind;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.util.Name;
 
@@ -94,7 +94,7 @@ public class DangerousLiteralNullChecker extends BugChecker implements LiteralTr
 
   @Override
   public Description matchLiteral(LiteralTree tree, VisitorState state) {
-    if (tree.getKind() != Kind.NULL_LITERAL) {
+    if (!Matchers.nullLiteral().matches(tree, state)) {
       return NO_MATCH;
     }
     Tree parent = state.getPath().getParentPath().getLeaf();

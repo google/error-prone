@@ -579,6 +579,13 @@ public class Matchers {
     };
   }
 
+  /** Matches an AST node if it is a null literal. */
+  public static Matcher<ExpressionTree> nullLiteral() {
+    return (tree, state) -> {
+      return tree.getKind() == Kind.NULL_LITERAL;
+    };
+  }
+
   /** Matches an AST node if it is a literal other than null. */
   public static Matcher<ExpressionTree> nonNullLiteral() {
     return (tree, state) -> {

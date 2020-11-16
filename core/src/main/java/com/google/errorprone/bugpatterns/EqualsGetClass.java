@@ -33,6 +33,7 @@ import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
+import com.google.errorprone.matchers.Matchers;
 import com.sun.source.tree.BinaryTree;
 import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.ClassTree;
@@ -150,10 +151,6 @@ public final class EqualsGetClass extends BugChecker implements MethodInvocation
       return varSymbol.getSimpleName().contentEquals("class");
     }
 
-    private static boolean matchesNull(ExpressionTree tree) {
-      return tree.getKind() == Kind.NULL_LITERAL;
-    }
-
     private final Symbol parameter;
     private final ClassSymbol classSymbol;
     private final VisitorState state;
@@ -183,7 +180,7 @@ public final class EqualsGetClass extends BugChecker implements MethodInvocation
       if (binaryTree.getKind() != Kind.NOT_EQUAL_TO && binaryTree.getKind() != Kind.EQUAL_TO) {
         return super.visitBinary(binaryTree, null);
       }
-      if (matchesEitherWay(binaryTree, isParameter, (tree, s) -> matchesNull(tree))) {
+      if (matchesEitherWay(binaryTree, isParameter, Matchers.nullLiteral())) {
         if (binaryTree.getKind() == Kind.NOT_EQUAL_TO) {
           makeAlwaysTrue();
         }
