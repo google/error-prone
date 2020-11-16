@@ -149,6 +149,7 @@ public class AndroidJdkLibsChecker extends ApiDiffChecker {
             .add("java/util/Spliterator$OfLong")
             .add("java/util/Spliterator$OfPrimitive")
             .add("java/util/StringJoiner")
+            .add("java/util/concurrent/ConcurrentHashMap")
             .add("java/util/concurrent/ConcurrentMap")
             .add("java/util/concurrent/atomic/AtomicInteger")
             .add("java/util/concurrent/atomic/AtomicLong")
