@@ -332,6 +332,7 @@ import com.google.errorprone.bugpatterns.UnnecessaryBoxedVariable;
 import com.google.errorprone.bugpatterns.UnnecessaryDefaultInEnumSwitch;
 import com.google.errorprone.bugpatterns.UnnecessaryLambda;
 import com.google.errorprone.bugpatterns.UnnecessaryMethodInvocationMatcher;
+import com.google.errorprone.bugpatterns.UnnecessaryMethodReference;
 import com.google.errorprone.bugpatterns.UnnecessaryOptionalGet;
 import com.google.errorprone.bugpatterns.UnnecessaryParentheses;
 import com.google.errorprone.bugpatterns.UnnecessarySetDefault;
@@ -868,6 +869,7 @@ public class BuiltInCheckerSuppliers {
           UnnecessaryAnonymousClass.class,
           UnnecessaryLambda.class,
           UnnecessaryMethodInvocationMatcher.class,
+          UnnecessaryMethodReference.class,
           UnnecessaryParentheses.class,
           UnsafeFinalization.class,
           UnsafeReflectiveConstructionCast.class,
