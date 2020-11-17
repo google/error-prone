@@ -127,7 +127,7 @@ public class HidingField extends BugChecker implements ClassTreeMatcher {
     VarSymbol varSymbol = ASTHelpers.getSymbol(variableTree);
 
     if (varSymbol != null) { // varSymbol is null when variable is primitive type
-      return IGNORED_CLASSES.contains(varSymbol.toString());
+      return IGNORED_CLASSES.contains(varSymbol.getQualifiedName().toString());
     }
 
     return false;

@@ -112,16 +112,17 @@ public class TreeToString extends AbstractToString {
 
   private static String createStringReplacement(
       VisitorState state, VarSymbol visitorStateSymbol, Tree target) {
+    String visitorStateVariable = visitorStateSymbol.getSimpleName().toString();
     if (target instanceof MethodInvocationTree) {
       MethodInvocationTree targetMethodInvocationTree = (MethodInvocationTree) target;
       if (TREEMAKER_LITERAL_CREATOR.matches(targetMethodInvocationTree, state)) {
         return String.format(
             "%s.getElements().getConstantExpression(%s)",
-            visitorStateSymbol,
+            visitorStateVariable,
             state.getSourceForNode(getOnlyElement(targetMethodInvocationTree.getArguments())));
       }
     }
     return String.format(
-        "%s.getSourceForNode(%s)", visitorStateSymbol, state.getSourceForNode(target));
+        "%s.getSourceForNode(%s)", visitorStateVariable, state.getSourceForNode(target));
   }
 }
