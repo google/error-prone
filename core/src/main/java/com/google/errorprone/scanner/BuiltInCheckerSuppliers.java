@@ -321,6 +321,7 @@ import com.google.errorprone.bugpatterns.TypeParameterNaming;
 import com.google.errorprone.bugpatterns.TypeParameterQualifier;
 import com.google.errorprone.bugpatterns.TypeParameterShadowing;
 import com.google.errorprone.bugpatterns.TypeParameterUnusedInFormals;
+import com.google.errorprone.bugpatterns.TypeToString;
 import com.google.errorprone.bugpatterns.URLEqualsHashCode;
 import com.google.errorprone.bugpatterns.UndefinedEquals;
 import com.google.errorprone.bugpatterns.UngroupedOverloads;
@@ -982,6 +983,7 @@ public class BuiltInCheckerSuppliers {
           TransientMisuse.class,
           TryFailRefactoring.class,
           TypeParameterNaming.class,
+          TypeToString.class,
           UngroupedOverloads.class,
           UnlockMethodChecker.class,
           UnnecessarilyFullyQualified.class,
