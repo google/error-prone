@@ -1366,6 +1366,9 @@ Scopes on modules have no function and will soon be an error.
 __[SwitchDefault](bugpattern/SwitchDefault)__<br>
 The default case of a switch should appear at the end of the last statement group
 
+__[SymbolToString](bugpattern/SymbolToString)__<br>
+Symbol#toString shouldn&#39;t be used for comparison as it is expensive and fragile.
+
 __[ThrowsUncheckedException](bugpattern/ThrowsUncheckedException)__<br>
 Unchecked exceptions do not need to be declared in the method signature.
 
