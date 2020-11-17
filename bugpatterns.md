@@ -1381,6 +1381,9 @@ Prefer assertThrows to try/fail
 __[TypeParameterNaming](bugpattern/TypeParameterNaming)__<br>
 Type parameters must be a single letter with an optional numeric suffix, or an UpperCamelCase name followed by the letter &#39;T&#39;.
 
+__[TypeToString](bugpattern/TypeToString)__<br>
+Type#toString shouldn&#39;t be used for comparison as it is expensive and fragile.
+
 __[UngroupedOverloads](bugpattern/UngroupedOverloads)__<br>
 Constructors and methods with the same name should appear sequentially with no other code in between. Please re-order or re-name methods.
 
