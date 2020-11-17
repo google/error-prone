@@ -70,15 +70,15 @@ The implicit object lock of the enclosing class specified by ClassName.
 'this' reference is intended.)
 
 </td></tr><tr><td><code>
-fieldName
-this.fieldName
+fieldName <br>
+this.fieldName <br>
 ClassName.this.fieldName
 </code></td><td>
 The final instance field specified by fieldName.
 
 </td></tr><tr><td><code>
-methodName()
-this.methodName()
+methodName() <br>
+this.methodName() <br>
 ClassName.this.methodName()
 </code></td><td>
 The instance method specified by methodName(). Methods called to return
