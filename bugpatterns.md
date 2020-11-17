@@ -1027,6 +1027,9 @@ Returning a lambda from a helper method or saving it in a constant is unnecessar
 __[UnnecessaryMethodInvocationMatcher](bugpattern/UnnecessaryMethodInvocationMatcher)__<br>
 It is not necessary to wrap a MethodMatcher with methodInvocation().
 
+__[UnnecessaryMethodReference](bugpattern/UnnecessaryMethodReference)__<br>
+This method reference is unnecessary, and can be replaced with the variable itself.
+
 __[UnnecessaryParentheses](bugpattern/UnnecessaryParentheses)__<br>
 These grouping parentheses are unnecessary; it is unlikely the code will be misinterpreted without them
 
