@@ -295,6 +295,7 @@ import com.google.errorprone.bugpatterns.SuppressWarningsDeprecated;
 import com.google.errorprone.bugpatterns.SuppressWarningsWithoutExplanation;
 import com.google.errorprone.bugpatterns.SwigMemoryLeak;
 import com.google.errorprone.bugpatterns.SwitchDefault;
+import com.google.errorprone.bugpatterns.SymbolToString;
 import com.google.errorprone.bugpatterns.SystemExitOutsideMain;
 import com.google.errorprone.bugpatterns.TestExceptionChecker;
 import com.google.errorprone.bugpatterns.TheoryButNoTheories;
@@ -970,6 +971,7 @@ public class BuiltInCheckerSuppliers {
           StronglyTypeTime.class,
           SuppressWarningsWithoutExplanation.class,
           SwitchDefault.class,
+          SymbolToString.class,
           SystemExitOutsideMain.class,
           TestExceptionChecker.class,
           ThrowSpecificExceptions.class,
