@@ -131,4 +131,37 @@ public final class UnnecessaryMethodReferenceTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void positiveCaseViaKnownDelegate() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.common.base.Predicate;",
+            "import java.util.function.Function;",
+            "import java.util.stream.Stream;",
+            "class Test {",
+            "  Stream<Integer> map(Stream<Integer> xs, Predicate<Integer> p) {",
+            "    // BUG: Diagnostic contains: (p)",
+            "    return xs.filter(p::apply);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void positiveCaseViaConvert() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.common.base.Converter;",
+            "import java.util.stream.Stream;",
+            "class Test {",
+            "  Stream<String> map(Stream<Integer> xs, Converter<Integer, String> fn) {",
+            "    // BUG: Diagnostic contains: (fn)",
+            "    return xs.map(fn::convert);",
+            "  }",
+            "}")
+        .doTest();
+  }
 }
