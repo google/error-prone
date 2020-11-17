@@ -22,6 +22,7 @@ import static com.google.common.base.Verify.verify;
 import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.errorprone.matchers.JUnitMatchers.JUNIT4_RUN_WITH_ANNOTATION;
+import static com.google.errorprone.matchers.Matchers.isSubtypeOf;
 import static com.sun.tools.javac.code.Scope.LookupKind.NON_RECURSIVE;
 import static java.util.Objects.requireNonNull;
 
@@ -2111,5 +2112,18 @@ public class ASTHelpers {
   /** Returns a no arg private constructor for the {@link ClassTree}. */
   public static String createPrivateConstructor(ClassTree classTree) {
     return "private " + classTree.getSimpleName() + "() {}";
+  }
+
+  private static final Matcher<Tree> IS_BUGCHECKER =
+      isSubtypeOf("com.google.errorprone.bugpatterns.BugChecker");
+
+  /** Returns {@code true} if the code is in a BugChecker class. */
+  public static boolean isBugCheckerCode(VisitorState state) {
+    for (Tree ancestor : state.getPath()) {
+      if (IS_BUGCHECKER.matches(ancestor, state)) {
+        return true;
+      }
+    }
+    return false;
   }
 }

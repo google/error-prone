@@ -20,6 +20,7 @@ import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Matchers.instanceMethod;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
+import static com.google.errorprone.util.ASTHelpers.isBugCheckerCode;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
 
 import com.google.errorprone.BugPattern;
@@ -27,7 +28,6 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Matcher;
-import com.google.errorprone.matchers.Matchers;
 import com.google.errorprone.predicates.TypePredicate;
 import com.google.errorprone.predicates.TypePredicates;
 import com.google.errorprone.util.ASTHelpers;
@@ -53,9 +53,6 @@ import java.util.Optional;
     severity = WARNING)
 public class TreeToString extends AbstractToString {
 
-  private static final Matcher<ClassTree> IS_BUGCHECKER =
-      Matchers.isSubtypeOf("com.google.errorprone.bugpatterns.BugChecker");
-
   private static final TypePredicate IS_TREE =
       TypePredicates.isDescendantOf("com.sun.source.tree.Tree");
 
@@ -66,8 +63,11 @@ public class TreeToString extends AbstractToString {
           .withParameters("java.lang.Object");
 
   private static boolean treeToStringInBugChecker(Type type, VisitorState state) {
+    if (!isBugCheckerCode(state)) {
+      return false;
+    }
     ClassTree enclosingClass = ASTHelpers.findEnclosingNode(state.getPath(), ClassTree.class);
-    if (enclosingClass == null || !IS_BUGCHECKER.matches(enclosingClass, state)) {
+    if (enclosingClass == null) {
       return false;
     }
     return IS_TREE.apply(type, state);

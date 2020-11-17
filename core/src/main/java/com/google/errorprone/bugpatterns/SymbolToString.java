@@ -18,9 +18,9 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
 import static com.google.errorprone.matchers.Matchers.instanceMethod;
-import static com.google.errorprone.matchers.Matchers.isSubtypeOf;
 import static com.google.errorprone.matchers.Matchers.toType;
 import static com.google.errorprone.predicates.TypePredicates.isDescendantOf;
+import static com.google.errorprone.util.ASTHelpers.isBugCheckerCode;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -34,7 +34,7 @@ import com.sun.tools.javac.code.Type;
 import java.util.Optional;
 
 /**
- * Flags {@code com.sun.tools.javac.code.Type#toString} usage in {@link BugChecker}s.
+ * Flags {@code com.sun.tools.javac.code.Symbol#toString} usage in {@link BugChecker}s.
  *
  * @author bhagwani@google.com (Sumit Bhagwani)
  */
@@ -50,19 +50,6 @@ public class SymbolToString extends AbstractToString {
       toType(
           MemberSelectTree.class,
           instanceMethod().onExactClass("java.lang.String").named("equals"));
-
-  private static final Matcher<Tree> IS_BUGCHECKER =
-      isSubtypeOf("com.google.errorprone.bugpatterns.BugChecker");
-
-  /** Returns {@code true} if the code is in a {@link BugChecker} class. */
-  private static boolean isBugCheckerCode(VisitorState state) {
-    for (Tree ancestor : state.getPath()) {
-      if (IS_BUGCHECKER.matches(ancestor, state)) {
-        return true;
-      }
-    }
-    return false;
-  }
 
   private static boolean symbolToStringInBugChecker(Type type, VisitorState state) {
     if (!isBugCheckerCode(state)) {
