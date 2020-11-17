@@ -7725,6 +7725,8 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/OptionalMapToOptional.html#matchMethodInvocation(com.sun.source.tree.MethodInvocationTree,com.google.errorprone.VisitorState)">matchMethodInvocation(MethodInvocationTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/OptionalMapToOptional.html" title="class in com.google.errorprone.bugpatterns">OptionalMapToOptional</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/OptionalMapUnusedValue.html#matchMethodInvocation(com.sun.source.tree.MethodInvocationTree,com.google.errorprone.VisitorState)">matchMethodInvocation(MethodInvocationTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/OptionalMapUnusedValue.html" title="class in com.google.errorprone.bugpatterns">OptionalMapUnusedValue</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/OptionalNotPresent.html#matchMethodInvocation(com.sun.source.tree.MethodInvocationTree,com.google.errorprone.VisitorState)">matchMethodInvocation(MethodInvocationTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/OptionalNotPresent.html" title="class in com.google.errorprone.bugpatterns">OptionalNotPresent</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/OutlineNone.html#matchMethodInvocation(com.sun.source.tree.MethodInvocationTree,com.google.errorprone.VisitorState)">matchMethodInvocation(MethodInvocationTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/OutlineNone.html" title="class in com.google.errorprone.bugpatterns">OutlineNone</a></dt>
@@ -9226,6 +9228,12 @@ loadScripts(document, 'script');</script>
 <div class="block">Matches <code>Optional#map</code> mapping to another <code>Optional</code>.</div>
 </dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/OptionalMapToOptional.html#%3Cinit%3E()">OptionalMapToOptional()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/OptionalMapToOptional.html" title="class in com.google.errorprone.bugpatterns">OptionalMapToOptional</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/bugpatterns/OptionalMapUnusedValue.html" title="class in com.google.errorprone.bugpatterns"><span class="type-name-link">OptionalMapUnusedValue</span></a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
+<dd>
+<div class="block">Replaces <code>Optional.map</code> with <code>Optional.ifPresent</code> if the value is unused.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/OptionalMapUnusedValue.html#%3Cinit%3E()">OptionalMapUnusedValue()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/OptionalMapUnusedValue.html" title="class in com.google.errorprone.bugpatterns">OptionalMapUnusedValue</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/OptionalNotPresent.html" title="class in com.google.errorprone.bugpatterns"><span class="type-name-link">OptionalNotPresent</span></a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
 <dd>&nbsp;</dd>

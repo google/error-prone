@@ -1220,6 +1220,9 @@ Instead of returning a functional type, return the actual type that the returned
 __[NonCanonicalStaticMemberImport](bugpattern/NonCanonicalStaticMemberImport)__<br>
 Static import of member uses non-canonical name
 
+__[OptionalMapUnusedValue](bugpattern/OptionalMapUnusedValue)__<br>
+Optional.ifPresent is preferred over Optional.map when the return value is unused
+
 __[PreferJavaTimeOverload](bugpattern/PreferJavaTimeOverload)__<br>
 Prefer using java.time-based APIs when available. Note that this checker does not and cannot guarantee that the overloads have equivalent semantics, but that is generally the case with overloaded methods.
 
