@@ -32,7 +32,7 @@ import static com.google.errorprone.matchers.Matchers.staticMethod;
 import static com.google.errorprone.util.ASTHelpers.constValue;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
-import static com.google.errorprone.util.ASTHelpers.getType;
+import static com.google.errorprone.util.ASTHelpers.targetType;
 import static java.util.stream.Collectors.toMap;
 
 import com.google.common.collect.ImmutableList;
@@ -57,6 +57,7 @@ import com.sun.source.tree.ParameterizedTypeTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.VariableTree;
+import com.sun.source.util.TreePath;
 import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Type;
@@ -120,7 +121,8 @@ public final class ImmutableSetForContains extends BugChecker implements ClassTr
     ImmutableVarUsageScanner usageScanner = new ImmutableVarUsageScanner(immutableListVar, state);
     // Scan entire compilation unit since private static vars of nested classes may be referred in
     // parent class.
-    usageScanner.scan(state.findPathToEnclosing(CompilationUnitTree.class), state);
+    TreePath cuPath = state.findPathToEnclosing(CompilationUnitTree.class);
+    usageScanner.scan(cuPath.getLeaf(), state.withPath(cuPath));
     SuggestedFix.Builder fix = SuggestedFix.builder();
     Optional<VariableTree> firstReplacement = Optional.empty();
     for (VariableTree var : immutableListVar) {
@@ -222,9 +224,8 @@ public final class ImmutableSetForContains extends BugChecker implements ClassTr
     @Override
     public Void visitMethodInvocation(
         MethodInvocationTree methodInvocationTree, VisitorState state) {
-      List<Type> paraTypes = getType(methodInvocationTree.getMethodSelect()).getParameterTypes();
-      for (int i = 0; i < paraTypes.size(); i++) {
-        visitMethodArgument(paraTypes.get(i), methodInvocationTree.getArguments().get(i), state);
+      for (int i = 0; i < methodInvocationTree.getArguments().size(); i++) {
+        visitMethodArgument(methodInvocationTree.getArguments().get(i), state);
       }
       methodInvocationTree.getTypeArguments().forEach(tree -> scan(tree, state));
       if (!allowedFuncOnImmutableVar(methodInvocationTree, state)) {
@@ -247,7 +248,8 @@ public final class ImmutableSetForContains extends BugChecker implements ClassTr
               && hasUniqueElements.get(getSymbol(receiver)));
     }
 
-    private void visitMethodArgument(Type argType, ExpressionTree argTree, VisitorState state) {
+    private void visitMethodArgument(ExpressionTree argTree, VisitorState state) {
+      Type argType = targetType(state.withPath(TreePath.getPath(state.getPath(), argTree))).type();
       if (argTree.getKind().equals(Kind.IDENTIFIER)
           && disallowedVarUsages.containsKey(getSymbol(argTree))
           && isSuperTypeOfImmutableSet(argType, state)

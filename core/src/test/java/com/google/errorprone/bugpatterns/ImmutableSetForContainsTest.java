@@ -440,4 +440,21 @@ public final class ImmutableSetForContainsTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void immutableListGetInVarArg_doesNothing() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            "import com.google.common.collect.ImmutableList;",
+            "import java.util.ArrayList;",
+            "class Test {",
+            "  private static final ImmutableList<String> MY_LIST = ImmutableList.of(\"hello\");",
+            "  private String myFunc() {",
+            "    return String.format(\"%s\", MY_LIST.get(0));",
+            "  }",
+            "}")
+        .expectUnchanged()
+        .doTest();
+  }
 }
