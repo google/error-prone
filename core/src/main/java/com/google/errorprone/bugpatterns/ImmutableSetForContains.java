@@ -109,7 +109,7 @@ public final class ImmutableSetForContains extends BugChecker implements ClassTr
         tree.getMembers().stream()
             .filter(member -> member.getKind().equals(Kind.VARIABLE))
             .map(VariableTree.class::cast)
-            // TODO(user) : Expand to non-static vars with simple init in constructors.
+            // TODO(ashishkedia) : Expand to non-static vars with simple init in constructors.
             .filter(
                 member ->
                     PRIVATE_STATIC_IMMUTABLE_LIST_MATCHER.matches(member, state)
