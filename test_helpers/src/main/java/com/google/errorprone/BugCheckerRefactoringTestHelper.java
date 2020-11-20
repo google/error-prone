@@ -34,7 +34,6 @@ import com.google.errorprone.apply.ImportOrganizer;
 import com.google.errorprone.apply.SourceFile;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.fixes.Fix;
-import com.google.errorprone.matchers.Description;
 import com.google.errorprone.scanner.ErrorProneScanner;
 import com.google.errorprone.scanner.ErrorProneScannerTransformer;
 import com.google.errorprone.util.RuntimeVersion;
@@ -137,7 +136,7 @@ public class BugCheckerRefactoringTestHelper {
   }
 
   private final Map<JavaFileObject, JavaFileObject> sources = new HashMap<>();
-  private final BugChecker refactoringBugChecker;
+  private final ErrorProneScanner scanner;
   private final ErrorProneInMemoryFileManager fileManager;
 
   private FixChooser fixChooser = FixChoosers.FIRST;
@@ -147,14 +146,19 @@ public class BugCheckerRefactoringTestHelper {
 
   private boolean run = false;
 
-  private BugCheckerRefactoringTestHelper(BugChecker refactoringBugChecker, Class<?> clazz) {
-    this.refactoringBugChecker = refactoringBugChecker;
+  private BugCheckerRefactoringTestHelper(Class<?> clazz, ErrorProneScanner scanner) {
     this.fileManager = new ErrorProneInMemoryFileManager(clazz);
+    this.scanner = scanner;
   }
 
   public static BugCheckerRefactoringTestHelper newInstance(
       BugChecker refactoringBugChecker, Class<?> clazz) {
-    return new BugCheckerRefactoringTestHelper(refactoringBugChecker, clazz);
+    return new BugCheckerRefactoringTestHelper(clazz, new ErrorProneScanner(refactoringBugChecker));
+  }
+
+  public static BugCheckerRefactoringTestHelper createWithMultipleCheckers(
+      Class<?> clazz, BugChecker... checkers) {
+    return new BugCheckerRefactoringTestHelper(clazz, new ErrorProneScanner(checkers));
   }
 
   public static BugCheckerRefactoringTestHelper newInstance(
@@ -295,16 +299,13 @@ public class BugCheckerRefactoringTestHelper {
       JavaFileObject sourceFileObject, Context context, JCCompilationUnit tree) throws IOException {
     ImportOrganizer importOrganizer = ImportOrderParser.getImportOrganizer(importOrder);
     final DescriptionBasedDiff diff = DescriptionBasedDiff.create(tree, importOrganizer);
-    transformer(refactoringBugChecker)
+    transformer()
         .apply(
             new TreePath(tree),
             context,
-            new DescriptionListener() {
-              @Override
-              public void onDescribed(Description description) {
-                if (!description.fixes.isEmpty()) {
-                  diff.handleFix(fixChooser.choose(description.fixes));
-                }
+            description -> {
+              if (!description.fixes.isEmpty()) {
+                diff.handleFix(fixChooser.choose(description.fixes));
               }
             });
     SourceFile sourceFile = SourceFile.create(sourceFileObject);
@@ -326,8 +327,7 @@ public class BugCheckerRefactoringTestHelper {
     return tree.getPackage().packge.package_info.toString();
   }
 
-  private ErrorProneScannerTransformer transformer(BugChecker bugChecker) {
-    ErrorProneScanner scanner = new ErrorProneScanner(bugChecker);
+  private ErrorProneScannerTransformer transformer() {
     return ErrorProneScannerTransformer.create(scanner);
   }
 
