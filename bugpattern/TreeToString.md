@@ -4,7 +4,7 @@ summary: Tree#toString shouldn't be used for Trees deriving from the code being 
   as it discards whitespace and comments.
 layout: bugpattern
 tags: ''
-severity: WARNING
+severity: ERROR
 ---
 
 <!--

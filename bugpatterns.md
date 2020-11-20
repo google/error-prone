@@ -431,6 +431,9 @@ throwIfUnchecked(knownCheckedException) is a no-op.
 __[ThrowNull](bugpattern/ThrowNull)__<br>
 Throwing &#39;null&#39; always results in a NullPointerException being thrown.
 
+__[TreeToString](bugpattern/TreeToString)__<br>
+Tree#toString shouldn&#39;t be used for Trees deriving from the code being compiled, as it discards whitespace and comments.
+
 __[TruthSelfEquals](bugpattern/TruthSelfEquals)__<br>
 isEqualTo should not be used to test an object for equality with itself; the assertion will never fail.
 
@@ -981,9 +984,6 @@ This TimeUnit conversion looks buggy: converting from a smaller unit to a larger
 
 __[ToStringReturnsNull](bugpattern/ToStringReturnsNull)__<br>
 An implementation of Object.toString() should never return null.
-
-__[TreeToString](bugpattern/TreeToString)__<br>
-Tree#toString shouldn&#39;t be used for Trees deriving from the code being compiled, as it discards whitespace and comments.
 
 __[TruthAssertExpected](bugpattern/TruthAssertExpected)__<br>
 The actual and expected values appear to be swapped, which results in poor assertion failure messages. The actual value should come first.
