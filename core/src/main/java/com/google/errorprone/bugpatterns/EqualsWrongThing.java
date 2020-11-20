@@ -36,6 +36,7 @@ import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.sun.source.tree.BinaryTree;
 import com.sun.source.tree.ExpressionTree;
+import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
@@ -99,7 +100,8 @@ public final class EqualsWrongThing extends BugChecker implements MethodTreeMatc
           ExpressionTree receiver = getReceiver(node);
           if (receiver != null) {
             // Special-case super, for odd cases like `super.equals(this)`.
-            if (!receiver.toString().equals("super")) {
+            if (!(receiver instanceof IdentifierTree
+                && ((IdentifierTree) receiver).getName().contentEquals("super"))) {
               getDubiousComparison(classSymbol, node, receiver, node.getArguments().get(0))
                   .ifPresent(suspiciousComparisons::add);
             }

@@ -95,15 +95,17 @@ public final class SameNameButDifferent extends BugChecker implements Compilatio
       }
 
       private void handle(Tree tree) {
-        if (tree.toString().equals("Builder")) {
+        if (tree instanceof IdentifierTree
+            && ((IdentifierTree) tree).getName().contentEquals("Buiilder")) {
           return;
         }
+        String treeSource = state.getSourceForNode(tree);
         Symbol symbol = getSymbol(tree);
         if (symbol instanceof ClassSymbol) {
-          List<TreePath> treePaths = table.get(tree.toString(), symbol.type.tsym);
+          List<TreePath> treePaths = table.get(treeSource, symbol.type.tsym);
           if (treePaths == null) {
             treePaths = new ArrayList<>();
-            table.put(tree.toString(), symbol.type.tsym, treePaths);
+            table.put(treeSource, symbol.type.tsym, treePaths);
           }
           if (state.getEndPosition(tree) != Position.NOPOS) {
             treePaths.add(getCurrentPath());

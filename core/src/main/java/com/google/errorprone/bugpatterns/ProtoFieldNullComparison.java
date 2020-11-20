@@ -144,7 +144,6 @@ public class ProtoFieldNullComparison extends BugChecker implements CompilationU
     this.matchTestAssertions =
         flags.getBoolean("ProtoFieldNullComparison:MatchTestAssertions").orElse(false);
     this.matchOptionals = flags.getBoolean("ProtoFieldNullComparison:MatchOptionals").orElse(true);
-
   }
 
   @Override
@@ -322,7 +321,8 @@ public class ProtoFieldNullComparison extends BugChecker implements CompilationU
         if (hasMethods.isEmpty()) {
           return Optional.empty();
         }
-        String replacement = replaceLast(methodInvocation.toString(), methodName, hasMethod);
+        String replacement =
+            replaceLast(state.getSourceForNode(methodInvocation), methodName, hasMethod);
         return Optional.of(negated ? ("!" + replacement) : replacement);
       }
 
@@ -347,18 +347,19 @@ public class ProtoFieldNullComparison extends BugChecker implements CompilationU
             getType(getOnlyElement(method.getArguments())), state.getSymtab().intType, state)) {
           return null;
         }
-        return (n, s) -> Optional.of(generateFix(method, n));
+        return (n, s) -> Optional.of(generateFix(method, n, state));
       }
 
-      private String generateFix(MethodInvocationTree methodInvocation, boolean negated) {
+      private String generateFix(
+          MethodInvocationTree methodInvocation, boolean negated, VisitorState visitorState) {
         String methodName = ASTHelpers.getSymbol(methodInvocation).getQualifiedName().toString();
         String countMethod = methodName + "Count";
         return String.format(
             "%s.%s() %s %s",
-            getReceiver(methodInvocation),
+            visitorState.getSourceForNode(getReceiver(methodInvocation)),
             countMethod,
             negated ? "<=" : ">",
-            getOnlyElement(methodInvocation.getArguments()));
+            visitorState.getSourceForNode(getOnlyElement(methodInvocation.getArguments())));
       }
     },
     /** {@code proto.getRepeatedFooList()} */
@@ -376,11 +377,14 @@ public class ProtoFieldNullComparison extends BugChecker implements CompilationU
           return null;
         }
         ExpressionTree expressionTree = method.getMethodSelect();
-        return isGetter(expressionTree) ? (n, s) -> Optional.of(generateFix(n, method)) : null;
+        return isGetter(expressionTree)
+            ? (n, s) -> Optional.of(generateFix(n, method, state))
+            : null;
       }
 
-      private String generateFix(boolean negated, ExpressionTree methodInvocation) {
-        String replacement = methodInvocation + ".isEmpty()";
+      private String generateFix(
+          boolean negated, ExpressionTree methodInvocation, VisitorState state) {
+        String replacement = state.getSourceForNode(methodInvocation) + ".isEmpty()";
         return negated ? replacement : ("!" + replacement);
       }
     },
@@ -424,7 +428,8 @@ public class ProtoFieldNullComparison extends BugChecker implements CompilationU
         return (negated, state) -> {
           String methodName = getMethodName(methodInvocation);
           String hasMethod = methodName.replaceFirst("get", "has");
-          String replacement = replaceLast(methodInvocation.toString(), methodName, hasMethod);
+          String replacement =
+              replaceLast(state.getSourceForNode(methodInvocation), methodName, hasMethod);
           return Optional.of(negated ? "!" + replacement : replacement);
         };
       }

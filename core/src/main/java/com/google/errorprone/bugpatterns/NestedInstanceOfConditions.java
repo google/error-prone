@@ -88,9 +88,9 @@ public class NestedInstanceOfConditions extends BugChecker implements IfTreeMatc
     @Override
     public boolean matches(Tree tree, VisitorState visitorState) {
       if (tree instanceof AssignmentTree) {
-        return variableExpressionTree
-            .toString()
-            .equals(((AssignmentTree) tree).getVariable().toString());
+        return visitorState
+            .getSourceForNode(variableExpressionTree)
+            .equals(visitorState.getSourceForNode(((AssignmentTree) tree).getVariable()));
       }
 
       return false;

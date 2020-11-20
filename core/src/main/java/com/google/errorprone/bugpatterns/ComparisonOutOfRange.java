@@ -137,7 +137,7 @@ public class ComparisonOutOfRange extends BugChecker implements BinaryTreeMatche
             throw new IllegalStateException(
                 "Cannot compare " + comparisonType + " to boolean literal");
           } else {
-            throw new IllegalStateException("Unexpected literal type: " + literal);
+            throw new IllegalStateException("Unexpected literal type: " + literal.getKind());
           }
           return intValue < minValue || intValue > maxValue;
       }

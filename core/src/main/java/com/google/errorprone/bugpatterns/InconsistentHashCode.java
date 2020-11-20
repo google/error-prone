@@ -196,7 +196,10 @@ public final class InconsistentHashCode extends BugChecker implements ClassTreeM
     @Override
     public Void visitMemberSelect(MemberSelectTree tree, Void unused) {
       ExpressionTree receiver = getReceiver(tree);
-      if (receiver == null || receiver.toString().equals("this")) {
+      ExpressionTree e = tree.getExpression();
+      if (receiver == null
+          || (e instanceof IdentifierTree
+              && ((IdentifierTree) e).getName().contentEquals("this"))) {
         Symbol symbol = ((JCFieldAccess) tree).sym;
         handleSymbol(symbol);
       }

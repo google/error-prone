@@ -48,7 +48,7 @@ public class EqualsReference extends BugChecker implements MethodTreeMatcher {
     if (Matchers.equalsMethodDeclaration().matches(methodTree, visitorState)) {
       VariableTree variableTree = methodTree.getParameters().get(0);
       VarSymbol varSymbol = ASTHelpers.getSymbol(variableTree);
-      TreeScannerEquals treeScannerEquals = new TreeScannerEquals(methodTree);
+      TreeScannerEquals treeScannerEquals = new TreeScannerEquals(methodTree, visitorState);
       treeScannerEquals.scan(methodTree.getBody(), varSymbol);
       if (treeScannerEquals.hasIllegalEquals) {
         return describeMatch(methodTree);
@@ -61,9 +61,11 @@ public class EqualsReference extends BugChecker implements MethodTreeMatcher {
 
     private boolean hasIllegalEquals = false;
     private final MethodTree methodTree;
+    private final VisitorState visitorState;
 
-    public TreeScannerEquals(MethodTree currMethodTree) {
+    public TreeScannerEquals(MethodTree currMethodTree, VisitorState visitorState) {
       methodTree = currMethodTree;
+      this.visitorState = visitorState;
     }
 
     @Override
@@ -77,10 +79,12 @@ public class EqualsReference extends BugChecker implements MethodTreeMatcher {
                   ASTHelpers.getSymbol(methodInvocationTree.getArguments().get(0)), varSymbol);
       if (methodSelectTree instanceof MemberSelectTree) {
         memberSelectTree = (MemberSelectTree) methodSelectTree;
+        ExpressionTree e = memberSelectTree.getExpression();
         // this.equals(o)
         // not using o.equals(this) because all instances of this were false positives
         // (people checked to see if o was an instance of this class)
-        if (memberSelectTree.getExpression().toString().equals("this")
+        if (e instanceof IdentifierTree
+            && ((IdentifierTree) e).getName().contentEquals("this")
             && Objects.equals(
                 ASTHelpers.getSymbol(methodTree), ASTHelpers.getSymbol(memberSelectTree))
             && hasParameterAndSameSymbol) {
