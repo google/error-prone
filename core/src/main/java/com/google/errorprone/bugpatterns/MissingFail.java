@@ -22,6 +22,7 @@ import static com.google.errorprone.matchers.JUnitMatchers.JUNIT_BEFORE_ANNOTATI
 import static com.google.errorprone.matchers.JUnitMatchers.hasJUnit4TestCases;
 import static com.google.errorprone.matchers.JUnitMatchers.hasJUnit4TestRunner;
 import static com.google.errorprone.matchers.JUnitMatchers.isTestCaseDescendant;
+import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.assertStatement;
 import static com.google.errorprone.matchers.Matchers.assignment;
 import static com.google.errorprone.matchers.Matchers.booleanConstant;
@@ -38,6 +39,7 @@ import static com.google.errorprone.matchers.Matchers.returnStatement;
 import static com.google.errorprone.matchers.Matchers.throwStatement;
 import static com.google.errorprone.matchers.Matchers.toType;
 import static com.google.errorprone.matchers.method.MethodMatchers.anyMethod;
+import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
 
 import com.google.errorprone.BugPattern;
@@ -61,7 +63,6 @@ import com.sun.source.tree.EnhancedForLoopTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.ForLoopTree;
 import com.sun.source.tree.LiteralTree;
-import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.StatementTree;
@@ -144,7 +145,12 @@ public class MissingFail extends BugChecker implements TryTreeMatcher {
   private static final Matcher<StatementTree> JAVA_ASSERT_FALSE =
       assertStatement(ignoreParens(Matchers.anyOf(booleanLiteral(false), booleanConstant(false))));
 
-  private static final Matcher<ExpressionTree> LOG_CALL = methodInvocation(new LogMethodMatcher());
+  private static final Matcher<ExpressionTree> LOG_CALL =
+      anyOf(
+          instanceMethod()
+              .onClass((t, s) -> t.asElement().getSimpleName().toString().contains("Logger"))
+              .withAnyName(),
+          instanceMethod().anyClass().withNameMatching(Pattern.compile("log.*")));
   private static final Matcher<Tree> LOG_IN_BLOCK =
       contains(toType(ExpressionTree.class, LOG_CALL));
 
@@ -401,29 +407,6 @@ public class MissingFail extends BugChecker implements TryTreeMatcher {
 
       String symSimpleName = sym.getSimpleName().toString();
       return symSimpleName.startsWith("assert") || symSimpleName.startsWith("verify");
-    }
-  }
-
-  private static class LogMethodMatcher implements Matcher<ExpressionTree> {
-
-    @Override
-    public boolean matches(ExpressionTree expressionTree, VisitorState state) {
-      Symbol sym = ASTHelpers.getSymbol(expressionTree);
-      if (sym != null && sym.getSimpleName().toString().startsWith("log")) {
-        return true;
-      }
-
-      if (sym != null && sym.isStatic()) {
-        if (sym.owner.getQualifiedName().toString().contains("Logger")) {
-          return true;
-        }
-      } else if (expressionTree instanceof MemberSelectTree) {
-        if (((MemberSelectTree) expressionTree).getExpression().toString().startsWith("log")) {
-          return true;
-        }
-      }
-
-      return false;
     }
   }
 
