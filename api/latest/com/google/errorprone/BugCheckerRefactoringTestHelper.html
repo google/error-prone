@@ -15,7 +15,7 @@
 <script type="text/javascript" src="../../../script-dir/jquery-ui.min.js"></script>
 </head>
 <body class="class-declaration-page">
-<script type="text/javascript">var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":9,"i7":9,"i8":10,"i9":10,"i10":10,"i11":10};
+<script type="text/javascript">var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":9,"i5":10,"i6":10,"i7":9,"i8":9,"i9":10,"i10":10,"i11":10,"i12":10};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "alt-color";
 var rowColor = "row-color";
@@ -183,43 +183,49 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 </td>
 </tr>
 <tr class="alt-color" id="i4">
-<td class="col-first"><code>void</code></td>
-<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#doTest()">doTest</a></span>()</code></th>
+<td class="col-first"><code>static <a href="BugCheckerRefactoringTestHelper.html" title="class in com.google.errorprone">BugCheckerRefactoringTestHelper</a></code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#createWithMultipleCheckers(java.lang.Class,com.google.errorprone.bugpatterns.BugChecker...)">createWithMultipleCheckers</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;clazz,
+<a href="bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a>...&nbsp;checkers)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
 <tr class="row-color" id="i5">
 <td class="col-first"><code>void</code></td>
-<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#doTest(com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode)">doTest</a></span>&#8203;(<a href="BugCheckerRefactoringTestHelper.TestMode.html" title="enum in com.google.errorprone">BugCheckerRefactoringTestHelper.TestMode</a>&nbsp;testMode)</code></th>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#doTest()">doTest</a></span>()</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
 <tr class="alt-color" id="i6">
+<td class="col-first"><code>void</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#doTest(com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode)">doTest</a></span>&#8203;(<a href="BugCheckerRefactoringTestHelper.TestMode.html" title="enum in com.google.errorprone">BugCheckerRefactoringTestHelper.TestMode</a>&nbsp;testMode)</code></th>
+<td class="col-last">&nbsp;</td>
+</tr>
+<tr class="row-color" id="i7">
 <td class="col-first"><code>static <a href="BugCheckerRefactoringTestHelper.html" title="class in com.google.errorprone">BugCheckerRefactoringTestHelper</a></code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#newInstance(com.google.errorprone.bugpatterns.BugChecker,java.lang.Class)">newInstance</a></span>&#8203;(<a href="bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a>&nbsp;refactoringBugChecker,
 <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;clazz)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color" id="i7">
+<tr class="alt-color" id="i8">
 <td class="col-first"><code>static <a href="BugCheckerRefactoringTestHelper.html" title="class in com.google.errorprone">BugCheckerRefactoringTestHelper</a></code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#newInstance(java.lang.Class,java.lang.Class)">newInstance</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;? extends <a href="bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a>&gt;&nbsp;checkerClass,
 <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;clazz)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color" id="i8">
+<tr class="row-color" id="i9">
 <td class="col-first"><code><a href="BugCheckerRefactoringTestHelper.html" title="class in com.google.errorprone">BugCheckerRefactoringTestHelper</a></code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#setArgs(com.google.common.collect.ImmutableList)">setArgs</a></span>&#8203;(com.google.common.collect.ImmutableList&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;args)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color" id="i9">
+<tr class="alt-color" id="i10">
 <td class="col-first"><code><a href="BugCheckerRefactoringTestHelper.html" title="class in com.google.errorprone">BugCheckerRefactoringTestHelper</a></code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#setArgs(java.lang.String...)">setArgs</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>...&nbsp;args)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color" id="i10">
+<tr class="row-color" id="i11">
 <td class="col-first"><code><a href="BugCheckerRefactoringTestHelper.html" title="class in com.google.errorprone">BugCheckerRefactoringTestHelper</a></code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#setFixChooser(com.google.errorprone.BugCheckerRefactoringTestHelper.FixChooser)">setFixChooser</a></span>&#8203;(<a href="BugCheckerRefactoringTestHelper.FixChooser.html" title="interface in com.google.errorprone">BugCheckerRefactoringTestHelper.FixChooser</a>&nbsp;chooser)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color" id="i11">
+<tr class="alt-color" id="i12">
 <td class="col-first"><code><a href="BugCheckerRefactoringTestHelper.html" title="class in com.google.errorprone">BugCheckerRefactoringTestHelper</a></code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#setImportOrder(java.lang.String)">setImportOrder</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;importOrder)</code></th>
 <td class="col-last">&nbsp;</td>
@@ -247,6 +253,13 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <h3>newInstance</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="BugCheckerRefactoringTestHelper.html" title="class in com.google.errorprone">BugCheckerRefactoringTestHelper</a></span>&nbsp;<span class="member-name">newInstance</span>&#8203;(<span class="parameters"><a href="bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a>&nbsp;refactoringBugChecker,
 <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;clazz)</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="createWithMultipleCheckers(java.lang.Class,com.google.errorprone.bugpatterns.BugChecker...)">
+<h3>createWithMultipleCheckers</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="BugCheckerRefactoringTestHelper.html" title="class in com.google.errorprone">BugCheckerRefactoringTestHelper</a></span>&nbsp;<span class="member-name">createWithMultipleCheckers</span>&#8203;(<span class="parameters"><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;clazz,
+<a href="bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a>...&nbsp;checkers)</span></div>
 </section>
 </li>
 <li>
