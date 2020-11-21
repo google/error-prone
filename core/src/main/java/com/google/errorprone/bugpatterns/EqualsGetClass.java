@@ -21,6 +21,7 @@ import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.equalsMethodDeclaration;
+import static com.google.errorprone.matchers.Matchers.instanceEqualsInvocation;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
@@ -118,12 +119,6 @@ public final class EqualsGetClass extends BugChecker implements MethodInvocation
             allOf(GET_CLASS, (tree, unused) -> matchesThis(tree)),
             (tree, unused) -> matchesClass(tree));
 
-    private static final Matcher<ExpressionTree> EQUALS =
-        instanceMethod()
-            .onDescendantOf("java.lang.Object")
-            .named("equals")
-            .withParameters("java.lang.Object");
-
     private static boolean matchesThis(ExpressionTree tree) {
       ExpressionTree receiver = getReceiver(tree);
       if (receiver == null) {
@@ -206,7 +201,7 @@ public final class EqualsGetClass extends BugChecker implements MethodInvocation
 
     @Override
     public Void visitMethodInvocation(MethodInvocationTree node, Void unused) {
-      if (!EQUALS.matches(node, state)) {
+      if (!instanceEqualsInvocation().matches(node, state)) {
         return null;
       }
       ExpressionTree argument = getOnlyElement(node.getArguments());

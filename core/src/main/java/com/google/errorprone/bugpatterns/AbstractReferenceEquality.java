@@ -18,7 +18,7 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.dataflow.nullnesspropagation.Nullness.NONNULL;
 import static com.google.errorprone.dataflow.nullnesspropagation.Nullness.NULL;
-import static com.google.errorprone.matchers.Matchers.instanceMethod;
+import static com.google.errorprone.matchers.Matchers.instanceEqualsInvocation;
 import static com.google.errorprone.matchers.Matchers.staticEqualsInvocation;
 
 import com.google.errorprone.VisitorState;
@@ -52,11 +52,7 @@ public abstract class AbstractReferenceEquality extends BugChecker implements Bi
   private static final Matcher<MethodInvocationTree> EQUALS_STATIC_METHODS =
       staticEqualsInvocation();
 
-  private static final Matcher<ExpressionTree> OBJECT_INSTANCE_EQUALS =
-      instanceMethod()
-          .onDescendantOf("java.lang.Object")
-          .named("equals")
-          .withParameters("java.lang.Object");
+  private static final Matcher<ExpressionTree> OBJECT_INSTANCE_EQUALS = instanceEqualsInvocation();
 
   protected abstract boolean matchArgument(ExpressionTree tree, VisitorState state);
 

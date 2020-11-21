@@ -19,7 +19,7 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.allOf;
-import static com.google.errorprone.matchers.Matchers.instanceMethod;
+import static com.google.errorprone.matchers.Matchers.instanceEqualsInvocation;
 import static com.google.errorprone.matchers.Matchers.receiverSameAsArgument;
 import static com.google.errorprone.matchers.Matchers.sameArgument;
 import static com.google.errorprone.matchers.Matchers.staticEqualsInvocation;
@@ -61,12 +61,7 @@ public class SelfEquals extends BugChecker implements MethodInvocationTreeMatche
           staticMethod().anyClass().namedAnyOf("assertTrue", "assertThat"));
 
   private static final Matcher<MethodInvocationTree> INSTANCE_MATCHER =
-      allOf(
-          instanceMethod()
-              .onDescendantOf("java.lang.Object")
-              .named("equals")
-              .withParameters("java.lang.Object"),
-          receiverSameAsArgument(0));
+      allOf(instanceEqualsInvocation(), receiverSameAsArgument(0));
 
   private static final Matcher<MethodInvocationTree> STATIC_MATCHER =
       allOf(staticEqualsInvocation(), sameArgument(0, 1));
