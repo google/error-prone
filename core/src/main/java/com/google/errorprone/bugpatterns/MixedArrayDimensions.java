@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.LinkType.CUSTOM;
 import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 
@@ -41,10 +40,7 @@ import java.util.List;
     name = "MixedArrayDimensions",
     summary = "C-style array declarations should not be used",
     severity = SUGGESTION,
-    linkType = CUSTOM,
-    tags = StandardTags.STYLE,
-    link = "https://google.github.io/styleguide/javaguide.html#s4.8.3.2-array-declarations"
-    )
+    tags = StandardTags.STYLE)
 public class MixedArrayDimensions extends BugChecker
     implements MethodTreeMatcher, VariableTreeMatcher {
 
