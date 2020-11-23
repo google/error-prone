@@ -100,4 +100,18 @@ public class OrphanedFormatStringTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void percent() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  void f() {",
+            "    StringBuilder messageBuilder = ",
+            "        new StringBuilder(\"hakuna % matata\").append(\"y\").append(\"n\");",
+            "  }",
+            "}")
+        .doTest();
+  }
 }
