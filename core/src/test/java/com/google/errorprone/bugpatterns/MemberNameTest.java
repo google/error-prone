@@ -210,12 +210,10 @@ public class MemberNameTest {
   }
 
   @Test
-  public void methodWithUnderscores_overriddenFromGeneratedSupertype_noFinding() {
+  public void methodWithUnderscores_overriddenFromSupertype_noFinding() {
     helper
         .addSourceLines(
             "Base.java",
-            "import javax.annotation.Generated;",
-            "@Generated(\"Hands\")",
             "abstract class Base {",
             "  @SuppressWarnings(\"MemberName\")", // We only care about the subtype in this test.
             "  abstract int get_some();",

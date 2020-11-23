@@ -25,11 +25,10 @@ import static com.google.errorprone.fixes.SuggestedFixes.renameVariable;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.JUnitMatchers.TEST_CASE;
 import static com.google.errorprone.util.ASTHelpers.annotationsAmong;
+import static com.google.errorprone.util.ASTHelpers.findSuperMethod;
 import static com.google.errorprone.util.ASTHelpers.findSuperMethods;
-import static com.google.errorprone.util.ASTHelpers.getGeneratedBy;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
-import static com.google.errorprone.util.ASTHelpers.outermostClass;
 
 import com.google.common.base.CaseFormat;
 import com.google.common.collect.ImmutableSet;
@@ -93,16 +92,15 @@ public final class MemberName extends BugChecker implements MethodTreeMatcher, V
     if (hasAnnotation(symbol, "org.junit.Ignore", state)) {
       return NO_MATCH;
     }
+    if (findSuperMethod(getSymbol(tree), state.getTypes()).isPresent()) {
+      return NO_MATCH;
+    }
     if (tree.getModifiers().getFlags().contains(Modifier.NATIVE)) {
       return NO_MATCH;
     }
     // JUnitParams reflectively accesses methods starting with "parametersFor" to provide parameters
     // for tests (which may then contain underscores).
     if (symbol.getSimpleName().toString().startsWith("parametersFor")) {
-      return NO_MATCH;
-    }
-    if (findSuperMethods(symbol, state.getTypes()).stream()
-        .anyMatch(m -> !getGeneratedBy(outermostClass(m), state).isEmpty())) {
       return NO_MATCH;
     }
     if (TEST_CASE.matches(tree, state)) {
