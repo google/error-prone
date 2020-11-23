@@ -19,6 +19,7 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.expressionStatement;
+import static com.google.errorprone.matchers.Matchers.matchSingleStatementBlock;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 
 import com.google.common.collect.Iterables;
@@ -27,9 +28,8 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.CatchTreeMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
+import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.CatchTree;
-import com.sun.source.tree.StatementTree;
-import java.util.List;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
@@ -40,20 +40,16 @@ import java.util.List;
     severity = WARNING)
 public class CatchAndPrintStackTrace extends BugChecker implements CatchTreeMatcher {
 
-  private static final Matcher<StatementTree> MATCHER =
-      expressionStatement(
-          instanceMethod().onDescendantOf("java.lang.Throwable").named("printStackTrace"));
+  private static final Matcher<BlockTree> MATCHER =
+      matchSingleStatementBlock(
+          expressionStatement(
+              instanceMethod().onDescendantOf("java.lang.Throwable").named("printStackTrace")));
 
   @Override
   public Description matchCatch(CatchTree tree, VisitorState state) {
-    List<? extends StatementTree> statements = tree.getBlock().getStatements();
-    if (statements.size() != 1) {
-      return NO_MATCH;
+    if (MATCHER.matches(tree.getBlock(), state)) {
+      return describeMatch(Iterables.getOnlyElement(tree.getBlock().getStatements()));
     }
-    StatementTree statement = Iterables.getOnlyElement(statements);
-    if (!MATCHER.matches(statement, state)) {
-      return NO_MATCH;
-    }
-    return describeMatch(statement);
+    return NO_MATCH;
   }
 }
