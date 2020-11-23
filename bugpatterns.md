@@ -883,6 +883,9 @@ Use grouping parenthesis to make the operator precedence explicit
 __[OptionalMapToOptional](bugpattern/OptionalMapToOptional)__<br>
 Mapping to another Optional will yield a nested Optional. Did you mean flatMap?
 
+__[OptionalMapUnusedValue](bugpattern/OptionalMapUnusedValue)__<br>
+Optional.ifPresent is preferred over Optional.map when the return value is unused
+
 __[OptionalNotPresent](bugpattern/OptionalNotPresent)__<br>
 One should not call optional.get() inside an if statement that checks !optional.isPresent
 
@@ -1219,9 +1222,6 @@ Instead of returning a functional type, return the actual type that the returned
 
 __[NonCanonicalStaticMemberImport](bugpattern/NonCanonicalStaticMemberImport)__<br>
 Static import of member uses non-canonical name
-
-__[OptionalMapUnusedValue](bugpattern/OptionalMapUnusedValue)__<br>
-Optional.ifPresent is preferred over Optional.map when the return value is unused
 
 __[PreferJavaTimeOverload](bugpattern/PreferJavaTimeOverload)__<br>
 Prefer using java.time-based APIs when available. Note that this checker does not and cannot guarantee that the overloads have equivalent semantics, but that is generally the case with overloaded methods.
