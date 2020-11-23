@@ -198,7 +198,9 @@ public final class InvalidLink extends BugChecker
                 .setMessage(
                     String.format(
                         "The reference `%s` to a method doesn't resolve to anything. Is it"
-                            + " misspelt?",
+                            + " misspelt, or is the parameter list not correct? See"
+                            + " https://docs.oracle.com/javase/8/docs/technotes/tools/unix/javadoc.html#JSSOR654"
+                            + " for documentation on how to form method links.",
                         reference))
                 .build());
       }
