@@ -170,8 +170,8 @@ implements org.checkerframework.shaded.dataflow.analysis.Store&lt;<a href="Acces
 <tbody>
 <tr class="alt-color" id="i0">
 <td class="col-first"><code>boolean</code></td>
-<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#canAlias(org.checkerframework.shaded.dataflow.analysis.FlowExpressions.Receiver,org.checkerframework.shaded.dataflow.analysis.FlowExpressions.Receiver)">canAlias</a></span>&#8203;(org.checkerframework.shaded.dataflow.analysis.FlowExpressions.Receiver&nbsp;a,
-org.checkerframework.shaded.dataflow.analysis.FlowExpressions.Receiver&nbsp;b)</code></th>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#canAlias(org.checkerframework.shaded.dataflow.expression.Receiver,org.checkerframework.shaded.dataflow.expression.Receiver)">canAlias</a></span>&#8203;(org.checkerframework.shaded.dataflow.expression.Receiver&nbsp;a,
+org.checkerframework.shaded.dataflow.expression.Receiver&nbsp;b)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
 <tr class="row-color" id="i1">
@@ -207,7 +207,7 @@ org.checkerframework.shaded.dataflow.analysis.FlowExpressions.Receiver&nbsp;b)</
 </tr>
 <tr class="row-color" id="i7">
 <td class="col-first"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></td>
-<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#visualize(org.checkerframework.shaded.dataflow.cfg.CFGVisualizer)">visualize</a></span>&#8203;(org.checkerframework.shaded.dataflow.cfg.CFGVisualizer&lt;?,&#8203;<a href="AccessPathStore.html" title="class in com.google.errorprone.dataflow">AccessPathStore</a>&lt;<a href="AccessPathStore.html" title="type parameter in AccessPathStore">V</a>&gt;,&#8203;?&gt;&nbsp;cfgVisualizer)</code></th>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#visualize(org.checkerframework.shaded.dataflow.cfg.visualize.CFGVisualizer)">visualize</a></span>&#8203;(org.checkerframework.shaded.dataflow.cfg.visualize.CFGVisualizer&lt;?,&#8203;<a href="AccessPathStore.html" title="class in com.google.errorprone.dataflow">AccessPathStore</a>&lt;<a href="AccessPathStore.html" title="type parameter in AccessPathStore">V</a>&gt;,&#8203;?&gt;&nbsp;cfgVisualizer)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
 <tr class="alt-color" id="i8">
@@ -308,10 +308,10 @@ org.checkerframework.shaded.dataflow.analysis.FlowExpressions.Receiver&nbsp;b)</
 </section>
 </li>
 <li>
-<section class="detail" id="canAlias(org.checkerframework.shaded.dataflow.analysis.FlowExpressions.Receiver,org.checkerframework.shaded.dataflow.analysis.FlowExpressions.Receiver)">
+<section class="detail" id="canAlias(org.checkerframework.shaded.dataflow.expression.Receiver,org.checkerframework.shaded.dataflow.expression.Receiver)">
 <h3>canAlias</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="member-name">canAlias</span>&#8203;(<span class="parameters">org.checkerframework.shaded.dataflow.analysis.FlowExpressions.Receiver&nbsp;a,
-org.checkerframework.shaded.dataflow.analysis.FlowExpressions.Receiver&nbsp;b)</span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="member-name">canAlias</span>&#8203;(<span class="parameters">org.checkerframework.shaded.dataflow.expression.Receiver&nbsp;a,
+org.checkerframework.shaded.dataflow.expression.Receiver&nbsp;b)</span></div>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code>canAlias</code>&nbsp;in interface&nbsp;<code>org.checkerframework.shaded.dataflow.analysis.Store&lt;<a href="AccessPathStore.html" title="type parameter in AccessPathStore">V</a> extends org.checkerframework.shaded.dataflow.analysis.AbstractValue&lt;<a href="AccessPathStore.html" title="type parameter in AccessPathStore">V</a>&gt;&gt;</code></dd>
@@ -319,9 +319,9 @@ org.checkerframework.shaded.dataflow.analysis.FlowExpressions.Receiver&nbsp;b)</
 </section>
 </li>
 <li>
-<section class="detail" id="visualize(org.checkerframework.shaded.dataflow.cfg.CFGVisualizer)">
+<section class="detail" id="visualize(org.checkerframework.shaded.dataflow.cfg.visualize.CFGVisualizer)">
 <h3>visualize</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="member-name">visualize</span>&#8203;(<span class="parameters">org.checkerframework.shaded.dataflow.cfg.CFGVisualizer&lt;?,&#8203;<a href="AccessPathStore.html" title="class in com.google.errorprone.dataflow">AccessPathStore</a>&lt;<a href="AccessPathStore.html" title="type parameter in AccessPathStore">V</a>&gt;,&#8203;?&gt;&nbsp;cfgVisualizer)</span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="member-name">visualize</span>&#8203;(<span class="parameters">org.checkerframework.shaded.dataflow.cfg.visualize.CFGVisualizer&lt;?,&#8203;<a href="AccessPathStore.html" title="class in com.google.errorprone.dataflow">AccessPathStore</a>&lt;<a href="AccessPathStore.html" title="type parameter in AccessPathStore">V</a>&gt;,&#8203;?&gt;&nbsp;cfgVisualizer)</span></div>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code>visualize</code>&nbsp;in interface&nbsp;<code>org.checkerframework.shaded.dataflow.analysis.Store&lt;<a href="AccessPathStore.html" title="type parameter in AccessPathStore">V</a> extends org.checkerframework.shaded.dataflow.analysis.AbstractValue&lt;<a href="AccessPathStore.html" title="type parameter in AccessPathStore">V</a>&gt;&gt;</code></dd>
