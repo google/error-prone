@@ -89,7 +89,10 @@ public class TreeToStringTest {
             "     return maker.Literal(\"val\").toString();",
             "  }",
             "}")
-        .addModules("jdk.compiler/com.sun.tools.javac.code")
+        .addModules(
+            "jdk.compiler/com.sun.tools.javac.code",
+            "jdk.compiler/com.sun.tools.javac.tree",
+            "jdk.compiler/com.sun.tools.javac.util")
         .doTest();
   }
 }

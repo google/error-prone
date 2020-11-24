@@ -94,7 +94,8 @@ public class TypeToStringTest {
             "    }",
             "  }",
             "}")
-        .addModules("jdk.compiler/com.sun.tools.javac.code")
+        .addModules(
+            "jdk.compiler/com.sun.tools.javac.code", "jdk.compiler/com.sun.tools.javac.tree")
         .doTest();
   }
 }
