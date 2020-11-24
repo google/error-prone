@@ -40,6 +40,5 @@ switch (state) {
 }
 ```
 
-[style]: https://google.github.io/styleguide/javaguide.html#s4.8.4-switch
-
+[style]: https://google.github.io/styleguide/javaguide.html#s4.8.4.3-switch-default
 [MissingCasesInEnumSwitch]: https://errorprone.info/bugpattern/MissingCasesInEnumSwitch

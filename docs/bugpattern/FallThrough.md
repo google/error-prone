@@ -21,4 +21,4 @@ switch (input) {
 }
 ```
 
-[style]: https://google.github.io/styleguide/javaguide.html#s4.8.4-switch
+[style]: https://google.github.io/styleguide/javaguide.html#s4.8.4.2-switch-fall-through
