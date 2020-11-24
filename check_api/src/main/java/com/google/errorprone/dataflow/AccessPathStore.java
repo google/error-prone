@@ -25,9 +25,9 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import javax.annotation.Nullable;
 import org.checkerframework.shaded.dataflow.analysis.AbstractValue;
-import org.checkerframework.shaded.dataflow.analysis.FlowExpressions;
 import org.checkerframework.shaded.dataflow.analysis.Store;
-import org.checkerframework.shaded.dataflow.cfg.CFGVisualizer;
+import org.checkerframework.shaded.dataflow.cfg.visualize.CFGVisualizer;
+import org.checkerframework.shaded.dataflow.expression.Receiver;
 
 /**
  * Immutable map from local variables or heap access paths to their {@link AbstractValue}
@@ -94,7 +94,7 @@ public abstract class AccessPathStore<V extends AbstractValue<V>>
   }
 
   @Override
-  public boolean canAlias(FlowExpressions.Receiver a, FlowExpressions.Receiver b) {
+  public boolean canAlias(Receiver a, Receiver b) {
     return true;
   }
 

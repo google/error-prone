@@ -33,9 +33,9 @@ import java.io.Serializable;
 import javax.lang.model.element.ElementKind;
 import org.checkerframework.shaded.dataflow.analysis.Analysis;
 import org.checkerframework.shaded.dataflow.analysis.ForwardAnalysisImpl;
-import org.checkerframework.shaded.dataflow.cfg.CFGBuilder;
 import org.checkerframework.shaded.dataflow.cfg.ControlFlowGraph;
 import org.checkerframework.shaded.dataflow.cfg.UnderlyingAST;
+import org.checkerframework.shaded.dataflow.cfg.builder.CFGBuilder;
 
 /**
  * An interface to the "trusting" nullness analysis. This variant "trusts" {@code Nullable}
