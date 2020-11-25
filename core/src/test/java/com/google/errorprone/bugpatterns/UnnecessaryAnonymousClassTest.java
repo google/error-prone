@@ -179,4 +179,30 @@ public class UnnecessaryAnonymousClassTest {
         .expectUnchanged()
         .doTest();
   }
+
+  @Test
+  public void mockitoSpy() {
+    testHelper
+        .addInputLines(
+            "Test.java",
+            "import java.util.function.Function;",
+            "import org.mockito.Spy;",
+            "class Test {",
+            "  interface Foo {",
+            "    int foo(int a);",
+            "  }",
+            "  @Spy",
+            "  private static final Foo FOO = new Foo() {",
+            "    @Override",
+            "    public int foo(int a) {",
+            "      return 2 * a;",
+            "    }",
+            "  };",
+            "  public static void test() {",
+            "    FOO.foo(2);",
+            "  }",
+            "}")
+        .expectUnchanged()
+        .doTest();
+  }
 }

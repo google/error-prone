@@ -114,7 +114,10 @@ public class UnnecessaryAnonymousClass extends BugChecker implements VariableTre
     if (state.isAndroidCompatible()) {
       return NO_MATCH;
     }
-
+    if (tree.getModifiers().getAnnotations().stream()
+        .anyMatch(at -> getSymbol(at).getQualifiedName().contentEquals("org.mockito.Spy"))) {
+      return NO_MATCH;
+    }
     SuggestedFix.Builder fixBuilder = SuggestedFix.builder();
 
     // Derive new method name from identifier.
