@@ -1321,6 +1321,9 @@ This loop can be replaced with an enhanced for loop.
 __[HashCodeToString](bugpattern/HashCodeToString)__<br>
 Classes that override hashCode should also consider overriding toString.
 
+__[ImmutableMemberCollection](bugpattern/ImmutableMemberCollection)__<br>
+If you don&#39;t intend to mutate a member collection prefer using Immutable types.
+
 __[ImmutableRefactoring](bugpattern/ImmutableRefactoring)__<br>
 Refactors uses of the JSR 305 @Immutable to Error Prone&#39;s annotation
 
