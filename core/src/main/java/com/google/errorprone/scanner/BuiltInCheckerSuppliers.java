@@ -139,6 +139,7 @@ import com.google.errorprone.bugpatterns.IdentityBinaryExpression;
 import com.google.errorprone.bugpatterns.IdentityHashMapBoxing;
 import com.google.errorprone.bugpatterns.IdentityHashMapUsage;
 import com.google.errorprone.bugpatterns.IgnoredPureGetter;
+import com.google.errorprone.bugpatterns.ImmutableMemberCollection;
 import com.google.errorprone.bugpatterns.ImmutableModification;
 import com.google.errorprone.bugpatterns.ImmutableSetForContains;
 import com.google.errorprone.bugpatterns.ImplementAssertionWithChaining;
@@ -927,6 +928,7 @@ public class BuiltInCheckerSuppliers {
           FuzzyEqualsShouldNotBeUsedInEqualsMethod.class,
           HardCodedSdCardPath.class,
           HashCodeToString.class,
+          ImmutableMemberCollection.class,
           ImmutableRefactoring.class,
           ImmutableSetForContains.class,
           ImplementAssertionWithChaining.class,
