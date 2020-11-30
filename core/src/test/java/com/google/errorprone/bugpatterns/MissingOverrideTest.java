@@ -18,6 +18,7 @@ package com.google.errorprone.bugpatterns;
 
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.CompilationTestHelper;
+import com.google.errorprone.util.RuntimeVersion;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -32,7 +33,11 @@ public class MissingOverrideTest {
   @Test
   public void simple() {
     compilationHelper
-        .addSourceLines("Super.java", "public class Super {", "  void f() {}", "}")
+        .addSourceLines(
+            "Super.java", //
+            "public class Super {",
+            "  void f() {}",
+            "}")
         .addSourceLines(
             "Test.java",
             "public class Test extends Super {",
@@ -45,7 +50,11 @@ public class MissingOverrideTest {
   @Test
   public void abstractMethod() {
     compilationHelper
-        .addSourceLines("Super.java", "public abstract class Super {", "  abstract void f();", "}")
+        .addSourceLines(
+            "Super.java", //
+            "public abstract class Super {",
+            "  abstract void f();",
+            "}")
         .addSourceLines(
             "Test.java",
             "public class Test extends Super {",
@@ -56,9 +65,28 @@ public class MissingOverrideTest {
   }
 
   @Test
+  public void generatedMethod() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java", //
+            (RuntimeVersion.isAtLeast9()
+                ? "import javax.annotation.processing.Generated;"
+                : "import javax.annotation.Generated;"),
+            "@Generated(\"foo\")",
+            "public abstract class Test {",
+            "  public abstract int hashCode();",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void interfaceMethod() {
     compilationHelper
-        .addSourceLines("Super.java", "interface Super {", "  void f();", "}")
+        .addSourceLines(
+            "Super.java", //
+            "interface Super {",
+            "  void f();",
+            "}")
         .addSourceLines(
             "Test.java",
             "public class Test implements Super {",
@@ -71,25 +99,43 @@ public class MissingOverrideTest {
   @Test
   public void bothStatic() {
     compilationHelper
-        .addSourceLines("Super.java", "public class Super {", "  static void f() {}", "}")
         .addSourceLines(
-            "Test.java", "public class Test extends Super {", "  static public void f() {}", "}")
+            "Super.java", //
+            "public class Super {",
+            "  static void f() {}",
+            "}")
+        .addSourceLines(
+            "Test.java", //
+            "public class Test extends Super {",
+            "  static public void f() {}",
+            "}")
         .doTest();
   }
 
   @Test
   public void deprecatedMethod() {
     compilationHelper
-        .addSourceLines("Super.java", "public class Super {", "  @Deprecated void f() {}", "}")
         .addSourceLines(
-            "Test.java", "public class Test extends Super {", "  public void f() {}", "}")
+            "Super.java", //
+            "public class Super {",
+            "  @Deprecated void f() {}",
+            "}")
+        .addSourceLines(
+            "Test.java", //
+            "public class Test extends Super {",
+            "  public void f() {}",
+            "}")
         .doTest();
   }
 
   @Test
   public void interfaceOverride() {
     compilationHelper
-        .addSourceLines("Super.java", "interface Super {", "  void f();", "}")
+        .addSourceLines(
+            "Super.java", //
+            "interface Super {",
+            "  void f();",
+            "}")
         .addSourceLines(
             "Test.java",
             "public interface Test extends Super {",
@@ -103,8 +149,16 @@ public class MissingOverrideTest {
   public void ignoreInterfaceOverride() {
     compilationHelper
         .setArgs(ImmutableList.of("-XepOpt:MissingOverride:IgnoreInterfaceOverrides=true"))
-        .addSourceLines("Super.java", "interface Super {", "  void f();", "}")
-        .addSourceLines("Test.java", "public interface Test extends Super {", "  void f();", "}")
+        .addSourceLines(
+            "Super.java", //
+            "interface Super {",
+            "  void f();",
+            "}")
+        .addSourceLines(
+            "Test.java", //
+            "public interface Test extends Super {",
+            "  void f();",
+            "}")
         .doTest();
   }
 }

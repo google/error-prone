@@ -67,6 +67,9 @@ public class MissingOverride extends BugChecker implements MethodTreeMatcher {
     if (override == null) {
       return Description.NO_MATCH;
     }
+    if (!ASTHelpers.getGeneratedBy(state).isEmpty()) {
+      return Description.NO_MATCH;
+    }
     if (ASTHelpers.hasAnnotation(override, Deprecated.class, state)) {
       // to allow deprecated methods to be removed non-atomically, we permit overrides of
       // @Deprecated to skip the annotation
