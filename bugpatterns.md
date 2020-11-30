@@ -1328,7 +1328,7 @@ __[ImmutableRefactoring](bugpattern/ImmutableRefactoring)__<br>
 Refactors uses of the JSR 305 @Immutable to Error Prone&#39;s annotation
 
 __[ImmutableSetForContains](bugpattern/ImmutableSetForContains)__<br>
-ImmutableSet is a more efficient type for private static final constants if the constant is only used for contains, containsAll or isEmpty checks.
+This private static ImmutableList either does not contain duplicates or is only used for contains, containsAll or isEmpty checks or both. ImmutableSet is a better type for such collection. It is often more efficient and / or captures useful info about absence of duplicates.
 
 __[ImplementAssertionWithChaining](bugpattern/ImplementAssertionWithChaining)__<br>
 Prefer check(...), which usually generates more readable failure messages.
