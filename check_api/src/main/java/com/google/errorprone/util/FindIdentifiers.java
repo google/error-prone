@@ -453,12 +453,12 @@ public final class FindIdentifiers {
 
   /** Returns true iff the leaf node of the {@code path} occurs in a JLS 8.3.1 static context. */
   private static boolean inStaticContext(TreePath path) {
-    Tree prev = path.getLeaf();
-    path = path.getParentPath();
-
     ClassSymbol enclosingClass =
         ASTHelpers.getSymbol(ASTHelpers.findEnclosingNode(path, ClassTree.class));
     ClassSymbol directSuperClass = (ClassSymbol) enclosingClass.getSuperclass().tsym;
+
+    Tree prev = path.getLeaf();
+    path = path.getParentPath();
 
     for (Tree tree : path) {
       switch (tree.getKind()) {
