@@ -82,8 +82,8 @@ public final class ConstantPatternCompile extends BugChecker implements Variable
     if (!PATTERN_COMPILE_CHECK.matches(methodInvocationTree, state)) {
       return Description.NO_MATCH;
     }
-    if (methodInvocationTree.getArguments().stream()
-        .noneMatch(ConstantPatternCompile::isArgStaticAndConstant)) {
+    if (!methodInvocationTree.getArguments().stream()
+        .allMatch(ConstantPatternCompile::isArgStaticAndConstant)) {
       return Description.NO_MATCH;
     }
     MethodTree outerMethodTree = ASTHelpers.findEnclosingNode(state.getPath(), MethodTree.class);

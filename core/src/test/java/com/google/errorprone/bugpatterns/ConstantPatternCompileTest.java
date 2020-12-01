@@ -176,6 +176,28 @@ public class ConstantPatternCompileTest {
   }
 
   @Test
+  public void testNegativeCases_multiArg() {
+    compilationHelper
+        .addSourceLines(
+            "in/Test.java",
+            "import com.google.errorprone.annotations.CompileTimeConstant;",
+            "import java.util.regex.Matcher;",
+            "import java.util.regex.Pattern;",
+            "class Test {",
+            "  public static int getMatchCount(CharSequence content, String regex) {",
+            "  int count = 0;",
+            "  Pattern pattern = Pattern.compile(regex, Pattern.MULTILINE);",
+            "  Matcher matcher = pattern.matcher(content);",
+            "  while (matcher.find()) {",
+            "    count++;",
+            "  }",
+            "  return count;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void testNegativeCase_staticBlock() {
     compilationHelper
         .addSourceLines(
