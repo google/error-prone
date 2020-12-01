@@ -17,51 +17,32 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.findSuperMethods;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
-import static com.sun.source.tree.Tree.Kind.NULL_LITERAL;
 
 import com.google.common.util.concurrent.Futures;
 import com.google.errorprone.VisitorState;
-import com.google.errorprone.bugpatterns.BugChecker.ReturnTreeMatcher;
+import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.SuggestedFix;
-import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.ReturnTree;
-import com.sun.source.tree.StatementTree;
-import com.sun.source.util.TreePath;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
+import java.util.Optional;
 
 /**
  * Superclass for checks that {@code AsyncCallable} and {@code AsyncFunction} implementations do not
  * directly {@code return null}.
  */
-abstract class AbstractAsyncTypeReturnsNull extends BugChecker implements ReturnTreeMatcher {
-  private final Matcher<MethodTree> implementsAsyncTypeMethod;
+abstract class AbstractAsyncTypeReturnsNull extends AbstractMethodReturnsNull {
 
   AbstractAsyncTypeReturnsNull(Class<?> asyncClass) {
-    this.implementsAsyncTypeMethod = overridesMethodOfClass(asyncClass);
+    super(overridesMethodOfClass(asyncClass));
   }
 
   @Override
-  public final Description matchReturn(ReturnTree tree, VisitorState state) {
-    if (tree.getExpression() == null || tree.getExpression().getKind() != NULL_LITERAL) {
-      return NO_MATCH;
-    }
-    TreePath path = state.getPath();
-    while (path != null && path.getLeaf() instanceof StatementTree) {
-      path = path.getParentPath();
-    }
-    if (path == null || !(path.getLeaf() instanceof MethodTree)) {
-      return NO_MATCH;
-    }
-    if (!implementsAsyncTypeMethod.matches((MethodTree) path.getLeaf(), state)) {
-      return NO_MATCH;
-    }
-    return describeMatch(
-        tree,
+  protected Optional<Fix> provideFix(ReturnTree tree) {
+    return Optional.of(
         SuggestedFix.builder()
             .replace(tree.getExpression(), "immediateFuture(null)")
             .addStaticImport(Futures.class.getName() + ".immediateFuture")
