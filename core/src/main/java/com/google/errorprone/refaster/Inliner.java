@@ -23,7 +23,6 @@ import com.google.common.collect.Sets;
 import com.google.errorprone.SubContext;
 import com.google.errorprone.refaster.UTypeVar.TypeWithExpression;
 import com.google.errorprone.util.ASTHelpers;
-import com.google.errorprone.util.RuntimeVersion;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.TypeSymbol;
@@ -234,13 +233,15 @@ public final class Inliner {
   }
 
   private static void setUpperBound(TypeVar typeVar, Type bound) {
+    // https://bugs.openjdk.java.net/browse/JDK-8193367
     try {
-      // https://bugs.openjdk.java.net/browse/JDK-8193367
-      if (RuntimeVersion.isAtLeast13()) {
-        TypeVar.class.getMethod("setUpperBound", Type.class).invoke(typeVar, bound);
-      } else {
-        TypeVar.class.getField("bound").set(typeVar, bound);
-      }
+      TypeVar.class.getMethod("setUpperBound", Type.class).invoke(typeVar, bound);
+      return;
+    } catch (ReflectiveOperationException e) {
+      // continue below
+    }
+    try {
+      TypeVar.class.getField("bound").set(typeVar, bound);
     } catch (ReflectiveOperationException e) {
       throw new LinkageError(e.getMessage(), e);
     }
