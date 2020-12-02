@@ -33,7 +33,7 @@ import com.sun.source.tree.ReturnTree;
 import java.util.Optional;
 
 /**
- * Flags methods with collection return types which return {@link null} in some cases but don't
+ * Flags methods with collection return types which return {@code null} in some cases but don't
  * annotate the method as @Nullable.
  *
  * @author bhagwani@google.com (Sumit Bhagwani)
@@ -41,7 +41,7 @@ import java.util.Optional;
 @BugPattern(
     name = "ReturnsNullCollection",
     summary =
-        "Methods has a collection return type and returns {@link null} in some cases but does not"
+        "Methods has a collection return type and returns {@code null} in some cases but does not"
             + " annotate the method as @Nullable. See Effective Java 3rd Edition Item 54.",
     severity = SUGGESTION)
 public class ReturnsNullCollection extends AbstractMethodReturnsNull {
