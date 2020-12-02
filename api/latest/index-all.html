@@ -9773,6 +9773,10 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/ProtoTruthMixedDescriptors.html#%3Cinit%3E()">ProtoTruthMixedDescriptors()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/ProtoTruthMixedDescriptors.html" title="class in com.google.errorprone.bugpatterns">ProtoTruthMixedDescriptors</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/AsyncFunctionReturnsNull.html#provideFix(com.sun.source.tree.ReturnTree)">provideFix(ReturnTree)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/AsyncFunctionReturnsNull.html" title="class in com.google.errorprone.bugpatterns">AsyncFunctionReturnsNull</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/ReturnsNullCollection.html#provideFix(com.sun.source.tree.ReturnTree)">provideFix(ReturnTree)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/ReturnsNullCollection.html" title="class in com.google.errorprone.bugpatterns">ReturnsNullCollection</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/BugPattern.html#providesFix()">providesFix()</a></span> - Method in annotation type com.google.errorprone.<a href="com/google/errorprone/BugPattern.html" title="annotation in com.google.errorprone">BugPattern</a></dt>
 <dd>
 <div class="deprecation-block"><span class="deprecated-label">Deprecated.</span>
@@ -10248,6 +10252,13 @@ loadScripts(document, 'script');</script>
 <div class="block">New matcher for a <code>return</code> statement where the returned expression is matched by the
  passed <code>returnedMatcher</code>.</div>
 </dd>
+<dt><a href="com/google/errorprone/bugpatterns/ReturnsNullCollection.html" title="class in com.google.errorprone.bugpatterns"><span class="type-name-link">ReturnsNullCollection</span></a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
+<dd>
+<div class="block">Flags methods with collection return types which return <code>null</code> in some cases but don't
+ annotate the method as @Nullable.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/ReturnsNullCollection.html#%3Cinit%3E()">ReturnsNullCollection()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/ReturnsNullCollection.html" title="class in com.google.errorprone.bugpatterns">ReturnsNullCollection</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/matchers/Matchers.html#returnStatement(com.google.errorprone.matchers.Matcher)">returnStatement(Matcher&lt;? super ExpressionTree&gt;)</a></span> - Static method in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/Matchers.html" title="class in com.google.errorprone.matchers">Matchers</a></dt>
 <dd>
 <div class="block">Matches a <code>return</code> statement where the returned expression is matched by the passed

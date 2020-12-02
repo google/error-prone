@@ -15,7 +15,7 @@
 <script type="text/javascript" src="../../../../script-dir/jquery-ui.min.js"></script>
 </head>
 <body class="class-declaration-page">
-<script type="text/javascript">var data = {"i0":10};
+<script type="text/javascript">var data = {"i0":10,"i1":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "alt-color";
 var rowColor = "row-color";
@@ -151,6 +151,11 @@ extends <a href="BugChecker.html" title="class in com.google.errorprone.bugpatte
 <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
+<tr class="row-color" id="i1">
+<td class="col-first"><code>protected <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="../fixes/Fix.html" title="interface in com.google.errorprone.fixes">Fix</a>&gt;</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#provideFix(com.sun.source.tree.ReturnTree)">provideFix</a></span>&#8203;(com.sun.source.tree.ReturnTree&nbsp;tree)</code></th>
+<td class="col-last">&nbsp;</td>
+</tr>
 </tbody>
 </table>
 </div>
@@ -189,6 +194,12 @@ extends <a href="BugChecker.html" title="class in com.google.errorprone.bugpatte
 <section class="method-details" id="method.detail">
 <h2>Method Details</h2>
 <ul class="member-list">
+<li>
+<section class="detail" id="provideFix(com.sun.source.tree.ReturnTree)">
+<h3>provideFix</h3>
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="../fixes/Fix.html" title="interface in com.google.errorprone.fixes">Fix</a>&gt;</span>&nbsp;<span class="member-name">provideFix</span>&#8203;(<span class="parameters">com.sun.source.tree.ReturnTree&nbsp;tree)</span></div>
+</section>
+</li>
 <li>
 <section class="detail" id="matchReturn(com.sun.source.tree.ReturnTree,com.google.errorprone.VisitorState)">
 <h3>matchReturn</h3>
