@@ -17,9 +17,9 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
+import static com.google.errorprone.fixes.SuggestedFixes.renameVariableUsages;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
-import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
 
 import com.google.common.base.CaseFormat;
@@ -43,8 +43,6 @@ import com.sun.tools.javac.code.Flags;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Type;
-import com.sun.tools.javac.tree.JCTree;
-import com.sun.tools.javac.tree.TreeScanner;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.NestingKind;
 
@@ -113,7 +111,7 @@ public final class ConstantPatternCompile extends BugChecker implements Variable
 
     SuggestedFix fix =
         SuggestedFix.builder()
-            .merge(renameVariableOccurrences(tree, upperUnderscoreVarName, state))
+            .merge(renameVariableUsages(tree, upperUnderscoreVarName, state))
             .postfixWith(outerMethodTree, variableTreeString)
             .delete(tree)
             .build();
@@ -129,33 +127,5 @@ public final class ConstantPatternCompile extends BugChecker implements Variable
       return true;
     }
     return (argSymbol.flags() & Flags.STATIC) != 0;
-  }
-
-  private static SuggestedFix renameVariableOccurrences(
-      VariableTree tree, String replacement, VisitorState state) {
-    SuggestedFix.Builder fix = SuggestedFix.builder();
-    Symbol.VarSymbol sym = getSymbol(tree);
-    ((JCTree) state.getPath().getCompilationUnit())
-        .accept(
-            new TreeScanner() {
-              @Override
-              public void visitIdent(JCTree.JCIdent tree) {
-                if (sym.equals(getSymbol(tree))) {
-                  fix.replace(tree, replacement);
-                }
-              }
-
-              @Override
-              public void visitSelect(JCTree.JCFieldAccess tree) {
-                if (sym.equals(getSymbol(tree))) {
-                  fix.replace(
-                      state.getEndPosition(tree.getExpression()),
-                      state.getEndPosition(tree),
-                      "." + replacement);
-                }
-                super.visitSelect(tree);
-              }
-            });
-    return fix.build();
   }
 }

@@ -651,8 +651,19 @@ public class SuggestedFixes {
     // handle implicit lambda parameter types
     int searchOffset = typeEndPos == -1 ? 0 : (typeEndPos - getStartPosition(tree));
     int pos = getStartPosition(tree) + state.getSourceForNode(tree).indexOf(name, searchOffset);
-    final SuggestedFix.Builder fix =
-        SuggestedFix.builder().replace(pos, pos + name.length(), replacement);
+    return SuggestedFix.builder()
+        .replace(pos, pos + name.length(), replacement)
+        .merge(renameVariableUsages(tree, replacement, state))
+        .build();
+  }
+
+  /**
+   * Renames usage of the given {@link VariableTree} in the current compilation unit to {@code
+   * replacement}.
+   */
+  public static SuggestedFix renameVariableUsages(
+      VariableTree tree, final String replacement, VisitorState state) {
+    final SuggestedFix.Builder fix = SuggestedFix.builder();
     final Symbol.VarSymbol sym = getSymbol(tree);
     new TreeScanner<Void, Void>() {
       @Override
