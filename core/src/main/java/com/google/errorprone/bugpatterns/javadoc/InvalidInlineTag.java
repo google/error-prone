@@ -300,6 +300,7 @@ public final class InvalidInlineTag extends BugChecker
       Optional<String> bestMatch =
           Utils.getBestMatch(
               tag.name(),
+              /* maxEditDistance= */ 2,
               validTags.stream()
                   .filter(t -> t.type().equals(tag.type()))
                   .map(JavadocTag::name)

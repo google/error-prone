@@ -38,16 +38,12 @@ import javax.annotation.Nullable;
 
 /** Common utility methods for fixing Javadocs. */
 final class Utils {
-
-  /** Maximum edit distance for fixing parameter names and tags. */
-  private static final int EDIT_LIMIT = 5;
-
-  static Optional<String> getBestMatch(String to, Iterable<String> choices) {
+  static Optional<String> getBestMatch(String to, int maxEditDistance, Iterable<String> choices) {
     String bestMatch = null;
     int minDistance = Integer.MAX_VALUE;
     for (String choice : choices) {
       int distance = getEditDistance(to, choice);
-      if (distance < minDistance && distance < EDIT_LIMIT) {
+      if (distance < minDistance && distance < maxEditDistance) {
         bestMatch = choice;
         minDistance = distance;
       }

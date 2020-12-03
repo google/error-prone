@@ -51,6 +51,19 @@ public final class InvalidBlockTagTest {
   }
 
   @Test
+  public void veryBadTypo_noSuggestion() {
+    refactoring
+        .addInputLines(
+            "Test.java", //
+            "interface Test {",
+            "  /** @returnFnargleBlargle anything */",
+            "  void foo();",
+            "}")
+        .expectUnchanged()
+        .doTest(TestMode.TEXT_MATCH);
+  }
+
+  @Test
   public void otherAcceptedTags() {
     helper
         .addSourceLines(
