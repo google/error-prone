@@ -200,6 +200,11 @@ public abstract class ScannerSupplier implements Supplier<Scanner> {
               severities.put(check.canonicalName(), check.defaultSeverity());
               disabled.remove(check.canonicalName());
               break;
+            case DYNAMIC:
+              // we do not want a severity override for a dynamic check, but
+              // we must ensure that it is actually enabled
+              disabled.remove(check.canonicalName());
+              break;
             case HIDDEN:
               severities.put(check.canonicalName(), SeverityLevel.HIDDEN);
               disabled.remove(check.canonicalName());

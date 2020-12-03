@@ -119,10 +119,6 @@ public class JavacErrorDescriptionListener implements DescriptionListener {
         case HIDDEN:
           // we don't log anything for hidden level
           return;
-        case DYNAMIC:
-          // we don't log anything for dynamic level, but nothing should ever
-          // get this value
-          return;
       }
       log.report(
           factory.create(
