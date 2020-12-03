@@ -262,6 +262,7 @@ public class VisitorState {
 
   public void reportMatch(Description description) {
     checkNotNull(description, "Use Description.NO_MATCH to denote an absent finding.");
+    checkArgument(description.severity != SeverityLevel.DYNAMIC, "Descriptions must not specify DYNAMIC severity");
     if (description == Description.NO_MATCH) {
       return;
     }
@@ -271,7 +272,7 @@ public class VisitorState {
     // (separate) SeverityLevel. Adding the method to the interface would require updating the
     // existing implementations, though. Wait for default methods?
     SeverityLevel override = sharedState.severityMap.get(description.checkName);
-    if (override != null) {
+    if (override != null && override != SeverityLevel.DYNAMIC) {
       description = description.applySeverityOverride(override);
     }
     sharedState.statisticsCollector.incrementCounter(statsKey(description.checkName + "-findings"));

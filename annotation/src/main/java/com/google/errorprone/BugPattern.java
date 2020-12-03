@@ -154,7 +154,8 @@ public @interface BugPattern {
     WARNING,
     /** Note that this level generally disables the bug checker. */
     SUGGESTION,
-    HIDDEN
+    HIDDEN,
+    DYNAMIC
   }
 
   /** True if the check can be disabled using command-line flags. */
