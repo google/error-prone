@@ -22,14 +22,15 @@ import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.annotations.CheckReturnValue;
+import com.google.errorprone.annotations.Immutable;
 import com.google.errorprone.fixes.Fix;
 import com.sun.source.tree.Tree;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition;
-
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -47,7 +48,7 @@ public class Description {
   /** Describes the sentinel value of the case where the match failed. */
   public static final Description NO_MATCH =
       new Description(
-          null, "<no match>", "<no match>", "<no match>", ImmutableList.<Fix>of(), SUGGESTION, Collections.emptyMap());
+          null, "<no match>", "<no match>", "<no match>", ImmutableList.<Fix>of(), SUGGESTION, ImmutableMap.of());
 
   /** The position of the match. */
   public final DiagnosticPosition position;
@@ -61,7 +62,8 @@ public class Description {
   /** The raw link URL for the check. May be null if there is no link. */
   @Nullable private final String linkUrl;
 
-  private final Map<String, Object> metadata;
+  /** The metadata associated with this description */
+  private final ImmutableMap<String, Object> metadata;
 
   /**
    * A list of fixes to suggest in an error message or use in automated refactoring. Fixes are in
@@ -112,7 +114,7 @@ public class Description {
       @Nullable String linkUrl,
       List<Fix> fixes,
       SeverityLevel severity,
-      Map<String, Object> metadata) {
+      ImmutableMap<String, Object> metadata) {
     this.position = position;
     this.checkName = checkName;
     this.rawMessage = rawMessage;
@@ -167,7 +169,7 @@ public class Description {
     private final SeverityLevel severity;
     private final ImmutableList.Builder<Fix> fixListBuilder = ImmutableList.builder();
     private String rawMessage;
-    private Map<String, Object> metadata;
+    private final ImmutableMap.Builder<String, Object> metadata;
 
     private Builder(
         DiagnosticPosition position,
@@ -180,7 +182,7 @@ public class Description {
       this.linkUrl = linkUrl;
       this.severity = Preconditions.checkNotNull(severity);
       this.rawMessage = Preconditions.checkNotNull(rawMessage);
-      this.metadata = new HashMap<>();
+      this.metadata = ImmutableMap.builder();
     }
 
     /**
@@ -259,7 +261,7 @@ public class Description {
     }
 
     public Description build() {
-      return new Description(position, name, rawMessage, linkUrl, fixListBuilder.build(), severity, Collections.unmodifiableMap(metadata));
+      return new Description(position, name, rawMessage, linkUrl, fixListBuilder.build(), severity, metadata.build());
     }
   }
 }
