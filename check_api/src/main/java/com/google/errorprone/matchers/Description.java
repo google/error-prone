@@ -88,11 +88,10 @@ public class Description {
     return linkUrl;
   }
 
-  @Nullable
-  public <T> T getMetadata(String key) {
+  public <T> Optional<T> getMetadata(String key) {
     @SuppressWarnings("unchecked")
     T res = (T) metadata.get(key);
-    return res;
+    return Optional.ofNullable(res);
   }
 
   /** Returns the raw message, not including a link or check name. */
