@@ -87,9 +87,9 @@ public class Description {
   }
 
   @Nullable
-  public <T> T getMetadata() {
+  public <T> T getMetadata(String key) {
     @SuppressWarnings("unchecked")
-    T res = (T) metadata;
+    T res = (T) metadata.get(key);
     return res;
   }
 
