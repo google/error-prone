@@ -47,7 +47,7 @@ public class Description {
   /** Describes the sentinel value of the case where the match failed. */
   public static final Description NO_MATCH =
       new Description(
-          null, "<no match>", "<no match>", "<no match>", ImmutableList.<Fix>of(), SUGGESTION, null);
+          null, "<no match>", "<no match>", "<no match>", ImmutableList.<Fix>of(), SUGGESTION, Collections.emptyMap());
 
   /** The position of the match. */
   public final DiagnosticPosition position;
@@ -247,6 +247,10 @@ public class Description {
       return this;
     }
 
+    /**
+     * Add custom metadata to this description. This metadata may be used by description
+     * listeners to drive additional actions
+     */
     public Builder addMetadata(String key, Object value) {
       checkNotNull(key, "metadata key must not be null");
       checkNotNull(value, "metadata value must not be null");
