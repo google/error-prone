@@ -43,7 +43,7 @@ public class Description {
   /** Describes the sentinel value of the case where the match failed. */
   public static final Description NO_MATCH =
       new Description(
-          null, "<no match>", "<no match>", "<no match>", ImmutableList.<Fix>of(), SUGGESTION);
+          null, "<no match>", "<no match>", "<no match>", ImmutableList.<Fix>of(), SUGGESTION, null);
 
   /** The position of the match. */
   public final DiagnosticPosition position;
@@ -56,6 +56,8 @@ public class Description {
 
   /** The raw link URL for the check. May be null if there is no link. */
   @Nullable private final String linkUrl;
+
+  @Nullable private final Object metadata;
 
   /**
    * A list of fixes to suggest in an error message or use in automated refactoring. Fixes are in
@@ -80,6 +82,13 @@ public class Description {
     return linkUrl;
   }
 
+  @Nullable
+  public <T> T getMetadata() {
+    @SuppressWarnings("unchecked")
+    T res = (T) metadata;
+    return res;
+  }
+
   /** Returns the raw message, not including a link or check name. */
   public String getRawMessage() {
     return rawMessage;
@@ -98,19 +107,21 @@ public class Description {
       String rawMessage,
       @Nullable String linkUrl,
       List<Fix> fixes,
-      SeverityLevel severity) {
+      SeverityLevel severity,
+      Object metadata) {
     this.position = position;
     this.checkName = checkName;
     this.rawMessage = rawMessage;
     this.linkUrl = linkUrl;
     this.fixes = ImmutableList.copyOf(fixes);
     this.severity = severity;
+    this.metadata = metadata;
   }
 
   /** Internal-only. Has no effect if applied to a Description within a BugChecker. */
   @CheckReturnValue
   public Description applySeverityOverride(SeverityLevel severity) {
-    return new Description(position, checkName, rawMessage, linkUrl, fixes, severity);
+    return new Description(position, checkName, rawMessage, linkUrl, fixes, severity, metadata);
   }
 
   /**
@@ -152,6 +163,7 @@ public class Description {
     private final SeverityLevel severity;
     private final ImmutableList.Builder<Fix> fixListBuilder = ImmutableList.builder();
     private String rawMessage;
+    private Object metadata;
 
     private Builder(
         DiagnosticPosition position,
@@ -230,8 +242,14 @@ public class Description {
       return this;
     }
 
+    public Builder setMetadata(Object metadata) {
+      checkNotNull(linkUrl, "metadata must not be null");
+      this.metadata = metadata;
+      return this;
+    }
+
     public Description build() {
-      return new Description(position, name, rawMessage, linkUrl, fixListBuilder.build(), severity);
+      return new Description(position, name, rawMessage, linkUrl, fixListBuilder.build(), severity, metadata);
     }
   }
 }
