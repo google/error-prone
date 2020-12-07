@@ -29,7 +29,11 @@ import com.google.errorprone.fixes.Fix;
 import com.sun.source.tree.Tree;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition;
+
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import javax.annotation.Nullable;
 
@@ -57,7 +61,7 @@ public class Description {
   /** The raw link URL for the check. May be null if there is no link. */
   @Nullable private final String linkUrl;
 
-  @Nullable private final Object metadata;
+  private final Map<String, Object> metadata;
 
   /**
    * A list of fixes to suggest in an error message or use in automated refactoring. Fixes are in
@@ -108,7 +112,7 @@ public class Description {
       @Nullable String linkUrl,
       List<Fix> fixes,
       SeverityLevel severity,
-      Object metadata) {
+      Map<String, Object> metadata) {
     this.position = position;
     this.checkName = checkName;
     this.rawMessage = rawMessage;
@@ -163,7 +167,7 @@ public class Description {
     private final SeverityLevel severity;
     private final ImmutableList.Builder<Fix> fixListBuilder = ImmutableList.builder();
     private String rawMessage;
-    private Object metadata;
+    private Map<String, Object> metadata;
 
     private Builder(
         DiagnosticPosition position,
@@ -176,6 +180,7 @@ public class Description {
       this.linkUrl = linkUrl;
       this.severity = Preconditions.checkNotNull(severity);
       this.rawMessage = Preconditions.checkNotNull(rawMessage);
+      this.metadata = new HashMap<>();
     }
 
     /**
@@ -242,14 +247,15 @@ public class Description {
       return this;
     }
 
-    public Builder setMetadata(Object metadata) {
-      checkNotNull(linkUrl, "metadata must not be null");
-      this.metadata = metadata;
+    public Builder addMetadata(String key, Object value) {
+      checkNotNull(key, "metadata key must not be null");
+      checkNotNull(value, "metadata value must not be null");
+      metadata.put(key, value);
       return this;
     }
 
     public Description build() {
-      return new Description(position, name, rawMessage, linkUrl, fixListBuilder.build(), severity, metadata);
+      return new Description(position, name, rawMessage, linkUrl, fixListBuilder.build(), severity, Collections.unmodifiableMap(metadata));
     }
   }
 }
