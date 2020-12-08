@@ -88,7 +88,11 @@ public final class IsInstanceIncompatibleType extends BugChecker
   }
 
   private static Type classTypeArgument(ExpressionTree tree) {
-    Collection<Type> receiverTypeArguments = getType(getReceiver(tree)).getTypeArguments();
+    ExpressionTree receiver = getReceiver(tree);
+    if (receiver == null) {
+      return null;
+    }
+    Collection<Type> receiverTypeArguments = getType(receiver).getTypeArguments();
     return !receiverTypeArguments.isEmpty() ? getOnlyElement(receiverTypeArguments) : null;
   }
 
