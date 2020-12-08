@@ -16,6 +16,7 @@
 
 package com.google.errorprone.bugpatterns.inject;
 
+import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
 import java.util.Collections;
 import org.junit.Test;
@@ -25,6 +26,11 @@ import org.junit.runners.JUnit4;
 /** @author sgoldfeder@google.com (Steven Goldfeder) */
 @RunWith(JUnit4.class)
 public class ScopeOrQualifierAnnotationRetentionTest {
+
+  private final BugCheckerRefactoringTestHelper refactoringTestHelper =
+      BugCheckerRefactoringTestHelper.newInstance(
+          ScopeOrQualifierAnnotationRetention.class, getClass());
+
   private final CompilationTestHelper compilationHelper =
       CompilationTestHelper.newInstance(ScopeOrQualifierAnnotationRetention.class, getClass());
 
@@ -39,6 +45,37 @@ public class ScopeOrQualifierAnnotationRetentionTest {
   public void testNegativeCase() {
     compilationHelper
         .addSourceFile("ScopeOrQualifierAnnotationRetentionNegativeCases.java")
+        .doTest();
+  }
+
+  @Test
+  public void testRefactoring() {
+    refactoringTestHelper
+        .addInputLines(
+            "in/Anno.java",
+            "import static java.lang.annotation.ElementType.METHOD;",
+            "import static java.lang.annotation.ElementType.TYPE;",
+            "",
+            "import java.lang.annotation.Target;",
+            "import javax.inject.Qualifier;",
+            "",
+            "@Qualifier",
+            "@Target({TYPE, METHOD})",
+            "public @interface Anno {}")
+        .addOutputLines(
+            "out/Anno.java",
+            "import static java.lang.annotation.ElementType.METHOD;",
+            "import static java.lang.annotation.ElementType.TYPE;",
+            "import static java.lang.annotation.RetentionPolicy.RUNTIME;",
+            "",
+            "import java.lang.annotation.Retention;",
+            "import java.lang.annotation.Target;",
+            "import javax.inject.Qualifier;",
+            "",
+            "@Retention(RUNTIME)",
+            "@Qualifier",
+            "@Target({TYPE, METHOD})",
+            "public @interface Anno {}")
         .doTest();
   }
 
