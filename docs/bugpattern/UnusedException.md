@@ -24,9 +24,24 @@ Prefer wrapping the original exception instead,
   }
 ```
 
-Suppress false positives with `@SuppressWarnings("UnusedException")` on the
-ignored exception. Consider also adding a comment to explain why the exception
-should not be propagated.
+## Suppression
+
+If the exception is deliberately unused, rename it `unused` to suppress this
+diagnostic.
+
+```java
+static <T extends Enum<T>> T tryForName(Class<T> enumType, String name) {
+  try {
+    return Enum.valueOf(enumType, name);
+  } catch (IllegalArgumentException unused) {
+    return null;
+  }
+}
+```
+
+Otherwise, suppress false positives with `@SuppressWarnings("UnusedException")`
+on the ignored exception. Consider also adding a comment to explain why the
+exception should not be propagated.
 
 ```java
   try {
