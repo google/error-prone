@@ -16,7 +16,10 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static org.junit.Assume.assumeTrue;
+
 import com.google.errorprone.CompilationTestHelper;
+import com.google.errorprone.util.RuntimeVersion;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -118,6 +121,27 @@ public class NullTernaryTest {
             "            ? 0",
             "            : (array!=null?input:null).length();",
             "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void expressionSwitch_doesNotCrash() {
+    assumeTrue(RuntimeVersion.isAtLeast14());
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            " static String doStuff(SomeEnum enumVar) {",
+            "   return switch (enumVar) {",
+            "     case A -> enumVar.name() != null ? \"AAA\" : null;",
+            "     default -> null;",
+            "   };",
+            " }",
+            " ",
+            " static enum SomeEnum {",
+            "   A, B",
+            " }",
             "}")
         .doTest();
   }
