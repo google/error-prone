@@ -1202,6 +1202,15 @@ Setting the caught exception as the cause of the log message may provide more co
 __[FloggerMessageFormat](bugpattern/FloggerMessageFormat)__<br>
 Invalid message format-style format specifier ({0}), expected printf-style (%s)
 
+__[FloggerPassedAround](bugpattern/FloggerPassedAround)__<br>
+There is no advantage to passing around a logger rather than declaring one in the class that needs it.
+
+__[FloggerWithCause](bugpattern/FloggerWithCause)__<br>
+Calling withCause(Throwable) with an inline allocated Throwable is discouraged. Consider using withStackTrace(StackSize) instead, and specifying a reduced stack size (e.g. SMALL, MEDIUM or LARGE) instead of FULL, to improve performance.
+
+__[FloggerWithoutCause](bugpattern/FloggerWithoutCause)__<br>
+Use withCause to associate Exceptions with log statements
+
 __[FunctionalInterfaceClash](bugpattern/FunctionalInterfaceClash)__<br>
 Overloads will be ambiguous when passing lambda arguments.
 
