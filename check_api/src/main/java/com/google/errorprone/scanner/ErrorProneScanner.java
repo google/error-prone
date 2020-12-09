@@ -23,6 +23,7 @@ import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.ErrorProneError;
 import com.google.errorprone.ErrorProneOptions;
+import com.google.errorprone.HubSpotErrorHandler;
 import com.google.errorprone.SuppressionInfo.SuppressedState;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;

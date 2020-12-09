@@ -23,7 +23,6 @@ import javax.tools.StandardLocation;
 
 import com.google.common.collect.Iterables;
 import com.google.errorprone.bugpatterns.BugChecker;
-import com.google.errorprone.scanner.HubSpotErrorHandler;
 import com.google.errorprone.scanner.ScannerSupplier;
 import com.sun.tools.javac.processing.JavacProcessingEnvironment;
 import com.sun.tools.javac.util.Context;

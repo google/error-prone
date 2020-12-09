@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.google.errorprone.scanner;
+package com.google.errorprone;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -23,8 +23,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -32,21 +32,20 @@ import java.util.concurrent.ConcurrentHashMap;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Strings;
-import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Iterables;
-import com.google.errorprone.BugCheckerInfo;
-import com.google.errorprone.ErrorProneOptions;
 import com.google.errorprone.bugpatterns.BugChecker;
+import com.google.errorprone.descriptionlistener.CustomDescriptionListenerFactory;
+import com.google.errorprone.descriptionlistener.DescriptionListenerResources;
 import com.google.errorprone.matchers.Suppressible;
-import com.sun.tools.javac.util.Context;
+import com.google.errorprone.scanner.ScannerSupplier;
 
 public class HubSpotErrorHandler {
   private static final ObjectMapper MAPPER = new ObjectMapper();
   private static final String EXCEPTIONS = "errorProneExceptions";
   private static final String MISSING = "errorProneMissingChecks";
   private static final String INIT_ERROR = "errorProneInitErrors";
+  private static final String LISTENER_INIT_ERRORS = "errorProneListenerInitErrors";
   private static final Map<String, Set<String>> DATA = loadExistingData();
 
   public static ScannerSupplier createScannerSupplier(Iterable<BugChecker> extraBugCheckers) {
@@ -64,10 +63,26 @@ public class HubSpotErrorHandler {
     return ScannerSupplier.fromBugCheckerInfos(builder.build());
   }
 
+  public static List<DescriptionListener> loadDescriptionListeners(Iterable<CustomDescriptionListenerFactory> factories, DescriptionListenerResources resources) {
+    Iterator<CustomDescriptionListenerFactory> iter = factories.iterator();
+    ImmutableList.Builder<DescriptionListener> listeners = ImmutableList.builder();
+    while (iter.hasNext()) {
+      try {
+        listeners.add(iter.next().createFactory(resources));
+      } catch (Throwable t) {
+        recordListenerInitError(t);
+      }
+    }
+
+    return listeners.build();
+  }
+
+  public static boolean isEnabled(DescriptionListenerResources resources) {
+    return isEnabled(resources.getContext().get(ErrorProneFlags.class));
+  }
+
   public static boolean isEnabled(ErrorProneOptions options) {
-    return options.getFlags()
-        .getBoolean("hubspot:error-reporting")
-        .orElse(false);
+    return isEnabled(options.getFlags());
   }
 
   public static void recordError(Suppressible s) {
@@ -84,9 +99,26 @@ public class HubSpotErrorHandler {
     flushErrors();
   }
 
-  private static void recordCheckLoadError(Throwable e) {
+  private static boolean isEnabled(ErrorProneFlags flags) {
+    if (flags == null) {
+      return false;
+    }
+
+    return flags
+        .getBoolean("hubspot:error-reporting")
+        .orElse(false);
+  }
+
+  private static void recordCheckLoadError(Throwable t) {
     DATA.computeIfAbsent(INIT_ERROR, ignored -> ConcurrentHashMap.newKeySet())
-        .add(toInitErrorMessage(e));
+        .add(toInitErrorMessage(t));
+
+    flushErrors();
+  }
+
+  private static void recordListenerInitError(Throwable t) {
+    DATA.computeIfAbsent(LISTENER_INIT_ERRORS, ignored -> ConcurrentHashMap.newKeySet())
+        .add(toInitErrorMessage(t));
 
     flushErrors();
   }
