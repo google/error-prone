@@ -16,6 +16,7 @@
 
 package com.google.errorprone.bugpatterns.formatstring;
 
+import static com.google.common.collect.Iterables.getOnlyElement;
 
 import com.google.auto.value.AutoValue;
 import com.google.common.base.Preconditions;
@@ -211,6 +212,13 @@ public class FormatStringValidation {
     }
     if (isSubtype(types, type, state.getTypeFromString(TemporalAccessor.class.getName()))) {
       return ZonedDateTime.ofInstant(Instant.now(), ZoneId.systemDefault());
+    }
+    Type lazyArg = state.getTypeFromString("com.google.common.flogger.LazyArg");
+    if (lazyArg != null) {
+      Type asLazyArg = types.asSuper(type, lazyArg.tsym);
+      if (asLazyArg != null && !asLazyArg.getTypeArguments().isEmpty()) {
+        return getInstance(getOnlyElement(asLazyArg.getTypeArguments()), state);
+      }
     }
     return new Object();
   }
