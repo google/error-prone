@@ -387,6 +387,8 @@ import com.google.errorprone.bugpatterns.collectionincompatibletype.Incompatible
 import com.google.errorprone.bugpatterns.collectionincompatibletype.TruthIncompatibleType;
 import com.google.errorprone.bugpatterns.flogger.FloggerFormatString;
 import com.google.errorprone.bugpatterns.flogger.FloggerLogVarargs;
+import com.google.errorprone.bugpatterns.flogger.FloggerLogWithCause;
+import com.google.errorprone.bugpatterns.flogger.FloggerMessageFormat;
 import com.google.errorprone.bugpatterns.formatstring.FormatString;
 import com.google.errorprone.bugpatterns.formatstring.FormatStringAnnotationChecker;
 import com.google.errorprone.bugpatterns.formatstring.InlineFormatString;
@@ -928,6 +930,8 @@ public class BuiltInCheckerSuppliers {
           FieldCanBeFinal.class,
           FieldCanBeLocal.class,
           FieldCanBeStatic.class,
+          FloggerLogWithCause.class,
+          FloggerMessageFormat.class,
           ForEachIterable.class,
           FunctionalInterfaceClash.class,
           FuzzyEqualsShouldNotBeUsedInEqualsMethod.class,
