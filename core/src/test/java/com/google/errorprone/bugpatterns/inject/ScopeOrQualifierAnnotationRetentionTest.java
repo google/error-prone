@@ -72,9 +72,9 @@ public class ScopeOrQualifierAnnotationRetentionTest {
             "import java.lang.annotation.Target;",
             "import javax.inject.Qualifier;",
             "",
-            "@Retention(RUNTIME)",
             "@Qualifier",
             "@Target({TYPE, METHOD})",
+            "@Retention(RUNTIME)",
             "public @interface Anno {}")
         .doTest();
   }

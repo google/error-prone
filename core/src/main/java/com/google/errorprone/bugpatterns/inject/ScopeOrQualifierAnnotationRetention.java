@@ -27,6 +27,7 @@ import static com.google.errorprone.matchers.Matchers.hasAnnotation;
 import static com.google.errorprone.matchers.Matchers.kindIs;
 import static com.sun.source.tree.Tree.Kind.ANNOTATION_TYPE;
 
+import com.google.common.collect.Iterables;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
@@ -90,12 +91,13 @@ public class ScopeOrQualifierAnnotationRetention extends BugChecker implements C
   private Description describe(
       ClassTree classTree, VisitorState state, @Nullable Retention retention) {
     if (retention == null) {
+      AnnotationTree annotation = Iterables.getLast(classTree.getModifiers().getAnnotations());
       return describeMatch(
           classTree,
           SuggestedFix.builder()
               .addImport("java.lang.annotation.Retention")
               .addStaticImport("java.lang.annotation.RetentionPolicy.RUNTIME")
-              .prefixWith(classTree, "@Retention(RUNTIME)\n")
+              .postfixWith(annotation, "@Retention(RUNTIME)")
               .build());
     }
     AnnotationTree retentionNode = null;
