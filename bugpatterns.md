@@ -1196,6 +1196,12 @@ equals() implementation may throw NullPointerException when given null
 __[ExpectedExceptionChecker](bugpattern/ExpectedExceptionChecker)__<br>
 Prefer assertThrows to ExpectedException
 
+__[FloggerLogWithCause](bugpattern/FloggerLogWithCause)__<br>
+Setting the caught exception as the cause of the log message may provide more context for anyone debugging errors.
+
+__[FloggerMessageFormat](bugpattern/FloggerMessageFormat)__<br>
+Invalid message format-style format specifier ({0}), expected printf-style (%s)
+
 __[FunctionalInterfaceClash](bugpattern/FunctionalInterfaceClash)__<br>
 Overloads will be ambiguous when passing lambda arguments.
 
