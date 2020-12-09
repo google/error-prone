@@ -143,6 +143,9 @@ Comparing different pairs of fields/getters in an equals implementation is proba
 __[FloggerFormatString](bugpattern/FloggerFormatString)__<br>
 Invalid printf-style format string
 
+__[FloggerLogVarargs](bugpattern/FloggerLogVarargs)__<br>
+logVarargs should be used to pass through format strings and arguments.
+
 __[ForOverride](bugpattern/ForOverride)__<br>
 Method annotated @ForOverride must be protected or package-private and only invoked from declaring class, or from an override of the method
 
