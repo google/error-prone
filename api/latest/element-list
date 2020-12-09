@@ -7,6 +7,7 @@ com.google.errorprone.bugpatterns.android
 com.google.errorprone.bugpatterns.apidiff
 com.google.errorprone.bugpatterns.argumentselectiondefects
 com.google.errorprone.bugpatterns.collectionincompatibletype
+com.google.errorprone.bugpatterns.flogger
 com.google.errorprone.bugpatterns.formatstring
 com.google.errorprone.bugpatterns.inject
 com.google.errorprone.bugpatterns.inject.dagger

@@ -140,6 +140,9 @@ __[EqualsReference](bugpattern/EqualsReference)__<br>
 __[EqualsWrongThing](bugpattern/EqualsWrongThing)__<br>
 Comparing different pairs of fields/getters in an equals implementation is probably a mistake.
 
+__[FloggerFormatString](bugpattern/FloggerFormatString)__<br>
+Invalid printf-style format string
+
 __[ForOverride](bugpattern/ForOverride)__<br>
 Method annotated @ForOverride must be protected or package-private and only invoked from declaring class, or from an override of the method
 

@@ -90,80 +90,84 @@ loadScripts(document, 'script');</script>
 <td class="col-last">&nbsp;</td>
 </tr>
 <tr class="alt-color">
-<th class="col-first" scope="row"><a href="#com.google.errorprone.bugpatterns.formatstring">com.google.errorprone.bugpatterns.formatstring</a></th>
+<th class="col-first" scope="row"><a href="#com.google.errorprone.bugpatterns.flogger">com.google.errorprone.bugpatterns.flogger</a></th>
 <td class="col-last">&nbsp;</td>
 </tr>
 <tr class="row-color">
+<th class="col-first" scope="row"><a href="#com.google.errorprone.bugpatterns.formatstring">com.google.errorprone.bugpatterns.formatstring</a></th>
+<td class="col-last">&nbsp;</td>
+</tr>
+<tr class="alt-color">
 <th class="col-first" scope="row"><a href="#com.google.errorprone.bugpatterns.inject">com.google.errorprone.bugpatterns.inject</a></th>
 <td class="col-last">
 <div class="block">Bug patterns related to <a href="http://en.wikipedia.org/wiki/Dependency_injection">dependency
  injection</a> and <a href="https://jcp.org/en/jsr/detail?id=330">JSR 330</a>.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <th class="col-first" scope="row"><a href="#com.google.errorprone.bugpatterns.inject.dagger">com.google.errorprone.bugpatterns.inject.dagger</a></th>
 <td class="col-last">
 <div class="block">Bug patterns related to <a href="https://dagger.dev/">Dagger</a>.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <th class="col-first" scope="row"><a href="#com.google.errorprone.bugpatterns.inject.guice">com.google.errorprone.bugpatterns.inject.guice</a></th>
 <td class="col-last">
 <div class="block">Bug patterns related to <a href="https://github.com/google/guice">Guice</a>.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <th class="col-first" scope="row"><a href="#com.google.errorprone.bugpatterns.javadoc">com.google.errorprone.bugpatterns.javadoc</a></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <th class="col-first" scope="row"><a href="#com.google.errorprone.bugpatterns.nullness">com.google.errorprone.bugpatterns.nullness</a></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <th class="col-first" scope="row"><a href="#com.google.errorprone.bugpatterns.overloading">com.google.errorprone.bugpatterns.overloading</a></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <th class="col-first" scope="row"><a href="#com.google.errorprone.bugpatterns.threadsafety">com.google.errorprone.bugpatterns.threadsafety</a></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <th class="col-first" scope="row"><a href="#com.google.errorprone.bugpatterns.time">com.google.errorprone.bugpatterns.time</a></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <th class="col-first" scope="row"><a href="#com.google.errorprone.fixes">com.google.errorprone.fixes</a></th>
 <td class="col-last">
 <div class="block">Support code for providing automated corrections for defects we find.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <th class="col-first" scope="row"><a href="#com.google.errorprone.matchers">com.google.errorprone.matchers</a></th>
 <td class="col-last">
 <div class="block">A predicate DSL for matching javac AST nodes.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <th class="col-first" scope="row"><a href="#com.google.errorprone.predicates">com.google.errorprone.predicates</a></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <th class="col-first" scope="row"><a href="#com.google.errorprone.predicates.type">com.google.errorprone.predicates.type</a></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <th class="col-first" scope="row"><a href="#com.google.errorprone.scanner">com.google.errorprone.scanner</a></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <th class="col-first" scope="row"><a href="#com.google.errorprone.suppliers">com.google.errorprone.suppliers</a></th>
 <td class="col-last">
 <div class="block">Supports matchers, but rather than giving Matcher implementations which are predicates on
  individual AST nodes, a supplier gives contextual information from the traversal of the AST.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <th class="col-first" scope="row"><a href="#com.google.errorprone.util">com.google.errorprone.util</a></th>
 <td class="col-last">
 <div class="block">Utility code.</div>
@@ -3898,6 +3902,31 @@ com.sun.source.tree.ExpressionTree&nbsp;tree,
 <tr class="alt-color">
 <td class="col-first"><code><a href="../matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
 <th class="col-second" scope="row"><span class="type-name-label">TruthIncompatibleType.</span><code><span class="member-name-link"><a href="../bugpatterns/collectionincompatibletype/TruthIncompatibleType.html#matchMethodInvocation(com.sun.source.tree.MethodInvocationTree,com.google.errorprone.VisitorState)">matchMethodInvocation</a></span>&#8203;(com.sun.source.tree.MethodInvocationTree&nbsp;tree,
+<a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
+<td class="col-last">&nbsp;</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="com.google.errorprone.bugpatterns.flogger">
+<h2>Uses of <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a> in <a href="../bugpatterns/flogger/package-summary.html">com.google.errorprone.bugpatterns.flogger</a></h2>
+<div class="use-summary">
+<table class="summary-table">
+<caption><span>Methods in <a href="../bugpatterns/flogger/package-summary.html">com.google.errorprone.bugpatterns.flogger</a> with parameters of type <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a></span></caption>
+<thead>
+<tr>
+<th class="col-first" scope="col">Modifier and Type</th>
+<th class="col-second" scope="col">Method</th>
+<th class="col-last" scope="col">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="alt-color">
+<td class="col-first"><code><a href="../matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
+<th class="col-second" scope="row"><span class="type-name-label">FloggerFormatString.</span><code><span class="member-name-link"><a href="../bugpatterns/flogger/FloggerFormatString.html#matchMethodInvocation(com.sun.source.tree.MethodInvocationTree,com.google.errorprone.VisitorState)">matchMethodInvocation</a></span>&#8203;(com.sun.source.tree.MethodInvocationTree&nbsp;tree,
 <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
