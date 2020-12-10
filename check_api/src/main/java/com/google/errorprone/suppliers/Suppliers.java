@@ -140,6 +140,22 @@ public class Suppliers {
         }
       };
 
+  public static final Supplier<Type> JAVA_LANG_INTEGER_TYPE =
+      new Supplier<Type>() {
+        @Override
+        public Type get(VisitorState state) {
+          return state.getTypeFromString("java.lang.Integer");
+        }
+      };
+
+  public static final Supplier<Type> JAVA_LANG_LONG_TYPE =
+      new Supplier<Type>() {
+        @Override
+        public Type get(VisitorState state) {
+          return state.getTypeFromString("java.lang.Long");
+        }
+      };
+
   public static final Supplier<Type> STRING_TYPE =
       new Supplier<Type>() {
         @Override
