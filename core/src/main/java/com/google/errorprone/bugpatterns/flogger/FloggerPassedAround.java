@@ -43,7 +43,7 @@ public final class FloggerPassedAround extends BugChecker implements MethodTreeM
   private static final TypePredicate LOGGER_TYPE =
       anyOf(
           isDescendantOf("com.google.common.flogger.FluentLogger"),
-          isDescendantOf("com.google.common.flogger.GoogleLogger"),
+          isDescendantOf("com.google.common.flogger.FluentLogger"),
           isDescendantOf("com.google.common.flogger.android.AndroidFluentLogger"));
 
   @Override
