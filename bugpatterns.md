@@ -1205,6 +1205,9 @@ Invalid message format-style format specifier ({0}), expected printf-style (%s)
 __[FloggerPassedAround](bugpattern/FloggerPassedAround)__<br>
 There is no advantage to passing around a logger rather than declaring one in the class that needs it.
 
+__[FloggerRedundantIsEnabled](bugpattern/FloggerRedundantIsEnabled)__<br>
+Logger level check is already implied in the log() call. An explicit at[Level]().isEnabled() check is redundant.
+
 __[FloggerWithCause](bugpattern/FloggerWithCause)__<br>
 Calling withCause(Throwable) with an inline allocated Throwable is discouraged. Consider using withStackTrace(StackSize) instead, and specifying a reduced stack size (e.g. SMALL, MEDIUM or LARGE) instead of FULL, to improve performance.
 
