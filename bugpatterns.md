@@ -146,6 +146,9 @@ Invalid printf-style format string
 __[FloggerLogVarargs](bugpattern/FloggerLogVarargs)__<br>
 logVarargs should be used to pass through format strings and arguments.
 
+__[FloggerSplitLogStatement](bugpattern/FloggerSplitLogStatement)__<br>
+Splitting log statements and using Api instances directly breaks logging.
+
 __[ForOverride](bugpattern/ForOverride)__<br>
 Method annotated @ForOverride must be protected or package-private and only invoked from declaring class, or from an override of the method
 
