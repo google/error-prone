@@ -1211,6 +1211,9 @@ There is no advantage to passing around a logger rather than declaring one in th
 __[FloggerRedundantIsEnabled](bugpattern/FloggerRedundantIsEnabled)__<br>
 Logger level check is already implied in the log() call. An explicit at[Level]().isEnabled() check is redundant.
 
+__[FloggerRequiredModifiers](bugpattern/FloggerRequiredModifiers)__<br>
+FluentLogger.forEnclosingClass should always be saved to a private static final field.
+
 __[FloggerWithCause](bugpattern/FloggerWithCause)__<br>
 Calling withCause(Throwable) with an inline allocated Throwable is discouraged. Consider using withStackTrace(StackSize) instead, and specifying a reduced stack size (e.g. SMALL, MEDIUM or LARGE) instead of FULL, to improve performance.
 
