@@ -391,6 +391,7 @@ import com.google.errorprone.bugpatterns.flogger.FloggerLogWithCause;
 import com.google.errorprone.bugpatterns.flogger.FloggerMessageFormat;
 import com.google.errorprone.bugpatterns.flogger.FloggerPassedAround;
 import com.google.errorprone.bugpatterns.flogger.FloggerRedundantIsEnabled;
+import com.google.errorprone.bugpatterns.flogger.FloggerRequiredModifiers;
 import com.google.errorprone.bugpatterns.flogger.FloggerSplitLogStatement;
 import com.google.errorprone.bugpatterns.flogger.FloggerWithCause;
 import com.google.errorprone.bugpatterns.flogger.FloggerWithoutCause;
@@ -940,6 +941,7 @@ public class BuiltInCheckerSuppliers {
           FloggerMessageFormat.class,
           FloggerPassedAround.class,
           FloggerRedundantIsEnabled.class,
+          FloggerRequiredModifiers.class,
           FloggerWithCause.class,
           FloggerWithoutCause.class,
           ForEachIterable.class,
