@@ -24,6 +24,7 @@ import static com.google.errorprone.matchers.method.MethodMatchers.constructor;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.BugPattern.LinkType;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
@@ -53,6 +54,8 @@ import java.util.Optional;
             + " Consider using withStackTrace(StackSize) instead, and specifying a reduced"
             + " stack size (e.g. SMALL, MEDIUM or LARGE) instead of FULL, to improve"
             + " performance.",
+    linkType = LinkType.CUSTOM,
+    link = "https://google.github.io/flogger/best_practice#stack-trace",
     severity = WARNING)
 public class FloggerWithCause extends BugChecker implements MethodInvocationTreeMatcher {
 

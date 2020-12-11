@@ -33,6 +33,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.BugPattern.LinkType;
 import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
@@ -78,6 +79,8 @@ import javax.lang.model.element.NestingKind;
     name = "FloggerRequiredModifiers",
     summary =
         "FluentLogger.forEnclosingClass should always be saved to a private static final field.",
+    link = "https://google.github.io/flogger/best_practice#modifiers",
+    linkType = LinkType.CUSTOM,
     severity = WARNING)
 public final class FloggerRequiredModifiers extends BugChecker
     implements MethodInvocationTreeMatcher,

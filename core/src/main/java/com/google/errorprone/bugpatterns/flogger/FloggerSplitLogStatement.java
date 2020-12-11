@@ -16,6 +16,7 @@
 
 package com.google.errorprone.bugpatterns.flogger;
 
+import static com.google.errorprone.BugPattern.LinkType.CUSTOM;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.allOf;
@@ -41,6 +42,8 @@ import com.sun.source.tree.VariableTree;
 @BugPattern(
     name = "FloggerSplitLogStatement",
     summary = "Splitting log statements and using Api instances directly breaks logging.",
+    linkType = CUSTOM,
+    link = "https://google.github.io/flogger/best_practice#no-split",
     severity = ERROR)
 public final class FloggerSplitLogStatement extends BugChecker
     implements MethodTreeMatcher, VariableTreeMatcher {

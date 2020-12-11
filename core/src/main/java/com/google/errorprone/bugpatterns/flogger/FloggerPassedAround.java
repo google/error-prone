@@ -23,6 +23,7 @@ import static com.google.errorprone.predicates.TypePredicates.isDescendantOf;
 import static com.google.errorprone.util.ASTHelpers.getType;
 
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.BugPattern.LinkType;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
@@ -38,6 +39,8 @@ import com.sun.tools.javac.code.Type;
     summary =
         "There is no advantage to passing around a logger rather than declaring one in the class"
             + " that needs it.",
+    linkType = LinkType.CUSTOM,
+    link = "https://google.github.io/flogger/best_practice#one-per-class",
     severity = WARNING)
 public final class FloggerPassedAround extends BugChecker implements MethodTreeMatcher {
   private static final TypePredicate LOGGER_TYPE =
