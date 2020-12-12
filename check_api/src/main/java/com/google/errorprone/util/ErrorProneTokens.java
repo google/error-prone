@@ -82,9 +82,27 @@ public class ErrorProneTokens {
 
     @Override
     protected Comment processComment(int pos, int endPos, CommentStyle style) {
-      char[] buf = reader.getRawCharacters(pos, endPos);
+      char[] buf = getRawCharactersReflectively(pos, endPos);
       return new CommentWithTextAndPosition(
           pos, endPos, new AccessibleReader(fac, buf, buf.length), style);
+    }
+
+    private char[] getRawCharactersReflectively(int beginIndex, int endIndex) {
+      Object instance;
+      try {
+        instance = JavaTokenizer.class.getDeclaredField("reader").get(this);
+      } catch (ReflectiveOperationException e) {
+        instance = this;
+      }
+      try {
+        return (char[])
+            instance
+                .getClass()
+                .getMethod("getRawCharacters", int.class, int.class)
+                .invoke(instance, beginIndex, endIndex);
+      } catch (ReflectiveOperationException e) {
+        throw new LinkageError(e.getMessage(), e);
+      }
     }
   }
 
