@@ -103,6 +103,7 @@
           <artifactId>maven-surefire-plugin</artifactId>
           <configuration>
             <runOrder>alphabetical</runOrder>
+            <trimStackTrace>false</trimStackTrace>
           </configuration>
         </plugin>
       </plugins>

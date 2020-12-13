@@ -439,6 +439,7 @@
         <configuration>
           <!-- set heap size to work around http://github.com/travis-ci/travis-ci/issues/3396 -->
           <argLine>-Xmx1g</argLine>
+          <trimStackTrace>false</trimStackTrace>
         </configuration>
       </plugin>
       <plugin>
@@ -527,6 +528,7 @@
               <!-- set heap size to work around http://github.com/travis-ci/travis-ci/issues/3396 -->
               <!-- put javac.jar on bootclasspath when executing tests -->
               <argLine>-Xmx1g -Xbootclasspath/p:${settings.localRepository}/com/google/errorprone/javac/${javac.version}/javac-${javac.version}.jar</argLine>
+              <trimStackTrace>false</trimStackTrace>
             </configuration>
           </plugin>
         </plugins>
