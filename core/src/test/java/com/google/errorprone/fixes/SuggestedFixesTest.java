@@ -846,14 +846,47 @@ public class SuggestedFixesTest {
   }
 
   @Test
-  public void qualifyStaticImport_whenNamesClash_usesQualifiedName() {
+  public void qualifyStaticImport_whenIdentifierNamesClash_usesQualifiedName() {
+    BugCheckerRefactoringTestHelper.newInstance(new ReplaceMethodInvocations(), getClass())
+        .addInputLines(
+            "pkg/Lib.java",
+            "package pkg;",
+            "public class Lib {",
+            "  public static void verifyNotNull(int a) {}",
+            " }")
+        .expectUnchanged()
+        .addInputLines(
+            "Test.java",
+            "import static com.google.common.base.Preconditions.checkNotNull;",
+            "import static pkg.Lib.verifyNotNull;",
+            "class Test {",
+            "  void test() {",
+            "    verifyNotNull(2);",
+            "    checkNotNull(1);",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "import static com.google.common.base.Preconditions.checkNotNull;",
+            "import static pkg.Lib.verifyNotNull;",
+            "import com.google.common.base.Verify;",
+            "class Test {",
+            "  void test() {",
+            "    verifyNotNull(2);",
+            "    Verify.verifyNotNull(1);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void qualifyStaticImport_whenMethodNamesClash_usesQualifiedName() {
     BugCheckerRefactoringTestHelper.newInstance(new ReplaceMethodInvocations(), getClass())
         .addInputLines(
             "Test.java",
             "import static com.google.common.base.Preconditions.checkNotNull;",
             "class Test {",
             "  void test() {",
-            "    verifyNotNull(2);",
             "    checkNotNull(1);",
             "  }",
             "  void verifyNotNull(int a) {}",
@@ -864,7 +897,6 @@ public class SuggestedFixesTest {
             "import com.google.common.base.Verify;",
             "class Test {",
             "  void test() {",
-            "    verifyNotNull(2);",
             "    Verify.verifyNotNull(1);",
             "  }",
             "  void verifyNotNull(int a) {}",
