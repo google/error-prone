@@ -18,15 +18,19 @@ package com.google.errorprone;
 
 import static com.google.common.base.Preconditions.checkState;
 import static com.google.common.collect.ImmutableList.toImmutableList;
+import static com.google.common.collect.ImmutableMap.toImmutableMap;
+import static com.google.common.collect.Streams.stream;
 import static com.google.common.truth.Truth.assertAbout;
 import static com.google.common.truth.Truth.assertThat;
+import static com.google.common.truth.Truth.assertWithMessage;
 import static com.google.testing.compile.JavaSourceSubjectFactory.javaSource;
 import static org.junit.Assert.fail;
 
+import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Iterators;
-import com.google.common.io.CharStreams;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import com.google.errorprone.annotations.CheckReturnValue;
 import com.google.errorprone.apply.DescriptionBasedDiff;
@@ -49,6 +53,8 @@ import com.sun.tools.javac.tree.JCTree.JCClassDecl;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 import com.sun.tools.javac.util.Context;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.io.UncheckedIOException;
 import java.nio.file.FileAlreadyExistsException;
 import java.util.Arrays;
@@ -269,10 +275,11 @@ public class BugCheckerRefactoringTestHelper {
     }
     context.put(ErrorProneOptions.class, errorProneOptions);
     fileManager.createAndInstallTempFolderForOutput();
+    StringWriter out = new StringWriter();
     JavacTaskImpl task =
         (JavacTaskImpl)
             tool.getTask(
-                CharStreams.nullWriter(),
+                new PrintWriter(out, true),
                 fileManager,
                 diagnosticsCollector,
                 ImmutableList.copyOf(errorProneOptions.getRemainingArgs()),
@@ -281,11 +288,12 @@ public class BugCheckerRefactoringTestHelper {
                 context);
     Iterable<? extends CompilationUnitTree> trees = task.parse();
     task.analyze();
-    JCCompilationUnit tree =
-        Iterables.getOnlyElement(
-            Iterables.filter(
-                Iterables.filter(trees, JCCompilationUnit.class),
-                compilationUnit -> compilationUnit.getSourceFile() == input));
+    ImmutableMap<JavaFileObject, ? extends CompilationUnitTree> bySource =
+        stream(trees).collect(toImmutableMap(t -> t.getSourceFile(), t -> t));
+    assertWithMessage(out + Joiner.on('\n').join(diagnosticsCollector.getDiagnostics()))
+        .that(bySource)
+        .containsKey(input);
+    JCCompilationUnit tree = (JCCompilationUnit) bySource.get(input);
     Iterable<Diagnostic<? extends JavaFileObject>> errorDiagnostics =
         Iterables.filter(
             diagnosticsCollector.getDiagnostics(), d -> d.getKind() == Diagnostic.Kind.ERROR);
