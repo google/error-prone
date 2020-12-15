@@ -453,18 +453,23 @@ public class SuggestedFixes {
     String name = qualifiedName.substring(qualifiedName.lastIndexOf(".") + 1);
     AtomicBoolean foundConflict = new AtomicBoolean(false);
     new TreeScanner<Void, Void>() {
+      @Override
+      public Void visitMethod(MethodTree method, Void unused) {
+        process(method, method.getName());
+        return super.visitMethod(method, null);
+      }
 
       @Override
       public Void visitIdentifier(IdentifierTree ident, Void unused) {
-        process(ident);
+        process(ident, ident.getName());
         return super.visitIdentifier(ident, null);
       }
 
-      private void process(IdentifierTree ident) {
-        if (!ident.getName().contentEquals(name)) {
+      private void process(Tree tree, Name identifier) {
+        if (!identifier.contentEquals(name)) {
           return;
         }
-        Symbol symbol = getSymbol(ident);
+        Symbol symbol = getSymbol(tree);
         if (symbol == null) {
           return;
         }
