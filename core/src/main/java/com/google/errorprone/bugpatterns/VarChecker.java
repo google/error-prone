@@ -59,6 +59,9 @@ public class VarChecker extends BugChecker implements VariableTreeMatcher {
     if (ASTHelpers.hasAnnotation(sym, Var.class, state)) {
       return Description.NO_MATCH;
     }
+    if (!ASTHelpers.getGeneratedBy(state).isEmpty()) {
+      return Description.NO_MATCH;
+    }
     if (TreeInfo.isReceiverParam((JCTree) tree)) {
       return Description.NO_MATCH;
     }

@@ -330,4 +330,45 @@ public class VarCheckerTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void suppressedByGeneratedAnnotation() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import javax.annotation.processing.Generated;",
+            "@Generated(\"generator\") class Test {",
+            "  public void x() {",
+            "    final int y = 0;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void suppressedBySuppressWarningsAnnotation() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "@SuppressWarnings(\"Var\") class Test {",
+            "  public void x() {",
+            "    final int y = 0;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void notSuppressedByUnrelatedSuppressWarningsAnnotation() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "@SuppressWarnings(\"Foo\") class Test {",
+            "  public void x() {",
+            "    // BUG: Diagnostic contains: Unnecessary 'final' modifier.",
+            "    final int y = 0;",
+            "  }",
+            "}")
+        .doTest();
+  }
 }
