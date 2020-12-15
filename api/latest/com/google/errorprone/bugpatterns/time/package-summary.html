@@ -306,6 +306,12 @@ loadScripts(document, 'script');</script>
 <div class="block">Checker that detects likely time-unit mismatches by looking at identifier names.</div>
 </td>
 </tr>
+<tr class="alt-color">
+<th class="col-first" scope="row"><a href="ZoneIdOfZ.html" title="class in com.google.errorprone.bugpatterns.time">ZoneIdOfZ</a></th>
+<td class="col-last">
+<div class="block">This checker bans calls to <code>ZoneId.of("Z")</code> in favor of <a href="https://docs.oracle.com/javase/8/docs/api/java/time/ZoneOffset.html#UTC" title="class or interface in java.time" class="external-link"><code>ZoneOffset.UTC</code></a>.</div>
+</td>
+</tr>
 </tbody>
 </table>
 </div>

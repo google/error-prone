@@ -3770,6 +3770,13 @@ int&nbsp;count)</code></th>
 <div class="block">Checker that detects likely time-unit mismatches by looking at identifier names.</div>
 </td>
 </tr>
+<tr class="row-color">
+<td class="col-first"><code>class&nbsp;</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="../time/ZoneIdOfZ.html" title="class in com.google.errorprone.bugpatterns.time">ZoneIdOfZ</a></span></code></th>
+<td class="col-last">
+<div class="block">This checker bans calls to <code>ZoneId.of("Z")</code> in favor of <a href="https://docs.oracle.com/javase/8/docs/api/java/time/ZoneOffset.html#UTC" title="class or interface in java.time" class="external-link"><code>ZoneOffset.UTC</code></a>.</div>
+</td>
+</tr>
 </tbody>
 </table>
 </div>

@@ -473,6 +473,9 @@ This field is guaranteed not to be set given it&#39;s within a switch over a one
 __[XorPower](bugpattern/XorPower)__<br>
 The `^` operator is binary XOR, not a power operator.
 
+__[ZoneIdOfZ](bugpattern/ZoneIdOfZ)__<br>
+Use ZoneOffset.UTC instead of ZoneId.of(&quot;Z&quot;).
+
 ## On by default : WARNING
 
 __[AlmostJavadoc](bugpattern/AlmostJavadoc)__<br>
