@@ -495,6 +495,7 @@ import com.google.errorprone.bugpatterns.time.StronglyTypeTime;
 import com.google.errorprone.bugpatterns.time.TemporalAccessorGetChronoField;
 import com.google.errorprone.bugpatterns.time.TimeUnitConversionChecker;
 import com.google.errorprone.bugpatterns.time.TimeUnitMismatch;
+import com.google.errorprone.bugpatterns.time.ZoneIdOfZ;
 import java.util.Arrays;
 
 /**
@@ -691,7 +692,8 @@ public class BuiltInCheckerSuppliers {
           UnusedCollectionModifiedInPlace.class,
           VarTypeName.class,
           WrongOneof.class,
-          XorPower.class
+          XorPower.class,
+          ZoneIdOfZ.class
           // end
           );
 
