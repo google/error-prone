@@ -3639,26 +3639,33 @@ int&nbsp;count)</code></th>
 </tr>
 <tr class="row-color">
 <td class="col-first"><code>class&nbsp;</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="../time/JodaDateTimeConstants.html" title="class in com.google.errorprone.bugpatterns.time">JodaDateTimeConstants</a></span></code></th>
+<td class="col-last">
+<div class="block">Checks for usages of dangerous <code>DateTimeConstants</code> constants.</div>
+</td>
+</tr>
+<tr class="alt-color">
+<td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../time/JodaDurationWithMillis.html" title="class in com.google.errorprone.bugpatterns.time">JodaDurationWithMillis</a></span></code></th>
 <td class="col-last">
 <div class="block">Check for calls to <code>duration.withMillis(long)</code>.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../time/JodaInstantWithMillis.html" title="class in com.google.errorprone.bugpatterns.time">JodaInstantWithMillis</a></span></code></th>
 <td class="col-last">
 <div class="block">Check for calls to <code>instant.withMillis(long)</code>.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../time/JodaNewPeriod.html" title="class in com.google.errorprone.bugpatterns.time">JodaNewPeriod</a></span></code></th>
 <td class="col-last">
 <div class="block">Match possibly incorrect use of Period to obtain a number of (e.g.) days between two dates.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../time/JodaPlusMinusLong.html" title="class in com.google.errorprone.bugpatterns.time">JodaPlusMinusLong</a></span></code></th>
 <td class="col-last">
@@ -3666,21 +3673,21 @@ int&nbsp;count)</code></th>
  &lt;type&gt; = {Duration,Instant,DateTime,DateMidnight}</code>.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../time/JodaTimeConverterManager.html" title="class in com.google.errorprone.bugpatterns.time">JodaTimeConverterManager</a></span></code></th>
 <td class="col-last">
 <div class="block">Ban usage of Joda's <code>ConverterManager</code>.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../time/JodaToSelf.html" title="class in com.google.errorprone.bugpatterns.time">JodaToSelf</a></span></code></th>
 <td class="col-last">
 <div class="block">Check for calls to Joda-Time's <code>foo.toFoo()</code> and <code>new Foo(foo)</code>.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../time/JodaWithDurationAddedLong.html" title="class in com.google.errorprone.bugpatterns.time">JodaWithDurationAddedLong</a></span></code></th>
 <td class="col-last">
@@ -3688,7 +3695,7 @@ int&nbsp;count)</code></th>
  {Duration,Instant,DateTime}</code>.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../time/LocalDateTemporalAmount.html" title="class in com.google.errorprone.bugpatterns.time">LocalDateTemporalAmount</a></span></code></th>
 <td class="col-last">
@@ -3696,14 +3703,14 @@ int&nbsp;count)</code></th>
  where the <a href="https://docs.oracle.com/javase/8/docs/api/java/time/temporal/TemporalAmount.html" title="class or interface in java.time.temporal" class="external-link"><code>TemporalAmount</code></a> is a non-zero <a href="https://docs.oracle.com/javase/8/docs/api/java/time/Duration.html" title="class or interface in java.time" class="external-link"><code>Duration</code></a>.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../time/PeriodFrom.html" title="class in com.google.errorprone.bugpatterns.time">PeriodFrom</a></span></code></th>
 <td class="col-last">
 <div class="block">Bans calls to <code>Period.from(temporalAmount)</code> where <code>temporalAmount</code> is a <a href="https://docs.oracle.com/javase/8/docs/api/java/time/Duration.html" title="class or interface in java.time" class="external-link"><code>Duration</code></a>.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../time/PeriodGetTemporalUnit.html" title="class in com.google.errorprone.bugpatterns.time">PeriodGetTemporalUnit</a></span></code></th>
 <td class="col-last">
@@ -3711,21 +3718,21 @@ int&nbsp;count)</code></th>
  <code>MONTHS</code>, or <code>DAYS</code>.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../time/PeriodTimeMath.html" title="class in com.google.errorprone.bugpatterns.time">PeriodTimeMath</a></span></code></th>
 <td class="col-last">
 <div class="block">Bans calls to <code>Period#plus/minus(TemporalAmount)</code> where the argument is a Duration.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../time/PreferJavaTimeOverload.html" title="class in com.google.errorprone.bugpatterns.time">PreferJavaTimeOverload</a></span></code></th>
 <td class="col-last">
 <div class="block">This check suggests the use of <code>java.time</code>-based APIs, when available.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../time/ProtoDurationGetSecondsGetNano.html" title="class in com.google.errorprone.bugpatterns.time">ProtoDurationGetSecondsGetNano</a></span></code></th>
 <td class="col-last">
@@ -3733,7 +3740,7 @@ int&nbsp;count)</code></th>
  without a "nearby" access of the underlying seconds field.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../time/ProtoTimestampGetSecondsGetNano.html" title="class in com.google.errorprone.bugpatterns.time">ProtoTimestampGetSecondsGetNano</a></span></code></th>
 <td class="col-last">
@@ -3741,14 +3748,14 @@ int&nbsp;count)</code></th>
  timestamp without a "nearby" access of the underlying seconds field.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../time/StronglyTypeTime.html" title="class in com.google.errorprone.bugpatterns.time">StronglyTypeTime</a></span></code></th>
 <td class="col-last">
 <div class="block">Flags fields which would be better expressed as time types rather than primitive integers.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../time/TemporalAccessorGetChronoField.html" title="class in com.google.errorprone.bugpatterns.time">TemporalAccessorGetChronoField</a></span></code></th>
 <td class="col-last">
@@ -3756,21 +3763,21 @@ int&nbsp;count)</code></th>
  throw an <code>UnsupportedTemporalTypeException</code>.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../time/TimeUnitConversionChecker.html" title="class in com.google.errorprone.bugpatterns.time">TimeUnitConversionChecker</a></span></code></th>
 <td class="col-last">
 <div class="block">Check for problematic or suspicious TimeUnit conversion calls.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../time/TimeUnitMismatch.html" title="class in com.google.errorprone.bugpatterns.time">TimeUnitMismatch</a></span></code></th>
 <td class="col-last">
 <div class="block">Checker that detects likely time-unit mismatches by looking at identifier names.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../time/ZoneIdOfZ.html" title="class in com.google.errorprone.bugpatterns.time">ZoneIdOfZ</a></span></code></th>
 <td class="col-last">
