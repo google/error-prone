@@ -24,14 +24,13 @@ import static com.google.errorprone.matchers.Matchers.anyOf;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
-import com.google.errorprone.bugpatterns.BugChecker.ImportTreeMatcher;
+import com.google.errorprone.bugpatterns.BugChecker.IdentifierTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.MemberSelectTreeMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.sun.source.tree.ExpressionTree;
-import com.sun.source.tree.ImportTree;
+import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.MemberSelectTree;
-import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 /** Checks for usages of dangerous {@code DateTimeConstants} constants. */
@@ -46,10 +45,7 @@ import java.util.stream.Stream;
             + " perform date/time math.",
     severity = WARNING)
 public final class JodaDateTimeConstants extends BugChecker
-    implements MemberSelectTreeMatcher, ImportTreeMatcher {
-
-  private static final Pattern DATE_TIME_CONSTANTS_STATIC_IMPORT_REGEX =
-      Pattern.compile("^org\\.joda\\.time\\.DateTimeConstants\\.[A-Z]+_PER_[A-Z]+$");
+    implements MemberSelectTreeMatcher, IdentifierTreeMatcher {
 
   private static final Matcher<ExpressionTree> DATE_TIME_CONSTANTS_MATCHER =
       anyOf(
@@ -74,16 +70,15 @@ public final class JodaDateTimeConstants extends BugChecker
 
   @Override
   public Description matchMemberSelect(MemberSelectTree tree, VisitorState state) {
-    return DATE_TIME_CONSTANTS_MATCHER.matches(tree, state) ? describeMatch(tree) : NO_MATCH;
+    return match(tree, state);
   }
 
   @Override
-  public Description matchImport(ImportTree tree, VisitorState state) {
-    return tree.isStatic()
-            && DATE_TIME_CONSTANTS_STATIC_IMPORT_REGEX
-                .matcher(state.getSourceForNode(tree.getQualifiedIdentifier()))
-                .matches()
-        ? describeMatch(tree)
-        : NO_MATCH;
+  public Description matchIdentifier(IdentifierTree tree, VisitorState state) {
+    return match(tree, state);
+  }
+
+  private Description match(ExpressionTree tree, VisitorState state) {
+    return DATE_TIME_CONSTANTS_MATCHER.matches(tree, state) ? describeMatch(tree) : NO_MATCH;
   }
 }

@@ -59,9 +59,9 @@ public class JodaDateTimeConstantsTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "// BUG: Diagnostic contains: JodaDateTimeConstants",
             "import static org.joda.time.DateTimeConstants.MILLIS_PER_MINUTE;",
             "public class TestClass {",
+            "  // BUG: Diagnostic contains: JodaDateTimeConstants",
             "  private final long sixMinsInMillis = 6 * MILLIS_PER_MINUTE;",
             "}")
         .doTest();
