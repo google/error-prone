@@ -84,12 +84,12 @@ loadScripts(document, 'script');</script>
 <section class="description">
 <dl class="notes">
 <dt>All Implemented Interfaces:</dt>
-<dd><code><a href="../BugChecker.ImportTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.ImportTreeMatcher</a></code>, <code><a href="../BugChecker.MemberSelectTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.MemberSelectTreeMatcher</a></code>, <code><a href="../../matchers/Suppressible.html" title="interface in com.google.errorprone.matchers">Suppressible</a></code>, <code><a href="https://docs.oracle.com/javase/8/docs/api/java/io/Serializable.html" title="class or interface in java.io" class="external-link">Serializable</a></code></dd>
+<dd><code><a href="../BugChecker.IdentifierTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.IdentifierTreeMatcher</a></code>, <code><a href="../BugChecker.MemberSelectTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.MemberSelectTreeMatcher</a></code>, <code><a href="../../matchers/Suppressible.html" title="interface in com.google.errorprone.matchers">Suppressible</a></code>, <code><a href="https://docs.oracle.com/javase/8/docs/api/java/io/Serializable.html" title="class or interface in java.io" class="external-link">Serializable</a></code></dd>
 </dl>
 <hr>
 <pre>public final class <span class="type-name-label">JodaDateTimeConstants</span>
 extends <a href="../BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a>
-implements <a href="../BugChecker.MemberSelectTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.MemberSelectTreeMatcher</a>, <a href="../BugChecker.ImportTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.ImportTreeMatcher</a></pre>
+implements <a href="../BugChecker.MemberSelectTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.MemberSelectTreeMatcher</a>, <a href="../BugChecker.IdentifierTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.IdentifierTreeMatcher</a></pre>
 <div class="block">Checks for usages of dangerous <code>DateTimeConstants</code> constants.</div>
 <dl class="notes">
 <dt>See Also:</dt>
@@ -148,7 +148,7 @@ implements <a href="../BugChecker.MemberSelectTreeMatcher.html" title="interface
 <tbody>
 <tr class="alt-color" id="i0">
 <td class="col-first"><code><a href="../../matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
-<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#matchImport(com.sun.source.tree.ImportTree,com.google.errorprone.VisitorState)">matchImport</a></span>&#8203;(com.sun.source.tree.ImportTree&nbsp;tree,
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#matchIdentifier(com.sun.source.tree.IdentifierTree,com.google.errorprone.VisitorState)">matchIdentifier</a></span>&#8203;(com.sun.source.tree.IdentifierTree&nbsp;tree,
 <a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
@@ -208,13 +208,13 @@ implements <a href="../BugChecker.MemberSelectTreeMatcher.html" title="interface
 </section>
 </li>
 <li>
-<section class="detail" id="matchImport(com.sun.source.tree.ImportTree,com.google.errorprone.VisitorState)">
-<h3>matchImport</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../../matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></span>&nbsp;<span class="member-name">matchImport</span>&#8203;(<span class="parameters">com.sun.source.tree.ImportTree&nbsp;tree,
+<section class="detail" id="matchIdentifier(com.sun.source.tree.IdentifierTree,com.google.errorprone.VisitorState)">
+<h3>matchIdentifier</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../../matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></span>&nbsp;<span class="member-name">matchIdentifier</span>&#8203;(<span class="parameters">com.sun.source.tree.IdentifierTree&nbsp;tree,
 <a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
 <dl class="notes">
 <dt>Specified by:</dt>
-<dd><code><a href="../BugChecker.ImportTreeMatcher.html#matchImport(com.sun.source.tree.ImportTree,com.google.errorprone.VisitorState)">matchImport</a></code>&nbsp;in interface&nbsp;<code><a href="../BugChecker.ImportTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.ImportTreeMatcher</a></code></dd>
+<dd><code><a href="../BugChecker.IdentifierTreeMatcher.html#matchIdentifier(com.sun.source.tree.IdentifierTree,com.google.errorprone.VisitorState)">matchIdentifier</a></code>&nbsp;in interface&nbsp;<code><a href="../BugChecker.IdentifierTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.IdentifierTreeMatcher</a></code></dd>
 </dl>
 </section>
 </li>
