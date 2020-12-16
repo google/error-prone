@@ -161,11 +161,14 @@ public @interface BugPattern {
 
   SeverityLevel severity();
 
-  /** The severity of the diagnostic. */
+  /**
+   * The severity of the diagnostic.
+   */
   enum SeverityLevel {
     ERROR,
     WARNING,
-    SUGGESTION
+    /** Note that this level generally disables the bug checker. */
+    SUGGESTION,
   }
 
   /** True if the check can be disabled using command-line flags. */
