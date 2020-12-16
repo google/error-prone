@@ -50,7 +50,7 @@ public class NullnessPropagationTransferCases2 {
   static final String CONSTANT_DERIVED_STRING = CONSTANT_DERIVED_BOOLEAN ? CONSTANT_STRING : "";
   static final MyClass CONSTANT_OTHER_CLASS = new MyClass();
   static final Integer[] CONSTANT_OBJECT_ARRAY = new Integer[7];
-  static final Integer[] CONSTANT_ARRAY_INITIALIZER = {new Integer(5)};
+  static final Integer[] CONSTANT_ARRAY_INITIALIZER = {Integer.valueOf(5)};
   static final Object CONSTANT_NO_INITIALIZER;
 
   static {

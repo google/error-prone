@@ -7,7 +7,7 @@ of any use.
     new EqualsTester()
         .addEqualityGroup("hello", new String("hello"))
         .addEqualityGroup("world", new String("world"))
-        .addEqualityGroup(2, new Integer(2));
+        .addEqualityGroup(2, Integer.valueOf(2));
     // Oops: forgot to call `testEquals()`
   }
 ```

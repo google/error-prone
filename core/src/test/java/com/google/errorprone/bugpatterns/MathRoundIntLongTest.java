@@ -54,7 +54,7 @@ public class MathRoundIntLongTest {
             "Test.java", //
             "class Test {",
             "  void f() {",
-            "    Integer i = new Integer(3);",
+            "    Integer i = Integer.valueOf(3);",
             "    int y = Math.round(i);",
             "  }",
             "}")
@@ -62,7 +62,7 @@ public class MathRoundIntLongTest {
             "Test.java", //
             "class Test {",
             "  void f() {",
-            "    Integer i = new Integer(3);",
+            "    Integer i = Integer.valueOf(3);",
             "    int y = i;",
             "  }",
             "}")
@@ -99,7 +99,7 @@ public class MathRoundIntLongTest {
             "Test.java", //
             "class Test {",
             "  void f() {",
-            "    Long l = new Long(\"3\");",
+            "    Long l = Long.valueOf(\"3\");",
             "    int y = Math.round(l);",
             "  }",
             "}")
@@ -108,7 +108,7 @@ public class MathRoundIntLongTest {
             "import com.google.common.primitives.Ints;",
             "class Test {",
             "  void f() {",
-            "    Long l = new Long(\"3\");",
+            "    Long l = Long.valueOf(\"3\");",
             "    int y = Ints.saturatedCast(l);",
             "  }",
             "}")
@@ -122,7 +122,7 @@ public class MathRoundIntLongTest {
             "Test.java", //
             "class Test {",
             "  void f() {",
-            "    Float f = new Float(\"3\");",
+            "    Float f = Float.valueOf(\"3\");",
             "    int y = Math.round(f);",
             "  }",
             "}")
@@ -137,7 +137,7 @@ public class MathRoundIntLongTest {
             "Test.java", //
             "class Test {",
             "  void f() {",
-            "    Double d = new Double(\"3\");",
+            "    Double d = Double.valueOf(\"3\");",
             "    Long y = Math.round(d);",
             "  }",
             "}")

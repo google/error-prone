@@ -219,7 +219,7 @@ public class UnusedVariableTest {
             "      notUsedLocal = this.calculate()",
             "          + 1  ;",
             "      notUsedLocal--;",
-            "      notUsedLocal += new Integer(1);",
+            "      notUsedLocal += Integer.valueOf(1);",
             "      System.out.println(usedLocal);",
             "    }",
             "    System.out.println(usedLocal);",

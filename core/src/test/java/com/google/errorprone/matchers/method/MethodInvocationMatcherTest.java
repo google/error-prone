@@ -84,7 +84,7 @@ public class MethodInvocationMatcherTest {
             "    // BUG: Diagnostic contains: ",
             "    String s = \"5\".toString();",
             "    // BUG: Diagnostic contains: ",
-            "    int result = new Integer(5).compareTo(6);",
+            "    int result = Integer.valueOf(5).compareTo(6);",
             "    // BUG: Diagnostic contains: ",
             "    return String.valueOf(5);",
             "  }",

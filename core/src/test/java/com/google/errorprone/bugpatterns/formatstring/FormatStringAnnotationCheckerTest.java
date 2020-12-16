@@ -113,7 +113,7 @@ public class FormatStringAnnotationCheckerTest {
             "  @FormatMethod public static void log(@FormatString String s, Object... args) {}",
             "  public static void callLog() {",
             "    final String formatString = \"%d\";",
-            "    log(formatString, new Integer(0));",
+            "    log(formatString, Integer.valueOf(0));",
             "  }",
             "}")
         .doTest();
