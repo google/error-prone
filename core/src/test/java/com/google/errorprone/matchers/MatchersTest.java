@@ -284,7 +284,7 @@ public class MatchersTest {
             "    return true;",
             "  }",
             "  public Object doesntMatch2() {",
-            "    return new Integer(42);",
+            "    return Integer.valueOf(42);",
             "  }",
             "  // BUG: Diagnostic contains:",
             "  public void matches() {",

@@ -69,7 +69,7 @@ public class ModifyCollectionInEnhancedForLoopNegativeCases {
 
   public static void testMapKeySet(HashMap<Integer, Integer> map1, HashMap<Integer, Integer> map2) {
     for (Integer a : map1.keySet()) {
-      map2.putIfAbsent(new Integer("42"), new Integer("43"));
+      map2.putIfAbsent(Integer.parseInt("42"), Integer.parseInt("43"));
       map2.clear();
       map2.remove(a);
     }
@@ -77,16 +77,16 @@ public class ModifyCollectionInEnhancedForLoopNegativeCases {
 
   public static void testMapValues(HashMap<Integer, Integer> map1, HashMap<Integer, Integer> map2) {
     for (Integer a : map1.values()) {
-      map2.putIfAbsent(new Integer("42"), a);
+      map2.putIfAbsent(Integer.parseInt("42"), a);
       map2.clear();
-      map2.remove(new Integer("42"));
+      map2.remove(Integer.parseInt("42"));
     }
   }
 
   public static void testMapEntrySet(
       HashMap<Integer, Integer> map1, HashMap<Integer, Integer> map2) {
     for (Map.Entry<Integer, Integer> a : map1.entrySet()) {
-      map2.putIfAbsent(new Integer("42"), new Integer("43"));
+      map2.putIfAbsent(Integer.parseInt("42"), Integer.parseInt("43"));
       map2.clear();
       map2.remove(a.getKey());
     }

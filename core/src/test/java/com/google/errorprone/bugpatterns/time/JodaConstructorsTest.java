@@ -123,7 +123,7 @@ public class JodaConstructorsTest {
             "TestClass.java",
             "import org.joda.time.Duration;",
             "public class TestClass {",
-            "  private static final Duration ONE_MILLI = new Duration(new Integer(42));",
+            "  private static final Duration ONE_MILLI = new Duration(Integer.valueOf(42));",
             "}")
         .doTest();
   }
@@ -174,7 +174,7 @@ public class JodaConstructorsTest {
             "TestClass.java",
             "import org.joda.time.Duration;",
             "public class TestClass {",
-            "  private static final Duration ONE_MILLI = new Duration(new Long(1L));",
+            "  private static final Duration ONE_MILLI = new Duration(Long.valueOf(1L));",
             "}")
         .doTest();
   }

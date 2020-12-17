@@ -128,7 +128,7 @@ class UnnecessaryBoxedVariableCases {
 
   int positive_assignmentInReturn2() {
     Integer myVariable;
-    return myVariable = new Integer(42);
+    return myVariable = Integer.valueOf(42);
   }
 
   int positive_hashCode() {
