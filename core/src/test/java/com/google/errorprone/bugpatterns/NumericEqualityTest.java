@@ -46,11 +46,11 @@ public class NumericEqualityTest {
             "Test.java",
             "class Test {",
             "  void f() {",
-            "    final Long constValue = new Long(1000L);",
+            "    final Long constValue = Long.valueOf(1000L);",
             "    Long assignedValue;",
             "    // BUG: Diagnostic contains:"
-                + " (!(assignedValue = new Long(1000L)).equals(constValue))",
-            "    boolean retVal = ((assignedValue = new Long(1000L)) != constValue);",
+                + " (!(assignedValue = Long.valueOf(1000L)).equals(constValue))",
+            "    boolean retVal = ((assignedValue = Long.valueOf(1000L)) != constValue);",
             "  }",
             "}")
         .doTest();
