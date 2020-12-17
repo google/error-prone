@@ -89,7 +89,7 @@ public class ImportStatements {
       }
     }
 
-    // sanity check for start/end positions
+    // validate start/end positions
     Preconditions.checkState(startPos <= endPos);
 
     this.importOrganizer = importOrganizer;

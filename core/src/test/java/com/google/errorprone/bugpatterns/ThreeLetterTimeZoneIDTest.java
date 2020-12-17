@@ -41,7 +41,7 @@ public class ThreeLetterTimeZoneIDTest {
   @Test
   public void testAllThreeLetterIdsAreCoveredByZoneIdShortIds() {
     // The check's logic is predicated on there being an entry in SHORT_IDS for all three-letter
-    // IDs in TimeZone.getAvailableIDs() that aren't in ZoneId.getAvailableZoneIds(). Sanity check.
+    // IDs in TimeZone.getAvailableIDs() that aren't in ZoneId.getAvailableZoneIds().
     Set<String> availableZoneIds = new HashSet<>(ZoneId.getAvailableZoneIds());
     Set<String> expectedIds =
         Arrays.stream(TimeZone.getAvailableIDs())

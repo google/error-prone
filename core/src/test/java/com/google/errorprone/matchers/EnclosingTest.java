@@ -158,7 +158,7 @@ public class EnclosingTest extends CompilerBasedAbstractTest {
     assertCompiles(fooIsUsedUnderLoopStatementAccordingToBlockOrCase(true));
   }
 
-  /** Sanity checks that the scanners are doing what we expect. */
+  /** Make sure the scanners are doing what we expect. */
   @Test
   public void usedElsewhereInLoop() {
     writeFile(

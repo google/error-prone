@@ -331,9 +331,8 @@ public class SuggestedFix implements Fix {
     }
 
     /**
-     * Implicit default constructors are one of the few synthetic constructs added to the AST early
-     * enough to be visible from Error Prone, so we do a sanity-check here to prevent attempts to
-     * edit them.
+     * Prevent attempts to modify implicit default constructurs, since they are one of the few
+     * synthetic constructs added to the AST early enough to be visible from Error Prone.
      */
     private static void checkNotSyntheticConstructor(Tree tree) {
       if (tree instanceof MethodTree && ASTHelpers.isGeneratedConstructor((MethodTree) tree)) {
