@@ -371,4 +371,22 @@ public class VarCheckerTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void effectivelyFinal() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.errorprone.annotations.Var;",
+            "class Test {",
+            "  int f(",
+            "      // BUG: Diagnostic contains: @Var variable is never modified",
+            "      @Var int x,",
+            "      @Var int y) {",
+            "    y++;",
+            "    return x + y;",
+            "  }",
+            "}")
+        .doTest();
+  }
 }

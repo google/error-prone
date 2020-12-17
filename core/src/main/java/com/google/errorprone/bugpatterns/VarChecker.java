@@ -17,6 +17,7 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
+import static com.google.errorprone.util.ASTHelpers.getAnnotationWithSimpleName;
 import static com.google.errorprone.util.ASTHelpers.isConsideredFinal;
 
 import com.google.errorprone.BugPattern;
@@ -32,6 +33,7 @@ import com.sun.source.tree.ForLoopTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
+import com.sun.tools.javac.code.Flags;
 import com.sun.tools.javac.code.Source;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.tree.JCTree;
@@ -57,6 +59,14 @@ public class VarChecker extends BugChecker implements VariableTreeMatcher {
       return Description.NO_MATCH;
     }
     if (ASTHelpers.hasAnnotation(sym, Var.class, state)) {
+      if ((sym.flags() & Flags.EFFECTIVELY_FINAL) != 0) {
+        return buildDescription(tree)
+            .setMessage("@Var variable is never modified")
+            .addFix(
+                SuggestedFix.delete(
+                    getAnnotationWithSimpleName(tree.getModifiers().getAnnotations(), "Var")))
+            .build();
+      }
       return Description.NO_MATCH;
     }
     if (!ASTHelpers.getGeneratedBy(state).isEmpty()) {
