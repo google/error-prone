@@ -20,7 +20,7 @@ echo -e "Publishing docs...\n"
 
 GH_PAGES_DIR=$HOME/gh-pages
 
-git clone --quiet --branch=gh-pages https://${GH_TOKEN}@github.com/google/error-prone $GH_PAGES_DIR > /dev/null
+git clone --quiet --branch=gh-pages https://${GITHUB_TOKEN}@github.com/google/error-prone $GH_PAGES_DIR > /dev/null
 (
   cd $GH_PAGES_DIR
   rm -rf _data/bugpatterns.yaml api/latest
