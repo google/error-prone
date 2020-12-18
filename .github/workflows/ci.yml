@@ -107,4 +107,5 @@ jobs:
       - name: 'Generate latest docs'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_RUN_NUMBER: ${{ secrets.GITHUB_RUN_NUMBER }}
         run: ./util/generate-latest-docs.sh
