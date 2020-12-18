@@ -257,6 +257,33 @@ public final class InvalidInlineTag extends BugChecker
     @Override
     public Void visitUnknownInlineTag(UnknownInlineTagTree unknownInlineTagTree, Void unused) {
       String name = unknownInlineTagTree.getTagName();
+      if (name.equals("param")) {
+        int startPos = Utils.getStartPosition(unknownInlineTagTree, state);
+        int endPos = Utils.getEndPosition(unknownInlineTagTree, state);
+        CharSequence text = state.getSourceCode().subSequence(startPos, endPos);
+        Matcher matcher = PARAM_MATCHER.matcher(text);
+        if (matcher.find()) {
+          String parameterName = matcher.group(1);
+          if (parameters.contains(parameterName)) {
+            String message =
+                String.format(
+                    "@param cannot be used inline to refer to parameters; {@code %s} is"
+                        + " recommended",
+                    parameterName);
+            state.reportMatch(
+                buildDescription(diagnosticPosition(getCurrentPath(), state))
+                    .setMessage(message)
+                    .addFix(
+                        Utils.replace(
+                            unknownInlineTagTree,
+                            String.format("{@code %s}", parameterName),
+                            state))
+                    .build());
+          }
+          fixedTags.add(unknownInlineTagTree);
+          return super.visitUnknownInlineTag(unknownInlineTagTree, null);
+        }
+      }
       if (parameters.contains(name)) {
         String message = String.format(INVALID_TAG_IS_PARAMETER_NAME, name);
         state.reportMatch(
