@@ -40,8 +40,8 @@ rsync -a docgen/target/generated-wiki/ ${GH_PAGES_DIR}
 
 cd $GH_PAGES_DIR
 git add --all .
-git config --global user.name "GitHub Action"
-git config --global user.email "action@github.com"
+git config --global user.name "$GITHUB_ACTOR"
+git config --global user.email "$GITHUB_ACTOR@users.noreply.github.com"
 git commit -m "Latest docs on successful build $GITHUB_RUN_NUMBER auto-pushed to gh-pages"
 git push -fq origin gh-pages > /dev/null
 
