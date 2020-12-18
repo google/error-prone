@@ -332,7 +332,7 @@ public final class AnnotationPositionTest {
             "sealed @Deprecated interface Test {",
             "  final class A implements Test {}",
             "}")
-        .setArgs("--enable-preview", "--release=15")
+        .setArgs("--enable-preview", "--release", Integer.toString(RuntimeVersion.release()))
         .doTest(TEXT_MATCH);
   }
 }

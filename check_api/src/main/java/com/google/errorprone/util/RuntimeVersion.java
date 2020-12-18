@@ -84,4 +84,13 @@ public class RuntimeVersion {
   public static boolean isAtLeast15() {
     return MAJOR >= 15;
   }
+
+  /**
+   * Returns the latest {@code --release} version.
+   *
+   * <p>Prefer the {@code isAtLeast} methods for assumption checks in tests.
+   */
+  public static int release() {
+    return MAJOR;
+  }
 }
