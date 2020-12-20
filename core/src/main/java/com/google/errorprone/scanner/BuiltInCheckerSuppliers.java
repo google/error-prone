@@ -114,6 +114,7 @@ import com.google.errorprone.bugpatterns.EqualsWrongThing;
 import com.google.errorprone.bugpatterns.ExpectedExceptionChecker;
 import com.google.errorprone.bugpatterns.ExtendingJUnitAssert;
 import com.google.errorprone.bugpatterns.ExtendsAutoValue;
+import com.google.errorprone.bugpatterns.ExtendsThrowable;
 import com.google.errorprone.bugpatterns.FallThrough;
 import com.google.errorprone.bugpatterns.FieldCanBeFinal;
 import com.google.errorprone.bugpatterns.FieldCanBeLocal;
@@ -755,6 +756,7 @@ public class BuiltInCheckerSuppliers {
           EqualsUsingHashCode.class,
           EscapedEntity.class,
           ExtendingJUnitAssert.class,
+          ExtendsThrowable.class,
           FallThrough.class,
           Finally.class,
           FloatCast.class,
