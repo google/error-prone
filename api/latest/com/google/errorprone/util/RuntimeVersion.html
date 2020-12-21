@@ -15,7 +15,7 @@
 <script type="text/javascript" src="../../../../script-dir/jquery-ui.min.js"></script>
 </head>
 <body class="class-declaration-page">
-<script type="text/javascript">var data = {"i0":9,"i1":9,"i2":9,"i3":9,"i4":9,"i5":9,"i6":9,"i7":9,"i8":9};
+<script type="text/javascript">var data = {"i0":9,"i1":9,"i2":9,"i3":9,"i4":9,"i5":9,"i6":9,"i7":9,"i8":9,"i9":9};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],8:["t4","Concrete Methods"]};
 var altColor = "alt-color";
 var rowColor = "row-color";
@@ -189,6 +189,13 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <div class="block">Returns true if the current runtime is JDK 10 or earlier.</div>
 </td>
 </tr>
+<tr class="row-color" id="i9">
+<td class="col-first"><code>static int</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#release()">release</a></span>()</code></th>
+<td class="col-last">
+<div class="block">Returns the latest <code>--release</code> version.</div>
+</td>
+</tr>
 </tbody>
 </table>
 </div>
@@ -282,6 +289,15 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <h3>isAtLeast15</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="member-name">isAtLeast15</span>()</div>
 <div class="block">Returns true if the current runtime is JDK 15 or newer.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="release()">
+<h3>release</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="member-name">release</span>()</div>
+<div class="block">Returns the latest <code>--release</code> version.
+
+ <p>Prefer the <code>isAtLeast</code> methods for assumption checks in tests.</div>
 </section>
 </li>
 </ul>
