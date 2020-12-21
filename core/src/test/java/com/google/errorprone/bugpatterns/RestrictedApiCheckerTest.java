@@ -37,6 +37,7 @@ public class RestrictedApiCheckerTest {
   protected RestrictedApiCheckerTest(Class<? extends BugChecker> checker) {
     helper =
         CompilationTestHelper.newInstance(checker, RestrictedApiCheckerTest.class)
+            .addSourceFile("Allowlist.java")
             .addSourceFile("RestrictedApiMethods.java")
             .matchAllDiagnostics();
     refactoringTest =
