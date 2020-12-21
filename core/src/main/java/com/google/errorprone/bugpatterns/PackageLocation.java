@@ -17,8 +17,10 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
+import static java.lang.Math.max;
 
-import com.google.common.base.CharMatcher;
+import com.google.common.base.Joiner;
+import com.google.common.base.Splitter;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.StandardTags;
 import com.google.errorprone.VisitorState;
@@ -29,6 +31,7 @@ import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.tools.javac.code.Symbol.PackageSymbol;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
+import java.util.List;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
@@ -40,7 +43,8 @@ import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
     tags = StandardTags.STYLE)
 public class PackageLocation extends BugChecker implements CompilationUnitTreeMatcher {
 
-  private static final CharMatcher DOT_MATCHER = CharMatcher.is('.');
+  private static final Splitter DOT_SPLITTER = Splitter.on('.');
+  private static final Splitter PATH_SPLITTER = Splitter.on('/');
 
   @Override
   public Description matchCompilationUnit(CompilationUnitTree tree, VisitorState state) {
@@ -63,16 +67,19 @@ public class PackageLocation extends BugChecker implements CompilationUnitTreeMa
     if (actualFileName == null) {
       return Description.NO_MATCH;
     }
-    String actualPath = actualFileName.substring(0, actualFileName.lastIndexOf('/'));
-    String expectedSuffix = "/" + DOT_MATCHER.replaceFrom(packageName, '/');
-    if (actualPath.endsWith(expectedSuffix)) {
+    List<String> actualPath =
+        PATH_SPLITTER.splitToList(actualFileName.substring(0, actualFileName.lastIndexOf('/')));
+    List<String> expectedSuffix = DOT_SPLITTER.splitToList(packageName);
+    List<String> actualSuffix =
+        actualPath.subList(max(0, actualPath.size() - expectedSuffix.size()), actualPath.size());
+    if (actualSuffix.equals(expectedSuffix)) {
       return Description.NO_MATCH;
     }
 
     String message =
         String.format(
             "Expected package %s to be declared in a directory ending with %s, instead found %s",
-            packageName, expectedSuffix, actualPath);
+            packageName, Joiner.on('/').join(expectedSuffix), Joiner.on('/').join(actualSuffix));
     return buildDescription(tree.getPackageName()).setMessage(message).build();
   }
 }
