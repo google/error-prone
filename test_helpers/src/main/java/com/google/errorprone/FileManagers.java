@@ -18,6 +18,7 @@ package com.google.errorprone;
 
 import static com.google.common.base.StandardSystemProperty.JAVA_CLASS_PATH;
 import static com.google.common.collect.ImmutableList.toImmutableList;
+import static com.google.common.collect.Streams.stream;
 import static java.lang.ThreadLocal.withInitial;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Arrays.stream;
@@ -90,8 +91,8 @@ public final class FileManagers {
 
   /** Returns the current runtime's classpath. */
   private static ImmutableList<Path> systemClassPath() {
-    return Splitter.on(File.pathSeparatorChar)
-        .splitToStream(JAVA_CLASS_PATH.value())
+    // splitToStream isn't available if Android guava is on the classpath
+    return stream(Splitter.on(File.pathSeparatorChar).split(JAVA_CLASS_PATH.value()))
         .map(Paths::get)
         .collect(toImmutableList());
   }

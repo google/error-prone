@@ -19,7 +19,10 @@ package com.google.errorprone;
 import static com.google.common.base.Preconditions.checkState;
 import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.common.truth.Truth.assertWithMessage;
+import static com.google.errorprone.FileObjects.forResource;
+import static com.google.errorprone.FileObjects.forSourceLines;
 import static java.nio.charset.StandardCharsets.UTF_8;
+import static java.util.Arrays.stream;
 import static org.junit.Assert.fail;
 
 import com.google.common.base.Joiner;
@@ -45,7 +48,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
@@ -56,7 +58,6 @@ import javax.tools.Diagnostic;
 import javax.tools.JavaCompiler;
 import javax.tools.JavaCompiler.CompilationTask;
 import javax.tools.JavaFileObject;
-import javax.tools.StandardLocation;
 
 /** Helps test Error Prone bug checkers and compilations. */
 @CheckReturnValue
@@ -78,7 +79,7 @@ public class CompilationTestHelper {
   private final DiagnosticTestHelper diagnosticHelper;
   private final BaseErrorProneJavaCompiler compiler;
   private final ByteArrayOutputStream outputStream;
-  private final ErrorProneInMemoryFileManager fileManager;
+  private final Class<?> clazz;
   private final List<JavaFileObject> sources = new ArrayList<>();
   private ImmutableList<String> extraArgs = ImmutableList.of();
   @Nullable private ImmutableList<Class<?>> overrideClasspath;
@@ -91,12 +92,7 @@ public class CompilationTestHelper {
   private boolean run = false;
 
   private CompilationTestHelper(ScannerSupplier scannerSupplier, String checkName, Class<?> clazz) {
-    this.fileManager = new ErrorProneInMemoryFileManager(clazz);
-    try {
-      fileManager.setLocation(StandardLocation.SOURCE_PATH, Collections.emptyList());
-    } catch (IOException e) {
-      throw new UncheckedIOException(e);
-    }
+    this.clazz = clazz;
     this.diagnosticHelper = new DiagnosticTestHelper(checkName);
     this.outputStream = new ByteArrayOutputStream();
     this.compiler = new BaseErrorProneJavaCompiler(JavacTool.create(), scannerSupplier);
@@ -188,7 +184,7 @@ public class CompilationTestHelper {
   // TODO(eaftan): We could eliminate this path parameter and just infer the path from the
   // package and class name
   public CompilationTestHelper addSourceLines(String path, String... lines) {
-    this.sources.add(fileManager.forSourceLines(path, lines));
+    this.sources.add(forSourceLines(path, lines));
     return this;
   }
 
@@ -200,7 +196,7 @@ public class CompilationTestHelper {
    * @param path the path to the source file
    */
   public CompilationTestHelper addSourceFile(String path) {
-    this.sources.add(fileManager.forResource(path));
+    this.sources.add(forResource(clazz, path));
     return this;
   }
 
@@ -221,7 +217,7 @@ public class CompilationTestHelper {
       return this;
     }
     return setArgs(
-        Arrays.stream(modules)
+        stream(modules)
             .map(m -> String.format("--add-exports=%s=ALL-UNNAMED", m))
             .collect(toImmutableList()));
   }
@@ -359,13 +355,12 @@ public class CompilationTestHelper {
     if (checkWellFormed) {
       checkWellFormed(sources, processedArgs);
     }
-    fileManager.createAndInstallTempFolderForOutput();
     return compiler
             .getTask(
                 new PrintWriter(
                     new BufferedWriter(new OutputStreamWriter(outputStream, UTF_8)),
                     /*autoFlush=*/ true),
-                fileManager,
+                FileManagers.testFileManager(),
                 diagnosticHelper.collector,
                 /* options= */ ImmutableList.copyOf(processedArgs),
                 /* classes= */ ImmutableList.of(),
@@ -375,8 +370,8 @@ public class CompilationTestHelper {
         : Result.ERROR;
   }
 
+  // TODO(b/176108531): check for non-Error Prone diagnostics without compiling everything twice
   private void checkWellFormed(Iterable<JavaFileObject> sources, List<String> args) {
-    fileManager.createAndInstallTempFolderForOutput();
     JavaCompiler compiler = JavacTool.create();
     OutputStream outputStream = new ByteArrayOutputStream();
     List<String> remainingArgs = null;
@@ -390,7 +385,7 @@ public class CompilationTestHelper {
             new PrintWriter(
                 new BufferedWriter(new OutputStreamWriter(outputStream, UTF_8)),
                 /*autoFlush=*/ true),
-            fileManager,
+            FileManagers.testFileManager(),
             null,
             remainingArgs,
             null,

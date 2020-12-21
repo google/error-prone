@@ -23,6 +23,8 @@ import static com.google.common.collect.Streams.stream;
 import static com.google.common.truth.Truth.assertAbout;
 import static com.google.common.truth.Truth.assertThat;
 import static com.google.common.truth.Truth.assertWithMessage;
+import static com.google.errorprone.FileObjects.forResource;
+import static com.google.errorprone.FileObjects.forSourceLines;
 import static com.google.testing.compile.JavaSourceSubjectFactory.javaSource;
 import static org.junit.Assert.fail;
 
@@ -56,7 +58,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.UncheckedIOException;
-import java.nio.file.FileAlreadyExistsException;
+import java.net.URI;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -142,8 +144,8 @@ public class BugCheckerRefactoringTestHelper {
   }
 
   private final Map<JavaFileObject, JavaFileObject> sources = new HashMap<>();
+  private final Class<?> clazz;
   private final ErrorProneScanner scanner;
-  private final ErrorProneInMemoryFileManager fileManager;
 
   private FixChooser fixChooser = FixChoosers.FIRST;
   private List<String> options = ImmutableList.of();
@@ -153,7 +155,7 @@ public class BugCheckerRefactoringTestHelper {
   private boolean run = false;
 
   private BugCheckerRefactoringTestHelper(Class<?> clazz, ErrorProneScanner scanner) {
-    this.fileManager = new ErrorProneInMemoryFileManager(clazz);
+    this.clazz = clazz;
     this.scanner = scanner;
   }
 
@@ -179,13 +181,11 @@ public class BugCheckerRefactoringTestHelper {
   }
 
   public BugCheckerRefactoringTestHelper.ExpectOutput addInput(String inputFilename) {
-    return new ExpectOutput(fileManager.forResource(inputFilename));
+    return new ExpectOutput(forResource(clazz, inputFilename));
   }
 
   public BugCheckerRefactoringTestHelper.ExpectOutput addInputLines(String path, String... input) {
-    String inputPath = getPath("in/", path);
-    assertThat(fileManager.exists(inputPath)).isFalse();
-    return new ExpectOutput(fileManager.forSourceLines(inputPath, input));
+    return new ExpectOutput(forSourceLines(path, input));
   }
 
   public BugCheckerRefactoringTestHelper setFixChooser(FixChooser chooser) {
@@ -274,13 +274,12 @@ public class BugCheckerRefactoringTestHelper {
       throw new IllegalArgumentException("Exception during argument processing: " + e);
     }
     context.put(ErrorProneOptions.class, errorProneOptions);
-    fileManager.createAndInstallTempFolderForOutput();
     StringWriter out = new StringWriter();
     JavacTaskImpl task =
         (JavacTaskImpl)
             tool.getTask(
                 new PrintWriter(out, true),
-                fileManager,
+                FileManagers.testFileManager(),
                 diagnosticsCollector,
                 ImmutableList.copyOf(errorProneOptions.getRemainingArgs()),
                 /*classes=*/ null,
@@ -288,12 +287,13 @@ public class BugCheckerRefactoringTestHelper {
                 context);
     Iterable<? extends CompilationUnitTree> trees = task.parse();
     task.analyze();
-    ImmutableMap<JavaFileObject, ? extends CompilationUnitTree> bySource =
-        stream(trees).collect(toImmutableMap(t -> t.getSourceFile(), t -> t));
+    ImmutableMap<URI, ? extends CompilationUnitTree> byURI =
+        stream(trees).collect(toImmutableMap(t -> t.getSourceFile().toUri(), t -> t));
+    URI inputURI = input.toUri();
     assertWithMessage(out + Joiner.on('\n').join(diagnosticsCollector.getDiagnostics()))
-        .that(bySource)
-        .containsKey(input);
-    JCCompilationUnit tree = (JCCompilationUnit) bySource.get(input);
+        .that(byURI)
+        .containsKey(inputURI);
+    JCCompilationUnit tree = (JCCompilationUnit) byURI.get(inputURI);
     Iterable<Diagnostic<? extends JavaFileObject>> errorDiagnostics =
         Iterables.filter(
             diagnosticsCollector.getDiagnostics(), d -> d.getKind() == Diagnostic.Kind.ERROR);
@@ -348,27 +348,16 @@ public class BugCheckerRefactoringTestHelper {
     }
 
     public BugCheckerRefactoringTestHelper addOutputLines(String path, String... output) {
-      String outputPath = getPath("out/", path);
-      if (fileManager.exists(outputPath)) {
-        throw new UncheckedIOException(new FileAlreadyExistsException(outputPath));
-      }
-      return addInputAndOutput(input, fileManager.forSourceLines(outputPath, output));
+      return addInputAndOutput(input, forSourceLines(path, output));
     }
 
     public BugCheckerRefactoringTestHelper addOutput(String outputFilename) {
-      return addInputAndOutput(input, fileManager.forResource(outputFilename));
+      return addInputAndOutput(input, forResource(clazz, outputFilename));
     }
 
     public BugCheckerRefactoringTestHelper expectUnchanged() {
       return addInputAndOutput(input, input);
     }
-  }
-
-  private String getPath(String prefix, String path) {
-    // return prefix + path;
-    int insertAt = path.lastIndexOf('/');
-    insertAt = insertAt == -1 ? 0 : insertAt + 1;
-    return new StringBuilder(path).insert(insertAt, prefix + "/").toString();
   }
 
   private static void closeCompiler(Context context) {
