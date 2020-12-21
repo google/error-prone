@@ -3391,6 +3391,14 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/google/errorprone/apply/FileDestination.html" title="interface in com.google.errorprone.apply"><span class="type-name-link">FileDestination</span></a> - Interface in <a href="com/google/errorprone/apply/package-summary.html">com.google.errorprone.apply</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/FileManagers.html" title="class in com.google.errorprone"><span class="type-name-link">FileManagers</span></a> - Class in <a href="com/google/errorprone/package-summary.html">com.google.errorprone</a></dt>
+<dd>
+<div class="block">Manages <code>JavacFileManager</code>s for use in Error Prone's test.</div>
+</dd>
+<dt><a href="com/google/errorprone/FileObjects.html" title="class in com.google.errorprone"><span class="type-name-link">FileObjects</span></a> - Class in <a href="com/google/errorprone/package-summary.html">com.google.errorprone</a></dt>
+<dd>
+<div class="block">Factories for in-memory <a href="https://docs.oracle.com/javase/8/docs/api/javax/tools/JavaFileObject.html" title="class or interface in javax.tools" class="external-link"><code>JavaFileObject</code></a>s, for testing.</div>
+</dd>
 <dt><a href="com/google/errorprone/apply/FileSource.html" title="interface in com.google.errorprone.apply"><span class="type-name-link">FileSource</span></a> - Interface in <a href="com/google/errorprone/apply/package-summary.html">com.google.errorprone.apply</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/ErrorProneInMemoryFileManager.html#fileSystem()">fileSystem()</a></span> - Method in class com.google.errorprone.<a href="com/google/errorprone/ErrorProneInMemoryFileManager.html" title="class in com.google.errorprone">ErrorProneInMemoryFileManager</a></dt>
@@ -3699,6 +3707,10 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Loads a resource of the provided class into a <a href="https://docs.oracle.com/javase/8/docs/api/javax/tools/JavaFileObject.html" title="class or interface in javax.tools" class="external-link"><code>JavaFileObject</code></a>.</div>
 </dd>
+<dt><span class="member-name-link"><a href="com/google/errorprone/FileObjects.html#forResource(java.lang.Class,java.lang.String)">forResource(Class&lt;?&gt;, String)</a></span> - Static method in class com.google.errorprone.<a href="com/google/errorprone/FileObjects.html" title="class in com.google.errorprone">FileObjects</a></dt>
+<dd>
+<div class="block">Loads a resource of the provided class into a <a href="https://docs.oracle.com/javase/8/docs/api/javax/tools/JavaFileObject.html" title="class or interface in javax.tools" class="external-link"><code>JavaFileObject</code></a>.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/ErrorProneInMemoryFileManager.html#forResource(java.lang.String)">forResource(String)</a></span> - Method in class com.google.errorprone.<a href="com/google/errorprone/ErrorProneInMemoryFileManager.html" title="class in com.google.errorprone">ErrorProneInMemoryFileManager</a></dt>
 <dd>
 <div class="block">Loads a resource of the class passed into the constructor into a <a href="https://docs.oracle.com/javase/8/docs/api/javax/tools/JavaFileObject.html" title="class or interface in javax.tools" class="external-link"><code>JavaFileObject</code></a>.</div>
@@ -3707,7 +3719,15 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Loads resources of the provided class into <a href="https://docs.oracle.com/javase/8/docs/api/javax/tools/JavaFileObject.html" title="class or interface in javax.tools" class="external-link"><code>JavaFileObject</code></a>s.</div>
 </dd>
+<dt><span class="member-name-link"><a href="com/google/errorprone/FileObjects.html#forResources(java.lang.Class,java.lang.String...)">forResources(Class&lt;?&gt;, String...)</a></span> - Static method in class com.google.errorprone.<a href="com/google/errorprone/FileObjects.html" title="class in com.google.errorprone">FileObjects</a></dt>
+<dd>
+<div class="block">Loads resources of the provided class into <a href="https://docs.oracle.com/javase/8/docs/api/javax/tools/JavaFileObject.html" title="class or interface in javax.tools" class="external-link"><code>JavaFileObject</code></a>s.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/ErrorProneInMemoryFileManager.html#forSourceLines(java.lang.String,java.lang.String...)">forSourceLines(String, String...)</a></span> - Method in class com.google.errorprone.<a href="com/google/errorprone/ErrorProneInMemoryFileManager.html" title="class in com.google.errorprone">ErrorProneInMemoryFileManager</a></dt>
+<dd>
+<div class="block">Creates a <a href="https://docs.oracle.com/javase/8/docs/api/javax/tools/JavaFileObject.html" title="class or interface in javax.tools" class="external-link"><code>JavaFileObject</code></a> with the given name and content.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/google/errorprone/FileObjects.html#forSourceLines(java.lang.String,java.lang.String...)">forSourceLines(String, String...)</a></span> - Static method in class com.google.errorprone.<a href="com/google/errorprone/FileObjects.html" title="class in com.google.errorprone">FileObjects</a></dt>
 <dd>
 <div class="block">Creates a <a href="https://docs.oracle.com/javase/8/docs/api/javax/tools/JavaFileObject.html" title="class or interface in javax.tools" class="external-link"><code>JavaFileObject</code></a> with the given name and content.</div>
 </dd>
@@ -11181,6 +11201,10 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/TestExceptionChecker.html#%3Cinit%3E()">TestExceptionChecker()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/TestExceptionChecker.html" title="class in com.google.errorprone.bugpatterns">TestExceptionChecker</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/google/errorprone/FileManagers.html#testFileManager()">testFileManager()</a></span> - Static method in class com.google.errorprone.<a href="com/google/errorprone/FileManagers.html" title="class in com.google.errorprone">FileManagers</a></dt>
+<dd>
+<div class="block">Returns a <code>JavacFileManager</code> for use in compiler-based tests.</div>
+</dd>
 <dt><a href="com/google/errorprone/matchers/TestNgMatchers.html" title="class in com.google.errorprone.matchers"><span class="type-name-link">TestNgMatchers</span></a> - Class in <a href="com/google/errorprone/matchers/package-summary.html">com.google.errorprone.matchers</a></dt>
 <dd>
 <div class="block">Matchers for code patterns which appear to be TestNG-based tests.</div>
