@@ -35,6 +35,7 @@ import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.InjectMatchers;
 import com.google.errorprone.matchers.Matcher;
+import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.LambdaExpressionTree;
 import com.sun.source.tree.MethodTree;
@@ -82,6 +83,11 @@ public final class MutableMethodReturnType extends BugChecker implements MethodT
 
     Type returnType = methodSymbol.getReturnType();
     if (ImmutableCollections.isImmutableType(returnType)) {
+      return Description.NO_MATCH;
+    }
+    // Iterable is technically mutable, but there isn't an Immutable* equivalent, and switching
+    // to an immutable list or set may not be the right choice for all APIs
+    if (ASTHelpers.isSameType(returnType, state.getSymtab().iterableType, state)) {
       return Description.NO_MATCH;
     }
 

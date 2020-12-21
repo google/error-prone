@@ -276,9 +276,10 @@ public class MutableMethodReturnTypeTest {
             "Test.java",
             "import com.google.common.collect.ImmutableList;",
             "import com.google.common.collect.ImmutableSet;",
+            "import java.util.Collection;",
             "class Test {",
             "  // BUG: Diagnostic contains: ImmutableCollection<String> foo()",
-            "  final Iterable<String> foo() {",
+            "  final Collection<String> foo() {",
             "    if (true) {",
             "      return ImmutableList.of();",
             "    } else {",
@@ -414,6 +415,20 @@ public class MutableMethodReturnTypeTest {
             "      };",
             "    List<String> foo = fooProvider.get();",
             "    return foo.size();",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void negative_iterable() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.common.collect.ImmutableList;",
+            "class Test {",
+            "  final Iterable<String> foo() {",
+            "    return ImmutableList.of();",
             "  }",
             "}")
         .doTest();
