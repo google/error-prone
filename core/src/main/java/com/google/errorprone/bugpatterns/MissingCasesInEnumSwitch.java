@@ -26,12 +26,16 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.SwitchTreeMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
+import com.google.errorprone.util.RuntimeVersion;
 import com.sun.source.tree.CaseTree;
+import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.SwitchTree;
 import com.sun.tools.javac.code.Type;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import javax.lang.model.element.ElementKind;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
@@ -55,7 +59,7 @@ public class MissingCasesInEnumSwitch extends BugChecker implements SwitchTreeMa
     }
     ImmutableSet<String> handled =
         tree.getCases().stream()
-            .map(CaseTree::getExpression)
+            .flatMap(MissingCasesInEnumSwitch::getExpressions)
             .filter(IdentifierTree.class::isInstance)
             .map(e -> ((IdentifierTree) e).getName().toString())
             .collect(toImmutableSet());
@@ -89,5 +93,20 @@ public class MissingCasesInEnumSwitch extends BugChecker implements SwitchTreeMa
       message.append(String.format(", and %d others", unhandled.size() - numberToShow));
     }
     return message.toString();
+  }
+
+  @SuppressWarnings("unchecked")
+  private static Stream<? extends ExpressionTree> getExpressions(CaseTree caseTree) {
+    try {
+      if (RuntimeVersion.isAtLeast12()) {
+        return ((List<? extends ExpressionTree>)
+                CaseTree.class.getMethod("getExpressions").invoke(caseTree))
+            .stream();
+      } else {
+        return Stream.of(caseTree.getExpression());
+      }
+    } catch (ReflectiveOperationException e) {
+      throw new LinkageError(e.getMessage(), e);
+    }
   }
 }
