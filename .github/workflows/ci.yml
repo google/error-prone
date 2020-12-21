@@ -105,4 +105,6 @@ jobs:
         with:
           java-version: 15
       - name: 'Generate latest docs'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: ./util/generate-latest-docs.sh
