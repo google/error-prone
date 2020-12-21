@@ -1571,7 +1571,7 @@ public class ASTHelpers {
         SwitchTree switchTree = (SwitchTree) t;
         return getType(switchTree.getExpression());
       }
-      // TODO(bhagwani): When the ErrorProne project switches to JDK 12, we should check
+      // TODO(b/176098078): When the ErrorProne project switches to JDK 12, we should check
       // for SwitchExpressionTree.
       return null;
     }

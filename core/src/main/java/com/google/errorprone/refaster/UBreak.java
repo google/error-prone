@@ -44,7 +44,7 @@ final class UBreak extends USimpleStatement implements BreakTree {
     return new UBreak((label == null) ? null : StringName.of(label));
   }
 
-  // @Override for JDK 12 only
+  // TODO(b/176098078): Add @Override once compiling JDK 12+
   public ExpressionTree getValue() {
     return null;
   }
