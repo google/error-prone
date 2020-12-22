@@ -213,7 +213,6 @@ public class TruthIncompatibleTypeTest {
             "    assertThat(xs).containsExactly((Object[]) x);",
             "  }",
             "}")
-        .ignoreJavacErrors()
         .doTest();
   }
 

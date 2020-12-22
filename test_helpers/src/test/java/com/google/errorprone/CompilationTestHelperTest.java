@@ -241,9 +241,7 @@ public class CompilationTestHelperTest {
                         "    return}",
                         "}")
                     .doTest());
-    assertThat(expected)
-        .hasMessageThat()
-        .contains("Test program failed to compile with non Error Prone error");
+    assertThat(expected).hasMessageThat().contains("error: illegal start of expression");
   }
 
   @Test
@@ -336,7 +334,6 @@ public class CompilationTestHelperTest {
                     .addSourceLines("Test.java", "public class Test {}")
                     .setArgs(
                         ImmutableList.of("-Xep:ReturnTreeChecker:Squirrels")) // Bad flag crashes.
-                    .ignoreJavacErrors()
                     .doTest());
     assertThat(expected)
         .hasMessageThat()
@@ -545,7 +542,6 @@ public class CompilationTestHelperTest {
                 + WithClassPathSuper.class.getCanonicalName(),
             "class Test extends WithClassPath {}")
         .withClasspath(CompilationTestHelperTest.class, WithClassPath.class)
-        .ignoreJavacErrors()
         .matchAllDiagnostics()
         .expectResult(Result.ERROR)
         .doTest();

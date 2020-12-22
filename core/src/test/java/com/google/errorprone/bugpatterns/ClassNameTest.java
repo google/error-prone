@@ -103,7 +103,6 @@ public class ClassNameTest {
             "// BUG: Diagnostic contains: should be declared in a file named Test.java",
             "public class Test {",
             "}")
-        .ignoreJavacErrors()
         .matchAllDiagnostics()
         .doTest();
   }
