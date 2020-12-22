@@ -20,6 +20,8 @@ import static com.google.common.truth.Truth.assertThat;
 import static com.google.common.truth.Truth.assertWithMessage;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.DiagnosticTestHelper.diagnosticMessage;
+import static com.google.errorprone.FileObjects.forResources;
+import static com.google.errorprone.FileObjects.forSourceLines;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.constValue;
 import static java.util.Locale.ENGLISH;
@@ -100,9 +102,7 @@ public class ErrorProneCompilerIntegrationTest {
   public void fileWithError() {
     Result exitCode =
         compiler.compile(
-            compiler
-                .fileManager()
-                .forResources(BadShiftAmount.class, "testdata/BadShiftAmountPositiveCases.java"));
+            forResources(BadShiftAmount.class, "testdata/BadShiftAmountPositiveCases.java"));
     assertThat(outputStream.toString(), exitCode, is(Result.ERROR));
 
     Matcher<? super Iterable<Diagnostic<? extends JavaFileObject>>> matcher =
@@ -118,11 +118,9 @@ public class ErrorProneCompilerIntegrationTest {
     compiler = compilerBuilder.build();
     Result exitCode =
         compiler.compile(
-            compiler
-                .fileManager()
-                .forResources(
-                    NonAtomicVolatileUpdate.class,
-                    "testdata/NonAtomicVolatileUpdatePositiveCases.java"));
+            forResources(
+                NonAtomicVolatileUpdate.class,
+                "testdata/NonAtomicVolatileUpdatePositiveCases.java"));
     assertThat(outputStream.toString(), exitCode, is(Result.OK));
 
     Matcher<? super Iterable<Diagnostic<? extends JavaFileObject>>> matcher =
@@ -136,9 +134,7 @@ public class ErrorProneCompilerIntegrationTest {
   public void fileWithMultipleTopLevelClasses() {
     Result exitCode =
         compiler.compile(
-            compiler
-                .fileManager()
-                .forResources(getClass(), "testdata/MultipleTopLevelClassesWithNoErrors.java"));
+            forResources(getClass(), "testdata/MultipleTopLevelClassesWithNoErrors.java"));
     assertThat(outputStream.toString(), exitCode, is(Result.OK));
   }
 
@@ -146,12 +142,10 @@ public class ErrorProneCompilerIntegrationTest {
   public void fileWithMultipleTopLevelClassesExtends() {
     Result exitCode =
         compiler.compile(
-            compiler
-                .fileManager()
-                .forResources(
-                    getClass(),
-                    "testdata/MultipleTopLevelClassesWithNoErrors.java",
-                    "testdata/ExtendedMultipleTopLevelClassesWithNoErrors.java"));
+            forResources(
+                getClass(),
+                "testdata/MultipleTopLevelClassesWithNoErrors.java",
+                "testdata/ExtendedMultipleTopLevelClassesWithNoErrors.java"));
     assertThat(outputStream.toString(), exitCode, is(Result.OK));
   }
 
@@ -163,12 +157,10 @@ public class ErrorProneCompilerIntegrationTest {
   public void fileWithMultipleTopLevelClassesExtendsWithError() {
     Result exitCode =
         compiler.compile(
-            compiler
-                .fileManager()
-                .forResources(
-                    getClass(),
-                    "testdata/MultipleTopLevelClassesWithErrors.java",
-                    "testdata/ExtendedMultipleTopLevelClassesWithErrors.java"));
+            forResources(
+                getClass(),
+                "testdata/MultipleTopLevelClassesWithErrors.java",
+                "testdata/ExtendedMultipleTopLevelClassesWithErrors.java"));
     assertThat(outputStream.toString(), exitCode, is(Result.ERROR));
     Matcher<? super Iterable<Diagnostic<? extends JavaFileObject>>> matcher =
         hasItem(diagnosticMessage(containsString("[SelfAssignment]")));
@@ -192,12 +184,10 @@ public class ErrorProneCompilerIntegrationTest {
     compiler = compilerBuilder.build();
     Result exitCode =
         compiler.compile(
-            compiler
-                .fileManager()
-                .forResources(
-                    getClass(),
-                    "testdata/MultipleTopLevelClassesWithErrors.java",
-                    "testdata/ExtendedMultipleTopLevelClassesWithErrors.java"));
+            forResources(
+                getClass(),
+                "testdata/MultipleTopLevelClassesWithErrors.java",
+                "testdata/ExtendedMultipleTopLevelClassesWithErrors.java"));
     assertThat(outputStream.toString(), exitCode, is(Result.ERROR));
     Matcher<? super Iterable<Diagnostic<? extends JavaFileObject>>> matcher =
         hasItem(
@@ -215,9 +205,7 @@ public class ErrorProneCompilerIntegrationTest {
   public void annotationProcessingWorks() {
     Result exitCode =
         compiler.compile(
-            compiler
-                .fileManager()
-                .forResources(getClass(), "testdata/UsesAnnotationProcessor.java"),
+            forResources(getClass(), "testdata/UsesAnnotationProcessor.java"),
             Arrays.asList(new NullAnnotationProcessor()));
     assertThat(outputStream.toString(), exitCode, is(Result.OK));
   }
@@ -227,16 +215,14 @@ public class ErrorProneCompilerIntegrationTest {
   public void reportReadyForAnalysisOnce() {
     Result exitCode =
         compiler.compile(
-            compiler
-                .fileManager()
-                .forResources(
-                    getClass(),
-                    "testdata/FlowConstants.java",
-                    "testdata/FlowSub.java",
-                    // This order is important: the superclass needs to occur after the subclass in
-                    // the sources so it goes through flow twice (once so it can be used when the
-                    // subclass is desugared, once normally).
-                    "testdata/FlowSuper.java"));
+            forResources(
+                getClass(),
+                "testdata/FlowConstants.java",
+                "testdata/FlowSub.java",
+                // This order is important: the superclass needs to occur after the subclass in
+                // the sources so it goes through flow twice (once so it can be used when the
+                // subclass is desugared, once normally).
+                "testdata/FlowSuper.java"));
     assertThat(outputStream.toString(), exitCode, is(Result.OK));
   }
 
@@ -255,7 +241,9 @@ public class ErrorProneCompilerIntegrationTest {
     Result exitCode =
         compiler.compile(
             Arrays.asList(
-                compiler.fileManager().forSourceLines("Test.java", "public class Test {}")));
+                forSourceLines(
+                    "Test.java", //
+                    "public class Test {}")));
 
     Matcher<? super Iterable<Diagnostic<? extends JavaFileObject>>> matcher =
         not(hasItem(diagnosticMessage(containsString("[ConstructorMatcher]"))));
@@ -292,10 +280,11 @@ public class ErrorProneCompilerIntegrationTest {
     Result exitCode =
         compiler.compile(
             Arrays.asList(
-                compiler
-                    .fileManager()
-                    .forSourceLines(
-                        "Test.java", "public class Test {", "  public Test() {}", "}")));
+                forSourceLines(
+                    "Test.java", //
+                    "public class Test {",
+                    "  public Test() {}",
+                    "}")));
 
     Matcher<? super Iterable<Diagnostic<? extends JavaFileObject>>> matcher =
         not(hasItem(diagnosticMessage(containsString("[SuperCallMatcher]"))));
@@ -315,13 +304,11 @@ public class ErrorProneCompilerIntegrationTest {
             compiler.compile(
                 args,
                 Arrays.asList(
-                    compiler
-                        .fileManager()
-                        .forSourceLines(
-                            "Test.java", //
-                            "public class Test {",
-                            "  public Test() {}",
-                            "}"))));
+                    forSourceLines(
+                        "Test.java", //
+                        "public class Test {",
+                        "  public Test() {}",
+                        "}"))));
   }
 
   @Test
@@ -334,8 +321,7 @@ public class ErrorProneCompilerIntegrationTest {
       "  }",
       "}"
     };
-    List<JavaFileObject> fileObjects =
-        Arrays.asList(compiler.fileManager().forSourceLines("Test.java", testFile));
+    List<JavaFileObject> fileObjects = Arrays.asList(forSourceLines("Test.java", testFile));
     Result exitCode = compiler.compile(fileObjects);
     outputStream.flush();
     assertThat(diagnosticHelper.getDiagnostics()).isEmpty();
@@ -364,8 +350,7 @@ public class ErrorProneCompilerIntegrationTest {
       "  }",
       "}"
     };
-    List<JavaFileObject> fileObjects =
-        Arrays.asList(compiler.fileManager().forSourceLines("Test.java", testFile));
+    List<JavaFileObject> fileObjects = Arrays.asList(forSourceLines("Test.java", testFile));
     String[] args = {"-Xep:SelfAssignment:WARN"};
     Result exitCode = compiler.compile(args, fileObjects);
     outputStream.flush();
@@ -392,8 +377,7 @@ public class ErrorProneCompilerIntegrationTest {
       "  }",
       "}"
     };
-    List<JavaFileObject> fileObjects =
-        Arrays.asList(compiler.fileManager().forSourceLines("Test.java", testFile));
+    List<JavaFileObject> fileObjects = Arrays.asList(forSourceLines("Test.java", testFile));
     String[] args = {"-Xep:EmptyIf"};
     Result exitCode = compiler.compile(args, fileObjects);
     outputStream.flush();
@@ -422,7 +406,7 @@ public class ErrorProneCompilerIntegrationTest {
     };
 
     List<JavaFileObject> fileObjects =
-        Arrays.asList(compiler.fileManager().forSourceLines("Generated.java", generatedFile));
+        Arrays.asList(forSourceLines("Generated.java", generatedFile));
 
     {
       String[] args = {"-Xep:RemoveUnusedImports:WARN"};
@@ -458,7 +442,7 @@ public class ErrorProneCompilerIntegrationTest {
     };
 
     List<JavaFileObject> fileObjects =
-        Arrays.asList(compiler.fileManager().forSourceLines("Generated.java", generatedFile));
+        Arrays.asList(forSourceLines("Generated.java", generatedFile));
     {
       String[] args = {"-Xep:EmptyIf:WARN"};
       Result exitCode = compiler.compile(args, fileObjects);
@@ -493,9 +477,7 @@ public class ErrorProneCompilerIntegrationTest {
 
     String[] args = {"-Xep:EmptyIf:ERROR", "-XepDisableWarningsInGeneratedCode"};
     Result exitCode =
-        compiler.compile(
-            args,
-            Arrays.asList(compiler.fileManager().forSourceLines("Generated.java", generatedFile)));
+        compiler.compile(args, Arrays.asList(forSourceLines("Generated.java", generatedFile)));
     outputStream.flush();
     assertThat(diagnosticHelper.getDiagnostics()).hasSize(1);
     assertThat(diagnosticHelper.getDiagnostics().get(0).getMessage(ENGLISH)).contains("[EmptyIf]");
@@ -517,16 +499,14 @@ public class ErrorProneCompilerIntegrationTest {
     Result exitCode =
         compiler.compile(
             Arrays.asList(
-                compiler
-                    .fileManager()
-                    .forSourceLines(
-                        "test/Test.java",
-                        "package Test;",
-                        "class Test {",
-                        "  void f() {",
-                        "    return;",
-                        "  }",
-                        "}")));
+                forSourceLines(
+                    "test/Test.java",
+                    "package Test;",
+                    "class Test {",
+                    "  void f() {",
+                    "    return;",
+                    "  }",
+                    "}")));
     assertWithMessage(outputStream.toString()).that(exitCode).isEqualTo(Result.ERROR);
     assertThat(diagnosticHelper.getDiagnostics()).hasSize(1);
     Diagnostic<? extends JavaFileObject> diag =
@@ -556,12 +536,10 @@ public class ErrorProneCompilerIntegrationTest {
         compiler.compile(
             new String[] {"-XDcompilePolicy=byfile"},
             Arrays.asList(
-                compiler
-                    .fileManager()
-                    .forSourceLines(
-                        "Test.java", //
-                        "package test;",
-                        "class Test {}")));
+                forSourceLines(
+                    "Test.java", //
+                    "package test;",
+                    "class Test {}")));
     outputStream.flush();
     assertWithMessage(outputStream.toString()).that(exitCode).isEqualTo(Result.OK);
   }
@@ -572,12 +550,10 @@ public class ErrorProneCompilerIntegrationTest {
         compiler.compile(
             new String[] {"-XDcompilePolicy=simple"},
             Arrays.asList(
-                compiler
-                    .fileManager()
-                    .forSourceLines(
-                        "Test.java", //
-                        "package test;",
-                        "class Test {}")));
+                forSourceLines(
+                    "Test.java", //
+                    "package test;",
+                    "class Test {}")));
     outputStream.flush();
     assertWithMessage(outputStream.toString()).that(exitCode).isEqualTo(Result.OK);
   }
@@ -603,14 +579,12 @@ public class ErrorProneCompilerIntegrationTest {
           "-XDshouldStopPolicyIfError=LOWER",
         },
         Arrays.asList(
-            compiler
-                .fileManager()
-                .forSourceLines(
-                    "Test.java",
-                    "package test;",
-                    "public class Test {",
-                    "  Object f() { return new NoSuch(); }",
-                    "}")));
+            forSourceLines(
+                "Test.java",
+                "package test;",
+                "public class Test {",
+                "  Object f() { return new NoSuch(); }",
+                "}")));
     outputStream.flush();
     String output = diagnosticHelper.getDiagnostics().toString();
     assertThat(output).contains("error: cannot find symbol");
@@ -650,14 +624,12 @@ public class ErrorProneCompilerIntegrationTest {
     };
     List<JavaFileObject> sources =
         Arrays.asList(
-            compiler
-                .fileManager()
-                .forSourceLines(
-                    "Test.java",
-                    "package test;",
-                    "public class Test {",
-                    "  Object f() { return \"XYLOPHONE\"; }",
-                    "}"));
+            forSourceLines(
+                "Test.java",
+                "package test;",
+                "public class Test {",
+                "  Object f() { return \"XYLOPHONE\"; }",
+                "}"));
 
     compilerBuilder.report(ScannerSupplier.fromBugCheckerClasses(ForbiddenString.class));
     compiler = compilerBuilder.build();
@@ -672,14 +644,12 @@ public class ErrorProneCompilerIntegrationTest {
     String[] args = {"-XepOpt:Forbidden=bananas"};
     List<JavaFileObject> sources =
         Arrays.asList(
-            compiler
-                .fileManager()
-                .forSourceLines(
-                    "Test.java",
-                    "package test;",
-                    "public class Test {",
-                    "  Object f() { return \"BANANAS\"; }",
-                    "}"));
+            forSourceLines(
+                "Test.java",
+                "package test;",
+                "public class Test {",
+                "  Object f() { return \"BANANAS\"; }",
+                "}"));
 
     // First compile forbids "bananas", should fail.
     compilerBuilder.report(ScannerSupplier.fromBugCheckerClasses(ForbiddenString.class));

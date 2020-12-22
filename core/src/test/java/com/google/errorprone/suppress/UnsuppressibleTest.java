@@ -17,6 +17,7 @@
 package com.google.errorprone.suppress;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.FileObjects.forResources;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
@@ -74,8 +75,7 @@ public class UnsuppressibleTest {
 
   @Test
   public void testPositiveCase() {
-    List<JavaFileObject> sources =
-        compiler.fileManager().forResources(getClass(), "UnsuppressiblePositiveCases.java");
+    List<JavaFileObject> sources = forResources(getClass(), "UnsuppressiblePositiveCases.java");
     assertThat(compiler.compile(sources), is(Result.ERROR));
     assertThat(diagnosticHelper.getDiagnostics().toString(), containsString("[MyChecker]"));
   }

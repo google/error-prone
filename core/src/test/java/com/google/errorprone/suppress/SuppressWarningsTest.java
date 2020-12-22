@@ -16,6 +16,7 @@
 
 package com.google.errorprone.suppress;
 
+import static com.google.errorprone.FileObjects.forResources;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
@@ -51,8 +52,7 @@ public class SuppressWarningsTest {
 
   @Test
   public void testNegativeCase() {
-    List<JavaFileObject> sources =
-        compiler.fileManager().forResources(getClass(), "SuppressWarningsNegativeCases.java");
+    List<JavaFileObject> sources = forResources(getClass(), "SuppressWarningsNegativeCases.java");
     assertThat(compiler.compile(sources), is(Result.OK));
   }
 }

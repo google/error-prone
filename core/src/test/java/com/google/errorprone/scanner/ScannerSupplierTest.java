@@ -21,7 +21,6 @@ import static com.google.common.truth.Truth.assertThat;
 import static com.google.common.truth.Truth8.assertThat;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.scanner.BuiltInCheckerSuppliers.getSuppliers;
-import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.junit.Assert.assertThrows;
 
 import com.google.common.base.Joiner;
@@ -38,6 +37,7 @@ import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.ErrorProneJavaCompilerTest;
 import com.google.errorprone.ErrorProneJavaCompilerTest.UnsuppressibleArrayEquals;
 import com.google.errorprone.ErrorProneOptions;
+import com.google.errorprone.FileManagers;
 import com.google.errorprone.InvalidCommandLineOptionException;
 import com.google.errorprone.bugpatterns.ArrayEquals;
 import com.google.errorprone.bugpatterns.BadShiftAmount;
@@ -63,7 +63,6 @@ import java.nio.file.FileSystem;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collections;
-import java.util.Locale;
 import java.util.Map;
 import java.util.function.Supplier;
 import javax.tools.JavaFileObject.Kind;
@@ -211,8 +210,7 @@ public class ScannerSupplierTest {
       FileSystem fileSystem, String name, String... lines)
       throws IOException, ClassNotFoundException {
     JavacTool javacTool = JavacTool.create();
-    JavacFileManager fileManager =
-        javacTool.getStandardFileManager(null, Locale.getDefault(), UTF_8);
+    JavacFileManager fileManager = FileManagers.testFileManager();
     Path tmp = fileSystem.getPath("tmp");
     Files.createDirectories(tmp);
     Path output = Files.createTempDirectory(tmp, "output");
@@ -654,9 +652,6 @@ public class ScannerSupplierTest {
   }
 
   private ScannerSupplierSubject assertScanner(ScannerSupplier scannerSupplier) {
-    return assertAbout(SCANNER_SUBJECT_FACTORY).that(scannerSupplier);
+    return assertAbout(ScannerSupplierSubject::new).that(scannerSupplier);
   }
-
-  private static final Subject.Factory<ScannerSupplierSubject, ScannerSupplier>
-      SCANNER_SUBJECT_FACTORY = ScannerSupplierSubject::new;
 }

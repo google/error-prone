@@ -14,17 +14,17 @@
 
 package com.google.errorprone.refaster;
 
-import static java.nio.charset.StandardCharsets.UTF_8;
+import static com.google.testing.compile.JavaFileObjects.forSourceString;
 
 import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.google.common.io.CharStreams;
 import com.google.errorprone.CodeTransformer;
+import com.google.errorprone.FileManagers;
 import com.google.errorprone.apply.DescriptionBasedDiff;
 import com.google.errorprone.apply.ImportOrganizer;
 import com.google.errorprone.apply.SourceFile;
-import com.google.testing.compile.JavaFileObjects;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.util.TreePath;
 import com.sun.tools.javac.api.JavacTaskImpl;
@@ -32,7 +32,6 @@ import com.sun.tools.javac.api.JavacTool;
 import com.sun.tools.javac.tree.JCTree.JCClassDecl;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 import java.io.IOException;
-import java.util.Locale;
 import javax.tools.DiagnosticCollector;
 import javax.tools.JavaCompiler;
 import javax.tools.JavaFileObject;
@@ -54,8 +53,7 @@ public abstract class CodeTransformerTestHelper {
   public JavaFileObject transform(JavaFileObject original) {
     JavaCompiler compiler = JavacTool.create();
     DiagnosticCollector<JavaFileObject> diagnosticsCollector = new DiagnosticCollector<>();
-    StandardJavaFileManager fileManager =
-        compiler.getStandardFileManager(diagnosticsCollector, Locale.ENGLISH, UTF_8);
+    StandardJavaFileManager fileManager = FileManagers.testFileManager();
     JavacTaskImpl task =
         (JavacTaskImpl)
             compiler.getTask(
@@ -77,7 +75,7 @@ public abstract class CodeTransformerTestHelper {
       transformer().apply(new TreePath(tree), task.getContext(), diff);
       diff.applyDifferences(sourceFile);
 
-      return JavaFileObjects.forSourceString(
+      return forSourceString(
           Iterables.getOnlyElement(Iterables.filter(tree.getTypeDecls(), JCClassDecl.class))
               .sym
               .getQualifiedName()

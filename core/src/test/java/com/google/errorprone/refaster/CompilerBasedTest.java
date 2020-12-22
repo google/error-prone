@@ -16,11 +16,11 @@
 
 package com.google.errorprone.refaster;
 
-import static java.nio.charset.StandardCharsets.UTF_8;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.io.CharStreams;
+import com.google.errorprone.FileManagers;
 import com.google.errorprone.apply.SourceFile;
 import com.google.testing.compile.JavaFileObjects;
 import com.sun.source.tree.CompilationUnitTree;
@@ -32,7 +32,6 @@ import com.sun.tools.javac.tree.TreeInfo;
 import com.sun.tools.javac.tree.TreeScanner;
 import com.sun.tools.javac.util.Context;
 import java.io.IOException;
-import java.util.Locale;
 import java.util.Map;
 import javax.tools.DiagnosticCollector;
 import javax.tools.JavaCompiler;
@@ -53,8 +52,7 @@ public class CompilerBasedTest {
   protected void compile(TreeScanner scanner, JavaFileObject fileObject) {
     JavaCompiler compiler = JavacTool.create();
     DiagnosticCollector<JavaFileObject> diagnosticsCollector = new DiagnosticCollector<>();
-    StandardJavaFileManager fileManager =
-        compiler.getStandardFileManager(diagnosticsCollector, Locale.ENGLISH, UTF_8);
+    StandardJavaFileManager fileManager = FileManagers.testFileManager();
     JavacTaskImpl task =
         (JavacTaskImpl)
             compiler.getTask(

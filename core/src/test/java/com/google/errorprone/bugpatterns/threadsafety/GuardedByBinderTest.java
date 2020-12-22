@@ -17,10 +17,11 @@
 package com.google.errorprone.bugpatterns.threadsafety;
 
 import static com.google.common.truth.Truth.assertThat;
+import static com.google.errorprone.FileObjects.forSourceLines;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.junit.Assert.fail;
 
-import com.google.errorprone.ErrorProneInMemoryFileManager;
+import com.google.errorprone.FileManagers;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.CompilationUnitTree;
@@ -47,15 +48,13 @@ import org.junit.runners.JUnit4;
 @RunWith(JUnit4.class)
 public class GuardedByBinderTest {
 
-  private final ErrorProneInMemoryFileManager fileManager = new ErrorProneInMemoryFileManager();
-
   @Test
   public void testInherited() {
     assertThat(
             bind(
                 "Test",
                 "slock",
-                fileManager.forSourceLines(
+                forSourceLines(
                     "threadsafety/Test.java",
                     "package threadsafety;",
                     "class Super {",
@@ -72,7 +71,7 @@ public class GuardedByBinderTest {
             bind(
                 "Test",
                 "lock",
-                fileManager.forSourceLines(
+                forSourceLines(
                     "threadsafety/Test.java",
                     "package threadsafety;",
                     "class Test {",
@@ -87,7 +86,7 @@ public class GuardedByBinderTest {
             bind(
                 "Test",
                 "s.f.g().f.g().lock",
-                fileManager.forSourceLines(
+                forSourceLines(
                     "threadsafety/Test.java",
                     "package threadsafety;",
                     "import javax.annotation.concurrent.GuardedBy;",
@@ -108,7 +107,7 @@ public class GuardedByBinderTest {
     bindFail(
         "Test",
         "Super.this.lock",
-        fileManager.forSourceLines(
+        forSourceLines(
             "threadsafety/Test.java",
             "package threadsafety;",
             "import javax.annotation.concurrent.GuardedBy;",
@@ -124,7 +123,7 @@ public class GuardedByBinderTest {
             bind(
                 "Test",
                 "Test.class",
-                fileManager.forSourceLines(
+                forSourceLines(
                     "threadsafety/Test.java", "package threadsafety;", "class Test {", "}")))
         .isEqualTo("(CLASS_LITERAL threadsafety.Test)");
   }
@@ -135,7 +134,7 @@ public class GuardedByBinderTest {
             bind(
                 "Test",
                 "Super.class",
-                fileManager.forSourceLines(
+                forSourceLines(
                     "threadsafety/Test.java",
                     "package threadsafety;",
                     "class Super {}",
@@ -148,7 +147,7 @@ public class GuardedByBinderTest {
     bindFail(
         "Test",
         "t.class",
-        fileManager.forSourceLines(
+        forSourceLines(
             "threadsafety/Test.java",
             "package threadsafety;",
             "import javax.annotation.concurrent.GuardedBy;",
@@ -163,7 +162,7 @@ public class GuardedByBinderTest {
     bindFail(
         "Test",
         "Super.class",
-        fileManager.forSourceLines(
+        forSourceLines(
             "threadsafety/Test.java",
             "package threadsafety;",
             "import javax.annotation.concurrent.GuardedBy;",
@@ -175,7 +174,7 @@ public class GuardedByBinderTest {
     bindFail(
         "Test",
         "Segment.this",
-        fileManager.forSourceLines(
+        forSourceLines(
             "threadsafety/Test.java",
             "package threadsafety;",
             "import javax.annotation.concurrent.GuardedBy;",
@@ -188,7 +187,7 @@ public class GuardedByBinderTest {
             bind(
                 "Test",
                 "Outer.this.lock",
-                fileManager.forSourceLines(
+                forSourceLines(
                     "threadsafety/Test.java",
                     "package threadsafety;",
                     "class Outer {",
@@ -204,7 +203,7 @@ public class GuardedByBinderTest {
             bind(
                 "Test",
                 "lock",
-                fileManager.forSourceLines(
+                forSourceLines(
                     "threadsafety/Test.java",
                     "package threadsafety;",
                     "import javax.annotation.concurrent.GuardedBy;",
@@ -221,7 +220,7 @@ public class GuardedByBinderTest {
             bind(
                 "Test",
                 "Other.lock",
-                fileManager.forSourceLines(
+                forSourceLines(
                     "threadsafety/Test.java",
                     "package threadsafety;",
                     "class Other {",
@@ -238,7 +237,7 @@ public class GuardedByBinderTest {
             bind(
                 "Test",
                 "Other.lock",
-                fileManager.forSourceLines(
+                forSourceLines(
                     "threadsafety/Test.java",
                     "package threadsafety;",
                     "class Other {",
@@ -256,7 +255,7 @@ public class GuardedByBinderTest {
             bind(
                 "Test",
                 "Other.class",
-                fileManager.forSourceLines(
+                forSourceLines(
                     "threadsafety/Test.java",
                     "package threadsafety;",
                     "class Other {",
@@ -274,7 +273,7 @@ public class GuardedByBinderTest {
             bind(
                 "Test",
                 "Other",
-                fileManager.forSourceLines(
+                forSourceLines(
                     "threadsafety/Test.java",
                     "package threadsafety;",
                     "class Other {",
@@ -292,7 +291,7 @@ public class GuardedByBinderTest {
             bind(
                 "Test",
                 "lock",
-                fileManager.forSourceLines(
+                forSourceLines(
                     "threadsafety/Test.java",
                     "package threadsafety;",
                     "class Test {",
@@ -307,7 +306,7 @@ public class GuardedByBinderTest {
             bind(
                 "Test",
                 "lock()",
-                fileManager.forSourceLines(
+                forSourceLines(
                     "threadsafety/Test.java",
                     "package threadsafety;",
                     "class Test {",
@@ -322,7 +321,7 @@ public class GuardedByBinderTest {
             bind(
                 "Test",
                 "Test.lock",
-                fileManager.forSourceLines(
+                forSourceLines(
                     "threadsafety/Test.java",
                     "package threadsafety;",
                     "class Test {",
@@ -336,7 +335,7 @@ public class GuardedByBinderTest {
     bindFail(
         "Test",
         "Test.lock",
-        fileManager.forSourceLines(
+        forSourceLines(
             "threadsafety/Test.java",
             "package threadsafety;",
             "class Test {",
@@ -349,7 +348,7 @@ public class GuardedByBinderTest {
     bindFail(
         "Test",
         "Test.lock()",
-        fileManager.forSourceLines(
+        forSourceLines(
             "threadsafety/Test.java",
             "package threadsafety;",
             "class Test {",
@@ -363,7 +362,7 @@ public class GuardedByBinderTest {
             bind(
                 "Inner",
                 "this.lock",
-                fileManager.forSourceLines(
+                forSourceLines(
                     "threadsafety/Test.java",
                     "package threadsafety;",
                     "class Outer {",
@@ -381,7 +380,7 @@ public class GuardedByBinderTest {
             bind(
                 "Inner",
                 "lock",
-                fileManager.forSourceLines(
+                forSourceLines(
                     "threadsafety/Test.java",
                     "package threadsafety;",
                     "class Outer {",
@@ -399,7 +398,7 @@ public class GuardedByBinderTest {
             bind(
                 "Inner",
                 "endpoint().lock()",
-                fileManager.forSourceLines(
+                forSourceLines(
                     "threadsafety/Test.java",
                     "package threadsafety;",
                     "class Outer {",
@@ -420,7 +419,7 @@ public class GuardedByBinderTest {
             bind(
                 "Test",
                 "Test.this",
-                fileManager.forSourceLines(
+                forSourceLines(
                     "threadsafety/Test.java", "package threadsafety;", "class Test {", "}")))
         .isEqualTo("(THIS)");
   }
@@ -432,7 +431,7 @@ public class GuardedByBinderTest {
             bind(
                 "",
                 "mu",
-                fileManager.forSourceLines(
+                forSourceLines(
                     "threadsafety/Test.java",
                     "package threadsafety;",
                     "import javax.annotation.concurrent.GuardedBy;",
@@ -459,7 +458,7 @@ public class GuardedByBinderTest {
     bindFail(
         "Test",
         "Other.lock",
-        fileManager.forSourceLines(
+        forSourceLines(
             "threadsafety/Test.java",
             "package threadsafety;",
             "class Other {",
@@ -477,7 +476,7 @@ public class GuardedByBinderTest {
     bindFail(
         "Test",
         "lock",
-        fileManager.forSourceLines(
+        forSourceLines(
             "threadsafety/Test.java",
             "package threadsafety;",
             "class Test {",
@@ -500,7 +499,7 @@ public class GuardedByBinderTest {
             javaCompiler.getTask(
                 new PrintWriter(
                     new BufferedWriter(new OutputStreamWriter(System.err, UTF_8)), true),
-                fileManager,
+                FileManagers.testFileManager(),
                 null,
                 Collections.<String>emptyList(),
                 null,

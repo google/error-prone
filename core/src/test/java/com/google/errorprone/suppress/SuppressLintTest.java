@@ -17,6 +17,8 @@
 package com.google.errorprone.suppress;
 
 import static com.google.common.truth.Truth.assertThat;
+import static com.google.errorprone.FileObjects.forResources;
+import static com.google.errorprone.FileObjects.forSourceLines;
 
 import com.google.errorprone.ErrorProneTestCompiler;
 import com.google.errorprone.bugpatterns.DeadException;
@@ -47,17 +49,14 @@ public class SuppressLintTest {
 
   @Test
   public void testNegativeCase() {
-    List<JavaFileObject> sources =
-        compiler.fileManager().forResources(getClass(), "SuppressLintNegativeCases.java");
+    List<JavaFileObject> sources = forResources(getClass(), "SuppressLintNegativeCases.java");
     JavaFileObject stub =
-        compiler
-            .fileManager()
-            .forSourceLines(
-                "SuppressLint.java",
-                "package android.annotation;",
-                "public @interface SuppressLint {",
-                " public String[] value() default {};",
-                "}");
+        forSourceLines(
+            "SuppressLint.java",
+            "package android.annotation;",
+            "public @interface SuppressLint {",
+            " public String[] value() default {};",
+            "}");
     List<JavaFileObject> thingsToCompile = new ArrayList<>(sources);
     thingsToCompile.add(stub);
     assertThat(compiler.compile(thingsToCompile)).isEqualTo(Result.OK);

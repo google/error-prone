@@ -60,8 +60,6 @@ public class ErrorProneTestCompiler {
   private final ScannerSupplier scannerSupplier;
   private final PrintWriter printWriter;
 
-  private final ErrorProneInMemoryFileManager fileManager = new ErrorProneInMemoryFileManager();
-
   public ErrorProneTestCompiler(
       DiagnosticListener<? super JavaFileObject> listener,
       ScannerSupplier scannerSupplier,
@@ -69,10 +67,6 @@ public class ErrorProneTestCompiler {
     this.listener = listener;
     this.scannerSupplier = scannerSupplier;
     this.printWriter = printWriter;
-  }
-
-  public ErrorProneInMemoryFileManager fileManager() {
-    return fileManager;
   }
 
   public Result compile(List<JavaFileObject> sources) {
@@ -96,7 +90,13 @@ public class ErrorProneTestCompiler {
     }
     CompilationTask task =
         new BaseErrorProneJavaCompiler(scannerSupplier)
-            .getTask(printWriter, fileManager, listener, Arrays.asList(args), null, sources);
+            .getTask(
+                printWriter,
+                FileManagers.testFileManager(),
+                listener,
+                Arrays.asList(args),
+                null,
+                sources);
     if (processors != null) {
       task.setProcessors(processors);
     }
