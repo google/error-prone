@@ -3137,19 +3137,6 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Builder for Error Prone command-line flags object.</div>
 </dd>
-<dt><a href="com/google/errorprone/ErrorProneInMemoryFileManager.html" title="class in com.google.errorprone"><span class="type-name-link">ErrorProneInMemoryFileManager</span></a> - Class in <a href="com/google/errorprone/package-summary.html">com.google.errorprone</a></dt>
-<dd>
-<div class="block">An in-memory file manager for testing that uses <code>JavacFileManager</code> and <code>Jimfs</code>.</div>
-</dd>
-<dt><span class="member-name-link"><a href="com/google/errorprone/ErrorProneInMemoryFileManager.html#%3Cinit%3E()">ErrorProneInMemoryFileManager()</a></span> - Constructor for class com.google.errorprone.<a href="com/google/errorprone/ErrorProneInMemoryFileManager.html" title="class in com.google.errorprone">ErrorProneInMemoryFileManager</a></dt>
-<dd>
-<div class="block">Constructs an ErrorProneInMemoryFileManager instance.</div>
-</dd>
-<dt><span class="member-name-link"><a href="com/google/errorprone/ErrorProneInMemoryFileManager.html#%3Cinit%3E(java.lang.Class)">ErrorProneInMemoryFileManager(Class&lt;?&gt;)</a></span> - Constructor for class com.google.errorprone.<a href="com/google/errorprone/ErrorProneInMemoryFileManager.html" title="class in com.google.errorprone">ErrorProneInMemoryFileManager</a></dt>
-<dd>
-<div class="block">Constructs an ErrorProneInMemoryFileManager instance, given a class that can be used to lookup
- file resources, such as test inputs to compile.</div>
-</dd>
 <dt><a href="com/google/errorprone/ErrorProneJavaCompiler.html" title="class in com.google.errorprone"><span class="type-name-link">ErrorProneJavaCompiler</span></a> - Class in <a href="com/google/errorprone/package-summary.html">com.google.errorprone</a></dt>
 <dd>
 <div class="block">An Error Prone compiler that implements <a href="https://docs.oracle.com/javase/8/docs/api/javax/tools/JavaCompiler.html" title="class or interface in javax.tools" class="external-link"><code>JavaCompiler</code></a>.</div>
@@ -3256,8 +3243,6 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Accept overlapping insertions, with the existing insertion before the new one.</div>
 </dd>
-<dt><span class="member-name-link"><a href="com/google/errorprone/ErrorProneInMemoryFileManager.html#exists(java.lang.String)">exists(String)</a></span> - Method in class com.google.errorprone.<a href="com/google/errorprone/ErrorProneInMemoryFileManager.html" title="class in com.google.errorprone">ErrorProneInMemoryFileManager</a></dt>
-<dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/predicates/type/DescendantOf.html#expected">expected</a></span> - Variable in class com.google.errorprone.predicates.type.<a href="com/google/errorprone/predicates/type/DescendantOf.html" title="class in com.google.errorprone.predicates.type">DescendantOf</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/ExpectedExceptionChecker.html" title="class in com.google.errorprone.bugpatterns"><span class="type-name-link">ExpectedExceptionChecker</span></a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
@@ -3400,8 +3385,6 @@ loadScripts(document, 'script');</script>
 <div class="block">Factories for in-memory <a href="https://docs.oracle.com/javase/8/docs/api/javax/tools/JavaFileObject.html" title="class or interface in javax.tools" class="external-link"><code>JavaFileObject</code></a>s, for testing.</div>
 </dd>
 <dt><a href="com/google/errorprone/apply/FileSource.html" title="interface in com.google.errorprone.apply"><span class="type-name-link">FileSource</span></a> - Interface in <a href="com/google/errorprone/apply/package-summary.html">com.google.errorprone.apply</a></dt>
-<dd>&nbsp;</dd>
-<dt><span class="member-name-link"><a href="com/google/errorprone/ErrorProneInMemoryFileManager.html#fileSystem()">fileSystem()</a></span> - Method in class com.google.errorprone.<a href="com/google/errorprone/ErrorProneInMemoryFileManager.html" title="class in com.google.errorprone">ErrorProneInMemoryFileManager</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/scanner/ScannerSupplier.html#filter(com.google.common.base.Predicate)">filter(Predicate&lt;? super BugCheckerInfo&gt;)</a></span> - Method in class com.google.errorprone.scanner.<a href="com/google/errorprone/scanner/ScannerSupplier.html" title="class in com.google.errorprone.scanner">ScannerSupplier</a></dt>
 <dd>
@@ -3703,29 +3686,13 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/ForOverrideChecker.html#%3Cinit%3E()">ForOverrideChecker()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/ForOverrideChecker.html" title="class in com.google.errorprone.bugpatterns">ForOverrideChecker</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="member-name-link"><a href="com/google/errorprone/ErrorProneInMemoryFileManager.html#forResource(java.lang.Class,java.lang.String)">forResource(Class&lt;?&gt;, String)</a></span> - Method in class com.google.errorprone.<a href="com/google/errorprone/ErrorProneInMemoryFileManager.html" title="class in com.google.errorprone">ErrorProneInMemoryFileManager</a></dt>
-<dd>
-<div class="block">Loads a resource of the provided class into a <a href="https://docs.oracle.com/javase/8/docs/api/javax/tools/JavaFileObject.html" title="class or interface in javax.tools" class="external-link"><code>JavaFileObject</code></a>.</div>
-</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/FileObjects.html#forResource(java.lang.Class,java.lang.String)">forResource(Class&lt;?&gt;, String)</a></span> - Static method in class com.google.errorprone.<a href="com/google/errorprone/FileObjects.html" title="class in com.google.errorprone">FileObjects</a></dt>
 <dd>
 <div class="block">Loads a resource of the provided class into a <a href="https://docs.oracle.com/javase/8/docs/api/javax/tools/JavaFileObject.html" title="class or interface in javax.tools" class="external-link"><code>JavaFileObject</code></a>.</div>
 </dd>
-<dt><span class="member-name-link"><a href="com/google/errorprone/ErrorProneInMemoryFileManager.html#forResource(java.lang.String)">forResource(String)</a></span> - Method in class com.google.errorprone.<a href="com/google/errorprone/ErrorProneInMemoryFileManager.html" title="class in com.google.errorprone">ErrorProneInMemoryFileManager</a></dt>
-<dd>
-<div class="block">Loads a resource of the class passed into the constructor into a <a href="https://docs.oracle.com/javase/8/docs/api/javax/tools/JavaFileObject.html" title="class or interface in javax.tools" class="external-link"><code>JavaFileObject</code></a>.</div>
-</dd>
-<dt><span class="member-name-link"><a href="com/google/errorprone/ErrorProneInMemoryFileManager.html#forResources(java.lang.Class,java.lang.String...)">forResources(Class&lt;?&gt;, String...)</a></span> - Method in class com.google.errorprone.<a href="com/google/errorprone/ErrorProneInMemoryFileManager.html" title="class in com.google.errorprone">ErrorProneInMemoryFileManager</a></dt>
-<dd>
-<div class="block">Loads resources of the provided class into <a href="https://docs.oracle.com/javase/8/docs/api/javax/tools/JavaFileObject.html" title="class or interface in javax.tools" class="external-link"><code>JavaFileObject</code></a>s.</div>
-</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/FileObjects.html#forResources(java.lang.Class,java.lang.String...)">forResources(Class&lt;?&gt;, String...)</a></span> - Static method in class com.google.errorprone.<a href="com/google/errorprone/FileObjects.html" title="class in com.google.errorprone">FileObjects</a></dt>
 <dd>
 <div class="block">Loads resources of the provided class into <a href="https://docs.oracle.com/javase/8/docs/api/javax/tools/JavaFileObject.html" title="class or interface in javax.tools" class="external-link"><code>JavaFileObject</code></a>s.</div>
-</dd>
-<dt><span class="member-name-link"><a href="com/google/errorprone/ErrorProneInMemoryFileManager.html#forSourceLines(java.lang.String,java.lang.String...)">forSourceLines(String, String...)</a></span> - Method in class com.google.errorprone.<a href="com/google/errorprone/ErrorProneInMemoryFileManager.html" title="class in com.google.errorprone">ErrorProneInMemoryFileManager</a></dt>
-<dd>
-<div class="block">Creates a <a href="https://docs.oracle.com/javase/8/docs/api/javax/tools/JavaFileObject.html" title="class or interface in javax.tools" class="external-link"><code>JavaFileObject</code></a> with the given name and content.</div>
 </dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/FileObjects.html#forSourceLines(java.lang.String,java.lang.String...)">forSourceLines(String, String...)</a></span> - Static method in class com.google.errorprone.<a href="com/google/errorprone/FileObjects.html" title="class in com.google.errorprone">FileObjects</a></dt>
 <dd>
@@ -5239,8 +5206,6 @@ loadScripts(document, 'script');</script>
 <div class="block">Checks if a method, or any overridden method, is annotated with any annotation from the
  org.junit package.</div>
 </dd>
-<dt><span class="member-name-link"><a href="com/google/errorprone/ErrorProneInMemoryFileManager.html#hasLocation(javax.tools.JavaFileManager.Location)">hasLocation(JavaFileManager.Location)</a></span> - Method in class com.google.errorprone.<a href="com/google/errorprone/ErrorProneInMemoryFileManager.html" title="class in com.google.errorprone">ErrorProneInMemoryFileManager</a></dt>
-<dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/apidiff/ApiDiffProto.ClassDiff.Builder.html#hasMemberDiff()">hasMemberDiff()</a></span> - Method in class com.google.errorprone.bugpatterns.apidiff.<a href="com/google/errorprone/bugpatterns/apidiff/ApiDiffProto.ClassDiff.Builder.html" title="class in com.google.errorprone.bugpatterns.apidiff">ApiDiffProto.ClassDiff.Builder</a></dt>
 <dd>
 <div class="block"><code>.devtools.staticanalysis.errorprone.apidiff.MemberDiff member_diff = 2;</code></div>
