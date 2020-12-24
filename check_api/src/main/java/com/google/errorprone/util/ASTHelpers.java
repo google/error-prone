@@ -371,7 +371,7 @@ public class ASTHelpers {
     if (path != null) {
       do {
         path = path.getParentPath();
-      } while (path != null && !(klass.isInstance(path.getLeaf())));
+      } while (path != null && !klass.isInstance(path.getLeaf()));
     }
     return path;
   }
