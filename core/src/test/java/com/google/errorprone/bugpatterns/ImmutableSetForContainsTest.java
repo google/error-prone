@@ -176,7 +176,7 @@ public final class ImmutableSetForContainsTest {
   }
 
   @Test
-  public void immutableList_uniqueElements_iterating_replacesWithSet() {
+  public void immutableList_uniqueElements_iterating_negative() {
     refactoringHelper
         .addInputLines(
             "Test.java",
@@ -200,29 +200,7 @@ public final class ImmutableSetForContainsTest {
             "    for (Long lvar : longList) { System.out.println(lvar); }",
             "  }",
             "}")
-        .addOutputLines(
-            "Test.java",
-            "import static com.sun.source.tree.Tree.Kind.METHOD_INVOCATION;",
-            "import com.google.common.collect.ImmutableList;",
-            "import com.google.common.collect.ImmutableSet;",
-            "import com.sun.source.tree.Tree.Kind;",
-            "import java.util.ArrayList;",
-            "class Test {",
-            "  private static final ImmutableSet<String> STR_LIST = ImmutableSet.of(\"hello\");",
-            "  private static final ImmutableSet<Kind> ENUM_LIST =",
-            "                                  ImmutableSet.of(Kind.AND, METHOD_INVOCATION);",
-            "  private void myFunc() {",
-            "    STR_LIST.stream().forEach(System.out::println);",
-            "    STR_LIST.forEach(System.out::println);",
-            "    ENUM_LIST.stream().forEach(System.out::println);",
-            "    ENUM_LIST.forEach(System.out::println);",
-            "    for (String myStr : STR_LIST) { System.out.println(myStr); }",
-            "    for (Kind myKind : ENUM_LIST) { System.out.println(myKind); }",
-            "    for (Long lvar : ImmutableList.<Long>of(2L)) { System.out.println(lvar); }",
-            "    ImmutableList<Long> longList = ImmutableList.of(1L);",
-            "    for (Long lvar : longList) { System.out.println(lvar); }",
-            "  }",
-            "}")
+        .expectUnchanged()
         .doTest();
   }
 
@@ -267,7 +245,7 @@ public final class ImmutableSetForContainsTest {
   }
 
   @Test
-  public void immutableList_passedToFunctionsAcceptingSet_replacesWithImmutableSet() {
+  public void immutableList_passedToFunctionsAcceptingSet_negative() {
     refactoringHelper
         .addInputLines(
             "Test.java",
@@ -282,19 +260,7 @@ public final class ImmutableSetForContainsTest {
             "    String onlyElement = Iterables.getOnlyElement(MY_LIST);",
             "  }",
             "}")
-        .addOutputLines(
-            "Test.java",
-            "import com.google.common.collect.ImmutableList;",
-            "import com.google.common.collect.ImmutableSet;",
-            "import com.google.common.collect.Iterables;",
-            "import java.util.ArrayList;",
-            "class Test {",
-            "  private static final ImmutableSet<String> MY_LIST = ImmutableSet.of(\"hello\");",
-            "  private void myFunc() {",
-            "    ImmutableSet<String> mySet = ImmutableSet.copyOf(MY_LIST);",
-            "    String onlyElement = Iterables.getOnlyElement(MY_LIST);",
-            "  }",
-            "}")
+        .expectUnchanged()
         .doTest();
   }
 
@@ -341,7 +307,7 @@ public final class ImmutableSetForContainsTest {
   }
 
   @Test
-  public void immutableListInNestedClass_usedInParentClass_replacesIfNoListFunctionsInvoked() {
+  public void immutableListInNestedClass_usedInParentClass_negative() {
     refactoringHelper
         .addInputLines(
             "Test.java",
@@ -356,25 +322,12 @@ public final class ImmutableSetForContainsTest {
             "    String two = Nested.MY_LIST_2.iterator().next();",
             "  }",
             "}")
-        .addOutputLines(
-            "Test.java",
-            "import com.google.common.collect.ImmutableList;",
-            "import com.google.common.collect.ImmutableSet;",
-            "class Test {",
-            "  private static final class Nested {",
-            "    private static final ImmutableList<String> MY_LIST_1 = ImmutableList.of(\"a\");",
-            "    private static final ImmutableSet<String> MY_LIST_2 = ImmutableSet.of(\"b\");",
-            "  }",
-            "  private void myFunc() {",
-            "    String one = Nested.MY_LIST_1.get(0);",
-            "    String two = Nested.MY_LIST_2.iterator().next();",
-            "  }",
-            "}")
+        .expectUnchanged()
         .doTest();
   }
 
   @Test
-  public void twoImmutableListsUsedInSameMethodInvocation_replacesOnlySafeOnes() {
+  public void twoImmutableListsUsedInSameMethodInvocation_negative() {
     refactoringHelper
         .addInputLines(
             "Test.java",
@@ -387,23 +340,12 @@ public final class ImmutableSetForContainsTest {
             "    MY_LIST_1.forEach(elem -> System.out.println(MY_LIST_2.get(0)));",
             "  }",
             "}")
-        .addOutputLines(
-            "Test.java",
-            "import com.google.common.collect.ImmutableList;",
-            "import com.google.common.collect.ImmutableSet;",
-            "import java.util.ArrayList;",
-            "class Test {",
-            "  private static final ImmutableSet<String> MY_LIST_1 = ImmutableSet.of(\"hello\");",
-            "  private static final ImmutableList<String> MY_LIST_2 = ImmutableList.of(\"world\");",
-            "  private void myFunc() {",
-            "    MY_LIST_1.forEach(elem -> System.out.println(MY_LIST_2.get(0)));",
-            "  }",
-            "}")
+        .expectUnchanged()
         .doTest();
   }
 
   @Test
-  public void listOfClassOrDistinctInstances_uniqueElements_iterating_replacesWithSet() {
+  public void listOfClassOrDistinctInstances_uniqueElements_iterating_negative() {
     refactoringHelper
         .addInputLines(
             "Test.java",
@@ -421,23 +363,7 @@ public final class ImmutableSetForContainsTest {
             "    OBJ_LIST.forEach(System.out::println);",
             "  }",
             "}")
-        .addOutputLines(
-            "Test.java",
-            "import static com.sun.source.tree.Tree.Kind.METHOD_INVOCATION;",
-            "import com.google.common.collect.ImmutableList;",
-            "import com.google.common.collect.ImmutableSet;",
-            "import com.sun.source.tree.Tree.Kind;",
-            "import java.util.ArrayList;",
-            "class Test {",
-            "  private static final ImmutableSet<Class<?>> CLS_LIST = ",
-            "      ImmutableSet.of(Long.class, Double.class);",
-            "  private static final ImmutableSet<Object> OBJ_LIST =",
-            "      ImmutableSet.of(new String(\"\"), new Object());",
-            "  private void myFunc() {",
-            "    CLS_LIST.stream().forEach(System.out::println);",
-            "    OBJ_LIST.forEach(System.out::println);",
-            "  }",
-            "}")
+        .expectUnchanged()
         .doTest();
   }
 

@@ -16,8 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.common.collect.ImmutableList.toImmutableList;
-import static com.google.common.collect.ImmutableMap.toImmutableMap;
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
@@ -29,14 +27,11 @@ import static com.google.errorprone.matchers.Matchers.instanceMethod;
 import static com.google.errorprone.matchers.Matchers.isSameType;
 import static com.google.errorprone.matchers.Matchers.isStatic;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
-import static com.google.errorprone.util.ASTHelpers.constValue;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
-import static com.google.errorprone.util.ASTHelpers.targetType;
 import static java.util.stream.Collectors.toMap;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -47,7 +42,6 @@ import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
-import com.sun.source.tree.EnhancedForLoopTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.MemberSelectTree;
@@ -60,12 +54,9 @@ import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
 import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.code.Symbol;
-import com.sun.tools.javac.code.Type;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Stream;
-import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
 
 /**
@@ -75,10 +66,8 @@ import javax.lang.model.element.Modifier;
 @BugPattern(
     name = "ImmutableSetForContains",
     summary =
-        "This private static ImmutableList either does not contain duplicates or is only used for"
-            + " contains, containsAll or isEmpty checks or both. ImmutableSet is a better type for"
-            + " such collection. It is often more efficient and / or captures useful info about"
-            + " absence of duplicates.",
+        "This private static ImmutableList is only used for contains, containsAll or isEmpty"
+            + " checks; prefer ImmutableSet.",
     severity = SUGGESTION)
 public final class ImmutableSetForContains extends BugChecker implements ClassTreeMatcher {
 
@@ -120,7 +109,7 @@ public final class ImmutableSetForContains extends BugChecker implements ClassTr
     if (immutableListVar.isEmpty()) {
       return Description.NO_MATCH;
     }
-    ImmutableVarUsageScanner usageScanner = new ImmutableVarUsageScanner(immutableListVar, state);
+    ImmutableVarUsageScanner usageScanner = new ImmutableVarUsageScanner(immutableListVar);
     // Scan entire compilation unit since private static vars of nested classes may be referred in
     // parent class.
     TreePath cuPath = state.findPathToEnclosing(CompilationUnitTree.class);
@@ -200,35 +189,24 @@ public final class ImmutableSetForContains extends BugChecker implements ClassTr
         instanceMethod()
             .onExactClass(ImmutableList.class.getName())
             .namedAnyOf("contains", "containsAll", "isEmpty");
-    private static final Matcher<ExpressionTree> ALLOWED_FUNCTIONS_WHEN_UNIQUE =
-        instanceMethod()
-            .onExactClass(ImmutableList.class.getName())
-            .namedAnyOf("size", "stream", "iterator", "forEach");
     private static final Matcher<ExpressionTree> IMMUTABLE_LIST_OF =
         staticMethod().onClass(ImmutableList.class.getName()).named("of");
 
     // For each ImmutableList usage var, we will keep a map indicating if the var has been used in a
     // way that would prevent us from making it a set.
     private final Map<Symbol, Boolean> disallowedVarUsages;
-    private final ImmutableMap<Symbol, Boolean> hasUniqueElements;
 
-    private ImmutableVarUsageScanner(
-        ImmutableSet<VariableTree> immutableListVar, VisitorState state) {
+    private ImmutableVarUsageScanner(ImmutableSet<VariableTree> immutableListVar) {
       this.disallowedVarUsages =
           immutableListVar.stream()
               .map(ASTHelpers::getSymbol)
               .collect(toMap(x -> x, x -> Boolean.FALSE));
-      this.hasUniqueElements =
-          immutableListVar.stream()
-              .collect(toImmutableMap(ASTHelpers::getSymbol, var -> hasUniqueElements(var, state)));
     }
 
     @Override
     public Void visitMethodInvocation(
         MethodInvocationTree methodInvocationTree, VisitorState state) {
-      for (int i = 0; i < methodInvocationTree.getArguments().size(); i++) {
-        visitMethodArgument(methodInvocationTree.getArguments().get(i), state);
-      }
+      methodInvocationTree.getArguments().forEach(tree -> scan(tree, state));
       methodInvocationTree.getTypeArguments().forEach(tree -> scan(tree, state));
       if (!allowedFuncOnImmutableVar(methodInvocationTree, state)) {
         scan(methodInvocationTree.getMethodSelect(), state);
@@ -245,50 +223,7 @@ public final class ImmutableSetForContains extends BugChecker implements ClassTr
         // Not a function invocation on any of the candidate immutable list vars.
         return false;
       }
-      return ALLOWED_FUNCTIONS_ON_LIST.matches(methodTree, state)
-          || (ALLOWED_FUNCTIONS_WHEN_UNIQUE.matches(methodTree, state)
-              && hasUniqueElements.get(getSymbol(receiver)));
-    }
-
-    private void visitMethodArgument(ExpressionTree argTree, VisitorState state) {
-      Type argType = targetType(state.withPath(TreePath.getPath(state.getPath(), argTree))).type();
-      if (argTree.getKind().equals(Kind.IDENTIFIER)
-          && disallowedVarUsages.containsKey(getSymbol(argTree))
-          && isSuperTypeOfImmutableSet(argType, state)
-          && hasUniqueElements.get(getSymbol(argTree))) {
-        // ImmutableList is passed to function that accepts a generic collection and list has unique
-        // elements - so we can safely convert to ImmutableSet and pass the collection to this
-        // function.
-        return;
-      }
-      scan(argTree, state);
-    }
-
-    private static boolean isSuperTypeOfImmutableSet(Type argType, VisitorState state) {
-      Type erasedArgType = state.getTypes().erasure(argType);
-      Type immutableSetType = state.getTypeFromString(ImmutableSet.class.getName());
-      Type objType = state.getTypeFromString(Object.class.getName());
-      return state.getTypes().isSubtype(immutableSetType, erasedArgType)
-          // We don't want to change list to set if list is passed to function accepting any obj.
-          // This likely indicates that the function might be using reflection. Also there is
-          // .equals() whose arg we cannot change as it will break build.
-          && !state.getTypes().isSameType(erasedArgType, objType);
-    }
-
-    @Override
-    public Void visitEnhancedForLoop(
-        EnhancedForLoopTree enhancedForLoopTree, VisitorState visitorState) {
-      ExpressionTree expression = enhancedForLoopTree.getExpression();
-      if (!expression.getKind().equals(Kind.IDENTIFIER)) {
-        return super.visitEnhancedForLoop(enhancedForLoopTree, visitorState);
-      }
-      Symbol var = getSymbol(expression);
-      if (!disallowedVarUsages.containsKey(var) || !hasUniqueElements.containsKey(var)) {
-        return super.visitEnhancedForLoop(enhancedForLoopTree, visitorState);
-      }
-      // Skip visiting expression. But visit statements.
-      scan(enhancedForLoopTree.getStatement(), visitorState);
-      return scan(enhancedForLoopTree.getVariable(), visitorState);
+      return ALLOWED_FUNCTIONS_ON_LIST.matches(methodTree, state);
     }
 
     @Override
@@ -305,66 +240,6 @@ public final class ImmutableSetForContains extends BugChecker implements ClassTr
 
     private void recordDisallowedUsage(Symbol symbol) {
       disallowedVarUsages.computeIfPresent(symbol, (sym, oldVal) -> Boolean.TRUE);
-    }
-
-    private static boolean hasUniqueElements(VariableTree varTree, VisitorState state) {
-      if (varTree.getInitializer() == null) {
-        return false;
-      }
-      if (!IMMUTABLE_LIST_OF.matches(varTree.getInitializer(), state)) {
-        return false;
-      }
-      List<? extends ExpressionTree> initElements =
-          ((MethodInvocationTree) varTree.getInitializer()).getArguments();
-      return areDistinctConstantVals(initElements)
-          || areDistinctEnums(initElements)
-          || areDistinctClazz(initElements, state)
-          || areDistinctClassInstances(initElements);
-    }
-
-    private static boolean areDistinctConstantVals(List<? extends ExpressionTree> trees) {
-      if (trees.stream().anyMatch(tree -> constValue(tree) == null)) {
-        return false;
-      }
-      return trees.stream().map(ASTHelpers::constValue).distinct().count() == trees.size();
-    }
-
-    private static boolean areDistinctEnums(List<? extends ExpressionTree> trees) {
-      if (trees.stream().anyMatch(tree -> getSymbol(tree) == null)) {
-        return false;
-      }
-      ImmutableList<Symbol> symbols =
-          trees.stream().map(ASTHelpers::getSymbol).collect(toImmutableList());
-      if (!symbols.stream().allMatch(sym -> sym.getKind().equals(ElementKind.ENUM_CONSTANT))) {
-        return false;
-      }
-      return ImmutableSet.copyOf(symbols).size() == trees.size();
-    }
-
-    private static boolean areDistinctClazz(
-        List<? extends ExpressionTree> trees, VisitorState state) {
-      return trees.stream()
-              .filter(tree -> isSameType(Class.class).matches(tree, state))
-              .filter(tree -> tree.getKind().equals(Kind.MEMBER_SELECT))
-              .map(MemberSelectTree.class::cast)
-              .filter(tree -> tree.getIdentifier().contentEquals("class"))
-              .map(MemberSelectTree::getExpression)
-              .filter(expr -> expr.getKind().equals(Kind.IDENTIFIER))
-              .map(tree -> ((IdentifierTree) tree).getName())
-              .distinct()
-              .count()
-          == trees.size();
-    }
-
-    private static boolean areDistinctClassInstances(List<? extends ExpressionTree> trees) {
-      return trees.stream()
-              .filter(tree -> tree.getKind().equals(Kind.NEW_CLASS))
-              .map(tree -> ((NewClassTree) tree).getIdentifier())
-              .filter(tree -> tree.getKind().equals(Kind.IDENTIFIER))
-              .map(tree -> ((IdentifierTree) tree).getName())
-              .distinct()
-              .count()
-          == trees.size();
     }
   }
 }
