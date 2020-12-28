@@ -820,6 +820,9 @@ It is dangerous to use a boxed primitive as a lock as it can unintentionally lea
 __[LogicalAssignment](bugpattern/LogicalAssignment)__<br>
 Assignment where a boolean expression was expected; use == if this assignment wasn&#39;t expected or add parentheses for clarity.
 
+__[LongFloatConversion](bugpattern/LongFloatConversion)__<br>
+Conversion from long to float may lose precision; use an explicit cast to float if this was intentional
+
 __[MathAbsoluteRandom](bugpattern/MathAbsoluteRandom)__<br>
 Math.abs does not always give a positive result. Please consider other methods for positive random numbers.
 
