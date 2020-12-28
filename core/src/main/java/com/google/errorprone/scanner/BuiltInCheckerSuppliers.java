@@ -185,6 +185,7 @@ import com.google.errorprone.bugpatterns.LiteProtoToString;
 import com.google.errorprone.bugpatterns.LockNotBeforeTry;
 import com.google.errorprone.bugpatterns.LockOnBoxedPrimitive;
 import com.google.errorprone.bugpatterns.LogicalAssignment;
+import com.google.errorprone.bugpatterns.LongFloatConversion;
 import com.google.errorprone.bugpatterns.LongLiteralLowerCaseSuffix;
 import com.google.errorprone.bugpatterns.LoopConditionChecker;
 import com.google.errorprone.bugpatterns.LossyPrimitiveCompare;
@@ -815,6 +816,7 @@ public class BuiltInCheckerSuppliers {
           LockNotBeforeTry.class,
           LockOnBoxedPrimitive.class,
           LogicalAssignment.class,
+          LongFloatConversion.class,
           MathAbsoluteRandom.class,
           MissingCasesInEnumSwitch.class,
           MissingFail.class,
