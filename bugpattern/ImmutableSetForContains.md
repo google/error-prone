@@ -1,9 +1,7 @@
 ---
 title: ImmutableSetForContains
-summary: This private static ImmutableList either does not contain duplicates or is
-  only used for contains, containsAll or isEmpty checks or both. ImmutableSet is a
-  better type for such collection. It is often more efficient and / or captures useful
-  info about absence of duplicates.
+summary: This private static ImmutableList is only used for contains, containsAll
+  or isEmpty checks; prefer ImmutableSet.
 layout: bugpattern
 tags: ''
 severity: SUGGESTION
