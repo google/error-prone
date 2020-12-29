@@ -146,7 +146,7 @@ public final class UndefinedEquals extends BugChecker implements MethodInvocatio
     }
 
     // Generate fix for CharSequence
-    Type charSequenceType = state.getTypeFromString("java.lang.CharSequence");
+    Type charSequenceType = state.getSymtab().charSequenceType;
     BiFunction<Tree, Tree, Optional<SuggestedFix>> generateCharSequenceFix =
         (maybeCharSequence, maybeString) -> {
           if (charSequenceType != null
