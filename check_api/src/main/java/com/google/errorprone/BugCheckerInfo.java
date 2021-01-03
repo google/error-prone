@@ -119,7 +119,7 @@ public class BugCheckerInfo implements Serializable {
   }
 
   private static boolean isSuppressWarnings(Class<? extends Annotation> annotation) {
-    return annotation.getSimpleName().equals("SuppressWarnings");
+    return annotation.isAssignableFrom(SuppressWarnings.class);
   }
 
   private BugCheckerInfo(
