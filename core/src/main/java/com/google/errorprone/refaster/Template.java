@@ -483,7 +483,7 @@ public abstract class Template<M extends TemplateMatch> implements Serializable 
   private static Object newMethodResolutionPhase(boolean autoboxing) {
     for (Class<?> c : Resolve.class.getDeclaredClasses()) {
       try {
-		if (c.isAssignableFrom(Class.forName("com.sun.tools.javac.comp.Resolve.MethodResolutionPhase"))) {
+		if (!c.isAssignableFrom(Class.forName("com.sun.tools.javac.comp.Resolve$MethodResolutionPhase"))) {
 		  continue;
 		}
       } catch (ClassNotFoundException e1) {
