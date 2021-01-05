@@ -60,6 +60,7 @@ public class DoNotClaimAnnotations extends BugChecker implements MethodTreeMatch
           s ->
               Stream.of("java.util.Set", "javax.annotation.processing.RoundEnvironment")
                   .map(s::getTypeFromString)
+                  .filter(x -> x != null)
                   .collect(toImmutableList()));
 
   private static final Supplier<Symbol> PROCESSOR_SYMBOL =
