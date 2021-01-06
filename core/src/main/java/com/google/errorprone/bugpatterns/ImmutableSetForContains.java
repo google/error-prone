@@ -117,6 +117,9 @@ public final class ImmutableSetForContains extends BugChecker implements ClassTr
     SuggestedFix.Builder fix = SuggestedFix.builder();
     Optional<VariableTree> firstReplacement = Optional.empty();
     for (VariableTree var : immutableListVar) {
+      if (isSuppressed(var)) {
+        continue;
+      }
       if (!usageScanner.disallowedVarUsages.get(getSymbol(var))) {
         firstReplacement = Optional.of(var);
         fix.merge(convertListToSetInit(var, state));
@@ -189,8 +192,6 @@ public final class ImmutableSetForContains extends BugChecker implements ClassTr
         instanceMethod()
             .onExactClass(ImmutableList.class.getName())
             .namedAnyOf("contains", "containsAll", "isEmpty");
-    private static final Matcher<ExpressionTree> IMMUTABLE_LIST_OF =
-        staticMethod().onClass(ImmutableList.class.getName()).named("of");
 
     // For each ImmutableList usage var, we will keep a map indicating if the var has been used in a
     // way that would prevent us from making it a set.

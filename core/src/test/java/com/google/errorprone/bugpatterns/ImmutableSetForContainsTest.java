@@ -383,4 +383,22 @@ public final class ImmutableSetForContainsTest {
         .expectUnchanged()
         .doTest();
   }
+
+  @Test
+  public void suppressionOnVariableTree_noFinding() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            "import com.google.common.collect.ImmutableList;",
+            "class Test {",
+            "  @SuppressWarnings(\"ImmutableSetForContains\")",
+            "  private static final ImmutableList<String> MY_LIST_1 =",
+            "           ImmutableList.<String>builder().add(\"hello\").build();",
+            "  private void myFunc() {",
+            "    boolean myBool1 = MY_LIST_1.contains(\"he\");",
+            "  }",
+            "}")
+        .expectUnchanged()
+        .doTest();
+  }
 }
