@@ -18,6 +18,7 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
+import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.StandardTags;
@@ -41,6 +42,9 @@ import javax.lang.model.element.NestingKind;
     severity = WARNING,
     tags = {StandardTags.STYLE, StandardTags.PERFORMANCE})
 public class ClassCanBeStatic extends BugChecker implements ClassTreeMatcher {
+
+  private static final String REFASTER_ANNOTATION =
+      "com.google.errorprone.refaster.annotation.BeforeTemplate";
 
   @Override
   public Description matchClass(final ClassTree tree, final VisitorState state) {
@@ -71,6 +75,9 @@ public class ClassCanBeStatic extends BugChecker implements ClassTreeMatcher {
       return NO_MATCH;
     }
     if (CanBeStaticAnalyzer.referencesOuter(tree, currentClass, state)) {
+      return NO_MATCH;
+    }
+    if (tree.getMembers().stream().anyMatch(m -> hasAnnotation(m, REFASTER_ANNOTATION, state))) {
       return NO_MATCH;
     }
     return describeMatch(tree, SuggestedFixes.addModifiers(tree, state, Modifier.STATIC));
