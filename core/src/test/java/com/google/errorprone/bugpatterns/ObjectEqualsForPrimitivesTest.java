@@ -16,7 +16,7 @@
 
 package com.google.errorprone.bugpatterns;
 
-import com.google.errorprone.CompilationTestHelper;
+import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -25,16 +25,156 @@ import org.junit.runners.JUnit4;
 @RunWith(JUnit4.class)
 public class ObjectEqualsForPrimitivesTest {
 
-  private final CompilationTestHelper compilationHelper =
-      CompilationTestHelper.newInstance(ObjectEqualsForPrimitives.class, getClass());
+  private final BugCheckerRefactoringTestHelper refactoringHelper =
+      BugCheckerRefactoringTestHelper.newInstance(ObjectEqualsForPrimitives.class, getClass());
 
   @Test
-  public void testPositiveCase() {
-    compilationHelper.addSourceFile("ObjectEqualsForPrimitivesPositiveCases.java").doTest();
+  public void testBoxedIntegers() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            "import java.util.Objects;",
+            "public class Test {",
+            "  private static boolean doTest(Integer a, Integer b) {",
+            "    return Objects.equals(a, b);",
+            "  }",
+            "}")
+        .expectUnchanged()
+        .doTest();
   }
 
   @Test
-  public void testNegativeCase() {
-    compilationHelper.addSourceFile("ObjectEqualsForPrimitivesNegativeCases.java").doTest();
+  public void testBoxedAndPrimitive() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            "import java.util.Objects;",
+            "public class Test {",
+            "  private static boolean doTest(Integer a, int b) {",
+            "    return Objects.equals(a, b);",
+            "  }",
+            "}")
+        .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
+  public void testPrimitiveAndBoxed() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            "import java.util.Objects;",
+            "public class Test {",
+            "  private static boolean doTest(int a, Integer b) {",
+            "    return Objects.equals(a, b);",
+            "  }",
+            "}")
+        .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
+  public void testObjects() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            "import java.util.Objects;",
+            "public class Test {",
+            "  private static boolean doTest(Object a, Object b) {",
+            "    return Objects.equals(a, b);",
+            "  }",
+            "}")
+        .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
+  public void testPrimitives() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            "import java.util.Objects;",
+            "public class Test {",
+            "  private static boolean testBooleans(boolean a, boolean b) {",
+            "    return Objects.equals(a, b);",
+            "  }",
+            "  private static boolean testInts(int a, int b) {",
+            "    return Objects.equals(a, b);",
+            "  }",
+            "  private static boolean testLongs(long a, long b) {",
+            "    return Objects.equals(a, b);",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "import java.util.Objects;",
+            "public class Test {",
+            "  private static boolean testBooleans(boolean a, boolean b) {",
+            "    return (a == b);",
+            "  }",
+            "  private static boolean testInts(int a, int b) {",
+            "    return (a == b);",
+            "  }",
+            "  private static boolean testLongs(long a, long b) {",
+            "    return (a == b);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void testPrimitivesNegated() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            "import java.util.Objects;",
+            "public class Test {",
+            "  private static boolean testBooleans(boolean a, boolean b) {",
+            "    return !Objects.equals(a, b);",
+            "  }",
+            "  private static boolean testInts(int a, int b) {",
+            "    return !Objects.equals(a, b);",
+            "  }",
+            "  private static boolean testLongs(long a, long b) {",
+            "    return !Objects.equals(a, b);",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "import java.util.Objects;",
+            "public class Test {",
+            "  private static boolean testBooleans(boolean a, boolean b) {",
+            "    return !(a == b);",
+            "  }",
+            "  private static boolean testInts(int a, int b) {",
+            "    return !(a == b);",
+            "  }",
+            "  private static boolean testLongs(long a, long b) {",
+            "    return !(a == b);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void testIntAndLong() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            "import java.util.Objects;",
+            "public class Test {",
+            "  private static boolean doTest(int a, long b) {",
+            "    return Objects.equals(a, b);",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "import java.util.Objects;",
+            "public class Test {",
+            "  private static boolean doTest(int a, long b) {",
+            "    return (a == b);",
+            "  }",
+            "}")
+        .doTest();
   }
 }
