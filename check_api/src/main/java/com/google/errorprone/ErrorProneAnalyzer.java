@@ -168,9 +168,20 @@ public class ErrorProneAnalyzer implements TaskListener {
       // symbol's supertypes. If javac didn't need to check the symbol's assignability
       // then a normal compilation would have succeeded, and no diagnostics will have been
       // reported yet, but we don't want to crash javac.
-      log.error("proc.cant.access", e.sym, e.getDetailValue(), getStackTraceAsString(e));
+      log.error("proc.cant.access", e.sym, getDetailValue(e), getStackTraceAsString(e));
     } finally {
       log.useSource(originalSource);
+    }
+  }
+
+  private static Object getDetailValue(CompletionFailure completionFailure) {
+    try {
+      // The return type of getDetailValue() changed from Object to JCDiagnostic in JDK 10,
+      // but the rest of the signature is unchanged between the two versions,
+      // see https://bugs.openjdk.java.net/browse/JDK-817032,
+      return CompletionFailure.class.getMethod("getDetailValue").invoke(completionFailure);
+    } catch (ReflectiveOperationException e) {
+      throw new LinkageError(e.getMessage(), e);
     }
   }
 
