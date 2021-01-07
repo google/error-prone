@@ -54,4 +54,21 @@ public class ModifyCollectionInEnhancedForLoopTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void concurrentMap() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.util.Map;",
+            "import java.util.concurrent.ConcurrentMap;",
+            "class Test {",
+            "  void f(ConcurrentMap<String, Integer> map) {",
+            "    for (Map.Entry<String, Integer> e : map.entrySet()) {",
+            "      map.remove(e.getKey());",
+            "    }",
+            "  }",
+            "}")
+        .doTest();
+  }
 }
