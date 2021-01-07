@@ -172,7 +172,7 @@ public class BaseErrorProneJavaCompiler implements JavaCompiler {
     if (compilePolicy == null) {
       throw new InvalidCommandLineOptionException(
           "The default compilation policy (by-todo) is not supported by Error Prone,"
-              + " pass -XDcompilePolicy=byfile instead");
+              + " pass -XDcompilePolicy=simple instead");
     }
     switch (compilePolicy) {
       case "byfile":
@@ -182,7 +182,7 @@ public class BaseErrorProneJavaCompiler implements JavaCompiler {
         throw new InvalidCommandLineOptionException(
             String.format(
                 "-XDcompilePolicy=%s is not supported by Error Prone,"
-                    + " pass -XDcompilePolicy=byfile instead",
+                    + " pass -XDcompilePolicy=simple instead",
                 compilePolicy));
     }
   }
@@ -200,7 +200,7 @@ public class BaseErrorProneJavaCompiler implements JavaCompiler {
         return args; // don't do anything if a valid policy is already set
       }
     }
-    return ImmutableList.<String>builder().addAll(args).add("-XDcompilePolicy=byfile").build();
+    return ImmutableList.<String>builder().addAll(args).add("-XDcompilePolicy=simple").build();
   }
 
   /** Registers our message bundle. */
