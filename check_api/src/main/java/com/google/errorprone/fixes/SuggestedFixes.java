@@ -1310,6 +1310,7 @@ public class SuggestedFixes {
     for (Diagnostic<? extends JavaFileObject> diagnostic : diagnosticListener.getDiagnostics()) {
       warningIsError |= diagnostic.getCode().equals("compiler.err.warnings.and.werror");
       JavaFileObject diagnosticSource = diagnostic.getSource();
+      // If the source's origin is unknown, assume that new diagnostics are due to a modification.
       boolean diagnosticInSameCompilationUnit = diagnosticSource == null
               || diagnosticSource.toUri().equals(modifiedFileUri);
       switch (diagnostic.getKind()) {
