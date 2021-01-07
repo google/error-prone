@@ -383,9 +383,11 @@ public final class MixedMutabilityReturnType extends BugChecker
         return null;
       }
 
-      fix.replace(
-          ASTHelpers.getErasedTypeTree(variableTree.getType()),
-          qualifyType(state, fix, details.builderType()));
+      Tree erasedType = ASTHelpers.getErasedTypeTree(variableTree.getType());
+      // don't try to replace synthetic nodes for `var`
+      if (ASTHelpers.getStartPosition(erasedType) != -1) {
+        fix.replace(erasedType, qualifyType(state, fix, details.builderType()));
+      }
       if (variableTree.getInitializer() != null) {
         fix.replace(
             variableTree.getInitializer(),

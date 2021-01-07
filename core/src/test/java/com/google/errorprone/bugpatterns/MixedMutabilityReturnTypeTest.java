@@ -16,9 +16,12 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static org.junit.Assume.assumeTrue;
+
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.BugCheckerRefactoringTestHelper.FixChoosers;
 import com.google.errorprone.CompilationTestHelper;
+import com.google.errorprone.util.RuntimeVersion;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -472,6 +475,45 @@ public final class MixedMutabilityReturnTypeTest {
             "    return ImmutableList.of(a);",
             "  }",
             "}")
+        .doTest();
+  }
+
+  @Test
+  public void refactoringWithVar() {
+    assumeTrue(RuntimeVersion.isAtLeast15());
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            "import java.util.ArrayList;",
+            "import java.util.Collections;",
+            "import java.util.List;",
+            "final class Test {",
+            "  List<Object> foo() {",
+            "    if (hashCode() > 0) {",
+            "      return Collections.emptyList();",
+            "    }",
+            "    var ints = new ArrayList<>();",
+            "    ints.add(1);",
+            "    return ints;",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "import com.google.common.collect.ImmutableList;",
+            "import java.util.ArrayList;",
+            "import java.util.Collections;",
+            "import java.util.List;",
+            "final class Test {",
+            "  ImmutableList<Object> foo() {",
+            "    if (hashCode() > 0) {",
+            "      return ImmutableList.of();",
+            "    }",
+            "    var ints = ImmutableList.builder();",
+            "    ints.add(1);",
+            "    return ints.build();",
+            "  }",
+            "}")
+        .setFixChooser(FixChoosers.SECOND)
         .doTest();
   }
 }
