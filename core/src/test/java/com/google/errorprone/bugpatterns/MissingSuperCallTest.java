@@ -55,6 +55,30 @@ public class MissingSuperCallTest {
   }
 
   @Test
+  public void androidx() {
+    compilationHelper
+        .addSourceLines(
+            "androidx/annotation/CallSuper.java",
+            "package androidx.annotation;",
+            "public @interface CallSuper {}")
+        .addSourceLines(
+            "Super.java",
+            "import androidx.annotation.CallSuper;",
+            "public class Super {",
+            "  @CallSuper public void doIt() {}",
+            "}")
+        .addSourceLines(
+            "Sub.java",
+            "public class Sub extends Super {",
+            "  // BUG: Diagnostic contains:",
+            "  // This method overrides Super#doIt, which is annotated with @CallSuper,",
+            "  // but does not call the super method",
+            "  @Override public void doIt() {}",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void javax() {
     compilationHelper
         .addSourceLines(

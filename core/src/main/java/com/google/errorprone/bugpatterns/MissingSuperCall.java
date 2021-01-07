@@ -55,6 +55,7 @@ public class MissingSuperCall extends BugChecker
 
   private enum AnnotationType {
     ANDROID("android.support.annotation.CallSuper"),
+    ANDROIDX("androidx.annotation.CallSuper"),
     ERROR_PRONE("com.google.errorprone.annotations.OverridingMethodsMustInvokeSuper"),
     JSR305("javax.annotation.OverridingMethodsMustInvokeSuper"),
     FINDBUGS("edu.umd.cs.findbugs.annotations.OverrideMustInvoke");
