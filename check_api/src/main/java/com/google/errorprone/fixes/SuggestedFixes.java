@@ -1309,8 +1309,9 @@ public class SuggestedFixes {
     boolean warningInSameCompilationUnit = false;
     for (Diagnostic<? extends JavaFileObject> diagnostic : diagnosticListener.getDiagnostics()) {
       warningIsError |= diagnostic.getCode().equals("compiler.err.warnings.and.werror");
-      boolean diagnosticInSameCompilationUnit =
-          diagnostic.getSource().toUri().equals(modifiedFileUri);
+      JavaFileObject diagnosticSource = diagnostic.getSource();
+      boolean diagnosticInSameCompilationUnit = diagnosticSource == null
+              || diagnosticSource.toUri().equals(modifiedFileUri);
       switch (diagnostic.getKind()) {
         case ERROR:
           ++countErrors;
