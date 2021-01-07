@@ -120,4 +120,24 @@ public final class UnnecessarilyVisibleTest {
         .expectUnchanged()
         .doTest();
   }
+
+  @Test
+  public void overridesPublicMethod_noFinding() {
+    helper
+        .addInputLines(
+            "A.java", //
+            "class A {",
+            "  public void foo() {}",
+            "}")
+        .expectUnchanged()
+        .addInputLines(
+            "Test.java", //
+            "import com.google.inject.Provides;",
+            "class Test extends A {",
+            "  @Provides",
+            "  public void foo() {}",
+            "}")
+        .expectUnchanged()
+        .doTest();
+  }
 }

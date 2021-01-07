@@ -23,6 +23,7 @@ import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.fixes.SuggestedFixes.removeModifiers;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.annotationsAmong;
+import static com.google.errorprone.util.ASTHelpers.findSuperMethod;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.hasDirectAnnotationWithSimpleName;
 
@@ -33,6 +34,7 @@ import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.suppliers.Supplier;
 import com.sun.source.tree.MethodTree;
+import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.util.Name;
 import java.util.Set;
 import java.util.stream.Stream;
@@ -65,9 +67,14 @@ public final class UnnecessarilyVisible extends BugChecker implements MethodTree
 
   @Override
   public Description matchMethod(MethodTree tree, VisitorState state) {
-    if (annotationsAmong(getSymbol(tree), FRAMEWORK_ANNOTATIONS.get(state), state).isEmpty()) {
+    MethodSymbol symbol = getSymbol(tree);
+    if (annotationsAmong(symbol, FRAMEWORK_ANNOTATIONS.get(state), state).isEmpty()) {
       return NO_MATCH;
     }
+    if (findSuperMethod(symbol, state.getTypes()).isPresent()) {
+      return NO_MATCH;
+    }
+
     if (hasDirectAnnotationWithSimpleName(tree, "VisibleForTesting")) {
       return NO_MATCH;
     }
