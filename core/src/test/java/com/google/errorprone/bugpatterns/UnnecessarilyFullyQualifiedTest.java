@@ -16,6 +16,7 @@
 package com.google.errorprone.bugpatterns;
 
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
+import com.google.errorprone.CompilationTestHelper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -128,6 +129,20 @@ public final class UnnecessarilyFullyQualifiedTest {
             "  Foo foo();",
             "  Foo.Builder fooBuilder();",
             "}")
+        .doTest();
+  }
+
+  @Test
+  public void packageInfo() {
+    CompilationTestHelper.newInstance(UnnecessarilyFullyQualified.class, getClass())
+        .addSourceLines(
+            "a/A.java", //
+            "package a;",
+            "public @interface A {}")
+        .addSourceLines(
+            "b/package-info.java", //
+            "@a.A",
+            "package b;")
         .doTest();
   }
 }

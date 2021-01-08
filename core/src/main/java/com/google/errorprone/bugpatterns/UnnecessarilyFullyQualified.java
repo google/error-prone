@@ -71,6 +71,9 @@ public final class UnnecessarilyFullyQualified extends BugChecker
             t -> getSymbol(tree) != null && !getGeneratedBy(getSymbol(tree), state).isEmpty())) {
       return NO_MATCH;
     }
+    if (isPackageInfo(tree)) {
+      return NO_MATCH;
+    }
     Table<Name, TypeSymbol, List<TreePath>> table = HashBasedTable.create();
     Set<Name> identifiersSeen = new HashSet<>();
     new SuppressibleTreePathScanner<Void, Void>() {
@@ -182,5 +185,14 @@ public final class UnnecessarilyFullyQualified extends BugChecker
       }
     }
     return NO_MATCH;
+  }
+
+  private boolean isPackageInfo(CompilationUnitTree tree) {
+    String name = tree.getSourceFile().getName();
+    int idx = name.lastIndexOf('/');
+    if (idx != -1) {
+      name = name.substring(idx + 1);
+    }
+    return name.equals("package-info.java");
   }
 }
