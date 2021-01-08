@@ -38,9 +38,7 @@ import com.sun.source.tree.MethodInvocationTree;
  */
 @BugPattern(
     name = "ThreadPriorityCheck",
-    summary =
-        "Relying on the thread scheduler is discouraged; "
-            + "see Effective Java 3rd Edition Item 84.",
+    summary = "Relying on the thread scheduler is discouraged.",
     severity = WARNING)
 public class ThreadPriorityCheck extends BugChecker implements MethodInvocationTreeMatcher {
 
