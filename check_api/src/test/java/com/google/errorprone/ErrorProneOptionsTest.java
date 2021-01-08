@@ -269,4 +269,11 @@ public class ErrorProneOptionsTest {
     assertThat(options.patchingOptions().importOrganizer())
         .isSameInstanceAs(ImportOrganizer.ANDROID_STATIC_LAST_ORGANIZER);
   }
+
+  @Test
+  public void noSuchXepFlag() {
+    assertThrows(
+        InvalidCommandLineOptionException.class,
+        () -> ErrorProneOptions.processArgs(new String[] {"-XepNoSuchFlag"}));
+  }
 }

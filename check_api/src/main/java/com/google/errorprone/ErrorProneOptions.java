@@ -45,6 +45,7 @@ import java.util.regex.Pattern;
  */
 public class ErrorProneOptions {
 
+  private static final String PREFIX = "-Xep";
   private static final String SEVERITY_PREFIX = "-Xep:";
   private static final String PATCH_CHECKS_PREFIX = "-XepPatchChecks:";
   private static final String PATCH_OUTPUT_LOCATION = "-XepPatchLocation:";
@@ -461,6 +462,9 @@ public class ErrorProneOptions {
             builder.setExcludedPattern(Pattern.compile(pathRegex));
 
           } else {
+            if (arg.startsWith(PREFIX)) {
+              throw new InvalidCommandLineOptionException("invalid flag: " + arg);
+            }
             remainingArgs.add(arg);
           }
       }
