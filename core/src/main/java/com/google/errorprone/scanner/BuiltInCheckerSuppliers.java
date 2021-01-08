@@ -365,7 +365,6 @@ import com.google.errorprone.bugpatterns.WaitNotInLoop;
 import com.google.errorprone.bugpatterns.WildcardImport;
 import com.google.errorprone.bugpatterns.WithSignatureDiscouraged;
 import com.google.errorprone.bugpatterns.WrongOneof;
-import com.google.errorprone.bugpatterns.WrongParameterPackage;
 import com.google.errorprone.bugpatterns.XorPower;
 import com.google.errorprone.bugpatterns.android.BinderIdentityRestoredDangerously;
 import com.google.errorprone.bugpatterns.android.BundleDeserializationCast;
@@ -1035,8 +1034,7 @@ public class BuiltInCheckerSuppliers {
           UrlInSee.class,
           UseEnumSwitch.class,
           VarChecker.class,
-          WildcardImport.class,
-          WrongParameterPackage.class
+          WildcardImport.class
           // end
           );
 
