@@ -138,18 +138,6 @@ public final class MissingSummaryTest {
   }
 
   @Test
-  public void negativeEmpty() {
-    helper
-        .addSourceLines(
-            "Test.java", //
-            "interface Test {",
-            "  /** */",
-            "  int test();",
-            "}")
-        .doTest();
-  }
-
-  @Test
   public void negativeAnnotations() {
     helper
         .addSourceLines(
@@ -219,6 +207,19 @@ public final class MissingSummaryTest {
             "  // BUG: Diagnostic contains:",
             "  /** @return */",
             "  int test(int n);",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void emptyComment() {
+    helper
+        .addSourceLines(
+            "Test.java", //
+            "package test;",
+            "/** */",
+            "// BUG: Diagnostic contains: summary line is required",
+            "public class Test {",
             "}")
         .doTest();
   }

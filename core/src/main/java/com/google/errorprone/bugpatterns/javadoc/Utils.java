@@ -20,6 +20,7 @@ import static com.google.errorprone.names.LevenshteinEditDistance.getEditDistanc
 
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.SuggestedFix;
+import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.doctree.DocCommentTree;
 import com.sun.source.doctree.DocTree;
 import com.sun.source.tree.CompilationUnitTree;
@@ -87,6 +88,11 @@ final class Utils {
   static DiagnosticPosition diagnosticPosition(DocTreePath path, VisitorState state) {
     int startPosition = getStartPosition(path.getLeaf(), state);
     Tree tree = path.getTreePath().getLeaf();
+    if (startPosition == Position.NOPOS) {
+      // javac doesn't seem to store positions for e.g. trivial empty javadoc like `/** */`
+      // see: https://github.com/google/error-prone/issues/1981
+      startPosition = ASTHelpers.getStartPosition(tree);
+    }
     return getDiagnosticPosition(startPosition, tree);
   }
 
