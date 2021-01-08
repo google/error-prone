@@ -369,21 +369,21 @@ public class DefaultCharset extends BugChecker
         sym.type, state.getTypeFromString(original.getCanonicalName()), state)) {
       return;
     }
-    state
-        .getPath()
-        .getCompilationUnit()
-        .accept(
-            new TreeScanner<Void, Void>() {
-              @Override
-              public Void visitVariable(VariableTree node, Void unused) {
-                if (sym.equals(ASTHelpers.getSymbol(node))) {
-                  fix.replace(node.getType(), replacement.getSimpleName())
-                      .addImport(replacement.getCanonicalName());
-                }
-                return null;
-              }
-            },
-            null);
+    new TreeScanner<Void, Void>() {
+      @Override
+      public Void visitVariable(VariableTree node, Void unused) {
+        if (!sym.equals(ASTHelpers.getSymbol(node))) {
+          return null;
+        }
+        if (ASTHelpers.getStartPosition(node.getType()) == -1) {
+          // ignore synthetic tree nodes for `var`
+          return null;
+        }
+        fix.replace(node.getType(), replacement.getSimpleName())
+            .addImport(replacement.getCanonicalName());
+        return null;
+      }
+    }.scan(state.getPath().getCompilationUnit(), null);
   }
 
   private Description handleFileWriter(NewClassTree tree, VisitorState state) {

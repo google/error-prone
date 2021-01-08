@@ -16,9 +16,12 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static org.junit.Assume.assumeTrue;
+
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.BugCheckerRefactoringTestHelper.FixChoosers;
 import com.google.errorprone.CompilationTestHelper;
+import com.google.errorprone.util.RuntimeVersion;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -495,6 +498,33 @@ public class DefaultCharsetTest {
             "    new Scanner((File) null, UTF_8.name());",
             "    new Scanner((Path) null, UTF_8.name());",
             "    new Scanner((ReadableByteChannel) null, UTF_8.name());",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void withVar() {
+    assumeTrue(RuntimeVersion.isAtLeast15());
+    refactoringTest()
+        .addInputLines(
+            "in/Test.java",
+            "import java.io.File;",
+            "import java.io.FileWriter;",
+            "class Test {",
+            "  void f(File file) throws Exception {",
+            "    var fileWriter = new FileWriter(file);",
+            "  }",
+            "}")
+        .addOutputLines(
+            "out/Test.java",
+            "import static java.nio.charset.StandardCharsets.UTF_8;",
+            "import java.io.File;",
+            "import java.io.FileWriter;",
+            "import java.nio.file.Files;",
+            "class Test {",
+            "  void f(File file) throws Exception {",
+            "    var fileWriter = Files.newBufferedWriter(file.toPath(), UTF_8);",
             "  }",
             "}")
         .doTest();
