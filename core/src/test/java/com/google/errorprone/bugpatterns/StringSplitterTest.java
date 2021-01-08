@@ -438,4 +438,44 @@ public class StringSplitterTest {
         .setArgs("-cp", ":")
         .doTest(TestMode.TEXT_MATCH);
   }
+
+  @Test
+  public void patternSplit() {
+    testHelper
+        .addInputLines(
+            "Test.java",
+            "import java.util.regex.Pattern;",
+            "class Test {",
+            "  void f() {",
+            "    String x = Pattern.compile(\"\").split(\"c\")[0];",
+            "    for (String s : Pattern.compile(\"\").split(\":\")) {}",
+            "    String[] xs = Pattern.compile(\"c\").split(\"\");",
+            "    xs[0] = null;",
+            "    System.err.println(xs[0]);",
+            "    String[] pieces = Pattern.compile(\":\").split(\"\");",
+            "    for (int i = 0; i < pieces.length; i++) {}",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "import com.google.common.base.Splitter;",
+            "import com.google.common.collect.Iterables;",
+            "import java.util.ArrayList;",
+            "import java.util.List;",
+            "import java.util.regex.Pattern;",
+            "",
+            "class Test {",
+            "  void f() {",
+            "    String x = Iterables.get(Splitter.on(Pattern.compile(\"\")).split(\"c\"), 0);",
+            "    for (String s : Splitter.on(Pattern.compile(\"\")).split(\":\")) {}",
+            "    List<String> xs ="
+                + " new ArrayList<>(Splitter.on(Pattern.compile(\"c\")).splitToList(\"\"));",
+            "    xs.set(0, null);",
+            "    System.err.println(xs.get(0));",
+            "    List<String> pieces = Splitter.on(Pattern.compile(\":\")).splitToList(\"\");",
+            "    for (int i = 0; i < pieces.size(); i++) {}",
+            "  }",
+            "}")
+        .doTest(TestMode.TEXT_MATCH);
+  }
 }

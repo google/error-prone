@@ -1,5 +1,5 @@
-`String.split(String)` has surprising behaviour. For example, consider the
-following puzzler from
+`String.split(String)` and `Pattern.split(CharSequence) have surprising
+behaviour. For example, consider the following puzzler from
 http://konigsberg.blogspot.com/2009/11/final-thoughts-java-puzzler-splitting.html:
 
 ```java
@@ -11,13 +11,13 @@ The result is `[""]` and `[]`!
 
 More examples:
 
-input    | `input.split(":")`  | `Splitter.on(':').split(input)`
--------- | ------------------- | -------------------------------
-`""`     | `[""]`              | `[""]`
-`":"`    | `[]`                | `["", ""]`
-`":::"`  | `[]`                | `["", "", "", ""]`
-`"a:::"` | `["a"]`             | `["a", "", "", ""]`
-`":::b"` | `["", "", "", "b"]` | `["", "", "", "b"]`
+input    | `input.split(":")`  | `Pattern.compile(":").split(input) | `Splitter.on(':').split(input)`
+-------- | ------------------- | ---------------------------------- | -------------------------------
+`""`     | `[""]`              | `[""]`                             | `[""]`
+`":"`    | `[]`                | `[]`                               | `["", ""]`
+`":::"`  | `[]`                | `[]`                               | `["", "", "", ""]`
+`"a:::"` | `["a"]`             | `["a"]`                            | `["a", "", "", ""]`
+`":::b"` | `["", "", "", "b"]` | `["", "", "", "b"]`                | `["", "", "", "b"]`
 
 Prefer either:
 
@@ -27,7 +27,9 @@ Prefer either:
     handling of empty strings and the trimming of whitespace with `trimResults`
     and `omitEmptyStrings`.
 
-*   [`String.split(String, int)`](https://docs.oracle.com/javase/9/docs/api/java/lang/String.html#split-java.lang.String-int-)
+*   [`String.split(String, int)`](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html#split\(java.lang.String,int\))
+    or
+    [`Pattern.split(CharSequence, int)`](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html#split\(java.lang.String,int\))
     and setting an explicit 'limit' to `-1` to match the behaviour of
     `Splitter`.
 
