@@ -50,6 +50,9 @@ Classes that implement Annotation must override equals and hashCode. Consider us
 __[BadShiftAmount](bugpattern/BadShiftAmount)__<br>
 Shift by an amount that is out of range
 
+__[BanSerializableRead](bugpattern/BanSerializableRead)__<br>
+Deserializing user input via the `Serializable` API is extremely dangerous
+
 __[BundleDeserializationCast](bugpattern/BundleDeserializationCast)__<br>
 Object serialized in Bundle may have been flattened to base type.
 
@@ -889,6 +892,9 @@ __[NullablePrimitive](bugpattern/NullablePrimitive)__<br>
 __[NullableVoid](bugpattern/NullableVoid)__<br>
 void-returning methods should not be annotated with @Nullable, since they cannot return null
 
+__[ObjectEqualsForPrimitives](bugpattern/ObjectEqualsForPrimitives)__<br>
+Avoid unnecessary boxing by using plain == for primitive types.
+
 __[ObjectToString](bugpattern/ObjectToString)__<br>
 Calling toString on Objects that don&#39;t override toString() doesn&#39;t provide useful information
 
@@ -995,7 +1001,7 @@ __[ThreadLocalUsage](bugpattern/ThreadLocalUsage)__<br>
 ThreadLocals should be stored in static fields
 
 __[ThreadPriorityCheck](bugpattern/ThreadPriorityCheck)__<br>
-Relying on the thread scheduler is discouraged; see Effective Java 3rd Edition Item 84.
+Relying on the thread scheduler is discouraged.
 
 __[ThreeLetterTimeZoneID](bugpattern/ThreeLetterTimeZoneID)__<br>
 Three-letter time zone identifiers are deprecated, may be ambiguous, and might not do what you intend; the full IANA time zone ID should be used instead.
@@ -1157,9 +1163,6 @@ __[NoAllocation](bugpattern/NoAllocation)__<br>
 
 __[NumericEquality](bugpattern/NumericEquality)__<br>
 Numeric comparison using reference equality instead of value equality
-
-__[ParameterPackage](bugpattern/ParameterPackage)__<br>
-Method parameter has wrong package
 
 __[RefersToDaggerCodegen](bugpattern/RefersToDaggerCodegen)__<br>
 Don&#39;t refer to Dagger&#39;s internal or generated code

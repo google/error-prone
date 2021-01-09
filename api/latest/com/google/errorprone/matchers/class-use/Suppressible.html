@@ -672,48 +672,55 @@ boolean&nbsp;suppressedInGeneratedCode,
 </tr>
 <tr class="alt-color">
 <td class="col-first"><code>class&nbsp;</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/BanSerializableRead.html" title="class in com.google.errorprone.bugpatterns">BanSerializableRead</a></span></code></th>
+<td class="col-last">
+<div class="block">A <a href="../../bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a> that detects use of the unsafe <a href="https://docs.oracle.com/javase/8/docs/api/java/io/Serializable.html" title="class or interface in java.io" class="external-link"><code>Serializable</code></a> API.</div>
+</td>
+</tr>
+<tr class="row-color">
+<td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/BigDecimalEquals.html" title="class in com.google.errorprone.bugpatterns">BigDecimalEquals</a></span></code></th>
 <td class="col-last">
 <div class="block">Matches use of <code>BigDecimal#equals</code>, which compares scale as well (which is not likely to be
  intended).</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/BigDecimalLiteralDouble.html" title="class in com.google.errorprone.bugpatterns">BigDecimalLiteralDouble</a></span></code></th>
 <td class="col-last">
 <div class="block">Matches usages of <code>new BigDecimal(double)</code> which lose precision.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/BooleanParameter.html" title="class in com.google.errorprone.bugpatterns">BooleanParameter</a></span></code></th>
 <td class="col-last">
 <div class="block">A <a href="../../bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>; see the associated <a href="../../BugPattern.html" title="annotation in com.google.errorprone"><code>BugPattern</code></a> annotation for details.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/BoxedPrimitiveConstructor.html" title="class in com.google.errorprone.bugpatterns">BoxedPrimitiveConstructor</a></span></code></th>
 <td class="col-last">
 <div class="block">A <a href="../../bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>; see the associated <a href="../../BugPattern.html" title="annotation in com.google.errorprone"><code>BugPattern</code></a> annotation for details.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/BoxedPrimitiveEquality.html" title="class in com.google.errorprone.bugpatterns">BoxedPrimitiveEquality</a></span></code></th>
 <td class="col-last">
 <div class="block">A <a href="../../bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>; see the associated <a href="../../BugPattern.html" title="annotation in com.google.errorprone"><code>BugPattern</code></a> annotation for details.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a></span></code></th>
 <td class="col-last">
 <div class="block">A base class for implementing bug checkers.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/ByteBufferBackingArray.html" title="class in com.google.errorprone.bugpatterns">ByteBufferBackingArray</a></span></code></th>
 <td class="col-last">
@@ -721,49 +728,49 @@ boolean&nbsp;suppressedInGeneratedCode,
  array, or when the buffer wasn't initialized using ByteBuffer.wrap() or ByteBuffer.allocate().</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/CacheLoaderNull.html" title="class in com.google.errorprone.bugpatterns">CacheLoaderNull</a></span></code></th>
 <td class="col-last">
 <div class="block">A <a href="../../bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>; see the associated <a href="../../BugPattern.html" title="annotation in com.google.errorprone"><code>BugPattern</code></a> annotation for details.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/CannotMockFinalClass.html" title="class in com.google.errorprone.bugpatterns">CannotMockFinalClass</a></span></code></th>
 <td class="col-last">
 <div class="block">Bug pattern to recognize attempts to mock final types.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/CanonicalDuration.html" title="class in com.google.errorprone.bugpatterns">CanonicalDuration</a></span></code></th>
 <td class="col-last">
 <div class="block">A <a href="../../bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>; see the associated <a href="../../BugPattern.html" title="annotation in com.google.errorprone"><code>BugPattern</code></a> annotation for details.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/CatchAndPrintStackTrace.html" title="class in com.google.errorprone.bugpatterns">CatchAndPrintStackTrace</a></span></code></th>
 <td class="col-last">
 <div class="block">A <a href="../../bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>; see the associated <a href="../../BugPattern.html" title="annotation in com.google.errorprone"><code>BugPattern</code></a> annotation for details.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/CatchFail.html" title="class in com.google.errorprone.bugpatterns">CatchFail</a></span></code></th>
 <td class="col-last">
 <div class="block">A <a href="../../bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>; see the associated <a href="../../BugPattern.html" title="annotation in com.google.errorprone"><code>BugPattern</code></a> annotation for details.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/CatchingUnchecked.html" title="class in com.google.errorprone.bugpatterns">CatchingUnchecked</a></span></code></th>
 <td class="col-last">
 <div class="block">Flags code which catches <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/RuntimeException.html" title="class or interface in java.lang" class="external-link"><code>RuntimeException</code></a>s under the guise of catching <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Exception.html" title="class or interface in java.lang" class="external-link"><code>Exception</code></a>.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/ChainedAssertionLosesContext.html" title="class in com.google.errorprone.bugpatterns">ChainedAssertionLosesContext</a></span></code></th>
 <td class="col-last">
@@ -771,7 +778,7 @@ boolean&nbsp;suppressedInGeneratedCode,
  Subject</code> assertion method.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/ChainingConstructorIgnoresParameter.html" title="class in com.google.errorprone.bugpatterns">ChainingConstructorIgnoresParameter</a></span></code></th>
 <td class="col-last">
@@ -779,94 +786,94 @@ boolean&nbsp;suppressedInGeneratedCode,
  the caller passes <code>foo</code> as a parameter.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/CheckedExceptionNotThrown.html" title="class in com.google.errorprone.bugpatterns">CheckedExceptionNotThrown</a></span></code></th>
 <td class="col-last">
 <div class="block">Flags checked exceptions which are claimed to be thrown, but are not.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/CheckNotNullMultipleTimes.html" title="class in com.google.errorprone.bugpatterns">CheckNotNullMultipleTimes</a></span></code></th>
 <td class="col-last">
 <div class="block">Checks for the same variable being checked against null twice in a method.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/CheckReturnValue.html" title="class in com.google.errorprone.bugpatterns">CheckReturnValue</a></span></code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/ClassCanBeStatic.html" title="class in com.google.errorprone.bugpatterns">ClassCanBeStatic</a></span></code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/ClassName.html" title="class in com.google.errorprone.bugpatterns">ClassName</a></span></code></th>
 <td class="col-last">
 <div class="block">A <a href="../../bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>; see the associated <a href="../../BugPattern.html" title="annotation in com.google.errorprone"><code>BugPattern</code></a> annotation for details.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/ClassNamedLikeTypeParameter.html" title="class in com.google.errorprone.bugpatterns">ClassNamedLikeTypeParameter</a></span></code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/ClassNewInstance.html" title="class in com.google.errorprone.bugpatterns">ClassNewInstance</a></span></code></th>
 <td class="col-last">
 <div class="block">A <a href="../../bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>; see the associated <a href="../../BugPattern.html" title="annotation in com.google.errorprone"><code>BugPattern</code></a> annotation for details.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/CollectionToArraySafeParameter.html" title="class in com.google.errorprone.bugpatterns">CollectionToArraySafeParameter</a></span></code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/CollectorShouldNotUseState.html" title="class in com.google.errorprone.bugpatterns">CollectorShouldNotUseState</a></span></code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/ComparableAndComparator.html" title="class in com.google.errorprone.bugpatterns">ComparableAndComparator</a></span></code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/ComparableType.html" title="class in com.google.errorprone.bugpatterns">ComparableType</a></span></code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/CompareToZero.html" title="class in com.google.errorprone.bugpatterns">CompareToZero</a></span></code></th>
 <td class="col-last">
 <div class="block">Suggests comparing the result of <code>compareTo</code> to only <code>0</code>.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/ComparingThisWithNull.html" title="class in com.google.errorprone.bugpatterns">ComparingThisWithNull</a></span></code></th>
 <td class="col-last">
 <div class="block">Check for expressions containing <code>this != null</code> or <code>this == null</code></div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/ComparisonContractViolated.html" title="class in com.google.errorprone.bugpatterns">ComparisonContractViolated</a></span></code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/ComparisonOutOfRange.html" title="class in com.google.errorprone.bugpatterns">ComparisonOutOfRange</a></span></code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/CompileTimeConstantChecker.html" title="class in com.google.errorprone.bugpatterns">CompileTimeConstantChecker</a></span></code></th>
 <td class="col-last">
@@ -876,38 +883,38 @@ boolean&nbsp;suppressedInGeneratedCode,
  compile-time constant expression.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/ComplexBooleanConstant.html" title="class in com.google.errorprone.bugpatterns">ComplexBooleanConstant</a></span></code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/ComputeIfAbsentAmbiguousReference.html" title="class in com.google.errorprone.bugpatterns">ComputeIfAbsentAmbiguousReference</a></span></code></th>
 <td class="col-last">
 <div class="block">Flags ambiguous creations of objects in <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Map.html#computeIfAbsent(K,java.util.function.Function)" title="class or interface in java.util" class="external-link"><code>Map.computeIfAbsent(K, java.util.function.Function&lt;? super K, ? extends V&gt;)</code></a>.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/ConditionalExpressionNumericPromotion.html" title="class in com.google.errorprone.bugpatterns">ConditionalExpressionNumericPromotion</a></span></code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/ConstantField.html" title="class in com.google.errorprone.bugpatterns">ConstantField</a></span></code></th>
 <td class="col-last">
 <div class="block">A <a href="../../bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>; see the associated <a href="../../BugPattern.html" title="annotation in com.google.errorprone"><code>BugPattern</code></a> annotation for details.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/ConstantOverflow.html" title="class in com.google.errorprone.bugpatterns">ConstantOverflow</a></span></code></th>
 <td class="col-last">
 <div class="block">A <a href="../../bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>; see the associated <a href="../../BugPattern.html" title="annotation in com.google.errorprone"><code>BugPattern</code></a> annotation for details.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/ConstantPatternCompile.html" title="class in com.google.errorprone.bugpatterns">ConstantPatternCompile</a></span></code></th>
 <td class="col-last">
@@ -915,96 +922,96 @@ boolean&nbsp;suppressedInGeneratedCode,
  be constants.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/DangerousLiteralNullChecker.html" title="class in com.google.errorprone.bugpatterns">DangerousLiteralNullChecker</a></span></code></th>
 <td class="col-last">
 <div class="block">A <a href="../../bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>; see the associated <a href="../../BugPattern.html" title="annotation in com.google.errorprone"><code>BugPattern</code></a> annotation for details.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/DateFormatConstant.html" title="class in com.google.errorprone.bugpatterns">DateFormatConstant</a></span></code></th>
 <td class="col-last">
 <div class="block">A <a href="../../bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>; see the associated <a href="../../BugPattern.html" title="annotation in com.google.errorprone"><code>BugPattern</code></a> annotation for details.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/DeadException.html" title="class in com.google.errorprone.bugpatterns">DeadException</a></span></code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/DeadThread.html" title="class in com.google.errorprone.bugpatterns">DeadThread</a></span></code></th>
 <td class="col-last">
 <div class="block">A <a href="../../bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>; see the associated <a href="../../BugPattern.html" title="annotation in com.google.errorprone"><code>BugPattern</code></a> annotation for details.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/DeduplicateConstants.html" title="class in com.google.errorprone.bugpatterns">DeduplicateConstants</a></span></code></th>
 <td class="col-last">
 <div class="block">A checker that suggests deduplicating literals with existing constant variables.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/DefaultCharset.html" title="class in com.google.errorprone.bugpatterns">DefaultCharset</a></span></code></th>
 <td class="col-last">
 <div class="block">A <a href="../../bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>; see the associated <a href="../../BugPattern.html" title="annotation in com.google.errorprone"><code>BugPattern</code></a> annotation for details.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/DefaultPackage.html" title="class in com.google.errorprone.bugpatterns">DefaultPackage</a></span></code></th>
 <td class="col-last">
 <div class="block">Java classes shouldn't use default package.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/DepAnn.html" title="class in com.google.errorprone.bugpatterns">DepAnn</a></span></code></th>
 <td class="col-last">
 <div class="block">Matches the behaviour of the javac dep-ann Xlint warning.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/DescribeMatch.html" title="class in com.google.errorprone.bugpatterns">DescribeMatch</a></span></code></th>
 <td class="col-last">
 <div class="block">A <a href="../../bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>; see the associated <a href="../../BugPattern.html" title="annotation in com.google.errorprone"><code>BugPattern</code></a> annotation for details.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/DifferentNameButSame.html" title="class in com.google.errorprone.bugpatterns">DifferentNameButSame</a></span></code></th>
 <td class="col-last">
 <div class="block">Discourages using multiple names to refer to the same type within a file (e.g.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/DiscardedPostfixExpression.html" title="class in com.google.errorprone.bugpatterns">DiscardedPostfixExpression</a></span></code></th>
 <td class="col-last">
 <div class="block">A <a href="../../bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>; see the associated <a href="../../BugPattern.html" title="annotation in com.google.errorprone"><code>BugPattern</code></a> annotation for details.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/DivZero.html" title="class in com.google.errorprone.bugpatterns">DivZero</a></span></code></th>
 <td class="col-last">
 <div class="block">Matches the behaviour of javac's divzero xlint warning.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/DoNotCallChecker.html" title="class in com.google.errorprone.bugpatterns">DoNotCallChecker</a></span></code></th>
 <td class="col-last">
 <div class="block">A <a href="../../bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>; see the associated <a href="../../BugPattern.html" title="annotation in com.google.errorprone"><code>BugPattern</code></a> annotation for details.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/DoNotCallSuggester.html" title="class in com.google.errorprone.bugpatterns">DoNotCallSuggester</a></span></code></th>
 <td class="col-last">
@@ -1012,21 +1019,21 @@ boolean&nbsp;suppressedInGeneratedCode,
  calls at compile-time instead failing at runtime.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/DoNotClaimAnnotations.html" title="class in com.google.errorprone.bugpatterns">DoNotClaimAnnotations</a></span></code></th>
 <td class="col-last">
 <div class="block">A <a href="../../bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>; see the associated <a href="../../BugPattern.html" title="annotation in com.google.errorprone"><code>BugPattern</code></a> annotation for details.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/DoNotMockAutoValue.html" title="class in com.google.errorprone.bugpatterns">DoNotMockAutoValue</a></span></code></th>
 <td class="col-last">
 <div class="block">Suggests not mocking AutoValue classes.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/DoNotMockChecker.html" title="class in com.google.errorprone.bugpatterns">DoNotMockChecker</a></span></code></th>
 <td class="col-last">
@@ -1034,42 +1041,42 @@ boolean&nbsp;suppressedInGeneratedCode,
  tested using an alternative instance.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/DoubleBraceInitialization.html" title="class in com.google.errorprone.bugpatterns">DoubleBraceInitialization</a></span></code></th>
 <td class="col-last">
 <div class="block">A <a href="../../bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>; see the associated <a href="../../BugPattern.html" title="annotation in com.google.errorprone"><code>BugPattern</code></a> annotation for details.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/DuplicateMapKeys.html" title="class in com.google.errorprone.bugpatterns">DuplicateMapKeys</a></span></code></th>
 <td class="col-last">
 <div class="block">Flags duplicate keys used in ImmutableMap construction.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/EmptyCatch.html" title="class in com.google.errorprone.bugpatterns">EmptyCatch</a></span></code></th>
 <td class="col-last">
 <div class="block">A <a href="../../bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>; see the associated <a href="../../BugPattern.html" title="annotation in com.google.errorprone"><code>BugPattern</code></a> annotation for details.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/EmptyIfStatement.html" title="class in com.google.errorprone.bugpatterns">EmptyIfStatement</a></span></code></th>
 <td class="col-last">
 <div class="block">This checker finds and fixes empty statements after an if, with no else part.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/EmptyTopLevelDeclaration.html" title="class in com.google.errorprone.bugpatterns">EmptyTopLevelDeclaration</a></span></code></th>
 <td class="col-last">
 <div class="block">A <a href="../../bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>; see the associated <a href="../../BugPattern.html" title="annotation in com.google.errorprone"><code>BugPattern</code></a> annotation for details.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/EqualsGetClass.html" title="class in com.google.errorprone.bugpatterns">EqualsGetClass</a></span></code></th>
 <td class="col-last">
@@ -1077,109 +1084,109 @@ boolean&nbsp;suppressedInGeneratedCode,
  for non-final classes.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/EqualsHashCode.html" title="class in com.google.errorprone.bugpatterns">EqualsHashCode</a></span></code></th>
 <td class="col-last">
 <div class="block">Classes that override <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#equals(java.lang.Object)" title="class or interface in java.lang" class="external-link"><code>Object.equals(java.lang.Object)</code></a> should also override <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#hashCode()" title="class or interface in java.lang" class="external-link"><code>Object.hashCode()</code></a>.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/EqualsIncompatibleType.html" title="class in com.google.errorprone.bugpatterns">EqualsIncompatibleType</a></span></code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/EqualsNaN.html" title="class in com.google.errorprone.bugpatterns">EqualsNaN</a></span></code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/EqualsReference.html" title="class in com.google.errorprone.bugpatterns">EqualsReference</a></span></code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/EqualsUnsafeCast.html" title="class in com.google.errorprone.bugpatterns">EqualsUnsafeCast</a></span></code></th>
 <td class="col-last">
 <div class="block">Checks for <code>equals</code> implementations making unsafe casts.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/EqualsUsingHashCode.html" title="class in com.google.errorprone.bugpatterns">EqualsUsingHashCode</a></span></code></th>
 <td class="col-last">
 <div class="block">Discourages implementing <code>equals</code> using <code>hashCode</code>.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/EqualsWrongThing.html" title="class in com.google.errorprone.bugpatterns">EqualsWrongThing</a></span></code></th>
 <td class="col-last">
 <div class="block">Checks for <code>equals</code> implementations comparing non-corresponding fields.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/ExpectedExceptionChecker.html" title="class in com.google.errorprone.bugpatterns">ExpectedExceptionChecker</a></span></code></th>
 <td class="col-last">
 <div class="block">A <a href="../../bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>; see the associated <a href="../../BugPattern.html" title="annotation in com.google.errorprone"><code>BugPattern</code></a> annotation for details.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/ExtendingJUnitAssert.html" title="class in com.google.errorprone.bugpatterns">ExtendingJUnitAssert</a></span></code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/ExtendsAutoValue.html" title="class in com.google.errorprone.bugpatterns">ExtendsAutoValue</a></span></code></th>
 <td class="col-last">
 <div class="block">Makes sure that you are not extending a class that has @AutoValue as an annotation.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/FallThrough.html" title="class in com.google.errorprone.bugpatterns">FallThrough</a></span></code></th>
 <td class="col-last">
 <div class="block">A <a href="../../bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>; see the associated <a href="../../BugPattern.html" title="annotation in com.google.errorprone"><code>BugPattern</code></a> annotation for details.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/FieldCanBeFinal.html" title="class in com.google.errorprone.bugpatterns">FieldCanBeFinal</a></span></code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/FieldCanBeLocal.html" title="class in com.google.errorprone.bugpatterns">FieldCanBeLocal</a></span></code></th>
 <td class="col-last">
 <div class="block">Flags fields which can be replaced with local variables.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/FieldCanBeStatic.html" title="class in com.google.errorprone.bugpatterns">FieldCanBeStatic</a></span></code></th>
 <td class="col-last">
 <div class="block">Finds fields which can be safely made static.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/Finally.html" title="class in com.google.errorprone.bugpatterns">Finally</a></span></code></th>
 <td class="col-last">
 <div class="block">Matches the behaviour of javac's finally Xlint warning.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/FloatCast.html" title="class in com.google.errorprone.bugpatterns">FloatCast</a></span></code></th>
 <td class="col-last">
 <div class="block">A <a href="../../bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>; see the associated <a href="../../BugPattern.html" title="annotation in com.google.errorprone"><code>BugPattern</code></a> annotation for details.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/FloatingPointAssertionWithinEpsilon.html" title="class in com.google.errorprone.bugpatterns">FloatingPointAssertionWithinEpsilon</a></span></code></th>
 <td class="col-last">
@@ -1188,21 +1195,21 @@ boolean&nbsp;suppressedInGeneratedCode,
  TOLERANCE</code> is not zero.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/FloatingPointLiteralPrecision.html" title="class in com.google.errorprone.bugpatterns">FloatingPointLiteralPrecision</a></span></code></th>
 <td class="col-last">
 <div class="block">A <a href="../../bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>; see the associated <a href="../../BugPattern.html" title="annotation in com.google.errorprone"><code>BugPattern</code></a> annotation for details.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/ForEachIterable.html" title="class in com.google.errorprone.bugpatterns">ForEachIterable</a></span></code></th>
 <td class="col-last">
 <div class="block">A <a href="../../bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>; see the associated <a href="../../BugPattern.html" title="annotation in com.google.errorprone"><code>BugPattern</code></a> annotation for details.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/ForOverrideChecker.html" title="class in com.google.errorprone.bugpatterns">ForOverrideChecker</a></span></code></th>
 <td class="col-last">
@@ -1210,26 +1217,26 @@ boolean&nbsp;suppressedInGeneratedCode,
  called from the defining class.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/FunctionalInterfaceClash.html" title="class in com.google.errorprone.bugpatterns">FunctionalInterfaceClash</a></span></code></th>
 <td class="col-last">
 <div class="block">A <a href="../../bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>; see the associated <a href="../../BugPattern.html" title="annotation in com.google.errorprone"><code>BugPattern</code></a> annotation for details.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/FunctionalInterfaceMethodChanged.html" title="class in com.google.errorprone.bugpatterns">FunctionalInterfaceMethodChanged</a></span></code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/FutureReturnValueIgnored.html" title="class in com.google.errorprone.bugpatterns">FutureReturnValueIgnored</a></span></code></th>
 <td class="col-last">
 <div class="block">See BugPattern annotation.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/FuturesGetCheckedIllegalExceptionType.html" title="class in com.google.errorprone.bugpatterns">FuturesGetCheckedIllegalExceptionType</a></span></code></th>
 <td class="col-last">
@@ -1237,99 +1244,99 @@ boolean&nbsp;suppressedInGeneratedCode,
  pass an incompatible exception type.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/FuzzyEqualsShouldNotBeUsedInEqualsMethod.html" title="class in com.google.errorprone.bugpatterns">FuzzyEqualsShouldNotBeUsedInEqualsMethod</a></span></code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/GetClassOnAnnotation.html" title="class in com.google.errorprone.bugpatterns">GetClassOnAnnotation</a></span></code></th>
 <td class="col-last">
 <div class="block">A <a href="../../bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>; see the associated <a href="../../BugPattern.html" title="annotation in com.google.errorprone"><code>BugPattern</code></a> annotation for details.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/GetClassOnClass.html" title="class in com.google.errorprone.bugpatterns">GetClassOnClass</a></span></code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/GetClassOnEnum.html" title="class in com.google.errorprone.bugpatterns">GetClassOnEnum</a></span></code></th>
 <td class="col-last">
 <div class="block">A <a href="../../bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>; see the associated <a href="../../BugPattern.html" title="annotation in com.google.errorprone"><code>BugPattern</code></a> annotation for details.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/HashCodeToString.html" title="class in com.google.errorprone.bugpatterns">HashCodeToString</a></span></code></th>
 <td class="col-last">
 <div class="block">Classes that override <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#hashCode()" title="class or interface in java.lang" class="external-link"><code>Object.hashCode()</code></a> should consider overriding <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#toString()" title="class or interface in java.lang" class="external-link"><code>Object.toString()</code></a>.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/HashtableContains.html" title="class in com.google.errorprone.bugpatterns">HashtableContains</a></span></code></th>
 <td class="col-last">
 <div class="block">A <a href="../../bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>; see the associated <a href="../../BugPattern.html" title="annotation in com.google.errorprone"><code>BugPattern</code></a> annotation for details.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/HidingField.html" title="class in com.google.errorprone.bugpatterns">HidingField</a></span></code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/IdentityBinaryExpression.html" title="class in com.google.errorprone.bugpatterns">IdentityBinaryExpression</a></span></code></th>
 <td class="col-last">
 <div class="block">A <a href="../../bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>; see the associated <a href="../../BugPattern.html" title="annotation in com.google.errorprone"><code>BugPattern</code></a> annotation for details.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/IdentityHashMapBoxing.html" title="class in com.google.errorprone.bugpatterns">IdentityHashMapBoxing</a></span></code></th>
 <td class="col-last">
 <div class="block">A <a href="../../bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>; see the associated <a href="../../BugPattern.html" title="annotation in com.google.errorprone"><code>BugPattern</code></a> annotation for details.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/IdentityHashMapUsage.html" title="class in com.google.errorprone.bugpatterns">IdentityHashMapUsage</a></span></code></th>
 <td class="col-last">
 <div class="block">A <a href="../../bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>; see the associated <a href="../../BugPattern.html" title="annotation in com.google.errorprone"><code>BugPattern</code></a> annotation for details.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/IgnoredPureGetter.html" title="class in com.google.errorprone.bugpatterns">IgnoredPureGetter</a></span></code></th>
 <td class="col-last">
 <div class="block">Flags ignored return values from pure getters.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/ImmutableMemberCollection.html" title="class in com.google.errorprone.bugpatterns">ImmutableMemberCollection</a></span></code></th>
 <td class="col-last">
 <div class="block">Refactoring to suggest Immutable types for member collection that are not mutated.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/ImmutableModification.html" title="class in com.google.errorprone.bugpatterns">ImmutableModification</a></span></code></th>
 <td class="col-last">
 <div class="block">A <a href="../../bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>; see the associated <a href="../../BugPattern.html" title="annotation in com.google.errorprone"><code>BugPattern</code></a> annotation for details.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/ImmutableSetForContains.html" title="class in com.google.errorprone.bugpatterns">ImmutableSetForContains</a></span></code></th>
 <td class="col-last">
 <div class="block">Refactoring to suggest using <code>private static final</code> <code>ImmutableSet</code> over <code>ImmutableList</code> when using only contains, containsAll and isEmpty.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/ImplementAssertionWithChaining.html" title="class in com.google.errorprone.bugpatterns">ImplementAssertionWithChaining</a></span></code></th>
 <td class="col-last">
@@ -1337,59 +1344,59 @@ boolean&nbsp;suppressedInGeneratedCode,
  Subject.check(...)</code>.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/Incomparable.html" title="class in com.google.errorprone.bugpatterns">Incomparable</a></span></code></th>
 <td class="col-last">
 <div class="block">A <a href="../../bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>; see the associated <a href="../../BugPattern.html" title="annotation in com.google.errorprone"><code>BugPattern</code></a> annotation for details.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/IncompatibleModifiersChecker.html" title="class in com.google.errorprone.bugpatterns">IncompatibleModifiersChecker</a></span></code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/InconsistentCapitalization.html" title="class in com.google.errorprone.bugpatterns">InconsistentCapitalization</a></span></code></th>
 <td class="col-last">
 <div class="block">Checker for variables under the same scope that only differ in capitalization.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/InconsistentHashCode.html" title="class in com.google.errorprone.bugpatterns">InconsistentHashCode</a></span></code></th>
 <td class="col-last">
 <div class="block">Looks for hashCode implementations which are inconsistent with equals.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/IncrementInForLoopAndHeader.html" title="class in com.google.errorprone.bugpatterns">IncrementInForLoopAndHeader</a></span></code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/IndexOfChar.html" title="class in com.google.errorprone.bugpatterns">IndexOfChar</a></span></code></th>
 <td class="col-last">
 <div class="block">A <a href="../../bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>; see the associated <a href="../../BugPattern.html" title="annotation in com.google.errorprone"><code>BugPattern</code></a> annotation for details.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/InexactVarargsConditional.html" title="class in com.google.errorprone.bugpatterns">InexactVarargsConditional</a></span></code></th>
 <td class="col-last">
 <div class="block">A <a href="../../bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>; see the associated <a href="../../BugPattern.html" title="annotation in com.google.errorprone"><code>BugPattern</code></a> annotation for details.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/InfiniteRecursion.html" title="class in com.google.errorprone.bugpatterns">InfiniteRecursion</a></span></code></th>
 <td class="col-last">
 <div class="block">A <a href="../../bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>; see the associated <a href="../../BugPattern.html" title="annotation in com.google.errorprone"><code>BugPattern</code></a> annotation for details.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/InitializeInline.html" title="class in com.google.errorprone.bugpatterns">InitializeInline</a></span></code></th>
 <td class="col-last">
@@ -1397,31 +1404,31 @@ boolean&nbsp;suppressedInGeneratedCode,
  if possible.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/InputStreamSlowMultibyteRead.html" title="class in com.google.errorprone.bugpatterns">InputStreamSlowMultibyteRead</a></span></code></th>
 <td class="col-last">
 <div class="block">Checks that InputStreams should override int read(byte[], int, int);</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/InsecureCipherMode.html" title="class in com.google.errorprone.bugpatterns">InsecureCipherMode</a></span></code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/InstanceOfAndCastMatchWrongType.html" title="class in com.google.errorprone.bugpatterns">InstanceOfAndCastMatchWrongType</a></span></code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/InterfaceWithOnlyStatics.html" title="class in com.google.errorprone.bugpatterns">InterfaceWithOnlyStatics</a></span></code></th>
 <td class="col-last">
 <div class="block">Bugpattern to detect interfaces used only to store static fields/methods.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/InterruptedExceptionSwallowed.html" title="class in com.google.errorprone.bugpatterns">InterruptedExceptionSwallowed</a></span></code></th>
 <td class="col-last">
@@ -1429,105 +1436,105 @@ boolean&nbsp;suppressedInGeneratedCode,
  catching a supertype, and not specially handled.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/IntLongMath.html" title="class in com.google.errorprone.bugpatterns">IntLongMath</a></span></code></th>
 <td class="col-last">
 <div class="block">A <a href="../../bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>; see the associated <a href="../../BugPattern.html" title="annotation in com.google.errorprone"><code>BugPattern</code></a> annotation for details.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/InvalidPatternSyntax.html" title="class in com.google.errorprone.bugpatterns">InvalidPatternSyntax</a></span></code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/InvalidTimeZoneID.html" title="class in com.google.errorprone.bugpatterns">InvalidTimeZoneID</a></span></code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/InvalidZoneId.html" title="class in com.google.errorprone.bugpatterns">InvalidZoneId</a></span></code></th>
 <td class="col-last">
 <div class="block">Validates ZoneId.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/IsInstanceIncompatibleType.html" title="class in com.google.errorprone.bugpatterns">IsInstanceIncompatibleType</a></span></code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/IsInstanceOfClass.html" title="class in com.google.errorprone.bugpatterns">IsInstanceOfClass</a></span></code></th>
 <td class="col-last">
 <div class="block">A <a href="../../bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>; see the associated <a href="../../BugPattern.html" title="annotation in com.google.errorprone"><code>BugPattern</code></a> annotation for details.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/IterableAndIterator.html" title="class in com.google.errorprone.bugpatterns">IterableAndIterator</a></span></code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/IterablePathParameter.html" title="class in com.google.errorprone.bugpatterns">IterablePathParameter</a></span></code></th>
 <td class="col-last">
 <div class="block">A <a href="../../bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>; see the associated <a href="../../BugPattern.html" title="annotation in com.google.errorprone"><code>BugPattern</code></a> annotation for details.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/JavaLangClash.html" title="class in com.google.errorprone.bugpatterns">JavaLangClash</a></span></code></th>
 <td class="col-last">
 <div class="block">A <a href="../../bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>; see the associated <a href="../../BugPattern.html" title="annotation in com.google.errorprone"><code>BugPattern</code></a> annotation for details.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/JavaUtilDateChecker.html" title="class in com.google.errorprone.bugpatterns">JavaUtilDateChecker</a></span></code></th>
 <td class="col-last">
 <div class="block">A <a href="../../bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>; see the associated <a href="../../BugPattern.html" title="annotation in com.google.errorprone"><code>BugPattern</code></a> annotation for details.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/JdkObsolete.html" title="class in com.google.errorprone.bugpatterns">JdkObsolete</a></span></code></th>
 <td class="col-last">
 <div class="block">A <a href="../../bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>; see the associated <a href="../../BugPattern.html" title="annotation in com.google.errorprone"><code>BugPattern</code></a> annotation for details.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/JMockTestWithoutRunWithOrRuleAnnotation.html" title="class in com.google.errorprone.bugpatterns">JMockTestWithoutRunWithOrRuleAnnotation</a></span></code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/JUnit3FloatingPointComparisonWithoutDelta.html" title="class in com.google.errorprone.bugpatterns">JUnit3FloatingPointComparisonWithoutDelta</a></span></code></th>
 <td class="col-last">
 <div class="block">Detects floating-point assertEquals() calls that will not work in JUnit 4.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/JUnit3TestNotRun.html" title="class in com.google.errorprone.bugpatterns">JUnit3TestNotRun</a></span></code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/JUnit4ClassAnnotationNonStatic.html" title="class in com.google.errorprone.bugpatterns">JUnit4ClassAnnotationNonStatic</a></span></code></th>
 <td class="col-last">
 <div class="block"><code>@BeforeClass</code> or <code>@AfterClass</code> should be applied to static methods.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/JUnit4ClassUsedInJUnit3.html" title="class in com.google.errorprone.bugpatterns">JUnit4ClassUsedInJUnit3</a></span></code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/JUnit4SetUpNotRun.html" title="class in com.google.errorprone.bugpatterns">JUnit4SetUpNotRun</a></span></code></th>
 <td class="col-last">
@@ -1535,7 +1542,7 @@ boolean&nbsp;suppressedInGeneratedCode,
  annotated with a non-JUnit4 @Before annotation.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/JUnit4TearDownNotRun.html" title="class in com.google.errorprone.bugpatterns">JUnit4TearDownNotRun</a></span></code></th>
 <td class="col-last">
@@ -1543,48 +1550,48 @@ boolean&nbsp;suppressedInGeneratedCode,
  annotated with a non-JUnit4 @After annotation.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/JUnit4TestNotRun.html" title="class in com.google.errorprone.bugpatterns">JUnit4TestNotRun</a></span></code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/JUnitAmbiguousTestClass.html" title="class in com.google.errorprone.bugpatterns">JUnitAmbiguousTestClass</a></span></code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/JUnitAssertSameCheck.html" title="class in com.google.errorprone.bugpatterns">JUnitAssertSameCheck</a></span></code></th>
 <td class="col-last">
 <div class="block">Points out if an object is tested for reference equality to itself using JUnit library.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/LambdaFunctionalInterface.html" title="class in com.google.errorprone.bugpatterns">LambdaFunctionalInterface</a></span></code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/LiteByteStringUtf8.html" title="class in com.google.errorprone.bugpatterns">LiteByteStringUtf8</a></span></code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/LiteEnumValueOf.html" title="class in com.google.errorprone.bugpatterns">LiteEnumValueOf</a></span></code></th>
 <td class="col-last">
 <div class="block">Points out if #valueOf() is called on a Protocol Buffer Enum.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/LiteProtoToString.html" title="class in com.google.errorprone.bugpatterns">LiteProtoToString</a></span></code></th>
 <td class="col-last">
 <div class="block">Flags calls to <code>toString</code> on lite protos.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/LockNotBeforeTry.html" title="class in com.google.errorprone.bugpatterns">LockNotBeforeTry</a></span></code></th>
 <td class="col-last">
@@ -1592,141 +1599,141 @@ boolean&nbsp;suppressedInGeneratedCode,
  that calls <code>Lock.unlock</code>.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/LockOnBoxedPrimitive.html" title="class in com.google.errorprone.bugpatterns">LockOnBoxedPrimitive</a></span></code></th>
 <td class="col-last">
 <div class="block">Detects locks on boxed primitives.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/LogicalAssignment.html" title="class in com.google.errorprone.bugpatterns">LogicalAssignment</a></span></code></th>
 <td class="col-last">
 <div class="block">A <a href="../../bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>; see the associated <a href="../../BugPattern.html" title="annotation in com.google.errorprone"><code>BugPattern</code></a> annotation for details.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/LongFloatConversion.html" title="class in com.google.errorprone.bugpatterns">LongFloatConversion</a></span></code></th>
 <td class="col-last">
 <div class="block">A <a href="../../bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>; see the associated <a href="../../BugPattern.html" title="annotation in com.google.errorprone"><code>BugPattern</code></a> annotation for details.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/LongLiteralLowerCaseSuffix.html" title="class in com.google.errorprone.bugpatterns">LongLiteralLowerCaseSuffix</a></span></code></th>
 <td class="col-last">
 <div class="block">Matcher for a <code>long</code> literal with a lower-case ell for a suffix (e.g.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/LoopConditionChecker.html" title="class in com.google.errorprone.bugpatterns">LoopConditionChecker</a></span></code></th>
 <td class="col-last">
 <div class="block">A <a href="../../bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>; see the associated <a href="../../BugPattern.html" title="annotation in com.google.errorprone"><code>BugPattern</code></a> annotation for details.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/LossyPrimitiveCompare.html" title="class in com.google.errorprone.bugpatterns">LossyPrimitiveCompare</a></span></code></th>
 <td class="col-last">
 <div class="block">Checker to prevent usages of comparison methods where both the operands undergo lossy widening.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/MathAbsoluteRandom.html" title="class in com.google.errorprone.bugpatterns">MathAbsoluteRandom</a></span></code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/MathRoundIntLong.html" title="class in com.google.errorprone.bugpatterns">MathRoundIntLong</a></span></code></th>
 <td class="col-last">
 <div class="block">Check for calls to Math's <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Math.html#round(float)" title="class or interface in java.lang" class="external-link"><code>Math.round(float)</code></a> with an integer or long parameter.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/MemberName.html" title="class in com.google.errorprone.bugpatterns">MemberName</a></span></code></th>
 <td class="col-last">
 <div class="block">Flags a few ways in which member names may violate the style guide.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/MethodCanBeStatic.html" title="class in com.google.errorprone.bugpatterns">MethodCanBeStatic</a></span></code></th>
 <td class="col-last">
 <div class="block">A <a href="../../bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>; see the associated <a href="../../BugPattern.html" title="annotation in com.google.errorprone"><code>BugPattern</code></a> annotation for details.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/MissingCasesInEnumSwitch.html" title="class in com.google.errorprone.bugpatterns">MissingCasesInEnumSwitch</a></span></code></th>
 <td class="col-last">
 <div class="block">A <a href="../../bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>; see the associated <a href="../../BugPattern.html" title="annotation in com.google.errorprone"><code>BugPattern</code></a> annotation for details.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/MissingDefault.html" title="class in com.google.errorprone.bugpatterns">MissingDefault</a></span></code></th>
 <td class="col-last">
 <div class="block">A <a href="../../bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>; see the associated <a href="../../BugPattern.html" title="annotation in com.google.errorprone"><code>BugPattern</code></a> annotation for details.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/MissingFail.html" title="class in com.google.errorprone.bugpatterns">MissingFail</a></span></code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/MissingOverride.html" title="class in com.google.errorprone.bugpatterns">MissingOverride</a></span></code></th>
 <td class="col-last">
 <div class="block">A <a href="../../bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>; see the associated <a href="../../BugPattern.html" title="annotation in com.google.errorprone"><code>BugPattern</code></a> annotation for details.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/MissingSuperCall.html" title="class in com.google.errorprone.bugpatterns">MissingSuperCall</a></span></code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/MissingTestCall.html" title="class in com.google.errorprone.bugpatterns">MissingTestCall</a></span></code></th>
 <td class="col-last">
 <div class="block">Matches test helpers which require a terminating method to be called.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/MisusedDateFormat.html" title="class in com.google.errorprone.bugpatterns">MisusedDateFormat</a></span></code></th>
 <td class="col-last">
 <div class="block">Base class for checks which find common errors in date format patterns.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/MisusedDayOfYear.html" title="class in com.google.errorprone.bugpatterns">MisusedDayOfYear</a></span></code></th>
 <td class="col-last">
 <div class="block">Ban use of D (day-of-year) in a date format pattern that also contains M (month-of-year).</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/MisusedWeekYear.html" title="class in com.google.errorprone.bugpatterns">MisusedWeekYear</a></span></code></th>
 <td class="col-last">
 <div class="block">Ban use of YYYY in a SimpleDateFormat pattern, unless it is being used for a week date.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/MixedArrayDimensions.html" title="class in com.google.errorprone.bugpatterns">MixedArrayDimensions</a></span></code></th>
 <td class="col-last">
 <div class="block">A <a href="../../bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>; see the associated <a href="../../BugPattern.html" title="annotation in com.google.errorprone"><code>BugPattern</code></a> annotation for details.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/MixedDescriptors.html" title="class in com.google.errorprone.bugpatterns">MixedDescriptors</a></span></code></th>
 <td class="col-last">
@@ -1734,7 +1741,7 @@ boolean&nbsp;suppressedInGeneratedCode,
  proto.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/MixedMutabilityReturnType.html" title="class in com.google.errorprone.bugpatterns">MixedMutabilityReturnType</a></span></code></th>
 <td class="col-last">
@@ -1742,31 +1749,31 @@ boolean&nbsp;suppressedInGeneratedCode,
  others.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/MockitoUsage.html" title="class in com.google.errorprone.bugpatterns">MockitoUsage</a></span></code></th>
 <td class="col-last">
 <div class="block">A <a href="../../bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>; see the associated <a href="../../BugPattern.html" title="annotation in com.google.errorprone"><code>BugPattern</code></a> annotation for details.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/ModifiedButNotUsed.html" title="class in com.google.errorprone.bugpatterns">ModifiedButNotUsed</a></span></code></th>
 <td class="col-last">
 <div class="block">Matches creation of new collections/proto builders which are modified but never used.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/ModifyCollectionInEnhancedForLoop.html" title="class in com.google.errorprone.bugpatterns">ModifyCollectionInEnhancedForLoop</a></span></code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/ModifyingCollectionWithItself.html" title="class in com.google.errorprone.bugpatterns">ModifyingCollectionWithItself</a></span></code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/ModifySourceCollectionInStream.html" title="class in com.google.errorprone.bugpatterns">ModifySourceCollectionInStream</a></span></code></th>
 <td class="col-last">
@@ -1774,31 +1781,31 @@ boolean&nbsp;suppressedInGeneratedCode,
  the stream operations.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/MultipleParallelOrSequentialCalls.html" title="class in com.google.errorprone.bugpatterns">MultipleParallelOrSequentialCalls</a></span></code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/MultipleTopLevelClasses.html" title="class in com.google.errorprone.bugpatterns">MultipleTopLevelClasses</a></span></code></th>
 <td class="col-last">
 <div class="block">A <a href="../../bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>; see the associated <a href="../../BugPattern.html" title="annotation in com.google.errorprone"><code>BugPattern</code></a> annotation for details.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/MultipleUnaryOperatorsInMethodCall.html" title="class in com.google.errorprone.bugpatterns">MultipleUnaryOperatorsInMethodCall</a></span></code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/MultiVariableDeclaration.html" title="class in com.google.errorprone.bugpatterns">MultiVariableDeclaration</a></span></code></th>
 <td class="col-last">
 <div class="block">A <a href="../../bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>; see the associated <a href="../../BugPattern.html" title="annotation in com.google.errorprone"><code>BugPattern</code></a> annotation for details.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/MustBeClosedChecker.html" title="class in com.google.errorprone.bugpatterns">MustBeClosedChecker</a></span></code></th>
 <td class="col-last">
@@ -1806,140 +1813,147 @@ boolean&nbsp;suppressedInGeneratedCode,
  resource variable initializer of a try-with-resources statement.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/MutableConstantField.html" title="class in com.google.errorprone.bugpatterns">MutableConstantField</a></span></code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/MutableMethodReturnType.html" title="class in com.google.errorprone.bugpatterns">MutableMethodReturnType</a></span></code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/MutablePublicArray.html" title="class in com.google.errorprone.bugpatterns">MutablePublicArray</a></span></code></th>
 <td class="col-last">
 <div class="block">Check for public static final declaration of Arrays.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/NarrowingCompoundAssignment.html" title="class in com.google.errorprone.bugpatterns">NarrowingCompoundAssignment</a></span></code></th>
 <td class="col-last">
 <div class="block">A <a href="../../bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>; see the associated <a href="../../BugPattern.html" title="annotation in com.google.errorprone"><code>BugPattern</code></a> annotation for details.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/NCopiesOfChar.html" title="class in com.google.errorprone.bugpatterns">NCopiesOfChar</a></span></code></th>
 <td class="col-last">
 <div class="block">A <a href="../../bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>; see the associated <a href="../../BugPattern.html" title="annotation in com.google.errorprone"><code>BugPattern</code></a> annotation for details.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/NestedInstanceOfConditions.html" title="class in com.google.errorprone.bugpatterns">NestedInstanceOfConditions</a></span></code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/NoAllocationChecker.html" title="class in com.google.errorprone.bugpatterns">NoAllocationChecker</a></span></code></th>
 <td class="col-last">
 <div class="block">Checks methods annotated with <code>@NoAllocation</code> to ensure they really do not allocate.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/NoFunctionalReturnType.html" title="class in com.google.errorprone.bugpatterns">NoFunctionalReturnType</a></span></code></th>
 <td class="col-last">
 <div class="block">Check for functional return types.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/NonAtomicVolatileUpdate.html" title="class in com.google.errorprone.bugpatterns">NonAtomicVolatileUpdate</a></span></code></th>
 <td class="col-last">
 <div class="block">Detects non-atomic updates to volatile variables.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/NonCanonicalStaticImport.html" title="class in com.google.errorprone.bugpatterns">NonCanonicalStaticImport</a></span></code></th>
 <td class="col-last">
 <div class="block">Types shouldn't be statically by their non-canonical name.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/NonCanonicalStaticMemberImport.html" title="class in com.google.errorprone.bugpatterns">NonCanonicalStaticMemberImport</a></span></code></th>
 <td class="col-last">
 <div class="block">Members shouldn't be statically by their non-canonical name.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/NonCanonicalType.html" title="class in com.google.errorprone.bugpatterns">NonCanonicalType</a></span></code></th>
 <td class="col-last">
 <div class="block">Flags types being referred to by their non-canonical name.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/NonFinalCompileTimeConstant.html" title="class in com.google.errorprone.bugpatterns">NonFinalCompileTimeConstant</a></span></code></th>
 <td class="col-last">
 <div class="block">Enforce that @CompileTimeConstant parameters are final or effectively final.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/NonOverridingEquals.html" title="class in com.google.errorprone.bugpatterns">NonOverridingEquals</a></span></code></th>
 <td class="col-last">
 <div class="block">Bug checker for equals methods that don't actually override equals.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/NonRuntimeAnnotation.html" title="class in com.google.errorprone.bugpatterns">NonRuntimeAnnotation</a></span></code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/NullableConstructor.html" title="class in com.google.errorprone.bugpatterns">NullableConstructor</a></span></code></th>
 <td class="col-last">
 <div class="block">A <a href="../../bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>; see the associated <a href="../../BugPattern.html" title="annotation in com.google.errorprone"><code>BugPattern</code></a> annotation for details.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/NullablePrimitive.html" title="class in com.google.errorprone.bugpatterns">NullablePrimitive</a></span></code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/NullableVoid.html" title="class in com.google.errorprone.bugpatterns">NullableVoid</a></span></code></th>
 <td class="col-last">
 <div class="block">A <a href="../../bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>; see the associated <a href="../../BugPattern.html" title="annotation in com.google.errorprone"><code>BugPattern</code></a> annotation for details.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/NullOptional.html" title="class in com.google.errorprone.bugpatterns">NullOptional</a></span></code></th>
 <td class="col-last">
 <div class="block">Flags passing literal null to <code>Optional</code>-accepting APIs.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/NullTernary.html" title="class in com.google.errorprone.bugpatterns">NullTernary</a></span></code></th>
 <td class="col-last">
 <div class="block">A <a href="../../bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>; see the associated <a href="../../BugPattern.html" title="annotation in com.google.errorprone"><code>BugPattern</code></a> annotation for details.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/NumericEquality.html" title="class in com.google.errorprone.bugpatterns">NumericEquality</a></span></code></th>
 <td class="col-last">&nbsp;</td>
+</tr>
+<tr class="row-color">
+<td class="col-first"><code>class&nbsp;</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/ObjectEqualsForPrimitives.html" title="class in com.google.errorprone.bugpatterns">ObjectEqualsForPrimitives</a></span></code></th>
+<td class="col-last">
+<div class="block">Check for usage of <code>Objects.equal</code> on primitive types.</div>
+</td>
 </tr>
 <tr class="alt-color">
 <td class="col-first"><code>class&nbsp;</code></td>
@@ -2801,11 +2815,6 @@ boolean&nbsp;suppressedInGeneratedCode,
 </td>
 </tr>
 <tr class="alt-color">
-<td class="col-first"><code>class&nbsp;</code></td>
-<th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/WrongParameterPackage.html" title="class in com.google.errorprone.bugpatterns">WrongParameterPackage</a></span></code></th>
-<td class="col-last">&nbsp;</td>
-</tr>
-<tr class="row-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../../bugpatterns/XorPower.html" title="class in com.google.errorprone.bugpatterns">XorPower</a></span></code></th>
 <td class="col-last">
@@ -4061,7 +4070,7 @@ boolean&nbsp;suppressedInGeneratedCode,
 <span class="skip-nav" id="skip.navbar.bottom">
 <!--   -->
 </span></nav>
-<p class="legal-copy"><small>Copyright &#169; 2020. All rights reserved.</small></p>
+<p class="legal-copy"><small>Copyright &#169; 2021. All rights reserved.</small></p>
 </footer>
 </div>
 </div>
