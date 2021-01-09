@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns.testdata;
 
-import com.google.errorprone.annotations.SuppressBanSerializableForLegacyCode;
 import com.google.errorprone.bugpatterns.BanSerializableReadTest;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -39,7 +38,7 @@ class BanSerializableReadPositiveCases implements Serializable {
    * @throws IOException
    * @throws ClassNotFoundException
    */
-  @SuppressBanSerializableForLegacyCode
+  @SuppressWarnings("BanSerializableRead")
   public static final void sayHi() throws IOException, ClassNotFoundException {
     PipedInputStream in = new PipedInputStream();
     PipedOutputStream out = new PipedOutputStream(in);
@@ -64,7 +63,7 @@ class BanSerializableReadPositiveCases implements Serializable {
    * @throws IOException
    * @throws ClassNotFoundException
    */
-  @SuppressBanSerializableForLegacyCode
+  @SuppressWarnings("BanSerializableRead")
   public static final void directCall() throws IOException, ClassNotFoundException {
     PipedInputStream in = new PipedInputStream();
     PipedOutputStream out = new PipedOutputStream(in);

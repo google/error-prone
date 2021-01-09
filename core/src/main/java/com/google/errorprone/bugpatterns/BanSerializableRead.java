@@ -28,34 +28,17 @@ import static com.google.errorprone.matchers.Matchers.not;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.VisitorState;
-import com.google.errorprone.annotations.SuppressBanSerializableCompletedSecurityReview;
-import com.google.errorprone.annotations.SuppressBanSerializableForLegacyCode;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
-import com.google.errorprone.fixes.SuggestedFix;
-import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
-import java.util.Optional;
 
 /** A {@link BugChecker} that detects use of the unsafe {@link java.io.Serializable} API. */
 @BugPattern(
     name = "BanSerializableRead",
     summary = "Deserializing user input via the `Serializable` API is extremely dangerous",
-    explanation =
-        "The Java `Serializable` API is very powerful, and very dangerous. Any consumption of a"
-            + " serialized object that cannot be explicitly trusted will likely result in a"
-            + " critical remote code execution bug that will give an attacker control of the"
-            + " application."
-            + " Consider using less powerful serialization methods, such as JSON or XML.\n\n"
-            + "If using safer APIs is difficult and content that is processed is not user content,"
-            + " add ise-hardening-reviews as a reviewer for a suppression annotation.",
-    severity = SeverityLevel.ERROR,
-    suppressionAnnotations = {
-      SuppressBanSerializableCompletedSecurityReview.class,
-      SuppressBanSerializableForLegacyCode.class
-    })
+    severity = SeverityLevel.ERROR)
 public final class BanSerializableRead extends BugChecker implements MethodInvocationTreeMatcher {
 
   private static final Matcher<ExpressionTree> EXEMPT =
@@ -111,14 +94,8 @@ public final class BanSerializableRead extends BugChecker implements MethodInvoc
       return Description.NO_MATCH;
     }
 
-    Optional<SuggestedFix> fix =
-        SuggestedFixes.suggestExemptingAnnotation(
-            SuppressBanSerializableForLegacyCode.class.getName(), state.getPath(), state);
+    Description.Builder description = buildDescription(tree);
 
-    if (!fix.isPresent()) {
-      return describeMatch(tree);
-    }
-
-    return describeMatch(tree, fix.get());
+    return description.build();
   }
 }

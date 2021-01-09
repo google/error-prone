@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
-import com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode;
 import com.google.errorprone.CompilationTestHelper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -49,13 +48,5 @@ public class BanSerializableReadTest {
         .expectUnchanged()
         .setArgs("-XepCompilingTestOnlyCode")
         .doTest();
-  }
-
-  @Test
-  public void testRefactor() {
-    refactoringHelper
-        .addInput("BanSerializableReadPositiveCases.java")
-        .addOutput("BanSerializableReadPositiveCases_expected.java")
-        .doTest(TestMode.TEXT_MATCH);
   }
 }

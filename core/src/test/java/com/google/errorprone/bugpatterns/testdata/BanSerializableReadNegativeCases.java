@@ -16,8 +16,6 @@
 
 package com.google.errorprone.bugpatterns.testdata;
 
-import com.google.errorprone.annotations.SuppressBanSerializableCompletedSecurityReview;
-import com.google.errorprone.annotations.SuppressBanSerializableForLegacyCode;
 import com.google.errorprone.bugpatterns.BanSerializableReadTest;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -49,7 +47,7 @@ public class BanSerializableReadNegativeCases implements Serializable {
    * @throws IOException
    * @throws ClassNotFoundException
    */
-  @SuppressBanSerializableForLegacyCode
+  @SuppressWarnings("BanSerializableRead")
   public static final void directCall() throws IOException, ClassNotFoundException {
     PipedInputStream in = new PipedInputStream();
     PipedOutputStream out = new PipedOutputStream(in);
@@ -68,7 +66,7 @@ public class BanSerializableReadNegativeCases implements Serializable {
    * @throws IOException
    * @throws ClassNotFoundException
    */
-  @SuppressBanSerializableCompletedSecurityReview
+  @SuppressWarnings("BanSerializableRead")
   public static final void sayHi() throws IOException, ClassNotFoundException {
     PipedInputStream in = new PipedInputStream();
     PipedOutputStream out = new PipedOutputStream(in);
@@ -87,7 +85,7 @@ public class BanSerializableReadNegativeCases implements Serializable {
   // These test the more esoteric annotations
 
   // code has gone through a security review
-  @SuppressBanSerializableCompletedSecurityReview
+  @SuppressWarnings("BanSerializableRead")
   public static final void directCall2() throws IOException, ClassNotFoundException {
     PipedInputStream in = new PipedInputStream();
     PipedOutputStream out = new PipedOutputStream(in);
@@ -100,7 +98,7 @@ public class BanSerializableReadNegativeCases implements Serializable {
   }
 
   // code is well-tested legacy
-  @SuppressBanSerializableForLegacyCode
+  @SuppressWarnings("BanSerializableRead")
   public static final void directCall3() throws IOException, ClassNotFoundException {
     PipedInputStream in = new PipedInputStream();
     PipedOutputStream out = new PipedOutputStream(in);
