@@ -1396,9 +1396,6 @@ Package names should match the directory they are declared in
 __[ParameterComment](bugpattern/ParameterComment)__<br>
 Non-standard parameter comment; prefer `/* paramName= */ arg`
 
-__[ParameterNotNullable](bugpattern/ParameterNotNullable)__<br>
-Method parameters that aren&#39;t checked for null shouldn&#39;t be annotated @Nullable
-
 __[PrivateConstructorForNoninstantiableModule](bugpattern/PrivateConstructorForNoninstantiableModule)__<br>
 Add a private constructor to modules that will not be instantiated by Dagger.
 
