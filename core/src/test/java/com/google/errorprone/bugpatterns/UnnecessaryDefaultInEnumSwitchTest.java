@@ -17,9 +17,11 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH;
+import static org.junit.Assume.assumeTrue;
 
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
+import com.google.errorprone.util.RuntimeVersion;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -774,6 +776,46 @@ public class UnnecessaryDefaultInEnumSwitchTest {
             "      // BUG: Diagnostic contains: UNRECOGNIZED",
             "      default:",
             "        break;",
+            "    }",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void defaultCaseKindRule() {
+    assumeTrue(RuntimeVersion.isAtLeast14());
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  enum Case { ONE, TWO }",
+            "  void m(Case c) {",
+            "    switch (c) {",
+            "      case ONE -> {}",
+            "      case TWO -> {}",
+            "      // BUG: Diagnostic contains: UnnecessaryDefaultInEnumSwitch",
+            "      default -> {}",
+            "    }",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void unrecognizedCaseKindRule() {
+    assumeTrue(RuntimeVersion.isAtLeast14());
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  enum Case { ONE, TWO, UNRECOGNIZED }",
+            "  void m(Case c) {",
+            "    switch (c) {",
+            "      case ONE -> {}",
+            "      case TWO -> {}",
+            "      // BUG: Diagnostic contains: UnnecessaryDefaultInEnumSwitch",
+            "      default -> {}",
             "    }",
             "  }",
             "}")

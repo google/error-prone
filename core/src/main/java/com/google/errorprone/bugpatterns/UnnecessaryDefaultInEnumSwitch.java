@@ -108,6 +108,10 @@ public class UnnecessaryDefaultInEnumSwitch extends BugChecker implements Switch
   private Description fixDefault(
       SwitchTree switchTree, CaseTree caseBeforeDefault, CaseTree defaultCase, VisitorState state) {
     List<? extends StatementTree> defaultStatements = defaultCase.getStatements();
+    if (defaultStatements == null) {
+      // TODO(b/177258673): provide fixes for `case -> ...`
+      return buildDescription(defaultCase).setMessage(DESCRIPTION_REMOVED_DEFAULT).build();
+    }
     if (trivialDefault(defaultStatements)) {
       // deleting `default:` or `default: break;` is a no-op
       return buildDescription(defaultCase)
@@ -184,6 +188,10 @@ public class UnnecessaryDefaultInEnumSwitch extends BugChecker implements Switch
     List<? extends StatementTree> defaultStatements = defaultCase.getStatements();
     Description.Builder unrecognizedDescription =
         buildDescription(defaultCase).setMessage(DESCRIPTION_UNRECOGNIZED);
+    if (defaultStatements == null) {
+      // TODO(b/177258673): provide fixes for `case -> ...`
+      return unrecognizedDescription.build();
+    }
     if (trivialDefault(defaultStatements)) {
       // the default case is empty or contains only `break` -- replace it with `case UNRECOGNIZED:`
       // with fall out.
