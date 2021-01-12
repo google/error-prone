@@ -18,8 +18,8 @@ package com.google.errorprone.names;
 
 import static com.google.common.collect.ImmutableList.toImmutableList;
 
+import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableList;
-import java.util.Arrays;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -32,8 +32,9 @@ public class NamingConventions {
   private static final String CASE_TRANSITION = "(?<=[a-z0-9])(?=[A-Z])";
   private static final String TRAILING_DIGITS = "(?<![0-9_])(?=[0-9]+$)";
 
-  private static final Pattern TERM_SPLITTER =
-      Pattern.compile(String.format("%s|%s|%s", UNDERSCORE, CASE_TRANSITION, TRAILING_DIGITS));
+  private static final Splitter TERM_SPLITTER =
+      Splitter.onPattern(String.format("%s|%s|%s", UNDERSCORE, CASE_TRANSITION, TRAILING_DIGITS))
+          .omitEmptyStrings();
 
   /**
    * Split a Java name into terms based on either Camel Case or Underscores. We also split digits at
@@ -47,7 +48,8 @@ public class NamingConventions {
       // Degenerate case of names which contain only underscore
       return ImmutableList.of(identifierName);
     }
-    return Arrays.stream(TERM_SPLITTER.split(identifierName))
+    return TERM_SPLITTER
+        .splitToStream(identifierName)
         .map(String::toLowerCase)
         .collect(toImmutableList());
   }

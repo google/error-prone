@@ -295,6 +295,25 @@ public class TypeParameterNamingTest {
   }
 
   @Test
+  public void refactoring_underscore() {
+    refactoring
+        .addInputLines(
+            "in/Test.java", //
+            "class Test {",
+            "  public <_T> void method(_T t) {",
+            "  }",
+            "}")
+        .addOutputLines(
+            "in/Test.java", //
+            "class Test {",
+            "  public <T> void method(T t) {",
+            "  }",
+            "}")
+        .setFixChooser(FixChoosers.FIRST)
+        .doTest(TestMode.TEXT_MATCH);
+  }
+
+  @Test
   public void classifyTypeName_singleLetter() {
     assertKindOfName("T").isEqualTo(LETTER_WITH_MAYBE_NUMERAL);
     assertKindOfName("D").isEqualTo(LETTER_WITH_MAYBE_NUMERAL);

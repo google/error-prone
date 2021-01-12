@@ -205,7 +205,8 @@ public class TypeParameterNaming extends BugChecker implements TypeParameterTree
   }
 
   private static String suggestedSingleLetter(String id, Tree tree) {
-    char firstLetter = id.charAt(0);
+    char firstLetter =
+        Ascii.toUpperCase(NamingConventions.splitToLowercaseTerms(id).get(0).charAt(0));
     Symbol sym = ASTHelpers.getSymbol(tree);
     List<TypeVariableSymbol> enclosingTypeSymbols = typeVariablesEnclosing(sym);
 
