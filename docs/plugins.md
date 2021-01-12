@@ -51,18 +51,12 @@ java_plugin(
 )
 ```
 
-For a complete example, see:
-[examples/plugin/bazel](https://github.com/google/error-prone/tree/master/examples/plugin/bazel).
-
 ### Maven
 
 Starting in version 3.5, maven-compiler-plugin allows the processor path to be
 configured with the
 [annotationProcessorPaths](https://maven.apache.org/plugins/maven-compiler-plugin/compile-mojo.html#annotationProcessorPaths)
 parameter.
-
-For a complete example, see:
-[examples/plugin/maven](https://github.com/google/error-prone/tree/master/examples/plugin/maven).
 
 ### Gradle
 
@@ -74,9 +68,6 @@ dependencies {
   annotationProcessor project(':custom-checks')
 }
 ```
-
-For a complete example using the `net.ltgt.apt` plugin, see:
-[examples/plugin/gradle](https://github.com/google/error-prone/tree/master/examples/plugin/gradle).
 
 ## Command-Line Arguments
 

@@ -102,24 +102,6 @@ support:
   </profiles>
 ```
 
-See the
-[examples/maven](https://github.com/google/error-prone/tree/master/examples/maven)
-directory for a working example:
-
-```
-../examples/maven/error_prone_should_flag$ mvn compile
-[INFO] Compiling 1 source file to .../examples/maven/target/classes
-.../examples/maven/src/main/java/Main.java:20: error: [DeadException] Exception created but not thrown
-    new Exception();
-    ^
-    (see http://errorprone.info/bugpattern/DeadException)
-  Did you mean 'throw new Exception();'?
-1 error
-[INFO] ------------------------------------------------------------------------
-[INFO] BUILD FAILURE
-[INFO] ------------------------------------------------------------------------
-```
-
 See the [flags documentation](http://errorprone.info/docs/flags#maven) for details on
 how to customize the plugin's behavior.
 
@@ -134,8 +116,7 @@ Download the following artifacts from maven:
 
 *   [error_prone_core-2.4.0-with-dependencies.jar](https://repo1.maven.org/maven2/com/google/errorprone/error_prone_core/2.4.0/error_prone_core-2.4.0-with-dependencies.jar)
 *   [jFormatString-3.0.0.jar](https://repo1.maven.org/maven2/com/google/code/findbugs/jFormatString/3.0.0/jFormatString-3.0.0.jar)
-*   [dataflow-2.5.7.jar](https://repo1.maven.org/maven2/org/checkerframework/dataflow/2.5.7/dataflow-2.5.7.jar)
-*   [javacutil-2.5.7.jar](https://repo1.maven.org/maven2/org/checkerframework/javacutil/2.5.7/javacutil-2.5.7.jar)
+*   [dataflow-shaded-3.7.1.jar](https://repo1.maven.org/maven2/org/checkerframework/dataflow-shaded/3.7.1/dataflow-shaded-3.7.1.jar)
 *   [javac-9+181-r4173-1.jar](https://repo1.maven.org/maven2/com/google/errorprone/javac/9+181-r4173-1/javac-9+181-r4173-1.jar)
 
 and add the following javac task to your project's `build.xml` file:
@@ -151,8 +132,7 @@ and add the following javac task to your project's `build.xml` file:
     <path id="processorpath.ref">
       <pathelement location="${user.home}/.m2/repository/com/google/errorprone/error_prone_core/2.4.0/error_prone_core-2.4.0-with-dependencies.jar"/>
       <pathelement location="${user.home}/.m2/repository/com/google/code/findbugs/jFormatString/3.0.0/jFormatString-3.0.0.jar"/>
-      <pathelement location="${user.home}/.m2/repository/org/checkerframework/dataflow/2.5.7/dataflow-2.5.7.jar"/>
-      <pathelement location="${user.home}/.m2/repository/org/checkerframework/javacutil/2.5.7/javacutil-2.5.7.jar"/>
+      <pathelement location="${user.home}/.m2/repository/org/checkerframework/dataflow-shaded/3.7.1/dataflow-shaded-3.7.1.jar"/>
       <!-- Add annotation processors and Error Prone custom checks here if needed -->
     </path>
 
@@ -164,26 +144,6 @@ and add the following javac task to your project's `build.xml` file:
       <compilerarg value="-Xplugin:ErrorProne -Xep:DeadException:ERROR" />
     </javac>
   </target>
-```
-
-See
-[examples/ant](https://github.com/google/error-prone/tree/master/examples/ant)
-for a working example.
-
-```
-examples/ant$ ant
-Buildfile: .../examples/ant/build.xml
-
-compile:
-    [javac] Compiling 1 source file to .../examples/ant/build
-    [javac] .../examples/ant/compilerclasspath/src/Main.java:20: error: [DeadException] Exception created but not thrown
-    [javac]       new IllegalArgumentException("Missing required argument");
-    [javac]       ^
-    [javac]     (see http://errorprone.info/bugpattern/DeadException)
-    [javac]   Did you mean 'throw new IllegalArgumentException("Missing required argument");'?
-    [javac] 1 error
-
-BUILD FAILED
 ```
 
 ## IntelliJ IDEA
@@ -220,11 +180,11 @@ Example:
 
 ```bash
 wget https://repo1.maven.org/maven2/com/google/errorprone/error_prone_core/2.4.0/error_prone_core-2.4.0-with-dependencies.jar
-wget https://repo1.maven.org/maven2/org/checkerframework/dataflow-shaded/3.1.2/dataflow-shaded-3.1.2.jar
+wget https://repo1.maven.org/maven2/org/checkerframework/dataflow-shaded/3.7.1/dataflow-shaded-3.7.1.jar
 wget https://repo1.maven.org/maven2/com/google/code/findbugs/jFormatString/3.0.0/jFormatString-3.0.0.jar
 javac \
   -XDcompilePolicy=simple \
-  -processorpath error_prone_core-2.4.0-with-dependencies.jar:dataflow-shaded-3.1.2.jar:jFormatString-3.0.0.jar \
+  -processorpath error_prone_core-2.4.0-with-dependencies.jar:dataflow-shaded-3.7.1.jar:jFormatString-3.0.0.jar \
   '-Xplugin:ErrorProne -XepDisableAllChecks -Xep:CollectionIncompatibleType:ERROR' \
   ShortSet.java
 ```
@@ -243,13 +203,13 @@ To use Error Prone from the command line as a javac replacement:
 
 ```
 wget https://repo1.maven.org/maven2/com/google/errorprone/error_prone_core/2.4.0/error_prone_core-2.4.0-with-dependencies.jar
-wget https://repo1.maven.org/maven2/org/checkerframework/dataflow-shaded/3.1.2/dataflow-shaded-3.1.2.jar
+wget https://repo1.maven.org/maven2/org/checkerframework/dataflow-shaded/3.7.1/dataflow-shaded-3.7.1.jar
 wget https://repo1.maven.org/maven2/com/google/code/findbugs/jFormatString/3.0.0/jFormatString-3.0.0.jar
 wget https://repo1.maven.org/maven2/com/google/errorprone/javac/9+181-r4173-1/javac-9+181-r4173-1.jar
 javac \
   -J-Xbootclasspath/p:javac-9+181-r4173-1.jar \
   -XDcompilePolicy=simple \
-  -processorpath error_prone_core-2.4.0-with-dependencies.jar:dataflow-shaded-3.1.2.jar:jFormatString-3.0.0.jar \
+  -processorpath error_prone_core-2.4.0-with-dependencies.jar:dataflow-shaded-3.7.1.jar:jFormatString-3.0.0.jar \
   '-Xplugin:ErrorProne -XepDisableAllChecks -Xep:CollectionIncompatibleType:ERROR' \
   ShortSet.java
 ```
