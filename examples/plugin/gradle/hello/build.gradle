@@ -1,3 +1,0 @@
-dependencies {
-  annotationProcessor project(':sample_plugin')
-}
