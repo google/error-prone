@@ -54,7 +54,7 @@ import java.util.Set;
 import java.util.TreeSet;
 
 /**
- * Checks if the methods specified in {@link junitparams.Parameters} annotation to provide
+ * Checks if the methods specified in {@code junitparams.Parameters} annotation to provide
  * parameters exists.
  *
  * <p>This checks for the required method in the current class and all the base classes. In case the
