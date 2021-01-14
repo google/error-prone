@@ -269,6 +269,9 @@ This looks like a test method but is not run; please add @Test and @Ignore, or, 
 __[JUnitAssertSameCheck](bugpattern/JUnitAssertSameCheck)__<br>
 An object is tested for reference equality to itself using JUnit library.
 
+__[JUnitParameterMethodNotFound](bugpattern/JUnitParameterMethodNotFound)__<br>
+The method for providing parameters was not found.
+
 __[JavaxInjectOnAbstractMethod](bugpattern/JavaxInjectOnAbstractMethod)__<br>
 Abstract and default methods are not injectable with javax.inject.Inject
 
