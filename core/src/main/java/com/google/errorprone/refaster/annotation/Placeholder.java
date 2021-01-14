@@ -26,22 +26,22 @@ import java.lang.annotation.Target;
  * arbitrary expression (if the return type is nonvoid), or zero or more statements (if the return
  * type is void), in terms of its arguments. For example,
  *
- * <pre>{@code
- * abstract class ComputeIfAbsent<K, V> {
- *  @Placeholder abstract V computeValue(K key);
+ * <pre><code>
+ * abstract class ComputeIfAbsent&lt;K, V&gt; {
+ *  {@literal @}Placeholder abstract V computeValue(K key);
  *
- *  @BeforeTemplate void getOrCompute(Map<K, V> map, K key) {
+ *  {@literal @}BeforeTemplate void getOrCompute(Map&lt;K, V&gt; map, K key) {
  *     V value = map.get(key);
  *     if (value == null) {
  *       map.put(key, value = computeValue(key));
  *     }
  *   }
  *
- *  @AfterTemplate void computeIfAbsent(Map<K, V> map, K key) {
- *     V value = map.computeIfAbsent(key, (K k) -> computeValue(k));
+ *  {@literal @}AfterTemplate void computeIfAbsent(Map&lt;K, V&gt; map, K key) {
+ *     V value = map.computeIfAbsent(key, (K k) -&gt; computeValue(k));
  *   }
  * }
- * }</pre>
+ * </code></pre>
  *
  * <p>Here, {@code computeValue} represents an arbitrary expression in terms of {@code key}, and the
  * {@code @AfterTemplate} rewrites that same expression in terms of the parameter of a lambda
@@ -49,12 +49,12 @@ import java.lang.annotation.Target;
  *
  * <p>For a multi-line example, consider
  *
- * <pre>{@code
- * abstract class TryWithResources<T extends AutoCloseable> {
- *  @Placeholder abstract T open();
- *  @Placeholder void process(T resource);
+ * <pre><code>
+ * abstract class TryWithResources&lt;T extends AutoCloseable&gt; {
+ *  {@literal @}Placeholder abstract T open();
+ *  {@literal @}Placeholder void process(T resource);
  *
- *  @BeforeTemplate void tryFinallyClose() {
+ *  {@literal @}BeforeTemplate void tryFinallyClose() {
  *     T resource = open();
  *     try {
  *       process(resource);
@@ -63,13 +63,13 @@ import java.lang.annotation.Target;
  *     }
  *   }
  *
- *  @AfterTemplate void tryWithResource() {
+ *  {@literal @}AfterTemplate void tryWithResource() {
  *     try (T resource = open()) {
  *       process(resource);
  *     }
  *   }
  * }
- * }</pre>
+ * </code></pre>
  *
  * <p>Here, {@code process} is any block, though it must refer to {@code resource} in some way; it
  * is not permitted to reassign the contents of {@code resource}.

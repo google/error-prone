@@ -37,10 +37,10 @@ public interface CodeTransformer {
    * applied to it:
    *
    * <pre>{@code
-   * @MyCustomAnnotation("value")
+   * {@literal @}MyCustomAnnotation("value")
    * public class AnnotatedRefasterRule {
-   *    @BeforeTemplate void before(String x) {...}
-   *    @AfterTemplate void after(String x) {...}
+   *    {@literal @}BeforeTemplate void before(String x) {...}
+   *    {@literal @}AfterTemplate void after(String x) {...}
    * }
    * }</pre>
    *

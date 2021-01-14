@@ -27,16 +27,16 @@ import javax.lang.model.element.Modifier;
  * Annotation declaring that the target annotation is incompatible with any one of the provided
  * modifiers. For example, an annotation declared as:
  *
- * <pre>{@code
- * @IncompatibleModifiers(Modifier.PUBLIC)
- * @interface MyAnnotation {}
- * }</pre>
+ * <pre>
+ * {@literal @}IncompatibleModifiers(Modifier.PUBLIC)
+ * {@literal @}interface MyAnnotation {}
+ * </pre>
  *
  * <p>will be considered illegal when used as:
  *
- * <pre>{@code
- * @MyAnnotation public void foo() {}
- * }</pre>
+ * <pre>
+ * {@literal @}MyAnnotation public void foo() {}
+ * </pre>
  *
  * @author benyu@google.com (Jige Yu)
  */

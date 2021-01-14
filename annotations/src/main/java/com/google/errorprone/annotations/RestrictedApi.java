@@ -38,15 +38,15 @@ import java.lang.annotation.Target;
  * example through code review, could be marked {@code @ReviewedFooBar}.
  *
  * <pre>{@code
- * public @interface LegacyUnsafeFooBar{}
+ * public {@literal @}interface LegacyUnsafeFooBar{}
  *
- * public @interface ReviewedFooBar{
+ * public {@literal @}interface ReviewedFooBar{
  *  public string reviewer();
  *  public string comments();
  * }
  *
  * public class Foo {
- *   @RestrictedApi(
+ *   {@literal @}RestrictedApi(
  *      explanation="You could shoot yourself in the foot with Foo.bar if you aren't careful",
  *      link="http://edsger.dijkstra/foo_bar_consider_harmful.html",
  *      allowedOnPath="testsuite/.*", // Unsafe behavior in tests is ok.
@@ -61,7 +61,7 @@ import java.lang.annotation.Target;
  *   }
  *   boolean complicatedCondition = true;
  *
- *   @ReviewedFooBar(
+ *   {@literal @}ReviewedFooBar(
  *      reviewer="bangert",
  *      comments="Makes sure complicatedCondition isn't true, so bar is safe!"
  *   )
@@ -71,7 +71,7 @@ import java.lang.annotation.Target;
  *      }
  *   }
  *
- *   @LegacyUnsafeFooBar
+ *   {@literal @}LegacyUnsafeFooBar
  *   public void someOldCode() {
  *      // ...
  *      bar()

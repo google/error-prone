@@ -686,11 +686,11 @@ public final class ThreadSafety {
    * <p>Usually only the immediately enclosing declaration is searched, but it's possible to have
    * cases like:
    *
-   * <pre>{@code
-   * @MarkerAnnotation(containerOf="T") class C<T> {
-   *   class Inner extends ThreadSafeCollection<T> {}
+   * <pre>
+   * {@literal @}MarkerAnnotation(containerOf="T") class C&lt;T&gt; {
+   *   class Inner extends ThreadSafeCollection&lt;T&gt; {}
    * }
-   * }</pre>
+   * </pre>
    */
   public Set<String> threadSafeTypeParametersInScope(Symbol sym) {
     if (sym == null) {

@@ -27,16 +27,16 @@ import javax.lang.model.element.Modifier;
  * Annotation declaring that the target annotation requires all the specified modifiers. For
  * example, an annotation declared as:
  *
- * <pre>{@code
- * @RequiredModifiers(Modifier.PUBLIC)
- * @interface MyAnnotation {}
- * }</pre>
+ * <pre>
+ * {@literal @}RequiredModifiers(Modifier.PUBLIC)
+ * {@literal @}interface MyAnnotation {}
+ * </pre>
  *
  * <p>will be considered illegal when used on non-public elements such as:
  *
- * <pre>{@code
- * @MyAnnotation void foo() {}
- * }</pre>
+ * <pre>
+ * {@literal @}MyAnnotation void foo() {}
+ * </pre>
  *
  * @author benyu@google.com (Jige Yu)
  */
