@@ -42,10 +42,13 @@ jobs:
           java-version: ${{ matrix.java }}
       - name: 'Install'
         shell: bash
-        run: mvn install -DskipTests=true -B -V
+        run: mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
       - name: 'Test'
         shell: bash
         run: mvn test -B
+      - name: 'Javadoc'
+        shell: bash
+        run: mvn -P '!examples' javadoc:aggregate
 
   publish_snapshot:
     name: 'Publish snapshot'
