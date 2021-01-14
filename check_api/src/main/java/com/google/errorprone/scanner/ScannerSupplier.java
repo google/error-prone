@@ -16,7 +16,6 @@
 
 package com.google.errorprone.scanner;
 
-import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Predicate;
 import com.google.common.base.Supplier;
 import com.google.common.collect.HashBiMap;
@@ -103,7 +102,6 @@ public abstract class ScannerSupplier implements Supplier<Scanner> {
    * Returns a map of check name to {@link BugCheckerInfo} for all {@link BugCheckerInfo}s in this
    * {@link ScannerSupplier}, including disabled ones.
    */
-  @VisibleForTesting
   public abstract ImmutableBiMap<String, BugCheckerInfo> getAllChecks();
 
   /**
