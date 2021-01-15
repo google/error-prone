@@ -253,25 +253,10 @@ public abstract class Template<M extends TemplateMatch> implements Serializable 
     final JCCompilationUnit unit = context.get(JCCompilationUnit.class);
     try {
       final String unitContents = unit.getSourceFile().getCharContent(false).toString();
-      return new Pretty(writer, true) {
+      return new HubSpotPretty(writer, true) {
         {
           // Work-around for b/22196513
           width = 0;
-        }
-
-        @Override
-        public void visitAnnotation(JCAnnotation anno) {
-          if (anno.getArguments().isEmpty()) {
-            try {
-              print("@");
-              printExpr(anno.annotationType);
-            } catch (IOException e) {
-              // the supertype swallows exceptions too
-              throw new RuntimeException(e);
-            }
-          } else {
-            super.visitAnnotation(anno);
-          }
         }
 
         @Override
@@ -326,39 +311,6 @@ public abstract class Template<M extends TemplateMatch> implements Serializable 
             }
           }
           super.printStat(tree);
-        }
-
-        // Don't print parentheses around single lambda parameters without an explicit type.
-        @Override
-        public void visitLambda(JCLambda lambda) {
-          try {
-            boolean exactlyOneParamWithNoType =
-                lambda.params.size() == 1 && lambda.params.get(0).vartype == null;
-            if (!exactlyOneParamWithNoType) {
-              print("(");
-            }
-            boolean first = true;
-            for (JCVariableDecl param : lambda.params) {
-              if (!first) {
-                print(",");
-              }
-              if (param.vartype != null) {
-                if (!first) {
-                  print(" ");
-                }
-                print(param.vartype + " ");
-              }
-              print(param.name);
-              first = false;
-            }
-            if (!exactlyOneParamWithNoType) {
-              print(")");
-            }
-            print("->");
-            printExpr(lambda.body);
-          } catch (IOException e) {
-            throw new UncheckedIOException(e);
-          }
         }
 
         @Override
