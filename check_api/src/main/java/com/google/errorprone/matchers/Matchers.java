@@ -1237,7 +1237,7 @@ public class Matchers {
    * @param treeMatcher The matcher to apply recursively to the tree.
    */
   public static <T extends Tree, V extends Tree> Matcher<T> contains(
-      Class<V> clazz, Matcher<V> treeMatcher) {
+      Class<? extends V> clazz, Matcher<? super V> treeMatcher) {
     final Matcher<Tree> contains = new Contains(toType(clazz, treeMatcher));
     return contains::matches;
   }
