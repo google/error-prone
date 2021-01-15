@@ -334,7 +334,7 @@ public final class PrivateConstructorForUtilityClassTest {
   }
 
   @Test
-  public void finalNotAddedForAbstractClass() {
+  public void abstractClass_noPrivateConstructor() {
     testHelper
         .addInputLines(
             "in/Test.java", //
@@ -342,13 +342,7 @@ public final class PrivateConstructorForUtilityClassTest {
             "abstract class Test {",
             "  static final String SOME_CONSTANT = \"\";",
             "}")
-        .addOutputLines(
-            "out/Test.java",
-            "",
-            "abstract class Test {",
-            "  static final String SOME_CONSTANT = \"\";",
-            "  private Test() {}",
-            "}")
+        .expectUnchanged()
         .doTest();
   }
 }

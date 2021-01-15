@@ -41,7 +41,6 @@ import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
-import java.util.Set;
 import javax.lang.model.element.Modifier;
 
 /** @author gak@google.com (Gregory Kick) */
@@ -58,6 +57,7 @@ public final class PrivateConstructorForUtilityClass extends BugChecker
   @Override
   public Description matchClass(ClassTree classTree, VisitorState state) {
     if (!classTree.getKind().equals(CLASS)
+        || classTree.getModifiers().getFlags().contains(Modifier.ABSTRACT)
         || classTree.getExtendsClause() != null
         || !classTree.getImplementsClause().isEmpty()
         || isInPrivateScope(state)
@@ -79,10 +79,7 @@ public final class PrivateConstructorForUtilityClass extends BugChecker
     SuggestedFix.Builder fix =
         SuggestedFix.builder()
             .merge(addMembers(classTree, state, createPrivateConstructor(classTree)));
-    Set<Modifier> modifiers = classTree.getModifiers().getFlags();
-    if (!modifiers.contains(Modifier.ABSTRACT) && !modifiers.contains(Modifier.FINAL)) {
-      SuggestedFixes.addModifiers(classTree, state, Modifier.FINAL).ifPresent(fix::merge);
-    }
+    SuggestedFixes.addModifiers(classTree, state, Modifier.FINAL).ifPresent(fix::merge);
     return describeMatch(classTree, fix.build());
   }
 
