@@ -322,8 +322,8 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <tr class="alt-color" id="i24">
 <td class="col-first"><code>static &lt;T extends com.sun.source.tree.Tree,&#8203;
 V extends com.sun.source.tree.Tree&gt;<br><a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;T&gt;</code></td>
-<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#contains(java.lang.Class,com.google.errorprone.matchers.Matcher)">contains</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;V&gt;&nbsp;clazz,
-<a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;V&gt;&nbsp;treeMatcher)</code></th>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#contains(java.lang.Class,com.google.errorprone.matchers.Matcher)">contains</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;? extends V&gt;&nbsp;clazz,
+<a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;? super V&gt;&nbsp;treeMatcher)</code></th>
 <td class="col-last">
 <div class="block">Applies the given matcher recursively to all descendants of an AST node, and matches if any
  matching descendant node is found.</div>
@@ -2189,8 +2189,8 @@ T extends com.sun.source.tree.Tree&gt;</span>
 <h3>contains</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="type-parameters-long">&lt;T extends com.sun.source.tree.Tree,&#8203;
 V extends com.sun.source.tree.Tree&gt;</span>
-<span class="return-type"><a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;T&gt;</span>&nbsp;<span class="member-name">contains</span>&#8203;(<span class="parameters"><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;V&gt;&nbsp;clazz,
-<a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;V&gt;&nbsp;treeMatcher)</span></div>
+<span class="return-type"><a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;T&gt;</span>&nbsp;<span class="member-name">contains</span>&#8203;(<span class="parameters"><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;? extends V&gt;&nbsp;clazz,
+<a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;? super V&gt;&nbsp;treeMatcher)</span></div>
 <div class="block">Applies the given matcher recursively to all descendants of an AST node, and matches if any
  matching descendant node is found.</div>
 <dl class="notes">
