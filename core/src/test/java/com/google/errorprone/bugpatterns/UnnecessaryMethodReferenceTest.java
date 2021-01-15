@@ -164,4 +164,23 @@ public final class UnnecessaryMethodReferenceTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void ignoreSuper() {
+    helper
+        .addSourceLines(
+            "S.java", //
+            "class S implements Runnable {",
+            "  public void run() {}",
+            "}")
+        .addSourceLines(
+            "Test.java",
+            "abstract class Test extends S {",
+            "  abstract void r(Runnable r);",
+            "  public void run() {",
+            "    r(super::run);",
+            "  }",
+            "}")
+        .doTest();
+  }
 }

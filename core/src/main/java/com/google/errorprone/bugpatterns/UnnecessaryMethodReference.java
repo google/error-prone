@@ -37,6 +37,7 @@ import com.google.errorprone.predicates.TypePredicate;
 import com.google.errorprone.predicates.TypePredicates;
 import com.google.errorprone.util.ASTHelpers.TargetType;
 import com.sun.source.tree.ExpressionTree;
+import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.MemberReferenceTree;
 import com.sun.source.tree.MemberReferenceTree.ReferenceMode;
 import com.sun.source.tree.MethodInvocationTree;
@@ -67,6 +68,10 @@ public final class UnnecessaryMethodReference extends BugChecker
     }
     ExpressionTree receiver = getReceiver(tree);
     if (receiver == null) {
+      return NO_MATCH;
+    }
+    if (receiver instanceof IdentifierTree
+        && ((IdentifierTree) receiver).getName().contentEquals("super")) {
       return NO_MATCH;
     }
     if (!isSubtype(getType(receiver), targetType.type(), state)) {
