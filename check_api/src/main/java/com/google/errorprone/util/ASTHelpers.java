@@ -139,6 +139,7 @@ import com.sun.tools.javac.util.Log.DeferredDiagnosticHandler;
 import com.sun.tools.javac.util.Name;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
 import java.net.JarURLConnection;
 import java.net.URI;
 import java.util.ArrayDeque;
@@ -2132,5 +2133,32 @@ public class ASTHelpers {
       }
     }
     return false;
+  }
+
+  private static final Method IS_LOCAL = getIsLocal();
+
+  private static Method getIsLocal() {
+    try {
+      return Symbol.class.getMethod("isLocal");
+    } catch (NoSuchMethodException e) {
+      // continue below
+    }
+    try {
+      return Symbol.class.getMethod("isDirectlyOrIndirectlyLocal");
+    } catch (NoSuchMethodException e) {
+      throw new LinkageError(e.getMessage(), e);
+    }
+  }
+
+  /**
+   * Returns true if the symbol is directly or indirectly local to a method or variable initializer;
+   * see [@code Symbol#isLocal} or {@code Symbol#isDirectlyOrIndirectlyLocal}.
+   */
+  public static boolean isLocal(Symbol symbol) {
+    try {
+      return (boolean) IS_LOCAL.invoke(symbol);
+    } catch (ReflectiveOperationException e) {
+      throw new LinkageError(e.getMessage(), e);
+    }
   }
 }

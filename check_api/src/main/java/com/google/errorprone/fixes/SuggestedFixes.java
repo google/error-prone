@@ -311,7 +311,7 @@ public class SuggestedFixes {
       return sym.getSimpleName().toString();
     }
     if (sym.getKind() == ElementKind.CLASS) {
-      if (sym.isLocal()) {
+      if (ASTHelpers.isLocal(sym)) {
         if (!sym.isAnonymous()) {
           return sym.getSimpleName().toString();
         }
