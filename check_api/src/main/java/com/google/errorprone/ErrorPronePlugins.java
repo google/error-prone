@@ -48,8 +48,8 @@ public final class ErrorPronePlugins {
       return scannerSupplier;
     }
 
-    if (HubSpotErrorHandler.isEnabled(options)) {
-      return scannerSupplier.plus(HubSpotErrorHandler.createScannerSupplier(extraBugCheckers));
+    if (HubSpotUtils.isErrorHandlingEnabled(options)) {
+      return scannerSupplier.plus(HubSpotUtils.createScannerSupplier(extraBugCheckers));
     }
 
     return scannerSupplier.plus(

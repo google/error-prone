@@ -7,7 +7,7 @@ import java.util.function.Supplier;
 
 import com.google.common.base.Suppliers;
 import com.google.errorprone.DescriptionListener;
-import com.google.errorprone.HubSpotErrorHandler;
+import com.google.errorprone.HubSpotUtils;
 import com.google.errorprone.matchers.Description;
 import com.sun.tools.javac.util.Context;
 
@@ -62,8 +62,8 @@ public class DescriptionListeners {
     @Override
     public DescriptionListener createFactory(DescriptionListenerResources resources) {
       final List<DescriptionListener> descriptionListeners;
-      if (HubSpotErrorHandler.isEnabled(resources)) {
-        descriptionListeners = HubSpotErrorHandler.loadDescriptionListeners(delegates, resources);
+      if (HubSpotUtils.isErrorHandlingEnabled(resources)) {
+        descriptionListeners = HubSpotUtils.loadDescriptionListeners(delegates, resources);
       } else {
         descriptionListeners = new ArrayList<>();
         for (CustomDescriptionListenerFactory delegate : delegates) {

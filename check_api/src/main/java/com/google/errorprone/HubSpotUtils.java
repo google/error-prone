@@ -21,6 +21,7 @@ import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.Duration;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -28,6 +29,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicLong;
 
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -39,14 +41,16 @@ import com.google.errorprone.descriptionlistener.CustomDescriptionListenerFactor
 import com.google.errorprone.descriptionlistener.DescriptionListenerResources;
 import com.google.errorprone.matchers.Suppressible;
 import com.google.errorprone.scanner.ScannerSupplier;
+import com.sun.tools.javac.util.Context;
 
-public class HubSpotErrorHandler {
+public class HubSpotUtils {
   private static final ObjectMapper MAPPER = new ObjectMapper();
   private static final String EXCEPTIONS = "errorProneExceptions";
   private static final String MISSING = "errorProneMissingChecks";
   private static final String INIT_ERROR = "errorProneInitErrors";
   private static final String LISTENER_INIT_ERRORS = "errorProneListenerInitErrors";
   private static final Map<String, Set<String>> DATA = loadExistingData();
+  private static final Map<String, AtomicLong> TIMINGS = loadExistingTimings();
 
   public static ScannerSupplier createScannerSupplier(Iterable<BugChecker> extraBugCheckers) {
     ImmutableList.Builder<BugCheckerInfo> builder = ImmutableList.builder();
@@ -77,12 +81,12 @@ public class HubSpotErrorHandler {
     return listeners.build();
   }
 
-  public static boolean isEnabled(DescriptionListenerResources resources) {
-    return isEnabled(resources.getContext().get(ErrorProneFlags.class));
+  public static boolean isErrorHandlingEnabled(DescriptionListenerResources resources) {
+    return isErrorHandlingEnabled(resources.getContext().get(ErrorProneFlags.class));
   }
 
-  public static boolean isEnabled(ErrorProneOptions options) {
-    return isEnabled(options.getFlags());
+  public static boolean isErrorHandlingEnabled(ErrorProneOptions options) {
+    return isErrorHandlingEnabled(options.getFlags());
   }
 
   public static void recordError(Suppressible s) {
@@ -99,7 +103,19 @@ public class HubSpotErrorHandler {
     flushErrors();
   }
 
-  private static boolean isEnabled(ErrorProneFlags flags) {
+  public static void updateTimings(Context context) {
+    ErrorProneTimings.instance(context)
+        .timings()
+        .forEach(HubSpotUtils::addTime);
+
+    flushTimings();
+  }
+
+  private static void addTime(String name, Duration elapsed) {
+    TIMINGS.computeIfAbsent(name, ignored -> new AtomicLong()).addAndGet(elapsed.toMillis());
+  }
+
+  private static boolean isErrorHandlingEnabled(ErrorProneFlags flags) {
     if (flags == null) {
       return false;
     }
@@ -132,35 +148,51 @@ public class HubSpotErrorHandler {
   }
 
   private static void flushErrors() {
-    Optional<Path> output = getOutput();
-    if (!output.isPresent()) {
-      return;
-    }
+    getErrorOutput().ifPresent(p -> flush(DATA, p));
+  }
 
-    try (OutputStream stream = Files.newOutputStream(output.get())) {
-      MAPPER.writeValue(stream, DATA);
+  private static void flushTimings() {
+    getTimingsOutput().ifPresent(p -> flush(TIMINGS, p));
+  }
+
+  private static void flush(Object data, Path path) {
+    try (OutputStream stream = Files.newOutputStream(path)) {
+      MAPPER.writeValue(stream, data);
     } catch (IOException e) {
       throw new RuntimeException(
-          String.format("Failed to write errorprone metadata to %s", output)
+          String.format("Failed to write errorprone metadata to %s", path)
       );
     }
   }
 
   private static Map<String, Set<String>> loadExistingData() {
-    return getOutput()
-        .map(HubSpotErrorHandler::loadData)
-        .map(HubSpotErrorHandler::toDataSet)
+    return getErrorOutput()
+        .map(HubSpotUtils::loadData)
+        .map(HubSpotUtils::toDataSet)
+        .orElseGet(ConcurrentHashMap::new);
+  }
+
+  private static Map<String, AtomicLong> loadExistingTimings() {
+    return getTimingsOutput()
+        .map(HubSpotUtils::loadTimingData)
+        .map(HubSpotUtils::toTimingDataSet)
         .orElseGet(ConcurrentHashMap::new);
   }
 
   private static Map<String, Set<String>> toDataSet(Map<String, Set<String>> data) {
-    ConcurrentHashMap<String, Set<String>> map = new ConcurrentHashMap<>();
+    ConcurrentHashMap<String, Set<String>> map = new ConcurrentHashMap<>(data.size());
     data.forEach((k, v) -> {
       Set<String> set = ConcurrentHashMap.newKeySet(v.size());
       set.addAll(v);
       map.put(k, set);
     });
 
+    return map;
+  }
+
+  private static Map<String, AtomicLong> toTimingDataSet(Map<String, Long> data) {
+    ConcurrentHashMap<String, AtomicLong> map = new ConcurrentHashMap<>(data.size());
+    data.forEach((k, v) -> map.put(k, new AtomicLong(v)));
     return map;
   }
 
@@ -186,8 +218,37 @@ public class HubSpotErrorHandler {
     }
   }
 
-  private static Optional<Path> getOutput() {
+  private static Map<String, Long> loadTimingData(Path path) {
+    if (!Files.exists(path)) {
+      return ImmutableMap.of();
+    }
+
+    JavaType type = MAPPER
+        .getTypeFactory()
+        .constructMapType(
+            HashMap.class,
+            String.class,
+            Long.class
+        );
+
+    try {
+      return MAPPER.readValue(path.toFile(), type);
+    } catch (IOException e) {
+      throw new RuntimeException("Failed to read existing file to load timing data", e);
+    }
+  }
+
+  private static Optional<Path> getErrorOutput() {
     return getOutputDir().map(o -> o.resolve("error-prone-exceptions.json"));
+  }
+
+  private static Optional<Path> getTimingsOutput() {
+    return isTimingEnabled() ?
+      getOutputDir().map(o -> o.resolve("error-prone-timings.json")) : Optional.empty();
+  }
+
+  private static boolean isTimingEnabled() {
+    return "true".equalsIgnoreCase(System.getenv("ERROR_PRONE_TIMINGS_ENABLED"));
   }
 
   private static Optional<Path> getOutputDir() {
@@ -211,7 +272,7 @@ public class HubSpotErrorHandler {
     return Optional.of(res);
   }
 
-  private HubSpotErrorHandler() {
+  private HubSpotUtils() {
     throw new AssertionError();
   }
 }

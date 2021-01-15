@@ -30,7 +30,7 @@ import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.ErrorProneOptions;
 import com.google.errorprone.ErrorProneOptions.Severity;
-import com.google.errorprone.HubSpotErrorHandler;
+import com.google.errorprone.HubSpotUtils;
 import com.google.errorprone.InvalidCommandLineOptionException;
 import com.google.errorprone.annotations.CheckReturnValue;
 import com.google.errorprone.bugpatterns.BugChecker;
@@ -182,7 +182,7 @@ public abstract class ScannerSupplier implements Supplier<Scanner> {
           BugCheckerInfo check = getAllChecks().get(checkName);
           if (check == null) {
             if (errorProneOptions.ignoreUnknownChecks()) {
-              HubSpotErrorHandler.recordMissingCheck(checkName);
+              HubSpotUtils.recordMissingCheck(checkName);
               return;
             }
             throw new InvalidCommandLineOptionException(checkName + " is not a valid checker name");
