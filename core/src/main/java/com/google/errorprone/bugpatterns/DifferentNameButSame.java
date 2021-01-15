@@ -46,6 +46,7 @@ import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.ImportTree;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodTree;
+import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
@@ -107,6 +108,15 @@ public final class DifferentNameButSame extends BugChecker implements Compilatio
 
       @Override
       public Void visitIdentifier(IdentifierTree identifierTree, Void unused) {
+        Tree parent = getCurrentPath().getParentPath().getLeaf();
+        if (parent instanceof NewClassTree) {
+          NewClassTree newClassTree = (NewClassTree) parent;
+          if (newClassTree.getIdentifier().equals(identifierTree)
+              && newClassTree.getEnclosingExpression() != null) {
+            // don't try to fix instantiations with explicit enclosing instances, e.g. `a.new B();`
+            return null;
+          }
+        }
         handle(identifierTree);
         return super.visitIdentifier(identifierTree, null);
       }

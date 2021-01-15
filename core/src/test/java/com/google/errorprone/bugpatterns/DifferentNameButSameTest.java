@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -311,7 +310,6 @@ public final class DifferentNameButSameTest {
         .doTest();
   }
 
-  @Ignore("b/177381438")
   @Test
   public void innerClassConstructor() {
     BugCheckerRefactoringTestHelper.newInstance(new DifferentNameButSame(), getClass())
