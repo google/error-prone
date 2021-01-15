@@ -19,7 +19,7 @@ import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
-import static com.google.errorprone.util.ASTHelpers.getSymbol;
+import static com.google.errorprone.util.ASTHelpers.sameVariable;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -33,7 +33,6 @@ import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreeScanner;
-import com.sun.tools.javac.code.Symbol;
 
 /**
  * A refactoring to replace Optional.get() with lambda arg in expressions passed as arg to member
@@ -85,7 +84,6 @@ public final class UnnecessaryOptionalGet extends BugChecker
     if (!onlyArg.getKind().equals(Kind.LAMBDA_EXPRESSION)) {
       return Description.NO_MATCH;
     }
-    Symbol optionalVar = getSymbol(getReceiver(tree));
     VariableTree arg = getOnlyElement(((LambdaExpressionTree) onlyArg).getParameters());
     SuggestedFix.Builder fix = SuggestedFix.builder();
     new TreeScanner<Void, VisitorState>() {
@@ -93,7 +91,7 @@ public final class UnnecessaryOptionalGet extends BugChecker
       public Void visitMethodInvocation(
           MethodInvocationTree methodInvocationTree, VisitorState visitorState) {
         if (OPTIONAL_GET.matches(methodInvocationTree, visitorState)
-            && optionalVar.equals(getSymbol(getReceiver(methodInvocationTree)))) {
+            && sameVariable(getReceiver(tree), getReceiver(methodInvocationTree))) {
           fix.replace(methodInvocationTree, state.getSourceForNode(arg));
         }
         return super.visitMethodInvocation(methodInvocationTree, visitorState);

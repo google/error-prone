@@ -217,17 +217,7 @@ public final class UnnecessaryOptionalGetTest {
             "    return Optional.of(\"hello\");",
             "  }",
             "}")
-        .addOutputLines(
-            "Test.java",
-            "import java.util.Optional;",
-            "public class Test {",
-            "  private void home() {",
-            "    myOpFunc().ifPresent(x -> System.out.println(x));",
-            "  }",
-            "  private Optional<String> myOpFunc() {",
-            "    return Optional.of(\"hello\");",
-            "  }",
-            "}")
+        .expectUnchanged()
         .doTest();
   }
 
@@ -264,6 +254,30 @@ public final class UnnecessaryOptionalGetTest {
             "    opLong.ifPresent(x -> System.out.println(x));",
             "  }",
             "}")
+        .doTest();
+  }
+
+  @Test
+  public void differentReceivers() {
+    refactoringTestHelper
+        .addInputLines(
+            "Test.java",
+            "import java.util.Optional;",
+            "public class Test {",
+            "  abstract static class T {",
+            "    abstract Optional<String> getValue();",
+            "  }",
+            "  static void test(T actual, T expected) {",
+            "    actual",
+            "        .getValue()",
+            "        .ifPresent(",
+            "            actualValue -> {",
+            "              String expectedValue = expected.getValue().get();",
+            "              actualValue.equals(expectedValue);",
+            "            });",
+            "  }",
+            "}")
+        .expectUnchanged()
         .doTest();
   }
 }
