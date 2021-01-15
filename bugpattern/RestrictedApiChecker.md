@@ -17,4 +17,4 @@ Calls to APIs marked @RestrictedApi are prohibited without a corresponding
 whitelist annotation.
 
 ## Suppression
-This check may not be suppressed.
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("RestrictedApiChecker")` to the enclosing element.

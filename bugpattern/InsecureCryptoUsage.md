@@ -39,3 +39,5 @@ classes of problems that are covered by this checker:
     invalid DSA signatures in specific configurations. The checker will flag all
     cryptographic operations that may involve DSA.
 
+## Suppression
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("InsecureCryptoUsage")` to the enclosing element.

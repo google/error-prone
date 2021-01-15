@@ -27,4 +27,4 @@ For the same reason, it's also disallowed to create lambda expressions with
 `@CompileTimeConstant` parameters.
 
 ## Suppression
-This check may not be suppressed.
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("CompileTimeConstant")` to the enclosing element.
