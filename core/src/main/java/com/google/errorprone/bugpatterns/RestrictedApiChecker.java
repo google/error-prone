@@ -16,6 +16,7 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.common.base.MoreObjects.firstNonNull;
 import static com.google.common.collect.Iterables.getOnlyElement;
 
 import com.google.errorprone.BugPattern;
@@ -40,7 +41,9 @@ import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.TypeSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Types;
+import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
+import java.util.List;
 import java.util.Optional;
 import java.util.regex.Pattern;
 import javax.annotation.Nullable;
@@ -106,16 +109,22 @@ public class RestrictedApiChecker extends BugChecker
    */
   private static Type dropImplicitEnclosingInstanceParameter(
       NewClassTree tree, VisitorState state, MethodSymbol anonymousClassConstructor) {
-    if (tree.getEnclosingExpression() == null) {
-      return anonymousClassConstructor.asType();
+    Type type = anonymousClassConstructor.asType();
+    if (!hasEnclosingExpression(tree)) {
+      // fast path
+      return type;
     }
-    com.sun.tools.javac.util.List<Type> origParams =
-        anonymousClassConstructor.asType().getParameterTypes();
-    com.sun.tools.javac.util.List<Type> newParams =
-        com.sun.tools.javac.util.List.from(origParams.subList(1, origParams.size()));
-    return state
-        .getTypes()
-        .createMethodTypeWithParameters(anonymousClassConstructor.asType(), newParams);
+    com.sun.tools.javac.util.List<Type> params = type.getParameterTypes();
+    params = firstNonNull(params.tail, com.sun.tools.javac.util.List.nil());
+    return state.getTypes().createMethodTypeWithParameters(type, params);
+  }
+
+  private static boolean hasEnclosingExpression(NewClassTree tree) {
+    if (tree.getEnclosingExpression() != null) {
+      return true;
+    }
+    List<? extends ExpressionTree> arguments = tree.getArguments();
+    return !arguments.isEmpty() && ((JCTree) arguments.get(0)).hasTag(JCTree.Tag.NULLCHK);
   }
 
   private static MethodSymbol superclassConstructorSymbol(NewClassTree tree, VisitorState state) {

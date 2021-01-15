@@ -296,4 +296,23 @@ public class RestrictedApiCheckerTest {
             "}")
         .doTest();
   }
+
+  // https://github.com/google/error-prone/issues/2099
+  @Test
+  public void i2099() {
+    helper
+        .addSourceLines(
+            "T.java",
+            "package t;",
+            "class T {",
+            "  static class Foo {",
+            "    class Loo {}",
+            "  }",
+            "  public void testFoo(Foo foo) {",
+            "    foo.new Loo() {};",
+            "  }",
+            "}")
+        .expectResult(Result.OK)
+        .doTest();
+  }
 }
