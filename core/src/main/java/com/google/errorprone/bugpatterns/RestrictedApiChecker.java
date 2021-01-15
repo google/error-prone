@@ -51,9 +51,7 @@ import javax.lang.model.type.MirroredTypesException;
 @BugPattern(
     name = "RestrictedApiChecker",
     summary = "Check for non-whitelisted callers to RestrictedApiChecker.",
-    severity = SeverityLevel.ERROR,
-    suppressionAnnotations = {},
-    disableable = false)
+    severity = SeverityLevel.ERROR)
 public class RestrictedApiChecker extends BugChecker
     implements MethodInvocationTreeMatcher,
         NewClassTreeMatcher,

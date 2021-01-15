@@ -48,7 +48,6 @@ import com.google.errorprone.bugpatterns.DivZero;
 import com.google.errorprone.bugpatterns.EqualsIncompatibleType;
 import com.google.errorprone.bugpatterns.LongLiteralLowerCaseSuffix;
 import com.google.errorprone.bugpatterns.PackageLocation;
-import com.google.errorprone.bugpatterns.RestrictedApiChecker;
 import com.google.errorprone.bugpatterns.StaticQualifiedUsingExpression;
 import com.google.errorprone.bugpatterns.StringEquality;
 import com.google.errorprone.bugpatterns.nullness.UnnecessaryCheckNotNull;
@@ -328,52 +327,6 @@ public class ScannerSupplierTest {
             ss.applyOverrides(epOptions)
                 .plus(ScannerSupplier.fromBugCheckerClasses(DivZero.class).filter(t -> false)))
         .hasEnabledChecks(BadShiftAmount.class, StaticQualifiedUsingExpression.class);
-  }
-
-  @Test
-  public void applyOverridesDisableAllChecks() {
-    // Create new scanner.
-    ScannerSupplier ss =
-        ScannerSupplier.fromBugCheckerClasses(
-            ArrayEquals.class, BadShiftAmount.class, StaticQualifiedUsingExpression.class);
-
-    // Make sure all checks in the scanner start enabled.
-    assertScanner(ss)
-        .hasEnabledChecks(
-            ArrayEquals.class, BadShiftAmount.class, StaticQualifiedUsingExpression.class);
-
-    // Apply the 'DisableAllChecks' flag, make sure all checks are disabled.
-    ErrorProneOptions epOptions =
-        ErrorProneOptions.processArgs(ImmutableList.of("-XepDisableAllChecks"));
-
-    assertScanner(ss.applyOverrides(epOptions)).hasEnabledChecks();
-
-    // Don't suppress unsuppressible checks.
-    ss = ss.plus(ScannerSupplier.fromBugCheckerClasses(RestrictedApiChecker.class));
-
-    assertScanner(ss.applyOverrides(epOptions)).hasEnabledChecks(RestrictedApiChecker.class);
-
-    // Apply 'DisableAllChecks' flag with another -Xep flag
-    epOptions =
-        ErrorProneOptions.processArgs(
-            ImmutableList.of("-XepDisableAllChecks", "-Xep:ArrayEquals:ERROR"));
-
-    // Make sure the severity flag overrides the global disable flag.
-    assertScanner(ss.applyOverrides(epOptions))
-        .hasEnabledChecks(RestrictedApiChecker.class, ArrayEquals.class);
-
-    // Order matters. The DisableAllChecks flag should override all severities that come before it.
-    epOptions =
-        ErrorProneOptions.processArgs(
-            ImmutableList.of("-Xep:ArrayEquals:ERROR", "-XepDisableAllChecks"));
-
-    // Make sure the global disable flag overrides flags that come before it.
-    assertScanner(ss.applyOverrides(epOptions)).hasEnabledChecks(RestrictedApiChecker.class);
-
-    // The 'DisableAllChecks' flag doesn't populate through to additional plugins.
-    assertScanner(
-            ss.applyOverrides(epOptions).plus(ScannerSupplier.fromBugCheckerClasses(DivZero.class)))
-        .hasEnabledChecks(RestrictedApiChecker.class, DivZero.class);
   }
 
   @Test

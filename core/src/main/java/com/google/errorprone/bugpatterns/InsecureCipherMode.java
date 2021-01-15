@@ -36,7 +36,6 @@ import com.sun.tools.javac.tree.JCTree;
     altNames = {"InsecureCipherMode"},
     summary =
         "A standard cryptographic operation is used in a mode that is prone to vulnerabilities",
-    documentSuppression = false,
     severity = ERROR)
 public class InsecureCipherMode extends BugChecker implements MethodInvocationTreeMatcher {
   private static final String MESSAGE_BASE = "Insecure usage of a crypto API: ";

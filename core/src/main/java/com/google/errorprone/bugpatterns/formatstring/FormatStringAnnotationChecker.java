@@ -43,8 +43,7 @@ import java.util.List;
 @BugPattern(
     name = "FormatStringAnnotation",
     summary = "Invalid format string passed to formatting method.",
-    severity = ERROR
-    )
+    severity = ERROR)
 public final class FormatStringAnnotationChecker extends BugChecker
     implements MethodInvocationTreeMatcher, MethodTreeMatcher, NewClassTreeMatcher {
 

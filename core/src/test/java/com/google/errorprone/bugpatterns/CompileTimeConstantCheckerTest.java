@@ -30,22 +30,6 @@ public class CompileTimeConstantCheckerTest {
       CompilationTestHelper.newInstance(CompileTimeConstantChecker.class, getClass());
 
   @Test
-  public void test_SuppressWarningsDoesntWork() {
-    compilationHelper
-        .addSourceLines(
-            "test/CompileTimeConstantTestCase.java",
-            "package test;",
-            "import com.google.errorprone.annotations.CompileTimeConstant;",
-            "public class CompileTimeConstantTestCase {",
-            "  public static void m(@CompileTimeConstant String s) { }",
-            "  @SuppressWarnings(\"CompileTimeConstant\")",
-            "  // BUG: Diagnostic contains: Non-compile-time constant expression passed",
-            "  public static void r(String x) { m(x); }",
-            "}")
-        .doTest();
-  }
-
-  @Test
   public void testMatches_fieldAccessFailsWithNonConstant() {
     compilationHelper
         .addSourceLines(

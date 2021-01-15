@@ -96,10 +96,7 @@ import javax.lang.model.element.ElementKind;
         "Non-compile-time constant expression passed to parameter with "
             + "@CompileTimeConstant type annotation.",
     linkType = NONE,
-    severity = ERROR,
-    disableable = false,
-    suppressionAnnotations = {}
-    )
+    severity = ERROR)
 public class CompileTimeConstantChecker extends BugChecker
     implements LambdaExpressionTreeMatcher,
         MemberReferenceTreeMatcher,
