@@ -32,6 +32,7 @@ import static java.util.stream.Collectors.joining;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Streams;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
@@ -43,16 +44,21 @@ import com.google.errorprone.util.ErrorProneTokens;
 import com.sun.source.doctree.DocCommentTree;
 import com.sun.source.doctree.ReferenceTree;
 import com.sun.source.doctree.ThrowsTree;
+import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodTree;
+import com.sun.source.tree.Tree;
+import com.sun.source.tree.VariableTree;
 import com.sun.source.util.DocSourcePositions;
 import com.sun.source.util.DocTreePath;
 import com.sun.source.util.DocTreePathScanner;
 import com.sun.tools.javac.api.JavacTrees;
+import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.parser.Tokens.TokenKind;
 import java.util.Objects;
+import java.util.stream.Stream;
 import javax.lang.model.element.Element;
 
 /** Flags checked exceptions which are claimed to be thrown, but are not. */
@@ -69,14 +75,16 @@ public final class CheckedExceptionNotThrown extends BugChecker implements Metho
       return NO_MATCH;
     }
     // Don't match test methods: that's rather noisy.
-    if (methodCanBeOverridden(getSymbol(tree))
+    MethodSymbol symbol = getSymbol(tree);
+    if (methodCanBeOverridden(symbol)
         || state.errorProneOptions().isTestOnlyTarget()
         || tree.getBody() == null) {
       return NO_MATCH;
     }
 
     ImmutableSet<Type> thrownExceptions =
-        getThrownExceptions(tree.getBody(), state).stream()
+        treesToScanForCheckedExceptions(tree, state)
+            .flatMap(t -> getThrownExceptions(t, state).stream())
             .filter(t -> isCheckedExceptionType(t, state))
             .collect(toImmutableSet());
 
@@ -123,6 +131,23 @@ public final class CheckedExceptionNotThrown extends BugChecker implements Metho
     SuggestedFix fix =
         SuggestedFix.builder().merge(fixJavadoc(thrownTypes, state)).merge(throwsFix).build();
     return buildDescription(tree.getThrows().get(0)).setMessage(description).addFix(fix).build();
+  }
+
+  private static Stream<Tree> treesToScanForCheckedExceptions(MethodTree tree, VisitorState state) {
+    if (getSymbol(tree).isStatic()) {
+      return Stream.of(tree.getBody());
+    }
+    return Streams.concat(
+        Stream.of(tree.getBody()), fieldInitializers(state.findEnclosing(ClassTree.class)));
+  }
+
+  private static Stream<ExpressionTree> fieldInitializers(ClassTree tree) {
+    return tree.getMembers().stream()
+        .filter(VariableTree.class::isInstance)
+        .map(VariableTree.class::cast)
+        .filter(v -> !getSymbol(v).isStatic())
+        .map(VariableTree::getInitializer)
+        .filter(i -> i != null);
   }
 
   private SuggestedFix fixJavadoc(ImmutableSet<Type> actuallyThrownTypes, VisitorState state) {

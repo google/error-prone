@@ -163,4 +163,21 @@ public final class CheckedExceptionNotThrownTest {
         .setArgs("-XepCompilingTestOnlyCode")
         .doTest();
   }
+
+  @Test
+  public void exceptionActuallyThrownInFieldInitializer() {
+    helper
+        .addInputLines(
+            "Test.java", //
+            "public final class Test {",
+            "  Test() throws Exception {}",
+            "  int f = test();",
+            "  static int test() throws Exception {",
+            "    Thread.sleep(1);",
+            "    return 1;",
+            "  }",
+            "}")
+        .expectUnchanged()
+        .doTest();
+  }
 }
