@@ -183,4 +183,19 @@ public final class UnnecessaryMethodReferenceTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void subType() {
+    helper
+        .addSourceLines(
+            "T.java",
+            "import java.util.function.Consumer;",
+            "abstract class T {",
+            "  void f(Consumer<String> c) {}",
+            "  void g(Consumer<Object> c) {",
+            "    f(c::accept);",
+            "  }",
+            "}")
+        .doTest();
+  }
 }

@@ -21,7 +21,6 @@ import static com.google.errorprone.util.ASTHelpers.findSuperMethodInType;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
-import static com.google.errorprone.util.ASTHelpers.isSubtype;
 import static com.google.errorprone.util.ASTHelpers.targetType;
 import static javax.lang.model.element.Modifier.ABSTRACT;
 
@@ -74,7 +73,7 @@ public final class UnnecessaryMethodReference extends BugChecker
         && ((IdentifierTree) receiver).getName().contentEquals("super")) {
       return NO_MATCH;
     }
-    if (!isSubtype(getType(receiver), targetType.type(), state)) {
+    if (!state.getTypes().isSubtype(getType(receiver), targetType.type())) {
       return NO_MATCH;
     }
     MethodSymbol symbol = getSymbol(tree);
