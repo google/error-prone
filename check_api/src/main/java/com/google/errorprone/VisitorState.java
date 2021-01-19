@@ -538,17 +538,21 @@ public class VisitorState {
    * This returns exactly what is in the source code, whereas .toString() pretty-prints the node
    * from its AST representation.
    *
-   * @return the source code that represents the node.
+   * @return the source code that represents the node, or {@code null} if the source code is
+   *     unavailable (e.g. for generated or desugared AST nodes)
    */
   @Nullable
   public String getSourceForNode(Tree tree) {
-    JCTree node = (JCTree) tree;
-    int start = node.getStartPosition();
-    int end = getEndPosition(node);
-    if (end < 0) {
+    int start = ((JCTree) tree).getStartPosition();
+    int end = getEndPosition(tree);
+    CharSequence source = getSourceCode();
+    if (end == -1) {
       return null;
     }
-    return getSourceCode().subSequence(start, end).toString();
+    checkArgument(start >= 0, "invalid start position (%s) for: %s", start, tree);
+    checkArgument(start < end, "invalid source positions (%s, %s) for: %s", start, end, tree);
+    checkArgument(end < source.length(), "invalid end position (%s) for: %s", end, tree);
+    return source.subSequence(start, end).toString();
   }
 
   /**
