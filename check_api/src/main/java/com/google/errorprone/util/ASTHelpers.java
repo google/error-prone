@@ -1373,9 +1373,9 @@ public class ASTHelpers {
   private static Stream<String> generatedValues(Attribute.Compound attribute) {
     return attribute.getElementValues().entrySet().stream()
         .filter(e -> e.getKey().getSimpleName().contentEquals("value"))
+        .findFirst()
         .map(e -> MoreAnnotations.asStrings((AnnotationValue) e.getValue()))
-        .findAny()
-        .orElse(Stream.of(attribute.type.tsym.getQualifiedName().toString()));
+        .orElseGet(() -> Stream.of(attribute.type.tsym.getQualifiedName().toString()));
   }
 
   public static boolean isSuper(Tree tree) {
