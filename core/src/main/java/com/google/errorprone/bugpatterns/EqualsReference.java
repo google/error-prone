@@ -48,7 +48,7 @@ public class EqualsReference extends BugChecker implements MethodTreeMatcher {
     if (Matchers.equalsMethodDeclaration().matches(methodTree, visitorState)) {
       VariableTree variableTree = methodTree.getParameters().get(0);
       VarSymbol varSymbol = ASTHelpers.getSymbol(variableTree);
-      TreeScannerEquals treeScannerEquals = new TreeScannerEquals(methodTree, visitorState);
+      TreeScannerEquals treeScannerEquals = new TreeScannerEquals(methodTree);
       treeScannerEquals.scan(methodTree.getBody(), varSymbol);
       if (treeScannerEquals.hasIllegalEquals) {
         return describeMatch(methodTree);
@@ -61,11 +61,9 @@ public class EqualsReference extends BugChecker implements MethodTreeMatcher {
 
     private boolean hasIllegalEquals = false;
     private final MethodTree methodTree;
-    private final VisitorState visitorState;
 
-    public TreeScannerEquals(MethodTree currMethodTree, VisitorState visitorState) {
+    public TreeScannerEquals(MethodTree currMethodTree) {
       methodTree = currMethodTree;
-      this.visitorState = visitorState;
     }
 
     @Override
