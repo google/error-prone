@@ -46,7 +46,7 @@ import java.util.concurrent.ForkJoinTask;
             + "suppresses exceptions thrown from the code that completes the Future.",
     severity = WARNING,
     tags = StandardTags.FRAGILE_CODE)
-public final class FutureReturnValueIgnored extends AbstractReturnValueIgnored
+public class FutureReturnValueIgnored extends AbstractReturnValueIgnored
     implements ReturnTreeMatcher {
 
   private static final Matcher<ExpressionTree> IGNORED_METHODS =
