@@ -35,6 +35,7 @@ import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.SwitchTree;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.util.Position;
+import java.util.List;
 import java.util.regex.Pattern;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
@@ -57,13 +58,14 @@ public class FallThrough extends BugChecker implements SwitchTreeMatcher {
         break;
       }
       CaseTree next = it.peek();
-      if (caseTree.getStatements().isEmpty()) {
+      List<? extends StatementTree> statements = caseTree.getStatements();
+      if (statements == null || statements.isEmpty()) {
         continue;
       }
       // We only care whether the last statement completes; javac would have already
       // reported an error if that statement wasn't reachable, and the answer is
       // independent of any preceding statements.
-      boolean completes = Reachability.canCompleteNormally(getLast(caseTree.getStatements()));
+      boolean completes = Reachability.canCompleteNormally(getLast(statements));
       int endPos = caseEndPosition(state, caseTree);
       if (endPos == Position.NOPOS) {
         break;
