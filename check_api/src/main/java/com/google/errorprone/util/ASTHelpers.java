@@ -1359,30 +1359,23 @@ public class ASTHelpers {
   }
 
   /**
-   * Returns the values of the given symbol's {@code javax.annotation.Generated} or {@code
-   * javax.annotation.processing.Generated} annotation, if present.
+   * Returns the values of the given symbol's {@code Generated} annotations, if present. If the
+   * annotation doesn't have {@code values} set, returns the string name of the annotation itself.
    */
   public static ImmutableSet<String> getGeneratedBy(Symbol symbol, VisitorState state) {
     checkNotNull(symbol);
-    Optional<Compound> c =
-        Stream.of("javax.annotation.Generated", "javax.annotation.processing.Generated")
-            .map(state::getSymbolFromString)
-            .filter(a -> a != null)
-            .map(symbol::attribute)
-            .filter(a -> a != null)
-            .findFirst();
-    if (!c.isPresent()) {
-      return ImmutableSet.of();
-    }
-    Optional<Attribute> values =
-        c.get().getElementValues().entrySet().stream()
-            .filter(e -> e.getKey().getSimpleName().contentEquals("value"))
-            .map(e -> e.getValue())
-            .findAny();
-    if (!values.isPresent()) {
-      return ImmutableSet.of();
-    }
-    return MoreAnnotations.asStrings((AnnotationValue) values.get()).collect(toImmutableSet());
+    return symbol.getRawAttributes().stream()
+        .filter(attribute -> attribute.type.tsym.getSimpleName().contentEquals("Generated"))
+        .flatMap(ASTHelpers::generatedValues)
+        .collect(toImmutableSet());
+  }
+
+  private static Stream<String> generatedValues(Attribute.Compound attribute) {
+    return attribute.getElementValues().entrySet().stream()
+        .filter(e -> e.getKey().getSimpleName().contentEquals("value"))
+        .map(e -> MoreAnnotations.asStrings((AnnotationValue) e.getValue()))
+        .findAny()
+        .orElse(Stream.of(attribute.type.tsym.getQualifiedName().toString()));
   }
 
   public static boolean isSuper(Tree tree) {
