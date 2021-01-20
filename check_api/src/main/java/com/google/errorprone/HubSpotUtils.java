@@ -44,14 +44,6 @@ import com.sun.tools.javac.util.Context;
 
 public class HubSpotUtils {
   private static final ObjectMapper MAPPER = new ObjectMapper();
-  private static final String EXCEPTIONS = "errorProneExceptions";
-  private static final String MISSING = "errorProneMissingChecks";
-  private static final String INIT_ERROR = "errorProneInitErrors";
-  private static final String LISTENER_INIT_ERRORS = "errorProneListenerInitErrors";
-  private static final String TIMINGS_KEY = "errorProneTimings";
-  private static final Map<String, Set<String>> DATA = loadExistingData();
-  private static final Map<String, Long> PREVIOUS_TIMING_DATA = loadExistingTimings();
-  private static final Map<String, Long> TIMING_DATA = new ConcurrentHashMap<>();
   private static final JavaType ERROR_DATA_TYPE = MAPPER
       .getTypeFactory()
       .constructMapType(
@@ -66,6 +58,14 @@ public class HubSpotUtils {
               HashMap.class,
               String.class,
               Long.class));
+  private static final String EXCEPTIONS = "errorProneExceptions";
+  private static final String MISSING = "errorProneMissingChecks";
+  private static final String INIT_ERROR = "errorProneInitErrors";
+  private static final String LISTENER_INIT_ERRORS = "errorProneListenerInitErrors";
+  private static final String TIMINGS_KEY = "errorProneTimings";
+  private static final Map<String, Set<String>> DATA = loadExistingData();
+  private static final Map<String, Long> PREVIOUS_TIMING_DATA = loadExistingTimings();
+  private static final Map<String, Long> TIMING_DATA = new ConcurrentHashMap<>();
 
   public static ScannerSupplier createScannerSupplier(Iterable<BugChecker> extraBugCheckers) {
     ImmutableList.Builder<BugCheckerInfo> builder = ImmutableList.builder();
@@ -244,12 +244,7 @@ public class HubSpotUtils {
   }
 
   private static Optional<Path> getTimingsOutput() {
-    return isTimingEnabled() ?
-      getOutputDir().map(o -> o.resolve("error-prone-timings.json")) : Optional.empty();
-  }
-
-  private static boolean isTimingEnabled() {
-    return "true".equalsIgnoreCase(System.getenv("ERROR_PRONE_TIMINGS_ENABLED"));
+    return getOutputDir().map(o -> o.resolve("error-prone-timings.json"));
   }
 
   private static Optional<Path> getOutputDir() {
