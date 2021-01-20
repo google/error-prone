@@ -50,7 +50,8 @@ public class HubSpotUtils {
   private static final String INIT_ERROR = "errorProneInitErrors";
   private static final String LISTENER_INIT_ERRORS = "errorProneListenerInitErrors";
   private static final Map<String, Set<String>> DATA = loadExistingData();
-  private static final Map<String, AtomicLong> TIMINGS = loadExistingTimings();
+  private static final Map<String, Long> PREVIOUS_TIMINGS = loadExistingTimings();
+  private static final Map<String, Long> TIMINGS = new ConcurrentHashMap<>();
 
   public static ScannerSupplier createScannerSupplier(Iterable<BugChecker> extraBugCheckers) {
     ImmutableList.Builder<BugCheckerInfo> builder = ImmutableList.builder();
@@ -103,16 +104,12 @@ public class HubSpotUtils {
     flushErrors();
   }
 
-  public static void updateTimings(Context context) {
+  public static void recordTimings(Context context) {
     ErrorProneTimings.instance(context)
         .timings()
-        .forEach(HubSpotUtils::addTime);
+        .forEach((k, v) -> TIMINGS.put(k, v.toMillis()));
 
     flushTimings();
-  }
-
-  private static void addTime(String name, Duration elapsed) {
-    TIMINGS.computeIfAbsent(name, ignored -> new AtomicLong()).addAndGet(elapsed.toMillis());
   }
 
   private static boolean isErrorHandlingEnabled(ErrorProneFlags flags) {
@@ -152,7 +149,20 @@ public class HubSpotUtils {
   }
 
   private static void flushTimings() {
-    getTimingsOutput().ifPresent(p -> flush(TIMINGS, p));
+    getTimingsOutput().ifPresent(p -> flush(computeFinalTimings(), p));
+  }
+
+  private static Map<String, Long> computeFinalTimings() {
+    HashMap<String, Long> res = new HashMap<>(PREVIOUS_TIMINGS);
+    TIMINGS.forEach((k, v) -> {
+      if (res.containsKey(k)) {
+        res.put(k, res.get(k) + v) ;
+      } else {
+        res.put(k, v);
+      }
+    });
+
+    return res;
   }
 
   private static void flush(Object data, Path path) {
@@ -172,10 +182,9 @@ public class HubSpotUtils {
         .orElseGet(ConcurrentHashMap::new);
   }
 
-  private static Map<String, AtomicLong> loadExistingTimings() {
+  private static Map<String, Long> loadExistingTimings() {
     return getTimingsOutput()
         .map(HubSpotUtils::loadTimingData)
-        .map(HubSpotUtils::toTimingDataSet)
         .orElseGet(ConcurrentHashMap::new);
   }
 
@@ -187,12 +196,6 @@ public class HubSpotUtils {
       map.put(k, set);
     });
 
-    return map;
-  }
-
-  private static Map<String, AtomicLong> toTimingDataSet(Map<String, Long> data) {
-    ConcurrentHashMap<String, AtomicLong> map = new ConcurrentHashMap<>(data.size());
-    data.forEach((k, v) -> map.put(k, new AtomicLong(v)));
     return map;
   }
 
