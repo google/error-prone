@@ -48,9 +48,24 @@ public class HubSpotUtils {
   private static final String MISSING = "errorProneMissingChecks";
   private static final String INIT_ERROR = "errorProneInitErrors";
   private static final String LISTENER_INIT_ERRORS = "errorProneListenerInitErrors";
+  private static final String TIMINGS_KEY = "errorProneTimings";
   private static final Map<String, Set<String>> DATA = loadExistingData();
-  private static final Map<String, Long> PREVIOUS_TIMINGS = loadExistingTimings();
-  private static final Map<String, Long> TIMINGS = new ConcurrentHashMap<>();
+  private static final Map<String, Long> PREVIOUS_TIMING_DATA = loadExistingTimings();
+  private static final Map<String, Long> TIMING_DATA = new ConcurrentHashMap<>();
+  private static final JavaType ERROR_DATA_TYPE = MAPPER
+      .getTypeFactory()
+      .constructMapType(
+          HashMap.class,
+          MAPPER.getTypeFactory().constructType(String.class),
+          MAPPER.getTypeFactory().constructCollectionType(Set.class, String.class));
+  private static final JavaType TIMINGS_DATA_TYPE = MAPPER.getTypeFactory()
+      .constructMapType(
+          HashMap.class,
+          MAPPER.getTypeFactory().constructType(String.class),
+          MAPPER.getTypeFactory().constructMapType(
+              HashMap.class,
+              String.class,
+              Long.class));
 
   public static ScannerSupplier createScannerSupplier(Iterable<BugChecker> extraBugCheckers) {
     ImmutableList.Builder<BugCheckerInfo> builder = ImmutableList.builder();
@@ -106,7 +121,7 @@ public class HubSpotUtils {
   public static void recordTimings(Context context) {
     ErrorProneTimings.instance(context)
         .timings()
-        .forEach((k, v) -> TIMINGS.put(k, v.toMillis()));
+        .forEach((k, v) -> TIMING_DATA.put(k, v.toMillis()));
 
     flushTimings();
   }
@@ -151,9 +166,9 @@ public class HubSpotUtils {
     getTimingsOutput().ifPresent(p -> flush(computeFinalTimings(), p));
   }
 
-  private static Map<String, Long> computeFinalTimings() {
-    TreeMap<String, Long> res = new TreeMap<>(PREVIOUS_TIMINGS);
-    TIMINGS.forEach((k, v) -> {
+  private static Map<String, Map<String, Long>> computeFinalTimings() {
+    TreeMap<String, Long> res = new TreeMap<>(PREVIOUS_TIMING_DATA);
+    TIMING_DATA.forEach((k, v) -> {
       if (res.containsKey(k)) {
         res.put(k, res.get(k) + v) ;
       } else {
@@ -161,7 +176,7 @@ public class HubSpotUtils {
       }
     });
 
-    return res;
+    return ImmutableMap.of(TIMINGS_KEY, res);
   }
 
   private static void flush(Object data, Path path) {
@@ -184,7 +199,9 @@ public class HubSpotUtils {
   private static Map<String, Long> loadExistingTimings() {
     return getTimingsOutput()
         .map(HubSpotUtils::loadTimingData)
-        .orElseGet(ConcurrentHashMap::new);
+        .flatMap(m -> Optional.ofNullable(m.get(TIMINGS_KEY)))
+        .map(ImmutableMap::copyOf)
+        .orElseGet(ImmutableMap::of);
   }
 
   private static Map<String, Set<String>> toDataSet(Map<String, Set<String>> data) {
@@ -203,38 +220,20 @@ public class HubSpotUtils {
       return ImmutableMap.of();
     }
 
-    JavaType type = MAPPER
-        .getTypeFactory()
-        .constructMapType(
-            HashMap.class,
-            MAPPER.getTypeFactory().constructType(String.class),
-            MAPPER
-                .getTypeFactory()
-                .constructCollectionType(Set.class, String.class)
-        );
-
     try {
-      return MAPPER.readValue(path.toFile(), type);
+      return MAPPER.readValue(path.toFile(), ERROR_DATA_TYPE);
     } catch (IOException e) {
       throw new RuntimeException("Failed to read existing file to load data", e);
     }
   }
 
-  private static Map<String, Long> loadTimingData(Path path) {
+  private static Map<String, Map<String, Long>> loadTimingData(Path path) {
     if (!Files.exists(path)) {
       return ImmutableMap.of();
     }
 
-    JavaType type = MAPPER
-        .getTypeFactory()
-        .constructMapType(
-            HashMap.class,
-            String.class,
-            Long.class
-        );
-
     try {
-      return MAPPER.readValue(path.toFile(), type);
+      return MAPPER.readValue(path.toFile(), TIMINGS_DATA_TYPE);
     } catch (IOException e) {
       throw new RuntimeException("Failed to read existing file to load timing data", e);
     }
