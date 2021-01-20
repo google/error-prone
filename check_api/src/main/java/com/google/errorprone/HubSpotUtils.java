@@ -21,15 +21,14 @@ import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.time.Duration;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicLong;
 
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -153,7 +152,7 @@ public class HubSpotUtils {
   }
 
   private static Map<String, Long> computeFinalTimings() {
-    HashMap<String, Long> res = new HashMap<>(PREVIOUS_TIMINGS);
+    TreeMap<String, Long> res = new TreeMap<>(PREVIOUS_TIMINGS);
     TIMINGS.forEach((k, v) -> {
       if (res.containsKey(k)) {
         res.put(k, res.get(k) + v) ;
