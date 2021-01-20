@@ -64,7 +64,7 @@ import javax.lang.model.element.Modifier;
  * @author alexeagle@google.com (Alex Eagle)
  * @author eaftan@google.com (Eddie Aftandillian)
  */
-public class JUnitMatchers {
+public final class JUnitMatchers {
   public static final String JUNIT4_TEST_ANNOTATION = "org.junit.Test";
   public static final String JUNIT4_THEORY_ANNOTATION = "org.junit.experimental.theories.Theory";
   public static final String JUNIT_BEFORE_ANNOTATION = "org.junit.Before";
@@ -305,4 +305,6 @@ public class JUnitMatchers {
             null),
         false);
   }
+
+  private JUnitMatchers() {}
 }

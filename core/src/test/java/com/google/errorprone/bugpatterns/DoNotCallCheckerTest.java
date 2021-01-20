@@ -169,9 +169,11 @@ public class DoNotCallCheckerTest {
   }
 
   /** Test class containing a method annotated with @DNC. */
-  public static class DNCTest {
+  public static final class DNCTest {
     @DoNotCall
     public static void f() {}
+
+    private DNCTest() {}
   }
 
   @Test

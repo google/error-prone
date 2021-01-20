@@ -40,7 +40,7 @@ import javax.annotation.Nullable;
  *
  * <p>i.e.: It is possible that an object of one type could be equal to an object of the other type.
  */
-public class TypeCompatibilityUtils {
+public final class TypeCompatibilityUtils {
 
   public static TypeCompatibilityReport compatibilityOfTypes(
       Type receiverType, Type argumentType, VisitorState state) {
@@ -236,4 +236,6 @@ public class TypeCompatibilityUtils {
       this.argument = argument;
     }
   }
+
+  private TypeCompatibilityUtils() {}
 }

@@ -23,7 +23,7 @@ import com.sun.tools.javac.util.Context;
  * {@link Context} has changed. The only meaningful way to compare JavacInvocationInstance objects
  * is by their object identity, as they have no properties.
  */
-public class JavacInvocationInstance {
+public final class JavacInvocationInstance {
   public static JavacInvocationInstance instance(Context context) {
     JavacInvocationInstance instance = context.get(JavacInvocationInstance.class);
     if (instance == null) {
@@ -32,4 +32,6 @@ public class JavacInvocationInstance {
     }
     return instance;
   }
+
+  private JavacInvocationInstance() {}
 }

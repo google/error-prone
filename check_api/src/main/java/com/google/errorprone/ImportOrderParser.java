@@ -18,7 +18,7 @@ package com.google.errorprone;
 import com.google.errorprone.apply.ImportOrganizer;
 
 /** Parse import order strings. */
-public class ImportOrderParser {
+public final class ImportOrderParser {
 
   /**
    * Parse import order string and create appropriate {@link ImportOrganizer}.
@@ -42,4 +42,6 @@ public class ImportOrderParser {
         throw new IllegalStateException("Unknown import order: '" + importOrder + "'");
     }
   }
+
+  private ImportOrderParser() {}
 }

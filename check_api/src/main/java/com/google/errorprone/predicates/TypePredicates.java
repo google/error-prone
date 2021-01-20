@@ -96,4 +96,6 @@ public final class TypePredicates {
   public static TypePredicate not(TypePredicate predicate) {
     return (type, state) -> !predicate.apply(type, state);
   }
+
+  private TypePredicates() {}
 }

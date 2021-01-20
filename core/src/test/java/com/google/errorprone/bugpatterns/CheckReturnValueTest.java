@@ -622,11 +622,13 @@ public class CheckReturnValueTest {
   }
 
   /** Test class containing a method annotated with @CRV. */
-  public static class CRVTest {
+  public static final class CRVTest {
     @javax.annotation.CheckReturnValue
     public static int f() {
       return 42;
     }
+
+    private CRVTest() {}
   }
 
   @Test

@@ -25,7 +25,7 @@ import com.sun.tools.javac.code.Type;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
-public class MethodMatchers {
+public final class MethodMatchers {
 
   /** @deprecated use {@code Matcher<ExpressionTree>} instead of referring directly to this type. */
   @Deprecated
@@ -196,4 +196,6 @@ public class MethodMatchers {
   public static ConstructorMatcher constructor() {
     return MethodMatcherImpl.CONSTRUCTOR;
   }
+
+  private MethodMatchers() {}
 }

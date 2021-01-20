@@ -45,4 +45,6 @@ public final class ErrorProneVersion {
       return Optional.absent();
     }
   }
+
+  private ErrorProneVersion() {}
 }

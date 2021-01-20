@@ -26,7 +26,7 @@ import javax.tools.JavaFileManager;
 import javax.tools.StandardLocation;
 
 /** Loads custom Error Prone checks from the annotation processor classpath. */
-public class ErrorPronePlugins {
+public final class ErrorPronePlugins {
 
   public static ScannerSupplier loadPlugins(ScannerSupplier scannerSupplier, Context context) {
     JavaFileManager fileManager = context.get(JavaFileManager.class);
@@ -47,4 +47,6 @@ public class ErrorPronePlugins {
         ScannerSupplier.fromBugCheckerClasses(
             Iterables.transform(extraBugCheckers, BugChecker::getClass)));
   }
+
+  private ErrorPronePlugins() {}
 }

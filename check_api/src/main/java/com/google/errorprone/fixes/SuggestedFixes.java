@@ -142,7 +142,7 @@ import javax.tools.JavaFileObject.Kind;
 import javax.tools.SimpleJavaFileObject;
 
 /** Factories for constructing {@link Fix}es. */
-public class SuggestedFixes {
+public final class SuggestedFixes {
 
   /** Parse a modifier token into a {@link Modifier}. */
   @Nullable
@@ -1601,4 +1601,6 @@ public class SuggestedFixes {
         + state.getSourceForNode(expressionTree)
         + (needsParentheses ? ")" : "");
   }
+
+  private SuggestedFixes() {}
 }

@@ -24,7 +24,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /** Utility functions for dealing with Java naming conventions */
-public class NamingConventions {
+public final class NamingConventions {
 
   private static final Pattern ONLY_UNDERSCORES = Pattern.compile("^_+$");
 
@@ -57,4 +57,6 @@ public class NamingConventions {
   public static String convertToLowerUnderscore(String identifierName) {
     return splitToLowercaseTerms(identifierName).stream().collect(Collectors.joining("_"));
   }
+
+  private NamingConventions() {}
 }

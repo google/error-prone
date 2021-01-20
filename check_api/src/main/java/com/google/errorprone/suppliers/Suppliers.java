@@ -31,7 +31,7 @@ import com.sun.tools.javac.tree.JCTree.JCExpression;
 import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
 
 /** @author alexeagle@google.com (Alex Eagle) */
-public class Suppliers {
+public final class Suppliers {
 
   /**
    * Supplies the n'th generic type of the given expression. For example, in {@code Map<A,B> c;} for
@@ -286,4 +286,6 @@ public class Suppliers {
               }
             }));
   }
+
+  private Suppliers() {}
 }

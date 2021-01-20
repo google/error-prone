@@ -46,7 +46,7 @@ import java.util.Optional;
  *
  * @author andrewrice@google.com (Andrew Rice)
  */
-public class Comments {
+public final class Comments {
 
   /**
    * Attach comments to nodes on arguments of constructor calls. Calls such as {@code new Test(
@@ -464,4 +464,6 @@ public class Comments {
       return argumentsIterator.hasNext();
     }
   }
+
+  private Comments() {}
 }

@@ -62,7 +62,7 @@ import javax.lang.model.element.Modifier;
  *
  * @author cushon@google.com (Liam Miller-Cushon)
  */
-public class HeldLockAnalyzer {
+public final class HeldLockAnalyzer {
 
   /** Listener interface for accesses to guarded members. */
   public interface LockEventListener {
@@ -391,7 +391,7 @@ public class HeldLockAnalyzer {
    * Find the locks that are released in the given tree. (e.g. the 'finally' clause of a
    * try/finally)
    */
-  static class ReleasedLockFinder {
+  static final class ReleasedLockFinder {
 
     /** Matcher for methods that release lock resources. */
     private static final Matcher<ExpressionTree> UNLOCK_MATCHER =
@@ -405,13 +405,15 @@ public class HeldLockAnalyzer {
         Tree tree, VisitorState state, GuardedByFlags flags) {
       return LockOperationFinder.find(tree, state, UNLOCK_MATCHER, flags);
     }
+
+    private ReleasedLockFinder() {}
   }
 
   /**
    * Find the locks that are acquired in the given tree. (e.g. the body of a @LockMethod-annotated
    * method.)
    */
-  static class AcquiredLockFinder {
+  static final class AcquiredLockFinder {
 
     /** Matcher for methods that acquire lock resources. */
     private static final Matcher<ExpressionTree> LOCK_MATCHER =
@@ -425,9 +427,11 @@ public class HeldLockAnalyzer {
         Tree tree, VisitorState state, GuardedByFlags flags) {
       return LockOperationFinder.find(tree, state, LOCK_MATCHER, flags);
     }
+
+    private AcquiredLockFinder() {}
   }
 
-  static class ExpectedLockCalculator {
+  static final class ExpectedLockCalculator {
 
     private static final GuardedByExpression.Factory F = new GuardedByExpression.Factory();
 
@@ -517,5 +521,9 @@ public class HeldLockAnalyzer {
           throw new IllegalGuardedBy(lockExpression.toString());
       }
     }
+
+    private ExpectedLockCalculator() {}
   }
+
+  private HeldLockAnalyzer() {}
 }

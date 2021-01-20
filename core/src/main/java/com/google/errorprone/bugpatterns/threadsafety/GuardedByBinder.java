@@ -41,7 +41,7 @@ import javax.lang.model.element.Name;
  *
  * @author cushon@google.com (Liam Miller-Cushon)
  */
-public class GuardedByBinder {
+public final class GuardedByBinder {
 
   /**
    * Creates a {@link GuardedByExpression} from a bound AST node, or returns {@code
@@ -331,4 +331,6 @@ public class GuardedByBinder {
           return null;
         }
       };
+
+  private GuardedByBinder() {}
 }

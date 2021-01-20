@@ -23,7 +23,7 @@ import com.google.common.base.CharMatcher;
  *
  * @author eaftan@google.com (Eddie Aftandilian)
  */
-public class BugPatternValidator {
+public final class BugPatternValidator {
 
   public static void validate(BugPattern pattern) throws ValidationException {
     if (pattern == null) {
@@ -50,4 +50,6 @@ public class BugPatternValidator {
         break;
     }
   }
+
+  private BugPatternValidator() {}
 }

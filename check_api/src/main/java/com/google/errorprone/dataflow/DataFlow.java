@@ -277,4 +277,6 @@ public final class DataFlow {
       return environment;
     }
   }
+
+  private DataFlow() {}
 }

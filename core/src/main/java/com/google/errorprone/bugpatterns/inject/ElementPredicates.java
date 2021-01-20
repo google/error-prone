@@ -86,4 +86,6 @@ public final class ElementPredicates {
     return annotations.stream()
         .anyMatch(annotation -> t.getQualifiedName().contentEquals(annotation));
   }
+
+  private ElementPredicates() {}
 }

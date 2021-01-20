@@ -60,7 +60,7 @@ import javax.annotation.Nullable;
 import javax.lang.model.type.TypeKind;
 
 /** Utilities for validating format strings. */
-public class FormatStringValidation {
+public final class FormatStringValidation {
 
   /** Description of an incorrect format method call. */
   @AutoValue
@@ -288,4 +288,6 @@ public class FormatStringValidation {
     }
     return String.format("unknown format conversion: '%s'", conversion);
   }
+
+  private FormatStringValidation() {}
 }

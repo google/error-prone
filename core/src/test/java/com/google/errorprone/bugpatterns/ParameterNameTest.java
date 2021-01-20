@@ -475,11 +475,13 @@ public class ParameterNameTest {
   }
 
   /** A test for annotated parameters across compilation boundaries. */
-  public static class AnnotatedParametersTestClass {
+  public static final class AnnotatedParametersTestClass {
     /** An annotation to apply to method parameters. */
     public @interface Annotated {}
 
     public static void target(@Annotated int foo) {}
+
+    private AnnotatedParametersTestClass() {}
   }
 
   @Test
@@ -709,8 +711,10 @@ public class ParameterNameTest {
   }
 
   /** A test input for separate compilation. */
-  public static class Holder {
+  public static final class Holder {
     public static void varargsMethod(int... values) {}
+
+    private Holder() {}
   }
 
   /** Regression test for b/147344912. */

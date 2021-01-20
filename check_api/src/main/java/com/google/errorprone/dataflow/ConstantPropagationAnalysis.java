@@ -41,4 +41,6 @@ public final class ConstantPropagationAnalysis {
     }
     return val.getValue();
   }
+
+  private ConstantPropagationAnalysis() {}
 }

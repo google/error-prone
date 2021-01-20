@@ -42,7 +42,7 @@ import java.util.stream.StreamSupport;
  * Utility main which consumes the same tab-delimited text file and generates GitHub pages for the
  * BugPatterns.
  */
-public class DocGenTool {
+public final class DocGenTool {
 
   @Parameters(separators = "=")
   static class Options {
@@ -133,4 +133,6 @@ public class DocGenTool {
     System.err.println(err);
     System.exit(1);
   }
+
+  private DocGenTool() {}
 }

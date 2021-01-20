@@ -23,7 +23,7 @@ import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
 /** Utilities for checks that work with regexes. */
-public class Regexes {
+public final class Regexes {
 
   /**
    * A map of regex constructs to escape characters we can translate to a literal. Note that '\b'
@@ -105,4 +105,6 @@ public class Regexes {
     }
     return Optional.of(result.toString());
   }
+
+  private Regexes() {}
 }

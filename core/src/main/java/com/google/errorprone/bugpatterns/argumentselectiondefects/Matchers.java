@@ -46,7 +46,7 @@ import java.util.regex.Pattern;
  *
  * @author andrewrice@google.com (Andrew Rice)
  */
-class Matchers {
+final class Matchers {
 
   /** Matches if the tree is a constructor for an AutoValue class. */
   static final Matcher<NewClassTree> AUTOVALUE_CONSTRUCTOR =
@@ -134,4 +134,6 @@ class Matchers {
           anyOf(TWO_PARAMETER_ASSERT, THREE_PARAMETER_ASSERT),
           not(ARGUMENT_EXTENDS_TRHOWABLE),
           not(METHOD_ANNOTATED_WITH_BEFORETEMPLATE));
+
+  private Matchers() {}
 }

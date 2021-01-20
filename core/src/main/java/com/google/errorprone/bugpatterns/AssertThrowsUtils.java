@@ -39,7 +39,7 @@ import java.util.Optional;
  * Utility methods for refactoring try-fail pattern to assertThrows, which is preferred. Used by
  * {@link TryFailRefactoring} and {@link MissingFail}.
  */
-public class AssertThrowsUtils {
+public final class AssertThrowsUtils {
 
   /**
    * Transforms a try-catch block in the try-fail pattern into a call to JUnit's {@code
@@ -141,4 +141,6 @@ public class AssertThrowsUtils {
     }
     return Optional.of(fix.build());
   }
+
+  private AssertThrowsUtils() {}
 }

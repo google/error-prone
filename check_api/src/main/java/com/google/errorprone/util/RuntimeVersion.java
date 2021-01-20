@@ -19,7 +19,7 @@ package com.google.errorprone.util;
 import java.lang.reflect.Method;
 
 /** JDK version string utilities. */
-public class RuntimeVersion {
+public final class RuntimeVersion {
 
   private static final int MAJOR = getMajor();
 
@@ -93,4 +93,6 @@ public class RuntimeVersion {
   public static int release() {
     return MAJOR;
   }
+
+  private RuntimeVersion() {}
 }

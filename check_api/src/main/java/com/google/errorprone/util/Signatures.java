@@ -30,7 +30,7 @@ import com.sun.tools.javac.util.Name;
 import java.util.Arrays;
 
 /** Signature generation. */
-public class Signatures {
+public final class Signatures {
 
   /** Returns the binary names of the class. */
   public static String classDescriptor(Type type, Types types) {
@@ -154,4 +154,6 @@ public class Signatures {
           return t.toString();
         }
       };
+
+  private Signatures() {}
 }
