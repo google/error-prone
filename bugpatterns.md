@@ -1301,6 +1301,9 @@ Use of @SuppressWarnings should be accompanied by a comment describing why the w
 __[SystemExitOutsideMain](bugpattern/SystemExitOutsideMain)__<br>
 Code that contains System.exit() is untestable.
 
+__[SystemOut](bugpattern/SystemOut)__<br>
+Printing to standard output should only be used for debugging, not in production code
+
 __[TestExceptionChecker](bugpattern/TestExceptionChecker)__<br>
 Using @Test(expected=...) is discouraged, since the test will pass if *any* statement in the test method throws the expected exception
 
