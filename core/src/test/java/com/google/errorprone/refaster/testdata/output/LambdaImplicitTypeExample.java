@@ -22,6 +22,6 @@ import java.util.stream.Collectors;
 public class LambdaImplicitTypeExample {
   public void example() {
     System.out.println(
-        Arrays.asList("foo", "bar").stream().reduce((a,b)->b));
+        Arrays.asList("foo", "bar").stream().reduce((a, b) -> b));
   }
 }

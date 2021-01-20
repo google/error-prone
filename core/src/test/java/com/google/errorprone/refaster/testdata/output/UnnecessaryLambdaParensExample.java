@@ -21,6 +21,6 @@ import java.util.stream.Collectors;
 
 public class UnnecessaryLambdaParensExample {
   public void example() {
-    System.out.println(Arrays.asList("foo", "bar").stream().map(x->x).reduce((a,b)->b));
+    System.out.println(Arrays.asList("foo", "bar").stream().map(x -> x).reduce((a, b) -> b));
   }
 }

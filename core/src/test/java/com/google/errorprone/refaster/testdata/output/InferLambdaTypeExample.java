@@ -23,8 +23,8 @@ public class InferLambdaTypeExample {
   public void example() {
     System.out.println(
         Arrays.asList("foo", "bar")
-            .stream().reduce((String a, String b)->b));
+            .stream().reduce((String a, String b) -> b));
     System.out.println(
-        Arrays.asList("foo", "bar").stream().reduce((String a, String b)->b));
+        Arrays.asList("foo", "bar").stream().reduce((String a, String b) -> b));
   }
 }

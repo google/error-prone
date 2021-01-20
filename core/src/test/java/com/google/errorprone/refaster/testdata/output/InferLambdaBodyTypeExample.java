@@ -21,7 +21,7 @@ import java.util.Collection;
 /** Sample data for InferLambdaBodyType. */
 public class InferLambdaBodyTypeExample {
   static void example(Collection<Integer> collection) {
-    collection.forEach((Integer i)->System.out.println(i));
-    collection.forEach((Integer i)->{ int j = i + 1; System.out.println(j); });
+    collection.forEach((Integer i) -> System.out.println(i));
+    collection.forEach((Integer i) -> { int j = i + 1; System.out.println(j); });
   }
 }
