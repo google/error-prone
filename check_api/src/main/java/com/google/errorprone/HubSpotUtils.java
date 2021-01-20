@@ -168,14 +168,10 @@ public class HubSpotUtils {
 
   private static Map<String, Map<String, Long>> computeFinalTimings() {
     TreeMap<String, Long> res = new TreeMap<>(PREVIOUS_TIMING_DATA);
-    TIMING_DATA.forEach((k, v) -> {
-      if (res.containsKey(k)) {
-        res.put(k, res.get(k) + v) ;
-      } else {
-        res.put(k, v);
-      }
-    });
-
+    TIMING_DATA.forEach(
+        (k, newValue) -> res.compute(
+            k,
+            (key, oldValue) -> oldValue == null ? newValue : oldValue + newValue));
     return ImmutableMap.of(TIMINGS_KEY, res);
   }
 
