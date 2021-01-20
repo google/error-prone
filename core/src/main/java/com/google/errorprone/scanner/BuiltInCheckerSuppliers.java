@@ -304,6 +304,7 @@ import com.google.errorprone.bugpatterns.SwigMemoryLeak;
 import com.google.errorprone.bugpatterns.SwitchDefault;
 import com.google.errorprone.bugpatterns.SymbolToString;
 import com.google.errorprone.bugpatterns.SystemExitOutsideMain;
+import com.google.errorprone.bugpatterns.SystemOut;
 import com.google.errorprone.bugpatterns.TestExceptionChecker;
 import com.google.errorprone.bugpatterns.TheoryButNoTheories;
 import com.google.errorprone.bugpatterns.ThreadJoinLoop;
@@ -543,7 +544,7 @@ public class BuiltInCheckerSuppliers {
   /** A list of all checks with severity ERROR that are on by default. */
   public static final ImmutableSet<BugCheckerInfo> ENABLED_ERRORS =
       getSuppliers(
-          // start
+          // keep-sorted start
           AndroidInjectionBeforeSuper.class,
           ArrayEquals.class,
           ArrayFillIncompatibleType.class,
@@ -699,13 +700,13 @@ public class BuiltInCheckerSuppliers {
           WrongOneof.class,
           XorPower.class,
           ZoneIdOfZ.class
-          // end
+          // keep-sorted end
           );
 
   /** A list of all checks with severity WARNING that are on by default. */
   public static final ImmutableSet<BugCheckerInfo> ENABLED_WARNINGS =
       getSuppliers(
-          // start
+          // keep-sorted start
           AlmostJavadoc.class,
           AmbiguousMethodReference.class,
           AnnotateFormatMethod.class,
@@ -912,13 +913,13 @@ public class BuiltInCheckerSuppliers {
           WaitNotInLoop.class,
           WakelockReleasedDangerously.class,
           WithSignatureDiscouraged.class
-          // end
+          // keep-sorted end
           );
 
   /** A list of all checks that are off by default. */
   public static final ImmutableSet<BugCheckerInfo> DISABLED_CHECKS =
       getSuppliers(
-          // start
+          // keep-sorted start
           AndroidJdkLibsChecker.class,
           AnnotationPosition.class,
           AssertFalse.class,
@@ -1011,6 +1012,7 @@ public class BuiltInCheckerSuppliers {
           SwitchDefault.class,
           SymbolToString.class,
           SystemExitOutsideMain.class,
+          SystemOut.class,
           TestExceptionChecker.class,
           ThrowSpecificExceptions.class,
           ThrowsUncheckedException.class,
@@ -1035,7 +1037,7 @@ public class BuiltInCheckerSuppliers {
           UseEnumSwitch.class,
           VarChecker.class,
           WildcardImport.class
-          // end
+          // keep-sorted end
           );
 
   // May not be instantiated
