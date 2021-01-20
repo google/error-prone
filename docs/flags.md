@@ -36,8 +36,7 @@ There are also a few blanket severity-changing flags:
 *   `-XepAllDisabledChecksAsWarnings`
 *   `-XepDisableAllChecks`
 *   `-XepDisableAllWarnings`
-*   `-XepDisableWarningsInGeneratedCode` : Disables warnings in classes annotated with
-    `@javax.annotation.Generated` or `@javax.annotation.processing.Generated`
+*   `-XepDisableWarningsInGeneratedCode` : Disables warnings in classes annotated with `@Generated`
 
 With any of the blanket flags, you can pass additional flags afterward to
 tweak the level of individual checks.  E.g., this flag combination disables
