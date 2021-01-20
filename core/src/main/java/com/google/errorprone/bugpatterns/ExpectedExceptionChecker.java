@@ -28,12 +28,13 @@ import static com.google.errorprone.matchers.Matchers.throwStatement;
 import static com.google.errorprone.matchers.Matchers.toType;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
-import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
+import static com.google.errorprone.util.ASTHelpers.getUpperBound;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Iterators;
 import com.google.common.collect.PeekingIterator;
 import com.google.errorprone.BugPattern;
@@ -160,13 +161,15 @@ public class ExpectedExceptionChecker extends BugChecker implements MethodTreeMa
       List<Tree> expectations,
       List<StatementTree> suffix,
       @Nullable StatementTree failure) {
-    return describeMatch(tree, buildBaseFix(state, expectations, failure).build(suffix));
+    return describeMatch(tree, buildFix(state, expectations, failure, suffix));
   }
 
-  private static BaseFix buildBaseFix(
-      VisitorState state, List<Tree> expectations, @Nullable StatementTree failure) {
-    String exceptionClassName = "Throwable";
-    String exceptionClassExpr = "Throwable.class";
+  private static Fix buildFix(
+      VisitorState state,
+      List<Tree> expectations,
+      @Nullable StatementTree failure,
+      List<StatementTree> suffix) {
+    Type exceptionType = state.getSymtab().throwableType;
     // additional assertions to perform on the captured exception (if any)
     List<String> newAsserts = new ArrayList<>();
     SuggestedFix.Builder fix = SuggestedFix.builder();
@@ -181,24 +184,19 @@ public class ExpectedExceptionChecker extends BugChecker implements MethodTreeMa
           Type type = ASTHelpers.getType(getOnlyElement(invocation.getArguments()));
           if (isSubtype(type, symtab.classType, state)) {
             // expect(Class<?>)
-            ExpressionTree arg = getOnlyElement(args);
-            exceptionClassExpr = state.getSourceForNode(arg);
-            ExpressionTree exceptionClassTree;
-            try {
-              exceptionClassTree = getReceiver(arg);
-            } catch (IllegalStateException e) {
-              // This can happen if exceptionClassExpr is not of the form SomeType.class.
-              break;
-            }
-            exceptionClassName = state.getSourceForNode(exceptionClassTree);
+            exceptionType =
+                getUpperBound(
+                    Iterables.getFirst(
+                        state.getTypes().asSuper(type, symtab.classType.tsym).getTypeArguments(),
+                        symtab.throwableType),
+                    state.getTypes());
           } else if (isSubtype(type, state.getTypeFromString("org.hamcrest.Matcher"), state)) {
             Type matcherType =
                 state.getTypes().asSuper(type, state.getSymbolFromString("org.hamcrest.Matcher"));
             if (!matcherType.getTypeArguments().isEmpty()) {
               Type matchType = getOnlyElement(matcherType.getTypeArguments());
               if (isSubtype(matchType, symtab.throwableType, state)) {
-                exceptionClassName = SuggestedFixes.qualifyType(state, fix, matchType);
-                exceptionClassExpr = exceptionClassName + ".class";
+                exceptionType = matchType;
               }
             }
             // expect(Matcher)
@@ -253,55 +251,40 @@ public class ExpectedExceptionChecker extends BugChecker implements MethodTreeMa
     if (failure != null) {
       fix.delete(failure);
     }
-    return new BaseFix(fix.build(), exceptionClassName, exceptionClassExpr, newAsserts);
+    return finishFix(fix.build(), exceptionType, newAsserts, suffix, state);
   }
 
-  /** A partially assembled fix. */
-  private static class BaseFix {
-
-    final SuggestedFix baseFix;
-    final String exceptionClassName;
-    final String exceptionClassExpr;
-    final List<String> newAsserts;
-
-    BaseFix(
-        SuggestedFix baseFix,
-        String exceptionClassName,
-        String exceptionClassExpr,
-        List<String> newAsserts) {
-      this.baseFix = baseFix;
-      this.exceptionClassName = exceptionClassName;
-      this.exceptionClassExpr = exceptionClassExpr;
-      this.newAsserts = newAsserts;
+  private static Fix finishFix(
+      SuggestedFix baseFix,
+      Type exceptionType,
+      List<String> newAsserts,
+      List<StatementTree> throwingStatements,
+      VisitorState state) {
+    if (throwingStatements.isEmpty()) {
+      return baseFix;
     }
-
-    public Fix build(List<? extends StatementTree> throwingStatements) {
-      if (throwingStatements.isEmpty()) {
-        return baseFix;
-      }
-      SuggestedFix.Builder fix = SuggestedFix.builder().merge(baseFix);
-      fix.addStaticImport("org.junit.Assert.assertThrows");
-      StringBuilder fixPrefix = new StringBuilder();
-      if (!newAsserts.isEmpty()) {
-        fixPrefix.append(String.format("%s thrown = ", exceptionClassName));
-      }
-      fixPrefix.append("assertThrows");
-      fixPrefix.append(String.format("(%s, () -> ", exceptionClassExpr));
-      boolean useExpressionLambda =
-          throwingStatements.size() == 1
-              && getOnlyElement(throwingStatements).getKind() == Kind.EXPRESSION_STATEMENT;
-      if (!useExpressionLambda) {
-        fixPrefix.append("{");
-      }
-      fix.prefixWith(throwingStatements.get(0), fixPrefix.toString());
-      if (useExpressionLambda) {
-        fix.postfixWith(((ExpressionStatementTree) throwingStatements.get(0)).getExpression(), ")");
-        fix.postfixWith(getLast(throwingStatements), '\n' + Joiner.on('\n').join(newAsserts));
-      } else {
-        fix.postfixWith(getLast(throwingStatements), "});\n" + Joiner.on('\n').join(newAsserts));
-      }
-      return fix.build();
+    SuggestedFix.Builder fix = SuggestedFix.builder().merge(baseFix);
+    fix.addStaticImport("org.junit.Assert.assertThrows");
+    StringBuilder fixPrefix = new StringBuilder();
+    String exceptionTypeName = SuggestedFixes.qualifyType(state, fix, exceptionType);
+    if (!newAsserts.isEmpty()) {
+      fixPrefix.append(String.format("%s thrown = ", exceptionTypeName));
     }
+    fixPrefix.append("assertThrows");
+    fixPrefix.append(String.format("(%s.class, () -> ", exceptionTypeName));
+    boolean useExpressionLambda =
+        throwingStatements.size() == 1
+            && getOnlyElement(throwingStatements).getKind() == Kind.EXPRESSION_STATEMENT;
+    if (!useExpressionLambda) {
+      fixPrefix.append("{");
+    }
+    fix.prefixWith(throwingStatements.get(0), fixPrefix.toString());
+    if (useExpressionLambda) {
+      fix.postfixWith(((ExpressionStatementTree) throwingStatements.get(0)).getExpression(), ")");
+      fix.postfixWith(getLast(throwingStatements), '\n' + Joiner.on('\n').join(newAsserts));
+    } else {
+      fix.postfixWith(getLast(throwingStatements), "});\n" + Joiner.on('\n').join(newAsserts));
+    }
+    return fix.build();
   }
 }
-
