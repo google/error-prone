@@ -175,7 +175,14 @@ public class HubSpotUtils {
         (k, newValue) -> res.compute(
             k,
             (key, oldValue) -> oldValue == null ? newValue : oldValue + newValue));
-    res.put("total", res.values().stream().mapToLong(Long::longValue).sum());
+
+    res.put(
+        "total",
+        res.entrySet()
+            .stream()
+            .filter(e -> !e.getKey().equals("total"))
+            .mapToLong(Map.Entry::getValue)
+            .sum());
 
     return res.entrySet()
         .stream()
