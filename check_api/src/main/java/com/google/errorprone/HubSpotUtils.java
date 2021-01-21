@@ -43,6 +43,8 @@ import com.google.errorprone.scanner.ScannerSupplier;
 import com.sun.tools.javac.util.Context;
 
 public class HubSpotUtils {
+  private static final String OVERWATCH_DIR_ENV_VAR = "MAVEN_PROJECTBASEDIR";
+  private static final String BLAZAR_DIR_ENV_VAR = "VIEWABLE_BUILD_ARTIFACTS_DIR";
   private static final ObjectMapper MAPPER = new ObjectMapper();
   private static final JavaType ERROR_DATA_TYPE = MAPPER
       .getTypeFactory()
@@ -166,13 +168,13 @@ public class HubSpotUtils {
     getTimingsOutput().ifPresent(p -> flush(computeFinalTimings(), p));
   }
 
-  private static Map<String, Map<String, Long>> computeFinalTimings() {
+  private static Map<String, Long> computeFinalTimings() {
     TreeMap<String, Long> res = new TreeMap<>(PREVIOUS_TIMING_DATA);
     TIMING_DATA.forEach(
         (k, newValue) -> res.compute(
             k,
             (key, oldValue) -> oldValue == null ? newValue : oldValue + newValue));
-    return ImmutableMap.of(TIMINGS_KEY, res);
+    return res;
   }
 
   private static void flush(Object data, Path path) {
@@ -195,8 +197,6 @@ public class HubSpotUtils {
   private static Map<String, Long> loadExistingTimings() {
     return getTimingsOutput()
         .map(HubSpotUtils::loadTimingData)
-        .flatMap(m -> Optional.ofNullable(m.get(TIMINGS_KEY)))
-        .map(ImmutableMap::copyOf)
         .orElseGet(ImmutableMap::of);
   }
 
@@ -212,44 +212,42 @@ public class HubSpotUtils {
   }
 
   private static Map<String, Set<String>> loadData(Path path) {
+    return loadData(path, ERROR_DATA_TYPE);
+  }
+
+  private static Map<String, Long> loadTimingData(Path path) {
+    return loadData(path, TIMINGS_DATA_TYPE);
+  }
+
+  private static <T, U> Map<T, U> loadData(Path path, JavaType type) {
     if (!Files.exists(path)) {
       return ImmutableMap.of();
     }
 
     try {
-      return MAPPER.readValue(path.toFile(), ERROR_DATA_TYPE);
+      return MAPPER.readValue(path.toFile(), type);
     } catch (IOException e) {
       throw new RuntimeException("Failed to read existing file to load data", e);
     }
   }
 
-  private static Map<String, Map<String, Long>> loadTimingData(Path path) {
-    if (!Files.exists(path)) {
-      return ImmutableMap.of();
-    }
-
-    try {
-      return MAPPER.readValue(path.toFile(), TIMINGS_DATA_TYPE);
-    } catch (IOException e) {
-      throw new RuntimeException("Failed to read existing file to load timing data", e);
-    }
-  }
-
   private static Optional<Path> getErrorOutput() {
-    return getOutputDir().map(o -> o.resolve("error-prone-exceptions.json"));
+    return getDataDir(OVERWATCH_DIR_ENV_VAR, "target/overwatch-metadata")
+        .map(o -> o.resolve("error-prone-exceptions.json"));
   }
 
   private static Optional<Path> getTimingsOutput() {
-    return getOutputDir().map(o -> o.resolve("error-prone-timings.json"));
+    return getDataDir(BLAZAR_DIR_ENV_VAR, "error-prone")
+        .map(o -> o.resolve("error-prone-timings.json"));
   }
 
-  private static Optional<Path> getOutputDir() {
-    String dir = System.getenv("MAVEN_PROJECTBASEDIR");
+  private static Optional<Path> getDataDir(String envVar, String pathToAppend) {
+    String dir = System.getenv(envVar);
     if (Strings.isNullOrEmpty(dir)) {
       return Optional.empty();
     }
 
-    Path res = Paths.get(dir).resolve("target/overwatch-metadata");
+    Path res = Paths.get(dir).resolve(pathToAppend);
     if (!Files.exists(res)) {
       try {
         Files.createDirectories(res);
