@@ -55,16 +55,12 @@ public class HubSpotUtils {
   private static final JavaType TIMINGS_DATA_TYPE = MAPPER.getTypeFactory()
       .constructMapType(
           HashMap.class,
-          MAPPER.getTypeFactory().constructType(String.class),
-          MAPPER.getTypeFactory().constructMapType(
-              HashMap.class,
-              String.class,
-              Long.class));
+          String.class,
+          Long.class);
   private static final String EXCEPTIONS = "errorProneExceptions";
   private static final String MISSING = "errorProneMissingChecks";
   private static final String INIT_ERROR = "errorProneInitErrors";
   private static final String LISTENER_INIT_ERRORS = "errorProneListenerInitErrors";
-  private static final String TIMINGS_KEY = "errorProneTimings";
   private static final Map<String, Set<String>> DATA = loadExistingData();
   private static final Map<String, Long> PREVIOUS_TIMING_DATA = loadExistingTimings();
   private static final Map<String, Long> TIMING_DATA = new ConcurrentHashMap<>();
