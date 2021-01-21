@@ -21,6 +21,7 @@ import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -30,11 +31,14 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
 
+import javax.swing.RowFilter.Entry;
+
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.google.errorprone.annotations.Immutable;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.descriptionlistener.CustomDescriptionListenerFactory;
 import com.google.errorprone.descriptionlistener.DescriptionListenerResources;
@@ -46,6 +50,7 @@ public class HubSpotUtils {
   private static final String OVERWATCH_DIR_ENV_VAR = "MAVEN_PROJECTBASEDIR";
   private static final String BLAZAR_DIR_ENV_VAR = "VIEWABLE_BUILD_ARTIFACTS_DIR";
   private static final ObjectMapper MAPPER = new ObjectMapper();
+  private static final Comparator<Map.Entry<String, Long>> TIMING_COMPARATOR = buildTimingComparator();
   private static final JavaType ERROR_DATA_TYPE = MAPPER
       .getTypeFactory()
       .constructMapType(
@@ -165,12 +170,19 @@ public class HubSpotUtils {
   }
 
   private static Map<String, Long> computeFinalTimings() {
-    TreeMap<String, Long> res = new TreeMap<>(PREVIOUS_TIMING_DATA);
+    Map<String, Long> res = new HashMap<>(PREVIOUS_TIMING_DATA);
     TIMING_DATA.forEach(
         (k, newValue) -> res.compute(
             k,
             (key, oldValue) -> oldValue == null ? newValue : oldValue + newValue));
-    return res;
+    res.put("total", res.values().stream().mapToLong(Long::longValue).sum());
+
+    return res.entrySet()
+        .stream()
+        .sorted(TIMING_COMPARATOR)
+        .collect(ImmutableMap.toImmutableMap(
+            Map.Entry::getKey,
+            Map.Entry::getValue));
   }
 
   private static void flush(Object data, Path path) {
@@ -256,6 +268,11 @@ public class HubSpotUtils {
     }
 
     return Optional.of(res);
+  }
+
+  private static Comparator<Map.Entry<String, Long>> buildTimingComparator() {
+    Comparator<Map.Entry<String, Long>> comp = Comparator.comparing(Map.Entry::getValue);
+    return comp.reversed().thenComparing(Map.Entry::getKey);
   }
 
   private HubSpotUtils() {
