@@ -175,7 +175,7 @@ public class HubSpotUtils {
 
   private static void flush(Object data, Path path) {
     try (OutputStream stream = Files.newOutputStream(path)) {
-      MAPPER.writeValue(stream, data);
+      MAPPER.writerWithDefaultPrettyPrinter().writeValue(stream, data);
     } catch (IOException e) {
       throw new RuntimeException(
           String.format("Failed to write errorprone metadata to %s", path)
