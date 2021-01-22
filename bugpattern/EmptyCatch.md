@@ -2,7 +2,7 @@
 title: EmptyCatch
 summary: Caught exceptions should not be ignored
 layout: bugpattern
-tags: ''
+tags: Style
 severity: WARNING
 ---
 

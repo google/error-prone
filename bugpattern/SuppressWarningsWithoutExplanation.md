@@ -3,7 +3,7 @@ title: SuppressWarningsWithoutExplanation
 summary: Use of @SuppressWarnings should be accompanied by a comment describing why
   the warning is safe to ignore.
 layout: bugpattern
-tags: ''
+tags: Style
 severity: WARNING
 ---
 
