@@ -33,6 +33,7 @@ import com.sun.source.tree.CatchTree;
     name = "EmptyCatch",
     summary = "Caught exceptions should not be ignored",
     severity = WARNING,
+    tags = BugPattern.StandardTags.STYLE,
     documentSuppression = false,
     linkType = CUSTOM,
     link = "https://google.github.io/styleguide/javaguide.html#s6.2-caught-exceptions"

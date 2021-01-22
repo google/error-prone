@@ -57,6 +57,7 @@ import java.util.Optional;
     summary =
         "Use of @SuppressWarnings should be accompanied by a comment describing why the warning is"
             + " safe to ignore.",
+    tags = BugPattern.StandardTags.STYLE,
     severity = WARNING,
     linkType = CUSTOM,
     link = "https://google.github.io/styleguide/javaguide.html#s8.4.2-how-to-handle-a-warning"

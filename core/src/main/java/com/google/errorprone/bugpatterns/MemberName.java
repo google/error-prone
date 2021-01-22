@@ -53,6 +53,7 @@ import javax.lang.model.element.Modifier;
     name = "MemberName",
     severity = WARNING,
     summary = "Methods and non-static variables should be named in lowerCamelCase.",
+    tags = BugPattern.StandardTags.STYLE,
     linkType = CUSTOM,
     link = "https://google.github.io/styleguide/javaguide.html#s5.2-specific-identifier-names")
 public final class MemberName extends BugChecker implements MethodTreeMatcher, VariableTreeMatcher {
