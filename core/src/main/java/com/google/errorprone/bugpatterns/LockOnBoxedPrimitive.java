@@ -16,36 +16,34 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.matchers.Matchers.allOf;
+import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.anyOf;
-import static com.google.errorprone.matchers.Matchers.anything;
-import static com.google.errorprone.matchers.Matchers.assignment;
 import static com.google.errorprone.matchers.Matchers.instanceMethod;
 import static com.google.errorprone.matchers.Matchers.isBoxedPrimitiveType;
-import static com.google.errorprone.matchers.Matchers.isPrimitiveOrBoxedPrimitiveType;
-import static com.google.errorprone.matchers.Matchers.variableInitializer;
+import static com.google.errorprone.util.ASTHelpers.getSymbol;
+import static com.google.errorprone.util.ASTHelpers.getType;
+import static com.google.errorprone.util.ASTHelpers.stripParentheses;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.VisitorState;
-import com.google.errorprone.bugpatterns.BugChecker.CompilationUnitTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.SynchronizedTreeMatcher;
+import com.google.errorprone.fixes.SuggestedFix;
+import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.suppliers.Suppliers;
 import com.google.errorprone.util.ASTHelpers;
-import com.sun.source.tree.AssignmentTree;
-import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.SynchronizedTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.code.Symbol;
-import java.util.Optional;
+import com.sun.tools.javac.code.Symbol.VarSymbol;
+import javax.lang.model.element.ElementKind;
 
 /** Detects locks on boxed primitives. */
 @BugPattern(
@@ -60,12 +58,7 @@ import java.util.Optional;
             + " piece of code.",
     severity = SeverityLevel.WARNING)
 public class LockOnBoxedPrimitive extends BugChecker
-    implements CompilationUnitTreeMatcher, SynchronizedTreeMatcher, MethodInvocationTreeMatcher {
-
-  private static final Matcher<AssignmentTree> PRIMITIVE_TO_OBJECT_ASSIGNMENT =
-      assignment(anything(), isPrimitiveOrBoxedPrimitiveType());
-  private static final Matcher<VariableTree> PRIMITIVE_TO_OBJECT_INITIALIZER =
-      allOf(anything(), variableInitializer(isPrimitiveOrBoxedPrimitiveType()));
+    implements SynchronizedTreeMatcher, MethodInvocationTreeMatcher {
 
   private static final Matcher<ExpressionTree> LOCKING_METHOD =
       anyOf(
@@ -81,22 +74,53 @@ public class LockOnBoxedPrimitive extends BugChecker
 
   private static final Matcher<ExpressionTree> BOXED_PRIMITIVE = isBoxedPrimitiveType();
 
-  private ImmutableSet<Symbol> knownBoxedVariables;
-
-  @Override
-  public Description matchCompilationUnit(CompilationUnitTree tree, VisitorState state) {
-    // Update the known boxed variables for this compilation unit.
-    knownBoxedVariables = getKnownEncapsulatedBoxedObjects(tree, state);
-    return Description.NO_MATCH;
-  }
-
   @Override
   public Description matchSynchronized(SynchronizedTree tree, VisitorState state) {
-    if (isDefinitelyBoxedPrimitive(tree.getExpression(), state)) {
-      return describeMatch(tree);
+    ExpressionTree locked = stripParentheses(tree.getExpression());
+    if (!isDefinitelyBoxedPrimitive(locked, state)) {
+      return NO_MATCH;
     }
+    return describeMatch(tree, createFix(locked, state));
+  }
 
-    return Description.NO_MATCH;
+  private SuggestedFix createFix(ExpressionTree locked, VisitorState state) {
+    Symbol lock = getSymbol(locked);
+    if (lock == null) {
+      return SuggestedFix.emptyFix();
+    }
+    if (!lock.getKind().equals(ElementKind.FIELD)) {
+      return SuggestedFix.emptyFix();
+    }
+    SuggestedFix.Builder fix = SuggestedFix.builder();
+    String lockName = lock.getSimpleName() + "Lock";
+    new TreeScanner<Void, Void>() {
+      @Override
+      public Void visitVariable(VariableTree node, Void unused) {
+        VarSymbol sym = getSymbol(node);
+        if (lock.equals(sym)) {
+          String unboxedType =
+              SuggestedFixes.qualifyType(state, fix, state.getTypes().unboxedType(getType(node)));
+          fix.prefixWith(
+                  node,
+                  String.format(
+                      "private final Object %s = new Object();\n@GuardedBy(\"%s\")",
+                      lockName, lockName))
+              .replace(node.getType(), unboxedType)
+              .addImport("com.google.errorprone.annotations.concurrent.GuardedBy");
+        }
+        return super.visitVariable(node, null);
+      }
+
+      @Override
+      public Void visitSynchronized(SynchronizedTree node, Void aVoid) {
+        ExpressionTree expression = stripParentheses(node.getExpression());
+        if (lock.equals(getSymbol(expression))) {
+          fix.replace(expression, lockName);
+        }
+        return super.visitSynchronized(node, aVoid);
+      }
+    }.scan(state.getPath().getCompilationUnit(), null);
+    return fix.build();
   }
 
   @Override
@@ -105,53 +129,11 @@ public class LockOnBoxedPrimitive extends BugChecker
         && isDefinitelyBoxedPrimitive(ASTHelpers.getReceiver(tree), state)) {
       return describeMatch(tree.getMethodSelect());
     }
-
-    return Description.NO_MATCH;
+    return NO_MATCH;
   }
 
-  /**
-   * Returns true if the expression tree is definitely referring to a boxed primitive. This is the
-   * case when the type is a boxed primitive, or the expression refers to a final variable that was
-   * initialized with a boxed primitive.
-   */
+  /** Returns true if the expression tree is definitely referring to a boxed primitive. */
   private boolean isDefinitelyBoxedPrimitive(ExpressionTree tree, VisitorState state) {
-    ExpressionTree stripped = ASTHelpers.stripParentheses(tree);
-
-    return BOXED_PRIMITIVE.matches(stripped, state) || isKnownBoxedSymbol(stripped);
-  }
-
-  private boolean isKnownBoxedSymbol(ExpressionTree tree) {
-    return knownBoxedVariables.contains(ASTHelpers.getSymbol(tree));
-  }
-
-  /**
-   * Searches the compilationUnitTree for any variable of type Object that is known to hold a boxed
-   * primitive at some point in time.
-   */
-  private static ImmutableSet<Symbol> getKnownEncapsulatedBoxedObjects(
-      CompilationUnitTree compilationUnitTree, VisitorState state) {
-    ImmutableSet.Builder<Symbol> knownBoxedVariables = ImmutableSet.builder();
-
-    new TreeScanner<Void, Void>() {
-      @Override
-      public Void visitAssignment(AssignmentTree assignmentTree, Void unused) {
-        if (PRIMITIVE_TO_OBJECT_ASSIGNMENT.matches(assignmentTree, state)) {
-          Optional.ofNullable(ASTHelpers.getSymbol(assignmentTree.getVariable()))
-              .ifPresent(knownBoxedVariables::add);
-        }
-        return super.visitAssignment(assignmentTree, null);
-      }
-
-      @Override
-      public Void visitVariable(VariableTree variableTree, Void unused) {
-        if (PRIMITIVE_TO_OBJECT_INITIALIZER.matches(variableTree, state)) {
-          Optional.ofNullable(ASTHelpers.getSymbol(variableTree))
-              .ifPresent(knownBoxedVariables::add);
-        }
-        return super.visitVariable(variableTree, null);
-      }
-    }.scan(compilationUnitTree, null);
-
-    return knownBoxedVariables.build();
+    return BOXED_PRIMITIVE.matches(tree, state);
   }
 }

@@ -16,6 +16,7 @@
 
 package com.google.errorprone.bugpatterns;
 
+import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -53,114 +54,6 @@ public class LockOnBoxedPrimitiveTest {
             bugOnSynchronizedBlock("badDoubleLock"),
             bugOnSynchronizedBlock("badBooleanLock"),
             bugOnSynchronizedBlock("badCharLock"),
-            "  }",
-            "}")
-        .doTest();
-  }
-
-  @Test
-  public void detectsSynchronizedBoxedLocks_encapsulated_primitiveInitializers() throws Exception {
-    compilationHelper
-        .addSourceLines(
-            "Test.java",
-            "class Test {",
-            "  private Object badByteLock = (byte)1;",
-            "  private Object badShortLock = (short)1;",
-            "  private Object badIntLock = 1;",
-            "  private Object badLongLock = 1L;",
-            "  private Object badFloatLock = 1f;",
-            "  private Object badDoubleLock = 1.0;",
-            "  private Object badBooleanLock = false;",
-            "  private Object badCharLock = 'c';",
-            "  private void test() {",
-            bugOnSynchronizedBlock("badByteLock"),
-            bugOnSynchronizedBlock("badShortLock"),
-            bugOnSynchronizedBlock("badIntLock"),
-            bugOnSynchronizedBlock("badLongLock"),
-            bugOnSynchronizedBlock("badFloatLock"),
-            bugOnSynchronizedBlock("badDoubleLock"),
-            bugOnSynchronizedBlock("badBooleanLock"),
-            bugOnSynchronizedBlock("badCharLock"),
-            "  }",
-            "}")
-        .doTest();
-  }
-
-  @Test
-  public void detectsSynchronizedBoxedLocks_encapsulated_boxedInitializers() throws Exception {
-    compilationHelper
-        .addSourceLines(
-            "Test.java",
-            "class Test {",
-            "  private Object badByteLock = Byte.valueOf((byte)1);",
-            "  private Object badShortLock = Short.valueOf((short)1);",
-            "  private Object badIntLock = Integer.valueOf(1);",
-            "  private Object badLongLock = Long.valueOf(1);",
-            "  private Object badFloatLock = Float.valueOf(1.0f);",
-            "  private Object badDoubleLock = Double.valueOf(1.0);",
-            "  private Object badBooleanLock = Boolean.valueOf(false);",
-            "  private Object badCharLock = Character.valueOf('c');",
-            "  private void test() {",
-            bugOnSynchronizedBlock("badByteLock"),
-            bugOnSynchronizedBlock("badShortLock"),
-            bugOnSynchronizedBlock("badIntLock"),
-            bugOnSynchronizedBlock("badLongLock"),
-            bugOnSynchronizedBlock("badFloatLock"),
-            bugOnSynchronizedBlock("badDoubleLock"),
-            bugOnSynchronizedBlock("badBooleanLock"),
-            bugOnSynchronizedBlock("badCharLock"),
-            "  }",
-            "}")
-        .doTest();
-  }
-
-  @Test
-  public void detectsSynchronizedBoxedLocks_encapsulated_initializedLater() throws Exception {
-    compilationHelper
-        .addSourceLines(
-            "Test.java",
-            "class Test {",
-            "  private Object badByteLock;",
-            "  private Object badShortLock;",
-            "  private Object badIntLock;",
-            "  private Object badLongLock;",
-            "  private Object badFloatLock;",
-            "  private Object badDoubleLock;",
-            "  private Object badBooleanLock;",
-            "  private Object badCharLock;",
-            "  {",
-            "    badByteLock = (byte)1;",
-            "    badShortLock = (short)1;",
-            "    badLongLock = 1L;",
-            "    badIntLock = 1;",
-            "    badFloatLock = 1f;",
-            "    badDoubleLock = 1.0;",
-            "    badBooleanLock = false;",
-            "    badCharLock = 'c';",
-            "  }",
-            "  private void test() {",
-            bugOnSynchronizedBlock("badByteLock"),
-            bugOnSynchronizedBlock("badShortLock"),
-            bugOnSynchronizedBlock("badIntLock"),
-            bugOnSynchronizedBlock("badLongLock"),
-            bugOnSynchronizedBlock("badFloatLock"),
-            bugOnSynchronizedBlock("badDoubleLock"),
-            bugOnSynchronizedBlock("badBooleanLock"),
-            bugOnSynchronizedBlock("badCharLock"),
-            "  }",
-            "}")
-        .doTest();
-  }
-
-  @Test
-  public void detectsSynchronizedBoxedLocks_nonObjectPrimitiveParent() throws Exception {
-    compilationHelper
-        .addSourceLines(
-            "Test.java",
-            "class Test {",
-            "  private Number badNumberLock = 3;",
-            "  private void test() {",
-            bugOnSynchronizedBlock("badNumberLock"),
             "  }",
             "}")
         .doTest();
@@ -210,100 +103,6 @@ public class LockOnBoxedPrimitiveTest {
             "  private Double badDoubleLock;",
             "  private Boolean badBooleanLock;",
             "  private Character badCharLock;",
-            "  private void test() throws InterruptedException {",
-            bugOnMonitorMethods("badByteLock"),
-            bugOnMonitorMethods("badShortLock"),
-            bugOnMonitorMethods("badIntLock"),
-            bugOnMonitorMethods("badLongLock"),
-            bugOnMonitorMethods("badFloatLock"),
-            bugOnMonitorMethods("badDoubleLock"),
-            bugOnMonitorMethods("badBooleanLock"),
-            bugOnMonitorMethods("badCharLock"),
-            "  }",
-            "}")
-        .doTest();
-  }
-
-  @Test
-  public void detectsMonitorMethodBoxedLock_encapsulated_primitiveInitializers() throws Exception {
-    compilationHelper
-        .addSourceLines(
-            "Test.java",
-            "class Test {",
-            "  private Object badByteLock = (byte)1;",
-            "  private Object badShortLock = (short)1;",
-            "  private Object badIntLock = 1;",
-            "  private Object badLongLock = 1L;",
-            "  private Object badFloatLock = 1f;",
-            "  private Object badDoubleLock = 1.0;",
-            "  private Object badBooleanLock = false;",
-            "  private Object badCharLock = 'c';",
-            "  private void test() throws InterruptedException {",
-            bugOnMonitorMethods("badByteLock"),
-            bugOnMonitorMethods("badShortLock"),
-            bugOnMonitorMethods("badIntLock"),
-            bugOnMonitorMethods("badLongLock"),
-            bugOnMonitorMethods("badFloatLock"),
-            bugOnMonitorMethods("badDoubleLock"),
-            bugOnMonitorMethods("badBooleanLock"),
-            bugOnMonitorMethods("badCharLock"),
-            "  }",
-            "}")
-        .doTest();
-  }
-
-  @Test
-  public void detectsMonitorMethodBoxedLock_encapsulated_boxedInitializers() throws Exception {
-    compilationHelper
-        .addSourceLines(
-            "Test.java",
-            "class Test {",
-            "  private Object badByteLock = Byte.valueOf((byte)1);",
-            "  private Object badShortLock = Short.valueOf((short)1);",
-            "  private Object badIntLock = Integer.valueOf(1);",
-            "  private Object badLongLock = Long.valueOf(1);",
-            "  private Object badFloatLock = Float.valueOf(1.0f);",
-            "  private Object badDoubleLock = Double.valueOf(1.0);",
-            "  private Object badBooleanLock = Boolean.valueOf(false);",
-            "  private Object badCharLock = Character.valueOf('c');",
-            "  private void test() throws InterruptedException {",
-            bugOnMonitorMethods("badByteLock"),
-            bugOnMonitorMethods("badShortLock"),
-            bugOnMonitorMethods("badIntLock"),
-            bugOnMonitorMethods("badLongLock"),
-            bugOnMonitorMethods("badFloatLock"),
-            bugOnMonitorMethods("badDoubleLock"),
-            bugOnMonitorMethods("badBooleanLock"),
-            bugOnMonitorMethods("badCharLock"),
-            "  }",
-            "}")
-        .doTest();
-  }
-
-  @Test
-  public void detectsMonitorMethodBoxedLock_encapsulated_initializedLater() throws Exception {
-    compilationHelper
-        .addSourceLines(
-            "Test.java",
-            "class Test {",
-            "  private Object badByteLock;",
-            "  private Object badShortLock;",
-            "  private Object badIntLock;",
-            "  private Object badLongLock;",
-            "  private Object badFloatLock;",
-            "  private Object badDoubleLock;",
-            "  private Object badBooleanLock;",
-            "  private Object badCharLock;",
-            "  {",
-            "    badByteLock = (byte)1;",
-            "    badShortLock = (short)1;",
-            "    badIntLock = 1;",
-            "    badLongLock = 1L;",
-            "    badFloatLock = 1f;",
-            "    badDoubleLock = 1.0;",
-            "    badBooleanLock = false;",
-            "    badCharLock = 'c';",
-            "  }",
             "  private void test() throws InterruptedException {",
             bugOnMonitorMethods("badByteLock"),
             bugOnMonitorMethods("badShortLock"),
@@ -379,5 +178,34 @@ public class LockOnBoxedPrimitiveTest {
             "    // BUG: Diagnostic contains: It is dangerous to use a boxed primitive as a lock",
             "    %<s.notifyAll();");
     return String.format(formatString, variableName);
+  }
+
+  @Test
+  public void refactoring() {
+    BugCheckerRefactoringTestHelper.newInstance(new LockOnBoxedPrimitive(), getClass())
+        .addInputLines(
+            "Test.java",
+            "class Test {",
+            "  private Boolean myBoolean;",
+            "  void test(boolean value) {",
+            "    synchronized (myBoolean) {",
+            "      myBoolean = value;",
+            "    }",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "import com.google.errorprone.annotations.concurrent.GuardedBy;",
+            "class Test {",
+            "  private final Object myBooleanLock = new Object();",
+            "  @GuardedBy(\"myBooleanLock\")",
+            "  private boolean myBoolean;",
+            "  void test(boolean value) {",
+            "    synchronized (myBooleanLock) {",
+            "      myBoolean = value;",
+            "    }",
+            "  }",
+            "}")
+        .doTest();
   }
 }
