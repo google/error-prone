@@ -24,7 +24,6 @@ import static com.google.errorprone.matchers.Matchers.instanceMethod;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
 
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.ProvidesFix;
 import com.google.errorprone.BugPattern.StandardTags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MemberSelectTreeMatcher;
@@ -41,8 +40,7 @@ import com.sun.source.tree.MethodInvocationTree;
     summary =
         "Printing to standard output should only be used for debugging, not in production code",
     severity = WARNING,
-    tags = StandardTags.LIKELY_ERROR,
-    providesFix = ProvidesFix.NO_FIX)
+    tags = StandardTags.LIKELY_ERROR)
 public class SystemOut extends BugChecker
     implements MethodInvocationTreeMatcher, MemberSelectTreeMatcher {
 
