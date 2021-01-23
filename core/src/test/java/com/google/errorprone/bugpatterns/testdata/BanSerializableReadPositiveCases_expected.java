@@ -56,7 +56,7 @@ class BanSerializableReadPositiveCases implements Serializable {
   }
 
   /**
-   * The checker has a special whitelist that allows classes to define methods called readObject --
+   * The checker has a special allowlist that allows classes to define methods called readObject --
    * Java accepts these as an override to the default serialization behaviour. While we want to
    * allow such methods to be defined, we don't want to allow these methods to be called.
    *
