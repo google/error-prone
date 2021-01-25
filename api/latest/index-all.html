@@ -461,6 +461,14 @@ loadScripts(document, 'script');</script>
 <div class="block">Override this to return false to forbid discarding return values in testers that are testing
  whether an exception is thrown.</div>
 </dd>
+<dt><span class="member-name-link"><a href="com/google/errorprone/annotations/RestrictedApi.html#allowlistAnnotations()">allowlistAnnotations()</a></span> - Method in annotation type com.google.errorprone.annotations.<a href="com/google/errorprone/annotations/RestrictedApi.html" title="annotation in com.google.errorprone.annotations">RestrictedApi</a></dt>
+<dd>
+<div class="block">Allow calls to the restricted API in methods or classes with this annotation.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/google/errorprone/annotations/RestrictedApi.html#allowlistWithWarningAnnotations()">allowlistWithWarningAnnotations()</a></span> - Method in annotation type com.google.errorprone.annotations.<a href="com/google/errorprone/annotations/RestrictedApi.html" title="annotation in com.google.errorprone.annotations">RestrictedApi</a></dt>
+<dd>
+<div class="block">Emit warnings, not errors, on calls to the restricted API for callers with this annotation.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/refaster/annotation/Placeholder.html#allowsIdentity()">allowsIdentity()</a></span> - Method in annotation type com.google.errorprone.refaster.annotation.<a href="com/google/errorprone/refaster/annotation/Placeholder.html" title="annotation in com.google.errorprone.refaster.annotation">Placeholder</a></dt>
 <dd>
 <div class="block">Identifies whether the placeholder is allowed to match an expression which simply returns one
@@ -972,6 +980,14 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/google/errorprone/util/ASTHelpers.TargetType.html" title="class in com.google.errorprone.util"><span class="type-name-link">ASTHelpers.TargetType</span></a> - Class in <a href="com/google/errorprone/util/package-summary.html">com.google.errorprone.util</a></dt>
 <dd>
 <div class="block">An expression's target type, see <a href="com/google/errorprone/util/ASTHelpers.html#targetType(com.google.errorprone.VisitorState)"><code>ASTHelpers.targetType(com.google.errorprone.VisitorState)</code></a>.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/google/errorprone/util/MoreAnnotations.html#asTypes(javax.lang.model.element.AnnotationValue)">asTypes(AnnotationValue)</a></span> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/MoreAnnotations.html" title="class in com.google.errorprone.util">MoreAnnotations</a></dt>
+<dd>
+<div class="block">Converts the given annotation value to one or more annotations.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/google/errorprone/util/MoreAnnotations.html#asTypeValue(javax.lang.model.element.AnnotationValue)">asTypeValue(AnnotationValue)</a></span> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/MoreAnnotations.html" title="class in com.google.errorprone.util">MoreAnnotations</a></dt>
+<dd>
+<div class="block">Converts the given attribute to an enum value.</div>
 </dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/refaster/Refaster.html#asVarargs(T)">asVarargs(T)</a></span> - Static method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/Refaster.html" title="class in com.google.errorprone.refaster">Refaster</a></dt>
 <dd>
@@ -3901,8 +3917,8 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/util/MoreAnnotations.html#getAnnotationValue(com.sun.tools.javac.code.Attribute.Compound,java.lang.String)">getAnnotationValue(Attribute.Compound, String)</a></span> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/MoreAnnotations.html" title="class in com.google.errorprone.util">MoreAnnotations</a></dt>
 <dd>
-<div class="block">Returns the value of the annotation element-value pair with the given name if it is not
- explicitly set.</div>
+<div class="block">Returns the value of the annotation element-value pair with the given name if it is explicitly
+ set.</div>
 </dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/util/ASTHelpers.html#getAnnotationWithSimpleName(java.util.List,java.lang.String)">getAnnotationWithSimpleName(List&lt;? extends AnnotationTree&gt;, String)</a></span> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/ASTHelpers.html" title="class in com.google.errorprone.util">ASTHelpers</a></dt>
 <dd>
@@ -4928,8 +4944,8 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/util/MoreAnnotations.html#getValue(com.sun.tools.javac.code.Attribute.Compound,java.lang.String)">getValue(Attribute.Compound, String)</a></span> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/MoreAnnotations.html" title="class in com.google.errorprone.util">MoreAnnotations</a></dt>
 <dd>
-<div class="block">Returns the value of the annotation element-value pair with the given name if it is not
- explicitly set.</div>
+<div class="block">Returns the value of the annotation element-value pair with the given name if it is explicitly
+ set.</div>
 </dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/names/LevenshteinEditDistance.html#getWorstCaseEditDistance(int,int)">getWorstCaseEditDistance(int, int)</a></span> - Static method in class com.google.errorprone.names.<a href="com/google/errorprone/names/LevenshteinEditDistance.html" title="class in com.google.errorprone.names">LevenshteinEditDistance</a></dt>
 <dd>
@@ -10310,11 +10326,11 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/annotations/RestrictedApi.html" title="annotation in com.google.errorprone.annotations"><span class="type-name-link">RestrictedApi</span></a> - Annotation Type in <a href="com/google/errorprone/annotations/package-summary.html">com.google.errorprone.annotations</a></dt>
 <dd>
-<div class="block">Restrict this method to callsites with a whitelist annotation.</div>
+<div class="block">Restrict this method to callsites with a allowlist annotation.</div>
 </dd>
 <dt><a href="com/google/errorprone/bugpatterns/RestrictedApiChecker.html" title="class in com.google.errorprone.bugpatterns"><span class="type-name-link">RestrictedApiChecker</span></a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
 <dd>
-<div class="block">Check for non-whitelisted callers to RestrictedApiChecker.</div>
+<div class="block">Check for non-allowlisted callers to RestrictedApiChecker.</div>
 </dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/RestrictedApiChecker.html#%3Cinit%3E()">RestrictedApiChecker()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/RestrictedApiChecker.html" title="class in com.google.errorprone.bugpatterns">RestrictedApiChecker</a></dt>
 <dd>&nbsp;</dd>
@@ -12750,11 +12766,15 @@ the order they are declared.</div>
 </dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/annotations/RestrictedApi.html#whitelistAnnotations()">whitelistAnnotations()</a></span> - Method in annotation type com.google.errorprone.annotations.<a href="com/google/errorprone/annotations/RestrictedApi.html" title="annotation in com.google.errorprone.annotations">RestrictedApi</a></dt>
 <dd>
-<div class="block">Allow calls to the restricted API in methods or classes with this annotation.</div>
+<div class="deprecation-block"><span class="deprecated-label">Deprecated.</span>
+<div class="deprecation-comment">use <a href="com/google/errorprone/annotations/RestrictedApi.html#allowlistAnnotations()"><code>RestrictedApi.allowlistAnnotations()</code></a> instead</div>
+</div>
 </dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/annotations/RestrictedApi.html#whitelistWithWarningAnnotations()">whitelistWithWarningAnnotations()</a></span> - Method in annotation type com.google.errorprone.annotations.<a href="com/google/errorprone/annotations/RestrictedApi.html" title="annotation in com.google.errorprone.annotations">RestrictedApi</a></dt>
 <dd>
-<div class="block">Emit warnings, not errors, on calls to the restricted API for callers with this annotation.</div>
+<div class="deprecation-block"><span class="deprecated-label">Deprecated.</span>
+<div class="deprecation-comment">use <a href="com/google/errorprone/annotations/RestrictedApi.html#allowlistWithWarningAnnotations()"><code>RestrictedApi.allowlistWithWarningAnnotations()</code></a> instead</div>
+</div>
 </dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/dataflow/AccessPathStore.html#widenedUpperBound(com.google.errorprone.dataflow.AccessPathStore)">widenedUpperBound(AccessPathStore&lt;V&gt;)</a></span> - Method in class com.google.errorprone.dataflow.<a href="com/google/errorprone/dataflow/AccessPathStore.html" title="class in com.google.errorprone.dataflow">AccessPathStore</a></dt>
 <dd>&nbsp;</dd>

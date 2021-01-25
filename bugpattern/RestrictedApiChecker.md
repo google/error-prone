@@ -1,6 +1,6 @@
 ---
 title: RestrictedApiChecker
-summary: Check for non-whitelisted callers to RestrictedApiChecker.
+summary: Check for non-allowlisted callers to RestrictedApiChecker.
 layout: bugpattern
 tags: ''
 severity: ERROR

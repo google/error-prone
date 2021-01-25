@@ -402,7 +402,7 @@ __[RequiredModifiers](bugpattern/RequiredModifiers)__<br>
 This annotation is missing required modifiers as specified by its @RequiredModifiers annotation
 
 __[RestrictedApiChecker](bugpattern/RestrictedApiChecker)__<br>
-Check for non-whitelisted callers to RestrictedApiChecker.
+Check for non-allowlisted callers to RestrictedApiChecker.
 
 __[ReturnValueIgnored](bugpattern/ReturnValueIgnored)__<br>
 Return value of this method must be used

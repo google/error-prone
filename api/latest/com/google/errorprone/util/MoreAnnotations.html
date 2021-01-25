@@ -15,7 +15,7 @@
 <script type="text/javascript" src="../../../../script-dir/jquery-ui.min.js"></script>
 </head>
 <body class="class-declaration-page">
-<script type="text/javascript">var data = {"i0":9,"i1":9,"i2":41,"i3":9,"i4":9,"i5":9,"i6":9,"i7":9};
+<script type="text/javascript">var data = {"i0":9,"i1":9,"i2":41,"i3":9,"i4":9,"i5":9,"i6":9,"i7":9,"i8":9,"i9":9};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],8:["t4","Concrete Methods"],32:["t6","Deprecated Methods"]};
 var altColor = "alt-color";
 var rowColor = "row-color";
@@ -142,15 +142,29 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 </td>
 </tr>
 <tr class="row-color" id="i5">
+<td class="col-first"><code>static <a href="https://docs.oracle.com/javase/8/docs/api/java/util/stream/Stream.html" title="class or interface in java.util.stream" class="external-link">Stream</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/javax/lang/model/type/TypeMirror.html" title="class or interface in javax.lang.model.type" class="external-link">TypeMirror</a>&gt;</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#asTypes(javax.lang.model.element.AnnotationValue)">asTypes</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/javax/lang/model/element/AnnotationValue.html" title="class or interface in javax.lang.model.element" class="external-link">AnnotationValue</a>&nbsp;v)</code></th>
+<td class="col-last">
+<div class="block">Converts the given annotation value to one or more annotations.</div>
+</td>
+</tr>
+<tr class="alt-color" id="i6">
+<td class="col-first"><code>static <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/javax/lang/model/type/TypeMirror.html" title="class or interface in javax.lang.model.type" class="external-link">TypeMirror</a>&gt;</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#asTypeValue(javax.lang.model.element.AnnotationValue)">asTypeValue</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/javax/lang/model/element/AnnotationValue.html" title="class or interface in javax.lang.model.element" class="external-link">AnnotationValue</a>&nbsp;a)</code></th>
+<td class="col-last">
+<div class="block">Converts the given attribute to an enum value.</div>
+</td>
+</tr>
+<tr class="row-color" id="i7">
 <td class="col-first"><code>static <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/javax/lang/model/element/AnnotationValue.html" title="class or interface in javax.lang.model.element" class="external-link">AnnotationValue</a>&gt;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#getAnnotationValue(com.sun.tools.javac.code.Attribute.Compound,java.lang.String)">getAnnotationValue</a></span>&#8203;(com.sun.tools.javac.code.Attribute.Compound&nbsp;attribute,
 <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;name)</code></th>
 <td class="col-last">
-<div class="block">Returns the value of the annotation element-value pair with the given name if it is not
- explicitly set.</div>
+<div class="block">Returns the value of the annotation element-value pair with the given name if it is explicitly
+ set.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i6">
+<tr class="alt-color" id="i8">
 <td class="col-first"><code>static <a href="https://docs.oracle.com/javase/8/docs/api/java/util/stream/Stream.html" title="class or interface in java.util.stream" class="external-link">Stream</a>&lt;com.sun.tools.javac.code.Attribute.Compound&gt;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#getDeclarationAndTypeAttributes(com.sun.tools.javac.code.Symbol)">getDeclarationAndTypeAttributes</a></span>&#8203;(com.sun.tools.javac.code.Symbol&nbsp;sym)</code></th>
 <td class="col-last">
@@ -161,13 +175,13 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
    Type annotations of the return type of a method.</div>
 </td>
 </tr>
-<tr class="row-color" id="i7">
+<tr class="row-color" id="i9">
 <td class="col-first"><code>static <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;com.sun.tools.javac.code.Attribute&gt;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#getValue(com.sun.tools.javac.code.Attribute.Compound,java.lang.String)">getValue</a></span>&#8203;(com.sun.tools.javac.code.Attribute.Compound&nbsp;attribute,
 <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;name)</code></th>
 <td class="col-last">
-<div class="block">Returns the value of the annotation element-value pair with the given name if it is not
- explicitly set.</div>
+<div class="block">Returns the value of the annotation element-value pair with the given name if it is explicitly
+ set.</div>
 </td>
 </tr>
 </tbody>
@@ -210,8 +224,8 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <h3>getValue</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;com.sun.tools.javac.code.Attribute&gt;</span>&nbsp;<span class="member-name">getValue</span>&#8203;(<span class="parameters">com.sun.tools.javac.code.Attribute.Compound&nbsp;attribute,
 <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;name)</span></div>
-<div class="block">Returns the value of the annotation element-value pair with the given name if it is not
- explicitly set.</div>
+<div class="block">Returns the value of the annotation element-value pair with the given name if it is explicitly
+ set.</div>
 </section>
 </li>
 <li>
@@ -219,8 +233,8 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <h3>getAnnotationValue</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/javax/lang/model/element/AnnotationValue.html" title="class or interface in javax.lang.model.element" class="external-link">AnnotationValue</a>&gt;</span>&nbsp;<span class="member-name">getAnnotationValue</span>&#8203;(<span class="parameters">com.sun.tools.javac.code.Attribute.Compound&nbsp;attribute,
 <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;name)</span></div>
-<div class="block">Returns the value of the annotation element-value pair with the given name if it is not
- explicitly set.</div>
+<div class="block">Returns the value of the annotation element-value pair with the given name if it is explicitly
+ set.</div>
 </section>
 </li>
 <li>
@@ -246,10 +260,24 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 </section>
 </li>
 <li>
+<section class="detail" id="asTypeValue(javax.lang.model.element.AnnotationValue)">
+<h3>asTypeValue</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/javax/lang/model/type/TypeMirror.html" title="class or interface in javax.lang.model.type" class="external-link">TypeMirror</a>&gt;</span>&nbsp;<span class="member-name">asTypeValue</span>&#8203;(<span class="parameters"><a href="https://docs.oracle.com/javase/8/docs/api/javax/lang/model/element/AnnotationValue.html" title="class or interface in javax.lang.model.element" class="external-link">AnnotationValue</a>&nbsp;a)</span></div>
+<div class="block">Converts the given attribute to an enum value.</div>
+</section>
+</li>
+<li>
 <section class="detail" id="asStrings(javax.lang.model.element.AnnotationValue)">
 <h3>asStrings</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/javase/8/docs/api/java/util/stream/Stream.html" title="class or interface in java.util.stream" class="external-link">Stream</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</span>&nbsp;<span class="member-name">asStrings</span>&#8203;(<span class="parameters"><a href="https://docs.oracle.com/javase/8/docs/api/javax/lang/model/element/AnnotationValue.html" title="class or interface in javax.lang.model.element" class="external-link">AnnotationValue</a>&nbsp;v)</span></div>
 <div class="block">Converts the given annotation value to one or more strings.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="asTypes(javax.lang.model.element.AnnotationValue)">
+<h3>asTypes</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/javase/8/docs/api/java/util/stream/Stream.html" title="class or interface in java.util.stream" class="external-link">Stream</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/javax/lang/model/type/TypeMirror.html" title="class or interface in javax.lang.model.type" class="external-link">TypeMirror</a>&gt;</span>&nbsp;<span class="member-name">asTypes</span>&#8203;(<span class="parameters"><a href="https://docs.oracle.com/javase/8/docs/api/javax/lang/model/element/AnnotationValue.html" title="class or interface in javax.lang.model.element" class="external-link">AnnotationValue</a>&nbsp;v)</span></div>
+<div class="block">Converts the given annotation value to one or more annotations.</div>
 </section>
 </li>
 <li>
