@@ -55,6 +55,7 @@ import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.List;
 import java.util.regex.Pattern;
+import javax.annotation.Nullable;
 
 /**
  * Migrates Truth subjects from a manual "test and fail" approach to one using {@code
@@ -115,6 +116,7 @@ public final class ImplementAssertionWithChaining extends BugChecker implements 
                 state.getSourceForNode(actualAndExpected.get(1)))));
   }
 
+  @Nullable
   private static ImmutableList<ExpressionTree> findActualAndExpected(
       ExpressionTree condition, VisitorState state) {
     /*
@@ -134,6 +136,7 @@ public final class ImplementAssertionWithChaining extends BugChecker implements 
     }
   }
 
+  @Nullable
   private static ImmutableList<ExpressionTree> findActualAndExpectedForPossibleEqualsCall(
       ExpressionTree possiblyEqualsCall, VisitorState state) {
     if (!EQUALS_LIKE_METHOD.matches(possiblyEqualsCall, state)) {
@@ -149,6 +152,7 @@ public final class ImplementAssertionWithChaining extends BugChecker implements 
             getOnlyElement(args));
   }
 
+  @Nullable
   private static ImmutableList<ExpressionTree> findActualAndExpectedForBinaryOp(
       BinaryTree binaryTree, VisitorState state) {
     /*
@@ -211,6 +215,7 @@ public final class ImplementAssertionWithChaining extends BugChecker implements 
    * that case, they appear "backward" as we walk the tree (i.e., bar, foo), so we add each one to
    * the beginning of the list as we go.
    */
+  @Nullable
   static String makeCheckDescription(ExpressionTree actual, VisitorState state) {
     /*
      * This conveniently also acts as a check that the actual and expected values aren't backward,
