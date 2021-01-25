@@ -2154,4 +2154,8 @@ public class ASTHelpers {
       throw new LinkageError(e.getMessage(), e);
     }
   }
+
+  private ASTHelpers() {
+    // no instantiation.
+  }
 }
