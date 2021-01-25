@@ -31,9 +31,11 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.stream.Stream;
 import javax.lang.model.element.AnnotationValue;
 import javax.lang.model.element.VariableElement;
+import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.SimpleAnnotationValueVisitor8;
 
 /** Annotation-related utilities. */
@@ -104,8 +106,8 @@ public final class MoreAnnotations {
   }
 
   /**
-   * Returns the value of the annotation element-value pair with the given name if it is not
-   * explicitly set.
+   * Returns the value of the annotation element-value pair with the given name if it is explicitly
+   * set.
    */
   public static Optional<Attribute> getValue(Attribute.Compound attribute, String name) {
     return attribute.getElementValues().entrySet().stream()
@@ -115,8 +117,8 @@ public final class MoreAnnotations {
   }
 
   /**
-   * Returns the value of the annotation element-value pair with the given name if it is not
-   * explicitly set.
+   * Returns the value of the annotation element-value pair with the given name if it is explicitly
+   * set.
    */
   public static Optional<AnnotationValue> getAnnotationValue(
       Attribute.Compound attribute, String name) {
@@ -126,6 +128,7 @@ public final class MoreAnnotations {
   /** Converts the given attribute to an integer value. */
   public static Optional<Integer> asIntegerValue(AnnotationValue a) {
     class Visitor extends SimpleAnnotationValueVisitor8<Integer, Void> {
+
       @Override
       public Integer visitInt(int i, Void unused) {
         return i;
@@ -137,6 +140,7 @@ public final class MoreAnnotations {
   /** Converts the given attribute to an string value. */
   public static Optional<String> asStringValue(AnnotationValue a) {
     class Visitor extends SimpleAnnotationValueVisitor8<String, Void> {
+
       @Override
       public String visitString(String s, Void unused) {
         return s;
@@ -148,9 +152,22 @@ public final class MoreAnnotations {
   /** Converts the given attribute to an enum value. */
   public static <T extends Enum<T>> Optional<T> asEnumValue(Class<T> clazz, AnnotationValue a) {
     class Visitor extends SimpleAnnotationValueVisitor8<T, Void> {
+
       @Override
       public T visitEnumConstant(VariableElement c, Void unused) {
         return Enum.valueOf(clazz, c.getSimpleName().toString());
+      }
+    }
+    return Optional.ofNullable(a.accept(new Visitor(), null));
+  }
+
+  /** Converts the given attribute to an enum value. */
+  public static Optional<TypeMirror> asTypeValue(AnnotationValue a) {
+    class Visitor extends SimpleAnnotationValueVisitor8<TypeMirror, Void> {
+
+      @Override
+      public TypeMirror visitType(TypeMirror t, Void unused) {
+        return t;
       }
     }
     return Optional.ofNullable(a.accept(new Visitor(), null));
@@ -173,6 +190,22 @@ public final class MoreAnnotations {
             },
             null),
         Stream.empty());
+  }
+
+  /** Converts the given annotation value to one or more annotations. */
+  public static Stream<TypeMirror> asTypes(AnnotationValue v) {
+    return asArray(v, MoreAnnotations::asTypeValue);
+  }
+
+  private static <T> Stream<T> asArray(
+      AnnotationValue v, Function<AnnotationValue, Optional<T>> mapper) {
+    class Visitor extends SimpleAnnotationValueVisitor8<Stream<T>, Void> {
+      @Override
+      public Stream<T> visitArray(List<? extends AnnotationValue> vals, Void unused) {
+        return vals.stream().map(mapper).flatMap(Streams::stream);
+      }
+    }
+    return MoreObjects.firstNonNull(v.accept(new Visitor(), null), Stream.of());
   }
 
   /**

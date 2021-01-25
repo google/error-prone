@@ -22,9 +22,9 @@ import java.lang.annotation.Target;
 
 // TODO(b/157082874): Allow restricting entire classes.
 /**
- * Restrict this method to callsites with a whitelist annotation.
+ * Restrict this method to callsites with a allowlist annotation.
  *
- * <p>Callers that are not whitelisted will cause a configurable compiler diagnostic. Whitelisting
+ * <p>Callers that are not allowlisted will cause a configurable compiler diagnostic. Allowlisting
  * can either allow the call outright, or make the compiler emit a warning when the API is called.
  * Paths matching a regular expression, e.g. unit tests, can also be excluded.
  *
@@ -50,8 +50,8 @@ import java.lang.annotation.Target;
  *      explanation="You could shoot yourself in the foot with Foo.bar if you aren't careful",
  *      link="http://edsger.dijkstra/foo_bar_consider_harmful.html",
  *      allowedOnPath="testsuite/.*", // Unsafe behavior in tests is ok.
- *      whitelistAnnotations = {ReviewedFooBar.class},
- *      whitelistWithWarningAnnotations = {LegacyUnsafeFooBar.class})
+ *      allowlistAnnotations = {ReviewedFooBar.class},
+ *      allowlistWithWarningAnnotations = {LegacyUnsafeFooBar.class})
  *   public void bar() {
  *      if (complicatedCondition) {
  *          shoot_your_foot();
@@ -95,15 +95,23 @@ public @interface RestrictedApi {
    */
   String allowedOnPath() default "";
 
-  /** Allow calls to the restricted API in methods or classes with this annotation. */
+  /** @deprecated use {@link #allowlistAnnotations} instead */
+  @Deprecated
   Class<? extends Annotation>[] whitelistAnnotations() default {};
+
+  /** Allow calls to the restricted API in methods or classes with this annotation. */
+  Class<? extends Annotation>[] allowlistAnnotations() default {};
+
+  /** @deprecated use {@link #allowlistWithWarningAnnotations} instead */
+  @Deprecated
+  Class<? extends Annotation>[] whitelistWithWarningAnnotations() default {};
 
   /**
    * Emit warnings, not errors, on calls to the restricted API for callers with this annotation.
    *
    * <p>This should only be used if callers should aggressively move away from this API (or change
-   * to a whitelist annotation after review). Too many warnings will lead to ALL warnings being
+   * to a allowlist annotation after review). Too many warnings will lead to ALL warnings being
    * ignored, so tread very carefully.
    */
-  Class<? extends Annotation>[] whitelistWithWarningAnnotations() default {};
+  Class<? extends Annotation>[] allowlistWithWarningAnnotations() default {};
 }
