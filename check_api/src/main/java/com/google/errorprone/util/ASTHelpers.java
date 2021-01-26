@@ -2155,7 +2155,5 @@ public class ASTHelpers {
     }
   }
 
-  private ASTHelpers() {
-    // no instantiation.
-  }
+  private ASTHelpers() {}
 }
