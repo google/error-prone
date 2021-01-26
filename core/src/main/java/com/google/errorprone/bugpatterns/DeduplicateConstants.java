@@ -40,6 +40,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import javax.annotation.Nullable;
 
 /**
  * A checker that suggests deduplicating literals with existing constant variables.
@@ -75,6 +76,7 @@ public class DeduplicateConstants extends BugChecker implements CompilationUnitT
     }
 
     /** Returns an in-scope constant variable with the given value. */
+    @Nullable
     public VarSymbol get(String value) {
       VarSymbol sym = getInternal(value);
       if (sym == null) {
@@ -86,6 +88,7 @@ public class DeduplicateConstants extends BugChecker implements CompilationUnitT
       return sym;
     }
 
+    @Nullable
     private VarSymbol getInternal(String value) {
       VarSymbol sym = values.get(value);
       if (sym != null) {

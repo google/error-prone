@@ -29,6 +29,7 @@ import com.sun.source.tree.LiteralTree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.tools.javac.tree.JCTree.JCLiteral;
 import java.util.regex.Pattern;
+import javax.annotation.Nullable;
 
 /**
  * Matcher for a <code>long</code> literal with a lower-case ell for a suffix (e.g. <code>234l
@@ -66,6 +67,7 @@ public class LongLiteralLowerCaseSuffix extends BugChecker implements LiteralTre
    * Extracts the long literal corresponding to a given {@link LiteralTree} node from the source
    * code as a string. Returns null if the source code is not available.
    */
+  @Nullable
   private static String getLongLiteral(LiteralTree literalTree, VisitorState state) {
     JCLiteral longLiteral = (JCLiteral) literalTree;
     CharSequence sourceFile = state.getSourceCode();

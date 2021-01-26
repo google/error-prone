@@ -46,6 +46,7 @@ import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
+import javax.annotation.Nullable;
 
 /** @author epmjohnston@google.com (Emily P.M. Johnston) */
 @BugPattern(
@@ -101,6 +102,7 @@ public class IsLoggableTagLength extends BugChecker implements MethodInvocationT
     return Utf8.encodedLength(tag) <= 23;
   }
 
+  @Nullable
   private VariableTree findEnclosingIdentifier(IdentifierTree originalNode, VisitorState state) {
     Symbol identifierSymbol = getSymbol(originalNode);
     if (!(identifierSymbol instanceof VarSymbol)) {

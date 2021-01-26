@@ -38,6 +38,7 @@ import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.tree.JCTree;
 import edu.umd.cs.findbugs.formatStringChecker.ExtraFormatArgumentsException;
+import javax.annotation.Nullable;
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
@@ -82,6 +83,7 @@ public class FloggerFormatString extends BugChecker implements MethodInvocationT
    * If there were more arguments than format specifiers and the last argument is an exception,
    * suggest using {@code withCause(e)} instead of adding a format specifier.
    */
+  @Nullable
   private Fix withCauseFix(
       ValidationResult result, MethodInvocationTree tree, final VisitorState state) {
     if (!(result.exception() instanceof ExtraFormatArgumentsException)) {

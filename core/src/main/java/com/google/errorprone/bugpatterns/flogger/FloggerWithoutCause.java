@@ -32,6 +32,7 @@ import com.sun.source.tree.Tree;
 import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.code.Type;
 import java.util.concurrent.atomic.AtomicBoolean;
+import javax.annotation.Nullable;
 import javax.lang.model.type.TypeKind;
 
 /**
@@ -84,6 +85,7 @@ public class FloggerWithoutCause extends BugChecker
             String.format(".withCause(%s)", state.getSourceForNode(exception))));
   }
 
+  @Nullable
   private Tree getExceptionArg(MethodInvocationTree tree, VisitorState state) {
     for (Tree arg : Lists.reverse(tree.getArguments())) {
       try {

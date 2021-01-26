@@ -46,6 +46,7 @@ import com.sun.source.tree.VariableTree;
 import com.sun.source.util.SimpleTreeVisitor;
 import com.sun.source.util.TreePath;
 import com.sun.tools.javac.code.Type;
+import javax.annotation.Nullable;
 import javax.lang.model.type.TypeKind;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
@@ -81,6 +82,7 @@ public class ConstantOverflow extends BugChecker implements BinaryTreeMatcher {
   /**
    * If the left operand of an int binary expression is an int literal, suggest making it a long.
    */
+  @Nullable
   private Fix longFix(ExpressionTree expr, VisitorState state) {
     BinaryTree binExpr = null;
     while (expr instanceof BinaryTree) {

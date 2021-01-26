@@ -54,6 +54,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import javax.annotation.Nullable;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
@@ -297,6 +298,7 @@ public class StringSplitter extends BugChecker implements MethodInvocationTreeMa
     throw new AssertionError(receiver);
   }
 
+  @Nullable
   private TreePath findEnclosing(VisitorState state) {
     for (TreePath path = state.getPath(); path != null; path = path.getParentPath()) {
       switch (path.getLeaf().getKind()) {

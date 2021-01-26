@@ -149,6 +149,7 @@ public final class ChainedAssertionLosesContext extends BugChecker
    * {@code check()}, which is part of the expression {@code check().that(...)}. But sometimes there
    * is an intervening call to {@code withMessage}, {@code about}, or both.
    */
+  @Nullable
   static MethodInvocationTree findThatCall(VisitorState state) {
     TreePath path = state.getPath();
     /*
@@ -258,6 +259,7 @@ public final class ChainedAssertionLosesContext extends BugChecker
         getDeclaredSymbol(enclosingClass).type, state.getTypeFromString(SUBJECT_CLASS), state);
   }
 
+  @Nullable
   private static String findThatCallAndMakeCheckDescription(VisitorState state) {
     MethodInvocationTree thatCall = findThatCall(state);
     if (thatCall == null) {

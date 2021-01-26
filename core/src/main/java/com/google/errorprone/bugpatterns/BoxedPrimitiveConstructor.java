@@ -46,6 +46,7 @@ import com.sun.tools.javac.code.Types;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCMethodInvocation;
 import com.sun.tools.javac.util.Context;
+import javax.annotation.Nullable;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
@@ -281,6 +282,7 @@ public class BoxedPrimitiveConstructor extends BugChecker implements NewClassTre
     return value ? "Boolean.TRUE" : "Boolean.FALSE";
   }
 
+  @Nullable
   private Object literalValue(Tree arg) {
     if (!(arg instanceof LiteralTree)) {
       return null;

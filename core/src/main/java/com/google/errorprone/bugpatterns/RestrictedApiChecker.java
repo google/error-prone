@@ -205,6 +205,7 @@ public class RestrictedApiChecker extends BugChecker
         getRestrictedApiAnnotation(superWithRestrictedApi.get(), state), where, state);
   }
 
+  @Nullable
   private static Attribute.Compound getRestrictedApiAnnotation(Symbol sym, VisitorState state) {
     if (sym == null) {
       return null;

@@ -239,6 +239,7 @@ public class JdkObsolete extends BugChecker
     return NO_MATCH;
   }
 
+  @Nullable
   private static Type getMethodOrLambdaReturnType(VisitorState state) {
     for (Tree tree : state.getPath()) {
       switch (tree.getKind()) {
@@ -254,6 +255,7 @@ public class JdkObsolete extends BugChecker
     return null;
   }
 
+  @Nullable
   static Type getTargetType(VisitorState state) {
     Tree parent = state.getPath().getParentPath().getLeaf();
     Type type;

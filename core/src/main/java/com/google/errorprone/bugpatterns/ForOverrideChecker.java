@@ -40,6 +40,7 @@ import com.sun.tools.javac.code.Type;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import javax.annotation.Nullable;
 import javax.lang.model.element.Modifier;
 
 /**
@@ -145,6 +146,7 @@ public class ForOverrideChecker extends BugChecker
    * <p>By 'direct', we mean that if the leaf is part of a field initializer of a class, then it is
    * considered to not be part of any method.
    */
+  @Nullable
   private static MethodTree findDirectMethod(TreePath path) {
     while (true) {
       path = path.getParentPath();

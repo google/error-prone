@@ -36,6 +36,7 @@ import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.UnaryTree;
 import com.sun.source.util.TreeScanner;
 import java.util.Iterator;
+import javax.annotation.Nullable;
 
 /** @author mariasam@google.com (Maria Sam) */
 @BugPattern(
@@ -82,6 +83,7 @@ public class OptionalNotPresent extends BugChecker implements MethodInvocationTr
     return Description.NO_MATCH;
   }
 
+  @Nullable
   private static IfTree possibleIf(IfTree ifTree, Tree upTree, Iterator<Tree> iter) {
     while (iter.hasNext()) {
       // if it's in the body of an if statement, and not the condition, then it does not apply,

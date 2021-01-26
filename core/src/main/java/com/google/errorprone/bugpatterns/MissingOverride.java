@@ -32,6 +32,7 @@ import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Types;
+import javax.annotation.Nullable;
 import javax.lang.model.element.Modifier;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
@@ -93,6 +94,7 @@ public class MissingOverride extends BugChecker implements MethodTreeMatcher {
    * Returns the {@link MethodSymbol} of the first method that sym overrides in its supertype
    * closure, or {@code null} if no such method exists.
    */
+  @Nullable
   private MethodSymbol getFirstOverride(Symbol sym, Types types) {
     ClassSymbol owner = sym.enclClass();
     if (ignoreInterfaceOverrides && owner.isInterface()) {
