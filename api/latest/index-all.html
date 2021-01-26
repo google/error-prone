@@ -7869,6 +7869,8 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/ShouldHaveEvenArgs.html#matchMethodInvocation(com.sun.source.tree.MethodInvocationTree,com.google.errorprone.VisitorState)">matchMethodInvocation(MethodInvocationTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/ShouldHaveEvenArgs.html" title="class in com.google.errorprone.bugpatterns">ShouldHaveEvenArgs</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/StreamMapToPeek.html#matchMethodInvocation(com.sun.source.tree.MethodInvocationTree,com.google.errorprone.VisitorState)">matchMethodInvocation(MethodInvocationTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/StreamMapToPeek.html" title="class in com.google.errorprone.bugpatterns">StreamMapToPeek</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/StreamResourceLeak.html#matchMethodInvocation(com.sun.source.tree.MethodInvocationTree,com.google.errorprone.VisitorState)">matchMethodInvocation(MethodInvocationTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/StreamResourceLeak.html" title="class in com.google.errorprone.bugpatterns">StreamResourceLeak</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/StringSplitter.html#matchMethodInvocation(com.sun.source.tree.MethodInvocationTree,com.google.errorprone.VisitorState)">matchMethodInvocation(MethodInvocationTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/StringSplitter.html" title="class in com.google.errorprone.bugpatterns">StringSplitter</a></dt>
@@ -10822,6 +10824,12 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">A collector of counters keyed by strings.</div>
 </dd>
+<dt><a href="com/google/errorprone/bugpatterns/StreamMapToPeek.html" title="class in com.google.errorprone.bugpatterns"><span class="type-name-link">StreamMapToPeek</span></a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
+<dd>
+<div class="block">Looks for invocations of <a href="https://docs.oracle.com/javase/8/docs/api/java/util/stream/Stream.html#map(java.util.function.Function)" title="class or interface in java.util.stream" class="external-link"><code>Stream.map(java.util.function.Function&lt;? super T, ? extends R&gt;)</code></a> that can be simplified to <a href="https://docs.oracle.com/javase/8/docs/api/java/util/stream/Stream.html#peek(java.util.function.Consumer)" title="class or interface in java.util.stream" class="external-link"><code>Stream.peek(java.util.function.Consumer&lt;? super T&gt;)</code></a>.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/StreamMapToPeek.html#%3Cinit%3E()">StreamMapToPeek()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/StreamMapToPeek.html" title="class in com.google.errorprone.bugpatterns">StreamMapToPeek</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/StreamResourceLeak.html" title="class in com.google.errorprone.bugpatterns"><span class="type-name-link">StreamResourceLeak</span></a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
 <dd>
 <div class="block">A <a href="com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>; see the associated <a href="com/google/errorprone/BugPattern.html" title="annotation in com.google.errorprone"><code>BugPattern</code></a> annotation for details.</div>
