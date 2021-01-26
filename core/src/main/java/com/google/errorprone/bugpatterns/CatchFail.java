@@ -46,9 +46,7 @@ import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.StatementTree;
-import com.sun.source.tree.Tree;
 import com.sun.source.tree.TryTree;
-import com.sun.source.util.TreePath;
 import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.code.Attribute.Compound;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
@@ -173,7 +171,7 @@ public class CatchFail extends BugChecker implements TryTreeMatcher {
                 state.getEndPosition(getLast(tryStatements))));
       }
     }
-    MethodTree enclosing = findEnclosing(state.getPath());
+    MethodTree enclosing = ASTHelpers.findEnclosingMethod(state);
     if (enclosing == null) {
       // There isn't an enclosing method, possibly because we're in a lambda or initializer block.
       return Optional.empty();
@@ -247,19 +245,5 @@ public class CatchFail extends BugChecker implements TryTreeMatcher {
             },
             null);
     return found[0];
-  }
-
-  private static MethodTree findEnclosing(TreePath path) {
-    for (Tree tree : path) {
-      switch (tree.getKind()) {
-        case METHOD:
-          return (MethodTree) tree;
-        case LAMBDA_EXPRESSION:
-        case CLASS:
-          return null;
-        default: // fall out
-      }
-    }
-    return null;
   }
 }

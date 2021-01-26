@@ -387,6 +387,22 @@ public class ASTHelpers {
     return (path == null) ? null : klass.cast(path.getLeaf());
   }
 
+  /** Finds the enclosing {@link MethodTree}. Returns {@code null} if no such node found. */
+  @Nullable
+  public static MethodTree findEnclosingMethod(VisitorState state) {
+    for (Tree parent : state.getPath()) {
+      switch (parent.getKind()) {
+        case METHOD:
+          return (MethodTree) parent;
+        case CLASS:
+        case LAMBDA_EXPRESSION:
+          return null;
+        default: // fall out
+      }
+    }
+    return null;
+  }
+
   /**
    * Find the root assignable expression of a chain of field accesses. If there is no root (i.e, a
    * bare method call or a static method call), return null.

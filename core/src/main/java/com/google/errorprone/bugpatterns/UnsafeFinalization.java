@@ -32,7 +32,6 @@ import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
-import com.sun.source.tree.Tree;
 import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.code.Flags;
 import com.sun.tools.javac.code.Flags.Flag;
@@ -66,7 +65,7 @@ public class UnsafeFinalization extends BugChecker implements MethodInvocationTr
       return NO_MATCH;
     }
     // Find the enclosing method declaration where the invocation occurs.
-    MethodTree method = enclosingMethod(state);
+    MethodTree method = ASTHelpers.findEnclosingMethod(state);
     if (method == null) {
       return NO_MATCH;
     }
@@ -149,19 +148,5 @@ public class UnsafeFinalization extends BugChecker implements MethodInvocationTr
   private static Stream<VarSymbol> getFields(TypeSymbol s) {
     return Streams.stream(s.members().getSymbols(m -> m.getKind() == ElementKind.FIELD))
         .map(VarSymbol.class::cast);
-  }
-
-  private static MethodTree enclosingMethod(VisitorState state) {
-    for (Tree parent : state.getPath()) {
-      switch (parent.getKind()) {
-        case METHOD:
-          return (MethodTree) parent;
-        case CLASS:
-        case LAMBDA_EXPRESSION:
-          return null;
-        default: // fall out
-      }
-    }
-    return null;
   }
 }
