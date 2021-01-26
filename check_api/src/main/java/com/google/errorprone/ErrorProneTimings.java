@@ -19,6 +19,7 @@ package com.google.errorprone;
 import static com.google.common.collect.ImmutableMap.toImmutableMap;
 
 import com.google.common.base.Stopwatch;
+import com.google.common.collect.ImmutableMap;
 import com.google.errorprone.matchers.Suppressible;
 import com.sun.tools.javac.util.Context;
 import java.time.Duration;
@@ -52,7 +53,7 @@ public final class ErrorProneTimings {
   }
 
   /** Returns the elapsed durations of each timer. */
-  public Map<String, Duration> timings() {
+  public ImmutableMap<String, Duration> timings() {
     return timers.entrySet().stream()
         .collect(toImmutableMap(e -> e.getKey(), e -> e.getValue().elapsed()));
   }
