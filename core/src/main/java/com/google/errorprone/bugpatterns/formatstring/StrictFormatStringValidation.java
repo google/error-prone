@@ -38,7 +38,6 @@ import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Types;
 import java.util.List;
-import java.util.stream.Stream;
 import javax.annotation.Nullable;
 import javax.lang.model.element.ElementKind;
 
@@ -60,11 +59,12 @@ public class StrictFormatStringValidation {
       return null;
     }
 
-    Stream<String> formatStringValues = FormatStringValidation.constValues(formatStringTree);
+    boolean hasConstantValue =
+        FormatStringValidation.constValues(formatStringTree).findAny().isPresent();
 
     // If formatString has a constant value, then it couldn't have been an @FormatString parameter,
     // so don't bother with annotations and just check if the parameters match the format string.
-    if (formatStringValues != null) {
+    if (hasConstantValue) {
       return FormatStringValidation.validate(
           /* formatMethodSymbol= */ null,
           ImmutableList.<ExpressionTree>builder().add(formatStringTree).addAll(args).build(),

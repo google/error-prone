@@ -151,6 +151,13 @@ public class FormatStringTest {
   }
 
   @Test
+  public void testConditionalExpression5() throws Exception {
+    testFormat(
+        "missing argument for format specifier '%s'",
+        "String.format(true ? \"%s\" : true ? \"%s\" : \"\");");
+  }
+
+  @Test
   public void missingArguments() {
     compilationHelper
         .addSourceLines(

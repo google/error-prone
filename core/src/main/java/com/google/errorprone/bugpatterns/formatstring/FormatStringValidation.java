@@ -26,6 +26,7 @@ import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ConditionalExpressionTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.Tree;
+import com.sun.source.util.SimpleTreeVisitor;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Types;
@@ -38,6 +39,7 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.temporal.TemporalAccessor;
 import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
@@ -51,6 +53,7 @@ import java.util.IllegalFormatConversionException;
 import java.util.IllegalFormatFlagsException;
 import java.util.IllegalFormatPrecisionException;
 import java.util.IllegalFormatWidthException;
+import java.util.List;
 import java.util.MissingFormatArgumentException;
 import java.util.MissingFormatWidthException;
 import java.util.UnknownFormatConversionException;
@@ -78,17 +81,22 @@ public final class FormatStringValidation {
   }
 
   static Stream<String> constValues(Tree tree) {
-    if (tree instanceof ConditionalExpressionTree) {
-      ConditionalExpressionTree cond = (ConditionalExpressionTree) tree;
-      String t = ASTHelpers.constValue(cond.getTrueExpression(), String.class);
-      String f = ASTHelpers.constValue(cond.getFalseExpression(), String.class);
-      if (t == null || f == null) {
+    List<Tree> flat = new ArrayList<>();
+    new SimpleTreeVisitor<Void, Void>() {
+      @Override
+      public Void visitConditionalExpression(ConditionalExpressionTree tree, Void unused) {
+        visit(tree.getTrueExpression(), null);
+        visit(tree.getFalseExpression(), null);
         return null;
       }
-      return Stream.of(t, f);
-    }
-    String r = ASTHelpers.constValue(tree, String.class);
-    return r != null ? Stream.of(r) : null;
+
+      @Override
+      protected Void defaultAction(Tree tree, Void unused) {
+        flat.add(tree);
+        return null;
+      }
+    }.visit(tree, null);
+    return flat.stream().map(t -> ASTHelpers.constValue(t, String.class)).filter(x -> x != null);
   }
 
   @Nullable
