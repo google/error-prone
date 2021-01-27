@@ -86,7 +86,7 @@ class AndroidImportOrganizer implements ImportOrganizer {
     return organized;
   }
 
-  private void organizePartition(OrganizedImports organized, List<Import> imports) {
+  private static void organizePartition(OrganizedImports organized, List<Import> imports) {
 
     Map<String, ImmutableSortedSet<Import>> groupedByRoot =
         imports.stream()

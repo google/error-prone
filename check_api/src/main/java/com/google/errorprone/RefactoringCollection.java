@@ -184,7 +184,7 @@ class RefactoringCollection implements DescriptionListener.Factory {
     }
   }
 
-  private void doApplyProcess(
+  private static void doApplyProcess(
       FileDestination fileDestination,
       FileSource fileSource,
       Collection<DelegatingDescriptionListener> listeners) {

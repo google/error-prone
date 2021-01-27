@@ -416,7 +416,7 @@ public class NullnessQualifierInference extends TreeScanner<Void, Void> {
         });
   }
 
-  private void visitTypeComponents(
+  private static void visitTypeComponents(
       Type type,
       ArrayDeque<Integer> partialSelector,
       Tree sourceNode,

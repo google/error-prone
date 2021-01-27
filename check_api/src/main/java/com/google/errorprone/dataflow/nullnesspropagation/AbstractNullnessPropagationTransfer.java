@@ -361,7 +361,7 @@ abstract class AbstractNullnessPropagationTransfer
   }
 
   @CheckReturnValue
-  private TransferResult<Nullness, AccessPathStore<Nullness>> updateRegularStore(
+  private static TransferResult<Nullness, AccessPathStore<Nullness>> updateRegularStore(
       Nullness value, TransferInput<?, AccessPathStore<Nullness>> input, ReadableUpdates updates) {
     ResultingStore newStore = updateStore(input.getRegularStore(), updates);
     return new RegularTransferResult<>(value, newStore.store, newStore.storeChanged);

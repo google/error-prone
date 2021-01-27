@@ -117,7 +117,7 @@ public class Reachability {
       return false;
     }
 
-    private Tree skipLabel(JCTree tree) {
+    private static Tree skipLabel(JCTree tree) {
       return tree.hasTag(JCTree.Tag.LABELLED) ? ((JCTree.JCLabeledStatement) tree).body : tree;
     }
 
@@ -162,7 +162,7 @@ public class Reachability {
       return true;
     }
 
-    private boolean isSystemExit(ExpressionTree expression) {
+    private static boolean isSystemExit(ExpressionTree expression) {
       if (!(expression instanceof MethodInvocationTree)) {
         return false;
       }
