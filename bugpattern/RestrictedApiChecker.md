@@ -14,7 +14,7 @@ To make changes, edit the @BugPattern annotation or the explanation in docs/bugp
 
 ## The problem
 Calls to APIs marked @RestrictedApi are prohibited without a corresponding
-whitelist annotation.
+allowlist annotation.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("RestrictedApiChecker")` to the enclosing element.
