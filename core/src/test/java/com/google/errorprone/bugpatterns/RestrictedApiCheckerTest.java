@@ -100,7 +100,7 @@ public class RestrictedApiCheckerTest {
   }
 
   @Test
-  public void testRestrictedCallAllowedOnWhitelistedPath() {
+  public void testRestrictedCallAllowedOnAllowlistedPath() {
     helper
         .addSourceLines(
             "testsuite/Testcase.java",
@@ -286,7 +286,7 @@ public class RestrictedApiCheckerTest {
             "   }",
             "   @RestrictedApi(",
             "     explanation=\"test\",",
-            "     whitelistAnnotations = {Allowlist.class},",
+            "     allowlistAnnotations = {Allowlist.class},",
             "     link = \"foo\"",
             "   )",
             "   void restrictedMethod() {",

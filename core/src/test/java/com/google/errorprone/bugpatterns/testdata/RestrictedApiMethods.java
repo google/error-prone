@@ -29,22 +29,22 @@ public class RestrictedApiMethods implements IFaceWithRestriction {
 
   @RestrictedApi(
       explanation = "lorem",
-      whitelistAnnotations = {Allowlist.class},
-      whitelistWithWarningAnnotations = {AllowlistWithWarning.class},
+      allowlistAnnotations = {Allowlist.class},
+      allowlistWithWarningAnnotations = {AllowlistWithWarning.class},
       link = "")
   public RestrictedApiMethods() {}
 
   @RestrictedApi(
       explanation = "lorem",
-      whitelistAnnotations = {Allowlist.class},
-      whitelistWithWarningAnnotations = {AllowlistWithWarning.class},
+      allowlistAnnotations = {Allowlist.class},
+      allowlistWithWarningAnnotations = {AllowlistWithWarning.class},
       link = "")
   public RestrictedApiMethods(int restricted) {}
 
   @RestrictedApi(
       explanation = "lorem",
-      whitelistAnnotations = {Allowlist.class},
-      whitelistWithWarningAnnotations = {AllowlistWithWarning.class},
+      allowlistAnnotations = {Allowlist.class},
+      allowlistWithWarningAnnotations = {AllowlistWithWarning.class},
       link = "",
       allowedOnPath = ".*testsuite/.*")
   public int restrictedMethod() {
@@ -53,8 +53,8 @@ public class RestrictedApiMethods implements IFaceWithRestriction {
 
   @RestrictedApi(
       explanation = "lorem",
-      whitelistAnnotations = {Allowlist.class},
-      whitelistWithWarningAnnotations = {AllowlistWithWarning.class},
+      allowlistAnnotations = {Allowlist.class},
+      allowlistWithWarningAnnotations = {AllowlistWithWarning.class},
       link = "")
   public static int restrictedStaticMethod() {
     return 2;
