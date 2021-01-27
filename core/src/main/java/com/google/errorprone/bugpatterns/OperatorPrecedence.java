@@ -71,7 +71,7 @@ public class OperatorPrecedence extends BugChecker implements BinaryTreeMatcher 
     return createAppropriateFix(tree, state);
   }
 
-  private boolean isConfusing(Kind thisKind, Kind parentKind) {
+  private static boolean isConfusing(Kind thisKind, Kind parentKind) {
     if (CONDITIONAL.contains(thisKind) && CONDITIONAL.contains(parentKind)) {
       return true;
     }

@@ -145,7 +145,7 @@ public class UseBinds extends BugChecker implements MethodTreeMatcher {
             .build());
   }
 
-  private SuggestedFix.Builder convertMethodToBinds(MethodTree method, VisitorState state) {
+  private static SuggestedFix.Builder convertMethodToBinds(MethodTree method, VisitorState state) {
     SuggestedFix.Builder fix = SuggestedFix.builder();
 
     JCModifiers modifiers = ((JCMethodDecl) method).getModifiers();
@@ -199,7 +199,7 @@ public class UseBinds extends BugChecker implements MethodTreeMatcher {
     return fix;
   }
 
-  private Description fixByDelegating() {
+  private static Description fixByDelegating() {
     // TODO(gak): add a suggested fix by which we make a nested abstract module that we can include
     return NO_MATCH;
   }

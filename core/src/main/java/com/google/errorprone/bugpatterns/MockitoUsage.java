@@ -77,7 +77,7 @@ public class MockitoUsage extends BugChecker implements MethodInvocationTreeMatc
    *   <li>Finally, offer to delete the mock statement.
    * </ul>
    */
-  private void buildFix(
+  private static void buildFix(
       Description.Builder builder, MethodInvocationTree tree, VisitorState state) {
     MethodInvocationTree mockitoCall = tree;
     List<? extends ExpressionTree> args = mockitoCall.getArguments();

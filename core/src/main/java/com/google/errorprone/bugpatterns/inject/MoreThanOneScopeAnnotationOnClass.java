@@ -71,7 +71,7 @@ public class MoreThanOneScopeAnnotationOnClass extends BugChecker implements Cla
     return Description.NO_MATCH;
   }
 
-  private String annotationDebugString(List<AnnotationTree> scopeAnnotations) {
+  private static String annotationDebugString(List<AnnotationTree> scopeAnnotations) {
     return Joiner.on(", ").join(scopeAnnotations);
   }
 }

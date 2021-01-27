@@ -76,7 +76,7 @@ public class UnusedAnonymousClass extends BugChecker implements NewClassTreeMatc
   private static final ImmutableList<String> TYPES_WITH_SIDE_EFFECT_FREE_CONSTRUCTORS =
       ImmutableList.of(Thread.class.getName());
 
-  private boolean sideEffectFreeConstructor(TypeSymbol classType, VisitorState state) {
+  private static boolean sideEffectFreeConstructor(TypeSymbol classType, VisitorState state) {
     if (classType.isInterface()) {
       return true;
     }

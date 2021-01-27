@@ -129,7 +129,7 @@ abstract class AbstractJUnit4InitMethodNotRun extends BugChecker implements Meth
     return describeMatch(methodTree, suggestedFix.build());
   }
 
-  private void makeProtectedPublic(
+  private static void makeProtectedPublic(
       MethodTree methodTree, VisitorState state, SuggestedFix.Builder suggestedFix) {
     if (Matchers.<MethodTree>hasModifier(Modifier.PROTECTED).matches(methodTree, state)) {
       ModifiersTree modifiers = methodTree.getModifiers();
@@ -155,11 +155,11 @@ abstract class AbstractJUnit4InitMethodNotRun extends BugChecker implements Meth
     }
   }
 
-  private String getUnqualifiedClassName(String goodAnnotation) {
+  private static String getUnqualifiedClassName(String goodAnnotation) {
     return goodAnnotation.substring(goodAnnotation.lastIndexOf(".") + 1);
   }
 
-  private AnnotationTree findAnnotation(
+  private static AnnotationTree findAnnotation(
       MethodTree methodTree, VisitorState state, String annotationName) {
     AnnotationTree annotationNode = null;
     for (AnnotationTree annotation : methodTree.getModifiers().getAnnotations()) {

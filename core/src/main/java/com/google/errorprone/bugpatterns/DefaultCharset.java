@@ -326,7 +326,8 @@ public class DefaultCharset extends BugChecker
     }
   }
 
-  private Fix nioFileReaderFix(VisitorState state, Tree arg, Tree toReplace, CharsetFix charset) {
+  private static Fix nioFileReaderFix(
+      VisitorState state, Tree arg, Tree toReplace, CharsetFix charset) {
     SuggestedFix.Builder fix = SuggestedFix.builder();
     fix.replace(
         toReplace,
@@ -338,7 +339,7 @@ public class DefaultCharset extends BugChecker
     return fix.build();
   }
 
-  private Fix guavaFileReaderFix(
+  private static Fix guavaFileReaderFix(
       VisitorState state, Tree fileArg, Tree toReplace, CharsetFix charset) {
     SuggestedFix.Builder fix = SuggestedFix.builder();
     fix.replace(
@@ -351,7 +352,7 @@ public class DefaultCharset extends BugChecker
     return fix.build();
   }
 
-  private void variableTypeFix(
+  private static void variableTypeFix(
       SuggestedFix.Builder fix, VisitorState state, Class<?> original, Class<?> replacement) {
     Tree parent = state.getPath().getParentPath().getLeaf();
     Symbol sym;
@@ -405,7 +406,7 @@ public class DefaultCharset extends BugChecker
     return description.build();
   }
 
-  private Fix guavaFileWriterFix(
+  private static Fix guavaFileWriterFix(
       VisitorState state, Tree fileArg, Tree toReplace, CharsetFix charset) {
     SuggestedFix.Builder fix = SuggestedFix.builder();
     fix.replace(
@@ -418,7 +419,7 @@ public class DefaultCharset extends BugChecker
     return fix.build();
   }
 
-  private Fix nioFileWriterFix(
+  private static Fix nioFileWriterFix(
       VisitorState state,
       Tree appendTree,
       Tree fileArg,
@@ -447,7 +448,7 @@ public class DefaultCharset extends BugChecker
   }
 
   /** Convert a boolean append mode to a StandardOpenOption. */
-  private String toAppendMode(SuggestedFix.Builder fix, Tree appendArg, VisitorState state) {
+  private static String toAppendMode(SuggestedFix.Builder fix, Tree appendArg, VisitorState state) {
     // recognize constants to try to avoid `true ? CREATE, APPEND : CREATE`
     Boolean value = ASTHelpers.constValue(appendArg, Boolean.class);
     if (value != null) {
@@ -469,7 +470,7 @@ public class DefaultCharset extends BugChecker
   }
 
   /** Converts a {@code String} to a {@code File}. */
-  private Object toFile(VisitorState state, Tree fileArg, SuggestedFix.Builder fix) {
+  private static Object toFile(VisitorState state, Tree fileArg, SuggestedFix.Builder fix) {
     Type type = ASTHelpers.getType(fileArg);
     if (ASTHelpers.isSubtype(type, state.getSymtab().stringType, state)) {
       fix.addImport("java.io.File");
@@ -482,7 +483,7 @@ public class DefaultCharset extends BugChecker
   }
 
   /** Convert a {@code String} or {@code File} argument to a {@code Path}. */
-  private String toPath(VisitorState state, Tree fileArg, SuggestedFix.Builder fix) {
+  private static String toPath(VisitorState state, Tree fileArg, SuggestedFix.Builder fix) {
     Type type = ASTHelpers.getType(fileArg);
     if (ASTHelpers.isSubtype(type, state.getSymtab().stringType, state)) {
       fix.addImport("java.nio.file.Paths");
@@ -494,7 +495,7 @@ public class DefaultCharset extends BugChecker
     }
   }
 
-  private void appendCharsets(
+  private static void appendCharsets(
       Description.Builder description,
       Tree tree,
       Tree select,
@@ -505,7 +506,7 @@ public class DefaultCharset extends BugChecker
         appendCharset(tree, select, arguments, state, CharsetFix.DEFAULT_CHARSET_FIX));
   }
 
-  private Fix appendCharset(
+  private static Fix appendCharset(
       Tree tree,
       Tree select,
       List<? extends ExpressionTree> arguments,

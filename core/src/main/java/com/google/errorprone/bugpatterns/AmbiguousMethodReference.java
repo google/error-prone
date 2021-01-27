@@ -107,7 +107,7 @@ public class AmbiguousMethodReference extends BugChecker implements ClassTreeMat
   }
 
   /** Returns a string descriptor of a method's reference type. */
-  private String methodReferenceDescriptor(Types types, MethodSymbol sym) {
+  private static String methodReferenceDescriptor(Types types, MethodSymbol sym) {
     StringBuilder sb = new StringBuilder();
     sb.append(sym.getSimpleName()).append('(');
     if (!sym.isStatic()) {

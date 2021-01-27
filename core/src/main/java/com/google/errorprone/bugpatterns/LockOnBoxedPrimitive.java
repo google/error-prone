@@ -133,7 +133,7 @@ public class LockOnBoxedPrimitive extends BugChecker
   }
 
   /** Returns true if the expression tree is definitely referring to a boxed primitive. */
-  private boolean isDefinitelyBoxedPrimitive(ExpressionTree tree, VisitorState state) {
+  private static boolean isDefinitelyBoxedPrimitive(ExpressionTree tree, VisitorState state) {
     return BOXED_PRIMITIVE.matches(tree, state);
   }
 }

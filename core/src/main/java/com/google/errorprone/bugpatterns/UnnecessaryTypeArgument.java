@@ -80,7 +80,7 @@ public class UnnecessaryTypeArgument extends BugChecker
   }
 
   /** Constructor a fix that deletes the set of type arguments. */
-  private Fix buildFix(Tree tree, List<? extends Tree> arguments, VisitorState state) {
+  private static Fix buildFix(Tree tree, List<? extends Tree> arguments, VisitorState state) {
 
     JCTree node = (JCTree) tree;
     int startAbsolute = node.getStartPosition();

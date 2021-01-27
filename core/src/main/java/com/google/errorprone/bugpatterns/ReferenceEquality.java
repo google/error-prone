@@ -69,7 +69,7 @@ public class ReferenceEquality extends AbstractReferenceEquality {
     return true;
   }
 
-  private boolean inEqualsOrCompareTo(Type classType, Type type, VisitorState state) {
+  private static boolean inEqualsOrCompareTo(Type classType, Type type, VisitorState state) {
     MethodTree methodTree = ASTHelpers.findEnclosingNode(state.getPath(), MethodTree.class);
     if (methodTree == null) {
       return false;

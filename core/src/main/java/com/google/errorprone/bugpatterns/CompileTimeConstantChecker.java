@@ -316,7 +316,7 @@ public class CompileTimeConstantChecker extends BugChecker
     return checkSuperMethods(node, state, compileTimeConstantAnnotationIndexes, methods.build());
   }
 
-  private List<Integer> getAnnotatedParams(List<VarSymbol> params, VisitorState state) {
+  private static List<Integer> getAnnotatedParams(List<VarSymbol> params, VisitorState state) {
     List<Integer> compileTimeConstantAnnotationIndexes = new ArrayList<>();
     for (int i = 0; i < params.size(); i++) {
       if (hasCompileTimeConstantAnnotation(state, params.get(i))) {

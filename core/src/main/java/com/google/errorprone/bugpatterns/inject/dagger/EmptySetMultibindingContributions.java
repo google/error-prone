@@ -187,7 +187,8 @@ public final class EmptySetMultibindingContributions extends BugChecker
     return describeMatch(method, fixBuilder.build());
   }
 
-  private String createReplacementMethodModifiers(VisitorState state, JCModifiers modifiers) {
+  private static String createReplacementMethodModifiers(
+      VisitorState state, JCModifiers modifiers) {
     ImmutableList.Builder<String> modifierStringsBuilder =
         ImmutableList.<String>builder().add("@Multibinds");
 
@@ -212,7 +213,7 @@ public final class EmptySetMultibindingContributions extends BugChecker
     return Joiner.on(' ').join(modifierStringsBuilder.build());
   }
 
-  private String createReplacementClassModifiers(
+  private static String createReplacementClassModifiers(
       VisitorState state, JCModifiers enclosingClassModifiers) {
     ImmutableList.Builder<String> classModifierStringsBuilder = ImmutableList.builder();
 

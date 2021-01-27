@@ -75,7 +75,7 @@ public class AutoFactoryAtInject extends BugChecker implements AnnotationTreeMat
   }
 
   // TODO(ronshapiro): consolidate uses
-  private Tree getCurrentlyAnnotatedNode(VisitorState state) {
+  private static Tree getCurrentlyAnnotatedNode(VisitorState state) {
     return state.getPath().getParentPath().getParentPath().getLeaf();
   }
 }

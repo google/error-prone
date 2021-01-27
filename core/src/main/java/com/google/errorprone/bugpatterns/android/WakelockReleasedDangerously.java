@@ -97,7 +97,8 @@ public class WakelockReleasedDangerously extends BugChecker implements MethodInv
     return describeMatch(releaseStatement, getFix(releaseStatement, wakelockSymbol, state));
   }
 
-  private SuggestedFix getFix(Tree releaseStatement, Symbol wakelockSymbol, VisitorState state) {
+  private static SuggestedFix getFix(
+      Tree releaseStatement, Symbol wakelockSymbol, VisitorState state) {
     // Wrap the release call line in a try/catch(RuntimeException) block.
     String before = "\ntry {\n";
     String after =
@@ -180,7 +181,7 @@ public class WakelockReleasedDangerously extends BugChecker implements MethodInv
                 m -> Boolean.FALSE.equals(constValue(m.getArguments().get(0), Boolean.class)));
   }
 
-  private ClassTree getTopLevelClass(VisitorState state) {
+  private static ClassTree getTopLevelClass(VisitorState state) {
     return (ClassTree)
         Streams.findLast(
                 Streams.stream(state.getPath().iterator())

@@ -53,7 +53,7 @@ public class IterableAndIterator extends BugChecker implements ClassTreeMatcher 
   private static final Matcher<Tree> ITERABLE_AND_ITERATOR_MATCHER =
       allOf(ITERABLE_MATCHER, ITERATOR_MATCHER);
 
-  private boolean matchAnySuperType(ClassTree tree, VisitorState state) {
+  private static boolean matchAnySuperType(ClassTree tree, VisitorState state) {
     List<Tree> superTypes = Lists.<Tree>newArrayList(tree.getImplementsClause());
     Tree superClass = tree.getExtendsClause();
     if (superClass != null) {

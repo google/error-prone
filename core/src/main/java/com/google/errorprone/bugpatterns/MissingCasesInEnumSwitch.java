@@ -80,7 +80,7 @@ public class MissingCasesInEnumSwitch extends BugChecker implements SwitchTreeMa
    *   <li>Non-exhaustive switch, expected cases for: FOO, BAR, BAZ, and 42 others.
    * </ul>
    */
-  private String buildMessage(Set<String> unhandled) {
+  private static String buildMessage(Set<String> unhandled) {
     StringBuilder message =
         new StringBuilder(
             "Non-exhaustive switch; either add a default or handle the remaining cases: ");

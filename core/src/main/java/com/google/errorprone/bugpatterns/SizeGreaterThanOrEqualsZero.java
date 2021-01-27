@@ -266,7 +266,7 @@ public class SizeGreaterThanOrEqualsZero extends BugChecker implements BinaryTre
     return describeMatch(tree, SuggestedFix.replace(tree, replacement));
   }
 
-  private ExpressionType isGreaterThanEqualToZero(BinaryTree tree) {
+  private static ExpressionType isGreaterThanEqualToZero(BinaryTree tree) {
     ExpressionTree literalOperand;
     ExpressionType returnType;
 

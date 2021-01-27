@@ -248,7 +248,7 @@ public final class AnnotationPosition extends BugChecker
         .build();
   }
 
-  private ImmutableList<String> annotationNames(List<AnnotationTree> annotations) {
+  private static ImmutableList<String> annotationNames(List<AnnotationTree> annotations) {
     return annotations.stream()
         .map(ASTHelpers::getSymbol)
         .filter(Objects::nonNull)

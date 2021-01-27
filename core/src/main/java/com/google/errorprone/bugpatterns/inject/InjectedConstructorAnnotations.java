@@ -90,7 +90,7 @@ public class InjectedConstructorAnnotations extends BugChecker implements Method
     }
   }
 
-  private boolean isInjectedConstructor(MethodTree methodTree, VisitorState state) {
+  private static boolean isInjectedConstructor(MethodTree methodTree, VisitorState state) {
     return allOf(methodIsConstructor(), hasAnnotation(GUICE_INJECT_ANNOTATION))
         .matches(methodTree, state);
   }

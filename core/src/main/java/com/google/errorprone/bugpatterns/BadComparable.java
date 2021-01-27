@@ -91,7 +91,7 @@ public class BadComparable extends BugChecker implements TypeCastTreeMatcher {
    * Matches if this is a narrowing integral cast between signed types where the expression is a
    * subtract.
    */
-  private boolean matches(TypeCastTree tree, VisitorState state) {
+  private static boolean matches(TypeCastTree tree, VisitorState state) {
     Type treeType = ASTHelpers.getType(tree.getType());
 
     // If the cast isn't narrowing to an int then don't implicate it in the bug pattern.

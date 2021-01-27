@@ -70,7 +70,7 @@ public class ProtoStringFieldReferenceEquality extends BugChecker implements Bin
     return NO_MATCH;
   }
 
-  private boolean match(ExpressionTree a, ExpressionTree b, VisitorState state) {
+  private static boolean match(ExpressionTree a, ExpressionTree b, VisitorState state) {
     return PROTO_STRING_METHOD.matches(a, state) && b.getKind() != Kind.NULL_LITERAL;
   }
 }

@@ -86,7 +86,7 @@ public class FloggerWithoutCause extends BugChecker
   }
 
   @Nullable
-  private Tree getExceptionArg(MethodInvocationTree tree, VisitorState state) {
+  private static Tree getExceptionArg(MethodInvocationTree tree, VisitorState state) {
     for (Tree arg : Lists.reverse(tree.getArguments())) {
       try {
         Type argType = ASTHelpers.getType(arg);

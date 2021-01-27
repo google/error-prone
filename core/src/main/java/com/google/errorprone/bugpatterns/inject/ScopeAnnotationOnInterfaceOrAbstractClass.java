@@ -74,7 +74,7 @@ public class ScopeAnnotationOnInterfaceOrAbstractClass extends BugChecker
     return Description.NO_MATCH;
   }
 
-  private Tree getCurrentlyAnnotatedNode(VisitorState state) {
+  private static Tree getCurrentlyAnnotatedNode(VisitorState state) {
     return state.getPath().getParentPath().getParentPath().getLeaf();
   }
 }

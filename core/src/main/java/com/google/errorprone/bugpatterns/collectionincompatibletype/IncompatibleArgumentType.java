@@ -154,7 +154,7 @@ public class IncompatibleArgumentType extends BugChecker implements MethodInvoca
   // Return whether this method contains any @CompatibleWith annotations. If there are none, the
   // caller should explore super-methods.
   @CheckReturnValue
-  private boolean populateTypesToEnforce(
+  private static boolean populateTypesToEnforce(
       MethodSymbol declaredMethod,
       Type calledMethodType,
       Type calledReceiverType,
@@ -198,7 +198,7 @@ public class IncompatibleArgumentType extends BugChecker implements MethodInvoca
   @Nullable
   @CheckReturnValue
   // From calledReceiverType
-  private RequiredType resolveRequiredTypeForThisCall(
+  private static RequiredType resolveRequiredTypeForThisCall(
       VisitorState state,
       Type calledMethodType,
       Type calledReceiverType,
@@ -215,7 +215,7 @@ public class IncompatibleArgumentType extends BugChecker implements MethodInvoca
     return requiredType;
   }
 
-  private RequiredType resolveTypeFromGenericMethod(
+  private static RequiredType resolveTypeFromGenericMethod(
       Type calledMethodType, MethodSymbol declaredMethod, String typeArgName) {
     int tyargIndex = findTypeArgInList(declaredMethod, typeArgName);
     return tyargIndex == -1
@@ -255,7 +255,7 @@ public class IncompatibleArgumentType extends BugChecker implements MethodInvoca
   // class Foo<X> { void something(@CW("X") Object x); }
   // new Foo<String>().something(123);
   @Nullable
-  private RequiredType resolveTypeFromClass(
+  private static RequiredType resolveTypeFromClass(
       Type calledType, ClassSymbol clazzSymbol, String typeArgName, VisitorState state) {
     // Try on the class
     int tyargIndex = findTypeArgInList(clazzSymbol, typeArgName);

@@ -111,7 +111,7 @@ public class ModifyingCollectionWithItself extends BugChecker
     return builder.build();
   }
 
-  private List<Fix> buildFixes(
+  private static List<Fix> buildFixes(
       MethodInvocationTree methodInvocationTree,
       VisitorState state,
       ExpressionTree receiver,

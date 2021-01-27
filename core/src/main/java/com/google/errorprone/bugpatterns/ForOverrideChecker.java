@@ -190,7 +190,7 @@ public class ForOverrideChecker extends BugChecker
    * @return a list of methods annotated @ForOverride that the method overrides, including the
    *     method itself if it has the annotation
    */
-  private List<MethodSymbol> getOverriddenMethods(VisitorState state, MethodSymbol method) {
+  private static List<MethodSymbol> getOverriddenMethods(VisitorState state, MethodSymbol method) {
     // Static methods cannot override, only overload.
     if (method.isStatic()) {
       throw new IllegalArgumentException(
@@ -234,7 +234,7 @@ public class ForOverrideChecker extends BugChecker
   }
 
   /** Get the outermost class/interface/enum of an element, or null if none. */
-  private Type getOutermostClass(VisitorState state) {
+  private static Type getOutermostClass(VisitorState state) {
     TreePath path = state.getPath();
     Type type = null;
 
@@ -249,7 +249,7 @@ public class ForOverrideChecker extends BugChecker
     return type;
   }
 
-  private boolean hasAnnotation(String annotation, Symbol member) {
+  private static boolean hasAnnotation(String annotation, Symbol member) {
     for (Attribute.Compound attribute : member.getAnnotationMirrors()) {
       if (annotation.equals(attribute.type.toString())) {
         return true;

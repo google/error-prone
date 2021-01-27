@@ -177,7 +177,7 @@ public abstract class AbstractReferenceEquality extends BugChecker implements Bi
     return Optional.empty();
   }
 
-  private Nullness getNullness(ExpressionTree expr, VisitorState state) {
+  private static Nullness getNullness(ExpressionTree expr, VisitorState state) {
     TreePath pathToExpr = new TreePath(state.getPath(), expr);
     return state.getNullnessAnalysis().getNullness(pathToExpr, state.context);
   }

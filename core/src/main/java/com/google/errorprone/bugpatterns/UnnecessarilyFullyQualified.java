@@ -187,7 +187,7 @@ public final class UnnecessarilyFullyQualified extends BugChecker
     return NO_MATCH;
   }
 
-  private boolean isPackageInfo(CompilationUnitTree tree) {
+  private static boolean isPackageInfo(CompilationUnitTree tree) {
     String name = tree.getSourceFile().getName();
     int idx = name.lastIndexOf('/');
     if (idx != -1) {

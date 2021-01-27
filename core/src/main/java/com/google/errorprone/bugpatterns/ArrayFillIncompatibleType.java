@@ -101,7 +101,7 @@ public class ArrayFillIncompatibleType extends BugChecker implements MethodInvoc
         .build();
   }
 
-  private boolean isValidArrayFill(
+  private static boolean isValidArrayFill(
       VisitorState state, Type arrayComponentType, Type fillingObjectType) {
     if (arrayComponentType == null || fillingObjectType == null) {
       return true; // shrug

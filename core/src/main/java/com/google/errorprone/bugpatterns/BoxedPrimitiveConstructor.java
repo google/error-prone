@@ -89,7 +89,7 @@ public class BoxedPrimitiveConstructor extends BugChecker implements NewClassTre
     return NO_MATCH;
   }
 
-  private Fix buildFix(NewClassTree tree, VisitorState state) {
+  private static Fix buildFix(NewClassTree tree, VisitorState state) {
     boolean autoboxFix = shouldAutoboxFix(state);
     Types types = state.getTypes();
     Type type = types.unboxedTypeOrType(getType(tree));
@@ -221,7 +221,7 @@ public class BoxedPrimitiveConstructor extends BugChecker implements NewClassTre
     return Source.instance(context).compareTo(Source.lookup("1.7")) <= 0; // 7 or below
   }
 
-  private String maybeCast(VisitorState state, Type type, Type argType) {
+  private static String maybeCast(VisitorState state, Type type, Type argType) {
     if (doubleAndFloatStatus(state, type, argType)
         == DoubleAndFloatStatus.PRIMITIVE_DOUBLE_INTO_FLOAT) {
       // e.g.: new Float(3.0d) => (float) 3.0d
@@ -244,7 +244,7 @@ public class BoxedPrimitiveConstructor extends BugChecker implements NewClassTre
     BOXED_DOUBLE_INTO_FLOAT
   }
 
-  private DoubleAndFloatStatus doubleAndFloatStatus(
+  private static DoubleAndFloatStatus doubleAndFloatStatus(
       VisitorState state, Type recieverType, Type argType) {
     Types types = state.getTypes();
     if (!types.isSameType(recieverType, state.getSymtab().floatType)) {
@@ -259,7 +259,7 @@ public class BoxedPrimitiveConstructor extends BugChecker implements NewClassTre
     return DoubleAndFloatStatus.NONE;
   }
 
-  private boolean shouldAutoboxFix(VisitorState state) {
+  private static boolean shouldAutoboxFix(VisitorState state) {
     switch (state.getPath().getParentPath().getLeaf().getKind()) {
       case METHOD_INVOCATION:
         // autoboxing a method argument affects overload resolution
@@ -275,7 +275,7 @@ public class BoxedPrimitiveConstructor extends BugChecker implements NewClassTre
     }
   }
 
-  private String literalFix(boolean value, boolean autoboxFix) {
+  private static String literalFix(boolean value, boolean autoboxFix) {
     if (autoboxFix) {
       return value ? "true" : "false";
     }
@@ -283,7 +283,7 @@ public class BoxedPrimitiveConstructor extends BugChecker implements NewClassTre
   }
 
   @Nullable
-  private Object literalValue(Tree arg) {
+  private static Object literalValue(Tree arg) {
     if (!(arg instanceof LiteralTree)) {
       return null;
     }

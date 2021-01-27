@@ -86,7 +86,7 @@ public class ClassNewInstance extends BugChecker implements MethodInvocationTree
 
   // if the match occurrs inside the body of a try statement with existing catch clauses
   // update or add a catch block to handle the new exceptions
-  private boolean fixExceptions(final VisitorState state, SuggestedFix.Builder fix) {
+  private static boolean fixExceptions(final VisitorState state, SuggestedFix.Builder fix) {
     TryTree tryTree = null;
     OUTER:
     for (TreePath path = state.getPath(); path != null; path = path.getParentPath()) {
@@ -190,7 +190,7 @@ public class ClassNewInstance extends BugChecker implements MethodInvocationTree
 
   // if there wasn't a try/catch to add new catch clauses to, update the enclosing
   // method declaration's throws clause to declare the new checked exceptions
-  private void fixThrows(VisitorState state, SuggestedFix.Builder fix) {
+  private static void fixThrows(VisitorState state, SuggestedFix.Builder fix) {
     MethodTree methodTree = state.findEnclosing(MethodTree.class);
     if (methodTree == null || methodTree.getThrows().isEmpty()) {
       return;
@@ -232,7 +232,8 @@ public class ClassNewInstance extends BugChecker implements MethodInvocationTree
    * method throws clauses), determine which handlers are for reflective exceptions, and whether all
    * exceptions thrown by {#link Constructor#newInstance} are handled.
    */
-  private <T> UnhandledResult<T> unhandled(ImmutableMap<Type, T> handles, VisitorState state) {
+  private static <T> UnhandledResult<T> unhandled(
+      ImmutableMap<Type, T> handles, VisitorState state) {
     LinkedHashSet<Type> toHandle = new LinkedHashSet<>();
     for (Class<?> e :
         Arrays.asList(

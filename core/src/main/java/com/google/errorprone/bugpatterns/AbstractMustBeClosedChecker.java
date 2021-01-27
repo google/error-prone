@@ -176,7 +176,7 @@ public abstract class AbstractMustBeClosedChecker extends BugChecker {
     return null;
   }
 
-  private boolean tryFinallyClose(VarSymbol var, TreePath path, VisitorState state) {
+  private static boolean tryFinallyClose(VarSymbol var, TreePath path, VisitorState state) {
     if (!isConsideredFinal(var)) {
       return false;
     }

@@ -222,7 +222,7 @@ public class UnnecessaryDefaultInEnumSwitch extends BugChecker implements Switch
   }
 
   /** Returns true if the default is empty, or contains only a break statement. */
-  private boolean trivialDefault(List<? extends StatementTree> defaultStatements) {
+  private static boolean trivialDefault(List<? extends StatementTree> defaultStatements) {
     if (defaultStatements.isEmpty()) {
       return true;
     }

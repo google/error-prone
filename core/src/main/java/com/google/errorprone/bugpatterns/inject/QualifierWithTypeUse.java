@@ -88,13 +88,13 @@ public class QualifierWithTypeUse extends BugChecker implements ClassTreeMatcher
     return Description.NO_MATCH;
   }
 
-  private boolean hasTypeUseOrTypeParameter(Target targetAnnotation) {
+  private static boolean hasTypeUseOrTypeParameter(Target targetAnnotation) {
     // Should only be in cases where Target is not in the classpath
     return targetAnnotation != null
         && !Collections.disjoint(FORBIDDEN_ELEMENT_TYPES, Arrays.asList(targetAnnotation.value()));
   }
 
-  private Fix removeTypeUse(Target targetAnnotation, AnnotationTree tree) {
+  private static Fix removeTypeUse(Target targetAnnotation, AnnotationTree tree) {
     Set<ElementType> elements = EnumSet.copyOf(Arrays.asList(targetAnnotation.value()));
     elements.removeAll(FORBIDDEN_ELEMENT_TYPES);
     if (elements.isEmpty()) {

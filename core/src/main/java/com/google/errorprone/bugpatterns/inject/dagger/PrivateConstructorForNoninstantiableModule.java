@@ -103,7 +103,7 @@ public class PrivateConstructorForNoninstantiableModule extends BugChecker
     return NO_MATCH;
   }
 
-  private Fix addPrivateConstructor(ClassTree classTree, VisitorState state) {
+  private static Fix addPrivateConstructor(ClassTree classTree, VisitorState state) {
     return SuggestedFixes.addMembers(classTree, state, createPrivateConstructor(classTree));
   }
 

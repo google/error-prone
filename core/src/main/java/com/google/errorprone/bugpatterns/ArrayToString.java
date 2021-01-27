@@ -86,7 +86,7 @@ public class ArrayToString extends AbstractToString {
     return fix(parent, tree, state);
   }
 
-  private Optional<Fix> fix(Tree replace, Tree with, VisitorState state) {
+  private static Optional<Fix> fix(Tree replace, Tree with, VisitorState state) {
     String method = isNestedArray(with, state) ? "deepToString" : "toString";
 
     return Optional.of(

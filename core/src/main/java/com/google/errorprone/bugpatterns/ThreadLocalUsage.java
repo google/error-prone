@@ -101,7 +101,7 @@ public class ThreadLocalUsage extends BugChecker implements NewClassTreeMatcher 
           "java.lang.Double");
 
   /** Ignore some common ThreadLocal type arguments that are fine to have per-instance copies of. */
-  private boolean wellKnownTypeArgument(NewClassTree tree, VisitorState state) {
+  private static boolean wellKnownTypeArgument(NewClassTree tree, VisitorState state) {
     Type type = getType(tree);
     if (type == null) {
       return false;

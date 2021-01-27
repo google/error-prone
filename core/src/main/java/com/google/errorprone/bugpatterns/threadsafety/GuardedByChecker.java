@@ -123,7 +123,7 @@ public class GuardedByChecker extends BugChecker
    *   <li>This access should be guarded by 'this'; instead found: 'mu1', 'mu2'
    * </ul>
    */
-  private String buildMessage(GuardedByExpression guard, HeldLockSet locks) {
+  private static String buildMessage(GuardedByExpression guard, HeldLockSet locks) {
     int heldLocks = locks.allLocks().size();
     StringBuilder message = new StringBuilder();
     Select enclosing = findOuterInstance(guard);
@@ -172,7 +172,7 @@ public class GuardedByChecker extends BugChecker
     return null;
   }
 
-  private boolean enclosingInstance(GuardedByExpression expr) {
+  private static boolean enclosingInstance(GuardedByExpression expr) {
     while (expr.kind() == Kind.SELECT) {
       expr = ((Select) expr).base();
       if (expr.kind() == Kind.THIS) {
@@ -202,7 +202,7 @@ public class GuardedByChecker extends BugChecker
 
   // TODO(cushon) - this is a hack. Provide an abstraction for matchers that need to do
   // stateful visiting? (e.g. a traversal that passes along a set of held locks...)
-  private void report(Description description, VisitorState state) {
+  private static void report(Description description, VisitorState state) {
     if (description == null || description == NO_MATCH) {
       return;
     }

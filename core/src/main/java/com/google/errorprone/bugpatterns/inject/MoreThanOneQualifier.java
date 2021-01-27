@@ -61,7 +61,7 @@ public class MoreThanOneQualifier extends BugChecker implements AnnotationTreeMa
     return Description.NO_MATCH;
   }
 
-  private List<? extends AnnotationTree> getSiblingAnnotations(VisitorState state) {
+  private static List<? extends AnnotationTree> getSiblingAnnotations(VisitorState state) {
     return ((ModifiersTree) state.getPath().getParentPath().getLeaf()).getAnnotations();
   }
 }

@@ -125,7 +125,7 @@ public abstract class ApiDiffChecker extends BugChecker
    * Finds the class of the expression's receiver: the declaring class of a static member access, or
    * the type that an instance member is accessed on.
    */
-  private ClassSymbol getReceiver(ExpressionTree tree, Symbol sym) {
+  private static ClassSymbol getReceiver(ExpressionTree tree, Symbol sym) {
     if (sym.isStatic() || sym instanceof ClassSymbol) {
       return sym.enclClass();
     }

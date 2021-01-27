@@ -103,7 +103,7 @@ public class CanBeStaticAnalyzer extends TreeScanner {
     }
   }
 
-  private boolean isOwnedBy(Symbol sym, Symbol owner, Types types) {
+  private static boolean isOwnedBy(Symbol sym, Symbol owner, Types types) {
     if (sym.owner == owner) {
       return true;
     }

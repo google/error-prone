@@ -143,7 +143,7 @@ public class AssistedParameters extends BugChecker implements MethodTreeMatcher 
     return buildDescription(constructor).setMessage(buildErrorMessage(conflicts)).build();
   }
 
-  private String buildErrorMessage(List<ConflictResult> conflicts) {
+  private static String buildErrorMessage(List<ConflictResult> conflicts) {
     StringBuilder sb =
         new StringBuilder(
             " Assisted parameters of the same type need to have distinct values for the @Assisted"
@@ -187,7 +187,7 @@ public class AssistedParameters extends BugChecker implements MethodTreeMatcher 
 
   // Since Type doesn't have strong equality semantics, we have to use Types.isSameType to
   // determine which parameters are conflicting with each other.
-  private Multimap<Type, VariableTree> partitionParametersByType(
+  private static Multimap<Type, VariableTree> partitionParametersByType(
       List<VariableTree> parameters, VisitorState state) {
 
     Types types = state.getTypes();

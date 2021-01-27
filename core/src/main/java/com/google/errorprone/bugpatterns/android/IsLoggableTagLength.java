@@ -98,12 +98,13 @@ public class IsLoggableTagLength extends BugChecker implements MethodInvocationT
     return NO_MATCH;
   }
 
-  private boolean isValidTag(String tag) {
+  private static boolean isValidTag(String tag) {
     return Utf8.encodedLength(tag) <= 23;
   }
 
   @Nullable
-  private VariableTree findEnclosingIdentifier(IdentifierTree originalNode, VisitorState state) {
+  private static VariableTree findEnclosingIdentifier(
+      IdentifierTree originalNode, VisitorState state) {
     Symbol identifierSymbol = getSymbol(originalNode);
     if (!(identifierSymbol instanceof VarSymbol)) {
       return null;

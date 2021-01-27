@@ -75,7 +75,7 @@ public final class RefersToDaggerCodegen extends BugChecker implements MethodInv
     return describeMatch(tree);
   }
 
-  private boolean isMembersInjectionInvocation(MethodSymbol method, VisitorState state) {
+  private static boolean isMembersInjectionInvocation(MethodSymbol method, VisitorState state) {
     if (method.getSimpleName().contentEquals("injectMembers")) {
       return false;
     }

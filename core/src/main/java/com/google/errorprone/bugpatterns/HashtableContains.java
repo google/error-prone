@@ -104,7 +104,8 @@ public class HashtableContains extends BugChecker implements MethodInvocationTre
     return result.build();
   }
 
-  private Fix replaceMethodName(MethodInvocationTree tree, VisitorState state, String newName) {
+  private static Fix replaceMethodName(
+      MethodInvocationTree tree, VisitorState state, String newName) {
     String source = state.getSourceForNode((JCTree) tree.getMethodSelect());
     int idx = source.lastIndexOf("contains");
     String replacement =

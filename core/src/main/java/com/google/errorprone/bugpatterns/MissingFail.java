@@ -267,7 +267,7 @@ public class MissingFail extends BugChecker implements TryTreeMatcher {
     return state.getSourceForNode(exceptionType);
   }
 
-  private boolean tryTreeMatches(TryTree tree, VisitorState state) {
+  private static boolean tryTreeMatches(TryTree tree, VisitorState state) {
     if (!isInClass(tree, state, TEST_CLASS)) {
       return false;
     }
@@ -307,43 +307,43 @@ public class MissingFail extends BugChecker implements TryTreeMatcher {
     return true;
   }
 
-  private boolean hasWhileTrue(TryTree tree, VisitorState state) {
+  private static boolean hasWhileTrue(TryTree tree, VisitorState state) {
     return WHILE_TRUE_IN_BLOCK.matches(tree, state);
   }
 
-  private boolean isInClass(TryTree tree, VisitorState state, Matcher<ClassTree> classTree) {
+  private static boolean isInClass(TryTree tree, VisitorState state, Matcher<ClassTree> classTree) {
     return Matchers.enclosingNode(toType(ClassTree.class, classTree)).matches(tree, state);
   }
 
-  private boolean hasBooleanAssertVariableInCatch(TryTree tree, VisitorState state) {
+  private static boolean hasBooleanAssertVariableInCatch(TryTree tree, VisitorState state) {
     return anyCatchBlockMatches(tree, state, BOOLEAN_ASSERT_VAR_IN_BLOCK);
   }
 
-  private boolean lastTryStatementIsAssert(TryTree tree, VisitorState state) {
+  private static boolean lastTryStatementIsAssert(TryTree tree, VisitorState state) {
     return ASSERT_LAST_CALL_IN_TRY.matches(tree, state);
   }
 
-  private boolean hasFieldAssignmentInCatch(TryTree tree, VisitorState state) {
+  private static boolean hasFieldAssignmentInCatch(TryTree tree, VisitorState state) {
     return anyCatchBlockMatches(tree, state, FIELD_ASSIGNMENT_IN_BLOCK);
   }
 
-  private boolean logsInCatch(VisitorState state, TryTree tree) {
+  private static boolean logsInCatch(VisitorState state, TryTree tree) {
     return anyCatchBlockMatches(tree, state, LOG_IN_BLOCK);
   }
 
-  private boolean hasFinally(TryTree tree) {
+  private static boolean hasFinally(TryTree tree) {
     return tree.getFinallyBlock() != null;
   }
 
-  private boolean hasContinue(TryTree tree, VisitorState state) {
+  private static boolean hasContinue(TryTree tree, VisitorState state) {
     return CONTINUE_IN_BLOCK.matches(tree, state);
   }
 
-  private boolean isInLoop(VisitorState state, TryTree tree) {
+  private static boolean isInLoop(VisitorState state, TryTree tree) {
     return IN_LOOP.matches(tree, state);
   }
 
-  private boolean isInapplicableExceptionType(TryTree tree, VisitorState state) {
+  private static boolean isInapplicableExceptionType(TryTree tree, VisitorState state) {
     for (CatchTree catchTree : tree.getCatches()) {
       if (INAPPLICABLE_EXCEPTION.matches(catchTree.getParameter(), state)) {
         return true;
@@ -352,23 +352,23 @@ public class MissingFail extends BugChecker implements TryTreeMatcher {
     return false;
   }
 
-  private boolean returnsInTryCatchOrAfter(TryTree tree, VisitorState state) {
+  private static boolean returnsInTryCatchOrAfter(TryTree tree, VisitorState state) {
     return RETURN_IN_BLOCK.matches(tree, state) || RETURN_AFTER.matches(tree, state);
   }
 
-  private boolean isInInapplicableMethod(TryTree tree, VisitorState state) {
+  private static boolean isInInapplicableMethod(TryTree tree, VisitorState state) {
     return NON_TEST_METHOD.matches(tree, state);
   }
 
-  private boolean hasThrowOrFail(TryTree tree, VisitorState state) {
+  private static boolean hasThrowOrFail(TryTree tree, VisitorState state) {
     return THROW_OR_FAIL_IN_BLOCK.matches(tree, state);
   }
 
-  private boolean hasAssertInCatch(TryTree tree, VisitorState state) {
+  private static boolean hasAssertInCatch(TryTree tree, VisitorState state) {
     return anyCatchBlockMatches(tree, state, ASSERT_IN_BLOCK);
   }
 
-  private boolean hasToleratedException(TryTree tree) {
+  private static boolean hasToleratedException(TryTree tree) {
     for (CatchTree catchTree : tree.getCatches()) {
       if (catchTree.getParameter().getName().contentEquals("tolerated")) {
         return true;
@@ -377,7 +377,7 @@ public class MissingFail extends BugChecker implements TryTreeMatcher {
     return false;
   }
 
-  private boolean hasExpectedException(TryTree tree) {
+  private static boolean hasExpectedException(TryTree tree) {
     for (CatchTree catchTree : tree.getCatches()) {
       if (catchTree.getParameter().getName().contentEquals("expected")) {
         return true;
@@ -386,7 +386,8 @@ public class MissingFail extends BugChecker implements TryTreeMatcher {
     return false;
   }
 
-  private boolean anyCatchBlockMatches(TryTree tree, VisitorState state, Matcher<Tree> matcher) {
+  private static boolean anyCatchBlockMatches(
+      TryTree tree, VisitorState state, Matcher<Tree> matcher) {
     for (CatchTree catchTree : tree.getCatches()) {
       if (matcher.matches(catchTree.getBlock(), state)) {
         return true;
@@ -472,7 +473,7 @@ public class MissingFail extends BugChecker implements TryTreeMatcher {
           && matches(methodInvocationTree.getArguments());
     }
 
-    private boolean matches(List<? extends ExpressionTree> expressionTrees) {
+    private static boolean matches(List<? extends ExpressionTree> expressionTrees) {
       Set<Integer> foundValues = new HashSet<>();
       for (Tree tree : expressionTrees) {
         if (tree instanceof LiteralTree) {

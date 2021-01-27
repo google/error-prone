@@ -83,7 +83,7 @@ public class ConstantOverflow extends BugChecker implements BinaryTreeMatcher {
    * If the left operand of an int binary expression is an int literal, suggest making it a long.
    */
   @Nullable
-  private Fix longFix(ExpressionTree expr, VisitorState state) {
+  private static Fix longFix(ExpressionTree expr, VisitorState state) {
     BinaryTree binExpr = null;
     while (expr instanceof BinaryTree) {
       binExpr = (BinaryTree) expr;

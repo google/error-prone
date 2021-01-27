@@ -114,7 +114,8 @@ public class CatchFail extends BugChecker implements TryTreeMatcher {
     return state.getSourceForNode(getOnlyElement(tree.getArguments()));
   }
 
-  private Optional<Fix> rethrowFix(ImmutableList<CatchTree> catchBlocks, VisitorState state) {
+  private static Optional<Fix> rethrowFix(
+      ImmutableList<CatchTree> catchBlocks, VisitorState state) {
     SuggestedFix.Builder fix = SuggestedFix.builder();
     catchBlocks.forEach(
         c -> {

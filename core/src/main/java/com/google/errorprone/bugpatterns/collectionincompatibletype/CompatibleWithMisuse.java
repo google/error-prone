@@ -124,7 +124,7 @@ public class CompatibleWithMisuse extends BugChecker implements AnnotationTreeMa
   // => X
   // This function assumes the the annotation tree will only have one argument, of type String, that
   // is required.
-  private String valueArgumentFromCompatibleWithAnnotation(AnnotationTree tree) {
+  private static String valueArgumentFromCompatibleWithAnnotation(AnnotationTree tree) {
     ExpressionTree argumentValue = Iterables.getOnlyElement(tree.getArguments());
     if (argumentValue.getKind() != Kind.ASSIGNMENT) {
       // :-| Annotation symbol broken. Punt?
@@ -134,7 +134,7 @@ public class CompatibleWithMisuse extends BugChecker implements AnnotationTreeMa
     return ASTHelpers.constValue(((AssignmentTree) argumentValue).getExpression(), String.class);
   }
 
-  private String printTypeArgs(Set<String> validNames) {
+  private static String printTypeArgs(Set<String> validNames) {
     return Joiner.on(", ").join(validNames);
   }
 

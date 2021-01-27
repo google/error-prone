@@ -257,7 +257,7 @@ public class StringSplitter extends BugChecker implements MethodInvocationTreeMa
     return String.format("on(\"%s\")", escaped);
   }
 
-  private SuggestedFix.Builder replaceWithSplitter(
+  private static SuggestedFix.Builder replaceWithSplitter(
       SuggestedFix.Builder fix,
       MethodInvocationTree tree,
       ExpressionTree arg,
@@ -299,7 +299,7 @@ public class StringSplitter extends BugChecker implements MethodInvocationTreeMa
   }
 
   @Nullable
-  private TreePath findEnclosing(VisitorState state) {
+  private static TreePath findEnclosing(VisitorState state) {
     for (TreePath path = state.getPath(); path != null; path = path.getParentPath()) {
       switch (path.getLeaf().getKind()) {
         case METHOD:
