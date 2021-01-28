@@ -1289,9 +1289,6 @@ This overriding method is redundant, and can be removed.
 __[RedundantThrows](bugpattern/RedundantThrows)__<br>
 Thrown exception is a subtype of another
 
-__[StreamMapToPeek](bugpattern/StreamMapToPeek)__<br>
-If Stream.map can be replaced with Stream.peek, prefer that
-
 __[StringEquality](bugpattern/StringEquality)__<br>
 String comparison using reference equality instead of value equality
 
