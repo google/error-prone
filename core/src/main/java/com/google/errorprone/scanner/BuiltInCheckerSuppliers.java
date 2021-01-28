@@ -291,7 +291,6 @@ import com.google.errorprone.bugpatterns.SizeGreaterThanOrEqualsZero;
 import com.google.errorprone.bugpatterns.StaticAssignmentInConstructor;
 import com.google.errorprone.bugpatterns.StaticMockMember;
 import com.google.errorprone.bugpatterns.StaticQualifiedUsingExpression;
-import com.google.errorprone.bugpatterns.StreamMapToPeek;
 import com.google.errorprone.bugpatterns.StreamResourceLeak;
 import com.google.errorprone.bugpatterns.StreamToIterable;
 import com.google.errorprone.bugpatterns.StreamToString;
@@ -1007,7 +1006,6 @@ public class BuiltInCheckerSuppliers {
           ScopeOrQualifierAnnotationRetention.class,
           StaticOrDefaultInterfaceMethod.class,
           StaticQualifiedUsingExpression.class,
-          StreamMapToPeek.class,
           StringEquality.class,
           StronglyTypeTime.class,
           SuppressWarningsWithoutExplanation.class,
