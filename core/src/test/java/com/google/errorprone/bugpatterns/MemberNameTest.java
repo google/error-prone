@@ -53,6 +53,28 @@ public class MemberNameTest {
   }
 
   @Test
+  public void nameWithUnderscores_mixedCasing() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            "class Test {",
+            "  private int foo_barBaz;",
+            "  int get() {",
+            "    return foo_barBaz;",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "class Test {",
+            "  private int fooBarBaz;",
+            "  int get() {",
+            "    return fooBarBaz;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void localVariable_renamed() {
     refactoringHelper
         .addInputLines(

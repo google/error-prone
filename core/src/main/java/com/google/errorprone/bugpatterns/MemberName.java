@@ -29,8 +29,10 @@ import static com.google.errorprone.util.ASTHelpers.findSuperMethod;
 import static com.google.errorprone.util.ASTHelpers.findSuperMethods;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
+import static java.util.stream.Collectors.joining;
 
 import com.google.common.base.CaseFormat;
+import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -148,17 +150,24 @@ public final class MemberName extends BugChecker implements MethodTreeMatcher, V
   }
 
   private static String suggestedRename(String name) {
-    if (LOWER_UNDERSCORE_PATTERN.matcher(name).matches()) {
-      return CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, name);
-    }
     if (UPPER_UNDERSCORE_PATTERN.matcher(name).matches()) {
       return CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, name);
     }
-    return name.replace("_", "");
+    if (LOWER_UNDERSCORE_PATTERN.matcher(name).matches()) {
+      return CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, name);
+    }
+    // If we get this far, it's likely a mixture of lower camelcase and underscores.
+    return CaseFormat.UPPER_CAMEL.to(
+        CaseFormat.LOWER_CAMEL,
+        UNDERSCORE_SPLITTER
+            .splitToStream(name)
+            .map(c -> CaseFormat.LOWER_CAMEL.to(CaseFormat.UPPER_CAMEL, c))
+            .collect(joining("")));
   }
 
   private static final Pattern LOWER_UNDERSCORE_PATTERN = Pattern.compile("[a-z0-9_]+");
   private static final Pattern UPPER_UNDERSCORE_PATTERN = Pattern.compile("[A-Z0-9_]+");
+  private static final Splitter UNDERSCORE_SPLITTER = Splitter.on('_');
 
   private static boolean canBeRenamed(Symbol symbol) {
     return symbol.isPrivate() || symbol.getKind().equals(ElementKind.LOCAL_VARIABLE);
