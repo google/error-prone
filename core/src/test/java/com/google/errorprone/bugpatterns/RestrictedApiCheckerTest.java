@@ -315,4 +315,24 @@ public class RestrictedApiCheckerTest {
         .expectResult(Result.OK)
         .doTest();
   }
+
+  // https://github.com/google/error-prone/issues/2152
+  @Test
+  public void i2152() {
+    helper
+        .addSourceLines(
+            "T.java",
+            "class T extends S {",
+            "  void f() {",
+            "    this.new I(\"\") {};",
+            "  }",
+            "}",
+            "abstract class S {",
+            "  public class I {",
+            "    public I(String name) {}",
+            "  }",
+            "}")
+        .expectResult(Result.OK)
+        .doTest();
+  }
 }

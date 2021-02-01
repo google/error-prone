@@ -51,9 +51,7 @@ import com.sun.tools.javac.code.Symbol.TypeSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Types;
 import com.sun.tools.javac.model.AnnotationProxyMaker;
-import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
-import java.util.List;
 import java.util.Optional;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
@@ -139,23 +137,11 @@ public class RestrictedApiChecker extends BugChecker
    * this implicit parameter.
    */
   private static Type dropImplicitEnclosingInstanceParameter(
-      NewClassTree tree, VisitorState state, MethodSymbol anonymousClassConstructor) {
+      VisitorState state, MethodSymbol anonymousClassConstructor) {
     Type type = anonymousClassConstructor.asType();
-    if (!hasEnclosingExpression(tree)) {
-      // fast path
-      return type;
-    }
     com.sun.tools.javac.util.List<Type> params = type.getParameterTypes();
     params = firstNonNull(params.tail, com.sun.tools.javac.util.List.nil());
     return state.getTypes().createMethodTypeWithParameters(type, params);
-  }
-
-  private static boolean hasEnclosingExpression(NewClassTree tree) {
-    if (tree.getEnclosingExpression() != null) {
-      return true;
-    }
-    List<? extends ExpressionTree> arguments = tree.getArguments();
-    return !arguments.isEmpty() && ((JCTree) arguments.get(0)).hasTag(JCTree.Tag.NULLCHK);
   }
 
   private static MethodSymbol superclassConstructorSymbol(NewClassTree tree, VisitorState state) {
@@ -163,7 +149,7 @@ public class RestrictedApiChecker extends BugChecker
     Types types = state.getTypes();
     TypeSymbol superclass = types.supertype(constructor.enclClass().asType()).asElement();
     Type anonymousClassType = constructor.enclClass().asType();
-    Type matchingConstructorType = dropImplicitEnclosingInstanceParameter(tree, state, constructor);
+    Type matchingConstructorType = dropImplicitEnclosingInstanceParameter(state, constructor);
 
     return (MethodSymbol)
         getOnlyElement(
