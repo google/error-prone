@@ -604,7 +604,7 @@ public class ScannerSupplierTest {
     }
   }
 
-  private ScannerSupplierSubject assertScanner(ScannerSupplier scannerSupplier) {
+  private static ScannerSupplierSubject assertScanner(ScannerSupplier scannerSupplier) {
     return assertAbout(ScannerSupplierSubject::new).that(scannerSupplier);
   }
 }

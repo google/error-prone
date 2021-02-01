@@ -484,7 +484,7 @@ public class GuardedByBinderTest {
             "}"));
   }
 
-  private void bindFail(String className, String exprString, JavaFileObject fileObject) {
+  private static void bindFail(String className, String exprString, JavaFileObject fileObject) {
     try {
       bind(className, exprString, fileObject);
       fail("Expected binding to fail.");
@@ -492,7 +492,7 @@ public class GuardedByBinderTest {
     }
   }
 
-  private String bind(String className, String exprString, JavaFileObject fileObject) {
+  private static String bind(String className, String exprString, JavaFileObject fileObject) {
     JavaCompiler javaCompiler = JavacTool.create();
     JavacTaskImpl task =
         (JavacTaskImpl)

@@ -168,7 +168,7 @@ public final class UndefinedEqualsTest {
         .doTest();
   }
 
-  private Object truthFixParameters() {
+  private static Object truthFixParameters() {
     return new Object[] {
       new String[] {
         lines(
@@ -333,7 +333,7 @@ public final class UndefinedEqualsTest {
     };
   }
 
-  private String lines(String... lines) {
+  private static String lines(String... lines) {
     return Joiner.on('\n').join(lines);
   }
 

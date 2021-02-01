@@ -61,7 +61,7 @@ public class TemplateIntegrationTest extends CompilerBasedTest {
     return Iterables.getOnlyElement(RefasterRuleBuilderScanner.extractRules(classTree, context));
   }
 
-  private void expectTransforms(
+  private static void expectTransforms(
       CodeTransformer transformer, JavaFileObject input, JavaFileObject expectedOutput)
       throws IOException {
     JavaFileObject transformedInput =

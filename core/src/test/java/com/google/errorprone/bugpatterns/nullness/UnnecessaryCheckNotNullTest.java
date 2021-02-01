@@ -253,7 +253,7 @@ public class UnnecessaryCheckNotNullTest extends CompilerBasedAbstractTest {
       return super.visitExpressionStatement(node, state);
     }
 
-    private void assertMatch(ExpressionTree node, List<String> expected) {
+    private static void assertMatch(ExpressionTree node, List<String> expected) {
       List<IdentifierTree> uses = UnnecessaryCheckNotNull.getVariableUses(node);
       assertWithMessage("variables used in " + node)
           .that(Lists.transform(uses, Functions.toStringFunction()))
