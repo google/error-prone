@@ -95,16 +95,8 @@ public @interface RestrictedApi {
    */
   String allowedOnPath() default "";
 
-  /** @deprecated use {@link #allowlistAnnotations} instead */
-  @Deprecated
-  Class<? extends Annotation>[] whitelistAnnotations() default {};
-
   /** Allow calls to the restricted API in methods or classes with this annotation. */
   Class<? extends Annotation>[] allowlistAnnotations() default {};
-
-  /** @deprecated use {@link #allowlistWithWarningAnnotations} instead */
-  @Deprecated
-  Class<? extends Annotation>[] whitelistWithWarningAnnotations() default {};
 
   /**
    * Emit warnings, not errors, on calls to the restricted API for callers with this annotation.

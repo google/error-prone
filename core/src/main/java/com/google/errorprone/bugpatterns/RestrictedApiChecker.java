@@ -96,11 +96,7 @@ public class RestrictedApiChecker extends BugChecker
   }
 
   private static final ImmutableSet<String> ALLOWLIST_ANNOTATION_NAMES =
-      ImmutableSet.of(
-          "allowlistAnnotations",
-          "allowlistWithWarningAnnotations",
-          "whitelistAnnotations",
-          "whitelistWithWarningAnnotations");
+      ImmutableSet.of("allowlistAnnotations", "allowlistWithWarningAnnotations");
 
   private static Tree getAnnotationArgumentTree(AnnotationTree tree, String name) {
     return tree.getArguments().stream()
@@ -245,6 +241,7 @@ public class RestrictedApiChecker extends BugChecker
   private static Matcher<Tree> shouldAllow(Attribute.Compound api) {
     Optional<Attribute> allowlistAnnotations =
         MoreAnnotations.getValue(api, "allowlistAnnotations");
+    // TODO(b/178905039): remove handling of legacy names
     if (!allowlistAnnotations.isPresent()) {
       allowlistAnnotations = MoreAnnotations.getValue(api, "whitelistAnnotations");
     }
@@ -258,6 +255,7 @@ public class RestrictedApiChecker extends BugChecker
   private static Matcher<Tree> shouldAllowWithWarning(Attribute.Compound api) {
     Optional<Attribute> allowlistWithWarningAnnotations =
         MoreAnnotations.getValue(api, "allowlistWithWarningAnnotations");
+    // TODO(b/178905039): remove handling of legacy names
     if (!allowlistWithWarningAnnotations.isPresent()) {
       allowlistWithWarningAnnotations =
           MoreAnnotations.getValue(api, "whitelistWithWarningAnnotations");
