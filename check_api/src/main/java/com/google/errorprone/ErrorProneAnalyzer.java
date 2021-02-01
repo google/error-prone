@@ -174,7 +174,7 @@ public class ErrorProneAnalyzer implements TaskListener {
       log.error("proc.cant.access", e.sym, getDetailValue(e), getStackTraceAsString(e));
     } finally {
       log.useSource(originalSource);
-      HubSpotUtils.recordTimings(context);
+      HubSpotUtils.recordCompletion(taskEvent, context);
     }
   }
 

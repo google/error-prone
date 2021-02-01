@@ -44,6 +44,7 @@ import com.google.errorprone.descriptionlistener.CustomDescriptionListenerFactor
 import com.google.errorprone.descriptionlistener.DescriptionListenerResources;
 import com.google.errorprone.matchers.Suppressible;
 import com.google.errorprone.scanner.ScannerSupplier;
+import com.sun.source.util.TaskEvent;
 import com.sun.tools.javac.util.Context;
 
 public class HubSpotUtils {
@@ -69,6 +70,7 @@ public class HubSpotUtils {
   private static final Map<String, Set<String>> DATA = loadExistingData();
   private static final Map<String, Long> PREVIOUS_TIMING_DATA = loadExistingTimings();
   private static final Map<String, Long> TIMING_DATA = new ConcurrentHashMap<>();
+  private static final Set<String> FILES_TO_COMPILE = ConcurrentHashMap.newKeySet();
 
   public static ScannerSupplier createScannerSupplier(Iterable<BugChecker> extraBugCheckers) {
     ImmutableList.Builder<BugCheckerInfo> builder = ImmutableList.builder();
@@ -132,12 +134,14 @@ public class HubSpotUtils {
     flushErrors();
   }
 
-  public static void recordTimings(Context context) {
+  public static void recordCompletion(TaskEvent event, Context context) {
     ErrorProneTimings.instance(context)
         .timings()
         .forEach((k, v) -> TIMING_DATA.put(k, v.toMillis()));
 
     flushTimings();
+
+    
   }
 
   private static boolean isErrorHandlingEnabled(ErrorProneFlags flags) {
