@@ -17,6 +17,7 @@
 package com.google.errorprone.bugpatterns.formatstring;
 
 import static com.google.common.collect.Iterables.getOnlyElement;
+import static com.google.errorprone.util.ASTHelpers.isSameType;
 
 import com.google.auto.value.AutoValue;
 import com.google.common.base.Preconditions;
@@ -36,7 +37,6 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.Instant;
 import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.time.temporal.TemporalAccessor;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -176,19 +176,19 @@ public final class FormatStringValidation {
         case BOOLEAN:
           return false;
         case BYTE:
-          return Byte.valueOf((byte) 1);
+          return (byte) 1;
         case SHORT:
-          return Short.valueOf((short) 2);
+          return (short) 2;
         case INT:
-          return Integer.valueOf(3);
+          return 3;
         case LONG:
-          return Long.valueOf(4);
+          return 4L;
         case CHAR:
-          return Character.valueOf('c');
+          return 'c';
         case FLOAT:
-          return Float.valueOf(5.0f);
+          return 5.0f;
         case DOUBLE:
-          return Double.valueOf(6.0d);
+          return 6.0d;
         case VOID:
         case NONE:
         case NULL:
@@ -201,13 +201,19 @@ public final class FormatStringValidation {
       }
     }
     if (isSubtype(types, type, state.getSymtab().stringType)) {
-      return String.valueOf("string");
+      return "string";
     }
     if (isSubtype(types, type, state.getTypeFromString(BigDecimal.class.getName()))) {
       return BigDecimal.valueOf(42.0d);
     }
     if (isSubtype(types, type, state.getTypeFromString(BigInteger.class.getName()))) {
       return BigInteger.valueOf(43L);
+    }
+    if (isSameType(type, state.getTypeFromString(Number.class.getName()), state)) {
+      // String.format only supports well-known subtypes of Number, but custom subtypes of Number
+      // are rarer than using it as a union of Byte/Short/Integer/Long/BigInteger, so we allow
+      // Number to avoid false positives.
+      return 0;
     }
     if (isSubtype(types, type, state.getTypeFromString(Date.class.getName()))) {
       return new Date();
@@ -219,7 +225,7 @@ public final class FormatStringValidation {
       return Instant.now();
     }
     if (isSubtype(types, type, state.getTypeFromString(TemporalAccessor.class.getName()))) {
-      return ZonedDateTime.ofInstant(Instant.now(), ZoneId.systemDefault());
+      return Instant.now().atZone(ZoneId.systemDefault());
     }
     Type lazyArg = state.getTypeFromString("com.google.common.flogger.LazyArg");
     if (lazyArg != null) {

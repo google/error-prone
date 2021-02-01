@@ -334,4 +334,17 @@ public class FormatStringTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void number() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  void f(Number n) {",
+            "    System.err.printf(\"%x\", n);",
+            "  }",
+            "}")
+        .doTest();
+  }
 }
