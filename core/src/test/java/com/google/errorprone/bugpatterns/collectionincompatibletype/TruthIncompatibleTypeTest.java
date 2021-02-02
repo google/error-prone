@@ -454,4 +454,20 @@ public class TruthIncompatibleTypeTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void protobuf() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import static com.google.common.truth.Truth.assertThat;",
+            "import com.google.protobuf.Message;",
+            "public class Test {",
+            "  public void f(Message m) {",
+            "    // BUG: Diagnostic contains:",
+            "    assertThat(m).isEqualTo(m.newBuilderForType());",
+            "  }",
+            "}")
+        .doTest();
+  }
 }

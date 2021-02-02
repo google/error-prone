@@ -18,6 +18,7 @@ package com.google.errorprone.bugpatterns;
 
 import com.google.auto.value.AutoValue;
 import com.google.common.base.Predicate;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Streams;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.util.ASTHelpers;
@@ -106,6 +107,27 @@ public final class TypeCompatibilityUtils {
     return TypeCompatibilityReport.incompatible(receiverType, argumentType);
   }
 
+  private static final ImmutableSet<String> LEAST_UPPER_BOUNDS_TO_IGNORE =
+      ImmutableSet.of(
+          "com.google.protobuf.MessageOrBuilder",
+          "com.google.protobuf.MessageLiteOrBuilder",
+          // Collection, Set, and List is unfortunate since List<String> and Set<String> have a lub
+          // class of Collection<String>, but Set and List are incompatible with each other due to
+          // their own equality declarations. Since they're all interfaces, however, they're
+          // technically cast-compatible to each other.
+          //
+          // We want to disallow equality between these collection sub-interfaces, but *do* want to
+          // allow equality between Collection and List. So, here's my attempt to express that
+          // cleanly.
+          //
+          // There are likely other type hierarchies where this situation occurs, but this one is
+          // the most common.
+          //
+          // Here, the LHS and RHS are disjoint collection types (List, Set, Multiset, etc.)
+          // (if they were both of one subtype, the lub wouldn't be Collection directly)
+          // So consider them incompatible with each other.
+          "java.util.Collection");
+
   private static TypeCompatibilityReport leastUpperBoundGenericMismatch(
       Type receiverType,
       Type argumentType,
@@ -133,24 +155,12 @@ public final class TypeCompatibilityUtils {
       return compatibilityReport;
     }
 
-    // Collection, Set, and List is unfortunate since List<String> and Set<String> have a lub class
-    // of Collection<String>, but Set and List are incompatible with eachother due to their own
-    // equality declarations. Since they're all interfaces, however, they're technically
-    // cast-compatible to eachother.
-    //
-    // We want to disallow equality between these collection sub-interfaces, but *do* want to
-    // allow equality between Collection and List. So, here's my attempt to express that cleanly.
-    //
-    // There are likely other type hierarchies where this situation occurs, but this one is the
-    // most common.
-    Type collectionType = state.getTypeFromString("java.util.Collection");
-    if (ASTHelpers.isSameType(lub, collectionType, state)
-        && !ASTHelpers.isSameType(receiverType, collectionType, state)
-        && !ASTHelpers.isSameType(argumentType, collectionType, state)) {
-      // Here, the LHS and RHS are disjoint collection types (List, Set, Multiset, etc.)
-      // (if they were both of one subtype, the lub wouldn't be Collection directly)
-      // So consider them incompatible with eachother.
-      return TypeCompatibilityReport.incompatible(receiverType, argumentType);
+    for (String lubToIgnore : LEAST_UPPER_BOUNDS_TO_IGNORE) {
+      if (ASTHelpers.isSameType(lub, state.getTypeFromString(lubToIgnore), state)
+          && !ASTHelpers.isSameType(receiverType, lub, state)
+          && !ASTHelpers.isSameType(argumentType, lub, state)) {
+        return TypeCompatibilityReport.incompatible(receiverType, argumentType);
+      }
     }
 
     return compatibilityReport;
