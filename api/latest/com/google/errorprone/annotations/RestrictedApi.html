@@ -202,6 +202,24 @@ public @interface <span class="type-name-label">RestrictedApi</span></pre>
 <div class="block">Emit warnings, not errors, on calls to the restricted API for callers with this annotation.</div>
 </td>
 </tr>
+<tr class="row-color">
+<td class="col-first"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;? extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/Annotation.html" title="class or interface in java.lang.annotation" class="external-link">Annotation</a>&gt;[]</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#whitelistAnnotations()">whitelistAnnotations</a></span></code></th>
+<td class="col-last">
+<div class="block"><span class="deprecated-label">Deprecated.</span>
+<div class="deprecation-comment">use <a href="#allowlistAnnotations()"><code>allowlistAnnotations()</code></a> instead</div>
+</div>
+</td>
+</tr>
+<tr class="alt-color">
+<td class="col-first"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;? extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/Annotation.html" title="class or interface in java.lang.annotation" class="external-link">Annotation</a>&gt;[]</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#whitelistWithWarningAnnotations()">whitelistWithWarningAnnotations</a></span></code></th>
+<td class="col-last">
+<div class="block"><span class="deprecated-label">Deprecated.</span>
+<div class="deprecation-comment">use <a href="#allowlistWithWarningAnnotations()"><code>allowlistWithWarningAnnotations()</code></a> instead</div>
+</div>
+</td>
+</tr>
 </tbody>
 </table>
 </div>
@@ -251,10 +269,38 @@ public @interface <span class="type-name-label">RestrictedApi</span></pre>
 </section>
 </li>
 <li>
+<section class="detail" id="whitelistAnnotations()">
+<h3>whitelistAnnotations</h3>
+<div class="member-signature"><span class="annotations"><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Deprecated.html" title="class or interface in java.lang" class="external-link">@Deprecated</a>
+</span><span class="return-type"><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;? extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/Annotation.html" title="class or interface in java.lang.annotation" class="external-link">Annotation</a>&gt;[]</span>&nbsp;<span class="member-name">whitelistAnnotations</span></div>
+<div class="deprecation-block"><span class="deprecated-label">Deprecated.</span>
+<div class="deprecation-comment">use <a href="#allowlistAnnotations()"><code>allowlistAnnotations()</code></a> instead</div>
+</div>
+<dl class="notes">
+<dt>Default:</dt>
+<dd>{}</dd>
+</dl>
+</section>
+</li>
+<li>
 <section class="detail" id="allowlistAnnotations()">
 <h3>allowlistAnnotations</h3>
 <div class="member-signature"><span class="return-type"><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;? extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/Annotation.html" title="class or interface in java.lang.annotation" class="external-link">Annotation</a>&gt;[]</span>&nbsp;<span class="member-name">allowlistAnnotations</span></div>
 <div class="block">Allow calls to the restricted API in methods or classes with this annotation.</div>
+<dl class="notes">
+<dt>Default:</dt>
+<dd>{}</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="whitelistWithWarningAnnotations()">
+<h3>whitelistWithWarningAnnotations</h3>
+<div class="member-signature"><span class="annotations"><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Deprecated.html" title="class or interface in java.lang" class="external-link">@Deprecated</a>
+</span><span class="return-type"><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;? extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/Annotation.html" title="class or interface in java.lang.annotation" class="external-link">Annotation</a>&gt;[]</span>&nbsp;<span class="member-name">whitelistWithWarningAnnotations</span></div>
+<div class="deprecation-block"><span class="deprecated-label">Deprecated.</span>
+<div class="deprecation-comment">use <a href="#allowlistWithWarningAnnotations()"><code>allowlistWithWarningAnnotations()</code></a> instead</div>
+</div>
 <dl class="notes">
 <dt>Default:</dt>
 <dd>{}</dd>
