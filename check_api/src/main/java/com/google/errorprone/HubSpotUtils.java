@@ -28,11 +28,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Supplier;
 
-import javax.swing.RowFilter.Entry;
 import javax.tools.JavaFileObject;
 
 import com.fasterxml.jackson.databind.JavaType;
@@ -41,7 +40,6 @@ import com.google.common.base.Strings;
 import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import com.google.errorprone.annotations.Immutable;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.descriptionlistener.CustomDescriptionListenerFactory;
 import com.google.errorprone.descriptionlistener.DescriptionListenerResources;
@@ -79,6 +77,7 @@ public class HubSpotUtils {
   private static final Map<String, Long> TIMING_DATA = new ConcurrentHashMap<>();
   private static final Set<String> FILES_TO_COMPILE = ConcurrentHashMap.newKeySet();
   private static final Set<Runnable> COMPLETION_RUNNABLES = ConcurrentHashMap.newKeySet();
+  private static final AtomicBoolean INITIALIZED = new AtomicBoolean(false);
 
   public static void init(JavacTask task) {
     Context context = ((BasicJavacTask) task).getContext();
@@ -87,6 +86,8 @@ public class HubSpotUtils {
         .stream()
         .map(JavaFileObject::getName)
         .forEach(FILES_TO_COMPILE::add);
+
+    INITIALIZED.set(true);
   }
 
   public static void addCompletionRunnable(Runnable runnable) {
@@ -162,18 +163,20 @@ public class HubSpotUtils {
 
     flushTimings();
 
-    boolean removed = FILES_TO_COMPILE.remove(event.getSourceFile().getName());
-    if (!removed && !isExcluded.get()) {
-      RuntimeException exception = new RuntimeException("Recording completion failed!");
-      Log.instance(context).error(
-          "error.prone.crash",
-          Throwables.getStackTraceAsString(exception),
-          "recording completion failed!");
-      throw exception;
-    }
+    if (INITIALIZED.get()) {
+      boolean removed = FILES_TO_COMPILE.remove(event.getSourceFile().getName());
+      if (!removed && !isExcluded.get()) {
+        RuntimeException exception = new RuntimeException("Recording completion failed!");
+        Log.instance(context).error(
+            "error.prone.crash",
+            Throwables.getStackTraceAsString(exception),
+            "recording completion failed!");
+        throw exception;
+      }
 
-    if (FILES_TO_COMPILE.isEmpty()) {
-      notifyCompletionListeners();
+      if (FILES_TO_COMPILE.isEmpty()) {
+        notifyCompletionListeners();
+      }
     }
   }
 
