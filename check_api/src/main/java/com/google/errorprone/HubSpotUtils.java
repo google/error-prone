@@ -32,6 +32,7 @@ import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
 
 import javax.swing.RowFilter.Entry;
+import javax.tools.JavaFileObject;
 
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -44,7 +45,10 @@ import com.google.errorprone.descriptionlistener.CustomDescriptionListenerFactor
 import com.google.errorprone.descriptionlistener.DescriptionListenerResources;
 import com.google.errorprone.matchers.Suppressible;
 import com.google.errorprone.scanner.ScannerSupplier;
+import com.sun.source.util.JavacTask;
 import com.sun.source.util.TaskEvent;
+import com.sun.tools.javac.api.BasicJavacTask;
+import com.sun.tools.javac.main.Arguments;
 import com.sun.tools.javac.util.Context;
 
 public class HubSpotUtils {
@@ -71,6 +75,14 @@ public class HubSpotUtils {
   private static final Map<String, Long> PREVIOUS_TIMING_DATA = loadExistingTimings();
   private static final Map<String, Long> TIMING_DATA = new ConcurrentHashMap<>();
   private static final Set<String> FILES_TO_COMPILE = ConcurrentHashMap.newKeySet();
+
+  public static void init(JavacTask task) {
+    Arguments.instance(((BasicJavacTask) task).getContext())
+        .getFileObjects()
+        .stream()
+        .map(JavaFileObject::getName)
+        .forEach(FILES_TO_COMPILE::add);
+  }
 
   public static ScannerSupplier createScannerSupplier(Iterable<BugChecker> extraBugCheckers) {
     ImmutableList.Builder<BugCheckerInfo> builder = ImmutableList.builder();
@@ -141,7 +153,7 @@ public class HubSpotUtils {
 
     flushTimings();
 
-    
+    FILES_TO_COMPILE.remove(event.getSourceFile().getName());
   }
 
   private static boolean isErrorHandlingEnabled(ErrorProneFlags flags) {
