@@ -30,6 +30,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Supplier;
 
 import javax.swing.RowFilter.Entry;
 import javax.tools.JavaFileObject;
@@ -37,6 +38,7 @@ import javax.tools.JavaFileObject;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Strings;
+import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.errorprone.annotations.Immutable;
@@ -50,6 +52,7 @@ import com.sun.source.util.TaskEvent;
 import com.sun.tools.javac.api.BasicJavacTask;
 import com.sun.tools.javac.main.Arguments;
 import com.sun.tools.javac.util.Context;
+import com.sun.tools.javac.util.Log;
 
 public class HubSpotUtils {
   private static final String OVERWATCH_DIR_ENV_VAR = "MAVEN_PROJECTBASEDIR";
@@ -75,13 +78,19 @@ public class HubSpotUtils {
   private static final Map<String, Long> PREVIOUS_TIMING_DATA = loadExistingTimings();
   private static final Map<String, Long> TIMING_DATA = new ConcurrentHashMap<>();
   private static final Set<String> FILES_TO_COMPILE = ConcurrentHashMap.newKeySet();
+  private static final Set<Runnable> COMPLETION_RUNNABLES = ConcurrentHashMap.newKeySet();
 
   public static void init(JavacTask task) {
-    Arguments.instance(((BasicJavacTask) task).getContext())
+    Context context = ((BasicJavacTask) task).getContext();
+    Arguments.instance(context)
         .getFileObjects()
         .stream()
         .map(JavaFileObject::getName)
         .forEach(FILES_TO_COMPILE::add);
+  }
+
+  public static void addCompletionRunnable(Runnable runnable) {
+    COMPLETION_RUNNABLES.add(runnable);
   }
 
   public static ScannerSupplier createScannerSupplier(Iterable<BugChecker> extraBugCheckers) {
@@ -146,14 +155,34 @@ public class HubSpotUtils {
     flushErrors();
   }
 
-  public static void recordCompletion(TaskEvent event, Context context) {
+  public static void recordCompletion(TaskEvent event, Context context, Supplier<Boolean> isExcluded) {
     ErrorProneTimings.instance(context)
         .timings()
         .forEach((k, v) -> TIMING_DATA.put(k, v.toMillis()));
 
     flushTimings();
 
-    FILES_TO_COMPILE.remove(event.getSourceFile().getName());
+    boolean removed = FILES_TO_COMPILE.remove(event.getSourceFile().getName());
+    if (!removed && !isExcluded.get()) {
+      RuntimeException exception = new RuntimeException("Recording completion failed!");
+      Log.instance(context).error(
+          "error.prone.crash",
+          Throwables.getStackTraceAsString(exception),
+          "recording completion failed!");
+      throw exception;
+    }
+
+    if (FILES_TO_COMPILE.isEmpty()) {
+      notifyCompletionListeners();
+    }
+  }
+
+  private static synchronized void notifyCompletionListeners() {
+    if (!FILES_TO_COMPILE.isEmpty()) {
+      return;
+    }
+
+    COMPLETION_RUNNABLES.forEach(Runnable::run);
   }
 
   private static boolean isErrorHandlingEnabled(ErrorProneFlags flags) {
