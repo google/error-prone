@@ -87,7 +87,8 @@ public class UseCorrectAssertInTests extends BugChecker implements MethodTreeMat
     for (AssertTree foundAssert : assertions) {
       replaceAssert(fix, foundAssert, state);
     }
-    return describeMatch(methodTree, fix.build());
+    // Emit finding on the first assertion rather than on the method (b/175575632).
+    return describeMatch(assertions.get(0), fix.build());
   }
 
   private static void replaceAssert(

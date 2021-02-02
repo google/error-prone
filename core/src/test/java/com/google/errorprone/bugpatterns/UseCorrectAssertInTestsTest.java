@@ -17,6 +17,7 @@
 package com.google.errorprone.bugpatterns;
 
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
+import com.google.errorprone.CompilationTestHelper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -34,12 +35,14 @@ public final class UseCorrectAssertInTestsTest {
 
   private static final String TEST_ONLY = "-XepCompilingTestOnlyCode";
 
-  private final BugCheckerRefactoringTestHelper helper =
+  private final BugCheckerRefactoringTestHelper refactoringHelper =
       BugCheckerRefactoringTestHelper.newInstance(new UseCorrectAssertInTests(), getClass());
+  private final CompilationTestHelper compilationHelper =
+      CompilationTestHelper.newInstance(UseCorrectAssertInTests.class, getClass());
 
   @Test
   public void correctAssertInTest() {
-    helper
+    refactoringHelper
         .addInputLines(
             INPUT, inputWithExpressionAndImport("assertThat(true).isTrue();", ASSERT_THAT_IMPORT))
         .expectUnchanged()
@@ -48,12 +51,34 @@ public final class UseCorrectAssertInTestsTest {
 
   @Test
   public void noAssertInTestsFound() {
-    helper.addInputLines(INPUT, inputWithExpression("int a = 1;")).expectUnchanged().doTest();
+    refactoringHelper
+        .addInputLines(INPUT, inputWithExpression("int a = 1;"))
+        .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
+  public void diagnosticIssuedAtFirstAssert() {
+    compilationHelper
+        .addSourceLines(
+            INPUT,
+            "import org.junit.runner.RunWith;",
+            "import org.junit.runners.JUnit4;",
+            "@RunWith(JUnit4.class)",
+            "public class FooTest {",
+            "  void foo() {",
+            "    int x = 1;",
+            "    // BUG: Diagnostic contains: UseCorrectAssertInTests",
+            "    assert true;",
+            "    assert true;",
+            "  }",
+            "}")
+        .doTest();
   }
 
   @Test
   public void assertInNonTestMethod() {
-    helper
+    refactoringHelper
         .addInputLines(
             INPUT,
             "import org.junit.runner.RunWith;",
@@ -80,7 +105,7 @@ public final class UseCorrectAssertInTestsTest {
 
   @Test
   public void assertInTestOnlyCode() {
-    helper
+    refactoringHelper
         .addInputLines(
             INPUT,
             "public class FooTest {", //
@@ -102,7 +127,7 @@ public final class UseCorrectAssertInTestsTest {
 
   @Test
   public void assertInNonTestCode() {
-    helper
+    refactoringHelper
         .addInputLines(
             INPUT,
             "public class FooTest {", //
@@ -116,7 +141,7 @@ public final class UseCorrectAssertInTestsTest {
 
   @Test
   public void wrongAssertInTestWithParentheses() {
-    helper
+    refactoringHelper
         .addInputLines(INPUT, inputWithExpression("assert (true);"))
         .addOutputLines(
             OUTPUT, inputWithExpressionAndImport("assertThat(true).isTrue();", ASSERT_THAT_IMPORT))
@@ -125,7 +150,7 @@ public final class UseCorrectAssertInTestsTest {
 
   @Test
   public void wrongAssertInTestWithoutParentheses() {
-    helper
+    refactoringHelper
         .addInputLines(INPUT, inputWithExpression("assert true;"))
         .addOutputLines(
             OUTPUT, inputWithExpressionAndImport("assertThat(true).isTrue();", ASSERT_THAT_IMPORT))
@@ -134,7 +159,7 @@ public final class UseCorrectAssertInTestsTest {
 
   @Test
   public void wrongAssertInTestWithDetailString() {
-    helper
+    refactoringHelper
         .addInputLines(INPUT, inputWithExpression("assert (true) : \"description\";"))
         .addOutputLines(
             OUTPUT,
@@ -146,7 +171,7 @@ public final class UseCorrectAssertInTestsTest {
 
   @Test
   public void wrongAssertInTestWithDetailStringVariable() {
-    helper
+    refactoringHelper
         .addInputLines(
             INPUT, inputWithExpressions("String desc = \"description\";", "assert (true) : desc;"))
         .addOutputLines(
@@ -160,7 +185,7 @@ public final class UseCorrectAssertInTestsTest {
 
   @Test
   public void wrongAssertInTestWithDetailNonStringVariable() {
-    helper
+    refactoringHelper
         .addInputLines(INPUT, inputWithExpressions("Integer desc = 1;", "assert (true) : desc;"))
         .addOutputLines(
             OUTPUT,
@@ -173,7 +198,7 @@ public final class UseCorrectAssertInTestsTest {
 
   @Test
   public void wrongAssertFalseCase() {
-    helper
+    refactoringHelper
         .addInputLines(
             INPUT,
             inputWithExpressions(
@@ -188,7 +213,7 @@ public final class UseCorrectAssertInTestsTest {
 
   @Test
   public void wrongAssertEqualsCase() {
-    helper
+    refactoringHelper
         .addInputLines(
             INPUT,
             inputWithExpressions(
@@ -203,7 +228,7 @@ public final class UseCorrectAssertInTestsTest {
 
   @Test
   public void wrongAssertEqualsNullCase() {
-    helper
+    refactoringHelper
         .addInputLines(
             INPUT,
             inputWithExpressions(
@@ -220,7 +245,7 @@ public final class UseCorrectAssertInTestsTest {
 
   @Test
   public void wrongAssertEqualsNullCaseLeftSide() {
-    helper
+    refactoringHelper
         .addInputLines(
             INPUT,
             inputWithExpressions(
@@ -237,7 +262,7 @@ public final class UseCorrectAssertInTestsTest {
 
   @Test
   public void wrongAssertEqualsNullCaseWithDetail() {
-    helper
+    refactoringHelper
         .addInputLines(
             INPUT,
             inputWithExpressions(
@@ -254,7 +279,7 @@ public final class UseCorrectAssertInTestsTest {
 
   @Test
   public void wrongAssertNotEqualsNullCase() {
-    helper
+    refactoringHelper
         .addInputLines(
             INPUT,
             inputWithExpressions(
@@ -271,7 +296,7 @@ public final class UseCorrectAssertInTestsTest {
 
   @Test
   public void wrongAssertReferenceSameCase() {
-    helper
+    refactoringHelper
         .addInputLines(
             INPUT,
             inputWithExpressions(
@@ -288,7 +313,7 @@ public final class UseCorrectAssertInTestsTest {
 
   @Test
   public void wrongAssertReferenceWithParensCase() {
-    helper
+    refactoringHelper
         .addInputLines(
             INPUT,
             inputWithExpressions(
@@ -305,7 +330,7 @@ public final class UseCorrectAssertInTestsTest {
 
   @Test
   public void wrongAssertReferenceNotSameCase() {
-    helper
+    refactoringHelper
         .addInputLines(
             INPUT,
             inputWithExpressions(
@@ -322,7 +347,7 @@ public final class UseCorrectAssertInTestsTest {
 
   @Test
   public void wrongAssertReferenceSameCaseWithDetailCase() {
-    helper
+    refactoringHelper
         .addInputLines(
             INPUT,
             inputWithExpressions(
