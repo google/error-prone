@@ -25,6 +25,7 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.google.common.collect.ImmutableMap;
+import com.google.errorprone.VisitorState;
 import com.sun.tools.javac.util.Context;
 
 public class HubSpotLifecycleManager {
@@ -34,6 +35,10 @@ public class HubSpotLifecycleManager {
   private final Set<Runnable> shutdownListener;
   private final AtomicBoolean started;
   private final AtomicBoolean stopped;
+
+  public static HubSpotLifecycleManager instance(VisitorState state) {
+    return instance(state.context);
+  }
 
   public static HubSpotLifecycleManager instance(Context context) {
     HubSpotLifecycleManager instance = context.get(timingsKey);
