@@ -65,8 +65,6 @@ public class HubSpotUtils {
   private static final Map<String, Set<String>> DATA = loadExistingData();
   private static final Map<String, Long> PREVIOUS_TIMING_DATA = loadExistingTimings();
   private static final Map<String, Long> TIMING_DATA = new ConcurrentHashMap<>();
-  private static final AtomicBoolean HAS_LIFECYCLE = new AtomicBoolean(false);
-  private static final AtomicBoolean IS_COMPLETE = new AtomicBoolean(false);
 
   public static ScannerSupplier createScannerSupplier(Iterable<BugChecker> extraBugCheckers) {
     ImmutableList.Builder<BugCheckerInfo> builder = ImmutableList.builder();
@@ -119,34 +117,25 @@ public class HubSpotUtils {
   public static void recordError(Suppressible s) {
     DATA.computeIfAbsent(EXCEPTIONS, ignored -> ConcurrentHashMap.newKeySet())
         .add(s.canonicalName());
-
-    flushErrors();
   }
 
   public static void recordMissingCheck(String checkName) {
     DATA.computeIfAbsent(MISSING, ignored -> ConcurrentHashMap.newKeySet())
         .add(checkName);
-
-    flushErrors();
   }
 
   public static void recordTimings(Context context) {
     ErrorProneTimings.instance(context)
         .timings()
         .forEach((k, v) -> TIMING_DATA.put(k, v.toMillis()));
-
-    flushTimings();
   }
 
   public static void init(JavacTask task) {
     Context context = ((BasicJavacTask) task).getContext();
-    HubSpotLifecycleManager.instance(context).addShutdownListener(HubSpotUtils::onComplete);
-  }
-
-  private static void onComplete() {
-    IS_COMPLETE.set(true);
-    flushErrors();
-    flushTimings();
+    HubSpotLifecycleManager.instance(context).addShutdownListener(() -> {
+      FileManager.getErrorOutputPath().ifPresent(p -> FileManager.write(DATA, p));
+      FileManager.getTimingsOutputPath().ifPresent(p -> FileManager.write(computeFinalTimings(), p));
+    });
   }
 
   private static boolean isErrorHandlingEnabled(ErrorProneFlags flags) {
@@ -162,15 +151,11 @@ public class HubSpotUtils {
   private static void recordCheckLoadError(Throwable t) {
     DATA.computeIfAbsent(INIT_ERROR, ignored -> ConcurrentHashMap.newKeySet())
         .add(toInitErrorMessage(t));
-
-    flushErrors();
   }
 
   private static void recordListenerInitError(Throwable t) {
     DATA.computeIfAbsent(LISTENER_INIT_ERRORS, ignored -> ConcurrentHashMap.newKeySet())
         .add(toInitErrorMessage(t));
-
-    flushErrors();
   }
 
   private static String toInitErrorMessage(Throwable e) {
@@ -178,18 +163,6 @@ public class HubSpotUtils {
       return "Unknown error";
     } else {
       return e.getMessage();
-    }
-  }
-
-  private static void flushErrors() {
-    if (shouldWriteToDisk()) {
-      FileManager.getErrorOutputPath().ifPresent(p -> FileManager.write(DATA, p));
-    }
-  }
-
-  private static void flushTimings() {
-    if (shouldWriteToDisk()) {
-      FileManager.getTimingsOutputPath().ifPresent(p -> FileManager.write(computeFinalTimings(), p));
     }
   }
 
@@ -257,14 +230,6 @@ public class HubSpotUtils {
       return JsonUtils.getMapper().readValue(path.toFile(), type);
     } catch (IOException e) {
       throw new RuntimeException("Failed to read existing file to load data", e);
-    }
-  }
-
-  private static boolean shouldWriteToDisk() {
-    if (HAS_LIFECYCLE.get()) {
-      return IS_COMPLETE.get();
-    } else {
-      return true;
     }
   }
 
