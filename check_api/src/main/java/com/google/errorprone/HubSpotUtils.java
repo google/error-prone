@@ -161,23 +161,18 @@ public class HubSpotUtils {
         .timings()
         .forEach((k, v) -> TIMING_DATA.put(k, v.toMillis()));
 
-    flushTimings();
-
     if (INITIALIZED.get()) {
       boolean removed = FILES_TO_COMPILE.remove(event.getSourceFile().getName());
       if (!removed && !isExcluded.get()) {
-        RuntimeException exception = new RuntimeException("Recording completion failed!");
-        Log.instance(context).error(
-            "hubspot.error.prone.utils.crash",
-            Throwables.getStackTraceAsString(exception),
-            "recording completion failed!");
-        throw exception;
+        throw new RuntimeException("Saw unexpected file to remove: " + event.getSourceFile().getName());
       }
 
       if (FILES_TO_COMPILE.isEmpty()) {
         notifyCompletionListeners();
       }
     }
+
+    flushTimings();
   }
 
   private static synchronized void notifyCompletionListeners() {
@@ -221,11 +216,15 @@ public class HubSpotUtils {
   }
 
   private static void flushErrors() {
-    getErrorOutput().ifPresent(p -> flush(DATA, p));
+    if (shouldWriteToDisk()) {
+      getErrorOutput().ifPresent(p -> flush(DATA, p));
+    }
   }
 
   private static void flushTimings() {
-    getTimingsOutput().ifPresent(p -> flush(computeFinalTimings(), p));
+    if (shouldWriteToDisk()) {
+      getTimingsOutput().ifPresent(p -> flush(computeFinalTimings(), p));
+    }
   }
 
   private static Map<String, Long> computeFinalTimings() {
@@ -334,6 +333,14 @@ public class HubSpotUtils {
     }
 
     return Optional.of(res);
+  }
+
+  private static boolean shouldWriteToDisk() {
+    if (INITIALIZED.get()) {
+      return FILES_TO_COMPILE.isEmpty();
+    } else {
+      return true;
+    }
   }
 
   private static Comparator<Map.Entry<String, Long>> buildTimingComparator() {
