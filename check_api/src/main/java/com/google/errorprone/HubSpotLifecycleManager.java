@@ -30,6 +30,7 @@ import com.sun.tools.javac.api.BasicJavacTask;
 import com.sun.tools.javac.file.PathFileObject;
 import com.sun.tools.javac.main.Arguments;
 import com.sun.tools.javac.util.Context;
+import com.sun.tools.javac.util.Log;
 
 public class HubSpotLifecycleManager {
   private static final Context.Key<HubSpotLifecycleManager> timingsKey = new Context.Key<>();
@@ -63,7 +64,7 @@ public class HubSpotLifecycleManager {
   public void markComplete(TaskEvent event) {
     boolean removed = filesToAnalyze.remove(getFileKey(event.getSourceFile()));
     if (!removed) {
-      throw new RuntimeException("Saw unexpected file to remove: " + event.getSourceFile().getName());
+      Log.instance(context).printRawLines("Did not have file to remove: " + getFileKey(event.getSourceFile()));
     }
 
     if (filesToAnalyze.isEmpty()) {
