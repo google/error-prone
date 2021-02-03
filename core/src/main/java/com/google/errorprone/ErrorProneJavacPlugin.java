@@ -31,7 +31,6 @@ public class ErrorProneJavacPlugin implements Plugin {
 
   @Override
   public void init(JavacTask javacTask, String... args) {
-    HubSpotUtils.init(javacTask);
     BaseErrorProneJavaCompiler.addTaskListener(
         javacTask, BuiltInCheckerSuppliers.defaultChecks(), ErrorProneOptions.processArgs(args));
   }

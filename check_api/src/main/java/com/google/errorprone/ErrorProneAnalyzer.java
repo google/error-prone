@@ -128,6 +128,7 @@ public class ErrorProneAnalyzer implements TaskListener {
     }
     // Assert that the event is unique and scan the current tree.
     verify(seen.add(path.getLeaf()), "Duplicate FLOW event for: %s", taskEvent.getTypeElement());
+    HubSpotUtils.init(context);
     Log log = Log.instance(context);
     JCCompilationUnit compilation = (JCCompilationUnit) path.getCompilationUnit();
     DescriptionListener descriptionListener =
@@ -174,7 +175,10 @@ public class ErrorProneAnalyzer implements TaskListener {
       log.error("proc.cant.access", e.sym, getDetailValue(e), getStackTraceAsString(e));
     } finally {
       log.useSource(originalSource);
-      HubSpotUtils.recordCompletion(taskEvent, context, () -> shouldExcludeSourceFile(compilation));
+      HubSpotUtils.recordTimings(context);
+      if (!shouldExcludeSourceFile(compilation)) {
+        HubSpotLifecycleManager.instance(context).markComplete(taskEvent);
+      }
     }
   }
 

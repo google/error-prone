@@ -30,14 +30,10 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.function.Supplier;
-
-import javax.tools.JavaFileObject;
 
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Strings;
-import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.errorprone.bugpatterns.BugChecker;
@@ -45,12 +41,7 @@ import com.google.errorprone.descriptionlistener.CustomDescriptionListenerFactor
 import com.google.errorprone.descriptionlistener.DescriptionListenerResources;
 import com.google.errorprone.matchers.Suppressible;
 import com.google.errorprone.scanner.ScannerSupplier;
-import com.sun.source.util.JavacTask;
-import com.sun.source.util.TaskEvent;
-import com.sun.tools.javac.api.BasicJavacTask;
-import com.sun.tools.javac.main.Arguments;
 import com.sun.tools.javac.util.Context;
-import com.sun.tools.javac.util.Log;
 
 public class HubSpotUtils {
   private static final String OVERWATCH_DIR_ENV_VAR = "MAVEN_PROJECTBASEDIR";
@@ -75,24 +66,8 @@ public class HubSpotUtils {
   private static final Map<String, Set<String>> DATA = loadExistingData();
   private static final Map<String, Long> PREVIOUS_TIMING_DATA = loadExistingTimings();
   private static final Map<String, Long> TIMING_DATA = new ConcurrentHashMap<>();
-  private static final Set<String> FILES_TO_COMPILE = ConcurrentHashMap.newKeySet();
-  private static final Set<Runnable> COMPLETION_RUNNABLES = ConcurrentHashMap.newKeySet();
-  private static final AtomicBoolean INITIALIZED = new AtomicBoolean(false);
-
-  public static void init(JavacTask task) {
-    Context context = ((BasicJavacTask) task).getContext();
-    Arguments.instance(context)
-        .getFileObjects()
-        .stream()
-        .map(JavaFileObject::getName)
-        .forEach(FILES_TO_COMPILE::add);
-
-    INITIALIZED.set(true);
-  }
-
-  public static void addCompletionRunnable(Runnable runnable) {
-    COMPLETION_RUNNABLES.add(runnable);
-  }
+  private static final AtomicBoolean HAS_LIFECYCLE = new AtomicBoolean(false);
+  private static final AtomicBoolean IS_COMPLETE = new AtomicBoolean(false);
 
   public static ScannerSupplier createScannerSupplier(Iterable<BugChecker> extraBugCheckers) {
     ImmutableList.Builder<BugCheckerInfo> builder = ImmutableList.builder();
@@ -156,31 +131,23 @@ public class HubSpotUtils {
     flushErrors();
   }
 
-  public static void recordCompletion(TaskEvent event, Context context, Supplier<Boolean> isExcluded) {
+  public static void recordTimings(Context context) {
     ErrorProneTimings.instance(context)
         .timings()
         .forEach((k, v) -> TIMING_DATA.put(k, v.toMillis()));
 
-    if (INITIALIZED.get()) {
-      boolean removed = FILES_TO_COMPILE.remove(event.getSourceFile().getName());
-      if (!removed && !isExcluded.get()) {
-        throw new RuntimeException("Saw unexpected file to remove: " + event.getSourceFile().getName());
-      }
-
-      if (FILES_TO_COMPILE.isEmpty()) {
-        notifyCompletionListeners();
-      }
-    }
-
     flushTimings();
   }
 
-  private static synchronized void notifyCompletionListeners() {
-    if (!FILES_TO_COMPILE.isEmpty()) {
-      return;
-    }
+  public static void init(Context context) {
+    HAS_LIFECYCLE.set(true);
+    HubSpotLifecycleManager.instance(context).addCompletionRunnable(HubSpotUtils::onComplete);
+  }
 
-    COMPLETION_RUNNABLES.forEach(Runnable::run);
+  private static void onComplete() {
+    IS_COMPLETE.set(true);
+    flushErrors();
+    flushTimings();
   }
 
   private static boolean isErrorHandlingEnabled(ErrorProneFlags flags) {
@@ -336,8 +303,8 @@ public class HubSpotUtils {
   }
 
   private static boolean shouldWriteToDisk() {
-    if (INITIALIZED.get()) {
-      return FILES_TO_COMPILE.isEmpty();
+    if (HAS_LIFECYCLE.get()) {
+      return IS_COMPLETE.get();
     } else {
       return true;
     }
