@@ -168,7 +168,7 @@ public class HubSpotUtils {
       if (!removed && !isExcluded.get()) {
         RuntimeException exception = new RuntimeException("Recording completion failed!");
         Log.instance(context).error(
-            "error.prone.crash",
+            "hubspot.error.prone.utils.crash",
             Throwables.getStackTraceAsString(exception),
             "recording completion failed!");
         throw exception;
