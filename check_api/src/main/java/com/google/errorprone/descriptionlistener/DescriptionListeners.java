@@ -7,7 +7,7 @@ import java.util.function.Supplier;
 
 import com.google.common.base.Suppliers;
 import com.google.errorprone.DescriptionListener;
-import com.google.errorprone.HubSpotUtils;
+import com.google.errorprone.hubspot.HubSpotUtils;
 import com.google.errorprone.matchers.Description;
 import com.sun.tools.javac.util.Context;
 

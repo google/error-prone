@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 The Error Prone Authors.
+ * Copyright 2021 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,47 +14,46 @@
  * limitations under the License.
  */
 
-package com.google.errorprone;
+package com.google.errorprone.hubspot;
 
 import java.io.IOException;
-import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.fasterxml.jackson.databind.JavaType;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.google.errorprone.BugCheckerInfo;
+import com.google.errorprone.DescriptionListener;
+import com.google.errorprone.ErrorProneFlags;
+import com.google.errorprone.ErrorProneOptions;
+import com.google.errorprone.ErrorProneTimings;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.descriptionlistener.CustomDescriptionListenerFactory;
 import com.google.errorprone.descriptionlistener.DescriptionListenerResources;
 import com.google.errorprone.matchers.Suppressible;
 import com.google.errorprone.scanner.ScannerSupplier;
+import com.sun.source.util.JavacTask;
+import com.sun.tools.javac.api.BasicJavacTask;
 import com.sun.tools.javac.util.Context;
 
 public class HubSpotUtils {
-  private static final String OVERWATCH_DIR_ENV_VAR = "MAVEN_PROJECTBASEDIR";
-  private static final String BLAZAR_DIR_ENV_VAR = "VIEWABLE_BUILD_ARTIFACTS_DIR";
-  private static final ObjectMapper MAPPER = new ObjectMapper();
   private static final Comparator<Map.Entry<String, Long>> TIMING_COMPARATOR = buildTimingComparator();
-  private static final JavaType ERROR_DATA_TYPE = MAPPER
-      .getTypeFactory()
+  private static final JavaType ERROR_DATA_TYPE = JsonUtils.getTypeFactory()
       .constructMapType(
           HashMap.class,
-          MAPPER.getTypeFactory().constructType(String.class),
-          MAPPER.getTypeFactory().constructCollectionType(Set.class, String.class));
-  private static final JavaType TIMINGS_DATA_TYPE = MAPPER.getTypeFactory()
+          JsonUtils.getTypeFactory().constructType(String.class),
+          JsonUtils.getTypeFactory().constructCollectionType(Set.class, String.class));
+  private static final JavaType TIMINGS_DATA_TYPE = JsonUtils.getTypeFactory()
       .constructMapType(
           HashMap.class,
           String.class,
@@ -139,9 +138,9 @@ public class HubSpotUtils {
     flushTimings();
   }
 
-  public static void init(Context context) {
-    HAS_LIFECYCLE.set(true);
-    HubSpotLifecycleManager.instance(context).addCompletionRunnable(HubSpotUtils::onComplete);
+  public static void init(JavacTask task) {
+    Context context = ((BasicJavacTask) task).getContext();
+    HubSpotLifecycleManager.instance(context).addShutdownListener(HubSpotUtils::onComplete);
   }
 
   private static void onComplete() {
@@ -184,13 +183,13 @@ public class HubSpotUtils {
 
   private static void flushErrors() {
     if (shouldWriteToDisk()) {
-      getErrorOutput().ifPresent(p -> flush(DATA, p));
+      FileManager.getErrorOutputPath().ifPresent(p -> FileManager.write(DATA, p));
     }
   }
 
   private static void flushTimings() {
     if (shouldWriteToDisk()) {
-      getTimingsOutput().ifPresent(p -> flush(computeFinalTimings(), p));
+      FileManager.getTimingsOutputPath().ifPresent(p -> FileManager.write(computeFinalTimings(), p));
     }
   }
 
@@ -217,25 +216,15 @@ public class HubSpotUtils {
             Map.Entry::getValue));
   }
 
-  private static void flush(Object data, Path path) {
-    try (OutputStream stream = Files.newOutputStream(path)) {
-      MAPPER.writerWithDefaultPrettyPrinter().writeValue(stream, data);
-    } catch (IOException e) {
-      throw new RuntimeException(
-          String.format("Failed to write errorprone metadata to %s", path)
-      );
-    }
-  }
-
   private static Map<String, Set<String>> loadExistingData() {
-    return getErrorOutput()
+    return FileManager.getErrorOutputPath()
         .map(HubSpotUtils::loadData)
         .map(HubSpotUtils::toDataSet)
         .orElseGet(ConcurrentHashMap::new);
   }
 
   private static Map<String, Long> loadExistingTimings() {
-    return getTimingsOutput()
+    return FileManager.getTimingsOutputPath()
         .map(HubSpotUtils::loadTimingData)
         .orElseGet(ImmutableMap::of);
   }
@@ -265,41 +254,10 @@ public class HubSpotUtils {
     }
 
     try {
-      return MAPPER.readValue(path.toFile(), type);
+      return JsonUtils.getMapper().readValue(path.toFile(), type);
     } catch (IOException e) {
       throw new RuntimeException("Failed to read existing file to load data", e);
     }
-  }
-
-  private static Optional<Path> getErrorOutput() {
-    return getDataDir(OVERWATCH_DIR_ENV_VAR, "target/overwatch-metadata")
-        .map(o -> o.resolve("error-prone-exceptions.json"));
-  }
-
-  private static Optional<Path> getTimingsOutput() {
-    return getDataDir(BLAZAR_DIR_ENV_VAR, "error-prone")
-        .map(o -> o.resolve("error-prone-timings.json"));
-  }
-
-  private static Optional<Path> getDataDir(String envVar, String pathToAppend) {
-    String dir = System.getenv(envVar);
-    if (Strings.isNullOrEmpty(dir)) {
-      return Optional.empty();
-    }
-
-    Path res = Paths.get(dir).resolve(pathToAppend);
-    if (!Files.exists(res)) {
-      try {
-        Files.createDirectories(res);
-      } catch (IOException e) {
-        throw new RuntimeException(
-            String.format("Failed to create directory: %s", res),
-            e
-        );
-      }
-    }
-
-    return Optional.of(res);
   }
 
   private static boolean shouldWriteToDisk() {

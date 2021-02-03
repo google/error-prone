@@ -17,6 +17,7 @@
 package com.google.errorprone;
 
 import com.google.auto.service.AutoService;
+import com.google.errorprone.hubspot.HubSpotUtils;
 import com.google.errorprone.scanner.BuiltInCheckerSuppliers;
 import com.sun.source.util.JavacTask;
 import com.sun.source.util.Plugin;
@@ -31,6 +32,7 @@ public class ErrorProneJavacPlugin implements Plugin {
 
   @Override
   public void init(JavacTask javacTask, String... args) {
+    HubSpotUtils.init(javacTask);
     BaseErrorProneJavaCompiler.addTaskListener(
         javacTask, BuiltInCheckerSuppliers.defaultChecks(), ErrorProneOptions.processArgs(args));
   }

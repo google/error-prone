@@ -24,6 +24,8 @@ import com.google.common.base.Supplier;
 import com.google.common.base.Suppliers;
 import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.descriptionlistener.DescriptionListeners;
+import com.google.errorprone.hubspot.HubSpotLifecycleManager;
+import com.google.errorprone.hubspot.HubSpotUtils;
 import com.google.errorprone.scanner.ErrorProneScannerTransformer;
 import com.google.errorprone.scanner.ScannerSupplier;
 import com.google.errorprone.util.ASTHelpers;
@@ -115,7 +117,17 @@ public class ErrorProneAnalyzer implements TaskListener {
   private int errorProneErrors = 0;
 
   @Override
+  public void started(TaskEvent taskEvent) {
+    if (taskEvent.getKind() == Kind.COMPILATION) {
+      HubSpotLifecycleManager.instance(context).handleStartup();
+    }
+  }
+
+  @Override
   public void finished(TaskEvent taskEvent) {
+    if (taskEvent.getKind() == Kind.COMPILATION) {
+      HubSpotLifecycleManager.instance(context).handleShutdown();
+    }
     if (taskEvent.getKind() != Kind.ANALYZE) {
       return;
     }
@@ -128,7 +140,6 @@ public class ErrorProneAnalyzer implements TaskListener {
     }
     // Assert that the event is unique and scan the current tree.
     verify(seen.add(path.getLeaf()), "Duplicate FLOW event for: %s", taskEvent.getTypeElement());
-    HubSpotUtils.init(context);
     Log log = Log.instance(context);
     JCCompilationUnit compilation = (JCCompilationUnit) path.getCompilationUnit();
     DescriptionListener descriptionListener =
@@ -176,9 +187,6 @@ public class ErrorProneAnalyzer implements TaskListener {
     } finally {
       log.useSource(originalSource);
       HubSpotUtils.recordTimings(context);
-      if (!shouldExcludeSourceFile(compilation)) {
-        HubSpotLifecycleManager.instance(context).markComplete(taskEvent);
-      }
     }
   }
 

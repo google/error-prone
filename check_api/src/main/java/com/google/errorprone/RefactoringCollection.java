@@ -34,6 +34,7 @@ import com.google.errorprone.apply.ImportOrganizer;
 import com.google.errorprone.apply.PatchFileDestination;
 import com.google.errorprone.apply.SourceFile;
 import com.google.errorprone.descriptionlistener.DescriptionListeners;
+import com.google.errorprone.hubspot.HubSpotPatchUtils;
 import com.google.errorprone.matchers.Description;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 import com.sun.tools.javac.util.Context;

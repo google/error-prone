@@ -23,6 +23,8 @@ import java.nio.file.Path;
 
 import org.junit.Test;
 
+import com.google.errorprone.hubspot.HubSpotPatchUtils;
+
 public class HubSpotPatchUtilsTest {
 
   @Test
