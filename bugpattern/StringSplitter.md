@@ -13,7 +13,7 @@ To make changes, edit the @BugPattern annotation or the explanation in docs/bugp
 
 
 ## The problem
-`String.split(String)` and `Pattern.split(CharSequence) have surprising
+`String.split(String)` and `Pattern.split(CharSequence)` have surprising
 behaviour. For example, consider the following puzzler from
 http://konigsberg.blogspot.com/2009/11/final-thoughts-java-puzzler-splitting.html:
 
