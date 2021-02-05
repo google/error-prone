@@ -26,6 +26,7 @@ import static com.google.errorprone.util.ASTHelpers.isSameType;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
@@ -52,7 +53,10 @@ public class ReturnValueIgnored extends AbstractReturnValueIgnored {
    */
   private static final ImmutableSet<String> TYPES_TO_CHECK =
       ImmutableSet.of(
-          "java.lang.String", "java.math.BigInteger", "java.math.BigDecimal", "java.nio.file.Path");
+          "java.lang.String", // TODO(b/179172489): remove this!
+          "java.math.BigInteger",
+          "java.math.BigDecimal",
+          "java.nio.file.Path");
 
   /**
    * Matches method invocations in which the method being called is on an instance of a type in the
@@ -143,6 +147,15 @@ public class ReturnValueIgnored extends AbstractReturnValueIgnored {
       staticMethod().onClass("java.util.Arrays");
 
   /**
+   * The return values of {@link java.lang.String} methods should always be checked (except for
+   * void-returning ones, which won't be checked by AbstractReturnValueIgnored).
+   */
+  private static final Matcher<ExpressionTree> STRING_METHODS =
+      anyOf(
+          staticMethod().onClass("java.lang.String"),
+          instanceMethod().onExactClass("java.lang.String"));
+
+  /**
    * The return values of {@link java.util.Optional} static methods and some instance methods should
    * always be checked.
    */
@@ -173,8 +186,15 @@ public class ReturnValueIgnored extends AbstractReturnValueIgnored {
               .namedAnyOf("containsKey", "containsValue")
               .withParameters("java.lang.Object"));
 
+  private final Matcher<? super ExpressionTree> matcher;
+
+  public ReturnValueIgnored(ErrorProneFlags flags) {
+    boolean checkString = flags.getBoolean("ReturnValueIgnored:CheckString").orElse(true);
+    this.matcher = checkString ? anyOf(SPECIALIZED_MATCHER, STRING_METHODS) : SPECIALIZED_MATCHER;
+  }
+
   @Override
   public Matcher<? super ExpressionTree> specializedMatcher() {
-    return SPECIALIZED_MATCHER;
+    return matcher;
   }
 }

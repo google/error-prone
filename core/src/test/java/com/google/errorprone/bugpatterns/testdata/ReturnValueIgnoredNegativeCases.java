@@ -34,7 +34,6 @@ public class ReturnValueIgnoredNegativeCases {
   }
 
   String run() {
-    a.trim().hashCode();
     return a.trim();
   }
 
