@@ -315,4 +315,37 @@ public class RestrictedApiCheckerTest {
         .expectResult(Result.OK)
         .doTest();
   }
+
+  @Ignore("https://github.com/google/error-prone/issues/2152")
+  @Test
+  public void i2152() {
+    helper
+        .addSourceLines(
+            "T.java",
+            "class T extends S {",
+            "  void f() {",
+            "    this.new I(\"\") {};",
+            "  }",
+            "}",
+            "abstract class S {",
+            "  public class I {",
+            "    public I(String name) {}",
+            "  }",
+            "}")
+        .expectResult(Result.OK)
+        .doTest();
+  }
+
+  @Test
+  public void enumConstructor() {
+    helper
+        .addSourceLines(
+            "T.java", //
+            "enum E {",
+            "  ONE(1, 2) {};",
+            "  E(int x, int y) {}",
+            "}")
+        .expectResult(Result.OK)
+        .doTest();
+  }
 }
