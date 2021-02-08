@@ -791,7 +791,7 @@ __[JodaConstructors](bugpattern/JodaConstructors)__<br>
 Use of certain JodaTime constructors are not allowed.
 
 __[JodaDateTimeConstants](bugpattern/JodaDateTimeConstants)__<br>
-Usage of the `_PER_` constants in `DateTimeConstants` are problematic because they encourage manual date/time math.
+Using the `_PER_` constants in `DateTimeConstants` is problematic because they encourage manual date/time math.
 
 __[JodaDurationWithMillis](bugpattern/JodaDurationWithMillis)__<br>
 Use of duration.withMillis(long) is not allowed. Please use Duration.millis(long) instead.

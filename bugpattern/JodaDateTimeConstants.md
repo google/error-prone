@@ -1,6 +1,6 @@
 ---
 title: JodaDateTimeConstants
-summary: Usage of the `_PER_` constants in `DateTimeConstants` are problematic because
+summary: Using the `_PER_` constants in `DateTimeConstants` is problematic because
   they encourage manual date/time math.
 layout: bugpattern
 tags: ''
