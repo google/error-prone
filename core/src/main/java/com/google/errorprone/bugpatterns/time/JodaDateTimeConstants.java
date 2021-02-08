@@ -37,8 +37,8 @@ import java.util.stream.Stream;
 @BugPattern(
     name = "JodaDateTimeConstants",
     summary =
-        "Usage of the `_PER_` constants in `DateTimeConstants` are problematic because they"
-            + " encourage manual date/time math.",
+        "Using the `_PER_` constants in `DateTimeConstants` is problematic because they encourage"
+            + " manual date/time math.",
     explanation =
         "Manual date/time math leads to overflows, unit mismatches, and weak typing. Prefer to use"
             + " strong types (e.g., `java.time.Duration` or `java.time.Instant`) and their APIs to"
