@@ -60,6 +60,7 @@ import com.google.errorprone.bugpatterns.CatchFail;
 import com.google.errorprone.bugpatterns.CatchingUnchecked;
 import com.google.errorprone.bugpatterns.ChainedAssertionLosesContext;
 import com.google.errorprone.bugpatterns.ChainingConstructorIgnoresParameter;
+import com.google.errorprone.bugpatterns.CharacterGetNumericValue;
 import com.google.errorprone.bugpatterns.CheckNotNullMultipleTimes;
 import com.google.errorprone.bugpatterns.CheckReturnValue;
 import com.google.errorprone.bugpatterns.CheckedExceptionNotThrown;
@@ -734,6 +735,7 @@ public class BuiltInCheckerSuppliers {
           CatchAndPrintStackTrace.class,
           CatchFail.class,
           ChainedAssertionLosesContext.class,
+          CharacterGetNumericValue.class,
           ClassCanBeStatic.class,
           ClassNewInstance.class,
           CloseableProvides.class,
