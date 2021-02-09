@@ -30,7 +30,7 @@ import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import java.util.Locale;
 
 /** Format string utilities. */
-final class FormatStringUtils {
+public final class FormatStringUtils {
 
   // TODO(cushon): add support for additional printf methods, maybe with an annotation
   private static final Matcher<ExpressionTree> FORMAT_METHOD =
@@ -43,7 +43,7 @@ final class FormatStringUtils {
                   "java.io.Console")
               .namedAnyOf("format", "printf"),
           staticMethod().onClass("java.lang.String").named("format"),
-          // Exclude zero-arg java.io.Console.readPassword from format methods.gg
+          // Exclude zero-arg java.io.Console.readPassword from format methods.
           instanceMethod()
               .onExactClass("java.io.Console")
               .withSignature("readPassword(java.lang.String,java.lang.Object...)"),
@@ -52,7 +52,7 @@ final class FormatStringUtils {
               .onExactClass("java.io.Console")
               .withSignature("readLine(java.lang.String,java.lang.Object...)"));
 
-  static ImmutableList<ExpressionTree> formatMethodArguments(
+  public static ImmutableList<ExpressionTree> formatMethodArguments(
       MethodInvocationTree tree, VisitorState state) {
     if (!FORMAT_METHOD.matches(tree, state)) {
       return ImmutableList.of();
