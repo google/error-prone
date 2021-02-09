@@ -747,27 +747,30 @@ public class ASTHelpers {
     return false;
   }
 
-  private static final Cache<Name, Boolean> inheritedAnnotationCache =
-      Caffeine.newBuilder().maximumSize(1000).build();
+  private static final Supplier<Cache<Name, Boolean>> inheritedAnnotationCache =
+      VisitorState.memoize(unusedState -> Caffeine.newBuilder().maximumSize(1000).build());
 
   @SuppressWarnings("ConstantConditions") // IntelliJ worries unboxing our Boolean may throw NPE.
   private static boolean isInherited(VisitorState state, Name annotationName) {
-    return inheritedAnnotationCache.get(
-        annotationName,
-        name -> {
-          Symbol annotationSym = state.getSymbolFromName(name);
-          if (annotationSym == null) {
-            return false;
-          }
-          try {
-            annotationSym.complete();
-          } catch (CompletionFailure e) {
-            /* @Inherited won't work if the annotation isn't on the classpath, but we can still
-            check if it's present directly */
-          }
-          Symbol inheritedSym = state.getSymtab().inheritedType.tsym;
-          return annotationSym.attribute(inheritedSym) != null;
-        });
+
+    return inheritedAnnotationCache
+        .get(state)
+        .get(
+            annotationName,
+            name -> {
+              Symbol annotationSym = state.getSymbolFromName(annotationName);
+              if (annotationSym == null) {
+                return false;
+              }
+              try {
+                annotationSym.complete();
+              } catch (CompletionFailure e) {
+                /* @Inherited won't work if the annotation isn't on the classpath, but we can still
+                check if it's present directly */
+              }
+              Symbol inheritedSym = state.getSymtab().inheritedType.tsym;
+              return annotationSym.attribute(inheritedSym) != null;
+            });
   }
 
   private static boolean isInherited(VisitorState state, String annotationName) {
