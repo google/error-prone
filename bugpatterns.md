@@ -565,6 +565,9 @@ Ignoring exceptions and calling fail() is unnecessary, and makes test output les
 __[ChainedAssertionLosesContext](bugpattern/ChainedAssertionLosesContext)__<br>
 Inside a Subject, use check(...) instead of assert*() to preserve user-supplied messages and other settings.
 
+__[CharacterGetNumericValue](bugpattern/CharacterGetNumericValue)__<br>
+getNumericValue has unexpected behaviour: it interprets A-Z as base-36 digits with values 10-35, but also supports non-arabic numerals and miscellaneous numeric unicode characters like ㊷; consider using Character.digit or UCharacter.getUnicodeNumericValue instead
+
 __[ClassCanBeStatic](bugpattern/ClassCanBeStatic)__<br>
 Inner class is non-static but does not reference enclosing class
 
