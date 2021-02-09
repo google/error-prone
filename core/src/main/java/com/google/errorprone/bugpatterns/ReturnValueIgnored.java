@@ -51,11 +51,7 @@ public class ReturnValueIgnored extends AbstractReturnValueIgnored {
    * https://github.com/spotbugs/spotbugs/blob/master/spotbugs/src/main/java/edu/umd/cs/findbugs/ba/CheckReturnAnnotationDatabase.java
    */
   private static final ImmutableSet<String> TYPES_TO_CHECK =
-      ImmutableSet.of(
-          "java.lang.String", // TODO(b/179172489): remove this!
-          "java.math.BigInteger",
-          "java.math.BigDecimal",
-          "java.nio.file.Path");
+      ImmutableSet.of("java.math.BigInteger", "java.math.BigDecimal", "java.nio.file.Path");
 
   /**
    * Matches method invocations in which the method being called is on an instance of a type in the
