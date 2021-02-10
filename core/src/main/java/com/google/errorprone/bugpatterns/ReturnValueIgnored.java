@@ -18,14 +18,18 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.allOf;
+import static com.google.errorprone.matchers.Matchers.anyMethod;
 import static com.google.errorprone.matchers.Matchers.anyOf;
+import static com.google.errorprone.matchers.Matchers.not;
 import static com.google.errorprone.matchers.Matchers.packageStartsWith;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
+import static com.google.errorprone.predicates.TypePredicates.isExactTypeAny;
 import static com.google.errorprone.util.ASTHelpers.isSameType;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
@@ -150,6 +154,51 @@ public class ReturnValueIgnored extends AbstractReturnValueIgnored {
           staticMethod().onClass("java.lang.String"),
           instanceMethod().onExactClass("java.lang.String"));
 
+  private static final ImmutableSet<String> PRIMITIVE_TYPES =
+      ImmutableSet.of(
+          "java.lang.Boolean",
+          "java.lang.Byte",
+          "java.lang.Character",
+          "java.lang.Double",
+          "java.lang.Float",
+          "java.lang.Integer",
+          "java.lang.Long",
+          "java.lang.Short");
+
+  /** All methods on the primitive wrapper types. */
+  private static final Matcher<ExpressionTree> PRIMITIVE_NON_PARSING_METHODS =
+      anyMethod().onClass(isExactTypeAny(PRIMITIVE_TYPES));
+
+  /**
+   * Parsing-style methods on the primitive wrapper types (e.g., {@link
+   * java.lang.Integer#decode(String)}).
+   */
+  // TODO(kak): Instead of special casing the parsing style methods, we could consider looking for a
+  // surrounding try/catch block (which folks use to validate input data).
+  private static final Matcher<ExpressionTree> PRIMITIVE_PARSING_METHODS =
+      anyOf(
+          staticMethod().onClass("java.lang.Character").namedAnyOf("toChars", "codePointCount"),
+          staticMethod().onClassAny(PRIMITIVE_TYPES).named("decode"),
+          staticMethod()
+              .onClassAny(PRIMITIVE_TYPES)
+              .withNameMatching(Pattern.compile("^parse[A-z]*")),
+          staticMethod()
+              .onClassAny(PRIMITIVE_TYPES)
+              .named("valueOf")
+              .withParameters("java.lang.String"),
+          staticMethod()
+              .onClassAny(PRIMITIVE_TYPES)
+              .named("valueOf")
+              .withParameters("java.lang.String", "int"));
+
+  /**
+   * The return values of primitive types (e.g., {@link java.lang.Integer}) should always be checked
+   * (except for parsing-type methods and void-returning methods, which won't be checked by
+   * AbstractReturnValueIgnored).
+   */
+  private static final Matcher<ExpressionTree> PRIMITIVE_METHODS =
+      allOf(not(PRIMITIVE_PARSING_METHODS), PRIMITIVE_NON_PARSING_METHODS);
+
   /**
    * The return values of {@link java.util.Optional} static methods and some instance methods should
    * always be checked.
@@ -182,8 +231,16 @@ public class ReturnValueIgnored extends AbstractReturnValueIgnored {
               .namedAnyOf("containsKey", "containsValue")
               .withParameters("java.lang.Object"));
 
+  private final Matcher<? super ExpressionTree> matcher;
+
+  public ReturnValueIgnored(ErrorProneFlags flags) {
+    boolean checkString = flags.getBoolean("ReturnValueIgnored:CheckPrimitives").orElse(true);
+    this.matcher =
+        checkString ? anyOf(SPECIALIZED_MATCHER, PRIMITIVE_METHODS) : SPECIALIZED_MATCHER;
+  }
+
   @Override
   public Matcher<? super ExpressionTree> specializedMatcher() {
-    return SPECIALIZED_MATCHER;
+    return matcher;
   }
 }

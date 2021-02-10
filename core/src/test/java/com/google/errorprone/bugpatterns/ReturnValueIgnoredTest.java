@@ -265,4 +265,28 @@ public class ReturnValueIgnoredTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void integers() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  void f() throws Exception {",
+            "    // BUG: Diagnostic contains: ReturnValueIgnored",
+            "    Integer.reverse(2);",
+            "    // BUG: Diagnostic contains: ReturnValueIgnored",
+            "    new Integer(2).doubleValue();",
+            // We ignore the following "parsing" style methods:
+            "    Integer.decode(\"1985\");",
+            "    Integer.parseInt(\"1985\");",
+            "    Integer.parseInt(\"1985\", 10);",
+            "    Integer.parseUnsignedInt(\"1985\");",
+            "    Integer.parseUnsignedInt(\"1985\", 10);",
+            "    Integer.valueOf(\"1985\");",
+            "    Integer.valueOf(\"1985\", 10);",
+            "  }",
+            "}")
+        .doTest();
+  }
 }
