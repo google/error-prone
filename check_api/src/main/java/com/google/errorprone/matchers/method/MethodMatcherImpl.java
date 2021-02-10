@@ -274,6 +274,16 @@ final class MethodMatcherImpl
   }
 
   @Override
+  public MethodClassMatcher onExactClassAny(Iterable<String> classTypes) {
+    return onClassAny(classTypes);
+  }
+
+  @Override
+  public MethodClassMatcher onExactClassAny(String... classTypes) {
+    return onClassAny(classTypes);
+  }
+
+  @Override
   public MethodClassMatcher onDescendantOf(String className) {
     TypePredicate pred = TypePredicates.isDescendantOf(className);
     return append(
