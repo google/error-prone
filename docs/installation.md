@@ -60,6 +60,11 @@ Edit your `pom.xml` file to add settings to the maven-compiler-plugin:
               <artifactId>error_prone_core</artifactId>
               <version>2.5.1</version>
             </path>
+            <!-- Other annotation processor go here.
+
+            If 'annotationProcessorPaths' is set, processors will no longer be
+            discovered on the regular -classpath; see also 'Using Error Prone
+            together with other annotation processors' below. -->
           </annotationProcessorPaths>
         </configuration>
       </plugin>
@@ -237,11 +242,12 @@ replace the call of `javac.main.Main.main()` with the Error Prone compiler:
 
 `return new ErrorProneCompiler.Builder().build().compile(args) == 0`
 
-## Using ErrorProne in concert with other Annotation Processors
+## Using Error Prone together with other annotation processors
 
 All of the above instructions use the `javac` option `-processorpath` which has
 side-effect of causing `javac` to no longer scan the compile classpath for
 annotation processors. If you are using other annotation processors in addition
-to ErrorProne, such as Lombok, then you will need to add their JARs to your
-`-processorpath` argument. The mechanics of this will vary according to the build
-tool you are using.
+to Error Prone, such as
+[AutoValue](https://github.com/google/auto/tree/master/value), then you will
+need to add their JARs to your `-processorpath` argument. The mechanics of this
+will vary according to the build tool you are using.
