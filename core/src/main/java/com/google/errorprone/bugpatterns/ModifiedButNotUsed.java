@@ -25,6 +25,8 @@ import static com.google.errorprone.matchers.Matchers.kindIs;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
 import static com.google.errorprone.matchers.method.MethodMatchers.constructor;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
+import static com.google.errorprone.predicates.TypePredicates.isDescendantOf;
+import static com.google.errorprone.predicates.TypePredicates.isDescendantOfAny;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.isConsideredFinal;
@@ -148,21 +150,13 @@ public class ModifiedButNotUsed extends BugChecker
                               .map(i -> Suppliers.typeFromString(i + ".Builder"))
                               .collect(toImmutableList())))),
           staticMethod()
-              .onClass(
-                  new DescendantOfAny(
-                      GUAVA_IMMUTABLES.stream()
-                          .map(Suppliers::typeFromString)
-                          .collect(toImmutableList())))
+              .onClass(isDescendantOfAny(GUAVA_IMMUTABLES))
               .namedAnyOf("builder", "builderWithExpectedSize"),
           allOf(
               kindIs(Kind.NEW_CLASS),
               constructor().forClass(new DescendantOf(Suppliers.typeFromString(MESSAGE_BUILDER)))),
-          staticMethod()
-              .onClass(new DescendantOf(Suppliers.typeFromString(MESSAGE)))
-              .named("newBuilder"),
-          instanceMethod()
-              .onClass(new DescendantOf(Suppliers.typeFromString(MESSAGE)))
-              .namedAnyOf("toBuilder", "newBuilderForType"));
+          staticMethod().onClass(isDescendantOf(MESSAGE)).named("newBuilder"),
+          instanceMethod().onDescendantOf(MESSAGE).namedAnyOf("toBuilder", "newBuilderForType"));
 
   private static final Matcher<ExpressionTree> NEW_COLLECTION =
       anyOf(
@@ -185,11 +179,8 @@ public class ModifiedButNotUsed extends BugChecker
               .onDescendantOf("com.google.protobuf.MessageLite.Builder")
               .namedAnyOf("build", "buildPartial"),
           instanceMethod()
-              .onClass(
-                  new DescendantOfAny(
-                      GUAVA_IMMUTABLES.stream()
-                          .map(c -> Suppliers.typeFromString(c + ".Builder"))
-                          .collect(toImmutableList())))
+              .onDescendantOfAny(
+                  GUAVA_IMMUTABLES.stream().map(c -> c + ".Builder").collect(toImmutableList()))
               .named("build"));
 
   @Override

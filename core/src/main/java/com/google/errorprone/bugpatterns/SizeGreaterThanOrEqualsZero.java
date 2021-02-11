@@ -37,7 +37,6 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
-import com.google.errorprone.predicates.TypePredicates;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.BinaryTree;
 import com.sun.source.tree.ExpressionTree;
@@ -111,15 +110,15 @@ public class SizeGreaterThanOrEqualsZero extends BugChecker implements BinaryTre
   private static final Matcher<ExpressionTree> SIZE_OR_LENGTH_INSTANCE_METHOD =
       anyOf(
           instanceMethod()
-              .onClass(TypePredicates.isDescendantOfAny(CLASSES.column(MethodName.SIZE).keySet()))
+              .onDescendantOfAny(CLASSES.column(MethodName.SIZE).keySet())
               .named("size"),
           instanceMethod()
-              .onClass(TypePredicates.isDescendantOfAny(CLASSES.column(MethodName.LENGTH).keySet()))
+              .onDescendantOfAny(CLASSES.column(MethodName.LENGTH).keySet())
               .named("length"));
   private static final Pattern PROTO_COUNT_METHOD_PATTERN = Pattern.compile("get(.+)Count");
   private static final Matcher<ExpressionTree> PROTO_METHOD_NAMED_GET_COUNT =
       instanceMethod()
-          .onClass(TypePredicates.isDescendantOf("com.google.protobuf.GeneratedMessage"))
+          .onDescendantOf("com.google.protobuf.GeneratedMessage")
           .withNameMatching(PROTO_COUNT_METHOD_PATTERN)
           .withParameters();
   private static final Matcher<ExpressionTree> PROTO_REPEATED_FIELD_COUNT_METHOD =

@@ -27,7 +27,6 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.method.MethodMatchers;
-import com.google.errorprone.predicates.TypePredicates;
 import com.google.errorprone.suppliers.Suppliers;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
@@ -45,7 +44,7 @@ import java.util.List;
 public class IndexOfChar extends BugChecker implements MethodInvocationTreeMatcher {
   private static final Matcher<ExpressionTree> MATCHER =
       MethodMatchers.instanceMethod()
-          .onClass(TypePredicates.isExactType(Suppliers.STRING_TYPE))
+          .onExactClass(Suppliers.STRING_TYPE)
           .named("indexOf")
           .withParameters("int", "int");
 

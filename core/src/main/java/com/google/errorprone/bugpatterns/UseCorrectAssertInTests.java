@@ -27,7 +27,6 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
-import com.google.errorprone.predicates.type.Any;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.AssertTree;
 import com.sun.source.tree.BinaryTree;
@@ -104,7 +103,7 @@ public class UseCorrectAssertInTests extends BugChecker implements MethodTreeMat
     }
 
     // case: "assert expr1.equals(expr2)"
-    if (instanceMethod().onClass(Any.INSTANCE).named("equals").matches(expr, state)) {
+    if (instanceMethod().anyClass().named("equals").matches(expr, state)) {
       JCMethodInvocation equalsCall = ((JCMethodInvocation) expr);
       JCExpression expr1 = ((JCFieldAccess) ((JCMethodInvocation) expr).meth).selected;
       JCExpression expr2 = equalsCall.getArguments().get(0);
