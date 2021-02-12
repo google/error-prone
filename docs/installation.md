@@ -60,7 +60,7 @@ Edit your `pom.xml` file to add settings to the maven-compiler-plugin:
               <artifactId>error_prone_core</artifactId>
               <version>2.5.1</version>
             </path>
-            <!-- Other annotation processor go here.
+            <!-- Other annotation processors go here.
 
             If 'annotationProcessorPaths' is set, processors will no longer be
             discovered on the regular -classpath; see also 'Using Error Prone
