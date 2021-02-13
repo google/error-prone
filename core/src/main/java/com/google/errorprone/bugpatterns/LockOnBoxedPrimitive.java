@@ -51,11 +51,6 @@ import javax.lang.model.element.ElementKind;
     summary =
         "It is dangerous to use a boxed primitive as a lock as it can unintentionally lead to"
             + " sharing a lock with another piece of code.",
-    explanation =
-        "Instances of boxed primitive types may be cached by the standard library `valueOf`"
-            + " method. This method is used for autoboxing. This means that using a boxed"
-            + " primitive as a lock can result in unintentionally sharing a lock with another"
-            + " piece of code.",
     severity = SeverityLevel.WARNING)
 public class LockOnBoxedPrimitive extends BugChecker
     implements SynchronizedTreeMatcher, MethodInvocationTreeMatcher {
