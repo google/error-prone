@@ -149,6 +149,16 @@ public class TemplateIntegrationTest extends CompilerBasedTest {
   }
 
   @Test
+  public void concatLiterals() throws IOException {
+    runTest("ConcatLiteralsTemplate");
+  }
+
+  @Test
+  public void concatLiteralsWithRepeated() throws IOException {
+    runTest("ConcatLiteralsTemplateWithRepeated");
+  }
+
+  @Test
   public void repeated() throws IOException {
     runTest("VarargTemplate");
   }
