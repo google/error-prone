@@ -18,7 +18,6 @@ package com.google.errorprone.predicates;
 
 import static com.google.errorprone.suppliers.Suppliers.fromStrings;
 
-import com.google.errorprone.predicates.type.Any;
 import com.google.errorprone.predicates.type.Array;
 import com.google.errorprone.predicates.type.DescendantOf;
 import com.google.errorprone.predicates.type.DescendantOfAny;
@@ -34,11 +33,6 @@ public final class TypePredicates {
   /** Match arrays. */
   public static TypePredicate isArray() {
     return Array.INSTANCE;
-  }
-
-  /** Match any type. */
-  public static TypePredicate anyType() {
-    return Any.INSTANCE;
   }
 
   /** Match types that are exactly equal. */
