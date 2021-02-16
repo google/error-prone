@@ -15,7 +15,7 @@
 <script type="text/javascript" src="../../../../script-dir/jquery-ui.min.js"></script>
 </head>
 <body class="class-declaration-page">
-<script type="text/javascript">var data = {"i0":9,"i1":9,"i2":9,"i3":9,"i4":9,"i5":9,"i6":9,"i7":9,"i8":9,"i9":9,"i10":9};
+<script type="text/javascript">var data = {"i0":9,"i1":9,"i2":9,"i3":9,"i4":9,"i5":9,"i6":9,"i7":9,"i8":9,"i9":9};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],8:["t4","Concrete Methods"]};
 var altColor = "alt-color";
 var rowColor = "row-color";
@@ -115,61 +115,54 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 </tr>
 <tr class="alt-color" id="i2">
 <td class="col-first"><code>static <a href="TypePredicate.html" title="interface in com.google.errorprone.predicates">TypePredicate</a></code></td>
-<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#anyType()">anyType</a></span>()</code></th>
-<td class="col-last">
-<div class="block">Match any type.</div>
-</td>
-</tr>
-<tr class="row-color" id="i3">
-<td class="col-first"><code>static <a href="TypePredicate.html" title="interface in com.google.errorprone.predicates">TypePredicate</a></code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#isArray()">isArray</a></span>()</code></th>
 <td class="col-last">
 <div class="block">Match arrays.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i4">
+<tr class="row-color" id="i3">
 <td class="col-first"><code>static <a href="TypePredicate.html" title="interface in com.google.errorprone.predicates">TypePredicate</a></code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#isDescendantOf(com.google.errorprone.suppliers.Supplier)">isDescendantOf</a></span>&#8203;(<a href="../suppliers/Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a>&lt;com.sun.tools.javac.code.Type&gt;&nbsp;type)</code></th>
 <td class="col-last">
 <div class="block">Match sub-types of the given type.</div>
 </td>
 </tr>
-<tr class="row-color" id="i5">
+<tr class="alt-color" id="i4">
 <td class="col-first"><code>static <a href="TypePredicate.html" title="interface in com.google.errorprone.predicates">TypePredicate</a></code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#isDescendantOf(java.lang.String)">isDescendantOf</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;type)</code></th>
 <td class="col-last">
 <div class="block">Match sub-types of the given type.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i6">
+<tr class="row-color" id="i5">
 <td class="col-first"><code>static <a href="TypePredicate.html" title="interface in com.google.errorprone.predicates">TypePredicate</a></code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#isDescendantOfAny(java.lang.Iterable)">isDescendantOfAny</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Iterable.html" title="class or interface in java.lang" class="external-link">Iterable</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;types)</code></th>
 <td class="col-last">
 <div class="block">Match types that are a sub-type of one of the given types.</div>
 </td>
 </tr>
-<tr class="row-color" id="i7">
+<tr class="alt-color" id="i6">
 <td class="col-first"><code>static <a href="TypePredicate.html" title="interface in com.google.errorprone.predicates">TypePredicate</a></code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#isExactType(com.google.errorprone.suppliers.Supplier)">isExactType</a></span>&#8203;(<a href="../suppliers/Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a>&lt;com.sun.tools.javac.code.Type&gt;&nbsp;type)</code></th>
 <td class="col-last">
 <div class="block">Match types that are exactly equal.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i8">
+<tr class="row-color" id="i7">
 <td class="col-first"><code>static <a href="TypePredicate.html" title="interface in com.google.errorprone.predicates">TypePredicate</a></code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#isExactType(java.lang.String)">isExactType</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;type)</code></th>
 <td class="col-last">
 <div class="block">Match types that are exactly equal.</div>
 </td>
 </tr>
-<tr class="row-color" id="i9">
+<tr class="alt-color" id="i8">
 <td class="col-first"><code>static <a href="TypePredicate.html" title="interface in com.google.errorprone.predicates">TypePredicate</a></code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#isExactTypeAny(java.lang.Iterable)">isExactTypeAny</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Iterable.html" title="class or interface in java.lang" class="external-link">Iterable</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;types)</code></th>
 <td class="col-last">
 <div class="block">Match types that are exactly equal to any of the given types.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i10">
+<tr class="row-color" id="i9">
 <td class="col-first"><code>static <a href="TypePredicate.html" title="interface in com.google.errorprone.predicates">TypePredicate</a></code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#not(com.google.errorprone.predicates.TypePredicate)">not</a></span>&#8203;(<a href="TypePredicate.html" title="interface in com.google.errorprone.predicates">TypePredicate</a>&nbsp;predicate)</code></th>
 <td class="col-last">&nbsp;</td>
@@ -197,13 +190,6 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <h3>isArray</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="TypePredicate.html" title="interface in com.google.errorprone.predicates">TypePredicate</a></span>&nbsp;<span class="member-name">isArray</span>()</div>
 <div class="block">Match arrays.</div>
-</section>
-</li>
-<li>
-<section class="detail" id="anyType()">
-<h3>anyType</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="TypePredicate.html" title="interface in com.google.errorprone.predicates">TypePredicate</a></span>&nbsp;<span class="member-name">anyType</span>()</div>
-<div class="block">Match any type.</div>
 </section>
 </li>
 <li>
