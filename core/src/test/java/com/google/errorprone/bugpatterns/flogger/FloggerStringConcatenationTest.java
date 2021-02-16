@@ -17,6 +17,7 @@
 package com.google.errorprone.bugpatterns.flogger;
 
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
+import com.google.errorprone.CompilationTestHelper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -37,7 +38,7 @@ public class FloggerStringConcatenationTest {
             "  private static final FluentLogger logger = FluentLogger.forEnclosingClass();",
             "  private static final String CONSTANT = \"constant\";",
             "  public void method(String world, int i, long l, float f, double d, boolean b) {",
-            "    logger.atInfo().log(\"hello \" + world + i + l + f + d + b + CONSTANT);",
+            "    logger.atInfo().log(\"hello \" + world + i + l + f + (d + \"\" + b) + CONSTANT);",
             "  }",
             "}")
         .addOutputLines(
@@ -48,6 +49,22 @@ public class FloggerStringConcatenationTest {
             "  private static final String CONSTANT = \"constant\";",
             "  public void method(String world, int i, long l, float f, double d, boolean b) {",
             "    logger.atInfo().log(\"hello %s%d%d%g%g%s%s\", world, i, l, f, d, b, CONSTANT);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void constant() {
+    CompilationTestHelper.newInstance(FloggerStringConcatenation.class, getClass())
+        .addSourceLines(
+            "in/Test.java",
+            "import com.google.common.flogger.FluentLogger;",
+            "class Test {",
+            "  private static final FluentLogger logger = FluentLogger.forEnclosingClass();",
+            "  private static final String CONSTANT = \"constant\";",
+            "  public void method() {",
+            "    logger.atInfo().log(CONSTANT + \"hello\");",
             "  }",
             "}")
         .doTest();

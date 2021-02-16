@@ -20,6 +20,7 @@ import static com.google.common.base.Preconditions.checkState;
 import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
+import static com.google.errorprone.util.ASTHelpers.constValue;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static java.util.stream.Collectors.joining;
 
@@ -35,6 +36,7 @@ import com.sun.source.tree.BinaryTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.LiteralTree;
 import com.sun.source.tree.MethodInvocationTree;
+import com.sun.source.tree.ParenthesizedTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.util.SimpleTreeVisitor;
@@ -65,6 +67,9 @@ public class FloggerStringConcatenation extends BugChecker implements MethodInvo
     if (!(argument instanceof BinaryTree)) {
       return NO_MATCH;
     }
+    if (constValue(argument, String.class) != null) {
+      return NO_MATCH;
+    }
     List<Tree> pieces = new ArrayList<>();
     argument.accept(
         new SimpleTreeVisitor<Void, Void>() {
@@ -73,6 +78,12 @@ public class FloggerStringConcatenation extends BugChecker implements MethodInvo
             checkState(tree.getKind().equals(Kind.PLUS));
             tree.getLeftOperand().accept(this, null);
             tree.getRightOperand().accept(this, null);
+            return null;
+          }
+
+          @Override
+          public Void visitParenthesized(ParenthesizedTree node, Void unused) {
+            node.getExpression().accept(this, null);
             return null;
           }
 
