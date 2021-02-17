@@ -640,6 +640,9 @@ The contract of #equals states that it should return false for incompatible type
 __[EqualsUsingHashCode](bugpattern/EqualsUsingHashCode)__<br>
 Implementing #equals by just comparing hashCodes is fragile. Hashes collide frequently, and this will lead to false positives in #equals.
 
+__[ErroneousThreadPoolConstructorChecker](bugpattern/ErroneousThreadPoolConstructorChecker)__<br>
+Thread pool size will never go beyond corePoolSize if an unbounded queue is used
+
 __[EscapedEntity](bugpattern/EscapedEntity)__<br>
 HTML entities in @code/@literal tags will appear literally in the rendered javadoc.
 

@@ -3109,6 +3109,14 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/EqualsWrongThing.html#%3Cinit%3E()">EqualsWrongThing()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/EqualsWrongThing.html" title="class in com.google.errorprone.bugpatterns">EqualsWrongThing</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/bugpatterns/ErroneousThreadPoolConstructorChecker.html" title="class in com.google.errorprone.bugpatterns"><span class="type-name-link">ErroneousThreadPoolConstructorChecker</span></a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
+<dd>
+<div class="block">ErrorProne checker to generate warning whenever <a href="https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/ThreadPoolExecutor.html" title="class or interface in java.util.concurrent" class="external-link"><code>ThreadPoolExecutor</code></a>
+ is constructed with different <code>corePoolSize</code> and <code>maximumPoolSize</code> using an unbounded
+ <code>workQueue</code></div>
+</dd>
+<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/ErroneousThreadPoolConstructorChecker.html#%3Cinit%3E()">ErroneousThreadPoolConstructorChecker()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/ErroneousThreadPoolConstructorChecker.html" title="class in com.google.errorprone.bugpatterns">ErroneousThreadPoolConstructorChecker</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/BugPattern.SeverityLevel.html#ERROR">ERROR</a></span> - com.google.errorprone.<a href="com/google/errorprone/BugPattern.SeverityLevel.html" title="enum in com.google.errorprone">BugPattern.SeverityLevel</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/threadsafety/GuardedByExpression.Kind.html#ERROR">ERROR</a></span> - com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/GuardedByExpression.Kind.html" title="enum in com.google.errorprone.bugpatterns.threadsafety">GuardedByExpression.Kind</a></dt>
@@ -8032,6 +8040,8 @@ loadScripts(document, 'script');</script>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/DefaultCharset.html#matchNewClass(com.sun.source.tree.NewClassTree,com.google.errorprone.VisitorState)">matchNewClass(NewClassTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/DefaultCharset.html" title="class in com.google.errorprone.bugpatterns">DefaultCharset</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/DoubleBraceInitialization.html#matchNewClass(com.sun.source.tree.NewClassTree,com.google.errorprone.VisitorState)">matchNewClass(NewClassTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/DoubleBraceInitialization.html" title="class in com.google.errorprone.bugpatterns">DoubleBraceInitialization</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/ErroneousThreadPoolConstructorChecker.html#matchNewClass(com.sun.source.tree.NewClassTree,com.google.errorprone.VisitorState)">matchNewClass(NewClassTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/ErroneousThreadPoolConstructorChecker.html" title="class in com.google.errorprone.bugpatterns">ErroneousThreadPoolConstructorChecker</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/formatstring/FormatStringAnnotationChecker.html#matchNewClass(com.sun.source.tree.NewClassTree,com.google.errorprone.VisitorState)">matchNewClass(NewClassTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.formatstring.<a href="com/google/errorprone/bugpatterns/formatstring/FormatStringAnnotationChecker.html" title="class in com.google.errorprone.bugpatterns.formatstring">FormatStringAnnotationChecker</a></dt>
 <dd>&nbsp;</dd>
