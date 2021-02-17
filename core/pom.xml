@@ -177,21 +177,21 @@
       <!-- Apache 2.0 -->
       <groupId>com.google.inject</groupId>
       <artifactId>guice</artifactId>
-      <version>4.0-beta5</version>
+      <version>4.2.3</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <!-- Apache 2.0 -->
       <groupId>com.google.inject.extensions</groupId>
       <artifactId>guice-assistedinject</artifactId>
-      <version>4.0-beta5</version>
+      <version>4.2.3</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <!-- Apache 2.0 -->
       <groupId>com.google.inject.extensions</groupId>
       <artifactId>guice-servlet</artifactId>
-      <version>4.0-beta5</version>
+      <version>4.2.3</version>
       <scope>test</scope>
     </dependency>
       <!-- Apache 2.0 -->
