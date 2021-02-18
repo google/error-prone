@@ -62,4 +62,16 @@ public class ScopeOrQualifierAnnotationRetentionPositiveCases {
   @Target({TYPE, METHOD})
   // BUG: Diagnostic contains: @Retention(RUNTIME)
   public @interface TestAnnotation5 {}
+
+  /** A dagger map key annotation with default retention. */
+  @dagger.MapKey
+  @Target({TYPE, METHOD})
+  // BUG: Diagnostic contains: @Retention(RUNTIME)
+  public @interface TestAnnotation6 {}
+
+  /** A Guice map key annotation with default retention. */
+  @com.google.inject.multibindings.MapKey
+  @Target({TYPE, METHOD})
+  // BUG: Diagnostic contains: @Retention(RUNTIME)
+  public @interface TestAnnotation7 {}
 }

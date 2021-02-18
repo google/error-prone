@@ -17,7 +17,9 @@ package com.google.errorprone.bugpatterns.inject;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.bugpatterns.inject.ElementPredicates.doesNotHaveRuntimeRetention;
 import static com.google.errorprone.bugpatterns.inject.ElementPredicates.hasSourceRetention;
+import static com.google.errorprone.matchers.InjectMatchers.DAGGER_MAP_KEY_ANNOTATION;
 import static com.google.errorprone.matchers.InjectMatchers.GUICE_BINDING_ANNOTATION;
+import static com.google.errorprone.matchers.InjectMatchers.GUICE_MAP_KEY_ANNOTATION;
 import static com.google.errorprone.matchers.InjectMatchers.GUICE_SCOPE_ANNOTATION;
 import static com.google.errorprone.matchers.InjectMatchers.JAVAX_QUALIFIER_ANNOTATION;
 import static com.google.errorprone.matchers.InjectMatchers.JAVAX_SCOPE_ANNOTATION;
@@ -43,6 +45,7 @@ import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import java.lang.annotation.Retention;
 import javax.annotation.Nullable;
 
+// TODO(b/180081278): Rename this check to MissingRuntimeRetention
 /** @author sgoldfeder@google.com (Steven Goldfeder) */
 @BugPattern(
     name = "InjectScopeOrQualifierAnnotationRetention",
@@ -52,7 +55,7 @@ public class ScopeOrQualifierAnnotationRetention extends BugChecker implements C
 
   private static final String RETENTION_ANNOTATION = "java.lang.annotation.Retention";
 
-  /** Matches classes that are annotated with @Scope or @ScopeAnnotation. */
+  /** Matches classes that are qualifier, scope annotation or map binding keys. */
   private static final Matcher<ClassTree> SCOPE_OR_QUALIFIER_ANNOTATION_MATCHER =
       allOf(
           kindIs(ANNOTATION_TYPE),
@@ -60,7 +63,9 @@ public class ScopeOrQualifierAnnotationRetention extends BugChecker implements C
               hasAnnotation(GUICE_SCOPE_ANNOTATION),
               hasAnnotation(JAVAX_SCOPE_ANNOTATION),
               hasAnnotation(GUICE_BINDING_ANNOTATION),
-              hasAnnotation(JAVAX_QUALIFIER_ANNOTATION)));
+              hasAnnotation(JAVAX_QUALIFIER_ANNOTATION),
+              hasAnnotation(GUICE_MAP_KEY_ANNOTATION),
+              hasAnnotation(DAGGER_MAP_KEY_ANNOTATION)));
 
   @Override
   public final Description matchClass(ClassTree classTree, VisitorState state) {

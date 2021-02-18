@@ -97,6 +97,9 @@ public final class InjectMatchers {
           symbolHasAnnotation(JAVAX_QUALIFIER_ANNOTATION),
           symbolHasAnnotation(GUICE_BINDING_ANNOTATION));
 
+  public static final String GUICE_MAP_KEY_ANNOTATION = "com.google.inject.multibindings.MapKey";
+  public static final String DAGGER_MAP_KEY_ANNOTATION = "dagger.MapKey";
+
   public static final Matcher<ClassTree> IS_DAGGER_COMPONENT =
       anyOf(
           hasAnnotation("dagger.Component"),

@@ -57,4 +57,14 @@ public class ScopeOrQualifierAnnotationRetentionNegativeCases {
   /** A non-qualifer, non-scoping annotation without runtime retention. */
   @Retention(SOURCE)
   public @interface TestAnnotation5 {}
+
+  /** A dagger map key annotation. */
+  @dagger.MapKey
+  @Retention(RUNTIME)
+  public @interface TestAnnotation6 {}
+
+  /** A Guice map key annotation. */
+  @com.google.inject.multibindings.MapKey
+  @Retention(RUNTIME)
+  public @interface TestAnnotation7 {}
 }
