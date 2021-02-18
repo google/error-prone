@@ -128,21 +128,6 @@ public @interface BugPattern {
   String[] tags() default {};
 
   /**
-   * Whether and what type of fix this check provides.
-   *
-   * @deprecated this field is not used
-   */
-  @Deprecated
-  ProvidesFix providesFix() default ProvidesFix.UNSPECIFIED;
-
-  /** Types of fixes BugCheckers can provide. */
-  enum ProvidesFix {
-    NO_FIX,
-    REQUIRES_HUMAN_ATTENTION,
-    UNSPECIFIED;
-  }
-
-  /**
    * A short summary of the problem that this checker detects. Used for the default compiler error
    * message and for the short description in the generated docs. Should not end with a period, to
    * match javac warning/error style.
