@@ -398,6 +398,9 @@ Use Random.nextInt(int).  Random.nextInt() % n can have negative results
 __[RectIntersectReturnValueIgnored](bugpattern/RectIntersectReturnValueIgnored)__<br>
 Return value of android.graphics.Rect.intersect() must be checked
 
+__[RemovedInJDK11](bugpattern/RemovedInJDK11)__<br>
+This API is no longer supported in JDK 11
+
 __[RequiredModifiers](bugpattern/RequiredModifiers)__<br>
 This annotation is missing required modifiers as specified by its @RequiredModifiers annotation
 
