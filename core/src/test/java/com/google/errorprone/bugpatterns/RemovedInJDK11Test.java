@@ -51,7 +51,7 @@ public class RemovedInJDK11Test {
             "    // BUG: Diagnostic contains:",
             "    sm.checkTopLevelWindow(null);",
             "    // BUG: Diagnostic contains:",
-            "    t.stop();",
+            "    t.stop(null);",
             "    // BUG: Diagnostic contains:",
             "    t.destroy();",
             "  }",

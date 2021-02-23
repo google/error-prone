@@ -49,7 +49,11 @@ public class RemovedInJDK11 extends BugChecker implements MethodInvocationTreeMa
                   "checkMemberAccess",
                   "checkSystemClipboardAccess",
                   "checkTopLevelWindow"),
-          instanceMethod().onExactClass("java.lang.Thread").namedAnyOf("destroy", "stop"));
+          instanceMethod()
+              .onExactClass("java.lang.Thread")
+              .named("stop")
+              .withParameters("java.lang.Throwable"),
+          instanceMethod().onExactClass("java.lang.Thread").named("destroy"));
 
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
