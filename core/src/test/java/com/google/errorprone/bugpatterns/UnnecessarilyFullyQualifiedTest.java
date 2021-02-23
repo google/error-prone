@@ -133,6 +133,23 @@ public final class UnnecessarilyFullyQualifiedTest {
   }
 
   @Test
+  public void exemptedNames() {
+    helper
+        .addInputLines(
+            "Annotation.java", //
+            "package pkg;",
+            "public class Annotation {}")
+        .expectUnchanged()
+        .addInputLines(
+            "Test.java", //
+            "interface Test {",
+            "  pkg.Annotation foo();",
+            "}")
+        .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
   public void packageInfo() {
     CompilationTestHelper.newInstance(UnnecessarilyFullyQualified.class, getClass())
         .addSourceLines(
