@@ -67,6 +67,7 @@ public class BadImport extends BugChecker implements ImportTreeMatcher {
   static final ImmutableSet<String> BAD_NESTED_CLASSES =
       ImmutableSet.of(
           "Builder",
+          "BuilderFactory",
           "Callback",
           "Class",
           "Entry",
