@@ -41,5 +41,35 @@ public void test() {
 }
 ```
 
+If your `AutoValue` has multiple required fields, and only one is relevant for a
+test, consider using a [builder] or [`with`-style methods][wither] to create
+test instances with just the fields you care about. Consider using
+
+[builder]: https://github.com/google/auto/blob/master/value/userguide/builders.md
+[wither]: https://github.com/google/auto/blob/master/value/userguide/builders-howto.md#withers
+
+```java
+private MyAutoValue.Builder myAutoValueBuilder() {
+  return MyAutoValue.builder().bar(42).baz(false);
+}
+
+@Test
+public void test() {
+  MyAutoValue myAutoValue = myAutoValueBuilder.foo("foo").build();
+}
+```
+
+or:
+
+```java
+private static final MyAutoValue MY_AUTO_VALUE =
+    MyAutoValue.create(/* foo= */ "", /* bar= */ 42, /* baz= */ false);
+
+@Test
+public void test() {
+  MyAutoValue myAutoValue = MY_AUTO_VALUE.withFoo("foo");
+}
+```
+
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("DoNotMockAutoValue")` to the enclosing element.
