@@ -15,7 +15,7 @@
 <script type="text/javascript" src="../../../script-dir/jquery-ui.min.js"></script>
 </head>
 <body class="class-declaration-page">
-<script type="text/javascript">var data = {"i0":10,"i1":10,"i2":10,"i3":9,"i4":9,"i5":9,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10,"i13":10,"i14":10,"i15":10,"i16":10,"i17":10,"i18":10,"i19":10,"i20":10,"i21":10,"i22":10,"i23":10,"i24":10,"i25":10,"i26":10,"i27":10,"i28":10,"i29":10,"i30":10,"i31":9,"i32":10,"i33":10,"i34":10,"i35":10};
+<script type="text/javascript">var data = {"i0":10,"i1":10,"i2":10,"i3":9,"i4":9,"i5":9,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10,"i13":10,"i14":10,"i15":10,"i16":10,"i17":10,"i18":10,"i19":10,"i20":10,"i21":10,"i22":10,"i23":10,"i24":10,"i25":10,"i26":10,"i27":10,"i28":10,"i29":10,"i30":10,"i31":10,"i32":9,"i33":10,"i34":10,"i35":10,"i36":10};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "alt-color";
 var rowColor = "row-color";
@@ -247,33 +247,40 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 </td>
 </tr>
 <tr class="row-color" id="i9">
+<td class="col-first"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#getConstantExpression(java.lang.Object)">getConstantExpression</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;value)</code></th>
+<td class="col-last">
+<div class="block">Returns the Java source code for a constant expression representing the given constant value.</div>
+</td>
+</tr>
+<tr class="alt-color" id="i10">
 <td class="col-first"><code><a href="https://docs.oracle.com/javase/8/docs/api/javax/lang/model/util/Elements.html" title="class or interface in javax.lang.model.util" class="external-link">Elements</a></code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#getElements()">getElements</a></span>()</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color" id="i10">
+<tr class="row-color" id="i11">
 <td class="col-first"><code>int</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#getEndPosition(com.sun.source.tree.Tree)">getEndPosition</a></span>&#8203;(com.sun.source.tree.Tree&nbsp;node)</code></th>
 <td class="col-last">
 <div class="block">Returns the end position of the node, or -1 if it is not available.</div>
 </td>
 </tr>
-<tr class="row-color" id="i11">
+<tr class="alt-color" id="i12">
 <td class="col-first"><code>com.sun.tools.javac.util.Name</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#getName(java.lang.String)">getName</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;nameStr)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color" id="i12">
+<tr class="row-color" id="i13">
 <td class="col-first"><code>com.sun.tools.javac.util.Names</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#getNames()">getNames</a></span>()</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color" id="i13">
+<tr class="alt-color" id="i14">
 <td class="col-first"><code><a href="dataflow/nullnesspropagation/NullnessAnalysis.html" title="class in com.google.errorprone.dataflow.nullnesspropagation">NullnessAnalysis</a></code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#getNullnessAnalysis()">getNullnessAnalysis</a></span>()</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color" id="i14">
+<tr class="row-color" id="i15">
 <td class="col-first"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="util/ErrorProneToken.html" title="class in com.google.errorprone.util">ErrorProneToken</a>&gt;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#getOffsetTokens(int,int)">getOffsetTokens</a></span>&#8203;(int&nbsp;start,
 int&nbsp;end)</code></th>
@@ -282,7 +289,7 @@ int&nbsp;end)</code></th>
  start position.</div>
 </td>
 </tr>
-<tr class="row-color" id="i15">
+<tr class="alt-color" id="i16">
 <td class="col-first"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="util/ErrorProneToken.html" title="class in com.google.errorprone.util">ErrorProneToken</a>&gt;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#getOffsetTokensForNode(com.sun.source.tree.Tree)">getOffsetTokensForNode</a></span>&#8203;(com.sun.source.tree.Tree&nbsp;tree)</code></th>
 <td class="col-last">
@@ -290,61 +297,61 @@ int&nbsp;end)</code></th>
  of the tree within the overall source.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i16">
+<tr class="row-color" id="i17">
 <td class="col-first"><code>com.sun.source.util.TreePath</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#getPath()">getPath</a></span>()</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color" id="i17">
+<tr class="alt-color" id="i18">
 <td class="col-first"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/CharSequence.html" title="class or interface in java.lang" class="external-link">CharSequence</a></code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#getSourceCode()">getSourceCode</a></span>()</code></th>
 <td class="col-last">
 <div class="block">Gets the current source file.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i18">
+<tr class="row-color" id="i19">
 <td class="col-first"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#getSourceForNode(com.sun.source.tree.Tree)">getSourceForNode</a></span>&#8203;(com.sun.source.tree.Tree&nbsp;tree)</code></th>
 <td class="col-last">
 <div class="block">Gets the original source code that represents the given node.</div>
 </td>
 </tr>
-<tr class="row-color" id="i19">
+<tr class="alt-color" id="i20">
 <td class="col-first"><code>com.sun.tools.javac.code.Symbol.ClassSymbol</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#getSymbolFromName(com.sun.tools.javac.util.Name)">getSymbolFromName</a></span>&#8203;(com.sun.tools.javac.util.Name&nbsp;name)</code></th>
 <td class="col-last">
 <div class="block">Look up the class symbol for a given Name.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i20">
+<tr class="row-color" id="i21">
 <td class="col-first"><code>com.sun.tools.javac.code.Symbol.ClassSymbol</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#getSymbolFromString(com.sun.tools.javac.code.Symbol.ModuleSymbol,com.sun.tools.javac.util.Name)">getSymbolFromString</a></span>&#8203;(com.sun.tools.javac.code.Symbol.ModuleSymbol&nbsp;msym,
 com.sun.tools.javac.util.Name&nbsp;name)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color" id="i21">
+<tr class="alt-color" id="i22">
 <td class="col-first"><code>com.sun.tools.javac.code.Symbol</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#getSymbolFromString(java.lang.String)">getSymbolFromString</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;symStr)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color" id="i22">
+<tr class="row-color" id="i23">
 <td class="col-first"><code>com.sun.tools.javac.code.Symtab</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#getSymtab()">getSymtab</a></span>()</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color" id="i23">
+<tr class="alt-color" id="i24">
 <td class="col-first"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="util/ErrorProneToken.html" title="class in com.google.errorprone.util">ErrorProneToken</a>&gt;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#getTokensForNode(com.sun.source.tree.Tree)">getTokensForNode</a></span>&#8203;(com.sun.source.tree.Tree&nbsp;tree)</code></th>
 <td class="col-last">
 <div class="block">Returns the list of <code>Tokens.Token</code>s for the given <code>JCTree</code>.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i24">
+<tr class="row-color" id="i25">
 <td class="col-first"><code>com.sun.tools.javac.tree.TreeMaker</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#getTreeMaker()">getTreeMaker</a></span>()</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color" id="i25">
+<tr class="alt-color" id="i26">
 <td class="col-first"><code>com.sun.tools.javac.code.Type</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#getType(com.sun.tools.javac.code.Type,boolean,java.util.List)">getType</a></span>&#8203;(com.sun.tools.javac.code.Type&nbsp;baseType,
 boolean&nbsp;isArray,
@@ -353,19 +360,19 @@ boolean&nbsp;isArray,
 <div class="block">Build an instance of a Type.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i26">
+<tr class="row-color" id="i27">
 <td class="col-first"><code>com.sun.tools.javac.code.Type</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#getTypeFromString(java.lang.String)">getTypeFromString</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;typeStr)</code></th>
 <td class="col-last">
 <div class="block">Given the binary name of a class, returns the <code>Type</code>.</div>
 </td>
 </tr>
-<tr class="row-color" id="i27">
+<tr class="alt-color" id="i28">
 <td class="col-first"><code>com.sun.tools.javac.code.Types</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#getTypes()">getTypes</a></span>()</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color" id="i28">
+<tr class="row-color" id="i29">
 <td class="col-first"><code>void</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#incrementCounter(com.google.errorprone.bugpatterns.BugChecker,java.lang.String)">incrementCounter</a></span>&#8203;(<a href="bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a>&nbsp;bugChecker,
 <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;key)</code></th>
@@ -374,7 +381,7 @@ boolean&nbsp;isArray,
  by 1.</div>
 </td>
 </tr>
-<tr class="row-color" id="i29">
+<tr class="alt-color" id="i30">
 <td class="col-first"><code>void</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#incrementCounter(com.google.errorprone.bugpatterns.BugChecker,java.lang.String,int)">incrementCounter</a></span>&#8203;(<a href="bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a>&nbsp;bugChecker,
 <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;key,
@@ -384,14 +391,14 @@ int&nbsp;count)</code></th>
  by <code>count</code>.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i30">
+<tr class="row-color" id="i31">
 <td class="col-first"><code>boolean</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#isAndroidCompatible()">isAndroidCompatible</a></span>()</code></th>
 <td class="col-last">
 <div class="block">Returns true if the compilation is targeting Android.</div>
 </td>
 </tr>
-<tr class="row-color" id="i31">
+<tr class="alt-color" id="i32">
 <td class="col-first"><code>static &lt;T&gt;&nbsp;<a href="suppliers/Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a>&lt;T&gt;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#memoize(com.google.errorprone.suppliers.Supplier)">memoize</a></span>&#8203;(<a href="suppliers/Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a>&lt;T&gt;&nbsp;f)</code></th>
 <td class="col-last">
@@ -399,24 +406,24 @@ int&nbsp;count)</code></th>
  compilation, but requires a VisitorState to compute that result.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i32">
+<tr class="row-color" id="i33">
 <td class="col-first"><code>void</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#reportMatch(com.google.errorprone.matchers.Description)">reportMatch</a></span>&#8203;(<a href="matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a>&nbsp;description)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color" id="i33">
+<tr class="alt-color" id="i34">
 <td class="col-first"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/AutoCloseable.html" title="class or interface in java.lang" class="external-link">AutoCloseable</a></code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#timingSpan(com.google.errorprone.matchers.Suppressible)">timingSpan</a></span>&#8203;(<a href="matchers/Suppressible.html" title="interface in com.google.errorprone.matchers">Suppressible</a>&nbsp;suppressible)</code></th>
 <td class="col-last">
 <div class="block">Returns a timing span for the given <a href="matchers/Suppressible.html" title="interface in com.google.errorprone.matchers"><code>Suppressible</code></a>.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i34">
+<tr class="row-color" id="i35">
 <td class="col-first"><code><a href="VisitorState.html" title="class in com.google.errorprone">VisitorState</a></code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#withPath(com.sun.source.util.TreePath)">withPath</a></span>&#8203;(com.sun.source.util.TreePath&nbsp;path)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color" id="i35">
+<tr class="alt-color" id="i36">
 <td class="col-first"><code><a href="VisitorState.html" title="class in com.google.errorprone">VisitorState</a></code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#withSuppression(com.google.errorprone.SuppressionInfo.SuppressedState)">withSuppression</a></span>&#8203;(<a href="SuppressionInfo.SuppressedState.html" title="enum in com.google.errorprone">SuppressionInfo.SuppressedState</a>&nbsp;suppressedState)</code></th>
 <td class="col-last">&nbsp;</td>
@@ -829,6 +836,14 @@ int&nbsp;end)</span></div>
 <div class="block">Produces a cache for a function that is expected to return the same result throughout a
  compilation, but requires a VisitorState to compute that result. Do not use this method for a
  function that depends on the varying state of a VisitorState (e.g. <a href="#getPath()"><code>getPath()</code></a>.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="getConstantExpression(java.lang.Object)">
+<h3>getConstantExpression</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="member-name">getConstantExpression</span>&#8203;(<span class="parameters"><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;value)</span></div>
+<div class="block">Returns the Java source code for a constant expression representing the given constant value.
+ Like <a href="https://docs.oracle.com/javase/8/docs/api/javax/lang/model/util/Elements.html#getConstantExpression(java.lang.Object)" title="class or interface in javax.lang.model.util" class="external-link"><code>Elements.getConstantExpression(java.lang.Object)</code></a>, but doesn't over-escape single quotes in strings.</div>
 </section>
 </li>
 </ul>
