@@ -746,4 +746,30 @@ public class VisitorState {
       this.errorProneOptions = errorProneOptions;
     }
   }
+
+  /**
+   * Returns the Java source code for a constant expression representing the given constant value.
+   * Like {@link Elements#getConstantExpression}, but doesn't over-escape single quotes in strings.
+   */
+  public String getConstantExpression(Object value) {
+    String escaped = getElements().getConstantExpression(value);
+    if (value instanceof String) {
+      // Don't escape single-quotes in string literals
+      StringBuilder sb = new StringBuilder();
+      for (int i = 0; i < escaped.length(); i++) {
+        char c = escaped.charAt(i);
+        if (c == '\\' && i + 1 < escaped.length()) {
+          char next = escaped.charAt(++i);
+          if (next != '\'') {
+            sb.append(c);
+          }
+          sb.append(next);
+        } else {
+          sb.append(c);
+        }
+      }
+      return sb.toString();
+    }
+    return escaped;
+  }
 }

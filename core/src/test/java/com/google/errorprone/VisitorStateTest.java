@@ -18,6 +18,11 @@ package com.google.errorprone;
 
 import static com.google.common.truth.Truth.assertThat;
 
+import com.google.common.collect.ImmutableList;
+import com.sun.source.util.JavacTask;
+import com.sun.tools.javac.api.BasicJavacTask;
+import com.sun.tools.javac.api.JavacTool;
+import com.sun.tools.javac.util.Context;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -50,5 +55,24 @@ public class VisitorStateTest {
         .isEqualTo("test.RegularClass$Nested");
     assertThat(VisitorState.inferBinaryName("com.google.RegularClass.Nested"))
         .isEqualTo("com.google.RegularClass$Nested");
+  }
+
+  @Test
+  public void getConstantExpression() {
+    JavacTask task =
+        JavacTool.create()
+            .getTask(
+                /* out= */ null,
+                FileManagers.testFileManager(),
+                /* diagnosticListener= */ null,
+                /* options= */ ImmutableList.of(),
+                /* classes= */ ImmutableList.of(),
+                /* compilationUnits= */ ImmutableList.of());
+    Context context = ((BasicJavacTask) task).getContext();
+    VisitorState visitorState = VisitorState.createForUtilityPurposes(context);
+    assertThat(visitorState.getConstantExpression("hello ' world")).isEqualTo("\"hello ' world\"");
+    assertThat(visitorState.getConstantExpression("hello \n world"))
+        .isEqualTo("\"hello \\n world\"");
+    assertThat(visitorState.getConstantExpression('\'')).isEqualTo("'\\''");
   }
 }
