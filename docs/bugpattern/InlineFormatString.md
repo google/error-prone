@@ -21,7 +21,7 @@ passed.
 If a single format string is used by multiple calls to `String.format`, consider
 extracting a helper method instead of making the string a constant:
 
-```
+```java
 String errorMessage(String badArgA, String badArgB) {
   return String.format("Uh oh, can't use %s with %s", badArgA, badArgB);
 }
