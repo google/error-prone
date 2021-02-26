@@ -105,7 +105,8 @@ public final class InjectMatchers {
           hasAnnotation("dagger.Component"),
           hasAnnotation("dagger.Subcomponent"),
           hasAnnotation("dagger.producers.ProductionComponent"),
-          hasAnnotation("dagger.producers.ProductionSubcomponent"));
+          hasAnnotation("dagger.producers.ProductionSubcomponent"),
+          hasAnnotation("dagger.hilt.DefineComponent"));
 
   public static final Matcher<ClassTree> IS_DAGGER_COMPONENT_OR_MODULE =
       anyOf(IS_DAGGER_COMPONENT, hasAnnotation("dagger.Module"));
