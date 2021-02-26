@@ -1846,4 +1846,23 @@ public class ImmutableCheckerTest {
             "}")
         .doTest();
   }
+
+  // regression test for b/181262633
+  @Test
+  public void immutableTypeParameter_rawSuper() {
+    compilationHelper
+        .addSourceLines(
+            "A.java",
+            "import com.google.errorprone.annotations.ImmutableTypeParameter;",
+            "import com.google.errorprone.annotations.Immutable;",
+            "@Immutable class S<@ImmutableTypeParameter X> {}")
+        .addSourceLines(
+            "Test.java",
+            "import com.google.errorprone.annotations.ImmutableTypeParameter;",
+            "import com.google.errorprone.annotations.Immutable;",
+            "// BUG: Diagnostic contains: 'S' required instantiation of 'X' with type parameters,"
+                + " but was raw",
+            "@Immutable class T<@ImmutableTypeParameter X> extends S {}")
+        .doTest();
+  }
 }

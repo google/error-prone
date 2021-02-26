@@ -377,18 +377,17 @@ public final class ThreadSafety {
    */
   public Violation threadSafeInstantiation(
       Set<String> containerTypeParameters, AnnotationInfo annotation, Type type) {
-    if (!annotation.containerOf().isEmpty()
-        && type.tsym.getTypeParameters().size() != type.getTypeArguments().size()) {
-      return Violation.of(
-          String.format(
-              "'%s' required instantiation of '%s' with type parameters, but was raw",
-              getPrettyName(type.tsym), Joiner.on(", ").join(annotation.containerOf())));
-    }
     for (int i = 0; i < type.tsym.getTypeParameters().size(); i++) {
       TypeVariableSymbol typaram = type.tsym.getTypeParameters().get(i);
       boolean immutableTypeParameter = hasThreadSafeTypeParameterAnnotation(typaram);
       if (annotation.containerOf().contains(typaram.getSimpleName().toString())
           || immutableTypeParameter) {
+        if (type.getTypeArguments().isEmpty()) {
+          return Violation.of(
+              String.format(
+                  "'%s' required instantiation of '%s' with type parameters, but was raw",
+                  getPrettyName(type.tsym), typaram));
+        }
         Type tyarg = type.getTypeArguments().get(i);
         if (suppressAnnotation != null
             && tyarg.getAnnotationMirrors().stream()
