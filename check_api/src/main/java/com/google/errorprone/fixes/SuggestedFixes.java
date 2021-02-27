@@ -966,7 +966,7 @@ public final class SuggestedFixes {
     ImmutableSet<String> newWarningSet =
         warningsSuppressed.stream()
             .filter(warning -> !warning.equals(warningToRemove))
-            .map(warningToKeep -> state.getElements().getConstantExpression(warningToKeep))
+            .map(state::getConstantExpression)
             .collect(toImmutableSet());
     if (newWarningSet.size() == warningsSuppressed.size()) {
       // no matches found. Nothing to delete.

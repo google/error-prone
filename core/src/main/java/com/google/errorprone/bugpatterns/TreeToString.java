@@ -117,7 +117,7 @@ public class TreeToString extends AbstractToString {
       MethodInvocationTree targetMethodInvocationTree = (MethodInvocationTree) target;
       if (TREEMAKER_LITERAL_CREATOR.matches(targetMethodInvocationTree, state)) {
         return String.format(
-            "%s.getElements().getConstantExpression(%s)",
+            "%s.getConstantExpression(%s)",
             visitorStateVariable,
             state.getSourceForNode(getOnlyElement(targetMethodInvocationTree.getArguments())));
       }

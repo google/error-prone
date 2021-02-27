@@ -85,7 +85,7 @@ public class TreeToStringTest {
             "  }",
             "  private String createTree(VisitorState state) {",
             "     TreeMaker maker = TreeMaker.instance(state.context);",
-            "    // BUG: Diagnostic contains: state.getElements().getConstantExpression(\"val\")",
+            "    // BUG: Diagnostic contains: state.getConstantExpression(\"val\")",
             "     return maker.Literal(\"val\").toString();",
             "  }",
             "}")
