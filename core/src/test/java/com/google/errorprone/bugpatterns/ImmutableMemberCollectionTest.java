@@ -89,4 +89,38 @@ public final class ImmutableMemberCollectionTest {
         .expectUnchanged()
         .doTest();
   }
+
+  @Test
+  public void setInit_mutableTypeInConstructor_doesNothing() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            "import java.util.Set;",
+            "import java.util.HashSet;",
+            "class Test {",
+            "  private final Set<String> mySet;",
+            "  Test() {",
+            "    mySet = new HashSet<>();",
+            "  }",
+            "}")
+        .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
+  public void setInit_mutableTypeInStaticBlock_doesNothing() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            "import java.util.Set;",
+            "import java.util.HashSet;",
+            "class Test {",
+            "  private static final Set<String> mySet;",
+            "  static {",
+            "    mySet = new HashSet<>();",
+            "  }",
+            "}")
+        .expectUnchanged()
+        .doTest();
+  }
 }
