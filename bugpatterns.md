@@ -667,6 +667,9 @@ This fuzzy equality check is using a tolerance less than the gap to the next num
 __[FloatingPointLiteralPrecision](bugpattern/FloatingPointLiteralPrecision)__<br>
 Floating point literal loses precision
 
+__[FloggerArgumentToString](bugpattern/FloggerArgumentToString)__<br>
+Use Flogger&#39;s printf-style formatting instead of explicitly converting arguments to strings
+
 __[FloggerStringConcatenation](bugpattern/FloggerStringConcatenation)__<br>
 Prefer string formatting using printf placeholders (e.g. %s) instead of string concatenation
 
