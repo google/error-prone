@@ -398,11 +398,12 @@ public final class FindIdentifiers {
           // the enclosing static nested class (JLS 8.5.1).
           if (lowerThan(
               path,
+              (curr, unused) -> {
+                Symbol sym = ASTHelpers.getSymbol(curr);
+                return sym != null && sym.isStatic();
+              },
               (curr, unused) ->
-                  curr instanceof ClassTree && ASTHelpers.getSymbol((ClassTree) curr).isStatic(),
-              (curr, unused) ->
-                  curr instanceof ClassTree
-                      && ASTHelpers.getSymbol((ClassTree) curr).equals(var.owner))) {
+                  curr instanceof ClassTree && ASTHelpers.getSymbol(curr).equals(var.owner))) {
             return false;
           }
         }
