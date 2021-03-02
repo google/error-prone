@@ -19,9 +19,9 @@ package com.google.errorprone.bugpatterns.flogger;
 import static com.google.common.base.Preconditions.checkState;
 import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
+import static com.google.errorprone.bugpatterns.flogger.FloggerHelpers.inferFormatSpecifier;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.constValue;
-import static com.google.errorprone.util.ASTHelpers.getType;
 import static java.util.stream.Collectors.joining;
 
 import com.google.errorprone.BugPattern;
@@ -100,7 +100,7 @@ public class FloggerStringConcatenation extends BugChecker implements MethodInvo
       if (piece.getKind().equals(Kind.STRING_LITERAL)) {
         formatString.append((String) ((LiteralTree) piece).getValue());
       } else {
-        formatString.append(formatSpecifier(piece));
+        formatString.append('%').append(inferFormatSpecifier(piece, state));
         formatArguments.add(piece);
       }
     }
@@ -111,22 +111,5 @@ public class FloggerStringConcatenation extends BugChecker implements MethodInvo
             state.getConstantExpression(formatString.toString())
                 + ", "
                 + formatArguments.stream().map(state::getSourceForNode).collect(joining(", "))));
-  }
-
-  private static String formatSpecifier(Tree piece) {
-    switch (getType(piece).getKind()) {
-      case INT:
-      case LONG:
-        return "%d";
-      case FLOAT:
-      case DOUBLE:
-        return "%g";
-      case BOOLEAN:
-        // %b is identical to %s in Flogger, but not in String.format, so it might be risky
-        // to train people to prefer it. (In format() a Boolean "null" becomes "false",)
-        return "%s";
-      default:
-        return "%s";
-    }
   }
 }

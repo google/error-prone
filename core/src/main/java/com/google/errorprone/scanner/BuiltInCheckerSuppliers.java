@@ -392,6 +392,7 @@ import com.google.errorprone.bugpatterns.collectionincompatibletype.CollectionUn
 import com.google.errorprone.bugpatterns.collectionincompatibletype.CompatibleWithMisuse;
 import com.google.errorprone.bugpatterns.collectionincompatibletype.IncompatibleArgumentType;
 import com.google.errorprone.bugpatterns.collectionincompatibletype.TruthIncompatibleType;
+import com.google.errorprone.bugpatterns.flogger.FloggerArgumentToString;
 import com.google.errorprone.bugpatterns.flogger.FloggerFormatString;
 import com.google.errorprone.bugpatterns.flogger.FloggerLogVarargs;
 import com.google.errorprone.bugpatterns.flogger.FloggerLogWithCause;
@@ -772,6 +773,7 @@ public class BuiltInCheckerSuppliers {
           FloatCast.class,
           FloatingPointAssertionWithinEpsilon.class,
           FloatingPointLiteralPrecision.class,
+          FloggerArgumentToString.class,
           FloggerStringConcatenation.class,
           FragmentInjection.class,
           FragmentNotInstantiable.class,
