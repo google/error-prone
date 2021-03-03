@@ -42,6 +42,7 @@ import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.scanner.ErrorProneScanner;
 import com.google.errorprone.scanner.ErrorProneScannerTransformer;
+import com.google.errorprone.scanner.ScannerSupplier;
 import com.google.errorprone.util.RuntimeVersion;
 import com.google.googlejavaformat.java.Formatter;
 import com.google.googlejavaformat.java.FormatterException;
@@ -145,7 +146,7 @@ public class BugCheckerRefactoringTestHelper {
 
   private final Map<JavaFileObject, JavaFileObject> sources = new HashMap<>();
   private final Class<?> clazz;
-  private final ErrorProneScanner scanner;
+  private final ScannerSupplier scannerSupplier;
 
   private FixChooser fixChooser = FixChoosers.FIRST;
   private List<String> options = ImmutableList.of();
@@ -154,30 +155,27 @@ public class BugCheckerRefactoringTestHelper {
 
   private boolean run = false;
 
-  private BugCheckerRefactoringTestHelper(Class<?> clazz, ErrorProneScanner scanner) {
+  private BugCheckerRefactoringTestHelper(Class<?> clazz, ScannerSupplier scannerSupplier) {
     this.clazz = clazz;
-    this.scanner = scanner;
+    this.scannerSupplier = scannerSupplier;
   }
 
   public static BugCheckerRefactoringTestHelper newInstance(
       BugChecker refactoringBugChecker, Class<?> clazz) {
-    return new BugCheckerRefactoringTestHelper(clazz, new ErrorProneScanner(refactoringBugChecker));
+    return new BugCheckerRefactoringTestHelper(
+        clazz, ScannerSupplier.fromScanner(new ErrorProneScanner(refactoringBugChecker)));
   }
 
   public static BugCheckerRefactoringTestHelper createWithMultipleCheckers(
       Class<?> clazz, BugChecker... checkers) {
-    return new BugCheckerRefactoringTestHelper(clazz, new ErrorProneScanner(checkers));
+    return new BugCheckerRefactoringTestHelper(
+        clazz, ScannerSupplier.fromScanner(new ErrorProneScanner(checkers)));
   }
 
   public static BugCheckerRefactoringTestHelper newInstance(
       Class<? extends BugChecker> checkerClass, Class<?> clazz) {
-    BugChecker checker;
-    try {
-      checker = checkerClass.getDeclaredConstructor().newInstance();
-    } catch (ReflectiveOperationException e) {
-      throw new LinkageError(e.getMessage(), e);
-    }
-    return newInstance(checker, clazz);
+    return new BugCheckerRefactoringTestHelper(
+        clazz, ScannerSupplier.fromBugCheckerClasses(checkerClass));
   }
 
   public BugCheckerRefactoringTestHelper.ExpectOutput addInput(String inputFilename) {
@@ -336,7 +334,7 @@ public class BugCheckerRefactoringTestHelper {
   }
 
   private ErrorProneScannerTransformer transformer() {
-    return ErrorProneScannerTransformer.create(scanner);
+    return ErrorProneScannerTransformer.create(scannerSupplier.get());
   }
 
   /** To assert the proper {@code .addInput().addOutput()} chain. */
