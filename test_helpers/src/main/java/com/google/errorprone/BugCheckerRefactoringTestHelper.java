@@ -164,16 +164,23 @@ public class BugCheckerRefactoringTestHelper {
     this.scannerSupplier = scannerSupplier;
   }
 
+  /** @deprecated prefer {@link #newInstance(Class, Class)} */
+  @Deprecated
   public static BugCheckerRefactoringTestHelper newInstance(
       BugChecker refactoringBugChecker, Class<?> clazz) {
     return new BugCheckerRefactoringTestHelper(
         clazz, new OverrideIgnoringScannerSupplier(new ErrorProneScanner(refactoringBugChecker)));
   }
 
-  public static BugCheckerRefactoringTestHelper createWithMultipleCheckers(
-      Class<?> clazz, BugChecker... checkers) {
-    return new BugCheckerRefactoringTestHelper(
-        clazz, new OverrideIgnoringScannerSupplier(new ErrorProneScanner(checkers)));
+  /**
+   * Returns a new {@link CompilationTestHelper}.
+   *
+   * @param scannerSupplier the {@link ScannerSupplier} to test
+   * @param clazz the class to use to locate file resources
+   */
+  public static BugCheckerRefactoringTestHelper newInstance(
+      ScannerSupplier scannerSupplier, Class<?> clazz) {
+    return new BugCheckerRefactoringTestHelper(clazz, scannerSupplier);
   }
 
   public static BugCheckerRefactoringTestHelper newInstance(
