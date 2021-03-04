@@ -29,10 +29,13 @@ import static com.google.testing.compile.JavaSourceSubjectFactory.javaSource;
 import static org.junit.Assert.fail;
 
 import com.google.common.base.Joiner;
+import com.google.common.collect.ImmutableBiMap;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Iterators;
+import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import com.google.errorprone.annotations.CheckReturnValue;
 import com.google.errorprone.apply.DescriptionBasedDiff;
@@ -42,6 +45,7 @@ import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.scanner.ErrorProneScanner;
 import com.google.errorprone.scanner.ErrorProneScannerTransformer;
+import com.google.errorprone.scanner.Scanner;
 import com.google.errorprone.scanner.ScannerSupplier;
 import com.google.errorprone.util.RuntimeVersion;
 import com.google.googlejavaformat.java.Formatter;
@@ -163,13 +167,13 @@ public class BugCheckerRefactoringTestHelper {
   public static BugCheckerRefactoringTestHelper newInstance(
       BugChecker refactoringBugChecker, Class<?> clazz) {
     return new BugCheckerRefactoringTestHelper(
-        clazz, ScannerSupplier.fromScanner(new ErrorProneScanner(refactoringBugChecker)));
+        clazz, new OverrideIgnoringScannerSupplier(new ErrorProneScanner(refactoringBugChecker)));
   }
 
   public static BugCheckerRefactoringTestHelper createWithMultipleCheckers(
       Class<?> clazz, BugChecker... checkers) {
     return new BugCheckerRefactoringTestHelper(
-        clazz, ScannerSupplier.fromScanner(new ErrorProneScanner(checkers)));
+        clazz, new OverrideIgnoringScannerSupplier(new ErrorProneScanner(checkers)));
   }
 
   public static BugCheckerRefactoringTestHelper newInstance(
@@ -305,7 +309,8 @@ public class BugCheckerRefactoringTestHelper {
       JavaFileObject sourceFileObject, Context context, JCCompilationUnit tree) throws IOException {
     ImportOrganizer importOrganizer = ImportOrderParser.getImportOrganizer(importOrder);
     final DescriptionBasedDiff diff = DescriptionBasedDiff.create(tree, importOrganizer);
-    transformer()
+    ErrorProneOptions errorProneOptions = context.get(ErrorProneOptions.class);
+    ErrorProneScannerTransformer.create(scannerSupplier.applyOverrides(errorProneOptions).get())
         .apply(
             new TreePath(tree),
             context,
@@ -333,10 +338,6 @@ public class BugCheckerRefactoringTestHelper {
     return tree.getPackage().packge.package_info.toString();
   }
 
-  private ErrorProneScannerTransformer transformer() {
-    return ErrorProneScannerTransformer.create(scannerSupplier.get());
-  }
-
   /** To assert the proper {@code .addInput().addOutput()} chain. */
   public class ExpectOutput {
     private final JavaFileObject input;
@@ -362,6 +363,54 @@ public class BugCheckerRefactoringTestHelper {
     JavaCompiler compiler = context.get(JavaCompiler.compilerKey);
     if (compiler != null) {
       compiler.close();
+    }
+  }
+
+  /**
+   * Wraps a {@code InstanceReturningScannerSupplier}, but silently skips {@link #applyOverrides}
+   * instead of throwing {@code UOE}.
+   */
+  private static class OverrideIgnoringScannerSupplier extends ScannerSupplier {
+
+    private final ScannerSupplier delegate;
+
+    public OverrideIgnoringScannerSupplier(ErrorProneScanner scanner) {
+      delegate = ScannerSupplier.fromScanner(scanner);
+    }
+
+    @Override
+    public Scanner get() {
+      return delegate.get();
+    }
+
+    @Override
+    public ScannerSupplier applyOverrides(ErrorProneOptions errorProneOptions) {
+      return this;
+    }
+
+    @Override
+    public ImmutableBiMap<String, BugCheckerInfo> getAllChecks() {
+      throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public ImmutableSet<BugCheckerInfo> getEnabledChecks() {
+      throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public ImmutableMap<String, SeverityLevel> severities() {
+      throw new UnsupportedOperationException();
+    }
+
+    @Override
+    protected ImmutableSet<String> disabled() {
+      throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public ErrorProneFlags getFlags() {
+      throw new UnsupportedOperationException();
     }
   }
 }
