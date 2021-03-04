@@ -93,9 +93,17 @@ public class SuppressionInfo {
     if (inGeneratedCode && suppressedInGeneratedCode) {
       return SuppressedState.SUPPRESSED;
     }
-    if (suppressible.supportsSuppressWarnings()
-        && !Collections.disjoint(suppressible.allNames(), suppressWarningsStrings)) {
-      return SuppressedState.SUPPRESSED;
+
+    if (HubSpotUtils.isCanonicalSuppressionEnabled(state)) {
+      if (suppressible.supportsSuppressWarnings()
+          && suppressWarningsStrings.contains(suppressible.canonicalName())) {
+        return SuppressedState.SUPPRESSED;
+      }
+    } else {
+      if (suppressible.supportsSuppressWarnings()
+          && !Collections.disjoint(suppressible.allNames(), suppressWarningsStrings)) {
+        return SuppressedState.SUPPRESSED;
+      }
     }
     if (suppressible.suppressedByAnyOf(customSuppressions, state)) {
       return SuppressedState.SUPPRESSED;

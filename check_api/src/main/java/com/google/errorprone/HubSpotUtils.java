@@ -107,6 +107,17 @@ public class HubSpotUtils {
     return isErrorHandlingEnabled(options.getFlags());
   }
 
+  public static boolean isCanonicalSuppressionEnabled(VisitorState visitorState) {
+    ErrorProneFlags flags = visitorState.errorProneOptions().getFlags();
+    if (flags == null) {
+      return false;
+    }
+
+    return flags
+        .getBoolean("hubspot:canonical-suppression")
+        .orElse(false);
+  }
+
   public static void recordError(Suppressible s) {
     DATA.computeIfAbsent(EXCEPTIONS, ignored -> ConcurrentHashMap.newKeySet())
         .add(s.canonicalName());
