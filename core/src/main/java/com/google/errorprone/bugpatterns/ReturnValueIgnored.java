@@ -24,11 +24,13 @@ import static com.google.errorprone.matchers.Matchers.not;
 import static com.google.errorprone.matchers.Matchers.packageStartsWith;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
+import static com.google.errorprone.predicates.TypePredicates.isDescendantOf;
 import static com.google.errorprone.predicates.TypePredicates.isExactTypeAny;
 import static com.google.errorprone.util.ASTHelpers.isSameType;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
@@ -208,6 +210,11 @@ public class ReturnValueIgnored extends AbstractReturnValueIgnored {
           instanceMethod().onExactClass("java.util.Optional").named("isPresent"),
           instanceMethod().onExactClass("java.util.Optional").named("isEmpty"));
 
+  /** The return values of {@code ProtoMessage.newBuilder()} should always be checked. */
+  // TODO(b/9467048): consolidate this with ProtoBuilderReturnValueIgnored
+  private static final Matcher<ExpressionTree> PROTO_METHODS =
+      staticMethod().onClass(isDescendantOf("com.google.protobuf.MessageLite")).named("newBuilder");
+
   private static final Matcher<? super ExpressionTree> SPECIALIZED_MATCHER =
       anyOf(
           RETURNS_SAME_TYPE,
@@ -231,8 +238,15 @@ public class ReturnValueIgnored extends AbstractReturnValueIgnored {
               .namedAnyOf("containsKey", "containsValue")
               .withParameters("java.lang.Object"));
 
+  private final Matcher<? super ExpressionTree> matcher;
+
+  public ReturnValueIgnored(ErrorProneFlags flags) {
+    boolean checkProtos = flags.getBoolean("ReturnValueIgnored:CheckProtos").orElse(true);
+    this.matcher = checkProtos ? anyOf(SPECIALIZED_MATCHER, PROTO_METHODS) : SPECIALIZED_MATCHER;
+  }
+
   @Override
   public Matcher<? super ExpressionTree> specializedMatcher() {
-    return SPECIALIZED_MATCHER;
+    return matcher;
   }
 }
