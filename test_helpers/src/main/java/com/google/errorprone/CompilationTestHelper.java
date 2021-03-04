@@ -22,6 +22,7 @@ import static com.google.common.truth.Truth.assertWithMessage;
 import static com.google.errorprone.FileObjects.forResource;
 import static com.google.errorprone.FileObjects.forSourceLines;
 import static java.nio.charset.StandardCharsets.UTF_8;
+import static java.util.Arrays.asList;
 import static java.util.Arrays.stream;
 import static org.junit.Assert.fail;
 
@@ -216,6 +217,14 @@ public class CompilationTestHelper {
         stream(modules)
             .map(m -> String.format("--add-exports=%s=ALL-UNNAMED", m))
             .collect(toImmutableList()));
+  }
+
+  /**
+   * Sets custom command-line arguments for the compilation. These will be appended to the default
+   * compilation arguments.
+   */
+  public CompilationTestHelper setArgs(String... args) {
+    return setArgs(asList(args));
   }
 
   /**
