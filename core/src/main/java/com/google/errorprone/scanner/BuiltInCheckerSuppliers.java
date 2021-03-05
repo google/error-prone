@@ -263,6 +263,7 @@ import com.google.errorprone.bugpatterns.PrimitiveAtomicReference;
 import com.google.errorprone.bugpatterns.PrivateConstructorForUtilityClass;
 import com.google.errorprone.bugpatterns.PrivateSecurityContractProtoAccess;
 import com.google.errorprone.bugpatterns.ProtectedMembersInFinalClass;
+import com.google.errorprone.bugpatterns.ProtoBuilderReturnValueIgnored;
 import com.google.errorprone.bugpatterns.ProtoFieldNullComparison;
 import com.google.errorprone.bugpatterns.ProtoRedundantSet;
 import com.google.errorprone.bugpatterns.ProtoStringFieldReferenceEquality;
@@ -668,6 +669,7 @@ public class BuiltInCheckerSuppliers {
           PeriodTimeMath.class,
           PreconditionsInvalidPlaceholder.class,
           PrivateSecurityContractProtoAccess.class,
+          ProtoBuilderReturnValueIgnored.class,
           ProtoFieldNullComparison.class,
           ProtoStringFieldReferenceEquality.class,
           ProtoTruthMixedDescriptors.class,
