@@ -110,21 +110,27 @@ loadScripts(document, 'script');</script>
 </td>
 </tr>
 <tr class="alt-color">
-<td class="col-first"><code>static <a href="../BugCheckerRefactoringTestHelper.html" title="class in com.google.errorprone">BugCheckerRefactoringTestHelper</a></code></td>
-<th class="col-second" scope="row"><span class="type-name-label">BugCheckerRefactoringTestHelper.</span><code><span class="member-name-link"><a href="../BugCheckerRefactoringTestHelper.html#createWithMultipleCheckers(java.lang.Class,com.google.errorprone.bugpatterns.BugChecker...)">createWithMultipleCheckers</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;clazz,
-<a href="../bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a>...&nbsp;checkers)</code></th>
-<td class="col-last">&nbsp;</td>
-</tr>
-<tr class="row-color">
 <td class="col-first"><code><a href="../BugCheckerRefactoringTestHelper.html" title="class in com.google.errorprone">BugCheckerRefactoringTestHelper</a></code></td>
 <th class="col-second" scope="row"><span class="type-name-label">BugCheckerRefactoringTestHelper.ExpectOutput.</span><code><span class="member-name-link"><a href="../BugCheckerRefactoringTestHelper.ExpectOutput.html#expectUnchanged()">expectUnchanged</a></span>()</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>static <a href="../BugCheckerRefactoringTestHelper.html" title="class in com.google.errorprone">BugCheckerRefactoringTestHelper</a></code></td>
 <th class="col-second" scope="row"><span class="type-name-label">BugCheckerRefactoringTestHelper.</span><code><span class="member-name-link"><a href="../BugCheckerRefactoringTestHelper.html#newInstance(com.google.errorprone.bugpatterns.BugChecker,java.lang.Class)">newInstance</a></span>&#8203;(<a href="../bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a>&nbsp;refactoringBugChecker,
 <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;clazz)</code></th>
-<td class="col-last">&nbsp;</td>
+<td class="col-last">
+<div class="block"><span class="deprecated-label">Deprecated.</span>
+<div class="deprecation-comment">prefer <a href="../BugCheckerRefactoringTestHelper.html#newInstance(java.lang.Class,java.lang.Class)"><code>newInstance(Class, Class)</code></a></div>
+</div>
+</td>
+</tr>
+<tr class="alt-color">
+<td class="col-first"><code>static <a href="../BugCheckerRefactoringTestHelper.html" title="class in com.google.errorprone">BugCheckerRefactoringTestHelper</a></code></td>
+<th class="col-second" scope="row"><span class="type-name-label">BugCheckerRefactoringTestHelper.</span><code><span class="member-name-link"><a href="../BugCheckerRefactoringTestHelper.html#newInstance(com.google.errorprone.scanner.ScannerSupplier,java.lang.Class)">newInstance</a></span>&#8203;(<a href="../scanner/ScannerSupplier.html" title="class in com.google.errorprone.scanner">ScannerSupplier</a>&nbsp;scannerSupplier,
+<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;clazz)</code></th>
+<td class="col-last">
+<div class="block">Returns a new <a href="../CompilationTestHelper.html" title="class in com.google.errorprone"><code>CompilationTestHelper</code></a>.</div>
+</td>
 </tr>
 <tr class="row-color">
 <td class="col-first"><code>static <a href="../BugCheckerRefactoringTestHelper.html" title="class in com.google.errorprone">BugCheckerRefactoringTestHelper</a></code></td>

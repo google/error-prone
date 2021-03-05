@@ -15,8 +15,8 @@
 <script type="text/javascript" src="../../../script-dir/jquery-ui.min.js"></script>
 </head>
 <body class="class-declaration-page">
-<script type="text/javascript">var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":9,"i5":10,"i6":10,"i7":9,"i8":9,"i9":10,"i10":10,"i11":10,"i12":10};
-var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
+<script type="text/javascript">var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":41,"i7":9,"i8":9,"i9":10,"i10":10,"i11":10,"i12":10};
+var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"],32:["t6","Deprecated Methods"]};
 var altColor = "alt-color";
 var rowColor = "row-color";
 var tableTab = "table-tab";
@@ -148,7 +148,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <section class="method-summary" id="method.summary">
 <h2>Method Summary</h2>
 <div class="member-summary" id="method-summary-table">
-<div class="table-tabs" role="tablist" aria-orientation="horizontal"><button role="tab" aria-selected="true" aria-controls="method-summary-table.tabpanel" tabindex="0" onkeydown="switchTab(event)" id="t0" class="active-table-tab">All Methods</button><button role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" id="t1" class="table-tab" onclick="show(1);">Static Methods</button><button role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" id="t2" class="table-tab" onclick="show(2);">Instance Methods</button><button role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" id="t4" class="table-tab" onclick="show(8);">Concrete Methods</button></div>
+<div class="table-tabs" role="tablist" aria-orientation="horizontal"><button role="tab" aria-selected="true" aria-controls="method-summary-table.tabpanel" tabindex="0" onkeydown="switchTab(event)" id="t0" class="active-table-tab">All Methods</button><button role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" id="t1" class="table-tab" onclick="show(1);">Static Methods</button><button role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" id="t2" class="table-tab" onclick="show(2);">Instance Methods</button><button role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" id="t4" class="table-tab" onclick="show(8);">Concrete Methods</button><button role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" id="t6" class="table-tab" onclick="show(32);">Deprecated Methods</button></div>
 <div id="method-summary-table.tabpanel" role="tabpanel">
 <table class="summary-table" aria-labelledby="t0">
 <thead>
@@ -183,26 +183,32 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 </td>
 </tr>
 <tr class="alt-color" id="i4">
-<td class="col-first"><code>static <a href="BugCheckerRefactoringTestHelper.html" title="class in com.google.errorprone">BugCheckerRefactoringTestHelper</a></code></td>
-<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#createWithMultipleCheckers(java.lang.Class,com.google.errorprone.bugpatterns.BugChecker...)">createWithMultipleCheckers</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;clazz,
-<a href="bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a>...&nbsp;checkers)</code></th>
-<td class="col-last">&nbsp;</td>
-</tr>
-<tr class="row-color" id="i5">
 <td class="col-first"><code>void</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#doTest()">doTest</a></span>()</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color" id="i6">
+<tr class="row-color" id="i5">
 <td class="col-first"><code>void</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#doTest(com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode)">doTest</a></span>&#8203;(<a href="BugCheckerRefactoringTestHelper.TestMode.html" title="enum in com.google.errorprone">BugCheckerRefactoringTestHelper.TestMode</a>&nbsp;testMode)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color" id="i7">
+<tr class="alt-color" id="i6">
 <td class="col-first"><code>static <a href="BugCheckerRefactoringTestHelper.html" title="class in com.google.errorprone">BugCheckerRefactoringTestHelper</a></code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#newInstance(com.google.errorprone.bugpatterns.BugChecker,java.lang.Class)">newInstance</a></span>&#8203;(<a href="bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a>&nbsp;refactoringBugChecker,
 <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;clazz)</code></th>
-<td class="col-last">&nbsp;</td>
+<td class="col-last">
+<div class="block"><span class="deprecated-label">Deprecated.</span>
+<div class="deprecation-comment">prefer <a href="#newInstance(java.lang.Class,java.lang.Class)"><code>newInstance(Class, Class)</code></a></div>
+</div>
+</td>
+</tr>
+<tr class="row-color" id="i7">
+<td class="col-first"><code>static <a href="BugCheckerRefactoringTestHelper.html" title="class in com.google.errorprone">BugCheckerRefactoringTestHelper</a></code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#newInstance(com.google.errorprone.scanner.ScannerSupplier,java.lang.Class)">newInstance</a></span>&#8203;(<a href="scanner/ScannerSupplier.html" title="class in com.google.errorprone.scanner">ScannerSupplier</a>&nbsp;scannerSupplier,
+<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;clazz)</code></th>
+<td class="col-last">
+<div class="block">Returns a new <a href="CompilationTestHelper.html" title="class in com.google.errorprone"><code>CompilationTestHelper</code></a>.</div>
+</td>
 </tr>
 <tr class="alt-color" id="i8">
 <td class="col-first"><code>static <a href="BugCheckerRefactoringTestHelper.html" title="class in com.google.errorprone">BugCheckerRefactoringTestHelper</a></code></td>
@@ -251,15 +257,25 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <li>
 <section class="detail" id="newInstance(com.google.errorprone.bugpatterns.BugChecker,java.lang.Class)">
 <h3>newInstance</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="BugCheckerRefactoringTestHelper.html" title="class in com.google.errorprone">BugCheckerRefactoringTestHelper</a></span>&nbsp;<span class="member-name">newInstance</span>&#8203;(<span class="parameters"><a href="bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a>&nbsp;refactoringBugChecker,
+<div class="member-signature"><span class="annotations"><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Deprecated.html" title="class or interface in java.lang" class="external-link">@Deprecated</a>
+</span><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="BugCheckerRefactoringTestHelper.html" title="class in com.google.errorprone">BugCheckerRefactoringTestHelper</a></span>&nbsp;<span class="member-name">newInstance</span>&#8203;(<span class="parameters"><a href="bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a>&nbsp;refactoringBugChecker,
 <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;clazz)</span></div>
+<div class="deprecation-block"><span class="deprecated-label">Deprecated.</span>
+<div class="deprecation-comment">prefer <a href="#newInstance(java.lang.Class,java.lang.Class)"><code>newInstance(Class, Class)</code></a></div>
+</div>
 </section>
 </li>
 <li>
-<section class="detail" id="createWithMultipleCheckers(java.lang.Class,com.google.errorprone.bugpatterns.BugChecker...)">
-<h3>createWithMultipleCheckers</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="BugCheckerRefactoringTestHelper.html" title="class in com.google.errorprone">BugCheckerRefactoringTestHelper</a></span>&nbsp;<span class="member-name">createWithMultipleCheckers</span>&#8203;(<span class="parameters"><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;clazz,
-<a href="bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a>...&nbsp;checkers)</span></div>
+<section class="detail" id="newInstance(com.google.errorprone.scanner.ScannerSupplier,java.lang.Class)">
+<h3>newInstance</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="BugCheckerRefactoringTestHelper.html" title="class in com.google.errorprone">BugCheckerRefactoringTestHelper</a></span>&nbsp;<span class="member-name">newInstance</span>&#8203;(<span class="parameters"><a href="scanner/ScannerSupplier.html" title="class in com.google.errorprone.scanner">ScannerSupplier</a>&nbsp;scannerSupplier,
+<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;clazz)</span></div>
+<div class="block">Returns a new <a href="CompilationTestHelper.html" title="class in com.google.errorprone"><code>CompilationTestHelper</code></a>.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>scannerSupplier</code> - the <a href="scanner/ScannerSupplier.html" title="class in com.google.errorprone.scanner"><code>ScannerSupplier</code></a> to test</dd>
+<dd><code>clazz</code> - the class to use to locate file resources</dd>
+</dl>
 </section>
 </li>
 <li>
