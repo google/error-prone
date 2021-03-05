@@ -43,7 +43,7 @@ public class MissingFailTest {
   private final CompilationTestHelper compilationHelper =
       CompilationTestHelper.newInstance(MissingFail.class, getClass());
   private final BugCheckerRefactoringTestHelper refactoringHelper =
-      BugCheckerRefactoringTestHelper.newInstance(new MissingFail(), getClass());
+      BugCheckerRefactoringTestHelper.newInstance(MissingFail.class, getClass());
 
   @Test
   public void testPositiveCases() {

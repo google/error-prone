@@ -31,7 +31,7 @@ import org.junit.runners.JUnit4;
 public class UnsafeReflectiveConstructionCastTest {
   private final BugCheckerRefactoringTestHelper testHelper =
       BugCheckerRefactoringTestHelper.newInstance(
-          new UnsafeReflectiveConstructionCast(), getClass());
+          UnsafeReflectiveConstructionCast.class, getClass());
   private final CompilationTestHelper compilationHelper =
       CompilationTestHelper.newInstance(UnsafeReflectiveConstructionCast.class, getClass());
 
@@ -51,7 +51,8 @@ public class UnsafeReflectiveConstructionCastTest {
             "class Test {",
             "  private String newInstanceOnGetDeclaredConstructorChained() throws Exception {",
             "    return ",
-            "      Class.forName(\"java.lang.String\").asSubclass(String.class).getDeclaredConstructor().newInstance();",
+            "     "
+                + " Class.forName(\"java.lang.String\").asSubclass(String.class).getDeclaredConstructor().newInstance();",
             "  }",
             "}")
         .doTest();
@@ -73,7 +74,8 @@ public class UnsafeReflectiveConstructionCastTest {
             "class Test {",
             "  class Fn<T> {};",
             "  private Fn<String> newInstanceOnGetDeclaredConstructorChained() throws Exception {",
-            "    return (Fn<String>) Class.forName(\"Fn\").asSubclass(Fn.class).getDeclaredConstructor().newInstance();",
+            "    return (Fn<String>)"
+                + " Class.forName(\"Fn\").asSubclass(Fn.class).getDeclaredConstructor().newInstance();",
             "  }",
             "}")
         .doTest();

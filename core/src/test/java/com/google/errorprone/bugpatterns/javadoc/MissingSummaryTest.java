@@ -28,7 +28,7 @@ import org.junit.runners.JUnit4;
 public final class MissingSummaryTest {
 
   private final BugCheckerRefactoringTestHelper refactoring =
-      BugCheckerRefactoringTestHelper.newInstance(new MissingSummary(), getClass());
+      BugCheckerRefactoringTestHelper.newInstance(MissingSummary.class, getClass());
 
   private final CompilationTestHelper helper =
       CompilationTestHelper.newInstance(MissingSummary.class, getClass());

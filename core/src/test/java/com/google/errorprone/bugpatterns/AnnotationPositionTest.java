@@ -46,7 +46,7 @@ public final class AnnotationPositionTest {
   private static final String[] nonTypeUseLines = new String[] {"@interface NonTypeUse {}"};
 
   private final BugCheckerRefactoringTestHelper refactoringHelper =
-      BugCheckerRefactoringTestHelper.newInstance(new AnnotationPosition(), getClass())
+      BugCheckerRefactoringTestHelper.newInstance(AnnotationPosition.class, getClass())
           .addInputLines("TypeUse.java", typeUseLines)
           .expectUnchanged()
           .addInputLines("NonTypeUse.java", nonTypeUseLines)

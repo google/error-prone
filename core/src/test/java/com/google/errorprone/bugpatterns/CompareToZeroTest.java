@@ -28,7 +28,7 @@ public final class CompareToZeroTest {
   private final CompilationTestHelper compilationHelper =
       CompilationTestHelper.newInstance(CompareToZero.class, getClass());
   private final BugCheckerRefactoringTestHelper refactoringHelper =
-      BugCheckerRefactoringTestHelper.newInstance(new CompareToZero(), getClass());
+      BugCheckerRefactoringTestHelper.newInstance(CompareToZero.class, getClass());
 
   @Test
   public void positive() {

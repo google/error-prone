@@ -29,7 +29,7 @@ public class ScopeOnModuleTest {
 
   @Before
   public void setUp() {
-    testHelper = BugCheckerRefactoringTestHelper.newInstance(new ScopeOnModule(), getClass());
+    testHelper = BugCheckerRefactoringTestHelper.newInstance(ScopeOnModule.class, getClass());
   }
 
   @Test

@@ -53,7 +53,7 @@ public class UseBindsTest {
 
   @Before
   public void setUp() {
-    testHelper = BugCheckerRefactoringTestHelper.newInstance(new UseBinds(), getClass());
+    testHelper = BugCheckerRefactoringTestHelper.newInstance(UseBinds.class, getClass());
   }
 
   @Test

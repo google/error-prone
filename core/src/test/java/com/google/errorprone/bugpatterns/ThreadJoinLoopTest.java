@@ -46,7 +46,7 @@ public class ThreadJoinLoopTest {
 
   @Test
   public void testFixes() {
-    BugCheckerRefactoringTestHelper.newInstance(new ThreadJoinLoop(), getClass())
+    BugCheckerRefactoringTestHelper.newInstance(ThreadJoinLoop.class, getClass())
         .addInput("ThreadJoinLoopPositiveCases.java")
         .addOutput("ThreadJoinLoopPositiveCases_expected.java")
         .doTest(TestMode.AST_MATCH);

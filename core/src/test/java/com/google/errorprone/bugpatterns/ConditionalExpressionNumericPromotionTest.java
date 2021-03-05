@@ -27,7 +27,7 @@ public class ConditionalExpressionNumericPromotionTest {
 
   private final BugCheckerRefactoringTestHelper testHelper =
       BugCheckerRefactoringTestHelper.newInstance(
-          new ConditionalExpressionNumericPromotion(), getClass());
+          ConditionalExpressionNumericPromotion.class, getClass());
 
   @Test
   public void positive() {

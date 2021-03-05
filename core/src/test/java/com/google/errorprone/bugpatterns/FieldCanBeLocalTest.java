@@ -30,7 +30,7 @@ public final class FieldCanBeLocalTest {
       CompilationTestHelper.newInstance(FieldCanBeLocal.class, getClass());
 
   private final BugCheckerRefactoringTestHelper refactoringTestHelper =
-      BugCheckerRefactoringTestHelper.newInstance(new FieldCanBeLocal(), getClass());
+      BugCheckerRefactoringTestHelper.newInstance(FieldCanBeLocal.class, getClass());
 
   @Test
   public void simplePositive() {

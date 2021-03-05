@@ -28,7 +28,7 @@ public final class ParametersButNotParameterizedTest {
   private final CompilationTestHelper helper =
       CompilationTestHelper.newInstance(ParametersButNotParameterized.class, getClass());
   private final BugCheckerRefactoringTestHelper refactoringHelper =
-      BugCheckerRefactoringTestHelper.newInstance(new ParametersButNotParameterized(), getClass());
+      BugCheckerRefactoringTestHelper.newInstance(ParametersButNotParameterized.class, getClass());
 
   @Test
   public void positive() {

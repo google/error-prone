@@ -26,7 +26,7 @@ import org.junit.runners.JUnit4;
 public class UnnecessaryMethodInvocationMatcherTest {
   private final BugCheckerRefactoringTestHelper refactoringTestHelper =
       BugCheckerRefactoringTestHelper.newInstance(
-          new UnnecessaryMethodInvocationMatcher(), getClass());
+          UnnecessaryMethodInvocationMatcher.class, getClass());
 
   @Test
   public void replace() {

@@ -43,7 +43,7 @@ public final class DiscardedPostfixExpressionTest {
 
   @Test
   public void refactoring() {
-    BugCheckerRefactoringTestHelper.newInstance(new DiscardedPostfixExpression(), getClass())
+    BugCheckerRefactoringTestHelper.newInstance(DiscardedPostfixExpression.class, getClass())
         .addInputLines(
             "Test.java",
             "import java.util.function.UnaryOperator;",

@@ -26,7 +26,7 @@ public final class StreamToIterableTest {
   private final CompilationTestHelper helper =
       CompilationTestHelper.newInstance(StreamToIterable.class, getClass());
   private final BugCheckerRefactoringTestHelper refactoring =
-      BugCheckerRefactoringTestHelper.newInstance(new StreamToIterable(), getClass());
+      BugCheckerRefactoringTestHelper.newInstance(StreamToIterable.class, getClass());
 
   @Test
   public void lambdaWithinEnhancedForLoop_recreatedEachTime_noFinding() {

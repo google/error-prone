@@ -27,7 +27,7 @@ import org.junit.runners.JUnit4;
 @RunWith(JUnit4.class)
 public final class EmptyBlockTagTest {
   private final BugCheckerRefactoringTestHelper refactoring =
-      BugCheckerRefactoringTestHelper.newInstance(new EmptyBlockTag(), getClass());
+      BugCheckerRefactoringTestHelper.newInstance(EmptyBlockTag.class, getClass());
   private final CompilationTestHelper compilationTestHelper =
       CompilationTestHelper.newInstance(EmptyBlockTag.class, getClass());
 

@@ -28,7 +28,7 @@ import org.junit.runners.JUnit4;
 public class CatchFailTest {
 
   private final BugCheckerRefactoringTestHelper testHelper =
-      BugCheckerRefactoringTestHelper.newInstance(new CatchFail(), getClass());
+      BugCheckerRefactoringTestHelper.newInstance(CatchFail.class, getClass());
 
   @Test
   public void positive() {

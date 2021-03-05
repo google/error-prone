@@ -27,7 +27,7 @@ import org.junit.runners.JUnit4;
 @RunWith(JUnit4.class)
 public final class InvalidInlineTagTest {
   private final BugCheckerRefactoringTestHelper refactoring =
-      BugCheckerRefactoringTestHelper.newInstance(new InvalidInlineTag(), getClass());
+      BugCheckerRefactoringTestHelper.newInstance(InvalidInlineTag.class, getClass());
 
   private final CompilationTestHelper helper =
       CompilationTestHelper.newInstance(InvalidInlineTag.class, getClass());

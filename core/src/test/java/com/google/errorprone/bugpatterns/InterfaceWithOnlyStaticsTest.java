@@ -28,7 +28,7 @@ public class InterfaceWithOnlyStaticsTest {
   private final CompilationTestHelper testHelper =
       CompilationTestHelper.newInstance(InterfaceWithOnlyStatics.class, getClass());
   private final BugCheckerRefactoringTestHelper refactoringHelper =
-      BugCheckerRefactoringTestHelper.newInstance(new InterfaceWithOnlyStatics(), getClass());
+      BugCheckerRefactoringTestHelper.newInstance(InterfaceWithOnlyStatics.class, getClass());
 
   @Test
   public void positive() {

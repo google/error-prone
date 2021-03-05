@@ -32,7 +32,7 @@ public final class LockNotBeforeTryTest {
   private final CompilationTestHelper compilationHelper =
       CompilationTestHelper.newInstance(LockNotBeforeTry.class, getClass());
   private final BugCheckerRefactoringTestHelper refactoringHelper =
-      BugCheckerRefactoringTestHelper.newInstance(new LockNotBeforeTry(), getClass());
+      BugCheckerRefactoringTestHelper.newInstance(LockNotBeforeTry.class, getClass());
 
   @Test
   public void positive() {

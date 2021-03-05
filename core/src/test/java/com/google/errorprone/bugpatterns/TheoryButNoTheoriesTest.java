@@ -28,7 +28,7 @@ public final class TheoryButNoTheoriesTest {
   private final CompilationTestHelper helper =
       CompilationTestHelper.newInstance(TheoryButNoTheories.class, getClass());
   private final BugCheckerRefactoringTestHelper refactoringHelper =
-      BugCheckerRefactoringTestHelper.newInstance(new TheoryButNoTheories(), getClass());
+      BugCheckerRefactoringTestHelper.newInstance(TheoryButNoTheories.class, getClass());
 
   @Test
   public void positive() {

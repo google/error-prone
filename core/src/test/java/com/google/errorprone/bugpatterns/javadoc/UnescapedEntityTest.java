@@ -32,7 +32,7 @@ public final class UnescapedEntityTest {
   private final CompilationTestHelper helper =
       CompilationTestHelper.newInstance(UnescapedEntity.class, getClass());
   private final BugCheckerRefactoringTestHelper refactoring =
-      BugCheckerRefactoringTestHelper.newInstance(new UnescapedEntity(), getClass());
+      BugCheckerRefactoringTestHelper.newInstance(UnescapedEntity.class, getClass());
 
   @Test
   public void positive() {

@@ -72,7 +72,7 @@ public class DateFormatConstantTest {
 
   @Test
   public void threadLocalFix() {
-    BugCheckerRefactoringTestHelper.newInstance(new DateFormatConstant(), getClass())
+    BugCheckerRefactoringTestHelper.newInstance(DateFormatConstant.class, getClass())
         .addInputLines(
             "in/Test.java",
             "import java.text.SimpleDateFormat;",
@@ -102,7 +102,7 @@ public class DateFormatConstantTest {
 
   @Test
   public void lowerCamelCaseFix() {
-    BugCheckerRefactoringTestHelper.newInstance(new DateFormatConstant(), getClass())
+    BugCheckerRefactoringTestHelper.newInstance(DateFormatConstant.class, getClass())
         .addInputLines(
             "in/Test.java",
             "import java.text.SimpleDateFormat;",

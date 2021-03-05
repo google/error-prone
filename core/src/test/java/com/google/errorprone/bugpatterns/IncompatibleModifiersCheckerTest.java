@@ -164,7 +164,7 @@ public class IncompatibleModifiersCheckerTest {
 
   @Test
   public void refactoring() {
-    BugCheckerRefactoringTestHelper.newInstance(new IncompatibleModifiersChecker(), getClass())
+    BugCheckerRefactoringTestHelper.newInstance(IncompatibleModifiersChecker.class, getClass())
         .addInputLines(
             "test/NotAbstract.java",
             "package test;",

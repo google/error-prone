@@ -26,7 +26,7 @@ import org.junit.runners.JUnit4;
 public class UnnecessaryLambdaTest {
 
   private final BugCheckerRefactoringTestHelper testHelper =
-      BugCheckerRefactoringTestHelper.newInstance(new UnnecessaryLambda(), getClass());
+      BugCheckerRefactoringTestHelper.newInstance(UnnecessaryLambda.class, getClass());
 
   @Test
   public void method() {

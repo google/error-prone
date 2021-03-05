@@ -204,7 +204,7 @@ public class RequiredModifiersCheckerTest {
 
   @Test
   public void refactoring() {
-    BugCheckerRefactoringTestHelper.newInstance(new RequiredModifiersChecker(), getClass())
+    BugCheckerRefactoringTestHelper.newInstance(RequiredModifiersChecker.class, getClass())
         .addInputLines(
             "test/AbstractRequired.java",
             "package test;",

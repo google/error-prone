@@ -26,7 +26,7 @@ import org.junit.runners.JUnit4;
 public class ObjectsHashCodePrimitiveTest {
 
   private final BugCheckerRefactoringTestHelper helper =
-      BugCheckerRefactoringTestHelper.newInstance(new ObjectsHashCodePrimitive(), getClass());
+      BugCheckerRefactoringTestHelper.newInstance(ObjectsHashCodePrimitive.class, getClass());
 
   @Test
   public void hashCodeIntLiteral() {

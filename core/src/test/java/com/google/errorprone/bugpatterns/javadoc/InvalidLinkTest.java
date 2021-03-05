@@ -31,7 +31,7 @@ public final class InvalidLinkTest {
       CompilationTestHelper.newInstance(InvalidLink.class, getClass());
 
   private final BugCheckerRefactoringTestHelper refactoring =
-      BugCheckerRefactoringTestHelper.newInstance(new InvalidLink(), getClass());
+      BugCheckerRefactoringTestHelper.newInstance(InvalidLink.class, getClass());
 
   @Test
   public void httpLink() {

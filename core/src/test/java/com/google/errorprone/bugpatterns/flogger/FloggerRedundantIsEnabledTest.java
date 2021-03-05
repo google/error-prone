@@ -42,7 +42,7 @@ public class FloggerRedundantIsEnabledTest {
 
   @Test
   public void testFixes() {
-    BugCheckerRefactoringTestHelper.newInstance(new FloggerRedundantIsEnabled(), getClass())
+    BugCheckerRefactoringTestHelper.newInstance(FloggerRedundantIsEnabled.class, getClass())
         .addInput("FloggerRedundantIsEnabledPositiveCases.java")
         .addOutput("FloggerRedundantIsEnabledPositiveCases_expected.java")
         .doTest(TestMode.AST_MATCH);

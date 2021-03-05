@@ -29,7 +29,7 @@ public class TryFailRefactoringTest {
   private final CompilationTestHelper compilationTestHelper =
       CompilationTestHelper.newInstance(TryFailRefactoring.class, getClass());
   private final BugCheckerRefactoringTestHelper testHelper =
-      BugCheckerRefactoringTestHelper.newInstance(new TryFailRefactoring(), getClass());
+      BugCheckerRefactoringTestHelper.newInstance(TryFailRefactoring.class, getClass());
 
   @Test
   public void catchBlock() {

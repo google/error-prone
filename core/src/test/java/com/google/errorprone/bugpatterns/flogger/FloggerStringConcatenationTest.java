@@ -26,7 +26,7 @@ import org.junit.runners.JUnit4;
 @RunWith(JUnit4.class)
 public class FloggerStringConcatenationTest {
   private final BugCheckerRefactoringTestHelper testHelper =
-      BugCheckerRefactoringTestHelper.newInstance(new FloggerStringConcatenation(), getClass());
+      BugCheckerRefactoringTestHelper.newInstance(FloggerStringConcatenation.class, getClass());
 
   @Test
   public void fix() {

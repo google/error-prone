@@ -33,7 +33,7 @@ public final class EqualsGetClassTest {
       CompilationTestHelper.newInstance(EqualsGetClass.class, getClass());
 
   private final BugCheckerRefactoringTestHelper refactoringHelper =
-      BugCheckerRefactoringTestHelper.newInstance(new EqualsGetClass(), getClass());
+      BugCheckerRefactoringTestHelper.newInstance(EqualsGetClass.class, getClass());
 
   @Test
   public void fixes_inline() {

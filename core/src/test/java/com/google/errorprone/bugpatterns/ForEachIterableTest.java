@@ -28,7 +28,7 @@ public class ForEachIterableTest {
 
   @Test
   public void positive() {
-    BugCheckerRefactoringTestHelper.newInstance(new ForEachIterable(), getClass())
+    BugCheckerRefactoringTestHelper.newInstance(ForEachIterable.class, getClass())
         .addInputLines(
             "in/Test.java",
             "import java.util.Iterator;",
@@ -67,7 +67,7 @@ public class ForEachIterableTest {
 
   @Test
   public void reuseVariable() {
-    BugCheckerRefactoringTestHelper.newInstance(new ForEachIterable(), getClass())
+    BugCheckerRefactoringTestHelper.newInstance(ForEachIterable.class, getClass())
         .addInputLines(
             "in/Test.java",
             "import java.util.Iterator;",
@@ -97,7 +97,7 @@ public class ForEachIterableTest {
 
   @Test
   public void wildcard() {
-    BugCheckerRefactoringTestHelper.newInstance(new ForEachIterable(), getClass())
+    BugCheckerRefactoringTestHelper.newInstance(ForEachIterable.class, getClass())
         .addInputLines(
             "in/Test.java",
             "import java.util.Iterator;",
@@ -126,7 +126,7 @@ public class ForEachIterableTest {
 
   @Test
   public void empty() {
-    BugCheckerRefactoringTestHelper.newInstance(new ForEachIterable(), getClass())
+    BugCheckerRefactoringTestHelper.newInstance(ForEachIterable.class, getClass())
         .addInputLines(
             "in/Test.java",
             "import java.util.Iterator;",
@@ -154,7 +154,7 @@ public class ForEachIterableTest {
 
   @Test
   public void wildcardExtends() {
-    BugCheckerRefactoringTestHelper.newInstance(new ForEachIterable(), getClass())
+    BugCheckerRefactoringTestHelper.newInstance(ForEachIterable.class, getClass())
         .addInputLines(
             "in/Test.java",
             "import java.util.Iterator;",

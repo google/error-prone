@@ -30,7 +30,7 @@ public class MixedArrayDimensionsTest {
 
   @Test
   public void positiveVariable() {
-    BugCheckerRefactoringTestHelper.newInstance(new MixedArrayDimensions(), getClass())
+    BugCheckerRefactoringTestHelper.newInstance(MixedArrayDimensions.class, getClass())
         .addInputLines(
             "in/Test.java",
             "abstract class Test {",
@@ -52,7 +52,7 @@ public class MixedArrayDimensionsTest {
 
   @Test
   public void positiveMethod() {
-    BugCheckerRefactoringTestHelper.newInstance(new MixedArrayDimensions(), getClass())
+    BugCheckerRefactoringTestHelper.newInstance(MixedArrayDimensions.class, getClass())
         .addInputLines(
             "in/Test.java",
             "abstract class Test {",

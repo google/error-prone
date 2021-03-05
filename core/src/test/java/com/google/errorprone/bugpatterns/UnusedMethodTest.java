@@ -28,7 +28,7 @@ public final class UnusedMethodTest {
   private final CompilationTestHelper helper =
       CompilationTestHelper.newInstance(UnusedMethod.class, getClass());
   private final BugCheckerRefactoringTestHelper refactoringHelper =
-      BugCheckerRefactoringTestHelper.newInstance(new UnusedMethod(), getClass());
+      BugCheckerRefactoringTestHelper.newInstance(UnusedMethod.class, getClass());
 
   @Test
   public void unusedNative() {

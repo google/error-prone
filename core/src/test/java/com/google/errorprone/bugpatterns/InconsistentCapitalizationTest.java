@@ -29,7 +29,7 @@ public class InconsistentCapitalizationTest {
   private final CompilationTestHelper compilationHelper =
       CompilationTestHelper.newInstance(InconsistentCapitalization.class, getClass());
   private final BugCheckerRefactoringTestHelper refactoringHelper =
-      BugCheckerRefactoringTestHelper.newInstance(new InconsistentCapitalization(), getClass());
+      BugCheckerRefactoringTestHelper.newInstance(InconsistentCapitalization.class, getClass());
 
   @Test
   public void testNegativeCases() {

@@ -30,7 +30,7 @@ import org.junit.runners.JUnit4;
 @RunWith(JUnit4.class)
 public class ComplexBooleanConstantTest {
   private final BugCheckerRefactoringTestHelper refactoringHelper =
-      BugCheckerRefactoringTestHelper.newInstance(new ComplexBooleanConstant(), getClass());
+      BugCheckerRefactoringTestHelper.newInstance(ComplexBooleanConstant.class, getClass());
 
   @Test
   public void refactorTest() {

@@ -71,7 +71,7 @@ public final class IntLongMathTest {
 
   @Test
   public void refactoring() {
-    BugCheckerRefactoringTestHelper.newInstance(new IntLongMath(), getClass())
+    BugCheckerRefactoringTestHelper.newInstance(IntLongMath.class, getClass())
         .addInputLines(
             "in/Test.java",
             "class Test {",

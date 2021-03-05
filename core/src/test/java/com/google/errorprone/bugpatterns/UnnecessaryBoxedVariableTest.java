@@ -25,7 +25,7 @@ import org.junit.runners.JUnit4;
 @RunWith(JUnit4.class)
 public class UnnecessaryBoxedVariableTest {
   private final BugCheckerRefactoringTestHelper helper =
-      BugCheckerRefactoringTestHelper.newInstance(new UnnecessaryBoxedVariable(), getClass());
+      BugCheckerRefactoringTestHelper.newInstance(UnnecessaryBoxedVariable.class, getClass());
 
   @Test
   public void testCases() {

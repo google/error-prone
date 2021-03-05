@@ -29,7 +29,7 @@ public class LogicalAssignmentTest {
 
   @Test
   public void positive() {
-    BugCheckerRefactoringTestHelper.newInstance(new LogicalAssignment(), getClass())
+    BugCheckerRefactoringTestHelper.newInstance(LogicalAssignment.class, getClass())
         .addInputLines(
             "in/Test.java",
             "class Test {",
@@ -75,7 +75,7 @@ public class LogicalAssignmentTest {
 
   @Test
   public void positive_equalityFix() {
-    BugCheckerRefactoringTestHelper.newInstance(new LogicalAssignment(), getClass())
+    BugCheckerRefactoringTestHelper.newInstance(LogicalAssignment.class, getClass())
         .addInputLines(
             "in/Test.java",
             "class Test {",

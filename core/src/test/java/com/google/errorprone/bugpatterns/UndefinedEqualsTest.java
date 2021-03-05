@@ -142,7 +142,7 @@ public final class UndefinedEqualsTest {
   @Test
   @Parameters(method = "truthFixParameters")
   public void truthFixParameterized(String input, String output) {
-    BugCheckerRefactoringTestHelper.newInstance(new UndefinedEquals(), getClass())
+    BugCheckerRefactoringTestHelper.newInstance(UndefinedEquals.class, getClass())
         .addInputLines(
             "Test.java",
             "import static com.google.common.truth.Truth.assertThat;",
@@ -339,7 +339,7 @@ public final class UndefinedEqualsTest {
 
   @Test
   public void truthFixAssertWithMessage() {
-    BugCheckerRefactoringTestHelper.newInstance(new UndefinedEquals(), getClass())
+    BugCheckerRefactoringTestHelper.newInstance(UndefinedEquals.class, getClass())
         .addInputLines(
             "Test.java",
             "import static com.google.common.truth.Truth.assertWithMessage;",
@@ -363,7 +363,7 @@ public final class UndefinedEqualsTest {
 
   @Test
   public void truthFixDontRewriteIsNotEqualTo() {
-    BugCheckerRefactoringTestHelper.newInstance(new UndefinedEquals(), getClass())
+    BugCheckerRefactoringTestHelper.newInstance(UndefinedEquals.class, getClass())
         .addInputLines(
             "Test.java",
             "import static com.google.common.truth.Truth.assertThat;",
@@ -387,7 +387,7 @@ public final class UndefinedEqualsTest {
 
   @Test
   public void truthFixAcrossMultipleLinesAndPoorlyFormatted() {
-    BugCheckerRefactoringTestHelper.newInstance(new UndefinedEquals(), getClass())
+    BugCheckerRefactoringTestHelper.newInstance(UndefinedEquals.class, getClass())
         .addInputLines(
             "Test.java",
             "import static com.google.common.truth.Truth.assertThat;",
@@ -446,7 +446,7 @@ public final class UndefinedEqualsTest {
 
   @Test
   public void charSequenceFix() {
-    BugCheckerRefactoringTestHelper.newInstance(new UndefinedEquals(), getClass())
+    BugCheckerRefactoringTestHelper.newInstance(UndefinedEquals.class, getClass())
         .addInputLines(
             "Test.java",
             "import static com.google.common.truth.Truth.assertThat;",

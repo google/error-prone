@@ -28,7 +28,7 @@ public class IdentityHashMapUsageTest {
   private final CompilationTestHelper compilationHelper =
       CompilationTestHelper.newInstance(IdentityHashMapUsage.class, getClass());
   private final BugCheckerRefactoringTestHelper refactoringHelper =
-      BugCheckerRefactoringTestHelper.newInstance(new IdentityHashMapUsage(), getClass());
+      BugCheckerRefactoringTestHelper.newInstance(IdentityHashMapUsage.class, getClass());
 
   @Test
   public void equals_putAll_positive() {

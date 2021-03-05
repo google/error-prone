@@ -29,7 +29,7 @@ public class JUnit3TestNotRunTest {
   private final CompilationTestHelper compilationHelper =
       CompilationTestHelper.newInstance(JUnit3TestNotRun.class, getClass());
   private final BugCheckerRefactoringTestHelper refactorHelper =
-      BugCheckerRefactoringTestHelper.newInstance(new JUnit3TestNotRun(), getClass());
+      BugCheckerRefactoringTestHelper.newInstance(JUnit3TestNotRun.class, getClass());
 
   @Test
   public void testPositiveCases() {

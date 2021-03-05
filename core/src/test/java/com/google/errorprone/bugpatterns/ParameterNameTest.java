@@ -35,7 +35,7 @@ public class ParameterNameTest {
 
   @Test
   public void positive() {
-    BugCheckerRefactoringTestHelper.newInstance(new ParameterName(), getClass())
+    BugCheckerRefactoringTestHelper.newInstance(ParameterName.class, getClass())
         .addInputLines(
             "in/Test.java",
             "class Test {",
@@ -616,7 +616,7 @@ public class ParameterNameTest {
 
   @Test
   public void varargsWrongFormat() {
-    BugCheckerRefactoringTestHelper.newInstance(new ParameterName(), getClass())
+    BugCheckerRefactoringTestHelper.newInstance(ParameterName.class, getClass())
         .addInputLines(
             "in/Test.java",
             "class Test {",
@@ -640,7 +640,7 @@ public class ParameterNameTest {
 
   @Test
   public void varargsTrailing() {
-    BugCheckerRefactoringTestHelper.newInstance(new ParameterName(), getClass())
+    BugCheckerRefactoringTestHelper.newInstance(ParameterName.class, getClass())
         .addInputLines(
             "in/Test.java",
             "class Test {",

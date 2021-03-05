@@ -27,7 +27,7 @@ import org.junit.runners.JUnit4;
 public class InlineFormatStringTest {
 
   private final BugCheckerRefactoringTestHelper refactoringHelper =
-      BugCheckerRefactoringTestHelper.newInstance(new InlineFormatString(), getClass());
+      BugCheckerRefactoringTestHelper.newInstance(InlineFormatString.class, getClass());
 
   private final CompilationTestHelper compilationHelper =
       CompilationTestHelper.newInstance(InlineFormatString.class, getClass());

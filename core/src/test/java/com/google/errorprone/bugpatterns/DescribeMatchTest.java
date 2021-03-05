@@ -25,7 +25,7 @@ import org.junit.runners.JUnit4;
 @RunWith(JUnit4.class)
 public class DescribeMatchTest {
   private final BugCheckerRefactoringTestHelper testHelper =
-      BugCheckerRefactoringTestHelper.newInstance(new DescribeMatch(), getClass());
+      BugCheckerRefactoringTestHelper.newInstance(DescribeMatch.class, getClass());
 
   @Test
   public void refactoring() {

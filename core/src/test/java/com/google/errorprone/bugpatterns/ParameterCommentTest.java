@@ -31,7 +31,7 @@ public class ParameterCommentTest {
       CompilationTestHelper.newInstance(ParameterComment.class, getClass());
 
   private final BugCheckerRefactoringTestHelper testHelper =
-      BugCheckerRefactoringTestHelper.newInstance(new ParameterComment(), getClass());
+      BugCheckerRefactoringTestHelper.newInstance(ParameterComment.class, getClass());
 
   @Test
   public void positive() {

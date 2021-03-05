@@ -46,7 +46,7 @@ public class JavaTimeDefaultTimeZoneTest {
   @Test
   public void staticImportOfStaticMethod() {
     BugCheckerRefactoringTestHelper.newInstance(
-            new JavaTimeDefaultTimeZone(), JavaTimeDefaultTimeZoneTest.class)
+            JavaTimeDefaultTimeZone.class, JavaTimeDefaultTimeZoneTest.class)
         .addInputLines(
             "in/TestClass.java",
             "import static java.time.LocalDate.now;",

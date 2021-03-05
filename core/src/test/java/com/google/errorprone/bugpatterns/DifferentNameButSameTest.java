@@ -25,7 +25,7 @@ import org.junit.runners.JUnit4;
 @RunWith(JUnit4.class)
 public final class DifferentNameButSameTest {
   private final BugCheckerRefactoringTestHelper helper =
-      BugCheckerRefactoringTestHelper.newInstance(new DifferentNameButSame(), getClass())
+      BugCheckerRefactoringTestHelper.newInstance(DifferentNameButSame.class, getClass())
           .addInputLines(
               "TypeUseAnnotation.java",
               "package pkg;",
@@ -312,7 +312,7 @@ public final class DifferentNameButSameTest {
 
   @Test
   public void innerClassConstructor() {
-    BugCheckerRefactoringTestHelper.newInstance(new DifferentNameButSame(), getClass())
+    BugCheckerRefactoringTestHelper.newInstance(DifferentNameButSame.class, getClass())
         .addInputLines(
             "A.java", //
             "package pkg;",

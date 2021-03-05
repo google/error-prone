@@ -26,7 +26,7 @@ import org.junit.runners.JUnit4;
 public class AssertThrowsMultipleStatementsTest {
 
   private final BugCheckerRefactoringTestHelper compilationHelper =
-      BugCheckerRefactoringTestHelper.newInstance(new AssertThrowsMultipleStatements(), getClass());
+      BugCheckerRefactoringTestHelper.newInstance(AssertThrowsMultipleStatements.class, getClass());
 
   @Test
   public void ignoreInThrowingRunnables() {

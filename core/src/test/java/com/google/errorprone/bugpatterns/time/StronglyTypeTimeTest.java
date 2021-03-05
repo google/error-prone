@@ -29,7 +29,7 @@ public final class StronglyTypeTimeTest {
       CompilationTestHelper.newInstance(StronglyTypeTime.class, getClass());
 
   private final BugCheckerRefactoringTestHelper refactoringHelper =
-      BugCheckerRefactoringTestHelper.newInstance(new StronglyTypeTime(), getClass());
+      BugCheckerRefactoringTestHelper.newInstance(StronglyTypeTime.class, getClass());
 
   @Test
   public void findingLocatedOnField() {

@@ -27,7 +27,7 @@ import org.junit.runners.JUnit4;
 public final class FloggerLogVarargsTest {
   @Test
   public void positive() {
-    BugCheckerRefactoringTestHelper.newInstance(new FloggerLogVarargs(), getClass())
+    BugCheckerRefactoringTestHelper.newInstance(FloggerLogVarargs.class, getClass())
         .addInputLines(
             "Test.java",
             "import com.google.common.flogger.FluentLogger;",
@@ -51,7 +51,7 @@ public final class FloggerLogVarargsTest {
 
   @Test
   public void positiveAnonymousClass() {
-    BugCheckerRefactoringTestHelper.newInstance(new FloggerLogVarargs(), getClass())
+    BugCheckerRefactoringTestHelper.newInstance(FloggerLogVarargs.class, getClass())
         .addInputLines(
             "Test.java",
             "import com.google.common.flogger.FluentLogger;",

@@ -136,7 +136,7 @@ public class ConstantOverflowTest {
 
   @Test
   public void longOverflow() {
-    BugCheckerRefactoringTestHelper.newInstance(new ConstantOverflow(), getClass())
+    BugCheckerRefactoringTestHelper.newInstance(ConstantOverflow.class, getClass())
         .addInputLines(
             "in/Test.java",
             "class Test {",
@@ -158,7 +158,7 @@ public class ConstantOverflowTest {
 
   @Test
   public void onlyFixIntegers() {
-    BugCheckerRefactoringTestHelper.newInstance(new ConstantOverflow(), getClass())
+    BugCheckerRefactoringTestHelper.newInstance(ConstantOverflow.class, getClass())
         .addInputLines("in/Test.java", "class Test {", "  int a = 'a' + Integer.MAX_VALUE;", "}")
         .addOutputLines("out/Test.java", "class Test {", "  int a = 'a' + Integer.MAX_VALUE;", "}")
         .doTest();

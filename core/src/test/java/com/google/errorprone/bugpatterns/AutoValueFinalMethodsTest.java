@@ -30,7 +30,7 @@ import org.junit.runners.JUnit4;
 @RunWith(JUnit4.class)
 public class AutoValueFinalMethodsTest {
   private final BugCheckerRefactoringTestHelper testHelper =
-      BugCheckerRefactoringTestHelper.newInstance(new AutoValueFinalMethods(), getClass());
+      BugCheckerRefactoringTestHelper.newInstance(AutoValueFinalMethods.class, getClass());
   private final CompilationTestHelper compilationHelper =
       CompilationTestHelper.newInstance(AutoValueFinalMethods.class, getClass());
 

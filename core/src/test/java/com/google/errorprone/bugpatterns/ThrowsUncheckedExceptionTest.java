@@ -41,7 +41,7 @@ public final class ThrowsUncheckedExceptionTest {
 
   @Test
   public void deleteAll() {
-    BugCheckerRefactoringTestHelper.newInstance(new ThrowsUncheckedException(), getClass())
+    BugCheckerRefactoringTestHelper.newInstance(ThrowsUncheckedException.class, getClass())
         .addInputLines(
             "in/Test.java",
             "import java.io.IOError;",
@@ -59,7 +59,7 @@ public final class ThrowsUncheckedExceptionTest {
 
   @Test
   public void deleteLeft() {
-    BugCheckerRefactoringTestHelper.newInstance(new ThrowsUncheckedException(), getClass())
+    BugCheckerRefactoringTestHelper.newInstance(ThrowsUncheckedException.class, getClass())
         .addInputLines(
             "in/Test.java",
             "import java.io.IOError;",
@@ -79,7 +79,7 @@ public final class ThrowsUncheckedExceptionTest {
 
   @Test
   public void deleteRight() {
-    BugCheckerRefactoringTestHelper.newInstance(new ThrowsUncheckedException(), getClass())
+    BugCheckerRefactoringTestHelper.newInstance(ThrowsUncheckedException.class, getClass())
         .addInputLines(
             "in/Test.java",
             "import java.io.IOError;",
@@ -99,7 +99,7 @@ public final class ThrowsUncheckedExceptionTest {
 
   @Test
   public void preserveOrder() {
-    BugCheckerRefactoringTestHelper.newInstance(new ThrowsUncheckedException(), getClass())
+    BugCheckerRefactoringTestHelper.newInstance(ThrowsUncheckedException.class, getClass())
         .addInputLines(
             "in/Test.java",
             "import java.io.IOException;",

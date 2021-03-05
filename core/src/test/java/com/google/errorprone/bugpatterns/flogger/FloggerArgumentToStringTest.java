@@ -30,7 +30,7 @@ public class FloggerArgumentToStringTest {
       CompilationTestHelper.newInstance(FloggerArgumentToString.class, getClass());
 
   private final BugCheckerRefactoringTestHelper refactoringHelper =
-      BugCheckerRefactoringTestHelper.newInstance(new FloggerArgumentToString(), getClass());
+      BugCheckerRefactoringTestHelper.newInstance(FloggerArgumentToString.class, getClass());
 
   @Test
   public void refactoring() {

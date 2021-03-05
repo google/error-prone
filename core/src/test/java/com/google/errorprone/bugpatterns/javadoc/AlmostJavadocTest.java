@@ -28,7 +28,7 @@ import org.junit.runners.JUnit4;
 @RunWith(JUnit4.class)
 public final class AlmostJavadocTest {
   private final BugCheckerRefactoringTestHelper refactoring =
-      BugCheckerRefactoringTestHelper.newInstance(new AlmostJavadoc(), getClass());
+      BugCheckerRefactoringTestHelper.newInstance(AlmostJavadoc.class, getClass());
 
   private final CompilationTestHelper helper =
       CompilationTestHelper.newInstance(AlmostJavadoc.class, getClass());

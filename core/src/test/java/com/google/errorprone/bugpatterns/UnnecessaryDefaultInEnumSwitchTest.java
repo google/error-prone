@@ -35,7 +35,7 @@ public class UnnecessaryDefaultInEnumSwitchTest {
 
   @Test
   public void switchCannotComplete() {
-    BugCheckerRefactoringTestHelper.newInstance(new UnnecessaryDefaultInEnumSwitch(), getClass())
+    BugCheckerRefactoringTestHelper.newInstance(UnnecessaryDefaultInEnumSwitch.class, getClass())
         .addInputLines(
             "in/Test.java",
             "class Test {",
@@ -73,7 +73,7 @@ public class UnnecessaryDefaultInEnumSwitchTest {
 
   @Test
   public void switchCannotCompleteUnrecognized() {
-    BugCheckerRefactoringTestHelper.newInstance(new UnnecessaryDefaultInEnumSwitch(), getClass())
+    BugCheckerRefactoringTestHelper.newInstance(UnnecessaryDefaultInEnumSwitch.class, getClass())
         .addInputLines(
             "in/Test.java",
             "class Test {",
@@ -112,7 +112,7 @@ public class UnnecessaryDefaultInEnumSwitchTest {
 
   @Test
   public void emptyDefault() {
-    BugCheckerRefactoringTestHelper.newInstance(new UnnecessaryDefaultInEnumSwitch(), getClass())
+    BugCheckerRefactoringTestHelper.newInstance(UnnecessaryDefaultInEnumSwitch.class, getClass())
         .addInputLines(
             "in/Test.java",
             "class Test {",
@@ -147,7 +147,7 @@ public class UnnecessaryDefaultInEnumSwitchTest {
 
   @Test
   public void emptyDefaultUnrecognized() {
-    BugCheckerRefactoringTestHelper.newInstance(new UnnecessaryDefaultInEnumSwitch(), getClass())
+    BugCheckerRefactoringTestHelper.newInstance(UnnecessaryDefaultInEnumSwitch.class, getClass())
         .addInputLines(
             "in/Test.java",
             "class Test {",
@@ -184,7 +184,7 @@ public class UnnecessaryDefaultInEnumSwitchTest {
 
   @Test
   public void defaultBreak() {
-    BugCheckerRefactoringTestHelper.newInstance(new UnnecessaryDefaultInEnumSwitch(), getClass())
+    BugCheckerRefactoringTestHelper.newInstance(UnnecessaryDefaultInEnumSwitch.class, getClass())
         .addInputLines(
             "in/Test.java",
             "class Test {",
@@ -220,7 +220,7 @@ public class UnnecessaryDefaultInEnumSwitchTest {
 
   @Test
   public void defaultBreakUnrecognized() {
-    BugCheckerRefactoringTestHelper.newInstance(new UnnecessaryDefaultInEnumSwitch(), getClass())
+    BugCheckerRefactoringTestHelper.newInstance(UnnecessaryDefaultInEnumSwitch.class, getClass())
         .addInputLines(
             "in/Test.java",
             "class Test {",
@@ -258,7 +258,7 @@ public class UnnecessaryDefaultInEnumSwitchTest {
 
   @Test
   public void completes_noUnassignedVars_priorCaseExits() {
-    BugCheckerRefactoringTestHelper.newInstance(new UnnecessaryDefaultInEnumSwitch(), getClass())
+    BugCheckerRefactoringTestHelper.newInstance(UnnecessaryDefaultInEnumSwitch.class, getClass())
         .addInputLines(
             "in/Test.java",
             "class Test {",
@@ -296,7 +296,7 @@ public class UnnecessaryDefaultInEnumSwitchTest {
 
   @Test
   public void completes_noUnassignedVars_priorCaseExitsUnrecognized() {
-    BugCheckerRefactoringTestHelper.newInstance(new UnnecessaryDefaultInEnumSwitch(), getClass())
+    BugCheckerRefactoringTestHelper.newInstance(UnnecessaryDefaultInEnumSwitch.class, getClass())
         .addInputLines(
             "in/Test.java",
             "class Test {",
@@ -336,7 +336,7 @@ public class UnnecessaryDefaultInEnumSwitchTest {
 
   @Test
   public void completes_noUnassignedVars_priorCaseDoesntExit() {
-    BugCheckerRefactoringTestHelper.newInstance(new UnnecessaryDefaultInEnumSwitch(), getClass())
+    BugCheckerRefactoringTestHelper.newInstance(UnnecessaryDefaultInEnumSwitch.class, getClass())
         .addInputLines(
             "in/Test.java",
             "class Test {",
@@ -375,7 +375,7 @@ public class UnnecessaryDefaultInEnumSwitchTest {
 
   @Test
   public void completes_noUnassignedVars_priorCaseDoesntExitUnrecognized() {
-    BugCheckerRefactoringTestHelper.newInstance(new UnnecessaryDefaultInEnumSwitch(), getClass())
+    BugCheckerRefactoringTestHelper.newInstance(UnnecessaryDefaultInEnumSwitch.class, getClass())
         .addInputLines(
             "in/Test.java",
             "class Test {",
@@ -487,7 +487,7 @@ public class UnnecessaryDefaultInEnumSwitchTest {
 
   @Test
   public void notExhaustiveUnrecognized() {
-    BugCheckerRefactoringTestHelper.newInstance(new UnnecessaryDefaultInEnumSwitch(), getClass())
+    BugCheckerRefactoringTestHelper.newInstance(UnnecessaryDefaultInEnumSwitch.class, getClass())
         .addInputLines(
             "Test.java",
             "class Test {",
@@ -522,7 +522,7 @@ public class UnnecessaryDefaultInEnumSwitchTest {
 
   @Test
   public void notExhaustive2() {
-    BugCheckerRefactoringTestHelper.newInstance(new UnnecessaryDefaultInEnumSwitch(), getClass())
+    BugCheckerRefactoringTestHelper.newInstance(UnnecessaryDefaultInEnumSwitch.class, getClass())
         .addInputLines(
             "Test.java",
             "class Test {",
@@ -565,7 +565,7 @@ public class UnnecessaryDefaultInEnumSwitchTest {
 
   @Test
   public void notExhaustive2Unrecognized() {
-    BugCheckerRefactoringTestHelper.newInstance(new UnnecessaryDefaultInEnumSwitch(), getClass())
+    BugCheckerRefactoringTestHelper.newInstance(UnnecessaryDefaultInEnumSwitch.class, getClass())
         .addInputLines(
             "Test.java",
             "class Test {",
@@ -610,7 +610,7 @@ public class UnnecessaryDefaultInEnumSwitchTest {
 
   @Test
   public void unrecognizedIgnore() {
-    BugCheckerRefactoringTestHelper.newInstance(new UnnecessaryDefaultInEnumSwitch(), getClass())
+    BugCheckerRefactoringTestHelper.newInstance(UnnecessaryDefaultInEnumSwitch.class, getClass())
         .addInputLines(
             "Test.java",
             "class Test {",
@@ -630,7 +630,7 @@ public class UnnecessaryDefaultInEnumSwitchTest {
 
   @Test
   public void defaultAboveCaseUnrecognized() {
-    BugCheckerRefactoringTestHelper.newInstance(new UnnecessaryDefaultInEnumSwitch(), getClass())
+    BugCheckerRefactoringTestHelper.newInstance(UnnecessaryDefaultInEnumSwitch.class, getClass())
         .addInputLines(
             "in/Test.java",
             "class Test {",
@@ -712,7 +712,7 @@ public class UnnecessaryDefaultInEnumSwitchTest {
 
   @Test
   public void switchCompletesUnrecognized() {
-    BugCheckerRefactoringTestHelper.newInstance(new UnnecessaryDefaultInEnumSwitch(), getClass())
+    BugCheckerRefactoringTestHelper.newInstance(UnnecessaryDefaultInEnumSwitch.class, getClass())
         .addInputLines(
             "in/Test.java",
             "class Test {",

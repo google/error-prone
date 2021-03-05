@@ -26,7 +26,7 @@ import org.junit.runners.JUnit4;
 @RunWith(JUnit4.class)
 public class DoubleBraceInitializationTest {
   private final BugCheckerRefactoringTestHelper testHelper =
-      BugCheckerRefactoringTestHelper.newInstance(new DoubleBraceInitialization(), getClass());
+      BugCheckerRefactoringTestHelper.newInstance(DoubleBraceInitialization.class, getClass());
 
   @Test
   public void negative() {

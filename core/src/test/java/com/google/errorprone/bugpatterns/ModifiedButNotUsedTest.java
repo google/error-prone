@@ -33,7 +33,7 @@ public final class ModifiedButNotUsedTest {
   private final CompilationTestHelper compilationHelper =
       CompilationTestHelper.newInstance(ModifiedButNotUsed.class, getClass());
   private final BugCheckerRefactoringTestHelper refactoringHelper =
-      BugCheckerRefactoringTestHelper.newInstance(new ModifiedButNotUsed(), getClass());
+      BugCheckerRefactoringTestHelper.newInstance(ModifiedButNotUsed.class, getClass());
 
   @Test
   public void positive() {

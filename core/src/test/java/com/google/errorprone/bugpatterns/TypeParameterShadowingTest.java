@@ -30,7 +30,7 @@ public class TypeParameterShadowingTest {
   private final CompilationTestHelper compilationHelper =
       CompilationTestHelper.newInstance(TypeParameterShadowing.class, getClass());
   private final BugCheckerRefactoringTestHelper refactoring =
-      BugCheckerRefactoringTestHelper.newInstance(new TypeParameterShadowing(), getClass());
+      BugCheckerRefactoringTestHelper.newInstance(TypeParameterShadowing.class, getClass());
 
   @Test
   public void singleLevel() {

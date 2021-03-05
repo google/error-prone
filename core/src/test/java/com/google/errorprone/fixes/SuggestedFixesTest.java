@@ -141,7 +141,7 @@ public class SuggestedFixesTest {
 
   @Test
   public void addAtBeginningOfLine() {
-    BugCheckerRefactoringTestHelper.newInstance(new EditModifiersChecker(), getClass())
+    BugCheckerRefactoringTestHelper.newInstance(EditModifiersChecker.class, getClass())
         .addInputLines(
             "in/Test.java",
             "import javax.annotation.Nullable;",
@@ -427,7 +427,7 @@ public class SuggestedFixesTest {
 
     private static BugCheckerRefactoringTestHelper testHelper(
         Class<? extends SuggestedFixesTest> clazz) {
-      return BugCheckerRefactoringTestHelper.newInstance(new AddAnnotation(), clazz)
+      return BugCheckerRefactoringTestHelper.newInstance(AddAnnotation.class, clazz)
           .addInputLines(
               "in/some/pkg/SomeAnnotation.java",
               "package some.pkg;",
@@ -798,7 +798,7 @@ public class SuggestedFixesTest {
 
   @Test
   public void qualifyStaticImport_addsStaticImportAndUsesUnqualifiedName() {
-    BugCheckerRefactoringTestHelper.newInstance(new ReplaceMethodInvocations(), getClass())
+    BugCheckerRefactoringTestHelper.newInstance(ReplaceMethodInvocations.class, getClass())
         .addInputLines(
             "Test.java",
             "import static com.google.common.base.Preconditions.checkNotNull;",
@@ -821,7 +821,7 @@ public class SuggestedFixesTest {
 
   @Test
   public void qualifyStaticImport_whenAlreadyImported_usesUnqualifiedName() {
-    BugCheckerRefactoringTestHelper.newInstance(new ReplaceMethodInvocations(), getClass())
+    BugCheckerRefactoringTestHelper.newInstance(ReplaceMethodInvocations.class, getClass())
         .addInputLines(
             "Test.java",
             "import static com.google.common.base.Preconditions.checkNotNull;",
@@ -847,7 +847,7 @@ public class SuggestedFixesTest {
 
   @Test
   public void qualifyStaticImport_whenIdentifierNamesClash_usesQualifiedName() {
-    BugCheckerRefactoringTestHelper.newInstance(new ReplaceMethodInvocations(), getClass())
+    BugCheckerRefactoringTestHelper.newInstance(ReplaceMethodInvocations.class, getClass())
         .addInputLines(
             "pkg/Lib.java",
             "package pkg;",
@@ -881,7 +881,7 @@ public class SuggestedFixesTest {
 
   @Test
   public void qualifyStaticImport_whenMethodNamesClash_usesQualifiedName() {
-    BugCheckerRefactoringTestHelper.newInstance(new ReplaceMethodInvocations(), getClass())
+    BugCheckerRefactoringTestHelper.newInstance(ReplaceMethodInvocations.class, getClass())
         .addInputLines(
             "Test.java",
             "import static com.google.common.base.Preconditions.checkNotNull;",
@@ -936,7 +936,7 @@ public class SuggestedFixesTest {
 
   @Test
   public void qualifyJavadocTest() {
-    BugCheckerRefactoringTestHelper.newInstance(new JavadocQualifier(), getClass())
+    BugCheckerRefactoringTestHelper.newInstance(JavadocQualifier.class, getClass())
         .addInputLines(
             "in/Test.java", //
             "import java.util.List;",
@@ -957,8 +957,9 @@ public class SuggestedFixesTest {
         .doTest(TEXT_MATCH);
   }
 
+  /** A {@link BugChecker} for testing. */
   @BugPattern(name = "SuppressMe", summary = "", severity = ERROR)
-  static final class SuppressMe extends BugChecker
+  public static final class SuppressMe extends BugChecker
       implements LiteralTreeMatcher, VariableTreeMatcher {
     @Override
     public Description matchLiteral(LiteralTree tree, VisitorState state) {
@@ -988,7 +989,7 @@ public class SuggestedFixesTest {
   @org.junit.Ignore("There appears to be an issue parsing lambda comments")
   public void testSuppressWarningsFix() {
     BugCheckerRefactoringTestHelper refactorTestHelper =
-        BugCheckerRefactoringTestHelper.newInstance(new SuppressMe(), getClass());
+        BugCheckerRefactoringTestHelper.newInstance(SuppressMe.class, getClass());
     refactorTestHelper
         .addInputLines(
             "in/Test.java",
@@ -1032,8 +1033,9 @@ public class SuggestedFixesTest {
         .doTest();
   }
 
+  /** A {@link BugChecker} for testing. */
   @BugPattern(name = "SuppressMeWithComment", summary = "", severity = ERROR)
-  static final class SuppressMeWithComment extends BugChecker implements LiteralTreeMatcher {
+  public static final class SuppressMeWithComment extends BugChecker implements LiteralTreeMatcher {
     private final String lineComment;
 
     SuppressMeWithComment(String lineComment) {
@@ -1120,8 +1122,9 @@ public class SuggestedFixesTest {
         .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
   }
 
+  /** A {@link BugChecker} for testing. */
   @BugPattern(name = "RemoveSuppressFromMe", summary = "", severity = ERROR)
-  static final class RemoveSuppressFromMe extends BugChecker implements LiteralTreeMatcher {
+  public static final class RemoveSuppressFromMe extends BugChecker implements LiteralTreeMatcher {
 
     @Override
     public Description matchLiteral(LiteralTree tree, VisitorState state) {
@@ -1134,7 +1137,7 @@ public class SuggestedFixesTest {
   @Test
   public void removeSuppressWarnings_singleWarning_removesEntireAnnotation() {
     BugCheckerRefactoringTestHelper refactorTestHelper =
-        BugCheckerRefactoringTestHelper.newInstance(new RemoveSuppressFromMe(), getClass());
+        BugCheckerRefactoringTestHelper.newInstance(RemoveSuppressFromMe.class, getClass());
     refactorTestHelper
         .addInputLines(
             "in/Test.java",
@@ -1148,7 +1151,7 @@ public class SuggestedFixesTest {
   @Test
   public void removeSuppressWarnings_twoWarning_removesWarningAndNewArray() {
     BugCheckerRefactoringTestHelper refactorTestHelper =
-        BugCheckerRefactoringTestHelper.newInstance(new RemoveSuppressFromMe(), getClass());
+        BugCheckerRefactoringTestHelper.newInstance(RemoveSuppressFromMe.class, getClass());
     refactorTestHelper
         .addInputLines(
             "in/Test.java",
@@ -1166,7 +1169,7 @@ public class SuggestedFixesTest {
   @Test
   public void removeSuppressWarnings_threeWarning_removesOnlyOneAndKeepsArray() {
     BugCheckerRefactoringTestHelper refactorTestHelper =
-        BugCheckerRefactoringTestHelper.newInstance(new RemoveSuppressFromMe(), getClass());
+        BugCheckerRefactoringTestHelper.newInstance(RemoveSuppressFromMe.class, getClass());
     refactorTestHelper
         .addInputLines(
             "in/Test.java",
@@ -1184,7 +1187,7 @@ public class SuggestedFixesTest {
   @Test
   public void removeSuppressWarnings_oneWarningInArray_removesWholeAnnotation() {
     BugCheckerRefactoringTestHelper refactorTestHelper =
-        BugCheckerRefactoringTestHelper.newInstance(new RemoveSuppressFromMe(), getClass());
+        BugCheckerRefactoringTestHelper.newInstance(RemoveSuppressFromMe.class, getClass());
     refactorTestHelper
         .addInputLines(
             "in/Test.java",
@@ -1198,7 +1201,7 @@ public class SuggestedFixesTest {
   @Test
   public void removeSuppressWarnings_withValueInit_retainsValue() {
     BugCheckerRefactoringTestHelper refactorTestHelper =
-        BugCheckerRefactoringTestHelper.newInstance(new RemoveSuppressFromMe(), getClass());
+        BugCheckerRefactoringTestHelper.newInstance(RemoveSuppressFromMe.class, getClass());
     refactorTestHelper
         .addInputLines(
             "in/Test.java",
@@ -1227,7 +1230,7 @@ public class SuggestedFixesTest {
 
   @Test
   public void compilesWithFixTest() {
-    BugCheckerRefactoringTestHelper.newInstance(new CompilesWithFixChecker(), getClass())
+    BugCheckerRefactoringTestHelper.newInstance(CompilesWithFixChecker.class, getClass())
         .addInputLines(
             "in/Test.java",
             "class Test {",
@@ -1251,7 +1254,7 @@ public class SuggestedFixesTest {
   @Test
   public void compilesWithFix_releaseFlag() {
     assumeTrue(RuntimeVersion.isAtLeast9());
-    BugCheckerRefactoringTestHelper.newInstance(new CompilesWithFixChecker(), getClass())
+    BugCheckerRefactoringTestHelper.newInstance(CompilesWithFixChecker.class, getClass())
         .setArgs("--release", "9")
         .addInputLines(
             "in/Test.java",
@@ -1585,7 +1588,7 @@ public class SuggestedFixesTest {
 
   @Test
   public void removeAddModifier_rangesCompatible() {
-    BugCheckerRefactoringTestHelper.newInstance(new RemoveAddModifier(), getClass())
+    BugCheckerRefactoringTestHelper.newInstance(RemoveAddModifier.class, getClass())
         .addInputLines("in/Test.java", "public class Test {}")
         .addOutputLines("out/Test.java", "abstract class Test {}")
         .doTest();
@@ -1610,7 +1613,7 @@ public class SuggestedFixesTest {
 
   @Test
   public void prefixAddImport() throws IOException {
-    BugCheckerRefactoringTestHelper.newInstance(new PrefixAddImportCheck(), getClass())
+    BugCheckerRefactoringTestHelper.newInstance(PrefixAddImportCheck.class, getClass())
         .addInputLines(
             "in/Test.java", //
             "package p;",
@@ -1632,8 +1635,9 @@ public class SuggestedFixesTest {
         .isEqualTo(URI.create("file:/com/google/Foo.java"));
   }
 
+  /** A {@link BugChecker} for testing. */
   @BugPattern(name = "RenameMethodChecker", summary = "RenameMethodChecker", severity = ERROR)
-  private static class RenameMethodChecker extends BugChecker
+  public static class RenameMethodChecker extends BugChecker
       implements MethodInvocationTreeMatcher {
     @Override
     public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
@@ -1643,7 +1647,7 @@ public class SuggestedFixesTest {
 
   @Test
   public void renameMethodInvocation() {
-    BugCheckerRefactoringTestHelper.newInstance(new RenameMethodChecker(), getClass())
+    BugCheckerRefactoringTestHelper.newInstance(RenameMethodChecker.class, getClass())
         .addInputLines(
             "Test.java",
             "import java.util.Collections;",
@@ -1900,7 +1904,7 @@ public class SuggestedFixesTest {
 
   @Test
   public void castTree() {
-    BugCheckerRefactoringTestHelper.newInstance(new CastTreeToIntChecker(), getClass())
+    BugCheckerRefactoringTestHelper.newInstance(CastTreeToIntChecker.class, getClass())
         .addInputLines(
             "Test.java",
             "class Test {",

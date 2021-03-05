@@ -27,7 +27,7 @@ import org.junit.runners.JUnit4;
 public class InjectOnMemberAndConstructorTest {
 
   private final BugCheckerRefactoringTestHelper testHelper =
-      BugCheckerRefactoringTestHelper.newInstance(new InjectOnMemberAndConstructor(), getClass());
+      BugCheckerRefactoringTestHelper.newInstance(InjectOnMemberAndConstructor.class, getClass());
   private final CompilationTestHelper compilationHelper =
       CompilationTestHelper.newInstance(InjectOnMemberAndConstructor.class, getClass());
 

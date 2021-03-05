@@ -32,7 +32,7 @@ public class RemoveUnusedImportsTest {
   @Before
   public void setUp() {
     this.testHelper =
-        BugCheckerRefactoringTestHelper.newInstance(new RemoveUnusedImports(), getClass());
+        BugCheckerRefactoringTestHelper.newInstance(RemoveUnusedImports.class, getClass());
   }
 
   @Test

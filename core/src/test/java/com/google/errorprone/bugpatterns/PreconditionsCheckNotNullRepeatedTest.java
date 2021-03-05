@@ -32,7 +32,7 @@ public class PreconditionsCheckNotNullRepeatedTest {
 
   private final BugCheckerRefactoringTestHelper testHelper =
       BugCheckerRefactoringTestHelper.newInstance(
-          new PreconditionsCheckNotNullRepeated(), getClass());
+          PreconditionsCheckNotNullRepeated.class, getClass());
   private final CompilationTestHelper compilationHelper =
       CompilationTestHelper.newInstance(PreconditionsCheckNotNullRepeated.class, getClass());
 

@@ -117,7 +117,7 @@ public class AssertionFailureIgnoredTest {
 
   @Test
   public void refactoring() {
-    BugCheckerRefactoringTestHelper.newInstance(new AssertionFailureIgnored(), getClass())
+    BugCheckerRefactoringTestHelper.newInstance(AssertionFailureIgnored.class, getClass())
         .addInputLines(
             "in/Test.java", //
             "import org.junit.Assert;",
@@ -182,7 +182,7 @@ public class AssertionFailureIgnoredTest {
 
   @Test
   public void refactoringStatements() {
-    BugCheckerRefactoringTestHelper.newInstance(new AssertionFailureIgnored(), getClass())
+    BugCheckerRefactoringTestHelper.newInstance(AssertionFailureIgnored.class, getClass())
         .addInputLines(
             "in/Test.java", //
             "import org.junit.Assert;",

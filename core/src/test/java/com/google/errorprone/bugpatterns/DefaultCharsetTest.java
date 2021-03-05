@@ -34,7 +34,7 @@ public class DefaultCharsetTest {
       CompilationTestHelper.newInstance(DefaultCharset.class, getClass());
 
   private BugCheckerRefactoringTestHelper refactoringTest() {
-    return BugCheckerRefactoringTestHelper.newInstance(new DefaultCharset(), getClass());
+    return BugCheckerRefactoringTestHelper.newInstance(DefaultCharset.class, getClass());
   }
 
   @Test

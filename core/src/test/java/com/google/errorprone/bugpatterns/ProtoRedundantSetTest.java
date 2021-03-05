@@ -142,7 +142,7 @@ public final class ProtoRedundantSetTest {
 
   @Test
   public void testFixes() {
-    BugCheckerRefactoringTestHelper.newInstance(new ProtoRedundantSet(), getClass())
+    BugCheckerRefactoringTestHelper.newInstance(ProtoRedundantSet.class, getClass())
         .addInputLines(
             "ProtoRedundantSetPositiveCases.java",
             "import com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage;",

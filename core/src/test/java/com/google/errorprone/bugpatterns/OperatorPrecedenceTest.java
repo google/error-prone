@@ -30,7 +30,7 @@ public class OperatorPrecedenceTest {
       CompilationTestHelper.newInstance(OperatorPrecedence.class, getClass());
 
   private final BugCheckerRefactoringTestHelper helper =
-      BugCheckerRefactoringTestHelper.newInstance(new OperatorPrecedence(), getClass());
+      BugCheckerRefactoringTestHelper.newInstance(OperatorPrecedence.class, getClass());
 
   @Test
   public void positive() {

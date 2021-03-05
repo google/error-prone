@@ -25,7 +25,7 @@ import org.junit.runners.JUnit4;
 @RunWith(JUnit4.class)
 public class WithSignatureDiscouragedTest {
   private final BugCheckerRefactoringTestHelper refactoringTestHelper =
-      BugCheckerRefactoringTestHelper.newInstance(new WithSignatureDiscouraged(), getClass());
+      BugCheckerRefactoringTestHelper.newInstance(WithSignatureDiscouraged.class, getClass());
 
   @Test
   public void named() {

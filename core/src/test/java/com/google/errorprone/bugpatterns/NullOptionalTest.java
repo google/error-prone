@@ -29,7 +29,7 @@ public final class NullOptionalTest {
       CompilationTestHelper.newInstance(NullOptional.class, getClass());
 
   private final BugCheckerRefactoringTestHelper refactoringHelper =
-      BugCheckerRefactoringTestHelper.newInstance(new NullOptional(), getClass());
+      BugCheckerRefactoringTestHelper.newInstance(NullOptional.class, getClass());
 
   @Test
   public void simplePositiveCase() {

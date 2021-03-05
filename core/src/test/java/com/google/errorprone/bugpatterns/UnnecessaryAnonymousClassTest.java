@@ -28,7 +28,7 @@ import org.junit.runners.JUnit4;
 public class UnnecessaryAnonymousClassTest {
 
   private final BugCheckerRefactoringTestHelper testHelper =
-      BugCheckerRefactoringTestHelper.newInstance(new UnnecessaryAnonymousClass(), getClass());
+      BugCheckerRefactoringTestHelper.newInstance(UnnecessaryAnonymousClass.class, getClass());
 
   @Test
   public void variable_instance() {

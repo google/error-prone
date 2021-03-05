@@ -50,7 +50,7 @@ public final class FloatingPointAssertionWithinEpsilonTest {
   @Test
   public void testFixes() {
     BugCheckerRefactoringTestHelper.newInstance(
-            new FloatingPointAssertionWithinEpsilon(), getClass())
+            FloatingPointAssertionWithinEpsilon.class, getClass())
         .addInput("FloatingPointAssertionWithinEpsilonPositiveCases.java")
         .addOutput("FloatingPointAssertionWithinEpsilonPositiveCases_expected.java")
         .doTest(TestMode.AST_MATCH);

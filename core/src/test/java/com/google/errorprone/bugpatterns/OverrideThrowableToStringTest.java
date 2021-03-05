@@ -40,7 +40,7 @@ public class OverrideThrowableToStringTest {
 
   @Test
   public void testFixes() {
-    BugCheckerRefactoringTestHelper.newInstance(new OverrideThrowableToString(), getClass())
+    BugCheckerRefactoringTestHelper.newInstance(OverrideThrowableToString.class, getClass())
         .addInput("OverrideThrowableToStringPositiveCases.java")
         .addOutput("OverrideThrowableToStringPositiveCases_expected.java")
         .doTest(TestMode.AST_MATCH);

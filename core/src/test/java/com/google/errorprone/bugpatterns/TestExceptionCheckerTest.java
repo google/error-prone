@@ -25,7 +25,7 @@ import org.junit.runners.JUnit4;
 @RunWith(JUnit4.class)
 public class TestExceptionCheckerTest {
   private final BugCheckerRefactoringTestHelper testHelper =
-      BugCheckerRefactoringTestHelper.newInstance(new TestExceptionChecker(), getClass());
+      BugCheckerRefactoringTestHelper.newInstance(TestExceptionChecker.class, getClass());
 
   @Test
   public void positive() {

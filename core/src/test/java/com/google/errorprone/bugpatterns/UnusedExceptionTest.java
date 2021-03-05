@@ -33,7 +33,7 @@ public final class UnusedExceptionTest {
       CompilationTestHelper.newInstance(UnusedException.class, getClass());
 
   private final BugCheckerRefactoringTestHelper refactoringHelper =
-      BugCheckerRefactoringTestHelper.newInstance(new UnusedException(), getClass());
+      BugCheckerRefactoringTestHelper.newInstance(UnusedException.class, getClass());
 
   @Test
   public void positiveCase() {

@@ -28,7 +28,7 @@ public final class BadImportTest {
   private final CompilationTestHelper compilationTestHelper =
       CompilationTestHelper.newInstance(BadImport.class, getClass());
   private final BugCheckerRefactoringTestHelper refactoringTestHelper =
-      BugCheckerRefactoringTestHelper.newInstance(new BadImport(), getClass());
+      BugCheckerRefactoringTestHelper.newInstance(BadImport.class, getClass());
 
   @Test
   public void positive_static_simpleCase() {

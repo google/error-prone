@@ -29,7 +29,7 @@ public class TypeNameShadowingTest {
   private final CompilationTestHelper compilationHelper =
       CompilationTestHelper.newInstance(TypeNameShadowing.class, getClass());
   private final BugCheckerRefactoringTestHelper refactoring =
-      BugCheckerRefactoringTestHelper.newInstance(new TypeNameShadowing(), getClass());
+      BugCheckerRefactoringTestHelper.newInstance(TypeNameShadowing.class, getClass());
 
   @Test
   public void positiveClass() {

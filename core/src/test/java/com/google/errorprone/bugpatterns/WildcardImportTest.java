@@ -38,7 +38,7 @@ public class WildcardImportTest {
 
   @Before
   public void setUp() {
-    testHelper = BugCheckerRefactoringTestHelper.newInstance(new WildcardImport(), getClass());
+    testHelper = BugCheckerRefactoringTestHelper.newInstance(WildcardImport.class, getClass());
   }
 
   @Test

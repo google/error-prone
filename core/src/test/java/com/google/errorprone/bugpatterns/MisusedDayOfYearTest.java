@@ -29,7 +29,7 @@ public final class MisusedDayOfYearTest {
       CompilationTestHelper.newInstance(MisusedDayOfYear.class, getClass());
 
   private final BugCheckerRefactoringTestHelper refactoringHelper =
-      BugCheckerRefactoringTestHelper.newInstance(new MisusedDayOfYear(), getClass());
+      BugCheckerRefactoringTestHelper.newInstance(MisusedDayOfYear.class, getClass());
 
   @Test
   public void positive() {

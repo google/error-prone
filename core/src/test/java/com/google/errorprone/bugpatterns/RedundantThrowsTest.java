@@ -75,7 +75,7 @@ public final class RedundantThrowsTest {
 
   @Test
   public void transitiveSuper() {
-    BugCheckerRefactoringTestHelper.newInstance(new RedundantThrows(), getClass())
+    BugCheckerRefactoringTestHelper.newInstance(RedundantThrows.class, getClass())
         .addInputLines(
             "in/Test.java",
             "import java.io.IOException;",

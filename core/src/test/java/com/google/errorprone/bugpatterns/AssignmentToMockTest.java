@@ -29,7 +29,7 @@ public final class AssignmentToMockTest {
       CompilationTestHelper.newInstance(AssignmentToMock.class, getClass());
 
   private final BugCheckerRefactoringTestHelper refactoringHelper =
-      BugCheckerRefactoringTestHelper.newInstance(new AssignmentToMock(), getClass());
+      BugCheckerRefactoringTestHelper.newInstance(AssignmentToMock.class, getClass());
 
   @Test
   public void positive() {

@@ -26,7 +26,7 @@ import org.junit.runners.JUnit4;
 public class ExpectedExceptionCheckerTest {
 
   private final BugCheckerRefactoringTestHelper testHelper =
-      BugCheckerRefactoringTestHelper.newInstance(new ExpectedExceptionChecker(), getClass());
+      BugCheckerRefactoringTestHelper.newInstance(ExpectedExceptionChecker.class, getClass());
 
   @Test
   public void expect() {

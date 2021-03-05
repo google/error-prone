@@ -182,7 +182,7 @@ public class LockOnBoxedPrimitiveTest {
 
   @Test
   public void refactoring() {
-    BugCheckerRefactoringTestHelper.newInstance(new LockOnBoxedPrimitive(), getClass())
+    BugCheckerRefactoringTestHelper.newInstance(LockOnBoxedPrimitive.class, getClass())
         .addInputLines(
             "Test.java",
             "class Test {",

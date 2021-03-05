@@ -25,7 +25,7 @@ import org.junit.runners.JUnit4;
 @RunWith(JUnit4.class)
 public final class UnnecessaryOptionalGetTest {
   private final BugCheckerRefactoringTestHelper refactoringTestHelper =
-      BugCheckerRefactoringTestHelper.newInstance(new UnnecessaryOptionalGet(), getClass());
+      BugCheckerRefactoringTestHelper.newInstance(UnnecessaryOptionalGet.class, getClass());
 
   @Test
   public void genericOptionalVars_sameVarGet_replacesWithLambdaArg() {

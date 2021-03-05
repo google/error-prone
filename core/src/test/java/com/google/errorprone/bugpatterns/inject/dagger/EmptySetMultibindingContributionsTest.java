@@ -63,7 +63,7 @@ public final class EmptySetMultibindingContributionsTest {
   public void setUp() {
     testHelper =
         BugCheckerRefactoringTestHelper.newInstance(
-            new EmptySetMultibindingContributions(), getClass());
+            EmptySetMultibindingContributions.class, getClass());
   }
 
   @Test

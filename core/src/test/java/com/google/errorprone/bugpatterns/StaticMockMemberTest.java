@@ -30,7 +30,7 @@ import org.junit.runners.JUnit4;
 @RunWith(JUnit4.class)
 public class StaticMockMemberTest {
   private final BugCheckerRefactoringTestHelper testHelper =
-      BugCheckerRefactoringTestHelper.newInstance(new StaticMockMember(), getClass());
+      BugCheckerRefactoringTestHelper.newInstance(StaticMockMember.class, getClass());
   private final CompilationTestHelper compilationHelper =
       CompilationTestHelper.newInstance(StaticMockMember.class, getClass());
 

@@ -30,7 +30,7 @@ public class ClassNewInstanceTest {
 
   @Before
   public void setUp() {
-    testHelper = BugCheckerRefactoringTestHelper.newInstance(new ClassNewInstance(), getClass());
+    testHelper = BugCheckerRefactoringTestHelper.newInstance(ClassNewInstance.class, getClass());
   }
 
   @Test

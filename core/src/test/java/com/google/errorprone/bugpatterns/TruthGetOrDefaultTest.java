@@ -32,7 +32,7 @@ public class TruthGetOrDefaultTest {
   private final CompilationTestHelper compilationHelper =
       CompilationTestHelper.newInstance(TruthGetOrDefault.class, getClass());
   private final BugCheckerRefactoringTestHelper testHelper =
-      BugCheckerRefactoringTestHelper.newInstance(new TruthGetOrDefault(), getClass());
+      BugCheckerRefactoringTestHelper.newInstance(TruthGetOrDefault.class, getClass());
 
   @Test
   public void testPositiveCases() {

@@ -26,7 +26,7 @@ import org.junit.runners.JUnit4;
 public class ImmutableRefactoringTest {
 
   private final BugCheckerRefactoringTestHelper compilationHelper =
-      BugCheckerRefactoringTestHelper.newInstance(new ImmutableRefactoring(), getClass());
+      BugCheckerRefactoringTestHelper.newInstance(ImmutableRefactoring.class, getClass());
 
   @Test
   public void positive() {

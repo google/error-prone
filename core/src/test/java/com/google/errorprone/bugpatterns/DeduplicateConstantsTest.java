@@ -27,7 +27,7 @@ public class DeduplicateConstantsTest {
 
   @Test
   public void positive() {
-    BugCheckerRefactoringTestHelper.newInstance(new DeduplicateConstants(), getClass())
+    BugCheckerRefactoringTestHelper.newInstance(DeduplicateConstants.class, getClass())
         .addInputLines(
             "Test.java",
             "class Test {",
@@ -51,7 +51,7 @@ public class DeduplicateConstantsTest {
 
   @Test
   public void effectivelyFinal() {
-    BugCheckerRefactoringTestHelper.newInstance(new DeduplicateConstants(), getClass())
+    BugCheckerRefactoringTestHelper.newInstance(DeduplicateConstants.class, getClass())
         .addInputLines(
             "Test.java",
             "class Test {",
@@ -75,7 +75,7 @@ public class DeduplicateConstantsTest {
 
   @Test
   public void negativeRecursiveInitializers() {
-    BugCheckerRefactoringTestHelper.newInstance(new DeduplicateConstants(), getClass())
+    BugCheckerRefactoringTestHelper.newInstance(DeduplicateConstants.class, getClass())
         .addInputLines(
             "Test.java",
             "class Test {",
@@ -93,7 +93,7 @@ public class DeduplicateConstantsTest {
 
   @Test
   public void negativeOnlyOneUse() {
-    BugCheckerRefactoringTestHelper.newInstance(new DeduplicateConstants(), getClass())
+    BugCheckerRefactoringTestHelper.newInstance(DeduplicateConstants.class, getClass())
         .addInputLines(
             "Test.java",
             "class Test {",
@@ -108,7 +108,7 @@ public class DeduplicateConstantsTest {
 
   @Test
   public void negativeTooShort() {
-    BugCheckerRefactoringTestHelper.newInstance(new DeduplicateConstants(), getClass())
+    BugCheckerRefactoringTestHelper.newInstance(DeduplicateConstants.class, getClass())
         .addInputLines(
             "Test.java",
             "class Test {",

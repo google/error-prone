@@ -27,7 +27,7 @@ import org.junit.runners.JUnit4;
 @RunWith(JUnit4.class)
 public final class InvalidParamTest {
   private final BugCheckerRefactoringTestHelper refactoring =
-      BugCheckerRefactoringTestHelper.newInstance(new InvalidParam(), getClass());
+      BugCheckerRefactoringTestHelper.newInstance(InvalidParam.class, getClass());
 
   private final CompilationTestHelper helper =
       CompilationTestHelper.newInstance(InvalidParam.class, getClass());

@@ -25,7 +25,7 @@ import org.junit.runners.JUnit4;
 @RunWith(JUnit4.class)
 public final class UnnecessarilyFullyQualifiedTest {
   private final BugCheckerRefactoringTestHelper helper =
-      BugCheckerRefactoringTestHelper.newInstance(new UnnecessarilyFullyQualified(), getClass());
+      BugCheckerRefactoringTestHelper.newInstance(UnnecessarilyFullyQualified.class, getClass());
 
   @Test
   public void singleUse() {

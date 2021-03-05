@@ -38,7 +38,7 @@ public class TypeParameterNamingTest {
   private final CompilationTestHelper compilationHelper =
       CompilationTestHelper.newInstance(TypeParameterNaming.class, getClass());
   private final BugCheckerRefactoringTestHelper refactoring =
-      BugCheckerRefactoringTestHelper.newInstance(new TypeParameterNaming(), getClass());
+      BugCheckerRefactoringTestHelper.newInstance(TypeParameterNaming.class, getClass());
 
   @Test
   public void positiveCases() {

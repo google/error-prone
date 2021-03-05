@@ -26,7 +26,7 @@ import org.junit.runners.JUnit4;
 public class ExtendingJUnitAssertTest {
 
   private final BugCheckerRefactoringTestHelper refactoringTestHelper =
-      BugCheckerRefactoringTestHelper.newInstance(new ExtendingJUnitAssert(), getClass());
+      BugCheckerRefactoringTestHelper.newInstance(ExtendingJUnitAssert.class, getClass());
 
   @Test
   public void positive() {

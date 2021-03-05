@@ -30,7 +30,7 @@ public class CanonicalDurationTest {
 
   @Test
   public void refactoringJavaTime() {
-    BugCheckerRefactoringTestHelper.newInstance(new CanonicalDuration(), getClass())
+    BugCheckerRefactoringTestHelper.newInstance(CanonicalDuration.class, getClass())
         .addInputLines(
             "in/A.java", //
             "package a;",
@@ -66,7 +66,7 @@ public class CanonicalDurationTest {
 
   @Test
   public void refactoringJoda() {
-    BugCheckerRefactoringTestHelper.newInstance(new CanonicalDuration(), getClass())
+    BugCheckerRefactoringTestHelper.newInstance(CanonicalDuration.class, getClass())
         .addInputLines(
             "in/A.java", //
             "package a;",
@@ -100,7 +100,7 @@ public class CanonicalDurationTest {
 
   @Test
   public void refactoringJavaTimeStaticImport() {
-    BugCheckerRefactoringTestHelper.newInstance(new CanonicalDuration(), getClass())
+    BugCheckerRefactoringTestHelper.newInstance(CanonicalDuration.class, getClass())
         .addInputLines(
             "in/A.java", //
             "package a;",
@@ -130,7 +130,7 @@ public class CanonicalDurationTest {
 
   @Test
   public void refactoringJodaStaticImport() {
-    BugCheckerRefactoringTestHelper.newInstance(new CanonicalDuration(), getClass())
+    BugCheckerRefactoringTestHelper.newInstance(CanonicalDuration.class, getClass())
         .addInputLines(
             "in/A.java", //
             "package a;",
@@ -179,7 +179,7 @@ public class CanonicalDurationTest {
 
   @Test
   public void consistentWithinExpression() {
-    BugCheckerRefactoringTestHelper.newInstance(new CanonicalDuration(), getClass())
+    BugCheckerRefactoringTestHelper.newInstance(CanonicalDuration.class, getClass())
         .addInputLines(
             "A.java",
             "package a;",

@@ -28,7 +28,7 @@ public class UseEnumSwitchTest {
 
   @Test
   public void refactoring() {
-    BugCheckerRefactoringTestHelper.newInstance(new UseEnumSwitch(), getClass())
+    BugCheckerRefactoringTestHelper.newInstance(UseEnumSwitch.class, getClass())
         .addInputLines(
             "Test.java",
             "class Test {",
@@ -63,7 +63,7 @@ public class UseEnumSwitchTest {
 
   @Test
   public void nonConstantEnum() {
-    BugCheckerRefactoringTestHelper.newInstance(new UseEnumSwitch(), getClass())
+    BugCheckerRefactoringTestHelper.newInstance(UseEnumSwitch.class, getClass())
         .addInputLines(
             "Test.java",
             "class Test {",

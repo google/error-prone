@@ -28,7 +28,7 @@ public class MisplacedScopeAnnotationsTest {
   private final CompilationTestHelper compilationHelper =
       CompilationTestHelper.newInstance(MisplacedScopeAnnotations.class, getClass());
   private final BugCheckerRefactoringTestHelper refactoringHelper =
-      BugCheckerRefactoringTestHelper.newInstance(new MisplacedScopeAnnotations(), getClass());
+      BugCheckerRefactoringTestHelper.newInstance(MisplacedScopeAnnotations.class, getClass());
 
   @Test
   public void testPositiveCase_methodInjection() {

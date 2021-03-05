@@ -30,7 +30,7 @@ public final class SameNameButDifferentTest {
       CompilationTestHelper.newInstance(SameNameButDifferent.class, getClass());
 
   private final BugCheckerRefactoringTestHelper refactoring =
-      BugCheckerRefactoringTestHelper.newInstance(new SameNameButDifferent(), getClass());
+      BugCheckerRefactoringTestHelper.newInstance(SameNameButDifferent.class, getClass());
 
   @Test
   public void simpleNameClash() {

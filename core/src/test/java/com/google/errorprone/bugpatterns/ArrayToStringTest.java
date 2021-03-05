@@ -30,7 +30,7 @@ public class ArrayToStringTest {
       CompilationTestHelper.newInstance(ArrayToString.class, getClass());
 
   private final BugCheckerRefactoringTestHelper refactoringHelper =
-      BugCheckerRefactoringTestHelper.newInstance(new ArrayToString(), getClass());
+      BugCheckerRefactoringTestHelper.newInstance(ArrayToString.class, getClass());
 
   @Test
   public void testPositiveCase() {

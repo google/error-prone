@@ -26,7 +26,7 @@ import org.junit.runners.JUnit4;
 @RunWith(JUnit4.class)
 public final class InvalidThrowsTest {
   private final BugCheckerRefactoringTestHelper refactoring =
-      BugCheckerRefactoringTestHelper.newInstance(new InvalidThrows(), getClass());
+      BugCheckerRefactoringTestHelper.newInstance(InvalidThrows.class, getClass());
 
   @Test
   public void positive() {

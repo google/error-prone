@@ -29,7 +29,7 @@ public class QualifierOrScopeOnInjectMethodTest {
   private final CompilationTestHelper compilationHelper =
       CompilationTestHelper.newInstance(QualifierOrScopeOnInjectMethod.class, getClass());
   private final BugCheckerRefactoringTestHelper refactoringHelper =
-      BugCheckerRefactoringTestHelper.newInstance(new QualifierOrScopeOnInjectMethod(), getClass());
+      BugCheckerRefactoringTestHelper.newInstance(QualifierOrScopeOnInjectMethod.class, getClass());
 
   @Test
   public void testPositiveCase() {

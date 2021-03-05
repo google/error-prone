@@ -103,7 +103,7 @@ public class FloggerWithCauseTest {
   // regression test for http://b/29131466
   @Test
   public void breakBeforeWithCause() {
-    BugCheckerRefactoringTestHelper.newInstance(new FloggerWithCause(), getClass())
+    BugCheckerRefactoringTestHelper.newInstance(FloggerWithCause.class, getClass())
         .addInputLines(
             "in/Test.java",
             "import com.google.common.flogger.FluentLogger;",

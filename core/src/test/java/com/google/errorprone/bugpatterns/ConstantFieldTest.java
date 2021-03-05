@@ -105,7 +105,7 @@ public class ConstantFieldTest {
 
   @Test
   public void renameUsages() {
-    BugCheckerRefactoringTestHelper.newInstance(new ConstantField(), getClass())
+    BugCheckerRefactoringTestHelper.newInstance(ConstantField.class, getClass())
         .addInputLines(
             "in/Test.java",
             "class Test {",

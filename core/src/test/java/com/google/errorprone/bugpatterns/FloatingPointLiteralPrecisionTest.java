@@ -30,7 +30,7 @@ public class FloatingPointLiteralPrecisionTest {
 
   @Test
   public void positive() {
-    BugCheckerRefactoringTestHelper.newInstance(new FloatingPointLiteralPrecision(), getClass())
+    BugCheckerRefactoringTestHelper.newInstance(FloatingPointLiteralPrecision.class, getClass())
         .addInputLines(
             "in/Test.java",
             "class Test {",
@@ -78,7 +78,7 @@ public class FloatingPointLiteralPrecisionTest {
     };
 
     // Don't provide a fix if the replacement is much longer than the current literal.
-    BugCheckerRefactoringTestHelper.newInstance(new FloatingPointLiteralPrecision(), getClass())
+    BugCheckerRefactoringTestHelper.newInstance(FloatingPointLiteralPrecision.class, getClass())
         .addInputLines("in/Test.java", input)
         .expectUnchanged()
         .doTest(TEXT_MATCH);

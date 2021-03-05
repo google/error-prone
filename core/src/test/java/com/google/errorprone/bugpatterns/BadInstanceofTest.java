@@ -34,7 +34,7 @@ public final class BadInstanceofTest {
 
   @Test
   public void refactoring() {
-    BugCheckerRefactoringTestHelper.newInstance(new BadInstanceof(), getClass())
+    BugCheckerRefactoringTestHelper.newInstance(BadInstanceof.class, getClass())
         .addInputLines(
             "Test.java",
             "class A {",

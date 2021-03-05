@@ -25,7 +25,7 @@ import org.junit.runners.JUnit4;
 @RunWith(JUnit4.class)
 public class SwitchDefaultTest {
   private final BugCheckerRefactoringTestHelper testHelper =
-      BugCheckerRefactoringTestHelper.newInstance(new SwitchDefault(), getClass());
+      BugCheckerRefactoringTestHelper.newInstance(SwitchDefault.class, getClass());
 
   @Test
   public void refactoring_groupAndCase() {

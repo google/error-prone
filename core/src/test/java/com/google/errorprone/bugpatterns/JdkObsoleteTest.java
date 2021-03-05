@@ -107,7 +107,7 @@ public class JdkObsoleteTest {
 
   @Test
   public void refactoring() {
-    BugCheckerRefactoringTestHelper.newInstance(new JdkObsolete(), getClass())
+    BugCheckerRefactoringTestHelper.newInstance(JdkObsolete.class, getClass())
         .addInputLines(
             "in/Test.java", //
             "import java.util.*;",
@@ -141,7 +141,7 @@ public class JdkObsoleteTest {
 
   @Test
   public void stringBufferRefactoringTest() {
-    BugCheckerRefactoringTestHelper.newInstance(new JdkObsolete(), getClass())
+    BugCheckerRefactoringTestHelper.newInstance(JdkObsolete.class, getClass())
         .addInputLines(
             "in/Test.java", //
             "class Test {",
@@ -186,7 +186,7 @@ public class JdkObsoleteTest {
 
   @Test
   public void additionalRefactorings() {
-    BugCheckerRefactoringTestHelper.newInstance(new JdkObsolete(), getClass())
+    BugCheckerRefactoringTestHelper.newInstance(JdkObsolete.class, getClass())
         .addInputLines(
             "in/Test.java", //
             "import java.util.*;",

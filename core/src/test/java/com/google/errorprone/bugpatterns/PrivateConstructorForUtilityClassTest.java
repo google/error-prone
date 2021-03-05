@@ -26,7 +26,7 @@ import org.junit.runners.JUnit4;
 public final class PrivateConstructorForUtilityClassTest {
   private final BugCheckerRefactoringTestHelper testHelper =
       BugCheckerRefactoringTestHelper.newInstance(
-          new PrivateConstructorForUtilityClass(), getClass());
+          PrivateConstructorForUtilityClass.class, getClass());
 
   @Test
   public void emptyClassesGetLeftAlone() {

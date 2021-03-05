@@ -107,7 +107,7 @@ public class UnusedNestedClassTest {
 
   @Test
   public void refactoring() {
-    BugCheckerRefactoringTestHelper.newInstance(new UnusedNestedClass(), getClass())
+    BugCheckerRefactoringTestHelper.newInstance(UnusedNestedClass.class, getClass())
         .addInputLines(
             "Test.java", //
             "class A {",

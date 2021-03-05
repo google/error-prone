@@ -30,7 +30,7 @@ import org.junit.runners.JUnit4;
 @RunWith(JUnit4.class)
 public class ProtectedMembersInFinalClassTest {
   private final BugCheckerRefactoringTestHelper testHelper =
-      BugCheckerRefactoringTestHelper.newInstance(new ProtectedMembersInFinalClass(), getClass());
+      BugCheckerRefactoringTestHelper.newInstance(ProtectedMembersInFinalClass.class, getClass());
   private final CompilationTestHelper compilationHelper =
       CompilationTestHelper.newInstance(ProtectedMembersInFinalClass.class, getClass());
 

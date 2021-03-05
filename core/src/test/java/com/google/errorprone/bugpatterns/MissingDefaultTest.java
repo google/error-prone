@@ -33,7 +33,7 @@ public class MissingDefaultTest {
 
   @Test
   public void positive() {
-    BugCheckerRefactoringTestHelper.newInstance(new MissingDefault(), getClass())
+    BugCheckerRefactoringTestHelper.newInstance(MissingDefault.class, getClass())
         .addInputLines(
             "in/Test.java",
             "class Test {",
@@ -64,7 +64,7 @@ public class MissingDefaultTest {
 
   @Test
   public void positiveBreak() {
-    BugCheckerRefactoringTestHelper.newInstance(new MissingDefault(), getClass())
+    BugCheckerRefactoringTestHelper.newInstance(MissingDefault.class, getClass())
         .addInputLines(
             "in/Test.java",
             "class Test {",
@@ -148,7 +148,7 @@ public class MissingDefaultTest {
 
   @Test
   public void emptyNoComment() {
-    BugCheckerRefactoringTestHelper.newInstance(new MissingDefault(), getClass())
+    BugCheckerRefactoringTestHelper.newInstance(MissingDefault.class, getClass())
         .addInputLines(
             "in/Test.java",
             "class Test {",
@@ -195,7 +195,7 @@ public class MissingDefaultTest {
 
   @Test
   public void multipleStatementsInGroup() {
-    BugCheckerRefactoringTestHelper.newInstance(new MissingDefault(), getClass())
+    BugCheckerRefactoringTestHelper.newInstance(MissingDefault.class, getClass())
         .addInputLines(
             "in/Test.java",
             "class Test {",

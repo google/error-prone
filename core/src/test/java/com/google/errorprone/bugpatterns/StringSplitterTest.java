@@ -31,7 +31,7 @@ import org.junit.runners.JUnit4;
 @RunWith(JUnit4.class)
 public class StringSplitterTest {
   private final BugCheckerRefactoringTestHelper testHelper =
-      BugCheckerRefactoringTestHelper.newInstance(new StringSplitter(), getClass());
+      BugCheckerRefactoringTestHelper.newInstance(StringSplitter.class, getClass());
 
   @Test
   public void positive() {

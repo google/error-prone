@@ -27,7 +27,7 @@ import org.junit.runners.JUnit4;
 public class DoNotClaimAnnotationsTest {
 
   private final BugCheckerRefactoringTestHelper testHelper =
-      BugCheckerRefactoringTestHelper.newInstance(new DoNotClaimAnnotations(), getClass());
+      BugCheckerRefactoringTestHelper.newInstance(DoNotClaimAnnotations.class, getClass());
 
   @Test
   public void testPositive() {

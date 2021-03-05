@@ -32,7 +32,7 @@ import org.junit.runners.JUnit4;
 public class UnnecessarySetDefaultTest {
 
   private final BugCheckerRefactoringTestHelper testHelper =
-      BugCheckerRefactoringTestHelper.newInstance(new UnnecessarySetDefault(), getClass());
+      BugCheckerRefactoringTestHelper.newInstance(UnnecessarySetDefault.class, getClass());
 
   @Test
   public void refactoring() {

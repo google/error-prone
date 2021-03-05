@@ -27,7 +27,7 @@ import org.junit.runners.JUnit4;
 @RunWith(JUnit4.class)
 public final class UrlInSeeTest {
   private final BugCheckerRefactoringTestHelper helper =
-      BugCheckerRefactoringTestHelper.newInstance(new UrlInSee(), getClass());
+      BugCheckerRefactoringTestHelper.newInstance(UrlInSee.class, getClass());
 
   @Test
   public void positive() {

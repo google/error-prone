@@ -25,7 +25,7 @@ import org.junit.runners.JUnit4;
 @RunWith(JUnit4.class)
 public final class InitializeInlineTest {
   private final BugCheckerRefactoringTestHelper compilationHelper =
-      BugCheckerRefactoringTestHelper.newInstance(new InitializeInline(), getClass());
+      BugCheckerRefactoringTestHelper.newInstance(InitializeInline.class, getClass());
 
   @Test
   public void simple() {

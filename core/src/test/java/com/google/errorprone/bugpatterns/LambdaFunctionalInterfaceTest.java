@@ -30,7 +30,7 @@ public class LambdaFunctionalInterfaceTest {
   CompilationTestHelper compilationHelper;
 
   private final BugCheckerRefactoringTestHelper refactoringHelper =
-      BugCheckerRefactoringTestHelper.newInstance(new LambdaFunctionalInterface(), getClass());
+      BugCheckerRefactoringTestHelper.newInstance(LambdaFunctionalInterface.class, getClass());
 
   @Before
   public void setUp() {

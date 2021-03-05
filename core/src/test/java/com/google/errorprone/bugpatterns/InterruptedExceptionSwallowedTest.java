@@ -34,7 +34,7 @@ public final class InterruptedExceptionSwallowedTest {
               "}");
 
   private final BugCheckerRefactoringTestHelper refactoringHelper =
-      BugCheckerRefactoringTestHelper.newInstance(new InterruptedExceptionSwallowed(), getClass());
+      BugCheckerRefactoringTestHelper.newInstance(InterruptedExceptionSwallowed.class, getClass());
 
   @Test
   public void negative() {

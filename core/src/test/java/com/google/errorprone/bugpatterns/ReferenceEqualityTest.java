@@ -29,9 +29,8 @@ public class ReferenceEqualityTest {
   private final CompilationTestHelper compilationHelper =
       CompilationTestHelper.newInstance(ReferenceEquality.class, getClass());
   private final BugCheckerRefactoringTestHelper refactoringTestHelper =
-      BugCheckerRefactoringTestHelper.newInstance(new ReferenceEquality(), getClass());
+      BugCheckerRefactoringTestHelper.newInstance(ReferenceEquality.class, getClass());
 
-  
   @Test
   public void protoGetter_nonnull() {
     compilationHelper

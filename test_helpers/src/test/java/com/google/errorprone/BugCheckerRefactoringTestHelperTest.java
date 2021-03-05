@@ -45,7 +45,7 @@ public class BugCheckerRefactoringTestHelperTest {
 
   @Before
   public void setUp() {
-    helper = BugCheckerRefactoringTestHelper.newInstance(new ReturnNullRefactoring(), getClass());
+    helper = BugCheckerRefactoringTestHelper.newInstance(ReturnNullRefactoring.class, getClass());
   }
 
   @Test
@@ -179,7 +179,7 @@ public class BugCheckerRefactoringTestHelperTest {
 
   @Test
   public void testAnnotationFullName() {
-    BugCheckerRefactoringTestHelper.newInstance(new RemoveAnnotationRefactoring(), getClass())
+    BugCheckerRefactoringTestHelper.newInstance(RemoveAnnotationRefactoring.class, getClass())
         .addInputLines("bar/Foo.java", "package bar;", "public @interface Foo {", "};")
         .expectUnchanged()
         .addInputLines("foo/Bar.java", "import bar.Foo;", "public @Foo class Bar {", "}")
@@ -232,7 +232,7 @@ public class BugCheckerRefactoringTestHelperTest {
 
   @Test
   public void staticLastImportOrder() {
-    BugCheckerRefactoringTestHelper.newInstance(new ImportArrayList(), getClass())
+    BugCheckerRefactoringTestHelper.newInstance(ImportArrayList.class, getClass())
         .setImportOrder("static-last")
         .addInputLines("pkg/A.java", "import static java.lang.Math.min;", "class A {", "}")
         .addOutputLines(

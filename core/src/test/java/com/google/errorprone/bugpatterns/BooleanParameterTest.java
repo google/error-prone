@@ -30,7 +30,7 @@ public class BooleanParameterTest {
 
   @Test
   public void refactoring() {
-    BugCheckerRefactoringTestHelper.newInstance(new BooleanParameter(), getClass())
+    BugCheckerRefactoringTestHelper.newInstance(BooleanParameter.class, getClass())
         .addInputLines(
             "in/Test.java",
             "class Test {",
@@ -76,7 +76,7 @@ public class BooleanParameterTest {
 
   @Test
   public void dontRefactorNonBooleanParameters() {
-    BugCheckerRefactoringTestHelper.newInstance(new BooleanParameter(), getClass())
+    BugCheckerRefactoringTestHelper.newInstance(BooleanParameter.class, getClass())
         .addInputLines(
             "in/Test.java",
             "class Test {",

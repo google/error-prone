@@ -25,7 +25,7 @@ import org.junit.runners.JUnit4;
 @RunWith(JUnit4.class)
 public class MathRoundIntLongTest {
   private final BugCheckerRefactoringTestHelper helper =
-      BugCheckerRefactoringTestHelper.newInstance(new MathRoundIntLong(), getClass());
+      BugCheckerRefactoringTestHelper.newInstance(MathRoundIntLong.class, getClass());
 
   @Test
   public void deleteRoundMethodInt() {

@@ -70,7 +70,7 @@ public class FloggerMessageFormatTest {
 
   @Test
   public void fix() {
-    BugCheckerRefactoringTestHelper.newInstance(new FloggerMessageFormat(), getClass())
+    BugCheckerRefactoringTestHelper.newInstance(FloggerMessageFormat.class, getClass())
         .addInputLines(
             "in/Test.java",
             "import com.google.common.flogger.FluentLogger;",

@@ -28,7 +28,7 @@ import org.junit.runners.JUnit4;
 public class WakelockReleasedDangerouslyTest {
 
   private final BugCheckerRefactoringTestHelper refactoringHelper =
-      BugCheckerRefactoringTestHelper.newInstance(new WakelockReleasedDangerously(), getClass())
+      BugCheckerRefactoringTestHelper.newInstance(WakelockReleasedDangerously.class, getClass())
           .setArgs(ImmutableList.of("-XDandroidCompatible=true"))
           .addInput("testdata/stubs/android/os/PowerManager.java")
           .expectUnchanged();

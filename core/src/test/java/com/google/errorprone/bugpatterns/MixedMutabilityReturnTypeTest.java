@@ -32,7 +32,7 @@ public final class MixedMutabilityReturnTypeTest {
   private final CompilationTestHelper compilationHelper =
       CompilationTestHelper.newInstance(MixedMutabilityReturnType.class, getClass());
   private final BugCheckerRefactoringTestHelper refactoringHelper =
-      BugCheckerRefactoringTestHelper.newInstance(new MixedMutabilityReturnType(), getClass());
+      BugCheckerRefactoringTestHelper.newInstance(MixedMutabilityReturnType.class, getClass());
 
   @Test
   public void positive() {

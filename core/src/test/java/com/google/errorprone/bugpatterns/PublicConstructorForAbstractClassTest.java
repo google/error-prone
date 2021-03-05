@@ -31,7 +31,7 @@ public class PublicConstructorForAbstractClassTest {
   public void basicRefactoringTest() throws IOException {
     BugCheckerRefactoringTestHelper testHelper =
         BugCheckerRefactoringTestHelper.newInstance(
-            new PublicConstructorForAbstractClass(), getClass());
+            PublicConstructorForAbstractClass.class, getClass());
     testHelper
         .addInputLines(
             "in/Test.java", //

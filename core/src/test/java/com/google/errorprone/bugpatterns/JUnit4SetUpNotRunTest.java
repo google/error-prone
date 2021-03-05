@@ -32,7 +32,7 @@ public class JUnit4SetUpNotRunTest {
   private final CompilationTestHelper compilationHelper =
       CompilationTestHelper.newInstance(JUnit4SetUpNotRun.class, getClass());
   private final BugCheckerRefactoringTestHelper refactoringTestHelper =
-      BugCheckerRefactoringTestHelper.newInstance(new JUnit4SetUpNotRun(), getClass());
+      BugCheckerRefactoringTestHelper.newInstance(JUnit4SetUpNotRun.class, getClass());
 
   @Test
   public void testPositiveCases() {

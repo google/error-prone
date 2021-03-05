@@ -36,7 +36,7 @@ public final class UseCorrectAssertInTestsTest {
   private static final String TEST_ONLY = "-XepCompilingTestOnlyCode";
 
   private final BugCheckerRefactoringTestHelper refactoringHelper =
-      BugCheckerRefactoringTestHelper.newInstance(new UseCorrectAssertInTests(), getClass());
+      BugCheckerRefactoringTestHelper.newInstance(UseCorrectAssertInTests.class, getClass());
   private final CompilationTestHelper compilationHelper =
       CompilationTestHelper.newInstance(UseCorrectAssertInTests.class, getClass());
 

@@ -31,7 +31,7 @@ public class ErroneousThreadPoolConstructorCheckerTest {
       CompilationTestHelper.newInstance(ErroneousThreadPoolConstructorChecker.class, getClass());
   private final BugCheckerRefactoringTestHelper refactoringHelper =
       BugCheckerRefactoringTestHelper.newInstance(
-          new ErroneousThreadPoolConstructorChecker(), getClass());
+          ErroneousThreadPoolConstructorChecker.class, getClass());
 
   @Test
   public void positiveCases() {

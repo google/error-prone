@@ -27,7 +27,7 @@ import org.junit.runners.JUnit4;
 public class XorPowerTest {
   @Test
   public void positive() {
-    BugCheckerRefactoringTestHelper.newInstance(new XorPower(), getClass())
+    BugCheckerRefactoringTestHelper.newInstance(XorPower.class, getClass())
         .addInputLines(
             "Test.java",
             "class Test {",

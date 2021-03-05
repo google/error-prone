@@ -46,7 +46,7 @@ public class MisusedWeekYearTest {
 
   @Test
   public void testRefactoring() {
-    BugCheckerRefactoringTestHelper.newInstance(new MisusedWeekYear(), getClass())
+    BugCheckerRefactoringTestHelper.newInstance(MisusedWeekYear.class, getClass())
         .addInputLines(
             "Test.java",
             "import java.time.format.DateTimeFormatter;",

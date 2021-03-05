@@ -32,7 +32,7 @@ public class ConstantPatternCompileTest {
   private final CompilationTestHelper compilationHelper =
       CompilationTestHelper.newInstance(ConstantPatternCompile.class, getClass());
   private final BugCheckerRefactoringTestHelper testHelper =
-      BugCheckerRefactoringTestHelper.newInstance(new ConstantPatternCompile(), getClass());
+      BugCheckerRefactoringTestHelper.newInstance(ConstantPatternCompile.class, getClass());
 
   @Test
   public void testPositiveCases() {

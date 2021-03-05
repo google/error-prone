@@ -30,7 +30,7 @@ public final class PrivateConstructorForNoninstantiableModuleTest {
   public void setUp() {
     testHelper =
         BugCheckerRefactoringTestHelper.newInstance(
-            new PrivateConstructorForNoninstantiableModule(), getClass());
+            PrivateConstructorForNoninstantiableModule.class, getClass());
   }
 
   @Test

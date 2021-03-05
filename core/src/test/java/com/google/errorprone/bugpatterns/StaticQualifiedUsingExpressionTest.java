@@ -29,7 +29,7 @@ public class StaticQualifiedUsingExpressionTest {
   private final CompilationTestHelper compilationHelper =
       CompilationTestHelper.newInstance(StaticQualifiedUsingExpression.class, getClass());
   private final BugCheckerRefactoringTestHelper refactoringHelper =
-      BugCheckerRefactoringTestHelper.newInstance(new StaticQualifiedUsingExpression(), getClass());
+      BugCheckerRefactoringTestHelper.newInstance(StaticQualifiedUsingExpression.class, getClass());
 
   @Test
   public void testPositiveCase1() {
