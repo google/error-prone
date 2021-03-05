@@ -21,6 +21,7 @@ import static com.google.errorprone.fixes.SuggestedFixes.addSuppressWarnings;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.MemberReferenceTreeMatcher;
@@ -63,7 +64,7 @@ import java.util.Map;
 public class CollectionIncompatibleType extends BugChecker
     implements MethodInvocationTreeMatcher, MemberReferenceTreeMatcher {
 
-  public enum FixType {
+  private enum FixType {
     NONE,
     CAST,
     PRINT_TYPES_AS_COMMENT,
@@ -77,8 +78,12 @@ public class CollectionIncompatibleType extends BugChecker
     this(FixType.NONE);
   }
 
+  public CollectionIncompatibleType(ErrorProneFlags flags) {
+    this(flags.getEnum("CollectionIncompatibleType:FixType", FixType.class).orElse(FixType.NONE));
+  }
+
   /** Creates a new {@link CollectionIncompatibleType} checker with the given {@code fixType}. */
-  public CollectionIncompatibleType(FixType fixType) {
+  private CollectionIncompatibleType(FixType fixType) {
     this.fixType = fixType;
   }
 

@@ -16,12 +16,10 @@
 
 package com.google.errorprone.bugpatterns.collectionincompatibletype;
 
+import com.google.common.collect.ImmutableList;
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode;
 import com.google.errorprone.CompilationTestHelper;
-import com.google.errorprone.bugpatterns.collectionincompatibletype.CollectionIncompatibleType.FixType;
-import com.google.errorprone.scanner.ErrorProneScanner;
-import com.google.errorprone.scanner.ScannerSupplier;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -32,6 +30,9 @@ import org.junit.runners.JUnit4;
 public class CollectionIncompatibleTypeTest {
   private final CompilationTestHelper compilationHelper =
       CompilationTestHelper.newInstance(CollectionIncompatibleType.class, getClass());
+
+  private final BugCheckerRefactoringTestHelper refactorTestHelper =
+      BugCheckerRefactoringTestHelper.newInstance(CollectionIncompatibleType.class, getClass());
 
   @Test
   public void testPositiveCases() {
@@ -55,12 +56,7 @@ public class CollectionIncompatibleTypeTest {
 
   @Test
   public void testCastFixes() {
-    CompilationTestHelper compilationHelperWithCastFix =
-        CompilationTestHelper.newInstance(
-            ScannerSupplier.fromScanner(
-                new ErrorProneScanner(new CollectionIncompatibleType(FixType.CAST))),
-            getClass());
-    compilationHelperWithCastFix
+    compilationHelper
         .addSourceLines(
             "Test.java",
             "import java.util.Collection;",
@@ -72,14 +68,12 @@ public class CollectionIncompatibleTypeTest {
             "    c1.containsAll(c2);",
             "  }",
             "}")
+        .setArgs(ImmutableList.of("-XepOpt:CollectionIncompatibleType:FixType=CAST"))
         .doTest();
   }
 
   @Test
   public void testSuppressWarningsFix() {
-    BugCheckerRefactoringTestHelper refactorTestHelper =
-        BugCheckerRefactoringTestHelper.newInstance(
-            new CollectionIncompatibleType(FixType.SUPPRESS_WARNINGS), getClass());
     refactorTestHelper
         .addInputLines(
             "in/Test.java",
@@ -101,6 +95,7 @@ public class CollectionIncompatibleTypeTest {
             "    c1.containsAll(/* expected: String, actual: Integer */ c2);",
             "  }",
             "}")
+        .setArgs("-XepOpt:CollectionIncompatibleType:FixType=SUPPRESS_WARNINGS")
         .doTest(TestMode.TEXT_MATCH);
   }
 
