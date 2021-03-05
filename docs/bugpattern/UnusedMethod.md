@@ -5,4 +5,4 @@ the impact on other source files.
 ## Suppression
 
 All false positives can be suppressed by annotating the method with
-`@SuppressWarnings("unused")`.
+`@SuppressWarnings("unused")` or prefixing its name with `unused`.
