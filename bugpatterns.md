@@ -1066,9 +1066,6 @@ This type is not guaranteed to implement a useful #equals method.
 __[UnescapedEntity](bugpattern/UnescapedEntity)__<br>
 Javadoc is interpreted as HTML, so HTML entities such as &amp;, &lt;, &gt; must be escaped.
 
-__[UnnecessaryAnonymousClass](bugpattern/UnnecessaryAnonymousClass)__<br>
-Implementing a functional interface is unnecessary; prefer to implement the functional interface method directly and use a method reference instead.
-
 __[UnnecessaryLambda](bugpattern/UnnecessaryLambda)__<br>
 Returning a lambda from a helper method or saving it in a constant is unnecessary; prefer to implement the functional interface method directly and use a method reference instead.
 
@@ -1339,6 +1336,9 @@ This fully qualified name is unambiguous to the compiler if imported.
 
 __[UnnecessarilyVisible](bugpattern/UnnecessarilyVisible)__<br>
 Some methods (such as those annotated with @Inject or @Provides) are only intended to be called by a framework, and so should have default visibility
+
+__[UnnecessaryAnonymousClass](bugpattern/UnnecessaryAnonymousClass)__<br>
+Implementing a functional interface is unnecessary; prefer to implement the functional interface method directly and use a method reference instead.
 
 __[UnnecessaryDefaultInEnumSwitch](bugpattern/UnnecessaryDefaultInEnumSwitch)__<br>
 Switch handles all enum values: an explicit default case is unnecessary and defeats error checking for non-exhaustive switches.
