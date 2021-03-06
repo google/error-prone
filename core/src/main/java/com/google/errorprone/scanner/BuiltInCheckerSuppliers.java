@@ -219,6 +219,7 @@ import com.google.errorprone.bugpatterns.MissingDefault;
 import com.google.errorprone.bugpatterns.MissingFail;
 import com.google.errorprone.bugpatterns.MissingImplementsComparable;
 import com.google.errorprone.bugpatterns.MissingOverride;
+import com.google.errorprone.bugpatterns.MissingRefasterAnnotation;
 import com.google.errorprone.bugpatterns.MissingSuperCall;
 import com.google.errorprone.bugpatterns.MissingTestCall;
 import com.google.errorprone.bugpatterns.MisusedDayOfYear;
@@ -916,6 +917,7 @@ public class BuiltInCheckerSuppliers {
           MissingFail.class,
           MissingImplementsComparable.class,
           MissingOverride.class,
+          MissingRefasterAnnotation.class,
           MissingSummary.class,
           MixedMutabilityReturnType.class,
           MockNotUsedInProduction.class,
