@@ -15,23 +15,11 @@
  */
 package com.google.errorprone.bugpatterns;
 
-import static com.google.common.truth.Truth.assertThat;
 import static com.google.errorprone.BugCheckerRefactoringTestHelper.FixChoosers.FIRST;
 
-import com.google.common.collect.Iterables;
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
+import com.google.errorprone.BugCheckerRefactoringTestHelper.FixChoosers;
 import com.google.errorprone.CompilationTestHelper;
-import com.google.errorprone.VisitorState;
-import com.google.errorprone.fixes.Fix;
-import com.google.errorprone.fixes.Replacement;
-import com.google.errorprone.matchers.Description;
-import com.google.errorprone.scanner.Scanner;
-import com.google.errorprone.scanner.ScannerSupplier;
-import com.sun.source.tree.TryTree;
-import com.sun.tools.javac.tree.EndPosTable;
-import com.sun.tools.javac.tree.JCTree;
-import java.util.ArrayList;
-import java.util.List;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -72,12 +60,8 @@ public class MissingFailTest {
 
   @Test
   public void testFailImport() {
-    TestScanner scanner = new TestScanner();
-    CompilationTestHelper compilationHelper =
-        CompilationTestHelper.newInstance(ScannerSupplier.fromScanner(scanner), getClass());
-
-    compilationHelper
-        .addSourceLines(
+    BugCheckerRefactoringTestHelper.newInstance(MissingFail.class, getClass())
+        .addInputLines(
             "test/A.java",
             "package test;",
             "import junit.framework.TestCase;",
@@ -88,27 +72,27 @@ public class MissingFailTest {
             "    } catch (IllegalArgumentException expected) {}",
             "  }",
             "}")
+        .addOutputLines(
+            "test/A.java",
+            "package test;",
+            "import static org.junit.Assert.fail;",
+            "import junit.framework.TestCase;",
+            "public class A extends TestCase {",
+            "  public void testMethod() {",
+            "    try {",
+            "      new String();",
+            "      fail(\"Expected IllegalArgumentException\");",
+            "    } catch (IllegalArgumentException expected) {}",
+            "  }",
+            "}")
+        .setFixChooser(FixChoosers.SECOND)
         .doTest();
-
-    Description warning = Iterables.getOnlyElement(scanner.suggestedChanges);
-    assertThat(warning.fixes).hasSize(2);
-    // Fix that adds fail comes after assertThrows fix.
-    Fix fix2 = warning.fixes.get(1);
-    assertThat(fix2.getImportsToAdd()).containsExactly("import static org.junit.Assert.fail");
-    assertThat(fix2.getImportsToRemove())
-        .containsExactly(
-            "import static junit.framework.TestCase.fail",
-            "import static junit.framework.Assert.fail");
   }
 
   @Test
   public void testFailMessageMultiCatch() {
-    TestScanner scanner = new TestScanner();
-    CompilationTestHelper compilationHelper =
-        CompilationTestHelper.newInstance(ScannerSupplier.fromScanner(scanner), getClass());
-
-    compilationHelper
-        .addSourceLines(
+    BugCheckerRefactoringTestHelper.newInstance(MissingFail.class, getClass())
+        .addInputLines(
             "test/A.java",
             "package test;",
             "import junit.framework.TestCase;",
@@ -119,13 +103,21 @@ public class MissingFailTest {
             "    } catch (IllegalArgumentException | IllegalStateException expected) {}",
             "  }",
             "}")
+        .addOutputLines(
+            "test/A.java",
+            "package test;",
+            "import static org.junit.Assert.fail;",
+            "import junit.framework.TestCase;",
+            "public class A extends TestCase {",
+            "  public void testMethod() {",
+            "    try {",
+            "      new String();",
+            "      fail(\"Expected Exception\");",
+            "    } catch (IllegalArgumentException | IllegalStateException expected) {}",
+            "  }",
+            "}")
+        .setFixChooser(FixChoosers.SECOND)
         .doTest();
-
-    Description warning = Iterables.getOnlyElement(scanner.suggestedChanges);
-    // Fix that adds fail comes after assertThrows fix.
-    Fix fix2 = warning.fixes.get(1);
-    assertThat(fix2.getReplacements(new NoopEndPosTable()))
-        .containsExactly(Replacement.create(0, 0, "\nfail(\"Expected Exception\");"));
   }
 
   // verify that exceptions not named 'expected' are ignored
@@ -301,33 +293,5 @@ public class MissingFailTest {
             "}")
         .expectUnchanged()
         .doTest();
-  }
-
-  private static class TestScanner extends Scanner {
-
-    final List<Description> suggestedChanges = new ArrayList<>();
-
-    @Override
-    public Void visitTry(TryTree node, VisitorState visitorState) {
-      suggestedChanges.add(
-          new MissingFail().matchTry(node, visitorState.withPath(getCurrentPath())));
-      return super.visitTry(node, visitorState);
-    }
-  }
-
-  private static class NoopEndPosTable implements EndPosTable {
-
-    @Override
-    public int getEndPos(JCTree tree) {
-      return 0;
-    }
-
-    @Override
-    public void storeEnd(JCTree tree, int endpos) {}
-
-    @Override
-    public int replaceTree(JCTree oldtree, JCTree newtree) {
-      return 0;
-    }
   }
 }
