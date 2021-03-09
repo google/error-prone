@@ -116,25 +116,4 @@ public final class ProtoBuilderReturnValueIgnoredTest {
         .setFixChooser(FixChoosers.SECOND)
         .doTest();
   }
-
-  @Test
-  public void testFoo() {
-    helper
-        .addSourceLines(
-            "Test.java",
-            "import com.google.protobuf.Duration;",
-            "final class Test {",
-            "  public void proto_build() {",
-            // TODO(b/9467048): this will later be flagged after the depot is scrubbed
-            "    Duration.newBuilder().setSeconds(4).build();",
-            "    Duration duration = Duration.newBuilder().setSeconds(4).build();",
-            "  }",
-            "  public void proto_buildPartial() {",
-            // TODO(b/9467048): this will later be flagged after the depot is scrubbed
-            "    Duration.newBuilder().setSeconds(4).buildPartial();",
-            "    Duration duration = Duration.newBuilder().setSeconds(4).buildPartial();",
-            "  }",
-            "}")
-        .doTest();
-  }
 }

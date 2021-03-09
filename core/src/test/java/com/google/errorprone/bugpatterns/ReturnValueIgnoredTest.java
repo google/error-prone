@@ -306,4 +306,25 @@ public class ReturnValueIgnoredTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void testProtoMessageBuildBuildPartial() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.protobuf.Duration;",
+            "final class Test {",
+            "  public void proto_build() {",
+            "    // BUG: Diagnostic contains: ReturnValueIgnored",
+            "    Duration.newBuilder().setSeconds(4).build();",
+            "    Duration duration = Duration.newBuilder().setSeconds(4).build();",
+            "  }",
+            "  public void proto_buildPartial() {",
+            "    // BUG: Diagnostic contains: ReturnValueIgnored",
+            "    Duration.newBuilder().setSeconds(4).buildPartial();",
+            "    Duration duration = Duration.newBuilder().setSeconds(4).buildPartial();",
+            "  }",
+            "}")
+        .doTest();
+  }
 }

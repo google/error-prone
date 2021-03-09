@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
-import static com.google.errorprone.BugPattern.StandardTags.FRAGILE_CODE;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
@@ -45,8 +44,7 @@ import com.sun.source.tree.MethodInvocationTree;
             + "#build(), the result is discarded and the only effect is to verify that all "
             + "required fields are set, which can be expressed more directly with "
             + "#isInitialized().",
-    severity = ERROR,
-    tags = FRAGILE_CODE)
+    severity = ERROR)
 public final class ProtoBuilderReturnValueIgnored extends AbstractReturnValueIgnored {
 
   private static final Matcher<ExpressionTree> BUILDER =

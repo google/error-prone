@@ -210,10 +210,18 @@ public class ReturnValueIgnored extends AbstractReturnValueIgnored {
           instanceMethod().onExactClass("java.util.Optional").named("isPresent"),
           instanceMethod().onExactClass("java.util.Optional").named("isEmpty"));
 
-  /** The return values of {@code ProtoMessage.newBuilder()} should always be checked. */
-  // TODO(b/9467048): consolidate this with ProtoBuilderReturnValueIgnored
+  private static final String PROTO_MESSAGE = "com.google.protobuf.MessageLite";
+
+  /**
+   * The return values of {@code ProtoMessage.newBuilder()}, {@code protoBuilder.build()} and {@code
+   * protoBuilder.buildPartial()} should always be checked.
+   */
   private static final Matcher<ExpressionTree> PROTO_METHODS =
-      staticMethod().onClass(isDescendantOf("com.google.protobuf.MessageLite")).named("newBuilder");
+      anyOf(
+          staticMethod().onClass(isDescendantOf(PROTO_MESSAGE)).named("newBuilder"),
+          instanceMethod()
+              .onDescendantOf(PROTO_MESSAGE + ".Builder")
+              .namedAnyOf("build", "buildPartial"));
 
   private static final Matcher<? super ExpressionTree> SPECIALIZED_MATCHER =
       anyOf(
