@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import com.google.common.collect.ImmutableList;
 import com.google.errorprone.CompilationTestHelper;
 import com.google.errorprone.annotations.CompileTimeConstant;
 import org.junit.Test;
@@ -572,22 +571,6 @@ public class CompileTimeConstantCheckerTest {
   }
 
   @Test
-  public void nonConstantField_negative() {
-    compilationHelper
-        .addSourceLines(
-            "test/CompileTimeConstantTestCase.java",
-            "package test;",
-            "import com.google.errorprone.annotations.CompileTimeConstant;",
-            "public abstract class CompileTimeConstantTestCase {",
-            "  abstract String something();",
-            "  @CompileTimeConstant final String x = something();",
-            "}")
-        .setArgs(
-            ImmutableList.of("-XepOpt:CompileTimeConstantChecker:CheckFieldInitializers=false"))
-        .doTest();
-  }
-
-  @Test
   public void nonConstantField_positive() {
     compilationHelper
         .addSourceLines(
@@ -599,7 +582,6 @@ public class CompileTimeConstantCheckerTest {
             "  // BUG: Diagnostic contains: Non-compile-time constant expression",
             "  @CompileTimeConstant final String x = something();",
             "}")
-        .setArgs(ImmutableList.of("-XepOpt:CompileTimeConstantChecker:CheckFieldInitializers=true"))
         .doTest();
   }
 
@@ -614,7 +596,6 @@ public class CompileTimeConstantCheckerTest {
             "public abstract class CompileTimeConstantTestCase {",
             "  @CompileTimeConstant final ImmutableList<String> x = ImmutableList.of(\"a\");",
             "}")
-        .setArgs(ImmutableList.of("-XepOpt:CompileTimeConstantChecker:CheckFieldInitializers=true"))
         .doTest();
   }
 }
