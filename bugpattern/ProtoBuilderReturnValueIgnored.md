@@ -4,7 +4,7 @@ summary: 'Unnecessary call to proto''s #build() method.  If you don''t consume t
   return value of #build(), the result is discarded and the only effect is to verify
   that all required fields are set, which can be expressed more directly with #isInitialized().'
 layout: bugpattern
-tags: FragileCode
+tags: ''
 severity: ERROR
 ---
 
