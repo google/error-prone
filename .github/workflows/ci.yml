@@ -1,6 +1,12 @@
 name: CI
 
-on: [ push, pull_request ]
+on:
+  push:
+    branches:
+    - master
+  pull_request:
+    branches:
+    - master
 
 jobs:
   test:
@@ -27,6 +33,10 @@ jobs:
     runs-on: ${{ matrix.os }}
     continue-on-error: ${{ matrix.experimental }}
     steps:
+      - name: Cancel previous
+        uses: styfle/cancel-workflow-action@0.8.0
+        with:
+          access_token: ${{ github.token }}
       - name: 'Check out repository'
         uses: actions/checkout@v2
       - name: 'Cache local Maven repository'
