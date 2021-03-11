@@ -21,7 +21,6 @@ import static com.google.errorprone.matchers.Matchers.annotations;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.isType;
 
-import com.google.auto.service.AutoService;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.LinkType;
 import com.google.errorprone.BugPattern.SeverityLevel;
@@ -37,7 +36,6 @@ import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
-@AutoService(BugChecker.class)
 @BugPattern(
     name = "MissingRefasterAnnotation",
     summary = "The Refaster template contains a method without any Refaster annotations",
@@ -45,7 +43,6 @@ import com.sun.source.tree.Tree;
     severity = SeverityLevel.WARNING,
     tags = StandardTags.LIKELY_ERROR)
 public final class MissingRefasterAnnotation extends BugChecker implements ClassTreeMatcher {
-  private static final long serialVersionUID = 1L;
   private static final MultiMatcher<Tree, AnnotationTree> HAS_REFASTER_ANNOTATION =
       annotations(
           AT_LEAST_ONE,
