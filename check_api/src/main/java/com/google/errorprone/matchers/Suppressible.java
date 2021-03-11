@@ -36,7 +36,9 @@ public interface Suppressible {
   boolean supportsSuppressWarnings();
 
   /** Return true if this checker should run on generated code */
-  boolean inspectGeneratedCode();
+  default boolean inspectGeneratedCode() {
+    return false;
+  }
 
   /** Returns the custom suppression annotations for this checker, if custom suppression is used. */
   Set<Class<? extends Annotation>> customSuppressionAnnotations();
