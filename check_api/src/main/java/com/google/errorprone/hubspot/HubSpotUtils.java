@@ -24,9 +24,10 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.regex.Pattern;
 
 import com.fasterxml.jackson.databind.JavaType;
 import com.google.common.base.Strings;
@@ -42,6 +43,8 @@ import com.google.errorprone.descriptionlistener.CustomDescriptionListenerFactor
 import com.google.errorprone.descriptionlistener.DescriptionListenerResources;
 import com.google.errorprone.matchers.Suppressible;
 import com.google.errorprone.scanner.ScannerSupplier;
+import com.google.errorprone.suppliers.Supplier;
+import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.util.JavacTask;
 import com.sun.tools.javac.api.BasicJavacTask;
 import com.sun.tools.javac.util.Context;
@@ -63,9 +66,11 @@ public class HubSpotUtils {
   private static final String INIT_ERROR = "errorProneInitErrors";
   private static final String LISTENER_INIT_ERRORS = "errorProneListenerInitErrors";
   private static final String ERROR_REPORTING_FLAG = "hubspot:error-reporting";
+  private static final String GENERATED_SOURCES_FLAG = "hubspot:generated-sources-pattern";
   private static final Map<String, Set<String>> DATA = loadExistingData();
   private static final Map<String, Long> PREVIOUS_TIMING_DATA = loadExistingTimings();
   private static final Map<String, Long> TIMING_DATA = new ConcurrentHashMap<>();
+  private static final Supplier<Pattern> GENERATED_PATTERN = VisitorState.memoize(getGeneratedPathsPattern());
 
   public static ScannerSupplier createScannerSupplier(Iterable<BugChecker> extraBugCheckers) {
     ImmutableList.Builder<BugCheckerInfo> builder = ImmutableList.builder();
@@ -108,6 +113,17 @@ public class HubSpotUtils {
     return isFlagEnabled("hubspot:canonical-suppressions-only", visitorState.errorProneOptions());
   }
 
+  public static boolean isGeneratedCodeInspectionEnabled(VisitorState visitorState) {
+    return isFlagEnabled("hubspot:generated-code-inspection", visitorState.errorProneOptions());
+  }
+
+  public static boolean isGenerated(VisitorState state) {
+    return GENERATED_PATTERN
+        .get(state)
+        .matcher(ASTHelpers.getFileName(state.getPath().getCompilationUnit()))
+        .matches();
+  }
+
   public static void recordError(Suppressible s) {
     DATA.computeIfAbsent(EXCEPTIONS, ignored -> ConcurrentHashMap.newKeySet())
         .add(s.canonicalName());
@@ -130,6 +146,13 @@ public class HubSpotUtils {
       FileManager.getErrorOutputPath().ifPresent(p -> FileManager.write(DATA, p));
       FileManager.getTimingsOutputPath().ifPresent(p -> FileManager.write(computeFinalTimings(), p));
     });
+  }
+
+  private static Supplier<Pattern> getGeneratedPathsPattern() {
+    return visitorState -> Optional.ofNullable(visitorState.errorProneOptions().getFlags())
+        .flatMap(f -> f.get(GENERATED_SOURCES_FLAG))
+        .map(Pattern::compile)
+        .orElseThrow(() -> new IllegalStateException("Must specify flag " + GENERATED_SOURCES_FLAG));
   }
 
   private static boolean isFlagEnabled(String flag, ErrorProneOptions errorProneOptions) {

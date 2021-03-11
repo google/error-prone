@@ -118,6 +118,10 @@ public class SuppressionInfo {
    * matchers on {@link CompilationUnitTree} will also be suppressed.
    */
   public SuppressionInfo forCompilationUnit(CompilationUnitTree tree, VisitorState state) {
+    if (HubSpotUtils.isGeneratedCodeInspectionEnabled(state)) {
+      return new SuppressionInfo(suppressWarningsStrings, customSuppressions, HubSpotUtils.isGenerated(state));
+    }
+
     AtomicBoolean generated = new AtomicBoolean(false);
     new SimpleTreeVisitor<Void, Void>() {
       @Override
@@ -147,7 +151,13 @@ public class SuppressionInfo {
    */
   public SuppressionInfo withExtendedSuppressions(
       Symbol sym, VisitorState state, Set<? extends Name> customSuppressionAnnosToLookFor) {
-    boolean newInGeneratedCode = inGeneratedCode || isGenerated(sym, state);
+    boolean newInGeneratedCode;
+    if (HubSpotUtils.isGeneratedCodeInspectionEnabled(state)) {
+      newInGeneratedCode = inGeneratedCode || HubSpotUtils.isGenerated(state);
+    } else {
+      newInGeneratedCode = inGeneratedCode || isGenerated(sym, state);
+    }
+
     boolean anyModification = newInGeneratedCode != inGeneratedCode;
 
     /* Handle custom suppression annotations. */

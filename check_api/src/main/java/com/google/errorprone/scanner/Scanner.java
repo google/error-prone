@@ -108,9 +108,16 @@ public class Scanner extends TreePathScanner<Void, VisitorState> {
   protected SuppressedState isSuppressed(
       Suppressible suppressible, ErrorProneOptions errorProneOptions, VisitorState state) {
 
-    boolean suppressedInGeneratedCode = !suppressible.inspectGeneratedCode()
-        || (errorProneOptions.disableWarningsInGeneratedCode()
-            && severityMap().get(suppressible.canonicalName()) != SeverityLevel.ERROR);
+    final boolean suppressedInGeneratedCode;
+    if (HubSpotUtils.isGeneratedCodeInspectionEnabled(state)) {
+      suppressedInGeneratedCode = !suppressible.inspectGeneratedCode()
+          || (errorProneOptions.disableWarningsInGeneratedCode()
+          && severityMap().get(suppressible.canonicalName()) != SeverityLevel.ERROR);
+    } else {
+      suppressedInGeneratedCode =
+          errorProneOptions.disableWarningsInGeneratedCode()
+              && severityMap().get(suppressible.canonicalName()) != SeverityLevel.ERROR;
+    }
 
     return currentSuppressions.suppressedState(suppressible, suppressedInGeneratedCode, state);
   }
