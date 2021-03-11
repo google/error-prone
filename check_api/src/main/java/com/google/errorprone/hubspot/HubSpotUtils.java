@@ -62,6 +62,7 @@ public class HubSpotUtils {
   private static final String MISSING = "errorProneMissingChecks";
   private static final String INIT_ERROR = "errorProneInitErrors";
   private static final String LISTENER_INIT_ERRORS = "errorProneListenerInitErrors";
+  private static final String ERROR_REPORTING_FLAG = "hubspot:error-reporting";
   private static final Map<String, Set<String>> DATA = loadExistingData();
   private static final Map<String, Long> PREVIOUS_TIMING_DATA = loadExistingTimings();
   private static final Map<String, Long> TIMING_DATA = new ConcurrentHashMap<>();
@@ -96,22 +97,15 @@ public class HubSpotUtils {
   }
 
   public static boolean isErrorHandlingEnabled(DescriptionListenerResources resources) {
-    return isErrorHandlingEnabled(resources.getContext().get(ErrorProneFlags.class));
+    return isFlagEnabled(ERROR_REPORTING_FLAG, resources.getContext().get(ErrorProneFlags.class));
   }
 
   public static boolean isErrorHandlingEnabled(ErrorProneOptions options) {
-    return isErrorHandlingEnabled(options.getFlags());
+    return isFlagEnabled(ERROR_REPORTING_FLAG, options);
   }
 
   public static boolean isCanonicalSuppressionEnabled(VisitorState visitorState) {
-    ErrorProneFlags flags = visitorState.errorProneOptions().getFlags();
-    if (flags == null) {
-      return false;
-    }
-
-    return flags
-        .getBoolean("hubspot:canonical-suppressions-only")
-        .orElse(false);
+    return isFlagEnabled("hubspot:canonical-suppressions-only", visitorState.errorProneOptions());
   }
 
   public static void recordError(Suppressible s) {
@@ -138,13 +132,17 @@ public class HubSpotUtils {
     });
   }
 
-  private static boolean isErrorHandlingEnabled(ErrorProneFlags flags) {
+  private static boolean isFlagEnabled(String flag, ErrorProneOptions errorProneOptions) {
+    return isFlagEnabled(flag, errorProneOptions.getFlags());
+  }
+
+  private static boolean isFlagEnabled(String flag, ErrorProneFlags flags) {
     if (flags == null) {
       return false;
     }
 
     return flags
-        .getBoolean("hubspot:error-reporting")
+        .getBoolean(flag)
         .orElse(false);
   }
 

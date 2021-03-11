@@ -25,6 +25,7 @@ import com.google.errorprone.SuppressionInfo;
 import com.google.errorprone.SuppressionInfo.SuppressedState;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.annotations.CheckReturnValue;
+import com.google.errorprone.hubspot.HubSpotUtils;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Suppressible;
 import com.google.errorprone.util.ASTHelpers;
@@ -107,9 +108,9 @@ public class Scanner extends TreePathScanner<Void, VisitorState> {
   protected SuppressedState isSuppressed(
       Suppressible suppressible, ErrorProneOptions errorProneOptions, VisitorState state) {
 
-    boolean suppressedInGeneratedCode =
-        errorProneOptions.disableWarningsInGeneratedCode()
-            && severityMap().get(suppressible.canonicalName()) != SeverityLevel.ERROR;
+    boolean suppressedInGeneratedCode = !suppressible.inspectGeneratedCode()
+        || (errorProneOptions.disableWarningsInGeneratedCode()
+            && severityMap().get(suppressible.canonicalName()) != SeverityLevel.ERROR);
 
     return currentSuppressions.suppressedState(suppressible, suppressedInGeneratedCode, state);
   }

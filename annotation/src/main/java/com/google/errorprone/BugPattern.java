@@ -171,6 +171,9 @@ public @interface BugPattern {
    */
   Class<? extends Annotation>[] suppressionAnnotations() default SuppressWarnings.class;
 
+  /** True if this check should be invoked on generated code */
+  boolean inspectGeneratedCode() default false;
+
   /**
    * Generate an explanation of how to suppress the check.
    *

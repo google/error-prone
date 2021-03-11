@@ -74,6 +74,8 @@ public class BugCheckerInfo implements Serializable {
 
   private final boolean supportsSuppressWarnings;
 
+  private final boolean inspectGeneratedCode;
+
   /**
    * A set of suppression annotations for this check. Computed from the {@code
    * suppressionAnnotations} attributes from its {@code BugPattern}. May be empty if there are no
@@ -111,6 +113,7 @@ public class BugCheckerInfo implements Serializable {
         pattern.severity(),
         createLinkUrl(pattern),
         Stream.of(pattern.suppressionAnnotations()).anyMatch(a -> isSuppressWarnings(a)),
+        pattern.inspectGeneratedCode(),
         Stream.of(pattern.suppressionAnnotations())
             .filter(a -> !isSuppressWarnings(a))
             .collect(toImmutableSet()),
@@ -130,6 +133,7 @@ public class BugCheckerInfo implements Serializable {
       SeverityLevel defaultSeverity,
       String linkUrl,
       boolean supportsSuppressWarnings,
+      boolean inspectGeneratedCode,
       Set<Class<? extends Annotation>> customSuppressionAnnotations,
       ImmutableSet<String> tags,
       boolean disableable) {
@@ -140,6 +144,7 @@ public class BugCheckerInfo implements Serializable {
     this.defaultSeverity = defaultSeverity;
     this.linkUrl = linkUrl;
     this.supportsSuppressWarnings = supportsSuppressWarnings;
+    this.inspectGeneratedCode = inspectGeneratedCode;
     this.customSuppressionAnnotations = customSuppressionAnnotations;
     this.tags = tags;
     this.disableable = disableable;
@@ -162,6 +167,7 @@ public class BugCheckerInfo implements Serializable {
         defaultSeverity,
         linkUrl,
         supportsSuppressWarnings,
+        inspectGeneratedCode,
         customSuppressionAnnotations,
         tags,
         disableable);
@@ -217,6 +223,10 @@ public class BugCheckerInfo implements Serializable {
 
   public Set<Class<? extends Annotation>> customSuppressionAnnotations() {
     return Collections.unmodifiableSet(customSuppressionAnnotations);
+  }
+
+  public boolean inspectGeneratedCode() {
+    return inspectGeneratedCode;
   }
 
   public boolean disableable() {

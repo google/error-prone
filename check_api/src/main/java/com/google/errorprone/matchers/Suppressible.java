@@ -35,6 +35,9 @@ public interface Suppressible {
   /** Returns true if this checker can be suppressed using {@code @SuppressWarnings}. */
   boolean supportsSuppressWarnings();
 
+  /** Return true if this checker should run on generated code */
+  boolean inspectGeneratedCode();
+
   /** Returns the custom suppression annotations for this checker, if custom suppression is used. */
   Set<Class<? extends Annotation>> customSuppressionAnnotations();
 
