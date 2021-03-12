@@ -17,8 +17,11 @@
 package com.google.errorprone.hubspot;
 
 import java.io.IOException;
+import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.PathMatcher;
+import java.nio.file.Paths;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -70,7 +73,7 @@ public class HubSpotUtils {
   private static final Map<String, Set<String>> DATA = loadExistingData();
   private static final Map<String, Long> PREVIOUS_TIMING_DATA = loadExistingTimings();
   private static final Map<String, Long> TIMING_DATA = new ConcurrentHashMap<>();
-  private static final Supplier<Pattern> GENERATED_PATTERN = VisitorState.memoize(getGeneratedPathsPattern());
+  private static final Supplier<PathMatcher> GENERATED_PATTERN = VisitorState.memoize(getGeneratedPathsMatcher());
 
   public static ScannerSupplier createScannerSupplier(Iterable<BugChecker> extraBugCheckers) {
     ImmutableList.Builder<BugCheckerInfo> builder = ImmutableList.builder();
@@ -120,8 +123,7 @@ public class HubSpotUtils {
   public static boolean isGenerated(VisitorState state) {
     return GENERATED_PATTERN
         .get(state)
-        .matcher(ASTHelpers.getFileName(state.getPath().getCompilationUnit()))
-        .matches();
+        .matches(Paths.get(ASTHelpers.getFileName(state.getPath().getCompilationUnit())));
   }
 
   public static void recordError(Suppressible s) {
@@ -148,10 +150,10 @@ public class HubSpotUtils {
     });
   }
 
-  private static Supplier<Pattern> getGeneratedPathsPattern() {
+  private static Supplier<PathMatcher> getGeneratedPathsMatcher() {
     return visitorState -> Optional.ofNullable(visitorState.errorProneOptions().getFlags())
         .flatMap(f -> f.get(GENERATED_SOURCES_FLAG))
-        .map(Pattern::compile)
+        .map(s -> FileSystems.getDefault().getPathMatcher(s))
         .orElseThrow(() -> new IllegalStateException("Must specify flag " + GENERATED_SOURCES_FLAG));
   }
 
