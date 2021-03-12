@@ -23,12 +23,12 @@ public class UngroupedOverloadsPositiveCasesSingle {
     foo();
   }
 
-  // BUG: Diagnostic contains: Overloads of 'foo' are not grouped together
+  // BUG: Diagnostic contains: ungrouped overloads of 'foo'
   public void foo() {
     foo(42);
   }
 
-  // BUG: Diagnostic contains: Overloads of 'foo' are not grouped together
+  // BUG: Diagnostic contains: ungrouped overloads of 'foo'
   public void foo(int x) {
     foo(x, x);
   }
@@ -41,7 +41,7 @@ public class UngroupedOverloadsPositiveCasesSingle {
     foo(x);
   }
 
-  // BUG: Diagnostic contains: Overloads of 'foo' are not grouped together
+  // BUG: Diagnostic contains: ungrouped overloads of 'foo'
   public void foo(int x, int y) {
     System.out.println(x + y);
   }

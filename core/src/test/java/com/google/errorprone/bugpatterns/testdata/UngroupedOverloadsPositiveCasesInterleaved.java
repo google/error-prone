@@ -21,7 +21,7 @@ public class UngroupedOverloadsPositiveCasesInterleaved {
 
   private int foo;
 
-  // BUG: Diagnostic contains: Overloads of 'bar' are not grouped together
+  // BUG: Diagnostic contains: ungrouped overloads of 'bar'
   public void bar(int x, String z, int y) {
     System.out.println(String.format("z: %s, x: %d, y: %d", z, x, y));
   }
@@ -30,24 +30,24 @@ public class UngroupedOverloadsPositiveCasesInterleaved {
     this.foo = foo;
   }
 
-  // BUG: Diagnostic contains: Overloads of 'bar' are not grouped together
+  // BUG: Diagnostic contains: ungrouped overloads of 'bar'
   public void bar(int x) {
     bar(foo, x);
   }
 
-  // BUG: Diagnostic contains: Overloads of 'baz' are not grouped together
+  // BUG: Diagnostic contains: ungrouped overloads of 'baz'
   public void baz(String x) {
     baz(x, FOO);
   }
 
-  // BUG: Diagnostic contains: Overloads of 'bar' are not grouped together
+  // BUG: Diagnostic contains: ungrouped overloads of 'bar'
   public void bar(int x, int y) {
     bar(y, FOO, x);
   }
 
   public static final String FOO = "foo";
 
-  // BUG: Diagnostic contains: Overloads of 'baz' are not grouped together
+  // BUG: Diagnostic contains: ungrouped overloads of 'baz'
   public void baz(String x, String y) {
     bar(foo, x + y, foo);
   }

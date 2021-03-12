@@ -212,16 +212,16 @@ public final class UngroupedOverloadsTest {
         .addSourceLines(
             "Test.java",
             "class Test {",
-            "  // BUG: Diagnostic contains: found ungrouped overloads on line(s): 8, 10, 12",
+            "  // BUG: Diagnostic contains: ungrouped overloads of 'foo' on line(s): 8, 10, 12",
             "  private void foo() {}",
-            "  // BUG: Diagnostic contains: found ungrouped overloads on line(s): 8, 10, 12",
+            "  // BUG: Diagnostic contains: ungrouped overloads of 'foo' on line(s): 8, 10, 12",
             "  private void foo(int a) {}",
             "  private void bar() {}",
-            "  // BUG: Diagnostic contains: found ungrouped overloads on line(s): 3, 5",
+            "  // BUG: Diagnostic contains: ungrouped overloads of 'foo' on line(s): 3, 5",
             "  private void foo(int a, int b) {}",
-            "  // BUG: Diagnostic contains: found ungrouped overloads on line(s): 3, 5",
+            "  // BUG: Diagnostic contains: ungrouped overloads of 'foo' on line(s): 3, 5",
             "  private void foo(int a, int b, int c) {}",
-            "  // BUG: Diagnostic contains: found ungrouped overloads on line(s): 3, 5",
+            "  // BUG: Diagnostic contains: ungrouped overloads of 'foo' on line(s): 3, 5",
             "  private void foo(int a, int b, int c, int d) {}",
             "}")
         .doTest();
@@ -279,10 +279,10 @@ public final class UngroupedOverloadsTest {
         .addSourceLines(
             "Test.java",
             "class Test {",
-            "  // BUG: Diagnostic contains: Constructor overloads",
+            "  // BUG: Diagnostic contains: constructor overloads",
             "  Test() {}",
             "  private void bar() {}",
-            "  // BUG: Diagnostic contains: Constructor overloads",
+            "  // BUG: Diagnostic contains: constructor overloads",
             "  Test(int i) {}",
             "}")
         .doTest();

@@ -183,10 +183,10 @@ public class UngroupedOverloads extends BugChecker implements ClassTreeMatcher {
     MethodSymbol symbol = ASTHelpers.getSymbol(tree);
     String name =
         symbol.isConstructor()
-            ? "Constructor overloads"
-            : String.format("Overloads of '%s'", symbol.getSimpleName());
+            ? "constructor overloads"
+            : String.format("overloads of '%s'", symbol.getSimpleName());
     return String.format(
-        "%s are not grouped together; found ungrouped overloads on line(s): %s",
+        "Overloads should be grouped together; found ungrouped %s on line(s): %s",
         name, ungroupedLines);
   }
 }
