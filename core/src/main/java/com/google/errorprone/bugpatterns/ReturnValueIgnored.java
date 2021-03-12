@@ -30,7 +30,6 @@ import static com.google.errorprone.util.ASTHelpers.isSameType;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
@@ -229,6 +228,7 @@ public class ReturnValueIgnored extends AbstractReturnValueIgnored {
           ReturnValueIgnored::functionalMethod,
           STREAM_METHOD,
           STRING_METHODS,
+          PROTO_METHODS,
           PRIMITIVE_METHODS,
           ARRAYS_METHODS,
           OPTIONAL_METHODS,
@@ -246,15 +246,8 @@ public class ReturnValueIgnored extends AbstractReturnValueIgnored {
               .namedAnyOf("containsKey", "containsValue")
               .withParameters("java.lang.Object"));
 
-  private final Matcher<? super ExpressionTree> matcher;
-
-  public ReturnValueIgnored(ErrorProneFlags flags) {
-    boolean checkProtos = flags.getBoolean("ReturnValueIgnored:CheckProtos").orElse(true);
-    this.matcher = checkProtos ? anyOf(SPECIALIZED_MATCHER, PROTO_METHODS) : SPECIALIZED_MATCHER;
-  }
-
   @Override
   public Matcher<? super ExpressionTree> specializedMatcher() {
-    return matcher;
+    return SPECIALIZED_MATCHER;
   }
 }
