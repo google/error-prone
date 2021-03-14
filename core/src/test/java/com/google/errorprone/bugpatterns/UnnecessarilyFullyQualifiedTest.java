@@ -162,4 +162,36 @@ public final class UnnecessarilyFullyQualifiedTest {
             "package b;")
         .doTest();
   }
+
+  @Test
+  public void immutables() {
+    CompilationTestHelper.newInstance(UnnecessarilyFullyQualified.class, getClass())
+        .addSourceLines(
+            "org/immutables/value/Value.java",
+            "package org.immutables.value;",
+            "",
+            "public @interface Value {",
+            "  @interface Immutable {}",
+            "}")
+        .addSourceLines(
+            "a/Value.java",
+            "package a;",
+            "",
+            "public @interface Value {",
+            "  String value();",
+            "}")
+        .addSourceLines(
+            "test/Test.java",
+            "package test;",
+            "",
+            "import a.Value;",
+            "",
+            "final class Test {",
+            "  Test(@Value(\"test\") String value) {}",
+            "",
+            "  @org.immutables.value.Value.Immutable",
+            "  abstract class AbstractType {}",
+            "}")
+        .doTest();
+  }
 }

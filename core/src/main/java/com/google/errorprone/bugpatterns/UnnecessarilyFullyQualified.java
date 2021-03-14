@@ -62,7 +62,7 @@ public final class UnnecessarilyFullyQualified extends BugChecker
 
   private static final ImmutableSet<String> EXEMPTED_NAMES =
       ImmutableSet.of(
-          "Annotation");
+          "Annotation", "Immutable");
 
   @Override
   public Description matchCompilationUnit(CompilationUnitTree tree, VisitorState state) {
