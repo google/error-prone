@@ -27,7 +27,7 @@ import javax.annotation.Nullable;
 import org.checkerframework.shaded.dataflow.analysis.AbstractValue;
 import org.checkerframework.shaded.dataflow.analysis.Store;
 import org.checkerframework.shaded.dataflow.cfg.visualize.CFGVisualizer;
-import org.checkerframework.shaded.dataflow.expression.Receiver;
+import org.checkerframework.shaded.dataflow.expression.JavaExpression;
 
 /**
  * Immutable map from local variables or heap access paths to their {@link AbstractValue}
@@ -94,7 +94,7 @@ public abstract class AccessPathStore<V extends AbstractValue<V>>
   }
 
   @Override
-  public boolean canAlias(Receiver a, Receiver b) {
+  public boolean canAlias(JavaExpression a, JavaExpression b) {
     return true;
   }
 

@@ -25,8 +25,8 @@ import static com.google.errorprone.dataflow.nullnesspropagation.Nullness.NULL;
 import static com.google.errorprone.dataflow.nullnesspropagation.Nullness.NULLABLE;
 import static com.sun.tools.javac.code.TypeTag.BOOLEAN;
 import static javax.lang.model.element.ElementKind.EXCEPTION_PARAMETER;
+import static org.checkerframework.shaded.javacutil.TreePathUtil.enclosingOfClass;
 import static org.checkerframework.shaded.javacutil.TreeUtils.elementFromDeclaration;
-import static org.checkerframework.shaded.javacutil.TreeUtils.enclosingOfClass;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
@@ -353,7 +353,7 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
   // Literals
 
   @Override
-  Nullness visitThisLiteral() {
+  Nullness visitThis() {
     return NONNULL;
   }
 

@@ -52,7 +52,7 @@ import org.checkerframework.shaded.dataflow.cfg.node.ConditionalNotNode;
 import org.checkerframework.shaded.dataflow.cfg.node.ConditionalOrNode;
 import org.checkerframework.shaded.dataflow.cfg.node.DoubleLiteralNode;
 import org.checkerframework.shaded.dataflow.cfg.node.EqualToNode;
-import org.checkerframework.shaded.dataflow.cfg.node.ExplicitThisLiteralNode;
+import org.checkerframework.shaded.dataflow.cfg.node.ExplicitThisNode;
 import org.checkerframework.shaded.dataflow.cfg.node.FieldAccessNode;
 import org.checkerframework.shaded.dataflow.cfg.node.FloatLiteralNode;
 import org.checkerframework.shaded.dataflow.cfg.node.FloatingDivisionNode;
@@ -60,7 +60,7 @@ import org.checkerframework.shaded.dataflow.cfg.node.FloatingRemainderNode;
 import org.checkerframework.shaded.dataflow.cfg.node.FunctionalInterfaceNode;
 import org.checkerframework.shaded.dataflow.cfg.node.GreaterThanNode;
 import org.checkerframework.shaded.dataflow.cfg.node.GreaterThanOrEqualNode;
-import org.checkerframework.shaded.dataflow.cfg.node.ImplicitThisLiteralNode;
+import org.checkerframework.shaded.dataflow.cfg.node.ImplicitThisNode;
 import org.checkerframework.shaded.dataflow.cfg.node.InstanceOfNode;
 import org.checkerframework.shaded.dataflow.cfg.node.IntegerDivisionNode;
 import org.checkerframework.shaded.dataflow.cfg.node.IntegerLiteralNode;
@@ -175,8 +175,8 @@ abstract class AbstractNullnessPropagationTransfer
     return NULLABLE;
   }
 
-  /** "Summary" method called by default for every {@code ThisLiteralNode}. */
-  Nullness visitThisLiteral() {
+  /** "Summary" method called by default for every {@code ThisNode}. */
+  Nullness visitThis() {
     return NULLABLE;
   }
 
@@ -762,25 +762,25 @@ abstract class AbstractNullnessPropagationTransfer
   }
 
   @Override
-  public final TransferResult<Nullness, AccessPathStore<Nullness>> visitImplicitThisLiteral(
-      ImplicitThisLiteralNode node, TransferInput<Nullness, AccessPathStore<Nullness>> input) {
-    Nullness value = visitImplicitThisLiteral();
+  public final TransferResult<Nullness, AccessPathStore<Nullness>> visitImplicitThis(
+      ImplicitThisNode node, TransferInput<Nullness, AccessPathStore<Nullness>> input) {
+    Nullness value = visitImplicitThis();
     return noStoreChanges(value, input);
   }
 
-  Nullness visitImplicitThisLiteral() {
-    return visitThisLiteral();
+  Nullness visitImplicitThis() {
+    return visitThis();
   }
 
   @Override
-  public final TransferResult<Nullness, AccessPathStore<Nullness>> visitExplicitThisLiteral(
-      ExplicitThisLiteralNode node, TransferInput<Nullness, AccessPathStore<Nullness>> input) {
-    Nullness value = visitExplicitThisLiteral();
+  public final TransferResult<Nullness, AccessPathStore<Nullness>> visitExplicitThis(
+      ExplicitThisNode node, TransferInput<Nullness, AccessPathStore<Nullness>> input) {
+    Nullness value = visitExplicitThis();
     return noStoreChanges(value, input);
   }
 
-  Nullness visitExplicitThisLiteral() {
-    return visitThisLiteral();
+  Nullness visitExplicitThis() {
+    return visitThis();
   }
 
   @Override
