@@ -28,7 +28,7 @@ public final class ImmutableMemberCollectionTest {
       BugCheckerRefactoringTestHelper.newInstance(ImmutableMemberCollection.class, getClass());
 
   @Test
-  public void listInitInline_replacesTypeWithImmutableList() {
+  public void listInitInline_notMutated_replacesTypeWithImmutableList() {
     refactoringHelper
         .addInputLines(
             "Test.java",
@@ -48,7 +48,7 @@ public final class ImmutableMemberCollectionTest {
   }
 
   @Test
-  public void listInitConstructor_replacesTypeWithImmutableList() {
+  public void listInitConstructor_notMutated_replacesTypeWithImmutableList() {
     refactoringHelper
         .addInputLines(
             "Test.java",
@@ -91,7 +91,7 @@ public final class ImmutableMemberCollectionTest {
   }
 
   @Test
-  public void setInit_mutableTypeInConstructor_doesNothing() {
+  public void setInit_mutableTypeInConstructor_mutated_doesNothing() {
     refactoringHelper
         .addInputLines(
             "Test.java",
@@ -102,13 +102,50 @@ public final class ImmutableMemberCollectionTest {
             "  Test() {",
             "    mySet = new HashSet<>();",
             "  }",
+            "  private void myFunc() {",
+            "    mySet.add(\"myString\");",
+            "  }",
             "}")
         .expectUnchanged()
         .doTest();
   }
 
   @Test
-  public void setInit_mutableTypeInStaticBlock_doesNothing() {
+  public void setInit_mutableTypeInConstructor_returnedAsIs_doesNothing() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            "import java.util.Set;",
+            "import java.util.HashSet;",
+            "class Test {",
+            "  private final Set<String> mySet = new HashSet<String>();",
+            "  private Set<String> myFunc() {",
+            "    return mySet;",
+            "  }",
+            "}")
+        .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
+  public void setInit_mutableTypeInConstructor_returnedInConditional_doesNothing() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            "import java.util.Set;",
+            "import java.util.HashSet;",
+            "class Test {",
+            "  private final Set<String> mySet = new HashSet<String>();",
+            "  private Set<String> myFunc() {",
+            "    return 1 > 2 ? new HashSet<String>() : mySet;",
+            "  }",
+            "}")
+        .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
+  public void setInit_mutableTypeInStaticBlock_mutated_doesNothing() {
     refactoringHelper
         .addInputLines(
             "Test.java",
@@ -118,6 +155,139 @@ public final class ImmutableMemberCollectionTest {
             "  private static final Set<String> mySet;",
             "  static {",
             "    mySet = new HashSet<>();",
+            "  }",
+            "  private static void myFunc() {",
+            "    mySet.add(\"myString\");",
+            "  }",
+            "}")
+        .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
+  public void setInit_mutableTypeInStaticBlock_passedToAnotherFunction_doesNothing() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            "import java.util.Set;",
+            "import java.util.HashSet;",
+            "class Test {",
+            "  private static final Set<String> mySet;",
+            "  static {",
+            "    mySet = new HashSet<>();",
+            "  }",
+            "  private static void myFunc() {",
+            "    System.out.println(mySet);",
+            "  }",
+            "}")
+        .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
+  public void listInitWithMutableType_notMutated_replacesTypeAndMakesDefensiveCopy() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            "import com.google.common.collect.ImmutableList;",
+            "import java.util.List;",
+            "import java.util.ArrayList;",
+            "class Test {",
+            "  private final List<String> myList1 = new ArrayList<>();",
+            "  private final List<String> myList2;",
+            "  Test() {",
+            "    myList2 = new ArrayList<>();",
+            "  }",
+            "  Test(String x) {",
+            "    myList2 = ImmutableList.of(x);",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "import com.google.common.collect.ImmutableList;",
+            "import java.util.List;",
+            "import java.util.ArrayList;",
+            "class Test {",
+            "  private final ImmutableList<String> myList1 = ",
+            "      ImmutableList.copyOf(new ArrayList<>());",
+            "  private final ImmutableList<String> myList2;",
+            "  Test() {",
+            "    myList2 = ImmutableList.copyOf(new ArrayList<>());",
+            "  }",
+            "  Test(String x) {",
+            "    myList2 = ImmutableList.of(x);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void listInitWithMutableType_invokesReadOnlyMethods_replacesTypeAndMakesDefensiveCopy() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            "import java.util.ArrayList;",
+            "import java.util.List;",
+            "class Test {",
+            "  private final List<String> myList = new ArrayList<>();",
+            "  private String myFunc() {",
+            "    return myList.get(0);",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "import com.google.common.collect.ImmutableList;",
+            "import java.util.ArrayList;",
+            "import java.util.List;",
+            "class Test {",
+            "  private final ImmutableList<String> myList = ",
+            "      ImmutableList.copyOf(new ArrayList<>());",
+            "  private String myFunc() {",
+            "    return myList.get(0);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void setMutation_thisReference_doesNothing() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            "import com.google.common.collect.ImmutableSet;",
+            "import java.util.Set;",
+            "import java.util.HashSet;",
+            "class Test {",
+            "  private final ImmutableSet<String> mySet;",
+            "  Test() {",
+            "    mySet = ImmutableSet.of();",
+            "  }",
+            "  private static final class Builder {",
+            "    private final Set<String> mySet = new HashSet<>();",
+            "    public void addString(String x) {",
+            "      this.mySet.add(x);",
+            "    }",
+            "  }",
+            "}")
+        .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
+  public void setInNestedClassMutationInParent_doesNothing() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            "import com.google.common.collect.ImmutableSet;",
+            "import java.util.Set;",
+            "import java.util.HashSet;",
+            "class Test {",
+            "  public void addString(String x) {",
+            "    NestedTest nested = new NestedTest();",
+            "    nested.mySet.add(x);",
+            "  }",
+            "  private static final class NestedTest {",
+            "    private final Set<String> mySet = new HashSet<>();",
             "  }",
             "}")
         .expectUnchanged()
