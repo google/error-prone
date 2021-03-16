@@ -146,8 +146,11 @@ but *not* on JDK 8:
 
 ```xml
 <arg>
-  -Xplugin:ErrorProne
-  -Xep:DeadException:WARN
+  -Xplugin:ErrorProne \
+  -Xep:DeadException:WARN \
   -Xep:GuardedBy:OFF
 </arg>
 ```
+
+When wrapping the arguments across multiple lines, escaping the newlines with
+`\` is required when using `<fork>true</fork>`, and optional otherwise.

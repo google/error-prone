@@ -50,6 +50,7 @@ Edit your `pom.xml` file to add settings to the maven-compiler-plugin:
         <configuration>
           <source>8</source>
           <target>8</target>
+          <encoding>UTF-8</encoding>
           <compilerArgs>
             <arg>-XDcompilePolicy=simple</arg>
             <arg>-Xplugin:ErrorProne</arg>
@@ -71,6 +72,57 @@ Edit your `pom.xml` file to add settings to the maven-compiler-plugin:
     </plugins>
   </build>
 ```
+
+### JDK 16
+
+Enabling `<fork>true</fork>` and setting the following `--add-exports=` flags is
+required on JDK 16 due to [JEP 396: Strongly Encapsulate JDK Internals by
+Default](https://openjdk.java.net/jeps/396):
+
+```
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.8.0</version>
+        <configuration>
+          <source>8</source>
+          <target>8</target>
+          <encoding>UTF-8</encoding>
+          <fork>true</fork>
+          <compilerArgs>
+            <arg>-XDcompilePolicy=simple</arg>
+            <arg>-Xplugin:ErrorProne</arg>
+            <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED</arg>
+            <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.file=ALL-UNNAMED</arg>
+            <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.main=ALL-UNNAMED</arg>
+            <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.tree=ALL-UNNAMED</arg>
+            <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.code=ALL-UNNAMED</arg>
+            <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.processing=ALL-UNNAMED</arg>
+            <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED</arg>
+            <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.parser=ALL-UNNAMED</arg>
+            <arg>-J--add-opens=jdk.compiler/com.sun.tools.javac.comp=ALL-UNNAMED</arg>
+          </compilerArgs>
+          <annotationProcessorPaths>
+            <path>
+              <groupId>com.google.errorprone</groupId>
+              <artifactId>error_prone_core</artifactId>
+              <version>2.5.1</version>
+            </path>
+            <!-- Other annotation processors go here.
+
+            If 'annotationProcessorPaths' is set, processors will no longer be
+            discovered on the regular -classpath; see also 'Using Error Prone
+            together with other annotation processors' below. -->
+          </annotationProcessorPaths>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+```
+
+### JDK 8
 
 Using the `error-prone-javac` is required when running on JDK 8, but using the
 `-J-Xbootclasspath/p:` flag to override the system javac is not supported on JDK
@@ -174,11 +226,11 @@ catches many of the same issues.
 
 ## Command Line
 
-### Java 9, 10, and 11
+### Java 9 and newer
 
 Error Prone supports the
 [`com.sun.source.util.Plugin`](https://docs.oracle.com/javase/8/docs/jdk/api/javac/tree/com/sun/source/util/Plugin.html)
-API, and can be used with JDK 9, 10 and 11 by adding Error Prone to the
+API, and can be used with JDK 9 and up by adding Error Prone to the
 `-processorpath` and setting the `-Xplugin` flag.
 
 Example:
@@ -188,6 +240,15 @@ wget https://repo1.maven.org/maven2/com/google/errorprone/error_prone_core/2.5.1
 wget https://repo1.maven.org/maven2/org/checkerframework/dataflow-shaded/3.7.1/dataflow-shaded-3.7.1.jar
 wget https://repo1.maven.org/maven2/com/google/code/findbugs/jFormatString/3.0.0/jFormatString-3.0.0.jar
 javac \
+  -J--add-exports=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED \
+  -J--add-exports=jdk.compiler/com.sun.tools.javac.file=ALL-UNNAMED \
+  -J--add-exports=jdk.compiler/com.sun.tools.javac.main=ALL-UNNAMED \
+  -J--add-exports=jdk.compiler/com.sun.tools.javac.tree=ALL-UNNAMED \
+  -J--add-exports=jdk.compiler/com.sun.tools.javac.code=ALL-UNNAMED \
+  -J--add-exports=jdk.compiler/com.sun.tools.javac.processing=ALL-UNNAMED \
+  -J--add-exports=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED \
+  -J--add-exports=jdk.compiler/com.sun.tools.javac.parser=ALL-UNNAMED \
+  -J--add-opens=jdk.compiler/com.sun.tools.javac.comp=ALL-UNNAMED \
   -XDcompilePolicy=simple \
   -processorpath error_prone_core-2.5.1-with-dependencies.jar:dataflow-shaded-3.7.1.jar:jFormatString-3.0.0.jar \
   '-Xplugin:ErrorProne -XepDisableAllChecks -Xep:CollectionIncompatibleType:ERROR' \
@@ -201,6 +262,10 @@ ShortSet.java:8: error: [CollectionIncompatibleType] Argument 'i - 1' should not
     (see http://errorprone.info/bugpattern/CollectionIncompatibleType)
 1 error
 ```
+
+The `--add-exports` and `--add-opens` flags are required when using JDK 16+ due to [JEP
+396: Strongly Encapsulate JDK Internals by
+Default](https://openjdk.java.net/jeps/396):
 
 ### Java 8
 
