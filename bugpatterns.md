@@ -979,6 +979,9 @@ reachabilityFence should always be called inside a finally block
 __[ReferenceEquality](bugpattern/ReferenceEquality)__<br>
 Comparison using reference equality instead of value equality
 
+__[RethrowReflectiveOperationExceptionAsLinkageError](bugpattern/RethrowReflectiveOperationExceptionAsLinkageError)__<br>
+Prefer LinkageError for rethrowing ReflectiveOperationException as unchecked
+
 __[ReturnFromVoid](bugpattern/ReturnFromVoid)__<br>
 Void methods should not have a @return tag.
 
