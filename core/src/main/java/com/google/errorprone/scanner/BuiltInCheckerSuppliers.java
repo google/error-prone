@@ -282,6 +282,7 @@ import com.google.errorprone.bugpatterns.RemoveUnusedImports;
 import com.google.errorprone.bugpatterns.RemovedInJDK11;
 import com.google.errorprone.bugpatterns.RequiredModifiersChecker;
 import com.google.errorprone.bugpatterns.RestrictedApiChecker;
+import com.google.errorprone.bugpatterns.RethrowReflectiveOperationExceptionAsLinkageError;
 import com.google.errorprone.bugpatterns.ReturnValueIgnored;
 import com.google.errorprone.bugpatterns.ReturnsNullCollection;
 import com.google.errorprone.bugpatterns.RxReturnValueIgnored;
@@ -877,6 +878,7 @@ public class BuiltInCheckerSuppliers {
           QualifierOrScopeOnInjectMethod.class,
           ReachabilityFenceUsage.class,
           ReferenceEquality.class,
+          RethrowReflectiveOperationExceptionAsLinkageError.class,
           ReturnFromVoid.class,
           RxReturnValueIgnored.class,
           SameNameButDifferent.class,
