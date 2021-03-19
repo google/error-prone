@@ -260,6 +260,11 @@ public abstract class BugChecker implements Suppressible, Serializable {
     return checkSuppression.test(annotations, s);
   }
 
+  @Override
+  public boolean inspectGeneratedCode() {
+    return info.inspectGeneratedCode();
+  }
+
   /**
    * Returns true if the given tree is annotated with a {@code @SuppressWarnings} that disables this
    * bug checker.
