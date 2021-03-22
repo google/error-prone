@@ -14,22 +14,13 @@
  * limitations under the License.
  */
 
-package com.google.errorprone.refaster.testdata.template;
-
-import com.google.errorprone.refaster.annotation.AfterTemplate;
-import com.google.errorprone.refaster.annotation.BeforeTemplate;
+package com.google.errorprone.refaster.testdata;
 
 /**
- *
+ * Test input for {@code KeyBindingErrorTemplate}.
  */
-public class KeyBindingErrorTemplate {
-  @BeforeTemplate
-  public int test(int a) {
-    return a + 1;
-  }
-
-  @AfterTemplate
-  public int test(int a, int b) {
-    return a + b + 1;
+class KeyBindingErrorTemplateExample {
+  public int example(int x) {
+    return x;
   }
 }
