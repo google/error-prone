@@ -89,6 +89,11 @@ public class TemplateIntegrationTest extends CompilerBasedTest {
   }
 
   @Test
+  public void improveKeyBindingError() throws IOException {
+    runTest("KeyBindingErrorTemplate");
+  }
+
+  @Test
   public void binary() throws IOException {
     runTest("BinaryTemplate");
   }
