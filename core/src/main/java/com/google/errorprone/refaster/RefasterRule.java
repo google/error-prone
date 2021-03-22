@@ -25,6 +25,8 @@ import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableClassToInstanceMap;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.errorprone.CodeTransformer;
 import com.google.errorprone.DescriptionListener;
@@ -37,7 +39,10 @@ import com.sun.tools.javac.util.Context;
 import java.io.Serializable;
 import java.lang.annotation.Annotation;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import javax.tools.JavaFileManager;
 
 /**
@@ -83,13 +88,40 @@ public abstract class RefasterRule<M extends TemplateMatch, T extends Template<M
           beforeTemplate.getClass(),
           qualifiedTemplateClass);
     }
+
+    int i = 0;
     for (Template<?> afterTemplate : afterTemplates) {
+      for (Template<?> beforeTemplate : beforeTemplates) {
+        for (Map.Entry<String, UType> entry : afterTemplate.expressionArgumentTypes().entrySet()) {
+          UType uType = beforeTemplate.expressionArgumentTypes().get(entry.getKey());// beforeTemplateEntries.get(entry.getKey());
+          checkState(
+                  uType != null && uType.getClass() == entry.getValue().getClass(),
+                  "@AfterTemplate variable %s of type %s doesnt have a matching type in the @BeforeTemplate in the class %s",
+                  entry.getKey(),
+                  entry.getValue(),
+                  qualifiedTemplateClass);
+        }
+      }
+//      ImmutableMap<String, UType> beforeTemplateEntries =
+//          Iterables.get(beforeTemplates, i).expressionArgumentTypes();
+
+      //      checkState(
+      //          beforeTemplateEntries.size() == afterTemplate.expressionArgumentTypes().size(),
+      //          "The method signature of the @AfterTemplate differs from the @BeforeTemplate in
+      // %s",
+      //          qualifiedTemplateClass);
+
+//      Optional<? extends Template<?>> beforeTemplates1 = beforeTemplates.stream().findFirst();
+//      for (? extends Template<?> beforeTemplateEntry : beforeTemplates.iterator())
+
+
       checkState(
           afterTemplate.getClass().equals(templateType),
           "Expected all templates to be of type %s but found template of type %s in %s",
           templateType,
           afterTemplate.getClass(),
           qualifiedTemplateClass);
+      i++;
     }
     @SuppressWarnings({"unchecked", "rawtypes"})
     RefasterRule<?, ?> result =

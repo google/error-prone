@@ -16,20 +16,63 @@
 
 package com.google.errorprone.refaster.testdata.template;
 
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Streams;
+import com.google.errorprone.refaster.Refaster;
 import com.google.errorprone.refaster.annotation.AfterTemplate;
 import com.google.errorprone.refaster.annotation.BeforeTemplate;
 
-/**
- *
- */
-public class KeyBindingErrorTemplate {
-  @BeforeTemplate
-  public int before(int a) {
-    return a + 1;
-  }
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Iterator;
 
-  @AfterTemplate
-  public int after(int a, int b) {
-    return a + b + 1;
-  }
+import static com.google.common.collect.ImmutableSet.toImmutableSet;
+
+/** */
+public class KeyBindingErrorTemplate {
+    @BeforeTemplate
+    public int before(int a) {
+      return a + 1;
+    }
+
+    @BeforeTemplate
+    public int before(int a, int b) {
+      b++;
+      return a + 1;
+    }
+
+    @AfterTemplate
+    public int after(int a, int b) {
+      return a + b + 1;
+    }
+//  @BeforeTemplate
+//  ImmutableSet<T> before(T[] iterable) {
+//    return Refaster.anyOf(
+//        ImmutableSet.<T>builder().add(iterable).build(),
+//        Arrays.stream(iterable).collect(toImmutableSet()));
+//  }
+//
+//  @BeforeTemplate
+//  ImmutableSet<T> before(Iterator<T> iterable) {
+//    return Refaster.anyOf(
+//        ImmutableSet.<T>builder().addAll(iterable).build(),
+//        Streams.stream(iterable).collect(toImmutableSet()));
+//  }
+//
+//  @BeforeTemplate
+//  ImmutableSet<T> before(Iterable<T> iterable) {
+//    return Refaster.anyOf(
+//        ImmutableSet.<T>builder().addAll(iterable).build(),
+//        Streams.stream(iterable).collect(toImmutableSet()));
+//  }
+//
+//  @BeforeTemplate
+//  ImmutableSet<T> before(Collection<T> iterable) {
+//    return iterable.stream().collect(toImmutableSet());
+//  }
+//
+//  @AfterTemplate
+//  ImmutableSet<T> after(Iterable<T> iterable) {
+//    return ImmutableSet.copyOf(iterable);
+//  }
 }

@@ -16,11 +16,24 @@
 
 package com.google.errorprone.refaster.testdata;
 
-/**
- * Test input for {@code KeyBindingErrorTemplate}.
- */
+import com.google.common.collect.ImmutableSet;
+
+import java.util.ArrayList;
+import java.util.Collection;
+
+import static com.google.common.collect.ImmutableSet.toImmutableSet;
+
+/** Test input for {@code KeyBindingErrorTemplate}. */
 class KeyBindingErrorTemplateExample {
-  public int example(int x) {
-    return x + 1 + 1;
-  }
+    public int example(int x) {
+      return x + 1 + 1;
+    }
+//  public ImmutableSet<Integer> example() {
+//    Collection<Integer> iterable = new ArrayList<>();
+//    iterable.add(1);
+//    iterable.add(2);
+//    iterable.add(3);
+//
+//    return ImmutableSet.copyOf(iterable);
+//  }
 }
