@@ -24,12 +24,12 @@ import com.google.errorprone.refaster.annotation.BeforeTemplate;
  */
 public class KeyBindingErrorTemplate {
   @BeforeTemplate
-  public int test(int a) {
+  public int before(int a) {
     return a + 1;
   }
 
   @AfterTemplate
-  public int test(int a, int b) {
+  public int after(int a, int b) {
     return a + b + 1;
   }
 }

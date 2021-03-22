@@ -21,6 +21,6 @@ package com.google.errorprone.refaster.testdata;
  */
 class KeyBindingErrorTemplateExample {
   public int example(int x) {
-    return x + 1;
+    return x + 1 + 1;
   }
 }
