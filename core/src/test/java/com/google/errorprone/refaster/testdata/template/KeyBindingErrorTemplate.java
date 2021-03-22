@@ -35,11 +35,11 @@ public class KeyBindingErrorTemplate {
       return a + 1;
     }
 
-    @BeforeTemplate
-    public int before(int a, int b) {
-      b++;
-      return a + 1;
-    }
+//    @BeforeTemplate
+//    public int before(int a, int b) {
+//      b++;
+//      return a + 1;
+//    }
 
     @AfterTemplate
     public int after(int a, int b) {
