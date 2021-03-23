@@ -1131,14 +1131,38 @@ public class Matchers {
     return (tree, state) -> ASTHelpers.sameVariable(tree, expr);
   }
 
-  /** Matches if the expression is provably non-null. */
-  public static Matcher<ExpressionTree> isNonNull() {
+  /**
+   * Matches if the expression is provably non-null.
+   *
+   * <p>Uses the Checker Framework dataflow implementation to determine nullness. Be careful about
+   * using this in performance-critical code.
+   */
+  public static Matcher<ExpressionTree> isNonNullUsingDataflow() {
     return new NullnessMatcher(Nullness.NONNULL);
   }
 
-  /** Matches if the expression is provably null. */
-  public static Matcher<ExpressionTree> isNull() {
+  /** @deprecated use {@link #isNonNullUsingDataflow} instead. */
+  @Deprecated
+  public static Matcher<ExpressionTree> isNonNull() {
+    return isNonNullUsingDataflow();
+  }
+
+  /**
+   * Matches if the expression is provably null.
+   *
+   * <p>Uses the Checker Framework dataflow implementation to determine nullness. Be careful about
+   * using this in performance-critical code.
+   *
+   * <p>Prefer {@code kindIs(NULL_LITERAL)} unless you really need dataflow.
+   */
+  public static Matcher<ExpressionTree> isNullUsingDataflow() {
     return new NullnessMatcher(Nullness.NULL);
+  }
+
+  /** @deprecated use {@link #isNullUsingDataflow} instead. */
+  @Deprecated
+  public static Matcher<ExpressionTree> isNull() {
+    return isNullUsingDataflow();
   }
 
   /**

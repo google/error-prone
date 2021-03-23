@@ -19,7 +19,7 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.BugPattern.StandardTags.SIMPLIFICATION;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
-import static com.google.errorprone.matchers.Matchers.isNonNull;
+import static com.google.errorprone.matchers.Matchers.isNonNullUsingDataflow;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
 
@@ -59,7 +59,7 @@ public final class BadInstanceof extends BugChecker implements InstanceOfTreeMat
     String subType = SuggestedFixes.prettyType(getType(tree.getExpression()), state);
     String expression = state.getSourceForNode(tree.getExpression());
     String superType = state.getSourceForNode(tree.getType());
-    if (isNonNull().matches(tree.getExpression(), state)) {
+    if (isNonNullUsingDataflow().matches(tree.getExpression(), state)) {
       return buildDescription(tree)
           .setMessage(String.format(NON_NULL, expression, subType, superType))
           .build();
