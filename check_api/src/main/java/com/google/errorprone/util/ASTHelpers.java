@@ -1024,6 +1024,7 @@ public class ASTHelpers {
   }
 
   /** Return the enclosing {@code ClassSymbol} of the given symbol, or {@code null}. */
+  @Nullable
   public static ClassSymbol enclosingClass(Symbol sym) {
     // sym.owner is null in the case of module symbols.
     return sym.owner == null ? null : sym.owner.enclClass();
