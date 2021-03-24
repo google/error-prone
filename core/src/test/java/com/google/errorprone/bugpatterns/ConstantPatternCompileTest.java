@@ -68,7 +68,7 @@ public class ConstantPatternCompileTest {
             "import java.util.regex.Matcher;",
             "import java.util.regex.Pattern;",
             "class Test {",
-            "  private static final String MY_COOL_PATTERN = \"a+\";",
+            "  static final String MY_COOL_PATTERN = \"a+\";",
             "  public static void myPopularStaticMethod() {",
             "    Pattern somePattern = Pattern.compile(MY_COOL_PATTERN);",
             "    Matcher m = somePattern.matcher(\"aaaaab\");",
@@ -79,7 +79,7 @@ public class ConstantPatternCompileTest {
             "import java.util.regex.Matcher;",
             "import java.util.regex.Pattern;",
             "class Test {",
-            "  private static final String MY_COOL_PATTERN = \"a+\";",
+            "  static final String MY_COOL_PATTERN = \"a+\";",
             "  public static void myPopularStaticMethod() {",
             "    Matcher m = SOME_PATTERN.matcher(\"aaaaab\");",
             "  }",
@@ -162,7 +162,7 @@ public class ConstantPatternCompileTest {
             "import java.util.regex.Matcher;",
             "import java.util.regex.Pattern;",
             "class Test {",
-            "  private static final String MY_COOL_PATTERN = \"a+\";",
+            "  static final String MY_COOL_PATTERN = \"a+\";",
             "  class Inner {",
             "  public void myPopularStaticMethod() {",
             "      Pattern myPattern = Pattern.compile(MY_COOL_PATTERN);",
@@ -175,7 +175,7 @@ public class ConstantPatternCompileTest {
             "import java.util.regex.Matcher;",
             "import java.util.regex.Pattern;",
             "class Test {",
-            "  private static final String MY_COOL_PATTERN = \"a+\";",
+            "  static final String MY_COOL_PATTERN = \"a+\";",
             "  class Inner {",
             "  public void myPopularStaticMethod() {",
             "      Matcher m = MY_PATTERN.matcher(\"aaaaab\");",
@@ -250,4 +250,7 @@ public class ConstantPatternCompileTest {
             "}")
         .doTest();
   }
+
+  // Don't convert String constants to patterns if they're used anywhere other than a single
+  // Pattern.compile call.
 }
