@@ -97,13 +97,13 @@ Default](https://openjdk.java.net/jeps/396):
             <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED</arg>
             <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.file=ALL-UNNAMED</arg>
             <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.main=ALL-UNNAMED</arg>
-            <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.tree=ALL-UNNAMED</arg>
-            <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.code=ALL-UNNAMED</arg>
-            <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.processing=ALL-UNNAMED</arg>
-            <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED</arg>
+            <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.model=ALL-UNNAMED</arg>
             <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.parser=ALL-UNNAMED</arg>
-            <arg>-J--add-opens=jdk.compiler/com.sun.tools.javac.comp=ALL-UNNAMED</arg>
+            <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.processing=ALL-UNNAMED</arg>
+            <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.tree=ALL-UNNAMED</arg>
+            <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED</arg>
             <arg>-J--add-opens=jdk.compiler/com.sun.tools.javac.code=ALL-UNNAMED</arg>
+            <arg>-J--add-opens=jdk.compiler/com.sun.tools.javac.comp=ALL-UNNAMED</arg>
           </compilerArgs>
           <annotationProcessorPaths>
             <path>
@@ -244,13 +244,13 @@ javac \
   -J--add-exports=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED \
   -J--add-exports=jdk.compiler/com.sun.tools.javac.file=ALL-UNNAMED \
   -J--add-exports=jdk.compiler/com.sun.tools.javac.main=ALL-UNNAMED \
-  -J--add-exports=jdk.compiler/com.sun.tools.javac.tree=ALL-UNNAMED \
-  -J--add-exports=jdk.compiler/com.sun.tools.javac.code=ALL-UNNAMED \
-  -J--add-exports=jdk.compiler/com.sun.tools.javac.processing=ALL-UNNAMED \
-  -J--add-exports=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED \
+  -J--add-exports=jdk.compiler/com.sun.tools.javac.model=ALL-UNNAMED \
   -J--add-exports=jdk.compiler/com.sun.tools.javac.parser=ALL-UNNAMED \
-  -J--add-opens=jdk.compiler/com.sun.tools.javac.comp=ALL-UNNAMED \
+  -J--add-exports=jdk.compiler/com.sun.tools.javac.processing=ALL-UNNAMED \
+  -J--add-exports=jdk.compiler/com.sun.tools.javac.tree=ALL-UNNAMED \
+  -J--add-exports=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED \
   -J--add-opens=jdk.compiler/com.sun.tools.javac.code=ALL-UNNAMED \
+  -J--add-opens=jdk.compiler/com.sun.tools.javac.comp=ALL-UNNAMED \
   -XDcompilePolicy=simple \
   -processorpath error_prone_core-2.5.1-with-dependencies.jar:dataflow-shaded-3.7.1.jar:jFormatString-3.0.0.jar \
   '-Xplugin:ErrorProne -XepDisableAllChecks -Xep:CollectionIncompatibleType:ERROR' \
