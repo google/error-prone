@@ -16,7 +16,9 @@
 
 package com.google.errorprone.refaster;
 
+import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkState;
+import static com.google.common.collect.ImmutableList.toImmutableList;
 
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.VisibleForTesting;
@@ -39,6 +41,8 @@ import java.lang.annotation.Annotation;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Stream;
 import javax.tools.JavaFileManager;
 
 /**
@@ -111,12 +115,42 @@ public abstract class RefasterRule<M extends TemplateMatch, T extends Template<M
       Collection<? extends Template<?>> beforeTemplates,
       Template<?> afterTemplate,
       String qualifiedTemplateClass) {
+
+    ImmutableList<Map.Entry<String, UType>> templates =
+        beforeTemplates.stream()
+            .map(
+                beforeTemplate ->
+                    afterTemplate.expressionArgumentTypes().entrySet().stream()
+                        .filter(
+                            entry ->
+                                beforeTemplate.expressionArgumentTypes().get(entry.getKey()) == null
+                                    || beforeTemplate
+                                            .expressionArgumentTypes()
+                                            .get(entry.getKey())
+                                            .getClass()
+                                        != entry.getValue().getClass())
+                        .findFirst()
+                        .orElse(null))
+            .filter(Objects::nonNull)
+            .collect(toImmutableList());
+
+    if (!templates.isEmpty()) {
+      Map.Entry<String, UType> stringUTypeEntry = templates.get(0);
+      throw new IllegalArgumentException(
+          String.format(
+              "@AfterTemplate variable `%s` of type %s doesn`t have a matching argument in the @BeforeTemplate, see the class %s",
+              stringUTypeEntry.getKey(),
+              ((UPrimitiveType) stringUTypeEntry.getValue()).getKind(),
+              qualifiedTemplateClass));
+    }
+
+    // This is the non-streamy way.
     for (Template<?> beforeTemplate : beforeTemplates) {
       for (Map.Entry<String, UType> entry : afterTemplate.expressionArgumentTypes().entrySet()) {
         UType uType = beforeTemplate.expressionArgumentTypes().get(entry.getKey());
-        checkState(
+        checkArgument(
             uType != null && uType.getClass() == entry.getValue().getClass(),
-            "@AfterTemplate variable `%s` of type %s doesn`t have a matching variable in the @BeforeTemplate, see the class %s",
+            "@AfterTemplate variable `%s` of type %s doesn`t have a matching argument in the @BeforeTemplate, see the class %s",
             entry.getKey(),
             ((UPrimitiveType) entry.getValue()).getKind(),
             qualifiedTemplateClass);
