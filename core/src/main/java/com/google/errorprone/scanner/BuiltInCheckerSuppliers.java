@@ -565,7 +565,6 @@ public class BuiltInCheckerSuppliers {
           AutoValueConstructorOrderChecker.class,
           BadAnnotationImplementation.class,
           BadShiftAmount.class,
-          BanSerializableRead.class,
           BundleDeserializationCast.class,
           ChainingConstructorIgnoresParameter.class,
           CheckNotNullMultipleTimes.class,
@@ -938,6 +937,7 @@ public class BuiltInCheckerSuppliers {
           AssertFalse.class,
           AssistedInjectAndInjectOnConstructors.class,
           AutoFactoryAtInject.class,
+          BanSerializableRead.class,
           BinderIdentityRestoredDangerously.class, // TODO: enable this by default.
           BindingToUnqualifiedCommonType.class,
           BooleanParameter.class,
