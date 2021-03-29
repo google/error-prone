@@ -50,9 +50,6 @@ Classes that implement Annotation must override equals and hashCode. Consider us
 __[BadShiftAmount](bugpattern/BadShiftAmount)__<br>
 Shift by an amount that is out of range
 
-__[BanSerializableRead](bugpattern/BanSerializableRead)__<br>
-Deserializing user input via the `Serializable` API is extremely dangerous
-
 __[BundleDeserializationCast](bugpattern/BundleDeserializationCast)__<br>
 Object serialized in Bundle may have been flattened to base type.
 
@@ -1127,6 +1124,9 @@ Use of class, field, or method that is not compatible with legacy Android device
 
 __[AutoFactoryAtInject](bugpattern/AutoFactoryAtInject)__<br>
 @AutoFactory and @Inject should not be used in the same type.
+
+__[BanSerializableRead](bugpattern/BanSerializableRead)__<br>
+Deserializing user input via the `Serializable` API is extremely dangerous
 
 __[ClassName](bugpattern/ClassName)__<br>
 The source file name should match the name of the top-level class it contains
