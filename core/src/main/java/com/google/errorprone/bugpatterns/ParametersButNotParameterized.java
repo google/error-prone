@@ -38,6 +38,7 @@ import com.sun.source.tree.ClassTree;
         "This test has @Parameters but is using the default JUnit4 runner. The parameters will"
             + " have no effect.",
     severity = ERROR)
+@SuppressWarnings("UnnecessarilyFullyQualified")
 public final class ParametersButNotParameterized extends BugChecker implements ClassTreeMatcher {
   private static final String PARAMETERIZED = "org.junit.runners.Parameterized";
   private static final String PARAMETER = "org.junit.runners.Parameterized.Parameter";
