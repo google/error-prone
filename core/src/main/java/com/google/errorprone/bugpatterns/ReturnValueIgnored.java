@@ -30,6 +30,7 @@ import static com.google.errorprone.util.ASTHelpers.isSameType;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
@@ -150,9 +151,7 @@ public class ReturnValueIgnored extends AbstractReturnValueIgnored {
    * void-returning ones, which won't be checked by AbstractReturnValueIgnored).
    */
   private static final Matcher<ExpressionTree> STRING_METHODS =
-      anyOf(
-          staticMethod().onClass("java.lang.String"),
-          instanceMethod().onExactClass("java.lang.String"));
+      anyMethod().onClass("java.lang.String");
 
   private static final ImmutableSet<String> PRIMITIVE_TYPES =
       ImmutableSet.of(
@@ -209,6 +208,12 @@ public class ReturnValueIgnored extends AbstractReturnValueIgnored {
           instanceMethod().onExactClass("java.util.Optional").named("isPresent"),
           instanceMethod().onExactClass("java.util.Optional").named("isEmpty"));
 
+  /**
+   * The return values of {@link java.util.concurrent.TimeUnit} methods should always be checked.
+   */
+  private static final Matcher<ExpressionTree> TIME_UNIT_METHODS =
+      anyMethod().onClass("java.util.concurrent.TimeUnit");
+
   private static final String PROTO_MESSAGE = "com.google.protobuf.MessageLite";
 
   /**
@@ -246,8 +251,16 @@ public class ReturnValueIgnored extends AbstractReturnValueIgnored {
               .namedAnyOf("containsKey", "containsValue")
               .withParameters("java.lang.Object"));
 
+  private final Matcher<? super ExpressionTree> matcher;
+
+  public ReturnValueIgnored(ErrorProneFlags flags) {
+    boolean checkTimeUnit = flags.getBoolean("ReturnValueIgnored:TimeUnit").orElse(true);
+    this.matcher =
+        checkTimeUnit ? anyOf(SPECIALIZED_MATCHER, TIME_UNIT_METHODS) : SPECIALIZED_MATCHER;
+  }
+
   @Override
   public Matcher<? super ExpressionTree> specializedMatcher() {
-    return SPECIALIZED_MATCHER;
+    return matcher;
   }
 }

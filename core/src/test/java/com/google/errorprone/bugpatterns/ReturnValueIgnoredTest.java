@@ -178,6 +178,22 @@ public class ReturnValueIgnoredTest {
   }
 
   @Test
+  public void timeUnitApis() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import static java.util.concurrent.TimeUnit.MILLISECONDS;",
+            "class Test {",
+            "  void timeUnit() {",
+            "    long ms = 4200;",
+            "    // BUG: Diagnostic contains: ReturnValueIgnored",
+            "    MILLISECONDS.toNanos(ms);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void issue1565_enumDeclaration() {
     compilationHelper
         .addSourceLines(
