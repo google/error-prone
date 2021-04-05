@@ -25,9 +25,11 @@ import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.DoWhileLoopTree;
 import com.sun.source.tree.IfTree;
+import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.ParenthesizedTree;
 import com.sun.source.tree.SynchronizedTree;
 import com.sun.source.tree.Tree;
+import com.sun.source.tree.VariableTree;
 import com.sun.source.tree.WhileLoopTree;
 import com.sun.source.util.SimpleTreeVisitor;
 import com.sun.source.util.TreeScanner;
@@ -63,6 +65,9 @@ abstract class RefasterScanner<M extends TemplateMatch, T extends Template<M>>
 
   @Override
   public Void visitClass(ClassTree node, Context context) {
+    if (isSuppressed(node, context)) {
+      return null;
+    }
     Symbol sym = ASTHelpers.getSymbol(node);
     if (sym == null || !sym.getQualifiedName().contentEquals(rule().qualifiedTemplateClass())) {
       ListBuffer<JCStatement> statements = new ListBuffer<>();
@@ -76,6 +81,22 @@ abstract class RefasterScanner<M extends TemplateMatch, T extends Template<M>>
       scan(TreeMaker.instance(context).Block(0, statements.toList()), context);
     }
     return null;
+  }
+
+  @Override
+  public Void visitMethod(MethodTree node, Context context) {
+    if (isSuppressed(node, context)) {
+      return null;
+    }
+    return super.visitMethod(node, context);
+  }
+
+  @Override
+  public Void visitVariable(VariableTree node, Context context) {
+    if (isSuppressed(node, context)) {
+      return null;
+    }
+    return super.visitVariable(node, context);
   }
 
   @Override
@@ -166,5 +187,9 @@ abstract class RefasterScanner<M extends TemplateMatch, T extends Template<M>>
     scan(node.getThenStatement(), context);
     scan(node.getElseStatement(), context);
     return null;
+  }
+
+  private boolean isSuppressed(Tree node, Context context) {
+    return RefasterSuppressionHelper.suppressed(rule(), node, context);
   }
 }

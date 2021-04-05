@@ -150,8 +150,12 @@ public abstract class RefasterRule<M extends TemplateMatch, T extends Template<M
     return Iterables.getLast(path);
   }
 
+  String simpleTemplateName() {
+    return fromSecondLevel(qualifiedTemplateClass());
+  }
+
   @Override
   public final String toString() {
-    return fromSecondLevel(qualifiedTemplateClass());
+    return simpleTemplateName();
   }
 }

@@ -355,4 +355,9 @@ public class TemplateIntegrationTest extends CompilerBasedTest {
   public void staticImportClassToken() throws IOException {
     runTest("StaticImportClassTokenTemplate");
   }
+
+  @Test
+  public void suppressWarnings() throws IOException {
+    runTest("SuppressWarningsTemplate");
+  }
 }
