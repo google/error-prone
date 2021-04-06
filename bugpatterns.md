@@ -440,6 +440,9 @@ Suppressing &quot;deprecated&quot; is probably a typo for &quot;deprecation&quot
 __[TemporalAccessorGetChronoField](bugpattern/TemporalAccessorGetChronoField)__<br>
 TemporalAccessor.get() only works for certain values of ChronoField.
 
+__[TestParametersNotInitialized](bugpattern/TestParametersNotInitialized)__<br>
+This test has @TestParameter fields but is using the default JUnit4 runner. The parameters will not be initialised beyond their default value.
+
 __[TheoryButNoTheories](bugpattern/TheoryButNoTheories)__<br>
 This test has members annotated with @Theory, @DataPoint, or @DataPoints but is using the default JUnit4 runner.
 
