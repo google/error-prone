@@ -25,10 +25,12 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ExpressionTree;
+import com.sun.source.tree.LambdaExpressionTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.tools.javac.code.Scope;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
+import com.sun.tools.javac.code.Symtab;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.util.Name;
 
@@ -54,7 +56,7 @@ public class ReferenceEquality extends AbstractReferenceEquality {
     if (classType == null) {
       return false;
     }
-    if (inEqualsOrCompareTo(classType, type, state)) {
+    if (inComparisonMethod(classType, type, state)) {
       return false;
     }
     if (ASTHelpers.isSubtype(type, state.getSymtab().enumSym.type, state)) {
@@ -69,8 +71,16 @@ public class ReferenceEquality extends AbstractReferenceEquality {
     return true;
   }
 
-  private static boolean inEqualsOrCompareTo(Type classType, Type type, VisitorState state) {
-    MethodTree methodTree = ASTHelpers.findEnclosingNode(state.getPath(), MethodTree.class);
+  private static boolean inComparisonMethod(Type classType, Type type, VisitorState state) {
+    Symtab symtab = state.getSymtab();
+    // Check for lambdas implementing the Comparator.compare functional interface.
+    LambdaExpressionTree lambdaTree =
+        ASTHelpers.findEnclosingNode(state.getPath(), LambdaExpressionTree.class);
+    if (lambdaTree != null) {
+      return ASTHelpers.isSameType(ASTHelpers.getType(lambdaTree), symtab.comparatorType, state);
+    }
+
+    MethodTree methodTree = ASTHelpers.findEnclosingMethod(state);
     if (methodTree == null) {
       return false;
     }
@@ -78,18 +88,26 @@ public class ReferenceEquality extends AbstractReferenceEquality {
     if (sym == null || sym.isStatic()) {
       return false;
     }
-    Symbol compareTo = getOnlyMember(state, state.getSymtab().comparableType, "compareTo");
-    Symbol equals = getOnlyMember(state, state.getSymtab().objectType, "equals");
-    if (!(sym.getSimpleName().contentEquals("compareTo")
-            && sym.overrides(compareTo, classType.tsym, state.getTypes(), /* checkResult= */ false))
-        && !(sym.getSimpleName().contentEquals("equals")
-            && sym.overrides(equals, classType.tsym, state.getTypes(), /* checkResult= */ false))) {
-      return false;
+    if (overridesMethodOnType(classType, sym, symtab.comparatorType, "compare", state)) {
+      return true;
     }
-    if (!ASTHelpers.isSameType(type, classType, state)) {
-      return false;
+    if (overridesMethodOnType(classType, sym, symtab.comparableType, "compareTo", state)
+        || overridesMethodOnType(classType, sym, symtab.objectType, "equals", state)) {
+      return ASTHelpers.isSameType(type, classType, state);
     }
-    return true;
+    return false;
+  }
+
+  private static boolean overridesMethodOnType(
+      Type classType,
+      MethodSymbol methodSymbol,
+      Type overriddenType,
+      String overriddenMethodName,
+      VisitorState state) {
+    Symbol overriddenMethodSymbol = getOnlyMember(state, overriddenType, overriddenMethodName);
+    return methodSymbol.getSimpleName().contentEquals(overriddenMethodName)
+        && methodSymbol.overrides(
+            overriddenMethodSymbol, classType.tsym, state.getTypes(), /* checkResult= */ false);
   }
 
   private static Symbol getOnlyMember(VisitorState state, Type type, String name) {

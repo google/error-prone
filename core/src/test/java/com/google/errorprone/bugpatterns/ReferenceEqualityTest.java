@@ -440,4 +440,64 @@ public class ReferenceEqualityTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void negative_implementsComparator() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.util.Comparator;",
+            "class Test {",
+            "  static class Comparator1 implements Comparator<String> {",
+            "    @Override",
+            "    public int compare(String o1, String o2) {",
+            "      if (o1 == o2) {",
+            "        return 0;",
+            "      } else if (o1 == null) {",
+            "        return -1;",
+            "      } else if (o2 == null) {",
+            "        return 1;",
+            "      } else {",
+            "        return -1;",
+            "      }",
+            "    }",
+            "  }",
+            "  static class Comparator2 implements Comparator<String> {",
+            "    @Override",
+            "    public int compare(String o1, String o2) {",
+            "      return o1 == o2 ? 0 : -1;",
+            "    }",
+            "  }",
+            "}")
+        .expectNoDiagnostics()
+        .doTest();
+  }
+
+  @Test
+  public void negative_lambdaComparator() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.util.Comparator;",
+            "class Test {",
+            "  private static final Comparator<String> comparator1 = (o1, o2) -> {",
+            "    if (o1 == o2) {",
+            "      return 0;",
+            "    } else if (o1 == null) {",
+            "      return -1;",
+            "    } else if (o2 == null) {",
+            "      return 1;",
+            "    } else {",
+            "      return -1;",
+            "    }",
+            "  };",
+            "  private static final Comparator<String> comparator2 = (o1, o2) -> {",
+            "    return o1 == o2 ? 0 : -1;",
+            "  };",
+            "  private static final Comparator<String> comparator3 =",
+            "      (o1, o2) -> o1 == o2 ? 0 : -1;",
+            "}")
+        .expectNoDiagnostics()
+        .doTest();
+  }
 }
