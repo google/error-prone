@@ -493,4 +493,23 @@ public final class FieldCanBeLocalTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void accessedInOtherMethod() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  private int x;",
+            "  int f() {",
+            "    x = 42;",
+            "    g();",
+            "    return x;",
+            "  }",
+            "  void g() {",
+            "    x = 46;",
+            "  }",
+            "}")
+        .doTest();
+  }
 }

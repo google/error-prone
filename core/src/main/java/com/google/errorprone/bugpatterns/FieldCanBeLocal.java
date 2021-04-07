@@ -40,7 +40,9 @@ import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.LambdaExpressionTree;
 import com.sun.source.tree.MemberSelectTree;
+import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
+import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.VariableTree;
@@ -195,6 +197,18 @@ public final class FieldCanBeLocal extends BugChecker implements CompilationUnit
             if (!unconditionallyAssigned.contains(varSymbol)) {
               potentialFields.remove(varSymbol);
             }
+          }
+
+          @Override
+          public Void visitNewClass(NewClassTree node, Void unused) {
+            unconditionallyAssigned.clear();
+            return super.visitNewClass(node, null);
+          }
+
+          @Override
+          public Void visitMethodInvocation(MethodInvocationTree node, Void unused) {
+            unconditionallyAssigned.clear();
+            return super.visitMethodInvocation(node, null);
           }
 
           @Override
