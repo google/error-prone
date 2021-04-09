@@ -168,6 +168,7 @@ public class AndroidJdkLibsChecker extends ApiDiffChecker {
         ImmutableSetMultimap.<String, ClassMemberKey>builder()
             .put("java/util/Arrays", ClassMemberKey.create("stream", ""))
             .put("java/util/Date", ClassMemberKey.create("from", ""))
+            .put("java/util/Date", ClassMemberKey.create("toInstant", ""))
             .put("java/util/GregorianCalendar", ClassMemberKey.create("from", ""))
             .put("java/util/TimeZone", ClassMemberKey.create("getTimeZone", ""))
             .put("java/lang/Integer", ClassMemberKey.create("sum", ""))
