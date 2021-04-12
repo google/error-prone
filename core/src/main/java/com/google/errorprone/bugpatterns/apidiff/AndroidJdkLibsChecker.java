@@ -164,23 +164,39 @@ public class AndroidJdkLibsChecker extends ApiDiffChecker {
         // see b/72354470, https://github.com/typetools/checker-framework/issues/1781
         ImmutableSet.of("javax/lang/model/type/TypeKind");
     // Descriptor is empty string to match on any member with same simple name.
+    // TODO(b/185137972): Automate the generation of desugar-supported method-level APIs.
     private static final ImmutableSetMultimap<String, ClassMemberKey> DESUGAR_ALLOWED_MEMBERS =
         ImmutableSetMultimap.<String, ClassMemberKey>builder()
             .put("java/util/Arrays", ClassMemberKey.create("stream", ""))
             .put("java/util/Date", ClassMemberKey.create("from", ""))
             .put("java/util/Date", ClassMemberKey.create("toInstant", ""))
+            .put("java/util/Calendar", ClassMemberKey.create("toInstant", ""))
             .put("java/util/GregorianCalendar", ClassMemberKey.create("from", ""))
+            .put("java/util/GregorianCalendar", ClassMemberKey.create("toZonedDateTime", ""))
             .put("java/util/TimeZone", ClassMemberKey.create("getTimeZone", ""))
+            .put("java/util/TimeZone", ClassMemberKey.create("toZoneId", ""))
             .put("java/lang/Integer", ClassMemberKey.create("sum", ""))
-            .put("java/lang/Long", ClassMemberKey.create("sum", ""))
-            .put("java/lang/Double", ClassMemberKey.create("sum", ""))
             .put("java/lang/Integer", ClassMemberKey.create("min", ""))
-            .put("java/lang/Long", ClassMemberKey.create("min", ""))
-            .put("java/lang/Double", ClassMemberKey.create("min", ""))
             .put("java/lang/Integer", ClassMemberKey.create("max", ""))
+            .put("java/lang/Long", ClassMemberKey.create("sum", ""))
+            .put("java/lang/Long", ClassMemberKey.create("min", ""))
             .put("java/lang/Long", ClassMemberKey.create("max", ""))
+            .put("java/lang/Double", ClassMemberKey.create("sum", ""))
+            .put("java/lang/Double", ClassMemberKey.create("min", ""))
             .put("java/lang/Double", ClassMemberKey.create("max", ""))
             .put("java/lang/Math", ClassMemberKey.create("toIntExact", ""))
+            .put("java/lang/Math", ClassMemberKey.create("addExact", ""))
+            .put("java/lang/Math", ClassMemberKey.create("subtractExact", ""))
+            .put("java/lang/Math", ClassMemberKey.create("multiplyExact", ""))
+            .put("java/lang/Math", ClassMemberKey.create("multiplyFull", ""))
+            .put("java/lang/Math", ClassMemberKey.create("multiplyHigh", ""))
+            .put("java/lang/Math", ClassMemberKey.create("incrementExact", ""))
+            .put("java/lang/Math", ClassMemberKey.create("decrementExact", ""))
+            .put("java/lang/Math", ClassMemberKey.create("negateExact", ""))
+            .put("java/lang/Math", ClassMemberKey.create("floorDiv", ""))
+            .put("java/lang/Math", ClassMemberKey.create("floorMod", ""))
+            .put("java/lang/Math", ClassMemberKey.create("nextDown", ""))
+            .put("java/io/BufferedReader", ClassMemberKey.create("lines", ""))
             .build();
     private static final ImmutableSetMultimap<String, ClassMemberKey> DESUGAR_BANNED_MEMBERS =
         ImmutableSetMultimap.<String, ClassMemberKey>builder()
