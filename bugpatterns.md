@@ -910,6 +910,9 @@ Constructors should not be annotated with @Nullable since they cannot return nul
 __[NullablePrimitive](bugpattern/NullablePrimitive)__<br>
 @Nullable should not be used for primitive types since they cannot be null
 
+__[NullablePrimitiveArray](bugpattern/NullablePrimitiveArray)__<br>
+@Nullable type annotations should not be used for primitive types since they cannot be null
+
 __[NullableVoid](bugpattern/NullableVoid)__<br>
 void-returning methods should not be annotated with @Nullable, since they cannot return null
 
