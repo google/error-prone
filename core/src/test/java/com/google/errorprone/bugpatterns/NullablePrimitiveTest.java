@@ -61,6 +61,20 @@ public class NullablePrimitiveTest {
         .doTest();
   }
 
+  @Test
+  public void positiveArray() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.util.List;",
+            "import org.checkerframework.checker.nullness.qual.Nullable;",
+            "class Test {",
+            "  // BUG: Diagnostic contains:",
+            "  List<@Nullable int[]> xs;",
+            "}")
+        .doTest();
+  }
+
   // regression test for #418
   @Test
   public void typeParameter() {
