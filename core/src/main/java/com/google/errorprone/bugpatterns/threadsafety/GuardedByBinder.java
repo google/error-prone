@@ -65,7 +65,7 @@ public final class GuardedByBinder {
   }
 
   /** Creates a {@link GuardedByExpression} from a string, given the resolution context. */
-  static Optional<GuardedByExpression> bindString(
+  public static Optional<GuardedByExpression> bindString(
       String string, GuardedBySymbolResolver resolver, GuardedByFlags flags) {
     try {
       return Optional.of(

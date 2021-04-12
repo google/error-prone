@@ -431,7 +431,11 @@ public final class HeldLockAnalyzer {
     private AcquiredLockFinder() {}
   }
 
-  static final class ExpectedLockCalculator {
+  /**
+   * Utility for discovering the lock expressions that needs to be held when accessing specific
+   * guarded members.
+   */
+  public static final class ExpectedLockCalculator {
 
     private static final GuardedByExpression.Factory F = new GuardedByExpression.Factory();
 
@@ -443,21 +447,21 @@ public final class HeldLockAnalyzer {
      *
      * <p>For example:
      *
-     * <pre>{@code
+     * <pre><code>
      * class MyClass {
      *   final Object mu = new Object();
-     *   @GuardedBy("mu")
+     *   {@literal @}GuardedBy("mu")
      *   int x;
      * }
      * void m(MyClass myClass) {
      *   myClass.x++;
      * }
-     * }</pre>
+     * </code></pre>
      *
      * To determine the lock that must be held when accessing myClass.x, from is called with
      * "myClass.x" and "mu", and returns "myClass.mu".
      */
-    static Optional<GuardedByExpression> from(
+    public static Optional<GuardedByExpression> from(
         JCTree.JCExpression guardedMemberExpression,
         GuardedByExpression guard,
         VisitorState state,
