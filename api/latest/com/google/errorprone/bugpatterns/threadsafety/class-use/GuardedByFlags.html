@@ -135,6 +135,25 @@ com.google.common.base.Predicate&lt;com.sun.source.tree.Tree&gt;&nbsp;isSuppress
 <td class="col-last">&nbsp;</td>
 </tr>
 <tr class="row-color">
+<td class="col-first"><code>static <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="../GuardedByExpression.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByExpression</a>&gt;</code></td>
+<th class="col-second" scope="row"><span class="type-name-label">GuardedByBinder.</span><code><span class="member-name-link"><a href="../GuardedByBinder.html#bindString(java.lang.String,com.google.errorprone.bugpatterns.threadsafety.GuardedBySymbolResolver,com.google.errorprone.bugpatterns.threadsafety.GuardedByFlags)">bindString</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;string,
+<a href="../GuardedBySymbolResolver.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedBySymbolResolver</a>&nbsp;resolver,
+<a href="../GuardedByFlags.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByFlags</a>&nbsp;flags)</code></th>
+<td class="col-last">
+<div class="block">Creates a <a href="../GuardedByExpression.html" title="class in com.google.errorprone.bugpatterns.threadsafety"><code>GuardedByExpression</code></a> from a string, given the resolution context.</div>
+</td>
+</tr>
+<tr class="alt-color">
+<td class="col-first"><code>static <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="../GuardedByExpression.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByExpression</a>&gt;</code></td>
+<th class="col-second" scope="row"><span class="type-name-label">HeldLockAnalyzer.ExpectedLockCalculator.</span><code><span class="member-name-link"><a href="../HeldLockAnalyzer.ExpectedLockCalculator.html#from(com.sun.tools.javac.tree.JCTree.JCExpression,com.google.errorprone.bugpatterns.threadsafety.GuardedByExpression,com.google.errorprone.VisitorState,com.google.errorprone.bugpatterns.threadsafety.GuardedByFlags)">from</a></span>&#8203;(com.sun.tools.javac.tree.JCTree.JCExpression&nbsp;guardedMemberExpression,
+<a href="../GuardedByExpression.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByExpression</a>&nbsp;guard,
+<a href="../../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
+<a href="../GuardedByFlags.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByFlags</a>&nbsp;flags)</code></th>
+<td class="col-last">
+<div class="block">Determine the lock expression that needs to be held when accessing a specific guarded member.</div>
+</td>
+</tr>
+<tr class="row-color">
 <td class="col-first"><code>static com.google.errorprone.bugpatterns.threadsafety.GuardedByUtils.GuardedByValidationResult</code></td>
 <th class="col-second" scope="row"><span class="type-name-label">GuardedByUtils.</span><code><span class="member-name-link"><a href="../GuardedByUtils.html#isGuardedByValid(com.sun.source.tree.Tree,com.google.errorprone.VisitorState,com.google.errorprone.bugpatterns.threadsafety.GuardedByFlags)">isGuardedByValid</a></span>&#8203;(com.sun.source.tree.Tree&nbsp;tree,
 <a href="../../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,

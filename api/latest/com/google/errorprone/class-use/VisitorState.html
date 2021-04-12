@@ -4784,6 +4784,16 @@ com.sun.source.tree.Tree&nbsp;leaf,
 <td class="col-last">&nbsp;</td>
 </tr>
 <tr class="row-color">
+<td class="col-first"><code>static <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="../bugpatterns/threadsafety/GuardedByExpression.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByExpression</a>&gt;</code></td>
+<th class="col-second" scope="row"><span class="type-name-label">HeldLockAnalyzer.ExpectedLockCalculator.</span><code><span class="member-name-link"><a href="../bugpatterns/threadsafety/HeldLockAnalyzer.ExpectedLockCalculator.html#from(com.sun.tools.javac.tree.JCTree.JCExpression,com.google.errorprone.bugpatterns.threadsafety.GuardedByExpression,com.google.errorprone.VisitorState,com.google.errorprone.bugpatterns.threadsafety.GuardedByFlags)">from</a></span>&#8203;(com.sun.tools.javac.tree.JCTree.JCExpression&nbsp;guardedMemberExpression,
+<a href="../bugpatterns/threadsafety/GuardedByExpression.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByExpression</a>&nbsp;guard,
+<a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
+<a href="../bugpatterns/threadsafety/GuardedByFlags.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByFlags</a>&nbsp;flags)</code></th>
+<td class="col-last">
+<div class="block">Determine the lock expression that needs to be held when accessing a specific guarded member.</div>
+</td>
+</tr>
+<tr class="alt-color">
 <td class="col-first"><code>protected abstract <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a>&lt;<a href="../bugpatterns/threadsafety/GuardedByExpression.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByExpression</a>&gt;</code></td>
 <th class="col-second" scope="row"><span class="type-name-label">AbstractLockMethodChecker.</span><code><span class="member-name-link"><a href="../bugpatterns/threadsafety/AbstractLockMethodChecker.html#getActual(com.sun.source.tree.MethodTree,com.google.errorprone.VisitorState)">getActual</a></span>&#8203;(com.sun.source.tree.MethodTree&nbsp;tree,
 <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
@@ -4791,19 +4801,19 @@ com.sun.source.tree.Tree&nbsp;leaf,
 <div class="block">Searches the method body for locks that are acquired/released.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>protected <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a>&lt;<a href="../bugpatterns/threadsafety/GuardedByExpression.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByExpression</a>&gt;</code></td>
 <th class="col-second" scope="row"><span class="type-name-label">LockMethodChecker.</span><code><span class="member-name-link"><a href="../bugpatterns/threadsafety/LockMethodChecker.html#getActual(com.sun.source.tree.MethodTree,com.google.errorprone.VisitorState)">getActual</a></span>&#8203;(com.sun.source.tree.MethodTree&nbsp;tree,
 <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>protected <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a>&lt;<a href="../bugpatterns/threadsafety/GuardedByExpression.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByExpression</a>&gt;</code></td>
 <th class="col-second" scope="row"><span class="type-name-label">UnlockMethodChecker.</span><code><span class="member-name-link"><a href="../bugpatterns/threadsafety/UnlockMethodChecker.html#getActual(com.sun.source.tree.MethodTree,com.google.errorprone.VisitorState)">getActual</a></span>&#8203;(com.sun.source.tree.MethodTree&nbsp;tree,
 <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code><a href="../bugpatterns/threadsafety/AnnotationInfo.html" title="class in com.google.errorprone.bugpatterns.threadsafety">AnnotationInfo</a></code></td>
 <th class="col-second" scope="row"><span class="type-name-label">ThreadSafety.</span><code><span class="member-name-link"><a href="../bugpatterns/threadsafety/ThreadSafety.html#getInheritedAnnotation(com.sun.tools.javac.code.Symbol,com.google.errorprone.VisitorState)">getInheritedAnnotation</a></span>&#8203;(com.sun.tools.javac.code.Symbol&nbsp;sym,
 <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
@@ -4812,7 +4822,7 @@ com.sun.source.tree.Tree&nbsp;leaf,
  containerOf spec's from super-classes.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code><a href="../bugpatterns/threadsafety/AnnotationInfo.html" title="class in com.google.errorprone.bugpatterns.threadsafety">AnnotationInfo</a></code></td>
 <th class="col-second" scope="row"><span class="type-name-label">ThreadSafety.</span><code><span class="member-name-link"><a href="../bugpatterns/threadsafety/ThreadSafety.html#getMarkerOrAcceptedAnnotation(com.sun.tools.javac.code.Symbol,com.google.errorprone.VisitorState)">getMarkerOrAcceptedAnnotation</a></span>&#8203;(com.sun.tools.javac.code.Symbol&nbsp;sym,
 <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
@@ -4821,7 +4831,7 @@ com.sun.source.tree.Tree&nbsp;leaf,
  an accepted annotation on the symbol, or from the list of well-known types.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>protected abstract <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a>&lt;<a href="../bugpatterns/threadsafety/GuardedByExpression.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByExpression</a>&gt;</code></td>
 <th class="col-second" scope="row"><span class="type-name-label">AbstractLockMethodChecker.</span><code><span class="member-name-link"><a href="../bugpatterns/threadsafety/AbstractLockMethodChecker.html#getUnwanted(com.sun.source.tree.MethodTree,com.google.errorprone.VisitorState)">getUnwanted</a></span>&#8203;(com.sun.source.tree.MethodTree&nbsp;tree,
 <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
@@ -4829,19 +4839,19 @@ com.sun.source.tree.Tree&nbsp;leaf,
 <div class="block">Searches the method body for the incorrect lock operation (e.g.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>protected <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a>&lt;<a href="../bugpatterns/threadsafety/GuardedByExpression.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByExpression</a>&gt;</code></td>
 <th class="col-second" scope="row"><span class="type-name-label">LockMethodChecker.</span><code><span class="member-name-link"><a href="../bugpatterns/threadsafety/LockMethodChecker.html#getUnwanted(com.sun.source.tree.MethodTree,com.google.errorprone.VisitorState)">getUnwanted</a></span>&#8203;(com.sun.source.tree.MethodTree&nbsp;tree,
 <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>protected <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a>&lt;<a href="../bugpatterns/threadsafety/GuardedByExpression.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByExpression</a>&gt;</code></td>
 <th class="col-second" scope="row"><span class="type-name-label">UnlockMethodChecker.</span><code><span class="member-name-link"><a href="../bugpatterns/threadsafety/UnlockMethodChecker.html#getUnwanted(com.sun.source.tree.MethodTree,com.google.errorprone.VisitorState)">getUnwanted</a></span>&#8203;(com.sun.source.tree.MethodTree&nbsp;tree,
 <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>static boolean</code></td>
 <th class="col-second" scope="row"><span class="type-name-label">WellKnownMutability.</span><code><span class="member-name-link"><a href="../bugpatterns/threadsafety/WellKnownMutability.html#isAnnotation(com.google.errorprone.VisitorState,com.sun.tools.javac.code.Type)">isAnnotation</a></span>&#8203;(<a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
 com.sun.tools.javac.code.Type&nbsp;type)</code></th>
@@ -4849,14 +4859,14 @@ com.sun.tools.javac.code.Type&nbsp;type)</code></th>
 <div class="block">Returns true if the type is an annotation.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>static com.google.errorprone.bugpatterns.threadsafety.GuardedByUtils.GuardedByValidationResult</code></td>
 <th class="col-second" scope="row"><span class="type-name-label">GuardedByUtils.</span><code><span class="member-name-link"><a href="../bugpatterns/threadsafety/GuardedByUtils.html#isGuardedByValid(com.sun.source.tree.Tree,com.google.errorprone.VisitorState,com.google.errorprone.bugpatterns.threadsafety.GuardedByFlags)">isGuardedByValid</a></span>&#8203;(com.sun.source.tree.Tree&nbsp;tree,
 <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
 <a href="../bugpatterns/threadsafety/GuardedByFlags.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByFlags</a>&nbsp;flags)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>static boolean</code></td>
 <th class="col-second" scope="row"><span class="type-name-label">WellKnownMutability.</span><code><span class="member-name-link"><a href="../bugpatterns/threadsafety/WellKnownMutability.html#isProto2MessageClass(com.google.errorprone.VisitorState,com.sun.tools.javac.code.Type)">isProto2MessageClass</a></span>&#8203;(<a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
 com.sun.tools.javac.code.Type&nbsp;type)</code></th>
@@ -4864,7 +4874,7 @@ com.sun.tools.javac.code.Type&nbsp;type)</code></th>
 <div class="block">Compile-time equivalent of <code>com.google.io.protocol.ProtocolSupport#isProto2MessageClass</code>.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>static boolean</code></td>
 <th class="col-second" scope="row"><span class="type-name-label">WellKnownMutability.</span><code><span class="member-name-link"><a href="../bugpatterns/threadsafety/WellKnownMutability.html#isProto2MutableMessageClass(com.google.errorprone.VisitorState,com.sun.tools.javac.code.Type)">isProto2MutableMessageClass</a></span>&#8203;(<a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
 com.sun.tools.javac.code.Type&nbsp;type)</code></th>
@@ -4873,97 +4883,97 @@ com.sun.tools.javac.code.Type&nbsp;type)</code></th>
  com.google.io.protocol.ProtocolSupport#isProto2MutableMessageClass</code>.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code><a href="../matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
 <th class="col-second" scope="row"><span class="type-name-label">ImmutableAnnotationChecker.</span><code><span class="member-name-link"><a href="../bugpatterns/threadsafety/ImmutableAnnotationChecker.html#matchClass(com.sun.source.tree.ClassTree,com.google.errorprone.VisitorState)">matchClass</a></span>&#8203;(com.sun.source.tree.ClassTree&nbsp;tree,
 <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code><a href="../matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
 <th class="col-second" scope="row"><span class="type-name-label">ImmutableChecker.</span><code><span class="member-name-link"><a href="../bugpatterns/threadsafety/ImmutableChecker.html#matchClass(com.sun.source.tree.ClassTree,com.google.errorprone.VisitorState)">matchClass</a></span>&#8203;(com.sun.source.tree.ClassTree&nbsp;tree,
 <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code><a href="../matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
 <th class="col-second" scope="row"><span class="type-name-label">ImmutableEnumChecker.</span><code><span class="member-name-link"><a href="../bugpatterns/threadsafety/ImmutableEnumChecker.html#matchClass(com.sun.source.tree.ClassTree,com.google.errorprone.VisitorState)">matchClass</a></span>&#8203;(com.sun.source.tree.ClassTree&nbsp;tree,
 <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code><a href="../matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
 <th class="col-second" scope="row"><span class="type-name-label">ImmutableRefactoring.</span><code><span class="member-name-link"><a href="../bugpatterns/threadsafety/ImmutableRefactoring.html#matchCompilationUnit(com.sun.source.tree.CompilationUnitTree,com.google.errorprone.VisitorState)">matchCompilationUnit</a></span>&#8203;(com.sun.source.tree.CompilationUnitTree&nbsp;tree,
 <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code><a href="../matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
 <th class="col-second" scope="row"><span class="type-name-label">DoubleCheckedLocking.</span><code><span class="member-name-link"><a href="../bugpatterns/threadsafety/DoubleCheckedLocking.html#matchIf(com.sun.source.tree.IfTree,com.google.errorprone.VisitorState)">matchIf</a></span>&#8203;(com.sun.source.tree.IfTree&nbsp;outerIf,
 <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code><a href="../matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
 <th class="col-second" scope="row"><span class="type-name-label">GuardedByChecker.</span><code><span class="member-name-link"><a href="../bugpatterns/threadsafety/GuardedByChecker.html#matchLambdaExpression(com.sun.source.tree.LambdaExpressionTree,com.google.errorprone.VisitorState)">matchLambdaExpression</a></span>&#8203;(com.sun.source.tree.LambdaExpressionTree&nbsp;tree,
 <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code><a href="../matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
 <th class="col-second" scope="row"><span class="type-name-label">ImmutableChecker.</span><code><span class="member-name-link"><a href="../bugpatterns/threadsafety/ImmutableChecker.html#matchMemberReference(com.sun.source.tree.MemberReferenceTree,com.google.errorprone.VisitorState)">matchMemberReference</a></span>&#8203;(com.sun.source.tree.MemberReferenceTree&nbsp;tree,
 <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code><a href="../matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
 <th class="col-second" scope="row"><span class="type-name-label">AbstractLockMethodChecker.</span><code><span class="member-name-link"><a href="../bugpatterns/threadsafety/AbstractLockMethodChecker.html#matchMethod(com.sun.source.tree.MethodTree,com.google.errorprone.VisitorState)">matchMethod</a></span>&#8203;(com.sun.source.tree.MethodTree&nbsp;tree,
 <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code><a href="../matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
 <th class="col-second" scope="row"><span class="type-name-label">GuardedByChecker.</span><code><span class="member-name-link"><a href="../bugpatterns/threadsafety/GuardedByChecker.html#matchMethod(com.sun.source.tree.MethodTree,com.google.errorprone.VisitorState)">matchMethod</a></span>&#8203;(com.sun.source.tree.MethodTree&nbsp;tree,
 <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code><a href="../matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
 <th class="col-second" scope="row"><span class="type-name-label">ImmutableChecker.</span><code><span class="member-name-link"><a href="../bugpatterns/threadsafety/ImmutableChecker.html#matchMethodInvocation(com.sun.source.tree.MethodInvocationTree,com.google.errorprone.VisitorState)">matchMethodInvocation</a></span>&#8203;(com.sun.source.tree.MethodInvocationTree&nbsp;tree,
 <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code><a href="../matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
 <th class="col-second" scope="row"><span class="type-name-label">ThreadPriorityCheck.</span><code><span class="member-name-link"><a href="../bugpatterns/threadsafety/ThreadPriorityCheck.html#matchMethodInvocation(com.sun.source.tree.MethodInvocationTree,com.google.errorprone.VisitorState)">matchMethodInvocation</a></span>&#8203;(com.sun.source.tree.MethodInvocationTree&nbsp;tree,
 <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code><a href="../matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
 <th class="col-second" scope="row"><span class="type-name-label">ImmutableChecker.</span><code><span class="member-name-link"><a href="../bugpatterns/threadsafety/ImmutableChecker.html#matchNewClass(com.sun.source.tree.NewClassTree,com.google.errorprone.VisitorState)">matchNewClass</a></span>&#8203;(com.sun.source.tree.NewClassTree&nbsp;tree,
 <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code><a href="../matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
 <th class="col-second" scope="row"><span class="type-name-label">StaticGuardedByInstance.</span><code><span class="member-name-link"><a href="../bugpatterns/threadsafety/StaticGuardedByInstance.html#matchSynchronized(com.sun.source.tree.SynchronizedTree,com.google.errorprone.VisitorState)">matchSynchronized</a></span>&#8203;(com.sun.source.tree.SynchronizedTree&nbsp;tree,
 <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code><a href="../matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
 <th class="col-second" scope="row"><span class="type-name-label">SynchronizeOnNonFinalField.</span><code><span class="member-name-link"><a href="../bugpatterns/threadsafety/SynchronizeOnNonFinalField.html#matchSynchronized(com.sun.source.tree.SynchronizedTree,com.google.errorprone.VisitorState)">matchSynchronized</a></span>&#8203;(com.sun.source.tree.SynchronizedTree&nbsp;tree,
 <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code><a href="../matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
 <th class="col-second" scope="row"><span class="type-name-label">ImmutableChecker.</span><code><span class="member-name-link"><a href="../bugpatterns/threadsafety/ImmutableChecker.html#matchTypeParameter(com.sun.source.tree.TypeParameterTree,com.google.errorprone.VisitorState)">matchTypeParameter</a></span>&#8203;(com.sun.source.tree.TypeParameterTree&nbsp;tree,
 <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code><a href="../matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
 <th class="col-second" scope="row"><span class="type-name-label">GuardedByChecker.</span><code><span class="member-name-link"><a href="../bugpatterns/threadsafety/GuardedByChecker.html#matchVariable(com.sun.source.tree.VariableTree,com.google.errorprone.VisitorState)">matchVariable</a></span>&#8203;(com.sun.source.tree.VariableTree&nbsp;tree,
 <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>

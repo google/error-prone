@@ -15,7 +15,7 @@
 <script type="text/javascript" src="../../../../../script-dir/jquery-ui.min.js"></script>
 </head>
 <body class="class-declaration-page">
-<script type="text/javascript">var data = {"i0":9};
+<script type="text/javascript">var data = {"i0":9,"i1":9};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],8:["t4","Concrete Methods"]};
 var altColor = "alt-color";
 var rowColor = "row-color";
@@ -144,6 +144,15 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
  Optional.empty()</code> if the AST node doesn't correspond to a 'simple' lock expression.</div>
 </td>
 </tr>
+<tr class="row-color" id="i1">
+<td class="col-first"><code>static <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="GuardedByExpression.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByExpression</a>&gt;</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#bindString(java.lang.String,com.google.errorprone.bugpatterns.threadsafety.GuardedBySymbolResolver,com.google.errorprone.bugpatterns.threadsafety.GuardedByFlags)">bindString</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;string,
+<a href="GuardedBySymbolResolver.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedBySymbolResolver</a>&nbsp;resolver,
+<a href="GuardedByFlags.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByFlags</a>&nbsp;flags)</code></th>
+<td class="col-last">
+<div class="block">Creates a <a href="GuardedByExpression.html" title="class in com.google.errorprone.bugpatterns.threadsafety"><code>GuardedByExpression</code></a> from a string, given the resolution context.</div>
+</td>
+</tr>
 </tbody>
 </table>
 </div>
@@ -170,6 +179,15 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <a href="GuardedByFlags.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByFlags</a>&nbsp;flags)</span></div>
 <div class="block">Creates a <a href="GuardedByExpression.html" title="class in com.google.errorprone.bugpatterns.threadsafety"><code>GuardedByExpression</code></a> from a bound AST node, or returns <code>
  Optional.empty()</code> if the AST node doesn't correspond to a 'simple' lock expression.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="bindString(java.lang.String,com.google.errorprone.bugpatterns.threadsafety.GuardedBySymbolResolver,com.google.errorprone.bugpatterns.threadsafety.GuardedByFlags)">
+<h3>bindString</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="GuardedByExpression.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByExpression</a>&gt;</span>&nbsp;<span class="member-name">bindString</span>&#8203;(<span class="parameters"><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;string,
+<a href="GuardedBySymbolResolver.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedBySymbolResolver</a>&nbsp;resolver,
+<a href="GuardedByFlags.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByFlags</a>&nbsp;flags)</span></div>
+<div class="block">Creates a <a href="GuardedByExpression.html" title="class in com.google.errorprone.bugpatterns.threadsafety"><code>GuardedByExpression</code></a> from a string, given the resolution context.</div>
 </section>
 </li>
 </ul>

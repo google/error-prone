@@ -1142,6 +1142,10 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/inject/guice/BindingToUnqualifiedCommonType.html#%3Cinit%3E()">BindingToUnqualifiedCommonType()</a></span> - Constructor for class com.google.errorprone.bugpatterns.inject.guice.<a href="com/google/errorprone/bugpatterns/inject/guice/BindingToUnqualifiedCommonType.html" title="class in com.google.errorprone.bugpatterns.inject.guice">BindingToUnqualifiedCommonType</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/threadsafety/GuardedByBinder.html#bindString(java.lang.String,com.google.errorprone.bugpatterns.threadsafety.GuardedBySymbolResolver,com.google.errorprone.bugpatterns.threadsafety.GuardedByFlags)">bindString(String, GuardedBySymbolResolver, GuardedByFlags)</a></span> - Static method in class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/GuardedByBinder.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByBinder</a></dt>
+<dd>
+<div class="block">Creates a <a href="com/google/errorprone/bugpatterns/threadsafety/GuardedByExpression.html" title="class in com.google.errorprone.bugpatterns.threadsafety"><code>GuardedByExpression</code></a> from a string, given the resolution context.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/matchers/Enclosing.Block.html#%3Cinit%3E(com.google.errorprone.matchers.Matcher)">Block(Matcher&lt;BlockTree&gt;)</a></span> - Constructor for class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/Enclosing.Block.html" title="class in com.google.errorprone.matchers">Enclosing.Block</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/matchers/Enclosing.BlockOrCase.html#%3Cinit%3E(com.google.errorprone.matchers.Matcher,com.google.errorprone.matchers.Matcher)">BlockOrCase(Matcher&lt;BlockTree&gt;, Matcher&lt;CaseTree&gt;)</a></span> - Constructor for class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/Enclosing.BlockOrCase.html" title="class in com.google.errorprone.matchers">Enclosing.BlockOrCase</a></dt>
@@ -3739,6 +3743,10 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/threadsafety/GuardedBySymbolResolver.html#from(com.sun.tools.javac.code.Symbol.ClassSymbol,com.sun.source.tree.CompilationUnitTree,com.sun.tools.javac.util.Context,com.sun.source.tree.Tree,com.google.errorprone.VisitorState)">from(Symbol.ClassSymbol, CompilationUnitTree, Context, Tree, VisitorState)</a></span> - Static method in class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/GuardedBySymbolResolver.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedBySymbolResolver</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/threadsafety/HeldLockAnalyzer.ExpectedLockCalculator.html#from(com.sun.tools.javac.tree.JCTree.JCExpression,com.google.errorprone.bugpatterns.threadsafety.GuardedByExpression,com.google.errorprone.VisitorState,com.google.errorprone.bugpatterns.threadsafety.GuardedByFlags)">from(JCTree.JCExpression, GuardedByExpression, VisitorState, GuardedByFlags)</a></span> - Static method in class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/HeldLockAnalyzer.ExpectedLockCalculator.html" title="class in com.google.errorprone.bugpatterns.threadsafety">HeldLockAnalyzer.ExpectedLockCalculator</a></dt>
+<dd>
+<div class="block">Determine the lock expression that needs to be held when accessing a specific guarded member.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/refaster/Choice.html#from(java.util.Collection)">from(Collection&lt;T&gt;)</a></span> - Static method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/Choice.html" title="class in com.google.errorprone.refaster">Choice</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/dataflow/nullnesspropagation/NullnessAnnotations.html#fromAnnotations(java.util.Collection)">fromAnnotations(Collection&lt;String&gt;)</a></span> - Static method in class com.google.errorprone.dataflow.nullnesspropagation.<a href="com/google/errorprone/dataflow/nullnesspropagation/NullnessAnnotations.html" title="class in com.google.errorprone.dataflow.nullnesspropagation">NullnessAnnotations</a></dt>
@@ -5267,6 +5275,11 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/google/errorprone/bugpatterns/threadsafety/HeldLockAnalyzer.html" title="class in com.google.errorprone.bugpatterns.threadsafety"><span class="type-name-link">HeldLockAnalyzer</span></a> - Class in <a href="com/google/errorprone/bugpatterns/threadsafety/package-summary.html">com.google.errorprone.bugpatterns.threadsafety</a></dt>
 <dd>
 <div class="block">A method body analyzer.</div>
+</dd>
+<dt><a href="com/google/errorprone/bugpatterns/threadsafety/HeldLockAnalyzer.ExpectedLockCalculator.html" title="class in com.google.errorprone.bugpatterns.threadsafety"><span class="type-name-link">HeldLockAnalyzer.ExpectedLockCalculator</span></a> - Class in <a href="com/google/errorprone/bugpatterns/threadsafety/package-summary.html">com.google.errorprone.bugpatterns.threadsafety</a></dt>
+<dd>
+<div class="block">Utility for discovering the lock expressions that needs to be held when accessing specific
+ guarded members.</div>
 </dd>
 <dt><a href="com/google/errorprone/bugpatterns/threadsafety/HeldLockAnalyzer.LockEventListener.html" title="interface in com.google.errorprone.bugpatterns.threadsafety"><span class="type-name-link">HeldLockAnalyzer.LockEventListener</span></a> - Interface in <a href="com/google/errorprone/bugpatterns/threadsafety/package-summary.html">com.google.errorprone.bugpatterns.threadsafety</a></dt>
 <dd>
