@@ -197,6 +197,7 @@ import com.google.errorprone.bugpatterns.MathAbsoluteRandom;
 import com.google.errorprone.bugpatterns.MathRoundIntLong;
 import com.google.errorprone.bugpatterns.MemberName;
 import com.google.errorprone.bugpatterns.MethodCanBeStatic;
+import com.google.errorprone.bugpatterns.MissingBraces;
 import com.google.errorprone.bugpatterns.MissingCasesInEnumSwitch;
 import com.google.errorprone.bugpatterns.MissingDefault;
 import com.google.errorprone.bugpatterns.MissingFail;
@@ -994,6 +995,7 @@ public class BuiltInCheckerSuppliers {
           LongLiteralLowerCaseSuffix.class,
           MemberName.class,
           MethodCanBeStatic.class,
+          MissingBraces.class,
           MissingDefault.class,
           MixedArrayDimensions.class,
           MoreThanOneQualifier.class,
