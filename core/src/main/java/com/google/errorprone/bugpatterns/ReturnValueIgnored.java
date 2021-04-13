@@ -30,6 +30,7 @@ import static com.google.errorprone.util.ASTHelpers.isSameType;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
@@ -204,16 +205,27 @@ public class ReturnValueIgnored extends AbstractReturnValueIgnored {
   private static final Matcher<ExpressionTree> OPTIONAL_METHODS =
       anyOf(
           staticMethod().onClass("java.util.Optional"),
-          instanceMethod().onExactClass("java.util.Optional").named("filter"),
-          instanceMethod().onExactClass("java.util.Optional").named("flatMap"),
-          instanceMethod().onExactClass("java.util.Optional").named("get"),
-          instanceMethod().onExactClass("java.util.Optional").named("isEmpty"),
-          instanceMethod().onExactClass("java.util.Optional").named("isPresent"),
-          instanceMethod().onExactClass("java.util.Optional").named("map"),
-          instanceMethod().onExactClass("java.util.Optional").named("or"),
-          instanceMethod().onExactClass("java.util.Optional").named("orElse"),
-          instanceMethod().onExactClass("java.util.Optional").named("orElseGet"),
-          instanceMethod().onExactClass("java.util.Optional").named("orElseThrow"));
+          instanceMethod().onExactClass("java.util.Optional")
+              .namedAnyOf(
+                  "isEmpty",
+                  "isPresent"));
+
+  /**
+   * The return values of {@link java.util.Optional} static methods and some instance methods should
+   * always be checked.
+   */
+  private static final Matcher<ExpressionTree> MORE_OPTIONAL_METHODS =
+          anyOf(
+                  instanceMethod().onExactClass("java.util.Optional")
+                          .namedAnyOf(
+                                  "filter",
+                                  "flatMap",
+                                  "get",
+                                  "map",
+                                  "or",
+                                  "orElse",
+                                  "orElseGet",
+                                  "orElseThrow"));
 
   /**
    * The return values of {@link java.util.concurrent.TimeUnit} methods should always be checked.
@@ -259,8 +271,16 @@ public class ReturnValueIgnored extends AbstractReturnValueIgnored {
               .namedAnyOf("containsKey", "containsValue")
               .withParameters("java.lang.Object"));
 
+  private final Matcher<? super ExpressionTree> matcher;
+
+  public ReturnValueIgnored(ErrorProneFlags flags) {
+    boolean checkOptional = flags.getBoolean("ReturnValueIgnored:MoreOptional").orElse(true);
+    this.matcher =
+            checkOptional ? anyOf(SPECIALIZED_MATCHER, MORE_OPTIONAL_METHODS) : SPECIALIZED_MATCHER;
+  }
+
   @Override
   public Matcher<? super ExpressionTree> specializedMatcher() {
-    return SPECIALIZED_MATCHER;
+    return matcher;
   }
 }
