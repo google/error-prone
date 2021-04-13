@@ -1414,6 +1414,9 @@ Use Java&#39;s utility functional interfaces instead of Function&lt;A, B&gt; for
 __[MethodCanBeStatic](bugpattern/MethodCanBeStatic)__<br>
 A private method that does not reference the enclosing instance can be static
 
+__[MissingBraces](bugpattern/MissingBraces)__<br>
+The Google Java Style Guide requires braces to be used with if, else, for, do and while statements, even when the body is empty or contains only a single statement.
+
 __[MixedArrayDimensions](bugpattern/MixedArrayDimensions)__<br>
 C-style array declarations should not be used
 
