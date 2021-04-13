@@ -17,9 +17,12 @@
 package com.google.errorprone.bugpatterns;
 
 import com.google.errorprone.CompilationTestHelper;
+import com.google.errorprone.util.RuntimeVersion;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
+
+import static org.junit.Assume.assumeTrue;
 
 /** @author alexeagle@google.com (Alex Eagle) */
 @RunWith(JUnit4.class)
@@ -169,9 +172,72 @@ public class ReturnValueIgnoredTest {
             "  void optional() {",
             "    Optional<Integer> optional = Optional.of(42);",
             "    // BUG: Diagnostic contains: ReturnValueIgnored",
-            "    optional.isPresent();",
             "    optional.filter(v -> v > 40);",
-            "    optional.map(v -> Integer.toString(v));",
+            "    // BUG: Diagnostic contains: ReturnValueIgnored",
+            "    optional.flatMap(v -> Optional.of(v + 1));",
+            "    // BUG: Diagnostic contains: ReturnValueIgnored",
+            "    optional.get();",
+            "    // BUG: Diagnostic contains: ReturnValueIgnored",
+            "    optional.isPresent();",
+            "    // BUG: Diagnostic contains: ReturnValueIgnored",
+            "    optional.map(v -> v + 1);",
+            "    // BUG: Diagnostic contains: ReturnValueIgnored",
+            "    optional.orElse(40);",
+            "    // BUG: Diagnostic contains: ReturnValueIgnored",
+            "    optional.orElseGet(() -> 40);",
+            "    // BUG: Diagnostic contains: ReturnValueIgnored",
+            "    optional.orElseThrow(() -> new RuntimeException());",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void optionalInstanceMethods_jdk9() {
+    assumeTrue(RuntimeVersion.isAtLeast9());
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.util.Optional;",
+            "class Test {",
+            "  void optional() {",
+            "    Optional<Integer> optional = Optional.of(42);",
+            "    // BUG: Diagnostic contains: ReturnValueIgnored",
+            "    optional.or(() -> Optional.empty());",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void optionalInstanceMethods_jdk10() {
+    assumeTrue(RuntimeVersion.isAtLeast10());
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.util.Optional;",
+            "class Test {",
+            "  void optional() {",
+            "    Optional<Integer> optional = Optional.of(42);",
+            "    // BUG: Diagnostic contains: ReturnValueIgnored",
+            "    optional.orElseThrow();",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void optionalInstanceMethods_jdk11() {
+    assumeTrue(RuntimeVersion.isAtLeast11());
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.util.Optional;",
+            "class Test {",
+            "  void optional() {",
+            "    Optional<Integer> optional = Optional.of(42);",
+            "    // BUG: Diagnostic contains: ReturnValueIgnored",
+            "    optional.isEmpty();",
             "  }",
             "}")
         .doTest();

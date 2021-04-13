@@ -204,8 +204,16 @@ public class ReturnValueIgnored extends AbstractReturnValueIgnored {
   private static final Matcher<ExpressionTree> OPTIONAL_METHODS =
       anyOf(
           staticMethod().onClass("java.util.Optional"),
+          instanceMethod().onExactClass("java.util.Optional").named("filter"),
+          instanceMethod().onExactClass("java.util.Optional").named("flatMap"),
+          instanceMethod().onExactClass("java.util.Optional").named("get"),
+          instanceMethod().onExactClass("java.util.Optional").named("isEmpty"),
           instanceMethod().onExactClass("java.util.Optional").named("isPresent"),
-          instanceMethod().onExactClass("java.util.Optional").named("isEmpty"));
+          instanceMethod().onExactClass("java.util.Optional").named("map"),
+          instanceMethod().onExactClass("java.util.Optional").named("or"),
+          instanceMethod().onExactClass("java.util.Optional").named("orElse"),
+          instanceMethod().onExactClass("java.util.Optional").named("orElseGet"),
+          instanceMethod().onExactClass("java.util.Optional").named("orElseThrow"));
 
   /**
    * The return values of {@link java.util.concurrent.TimeUnit} methods should always be checked.
