@@ -13,7 +13,8 @@ To make changes, edit the @BugPattern annotation or the explanation in docs/bugp
 
 
 ## The problem
-Scoping annotations are not allowed on abstract types.
+Scoping annotations are not inherited. They will have no effect if added to an
+abstract type.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("InjectScopeAnnotationOnInterfaceOrAbstractClass")` to the enclosing element.
