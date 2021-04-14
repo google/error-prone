@@ -67,6 +67,7 @@ public class FieldCanBeFinal extends BugChecker implements CompilationUnitTreeMa
           "com.google.inject.testing.fieldbinder.Bind",
           "com.google.errorprone.annotations.Var",
           "com.google.common.annotations.NonFinalForGwt",
+          "com.google.testing.junit.testparameterinjector.TestParameter",
           "org.kohsuke.args4j.Argument",
           "org.kohsuke.args4j.Option",
           "org.mockito.Spy",
