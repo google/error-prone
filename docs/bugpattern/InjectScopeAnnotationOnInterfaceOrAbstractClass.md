@@ -1,1 +1,2 @@
-Scoping annotations are not allowed on abstract types.
+Scoping annotations are not inherited. They will have no effect if added to an
+abstract type.
