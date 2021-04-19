@@ -238,9 +238,9 @@ public class FloggerArgumentToString extends BugChecker implements MethodInvocat
             Ascii.isUpperCase(placeholder) ? UPPER_HEX_FORMAT : HEX_FORMAT);
       }
     },
-    ARRAYS_AS_LIST(
+    ARRAYS_AS_LIST_OR_TO_STRING(
         allOf(
-            staticMethod().onClass("java.util.Arrays").named("asList"),
+            staticMethod().onClass("java.util.Arrays").namedAnyOf("asList", "toString"),
             toType(
                 MethodInvocationTree.class,
                 FloggerArgumentToString::hasSingleVarargsCompatibleArgument))) {
