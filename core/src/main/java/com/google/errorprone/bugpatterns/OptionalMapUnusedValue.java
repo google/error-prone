@@ -14,7 +14,7 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
+import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.argument;
@@ -37,7 +37,7 @@ import com.sun.source.tree.Tree.Kind;
 @BugPattern(
     name = "OptionalMapUnusedValue",
     summary = "Optional.ifPresent is preferred over Optional.map when the return value is unused",
-    severity = WARNING)
+    severity = ERROR)
 public final class OptionalMapUnusedValue extends BugChecker
     implements MethodInvocationTreeMatcher {
 
