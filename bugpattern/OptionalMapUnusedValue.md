@@ -4,7 +4,7 @@ summary: Optional.ifPresent is preferred over Optional.map when the return value
   unused
 layout: bugpattern
 tags: ''
-severity: WARNING
+severity: ERROR
 ---
 
 <!--

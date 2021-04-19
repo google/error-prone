@@ -341,6 +341,9 @@ This conditional expression may evaluate to null, which will result in an NPE wh
 __[OptionalEquality](bugpattern/OptionalEquality)__<br>
 Comparison using reference equality instead of value equality
 
+__[OptionalMapUnusedValue](bugpattern/OptionalMapUnusedValue)__<br>
+Optional.ifPresent is preferred over Optional.map when the return value is unused
+
 __[OverlappingQualifierAndScopeAnnotation](bugpattern/OverlappingQualifierAndScopeAnnotation)__<br>
 Annotations cannot be both Scope annotations and Qualifier annotations: this causes confusion when trying to use them.
 
@@ -930,9 +933,6 @@ Use grouping parenthesis to make the operator precedence explicit
 
 __[OptionalMapToOptional](bugpattern/OptionalMapToOptional)__<br>
 Mapping to another Optional will yield a nested Optional. Did you mean flatMap?
-
-__[OptionalMapUnusedValue](bugpattern/OptionalMapUnusedValue)__<br>
-Optional.ifPresent is preferred over Optional.map when the return value is unused
 
 __[OptionalNotPresent](bugpattern/OptionalNotPresent)__<br>
 One should not call optional.get() inside an if statement that checks !optional.isPresent
