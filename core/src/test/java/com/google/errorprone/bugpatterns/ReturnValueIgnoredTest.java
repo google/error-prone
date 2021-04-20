@@ -177,6 +177,7 @@ public class ReturnValueIgnoredTest {
             "    optional.flatMap(v -> Optional.of(v + 1));",
             "    // BUG: Diagnostic contains: ReturnValueIgnored",
             "    optional.get();",
+            "    optional.ifPresent(v -> {});",
             "    // BUG: Diagnostic contains: ReturnValueIgnored",
             "    optional.isPresent();",
             "    // BUG: Diagnostic contains: ReturnValueIgnored",

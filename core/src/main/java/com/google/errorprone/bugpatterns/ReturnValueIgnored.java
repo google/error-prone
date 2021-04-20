@@ -211,21 +211,11 @@ public class ReturnValueIgnored extends AbstractReturnValueIgnored {
                   "isPresent"));
 
   /**
-   * The return values of {@link java.util.Optional} static methods and some instance methods should
-   * always be checked.
+   * The return values of {@link java.util.Optional} methods should always be checked (except for
+   * void-returning ones, which won't be checked by AbstractReturnValueIgnored).
    */
   private static final Matcher<ExpressionTree> MORE_OPTIONAL_METHODS =
-          anyOf(
-                  instanceMethod().onExactClass("java.util.Optional")
-                          .namedAnyOf(
-                                  "filter",
-                                  "flatMap",
-                                  "get",
-                                  "map",
-                                  "or",
-                                  "orElse",
-                                  "orElseGet",
-                                  "orElseThrow"));
+          anyMethod().onClass("java.util.Optional");
 
   /**
    * The return values of {@link java.util.concurrent.TimeUnit} methods should always be checked.
