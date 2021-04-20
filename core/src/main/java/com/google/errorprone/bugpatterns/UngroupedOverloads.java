@@ -18,7 +18,6 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.common.collect.Iterables.getOnlyElement;
-import static com.google.errorprone.BugPattern.LinkType.CUSTOM;
 import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
 import static com.google.errorprone.BugPattern.StandardTags.STYLE;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
@@ -50,13 +49,11 @@ import javax.lang.model.element.Name;
 @BugPattern(
     name = "UngroupedOverloads",
     summary =
-        "Constructors and methods with the same name should appear sequentially"
-            + " with no other code in between. Please re-order or re-name methods.",
+        "Constructors and methods with the same name should appear sequentially with no other code"
+            + " in between, even when modifiers such as static or private differ between the"
+            + " methods. Please re-order or re-name methods.",
     severity = SUGGESTION,
-    linkType = CUSTOM,
-    tags = STYLE,
-    link = "https://google.github.io/styleguide/javaguide.html#s3.4.2.1-overloads-never-split"
-    )
+    tags = STYLE)
 public class UngroupedOverloads extends BugChecker implements ClassTreeMatcher {
 
   private final Boolean batchFindings;
@@ -186,7 +183,8 @@ public class UngroupedOverloads extends BugChecker implements ClassTreeMatcher {
             ? "constructor overloads"
             : String.format("overloads of '%s'", symbol.getSimpleName());
     return String.format(
-        "Overloads should be grouped together; found ungrouped %s on line(s): %s",
+        "Overloads should be grouped together, even when modifiers such as static or private differ"
+            + " between the methods; found ungrouped %s on line(s): %s",
         name, ungroupedLines);
   }
 }
