@@ -17,8 +17,9 @@ To make changes, edit the @BugPattern annotation or the explanation in docs/bugp
 Classes that AssistedInject factories create may not be annotated with scope
 annotations, such as @Singleton. This will cause a Guice error at runtime.
 
-See [https://code.google.com/p/google-guice/issues/detail?id=742 this bug
-report] for details.
+See
+[this bug report](https://code.google.com/p/google-guice/issues/detail?id=742)
+for details.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("GuiceAssistedInjectScoping")` to the enclosing element.
