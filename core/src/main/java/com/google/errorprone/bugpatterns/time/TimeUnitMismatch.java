@@ -514,6 +514,8 @@ public final class TimeUnitMismatch extends BugChecker
                   "ms",
                   "msec",
                   "msecs",
+                  "millisec",
+                  "millisecs",
                   "millisecond",
                   "milliseconds")
               // TODO(cpovirk): milis, milisecond, etc.? (i.e., misspellings)
@@ -524,6 +526,8 @@ public final class TimeUnitMismatch extends BugChecker
                   "us",
                   "usec",
                   "usecs",
+                  "microsec",
+                  "microsecs",
                   "microsecond",
                   "microseconds")
               .putAll(
@@ -533,6 +537,8 @@ public final class TimeUnitMismatch extends BugChecker
                   "ns",
                   "nsec",
                   "nsecs",
+                  "nanosec",
+                  "nanosecs",
                   "nanosecond",
                   "nanoseconds")
               .build()

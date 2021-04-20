@@ -61,6 +61,7 @@ public class TimeUnitMismatchTest {
         "millis",
         "MILLIS",
         "someMillis",
+        "millisecs",
         "timeoutMilli",
         "valueInMills",
         "mSec",
