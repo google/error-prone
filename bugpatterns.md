@@ -1469,7 +1469,7 @@ __[TypeToString](bugpattern/TypeToString)__<br>
 Type#toString shouldn&#39;t be used for comparison as it is expensive and fragile.
 
 __[UngroupedOverloads](bugpattern/UngroupedOverloads)__<br>
-Constructors and methods with the same name should appear sequentially with no other code in between. Please re-order or re-name methods.
+Constructors and methods with the same name should appear sequentially with no other code in between, even when modifiers such as static or private differ between the methods. Please re-order or re-name methods.
 
 __[UnnecessaryBoxedAssignment](bugpattern/UnnecessaryBoxedAssignment)__<br>
 This expression can be implicitly boxed.

@@ -1,7 +1,8 @@
 ---
 title: UngroupedOverloads
 summary: Constructors and methods with the same name should appear sequentially with
-  no other code in between. Please re-order or re-name methods.
+  no other code in between, even when modifiers such as static or private differ between
+  the methods. Please re-order or re-name methods.
 layout: bugpattern
 tags: Style
 severity: SUGGESTION
