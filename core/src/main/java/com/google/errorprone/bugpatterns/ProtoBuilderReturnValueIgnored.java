@@ -22,6 +22,7 @@ import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
+import static com.google.errorprone.util.SideEffectAnalysis.hasSideEffect;
 
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.BugPattern;
@@ -93,6 +94,11 @@ public final class ProtoBuilderReturnValueIgnored extends AbstractReturnValueIgn
     ExpressionTree receiver = getReceiver(tree);
     if (receiver instanceof IdentifierTree || receiver instanceof MemberSelectTree) {
       simpleFixBuilder.replace(state.getPath().getParentPath().getLeaf(), "");
+      if (hasSideEffect(receiver)) {
+        simpleFixBuilder.setShortDescription(
+            "Remove the call to #build. Note that this will not validate the presence "
+                + "of required fields, and removes any side effects of the receiver expression.");
+      }
     } else {
       simpleFixBuilder.replace(state.getEndPosition(receiver), state.getEndPosition(tree), "");
     }
