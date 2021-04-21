@@ -3,7 +3,7 @@ title: ConstantPatternCompile
 summary: Variables initialized with Pattern#compile calls on constants can be constants
 layout: bugpattern
 tags: ''
-severity: SUGGESTION
+severity: WARNING
 ---
 
 <!--

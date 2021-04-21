@@ -1226,6 +1226,9 @@ This catch block catches `Exception`, but can only catch unchecked exceptions. C
 __[CheckedExceptionNotThrown](bugpattern/CheckedExceptionNotThrown)__<br>
 This method cannot throw a checked exception that it claims to. This may cause consumers of the API to incorrectly attempt to handle, or propagate, this exception.
 
+__[ConstantPatternCompile](bugpattern/ConstantPatternCompile)__<br>
+Variables initialized with Pattern#compile calls on constants can be constants
+
 __[DifferentNameButSame](bugpattern/DifferentNameButSame)__<br>
 This type is referred to in different ways within this file, which may be confusing.
 
@@ -1377,9 +1380,6 @@ This class&#39;s name looks like a Type Parameter.
 
 __[ConstantField](bugpattern/ConstantField)__<br>
 Field name is CONSTANT_CASE, but field is not static and final
-
-__[ConstantPatternCompile](bugpattern/ConstantPatternCompile)__<br>
-Variables initialized with Pattern#compile calls on constants can be constants
 
 __[FieldCanBeFinal](bugpattern/FieldCanBeFinal)__<br>
 This field is only assigned during initialization; consider making it final
