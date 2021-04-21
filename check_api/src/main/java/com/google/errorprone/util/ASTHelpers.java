@@ -1201,6 +1201,10 @@ public class ASTHelpers {
           && TestNgMatchers.hasTestNgAnnotation((MethodTree) ancestor, state)) {
         return true;
       }
+      if (ancestor instanceof ClassTree
+          && TestNgMatchers.hasTestNgAnnotation((ClassTree) ancestor)) {
+        return true;
+      }
     }
     return false;
   }

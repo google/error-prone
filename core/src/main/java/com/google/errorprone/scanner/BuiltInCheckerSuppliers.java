@@ -109,6 +109,7 @@ import com.google.errorprone.bugpatterns.EqualsGetClass;
 import com.google.errorprone.bugpatterns.EqualsHashCode;
 import com.google.errorprone.bugpatterns.EqualsIncompatibleType;
 import com.google.errorprone.bugpatterns.EqualsNaN;
+import com.google.errorprone.bugpatterns.EqualsNull;
 import com.google.errorprone.bugpatterns.EqualsReference;
 import com.google.errorprone.bugpatterns.EqualsUnsafeCast;
 import com.google.errorprone.bugpatterns.EqualsUsingHashCode;
@@ -770,6 +771,7 @@ public class BuiltInCheckerSuppliers {
           EmptySetMultibindingContributions.class,
           EqualsGetClass.class,
           EqualsIncompatibleType.class,
+          EqualsNull.class,
           EqualsUnsafeCast.class,
           EqualsUsingHashCode.class,
           ErroneousThreadPoolConstructorChecker.class,

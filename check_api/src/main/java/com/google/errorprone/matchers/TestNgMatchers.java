@@ -19,7 +19,10 @@ import static com.google.errorprone.util.ASTHelpers.findSuperMethods;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 
 import com.google.errorprone.VisitorState;
+import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.MethodTree;
+import com.sun.tools.javac.code.Symbol;
+import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 
 /**
@@ -45,8 +48,14 @@ public class TestNgMatchers {
         .anyMatch(TestNgMatchers::hasTestNgAttr);
   }
 
-  /** Checks if a method symbol has any attribute from the org.testng package. */
-  private static boolean hasTestNgAttr(MethodSymbol methodSym) {
+  /** Checks if a class is annotated with any annotation from the org.testng package. */
+  public static boolean hasTestNgAnnotation(ClassTree tree) {
+    ClassSymbol classSym = getSymbol(tree);
+    return classSym != null && hasTestNgAttr(classSym);
+  }
+
+  /** Checks if a symbol has any attribute from the org.testng package. */
+  private static boolean hasTestNgAttr(Symbol methodSym) {
     return methodSym.getRawAttributes().stream()
         .anyMatch(attr -> attr.type.tsym.getQualifiedName().toString().startsWith("org.testng."));
   }
