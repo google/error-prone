@@ -30,6 +30,7 @@ import static com.google.errorprone.util.ASTHelpers.isSameType;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
@@ -204,8 +205,14 @@ public class ReturnValueIgnored extends AbstractReturnValueIgnored {
   private static final Matcher<ExpressionTree> OPTIONAL_METHODS =
       anyOf(
           staticMethod().onClass("java.util.Optional"),
-          instanceMethod().onExactClass("java.util.Optional").named("isPresent"),
-          instanceMethod().onExactClass("java.util.Optional").named("isEmpty"));
+          instanceMethod().onExactClass("java.util.Optional").namedAnyOf("isEmpty", "isPresent"));
+
+  /**
+   * The return values of {@link java.util.Optional} methods should always be checked (except for
+   * void-returning ones, which won't be checked by AbstractReturnValueIgnored).
+   */
+  private static final Matcher<ExpressionTree> MORE_OPTIONAL_METHODS =
+      anyMethod().onClass("java.util.Optional");
 
   /**
    * The return values of {@link java.util.concurrent.TimeUnit} methods should always be checked.
@@ -251,8 +258,16 @@ public class ReturnValueIgnored extends AbstractReturnValueIgnored {
               .namedAnyOf("containsKey", "containsValue")
               .withParameters("java.lang.Object"));
 
+  private final Matcher<? super ExpressionTree> matcher;
+
+  public ReturnValueIgnored(ErrorProneFlags flags) {
+    boolean checkOptional = flags.getBoolean("ReturnValueIgnored:MoreOptional").orElse(true);
+    this.matcher =
+        checkOptional ? anyOf(SPECIALIZED_MATCHER, MORE_OPTIONAL_METHODS) : SPECIALIZED_MATCHER;
+  }
+
   @Override
   public Matcher<? super ExpressionTree> specializedMatcher() {
-    return SPECIALIZED_MATCHER;
+    return matcher;
   }
 }
