@@ -70,7 +70,6 @@ public class BadImport extends BugChecker implements ImportTreeMatcher {
           "BuilderFactory",
           "Callback",
           "Class",
-          "Entry",
           "Enum",
           "Factory",
           "Type",
