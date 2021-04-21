@@ -19,7 +19,7 @@ package com.google.errorprone.bugpatterns;
 import static com.google.common.base.CaseFormat.LOWER_CAMEL;
 import static com.google.common.base.CaseFormat.UPPER_UNDERSCORE;
 import static com.google.common.collect.Iterables.getOnlyElement;
-import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
+import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.fixes.SuggestedFixes.renameVariableUsages;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.instanceMethod;
@@ -62,7 +62,7 @@ import javax.lang.model.element.NestingKind;
 @BugPattern(
     name = "ConstantPatternCompile",
     summary = "Variables initialized with Pattern#compile calls on constants can be constants",
-    severity = SUGGESTION)
+    severity = WARNING)
 public final class ConstantPatternCompile extends BugChecker implements VariableTreeMatcher {
 
   private static final Matcher<ExpressionTree> PATTERN_COMPILE_CHECK =
