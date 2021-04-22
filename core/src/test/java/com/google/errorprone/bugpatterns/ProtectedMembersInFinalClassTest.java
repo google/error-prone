@@ -111,4 +111,16 @@ public class ProtectedMembersInFinalClassTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void constructorFindingDescription() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "final class Test {",
+            "  // BUG: Diagnostic contains: Test",
+            "  protected Test() {}",
+            "}")
+        .doTest();
+  }
 }

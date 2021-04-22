@@ -37,6 +37,7 @@ import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
+import com.sun.tools.javac.code.Symbol;
 import javax.lang.model.element.Modifier;
 
 /**
@@ -86,7 +87,13 @@ public class ProtectedMembersInFinalClass extends BugChecker implements ClassTre
         String.format(
             "Make members of final classes package-private: %s",
             relevantMembers.stream()
-                .map(m -> ASTHelpers.getSymbol(m).name.toString())
+                .map(
+                    m -> {
+                      Symbol symbol = ASTHelpers.getSymbol(m);
+                      return symbol.isConstructor()
+                          ? symbol.owner.name.toString()
+                          : symbol.name.toString();
+                    })
                 .collect(joining(", ")));
     return buildDescription(relevantMembers.get(0)).setMessage(message).addFix(fix.build()).build();
   }
