@@ -551,7 +551,7 @@ public class VisitorState {
     }
     checkArgument(start >= 0, "invalid start position (%s) for: %s", start, tree);
     checkArgument(start < end, "invalid source positions (%s, %s) for: %s", start, end, tree);
-    checkArgument(end < source.length(), "invalid end position (%s) for: %s", end, tree);
+    checkArgument(end <= source.length(), "invalid end position (%s) for: %s", end, tree);
     return source.subSequence(start, end).toString();
   }
 
