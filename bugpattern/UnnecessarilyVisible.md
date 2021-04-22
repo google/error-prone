@@ -1,7 +1,7 @@
 ---
 title: UnnecessarilyVisible
 summary: Some methods (such as those annotated with @Inject or @Provides) are only
-  intended to be called by a framework, and so should have default visibility
+  intended to be called by a framework, and so should have default visibility.
 layout: bugpattern
 tags: ''
 severity: WARNING

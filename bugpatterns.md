@@ -1350,7 +1350,7 @@ __[UnnecessarilyFullyQualified](bugpattern/UnnecessarilyFullyQualified)__<br>
 This fully qualified name is unambiguous to the compiler if imported.
 
 __[UnnecessarilyVisible](bugpattern/UnnecessarilyVisible)__<br>
-Some methods (such as those annotated with @Inject or @Provides) are only intended to be called by a framework, and so should have default visibility
+Some methods (such as those annotated with @Inject or @Provides) are only intended to be called by a framework, and so should have default visibility.
 
 __[UnnecessaryAnonymousClass](bugpattern/UnnecessaryAnonymousClass)__<br>
 Implementing a functional interface is unnecessary; prefer to implement the functional interface method directly and use a method reference instead.
