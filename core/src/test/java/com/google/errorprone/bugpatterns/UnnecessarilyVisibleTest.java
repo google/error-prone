@@ -17,6 +17,7 @@
 package com.google.errorprone.bugpatterns;
 
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
+import com.google.errorprone.CompilationTestHelper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -26,6 +27,9 @@ import org.junit.runners.JUnit4;
 public final class UnnecessarilyVisibleTest {
   private final BugCheckerRefactoringTestHelper helper =
       BugCheckerRefactoringTestHelper.newInstance(UnnecessarilyVisible.class, getClass());
+
+  private final CompilationTestHelper compilationHelper =
+      CompilationTestHelper.newInstance(UnnecessarilyVisible.class, getClass());
 
   @Test
   public void publicConstructor() {
@@ -44,6 +48,37 @@ public final class UnnecessarilyVisibleTest {
             "  @Inject",
             "  Test() {}",
             "}")
+        .doTest();
+  }
+
+  @Test
+  public void caveatOnInject() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import javax.inject.Inject;",
+            "class Test {",
+            "  @Inject",
+            "  // BUG: Diagnostic contains: VisibleForTesting",
+            "  public Test() {}",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void caveatNotOnProvides() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.inject.Provides;",
+            "class Test {",
+            "  @Provides",
+            "  // BUG: Diagnostic matches: X",
+            "  public int foo() {",
+            "    return 1;",
+            "  }",
+            "}")
+        .expectErrorMessage("X", msg -> !msg.contains("VisibleForTesting"))
         .doTest();
   }
 

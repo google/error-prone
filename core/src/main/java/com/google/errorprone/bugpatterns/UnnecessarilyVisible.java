@@ -46,7 +46,7 @@ import javax.lang.model.element.Modifier;
     altNames = "RestrictInjectVisibility",
     summary =
         "Some methods (such as those annotated with @Inject or @Provides) are only intended to be"
-            + " called by a framework, and so should have default visibility",
+            + " called by a framework, and so should have default visibility.",
     severity = WARNING)
 public final class UnnecessarilyVisible extends BugChecker implements MethodTreeMatcher {
   private static final ImmutableSet<Modifier> VISIBILITY_MODIFIERS =
@@ -65,6 +65,17 @@ public final class UnnecessarilyVisible extends BugChecker implements MethodTree
                   .map(s::getName)
                   .collect(toImmutableSet()));
 
+  private static final Supplier<ImmutableSet<Name>> INJECT_ANNOTATIONS =
+      VisitorState.memoize(
+          s ->
+              Stream.of("com.google.inject.Inject", "javax.inject.Inject")
+                  .map(s::getName)
+                  .collect(toImmutableSet()));
+
+  private static final String VISIBLE_FOR_TESTING_CAVEAT =
+      " If this is only for testing purposes, consider annotating the element with"
+          + " @VisibleForTesting.";
+
   @Override
   public Description matchMethod(MethodTree tree, VisitorState state) {
     MethodSymbol symbol = getSymbol(tree);
@@ -82,6 +93,13 @@ public final class UnnecessarilyVisible extends BugChecker implements MethodTree
     if (badModifiers.isEmpty()) {
       return NO_MATCH;
     }
-    return describeMatch(tree, removeModifiers(tree.getModifiers(), state, badModifiers));
+    return buildDescription(tree)
+        .addFix(removeModifiers(tree.getModifiers(), state, badModifiers))
+        .setMessage(
+            message()
+                + (annotationsAmong(symbol, INJECT_ANNOTATIONS.get(state), state).isEmpty()
+                    ? ""
+                    : VISIBLE_FOR_TESTING_CAVEAT))
+        .build();
   }
 }
