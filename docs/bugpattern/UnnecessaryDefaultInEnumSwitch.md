@@ -77,7 +77,7 @@ boolean isOn(State state) {
     case OFF:
       return false;
     default:
-      throw new AssertionError("unknown state: " + state);
+      throw new AssertionError(state);
   }
 }
 ```
@@ -94,7 +94,7 @@ boolean isOn(State state) {
     case OFF:
       return false;
   }
-  throw new AssertionError("unknown state: " + state);
+  throw new AssertionError(state);
 }
 ```
 
