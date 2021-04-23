@@ -125,6 +125,7 @@ public final class ImmutableMemberCollection extends BugChecker implements Class
         classTree.getMembers().stream()
             .filter(member -> PRIVATE_FINAL_VAR_MATCHER.matches(member, state))
             .filter(member -> !EXCLUSIONS.matches(member, state))
+            .filter(member -> !isSuppressed(member))
             .map(VariableTree.class::cast)
             .flatMap(varTree -> stream(isReplaceable(varTree, state)))
             .collect(toImmutableMap(ReplaceableVar::symbol, var -> var));

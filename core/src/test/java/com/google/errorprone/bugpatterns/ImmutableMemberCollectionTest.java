@@ -48,6 +48,23 @@ public final class ImmutableMemberCollectionTest {
   }
 
   @Test
+  public void setInitConstructor_notMutatedButSuppressed_doesNothing() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            "import java.util.List;",
+            "class Test {",
+            "  @SuppressWarnings(\"ImmutableMemberCollection\")",
+            "  private final List<String> myList;",
+            "  Test(List<String> myList) {",
+            "    this.myList = myList;",
+            "  }",
+            "}")
+        .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
   public void listInitConstructor_notMutated_replacesTypeWithImmutableList() {
     refactoringHelper
         .addInputLines(
