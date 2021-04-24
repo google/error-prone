@@ -89,6 +89,17 @@ public class TemplateIntegrationTest extends CompilerBasedTest {
   }
 
   @Test
+  public void keyBindingError() {
+    IllegalArgumentException failure =
+        assertThrows(IllegalArgumentException.class, () -> runTest("KeyBindingErrorTemplate"));
+    assertThat(failure)
+        .hasMessageThat()
+        .matches(
+            "@AfterTemplate of .*\\.KeyBindingErrorTemplate defines arguments that are not present"
+                + " in all @BeforeTemplate methods: \\[b, c\\]");
+  }
+
+  @Test
   public void binary() throws IOException {
     runTest("BinaryTemplate");
   }

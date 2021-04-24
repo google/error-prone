@@ -16,6 +16,7 @@
 
 package com.google.errorprone.refaster;
 
+import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkState;
 
 import com.google.auto.value.AutoValue;
@@ -26,6 +27,7 @@ import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableClassToInstanceMap;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
+import com.google.common.collect.Sets;
 import com.google.errorprone.CodeTransformer;
 import com.google.errorprone.DescriptionListener;
 import com.google.errorprone.SubContext;
@@ -38,6 +40,7 @@ import java.io.Serializable;
 import java.lang.annotation.Annotation;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 import javax.tools.JavaFileManager;
 
 /**
@@ -83,7 +86,22 @@ public abstract class RefasterRule<M extends TemplateMatch, T extends Template<M
           beforeTemplate.getClass(),
           qualifiedTemplateClass);
     }
+
     for (Template<?> afterTemplate : afterTemplates) {
+      Set<String> missingArguments =
+          Sets.difference(
+              afterTemplate.expressionArgumentTypes().keySet(),
+              beforeTemplates.stream()
+                  .<Set<String>>map(t -> t.expressionArgumentTypes().keySet())
+                  .reduce(Sets::intersection)
+                  .get());
+      checkArgument(
+          missingArguments.isEmpty(),
+          "@AfterTemplate of %s defines arguments that are not present in all @BeforeTemplate"
+              + " methods: %s",
+          qualifiedTemplateClass,
+          missingArguments);
+
       checkState(
           afterTemplate.getClass().equals(templateType),
           "Expected all templates to be of type %s but found template of type %s in %s",
