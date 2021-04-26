@@ -16,6 +16,7 @@
 
 package com.google.errorprone.bugpatterns;
 
+import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -24,6 +25,9 @@ import org.junit.runners.JUnit4;
 /** Unit tests for {@link MustBeClosedChecker}. */
 @RunWith(JUnit4.class)
 public class MustBeClosedCheckerTest {
+
+  private final BugCheckerRefactoringTestHelper refactoringHelper =
+      BugCheckerRefactoringTestHelper.newInstance(MustBeClosedChecker.class, getClass());
 
   private final CompilationTestHelper compilationHelper =
       CompilationTestHelper.newInstance(MustBeClosedChecker.class, getClass());
@@ -36,5 +40,14 @@ public class MustBeClosedCheckerTest {
   @Test
   public void negativeCase() {
     compilationHelper.addSourceFile("MustBeClosedCheckerNegativeCases.java").doTest();
+  }
+
+  @Test
+  public void refactoring() {
+    refactoringHelper
+        .addInput("MustBeClosedCheckerPositiveCases.java")
+        .addOutput("MustBeClosedCheckerPositiveCases_expected.java")
+        .allowBreakingChanges() // The fix is best-effort, and some variable names may clash
+        .doTest();
   }
 }

@@ -23,7 +23,6 @@ class MustBeClosedCheckerPositiveCases {
 
   class DoesNotImplementAutoCloseable {
     @MustBeClosed
-    // BUG: Diagnostic contains: MustBeClosed should only annotate constructors of AutoCloseables.
     DoesNotImplementAutoCloseable() {}
 
     @MustBeClosed
@@ -51,7 +50,7 @@ class MustBeClosedCheckerPositiveCases {
 
     void sameClass() {
       // BUG: Diagnostic contains:
-      mustBeClosedAnnotatedMethod();
+      try (Closeable closeable = mustBeClosedAnnotatedMethod()) {}
     }
   }
 
@@ -62,7 +61,8 @@ class MustBeClosedCheckerPositiveCases {
 
     void sameClass() {
       // BUG: Diagnostic contains:
-      new MustBeClosedAnnotatedConstructor();
+      try (MustBeClosedAnnotatedConstructor mustBeClosedAnnotatedConstructor =
+          new MustBeClosedAnnotatedConstructor()) {}
     }
   }
 
@@ -73,18 +73,18 @@ class MustBeClosedCheckerPositiveCases {
 
   void positiveCase1() {
     // BUG: Diagnostic contains:
-    new Foo().mustBeClosedAnnotatedMethod();
+    try (Closeable closeable = new Foo().mustBeClosedAnnotatedMethod()) {}
   }
 
   void positiveCase2() {
     // BUG: Diagnostic contains:
-    Closeable closeable = new Foo().mustBeClosedAnnotatedMethod();
+    try (Closeable closeable = new Foo().mustBeClosedAnnotatedMethod()) {}
   }
 
   void positiveCase3() {
     try {
       // BUG: Diagnostic contains:
-      new Foo().mustBeClosedAnnotatedMethod();
+      try (Closeable closeable = new Foo().mustBeClosedAnnotatedMethod()) {}
     } finally {
     }
   }
@@ -92,26 +92,30 @@ class MustBeClosedCheckerPositiveCases {
   void positiveCase4() {
     try (Closeable c = new Foo().mustBeClosedAnnotatedMethod()) {
       // BUG: Diagnostic contains:
-      new Foo().mustBeClosedAnnotatedMethod();
+      try (Closeable closeable = new Foo().mustBeClosedAnnotatedMethod()) {}
     }
   }
 
   void positiveCase5() {
     // BUG: Diagnostic contains:
-    new MustBeClosedAnnotatedConstructor();
+    try (MustBeClosedAnnotatedConstructor mustBeClosedAnnotatedConstructor =
+        new MustBeClosedAnnotatedConstructor()) {}
   }
 
+  @MustBeClosed
   Closeable positiveCase6() {
     // BUG: Diagnostic contains:
     return new MustBeClosedAnnotatedConstructor();
   }
 
+  @MustBeClosed
   Closeable positiveCase7() {
     // BUG: Diagnostic contains:
     return new Foo().mustBeClosedAnnotatedMethod();
   }
 
   void positiveCase8() {
+    // Lambda has a fixless finding because no reasonable fix can be suggested
     Lambda expression =
         () -> {
           // BUG: Diagnostic contains:
@@ -121,6 +125,7 @@ class MustBeClosedCheckerPositiveCases {
 
   void positiveCase9() {
     new Foo() {
+      @MustBeClosed
       @Override
       public Closeable mustBeClosedAnnotatedMethod() {
         // BUG: Diagnostic contains:
@@ -130,28 +135,32 @@ class MustBeClosedCheckerPositiveCases {
   }
 
   int expressionDeclaredVariable() {
-    // BUG: Diagnostic contains:
-    int result = new Foo().mustBeClosedAnnotatedMethod().method();
+    int result;
+    try (Closeable closeable = new Foo().mustBeClosedAnnotatedMethod()) {
+      result = closeable.method();
+    }
     return result;
   }
 
   void tryWithResources_nonFinal() {
     Foo foo = new Foo();
     // BUG: Diagnostic contains:
-    Closeable closeable = foo.mustBeClosedAnnotatedMethod();
-    try {
-      closeable = null;
-    } finally {
-      closeable.close();
+    try (Closeable closeable = foo.mustBeClosedAnnotatedMethod()) {
+      try {
+        closeable = null;
+      } finally {
+        closeable.close();
+      }
     }
   }
 
   void tryWithResources_noClose() {
     Foo foo = new Foo();
     // BUG: Diagnostic contains:
-    Closeable closeable = foo.mustBeClosedAnnotatedMethod();
-    try {
-    } finally {
+    try (Closeable closeable = foo.mustBeClosedAnnotatedMethod()) {
+      try {
+      } finally {
+      }
     }
   }
 
@@ -171,7 +180,8 @@ class MustBeClosedCheckerPositiveCases {
 
   void twrStream() {
     // BUG: Diagnostic contains:
-    try (Stream<String> stream = new CloseableFoo().stream()) {}
+    try (CloseableFoo closeableFoo = new CloseableFoo();
+        Stream<String> stream = closeableFoo.stream()) {}
   }
 
   void constructorsTransitivelyRequiredAnnotation() {
@@ -180,6 +190,7 @@ class MustBeClosedCheckerPositiveCases {
       Parent() {}
 
       // BUG: Diagnostic contains: Invoked constructor is marked @MustBeClosed
+      @MustBeClosed
       Parent(int i) {
         this();
       }
@@ -190,9 +201,11 @@ class MustBeClosedCheckerPositiveCases {
 
     abstract class ChildExplicitConstructor extends Parent {
       // BUG: Diagnostic contains: Invoked constructor is marked @MustBeClosed
+      @MustBeClosed
       ChildExplicitConstructor() {}
 
       // BUG: Diagnostic contains: Invoked constructor is marked @MustBeClosed
+      @MustBeClosed
       ChildExplicitConstructor(int a) {
         super();
       }

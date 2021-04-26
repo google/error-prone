@@ -65,11 +65,15 @@ public class StreamResourceLeak extends AbstractMustBeClosedChecker
     if (!MATCHER.matches(tree, state)) {
       return NO_MATCH;
     }
-    return matchNewClassOrMethodInvocation(tree, state);
+    return matchNewClassOrMethodInvocation(tree, state, findingPerSite());
   }
 
   @Override
-  protected void addFix(Description.Builder description, ExpressionTree tree, VisitorState state) {
+  protected void addFix(
+      Description.Builder description,
+      ExpressionTree tree,
+      VisitorState state,
+      FixAggregator aggregator) {
     TreePath parentPath = state.getPath().getParentPath();
     Tree parent = parentPath.getLeaf();
     SuggestedFix.Builder fix = SuggestedFix.builder();

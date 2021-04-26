@@ -27,6 +27,7 @@ import static com.google.errorprone.matchers.Matchers.not;
 import static com.google.errorprone.matchers.method.MethodMatchers.constructor;
 
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.annotations.MustBeClosed;
 import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
@@ -46,6 +47,7 @@ import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree;
+import com.sun.source.util.TreePath;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import java.util.List;
 
@@ -55,13 +57,29 @@ import java.util.List;
  */
 @BugPattern(
     name = "MustBeClosedChecker",
-    summary = "The result of this method must be closed.",
+    altNames = "MustBeClosed",
+    summary =
+        "This method returns a resource which must be managed carefully, not just left for garbage"
+            + " collection. If it is a constant that will persist for the lifetime of your"
+            + " program, move it to a private static final field. Otherwise, you should use it in"
+            + " a try-with-resources.",
     severity = ERROR)
 public class MustBeClosedChecker extends AbstractMustBeClosedChecker
     implements MethodTreeMatcher,
         MethodInvocationTreeMatcher,
         NewClassTreeMatcher,
         ClassTreeMatcher {
+
+  private final boolean findingPerSite;
+
+  public MustBeClosedChecker() {
+    findingPerSite = true;
+  }
+
+  public MustBeClosedChecker(ErrorProneFlags flags) {
+    // Default to per-site, overridable with the flag
+    findingPerSite = !flags.getBoolean("MustBeClosedChecker:FindingPerMethod").orElse(false);
+  }
 
   private static final Matcher<Tree> IS_AUTOCLOSEABLE = isSubtypeOf(AutoCloseable.class);
 
@@ -104,13 +122,16 @@ public class MustBeClosedChecker extends AbstractMustBeClosedChecker
    */
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
+    if (!findingPerSite) {
+      return NO_MATCH;
+    }
     if (!HAS_MUST_BE_CLOSED_ANNOTATION.matches(tree, state)) {
       return NO_MATCH;
     }
     if (CONSTRUCTOR.matches(tree, state)) {
       return NO_MATCH;
     }
-    return matchNewClassOrMethodInvocation(tree, state);
+    return matchNewClassOrMethodInvocation(tree, state, findingPerSite());
   }
 
   /**
@@ -119,15 +140,19 @@ public class MustBeClosedChecker extends AbstractMustBeClosedChecker
    */
   @Override
   public Description matchNewClass(NewClassTree tree, VisitorState state) {
+    if (!findingPerSite) {
+      return NO_MATCH;
+    }
     if (!HAS_MUST_BE_CLOSED_ANNOTATION.matches(tree, state)) {
       return NO_MATCH;
     }
-    return matchNewClassOrMethodInvocation(tree, state);
+    return matchNewClassOrMethodInvocation(tree, state, findingPerSite());
   }
 
   @Override
-  protected Description matchNewClassOrMethodInvocation(ExpressionTree tree, VisitorState state) {
-    Description description = super.matchNewClassOrMethodInvocation(tree, state);
+  protected Description matchNewClassOrMethodInvocation(
+      ExpressionTree tree, VisitorState state, FixAggregator aggregator) {
+    Description description = super.matchNewClassOrMethodInvocation(tree, state, aggregator);
     if (description.equals(NO_MATCH)) {
       return NO_MATCH;
     }
@@ -172,9 +197,16 @@ public class MustBeClosedChecker extends AbstractMustBeClosedChecker
             buildDescription(methodTree)
                 .addFix(fix)
                 .setMessage(
-                    "Invoked constructor is marked @MustBeClosed, so this constructors must be "
+                    "Invoked constructor is marked @MustBeClosed, so this constructor must be "
                         + "marked @MustBeClosed too.")
                 .build());
+        if (!findingPerSite) {
+          state.reportMatch(
+              scanEntireMethodFor(
+                  HAS_MUST_BE_CLOSED_ANNOTATION,
+                  methodTree,
+                  state.withPath(TreePath.getPath(state.getPath(), methodTree))));
+        }
       }
     }
 
