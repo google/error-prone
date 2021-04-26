@@ -137,7 +137,9 @@ loadScripts(document, 'script');</script>
 <tr class="alt-color">
 <td class="col-first"><code>protected static <a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.Tree&gt;</code></td>
 <th class="col-second" scope="row"><span class="type-name-label">AbstractMustBeClosedChecker.</span><code><span class="member-name-link"><a href="../../bugpatterns/AbstractMustBeClosedChecker.html#HAS_MUST_BE_CLOSED_ANNOTATION">HAS_MUST_BE_CLOSED_ANNOTATION</a></span></code></th>
-<td class="col-last">&nbsp;</td>
+<td class="col-last">
+<div class="block">Matches trees annotated with <a href="../../annotations/MustBeClosed.html" title="annotation in com.google.errorprone.annotations"><code>MustBeClosed</code></a>.</div>
+</td>
 </tr>
 <tr class="row-color">
 <td class="col-first"><code>static <a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.Tree&gt;</code></td>
@@ -255,6 +257,15 @@ loadScripts(document, 'script');</script>
 <td class="col-last">
 <div class="block">Produces an extractor which, if the tree matches, extracts the type of that tree, as given by
  <a href="../../util/ASTHelpers.html#getType(com.sun.source.tree.Tree)"><code>ASTHelpers.getType(Tree)</code></a>.</div>
+</td>
+</tr>
+<tr class="row-color">
+<td class="col-first"><code>protected <a href="../Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
+<th class="col-second" scope="row"><span class="type-name-label">AbstractMustBeClosedChecker.</span><code><span class="member-name-link"><a href="../../bugpatterns/AbstractMustBeClosedChecker.html#scanEntireMethodFor(com.google.errorprone.matchers.Matcher,com.sun.source.tree.MethodTree,com.google.errorprone.VisitorState)">scanEntireMethodFor</a></span>&#8203;(<a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;? super com.sun.source.tree.MethodInvocationTree&gt;&nbsp;m,
+com.sun.source.tree.MethodTree&nbsp;tree,
+<a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
+<td class="col-last">
+<div class="block">Scans a method body for invocations matching <code>m</code>, and emitting them as a single fix.</div>
 </td>
 </tr>
 </tbody>

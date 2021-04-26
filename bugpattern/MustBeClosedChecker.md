@@ -1,6 +1,9 @@
 ---
 title: MustBeClosedChecker
-summary: The result of this method must be closed.
+summary: This method returns a resource which must be managed carefully, not just
+  left for garbage collection. If it is a constant that will persist for the lifetime
+  of your program, move it to a private static final field. Otherwise, you should
+  use it in a try-with-resources.
 layout: bugpattern
 tags: ''
 severity: ERROR
@@ -11,6 +14,7 @@ severity: ERROR
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+_Alternate names: MustBeClosed_
 
 ## The problem
 Methods or constructors annotated with `@MustBeClosed` require that the returned

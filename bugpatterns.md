@@ -321,7 +321,7 @@ __[MoreThanOneInjectableConstructor](bugpattern/MoreThanOneInjectableConstructor
 This class has more than one @Inject-annotated constructor. Please remove the @Inject annotation from all but one of them.
 
 __[MustBeClosedChecker](bugpattern/MustBeClosedChecker)__<br>
-The result of this method must be closed.
+This method returns a resource which must be managed carefully, not just left for garbage collection. If it is a constant that will persist for the lifetime of your program, move it to a private static final field. Otherwise, you should use it in a try-with-resources.
 
 __[NCopiesOfChar](bugpattern/NCopiesOfChar)__<br>
 The first argument to nCopies is the number of copies, and the second is the item to copy

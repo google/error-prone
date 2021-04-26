@@ -319,16 +319,18 @@ com.sun.source.tree.StatementTree&nbsp;lastTryStatement,
 </tr>
 <tr class="row-color">
 <td class="col-first"><code>protected void</code></td>
-<th class="col-second" scope="row"><span class="type-name-label">AbstractMustBeClosedChecker.</span><code><span class="member-name-link"><a href="../bugpatterns/AbstractMustBeClosedChecker.html#addFix(com.google.errorprone.matchers.Description.Builder,com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)">addFix</a></span>&#8203;(<a href="../matchers/Description.Builder.html" title="class in com.google.errorprone.matchers">Description.Builder</a>&nbsp;description,
+<th class="col-second" scope="row"><span class="type-name-label">AbstractMustBeClosedChecker.</span><code><span class="member-name-link"><a href="../bugpatterns/AbstractMustBeClosedChecker.html#addFix(com.google.errorprone.matchers.Description.Builder,com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState,com.google.errorprone.bugpatterns.AbstractMustBeClosedChecker.FixAggregator)">addFix</a></span>&#8203;(<a href="../matchers/Description.Builder.html" title="class in com.google.errorprone.matchers">Description.Builder</a>&nbsp;description,
 com.sun.source.tree.ExpressionTree&nbsp;tree,
-<a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
+<a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
+<a href="../bugpatterns/AbstractMustBeClosedChecker.FixAggregator.html" title="interface in com.google.errorprone.bugpatterns">AbstractMustBeClosedChecker.FixAggregator</a>&nbsp;aggregator)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
 <tr class="alt-color">
 <td class="col-first"><code>protected void</code></td>
-<th class="col-second" scope="row"><span class="type-name-label">StreamResourceLeak.</span><code><span class="member-name-link"><a href="../bugpatterns/StreamResourceLeak.html#addFix(com.google.errorprone.matchers.Description.Builder,com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)">addFix</a></span>&#8203;(<a href="../matchers/Description.Builder.html" title="class in com.google.errorprone.matchers">Description.Builder</a>&nbsp;description,
+<th class="col-second" scope="row"><span class="type-name-label">StreamResourceLeak.</span><code><span class="member-name-link"><a href="../bugpatterns/StreamResourceLeak.html#addFix(com.google.errorprone.matchers.Description.Builder,com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState,com.google.errorprone.bugpatterns.AbstractMustBeClosedChecker.FixAggregator)">addFix</a></span>&#8203;(<a href="../matchers/Description.Builder.html" title="class in com.google.errorprone.matchers">Description.Builder</a>&nbsp;description,
 com.sun.source.tree.ExpressionTree&nbsp;tree,
-<a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
+<a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
+<a href="../bugpatterns/AbstractMustBeClosedChecker.FixAggregator.html" title="interface in com.google.errorprone.bugpatterns">AbstractMustBeClosedChecker.FixAggregator</a>&nbsp;aggregator)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
 <tr class="row-color">
@@ -3111,17 +3113,19 @@ com.sun.source.tree.ExpressionTree&nbsp;argument)</code></th>
 </tr>
 <tr class="row-color">
 <td class="col-first"><code>protected <a href="../matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
-<th class="col-second" scope="row"><span class="type-name-label">AbstractMustBeClosedChecker.</span><code><span class="member-name-link"><a href="../bugpatterns/AbstractMustBeClosedChecker.html#matchNewClassOrMethodInvocation(com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)">matchNewClassOrMethodInvocation</a></span>&#8203;(com.sun.source.tree.ExpressionTree&nbsp;tree,
-<a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
+<th class="col-second" scope="row"><span class="type-name-label">AbstractMustBeClosedChecker.</span><code><span class="member-name-link"><a href="../bugpatterns/AbstractMustBeClosedChecker.html#matchNewClassOrMethodInvocation(com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState,com.google.errorprone.bugpatterns.AbstractMustBeClosedChecker.FixAggregator)">matchNewClassOrMethodInvocation</a></span>&#8203;(com.sun.source.tree.ExpressionTree&nbsp;tree,
+<a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
+<a href="../bugpatterns/AbstractMustBeClosedChecker.FixAggregator.html" title="interface in com.google.errorprone.bugpatterns">AbstractMustBeClosedChecker.FixAggregator</a>&nbsp;aggregator)</code></th>
 <td class="col-last">
-<div class="block">Check that constructors and methods annotated with <a href="../annotations/MustBeClosed.html" title="annotation in com.google.errorprone.annotations"><code>MustBeClosed</code></a> occur within the
- resource variable initializer of a try-with-resources statement.</div>
+<div class="block">Check that the expression <code>tree</code> occurs within the resource variable initializer of a
+ try-with-resources statement.</div>
 </td>
 </tr>
 <tr class="alt-color">
 <td class="col-first"><code>protected <a href="../matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
-<th class="col-second" scope="row"><span class="type-name-label">MustBeClosedChecker.</span><code><span class="member-name-link"><a href="../bugpatterns/MustBeClosedChecker.html#matchNewClassOrMethodInvocation(com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)">matchNewClassOrMethodInvocation</a></span>&#8203;(com.sun.source.tree.ExpressionTree&nbsp;tree,
-<a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
+<th class="col-second" scope="row"><span class="type-name-label">MustBeClosedChecker.</span><code><span class="member-name-link"><a href="../bugpatterns/MustBeClosedChecker.html#matchNewClassOrMethodInvocation(com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState,com.google.errorprone.bugpatterns.AbstractMustBeClosedChecker.FixAggregator)">matchNewClassOrMethodInvocation</a></span>&#8203;(com.sun.source.tree.ExpressionTree&nbsp;tree,
+<a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
+<a href="../bugpatterns/AbstractMustBeClosedChecker.FixAggregator.html" title="interface in com.google.errorprone.bugpatterns">AbstractMustBeClosedChecker.FixAggregator</a>&nbsp;aggregator)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
 <tr class="row-color">
@@ -3655,12 +3659,21 @@ com.sun.tools.javac.code.Symbol&nbsp;owner,
 </td>
 </tr>
 <tr class="alt-color">
+<td class="col-first"><code>protected <a href="../matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
+<th class="col-second" scope="row"><span class="type-name-label">AbstractMustBeClosedChecker.</span><code><span class="member-name-link"><a href="../bugpatterns/AbstractMustBeClosedChecker.html#scanEntireMethodFor(com.google.errorprone.matchers.Matcher,com.sun.source.tree.MethodTree,com.google.errorprone.VisitorState)">scanEntireMethodFor</a></span>&#8203;(<a href="../matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;? super com.sun.source.tree.MethodInvocationTree&gt;&nbsp;m,
+com.sun.source.tree.MethodTree&nbsp;tree,
+<a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
+<td class="col-last">
+<div class="block">Scans a method body for invocations matching <code>m</code>, and emitting them as a single fix.</div>
+</td>
+</tr>
+<tr class="row-color">
 <td class="col-first"><code>boolean</code></td>
 <th class="col-second" scope="row"><span class="type-name-label">BugChecker.</span><code><span class="member-name-link"><a href="../bugpatterns/BugChecker.html#suppressedByAnyOf(java.util.Set,com.google.errorprone.VisitorState)">suppressedByAnyOf</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a>&lt;com.sun.tools.javac.util.Name&gt;&nbsp;annotations,
 <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;s)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>protected abstract <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="../fixes/Fix.html" title="interface in com.google.errorprone.fixes">Fix</a>&gt;</code></td>
 <th class="col-second" scope="row"><span class="type-name-label">AbstractToString.</span><code><span class="member-name-link"><a href="../bugpatterns/AbstractToString.html#toStringFix(com.sun.source.tree.Tree,com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)">toStringFix</a></span>&#8203;(com.sun.source.tree.Tree&nbsp;parent,
 com.sun.source.tree.ExpressionTree&nbsp;expression,
@@ -3669,56 +3682,56 @@ com.sun.source.tree.ExpressionTree&nbsp;expression,
 <div class="block">Constructs a fix for an explicit toString call, e.g.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>protected <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="../fixes/Fix.html" title="interface in com.google.errorprone.fixes">Fix</a>&gt;</code></td>
 <th class="col-second" scope="row"><span class="type-name-label">ArrayToString.</span><code><span class="member-name-link"><a href="../bugpatterns/ArrayToString.html#toStringFix(com.sun.source.tree.Tree,com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)">toStringFix</a></span>&#8203;(com.sun.source.tree.Tree&nbsp;parent,
 com.sun.source.tree.ExpressionTree&nbsp;tree,
 <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>protected <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="../fixes/Fix.html" title="interface in com.google.errorprone.fixes">Fix</a>&gt;</code></td>
 <th class="col-second" scope="row"><span class="type-name-label">LiteProtoToString.</span><code><span class="member-name-link"><a href="../bugpatterns/LiteProtoToString.html#toStringFix(com.sun.source.tree.Tree,com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)">toStringFix</a></span>&#8203;(com.sun.source.tree.Tree&nbsp;parent,
 com.sun.source.tree.ExpressionTree&nbsp;tree,
 <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>protected <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="../fixes/Fix.html" title="interface in com.google.errorprone.fixes">Fix</a>&gt;</code></td>
 <th class="col-second" scope="row"><span class="type-name-label">ObjectToString.</span><code><span class="member-name-link"><a href="../bugpatterns/ObjectToString.html#toStringFix(com.sun.source.tree.Tree,com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)">toStringFix</a></span>&#8203;(com.sun.source.tree.Tree&nbsp;parent,
 com.sun.source.tree.ExpressionTree&nbsp;tree,
 <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>protected <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="../fixes/Fix.html" title="interface in com.google.errorprone.fixes">Fix</a>&gt;</code></td>
 <th class="col-second" scope="row"><span class="type-name-label">StreamToString.</span><code><span class="member-name-link"><a href="../bugpatterns/StreamToString.html#toStringFix(com.sun.source.tree.Tree,com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)">toStringFix</a></span>&#8203;(com.sun.source.tree.Tree&nbsp;parent,
 com.sun.source.tree.ExpressionTree&nbsp;tree,
 <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>protected <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="../fixes/Fix.html" title="interface in com.google.errorprone.fixes">Fix</a>&gt;</code></td>
 <th class="col-second" scope="row"><span class="type-name-label">SymbolToString.</span><code><span class="member-name-link"><a href="../bugpatterns/SymbolToString.html#toStringFix(com.sun.source.tree.Tree,com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)">toStringFix</a></span>&#8203;(com.sun.source.tree.Tree&nbsp;parent,
 com.sun.source.tree.ExpressionTree&nbsp;tree,
 <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>protected <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="../fixes/Fix.html" title="interface in com.google.errorprone.fixes">Fix</a>&gt;</code></td>
 <th class="col-second" scope="row"><span class="type-name-label">TreeToString.</span><code><span class="member-name-link"><a href="../bugpatterns/TreeToString.html#toStringFix(com.sun.source.tree.Tree,com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)">toStringFix</a></span>&#8203;(com.sun.source.tree.Tree&nbsp;parent,
 com.sun.source.tree.ExpressionTree&nbsp;tree,
 <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>protected <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="../fixes/Fix.html" title="interface in com.google.errorprone.fixes">Fix</a>&gt;</code></td>
 <th class="col-second" scope="row"><span class="type-name-label">TypeToString.</span><code><span class="member-name-link"><a href="../bugpatterns/TypeToString.html#toStringFix(com.sun.source.tree.Tree,com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)">toStringFix</a></span>&#8203;(com.sun.source.tree.Tree&nbsp;parent,
 com.sun.source.tree.ExpressionTree&nbsp;tree,
 <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>static <a href="../bugpatterns/StaticImports.StaticImportInfo.html" title="class in com.google.errorprone.bugpatterns">StaticImports.StaticImportInfo</a></code></td>
 <th class="col-second" scope="row"><span class="type-name-label">StaticImports.</span><code><span class="member-name-link"><a href="../bugpatterns/StaticImports.html#tryCreate(com.sun.source.tree.ImportTree,com.google.errorprone.VisitorState)">tryCreate</a></span>&#8203;(com.sun.source.tree.ImportTree&nbsp;tree,
 <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
@@ -3726,13 +3739,13 @@ com.sun.source.tree.ExpressionTree&nbsp;tree,
 <div class="block">Returns a <a href="../bugpatterns/StaticImports.StaticImportInfo.html" title="class in com.google.errorprone.bugpatterns"><code>StaticImports.StaticImportInfo</code></a> if the given import is a static single-type import.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>static <a href="../bugpatterns/StaticImports.StaticImportInfo.html" title="class in com.google.errorprone.bugpatterns">StaticImports.StaticImportInfo</a></code></td>
 <th class="col-second" scope="row"><span class="type-name-label">StaticImports.</span><code><span class="member-name-link"><a href="../bugpatterns/StaticImports.html#tryCreate(com.sun.source.tree.MemberSelectTree,com.google.errorprone.VisitorState)">tryCreate</a></span>&#8203;(com.sun.source.tree.MemberSelectTree&nbsp;access,
 <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>static <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="../fixes/Fix.html" title="interface in com.google.errorprone.fixes">Fix</a>&gt;</code></td>
 <th class="col-second" scope="row"><span class="type-name-label">AssertThrowsUtils.</span><code><span class="member-name-link"><a href="../bugpatterns/AssertThrowsUtils.html#tryFailToAssertThrows(com.sun.source.tree.TryTree,java.util.List,java.util.Optional,com.google.errorprone.VisitorState)">tryFailToAssertThrows</a></span>&#8203;(com.sun.source.tree.TryTree&nbsp;tryTree,
 <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;? extends com.sun.source.tree.StatementTree&gt;&nbsp;throwingStatements,
