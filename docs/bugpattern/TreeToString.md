@@ -3,7 +3,8 @@ compiled, as it discards whitespace and comments.
 
 This check only runs inside Error Prone code. Suggested replacements include:
 
-*   Prefer `VisitorState#escape` for escaping constants in generated code.
+*   Prefer `VisitorState#getConstantExpression` for escaping constants in
+    generated code.
 *   `VisitorState#getSourceForNode` : it will give you the original source text.
     Note that for synthetic trees (e.g.: implicit constructors), that source may
     be `null`.
