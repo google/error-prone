@@ -57,6 +57,7 @@ import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.code.Symbol;
+import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.tree.JCTree;
@@ -64,6 +65,7 @@ import com.sun.tools.javac.util.Name;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
+import javax.lang.model.element.NestingKind;
 
 /** Finds fields which can be safely made static. */
 @BugPattern(
@@ -185,6 +187,17 @@ public final class FieldCanBeStatic extends BugChecker implements VariableTreeMa
         || !tree.getModifiers().getFlags().contains(FINAL)
         || symbol.isStatic()
         || !symbol.getKind().equals(FIELD)) {
+      return NO_MATCH;
+    }
+    ClassSymbol enclClass = symbol.owner.enclClass();
+    if (enclClass == null) {
+      return NO_MATCH;
+    }
+    if (!enclClass.getNestingKind().equals(NestingKind.TOP_LEVEL)
+        && !enclClass.isStatic()
+        && symbol.getConstantValue() == null) {
+      // JLS 8.1.3: inner classes cannot declare static members, unless the member is a constant
+      // variable
       return NO_MATCH;
     }
     if (!isTypeKnownImmutable(getType(tree), state)) {
