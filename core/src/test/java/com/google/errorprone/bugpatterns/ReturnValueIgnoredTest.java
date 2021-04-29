@@ -18,6 +18,7 @@ package com.google.errorprone.bugpatterns;
 
 import static org.junit.Assume.assumeTrue;
 
+import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
 import com.google.errorprone.util.RuntimeVersion;
 import org.junit.Test;
@@ -30,6 +31,9 @@ public class ReturnValueIgnoredTest {
 
   private final CompilationTestHelper compilationHelper =
       CompilationTestHelper.newInstance(ReturnValueIgnored.class, getClass());
+
+  private final BugCheckerRefactoringTestHelper refactoringHelper =
+      BugCheckerRefactoringTestHelper.newInstance(ReturnValueIgnored.class, getClass());
 
   @Test
   public void testPositiveCases() {
@@ -406,6 +410,31 @@ public class ReturnValueIgnoredTest {
             "    // BUG: Diagnostic contains: ReturnValueIgnored",
             "    Duration.newBuilder().setSeconds(4).buildPartial();",
             "    Duration duration = Duration.newBuilder().setSeconds(4).buildPartial();",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void refactoring() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            "import java.util.Optional;",
+            "import java.util.stream.Stream;",
+            "final class Test {",
+            "  public void f() {",
+            "    Optional.of(42).orElseThrow(AssertionError::new);",
+            "    Stream.of(Optional.of(42)).forEach(o -> o.orElseThrow(AssertionError::new));",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "import java.util.Optional;",
+            "import java.util.stream.Stream;",
+            "final class Test {",
+            "  public void f() {",
+            "    Stream.of(Optional.of(42)).forEach(o -> o.orElseThrow(AssertionError::new));",
             "  }",
             "}")
         .doTest();

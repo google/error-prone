@@ -49,6 +49,7 @@ import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
 import com.google.errorprone.util.ASTHelpers;
+import com.sun.source.tree.ExpressionStatementTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.LambdaExpressionTree;
 import com.sun.source.tree.MemberReferenceTree;
@@ -218,7 +219,7 @@ public abstract class AbstractReturnValueIgnored extends BugChecker
     Type returnType =
         ASTHelpers.getReturnType(((JCMethodInvocation) methodInvocationTree).getMethodSelect());
 
-    Fix fix;
+    Fix fix = SuggestedFix.emptyFix();
     Symbol symbol = getSymbol(identifierExpr);
     if (identifierExpr != null
         && symbol != null
@@ -232,7 +233,9 @@ public abstract class AbstractReturnValueIgnored extends BugChecker
     } else {
       // Unclear what the programmer intended.  Delete since we don't know what else to do.
       Tree parent = state.getPath().getParentPath().getLeaf();
-      fix = SuggestedFix.delete(parent);
+      if (parent instanceof ExpressionStatementTree) {
+        fix = SuggestedFix.delete(parent);
+      }
     }
     return describeMatch(methodInvocationTree, fix);
   }
