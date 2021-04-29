@@ -37,6 +37,7 @@ import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import java.util.Optional;
 import javax.lang.model.element.ElementKind;
+import javax.lang.model.element.Name;
 
 /** @author eaftan@google.com (Eddie Aftandilian) */
 @BugPattern(
@@ -151,5 +152,11 @@ public class CheckReturnValue extends AbstractReturnValueIgnored
       return buildDescription(tree).setMessage(String.format(BOTH_ERROR, "class")).build();
     }
     return Description.NO_MATCH;
+  }
+
+  @Override
+  protected String getMessage(Name name) {
+    return String.format(
+        "Ignored return value of '%s', which is annotated with @CheckReturnValue", name);
   }
 }

@@ -78,6 +78,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Queue;
 import java.util.Set;
+import javax.lang.model.element.Name;
 import javax.lang.model.type.TypeKind;
 
 /**
@@ -237,7 +238,10 @@ public abstract class AbstractReturnValueIgnored extends BugChecker
         fix = SuggestedFix.delete(parent);
       }
     }
-    return describeMatch(methodInvocationTree, fix);
+    return buildDescription(methodInvocationTree)
+        .addFix(fix)
+        .setMessage(getMessage(getSymbol(methodInvocationTree).getSimpleName()))
+        .build();
   }
 
   /**
@@ -246,7 +250,17 @@ public abstract class AbstractReturnValueIgnored extends BugChecker
    */
   protected Description describeReturnValueIgnored(
       MemberReferenceTree memberReferenceTree, VisitorState state) {
-    return describeMatch(memberReferenceTree);
+    return buildDescription(memberReferenceTree)
+        .setMessage(getMessage(memberReferenceTree.getName()))
+        .build();
+  }
+
+  /**
+   * Returns the diagnostic message. Can be overridden by subclasses to provide a customized
+   * diagnostic that includes the name of the invoked method.
+   */
+  protected String getMessage(Name name) {
+    return message();
   }
 
   private static final Matcher<ExpressionTree> FAIL_METHOD =

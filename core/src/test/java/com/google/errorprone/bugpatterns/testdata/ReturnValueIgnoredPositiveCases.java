@@ -28,7 +28,7 @@ import java.util.Locale;
 public class ReturnValueIgnoredPositiveCases {
   String a = "thing";
 
-  // BUG: Diagnostic contains: Return value of this method must be used
+  // BUG: Diagnostic contains: Return value of 'valueOf' must be used
   private Runnable r = () -> String.valueOf("");
 
   { // String methods
@@ -139,25 +139,25 @@ public class ReturnValueIgnoredPositiveCases {
   Object[] objects = {new Object(), new Object()};
 
   { // Arrays methods
-    // BUG: Diagnostic contains: Return value of this method must be used
+    // BUG: Diagnostic contains: Return value of 'asList' must be used
     Arrays.asList(5, 4, 3, 2, 1);
-    // BUG: Diagnostic contains: Return value of this method must be used
+    // BUG: Diagnostic contains: Return value of 'binarySearch' must be used
     Arrays.binarySearch(numbers, 3);
-    // BUG: Diagnostic contains: Return value of this method must be used
+    // BUG: Diagnostic contains: Return value of 'copyOf' must be used
     Arrays.copyOf(numbers, 3);
-    // BUG: Diagnostic contains: Return value of this method must be used
+    // BUG: Diagnostic contains: Return value of 'copyOfRange' must be used
     Arrays.copyOfRange(numbers, 1, 3);
-    // BUG: Diagnostic contains: Return value of this method must be used
+    // BUG: Diagnostic contains: Return value of 'deepEquals' must be used
     Arrays.deepEquals(objects, objects);
-    // BUG: Diagnostic contains: Return value of this method must be used
+    // BUG: Diagnostic contains: Return value of 'deepHashCode' must be used
     Arrays.deepHashCode(objects);
-    // BUG: Diagnostic contains: Return value of this method must be used
+    // BUG: Diagnostic contains: Return value of 'deepToString' must be used
     Arrays.deepToString(objects);
-    // BUG: Diagnostic contains: Return value of this method must be used
+    // BUG: Diagnostic contains: Return value of 'equals' must be used
     Arrays.equals(objects, objects);
-    // BUG: Diagnostic contains: Return value of this method must be used
+    // BUG: Diagnostic contains: Return value of 'hashCode' must be used
     Arrays.hashCode(objects);
-    // BUG: Diagnostic contains: Return value of this method must be used
+    // BUG: Diagnostic contains: Return value of 'toString' must be used
     Arrays.toString(objects);
   }
 }

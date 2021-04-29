@@ -39,6 +39,7 @@ import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import java.util.regex.Pattern;
 import javax.lang.model.element.Modifier;
+import javax.lang.model.element.Name;
 
 /** @author alexeagle@google.com (Alex Eagle) */
 @BugPattern(
@@ -269,5 +270,10 @@ public class ReturnValueIgnored extends AbstractReturnValueIgnored {
   @Override
   public Matcher<? super ExpressionTree> specializedMatcher() {
     return matcher;
+  }
+
+  @Override
+  protected String getMessage(Name name) {
+    return String.format("Return value of '%s' must be used", name);
   }
 }
