@@ -22,7 +22,7 @@ handled properly, however `try` blocks that catch `Exception` or `Throwable` (or
 methods that `throws` either type) make it difficult to recognize that
 interruption may occur.
 
-For advice on how to handle `InterruptedException`, see https://www.ibm.com/developerworks/library/j-jtp05236/index.html
+For advice on how to handle `InterruptedException`, see http://web.archive.org/web/20201025132525/https://www.ibm.com/developerworks/library/j-jtp05236/index.html
 
 ## Suppression
 

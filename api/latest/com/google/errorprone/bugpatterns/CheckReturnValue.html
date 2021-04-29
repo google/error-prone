@@ -15,7 +15,7 @@
 <script type="text/javascript" src="../../../../script-dir/jquery-ui.min.js"></script>
 </head>
 <body class="class-declaration-page">
-<script type="text/javascript">var data = {"i0":10,"i1":10,"i2":10};
+<script type="text/javascript">var data = {"i0":10,"i1":10,"i2":10,"i3":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "alt-color";
 var rowColor = "row-color";
@@ -150,6 +150,13 @@ implements <a href="BugChecker.MethodTreeMatcher.html" title="interface in com.g
 </thead>
 <tbody>
 <tr class="alt-color" id="i0">
+<td class="col-first"><code>protected <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#getMessage(javax.lang.model.element.Name)">getMessage</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/javax/lang/model/element/Name.html" title="class or interface in javax.lang.model.element" class="external-link">Name</a>&nbsp;name)</code></th>
+<td class="col-last">
+<div class="block">Returns the diagnostic message.</div>
+</td>
+</tr>
+<tr class="row-color" id="i1">
 <td class="col-first"><code><a href="../matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#matchClass(com.sun.source.tree.ClassTree,com.google.errorprone.VisitorState)">matchClass</a></span>&#8203;(com.sun.source.tree.ClassTree&nbsp;tree,
 <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
@@ -158,7 +165,7 @@ implements <a href="BugChecker.MethodTreeMatcher.html" title="interface in com.g
  applied to a class (or interface or enum).</div>
 </td>
 </tr>
-<tr class="row-color" id="i1">
+<tr class="alt-color" id="i2">
 <td class="col-first"><code><a href="../matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#matchMethod(com.sun.source.tree.MethodTree,com.google.errorprone.VisitorState)">matchMethod</a></span>&#8203;(com.sun.source.tree.MethodTree&nbsp;tree,
 <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
@@ -166,7 +173,7 @@ implements <a href="BugChecker.MethodTreeMatcher.html" title="interface in com.g
 <div class="block">Validate <code>@CheckReturnValue</code> and <a href="../annotations/CanIgnoreReturnValue.html" title="annotation in com.google.errorprone.annotations"><code>CanIgnoreReturnValue</code></a> usage on methods.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i2">
+<tr class="row-color" id="i3">
 <td class="col-first"><code><a href="../matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.ExpressionTree&gt;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#specializedMatcher()">specializedMatcher</a></span>()</code></th>
 <td class="col-last">
@@ -254,6 +261,19 @@ implements <a href="BugChecker.MethodTreeMatcher.html" title="interface in com.g
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code><a href="BugChecker.ClassTreeMatcher.html#matchClass(com.sun.source.tree.ClassTree,com.google.errorprone.VisitorState)">matchClass</a></code>&nbsp;in interface&nbsp;<code><a href="BugChecker.ClassTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.ClassTreeMatcher</a></code></dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="getMessage(javax.lang.model.element.Name)">
+<h3>getMessage</h3>
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="member-name">getMessage</span>&#8203;(<span class="parameters"><a href="https://docs.oracle.com/javase/8/docs/api/javax/lang/model/element/Name.html" title="class or interface in javax.lang.model.element" class="external-link">Name</a>&nbsp;name)</span></div>
+<div class="block"><span class="descfrm-type-label">Description copied from class:&nbsp;<code><a href="AbstractReturnValueIgnored.html#getMessage(javax.lang.model.element.Name)">AbstractReturnValueIgnored</a></code></span></div>
+<div class="block">Returns the diagnostic message. Can be overridden by subclasses to provide a customized
+ diagnostic that includes the name of the invoked method.</div>
+<dl class="notes">
+<dt>Overrides:</dt>
+<dd><code><a href="AbstractReturnValueIgnored.html#getMessage(javax.lang.model.element.Name)">getMessage</a></code>&nbsp;in class&nbsp;<code><a href="AbstractReturnValueIgnored.html" title="class in com.google.errorprone.bugpatterns">AbstractReturnValueIgnored</a></code></dd>
 </dl>
 </section>
 </li>
