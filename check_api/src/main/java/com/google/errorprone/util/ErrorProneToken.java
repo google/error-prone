@@ -61,6 +61,21 @@ public class ErrorProneToken {
         token.comments.stream().map(c -> new OffsetComment(c, offset)).collect(toList()));
   }
 
+  public boolean hasName() {
+    // the subclasses of Token jealously guard their secrets;
+    // inspect class names to figure out which hazzers are supported by a given token
+    return token.getClass().getSimpleName().contentEquals("NamedToken");
+  }
+
+  public boolean hasStringVal() {
+    String name = token.getClass().getSimpleName();
+    return name.contentEquals("StringToken") || name.contentEquals("NumericToken");
+  }
+
+  public boolean hasRadix() {
+    return token.getClass().getSimpleName().contentEquals("NumericToken");
+  }
+
   public Name name() {
     return token.name();
   }
