@@ -224,6 +224,9 @@ A class can be annotated with at most one scope annotation.
 __[InjectOnMemberAndConstructor](bugpattern/InjectOnMemberAndConstructor)__<br>
 Members shouldn&#39;t be annotated with @Inject if constructor is already annotated @Inject
 
+__[InlineMeValidator](bugpattern/InlineMeValidator)__<br>
+Ensures that the @InlineMe annotation is used correctly.
+
 __[InstantTemporalUnit](bugpattern/InstantTemporalUnit)__<br>
 Instant APIs only work for NANOS, MICROS, MILLIS, SECONDS, MINUTES, HOURS, HALF_DAYS and DAYS.
 
@@ -735,6 +738,12 @@ Injected constructors cannot be optional nor have binding annotations
 
 __[InlineFormatString](bugpattern/InlineFormatString)__<br>
 Prefer to create format strings inline, instead of extracting them to a single-use constant
+
+__[InlineMeInliner](bugpattern/InlineMeInliner)__<br>
+This API is deprecated and the caller should be &#39;inlined&#39;.
+
+__[InlineMeSuggester](bugpattern/InlineMeSuggester)__<br>
+Recommends annotating a deprecated, inlineable API with @InlineMe.
 
 __[InputStreamSlowMultibyteRead](bugpattern/InputStreamSlowMultibyteRead)__<br>
 Please also override int read(byte[], int, int), otherwise multi-byte reads from this input stream are likely to be slow.

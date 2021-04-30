@@ -117,26 +117,30 @@ loadScripts(document, 'script');</script>
 </td>
 </tr>
 <tr class="row-color">
+<th class="col-first" scope="row"><a href="#com.google.errorprone.bugpatterns.inlineme">com.google.errorprone.bugpatterns.inlineme</a></th>
+<td class="col-last">&nbsp;</td>
+</tr>
+<tr class="alt-color">
 <th class="col-first" scope="row"><a href="#com.google.errorprone.bugpatterns.javadoc">com.google.errorprone.bugpatterns.javadoc</a></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <th class="col-first" scope="row"><a href="#com.google.errorprone.bugpatterns.nullness">com.google.errorprone.bugpatterns.nullness</a></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <th class="col-first" scope="row"><a href="#com.google.errorprone.bugpatterns.overloading">com.google.errorprone.bugpatterns.overloading</a></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <th class="col-first" scope="row"><a href="#com.google.errorprone.bugpatterns.threadsafety">com.google.errorprone.bugpatterns.threadsafety</a></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <th class="col-first" scope="row"><a href="#com.google.errorprone.bugpatterns.time">com.google.errorprone.bugpatterns.time</a></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <th class="col-first" scope="row"><a href="#com.google.errorprone.scanner">com.google.errorprone.scanner</a></th>
 <td class="col-last">&nbsp;</td>
 </tr>
@@ -3286,6 +3290,47 @@ int&nbsp;count)</code></th>
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../inject/guice/ProvidesMethodOutsideOfModule.html" title="class in com.google.errorprone.bugpatterns.inject.guice">ProvidesMethodOutsideOfModule</a></span></code></th>
 <td class="col-last">&nbsp;</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="com.google.errorprone.bugpatterns.inlineme">
+<h2>Uses of <a href="../BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a> in <a href="../inlineme/package-summary.html">com.google.errorprone.bugpatterns.inlineme</a></h2>
+<div class="use-summary">
+<table class="summary-table">
+<caption><span>Subclasses of <a href="../BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a> in <a href="../inlineme/package-summary.html">com.google.errorprone.bugpatterns.inlineme</a></span></caption>
+<thead>
+<tr>
+<th class="col-first" scope="col">Modifier and Type</th>
+<th class="col-second" scope="col">Class</th>
+<th class="col-last" scope="col">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="alt-color">
+<td class="col-first"><code>class&nbsp;</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="../inlineme/Inliner.html" title="class in com.google.errorprone.bugpatterns.inlineme">Inliner</a></span></code></th>
+<td class="col-last">
+<div class="block">Checker that performs the inlining at call-sites (where the invoked APIs are annotated as
+ <code>@InlineMe</code>).</div>
+</td>
+</tr>
+<tr class="row-color">
+<td class="col-first"><code>class&nbsp;</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="../inlineme/Suggester.html" title="class in com.google.errorprone.bugpatterns.inlineme">Suggester</a></span></code></th>
+<td class="col-last">
+<div class="block">Checker that recommends using <code>@InlineMe</code> on single-statement deprecated APIs.</div>
+</td>
+</tr>
+<tr class="alt-color">
+<td class="col-first"><code>class&nbsp;</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="../inlineme/Validator.html" title="class in com.google.errorprone.bugpatterns.inlineme">Validator</a></span></code></th>
+<td class="col-last">
+<div class="block">Checker that ensures the <code>@InlineMe</code> annotation is used correctly.</div>
+</td>
 </tr>
 </tbody>
 </table>

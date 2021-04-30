@@ -101,14 +101,18 @@ loadScripts(document, 'script');</script>
 </td>
 </tr>
 <tr class="row-color">
-<th class="col-first" scope="row"><a href="#com.google.errorprone.bugpatterns.javadoc">com.google.errorprone.bugpatterns.javadoc</a></th>
+<th class="col-first" scope="row"><a href="#com.google.errorprone.bugpatterns.inlineme">com.google.errorprone.bugpatterns.inlineme</a></th>
 <td class="col-last">&nbsp;</td>
 </tr>
 <tr class="alt-color">
-<th class="col-first" scope="row"><a href="#com.google.errorprone.bugpatterns.nullness">com.google.errorprone.bugpatterns.nullness</a></th>
+<th class="col-first" scope="row"><a href="#com.google.errorprone.bugpatterns.javadoc">com.google.errorprone.bugpatterns.javadoc</a></th>
 <td class="col-last">&nbsp;</td>
 </tr>
 <tr class="row-color">
+<th class="col-first" scope="row"><a href="#com.google.errorprone.bugpatterns.nullness">com.google.errorprone.bugpatterns.nullness</a></th>
+<td class="col-last">&nbsp;</td>
+</tr>
+<tr class="alt-color">
 <th class="col-first" scope="row"><a href="#com.google.errorprone.bugpatterns.threadsafety">com.google.errorprone.bugpatterns.threadsafety</a></th>
 <td class="col-last">&nbsp;</td>
 </tr>
@@ -726,6 +730,39 @@ loadScripts(document, 'script');</script>
 <div class="block">This checker matches methods that 1) are not themselves annotated with @Inject 2) descend from a
  method that is annotated with @javax.inject.Inject 3) do not descent from a method that is
  annotated with @com.google.inject.Inject</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="com.google.errorprone.bugpatterns.inlineme">
+<h2>Uses of <a href="../BugChecker.MethodTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.MethodTreeMatcher</a> in <a href="../inlineme/package-summary.html">com.google.errorprone.bugpatterns.inlineme</a></h2>
+<div class="use-summary">
+<table class="summary-table">
+<caption><span>Classes in <a href="../inlineme/package-summary.html">com.google.errorprone.bugpatterns.inlineme</a> that implement <a href="../BugChecker.MethodTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.MethodTreeMatcher</a></span></caption>
+<thead>
+<tr>
+<th class="col-first" scope="col">Modifier and Type</th>
+<th class="col-second" scope="col">Class</th>
+<th class="col-last" scope="col">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="alt-color">
+<td class="col-first"><code>class&nbsp;</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="../inlineme/Suggester.html" title="class in com.google.errorprone.bugpatterns.inlineme">Suggester</a></span></code></th>
+<td class="col-last">
+<div class="block">Checker that recommends using <code>@InlineMe</code> on single-statement deprecated APIs.</div>
+</td>
+</tr>
+<tr class="row-color">
+<td class="col-first"><code>class&nbsp;</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="../inlineme/Validator.html" title="class in com.google.errorprone.bugpatterns.inlineme">Validator</a></span></code></th>
+<td class="col-last">
+<div class="block">Checker that ensures the <code>@InlineMe</code> annotation is used correctly.</div>
 </td>
 </tr>
 </tbody>

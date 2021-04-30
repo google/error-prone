@@ -1885,6 +1885,8 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Bug patterns related to <a href="https://github.com/google/guice">Guice</a>.</div>
 </dd>
+<dt><a href="com/google/errorprone/bugpatterns/inlineme/package-summary.html">com.google.errorprone.bugpatterns.inlineme</a> - package com.google.errorprone.bugpatterns.inlineme</dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/javadoc/package-summary.html">com.google.errorprone.bugpatterns.javadoc</a> - package com.google.errorprone.bugpatterns.javadoc</dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/nullness/package-summary.html">com.google.errorprone.bugpatterns.nullness</a> - package com.google.errorprone.bugpatterns.nullness</dt>
@@ -3453,6 +3455,8 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">A helper class to find all identifiers in scope at a given program point.</div>
 </dd>
+<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/inlineme/Inliner.html#FINDING_TAG">FINDING_TAG</a></span> - Static variable in class com.google.errorprone.bugpatterns.inlineme.<a href="com/google/errorprone/bugpatterns/inlineme/Inliner.html" title="class in com.google.errorprone.bugpatterns.inlineme">Inliner</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/AbstractMustBeClosedChecker.html#findingPerMethod()">findingPerMethod()</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/AbstractMustBeClosedChecker.html" title="class in com.google.errorprone.bugpatterns">AbstractMustBeClosedChecker</a></dt>
 <dd>
 <div class="block">A FixAggregator that saves up all its findings from within a single method to emit at once.</div>
@@ -5541,6 +5545,10 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Policy specifying when and how to import classes when inlining types.</div>
 </dd>
+<dt><span class="member-name-link"><a href="com/google/errorprone/annotations/InlineMe.html#imports()">imports()</a></span> - Method in annotation type com.google.errorprone.annotations.<a href="com/google/errorprone/annotations/InlineMe.html" title="annotation in com.google.errorprone.annotations">InlineMe</a></dt>
+<dd>
+<div class="block">The new imports to (optionally) add to the caller.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/apply/ImportStatements.html#importsHaveChanged()">importsHaveChanged()</a></span> - Method in class com.google.errorprone.apply.<a href="com/google/errorprone/apply/ImportStatements.html" title="class in com.google.errorprone.apply">ImportStatements</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/StaticImports.StaticImportInfo.html#importStatement()">importStatement()</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/StaticImports.StaticImportInfo.html" title="class in com.google.errorprone.bugpatterns">StaticImports.StaticImportInfo</a></dt>
@@ -5732,11 +5740,27 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/refaster/Inliner.html#inlineList(java.lang.Iterable)">inlineList(Iterable&lt;? extends Inlineable&lt;? extends R&gt;&gt;)</a></span> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/Inliner.html" title="class in com.google.errorprone.refaster">Inliner</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/annotations/InlineMe.html" title="annotation in com.google.errorprone.annotations"><span class="type-name-link">InlineMe</span></a> - Annotation Type in <a href="com/google/errorprone/annotations/package-summary.html">com.google.errorprone.annotations</a></dt>
+<dd>
+<div class="block">Indicates that callers of this API should be inlined.</div>
+</dd>
+<dt><a href="com/google/errorprone/annotations/InlineMeValidationDisabled.html" title="annotation in com.google.errorprone.annotations"><span class="type-name-link">InlineMeValidationDisabled</span></a> - Annotation Type in <a href="com/google/errorprone/annotations/package-summary.html">com.google.errorprone.annotations</a></dt>
+<dd>
+<div class="block">An annotation that disables validation of the <a href="com/google/errorprone/annotations/InlineMe.html" title="annotation in com.google.errorprone.annotations"><code>InlineMe</code></a> annotation's correctness (i.e.:
+ that it accurately represents an inlining of the annotated method).</div>
+</dd>
+<dt><a href="com/google/errorprone/bugpatterns/inlineme/Inliner.html" title="class in com.google.errorprone.bugpatterns.inlineme"><span class="type-name-link">Inliner</span></a> - Class in <a href="com/google/errorprone/bugpatterns/inlineme/package-summary.html">com.google.errorprone.bugpatterns.inlineme</a></dt>
+<dd>
+<div class="block">Checker that performs the inlining at call-sites (where the invoked APIs are annotated as
+ <code>@InlineMe</code>).</div>
+</dd>
 <dt><a href="com/google/errorprone/refaster/Inliner.html" title="class in com.google.errorprone.refaster"><span class="type-name-link">Inliner</span></a> - Class in <a href="com/google/errorprone/refaster/package-summary.html">com.google.errorprone.refaster</a></dt>
 <dd>
 <div class="block">A context representing all the dependencies necessary to reconstruct a pretty-printable source
  tree from a <code>UTree</code> based on a set of substitutions.</div>
 </dd>
+<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/inlineme/Inliner.html#%3Cinit%3E(com.google.errorprone.ErrorProneFlags)">Inliner(ErrorProneFlags)</a></span> - Constructor for class com.google.errorprone.bugpatterns.inlineme.<a href="com/google/errorprone/bugpatterns/inlineme/Inliner.html" title="class in com.google.errorprone.bugpatterns.inlineme">Inliner</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/refaster/Inliner.html#%3Cinit%3E(com.sun.tools.javac.util.Context,com.google.errorprone.refaster.Bindings)">Inliner(Context, Bindings)</a></span> - Constructor for class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/Inliner.html" title="class in com.google.errorprone.refaster">Inliner</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/refaster/UReturn.html#inlineStatements(com.google.errorprone.refaster.Inliner)">inlineStatements(Inliner)</a></span> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/UReturn.html" title="class in com.google.errorprone.refaster">UReturn</a></dt>
@@ -7599,6 +7623,10 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/inject/QualifierOrScopeOnInjectMethod.html#matchMethod(com.sun.source.tree.MethodTree,com.google.errorprone.VisitorState)">matchMethod(MethodTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.inject.<a href="com/google/errorprone/bugpatterns/inject/QualifierOrScopeOnInjectMethod.html" title="class in com.google.errorprone.bugpatterns.inject">QualifierOrScopeOnInjectMethod</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/inlineme/Suggester.html#matchMethod(com.sun.source.tree.MethodTree,com.google.errorprone.VisitorState)">matchMethod(MethodTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.inlineme.<a href="com/google/errorprone/bugpatterns/inlineme/Suggester.html" title="class in com.google.errorprone.bugpatterns.inlineme">Suggester</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/inlineme/Validator.html#matchMethod(com.sun.source.tree.MethodTree,com.google.errorprone.VisitorState)">matchMethod(MethodTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.inlineme.<a href="com/google/errorprone/bugpatterns/inlineme/Validator.html" title="class in com.google.errorprone.bugpatterns.inlineme">Validator</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/InterruptedExceptionSwallowed.html#matchMethod(com.sun.source.tree.MethodTree,com.google.errorprone.VisitorState)">matchMethod(MethodTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/InterruptedExceptionSwallowed.html" title="class in com.google.errorprone.bugpatterns">InterruptedExceptionSwallowed</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/javadoc/EmptyBlockTag.html#matchMethod(com.sun.source.tree.MethodTree,com.google.errorprone.VisitorState)">matchMethod(MethodTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.javadoc.<a href="com/google/errorprone/bugpatterns/javadoc/EmptyBlockTag.html" title="class in com.google.errorprone.bugpatterns.javadoc">EmptyBlockTag</a></dt>
@@ -7856,6 +7884,8 @@ loadScripts(document, 'script');</script>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/inject/dagger/RefersToDaggerCodegen.html#matchMethodInvocation(com.sun.source.tree.MethodInvocationTree,com.google.errorprone.VisitorState)">matchMethodInvocation(MethodInvocationTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.inject.dagger.<a href="com/google/errorprone/bugpatterns/inject/dagger/RefersToDaggerCodegen.html" title="class in com.google.errorprone.bugpatterns.inject.dagger">RefersToDaggerCodegen</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/inject/guice/BindingToUnqualifiedCommonType.html#matchMethodInvocation(com.sun.source.tree.MethodInvocationTree,com.google.errorprone.VisitorState)">matchMethodInvocation(MethodInvocationTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.inject.guice.<a href="com/google/errorprone/bugpatterns/inject/guice/BindingToUnqualifiedCommonType.html" title="class in com.google.errorprone.bugpatterns.inject.guice">BindingToUnqualifiedCommonType</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/inlineme/Inliner.html#matchMethodInvocation(com.sun.source.tree.MethodInvocationTree,com.google.errorprone.VisitorState)">matchMethodInvocation(MethodInvocationTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.inlineme.<a href="com/google/errorprone/bugpatterns/inlineme/Inliner.html" title="class in com.google.errorprone.bugpatterns.inlineme">Inliner</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/InsecureCipherMode.html#matchMethodInvocation(com.sun.source.tree.MethodInvocationTree,com.google.errorprone.VisitorState)">matchMethodInvocation(MethodInvocationTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/InsecureCipherMode.html" title="class in com.google.errorprone.bugpatterns">InsecureCipherMode</a></dt>
 <dd>&nbsp;</dd>
@@ -8141,6 +8171,8 @@ loadScripts(document, 'script');</script>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/IdentityHashMapUsage.html#matchNewClass(com.sun.source.tree.NewClassTree,com.google.errorprone.VisitorState)">matchNewClass(NewClassTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/IdentityHashMapUsage.html" title="class in com.google.errorprone.bugpatterns">IdentityHashMapUsage</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/Incomparable.html#matchNewClass(com.sun.source.tree.NewClassTree,com.google.errorprone.VisitorState)">matchNewClass(NewClassTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/Incomparable.html" title="class in com.google.errorprone.bugpatterns">Incomparable</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/inlineme/Inliner.html#matchNewClass(com.sun.source.tree.NewClassTree,com.google.errorprone.VisitorState)">matchNewClass(NewClassTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.inlineme.<a href="com/google/errorprone/bugpatterns/inlineme/Inliner.html" title="class in com.google.errorprone.bugpatterns.inlineme">Inliner</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/JavaUtilDateChecker.html#matchNewClass(com.sun.source.tree.NewClassTree,com.google.errorprone.VisitorState)">matchNewClass(NewClassTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/JavaUtilDateChecker.html" title="class in com.google.errorprone.bugpatterns">JavaUtilDateChecker</a></dt>
 <dd>&nbsp;</dd>
@@ -10385,6 +10417,10 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Replace the source code with the new lines of code.</div>
 </dd>
+<dt><span class="member-name-link"><a href="com/google/errorprone/annotations/InlineMe.html#replacement()">replacement()</a></span> - Method in annotation type com.google.errorprone.annotations.<a href="com/google/errorprone/annotations/InlineMe.html" title="annotation in com.google.errorprone.annotations">InlineMe</a></dt>
+<dd>
+<div class="block">What the caller should be replaced with.</div>
+</dd>
 <dt><a href="com/google/errorprone/fixes/Replacement.html" title="class in com.google.errorprone.fixes"><span class="type-name-link">Replacement</span></a> - Class in <a href="com/google/errorprone/fixes/package-summary.html">com.google.errorprone.fixes</a></dt>
 <dd>
 <div class="block">A replaced section of a source file.</div>
@@ -10957,6 +10993,10 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/StaticImports.StaticImportInfo.html#%3Cinit%3E()">StaticImportInfo()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/StaticImports.StaticImportInfo.html" title="class in com.google.errorprone.bugpatterns">StaticImports.StaticImportInfo</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/google/errorprone/annotations/InlineMe.html#staticImports()">staticImports()</a></span> - Method in annotation type com.google.errorprone.annotations.<a href="com/google/errorprone/annotations/InlineMe.html" title="annotation in com.google.errorprone.annotations">InlineMe</a></dt>
+<dd>
+<div class="block">The new static imports to (optionally) add to the caller.</div>
+</dd>
 <dt><a href="com/google/errorprone/bugpatterns/StaticImports.html" title="class in com.google.errorprone.bugpatterns"><span class="type-name-link">StaticImports</span></a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
 <dd>
 <div class="block">Logic for inspecting static imports used by <a href="com/google/errorprone/bugpatterns/NonCanonicalStaticImport.html" title="class in com.google.errorprone.bugpatterns"><code>NonCanonicalStaticImport</code></a>, <a href="com/google/errorprone/bugpatterns/NonCanonicalStaticMemberImport.html" title="class in com.google.errorprone.bugpatterns"><code>NonCanonicalStaticMemberImport</code></a>, and <a href="com/google/errorprone/bugpatterns/UnnecessaryStaticImport.html" title="class in com.google.errorprone.bugpatterns"><code>UnnecessaryStaticImport</code></a>.</div>
@@ -11108,6 +11148,12 @@ loadScripts(document, 'script');</script>
 <div class="block">Instructs <a href="com/google/errorprone/fixes/SuggestedFixes.html#addMembers(com.sun.source.tree.ClassTree,com.google.errorprone.VisitorState,com.google.errorprone.fixes.SuggestedFixes.AdditionPosition,java.lang.String,java.lang.String...)"><code>SuggestedFixes.addMembers(ClassTree, VisitorState, AdditionPosition, String, String...)</code></a>
  whether to add the new member(s) at the beginning of the class, or at the end.</div>
 </dd>
+<dt><a href="com/google/errorprone/bugpatterns/inlineme/Suggester.html" title="class in com.google.errorprone.bugpatterns.inlineme"><span class="type-name-link">Suggester</span></a> - Class in <a href="com/google/errorprone/bugpatterns/inlineme/package-summary.html">com.google.errorprone.bugpatterns.inlineme</a></dt>
+<dd>
+<div class="block">Checker that recommends using <code>@InlineMe</code> on single-statement deprecated APIs.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/inlineme/Suggester.html#%3Cinit%3E()">Suggester()</a></span> - Constructor for class com.google.errorprone.bugpatterns.inlineme.<a href="com/google/errorprone/bugpatterns/inlineme/Suggester.html" title="class in com.google.errorprone.bugpatterns.inlineme">Suggester</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/fixes/SuggestedFixes.html#suggestExemptingAnnotation(java.lang.String,com.sun.source.util.TreePath,com.google.errorprone.VisitorState)">suggestExemptingAnnotation(String, TreePath, VisitorState)</a></span> - Static method in class com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/SuggestedFixes.html" title="class in com.google.errorprone.fixes">SuggestedFixes</a></dt>
 <dd>
 <div class="block">Create a fix to add a suppression annotation on the surrounding class.</div>
@@ -12248,6 +12294,12 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/formatstring/FormatStringValidation.ValidationResult.html#%3Cinit%3E()">ValidationResult()</a></span> - Constructor for class com.google.errorprone.bugpatterns.formatstring.<a href="com/google/errorprone/bugpatterns/formatstring/FormatStringValidation.ValidationResult.html" title="class in com.google.errorprone.bugpatterns.formatstring">FormatStringValidation.ValidationResult</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/bugpatterns/inlineme/Validator.html" title="class in com.google.errorprone.bugpatterns.inlineme"><span class="type-name-link">Validator</span></a> - Class in <a href="com/google/errorprone/bugpatterns/inlineme/package-summary.html">com.google.errorprone.bugpatterns.inlineme</a></dt>
+<dd>
+<div class="block">Checker that ensures the <code>@InlineMe</code> annotation is used correctly.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/inlineme/Validator.html#%3Cinit%3E()">Validator()</a></span> - Constructor for class com.google.errorprone.bugpatterns.inlineme.<a href="com/google/errorprone/bugpatterns/inlineme/Validator.html" title="class in com.google.errorprone.bugpatterns.inlineme">Validator</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/annotations/CompatibleWith.html#value()">value()</a></span> - Method in annotation type com.google.errorprone.annotations.<a href="com/google/errorprone/annotations/CompatibleWith.html" title="annotation in com.google.errorprone.annotations">CompatibleWith</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/annotations/concurrent/GuardedBy.html#value()">value()</a></span> - Method in annotation type com.google.errorprone.annotations.concurrent.<a href="com/google/errorprone/annotations/concurrent/GuardedBy.html" title="annotation in com.google.errorprone.annotations.concurrent">GuardedBy</a></dt>
@@ -12270,6 +12322,12 @@ loadScripts(document, 'script');</script>
 <dt><span class="member-name-link"><a href="com/google/errorprone/annotations/IncompatibleModifiers.html#value()">value()</a></span> - Method in annotation type com.google.errorprone.annotations.<a href="com/google/errorprone/annotations/IncompatibleModifiers.html" title="annotation in com.google.errorprone.annotations">IncompatibleModifiers</a></dt>
 <dd>
 <div class="block">The incompatible modifiers.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/google/errorprone/annotations/InlineMeValidationDisabled.html#value()">value()</a></span> - Method in annotation type com.google.errorprone.annotations.<a href="com/google/errorprone/annotations/InlineMeValidationDisabled.html" title="annotation in com.google.errorprone.annotations">InlineMeValidationDisabled</a></dt>
+<dd>
+<div class="block">An explanation as to why the validation is disabled (e.g.: moving from a constructor to a
+ static factory method that delegates to this constructor, which is behavior-perserving, but
+ isn't strictly an inlining).</div>
 </dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/annotations/RequiredModifiers.html#value()">value()</a></span> - Method in annotation type com.google.errorprone.annotations.<a href="com/google/errorprone/annotations/RequiredModifiers.html" title="annotation in com.google.errorprone.annotations">RequiredModifiers</a></dt>
 <dd>

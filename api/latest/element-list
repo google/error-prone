@@ -12,6 +12,7 @@ com.google.errorprone.bugpatterns.formatstring
 com.google.errorprone.bugpatterns.inject
 com.google.errorprone.bugpatterns.inject.dagger
 com.google.errorprone.bugpatterns.inject.guice
+com.google.errorprone.bugpatterns.inlineme
 com.google.errorprone.bugpatterns.javadoc
 com.google.errorprone.bugpatterns.nullness
 com.google.errorprone.bugpatterns.overloading
