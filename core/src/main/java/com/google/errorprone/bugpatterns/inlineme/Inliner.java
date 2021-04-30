@@ -275,7 +275,7 @@ public final class Inliner extends BugChecker
     /** Returns {@code ClassName.methodName}. */
     String shortName() {
       return String.format(
-          "%s.%s", Iterables.getLast(CLASS_NAME_SPLITTER.split(className())), methodName());
+          "%s.%s()", Iterables.getLast(CLASS_NAME_SPLITTER.split(className())), methodName());
     }
   }
 
