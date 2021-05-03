@@ -126,6 +126,28 @@ public final class LockNotBeforeTryTest {
   }
 
   @Test
+  public void interspersed() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            "import java.util.concurrent.locks.ReentrantLock;",
+            "class Test {",
+            "  private void test(ReentrantLock lock) {",
+            "    try {",
+            "      System.out.println(\"hi\");",
+            "      // BUG: Diagnostic contains:",
+            "      lock.lock();",
+            "      System.out.println(\"bye\");",
+            "    } finally {",
+            "      lock.unlock();",
+            "    }",
+            "  }",
+            "}")
+        .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
   public void refactorIntermediate() {
     refactoringHelper
         .addInputLines(
@@ -147,9 +169,9 @@ public final class LockNotBeforeTryTest {
             "import java.util.concurrent.locks.ReentrantLock;",
             "class Test {",
             "  private void test(ReentrantLock lock) {",
-            "    System.out.println(\"hi\");",
             "    lock.lock();",
             "    try {",
+            "      System.out.println(\"hi\");",
             "      System.out.println(\"hi\");",
             "    } finally {",
             "      lock.unlock();",
@@ -302,6 +324,42 @@ public final class LockNotBeforeTryTest {
             "    lock.lock();",
             "    s = lock.toString();",
             "    lock.unlock();",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void nullCheck() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            "import static java.util.Objects.requireNonNull;",
+            "import java.util.concurrent.locks.ReentrantLock;",
+            "class Test {",
+            "  private void test(ReentrantLock lock, Runnable r) {",
+            "    lock.lock();",
+            "    requireNonNull(r);",
+            "    try {",
+            "      r.run();",
+            "    } finally {",
+            "      lock.unlock();",
+            "    }",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "import static java.util.Objects.requireNonNull;",
+            "import java.util.concurrent.locks.ReentrantLock;",
+            "class Test {",
+            "  private void test(ReentrantLock lock, Runnable r) {",
+            "    lock.lock();",
+            "    try {",
+            "      requireNonNull(r);",
+            "      r.run();",
+            "    } finally {",
+            "      lock.unlock();",
+            "    }",
             "  }",
             "}")
         .doTest();

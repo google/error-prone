@@ -21,6 +21,7 @@ import static com.google.errorprone.BugPattern.StandardTags.FRAGILE_CODE;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
+import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 
 import com.google.common.collect.Iterables;
 import com.google.errorprone.BugPattern;
@@ -91,13 +92,15 @@ public final class LockNotBeforeTry extends BugChecker implements MethodInvocati
     }
     TryTree enclosingTry = state.findEnclosing(TryTree.class);
     if (enclosingTry != null && releases(enclosingTry, lockee, state)) {
-      SuggestedFix fix =
-          SuggestedFix.builder()
-              .replace(lockStatement, "")
-              .prefixWith(enclosingTry, state.getSourceForNode(lockStatement))
-              .build();
-      return buildDescription(lockInvocation)
-          .addFix(fix)
+      Description.Builder description = buildDescription(lockInvocation);
+      if (enclosingTry.getBlock().getStatements().indexOf(lockStatement) == 0) {
+        description.addFix(
+            SuggestedFix.builder()
+                .replace(lockStatement, "")
+                .prefixWith(enclosingTry, state.getSourceForNode(lockStatement))
+                .build());
+      }
+      return description
           .setMessage(
               String.format(
                   "Prefer obtaining the lock for %s outside the try block. That way, if #lock"
@@ -115,10 +118,13 @@ public final class LockNotBeforeTry extends BugChecker implements MethodInvocati
     for (StatementTree statement : Iterables.skip(block.getStatements(), index + 1)) {
       // ... for a try/finally which releases this lock.
       if (statement instanceof TryTree && releases((TryTree) statement, lockee, state)) {
+        int start = getStartPosition(statement);
+        int end = getStartPosition(((TryTree) statement).getBlock().getStatements().get(0));
         SuggestedFix fix =
             SuggestedFix.builder()
-                .replace(lockStatement, "")
-                .prefixWith(statement, state.getSourceForNode(lockStatement))
+                .replace(start, end, "")
+                .postfixWith(
+                    lockStatement, state.getSourceCode().subSequence(start, end).toString())
                 .build();
         return buildDescription(lockInvocation)
             .addFix(fix)
