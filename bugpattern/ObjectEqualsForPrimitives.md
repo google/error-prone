@@ -2,7 +2,7 @@
 title: ObjectEqualsForPrimitives
 summary: Avoid unnecessary boxing by using plain == for primitive types.
 layout: bugpattern
-tags: ''
+tags: Performance
 severity: WARNING
 ---
 
