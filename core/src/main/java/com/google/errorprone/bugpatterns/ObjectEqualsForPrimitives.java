@@ -22,6 +22,7 @@ import static com.google.errorprone.matchers.Matchers.isPrimitiveType;
 import static com.google.errorprone.matchers.Matchers.staticEqualsInvocation;
 
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.BugPattern.StandardTags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.fixes.Fix;
@@ -38,6 +39,7 @@ import com.sun.source.tree.MethodInvocationTree;
 @BugPattern(
     name = "ObjectEqualsForPrimitives",
     summary = "Avoid unnecessary boxing by using plain == for primitive types.",
+    tags = StandardTags.PERFORMANCE,
     severity = WARNING)
 public class ObjectEqualsForPrimitives extends BugChecker implements MethodInvocationTreeMatcher {
 
