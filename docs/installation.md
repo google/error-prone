@@ -1,7 +1,8 @@
----
+--------------------------------------------------------------------------------
+
 title: Installation
-layout: documentation
----
+
+## layout: documentation
 
 Our goal is to make it simple to add Error Prone checks to your existing Java
 compilation. Please note that Error Prone must be run on JDK 8 or newer. It can
@@ -76,8 +77,8 @@ Edit your `pom.xml` file to add settings to the maven-compiler-plugin:
 ### JDK 16
 
 Enabling `<fork>true</fork>` and setting the following `--add-exports=` flags is
-required on JDK 16 due to [JEP 396: Strongly Encapsulate JDK Internals by
-Default](https://openjdk.java.net/jeps/396):
+required on JDK 16 due to
+[JEP 396: Strongly Encapsulate JDK Internals by Default](https://openjdk.java.net/jeps/396):
 
 ```
   <build>
@@ -160,8 +161,8 @@ support:
   </profiles>
 ```
 
-See the [flags documentation](http://errorprone.info/docs/flags#maven) for details on
-how to customize the plugin's behavior.
+See the [flags documentation](http://errorprone.info/docs/flags#maven) for
+details on how to customize the plugin's behavior.
 
 ## Gradle
 
@@ -265,9 +266,9 @@ ShortSet.java:8: error: [CollectionIncompatibleType] Argument 'i - 1' should not
 1 error
 ```
 
-The `--add-exports` and `--add-opens` flags are required when using JDK 16+ due to [JEP
-396: Strongly Encapsulate JDK Internals by
-Default](https://openjdk.java.net/jeps/396):
+The `--add-exports` and `--add-opens` flags are required when using JDK 16+ due
+to
+[JEP 396: Strongly Encapsulate JDK Internals by Default](https://openjdk.java.net/jeps/396):
 
 ### Java 8
 

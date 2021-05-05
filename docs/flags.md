@@ -1,7 +1,8 @@
----
+--------------------------------------------------------------------------------
+
 title: Command-line flags
-layout: documentation
----
+
+## layout: documentation
 
 ### Severity
 
@@ -36,22 +37,22 @@ There are also a few blanket severity-changing flags:
 *   `-XepAllDisabledChecksAsWarnings`
 *   `-XepDisableAllChecks`
 *   `-XepDisableAllWarnings`
-*   `-XepDisableWarningsInGeneratedCode` : Disables warnings in classes annotated with `@Generated`
+*   `-XepDisableWarningsInGeneratedCode` : Disables warnings in classes
+    annotated with `@Generated`
 
-With any of the blanket flags, you can pass additional flags afterward to
-tweak the level of individual checks.  E.g., this flag combination disables
-all checks except for ReferenceEquality:
+With any of the blanket flags, you can pass additional flags afterward to tweak
+the level of individual checks. E.g., this flag combination disables all checks
+except for ReferenceEquality:
 
 ```bash
 -XepDisableAllChecks -Xep:ReferenceEquality:ERROR
 ```
 
-Additionally, you can completely exclude certain paths
-from any Error Prone checking via the `-XepExcludedPaths` flag.  The
-flag takes as an argument a regular expression that is matched against
-a source file's path to determine whether it should be excluded.
-So, to exclude files in any sub-directory of a path containing `build/generated`,
-use the option:
+Additionally, you can completely exclude certain paths from any Error Prone
+checking via the `-XepExcludedPaths` flag. The flag takes as an argument a
+regular expression that is matched against a source file's path to determine
+whether it should be excluded. So, to exclude files in any sub-directory of a
+path containing `build/generated`, use the option:
 
 ```bash
 -XepExcludedPaths:.*/build/generated/.*
@@ -67,8 +68,8 @@ We no longer support the old-style Error Prone disabling flags that used the
 ### Patching
 
 There are a couple of flags for configuration of patching in suggested fixes,
-e.g. `-XepPatchChecks:VALUE` and `-XepPatchLocation:VALUE`. See the [patching
-docs](http://errorprone.info/docs/patching) for more info.
+e.g. `-XepPatchChecks:VALUE` and `-XepPatchLocation:VALUE`. See the
+[patching docs](http://errorprone.info/docs/patching) for more info.
 
 ### Pass Additional Info to BugCheckers
 
@@ -116,9 +117,9 @@ public class MyChecker extends BugChecker implements SomeTreeMatcher {
 ## Maven
 
 To pass Error Prone flags to Maven, use the `compilerArgs` parameter in the
-plugin's configuration. The flags must be appended to the `arg` entry
-containing `-Xplugin:ErrorProne`. To enable warnings, the `showWarnings`
-parameter must also be set:
+plugin's configuration. The flags must be appended to the `arg` entry containing
+`-Xplugin:ErrorProne`. To enable warnings, the `showWarnings` parameter must
+also be set:
 
 ```xml
 <project>
@@ -141,8 +142,8 @@ parameter must also be set:
 
 Be aware that when running on JDK 8 the flags cannot be wrapped across multiple
 lines. JDK 9 and above do allow the flags to be separated by newlines. That is,
-the second `<arg>` element above can also be formatted as follows on JDK 9+,
-but *not* on JDK 8:
+the second `<arg>` element above can also be formatted as follows on JDK 9+, but
+*not* on JDK 8:
 
 ```xml
 <arg>
@@ -153,4 +154,4 @@ but *not* on JDK 8:
 ```
 
 When wrapping the arguments across multiple lines, escaping the newlines with
-`\` is required when using `<fork>true</fork>`, and optional otherwise.
+``\` is required when using``<fork>true</fork>`, and optional otherwise.
