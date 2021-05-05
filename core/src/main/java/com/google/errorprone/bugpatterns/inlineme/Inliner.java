@@ -260,22 +260,33 @@ public final class Inliner extends BugChecker
 
     static Api create(MethodSymbol method) {
       return new AutoValue_Inliner_Api(
-          method.owner.getQualifiedName().toString(), method.getSimpleName().toString());
+          method.owner.getQualifiedName().toString(),
+          method.getSimpleName().toString(),
+          method.isConstructor());
     }
 
     abstract String className();
 
     abstract String methodName();
 
+    abstract boolean isConstructor();
+
     /** Returns {@code FullyQualifiedClassName#methodName}. */
     String methodId() {
       return String.format("%s#%s", className(), methodName());
     }
 
-    /** Returns {@code ClassName.methodName}. */
+    /**
+     * Returns a short, human readable description of this API (e.g., {@code
+     * ClassName.methodName()}).
+     */
     String shortName() {
-      return String.format(
-          "%s.%s()", Iterables.getLast(CLASS_NAME_SPLITTER.split(className())), methodName());
+      return String.format("%s.%s()", simpleClassName(), methodName());
+    }
+
+    /** Returns the simple class name (e.g., {@code ClassName}). */
+    String simpleClassName() {
+      return Iterables.getLast(CLASS_NAME_SPLITTER.split(className()));
     }
   }
 
