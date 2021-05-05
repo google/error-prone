@@ -17,6 +17,7 @@
 package com.google.errorprone.bugpatterns.inlineme;
 
 import com.google.errorprone.CompilationTestHelper;
+import java.util.regex.Pattern;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -102,6 +103,65 @@ public class ValidatorTest {
   }
 
   @Test
+  public void testInstanceMethod_withInlineComment() {
+    helper
+        .addSourceLines(
+            "Client.java",
+            "import com.google.errorprone.annotations.InlineMe;",
+            "import java.util.function.Supplier;",
+            "public final class Client {",
+            "  @InlineMe(replacement = \"this.after(string);\")",
+            "  @Deprecated",
+            "  public void before(String string) {",
+            "    after(/* string= */ string);",
+            "  }",
+            "  public void after(String string) {",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void testInstanceMethod_withTrailingComment() {
+    helper
+        .addSourceLines(
+            "Client.java",
+            "import com.google.errorprone.annotations.InlineMe;",
+            "import java.util.function.Supplier;",
+            "public final class Client {",
+            "  @InlineMe(replacement = \"this.after(string);\")",
+            "  @Deprecated",
+            "  public void before(String string) {",
+            "    after( // string",
+            "        string);",
+            "  }",
+            "  public void after(String string) {",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void testInstanceMethod_withLambda() {
+    helper
+        .addSourceLines(
+            "Client.java",
+            "import com.google.errorprone.annotations.InlineMe;",
+            "import java.util.function.Supplier;",
+            "public final class Client {",
+            "  @InlineMe(replacement = \"this.after(() -> string);\")",
+            "  @Deprecated",
+            "  // BUG: Diagnostic contains: evaluation timing",
+            "  public void before(String string) {",
+            "    after(() -> string);",
+            "  }",
+            "  public void after(Supplier<String> supplier) {",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void testInstanceMethod_withLambdaAndVariable() {
     helper
         .addSourceLines(
@@ -170,6 +230,27 @@ public class ValidatorTest {
             "  }",
             "  private String privateMethod() {",
             "    return null;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void testInstanceMethod_splitOverMultipleLines_withLambda() {
+    helper
+        .addSourceLines(
+            "Client.java",
+            "import com.google.errorprone.annotations.InlineMe;",
+            "import java.util.function.Supplier;",
+            "public final class Client {",
+            "  @InlineMe(replacement = \"this.after(() -> string);\")",
+            "  @Deprecated",
+            "  // BUG: Diagnostic contains: evaluation timing",
+            "  public void before(String string) {",
+            "    after(() ->",
+            "      string);",
+            "  }",
+            "  public void after(Supplier<String> supplier) {",
             "  }",
             "}")
         .doTest();
@@ -367,6 +448,64 @@ public class ValidatorTest {
             "  }",
             "  public static <T> T after() {",
             "    return (T) null;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void testAllowingNestedClassImport() {
+    helper
+        .addSourceLines(
+            "Client.java",
+            "package com.google.frobber;",
+            "import com.google.errorprone.annotations.InlineMe;",
+            "import java.time.Duration;",
+            "public final class Client {",
+            "  public static final class Builder {",
+            "    @InlineMe(",
+            "        replacement = \"this.setDeadline(Client.Builder.parseDeadline(deadline));\",",
+            "        imports = {\"com.google.frobber.Client\"})",
+            "    @Deprecated",
+            // TODO(b/176094331): we shouldn't need to import `Builder`
+            "    // BUG: Diagnostic matches: BAR",
+            "    public void setDeadline(String deadline) {",
+            "      setDeadline(parseDuration(deadline));",
+            "    }",
+            "    public void setDeadline(Duration deadline) {",
+            "    }",
+            "    public static Duration parseDuration(String string) {",
+            "      return Duration.parse(string);",
+            "    }",
+            "  }",
+            "}")
+        .expectErrorMessage(
+            "BAR", Pattern.compile("InferredFromBody: .*\\.Builder]").asPredicate()::test)
+        .doTest();
+  }
+
+  @Test
+  public void testNestedClassWithInstanceMethodCallingStatic_implementationQualified() {
+    helper
+        .addSourceLines(
+            "Client.java",
+            "package com.google.frobber;",
+            "import com.google.errorprone.annotations.InlineMe;",
+            "import java.time.Duration;",
+            "public final class Client {",
+            "  public static final class Builder {",
+            "    @InlineMe(",
+            "        replacement = \"this.setDeadline(Client.Builder.parseDuration(deadline));\",",
+            "        imports = {\"com.google.frobber.Client\"})",
+            "    @Deprecated",
+            "    public void setDeadline(String deadline) {",
+            "      setDeadline(Client.Builder.parseDuration(deadline));",
+            "    }",
+            "    public void setDeadline(Duration deadline) {",
+            "    }",
+            "    public static Duration parseDuration(String string) {",
+            "      return Duration.parse(string);",
+            "    }",
             "  }",
             "}")
         .doTest();

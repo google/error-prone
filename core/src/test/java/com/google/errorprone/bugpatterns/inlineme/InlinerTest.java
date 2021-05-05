@@ -852,6 +852,43 @@ public class InlinerTest {
         .doTest();
   }
 
+  @Test
+  public void testReplaceWithJustParameter() {
+    refactoringTestHelper
+        .allowBreakingChanges()
+        .addInputLines(
+            "Client.java",
+            "import com.google.errorprone.annotations.InlineMe;",
+            "import java.time.Duration;",
+            "public final class Client {",
+            "  @Deprecated",
+            "  @InlineMe(replacement = \"x\")",
+            "  public final int identity(int x) {",
+            "    return x;",
+            "  }",
+            "}")
+        .expectUnchanged()
+        .addInputLines(
+            "Caller.java",
+            "public final class Caller {",
+            "  public void doTest() {",
+            "    Client client = new Client();",
+            "    int x = client.identity(42);",
+            "  }",
+            "}")
+        .addOutputLines(
+            "out/Caller.java",
+            "public final class Caller {",
+            "  public void doTest() {",
+            "    Client client = new Client();",
+            // TODO(b/180976346): replacements of the form that terminate in a parameter by itself
+            //  don't work with the new replacement tool, but this is uncommon enough
+            "    int x = client.identity(42);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
   private BugCheckerRefactoringTestHelper buildBugCheckerWithPrefixFlag(String prefix) {
     return BugCheckerRefactoringTestHelper.newInstance(
         new Inliner(ErrorProneFlags.builder().putFlag(Inliner.PREFIX_FLAG, prefix).build()),
