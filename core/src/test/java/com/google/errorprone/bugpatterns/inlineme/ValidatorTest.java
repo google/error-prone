@@ -122,6 +122,44 @@ public class ValidatorTest {
   }
 
   @Test
+  public void testInstanceMethod_withInlineCommentInAnnotation() {
+    helper
+        .addSourceLines(
+            "Client.java",
+            "import com.google.errorprone.annotations.InlineMe;",
+            "import java.util.function.Supplier;",
+            "public final class Client {",
+            "  @InlineMe(replacement = \"this.after(/* name= */ name);\")",
+            "  @Deprecated",
+            "  public void before(String name) {",
+            "    after(/* name= */ name);",
+            "  }",
+            "  public void after(String name) {",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void testInstanceMethod_with2InlineCommentInAnnotation() {
+    helper
+        .addSourceLines(
+            "Client.java",
+            "import com.google.errorprone.annotations.InlineMe;",
+            "import java.util.function.Supplier;",
+            "public final class Client {",
+            "  @InlineMe(replacement = \"this.after(/* name1= */ name1, /* name2= */ name2);\")",
+            "  @Deprecated",
+            "  public void before(String name1, String name2) {",
+            "    after(/* name1= */ name1, /* name2= */ name2);",
+            "  }",
+            "  public void after(String name1, String name2) {",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void testInstanceMethod_withTrailingComment() {
     helper
         .addSourceLines(

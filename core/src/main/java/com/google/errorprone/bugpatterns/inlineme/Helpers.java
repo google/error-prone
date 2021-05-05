@@ -25,23 +25,12 @@ final class Helpers {
 
   private static final CharMatcher SEMI_COLON_MATCHER = CharMatcher.is(';');
 
-  /**
-   * Normalizes a statement by stripping leading {@code "return "}, trailing semicolons, and
-   * comments.
-   */
+  /** Normalizes a statement by stripping leading {@code "return "} and trailing semicolons. */
   static String normalize(String statement) {
-    // TODO(kak): use VisitorState.getTokensForNode() instead of regexes
-    // TODO(kak): we can likely remove the comment stripping regexes, now that we're parsing and
-    // tokenizing instead of comparing formatted code chunks
-
-    // remove /* style comments */
-    statement = statement.replaceAll("/\\*.*\\*/\\s*", "");
-    // remove // style comments
-    statement = statement.replaceAll("//.*\n", "\n");
-    // Trailing semicolons
+    // strip trailing semicolons
     statement = SEMI_COLON_MATCHER.trimTrailingFrom(statement);
-    // return statement
-    statement = statement.replaceFirst("^return\\s+", "");
-    return statement;
+    // TODO(kak): avoid the need to strip the `return` by passing returnTree.getExpression() instead
+    // strip the leading `return` keyword (if present)
+    return statement.replaceFirst("^return\\s+", "");
   }
 }
