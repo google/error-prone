@@ -626,6 +626,72 @@ public class InlinerTest {
   }
 
   @Test
+  public void testEmptyReturn() {
+    refactoringTestHelper
+        .addInputLines(
+            "Client.java",
+            "import com.google.errorprone.annotations.InlineMe;",
+            "public final class Client {",
+            "  @Deprecated",
+            "  @InlineMe(replacement = \"return\")",
+            "  public void noOp() {",
+            "    return;",
+            "  }",
+            "}")
+        .expectUnchanged()
+        .addInputLines(
+            "Caller.java",
+            "public final class Caller {",
+            "  public void doTest() {",
+            "    Client client = new Client();",
+            "    client.noOp();",
+            "  }",
+            "}")
+        .addOutputLines(
+            "out/Caller.java",
+            "public final class Caller {",
+            "  public void doTest() {",
+            "    Client client = new Client();",
+            // TODO(b/187406170): this is a bug!
+            "    return;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void testEmptyReturnFluent() {
+    refactoringTestHelper
+        .addInputLines(
+            "Client.java",
+            "import com.google.errorprone.annotations.InlineMe;",
+            "public final class Client {",
+            "  @Deprecated",
+            "  @InlineMe(replacement = \"return\")",
+            "  public void noOp() {",
+            "    return;",
+            "  }",
+            "}")
+        .expectUnchanged()
+        .addInputLines(
+            "Caller.java",
+            "public final class Caller {",
+            "  public void doTest() {",
+            "    new Client().noOp();",
+            "  }",
+            "}")
+        .addOutputLines(
+            "out/Caller.java",
+            "public final class Caller {",
+            "  public void doTest() {",
+            // TODO(b/187406170): this is a bug!
+            "    return;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void testReturnThis_preChained() {
     refactoringTestHelper
         .addInputLines(
