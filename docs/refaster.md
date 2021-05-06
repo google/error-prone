@@ -1,17 +1,11 @@
---------------------------------------------------------------------------------
-
+---
 title: Refaster templates
+layout: documentation
+---
 
-## layout: documentation
+In addition to [patching] your code using the checks built-in to Error Prone, we've developed a mechanism to refactor your code using before-and-after templates (we call them Refaster templates). Once you write these templates, you compile them into .refaster files, then use the Error Prone compiler to refactor your code according to those rules.
 
-In addition to [patching] your code using the checks built-in to Error Prone,
-we've developed a mechanism to refactor your code using before-and-after
-templates (we call them Refaster templates). Once you write these templates, you
-compile them into .refaster files, then use the Error Prone compiler to refactor
-your code according to those rules.
-
-Refaster is described in more detail in a [research paper][lowasser-paper]
-presented by Louis Wasserman at the _Workshop for Refactoring Tools_.
+Refaster is described in more detail in a [research paper][lowasser-paper] presented by Louis Wasserman at the _Workshop for Refactoring Tools_.
 
 ## Building Refaster Templates
 
@@ -41,13 +35,7 @@ public class StringIsEmpty {
 }
 ```
 
-Refaster templates are any class with multiple methods with the same return type
-and list of arguments with the same name. One of the methods should be annotated
-`@AfterTemplate`, and every other method should be annotated with
-`@BeforeTemplate`. With this template, any code calling `String#equals` passing
-in the empty string literal, or calling `String#length` and comparing it to 0
-will be replaced by a call to `String#isEmpty`. Notably, no matter how the
-String expression is generated, Refaster will do the replacement:
+Refaster templates are any class with multiple methods with the same return type and list of arguments with the same name. One of the methods should be annotated `@AfterTemplate`, and every other method should be annotated with `@BeforeTemplate`. With this template, any code calling `String#equals` passing in the empty string literal, or calling `String#length` and comparing it to 0 will be replaced by a call to `String#isEmpty`. Notably, no matter how the String expression is generated, Refaster will do the replacement:
 
 ```java
 boolean b = someChained().methodCall().returningAString().length() == 0;
@@ -67,23 +55,17 @@ if (this.someStringField.equals(""))
 
 becomes
 
-```java
+```java 
 if (this.someStringField.isEmpty())
 ```
 
-There are other annotations in the [refaster.annotations] package that allow you
-to express more complex before-and-after refactorings, with examples about how
-to use them in their javadoc. See also the
-[advanced features](#advanced-features) section of this document.
+There are other annotations in the [refaster.annotations] package that allow you to express more complex before-and-after refactorings, with examples about how to use them in their javadoc. See also the [advanced features](#advanced-features) section of this document.
 
-In the above example, `@AlsoNegation` is used to signal that the rule can also
-match the logical negation of the `@BeforeTemplate` bodies (`string.length() !=
-0` becomes `!string.isEmpty()`);
+In the above example, `@AlsoNegation` is used to signal that the rule can also match the logical negation of the `@BeforeTemplate` bodies (`string.length() != 0` becomes `!string.isEmpty()`);
 
 ## Running the Refaster refactoring
 
-TIP: These instructions are valid as of Error Prone 2.3.1, and are subject to
-change.
+TIP: These instructions are valid as of Error Prone 2.3.1, and are subject to change.
 
 Use the Error Prone javac JAR and the Error Prone Refaster JAR to compile the
 Refaster template, using JDK 9 or newer:
@@ -142,9 +124,7 @@ $ patch -p0 -u -i error-prone.patch
 
 ## Anatomy of a Refaster Rule
 
-The idea of Refaster is, more or less, to take the pseudocode you'd write to
-explain a refactoring you wanted to perform, and make that into real code that
-performs a real refactoring.
+The idea of Refaster is, more or less, to take the pseudocode you'd write to explain a refactoring you wanted to perform, and make that into real code that performs a real refactoring.
 
 Let's take apart an example rule.
 
@@ -166,26 +146,19 @@ class Utf8Length { // A name for the refactoring
 }
 ```
 
-This refactoring rewrites _expressions_ of the form
-`someString.getBytes(UTF_8).length` to `Utf8.encodedLength(string)`, a method
-from Guava that avoids allocating an entire byte array just to get its length,
-no matter where that `String` comes from -- it can be the result of a more
-complicated expression, or just a simple variable. Additionally, this will match
-even if the `int` result of the expression is being passed to a method, added to
-something else, assigned to a variable, whatever.
+This refactoring rewrites _expressions_ of the form `someString.getBytes(UTF_8).length` to `Utf8.encodedLength(string)`, a method from Guava that avoids allocating an entire byte array just to get its length, no matter where that `String` comes from -- it can be the result of a more complicated expression, or just a simple variable.  Additionally, this will match even if the `int` result of the expression is being passed to a method, added to something else, assigned to a variable, whatever.
 
-This is called an _expression_ template because it rewrites expressions. Let's
-look at a _block_ template:
+This is called an _expression_ template because it rewrites expressions.  Let's look at a _block_ template:
 
 ```java
 class ListSwap<T> {
   // T is a type parameter for the entire rule, which will be inferred from the match
-
+  
   @BeforeTemplate
   void manualSwap(
        List<T> list, int i, int j) {
        // the list, i, and j can be any expressions of appropriate type
-    T tmp = list.get(i);
+    T tmp = list.get(i); 
       // tmp doesn't actually have to be the variable name used in the code being matched
     list.set(i, list.get(j));
     list.set(j, tmp);
@@ -197,32 +170,20 @@ class ListSwap<T> {
 }
 ```
 
-This rule matches three consecutive lines that "look like" the body of the
-`@BeforeTemplate`, and replaces them with the single line of the
-`@AfterTemplate`.
+This rule matches three consecutive lines that "look like" the body of the `@BeforeTemplate`, and replaces them with the single line of the `@AfterTemplate`.
 
 ## What is Refaster good for?
 
-Refaster was originally built for the Java Libraries Team at Google, around the
-slogan of "make simple refactorings simple." We tended to focus on library
-migrations, method renamings, and the like; refactorings that could be clearly
-described by just describing what the code should look like before and after the
-change. We use Refaster for simple refactorings like this, and combine it with
-more sophisticated analyses written with the Error Prone API for refactorings
-Refaster can't express.
+Refaster was originally built for the Java Libraries Team at Google, around the slogan of "make simple refactorings simple."  We tended to focus on library migrations, method renamings, and the like; refactorings that could be clearly described by just describing what the code should look like before and after the change.  We use Refaster for simple refactorings like this, and combine it with more sophisticated analyses written with the Error Prone API for refactorings Refaster can't express.
 
 Refaster excels at refactorings like:
 
-*   Migrate users of method A to method B.
-*   Migrate users of method A where the arguments are of some particular type to
-    method B.
-*   Migrate a particular fluent sequence of method invocations to some other
-    pattern.
-*   Migrate a sequence of consecutive statements to an alternative.
+ * Migrate users of method A to method B.
+ * Migrate users of method A where the arguments are of some particular type to method B.
+ * Migrate a particular fluent sequence of method invocations to some other pattern.
+ * Migrate a sequence of consecutive statements to an alternative.
 
-We have also found Refaster good for expressing code _simplification_ patterns
-to improve efficiency or code readability. For example, here is a simplification
-rule for Java 8 streams that Refaster expresses neatly:
+We have also found Refaster good for expressing code _simplification_ patterns to improve efficiency or code readability.  For example, here is a simplification rule for Java 8 streams that Refaster expresses neatly:
 
 ```java
 class SortedFirst<T> {
@@ -237,9 +198,7 @@ class SortedFirst<T> {
 }
 ```
 
-At Google, we have a tool that uses thousands of these simplification patterns
-to automatically comment on code reviews, suggesting improvements to code. We
-hope to release many of these soon.
+At Google, we have a tool that uses thousands of these simplification patterns to automatically comment on code reviews, suggesting improvements to code.  We hope to release many of these soon.
 
 ## Advanced features
 
@@ -300,8 +259,7 @@ class AddAllArrayToBuilder {
 
 ### `Refaster.clazz()` and other methods
 
-Consider the following refactoring, where calling X.class.cast(o) for any X is
-replaced with a simple cast to X.
+Consider the following refactoring, where calling X.class.cast(o) for any X is replaced with a simple cast to X.
 
 ```java
 class ClassCast<T> {
@@ -319,27 +277,17 @@ class ClassCast<T> {
 
 Here, `Refaster.<T>clazz()` is a "magic incantation" to substitute for the
 impossible-to-compile code you would _want_ to write here, `T.class`. There are
-a variety of these "magic incantations" in the
-[`Refaster` class][refaster-javadoc] for code patterns that you might wish to
-write in a `@BeforeTemplate` but don't technically compile as Java code.
+a variety of these "magic incantations" in the [`Refaster` class][refaster-javadoc]
+for code patterns that you might wish to write in a `@BeforeTemplate` but don't
+technically compile as Java code.
 
 ### `@UseImportPolicy`
 
-Refaster attempts to automatically infer how to import newly used classes and
-methods into refactored code, but the approach it uses to do so can be
-configured with the `@UseImportPolicy` annotation on the `@AfterTemplate`
-method. (Note that Refaster will _not_ pay attention to how the class is
-imported or qualified in the original Refaster template!) The `ImportPolicy`
-enum offers the following options:
+Refaster attempts to automatically infer how to import newly used classes and methods into refactored code, but the approach it uses to do so can be configured with the `@UseImportPolicy` annotation on the `@AfterTemplate` method.  (Note that Refaster will _not_ pay attention to how the class is imported or qualified in the original Refaster template!)  The `ImportPolicy` enum offers the following options:
 
-*   `IMPORT_TOP_LEVEL`, the default: imports the top-level class and explicitly
-    qualifies references to nested classes. For example, to refer to
-    `java.util.Map.Entry`, Refaster will `import java.util.Map;` and refer to
-    the type as `Map.Entry`.
-*   `IMPORT_CLASS_DIRECTLY` imports classes directly, whether nested in other
-    classes or not: e.g. `import java.util.Map.Entry;`
-*   `STATIC_IMPORT_ALWAYS` static imports methods explicitly mentioned in the
-    Refaster template, and refers to types themselves as in `IMPORT_TOP_LEVEL`.
+ * `IMPORT_TOP_LEVEL`, the default: imports the top-level class and explicitly qualifies references to nested classes.  For example, to refer to `java.util.Map.Entry`, Refaster will `import java.util.Map;` and refer to the type as `Map.Entry`.
+ * `IMPORT_CLASS_DIRECTLY` imports classes directly, whether nested in other classes or not: e.g. `import java.util.Map.Entry;`
+ * `STATIC_IMPORT_ALWAYS` static imports methods explicitly mentioned in the Refaster template, and refers to types themselves as in `IMPORT_TOP_LEVEL`.
 
 ### Placeholder methods
 
@@ -511,6 +459,7 @@ map.forEach(
 
 ...that is, it will automatically bracket the lambda body, or not, as
 appropriate to the placeholder body actually matched.
+
 
 [patching]: patching
 [refaster.annotations]: ../api/latest/com/google/errorprone/refaster/annotation/package-frame.html

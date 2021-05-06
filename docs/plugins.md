@@ -1,8 +1,7 @@
---------------------------------------------------------------------------------
-
+---
 title: Plugin checks
-
-## layout: documentation
+layout: documentation
+---
 
 Error Prone supports custom checks via a plugin mechanism. Plugin checks are
 loaded dynamically from the annotation processor path using
@@ -61,8 +60,8 @@ parameter.
 
 ### Gradle
 
-Starting in version 4.6, Gradle provides support for
-[configuring the processor path](https://docs.gradle.org/4.6/release-notes.html#convenient-declaration-of-annotation-processor-dependencies):
+Starting in version 4.6, Gradle provides support for [configuring the processor
+path](https://docs.gradle.org/4.6/release-notes.html#convenient-declaration-of-annotation-processor-dependencies):
 
 ```gradle
 dependencies {
@@ -72,9 +71,11 @@ dependencies {
 
 ## Command-Line Arguments
 
-Plugin checkers can accept additional configuration flags by defining a
-single-argument constructor taking an `ErrorProneFlags` object (see the
-[flags docs](http://errorprone.info/docs/flags)). However, note that plugin
-checkers must also define a zero-argument constructor, as they are loaded by a
-`ServiceLoader`. The actual checker instance used by Error Prone will be
-constructed using the `ErrorProneFlags` constructor.
+Plugin checkers can accept additional configuration flags by defining
+a single-argument constructor taking an `ErrorProneFlags` object (see
+the [flags docs](http://errorprone.info/docs/flags)).  However, note
+that plugin checkers must also define a zero-argument constructor, as
+they are loaded by a `ServiceLoader`.  The actual checker instance
+used by Error Prone will be constructed using the `ErrorProneFlags`
+constructor.
+
