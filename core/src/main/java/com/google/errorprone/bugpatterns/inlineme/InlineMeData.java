@@ -26,14 +26,13 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.annotations.InlineMe;
 import com.google.errorprone.util.SourceCodeEscapers;
 import com.sun.source.tree.ClassTree;
+import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.LambdaExpressionTree;
 import com.sun.source.tree.MemberReferenceTree;
 import com.sun.source.tree.MemberSelectTree;
-import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.NewArrayTree;
 import com.sun.source.tree.NewClassTree;
-import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.TypeCastTree;
 import com.sun.source.util.TreePath;
@@ -44,7 +43,6 @@ import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCExpression;
 import com.sun.tools.javac.tree.JCTree.JCLambda;
 import com.sun.tools.javac.tree.JCTree.JCLambda.ParameterKind;
-import com.sun.tools.javac.tree.JCTree.JCStatement;
 import com.sun.tools.javac.tree.JCTree.JCTypeCast;
 import com.sun.tools.javac.tree.JCTree.JCVariableDecl;
 import com.sun.tools.javac.tree.Pretty;
@@ -112,25 +110,25 @@ abstract class InlineMeData {
   //   one of the multiple flavors of inlining.
 
   //  TODO(b/176094331): importing the *outer* token for a nested class like Foo.Builder.something()
-  static InlineMeData buildExpectedInlineMeAnnotation(MethodTree tree, VisitorState state) {
-    StatementTree statement = tree.getBody().getStatements().get(0);
+  static InlineMeData buildExpectedInlineMeAnnotation(
+      VisitorState state, ExpressionTree expression) {
     ClassSymbol classSymbol = getSymbol(findEnclosingNode(state.getPath(), ClassTree.class));
 
     // Scan the statement to collect identifiers that need to be qualified - unqualified references
     // to field or instance methods, as well as collecting the imports we need to use.
     ImportAndQualificationFinder qualifier = new ImportAndQualificationFinder(classSymbol, state);
-    qualifier.scan(TreePath.getPath(state.getPath(), statement), null);
-    String suggestedInlining =
-        Helpers.normalize(
-            prettyPrint(
-                new QualifyingTreeCopier(state, qualifier.qualifications)
-                    .copy((JCStatement) statement)));
-    return create(suggestedInlining, qualifier.imports, qualifier.staticImports);
+    qualifier.scan(TreePath.getPath(state.getPath(), expression), null);
+    return create(
+        prettyPrint(
+            new QualifyingTreeCopier(state, qualifier.qualifications)
+                .copy((JCExpression) expression)),
+        qualifier.imports,
+        qualifier.staticImports);
   }
 
-  private static String prettyPrint(JCStatement statement) {
+  private static String prettyPrint(JCTree tree) {
     StringWriter w = new StringWriter();
-    statement.accept(new GooglePrinter(w));
+    tree.accept(new GooglePrinter(w));
     return w.toString();
   }
 

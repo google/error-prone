@@ -666,4 +666,21 @@ public class ValidatorTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void testEmptyMethod() {
+    helper
+        .addSourceLines(
+            "Client.java",
+            "import com.google.errorprone.annotations.InlineMe;",
+            "public final class Client {",
+            "  @Deprecated",
+            "  @InlineMe(replacement = \"return\")",
+            "  // BUG: Diagnostic contains: no-op",
+            "  public void noOp() {",
+            "    return;",
+            "  }",
+            "}")
+        .doTest();
+  }
 }

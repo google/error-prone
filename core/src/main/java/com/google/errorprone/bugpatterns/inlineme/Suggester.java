@@ -24,6 +24,7 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.annotations.InlineMe;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
+import com.google.errorprone.bugpatterns.inlineme.InlinabilityResult.InlineValidationErrorReason;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
@@ -55,8 +56,11 @@ public final class Suggester extends BugChecker implements MethodTreeMatcher {
         SuggestedFix.builder()
             .addImport(InlineMe.class.getCanonicalName())
             .prefixWith(
-                tree, InlineMeData.buildExpectedInlineMeAnnotation(tree, state).buildAnnotation());
-    if (inlinabilityResult == InlinabilityResult.METHOD_CAN_BE_OVERIDDEN_BUT_CAN_BE_FIXED) {
+                tree,
+                InlineMeData.buildExpectedInlineMeAnnotation(state, inlinabilityResult.body())
+                    .buildAnnotation());
+    if (inlinabilityResult.error()
+        == InlineValidationErrorReason.METHOD_CAN_BE_OVERIDDEN_BUT_CAN_BE_FIXED) {
       SuggestedFixes.addModifiers(tree, state, Modifier.FINAL).ifPresent(fixBuilder::merge);
     }
     return describeMatch(tree, fixBuilder.build());

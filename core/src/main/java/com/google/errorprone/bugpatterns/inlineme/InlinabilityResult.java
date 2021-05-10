@@ -16,11 +16,11 @@
 
 package com.google.errorprone.bugpatterns.inlineme;
 
-import static com.google.common.base.Preconditions.checkState;
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
 
+import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.util.ASTHelpers;
@@ -48,116 +48,151 @@ import javax.lang.model.element.Modifier;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /** Whether an API can have {@code @InlineMe} applied to it or not. */
-enum InlinabilityResult {
-  API_ISNT_DEPRECATED("InlineMe cannot be applied to an API that isn't @Deprecated."),
-  NO_BODY("InlineMe cannot be applied to abstract methods."),
-  NOT_EXACTLY_ONE_STATEMENT("InlineMe cannot inline methods with more than 1 statement."),
-  COMPLEX_STATEMENT(
-      "InlineMe cannot inline complex statements. Consider using a different refactoring tool"
-      ),
-  CALLS_DEPRECATED_OR_PRIVATE_APIS(
-      "InlineMe cannot be applied when the implementation references deprecated or non-public"
-          + " APIs."),
-  API_IS_PRIVATE("InlineMe cannot be applied to private APIs."),
-  LAMBDA_CAPTURES_PARAMETER(
-      "Inlining this method will result in a change in evaluation timing for one or more arguments"
-          + " to this method."),
-  METHOD_CAN_BE_OVERIDDEN_AND_CANT_BE_FIXED(
-      "Methods that are inlined should not be overridable, as the implementation of an overriding"
-          + " method may be different than the inlining"),
+@AutoValue
+abstract class InlinabilityResult {
 
-  // Technically an error in the case where an existing @InlineMe annotation is applied, but could
-  // be fixed while suggesting
-  METHOD_CAN_BE_OVERIDDEN_BUT_CAN_BE_FIXED(
-      "Methods that are inlined should not be overridable, as the implementation of an overriding"
-          + " method may be different than the inlining"),
-  INLINEABLE(null),
-  VARARGS_USED_UNSAFELY(
-      "When using a varargs parameter, it must only be passed in the last position of a method call"
-          + " to another varargs method");
+  abstract @Nullable InlineValidationErrorReason error();
 
-  @Nullable private final String errorMessage;
+  abstract @Nullable ExpressionTree body();
 
-  InlinabilityResult(@Nullable String errorMessage) {
-    this.errorMessage = errorMessage;
+  static InlinabilityResult fromError(InlineValidationErrorReason errorReason) {
+    return fromError(errorReason, null);
+  }
+
+  static InlinabilityResult fromError(
+      InlineValidationErrorReason errorReason, ExpressionTree body) {
+    return new AutoValue_InlinabilityResult(errorReason, body);
+  }
+
+  static InlinabilityResult inlinable(ExpressionTree body) {
+    return new AutoValue_InlinabilityResult(null, body);
   }
 
   boolean isValidForSuggester() {
-    return isValidForValidator() || this == METHOD_CAN_BE_OVERIDDEN_BUT_CAN_BE_FIXED;
+    return isValidForValidator()
+        || error() == InlineValidationErrorReason.METHOD_CAN_BE_OVERIDDEN_BUT_CAN_BE_FIXED;
   }
 
   boolean isValidForValidator() {
-    return errorMessage == null;
+    return error() == null;
   }
 
-  String getErrorMessage() {
-    checkState(errorMessage != null, "No error message exists for %s", this);
-    return errorMessage;
+  enum InlineValidationErrorReason {
+    API_ISNT_DEPRECATED("InlineMe cannot be applied to an API that isn't @Deprecated."),
+    NO_BODY("InlineMe cannot be applied to abstract methods."),
+    NOT_EXACTLY_ONE_STATEMENT("InlineMe cannot inline methods with more than 1 statement."),
+    COMPLEX_STATEMENT(
+        "InlineMe cannot inline complex statements. Consider using a different refactoring tool"
+        ),
+    CALLS_DEPRECATED_OR_PRIVATE_APIS(
+        "InlineMe cannot be applied when the implementation references deprecated or non-public"
+            + " APIs."),
+    API_IS_PRIVATE("InlineMe cannot be applied to private APIs."),
+    LAMBDA_CAPTURES_PARAMETER(
+        "Inlining this method will result in a change in evaluation timing for one or more"
+            + " arguments to this method."),
+    METHOD_CAN_BE_OVERIDDEN_AND_CANT_BE_FIXED(
+        "Methods that are inlined should not be overridable, as the implementation of an overriding"
+            + " method may be different than the inlining"),
+
+    // Technically an error in the case where an existing @InlineMe annotation is applied, but could
+    // be fixed while suggesting
+    METHOD_CAN_BE_OVERIDDEN_BUT_CAN_BE_FIXED(
+        "Methods that are inlined should not be overridable, as the implementation of an overriding"
+            + " method may be different than the inlining"),
+    VARARGS_USED_UNSAFELY(
+        "When using a varargs parameter, it must only be passed in the last position of a method"
+            + " call to another varargs method"),
+    EMPTY_VOID("InlineMe cannot yet be applied to no-op void methods");
+
+    @Nullable private final String errorMessage;
+
+    InlineValidationErrorReason(@Nullable String errorMessage) {
+      this.errorMessage = errorMessage;
+    }
+
+    String getErrorMessage() {
+      return errorMessage;
+    }
   }
 
   static InlinabilityResult forMethod(MethodTree tree, VisitorState state) {
     if (!hasAnnotation(tree, Deprecated.class, state)) {
-      return API_ISNT_DEPRECATED;
+      return fromError(InlineValidationErrorReason.API_ISNT_DEPRECATED);
     }
 
     if (tree.getBody() == null) {
-      return NO_BODY;
+      return fromError(InlineValidationErrorReason.NO_BODY);
     }
 
     if (tree.getBody().getStatements().size() != 1) {
-      return NOT_EXACTLY_ONE_STATEMENT;
+      return fromError(InlineValidationErrorReason.NOT_EXACTLY_ONE_STATEMENT);
     }
 
     MethodSymbol methSymbol = getSymbol(tree);
     if (methSymbol.getModifiers().contains(Modifier.PRIVATE)) {
-      return API_IS_PRIVATE;
+      return fromError(InlineValidationErrorReason.API_IS_PRIVATE);
     }
 
     StatementTree statement = tree.getBody().getStatements().get(0);
 
     if (state.getSourceForNode(statement) == null) {
-      return NO_BODY;
+      return fromError(InlineValidationErrorReason.NO_BODY);
     }
 
     // we can only inline either a ExpressionStatementTree or a ReturnTree
-    if (!(statement instanceof ExpressionStatementTree || statement instanceof ReturnTree)) {
-      return COMPLEX_STATEMENT;
+    ExpressionTree body;
+    // The statement is either an ExpressionStatement or a ReturnStatement, given
+    // InlinabilityResult.forMethod
+    switch (statement.getKind()) {
+      case EXPRESSION_STATEMENT:
+        body = ((ExpressionStatementTree) statement).getExpression();
+        break;
+      case RETURN:
+        body = ((ReturnTree) statement).getExpression();
+        if (body == null) {
+          return fromError(InlineValidationErrorReason.EMPTY_VOID);
+        }
+        break;
+      default:
+        return fromError(InlineValidationErrorReason.COMPLEX_STATEMENT);
     }
 
-    if (methSymbol.isVarArgs()
-        && usesVarargsParamPoorly(statement, methSymbol.params().last(), state)) {
-      return VARARGS_USED_UNSAFELY;
+    if (methSymbol.isVarArgs() && usesVarargsParamPoorly(body, methSymbol.params().last(), state)) {
+      return fromError(InlineValidationErrorReason.VARARGS_USED_UNSAFELY, body);
     }
 
     // TODO(kak): declare a list of all the types we don't want to allow (e.g., ClassTree) and use
     // contains
-    if (statement.toString().contains("{")) {
-      return COMPLEX_STATEMENT;
+    if (body.toString().contains("{")) {
+      return fromError(InlineValidationErrorReason.COMPLEX_STATEMENT, body);
     }
 
-    if (usesPrivateOrDeprecatedApis(statement, state)) {
-      return CALLS_DEPRECATED_OR_PRIVATE_APIS;
+    if (usesPrivateOrDeprecatedApis(body, state)) {
+      return fromError(InlineValidationErrorReason.CALLS_DEPRECATED_OR_PRIVATE_APIS, body);
     }
 
-    if (hasLambdaCapturingParameters(tree, statement)) {
-      return LAMBDA_CAPTURES_PARAMETER;
+    if (hasLambdaCapturingParameters(tree, body)) {
+      return fromError(InlineValidationErrorReason.LAMBDA_CAPTURES_PARAMETER, body);
     }
 
     if (ASTHelpers.methodCanBeOverridden(methSymbol)) {
       // TODO(glorioso): One additional edge case we can check is if the owning class can't be
       // overridden due to having no publicly-accessible constructors.
-      return methSymbol.isDefault()
-          ? METHOD_CAN_BE_OVERIDDEN_AND_CANT_BE_FIXED
-          : METHOD_CAN_BE_OVERIDDEN_BUT_CAN_BE_FIXED;
+      return fromError(
+          methSymbol.isDefault()
+              ? InlineValidationErrorReason.METHOD_CAN_BE_OVERIDDEN_AND_CANT_BE_FIXED
+              : InlineValidationErrorReason.METHOD_CAN_BE_OVERIDDEN_BUT_CAN_BE_FIXED,
+          body);
     }
 
-    return InlinabilityResult.INLINEABLE;
+    return inlinable(body);
   }
 
   // If the body refers to the varargs value at all, it should only be as the last argument
   // in a method call that is *also* varargs.
   private static boolean usesVarargsParamPoorly(
-      StatementTree statement, VarSymbol varargsParam, VisitorState state) {
+      ExpressionTree expressionTree, VarSymbol varargsParam, VisitorState state) {
     AtomicBoolean usesVarargsPoorly = new AtomicBoolean(false);
     new TreePathScanner<Void, Void>() {
       @Override
@@ -193,11 +228,11 @@ enum InlinabilityResult {
 
         return super.visitIdentifier(identifierTree, aVoid);
       }
-    }.scan(new TreePath(state.getPath(), statement), null);
+    }.scan(new TreePath(state.getPath(), expressionTree), null);
     return usesVarargsPoorly.get();
   }
 
-  private static boolean usesPrivateOrDeprecatedApis(StatementTree statement, VisitorState state) {
+  private static boolean usesPrivateOrDeprecatedApis(ExpressionTree statement, VisitorState state) {
     AtomicBoolean usesDeprecatedOrNonPublicApis = new AtomicBoolean(false);
     new TreeScanner<Void, Void>() {
       @Override
@@ -263,7 +298,7 @@ enum InlinabilityResult {
     return usesDeprecatedOrNonPublicApis.get();
   }
 
-  private static boolean hasLambdaCapturingParameters(MethodTree meth, StatementTree statement) {
+  private static boolean hasLambdaCapturingParameters(MethodTree meth, ExpressionTree statement) {
     AtomicBoolean paramReferred = new AtomicBoolean(false);
     ImmutableSet<VarSymbol> params =
         meth.getParameters().stream().map(ASTHelpers::getSymbol).collect(toImmutableSet());

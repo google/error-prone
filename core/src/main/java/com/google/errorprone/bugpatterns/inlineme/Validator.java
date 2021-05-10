@@ -19,6 +19,7 @@ package com.google.errorprone.bugpatterns.inlineme;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.util.ASTHelpers.getAnnotation;
 
+import com.google.common.base.CharMatcher;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
@@ -60,15 +61,16 @@ public final class Validator extends BugChecker implements MethodTreeMatcher {
     }
 
     InlinabilityResult result = InlinabilityResult.forMethod(tree, state);
-    if (result != InlinabilityResult.INLINEABLE) {
+    if (!result.isValidForValidator()) {
       return buildDescription(tree)
-          .setMessage(result.getErrorMessage())
+          .setMessage(result.error().getErrorMessage())
           // This method is un-inlineable, so let's remove the annotation (since we can't fix it)
           .addFix(SuggestedFix.delete(getInlineMeAnnotationTree(tree)))
           .build();
     }
 
-    InlineMeData inferredFromMethodBody = InlineMeData.buildExpectedInlineMeAnnotation(tree, state);
+    InlineMeData inferredFromMethodBody =
+        InlineMeData.buildExpectedInlineMeAnnotation(state, result.body());
     Set<MismatchedInlineMeComponents> mismatches =
         compatibleWithAnnotation(inferredFromMethodBody, anno, state.context);
     if (mismatches.isEmpty()) {
@@ -133,9 +135,7 @@ public final class Validator extends BugChecker implements MethodTreeMatcher {
     // Developers can customize the @InlineMe implementation a bit, so we have some leniency in
     // determining if an annotation properly represents the implementation of a method.
     if (!parseAndCheckForTokenEquivalence(
-        Helpers.normalize(anno.replacement()),
-        Helpers.normalize(inferredFromMethodBody.replacement()),
-        context)) {
+        anno.replacement(), inferredFromMethodBody.replacement(), context)) {
       mismatches.add(MismatchedInlineMeComponents.REPLACEMENT_STRING);
     }
     if (!inferredFromMethodBody.imports().equals(ImmutableSet.copyOf(anno.imports()))) {
@@ -147,12 +147,15 @@ public final class Validator extends BugChecker implements MethodTreeMatcher {
     return mismatches;
   }
 
+  private static final CharMatcher SEMICOLON = CharMatcher.is(';');
+
   /** Determines if the first and second token strings are equivalent. */
   private static boolean parseAndCheckForTokenEquivalence(
       String first, String second, Context context) {
-
-    ImmutableList<ErrorProneToken> tokens1 = ErrorProneTokens.getTokens(first, context);
-    ImmutableList<ErrorProneToken> tokens2 = ErrorProneTokens.getTokens(second, context);
+    ImmutableList<ErrorProneToken> tokens1 =
+        ErrorProneTokens.getTokens(SEMICOLON.trimTrailingFrom(first), context);
+    ImmutableList<ErrorProneToken> tokens2 =
+        ErrorProneTokens.getTokens(SEMICOLON.trimTrailingFrom(second), context);
 
     if (tokens1.size() != tokens2.size()) {
       return false;
