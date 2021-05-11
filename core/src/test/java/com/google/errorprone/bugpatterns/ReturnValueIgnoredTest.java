@@ -457,7 +457,7 @@ public class ReturnValueIgnoredTest {
             "    CustomIterator iterator = new CustomIterator();",
             "    // BUG: Diagnostic contains: ReturnValueIgnored",
             "    iterator.hasNext();",
-            "    iterator.next();", // this is OK (some folks next there way through an Iterator)
+            "    iterator.next();", // this is OK (some folks next their way through an Iterator)
             "    iterator.hasNext(true);", // this is OK (it's an overload but not on the interface)
             "    iterator.nonInterfaceMethod();", // this is OK (it's not an interface method)
             "  }",
