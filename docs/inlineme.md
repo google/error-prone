@@ -1,5 +1,5 @@
 ---
-title: @InlineMe
+title: InlineMe
 layout: documentation
 ---
 
@@ -17,6 +17,8 @@ caller is a process known as _inlining_. `@InlineMe` provides an easy to use
 mechanism to automatically inline deprecated APIs. For example:
 
 ```java
+import com.google.errorprone.annotations.InlineMe;
+
 public final class MyClass {
   /** @deprecated Use {@link #setDeadline(Duration)} instead. */
   @Deprecated
@@ -36,6 +38,8 @@ Users who call the method tagged with `@InlineMe` (e.g.,
 `myClass.setDeadline(3000)`) will be migrated to the new method:
 `myClass.setDeadline(Duration.ofMillis(3000))`
 
+<!-- TODO(kak): add instructions on how to run the Inliner in patch mode -->
+
 ## Example Usage
 
 `@InlineMe` supports a handful of API inlinings: non-overridable instance
@@ -49,7 +53,7 @@ replacement code with the `EnclosingClassName`.
 Both static imports and non-static imports are supported in the replacement
 code.
 
-Expand the zippies below to see examples of how to use `@InlineMe`:
+See the usage examples below:
 
 ### Instance method with no new imports
 
@@ -191,14 +195,14 @@ public final class MyClass {
 
 While it’s not possible to “inline” a constructor this way, InlineMe can still
 help. The catch is that the InlineMe code will not match the implementation’s
-code. You will need to manually disable the validator with a
-visibility-restricted `@InlineMeValidationDisabled` annotation.
+code. You will need to manually disable the validator with
+`@InlineMeValidationDisabled`.
 
 ```java
 public final class MyClass {
 
   /** @deprecated Please use {@link #create} instead. */
-  @InlineMeValidationDisabled("Migrating constructor to factory method")
+  @InlineMeValidationDisabled("Migrating from constructor to factory method")
   @Deprecated
   @InlineMe(
       replacement = "MyClass.create()",
@@ -216,4 +220,3 @@ public final class MyClass {
 NOTE: If a method is marked with `@InlineMeValidationDisabled`, you will need to
 run the `Inliner` and use the `-XepOpt:InlineMe:AllowUnvalidatedInlinings=true`
 flag.
-
