@@ -3,8 +3,6 @@ title: @InlineMe
 layout: documentation
 ---
 
-# InlineMe
-
 `@InlineMe` is a deprecation mechanism that allows automated tools to cleanup
 existing callers. This works similar to Kotlin's
 [`ReplaceWith`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-replace-with/)
@@ -53,8 +51,7 @@ code.
 
 Expand the zippies below to see examples of how to use `@InlineMe`:
 
-<details>
-<summary>Instance method with no new imports</summary>
+### Instance method with no new imports
 
 ```java
 import com.google.errorprone.annotations.InlineMe;
@@ -73,10 +70,7 @@ public final class MyClass {
 }
 ```
 
-</details>
-
-<details>
-<summary>Instance method with new imports</summary>
+### Instance method with new imports
 
 ```java
 import com.google.errorprone.annotations.InlineMe;
@@ -97,10 +91,7 @@ public final class MyClass {
 }
 ```
 
-</details>
-
-<details>
-<summary>Instance method with new static imports</summary>
+### Instance method with new static imports
 
 ```java
 import static com.google.thirdparty.jodatime.JavaTimeConversions.toJodaDuration;
@@ -122,10 +113,7 @@ public final class MyClass {
 }
 ```
 
-</details>
-
-<details>
-<summary>Static method with no new imports</summary>
+### Static method with no new imports
 
 NOTE: you should always add the enclosing class as an `import` on the
 `@InlineMe` annotation because the caller _may_ have static imported the old
@@ -149,10 +137,7 @@ public final class Frobber {
 }
 ```
 
-</details>
-
-<details>
-<summary>Static method with new static imports</summary>
+### Static method with new static imports
 
 NOTE: you should always add the enclosing class as an `import` on the
 `@InlineMe` annotation because the caller _may_ have static imported the old
@@ -180,10 +165,7 @@ public final class MyClass {
 }
 ```
 
-</details>
-
-<details>
-<summary>Constructor with new static imports</summary>
+### Constructor with new static imports
 
 ```java
 import static com.google.thirdparty.jodatime.JavaTimeConversions.toJavaDuration;
@@ -205,10 +187,7 @@ public final class MyClass {
 }
 ```
 
-</details>
-
-<details>
-<summary>Constructor to non-constructor</summary>
+### Constructor to non-constructor
 
 While it’s not possible to “inline” a constructor this way, InlineMe can still
 help. The catch is that the InlineMe code will not match the implementation’s
@@ -238,4 +217,3 @@ NOTE: If a method is marked with `@InlineMeValidationDisabled`, you will need to
 run the `Inliner` and use the `-XepOpt:InlineMe:AllowUnvalidatedInlinings=true`
 flag.
 
-</details>
