@@ -191,6 +191,44 @@ public class ReturnValueIgnored extends AbstractReturnValueIgnored {
               .named("valueOf")
               .withParameters("java.lang.String", "int"));
 
+  // TODO(kak): we may want to change this to an opt-out list per class (e.g., check _all_ of the
+  // methods on `java.util.Collection`, except this set. That would be much more future-proof.
+  // However, we need to make sure we're only checking the APIs defined on the interface, and not
+  // all methods on the descendant type.
+
+  /** APIs to check on the {@link java.util.Collection} interface. */
+  private static final Matcher<ExpressionTree> COLLECTION_METHODS =
+      anyOf(
+          instanceMethod()
+              .onDescendantOf("java.util.Collection")
+              .named("contains")
+              .withParameters("java.lang.Object"),
+          instanceMethod()
+              .onDescendantOf("java.util.Collection")
+              .named("containsAll")
+              .withParameters("java.util.Collection"),
+          instanceMethod().onDescendantOf("java.util.Collection").named("isEmpty").withParameters(),
+          instanceMethod().onDescendantOf("java.util.Collection").named("size").withParameters(),
+          instanceMethod().onDescendantOf("java.util.Collection").named("stream").withParameters(),
+          instanceMethod().onDescendantOf("java.util.Collection").named("toArray").withParameters(),
+          instanceMethod()
+              .onDescendantOf("java.util.Collection")
+              .named("toArray")
+              .withParameters("java.util.function.IntFunction"));
+
+  /** APIs to check on the {@link java.lang.Iterable} interface. */
+  private static final Matcher<ExpressionTree> ITERABLE_METHODS =
+      anyOf(
+          instanceMethod().onDescendantOf("java.lang.Iterable").named("iterator").withParameters(),
+          instanceMethod()
+              .onDescendantOf("java.lang.Iterable")
+              .named("spliterator")
+              .withParameters());
+
+  /** APIs to check on the {@link java.util.Iterator} interface. */
+  private static final Matcher<ExpressionTree> ITERATOR_METHODS =
+      instanceMethod().onDescendantOf("java.util.Iterator").named("hasNext").withParameters();
+
   /**
    * The return values of primitive types (e.g., {@link java.lang.Integer}) should always be checked
    * (except for parsing-type methods and void-returning methods, which won't be checked by
@@ -246,6 +284,8 @@ public class ReturnValueIgnored extends AbstractReturnValueIgnored {
           OPTIONAL_METHODS,
           TIME_UNIT_METHODS,
           ReturnValueIgnored::javaTimeTypes,
+          // TODO(b/187408482): delete these java.util.Collection APIs here and instead include
+          // COLLECTION_METHODS, ITERABLE_METHODS, and ITERATOR_METHODS
           instanceMethod()
               .onDescendantOf("java.util.Collection")
               .named("contains")
@@ -259,12 +299,21 @@ public class ReturnValueIgnored extends AbstractReturnValueIgnored {
               .namedAnyOf("containsKey", "containsValue")
               .withParameters("java.lang.Object"));
 
-  private final Matcher<? super ExpressionTree> matcher;
+  private Matcher<? super ExpressionTree> matcher;
 
   public ReturnValueIgnored(ErrorProneFlags flags) {
     boolean checkOptional = flags.getBoolean("ReturnValueIgnored:MoreOptional").orElse(true);
     this.matcher =
         checkOptional ? anyOf(SPECIALIZED_MATCHER, MORE_OPTIONAL_METHODS) : SPECIALIZED_MATCHER;
+
+    boolean checkCollection = flags.getBoolean("ReturnValueIgnored:Collection").orElse(true);
+    this.matcher = checkCollection ? anyOf(matcher, COLLECTION_METHODS) : matcher;
+
+    boolean checkIterable = flags.getBoolean("ReturnValueIgnored:Iterable").orElse(true);
+    this.matcher = checkIterable ? anyOf(matcher, ITERABLE_METHODS) : matcher;
+
+    boolean checkIterator = flags.getBoolean("ReturnValueIgnored:Iterator").orElse(true);
+    this.matcher = checkIterator ? anyOf(matcher, ITERATOR_METHODS) : matcher;
   }
 
   @Override

@@ -439,4 +439,66 @@ public class ReturnValueIgnoredTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void testIterableHasNext() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.util.Iterator;",
+            "final class Test {",
+            "  private static class CustomIterator implements Iterator<String> {",
+            "    @Override public boolean hasNext() { return true; }",
+            "    public boolean hasNext(boolean unused) { return true; }",
+            "    @Override public String next() { return \"hi\"; }",
+            "    public boolean nonInterfaceMethod() { return true; }",
+            "  }",
+            "  public void iteratorHasNext() {",
+            "    CustomIterator iterator = new CustomIterator();",
+            "    // BUG: Diagnostic contains: ReturnValueIgnored",
+            "    iterator.hasNext();",
+            "    iterator.next();", // this is OK (some folks next there way through an Iterator)
+            "    iterator.hasNext(true);", // this is OK (it's an overload but not on the interface)
+            "    iterator.nonInterfaceMethod();", // this is OK (it's not an interface method)
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void testCollectionToArray() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.common.collect.ImmutableList;",
+            "final class Test {",
+            "  private static final ImmutableList<Long> LIST = ImmutableList.of(42L);",
+            "  public void collectionToArray() {",
+            "    // BUG: Diagnostic contains: ReturnValueIgnored",
+            "    LIST.toArray();",
+            // Collection.toArray(T[]) is fine, since it _can_ dump the collection contents into the
+            // passed-in array *if* the array is large enough (in which case, you don't have to
+            // check the return value of the method call).
+            "    LIST.toArray(new Long[0]);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void testCollectionToArray_java8() {
+    assumeTrue(RuntimeVersion.isAtLeast9());
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.common.collect.ImmutableList;",
+            "final class Test {",
+            "  private static final ImmutableList<Long> LIST = ImmutableList.of(42L);",
+            "  public void collectionToArray() {",
+            "    // BUG: Diagnostic contains: ReturnValueIgnored",
+            "    LIST.toArray(Long[]::new);",
+            "  }",
+            "}")
+        .doTest();
+  }
 }
