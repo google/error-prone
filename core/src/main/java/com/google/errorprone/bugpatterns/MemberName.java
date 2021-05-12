@@ -69,7 +69,11 @@ public final class MemberName extends BugChecker implements MethodTreeMatcher, V
   private static final Supplier<ImmutableSet<Name>> EXEMPTED_METHOD_ANNOTATIONS =
       VisitorState.memoize(
           s ->
-              Stream.of("com.pholser.junit.quickcheck.Property")
+              Stream.of(
+                      "com.pholser.junit.quickcheck.Property",
+                      "com.google.caliper.Benchmark",
+                      "com.google.caliper.api.Macrobenchmark",
+                      "com.google.caliper.api.Footprint")
                   .map(s::getName)
                   .collect(toImmutableSet()));
 
