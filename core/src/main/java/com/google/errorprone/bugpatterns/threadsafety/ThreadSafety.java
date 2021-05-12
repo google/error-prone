@@ -562,6 +562,9 @@ public final class ThreadSafety {
         case CLASS:
           break;
         default:
+          if (type.tsym.getKind().name().equals("RECORD")) {
+            break;
+          }
           throw new AssertionError(String.format("Unexpected type kind %s", type.tsym.getKind()));
       }
       if (WellKnownMutability.isAnnotation(state, type)) {

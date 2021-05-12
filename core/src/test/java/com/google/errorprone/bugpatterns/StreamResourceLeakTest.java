@@ -16,9 +16,12 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static org.junit.Assume.assumeTrue;
+
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode;
 import com.google.errorprone.CompilationTestHelper;
+import com.google.errorprone.util.RuntimeVersion;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -281,6 +284,26 @@ public class StreamResourceLeakTest {
             "  default DirectoryStream<Path> f(Path path) throws IOException {",
             "    // BUG: Diagnostic contains: should be closed",
             "    return Files.newDirectoryStream(path);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void record() {
+    assumeTrue(RuntimeVersion.isAtLeast16());
+    testHelper
+        .addSourceLines(
+            "ExampleRecord.java",
+            "package example;",
+            "import java.io.IOException;",
+            "import java.nio.file.Files;",
+            "import java.nio.file.Path;",
+            "import java.util.stream.Stream;",
+            "record ExampleRecord(Path path) {",
+            "  public Stream<Path> list() throws IOException {",
+            "    // BUG: Diagnostic contains: should be closed",
+            "    return Files.list(path);",
             "  }",
             "}")
         .doTest();

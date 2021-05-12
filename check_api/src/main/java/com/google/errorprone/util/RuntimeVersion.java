@@ -85,6 +85,11 @@ public final class RuntimeVersion {
     return MAJOR >= 15;
   }
 
+  /** Returns true if the current runtime is JDK 16 or newer. */
+  public static boolean isAtLeast16() {
+    return MAJOR >= 16;
+  }
+
   /**
    * Returns the latest {@code --release} version.
    *

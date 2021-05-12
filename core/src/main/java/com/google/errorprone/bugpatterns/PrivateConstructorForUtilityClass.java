@@ -107,6 +107,9 @@ public final class PrivateConstructorForUtilityClass extends BugChecker
       case INTERFACE:
         return false;
       default:
+        if (tree.getKind().name().equals("RECORD")) {
+          return false;
+        }
         throw new AssertionError("unknown member type:" + tree.getKind());
     }
   }

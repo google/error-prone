@@ -1311,11 +1311,15 @@ public class Matchers {
   private static final ImmutableSet<Kind> DECLARATION =
       Sets.immutableEnumSet(Kind.LAMBDA_EXPRESSION, Kind.CLASS, Kind.ENUM, Kind.INTERFACE);
 
+  private static boolean isDeclaration(Kind kind) {
+    return DECLARATION.contains(kind) || kind.name().equals("RECORD");
+  }
+
   public static boolean methodCallInDeclarationOfThrowingRunnable(VisitorState state) {
     return stream(state.getPath())
         // Find the nearest definitional context for this method invocation
         // (i.e.: the nearest surrounding class or lambda)
-        .filter(t -> DECLARATION.contains(t.getKind()))
+        .filter(t -> isDeclaration(t.getKind()))
         .findFirst()
         .map(t -> isThrowingFunctionalInterface(getType(t), state))
         .orElseThrow(VerifyException::new);

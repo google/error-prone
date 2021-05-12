@@ -16,9 +16,12 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static org.junit.Assume.assumeTrue;
+
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
 import com.google.errorprone.ErrorProneFlags;
+import com.google.errorprone.util.RuntimeVersion;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -282,6 +285,26 @@ public class FieldCanBeStaticTest {
             "      // BUG: Diagnostic contains: can be static",
             "      private final int I = 42;",
             "    };",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void record() {
+    assumeTrue(RuntimeVersion.isAtLeast16());
+    compilationHelper
+        .addSourceLines(
+            "ExampleClass.java",
+            "package example;",
+            "public final class ExampleClass {",
+            "  public record OtherRecord(String value) {}",
+            "  public record SomeRecord(OtherRecord value) {",
+            "    public static SomeRecord fromValue(final OtherRecord value) {",
+            "      return new SomeRecord(value);",
+            "    }",
+            "  }",
+            "  private ExampleClass() {",
             "  }",
             "}")
         .doTest();
