@@ -15,20 +15,20 @@ jobs:
       fail-fast: false
       matrix:
         os: [ ubuntu-latest ]
-        java: [ 15, 11, 8 ]
+        java: [ 16, 11, 8 ]
         experimental: [ false ]
         # Only test on macos and windows with a single recent JDK to avoid a
         # combinatorial explosion of test configurations.
         # Most OS-specific issues are not specific to a particular JDK version.
         include:
           - os: macos-latest
-            java: 15
+            java: 16
             experimental: false
           - os: windows-latest
-            java: 15
+            java: 16
             experimental: false
           - os: ubuntu-latest
-            java: 16-ea
+            java: 17-ea
             experimental: true
     runs-on: ${{ matrix.os }}
     continue-on-error: ${{ matrix.experimental }}
