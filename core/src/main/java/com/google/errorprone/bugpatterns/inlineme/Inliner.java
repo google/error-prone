@@ -245,13 +245,7 @@ public final class Inliner extends BugChecker
   }
 
   private Description describe(Tree tree, SuggestedFix fix, Api api) {
-    return buildDescription(tree)
-        .setMessage(
-            api.shortName()
-                + " is deprecated and should be inlined"
-            )
-        .addFix(fix)
-        .build();
+    return buildDescription(tree).setMessage(api.deprecationMessage()).addFix(fix).build();
   }
 
   @AutoValue
@@ -271,8 +265,14 @@ public final class Inliner extends BugChecker
 
     abstract boolean isConstructor();
 
+    final String deprecationMessage() {
+      return shortName()
+          + " is deprecated and should be inlined"
+      ;
+    }
+
     /** Returns {@code FullyQualifiedClassName#methodName}. */
-    String methodId() {
+    final String methodId() {
       return String.format("%s#%s", className(), methodName());
     }
 
@@ -280,12 +280,12 @@ public final class Inliner extends BugChecker
      * Returns a short, human readable description of this API (e.g., {@code
      * ClassName.methodName()}).
      */
-    String shortName() {
+    final String shortName() {
       return String.format("%s.%s()", simpleClassName(), methodName());
     }
 
     /** Returns the simple class name (e.g., {@code ClassName}). */
-    String simpleClassName() {
+    final String simpleClassName() {
       return Iterables.getLast(CLASS_NAME_SPLITTER.split(className()));
     }
   }
