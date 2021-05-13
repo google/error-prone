@@ -352,14 +352,14 @@ public final class PrivateConstructorForUtilityClassTest {
   @Test
   public void record() {
     assumeTrue(RuntimeVersion.isAtLeast16());
-    testHelper
-        .addInputLines(
+    CompilationTestHelper.newInstance(PrivateConstructorForUtilityClass.class, getClass())
+        .addSourceLines(
             "ExampleUtilityClass.java",
             "package example;",
+            "// BUG: Diagnostic contains:",
             "public final class ExampleUtilityClass {",
             "  public record SomeRecord(String value) {}",
             "}")
-        .expectUnchanged()
         .doTest();
   }
 }
