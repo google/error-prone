@@ -24,6 +24,7 @@ import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.annotations.InlineMe;
+import com.google.errorprone.util.ASTHelpers;
 import com.google.errorprone.util.SourceCodeEscapers;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ExpressionTree;
@@ -259,7 +260,7 @@ abstract class InlineMeData {
         return super.visitIdentifier(identifierTree, unused);
       }
       Symbol symbol = getSymbol(identifierTree);
-      if (symbol == null || symbol.isLocal()) {
+      if (symbol == null || ASTHelpers.isLocal(symbol)) {
         return super.visitIdentifier(identifierTree, unused);
       }
 

@@ -254,7 +254,7 @@ abstract class InlinabilityResult {
 
       @Override
       public Void visitIdentifier(IdentifierTree node, Void unused) {
-        if (!getSymbol(node).isLocal()) {
+        if (!ASTHelpers.isLocal(getSymbol(node))) {
           if (!node.getName().contentEquals("this")) {
             if (isDeprecatedOrNonPublic(node)) {
               return null; // short-circuit
