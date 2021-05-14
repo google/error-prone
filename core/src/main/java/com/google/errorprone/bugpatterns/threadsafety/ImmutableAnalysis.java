@@ -38,13 +38,13 @@ import com.sun.tools.javac.code.Symbol.TypeVariableSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Type.ClassType;
-import com.sun.tools.javac.util.Filter;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Predicate;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.type.TypeKind;
@@ -229,13 +229,8 @@ public class ImmutableAnalysis {
     if (classSym.members() == null) {
       return Violation.absent();
     }
-    Filter<Symbol> instanceFieldFilter =
-        new Filter<Symbol>() {
-          @Override
-          public boolean accepts(Symbol symbol) {
-            return symbol.getKind() == ElementKind.FIELD && !symbol.isStatic();
-          }
-        };
+    Predicate<Symbol> instanceFieldFilter =
+        symbol -> symbol.getKind() == ElementKind.FIELD && !symbol.isStatic();
     Map<Symbol, Tree> declarations = new HashMap<>();
     if (tree.isPresent()) {
       for (Tree member : tree.get().getMembers()) {
@@ -248,7 +243,8 @@ public class ImmutableAnalysis {
     // javac gives us members in reverse declaration order
     // handling them in declaration order leads to marginally better diagnostics
     List<Symbol> members =
-        ImmutableList.copyOf(classSym.members().getSymbols(instanceFieldFilter)).reverse();
+        ImmutableList.copyOf(ASTHelpers.scope(classSym.members()).getSymbols(instanceFieldFilter))
+            .reverse();
     for (Symbol member : members) {
       Optional<Tree> memberTree = Optional.ofNullable(declarations.get(member));
       Violation info =

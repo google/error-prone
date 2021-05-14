@@ -146,7 +146,8 @@ public class UnsafeFinalization extends BugChecker implements MethodInvocationTr
   }
 
   private static Stream<VarSymbol> getFields(TypeSymbol s) {
-    return Streams.stream(s.members().getSymbols(m -> m.getKind() == ElementKind.FIELD))
+    return Streams.stream(
+            ASTHelpers.scope(s.members()).getSymbols(m -> m.getKind() == ElementKind.FIELD))
         .map(VarSymbol.class::cast);
   }
 }

@@ -34,13 +34,14 @@ import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.predicates.TypePredicate;
 import com.google.errorprone.predicates.TypePredicates;
+import com.google.errorprone.util.ASTHelpers;
 import com.google.errorprone.util.ASTHelpers.TargetType;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.MemberReferenceTree;
 import com.sun.source.tree.MemberReferenceTree.ReferenceMode;
 import com.sun.source.tree.MethodInvocationTree;
-import com.sun.tools.javac.code.Scope.WriteableScope;
+import com.sun.tools.javac.code.Scope;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Type;
@@ -77,9 +78,9 @@ public final class UnnecessaryMethodReference extends BugChecker
       return NO_MATCH;
     }
     MethodSymbol symbol = getSymbol(tree);
-    WriteableScope members = targetType.type().tsym.members();
-    if (!members.anyMatch(
-            sym -> isFunctionalInterfaceInvocation(symbol, targetType.type(), sym, state))
+    Scope members = targetType.type().tsym.members();
+    if (!ASTHelpers.scope(members)
+            .anyMatch(sym -> isFunctionalInterfaceInvocation(symbol, targetType.type(), sym, state))
         && !isKnownAlias(tree, targetType.type(), state)) {
       return NO_MATCH;
     }

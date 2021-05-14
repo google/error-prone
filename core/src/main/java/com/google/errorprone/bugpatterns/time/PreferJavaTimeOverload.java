@@ -57,7 +57,6 @@ import com.sun.tools.javac.code.Symbol.TypeSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Types;
-import com.sun.tools.javac.util.Filter;
 import com.sun.tools.javac.util.Name;
 import java.util.List;
 import java.util.Map;
@@ -400,7 +399,7 @@ public final class PreferJavaTimeOverload extends BugChecker
   // Adapted from ASTHelpers.findMatchingMethods(); but this short-circuits
   private static boolean hasMatchingMethods(
       Name name, final Predicate<MethodSymbol> predicate, Type startClass, Types types) {
-    Filter<Symbol> matchesMethodPredicate =
+    Predicate<Symbol> matchesMethodPredicate =
         sym -> sym instanceof MethodSymbol && predicate.apply((MethodSymbol) sym);
 
     // Iterate over all classes and interfaces that startClass inherits from.
@@ -410,7 +409,8 @@ public final class PreferJavaTimeOverload extends BugChecker
       Scope superClassSymbols = superClassSymbol.members();
       if (superClassSymbols != null) { // Can be null if superClass is a type variable
         if (!Iterables.isEmpty(
-            superClassSymbols.getSymbolsByName(name, matchesMethodPredicate, NON_RECURSIVE))) {
+            ASTHelpers.scope(superClassSymbols)
+                .getSymbolsByName(name, matchesMethodPredicate, NON_RECURSIVE))) {
           return true;
         }
       }
