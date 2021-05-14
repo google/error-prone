@@ -216,6 +216,14 @@ public class ReturnValueIgnored extends AbstractReturnValueIgnored {
               .named("toArray")
               .withParameters("java.util.function.IntFunction"));
 
+  /** APIs to check on the {@link java.util.Map} interface. */
+  private static final Matcher<ExpressionTree> MAP_METHODS =
+      anyOf(
+          instanceMethod()
+              .onDescendantOf("java.util.Map")
+              .namedAnyOf("containsKey", "containsValue")
+              .withParameters("java.lang.Object"));
+
   /** APIs to check on the {@link java.lang.Iterable} interface. */
   private static final Matcher<ExpressionTree> ITERABLE_METHODS =
       anyOf(
@@ -284,36 +292,17 @@ public class ReturnValueIgnored extends AbstractReturnValueIgnored {
           OPTIONAL_METHODS,
           TIME_UNIT_METHODS,
           ReturnValueIgnored::javaTimeTypes,
-          // TODO(b/187408482): delete these java.util.Collection APIs here and instead include
-          // COLLECTION_METHODS, ITERABLE_METHODS, and ITERATOR_METHODS
-          instanceMethod()
-              .onDescendantOf("java.util.Collection")
-              .named("contains")
-              .withParameters("java.lang.Object"),
-          instanceMethod()
-              .onDescendantOf("java.util.Collection")
-              .named("containsAll")
-              .withParameters("java.util.Collection"),
-          instanceMethod()
-              .onDescendantOf("java.util.Map")
-              .namedAnyOf("containsKey", "containsValue")
-              .withParameters("java.lang.Object"));
+          COLLECTION_METHODS,
+          MAP_METHODS,
+          ITERABLE_METHODS,
+          ITERATOR_METHODS);
 
-  private Matcher<? super ExpressionTree> matcher;
+  private final Matcher<? super ExpressionTree> matcher;
 
   public ReturnValueIgnored(ErrorProneFlags flags) {
     boolean checkOptional = flags.getBoolean("ReturnValueIgnored:MoreOptional").orElse(true);
     this.matcher =
         checkOptional ? anyOf(SPECIALIZED_MATCHER, MORE_OPTIONAL_METHODS) : SPECIALIZED_MATCHER;
-
-    boolean checkCollection = flags.getBoolean("ReturnValueIgnored:Collection").orElse(true);
-    this.matcher = checkCollection ? anyOf(matcher, COLLECTION_METHODS) : matcher;
-
-    boolean checkIterable = flags.getBoolean("ReturnValueIgnored:Iterable").orElse(true);
-    this.matcher = checkIterable ? anyOf(matcher, ITERABLE_METHODS) : matcher;
-
-    boolean checkIterator = flags.getBoolean("ReturnValueIgnored:Iterator").orElse(true);
-    this.matcher = checkIterator ? anyOf(matcher, ITERATOR_METHODS) : matcher;
   }
 
   @Override
