@@ -889,6 +889,205 @@ public class InlinerTest {
         .doTest();
   }
 
+  @Test
+  public void testOrderOfOperations() {
+    refactoringTestHelper
+        .allowBreakingChanges()
+        .addInputLines(
+            "Client.java",
+            "import com.google.errorprone.annotations.InlineMe;",
+            "public final class Client {",
+            "  @Deprecated",
+            "  @InlineMe(replacement = \"x * y\")",
+            "  public int multiply(int x, int y) {",
+            "    return x * y;",
+            "  }",
+            "}")
+        .expectUnchanged()
+        .addInputLines(
+            "Caller.java",
+            "public final class Caller {",
+            "  public void doTest() {",
+            "    Client client = new Client();",
+            "    int x = client.multiply(5, 10);",
+            "  }",
+            "}")
+        .addOutputLines(
+            "out/Caller.java",
+            "public final class Caller {",
+            "  public void doTest() {",
+            "    Client client = new Client();",
+            // TODO(kak): hmm, why don't we inline this?
+            "    int x = client.multiply(5, 10);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void testOrderOfOperationsWithParamAddition() {
+    refactoringTestHelper
+        .allowBreakingChanges()
+        .addInputLines(
+            "Client.java",
+            "import com.google.errorprone.annotations.InlineMe;",
+            "public final class Client {",
+            "  @Deprecated",
+            "  @InlineMe(replacement = \"x * y\")",
+            "  public int multiply(int x, int y) {",
+            "    return x * y;",
+            "  }",
+            "}")
+        .expectUnchanged()
+        .addInputLines(
+            "Caller.java",
+            "public final class Caller {",
+            "  public void doTest() {",
+            "    Client client = new Client();",
+            "    int x = client.multiply(5 + 3, 10);",
+            "  }",
+            "}")
+        .addOutputLines(
+            "out/Caller.java",
+            "public final class Caller {",
+            "  public void doTest() {",
+            "    Client client = new Client();",
+            // TODO(kak): hmm, why don't we inline this?
+            "    int x = client.multiply(5 + 3, 10);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void testOrderOfOperationsWithTrailingOperand() {
+    refactoringTestHelper
+        .allowBreakingChanges()
+        .addInputLines(
+            "Client.java",
+            "import com.google.errorprone.annotations.InlineMe;",
+            "public final class Client {",
+            "  @Deprecated",
+            "  @InlineMe(replacement = \"x * y\")",
+            "  public int multiply(int x, int y) {",
+            "    return x * y;",
+            "  }",
+            "}")
+        .expectUnchanged()
+        .addInputLines(
+            "Caller.java",
+            "public final class Caller {",
+            "  public void doTest() {",
+            "    Client client = new Client();",
+            "    int x = client.multiply(5 + 3, 10) * 5;",
+            "  }",
+            "}")
+        .addOutputLines(
+            "out/Caller.java",
+            "public final class Caller {",
+            "  public void doTest() {",
+            "    Client client = new Client();",
+            // TODO(kak): hmm, why don't we inline this?
+            "    int x = client.multiply(5 + 3, 10) * 5;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void testSublist() {
+    refactoringTestHelper
+        .allowBreakingChanges()
+        .addInputLines(
+            "Client.java",
+            "import com.google.errorprone.annotations.InlineMe;",
+            "import java.util.List;",
+            "public final class Client {",
+            "  @Deprecated",
+            "  @InlineMe(replacement = \"list.subList(list.size() - n, list.size())\")",
+            "  public List<String> last(List<String> list, int n) {",
+            "    return list.subList(list.size() - n, list.size());",
+            "  }",
+            "}")
+        .expectUnchanged()
+        .addInputLines(
+            "Caller.java",
+            "import java.util.ArrayList;",
+            "import java.util.List;",
+            "public final class Caller {",
+            "  public void doTest() {",
+            "    List<String> list = new ArrayList<>();",
+            "    list.add(\"hi\");",
+            "    Client client = new Client();",
+            "    List<String> result = client.last(list, 1);",
+            "  }",
+            "}")
+        .addOutputLines(
+            "out/Caller.java",
+            "import java.util.ArrayList;",
+            "import java.util.List;",
+            "public final class Caller {",
+            "  public void doTest() {",
+            "    List<String> list = new ArrayList<>();",
+            "    list.add(\"hi\");",
+            "    Client client = new Client();",
+            "    List<String> result = list.subList(list.size() - 1, list.size());",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void testSublistPassingMethod() {
+    refactoringTestHelper
+        .allowBreakingChanges()
+        .addInputLines(
+            "Client.java",
+            "import com.google.errorprone.annotations.InlineMe;",
+            "import java.util.List;",
+            "public final class Client {",
+            "  @Deprecated",
+            "  @InlineMe(replacement = \"list.subList(list.size() - n, list.size())\")",
+            "  public List<String> last(List<String> list, int n) {",
+            "    return list.subList(list.size() - n, list.size());",
+            "  }",
+            "}")
+        .expectUnchanged()
+        .addInputLines(
+            "Caller.java",
+            "import java.util.ArrayList;",
+            "import java.util.List;",
+            "public final class Caller {",
+            "  public void doTest() {",
+            "    Client client = new Client();",
+            "    List<String> result = client.last(getList(), 1);",
+            "  }",
+            "  public List<String> getList() {",
+            "    List<String> list = new ArrayList<>();",
+            "    list.add(\"hi\");",
+            "    return list;",
+            "  }",
+            "}")
+        .addOutputLines(
+            "out/Caller.java",
+            "import java.util.ArrayList;",
+            "import java.util.List;",
+            "public final class Caller {",
+            "  public void doTest() {",
+            "    Client client = new Client();",
+            // TODO(b/188184784): this is a bug, as there's no guarantee that getList() returns the
+            // same list every time (or it may be expensive!)
+            "    List<String> result = getList().subList(getList().size() - 1, getList().size());",
+            "  }",
+            "  public List<String> getList() {",
+            "    List<String> list = new ArrayList<>();",
+            "    list.add(\"hi\");",
+            "    return list;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
   private BugCheckerRefactoringTestHelper buildBugCheckerWithPrefixFlag(String prefix) {
     return BugCheckerRefactoringTestHelper.newInstance(
         new Inliner(ErrorProneFlags.builder().putFlag(Inliner.PREFIX_FLAG, prefix).build()),

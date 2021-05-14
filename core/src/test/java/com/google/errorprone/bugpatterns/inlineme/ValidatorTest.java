@@ -683,4 +683,20 @@ public class ValidatorTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void testMultiply() {
+    helper
+        .addSourceLines(
+            "Client.java",
+            "import com.google.errorprone.annotations.InlineMe;",
+            "public final class Client {",
+            "  @Deprecated",
+            "  @InlineMe(replacement = \"x * y\")",
+            "  public final int multiply(int x, int y) {",
+            "    return x * y;",
+            "  }",
+            "}")
+        .doTest();
+  }
 }
