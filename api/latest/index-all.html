@@ -640,6 +640,8 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/matchers/FieldMatchers.html#anyFieldInClass(java.lang.String)">anyFieldInClass(String)</a></span> - Static method in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/FieldMatchers.html" title="class in com.google.errorprone.matchers">FieldMatchers</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/google/errorprone/util/ErrorProneScope.html#anyMatch(java.util.function.Predicate)">anyMatch(Predicate&lt;Symbol&gt;)</a></span> - Method in class com.google.errorprone.util.<a href="com/google/errorprone/util/ErrorProneScope.html" title="class in com.google.errorprone.util">ErrorProneScope</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/matchers/Matchers.html#anyMethod()">anyMethod()</a></span> - Static method in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/Matchers.html" title="class in com.google.errorprone.matchers">Matchers</a></dt>
 <dd>
 <div class="block">Matches a static or instance method.</div>
@@ -3203,6 +3205,10 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/scanner/ErrorProneScannerTransformer.html#%3Cinit%3E()">ErrorProneScannerTransformer()</a></span> - Constructor for class com.google.errorprone.scanner.<a href="com/google/errorprone/scanner/ErrorProneScannerTransformer.html" title="class in com.google.errorprone.scanner">ErrorProneScannerTransformer</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/util/ErrorProneScope.html" title="class in com.google.errorprone.util"><span class="type-name-link">ErrorProneScope</span></a> - Class in <a href="com/google/errorprone/util/package-summary.html">com.google.errorprone.util</a></dt>
+<dd>
+<div class="block">A compatibility wrapper around <code>Filter</code></div>
+</dd>
 <dt><a href="com/google/errorprone/ErrorProneTimings.html" title="class in com.google.errorprone"><span class="type-name-link">ErrorProneTimings</span></a> - Class in <a href="com/google/errorprone/package-summary.html">com.google.errorprone</a></dt>
 <dd>
 <div class="block">A collection of timing data for the runtime of individual checks.</div>
@@ -3465,7 +3471,7 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">A FixAggregator that emits a separate fix for each method usage.</div>
 </dd>
-<dt><span class="member-name-link"><a href="com/google/errorprone/util/ASTHelpers.html#findMatchingMethods(com.sun.tools.javac.util.Name,com.google.common.base.Predicate,com.sun.tools.javac.code.Type,com.sun.tools.javac.code.Types)">findMatchingMethods(Name, Predicate&lt;Symbol.MethodSymbol&gt;, Type, Types)</a></span> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/ASTHelpers.html" title="class in com.google.errorprone.util">ASTHelpers</a></dt>
+<dt><span class="member-name-link"><a href="com/google/errorprone/util/ASTHelpers.html#findMatchingMethods(com.sun.tools.javac.util.Name,java.util.function.Predicate,com.sun.tools.javac.code.Type,com.sun.tools.javac.code.Types)">findMatchingMethods(Name, Predicate&lt;Symbol.MethodSymbol&gt;, Type, Types)</a></span> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/ASTHelpers.html" title="class in com.google.errorprone.util">ASTHelpers</a></dt>
 <dd>
 <div class="block">Finds all methods in any superclass of <code>startClass</code> with a certain <code>name</code> that
  match the given <code>predicate</code>.</div>
@@ -4900,6 +4906,12 @@ loadScripts(document, 'script');</script>
 <dt><span class="member-name-link"><a href="com/google/errorprone/VisitorState.html#getSymbolFromString(com.sun.tools.javac.code.Symbol.ModuleSymbol,com.sun.tools.javac.util.Name)">getSymbolFromString(Symbol.ModuleSymbol, Name)</a></span> - Method in class com.google.errorprone.<a href="com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/VisitorState.html#getSymbolFromString(java.lang.String)">getSymbolFromString(String)</a></span> - Method in class com.google.errorprone.<a href="com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/google/errorprone/util/ErrorProneScope.html#getSymbols(java.util.function.Predicate)">getSymbols(Predicate&lt;Symbol&gt;)</a></span> - Method in class com.google.errorprone.util.<a href="com/google/errorprone/util/ErrorProneScope.html" title="class in com.google.errorprone.util">ErrorProneScope</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/google/errorprone/util/ErrorProneScope.html#getSymbolsByName(com.sun.tools.javac.util.Name,java.util.function.Predicate)">getSymbolsByName(Name, Predicate&lt;Symbol&gt;)</a></span> - Method in class com.google.errorprone.util.<a href="com/google/errorprone/util/ErrorProneScope.html" title="class in com.google.errorprone.util">ErrorProneScope</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/google/errorprone/util/ErrorProneScope.html#getSymbolsByName(com.sun.tools.javac.util.Name,java.util.function.Predicate,com.sun.tools.javac.code.Scope.LookupKind)">getSymbolsByName(Name, Predicate&lt;Symbol&gt;, Scope.LookupKind)</a></span> - Method in class com.google.errorprone.util.<a href="com/google/errorprone/util/ErrorProneScope.html" title="class in com.google.errorprone.util">ErrorProneScope</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/VisitorState.html#getSymtab()">getSymtab()</a></span> - Method in class com.google.errorprone.<a href="com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a></dt>
 <dd>&nbsp;</dd>
@@ -10640,6 +10652,10 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/util/ASTHelpers.ScanThrownTypes.html#%3Cinit%3E(com.google.errorprone.VisitorState)">ScanThrownTypes(VisitorState)</a></span> - Constructor for class com.google.errorprone.util.<a href="com/google/errorprone/util/ASTHelpers.ScanThrownTypes.html" title="class in com.google.errorprone.util">ASTHelpers.ScanThrownTypes</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/google/errorprone/util/ASTHelpers.html#scope(com.sun.tools.javac.code.Scope)">scope(Scope)</a></span> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/ASTHelpers.html" title="class in com.google.errorprone.util">ASTHelpers</a></dt>
+<dd>
+<div class="block">Returns a compatibility adapter around <code>Scope</code>.</div>
+</dd>
 <dt><a href="com/google/errorprone/bugpatterns/inject/ScopeAnnotationOnInterfaceOrAbstractClass.html" title="class in com.google.errorprone.bugpatterns.inject"><span class="type-name-link">ScopeAnnotationOnInterfaceOrAbstractClass</span></a> - Class in <a href="com/google/errorprone/bugpatterns/inject/package-summary.html">com.google.errorprone.bugpatterns.inject</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/inject/ScopeAnnotationOnInterfaceOrAbstractClass.html#%3Cinit%3E()">ScopeAnnotationOnInterfaceOrAbstractClass()</a></span> - Constructor for class com.google.errorprone.bugpatterns.inject.<a href="com/google/errorprone/bugpatterns/inject/ScopeAnnotationOnInterfaceOrAbstractClass.html" title="class in com.google.errorprone.bugpatterns.inject">ScopeAnnotationOnInterfaceOrAbstractClass</a></dt>
