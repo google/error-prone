@@ -55,10 +55,13 @@ public final class ErrorProneScope {
   private static final Class<?> FILTER_CLASS = getFilterClass();
 
   private static Class<?> getFilterClass() {
+    if (RuntimeVersion.isAtLeast17()) {
+      return null;
+    }
     try {
       return Class.forName("com.sun.tools.javac.util.Filter");
     } catch (ClassNotFoundException e) {
-      return null;
+      throw new LinkageError(e.getMessage(), e);
     }
   }
 
