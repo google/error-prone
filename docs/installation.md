@@ -59,7 +59,7 @@ Edit your `pom.xml` file to add settings to the maven-compiler-plugin:
             <path>
               <groupId>com.google.errorprone</groupId>
               <artifactId>error_prone_core</artifactId>
-              <version>2.6.0</version>
+              <version>2.7.0</version>
             </path>
             <!-- Other annotation processors go here.
 
@@ -109,7 +109,7 @@ Default](https://openjdk.java.net/jeps/396):
             <path>
               <groupId>com.google.errorprone</groupId>
               <artifactId>error_prone_core</artifactId>
-              <version>2.6.0</version>
+              <version>2.7.0</version>
             </path>
             <!-- Other annotation processors go here.
 
@@ -172,7 +172,7 @@ The gradle plugin is an external contribution. The documentation and code is at
 
 Download the following artifacts from maven:
 
-*   [error_prone_core-2.6.0-with-dependencies.jar](https://repo1.maven.org/maven2/com/google/errorprone/error_prone_core/2.6.0/error_prone_core-2.6.0-with-dependencies.jar)
+*   [error_prone_core-2.7.0-with-dependencies.jar](https://repo1.maven.org/maven2/com/google/errorprone/error_prone_core/2.7.0/error_prone_core-2.7.0-with-dependencies.jar)
 *   [jFormatString-3.0.0.jar](https://repo1.maven.org/maven2/com/google/code/findbugs/jFormatString/3.0.0/jFormatString-3.0.0.jar)
 *   [dataflow-shaded-3.7.1.jar](https://repo1.maven.org/maven2/org/checkerframework/dataflow-shaded/3.7.1/dataflow-shaded-3.7.1.jar)
 *   [javac-9+181-r4173-1.jar](https://repo1.maven.org/maven2/com/google/errorprone/javac/9+181-r4173-1/javac-9+181-r4173-1.jar)
