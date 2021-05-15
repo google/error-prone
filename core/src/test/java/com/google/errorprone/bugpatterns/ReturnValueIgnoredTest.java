@@ -53,7 +53,7 @@ public class ReturnValueIgnoredTest {
             "import java.util.function.Function;",
             "class Test {",
             "  void f(Function<Integer, Integer> f) {",
-            "    // BUG: Diagnostic contains:",
+            "    // BUG: Diagnostic contains: ReturnValueIgnored",
             "    f.apply(0);",
             "  }",
             "}")
@@ -113,7 +113,7 @@ public class ReturnValueIgnoredTest {
             "Test.java",
             "class Test {",
             "  void f() {",
-            "    // BUG: Diagnostic contains:",
+            "    // BUG: Diagnostic contains: ReturnValueIgnored",
             "    \"\".codePoints().count();",
             "    \"\".codePoints().forEach(i -> {});",
             "  }",
@@ -308,7 +308,7 @@ public class ReturnValueIgnoredTest {
             "import java.nio.file.Path;",
             "abstract class Test {",
             "  void test(Path p) {",
-            "    // BUG: Diagnostic contains:",
+            "    // BUG: Diagnostic contains: ReturnValueIgnored",
             "    E e = p::toRealPath;",
             "  }",
             "  abstract <T> void a(T t);",
@@ -326,12 +326,61 @@ public class ReturnValueIgnoredTest {
             "Test.java",
             "abstract class Test {",
             "  void test(java.util.List p) {",
-            "    // BUG: Diagnostic contains:",
+            "    // BUG: Diagnostic contains: ReturnValueIgnored",
             "    p.contains(null);",
             "  }",
-            "  void test2(java.util.Map p) {",
-            "    // BUG: Diagnostic contains:",
-            "    p.containsKey(null);",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void mapMethods() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.util.Map;",
+            "public final class Test {",
+            "  void doTest(Map<Integer, Integer> map) {",
+            "    // BUG: Diagnostic contains: ReturnValueIgnored",
+            "    map.isEmpty();",
+            "    // BUG: Diagnostic contains: ReturnValueIgnored",
+            "    map.size();",
+            "    // BUG: Diagnostic contains: ReturnValueIgnored",
+            "    map.entrySet();",
+            "    // BUG: Diagnostic contains: ReturnValueIgnored",
+            "    map.keySet();",
+            "    // BUG: Diagnostic contains: ReturnValueIgnored",
+            "    map.values();",
+            "    // BUG: Diagnostic contains: ReturnValueIgnored",
+            "    map.containsKey(42);",
+            "    // BUG: Diagnostic contains: ReturnValueIgnored",
+            "    map.containsValue(42);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void mapMethods_java11() {
+    assumeTrue(RuntimeVersion.isAtLeast11());
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.util.Map;",
+            "class Test {",
+            "  void doTest() {",
+            "    // BUG: Diagnostic contains: ReturnValueIgnored",
+            "    Map.of(42, 42);",
+            "    // BUG: Diagnostic contains: ReturnValueIgnored",
+            "    Map.entry(42, 42);",
+            "  }",
+            "  void doTest(Map<Integer, Integer> map) {",
+            "    // BUG: Diagnostic contains: ReturnValueIgnored",
+            "    Map.copyOf(map);",
+            "  }",
+            "  void doTest(Map.Entry<Integer, Integer>... entries) {",
+            "    // BUG: Diagnostic contains: ReturnValueIgnored",
+            "    Map.ofEntries(entries);",
             "  }",
             "}")
         .doTest();
