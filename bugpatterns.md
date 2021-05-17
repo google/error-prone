@@ -743,7 +743,7 @@ __[InlineMeInliner](bugpattern/InlineMeInliner)__<br>
 This API is deprecated and the caller should be &#39;inlined&#39;.
 
 __[InlineMeSuggester](bugpattern/InlineMeSuggester)__<br>
-Recommends annotating a deprecated, inlineable API with @InlineMe.
+This deprecated API looks inlineable. If you&#39;d like the body of the API to be inlined to its callers, please annotate it with @InlineMe.
 
 __[InputStreamSlowMultibyteRead](bugpattern/InputStreamSlowMultibyteRead)__<br>
 Please also override int read(byte[], int, int), otherwise multi-byte reads from this input stream are likely to be slow.

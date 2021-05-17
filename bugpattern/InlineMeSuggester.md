@@ -1,6 +1,7 @@
 ---
 title: InlineMeSuggester
-summary: Recommends annotating a deprecated, inlineable API with @InlineMe.
+summary: This deprecated API looks inlineable. If you'd like the body of the API to
+  be inlined to its callers, please annotate it with @InlineMe.
 layout: bugpattern
 tags: ''
 severity: WARNING
