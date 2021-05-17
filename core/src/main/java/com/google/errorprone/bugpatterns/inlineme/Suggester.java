@@ -34,7 +34,9 @@ import javax.lang.model.element.Modifier;
 /** Checker that recommends using {@code @InlineMe} on single-statement deprecated APIs. */
 @BugPattern(
     name = "InlineMeSuggester",
-    summary = "Recommends annotating a deprecated, inlineable API with @InlineMe.",
+    summary =
+        "This deprecated API looks inlineable. If you'd like the body of the API to be inlined to"
+            + " its callers, please annotate it with @InlineMe.",
     severity = WARNING)
 public final class Suggester extends BugChecker implements MethodTreeMatcher {
 
