@@ -603,7 +603,9 @@ public class SuggesterTest {
 
   @Test
   public void testTernaryOverMultipleLines() {
+    // This is suggested/works only if we allow users to use the argument more than once
     refactoringTestHelper
+        .setArgs("-XepOpt:" + InlinabilityResult.DISALLOW_ARGUMENT_REUSE + "=false")
         .addInputLines(
             "Client.java",
             "package com.google.frobber;",

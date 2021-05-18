@@ -42,7 +42,9 @@ import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.PackageSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import javax.lang.model.element.Modifier;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -50,6 +52,8 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 /** Whether an API can have {@code @InlineMe} applied to it or not. */
 @AutoValue
 abstract class InlinabilityResult {
+
+  static final String DISALLOW_ARGUMENT_REUSE = "InlineMe:DisallowArgumentReuse";
 
   abstract @Nullable InlineValidationErrorReason error();
 
@@ -103,7 +107,8 @@ abstract class InlinabilityResult {
     VARARGS_USED_UNSAFELY(
         "When using a varargs parameter, it must only be passed in the last position of a method"
             + " call to another varargs method"),
-    EMPTY_VOID("InlineMe cannot yet be applied to no-op void methods");
+    EMPTY_VOID("InlineMe cannot yet be applied to no-op void methods"),
+    REUSE_OF_ARGUMENTS("Implementations cannot use an argument more than once");
 
     @Nullable private final String errorMessage;
 
@@ -116,7 +121,8 @@ abstract class InlinabilityResult {
     }
   }
 
-  static InlinabilityResult forMethod(MethodTree tree, VisitorState state) {
+  static InlinabilityResult forMethod(
+      MethodTree tree, VisitorState state, boolean checkForArgumentReuse) {
     if (!hasAnnotation(tree, Deprecated.class, state)) {
       return fromError(InlineValidationErrorReason.API_ISNT_DEPRECATED);
     }
@@ -168,6 +174,10 @@ abstract class InlinabilityResult {
       return fromError(InlineValidationErrorReason.COMPLEX_STATEMENT, body);
     }
 
+    if (checkForArgumentReuse && usesVariablesMultipleTimes(body, methSymbol.params(), state)) {
+      return fromError(InlineValidationErrorReason.REUSE_OF_ARGUMENTS, body);
+    }
+
     if (usesPrivateOrDeprecatedApis(body, state)) {
       return fromError(InlineValidationErrorReason.CALLS_DEPRECATED_OR_PRIVATE_APIS, body);
     }
@@ -187,6 +197,26 @@ abstract class InlinabilityResult {
     }
 
     return inlinable(body);
+  }
+
+  // TODO(glorioso): Carry forward the set of used symbols and their use count as a
+  // custom error message.
+  private static boolean usesVariablesMultipleTimes(
+      ExpressionTree body, List<VarSymbol> parameterVariables, VisitorState state) {
+    AtomicBoolean usesVarsTwice = new AtomicBoolean(false);
+    new TreePathScanner<Void, Void>() {
+      final Set<Symbol> usedVariables = new HashSet<>();
+
+      @Override
+      public Void visitIdentifier(IdentifierTree identifierTree, Void aVoid) {
+        Symbol usedSymbol = getSymbol(identifierTree);
+        if (parameterVariables.contains(usedSymbol) && !usedVariables.add(usedSymbol)) {
+          usesVarsTwice.set(true);
+        }
+        return super.visitIdentifier(identifierTree, aVoid);
+      }
+    }.scan(new TreePath(state.getPath(), body), null);
+    return usesVarsTwice.get();
   }
 
   // If the body refers to the varargs value at all, it should only be as the last argument

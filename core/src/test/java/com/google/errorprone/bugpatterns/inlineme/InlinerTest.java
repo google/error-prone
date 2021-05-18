@@ -16,6 +16,8 @@
 
 package com.google.errorprone.bugpatterns.inlineme;
 
+import static com.google.errorprone.bugpatterns.inlineme.Inliner.PREFIX_FLAG;
+
 import com.google.common.collect.ImmutableMap;
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.ErrorProneFlags;
@@ -997,7 +999,7 @@ public class InlinerTest {
   @Test
   public void testSublist() {
     refactoringTestHelper
-        .allowBreakingChanges()
+        .setArgs("-XepOpt:" + InlinabilityResult.DISALLOW_ARGUMENT_REUSE + "=false")
         .addInputLines(
             "Client.java",
             "import com.google.errorprone.annotations.InlineMe;",
@@ -1040,7 +1042,7 @@ public class InlinerTest {
   @Test
   public void testSublistPassingMethod() {
     refactoringTestHelper
-        .allowBreakingChanges()
+        .setArgs("-XepOpt:" + InlinabilityResult.DISALLOW_ARGUMENT_REUSE + "=false")
         .addInputLines(
             "Client.java",
             "import com.google.errorprone.annotations.InlineMe;",
@@ -1089,8 +1091,7 @@ public class InlinerTest {
   }
 
   private BugCheckerRefactoringTestHelper buildBugCheckerWithPrefixFlag(String prefix) {
-    return BugCheckerRefactoringTestHelper.newInstance(
-        new Inliner(ErrorProneFlags.builder().putFlag(Inliner.PREFIX_FLAG, prefix).build()),
-        getClass());
+    return BugCheckerRefactoringTestHelper.newInstance(Inliner.class, getClass())
+        .setArgs("-XepOpt:" + PREFIX_FLAG + "=" + prefix);
   }
 }
