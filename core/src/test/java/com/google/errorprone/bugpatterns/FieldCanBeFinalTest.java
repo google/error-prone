@@ -407,4 +407,21 @@ public class FieldCanBeFinalTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void constructorAssignmentWithLambdaReassignment() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  private Runnable r;",
+            "  Test() {",
+            "    r = foo(() -> r = null);",
+            "  }",
+            "  private static Runnable foo(Runnable r) {",
+            "    return r;",
+            "  }",
+            "}")
+        .doTest();
+  }
 }
