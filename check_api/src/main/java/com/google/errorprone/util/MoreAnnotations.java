@@ -208,17 +208,5 @@ public final class MoreAnnotations {
     return MoreObjects.firstNonNull(v.accept(new Visitor(), null), Stream.of());
   }
 
-  /**
-   * Converts the given attribute to one or more strings.
-   *
-   * @deprecated Continues to exist only to allow migration to wider {@link
-   *     #asStrings(AnnotationValue)} for targets which have this symbol compiled in. Please invoke
-   *     that target, with an explicit cast if necessary.
-   */
-  @Deprecated
-  public static Stream<String> asStrings(Attribute v) {
-    return asStrings((AnnotationValue) v);
-  }
-
   private MoreAnnotations() {}
 }
