@@ -17,10 +17,13 @@
 package com.google.errorprone.bugpatterns.inlineme;
 
 import static com.google.common.collect.ImmutableList.toImmutableList;
+import static com.google.common.collect.MoreCollectors.onlyElement;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
+import static com.google.errorprone.util.MoreAnnotations.asStringValue;
+import static com.google.errorprone.util.MoreAnnotations.getValue;
 import static com.google.errorprone.util.SideEffectAnalysis.hasSideEffect;
 
 import com.google.auto.value.AutoValue;
@@ -33,7 +36,6 @@ import com.google.common.collect.Iterables;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
-import com.google.errorprone.annotations.InlineMe;
 import com.google.errorprone.annotations.InlineMeValidationDisabled;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
@@ -42,17 +44,20 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
+import com.google.errorprone.util.MoreAnnotations;
 import com.sun.source.tree.ExpressionStatementTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.Tree;
+import com.sun.tools.javac.code.Attribute;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Stream;
 
 /**
  * Checker that performs the inlining at call-sites (where the invoked APIs are annotated as
@@ -74,6 +79,8 @@ public final class Inliner extends BugChecker
 
   static final String ALLOW_BREAKING_CHANGES_FLAG = "InlineMe:AllowBreakingChanges";
   static final String ALLOW_UNVALIDATED_INLININGS_FLAG = "InlineMe:AllowUnvalidatedInlinings";
+
+  private static final String INLINE_ME = "com.google.errorprone.annotations.InlineMe";
 
   private final ImmutableSet<String> apiPrefixes;
   private final boolean allowBreakingChanges;
@@ -133,7 +140,7 @@ public final class Inliner extends BugChecker
       String receiverString,
       ExpressionTree receiver,
       VisitorState state) {
-    if (!hasAnnotation(symbol, InlineMe.class, state)) {
+    if (!hasAnnotation(symbol, INLINE_ME, state)) {
       return Description.NO_MATCH;
     }
 
@@ -145,17 +152,20 @@ public final class Inliner extends BugChecker
       return Description.NO_MATCH;
     }
 
-    InlineMe inlineMe = symbol.getAnnotation(InlineMe.class);
+    Attribute.Compound inlineMe =
+        symbol.getRawAttributes().stream()
+            .filter(a -> a.type.tsym.getQualifiedName().contentEquals(INLINE_ME))
+            .collect(onlyElement());
 
     SuggestedFix.Builder builder = SuggestedFix.builder();
 
     Map<String, String> typeNames = new HashMap<>();
-    for (String newImport : inlineMe.imports()) {
+    for (String newImport : getStrings(inlineMe, "imports")) {
       String typeName = Iterables.getLast(PACKAGE_SPLITTER.split(newImport));
       String qualifiedTypeName = SuggestedFixes.qualifyType(state, builder, newImport);
       typeNames.put(typeName, qualifiedTypeName);
     }
-    for (String newStaticImport : inlineMe.staticImports()) {
+    for (String newStaticImport : getStrings(inlineMe, "staticImports")) {
       builder.addStaticImport(newStaticImport);
     }
 
@@ -182,7 +192,7 @@ public final class Inliner extends BugChecker
       }
     }
 
-    String replacement = inlineMe.replacement();
+    String replacement = asStringValue(getValue(inlineMe, "replacement").get()).get();
     int replacementStart = ((DiagnosticPosition) tree).getStartPosition();
     int replacementEnd = state.getEndPosition(tree);
 
@@ -242,6 +252,13 @@ public final class Inliner extends BugChecker
     }
 
     return describe(tree, fix, api);
+  }
+
+  private static ImmutableList<String> getStrings(Attribute.Compound attribute, String name) {
+    return getValue(attribute, name)
+        .map(MoreAnnotations::asStrings)
+        .orElse(Stream.empty())
+        .collect(toImmutableList());
   }
 
   private Description describe(Tree tree, SuggestedFix fix, Api api) {
