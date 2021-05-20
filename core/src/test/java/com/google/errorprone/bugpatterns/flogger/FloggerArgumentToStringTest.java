@@ -98,4 +98,28 @@ public class FloggerArgumentToStringTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void selfToString() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            "import com.google.common.flogger.FluentLogger;",
+            "class Test {",
+            "  private static final FluentLogger logger = FluentLogger.forEnclosingClass();",
+            "  public void f() {",
+            "    logger.atInfo().log(\"hello '%s'\", toString());",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "import com.google.common.flogger.FluentLogger;",
+            "class Test {",
+            "  private static final FluentLogger logger = FluentLogger.forEnclosingClass();",
+            "  public void f() {",
+            "    logger.atInfo().log(\"hello '%s'\", this);",
+            "  }",
+            "}")
+        .doTest();
+  }
 }

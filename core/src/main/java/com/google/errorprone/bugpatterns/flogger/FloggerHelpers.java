@@ -29,6 +29,10 @@ final class FloggerHelpers {
 
   static char inferFormatSpecifier(Tree piece, VisitorState state) {
     Type type = getType(piece);
+    return inferFormatSpecifier(type, state);
+  }
+
+  static char inferFormatSpecifier(Type type, VisitorState state) {
     if (type == null) {
       return STRING_FORMAT;
     }
