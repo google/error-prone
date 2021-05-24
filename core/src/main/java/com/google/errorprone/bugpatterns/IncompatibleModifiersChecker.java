@@ -19,12 +19,11 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.LinkType.NONE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
+import static com.google.errorprone.util.MoreAnnotations.getValue;
 
-import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
-import com.google.errorprone.annotations.IncompatibleModifiers;
 import com.google.errorprone.bugpatterns.BugChecker.AnnotationTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
@@ -32,8 +31,16 @@ import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.ModifiersTree;
 import com.sun.source.tree.Tree;
+import com.sun.tools.javac.code.Attribute;
+import com.sun.tools.javac.code.Symbol;
+import java.util.Collection;
+import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
+import javax.lang.model.element.AnnotationValue;
 import javax.lang.model.element.Modifier;
+import javax.lang.model.element.VariableElement;
+import javax.lang.model.util.SimpleAnnotationValueVisitor8;
 
 /** @author sgoldfeder@google.com (Steven Goldfeder) */
 @BugPattern(
@@ -45,15 +52,28 @@ import javax.lang.model.element.Modifier;
     severity = ERROR)
 public class IncompatibleModifiersChecker extends BugChecker implements AnnotationTreeMatcher {
 
+  private static final String INCOMPATIBLE_MODIFIERS =
+      "com.google.errorprone.annotations.IncompatibleModifiers";
+
   @Override
   public Description matchAnnotation(AnnotationTree tree, VisitorState state) {
-    IncompatibleModifiers annotation = ASTHelpers.getAnnotation(tree, IncompatibleModifiers.class);
+    Symbol sym = ASTHelpers.getSymbol(tree);
+    if (sym == null) {
+      return NO_MATCH;
+    }
+    Attribute.Compound annotation =
+        sym.getRawAttributes().stream()
+            .filter(a -> a.type.tsym.getQualifiedName().contentEquals(INCOMPATIBLE_MODIFIERS))
+            .findAny()
+            .orElse(null);
     if (annotation == null) {
       return NO_MATCH;
     }
-    ImmutableSet<Modifier> incompatibleModifiers = ImmutableSet.copyOf(annotation.value());
+    Set<Modifier> incompatibleModifiers = new LinkedHashSet<>();
+    getValue(annotation, "value").ifPresent(a -> getModifiers(incompatibleModifiers, a));
+    getValue(annotation, "modifier").ifPresent(a -> getModifiers(incompatibleModifiers, a));
     if (incompatibleModifiers.isEmpty()) {
-      return Description.NO_MATCH;
+      return NO_MATCH;
     }
 
     Tree parent = state.getPath().getParentPath().getLeaf();
@@ -82,5 +102,22 @@ public class IncompatibleModifiersChecker extends BugChecker implements Annotati
         .addFix(SuggestedFixes.removeModifiers((ModifiersTree) parent, state, incompatible))
         .setMessage(message)
         .build();
+  }
+
+  private static void getModifiers(Collection<Modifier> modifiers, Attribute attribute) {
+    class Visitor extends SimpleAnnotationValueVisitor8<Void, Void> {
+      @Override
+      public Void visitEnumConstant(VariableElement c, Void unused) {
+        modifiers.add(Modifier.valueOf(c.getSimpleName().toString()));
+        return null;
+      }
+
+      @Override
+      public Void visitArray(List<? extends AnnotationValue> vals, Void unused) {
+        vals.forEach(val -> val.accept(this, null));
+        return null;
+      }
+    }
+    attribute.accept(new Visitor(), null);
   }
 }
