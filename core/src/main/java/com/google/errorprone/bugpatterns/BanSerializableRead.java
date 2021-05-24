@@ -41,10 +41,16 @@ import com.sun.source.tree.MethodInvocationTree;
     severity = SeverityLevel.ERROR)
 public final class BanSerializableRead extends BugChecker implements MethodInvocationTreeMatcher {
 
-  private static final Matcher<ExpressionTree> EXEMPT =
+  // We allow the `readObject` method to be defined, since it defines what a value
+  // *would* deserialize to, *if* it would deserialize.
+  private static final Matcher<ExpressionTree> EXEMPT_IS_READOBJECT_METHOD =
       allOf(
           enclosingClass(isSubtypeOf("java.io.Serializable")),
           enclosingMethod(methodIsNamed("readObject")));
+
+  private static final Matcher<ExpressionTree> EXEMPT =
+      anyOf(
+          EXEMPT_IS_READOBJECT_METHOD);
 
   /** Checks for unsafe deserialization calls on an ObjectInputStream in an ExpressionTree. */
   private static final Matcher<ExpressionTree> OBJECT_INPUT_STREAM_DESERIALIZE_MATCHER =

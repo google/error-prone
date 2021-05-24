@@ -33,7 +33,7 @@ public class BanSerializableReadNegativeCases implements Serializable {
   public final String hi = "hi";
 
   // mostly a smoke test
-  public static final void noCrimesHere() {
+  public static void noCrimesHere() {
     System.out.println(new BanSerializableReadNegativeCases().hi);
   }
 
@@ -67,7 +67,7 @@ public class BanSerializableReadNegativeCases implements Serializable {
    * @throws ClassNotFoundException
    */
   @SuppressWarnings("BanSerializableRead")
-  public static final void sayHi() throws IOException, ClassNotFoundException {
+  public static void sayHi() throws IOException, ClassNotFoundException {
     PipedInputStream in = new PipedInputStream();
     PipedOutputStream out = new PipedOutputStream(in);
 
@@ -86,7 +86,7 @@ public class BanSerializableReadNegativeCases implements Serializable {
 
   // code has gone through a security review
   @SuppressWarnings("BanSerializableRead")
-  public static final void directCall2() throws IOException, ClassNotFoundException {
+  public static void directCall2() throws IOException, ClassNotFoundException {
     PipedInputStream in = new PipedInputStream();
     PipedOutputStream out = new PipedOutputStream(in);
 
