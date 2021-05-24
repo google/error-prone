@@ -20,6 +20,7 @@ import static java.lang.annotation.ElementType.FIELD;
 import static java.lang.annotation.ElementType.LOCAL_VARIABLE;
 import static java.lang.annotation.ElementType.PARAMETER;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
+import static javax.lang.model.element.Modifier.FINAL;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
@@ -41,5 +42,5 @@ import java.lang.annotation.Target;
  */
 @Target({FIELD, PARAMETER, LOCAL_VARIABLE})
 @Retention(RUNTIME)
-@IncompatibleModifiers(modifier = {Modifier.FINAL})
+@IncompatibleModifiers(FINAL)
 public @interface Var {}
