@@ -42,8 +42,8 @@ loadScripts(document, 'script');</script>
 <ul class="sub-nav-list">
 <li>Summary:&nbsp;</li>
 <li>Field&nbsp;|&nbsp;</li>
-<li>Required&nbsp;|&nbsp;</li>
-<li><a href="#annotation.type.optional.element.summary">Optional</a></li>
+<li><a href="#annotation.type.required.element.summary">Required</a>&nbsp;|&nbsp;</li>
+<li>Optional</li>
 </ul>
 <ul class="sub-nav-list">
 <li>Detail:&nbsp;</li>
@@ -78,7 +78,7 @@ public @interface <span class="type-name-label">IncompatibleModifiers</span></pr
  modifiers. For example, an annotation declared as:
 
  <pre>
- @IncompatibleModifiers(modifier = Modifier.PUBLIC)
+ @IncompatibleModifiers(Modifier.PUBLIC)
  @interface MyAnnotation {}
  </pre>
 
@@ -94,35 +94,26 @@ public @interface <span class="type-name-label">IncompatibleModifiers</span></pr
 </section>
 <section class="summary">
 <ul class="summary-list">
-<!-- =========== ANNOTATION TYPE OPTIONAL MEMBER SUMMARY =========== -->
+<!-- =========== ANNOTATION TYPE REQUIRED MEMBER SUMMARY =========== -->
 <li>
-<section class="member-summary" id="annotation.type.optional.element.summary">
-<h2>Optional Element Summary</h2>
+<section class="member-summary" id="annotation.type.required.element.summary">
+<h2>Required Element Summary</h2>
 <div class="member-summary">
 <table class="summary-table">
-<caption><span>Optional Elements</span></caption>
+<caption><span>Required Elements</span></caption>
 <thead>
 <tr>
 <th class="col-first" scope="col">Modifier and Type</th>
-<th class="col-second" scope="col">Optional Element</th>
+<th class="col-second" scope="col">Required Element</th>
 <th class="col-last" scope="col">Description</th>
 </tr>
 </thead>
 <tbody>
 <tr class="alt-color">
-<td class="col-first"><code><a href="Modifier.html" title="enum in com.google.errorprone.annotations">Modifier</a>[]</code></td>
-<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#modifier()">modifier</a></span></code></th>
-<td class="col-last">
-<div class="block">The incompatible modifiers.</div>
-</td>
-</tr>
-<tr class="row-color">
 <td class="col-first"><code><a href="https://docs.oracle.com/javase/8/docs/api/javax/lang/model/element/Modifier.html" title="class or interface in javax.lang.model.element" class="external-link">Modifier</a>[]</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#value()">value</a></span></code></th>
 <td class="col-last">
-<div class="block"><span class="deprecated-label">Deprecated.</span>
-<div class="deprecation-comment">use <a href="#modifier()"><code>modifier()</code></a> instead</div>
-</div>
+<div class="block">The incompatible modifiers.</div>
 </td>
 </tr>
 </tbody>
@@ -142,30 +133,12 @@ public @interface <span class="type-name-label">IncompatibleModifiers</span></pr
 <li>
 <section class="detail" id="value()">
 <h3>value</h3>
-<div class="member-signature"><span class="annotations"><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Deprecated.html" title="class or interface in java.lang" class="external-link">@Deprecated</a>
-</span><span class="return-type"><a href="https://docs.oracle.com/javase/8/docs/api/javax/lang/model/element/Modifier.html" title="class or interface in javax.lang.model.element" class="external-link">Modifier</a>[]</span>&nbsp;<span class="member-name">value</span></div>
-<div class="deprecation-block"><span class="deprecated-label">Deprecated.</span>
-<div class="deprecation-comment">use <a href="#modifier()"><code>modifier()</code></a> instead</div>
-</div>
-<dl class="notes">
-<dt>Default:</dt>
-<dd>{}</dd>
-</dl>
-</section>
-</li>
-<li>
-<section class="detail" id="modifier()">
-<h3>modifier</h3>
-<div class="member-signature"><span class="return-type"><a href="Modifier.html" title="enum in com.google.errorprone.annotations">Modifier</a>[]</span>&nbsp;<span class="member-name">modifier</span></div>
+<div class="member-signature"><span class="return-type"><a href="https://docs.oracle.com/javase/8/docs/api/javax/lang/model/element/Modifier.html" title="class or interface in javax.lang.model.element" class="external-link">Modifier</a>[]</span>&nbsp;<span class="member-name">value</span></div>
 <div class="block">The incompatible modifiers. The annotated element is illegal with the presence of any one or
  more of these modifiers.
 
  <p>Empty array has the same effect as not applying this annotation at all; duplicates are
  allowed but have no effect.</div>
-<dl class="notes">
-<dt>Default:</dt>
-<dd>{}</dd>
-</dl>
 </section>
 </li>
 </ul>
@@ -196,8 +169,8 @@ public @interface <span class="type-name-label">IncompatibleModifiers</span></pr
 <ul class="sub-nav-list">
 <li>Summary:&nbsp;</li>
 <li>Field&nbsp;|&nbsp;</li>
-<li>Required&nbsp;|&nbsp;</li>
-<li><a href="#annotation.type.optional.element.summary">Optional</a></li>
+<li><a href="#annotation.type.required.element.summary">Required</a>&nbsp;|&nbsp;</li>
+<li>Optional</li>
 </ul>
 <ul class="sub-nav-list">
 <li>Detail:&nbsp;</li>
