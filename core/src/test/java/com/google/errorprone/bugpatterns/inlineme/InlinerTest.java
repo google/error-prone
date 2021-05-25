@@ -18,9 +18,8 @@ package com.google.errorprone.bugpatterns.inlineme;
 
 import static com.google.errorprone.bugpatterns.inlineme.Inliner.PREFIX_FLAG;
 
-import com.google.common.collect.ImmutableMap;
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
-import com.google.errorprone.ErrorProneFlags;
+import com.google.errorprone.CompilationTestHelper;
 import com.google.errorprone.scanner.ScannerSupplier;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -724,41 +723,8 @@ public class InlinerTest {
   }
 
   @Test
-  public void dontInlineUnvalidatedInlining() {
+  public void inlineUnvalidatedInline() {
     refactoringTestHelper
-        .addInputLines(
-            "Client.java",
-            "package foo;",
-            "import com.google.errorprone.annotations.InlineMe;",
-            "import com.google.errorprone.annotations.InlineMeValidationDisabled;",
-            "public final class Client {",
-            "  @Deprecated",
-            "  @InlineMeValidationDisabled(\"Migrating to factory method\")",
-            "  @InlineMe(replacement = \"Client.create()\", imports = \"foo.Client\")",
-            "  public Client() {}",
-            "  ",
-            "  public static Client create() { return new Client(); }",
-            "}")
-        .expectUnchanged()
-        .addInputLines(
-            "Caller.java",
-            "import foo.Client;",
-            "public final class Caller {",
-            "  public void doTest() {",
-            "    Client client = new Client();",
-            "  }",
-            "}")
-        .expectUnchanged()
-        .doTest();
-  }
-
-  @Test
-  public void inlineUnvalidatedInlineWithExtraFlagOn() {
-    BugCheckerRefactoringTestHelper.newInstance(
-            new Inliner(
-                ErrorProneFlags.fromMap(
-                    ImmutableMap.of(Inliner.ALLOW_UNVALIDATED_INLININGS_FLAG, "true"))),
-            getClass())
         .addInputLines(
             "Client.java",
             "package foo;",
@@ -789,6 +755,37 @@ public class InlinerTest {
             "public final class Caller {",
             "  public void doTest() {",
             "    Client client = Client.create();",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void inlineUnvalidatedInlineMessage() {
+    CompilationTestHelper.newInstance(Inliner.class, getClass())
+        .addSourceLines(
+            "Client.java",
+            "package foo;",
+            "import com.google.errorprone.annotations.InlineMe;",
+            "import com.google.errorprone.annotations.InlineMeValidationDisabled;",
+            "public final class Client {",
+            "  @Deprecated",
+            "  @InlineMeValidationDisabled(\"Migrating to factory method\")",
+            "  @InlineMe(replacement = \"Client.create()\", imports = \"foo.Client\")",
+            "  public Client() {}",
+            "  ",
+            // The Inliner wants to inline the body of this factory method to the factory method :)
+            "  @SuppressWarnings(\"InlineMeInliner\")",
+            "  public static Client create() { return new Client(); }",
+            "}")
+        .addSourceLines(
+            "Caller.java",
+            "import foo.Client;",
+            "public final class Caller {",
+            "  public void doTest() {",
+            "    // BUG: Diagnostic contains: NOTE: this is an unvalidated inlining!"
+                + " Reasoning: Migrating to factory method",
+            "    Client client = new Client();",
             "  }",
             "}")
         .doTest();

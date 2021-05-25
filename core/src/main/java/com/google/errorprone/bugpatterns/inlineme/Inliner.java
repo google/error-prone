@@ -36,14 +36,12 @@ import com.google.common.collect.Iterables;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
-import com.google.errorprone.annotations.InlineMeValidationDisabled;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.NewClassTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
-import com.google.errorprone.util.ASTHelpers;
 import com.google.errorprone.util.MoreAnnotations;
 import com.sun.source.tree.ExpressionStatementTree;
 import com.sun.source.tree.ExpressionTree;
@@ -78,20 +76,19 @@ public final class Inliner extends BugChecker
   static final String PREFIX_FLAG = "InlineMe:Prefix";
 
   static final String ALLOW_BREAKING_CHANGES_FLAG = "InlineMe:AllowBreakingChanges";
-  static final String ALLOW_UNVALIDATED_INLININGS_FLAG = "InlineMe:AllowUnvalidatedInlinings";
 
   private static final String INLINE_ME = "com.google.errorprone.annotations.InlineMe";
 
+  private static final String VALIDATION_DISABLED =
+      "com.google.errorprone.annotations.InlineMeValidationDisabled";
+
   private final ImmutableSet<String> apiPrefixes;
   private final boolean allowBreakingChanges;
-  private final boolean refactorUnvalidatedMethods;
 
   public Inliner(ErrorProneFlags flags) {
     this.apiPrefixes =
         ImmutableSet.copyOf(flags.getSet(PREFIX_FLAG).orElse(ImmutableSet.<String>of()));
     this.allowBreakingChanges = flags.getBoolean(ALLOW_BREAKING_CHANGES_FLAG).orElse(false);
-    this.refactorUnvalidatedMethods =
-        flags.getBoolean(ALLOW_UNVALIDATED_INLININGS_FLAG).orElse(false);
   }
 
   // TODO(b/163596864): Add support for inlining fields
@@ -144,11 +141,8 @@ public final class Inliner extends BugChecker
       return Description.NO_MATCH;
     }
 
-    Api api = Api.create(symbol);
+    Api api = Api.create(symbol, state);
     if (!matchesApiPrefixes(api)) {
-      return Description.NO_MATCH;
-    }
-    if (shouldSkipUnvalidatedMethod(symbol, state)) {
       return Description.NO_MATCH;
     }
 
@@ -269,11 +263,21 @@ public final class Inliner extends BugChecker
   abstract static class Api {
     private static final Splitter CLASS_NAME_SPLITTER = Splitter.on('.');
 
-    static Api create(MethodSymbol method) {
+    static Api create(MethodSymbol method, VisitorState state) {
+      String extraMessage = "";
+      if (hasAnnotation(method, VALIDATION_DISABLED, state)) {
+        Attribute.Compound inlineMeValidationDisabled =
+            method.getRawAttributes().stream()
+                .filter(a -> a.type.tsym.getQualifiedName().contentEquals(VALIDATION_DISABLED))
+                .collect(onlyElement());
+        String reason = Iterables.getOnlyElement(getStrings(inlineMeValidationDisabled, "value"));
+        extraMessage = " NOTE: this is an unvalidated inlining! Reasoning: " + reason;
+      }
       return new AutoValue_Inliner_Api(
           method.owner.getQualifiedName().toString(),
           method.getSimpleName().toString(),
-          method.isConstructor());
+          method.isConstructor(),
+          extraMessage);
     }
 
     abstract String className();
@@ -282,10 +286,12 @@ public final class Inliner extends BugChecker
 
     abstract boolean isConstructor();
 
+    abstract String extraMessage();
+
     final String deprecationMessage() {
       return shortName()
           + " is deprecated and should be inlined"
-      ;
+          + extraMessage();
     }
 
     /** Returns {@code FullyQualifiedClassName#methodName}. */
@@ -305,11 +311,6 @@ public final class Inliner extends BugChecker
     final String simpleClassName() {
       return Iterables.getLast(CLASS_NAME_SPLITTER.split(className()));
     }
-  }
-
-  private boolean shouldSkipUnvalidatedMethod(MethodSymbol symbol, VisitorState state) {
-    return !refactorUnvalidatedMethods
-        && ASTHelpers.hasAnnotation(symbol, InlineMeValidationDisabled.class, state);
   }
 
   private boolean matchesApiPrefixes(Api api) {
