@@ -21,6 +21,7 @@ import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.anyMethod;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.not;
+import static com.google.errorprone.matchers.Matchers.nothing;
 import static com.google.errorprone.matchers.Matchers.packageStartsWith;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
@@ -107,30 +108,20 @@ public class ReturnValueIgnored extends AbstractReturnValueIgnored {
       return false;
     }
     Symbol symbol = ASTHelpers.getSymbol(tree);
-    if (symbol instanceof MethodSymbol) {
-      MethodSymbol methodSymbol = (MethodSymbol) symbol;
-      if (methodSymbol.owner.packge().getQualifiedName().toString().startsWith("java.time")
-          && methodSymbol.getModifiers().contains(Modifier.PUBLIC)) {
-        if (ALLOWED_JAVA_TIME_METHODS.matches(tree, state)) {
-          return false;
-        }
-        return true;
-      }
-    }
-    return false;
+    return symbol instanceof MethodSymbol
+        && symbol.owner.packge().getQualifiedName().toString().startsWith("java.time")
+        && symbol.getModifiers().contains(Modifier.PUBLIC)
+        && !ALLOWED_JAVA_TIME_METHODS.matches(tree, state);
   }
 
   /**
-   * Methods in {@link java.util.function} are pure, and their returnvalues should not be discarded.
+   * Methods in {@link java.util.function} are pure, and their return values should not be
+   * discarded.
    */
   private static boolean functionalMethod(ExpressionTree tree, VisitorState state) {
     Symbol symbol = ASTHelpers.getSymbol(tree);
     return symbol instanceof MethodSymbol
-        && ((MethodSymbol) symbol)
-            .owner
-            .packge()
-            .getQualifiedName()
-            .contentEquals("java.util.function");
+        && symbol.owner.packge().getQualifiedName().contentEquals("java.util.function");
   }
 
   /**
@@ -307,14 +298,17 @@ public class ReturnValueIgnored extends AbstractReturnValueIgnored {
           ITERABLE_METHODS,
           ITERATOR_METHODS);
 
-  private Matcher<? super ExpressionTree> matcher;
+  private final Matcher<? super ExpressionTree> matcher;
 
   public ReturnValueIgnored(ErrorProneFlags flags) {
     boolean checkOptional = flags.getBoolean("ReturnValueIgnored:MoreOptional").orElse(true);
-    this.matcher =
-        checkOptional ? anyOf(SPECIALIZED_MATCHER, MORE_OPTIONAL_METHODS) : SPECIALIZED_MATCHER;
     boolean checkMoreMap = flags.getBoolean("ReturnValueIgnored:MoreMap").orElse(true);
-    this.matcher = checkMoreMap ? anyOf(matcher, MORE_MAP_METHODS) : matcher;
+
+    this.matcher =
+        anyOf(
+            SPECIALIZED_MATCHER,
+            checkOptional ? MORE_OPTIONAL_METHODS : nothing(),
+            checkMoreMap ? MORE_MAP_METHODS : nothing());
   }
 
   @Override
