@@ -216,7 +216,3 @@ public final class MyClass {
   }
 }
 ```
-
-NOTE: If a method is marked with `@InlineMeValidationDisabled`, you will need to
-run the `Inliner` and use the `-XepOpt:InlineMe:AllowUnvalidatedInlinings=true`
-flag.
