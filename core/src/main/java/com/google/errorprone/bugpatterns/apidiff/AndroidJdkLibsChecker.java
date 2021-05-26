@@ -82,6 +82,12 @@ public class AndroidJdkLibsChecker extends ApiDiffChecker {
     return className.substring(0, className.lastIndexOf('/') + 1);
   }
 
+  private static final ImmutableSetMultimap<String, ClassMemberKey>
+      ADDITIONAL_MEMBERS_REQUIRING_DESUGAR =
+          ImmutableSetMultimap.<String, ClassMemberKey>builder()
+              .put("com/google/common/base/Stopwatch", ClassMemberKey.create("elapsed", ""))
+              .build();
+
   private static class ClassSupportInfo {
 
     private final ImmutableSet<String> allowedPackages;
@@ -95,7 +101,7 @@ public class AndroidJdkLibsChecker extends ApiDiffChecker {
       allowedClasses = allowJava8 ? DESUGAR_ALLOWED_CLASSES : BASE_ALLOWED_CLASSES;
       bannedClasses = BASE_BANNED_CLASSES;
       allowedMembers = allowJava8 ? DESUGAR_ALLOWED_MEMBERS : ImmutableSetMultimap.of();
-      bannedMembers = allowJava8 ? DESUGAR_BANNED_MEMBERS : ImmutableSetMultimap.of();
+      bannedMembers = allowJava8 ? DESUGAR_BANNED_MEMBERS : ADDITIONAL_MEMBERS_REQUIRING_DESUGAR;
     }
 
     private boolean memberIsAllowed(Map.Entry<String, ClassMemberKey> member) {
