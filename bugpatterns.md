@@ -1082,7 +1082,7 @@ __[UndefinedEquals](bugpattern/UndefinedEquals)__<br>
 This type is not guaranteed to implement a useful #equals method.
 
 __[UnescapedEntity](bugpattern/UnescapedEntity)__<br>
-Javadoc is interpreted as HTML, so HTML entities such as &amp;, &lt;, &gt; must be escaped.
+Javadoc is interpreted as HTML, so HTML entities such as &amp;, &lt;, &gt; must be escaped. If this finding seems wrong (e.g. is within a @code or @literal tag), check whether the tag could be malformed and not recognised by the compiler.
 
 __[UnnecessaryLambda](bugpattern/UnnecessaryLambda)__<br>
 Returning a lambda from a helper method or saving it in a constant is unnecessary; prefer to implement the functional interface method directly and use a method reference instead.
