@@ -550,4 +550,24 @@ public class ReturnValueIgnoredTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void objectMethods() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  void test(Test t, Object o) {",
+            "    // BUG: Diagnostic contains:",
+            "    t.equals(o);",
+            "    // BUG: Diagnostic contains:",
+            "    o.equals(t);",
+            "    // BUG: Diagnostic contains:",
+            "    t.hashCode();",
+            "    // BUG: Diagnostic contains:",
+            "    t.getClass();",
+            "  }",
+            "}")
+        .doTest();
+  }
 }

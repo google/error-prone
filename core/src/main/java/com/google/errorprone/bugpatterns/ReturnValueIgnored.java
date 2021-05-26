@@ -281,6 +281,17 @@ public class ReturnValueIgnored extends AbstractReturnValueIgnored {
               .onDescendantOf(PROTO_MESSAGE + ".Builder")
               .namedAnyOf("build", "buildPartial"));
 
+  private static final Matcher<ExpressionTree> OBJECT_METHODS =
+      anyOf(
+          instanceMethod()
+              .onDescendantOf("java.lang.Object")
+              .namedAnyOf("getClass", "hashCode", "clone", "toString")
+              .withParameters(),
+          instanceMethod()
+              .onDescendantOf("java.lang.Object")
+              .namedAnyOf("equals")
+              .withParameters("java.lang.Object"));
+
   private static final Matcher<? super ExpressionTree> SPECIALIZED_MATCHER =
       anyOf(
           RETURNS_SAME_TYPE,
@@ -303,12 +314,14 @@ public class ReturnValueIgnored extends AbstractReturnValueIgnored {
   public ReturnValueIgnored(ErrorProneFlags flags) {
     boolean checkOptional = flags.getBoolean("ReturnValueIgnored:MoreOptional").orElse(true);
     boolean checkMoreMap = flags.getBoolean("ReturnValueIgnored:MoreMap").orElse(true);
+    boolean objectMethods = flags.getBoolean("ReturnValueIgnored:ObjectMethods").orElse(true);
 
     this.matcher =
         anyOf(
             SPECIALIZED_MATCHER,
             checkOptional ? MORE_OPTIONAL_METHODS : nothing(),
-            checkMoreMap ? MORE_MAP_METHODS : nothing());
+            checkMoreMap ? MORE_MAP_METHODS : nothing(),
+            objectMethods ? OBJECT_METHODS : nothing());
   }
 
   @Override
