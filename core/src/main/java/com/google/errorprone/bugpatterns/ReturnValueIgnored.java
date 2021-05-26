@@ -208,18 +208,13 @@ public class ReturnValueIgnored extends AbstractReturnValueIgnored {
               .withParameters("java.util.function.IntFunction"));
 
   /** APIs to check on the {@link java.util.Map} interface. */
+  // TODO(b/188207175): consider adding Map.get() and Map.getOrDefault()
   private static final Matcher<ExpressionTree> MAP_METHODS =
       anyOf(
           instanceMethod()
               .onDescendantOf("java.util.Map")
               .namedAnyOf("containsKey", "containsValue")
-              .withParameters("java.lang.Object"));
-
-  /** APIs to check on the {@link java.util.Map} interface. */
-  // TODO(b/188207175): collapse these into MAP_METHODS
-  // TODO(b/188207175): consider adding Map.get() and Map.getOrDefault()
-  private static final Matcher<ExpressionTree> MORE_MAP_METHODS =
-      anyOf(
+              .withParameters("java.lang.Object"),
           instanceMethod()
               .onDescendantOf("java.util.Map")
               .namedAnyOf("isEmpty", "size", "entrySet", "keySet", "values"),
@@ -313,14 +308,12 @@ public class ReturnValueIgnored extends AbstractReturnValueIgnored {
 
   public ReturnValueIgnored(ErrorProneFlags flags) {
     boolean checkOptional = flags.getBoolean("ReturnValueIgnored:MoreOptional").orElse(true);
-    boolean checkMoreMap = flags.getBoolean("ReturnValueIgnored:MoreMap").orElse(true);
     boolean objectMethods = flags.getBoolean("ReturnValueIgnored:ObjectMethods").orElse(true);
 
     this.matcher =
         anyOf(
             SPECIALIZED_MATCHER,
             checkOptional ? MORE_OPTIONAL_METHODS : nothing(),
-            checkMoreMap ? MORE_MAP_METHODS : nothing(),
             objectMethods ? OBJECT_METHODS : nothing());
   }
 
