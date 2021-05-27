@@ -43,6 +43,18 @@ public class SuggesterTest {
   }
 
   @Test
+  public void testBuildAnnotation_withSingleImport() {
+    assertThat(
+            InlineMeData.buildAnnotation(
+                    "REPLACEMENT",
+                    ImmutableSet.of("java.time.Duration"),
+                    ImmutableSet.of()))
+            .isEqualTo(
+                    "@InlineMe(replacement = \"REPLACEMENT\", "
+                            + "imports = \"java.time.Duration\")\n");
+  }
+
+  @Test
   public void testInstanceMethodNewImport() {
     refactoringTestHelper
         .addInputLines(
@@ -67,7 +79,7 @@ public class SuggesterTest {
             "public final class Client {",
             "  private Duration deadline = Duration.ofSeconds(5);",
             "  @InlineMe(replacement = \"this.setDeadline(Duration.ofMillis(millis))\","
-                + " imports = {\"java.time.Duration\"})",
+                + " imports = \"java.time.Duration\")",
             "  @Deprecated",
             "  public void setDeadline(long millis) {",
             "    setDeadline(Duration.ofMillis(millis));",
@@ -100,7 +112,7 @@ public class SuggesterTest {
             "public final class Client {",
             "  @InlineMe(",
             "      replacement = \"Duration.ofMillis(millis)\", ",
-            "      imports = {\"java.time.Duration\"})",
+            "      imports = \"java.time.Duration\")",
             "  @Deprecated",
             "  public Duration fromMillis(long millis) {",
             "    return Duration.ofMillis(millis);",
@@ -142,7 +154,7 @@ public class SuggesterTest {
             "import com.google.errorprone.annotations.InlineMe;",
             "import java.time.Duration;",
             "public final class Client {",
-            "  @InlineMe(replacement = \"Duration.ZERO\", imports = {\"java.time.Duration\"})",
+            "  @InlineMe(replacement = \"Duration.ZERO\", imports = \"java.time.Duration\")",
             "  @Deprecated",
             "  public Duration getZero() {",
             "    return Duration.ZERO;",
@@ -230,7 +242,7 @@ public class SuggesterTest {
             "import java.util.Optional;",
             "public final class Client {",
             "  @InlineMe(replacement = \"input.map(Duration::ofMillis)\", ",
-            "      imports = {\"java.time.Duration\"})",
+            "      imports = \"java.time.Duration\")",
             "  @Deprecated",
             "  public Optional<Duration> silly(Optional<Long> input) {",
             "    return input.map(Duration::ofMillis);",
@@ -258,7 +270,7 @@ public class SuggesterTest {
             "import com.google.errorprone.annotations.InlineMe;",
             "import org.joda.time.Instant;",
             "public final class Client {",
-            "  @InlineMe(replacement = \"new Instant()\", imports = {\"org.joda.time.Instant\"})",
+            "  @InlineMe(replacement = \"new Instant()\", imports = \"org.joda.time.Instant\")",
             "  @Deprecated",
             "  public Instant silly() {",
             "    return new Instant();",
@@ -286,7 +298,7 @@ public class SuggesterTest {
             "import com.google.errorprone.annotations.InlineMe;",
             "import org.joda.time.Instant;",
             "public final class Client {",
-            "  @InlineMe(replacement = \"new Instant[42]\", imports = {\"org.joda.time.Instant\"})",
+            "  @InlineMe(replacement = \"new Instant[42]\", imports = \"org.joda.time.Instant\")",
             "  @Deprecated",
             "  public Instant[] silly() {",
             "    return new Instant[42];",
@@ -314,7 +326,7 @@ public class SuggesterTest {
             "import com.google.errorprone.annotations.InlineMe;",
             "public final class Client {",
             "  @InlineMe(replacement = \"new NestedClass()\", ",
-            "      imports = {\"com.google.frobber.Client.NestedClass\"})",
+            "      imports = \"com.google.frobber.Client.NestedClass\")",
             "  @Deprecated",
             "  public NestedClass silly() {",
             "    return new NestedClass();",
@@ -499,7 +511,7 @@ public class SuggesterTest {
             "import java.time.Duration;",
             "public final class Client {",
             "  @InlineMe(replacement = \"this.foo((Duration) duration)\", imports ="
-                + " {\"java.time.Duration\"})",
+                + " \"java.time.Duration\")",
             "  @Deprecated",
             "  public void setDuration(Object duration) {",
             "    foo((Duration) duration);",
@@ -626,7 +638,7 @@ public class SuggesterTest {
             "public final class Client {",
             "  @InlineMe(replacement = \""
                 + "deadline.compareTo(Duration.ZERO) > 0 ? deadline : Duration.ZERO\", ",
-            "imports = {\"java.time.Duration\"})",
+            "imports = \"java.time.Duration\")",
             "  @Deprecated",
             "  public Duration getDeadline(Duration deadline) {",
             "    return deadline.compareTo(Duration.ZERO) > 0",
@@ -660,7 +672,7 @@ public class SuggesterTest {
             "import java.time.Duration;",
             "public final class Client {",
             "  @InlineMe(replacement = \"Client.getDeadline2()\", ",
-            "      imports = {\"com.google.frobber.Client\"})",
+            "      imports = \"com.google.frobber.Client\")",
             "  @Deprecated",
             "  public static Duration getDeadline() {",
             "    return Client.getDeadline2();",
@@ -692,7 +704,7 @@ public class SuggesterTest {
             "import com.google.errorprone.annotations.InlineMe;",
             "public final class Client {",
             "  @InlineMe(replacement = \"format(template, arg)\", staticImports ="
-                + " {\"java.lang.String.format\"})",
+                + " \"java.lang.String.format\")",
             "  @Deprecated",
             "  public static String myFormat(String template, String arg) {",
             "    return format(template, arg);",
@@ -723,7 +735,7 @@ public class SuggesterTest {
             "import java.util.List;",
             "public final class Client {",
             "  @InlineMe(replacement = \"new ArrayList<Void>()\", imports ="
-                + " {\"java.util.ArrayList\"})",
+                + " \"java.util.ArrayList\")",
             "  @Deprecated",
             "  public static List<Void> newArrayList() {",
             "    return new ArrayList<Void>();",
