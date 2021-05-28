@@ -85,7 +85,9 @@ public class AndroidJdkLibsChecker extends ApiDiffChecker {
   private static final ImmutableSetMultimap<String, ClassMemberKey>
       ADDITIONAL_MEMBERS_REQUIRING_DESUGAR =
           ImmutableSetMultimap.<String, ClassMemberKey>builder()
-              .put("com/google/common/base/Stopwatch", ClassMemberKey.create("elapsed", ""))
+              .put(
+                  "com/google/common/base/Stopwatch",
+                  ClassMemberKey.create("elapsed", "()Ljava/time/Duration;"))
               .build();
 
   private static class ClassSupportInfo {

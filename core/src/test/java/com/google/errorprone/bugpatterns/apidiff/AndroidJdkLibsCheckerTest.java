@@ -106,10 +106,12 @@ public class AndroidJdkLibsCheckerTest extends Java7ApiCheckerTest {
         .addSourceLines(
             "Test.java",
             "import com.google.common.base.Stopwatch;",
+            "import java.util.concurrent.TimeUnit;",
             "public class Test {",
-            "  Object o() {",
+            "  void o() {",
             "    // BUG: Diagnostic contains:",
-            "    return Stopwatch.createStarted().elapsed();",
+            "    Stopwatch.createStarted().elapsed();",
+            "    Stopwatch.createStarted().elapsed(TimeUnit.MILLISECONDS);",
             "  }",
             "}")
         .doTest();
