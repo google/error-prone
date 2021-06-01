@@ -17,9 +17,11 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH;
+import static org.junit.Assume.assumeTrue;
 
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
+import com.google.errorprone.util.RuntimeVersion;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -224,5 +226,41 @@ public class MissingDefaultTest {
             "  }",
             "}")
         .doTest(TEXT_MATCH);
+  }
+
+  @Test
+  public void arrowSwitch() {
+    assumeTrue(RuntimeVersion.isAtLeast14());
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  void m(int i) {",
+            "    // BUG: Diagnostic contains:",
+            "    switch (i) {",
+            "      case 1 -> {}",
+            "      case 2 -> {}",
+            "    }",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void arrowSwitchNegative() {
+    assumeTrue(RuntimeVersion.isAtLeast14());
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  void m(int i) {",
+            "    switch (i) {",
+            "      case 1 -> {}",
+            "      case 2 -> {}",
+            "      default -> {} // fall out",
+            "    }",
+            "  }",
+            "}")
+        .doTest();
   }
 }

@@ -30,8 +30,10 @@ import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
 import com.google.errorprone.util.Reachability;
 import com.sun.source.tree.CaseTree;
+import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.SwitchTree;
 import com.sun.tools.javac.code.Type;
+import java.util.List;
 import java.util.Optional;
 import javax.lang.model.element.ElementKind;
 
@@ -62,8 +64,10 @@ public class MissingDefault extends BugChecker implements SwitchTreeMatcher {
         // for the switch statement. Hopefully we don't often see switches with zero cases.
         CaseTree lastCase = getLast(tree.getCases());
         String replacement;
-        if (lastCase.getStatements().isEmpty()
-            || Reachability.canCompleteNormally(Iterables.getLast(lastCase.getStatements()))) {
+        List<? extends StatementTree> statements = lastCase.getStatements();
+        if (statements == null
+            || statements.isEmpty()
+            || Reachability.canCompleteNormally(Iterables.getLast(statements))) {
           replacement = "\nbreak;\ndefault: // fall out\n";
         } else {
           replacement = "\ndefault: // fall out\n";
@@ -73,7 +77,8 @@ public class MissingDefault extends BugChecker implements SwitchTreeMatcher {
       return description.build();
     }
     CaseTree defaultCase = maybeDefault.get();
-    if (!defaultCase.getStatements().isEmpty()) {
+    List<? extends StatementTree> statements = defaultCase.getStatements();
+    if (statements != null && !statements.isEmpty()) {
       return NO_MATCH;
     }
     // If `default` case is empty, and last in switch, add `// fall out` comment
