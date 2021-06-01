@@ -83,7 +83,11 @@ abstract class InlineMeData {
   }
 
   private static String quote(Set<String> imports) {
-    return "{\"" + Joiner.on("\", \"").join(imports) + "\"}";
+    String quoted = "\"" + Joiner.on("\", \"").join(imports) + "\"";
+    if (imports.size() == 1) {
+      return quoted;
+    }
+    return "{" + quoted + "}";
   }
 
   // TODO(glorioso): be tolerant of trailing semicolon
