@@ -120,7 +120,7 @@ public class SizeGreaterThanOrEqualsZero extends BugChecker implements BinaryTre
       instanceMethod()
           .onDescendantOf("com.google.protobuf.GeneratedMessage")
           .withNameMatching(PROTO_COUNT_METHOD_PATTERN)
-          .withNoParameters();
+          .withParameters();
   private static final Matcher<ExpressionTree> PROTO_REPEATED_FIELD_COUNT_METHOD =
       SizeGreaterThanOrEqualsZero::isProtoRepeatedFieldCountMethod;
   private static final Matcher<ExpressionTree> SIZE_OR_LENGTH_STATIC_METHOD =

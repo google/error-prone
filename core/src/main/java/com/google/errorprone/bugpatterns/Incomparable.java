@@ -64,7 +64,7 @@ public class Incomparable extends BugChecker implements NewClassTreeMatcher {
                           "java.util.TreeSet",
                           "java.util.concurrent.ConcurrentSkipListMap",
                           "java.util.concurrent.ConcurrentSkipListSet")))
-              .withNoParameters());
+              .withParameters());
 
   @Override
   public Description matchNewClass(NewClassTree tree, VisitorState state) {

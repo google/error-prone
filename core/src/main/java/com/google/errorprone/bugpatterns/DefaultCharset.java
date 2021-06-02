@@ -154,7 +154,7 @@ public class DefaultCharset extends BugChecker
       staticMethod().onClass("com.google.protobuf.ByteString").named("copyFrom");
 
   private static final Matcher<ExpressionTree> STRING_GET_BYTES =
-      instanceMethod().onExactClass(String.class.getName()).named("getBytes").withNoParameters();
+      instanceMethod().onExactClass(String.class.getName()).named("getBytes").withParameters();
 
   private static final Matcher<ExpressionTree> FILE_NEW_WRITER =
       staticMethod()

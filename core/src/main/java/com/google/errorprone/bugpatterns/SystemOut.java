@@ -51,11 +51,11 @@ public class SystemOut extends BugChecker
 
   private static final Matcher<ExpressionTree> PRINT_STACK_TRACE =
       anyOf(
-          staticMethod().onClass(Thread.class.getName()).named("dumpStack").withNoParameters(),
+          staticMethod().onClass(Thread.class.getName()).named("dumpStack").withParameters(),
           instanceMethod()
               .onDescendantOf(Throwable.class.getName())
               .named("printStackTrace")
-              .withNoParameters());
+              .withParameters());
 
   @Override
   public Description matchMemberSelect(MemberSelectTree tree, VisitorState state) {

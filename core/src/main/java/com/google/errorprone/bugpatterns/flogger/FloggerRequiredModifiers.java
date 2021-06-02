@@ -92,7 +92,7 @@ public final class FloggerRequiredModifiers extends BugChecker
   private static final Supplier<Type> LOGGER_TYPE = Suppliers.typeFromString(GOOGLE_LOGGER);
 
   private static final Matcher<ExpressionTree> INIT_LOGGER =
-      staticMethod().onClass(LOGGER_TYPE).named("forEnclosingClass").withNoParameters();
+      staticMethod().onClass(LOGGER_TYPE).named("forEnclosingClass").withParameters();
 
   private static final ImmutableList<Modifier> EXPECTED_MODIFIERS =
       ImmutableList.of(Modifier.PRIVATE, STATIC, FINAL);

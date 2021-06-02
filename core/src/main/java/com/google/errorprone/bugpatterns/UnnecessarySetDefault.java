@@ -243,7 +243,7 @@ public class UnnecessarySetDefault extends BugChecker implements MethodInvocatio
   }
 
   private static Matcher<ExpressionTree> factoryMatcher(Class<?> clazz, String name) {
-    return staticMethod().onClass(clazz.getCanonicalName()).named(name).withNoParameters();
+    return staticMethod().onClass(clazz.getCanonicalName()).named(name).withParameters();
   }
 
   static Matcher<ExpressionTree> sourceMatcher(String source) {

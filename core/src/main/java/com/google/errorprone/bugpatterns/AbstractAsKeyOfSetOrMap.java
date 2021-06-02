@@ -52,7 +52,7 @@ public abstract class AbstractAsKeyOfSetOrMap extends BugChecker
           MethodMatchers.staticMethod()
               .onClass("com.google.common.collect.HashMultiset")
               .named("create")
-              .withNoParameters(),
+              .withParameters(),
           MethodMatchers.staticMethod()
               .onClass("com.google.common.collect.LinkedHashMultiset")
               .named("create"));

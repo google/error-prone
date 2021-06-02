@@ -41,7 +41,7 @@ public class GetClassOnAnnotation extends BugChecker
       instanceMethod()
           .onDescendantOf(Annotation.class.getName())
           .named("getClass")
-          .withNoParameters();
+          .withParameters();
 
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {

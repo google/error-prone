@@ -276,9 +276,9 @@ public final class ImplementAssertionWithChaining extends BugChecker implements 
           instanceMethod()
               .onDescendantOf("com.google.common.truth.Subject")
               .named("actual")
-              .withNoParameters(),
+              .withParameters(),
           instanceMethod()
               .onDescendantOf("com.google.common.truth.Subject")
               .named("getSubject")
-              .withNoParameters());
+              .withParameters());
 }

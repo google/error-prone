@@ -50,7 +50,7 @@ public class NearbyCallers {
       instanceMethod()
           .onDescendantOfAny(GeneratedMessage.class.getName(), GeneratedMessageLite.class.getName())
           .withNameMatching(Pattern.compile("get(?!CachedSize$|SerializedSize$).+"))
-          .withNoParameters();
+          .withParameters();
 
   /**
    * Returns whether or not there is a call matching {@code secondaryMethodMatcher} with the same

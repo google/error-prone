@@ -75,7 +75,7 @@ public final class JavaTimeDefaultTimeZone extends BugChecker
       Matchers.staticMethod()
           .onClass("java.time.Clock")
           .named("systemDefaultZone")
-          .withNoParameters();
+          .withParameters();
 
   private static final Matcher<ExpressionTree> IN_JAVA_TIME =
       Matchers.packageStartsWith("java.time");

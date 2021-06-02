@@ -57,12 +57,10 @@ import javax.annotation.Nullable;
 public class BoxedPrimitiveConstructor extends BugChecker implements NewClassTreeMatcher {
 
   private static final Matcher<Tree> TO_STRING =
-      toType(
-          ExpressionTree.class, instanceMethod().anyClass().named("toString").withNoParameters());
+      toType(ExpressionTree.class, instanceMethod().anyClass().named("toString").withParameters());
 
   private static final Matcher<Tree> HASH_CODE =
-      toType(
-          ExpressionTree.class, instanceMethod().anyClass().named("hashCode").withNoParameters());
+      toType(ExpressionTree.class, instanceMethod().anyClass().named("hashCode").withParameters());
 
   private static final Matcher<Tree> COMPARE_TO =
       toType(

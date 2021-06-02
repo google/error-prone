@@ -1427,7 +1427,7 @@ public class Matchers {
   }
 
   private static final Matcher<ExpressionTree> INSTANCE_HASHCODE =
-      allOf(instanceMethod().anyClass().named("hashCode").withNoParameters(), isSameType(INT_TYPE));
+      allOf(instanceMethod().anyClass().named("hashCode").withParameters(), isSameType(INT_TYPE));
 
   /** Matches calls to the method {@link Object#hashCode()} or any override of that method. */
   public static Matcher<ExpressionTree> instanceHashCodeInvocation() {

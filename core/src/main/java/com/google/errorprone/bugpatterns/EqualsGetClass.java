@@ -112,7 +112,7 @@ public final class EqualsGetClass extends BugChecker implements MethodInvocation
   private static class EqualsFixer extends TreePathScanner<Void, Void> {
 
     private static final Matcher<ExpressionTree> GET_CLASS =
-        instanceMethod().onDescendantOf("java.lang.Object").named("getClass").withNoParameters();
+        instanceMethod().onDescendantOf("java.lang.Object").named("getClass").withParameters();
 
     private static final Matcher<ExpressionTree> THIS_CLASS =
         anyOf(
