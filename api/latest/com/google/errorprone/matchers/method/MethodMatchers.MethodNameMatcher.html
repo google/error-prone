@@ -15,7 +15,7 @@
 <script type="text/javascript" src="../../../../../script-dir/jquery-ui.min.js"></script>
 </head>
 <body class="class-declaration-page">
-<script type="text/javascript">var data = {"i0":38,"i1":38,"i2":38};
+<script type="text/javascript">var data = {"i0":38,"i1":38,"i2":38,"i3":38,"i4":38};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],4:["t3","Abstract Methods"],32:["t6","Deprecated Methods"]};
 var altColor = "alt-color";
 var rowColor = "row-color";
@@ -113,13 +113,30 @@ extends <a href="MethodMatchers.MethodMatcher.html" title="interface in com.goog
 <tbody>
 <tr class="alt-color" id="i0">
 <td class="col-first"><code><a href="MethodMatchers.ParameterMatcher.html" title="interface in com.google.errorprone.matchers.method">MethodMatchers.ParameterMatcher</a></code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#withNoParameters()">withNoParameters</a></span>()</code></th>
+<td class="col-last">
+<div class="block"><span class="deprecated-label">Deprecated.</span></div>
+<div class="block">Match methods with no formal parameters.</div>
+</td>
+</tr>
+<tr class="row-color" id="i1">
+<td class="col-first"><code><a href="MethodMatchers.ParameterMatcher.html" title="interface in com.google.errorprone.matchers.method">MethodMatchers.ParameterMatcher</a></code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#withParameters()">withParameters</a></span>()</code></th>
+<td class="col-last">
+<div class="block"><span class="deprecated-label">Deprecated.</span>
+<div class="deprecation-comment">use <a href="#withNoParameters()"><code>withNoParameters()</code></a>.</div>
+</div>
+</td>
+</tr>
+<tr class="alt-color" id="i2">
+<td class="col-first"><code><a href="MethodMatchers.ParameterMatcher.html" title="interface in com.google.errorprone.matchers.method">MethodMatchers.ParameterMatcher</a></code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#withParameters(java.lang.Iterable)">withParameters</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Iterable.html" title="class or interface in java.lang" class="external-link">Iterable</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;parameters)</code></th>
 <td class="col-last">
 <div class="block"><span class="deprecated-label">Deprecated.</span></div>
 <div class="block">Match methods whose formal parameters have the given types.</div>
 </td>
 </tr>
-<tr class="row-color" id="i1">
+<tr class="row-color" id="i3">
 <td class="col-first"><code><a href="MethodMatchers.ParameterMatcher.html" title="interface in com.google.errorprone.matchers.method">MethodMatchers.ParameterMatcher</a></code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#withParameters(java.lang.String...)">withParameters</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>...&nbsp;parameters)</code></th>
 <td class="col-last">
@@ -127,7 +144,7 @@ extends <a href="MethodMatchers.MethodMatcher.html" title="interface in com.goog
 <div class="block">Match methods whose formal parameters have the given types.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i2">
+<tr class="alt-color" id="i4">
 <td class="col-first"><code><a href="MethodMatchers.ParameterMatcher.html" title="interface in com.google.errorprone.matchers.method">MethodMatchers.ParameterMatcher</a></code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#withParametersOfType(java.lang.Iterable)">withParametersOfType</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Iterable.html" title="class or interface in java.lang" class="external-link">Iterable</a>&lt;<a href="../../suppliers/Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a>&lt;com.sun.tools.javac.code.Type&gt;&gt;&nbsp;parameters)</code></th>
 <td class="col-last">
@@ -156,6 +173,24 @@ extends <a href="MethodMatchers.MethodMatcher.html" title="interface in com.goog
 <section class="method-details" id="method.detail">
 <h2>Method Details</h2>
 <ul class="member-list">
+<li>
+<section class="detail" id="withNoParameters()">
+<h3>withNoParameters</h3>
+<div class="member-signature"><span class="return-type"><a href="MethodMatchers.ParameterMatcher.html" title="interface in com.google.errorprone.matchers.method">MethodMatchers.ParameterMatcher</a></span>&nbsp;<span class="member-name">withNoParameters</span>()</div>
+<div class="deprecation-block"><span class="deprecated-label">Deprecated.</span></div>
+<div class="block">Match methods with no formal parameters.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="withParameters()">
+<h3>withParameters</h3>
+<div class="member-signature"><span class="annotations"><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Deprecated.html" title="class or interface in java.lang" class="external-link">@Deprecated</a>
+</span><span class="return-type"><a href="MethodMatchers.ParameterMatcher.html" title="interface in com.google.errorprone.matchers.method">MethodMatchers.ParameterMatcher</a></span>&nbsp;<span class="member-name">withParameters</span>()</div>
+<div class="deprecation-block"><span class="deprecated-label">Deprecated.</span>
+<div class="deprecation-comment">use <a href="#withNoParameters()"><code>withNoParameters()</code></a>.</div>
+</div>
+</section>
+</li>
 <li>
 <section class="detail" id="withParameters(java.lang.String...)">
 <h3>withParameters</h3>
