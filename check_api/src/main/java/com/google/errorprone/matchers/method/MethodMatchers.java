@@ -145,15 +145,7 @@ public final class MethodMatchers {
   /** @deprecated use {@code Matcher<ExpressionTree>} instead of referring directly to this type. */
   @Deprecated
   public interface MethodNameMatcher extends MethodMatcher {
-    /** Match methods with no formal parameters. */
-    ParameterMatcher withNoParameters();
-
-    /** @deprecated use {@link #withNoParameters()}. */
-    @Deprecated
-    ParameterMatcher withParameters();
-
     /** Match methods whose formal parameters have the given types. */
-    // TODO(ghm): Make this require at least one argument.
     ParameterMatcher withParameters(String... parameters);
 
     /** Match methods whose formal parameters have the given types. */
@@ -179,15 +171,7 @@ public final class MethodMatchers {
   /** @deprecated use {@code Matcher<ExpressionTree>} instead of referring directly to this type. */
   @Deprecated
   public interface ConstructorClassMatcher extends MethodMatcher {
-    /** Match constructors with no formal parameters. */
-    ParameterMatcher withNoParameters();
-
-    /** @deprecated use {@link #withNoParameters()}. */
-    @Deprecated
-    ParameterMatcher withParameters();
-
     /** Match constructors whose formal parameters have the given types. */
-    // TODO(ghm): Make this require at least one argument.
     ParameterMatcher withParameters(String... parameters);
 
     /** Match constructors whose formal parameters have the given types. */
