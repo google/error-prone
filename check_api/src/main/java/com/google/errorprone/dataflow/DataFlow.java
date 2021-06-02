@@ -36,18 +36,18 @@ import com.sun.tools.javac.processing.JavacProcessingEnvironment;
 import com.sun.tools.javac.util.Context;
 import javax.annotation.Nullable;
 import javax.annotation.processing.ProcessingEnvironment;
-import org.checkerframework.shaded.dataflow.analysis.AbstractValue;
-import org.checkerframework.shaded.dataflow.analysis.Analysis;
-import org.checkerframework.shaded.dataflow.analysis.ForwardAnalysisImpl;
-import org.checkerframework.shaded.dataflow.analysis.ForwardTransferFunction;
-import org.checkerframework.shaded.dataflow.analysis.Store;
-import org.checkerframework.shaded.dataflow.analysis.TransferFunction;
-import org.checkerframework.shaded.dataflow.cfg.ControlFlowGraph;
-import org.checkerframework.shaded.dataflow.cfg.UnderlyingAST;
-import org.checkerframework.shaded.dataflow.cfg.builder.CFGBuilder;
+import org.checkerframework.errorprone.dataflow.analysis.AbstractValue;
+import org.checkerframework.errorprone.dataflow.analysis.Analysis;
+import org.checkerframework.errorprone.dataflow.analysis.ForwardAnalysisImpl;
+import org.checkerframework.errorprone.dataflow.analysis.ForwardTransferFunction;
+import org.checkerframework.errorprone.dataflow.analysis.Store;
+import org.checkerframework.errorprone.dataflow.analysis.TransferFunction;
+import org.checkerframework.errorprone.dataflow.cfg.ControlFlowGraph;
+import org.checkerframework.errorprone.dataflow.cfg.UnderlyingAST;
+import org.checkerframework.errorprone.dataflow.cfg.builder.CFGBuilder;
 
 /**
- * Provides a wrapper around {@link org.checkerframework.shaded.dataflow.analysis.Analysis}.
+ * Provides a wrapper around {@link org.checkerframework.errorprone.dataflow.analysis.Analysis}.
  *
  * @author konne@google.com (Konstantin Weitz)
  */
