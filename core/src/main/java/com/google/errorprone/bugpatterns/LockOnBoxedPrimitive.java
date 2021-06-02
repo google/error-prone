@@ -65,7 +65,7 @@ public class LockOnBoxedPrimitive extends BugChecker
               .anyClass()
               .named("wait")
               .withParametersOfType(ImmutableList.of(Suppliers.LONG_TYPE, Suppliers.INT_TYPE)),
-          instanceMethod().anyClass().namedAnyOf("wait", "notify", "notifyAll").withParameters());
+          instanceMethod().anyClass().namedAnyOf("wait", "notify", "notifyAll").withNoParameters());
 
   private static final Matcher<ExpressionTree> BOXED_PRIMITIVE = isBoxedPrimitiveType();
 

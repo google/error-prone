@@ -84,7 +84,7 @@ public final class EmptySetMultibindingContributions extends BugChecker
           .onClassAny(
               ImmutableSet.class.getCanonicalName(), ImmutableSortedSet.class.getCanonicalName())
           .named("of")
-          .withParameters();
+          .withNoParameters();
 
   private static final Matcher<ExpressionTree> SET_CONSTRUCTORS =
       anyOf(
@@ -94,7 +94,7 @@ public final class EmptySetMultibindingContributions extends BugChecker
 
   @SuppressWarnings("rawtypes")
   private static Matcher<ExpressionTree> noArgSetConstructor(Class<? extends Set> setClass) {
-    return MethodMatchers.constructor().forClass(setClass.getCanonicalName()).withParameters();
+    return MethodMatchers.constructor().forClass(setClass.getCanonicalName()).withNoParameters();
   }
 
   private static final Matcher<ExpressionTree> SET_FACTORY_METHODS =
@@ -107,7 +107,7 @@ public final class EmptySetMultibindingContributions extends BugChecker
     return MethodMatchers.staticMethod()
         .onClass(Sets.class.getCanonicalName())
         .named(factoryName)
-        .withParameters();
+        .withNoParameters();
   }
 
   private static final Matcher<ExpressionTree> ENUM_SET_NONE_OF =

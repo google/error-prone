@@ -55,11 +55,11 @@ public final class JodaConstructors extends BugChecker implements NewClassTreeMa
       constructor().forClass("org.joda.time.Duration").withParameters("long");
 
   private static final Matcher<ExpressionTree> INSTANT_CTOR =
-      constructor().forClass("org.joda.time.Instant").withParameters();
+      constructor().forClass("org.joda.time.Instant").withNoParameters();
 
   private static final Matcher<ExpressionTree> DATE_TIME_CTORS =
       anyOf(
-          constructor().forClass("org.joda.time.DateTime").withParameters(),
+          constructor().forClass("org.joda.time.DateTime").withNoParameters(),
           constructor()
               .forClass("org.joda.time.DateTime")
               .withParameters("org.joda.time.Chronology"),

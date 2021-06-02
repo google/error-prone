@@ -414,6 +414,16 @@ final class MethodMatcherImpl
   }
 
   @Override
+  public ParameterMatcher withNoParameters() {
+    return withParameters(ImmutableList.of());
+  }
+
+  @Override
+  public ParameterMatcher withParameters() {
+    return withNoParameters();
+  }
+
+  @Override
   public ParameterMatcher withParameters(String... parameters) {
     return withParameters(ImmutableList.copyOf(parameters));
   }

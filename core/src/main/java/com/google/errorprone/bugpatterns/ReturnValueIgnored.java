@@ -198,10 +198,19 @@ public class ReturnValueIgnored extends AbstractReturnValueIgnored {
               .onDescendantOf("java.util.Collection")
               .named("containsAll")
               .withParameters("java.util.Collection"),
-          instanceMethod().onDescendantOf("java.util.Collection").named("isEmpty").withParameters(),
-          instanceMethod().onDescendantOf("java.util.Collection").named("size").withParameters(),
-          instanceMethod().onDescendantOf("java.util.Collection").named("stream").withParameters(),
-          instanceMethod().onDescendantOf("java.util.Collection").named("toArray").withParameters(),
+          instanceMethod()
+              .onDescendantOf("java.util.Collection")
+              .named("isEmpty")
+              .withNoParameters(),
+          instanceMethod().onDescendantOf("java.util.Collection").named("size").withNoParameters(),
+          instanceMethod()
+              .onDescendantOf("java.util.Collection")
+              .named("stream")
+              .withNoParameters(),
+          instanceMethod()
+              .onDescendantOf("java.util.Collection")
+              .named("toArray")
+              .withNoParameters(),
           instanceMethod()
               .onDescendantOf("java.util.Collection")
               .named("toArray")
@@ -223,15 +232,18 @@ public class ReturnValueIgnored extends AbstractReturnValueIgnored {
   /** APIs to check on the {@link java.lang.Iterable} interface. */
   private static final Matcher<ExpressionTree> ITERABLE_METHODS =
       anyOf(
-          instanceMethod().onDescendantOf("java.lang.Iterable").named("iterator").withParameters(),
+          instanceMethod()
+              .onDescendantOf("java.lang.Iterable")
+              .named("iterator")
+              .withNoParameters(),
           instanceMethod()
               .onDescendantOf("java.lang.Iterable")
               .named("spliterator")
-              .withParameters());
+              .withNoParameters());
 
   /** APIs to check on the {@link java.util.Iterator} interface. */
   private static final Matcher<ExpressionTree> ITERATOR_METHODS =
-      instanceMethod().onDescendantOf("java.util.Iterator").named("hasNext").withParameters();
+      instanceMethod().onDescendantOf("java.util.Iterator").named("hasNext").withNoParameters();
 
   /**
    * The return values of primitive types (e.g., {@link java.lang.Integer}) should always be checked
@@ -281,7 +293,7 @@ public class ReturnValueIgnored extends AbstractReturnValueIgnored {
           instanceMethod()
               .onDescendantOf("java.lang.Object")
               .namedAnyOf("getClass", "hashCode", "clone", "toString")
-              .withParameters(),
+              .withNoParameters(),
           instanceMethod()
               .onDescendantOf("java.lang.Object")
               .namedAnyOf("equals")

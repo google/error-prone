@@ -48,11 +48,11 @@ public final class ErroneousThreadPoolConstructorChecker extends BugChecker
       constructor().forClass("java.util.concurrent.ThreadPoolExecutor");
   private static final Matcher<ExpressionTree> UNBOUNDED_WORK_QUEUE_CONSTRUCTOR_MATCHER =
       anyOf(
-          constructor().forClass("java.util.concurrent.LinkedBlockingDeque").withParameters(),
+          constructor().forClass("java.util.concurrent.LinkedBlockingDeque").withNoParameters(),
           constructor()
               .forClass("java.util.concurrent.LinkedBlockingDeque")
               .withParameters("java.util.Collection"),
-          constructor().forClass("java.util.concurrent.LinkedBlockingQueue").withParameters(),
+          constructor().forClass("java.util.concurrent.LinkedBlockingQueue").withNoParameters(),
           constructor()
               .forClass("java.util.concurrent.LinkedBlockingQueue")
               .withParameters("java.util.Collection"),

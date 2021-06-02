@@ -66,7 +66,7 @@ public class ForEachIterable extends BugChecker implements VariableTreeMatcher {
       instanceMethod().onDescendantOf("java.util.Iterator").named("next");
 
   private static final Matcher<ExpressionTree> ITERATOR =
-      instanceMethod().onDescendantOf("java.lang.Iterable").named("iterator").withParameters();
+      instanceMethod().onDescendantOf("java.lang.Iterable").named("iterator").withNoParameters();
 
   @Override
   public Description matchVariable(VariableTree tree, VisitorState state) {

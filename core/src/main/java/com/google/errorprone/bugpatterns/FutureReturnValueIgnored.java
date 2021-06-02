@@ -56,7 +56,7 @@ public final class FutureReturnValueIgnored extends AbstractReturnValueIgnored
           instanceMethod()
               .onDescendantOf(ForkJoinTask.class.getName())
               .named("fork")
-              .withParameters(),
+              .withNoParameters(),
           // CompletionService is intended to be used in a way where the Future returned
           // from submit is discarded, because the Futures are available later via e.g. take()
           instanceMethod().onDescendantOf(CompletionService.class.getName()).named("submit"),

@@ -51,7 +51,7 @@ public class MockitoUsage extends BugChecker implements MethodInvocationTreeMatc
               .withSignature("<T>verify(T,org.mockito.verification.VerificationMode)"));
 
   private static final Matcher<ExpressionTree> NEVER_METHOD =
-      staticMethod().onClass("org.mockito.Mockito").named("never").withParameters();
+      staticMethod().onClass("org.mockito.Mockito").named("never").withNoParameters();
 
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {

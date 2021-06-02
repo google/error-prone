@@ -74,7 +74,7 @@ public class MethodInvocationMatcherTest {
     public MethodInvocationChecker() {
       List<MethodMatchers.MethodMatcher> matchers =
           ImmutableList.of(
-              instanceMethod().anyClass().named("toString").withParameters(),
+              instanceMethod().anyClass().named("toString").withNoParameters(),
               anyMethod().anyClass().named("valueOf").withParameters("int"),
               staticMethod().anyClass().named("valueOf").withParameters("long"),
               instanceMethod().onDescendantOf("java.lang.Number"));
