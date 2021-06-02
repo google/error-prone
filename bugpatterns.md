@@ -1460,7 +1460,7 @@ __[RemoveUnusedImports](bugpattern/RemoveUnusedImports)__<br>
 Unused imports
 
 __[ReturnsNullCollection](bugpattern/ReturnsNullCollection)__<br>
-Methods has a collection return type and returns {@code null} in some cases but does not annotate the method as @Nullable. See Effective Java 3rd Edition Item 54.
+Method has a collection return type and returns {@code null} in some cases but does not annotate the method as @Nullable. See Effective Java 3rd Edition Item 54.
 
 __[ScopeOnModule](bugpattern/ScopeOnModule)__<br>
 Scopes on modules have no function and will soon be an error.

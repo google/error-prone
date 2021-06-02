@@ -1,6 +1,6 @@
 ---
 title: ReturnsNullCollection
-summary: Methods has a collection return type and returns {@code null} in some cases
+summary: Method has a collection return type and returns {@code null} in some cases
   but does not annotate the method as @Nullable. See Effective Java 3rd Edition Item
   54.
 layout: bugpattern
