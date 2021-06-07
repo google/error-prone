@@ -121,7 +121,7 @@ public class EqualsIncompatibleType extends BugChecker
       ExpressionTree invocationTree, Type receiverType, Type argumentType, VisitorState state) {
     TypeCompatibilityReport compatibilityReport =
         typeCompatibilityUtils.compatibilityOfTypes(receiverType, argumentType, state);
-    if (compatibilityReport.compatible()) {
+    if (compatibilityReport.isCompatible()) {
       return NO_MATCH;
     }
 

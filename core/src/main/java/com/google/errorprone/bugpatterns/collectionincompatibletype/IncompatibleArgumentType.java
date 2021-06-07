@@ -130,7 +130,7 @@ public class IncompatibleArgumentType extends BugChecker implements MethodInvoca
         // Report a violation for this type
         TypeCompatibilityReport report =
             typeCompatibilityUtils.compatibilityOfTypes(requiredType.type(), argType, state);
-        if (!report.compatible()) {
+        if (!report.isCompatible()) {
           state.reportMatch(
               describeViolation(argument, argType, requiredType.type(), types, state));
         }

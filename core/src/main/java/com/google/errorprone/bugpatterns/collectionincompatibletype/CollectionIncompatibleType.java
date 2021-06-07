@@ -101,7 +101,7 @@ public class CollectionIncompatibleType extends BugChecker
     TypeCompatibilityReport compatibilityReport =
         typeCompatibilityUtils.compatibilityOfTypes(
             result.targetType(), result.sourceType(), state);
-    if (compatibilityReport.compatible()) {
+    if (compatibilityReport.isCompatible()) {
       return NO_MATCH;
     }
 

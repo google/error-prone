@@ -394,7 +394,7 @@ public class TruthIncompatibleType extends BugChecker implements MethodInvocatio
       ExpressionTree tree, Type targetType, Type sourceType, VisitorState state) {
     TypeCompatibilityReport compatibilityReport =
         typeCompatibilityUtils.compatibilityOfTypes(targetType, sourceType, state);
-    if (compatibilityReport.compatible()) {
+    if (compatibilityReport.isCompatible()) {
       return Stream.empty();
     }
     String sourceTypeName = Signatures.prettyType(sourceType);
