@@ -35,6 +35,7 @@ import static java.util.stream.Stream.concat;
 
 import com.google.common.collect.Streams;
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
@@ -131,6 +132,12 @@ public class TruthIncompatibleType extends BugChecker implements MethodInvocatio
 
   private static final Supplier<Type> CORRESPONDENCE =
       typeFromString("com.google.common.truth.Correspondence");
+
+  private final TypeCompatibilityUtils typeCompatibilityUtils;
+
+  public TruthIncompatibleType(ErrorProneFlags flags) {
+    this.typeCompatibilityUtils = TypeCompatibilityUtils.fromFlags(flags);
+  }
 
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
@@ -386,7 +393,7 @@ public class TruthIncompatibleType extends BugChecker implements MethodInvocatio
   private Stream<Description> checkCompatibility(
       ExpressionTree tree, Type targetType, Type sourceType, VisitorState state) {
     TypeCompatibilityReport compatibilityReport =
-        TypeCompatibilityUtils.compatibilityOfTypes(targetType, sourceType, state);
+        typeCompatibilityUtils.compatibilityOfTypes(targetType, sourceType, state);
     if (compatibilityReport.compatible()) {
       return Stream.empty();
     }

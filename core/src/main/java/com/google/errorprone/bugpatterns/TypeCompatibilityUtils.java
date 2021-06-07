@@ -20,6 +20,7 @@ import com.google.auto.value.AutoValue;
 import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Streams;
+import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.tools.javac.code.Flags;
@@ -42,13 +43,27 @@ import javax.annotation.Nullable;
  * <p>i.e.: It is possible that an object of one type could be equal to an object of the other type.
  */
 public final class TypeCompatibilityUtils {
+  private final boolean treatDifferentProtosAsIncomparable;
 
-  public static TypeCompatibilityReport compatibilityOfTypes(
+  public static TypeCompatibilityUtils fromFlags(ErrorProneFlags flags) {
+    return new TypeCompatibilityUtils(
+        flags.getBoolean("TypeCompatibility:TreatDifferentProtosAsIncomparable").orElse(true));
+  }
+
+  public static TypeCompatibilityUtils allOn() {
+    return new TypeCompatibilityUtils(/* treatDifferentProtosAsIncomparable= */ true);
+  }
+
+  private TypeCompatibilityUtils(boolean treatDifferentProtosAsIncomparable) {
+    this.treatDifferentProtosAsIncomparable = treatDifferentProtosAsIncomparable;
+  }
+
+  public TypeCompatibilityReport compatibilityOfTypes(
       Type receiverType, Type argumentType, VisitorState state) {
     return compatibilityOfTypes(receiverType, argumentType, typeSet(state), typeSet(state), state);
   }
 
-  private static TypeCompatibilityReport compatibilityOfTypes(
+  private TypeCompatibilityReport compatibilityOfTypes(
       Type receiverType,
       Type argumentType,
       Set<Type> previousReceiverTypes,
@@ -128,7 +143,7 @@ public final class TypeCompatibilityUtils {
           // So consider them incompatible with each other.
           "java.util.Collection");
 
-  private static TypeCompatibilityReport leastUpperBoundGenericMismatch(
+  private TypeCompatibilityReport leastUpperBoundGenericMismatch(
       Type receiverType,
       Type argumentType,
       Set<Type> previousReceiverTypes,
@@ -166,7 +181,7 @@ public final class TypeCompatibilityUtils {
     return compatibilityReport;
   }
 
-  private static TypeCompatibilityReport matchesSubtypeAndIsGenericMismatch(
+  private TypeCompatibilityReport matchesSubtypeAndIsGenericMismatch(
       Type receiverType,
       Type argumentType,
       Type superType,
@@ -246,6 +261,4 @@ public final class TypeCompatibilityUtils {
       this.argument = argument;
     }
   }
-
-  private TypeCompatibilityUtils() {}
 }
