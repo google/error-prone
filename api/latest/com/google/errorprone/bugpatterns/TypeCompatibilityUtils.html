@@ -15,8 +15,8 @@
 <script type="text/javascript" src="../../../../script-dir/jquery-ui.min.js"></script>
 </head>
 <body class="class-declaration-page">
-<script type="text/javascript">var data = {"i0":9};
-var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],8:["t4","Concrete Methods"]};
+<script type="text/javascript">var data = {"i0":9,"i1":10,"i2":9};
+var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "alt-color";
 var rowColor = "row-color";
 var tableTab = "table-tab";
@@ -120,7 +120,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <section class="method-summary" id="method.summary">
 <h2>Method Summary</h2>
 <div class="member-summary" id="method-summary-table">
-<div class="table-tabs" role="tablist" aria-orientation="horizontal"><button role="tab" aria-selected="true" aria-controls="method-summary-table.tabpanel" tabindex="0" onkeydown="switchTab(event)" id="t0" class="active-table-tab">All Methods</button><button role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" id="t1" class="table-tab" onclick="show(1);">Static Methods</button><button role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" id="t4" class="table-tab" onclick="show(8);">Concrete Methods</button></div>
+<div class="table-tabs" role="tablist" aria-orientation="horizontal"><button role="tab" aria-selected="true" aria-controls="method-summary-table.tabpanel" tabindex="0" onkeydown="switchTab(event)" id="t0" class="active-table-tab">All Methods</button><button role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" id="t1" class="table-tab" onclick="show(1);">Static Methods</button><button role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" id="t2" class="table-tab" onclick="show(2);">Instance Methods</button><button role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" id="t4" class="table-tab" onclick="show(8);">Concrete Methods</button></div>
 <div id="method-summary-table.tabpanel" role="tabpanel">
 <table class="summary-table" aria-labelledby="t0">
 <thead>
@@ -132,10 +132,20 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 </thead>
 <tbody>
 <tr class="alt-color" id="i0">
-<td class="col-first"><code>static <a href="TypeCompatibilityUtils.TypeCompatibilityReport.html" title="class in com.google.errorprone.bugpatterns">TypeCompatibilityUtils.TypeCompatibilityReport</a></code></td>
+<td class="col-first"><code>static <a href="TypeCompatibilityUtils.html" title="class in com.google.errorprone.bugpatterns">TypeCompatibilityUtils</a></code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#allOn()">allOn</a></span>()</code></th>
+<td class="col-last">&nbsp;</td>
+</tr>
+<tr class="row-color" id="i1">
+<td class="col-first"><code><a href="TypeCompatibilityUtils.TypeCompatibilityReport.html" title="class in com.google.errorprone.bugpatterns">TypeCompatibilityUtils.TypeCompatibilityReport</a></code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#compatibilityOfTypes(com.sun.tools.javac.code.Type,com.sun.tools.javac.code.Type,com.google.errorprone.VisitorState)">compatibilityOfTypes</a></span>&#8203;(com.sun.tools.javac.code.Type&nbsp;receiverType,
 com.sun.tools.javac.code.Type&nbsp;argumentType,
 <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
+<td class="col-last">&nbsp;</td>
+</tr>
+<tr class="alt-color" id="i2">
+<td class="col-first"><code>static <a href="TypeCompatibilityUtils.html" title="class in com.google.errorprone.bugpatterns">TypeCompatibilityUtils</a></code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#fromFlags(com.google.errorprone.ErrorProneFlags)">fromFlags</a></span>&#8203;(<a href="../ErrorProneFlags.html" title="class in com.google.errorprone">ErrorProneFlags</a>&nbsp;flags)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
 </tbody>
@@ -157,9 +167,21 @@ com.sun.tools.javac.code.Type&nbsp;argumentType,
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
+<section class="detail" id="fromFlags(com.google.errorprone.ErrorProneFlags)">
+<h3>fromFlags</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="TypeCompatibilityUtils.html" title="class in com.google.errorprone.bugpatterns">TypeCompatibilityUtils</a></span>&nbsp;<span class="member-name">fromFlags</span>&#8203;(<span class="parameters"><a href="../ErrorProneFlags.html" title="class in com.google.errorprone">ErrorProneFlags</a>&nbsp;flags)</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="allOn()">
+<h3>allOn</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="TypeCompatibilityUtils.html" title="class in com.google.errorprone.bugpatterns">TypeCompatibilityUtils</a></span>&nbsp;<span class="member-name">allOn</span>()</div>
+</section>
+</li>
+<li>
 <section class="detail" id="compatibilityOfTypes(com.sun.tools.javac.code.Type,com.sun.tools.javac.code.Type,com.google.errorprone.VisitorState)">
 <h3>compatibilityOfTypes</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="TypeCompatibilityUtils.TypeCompatibilityReport.html" title="class in com.google.errorprone.bugpatterns">TypeCompatibilityUtils.TypeCompatibilityReport</a></span>&nbsp;<span class="member-name">compatibilityOfTypes</span>&#8203;(<span class="parameters">com.sun.tools.javac.code.Type&nbsp;receiverType,
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="TypeCompatibilityUtils.TypeCompatibilityReport.html" title="class in com.google.errorprone.bugpatterns">TypeCompatibilityUtils.TypeCompatibilityReport</a></span>&nbsp;<span class="member-name">compatibilityOfTypes</span>&#8203;(<span class="parameters">com.sun.tools.javac.code.Type&nbsp;receiverType,
 com.sun.tools.javac.code.Type&nbsp;argumentType,
 <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
 </section>
