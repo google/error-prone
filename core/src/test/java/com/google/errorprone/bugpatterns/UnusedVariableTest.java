@@ -1288,10 +1288,8 @@ public class UnusedVariableTest {
         .doTest();
   }
 
-  @Ignore("b/188314422")
   @Test
-  public void unusedReassignment() {
-    new Exception();
+  public void unusedReassignment_removeSideEffectsFix() {
     refactoringHelper
         .addInputLines(
             "Test.java",
@@ -1318,6 +1316,41 @@ public class UnusedVariableTest {
             "  public void f(List<List<String>> lists) {",
             "  }",
             "}")
+        .setFixChooser(FixChoosers.FIRST)
+        .doTest();
+  }
+
+  @Test
+  public void unusedReassignment_keepSideEffectsFix() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            "import java.util.ArrayList;",
+            "import java.util.Collection;",
+            "import java.util.List;",
+            "import static java.util.stream.Collectors.toList;",
+            "public class Test {",
+            "  public void f(List<List<String>> lists) {",
+            "    List<String> result =",
+            "        lists.stream().collect(ArrayList::new, Collection::addAll,"
+                + " Collection::addAll);",
+            "    result = lists.stream().collect(ArrayList::new, ArrayList::addAll,"
+                + " ArrayList::addAll);",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "import java.util.ArrayList;",
+            "import java.util.Collection;",
+            "import java.util.List;",
+            "import static java.util.stream.Collectors.toList;",
+            "public class Test {",
+            "  public void f(List<List<String>> lists) {",
+            "    lists.stream().collect(ArrayList::new, Collection::addAll, Collection::addAll);",
+            "    lists.stream().collect(ArrayList::new, ArrayList::addAll, ArrayList::addAll);",
+            "  }",
+            "}")
+        .setFixChooser(FixChoosers.SECOND)
         .doTest();
   }
 }
