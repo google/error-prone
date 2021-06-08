@@ -174,7 +174,7 @@ Download the following artifacts from maven:
 
 *   [error_prone_core-2.7.1-with-dependencies.jar](https://repo1.maven.org/maven2/com/google/errorprone/error_prone_core/2.7.1/error_prone_core-2.7.1-with-dependencies.jar)
 *   [jFormatString-3.0.0.jar](https://repo1.maven.org/maven2/com/google/code/findbugs/jFormatString/3.0.0/jFormatString-3.0.0.jar)
-*   [dataflow-shaded-3.7.1.jar](https://repo1.maven.org/maven2/org/checkerframework/dataflow-shaded/3.7.1/dataflow-shaded-3.7.1.jar)
+*   [dataflow-shaded-3.11.0.jar](https://repo1.maven.org/maven2/org/checkerframework/dataflow-shaded/3.11.0/dataflow-shaded-3.11.0.jar)
 *   [javac-9+181-r4173-1.jar](https://repo1.maven.org/maven2/com/google/errorprone/javac/9+181-r4173-1/javac-9+181-r4173-1.jar)
 
 and add the following javac task to your project's `build.xml` file:
@@ -188,9 +188,9 @@ and add the following javac task to your project's `build.xml` file:
     </condition>
 
     <path id="processorpath.ref">
-      <pathelement location="${user.home}/.m2/repository/com/google/errorprone/error_prone_core/2.5.1/error_prone_core-2.5.1-with-dependencies.jar"/>
+      <pathelement location="${user.home}/.m2/repository/com/google/errorprone/error_prone_core/2.7.1/error_prone_core-2.7.1-with-dependencies.jar"/>
       <pathelement location="${user.home}/.m2/repository/com/google/code/findbugs/jFormatString/3.0.0/jFormatString-3.0.0.jar"/>
-      <pathelement location="${user.home}/.m2/repository/org/checkerframework/dataflow-shaded/3.7.1/dataflow-shaded-3.7.1.jar"/>
+      <pathelement location="${user.home}/.m2/repository/org/checkerframework/dataflow-shaded/3.11.0/dataflow-shaded-3.11.0.jar"/>
       <!-- Add annotation processors and Error Prone custom checks here if needed -->
     </path>
 
@@ -237,8 +237,8 @@ API, and can be used with JDK 9 and up by adding Error Prone to the
 Example:
 
 ```bash
-wget https://repo1.maven.org/maven2/com/google/errorprone/error_prone_core/2.5.1/error_prone_core-2.5.1-with-dependencies.jar
-wget https://repo1.maven.org/maven2/org/checkerframework/dataflow-shaded/3.7.1/dataflow-shaded-3.7.1.jar
+wget https://repo1.maven.org/maven2/com/google/errorprone/error_prone_core/2.7.1/error_prone_core-2.7.1-with-dependencies.jar
+wget https://repo1.maven.org/maven2/org/checkerframework/dataflow-shaded/3.11.0/dataflow-shaded-3.11.0.jar
 wget https://repo1.maven.org/maven2/com/google/code/findbugs/jFormatString/3.0.0/jFormatString-3.0.0.jar
 javac \
   -J--add-exports=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED \
@@ -252,7 +252,7 @@ javac \
   -J--add-opens=jdk.compiler/com.sun.tools.javac.code=ALL-UNNAMED \
   -J--add-opens=jdk.compiler/com.sun.tools.javac.comp=ALL-UNNAMED \
   -XDcompilePolicy=simple \
-  -processorpath error_prone_core-2.5.1-with-dependencies.jar:dataflow-shaded-3.7.1.jar:jFormatString-3.0.0.jar \
+  -processorpath error_prone_core-2.7.1-with-dependencies.jar:dataflow-shaded-3.11.0.jar:jFormatString-3.0.0.jar \
   '-Xplugin:ErrorProne -XepDisableAllChecks -Xep:CollectionIncompatibleType:ERROR' \
   ShortSet.java
 ```
@@ -274,14 +274,14 @@ Default](https://openjdk.java.net/jeps/396):
 To use Error Prone from the command line as a javac replacement:
 
 ```
-wget https://repo1.maven.org/maven2/com/google/errorprone/error_prone_core/2.5.1/error_prone_core-2.5.1-with-dependencies.jar
-wget https://repo1.maven.org/maven2/org/checkerframework/dataflow-shaded/3.7.1/dataflow-shaded-3.7.1.jar
+wget https://repo1.maven.org/maven2/com/google/errorprone/error_prone_core/2.7.1/error_prone_core-2.7.1-with-dependencies.jar
+wget https://repo1.maven.org/maven2/org/checkerframework/dataflow-shaded/3.11.0/dataflow-shaded-3.11.0.jar
 wget https://repo1.maven.org/maven2/com/google/code/findbugs/jFormatString/3.0.0/jFormatString-3.0.0.jar
 wget https://repo1.maven.org/maven2/com/google/errorprone/javac/9+181-r4173-1/javac-9+181-r4173-1.jar
 javac \
   -J-Xbootclasspath/p:javac-9+181-r4173-1.jar \
   -XDcompilePolicy=simple \
-  -processorpath error_prone_core-2.5.1-with-dependencies.jar:dataflow-shaded-3.7.1.jar:jFormatString-3.0.0.jar \
+  -processorpath error_prone_core-2.7.1-with-dependencies.jar:dataflow-shaded-3.11.0.jar:jFormatString-3.0.0.jar \
   '-Xplugin:ErrorProne -XepDisableAllChecks -Xep:CollectionIncompatibleType:ERROR' \
   ShortSet.java
 ```
