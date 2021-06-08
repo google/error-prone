@@ -69,14 +69,20 @@ public class TruthIncompatibleType extends BugChecker implements MethodInvocatio
           staticMethod()
               .onClassAny("com.google.common.truth.Truth", "com.google.common.truth.Truth8")
               .named("assertThat"),
+          staticMethod()
+              .onClass("com.google.common.truth.extensions.proto.ProtoTruth")
+              .named("assertThat"),
           instanceMethod()
               .onDescendantOf("com.google.common.truth.StandardSubjectBuilder")
               .named("that"));
 
-  private static final Matcher<ExpressionTree> IS_EQUAL_TO =
-      instanceMethod()
-          .onDescendantOf("com.google.common.truth.Subject")
-          .namedAnyOf("isEqualTo", "isNotEqualTo");
+  private final Matcher<ExpressionTree> isEqualTo;
+
+  private static final Matcher<ExpressionTree> FLUENT_PROTO_CHAIN =
+      anyOf(
+          instanceMethod()
+              .onDescendantOf("com.google.common.truth.extensions.proto.ProtoFluentAssertion"),
+          instanceMethod().onDescendantOf("com.google.common.truth.extensions.proto.ProtoSubject"));
 
   private static final Matcher<ExpressionTree> SCALAR_CONTAINS =
       instanceMethod()
@@ -136,7 +142,21 @@ public class TruthIncompatibleType extends BugChecker implements MethodInvocatio
   private final TypeCompatibilityUtils typeCompatibilityUtils;
 
   public TruthIncompatibleType(ErrorProneFlags flags) {
+    boolean handleProtoTruth = flags.getBoolean("TruthIncompatibleType:ProtoTruth").orElse(true);
+
     this.typeCompatibilityUtils = TypeCompatibilityUtils.fromFlags(flags);
+    this.isEqualTo =
+        handleProtoTruth
+            ? anyOf(
+                instanceMethod()
+                    .onDescendantOf("com.google.common.truth.Subject")
+                    .namedAnyOf("isEqualTo", "isNotEqualTo"),
+                instanceMethod()
+                    .onDescendantOf("com.google.common.truth.extensions.proto.ProtoFluentAssertion")
+                    .namedAnyOf("isEqualTo", "isNotEqualTo"))
+            : instanceMethod()
+                .onDescendantOf("com.google.common.truth.Subject")
+                .namedAnyOf("isEqualTo", "isNotEqualTo");
   }
 
   @Override
@@ -155,12 +175,22 @@ public class TruthIncompatibleType extends BugChecker implements MethodInvocatio
   }
 
   private Stream<Description> matchEquality(MethodInvocationTree tree, VisitorState state) {
-    if (!IS_EQUAL_TO.matches(tree, state)) {
+    if (!isEqualTo.matches(tree, state)) {
       return Stream.empty();
     }
     ExpressionTree receiver = getReceiver(tree);
-    if (!START_OF_ASSERTION.matches(receiver, state)) {
-      return Stream.empty();
+    while (true) {
+      if (!(receiver instanceof MethodInvocationTree)) {
+        return Stream.empty();
+      }
+      if (START_OF_ASSERTION.matches(receiver, state)) {
+        break;
+      }
+      // TODO(b/190357148): Handle fluent methods which change the expected target type.
+      if (!FLUENT_PROTO_CHAIN.matches(receiver, state)) {
+        return Stream.empty();
+      }
+      receiver = getReceiver(receiver);
     }
 
     Type targetType =
