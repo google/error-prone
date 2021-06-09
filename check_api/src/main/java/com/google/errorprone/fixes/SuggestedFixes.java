@@ -52,7 +52,6 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.apply.DescriptionBasedDiff;
 import com.google.errorprone.apply.ImportOrganizer;
 import com.google.errorprone.apply.SourceFile;
-import com.google.errorprone.fixes.SuggestedFix.Builder;
 import com.google.errorprone.util.ASTHelpers;
 import com.google.errorprone.util.ErrorProneToken;
 import com.google.errorprone.util.FindIdentifiers;
@@ -369,17 +368,17 @@ public final class SuggestedFixes {
     return type.accept(
         new SimpleTypeVisitor8<String, SuggestedFix.Builder>() {
           @Override
-          protected String defaultAction(TypeMirror e, Builder builder) {
+          protected String defaultAction(TypeMirror e, SuggestedFix.Builder builder) {
             return e.toString();
           }
 
           @Override
-          public String visitArray(ArrayType t, Builder builder) {
+          public String visitArray(ArrayType t, SuggestedFix.Builder builder) {
             return t.getComponentType().accept(this, builder) + "[]";
           }
 
           @Override
-          public String visitDeclared(DeclaredType t, Builder builder) {
+          public String visitDeclared(DeclaredType t, SuggestedFix.Builder builder) {
             String baseType = qualifyType(state, builder, ((Type) t).tsym);
             if (t.getTypeArguments().isEmpty()) {
               return baseType;
@@ -788,7 +787,7 @@ public final class SuggestedFixes {
     // replace only the type parameter name (and not any upper bounds)
     String name = typeParameter.getName().toString();
     int pos = getStartPosition(typeParameter);
-    Builder fixBuilder =
+    SuggestedFix.Builder fixBuilder =
         SuggestedFix.builder().replace(pos, pos + name.length(), typeVarReplacement);
 
     new TreeScanner<Void, Void>() {
@@ -906,7 +905,7 @@ public final class SuggestedFixes {
   @Nullable
   public static Fix addSuppressWarnings(
       VisitorState state, String warningToSuppress, @Nullable String lineComment) {
-    Builder fixBuilder = SuggestedFix.builder();
+    SuggestedFix.Builder fixBuilder = SuggestedFix.builder();
     addSuppressWarnings(fixBuilder, state, warningToSuppress, lineComment);
     return fixBuilder.isEmpty() ? null : fixBuilder.build();
   }
@@ -919,7 +918,7 @@ public final class SuggestedFixes {
    * @see #addSuppressWarnings(VisitorState, String, String)
    */
   public static void addSuppressWarnings(
-      Builder fixBuilder, VisitorState state, String warningToSuppress) {
+      SuggestedFix.Builder fixBuilder, VisitorState state, String warningToSuppress) {
     addSuppressWarnings(fixBuilder, state, warningToSuppress, null);
   }
 
@@ -935,7 +934,7 @@ public final class SuggestedFixes {
    * @see #addSuppressWarnings(VisitorState, String, String)
    */
   public static void addSuppressWarnings(
-      Builder fixBuilder,
+      SuggestedFix.Builder fixBuilder,
       VisitorState state,
       String warningToSuppress,
       @Nullable String lineComment) {
@@ -996,7 +995,7 @@ public final class SuggestedFixes {
    * @see #addSuppressWarnings(VisitorState, String, String)
    */
   public static void addSuppressWarnings(
-      Builder fixBuilder,
+      SuggestedFix.Builder fixBuilder,
       VisitorState state,
       String warningToSuppress,
       @Nullable String lineComment,
@@ -1072,7 +1071,7 @@ public final class SuggestedFixes {
    *
    * <p>N.B.: {@code newValues} are source-code strings, not string literal values.
    */
-  public static Builder addValuesToAnnotationArgument(
+  public static SuggestedFix.Builder addValuesToAnnotationArgument(
       AnnotationTree annotation,
       String parameterName,
       Collection<String> newValues,
@@ -1116,7 +1115,7 @@ public final class SuggestedFixes {
    *
    * <p>N.B.: {@code newValues} are source-code strings, not string literal values.
    */
-  public static Builder updateAnnotationArgumentValues(
+  public static SuggestedFix.Builder updateAnnotationArgumentValues(
       AnnotationTree annotation, String parameterName, Collection<String> newValues) {
     if (annotation.getArguments().isEmpty()) {
       String parameterPrefix = parameterName.equals("value") ? "" : (parameterName + " = ");
