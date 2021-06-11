@@ -19,7 +19,6 @@ syntax = "proto2";
 option java_enable_dual_generate_mutable_api = true;
 option java_package = "com.google.errorprone.bugpatterns.collectionincompatibletype.testdata";
 
-message Something {
-  message SomethingNested {}
-}
+message Something {}
+
 message SomethingElse {}

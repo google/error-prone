@@ -21,7 +21,6 @@ import static com.google.errorprone.util.ASTHelpers.getUpperBound;
 import static com.google.errorprone.util.ASTHelpers.isCastable;
 import static com.google.errorprone.util.ASTHelpers.isSameType;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
-import static java.lang.Math.max;
 
 import com.google.auto.value.AutoValue;
 import com.google.common.collect.Streams;
@@ -232,10 +231,17 @@ public final class TypeCompatibilityUtils {
       // figure out if the other is a proto2-mutable representing the same message/type as the
       // immutable proto.
 
+      // While proto2 can be compared to proto1, this is somewhat of a historical accident. We don't
+      // want to endorse this, and want to ban it. Protos of the same version and same descriptor
+      // should be comparable, hence proto2-immutable and proto2-mutable can be.
+
       // See b/152428396#comment10, but basically, we inspect the names of the classes to guess
       // whether or not those types are actually representing the same type.
-      return !guessSimpleProtoName(classNamePart(leftType))
-          .equals(guessSimpleProtoName(classNamePart(rightType)));
+      String leftClassPart = classNamePart(leftType);
+      String rightClassPart = classNamePart(rightType);
+
+      return !classesAreMutableAndImmutableOfSameType(leftClassPart, rightClassPart)
+          && !classesAreMutableAndImmutableOfSameType(rightClassPart, leftClassPart);
     }
 
     // Otherwise, if these two types are *concrete* proto classes, but not the same message, then
@@ -251,29 +257,12 @@ public final class TypeCompatibilityUtils {
     return (toEvaluate.tsym.flags() & (Flags.ABSTRACT | Flags.INTERFACE)) == 0;
   }
 
-  private static Type upperBound(Type type) {
-    return type.getUpperBound() == null ? type : type.getUpperBound();
+  private static boolean classesAreMutableAndImmutableOfSameType(String l, String r) {
+    return l.startsWith("Mutable") && l.substring("Mutable".length()).equals(r);
   }
 
-  /**
-   * Tries to guess the simple name of a proto given its class name.
-   *
-   * <p>This is quite imprecise (will lead to false-compatible results), and is used to work out
-   * when protos <em>might</em> be compatible between different proto versions.
-   */
-  static String guessSimpleProtoName(String typeName) {
-    if (typeName.startsWith("Mutable")) {
-      typeName = typeName.substring("Mutable".length());
-    }
-    // We're proto1 or proto2. Try to work out the simple proto name by taking the last part after
-    // a "_" or ".". proto1 separates nested protos using underscores, which is not something you
-    // see too often!
-    int lastDot = typeName.lastIndexOf(".");
-    int lastUnderscore = typeName.lastIndexOf("_");
-    if (lastDot == -1 && lastUnderscore == -1) {
-      return typeName;
-    }
-    return typeName.substring(max(lastDot, lastUnderscore) + 1);
+  private static Type upperBound(Type type) {
+    return type.getUpperBound() == null ? type : type.getUpperBound();
   }
 
   private static String classNamePart(Type type) {
