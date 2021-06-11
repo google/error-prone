@@ -221,7 +221,7 @@ boolean&nbsp;commentOnNewLine)</code></th>
 </td>
 </tr>
 <tr class="alt-color" id="i8">
-<td class="col-first"><code>static <a href="Fix.html" title="interface in com.google.errorprone.fixes">Fix</a></code></td>
+<td class="col-first"><code>static <a href="SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a></code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#addSuppressWarnings(com.google.errorprone.VisitorState,java.lang.String)">addSuppressWarnings</a></span>&#8203;(<a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
 <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;warningToSuppress)</code></th>
 <td class="col-last">
@@ -230,7 +230,7 @@ boolean&nbsp;commentOnNewLine)</code></th>
 </td>
 </tr>
 <tr class="row-color" id="i9">
-<td class="col-first"><code>static <a href="Fix.html" title="interface in com.google.errorprone.fixes">Fix</a></code></td>
+<td class="col-first"><code>static <a href="SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a></code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#addSuppressWarnings(com.google.errorprone.VisitorState,java.lang.String,java.lang.String)">addSuppressWarnings</a></span>&#8203;(<a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
 <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;warningToSuppress,
 <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;lineComment)</code></th>
@@ -724,7 +724,7 @@ com.sun.source.tree.Tree&nbsp;owningTree,
 <section class="detail" id="addSuppressWarnings(com.google.errorprone.VisitorState,java.lang.String)">
 <h3>addSuppressWarnings</h3>
 <div class="member-signature"><span class="annotations"><a href="https://docs.oracle.com/javase/8/docs/api/javax/annotation/Nullable.html" title="class or interface in javax.annotation" class="external-link">@Nullable</a>
-</span><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="Fix.html" title="interface in com.google.errorprone.fixes">Fix</a></span>&nbsp;<span class="member-name">addSuppressWarnings</span>&#8203;(<span class="parameters"><a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
+</span><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a></span>&nbsp;<span class="member-name">addSuppressWarnings</span>&#8203;(<span class="parameters"><a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
 <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;warningToSuppress)</span></div>
 <div class="block">Returns a fix that adds a <code>@SuppressWarnings(warningToSuppress)</code> to the closest
  suppressible element to the node pointed at by <code>state.getPath()</code>.</div>
@@ -738,7 +738,7 @@ com.sun.source.tree.Tree&nbsp;owningTree,
 <section class="detail" id="addSuppressWarnings(com.google.errorprone.VisitorState,java.lang.String,java.lang.String)">
 <h3>addSuppressWarnings</h3>
 <div class="member-signature"><span class="annotations"><a href="https://docs.oracle.com/javase/8/docs/api/javax/annotation/Nullable.html" title="class or interface in javax.annotation" class="external-link">@Nullable</a>
-</span><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="Fix.html" title="interface in com.google.errorprone.fixes">Fix</a></span>&nbsp;<span class="member-name">addSuppressWarnings</span>&#8203;(<span class="parameters"><a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
+</span><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a></span>&nbsp;<span class="member-name">addSuppressWarnings</span>&#8203;(<span class="parameters"><a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
 <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;warningToSuppress,
 <a href="https://docs.oracle.com/javase/8/docs/api/javax/annotation/Nullable.html" title="class or interface in javax.annotation" class="external-link">@Nullable</a>
 <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;lineComment)</span></div>
@@ -793,17 +793,6 @@ com.sun.source.tree.Tree&nbsp;owningTree,
 </section>
 </li>
 <li>
-<section class="detail" id="removeSuppressWarnings(com.google.errorprone.fixes.SuggestedFix.Builder,com.google.errorprone.VisitorState,java.lang.String)">
-<h3>removeSuppressWarnings</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="member-name">removeSuppressWarnings</span>&#8203;(<span class="parameters"><a href="SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a>&nbsp;fixBuilder,
-<a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
-<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;warningToRemove)</span></div>
-<div class="block">Modifies <code>fixBuilder</code> to either remove a <code>warningToRemove</code> warning from the closest
- <code>SuppressWarning</code> node or remove the entire <code>SuppressWarning</code> node if <code>
- warningToRemove</code> is the only warning in that node.</div>
-</section>
-</li>
-<li>
 <section class="detail" id="addSuppressWarnings(com.google.errorprone.fixes.SuggestedFix.Builder,com.google.errorprone.VisitorState,java.lang.String,java.lang.String,boolean)">
 <h3>addSuppressWarnings</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="member-name">addSuppressWarnings</span>&#8203;(<span class="parameters"><a href="SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a>&nbsp;fixBuilder,
@@ -827,6 +816,17 @@ boolean&nbsp;commentOnNewLine)</span></div>
 <dt>See Also:</dt>
 <dd><a href="#addSuppressWarnings(com.google.errorprone.VisitorState,java.lang.String,java.lang.String)"><code>addSuppressWarnings(VisitorState, String, String)</code></a></dd>
 </dl>
+</section>
+</li>
+<li>
+<section class="detail" id="removeSuppressWarnings(com.google.errorprone.fixes.SuggestedFix.Builder,com.google.errorprone.VisitorState,java.lang.String)">
+<h3>removeSuppressWarnings</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="member-name">removeSuppressWarnings</span>&#8203;(<span class="parameters"><a href="SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a>&nbsp;fixBuilder,
+<a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
+<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;warningToRemove)</span></div>
+<div class="block">Modifies <code>fixBuilder</code> to either remove a <code>warningToRemove</code> warning from the closest
+ <code>SuppressWarning</code> node or remove the entire <code>SuppressWarning</code> node if <code>
+ warningToRemove</code> is the only warning in that node.</div>
 </section>
 </li>
 <li>
