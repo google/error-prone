@@ -29,6 +29,7 @@ import static com.google.errorprone.util.ASTHelpers.getReceiverType;
 import static com.google.errorprone.util.ASTHelpers.getType;
 
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MemberReferenceTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
@@ -60,6 +61,12 @@ public class EqualsIncompatibleType extends BugChecker
           anyOf(
               instanceMethod().anyClass().named("assertFalse"),
               staticMethod().anyClass().named("assertFalse")));
+
+  private final TypeCompatibilityUtils typeCompatibilityUtils;
+
+  public EqualsIncompatibleType(ErrorProneFlags flags) {
+    this.typeCompatibilityUtils = TypeCompatibilityUtils.fromFlags(flags);
+  }
 
   @Override
   public Description matchMethodInvocation(
@@ -113,8 +120,8 @@ public class EqualsIncompatibleType extends BugChecker
   private Description handle(
       ExpressionTree invocationTree, Type receiverType, Type argumentType, VisitorState state) {
     TypeCompatibilityReport compatibilityReport =
-        TypeCompatibilityUtils.compatibilityOfTypes(receiverType, argumentType, state);
-    if (compatibilityReport.compatible()) {
+        typeCompatibilityUtils.compatibilityOfTypes(receiverType, argumentType, state);
+    if (compatibilityReport.isCompatible()) {
       return NO_MATCH;
     }
 

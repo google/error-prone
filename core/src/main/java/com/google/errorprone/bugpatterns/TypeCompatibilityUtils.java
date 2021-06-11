@@ -16,12 +16,17 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.errorprone.util.ASTHelpers.findMatchingMethods;
+import static com.google.errorprone.util.ASTHelpers.getUpperBound;
+import static com.google.errorprone.util.ASTHelpers.isCastable;
+import static com.google.errorprone.util.ASTHelpers.isSameType;
+import static com.google.errorprone.util.ASTHelpers.isSubtype;
+import static java.lang.Math.max;
+
 import com.google.auto.value.AutoValue;
-import com.google.common.base.Predicate;
-import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Streams;
+import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
-import com.google.errorprone.util.ASTHelpers;
 import com.sun.tools.javac.code.Flags;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
@@ -34,106 +39,63 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 import javax.annotation.Nullable;
+import javax.lang.model.type.TypeKind;
 
 /**
- * Logical utility methods to answer the question: Are these two types "compatible" with eachother,
+ * Logical utility methods to answer the question: Are these two types "compatible" with each other,
  * in the context of an equality check.
  *
  * <p>i.e.: It is possible that an object of one type could be equal to an object of the other type.
  */
 public final class TypeCompatibilityUtils {
+  private final boolean treatDifferentProtosAsIncomparable;
 
-  public static TypeCompatibilityReport compatibilityOfTypes(
+  public static TypeCompatibilityUtils fromFlags(ErrorProneFlags flags) {
+    return new TypeCompatibilityUtils(
+        flags.getBoolean("TypeCompatibility:TreatDifferentProtosAsIncomparable").orElse(true));
+  }
+
+  public static TypeCompatibilityUtils allOn() {
+    return new TypeCompatibilityUtils(/* treatDifferentProtosAsIncomparable= */ true);
+  }
+
+  private TypeCompatibilityUtils(boolean treatDifferentProtosAsIncomparable) {
+    this.treatDifferentProtosAsIncomparable = treatDifferentProtosAsIncomparable;
+  }
+
+  public TypeCompatibilityReport compatibilityOfTypes(
       Type receiverType, Type argumentType, VisitorState state) {
     return compatibilityOfTypes(receiverType, argumentType, typeSet(state), typeSet(state), state);
   }
 
-  private static TypeCompatibilityReport compatibilityOfTypes(
-      Type receiverType,
-      Type argumentType,
-      Set<Type> previousReceiverTypes,
-      Set<Type> previousArgumentTypes,
+  private TypeCompatibilityReport compatibilityOfTypes(
+      Type leftType,
+      Type rightType,
+      Set<Type> previouslySeenComponentsOfLeftType,
+      Set<Type> previouslySeenComponentsOfRightType,
       VisitorState state) {
 
-    if (receiverType == null || argumentType == null) {
-      return TypeCompatibilityReport.createCompatibleReport();
-    }
-    if (receiverType.isPrimitive()
-        && argumentType.isPrimitive()
-        && !ASTHelpers.isSameType(receiverType, argumentType, state)) {
-      return TypeCompatibilityReport.incompatible(receiverType, argumentType);
+    if (leftType == null
+        || rightType == null
+        || leftType.getKind() == TypeKind.NULL
+        || rightType.getKind() == TypeKind.NULL) {
+      return TypeCompatibilityReport.compatible();
     }
 
-    // If one type can be cast into the other, we don't flag the equality test.
-    // Note: we do this precisely in this order to allow primitive values to be checked pre-1.7:
-    // 1.6: java.lang.Object can't be cast to primitives
-    // 1.7: java.lang.Object can be cast to primitives (implicitly through the boxed primitive type)
-    if (ASTHelpers.isCastable(argumentType, receiverType, state)) {
-      return leastUpperBoundGenericMismatch(
-          receiverType, argumentType, previousReceiverTypes, previousArgumentTypes, state);
+    // If they're the exact same type, they are definitely compatible.
+    if (state.getTypes().isSameType(upperBound(leftType), upperBound(rightType))) {
+      return TypeCompatibilityReport.compatible();
     }
 
-    // Otherwise, we explore the superclasses of the receiver type as well as the interfaces it
-    // implements and we collect all overrides of java.lang.Object.equals(). If one of those
-    // overrides is inherited by the argument, then we don't flag the equality test.
-    Types types = state.getTypes();
-    Predicate<MethodSymbol> equalsPredicate =
-        methodSymbol ->
-            !methodSymbol.isStatic()
-                && ((methodSymbol.flags() & Flags.SYNTHETIC) == 0)
-                && types.isSameType(methodSymbol.getReturnType(), state.getSymtab().booleanType)
-                && methodSymbol.getParameters().size() == 1
-                && types.isSameType(
-                    methodSymbol.getParameters().get(0).type, state.getSymtab().objectType);
-    Set<MethodSymbol> overridesOfEquals =
-        ASTHelpers.findMatchingMethods(
-            state.getName("equals"), equalsPredicate, receiverType, types);
-    Symbol argumentClass = ASTHelpers.getUpperBound(argumentType, state.getTypes()).tsym;
-
-    for (MethodSymbol method : overridesOfEquals) {
-      ClassSymbol methodClass = method.enclClass();
-      if (argumentClass.isSubClass(methodClass, types)
-          && !methodClass.equals(state.getSymtab().objectType.tsym)
-          && !methodClass.equals(state.getSymtab().enumSym)) {
-        // The type of the argument shares a superclass
-        // (other then java.lang.Object or java.lang.Enum) or interface
-        // with the receiver that implements an override of java.lang.Object.equals().
-
-        // These should be compatible, but check any generic types for their compatbilities.
-        return leastUpperBoundGenericMismatch(
-            receiverType, argumentType, previousReceiverTypes, previousArgumentTypes, state);
-      }
+    if (leftType.isPrimitive()
+        && rightType.isPrimitive()
+        && !isSameType(leftType, rightType, state)) {
+      return TypeCompatibilityReport.incompatible(leftType, rightType);
     }
-    return TypeCompatibilityReport.incompatible(receiverType, argumentType);
-  }
 
-  private static final ImmutableSet<String> LEAST_UPPER_BOUNDS_TO_IGNORE =
-      ImmutableSet.of(
-          "com.google.protobuf.MessageOrBuilder",
-          "com.google.protobuf.MessageLiteOrBuilder",
-          // Collection, Set, and List is unfortunate since List<String> and Set<String> have a lub
-          // class of Collection<String>, but Set and List are incompatible with each other due to
-          // their own equality declarations. Since they're all interfaces, however, they're
-          // technically cast-compatible to each other.
-          //
-          // We want to disallow equality between these collection sub-interfaces, but *do* want to
-          // allow equality between Collection and List. So, here's my attempt to express that
-          // cleanly.
-          //
-          // There are likely other type hierarchies where this situation occurs, but this one is
-          // the most common.
-          //
-          // Here, the LHS and RHS are disjoint collection types (List, Set, Multiset, etc.)
-          // (if they were both of one subtype, the lub wouldn't be Collection directly)
-          // So consider them incompatible with each other.
-          "java.util.Collection");
-
-  private static TypeCompatibilityReport leastUpperBoundGenericMismatch(
-      Type receiverType,
-      Type argumentType,
-      Set<Type> previousReceiverTypes,
-      Set<Type> previousArgumentTypes,
-      VisitorState state) {
+    if (!isFeasiblyCompatible(leftType, rightType, state)) {
+      return TypeCompatibilityReport.incompatible(leftType, rightType);
+    }
 
     // Now, see if we can find a generic superclass between the two types, and if so, check the
     // generic parameters for cast-compatibility:
@@ -141,42 +103,207 @@ public final class TypeCompatibilityUtils {
     // class Super<T> (with an equals() override)
     // class Bar extends Super<String>
     // class Foo extends Super<Integer>
-    // Bar and Foo would least-upper-bound to Super, and we compare String and Integer to eachother
-    Type lub = state.getTypes().lub(argumentType, receiverType);
+    // Bar and Foo would least-upper-bound to Super, and we compare String and Integer to each-other
+    Type commonSupertype = state.getTypes().lub(rightType, leftType);
     // primitives, etc. can't have a common superclass.
-    if (lub.getTag().equals(TypeTag.BOT) || lub.getTag().equals(TypeTag.ERROR)) {
-      return TypeCompatibilityReport.createCompatibleReport();
+    if (commonSupertype.getTag().equals(TypeTag.BOT)
+        || commonSupertype.getTag().equals(TypeTag.ERROR)) {
+      return TypeCompatibilityReport.compatible();
     }
 
+    // Detect a potential generics mismatch - if there are no generics, this will return a
+    // compatible report.
     TypeCompatibilityReport compatibilityReport =
-        matchesSubtypeAndIsGenericMismatch(
-            receiverType, argumentType, lub, previousReceiverTypes, previousArgumentTypes, state);
-    if (!compatibilityReport.compatible()) {
+        checkForGenericsMismatch(
+            leftType,
+            rightType,
+            commonSupertype,
+            previouslySeenComponentsOfLeftType,
+            previouslySeenComponentsOfRightType,
+            state);
+
+    if (!compatibilityReport.isCompatible()) {
       return compatibilityReport;
     }
 
-    for (String lubToIgnore : LEAST_UPPER_BOUNDS_TO_IGNORE) {
-      if (ASTHelpers.isSameType(lub, state.getTypeFromString(lubToIgnore), state)
-          && !ASTHelpers.isSameType(receiverType, lub, state)
-          && !ASTHelpers.isSameType(argumentType, lub, state)) {
-        return TypeCompatibilityReport.incompatible(receiverType, argumentType);
-      }
-    }
-
-    return compatibilityReport;
+    // At this point, we're pretty sure these types are compatible with each other. However, there
+    // are certain scenarios where the normal processing believes that these two types are
+    // compatible, but due to the way that certain classes' equals methods are constructed, they
+    // deceive the normal processing into thinking they're compatible, but they are not.
+    return areTypesIncompatibleCollections(leftType, rightType, commonSupertype, state)
+            || areIncompatibleProtoTypes(leftType, rightType, commonSupertype, state)
+        ? TypeCompatibilityReport.incompatible(leftType, rightType)
+        : TypeCompatibilityReport.compatible();
   }
 
-  private static TypeCompatibilityReport matchesSubtypeAndIsGenericMismatch(
-      Type receiverType,
-      Type argumentType,
-      Type superType,
-      Set<Type> previousReceiverTypes,
-      Set<Type> previousArgumentTypes,
-      VisitorState state) {
-    List<Type> receiverTypes = typeArgsAsSuper(receiverType, superType, state);
-    List<Type> argumentTypes = typeArgsAsSuper(argumentType, superType, state);
+  private static boolean isFeasiblyCompatible(Type leftType, Type rightType, VisitorState state) {
+    // If one type can be cast into the other, they are potentially equal to each other.
+    // Note: we do this precisely in this order to allow primitive values to be checked pre-1.7:
+    // 1.6: java.lang.Object can't be cast to primitives
+    // 1.7: java.lang.Object can be cast to primitives (implicitly through the boxed primitive type)
+    if (isCastable(rightType, leftType, state)) {
+      return true;
+    }
 
-    return Streams.zip(receiverTypes.stream(), argumentTypes.stream(), TypePair::new)
+    // Otherwise, we collect all overrides of java.lang.Object.equals() that the left type has.
+    // If one of those overrides is inherited by the right type, then they share a common supertype
+    // that defines its own equals method.
+    Types types = state.getTypes();
+    Symbol rightClass = getUpperBound(rightType, state.getTypes()).tsym;
+    return findMatchingMethods(
+            state.getName("equals"), m -> customEqualsMethod(m, state), leftType, types)
+        .stream()
+        .anyMatch(method -> rightClass.isSubClass(method.enclClass(), types));
+  }
+
+  /**
+   * Returns if the method represents an override of equals(Object) that is not on `Object` or
+   * `Enum`.
+   *
+   * <p>This would represent an equals method that could specify equality semantics aside from
+   * object identity.
+   */
+  private static boolean customEqualsMethod(MethodSymbol methodSymbol, VisitorState state) {
+    ClassSymbol owningClass = methodSymbol.enclClass();
+    return !methodSymbol.isStatic()
+        && ((methodSymbol.flags() & Flags.SYNTHETIC) == 0)
+        && state.getTypes().isSameType(methodSymbol.getReturnType(), state.getSymtab().booleanType)
+        && methodSymbol.getParameters().size() == 1
+        && state
+            .getTypes()
+            .isSameType(methodSymbol.getParameters().get(0).type, state.getSymtab().objectType)
+        && !owningClass.equals(state.getSymtab().objectType.tsym)
+        && !owningClass.equals(state.getSymtab().enumSym);
+  }
+
+  /**
+   * Detects the situation where two distinct subtypes of Collection (e.g.: List or Set) are
+   * compared.
+   *
+   * <p>Since they share a common interface with an equals() declaration ({@code Collection<T>}),
+   * normal processing will consider them compatible with each other, but each subtype of Collection
+   * overrides equals() in such a way as to be incompatible with each other.
+   */
+  private static boolean areTypesIncompatibleCollections(
+      Type leftType, Type rightType, Type nearestCommonSupertype, VisitorState state) {
+    // We want to disallow equality between these collection sub-interfaces, but *do* want to
+    // allow compatibility between Collection and List.
+    Type collectionType = state.getTypeFromString("java.util.Collection");
+    return isSameType(nearestCommonSupertype, collectionType, state)
+        && !isSameType(leftType, collectionType, state)
+        && !isSameType(rightType, collectionType, state);
+  }
+
+  private boolean areIncompatibleProtoTypes(
+      Type leftType, Type rightType, Type nearestCommonSupertype, VisitorState state) {
+    if (!treatDifferentProtosAsIncomparable) {
+      return false;
+    }
+    // See discussion in b/152428396 - Proto equality is defined as having the "same message type",
+    // with the same corresponding field values. However - there are 3 flavors of Java Proto API
+    // that could represent the same message (proto1, mutable proto2, and immutable proto2 [as well
+    // as immutable proto3, but those look like proto2 classes without "hazzer" method]).
+    //
+    // Protos share a common super-interface that defines an equals() method, but since every proto
+    // message shares that supertype, we shouldn't let that shared equals() definition override our
+    // attempts to find mismatched equals() between "really" unrelated objects.
+    //
+    // We do our best here to identify circumstances where the programmer likely got protos that are
+    // unrelated (requiring special treatment above and beyond the normal logic in
+    // compatibilityOfTypes), but ignore cases where the protos are *actually* equal to each other
+    // according to its definition.
+
+    // proto1: io.ProtocolMessage < p.AbstractMutableMessage < p.MutableMessage < p.Message
+    // proto2-mutable: p.GeneratedMutableMessage < p.AbstractMutableMessage < ... as proto1
+    // proto2-immutable: p.GeneratedMessage < p.AbstractMessage < p.Message
+
+    // DynamicMessage is comparable to all other proto types.
+    Type dynamicMessage = state.getTypeFromString("com.google.protobuf.DynamicMessage");
+    if (isSameType(leftType, dynamicMessage, state)
+        || isSameType(rightType, dynamicMessage, state)) {
+      return false;
+    }
+
+    Type protoBase = state.getTypeFromString("com.google.protobuf.Message");
+    if (isSameType(nearestCommonSupertype, protoBase, state)
+        && !isSameType(leftType, protoBase, state)
+        && !isSameType(rightType, protoBase, state)) {
+      // In this situation, there's a mix of (immutable proto2, others) messages. Here, we want to
+      // figure out if the other is a proto2-mutable representing the same message/type as the
+      // immutable proto.
+
+      // See b/152428396#comment10, but basically, we inspect the names of the classes to guess
+      // whether or not those types are actually representing the same type.
+      return !guessSimpleProtoName(classNamePart(leftType))
+          .equals(guessSimpleProtoName(classNamePart(rightType)));
+    }
+
+    // Otherwise, if these two types are *concrete* proto classes, but not the same message, then
+    // consider them incompatible with each other.
+    Type messageLite = state.getTypeFromString("com.google.protobuf.MessageLite");
+    return isSubtype(nearestCommonSupertype, messageLite, state)
+        && isConcrete(leftType)
+        && isConcrete(rightType);
+  }
+
+  private static boolean isConcrete(Type type) {
+    Type toEvaluate = upperBound(type);
+    return (toEvaluate.tsym.flags() & (Flags.ABSTRACT | Flags.INTERFACE)) == 0;
+  }
+
+  private static Type upperBound(Type type) {
+    return type.getUpperBound() == null ? type : type.getUpperBound();
+  }
+
+  /**
+   * Tries to guess the simple name of a proto given its class name.
+   *
+   * <p>This is quite imprecise (will lead to false-compatible results), and is used to work out
+   * when protos <em>might</em> be compatible between different proto versions.
+   */
+  static String guessSimpleProtoName(String typeName) {
+    if (typeName.startsWith("Mutable")) {
+      typeName = typeName.substring("Mutable".length());
+    }
+    // We're proto1 or proto2. Try to work out the simple proto name by taking the last part after
+    // a "_" or ".". proto1 separates nested protos using underscores, which is not something you
+    // see too often!
+    int lastDot = typeName.lastIndexOf(".");
+    int lastUnderscore = typeName.lastIndexOf("_");
+    if (lastDot == -1 && lastUnderscore == -1) {
+      return typeName;
+    }
+    return typeName.substring(max(lastDot, lastUnderscore) + 1);
+  }
+
+  private static String classNamePart(Type type) {
+    String fullClassname = type.asElement().getQualifiedName().toString();
+    String packageName = type.asElement().packge().fullname.toString();
+    String prefix = fullClassname.substring(packageName.length());
+    return prefix.startsWith(".") ? prefix.substring(1) : prefix;
+  }
+
+  /**
+   * Given a {@code leftType} and {@code rightType} (of the shared supertype {@code superType}),
+   * compare the generic types of those two types (as projected against the {@code superType})
+   * against each other.
+   *
+   * <p>If there are no generic types, or the generic types are compatible with each other, returns
+   * a {@link TypeCompatibilityReport#isCompatible} report. Otherwise, returns a compatibility
+   * report showing that a specific generic type in the projection of {@code leftType} is
+   * incompatible with the specific generic type in the projection of {@code rightType}.
+   */
+  private TypeCompatibilityReport checkForGenericsMismatch(
+      Type leftType,
+      Type rightType,
+      Type superType,
+      Set<Type> previousLeftTypes,
+      Set<Type> previousRightTypes,
+      VisitorState state) {
+    List<Type> leftGenericTypes = typeArgsAsSuper(leftType, superType, state);
+    List<Type> rightGenericTypes = typeArgsAsSuper(rightType, superType, state);
+
+    return Streams.zip(leftGenericTypes.stream(), rightGenericTypes.stream(), TypePair::new)
         // If we encounter an f-bound, skip that index's type when comparing the compatibility of
         // types to avoid infinite recursion:
         // interface Super<A extends Super<A, B>, B>
@@ -184,24 +311,24 @@ public final class TypeCompatibilityUtils {
         // class Bar extends Super<Bar, Integer>
         .filter(
             tp ->
-                !(previousReceiverTypes.contains(tp.receiver)
-                    || ASTHelpers.isSameType(tp.receiver, receiverType, state)
-                    || previousArgumentTypes.contains(tp.argument)
-                    || ASTHelpers.isSameType(tp.argument, argumentType, state)))
+                !(previousLeftTypes.contains(tp.left)
+                    || isSameType(tp.left, leftType, state)
+                    || previousRightTypes.contains(tp.right)
+                    || isSameType(tp.right, rightType, state)))
         .map(
             types -> {
-              Set<Type> nextReceiverTypes = typeSet(state);
-              nextReceiverTypes.addAll(previousReceiverTypes);
-              nextReceiverTypes.add(receiverType);
-              Set<Type> nextArgumentTypes = typeSet(state);
-              nextArgumentTypes.addAll(previousArgumentTypes);
-              nextArgumentTypes.add(argumentType);
+              Set<Type> nextLeftTypes = typeSet(state);
+              nextLeftTypes.addAll(previousLeftTypes);
+              nextLeftTypes.add(leftType);
+              Set<Type> nextRightTypes = typeSet(state);
+              nextRightTypes.addAll(previousRightTypes);
+              nextRightTypes.add(rightType);
               return compatibilityOfTypes(
-                  types.receiver, types.argument, nextReceiverTypes, nextArgumentTypes, state);
+                  types.left, types.right, nextLeftTypes, nextRightTypes, state);
             })
-        .filter(tcr -> !tcr.compatible())
+        .filter(tcr -> !tcr.isCompatible())
         .findFirst()
-        .orElse(TypeCompatibilityReport.createCompatibleReport());
+        .orElse(TypeCompatibilityReport.compatible());
   }
 
   private static List<Type> typeArgsAsSuper(Type baseType, Type superType, VisitorState state) {
@@ -220,7 +347,10 @@ public final class TypeCompatibilityUtils {
 
   @AutoValue
   public abstract static class TypeCompatibilityReport {
-    public abstract boolean compatible();
+    private static final TypeCompatibilityReport COMPATIBLE =
+        new AutoValue_TypeCompatibilityUtils_TypeCompatibilityReport(true, null, null);
+
+    public abstract boolean isCompatible();
 
     @Nullable
     public abstract Type lhs();
@@ -228,8 +358,8 @@ public final class TypeCompatibilityUtils {
     @Nullable
     public abstract Type rhs();
 
-    static TypeCompatibilityReport createCompatibleReport() {
-      return new AutoValue_TypeCompatibilityUtils_TypeCompatibilityReport(true, null, null);
+    static TypeCompatibilityReport compatible() {
+      return COMPATIBLE;
     }
 
     static TypeCompatibilityReport incompatible(Type lhs, Type rhs) {
@@ -238,14 +368,12 @@ public final class TypeCompatibilityUtils {
   }
 
   private static final class TypePair {
-    final Type receiver;
-    final Type argument;
+    final Type left;
+    final Type right;
 
-    TypePair(Type receiver, Type argument) {
-      this.receiver = receiver;
-      this.argument = argument;
+    TypePair(Type left, Type right) {
+      this.left = left;
+      this.right = right;
     }
   }
-
-  private TypeCompatibilityUtils() {}
 }

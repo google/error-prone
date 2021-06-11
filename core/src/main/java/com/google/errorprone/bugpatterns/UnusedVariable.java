@@ -44,6 +44,7 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.ListMultimap;
 import com.google.common.collect.Multimaps;
+import com.google.common.collect.Streams;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
@@ -146,8 +147,8 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
   private static final ImmutableSet<String> EXEMPTING_FIELD_SUPER_TYPES =
       ImmutableSet.of("org.junit.rules.TestRule");
 
-  private static final ImmutableList<String> SPECIAL_FIELDS =
-      ImmutableList.of(
+  private static final ImmutableSet<String> SPECIAL_FIELDS =
+      ImmutableSet.of(
           "serialVersionUID",
           // TAG fields are used by convention in Android apps.
           "TAG");
@@ -270,15 +271,16 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
     Optional<AssignmentTree> reassignment =
         specs.stream()
             .map(UnusedSpec::terminatingAssignment)
-            .filter(Optional::isPresent)
-            .map(Optional::get)
+            .flatMap(Streams::stream)
             .filter(a -> allUsageSites.stream().noneMatch(tp -> tp.getLeaf().equals(a)))
             .findFirst();
-    if (!removedVariableTree.isPresent() || !reassignment.isPresent()) {
-      return SuggestedFix.emptyFix();
+    if (removedVariableTree.isPresent()
+        && reassignment.isPresent()
+        && !TOP_LEVEL_EXPRESSIONS.contains(reassignment.get().getExpression().getKind())) {
+      return SuggestedFix.prefixWith( // not needed if top-level statement
+          reassignment.get(), state.getSourceForNode(removedVariableTree.get().getType()) + " ");
     }
-    return SuggestedFix.prefixWith(
-        reassignment.get(), state.getSourceForNode(removedVariableTree.get().getType()) + " ");
+    return SuggestedFix.emptyFix();
   }
 
   private static String describeVariable(VarSymbol symbol) {
@@ -360,7 +362,8 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
     }
     ElementKind varKind = varSymbol.getKind();
     boolean encounteredSideEffects = false;
-    SuggestedFix.Builder fix = SuggestedFix.builder().setShortDescription("remove unused variable");
+    SuggestedFix.Builder keepSideEffectsFix =
+        SuggestedFix.builder().setShortDescription("remove unused variable");
     SuggestedFix.Builder removeSideEffectsFix =
         SuggestedFix.builder().setShortDescription("remove unused variable and any side effects");
     for (TreePath usagePath : usagePaths) {
@@ -378,10 +381,12 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
                 String.format(
                     "%s{ %s; }",
                     varSymbol.isStatic() ? "static " : "", state.getSourceForNode(initializer));
-            fix.merge(SuggestedFixes.replaceIncludingComments(usagePath, newContent, state));
+            keepSideEffectsFix.merge(
+                SuggestedFixes.replaceIncludingComments(usagePath, newContent, state));
             removeSideEffectsFix.replace(statement, "");
           } else {
-            fix.replace(statement, String.format("%s;", state.getSourceForNode(initializer)));
+            keepSideEffectsFix.replace(
+                statement, String.format("%s;", state.getSourceForNode(initializer)));
             removeSideEffectsFix.replace(statement, "");
           }
         } else if (isEnhancedForLoopVar(usagePath)) {
@@ -397,11 +402,12 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
                   state.getSourceForNode(variableTree.getType()));
           // The new content for the second fix should be identical to the content for the first
           // fix in this case because we can't just remove the enhanced for loop variable.
-          fix.replace(variableTree, newContent);
+          keepSideEffectsFix.replace(variableTree, newContent);
           removeSideEffectsFix.replace(variableTree, newContent);
         } else {
           String replacement = needsBlock(usagePath) ? "{}" : "";
-          fix.merge(SuggestedFixes.replaceIncludingComments(usagePath, replacement, state));
+          keepSideEffectsFix.merge(
+              SuggestedFixes.replaceIncludingComments(usagePath, replacement, state));
           removeSideEffectsFix.merge(
               SuggestedFixes.replaceIncludingComments(usagePath, replacement, state));
         }
@@ -418,14 +424,14 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
                     tree.getStartPosition(),
                     ((JCAssignOp) tree).getExpression().getStartPosition(),
                     "");
-            fix.merge(replacement);
+            keepSideEffectsFix.merge(replacement);
             removeSideEffectsFix.merge(replacement);
             continue;
           }
         } else if (tree instanceof AssignmentTree) {
           if (hasSideEffect(((AssignmentTree) tree).getExpression())) {
             encounteredSideEffects = true;
-            fix.replace(
+            keepSideEffectsFix.replace(
                 tree.getStartPosition(), ((JCAssign) tree).getExpression().getStartPosition(), "");
             removeSideEffectsFix.replace(statement, "");
             continue;
@@ -433,12 +439,12 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
         }
       }
       String replacement = needsBlock(usagePath) ? "{}" : "";
-      fix.replace(statement, replacement);
+      keepSideEffectsFix.replace(statement, replacement);
       removeSideEffectsFix.replace(statement, replacement);
     }
     return encounteredSideEffects
-        ? ImmutableList.of(removeSideEffectsFix.build(), fix.build())
-        : ImmutableList.of(fix.build());
+        ? ImmutableList.of(removeSideEffectsFix.build(), keepSideEffectsFix.build())
+        : ImmutableList.of(keepSideEffectsFix.build());
   }
 
   private static ImmutableList<SuggestedFix> buildUnusedParameterFixes(

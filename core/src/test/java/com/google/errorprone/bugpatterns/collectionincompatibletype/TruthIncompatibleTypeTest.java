@@ -456,16 +456,88 @@ public class TruthIncompatibleTypeTest {
   }
 
   @Test
-  public void protobuf() {
+  public void protoTruth_positiveCase() {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import static com.google.common.truth.Truth.assertThat;",
-            "import com.google.protobuf.Message;",
-            "public class Test {",
-            "  public void f(Message m) {",
+            "import static com.google.common.truth.extensions.proto.ProtoTruth.assertThat;",
+            "import com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage;",
+            "import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;",
+            "final class Test {",
+            "  void test(TestFieldProtoMessage a, TestProtoMessage b) {",
             "    // BUG: Diagnostic contains:",
-            "    assertThat(m).isEqualTo(m.newBuilderForType());",
+            "    assertThat(a).isNotEqualTo(b);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void protoTruth_withModifiers_positiveCase() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import static com.google.common.truth.extensions.proto.ProtoTruth.assertThat;",
+            "import com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage;",
+            "import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;",
+            "final class Test {",
+            "  void test(TestFieldProtoMessage a, TestProtoMessage b) {",
+            "    // BUG: Diagnostic contains:",
+            "    assertThat(a).ignoringFields(1).isNotEqualTo(b);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void protoTruth_contains() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import static com.google.common.truth.extensions.proto.ProtoTruth.assertThat;",
+            "import com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage;",
+            "import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;",
+            "final class Test {",
+            "  void test(Iterable<TestFieldProtoMessage> a, TestProtoMessage b) {",
+            "    // BUG: Diagnostic contains:",
+            "    assertThat(a).containsExactly(b);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void protoTruth_negativeCase() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import static com.google.common.truth.extensions.proto.ProtoTruth.assertThat;",
+            "import com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage;",
+            "final class Test {",
+            "  void test(TestFieldProtoMessage a, TestFieldProtoMessage b) {",
+            "    assertThat(a).isNotEqualTo(b);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void protoTruth_comparingElementsUsinng() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import static com.google.common.truth.extensions.proto.ProtoTruth.assertThat;",
+            "import com.google.common.collect.ImmutableList;",
+            "import com.google.common.truth.Correspondence;",
+            "import com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage;",
+            "import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;",
+            "public class Test {",
+            "  public void f(",
+            "      Iterable<TestProtoMessage> xs,",
+            "      Correspondence<TestFieldProtoMessage, TestProtoMessage> c) {",
+            "    // BUG: Diagnostic contains:",
+            "    assertThat(xs).comparingElementsUsing(c)",
+            "        .doesNotContain(TestProtoMessage.getDefaultInstance());",
             "  }",
             "}")
         .doTest();

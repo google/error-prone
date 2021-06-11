@@ -75,7 +75,7 @@ public final class InvalidInlineTag extends BugChecker
 
   private static final String INVALID_TAG_IS_PARAMETER_NAME =
       "@%1$s is not a valid tag, but is a parameter name. "
-          + "Use {@code %1%s} to refer to parameter names inline.";
+          + "Use {@code %1$s} to refer to parameter names inline.";
 
   private static final Pattern PARAM_MATCHER = Pattern.compile("\\{?@param ([a-zA-Z0-9]+)}?");
 
@@ -115,7 +115,11 @@ public final class InvalidInlineTag extends BugChecker
     return Description.NO_MATCH;
   }
 
-  private final class InvalidTagChecker extends DocTreePathScanner<Void, Void> {
+  static String getMessageForInvalidTag(String paramName) {
+    return String.format(INVALID_TAG_IS_PARAMETER_NAME, paramName);
+  }
+
+  final class InvalidTagChecker extends DocTreePathScanner<Void, Void> {
     private final VisitorState state;
 
     private final ImmutableSet<JavadocTag> validTags;
@@ -285,7 +289,7 @@ public final class InvalidInlineTag extends BugChecker
         }
       }
       if (parameters.contains(name)) {
-        String message = String.format(INVALID_TAG_IS_PARAMETER_NAME, name);
+        String message = getMessageForInvalidTag(name);
         state.reportMatch(
             buildDescription(diagnosticPosition(getCurrentPath(), state))
                 .setMessage(message)

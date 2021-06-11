@@ -19,7 +19,6 @@ package com.google.errorprone;
 import static com.google.common.truth.Truth.assertThat;
 
 import com.sun.tools.javac.util.Context;
-import com.sun.tools.javac.util.Context.Key;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -31,8 +30,8 @@ import org.junit.runners.JUnit4;
  */
 @RunWith(JUnit4.class)
 public class SubContextTest {
-  private static final Key<String> KEY1 = new Key<>();
-  private static final Key<String> KEY2 = new Key<>();
+  private static final Context.Key<String> KEY1 = new Context.Key<>();
+  private static final Context.Key<String> KEY2 = new Context.Key<>();
 
   enum Enum1 {
     VALUE1,

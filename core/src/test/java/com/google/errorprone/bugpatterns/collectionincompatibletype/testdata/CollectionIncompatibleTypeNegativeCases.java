@@ -28,6 +28,7 @@ import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.Stack;
 import java.util.Vector;
 import java.util.concurrent.ConcurrentHashMap;
@@ -272,5 +273,10 @@ public class CollectionIncompatibleTypeNegativeCases {
   public void methodArgCastToCollectionWildcard(
       Collection<Integer> collection1, Collection<String> collection2) {
     collection1.containsAll((Collection<?>) collection2);
+  }
+
+  public void classToken(
+      Set<Class<? extends Iterable<?>>> iterables, Class<ArrayList> arrayListClass) {
+    iterables.contains(arrayListClass);
   }
 }

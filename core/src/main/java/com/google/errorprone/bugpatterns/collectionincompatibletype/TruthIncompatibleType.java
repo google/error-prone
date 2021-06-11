@@ -35,6 +35,7 @@ import static java.util.stream.Stream.concat;
 
 import com.google.common.collect.Streams;
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
@@ -68,14 +69,20 @@ public class TruthIncompatibleType extends BugChecker implements MethodInvocatio
           staticMethod()
               .onClassAny("com.google.common.truth.Truth", "com.google.common.truth.Truth8")
               .named("assertThat"),
+          staticMethod()
+              .onClass("com.google.common.truth.extensions.proto.ProtoTruth")
+              .named("assertThat"),
           instanceMethod()
               .onDescendantOf("com.google.common.truth.StandardSubjectBuilder")
               .named("that"));
 
-  private static final Matcher<ExpressionTree> IS_EQUAL_TO =
-      instanceMethod()
-          .onDescendantOf("com.google.common.truth.Subject")
-          .namedAnyOf("isEqualTo", "isNotEqualTo");
+  private final Matcher<ExpressionTree> isEqualTo;
+
+  private static final Matcher<ExpressionTree> FLUENT_PROTO_CHAIN =
+      anyOf(
+          instanceMethod()
+              .onDescendantOf("com.google.common.truth.extensions.proto.ProtoFluentAssertion"),
+          instanceMethod().onDescendantOf("com.google.common.truth.extensions.proto.ProtoSubject"));
 
   private static final Matcher<ExpressionTree> SCALAR_CONTAINS =
       instanceMethod()
@@ -132,6 +139,26 @@ public class TruthIncompatibleType extends BugChecker implements MethodInvocatio
   private static final Supplier<Type> CORRESPONDENCE =
       typeFromString("com.google.common.truth.Correspondence");
 
+  private final TypeCompatibilityUtils typeCompatibilityUtils;
+
+  public TruthIncompatibleType(ErrorProneFlags flags) {
+    boolean handleProtoTruth = flags.getBoolean("TruthIncompatibleType:ProtoTruth").orElse(true);
+
+    this.typeCompatibilityUtils = TypeCompatibilityUtils.fromFlags(flags);
+    this.isEqualTo =
+        handleProtoTruth
+            ? anyOf(
+                instanceMethod()
+                    .onDescendantOf("com.google.common.truth.Subject")
+                    .namedAnyOf("isEqualTo", "isNotEqualTo"),
+                instanceMethod()
+                    .onDescendantOf("com.google.common.truth.extensions.proto.ProtoFluentAssertion")
+                    .namedAnyOf("isEqualTo", "isNotEqualTo"))
+            : instanceMethod()
+                .onDescendantOf("com.google.common.truth.Subject")
+                .namedAnyOf("isEqualTo", "isNotEqualTo");
+  }
+
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
     Streams.concat(
@@ -148,12 +175,22 @@ public class TruthIncompatibleType extends BugChecker implements MethodInvocatio
   }
 
   private Stream<Description> matchEquality(MethodInvocationTree tree, VisitorState state) {
-    if (!IS_EQUAL_TO.matches(tree, state)) {
+    if (!isEqualTo.matches(tree, state)) {
       return Stream.empty();
     }
     ExpressionTree receiver = getReceiver(tree);
-    if (!START_OF_ASSERTION.matches(receiver, state)) {
-      return Stream.empty();
+    while (true) {
+      if (!(receiver instanceof MethodInvocationTree)) {
+        return Stream.empty();
+      }
+      if (START_OF_ASSERTION.matches(receiver, state)) {
+        break;
+      }
+      // TODO(b/190357148): Handle fluent methods which change the expected target type.
+      if (!FLUENT_PROTO_CHAIN.matches(receiver, state)) {
+        return Stream.empty();
+      }
+      receiver = getReceiver(receiver);
     }
 
     Type targetType =
@@ -386,8 +423,8 @@ public class TruthIncompatibleType extends BugChecker implements MethodInvocatio
   private Stream<Description> checkCompatibility(
       ExpressionTree tree, Type targetType, Type sourceType, VisitorState state) {
     TypeCompatibilityReport compatibilityReport =
-        TypeCompatibilityUtils.compatibilityOfTypes(targetType, sourceType, state);
-    if (compatibilityReport.compatible()) {
+        typeCompatibilityUtils.compatibilityOfTypes(targetType, sourceType, state);
+    if (compatibilityReport.isCompatible()) {
       return Stream.empty();
     }
     String sourceTypeName = Signatures.prettyType(sourceType);

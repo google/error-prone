@@ -199,4 +199,28 @@ public final class UnusedMethodTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void methodSource() {
+    helper
+        .addSourceLines(
+            "MethodSource.java",
+            "package org.junit.jupiter.params.provider;",
+            "public @interface MethodSource {",
+            "  String[] value();",
+            "}")
+        .addSourceLines(
+            "Test.java",
+            "import java.util.stream.Stream;",
+            "import org.junit.jupiter.params.provider.MethodSource;",
+            "class Test {",
+            "  @MethodSource(\"parameters\")",
+            "  void test() {}",
+            "",
+            "  private static Stream<String> parameters() {",
+            "    return Stream.of();",
+            "  }",
+            "}")
+        .doTest();
+  }
 }

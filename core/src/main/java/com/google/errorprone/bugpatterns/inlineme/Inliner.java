@@ -215,6 +215,8 @@ public final class Inliner extends BugChecker
     // Qualify imports first, then replace parameter values to avoid clobbering source from the
     // inlined method.
     for (Map.Entry<String, String> typeName : typeNames.entrySet()) {
+      // TODO(b/189535612): we'll need to be smarter about our replacements (to avoid clobbering
+      // inline parameter comments like /* paramName= */
       replacement =
           replacement.replaceAll(
               "\\b" + Pattern.quote(typeName.getKey()) + "\\b",

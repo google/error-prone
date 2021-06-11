@@ -16,6 +16,7 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.common.collect.Iterables.getLast;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Matchers.SERIALIZATION_METHODS;
@@ -23,6 +24,8 @@ import static com.google.errorprone.suppliers.Suppliers.typeFromString;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
+import static com.google.errorprone.util.MoreAnnotations.asStrings;
+import static com.google.errorprone.util.MoreAnnotations.getAnnotationValue;
 
 import com.google.common.base.Ascii;
 import com.google.common.collect.ImmutableSet;
@@ -226,6 +229,39 @@ public final class UnusedMethod extends BugChecker implements CompilationUnitTre
         }
         super.visitMethodInvocation(tree, null);
         return null;
+      }
+
+      @Override
+      public Void visitMethod(MethodTree tree, Void unused) {
+        handleMethodSource(tree);
+        super.visitMethod(tree, null);
+        return null;
+      }
+
+      /**
+       * If a method is annotated with @MethodSource, the annotation value refers to another method
+       * that is used reflectively to supply test parameters, so that method should not be
+       * considered unused.
+       */
+      private void handleMethodSource(MethodTree tree) {
+        MethodSymbol sym = getSymbol(tree);
+        if (sym == null) {
+          return;
+        }
+        Name name = state.getName("org.junit.jupiter.params.provider.MethodSource");
+        sym.getRawAttributes().stream()
+            .filter(a -> a.type.tsym.getQualifiedName().equals(name))
+            .findAny()
+            // get the annotation value array as a set of Names
+            .flatMap(a -> getAnnotationValue(a, "value"))
+            .map(y -> asStrings(y).map(state::getName).collect(toImmutableSet()))
+            // remove all potentially unused methods whose simple name is referenced by the
+            // @MethodSource
+            .ifPresent(
+                referencedNames ->
+                    unusedMethods
+                        .entrySet()
+                        .removeIf(e -> referencedNames.contains(e.getKey().getSimpleName())));
       }
     }
 

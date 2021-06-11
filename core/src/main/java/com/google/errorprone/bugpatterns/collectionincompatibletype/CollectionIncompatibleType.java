@@ -72,20 +72,14 @@ public class CollectionIncompatibleType extends BugChecker
   }
 
   private final FixType fixType;
-
-  /** Creates a new {@link CollectionIncompatibleType} checker that provides no fix. */
-  public CollectionIncompatibleType() {
-    this(FixType.NONE);
-  }
+  private final TypeCompatibilityUtils typeCompatibilityUtils;
 
   public CollectionIncompatibleType(ErrorProneFlags flags) {
-    this(flags.getEnum("CollectionIncompatibleType:FixType", FixType.class).orElse(FixType.NONE));
+    this.fixType =
+        flags.getEnum("CollectionIncompatibleType:FixType", FixType.class).orElse(FixType.NONE);
+    this.typeCompatibilityUtils = TypeCompatibilityUtils.fromFlags(flags);
   }
 
-  /** Creates a new {@link CollectionIncompatibleType} checker with the given {@code fixType}. */
-  private CollectionIncompatibleType(FixType fixType) {
-    this.fixType = fixType;
-  }
 
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
@@ -105,9 +99,9 @@ public class CollectionIncompatibleType extends BugChecker
 
     Types types = state.getTypes();
     TypeCompatibilityReport compatibilityReport =
-        TypeCompatibilityUtils.compatibilityOfTypes(
+        typeCompatibilityUtils.compatibilityOfTypes(
             result.targetType(), result.sourceType(), state);
-    if (compatibilityReport.compatible()) {
+    if (compatibilityReport.isCompatible()) {
       return NO_MATCH;
     }
 

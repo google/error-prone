@@ -48,9 +48,8 @@ public final class LiteProtoToString extends AbstractToString {
   private static final String LITE_ENUM_MESSAGE =
       "toString() on lite proto enums will generate different representations of the value from"
           + " development and optimized builds. Consider using #getNumber if you only need a"
-          + " serialized representation of the value, or #name if you really need the name. Using"
-          + " #name will prevent the optimizer stripping out the names of elements, however;"
-          + " so do not use if this enum contains strings that should not leak external to Google.";
+          + " serialized representation of the value, or #name if you really need the name."
+          + "";
 
   private static final TypePredicate IS_LITE_PROTO =
       allOf(
