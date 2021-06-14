@@ -21,6 +21,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.common.collect.Iterables.getLast;
+import static com.google.common.collect.Streams.stream;
 import static com.google.errorprone.util.ASTHelpers.getAnnotation;
 import static com.google.errorprone.util.ASTHelpers.getAnnotationWithSimpleName;
 import static com.google.errorprone.util.ASTHelpers.getModifiers;
@@ -34,13 +35,11 @@ import static com.sun.tools.javac.util.Position.NOPOS;
 import static java.util.stream.Collectors.joining;
 
 import com.google.common.annotations.VisibleForTesting;
-import com.google.common.base.Function;
 import com.google.common.base.Joiner;
 import com.google.common.base.Objects;
 import com.google.common.base.Predicates;
 import com.google.common.base.Splitter;
 import com.google.common.base.Verify;
-import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
@@ -852,17 +851,10 @@ public final class SuggestedFixes {
           getThrowsPosition(tree, state) - 1, state.getEndPosition(getLast(trees)), "");
     }
     String replacement =
-        FluentIterable.from(tree.getThrows())
-            .filter(Predicates.not(Predicates.in(toDelete)))
-            .transform(
-                new Function<ExpressionTree, String>() {
-                  @Override
-                  @Nullable
-                  public String apply(ExpressionTree input) {
-                    return state.getSourceForNode(input);
-                  }
-                })
-            .join(Joiner.on(", "));
+        tree.getThrows().stream()
+            .filter(t -> !toDelete.contains(t))
+            .map(state::getSourceForNode)
+            .collect(joining(", "));
     return SuggestedFix.replace(
         getStartPosition(tree.getThrows().get(0)),
         state.getEndPosition(getLast(tree.getThrows())),
@@ -885,7 +877,7 @@ public final class SuggestedFixes {
    * @see #addSuppressWarnings(VisitorState, String, String)
    */
   @Nullable
-  public static Fix addSuppressWarnings(VisitorState state, String warningToSuppress) {
+  public static SuggestedFix addSuppressWarnings(VisitorState state, String warningToSuppress) {
     return addSuppressWarnings(state, warningToSuppress, null);
   }
 
@@ -903,7 +895,7 @@ public final class SuggestedFixes {
    * warningToSuppress}, this method will return null.
    */
   @Nullable
-  public static Fix addSuppressWarnings(
+  public static SuggestedFix addSuppressWarnings(
       VisitorState state, String warningToSuppress, @Nullable String lineComment) {
     SuggestedFix.Builder fixBuilder = SuggestedFix.builder();
     addSuppressWarnings(fixBuilder, state, warningToSuppress, lineComment);
@@ -939,45 +931,6 @@ public final class SuggestedFixes {
       String warningToSuppress,
       @Nullable String lineComment) {
     addSuppressWarnings(fixBuilder, state, warningToSuppress, lineComment, true);
-  }
-  /**
-   * Modifies {@code fixBuilder} to either remove a {@code warningToRemove} warning from the closest
-   * {@code SuppressWarning} node or remove the entire {@code SuppressWarning} node if {@code
-   * warningToRemove} is the only warning in that node.
-   */
-  public static void removeSuppressWarnings(
-      SuggestedFix.Builder fixBuilder, VisitorState state, String warningToRemove) {
-    // Find the nearest tree to remove @SuppressWarnings from.
-    Tree suppressibleNode = suppressibleNode(state.getPath());
-    if (suppressibleNode == null) {
-      return;
-    }
-
-    AnnotationTree suppressAnnotationTree =
-        getAnnotationWithSimpleName(
-            findAnnotationsTree(suppressibleNode), SuppressWarnings.class.getSimpleName());
-    if (suppressAnnotationTree == null) {
-      return;
-    }
-
-    SuppressWarnings annotation = getAnnotation(suppressibleNode, SuppressWarnings.class);
-    ImmutableSet<String> warningsSuppressed = ImmutableSet.copyOf(annotation.value());
-    ImmutableSet<String> newWarningSet =
-        warningsSuppressed.stream()
-            .filter(warning -> !warning.equals(warningToRemove))
-            .map(state::getConstantExpression)
-            .collect(toImmutableSet());
-    if (newWarningSet.size() == warningsSuppressed.size()) {
-      // no matches found. Nothing to delete.
-      return;
-    }
-    if (newWarningSet.isEmpty()) {
-      // No warning left to suppress. Delete entire annotation.
-      fixBuilder.delete(suppressAnnotationTree);
-      return;
-    }
-    fixBuilder.merge(
-        updateAnnotationArgumentValues(suppressAnnotationTree, "value", newWarningSet));
   }
 
   /**
@@ -1042,6 +995,45 @@ public final class SuggestedFixes {
 
       fixBuilder.prefixWith(suppressibleNode, replacement);
     }
+  }
+  /**
+   * Modifies {@code fixBuilder} to either remove a {@code warningToRemove} warning from the closest
+   * {@code SuppressWarning} node or remove the entire {@code SuppressWarning} node if {@code
+   * warningToRemove} is the only warning in that node.
+   */
+  public static void removeSuppressWarnings(
+      SuggestedFix.Builder fixBuilder, VisitorState state, String warningToRemove) {
+    // Find the nearest tree to remove @SuppressWarnings from.
+    Tree suppressibleNode = suppressibleNode(state.getPath());
+    if (suppressibleNode == null) {
+      return;
+    }
+
+    AnnotationTree suppressAnnotationTree =
+        getAnnotationWithSimpleName(
+            findAnnotationsTree(suppressibleNode), SuppressWarnings.class.getSimpleName());
+    if (suppressAnnotationTree == null) {
+      return;
+    }
+
+    SuppressWarnings annotation = getAnnotation(suppressibleNode, SuppressWarnings.class);
+    ImmutableSet<String> warningsSuppressed = ImmutableSet.copyOf(annotation.value());
+    ImmutableSet<String> newWarningSet =
+        warningsSuppressed.stream()
+            .filter(warning -> !warning.equals(warningToRemove))
+            .map(state::getConstantExpression)
+            .collect(toImmutableSet());
+    if (newWarningSet.size() == warningsSuppressed.size()) {
+      // no matches found. Nothing to delete.
+      return;
+    }
+    if (newWarningSet.isEmpty()) {
+      // No warning left to suppress. Delete entire annotation.
+      fixBuilder.delete(suppressAnnotationTree);
+      return;
+    }
+    fixBuilder.merge(
+        updateAnnotationArgumentValues(suppressAnnotationTree, "value", newWarningSet));
   }
 
   private static List<? extends AnnotationTree> findAnnotationsTree(Tree tree) {
@@ -1449,7 +1441,7 @@ public final class SuggestedFixes {
       builder.addImport(exemptingAnnotation);
     }
     Optional<Tree> exemptingAnnotationLocation =
-        StreamSupport.stream(where.spliterator(), false)
+        stream(where)
             .filter(tree -> supportedExemptingAnnotationLocationKinds.contains(tree.getKind()))
             .filter(Predicates.not(SuggestedFixes::isAnonymousClassTree))
             .findFirst();
