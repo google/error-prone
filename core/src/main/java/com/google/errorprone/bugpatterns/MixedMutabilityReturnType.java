@@ -90,16 +90,16 @@ public final class MixedMutabilityReturnType extends BugChecker
 
   private static final Matcher<ExpressionTree> EMPTY_INITIALIZER =
       anyOf(
-          constructor().forClass("java.util.ArrayList").withParameters(),
-          constructor().forClass("java.util.HashMap").withParameters(),
+          constructor().forClass("java.util.ArrayList").withNoParameters(),
+          constructor().forClass("java.util.HashMap").withNoParameters(),
           staticMethod()
               .onClass("com.google.common.collect.Lists")
               .namedAnyOf("newArrayList", "newLinkedList")
-              .withParameters(),
+              .withNoParameters(),
           staticMethod()
               .onClass("com.google.common.collect.Sets")
               .namedAnyOf("newHashSet", "newLinkedHashSet")
-              .withParameters());
+              .withNoParameters());
 
   private static final Matcher<ExpressionTree> IMMUTABLE =
       anyOf(

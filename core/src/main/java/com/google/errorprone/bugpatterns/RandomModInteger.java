@@ -41,7 +41,7 @@ public class RandomModInteger extends BugChecker implements BinaryTreeMatcher {
       Matchers.instanceMethod()
           .onDescendantOf("java.util.Random")
           .named("nextInt")
-          .withParameters();
+          .withNoParameters();
 
   @Override
   public Description matchBinary(BinaryTree tree, VisitorState state) {

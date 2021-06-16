@@ -46,7 +46,7 @@ public class MathAbsoluteRandom extends BugChecker implements MethodInvocationTr
               instanceMethod()
                   .onDescendantOf("java.util.Random")
                   .namedAnyOf("nextInt", "nextLong")
-                  .withParameters()));
+                  .withNoParameters()));
 
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
