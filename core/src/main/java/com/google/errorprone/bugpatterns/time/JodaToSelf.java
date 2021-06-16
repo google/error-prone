@@ -64,7 +64,7 @@ public final class JodaToSelf extends BugChecker
                           Matchers.instanceMethod()
                               .onExactClass("org.joda.time." + typeName)
                               .named("to" + typeName)
-                              .withParameters())
+                              .withNoParameters())
                   .collect(toImmutableList())),
           // Allow usage by JodaTime itself
           Matchers.not(Matchers.packageStartsWith("org.joda.time")));

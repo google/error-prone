@@ -65,9 +65,9 @@ public class FloggerRedundantIsEnabled extends BugChecker implements IfTreeMatch
           .onDescendantOf(FLOGGER)
           .namedAnyOf(
               "atInfo", "atConfig", "atFine", "atFiner", "atFinest", "atWarning", "atSevere")
-          .withParameters();
+          .withNoParameters();
   private static final Matcher<ExpressionTree> IS_ENABLED =
-      instanceMethod().onDescendantOf(FLOGGER_API).named("isEnabled").withParameters();
+      instanceMethod().onDescendantOf(FLOGGER_API).named("isEnabled").withNoParameters();
   private static final Matcher<ExpressionTree> LOG =
       instanceMethod().onDescendantOf(FLOGGER_API).named("log");
 

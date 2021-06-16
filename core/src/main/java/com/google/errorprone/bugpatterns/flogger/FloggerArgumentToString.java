@@ -126,7 +126,7 @@ public class FloggerArgumentToString extends BugChecker implements MethodInvocat
 
   private enum Unwrapper {
     // Unwrap any instance call to toString().
-    TO_STRING(instanceMethod().anyClass().named("toString").withParameters()) {
+    TO_STRING(instanceMethod().anyClass().named("toString").withNoParameters()) {
 
       @Override
       Parameter unwrap(MethodInvocationTree invocation, char placeholder) {
@@ -206,7 +206,7 @@ public class FloggerArgumentToString extends BugChecker implements MethodInvocat
     // Check that the output format safe to unwrap (it could be log("%b", x.toString()) which
     // cannot be unwrapped).
     STRING_TO_UPPER_CASE(
-        instanceMethod().onExactClass("java.lang.String").named("toUpperCase").withParameters()) {
+        instanceMethod().onExactClass("java.lang.String").named("toUpperCase").withNoParameters()) {
 
       @Override
       Parameter unwrap(MethodInvocationTree invocation, char placeholder) {
