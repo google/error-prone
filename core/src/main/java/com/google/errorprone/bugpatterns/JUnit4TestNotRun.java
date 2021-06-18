@@ -33,7 +33,6 @@ import static javax.lang.model.element.Modifier.PUBLIC;
 import static javax.lang.model.element.Modifier.STATIC;
 
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
@@ -84,9 +83,6 @@ public class JUnit4TestNotRun extends BugChecker implements ClassTreeMatcher {
           not(JUnitMatchers::hasJUnitAnnotation));
 
   private boolean isParameterAnnotation(AnnotationTree annotation, VisitorState state) {
-    if (!allowParameterizingAnnotations) {
-      return false;
-    }
     Type annotationType = getType(annotation);
     if (isSameType(annotationType, FROM_DATA_POINTS.get(state), state)) {
       return true;
@@ -98,13 +94,6 @@ public class JUnit4TestNotRun extends BugChecker implements ClassTreeMatcher {
       Suppliers.typeFromString("org.junit.experimental.theories.FromDataPoints");
 
   private static final Matcher<Tree> NOT_STATIC = not(hasModifier(STATIC));
-
-  private final boolean allowParameterizingAnnotations;
-
-  public JUnit4TestNotRun(ErrorProneFlags flags) {
-    this.allowParameterizingAnnotations =
-        flags.getBoolean("JUnit4TestNotRun:AllowParameterizingAnnotations").orElse(true);
-  }
 
   @Override
   public Description matchClass(ClassTree tree, VisitorState state) {

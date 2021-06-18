@@ -16,11 +16,9 @@
 
 package com.google.errorprone.bugpatterns;
 
-import com.google.common.collect.ImmutableList;
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.BugCheckerRefactoringTestHelper.FixChoosers;
 import com.google.errorprone.CompilationTestHelper;
-import com.google.errorprone.ErrorProneFlags;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -33,8 +31,7 @@ public class JUnit4TestNotRunTest {
       CompilationTestHelper.newInstance(JUnit4TestNotRun.class, getClass());
 
   private final BugCheckerRefactoringTestHelper refactoringHelper =
-      BugCheckerRefactoringTestHelper.newInstance(
-          new JUnit4TestNotRun(ErrorProneFlags.empty()), getClass());
+      BugCheckerRefactoringTestHelper.newInstance(JUnit4TestNotRun.class, getClass());
 
   @Test
   public void testPositiveCase1() {
@@ -580,26 +577,6 @@ public class JUnit4TestNotRunTest {
             "     fail();",
             "  }",
             "}")
-        .doTest();
-  }
-
-  @Test
-  public void methodsWithParameters_flaggedOff_notConsideredTests() {
-    compilationHelper
-        .addSourceLines(
-            "TestTheories.java",
-            "import static org.junit.Assert.fail;",
-            "import org.junit.runner.RunWith;",
-            "import org.junit.experimental.theories.Theories;",
-            "import org.junit.experimental.theories.FromDataPoints;",
-            "@RunWith(Theories.class)",
-            "public class TestTheories {",
-            "   // BUG: Diagnostic contains:",
-            "   public void testMyTheory(@FromDataPoints(\"foo\") Object foo) {",
-            "     fail();",
-            "  }",
-            "}")
-        .setArgs(ImmutableList.of("-XepOpt:JUnit4TestNotRun:AllowParameterizingAnnotations:OFF"))
         .doTest();
   }
 
