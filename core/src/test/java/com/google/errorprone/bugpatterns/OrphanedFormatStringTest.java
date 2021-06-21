@@ -81,6 +81,7 @@ public class OrphanedFormatStringTest {
             "class Test {",
             "  static class MyPrintWriter extends java.io.PrintWriter {",
             "    MyPrintWriter() throws java.io.FileNotFoundException {super((String) null);}",
+            "    public void println(String message) {}",
             "    @FormatMethod",
             "    public void println(String first, Object...args) {}",
             "    @FormatMethod",
@@ -88,6 +89,8 @@ public class OrphanedFormatStringTest {
                 + " @FormatString String second, Object...args) {}",
             "  }",
             "  void f(MyPrintWriter pw) {",
+            "    // BUG: Diagnostic contains:",
+            "    pw.println(\"%s\");",
             "    pw.println(\"%s %s\", \"\", \"\");",
             "    pw.print(\"\", \"%s\");",
             // Here, %s in the first position is a non-format String arg
@@ -110,6 +113,21 @@ public class OrphanedFormatStringTest {
             "  void f() {",
             "    StringBuilder messageBuilder = ",
             "        new StringBuilder(\"hakuna % matata\").append(\"y\").append(\"n\");",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void assertWithMessage() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "import static com.google.common.truth.Truth.assertWithMessage;",
+            "class Test {",
+            "  void test() {",
+            "    // BUG: Diagnostic contains:",
+            "    assertWithMessage(\"%s\").that(\"\").isNull();",
             "  }",
             "}")
         .doTest();
