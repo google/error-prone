@@ -44,6 +44,7 @@ import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.PackageSymbol;
 import com.sun.tools.javac.code.Symbol.TypeSymbol;
 import com.sun.tools.javac.util.Position;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -189,7 +190,7 @@ public final class UnnecessarilyFullyQualified extends BugChecker
 
   private static boolean isPackageInfo(CompilationUnitTree tree) {
     String name = tree.getSourceFile().getName();
-    int idx = name.lastIndexOf('/');
+    int idx = name.lastIndexOf(File.separatorChar);
     if (idx != -1) {
       name = name.substring(idx + 1);
     }

@@ -24,6 +24,7 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.CompilationUnitTreeMatcher;
 import com.google.errorprone.matchers.Description;
 import com.sun.source.tree.CompilationUnitTree;
+import java.io.File;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
@@ -37,7 +38,7 @@ public class PackageInfo extends BugChecker implements CompilationUnitTreeMatche
       return NO_MATCH;
     }
     String name = tree.getSourceFile().getName();
-    int idx = name.lastIndexOf('/');
+    int idx = name.lastIndexOf(File.separatorChar);
     if (idx != -1) {
       name = name.substring(idx + 1);
     }
