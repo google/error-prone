@@ -29,6 +29,7 @@ import static com.google.errorprone.matchers.Matchers.methodIsNamed;
 import static com.google.errorprone.matchers.Matchers.methodReturns;
 import static com.google.errorprone.matchers.MethodVisibility.Visibility.PUBLIC;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
+import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.isSameType;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
@@ -54,13 +55,19 @@ import com.sun.source.tree.CatchTree;
 import com.sun.source.tree.InstanceOfTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.StatementTree;
+import com.sun.source.tree.ThrowTree;
 import com.sun.source.tree.TryTree;
+import com.sun.source.tree.VariableTree;
+import com.sun.source.util.TreePath;
+import com.sun.source.util.TreePathScanner;
 import com.sun.source.util.TreeScanner;
+import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Type.UnionClassType;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Stream;
 import javax.annotation.Nullable;
 
@@ -157,12 +164,38 @@ public final class InterruptedExceptionSwallowed extends BugChecker
         ImmutableSet<Type> thrownExceptions = getThrownExceptions(tree, state);
         if (thrownExceptions.stream().anyMatch(t -> isSubtype(t, interrupted, state))
             && !blockChecksForInterruptedException(catchTree.getBlock(), state)
+            && !(exceptionIsRethrown(catchTree, catchTree.getParameter(), state)
+                && methodDeclaresInterruptedException(state.findEnclosing(MethodTree.class), state))
             && !isSuppressed(catchTree.getParameter())) {
           return describeMatch(catchTree, createFix(catchTree));
         }
       }
     }
     return NO_MATCH;
+  }
+
+  private boolean exceptionIsRethrown(
+      CatchTree catchTree, VariableTree parameter, VisitorState state) {
+    AtomicBoolean rethrown = new AtomicBoolean();
+    new TreePathScanner<Void, Void>() {
+      @Override
+      public Void visitThrow(ThrowTree throwTree, Void unused) {
+        VarSymbol parameterSymbol = getSymbol(parameter);
+        if (parameterSymbol.equals(getSymbol(throwTree.getExpression()))) {
+          rethrown.set(true);
+        }
+        return super.visitThrow(throwTree, null);
+      }
+    }.scan(new TreePath(state.getPath(), catchTree), null);
+    return rethrown.get();
+  }
+
+  private boolean methodDeclaresInterruptedException(MethodTree enclosing, VisitorState state) {
+    if (enclosing == null) {
+      return false;
+    }
+    return enclosing.getThrows().stream()
+        .anyMatch(t -> isSameType(getType(t), state.getSymtab().interruptedExceptionType, state));
   }
 
   private static SuggestedFix createFix(CatchTree catchTree) {

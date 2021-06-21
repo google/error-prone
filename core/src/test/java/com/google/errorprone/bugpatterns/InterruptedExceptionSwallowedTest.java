@@ -152,6 +152,25 @@ public final class InterruptedExceptionSwallowedTest {
   }
 
   @Test
+  public void negative_rethrown() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.util.concurrent.Future;",
+            "class Test {",
+            "  void test() throws InterruptedException, Exception {",
+            "    try {",
+            "      try (Thrower t = new Thrower()) {",
+            "      }",
+            "    } catch (Exception e) {",
+            "      throw e;",
+            "    }",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void thrownByClose_inherited() {
     compilationHelper
         .addSourceLines(
