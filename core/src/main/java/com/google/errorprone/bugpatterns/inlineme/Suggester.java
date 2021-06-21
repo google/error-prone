@@ -50,6 +50,11 @@ public final class Suggester extends BugChecker implements MethodTreeMatcher {
 
   @Override
   public Description matchMethod(MethodTree tree, VisitorState state) {
+    // only suggest @InlineMe on @Deprecated APIs
+    if (!hasAnnotation(tree, Deprecated.class, state)) {
+      return Description.NO_MATCH;
+    }
+
     // if the API is already annotated with @InlineMe, then return no match
     if (hasAnnotation(tree, InlineMe.class, state)) {
       return Description.NO_MATCH;

@@ -82,7 +82,6 @@ abstract class InlinabilityResult {
   }
 
   enum InlineValidationErrorReason {
-    API_ISNT_DEPRECATED("InlineMe cannot be applied to an API that isn't @Deprecated."),
     NO_BODY("InlineMe cannot be applied to abstract methods."),
     NOT_EXACTLY_ONE_STATEMENT("InlineMe cannot inline methods with more than 1 statement."),
     COMPLEX_STATEMENT(
@@ -123,10 +122,6 @@ abstract class InlinabilityResult {
 
   static InlinabilityResult forMethod(
       MethodTree tree, VisitorState state, boolean checkForArgumentReuse) {
-    if (!hasAnnotation(tree, Deprecated.class, state)) {
-      return fromError(InlineValidationErrorReason.API_ISNT_DEPRECATED);
-    }
-
     if (tree.getBody() == null) {
       return fromError(InlineValidationErrorReason.NO_BODY);
     }
