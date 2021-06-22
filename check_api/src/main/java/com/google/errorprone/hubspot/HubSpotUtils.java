@@ -30,7 +30,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.regex.Pattern;
 
 import com.fasterxml.jackson.databind.JavaType;
 import com.google.common.base.Strings;
@@ -41,6 +40,7 @@ import com.google.errorprone.DescriptionListener;
 import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.ErrorProneOptions;
 import com.google.errorprone.ErrorProneTimings;
+import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.descriptionlistener.CustomDescriptionListenerFactory;
 import com.google.errorprone.descriptionlistener.DescriptionListenerResources;
