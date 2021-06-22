@@ -145,7 +145,7 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
 
   /** The set of types exempting a field of type extending them. */
   private static final ImmutableSet<String> EXEMPTING_FIELD_SUPER_TYPES =
-      ImmutableSet.of("org.junit.rules.TestRule");
+      ImmutableSet.of("org.junit.rules.TestRule", "org.slf4j.Logger");
 
   private static final ImmutableSet<String> SPECIAL_FIELDS =
       ImmutableSet.of(
