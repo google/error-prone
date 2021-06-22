@@ -79,7 +79,7 @@ public class WithSignatureDiscouragedTest {
             "    instanceMethod()",
             "      .anyClass()",
             "      .named(\"toString\")",
-            "      .withParameters();",
+            "      .withNoParameters();",
             "}")
         .doTest();
   }

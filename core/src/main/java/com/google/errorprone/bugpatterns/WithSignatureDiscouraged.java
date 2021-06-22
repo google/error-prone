@@ -17,6 +17,7 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.instanceMethod;
+import static java.util.stream.Collectors.joining;
 
 import com.google.common.base.Ascii;
 import com.google.common.base.Splitter;
@@ -32,7 +33,6 @@ import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.tools.javac.tree.JCTree;
-import java.util.stream.Collectors;
 
 /**
  * {@link
@@ -96,12 +96,6 @@ public class WithSignatureDiscouraged extends BugChecker implements MethodInvoca
       // handle those.
       return NO_MATCH;
     }
-
-    // A single string representing all the args to withParameters
-    String withParamsArgList =
-        paramTypes.stream()
-            .map(type -> String.format("\"%s\"", type))
-            .collect(Collectors.joining(", "));
     int treeStart = tree.getStartPosition();
     String source = state.getSourceForNode(tree);
     if (source == null) {
@@ -115,8 +109,14 @@ public class WithSignatureDiscouraged extends BugChecker implements MethodInvoca
     }
     int startPosition = treeStart + offset;
     int endPosition = state.getEndPosition(tree);
-    String replacementText =
-        String.format(".named(\"%s\").withParameters(%s)", methodName, withParamsArgList);
+
+    String withParameters =
+        paramTypes.isEmpty()
+            ? "withNoParameters()"
+            : paramTypes.stream()
+                .map(type -> String.format("\"%s\"", type))
+                .collect(joining(", ", "withParameters(", ")"));
+    String replacementText = String.format(".named(\"%s\").%s", methodName, withParameters);
     return describeMatch(tree, SuggestedFix.replace(startPosition, endPosition, replacementText));
   }
 
