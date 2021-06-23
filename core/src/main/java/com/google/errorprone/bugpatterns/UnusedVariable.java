@@ -116,7 +116,7 @@ import javax.lang.model.type.NullType;
     summary = "Unused.",
     severity = WARNING,
     documentSuppression = false)
-public final class UnusedVariable extends BugChecker implements CompilationUnitTreeMatcher {
+public class UnusedVariable extends BugChecker implements CompilationUnitTreeMatcher {
   private static final String EXEMPT_PREFIX = "unused";
 
   private static final ImmutableSet<String> EXEMPT_NAMES = ImmutableSet.of("ignored");
@@ -233,6 +233,11 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
       } else {
         fixes = buildUnusedVarFixes(symbol, allUsageSites, state);
       }
+
+      if (!shouldReport(symbol, state, fixes)) {
+        continue;
+      }
+
       state.reportMatch(
           buildDescription(unused)
               .setMessage(
@@ -253,6 +258,10 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
               .build());
     }
     return Description.NO_MATCH;
+  }
+
+  protected boolean shouldReport(VarSymbol symbol, VisitorState state, List<SuggestedFix> fixes) {
+    return true;
   }
 
   private static SuggestedFix makeAssignmentDeclaration(
