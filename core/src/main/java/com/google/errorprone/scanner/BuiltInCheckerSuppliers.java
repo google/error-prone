@@ -177,6 +177,7 @@ import com.google.errorprone.bugpatterns.JUnit4ClassUsedInJUnit3;
 import com.google.errorprone.bugpatterns.JUnit4SetUpNotRun;
 import com.google.errorprone.bugpatterns.JUnit4TearDownNotRun;
 import com.google.errorprone.bugpatterns.JUnit4TestNotRun;
+import com.google.errorprone.bugpatterns.JUnit4TestsNotRunWithinEnclosed;
 import com.google.errorprone.bugpatterns.JUnitAmbiguousTestClass;
 import com.google.errorprone.bugpatterns.JUnitAssertSameCheck;
 import com.google.errorprone.bugpatterns.JUnitParameterMethodNotFound;
@@ -640,6 +641,7 @@ public class BuiltInCheckerSuppliers {
           JUnit4SetUpNotRun.class,
           JUnit4TearDownNotRun.class,
           JUnit4TestNotRun.class,
+          JUnit4TestsNotRunWithinEnclosed.class,
           JUnitAssertSameCheck.class,
           JUnitParameterMethodNotFound.class,
           JavaxInjectOnAbstractMethod.class,
