@@ -88,6 +88,7 @@ import javax.lang.model.type.TypeKind;
  */
 public abstract class AbstractReturnValueIgnored extends BugChecker
     implements MethodInvocationTreeMatcher, MemberReferenceTreeMatcher, ReturnTreeMatcher {
+
   private final java.util.function.Supplier<Matcher<ExpressionTree>> methodInvocationMatcher =
       Suppliers.memoize(
           () ->
