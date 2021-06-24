@@ -82,6 +82,7 @@ public final class UnusedMethod extends BugChecker implements CompilationUnitTre
           "com.fasterxml.jackson.annotation.JsonAnySetter",
           "com.fasterxml.jackson.annotation.JsonCreator",
           "com.fasterxml.jackson.annotation.JsonGetter",
+          "com.fasterxml.jackson.annotation.JsonProperty",
           "com.fasterxml.jackson.annotation.JsonSetter",
           "com.fasterxml.jackson.annotation.JsonValue",
           "com.google.inject.Provides",
