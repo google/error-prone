@@ -21,6 +21,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Verify.verify;
 import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
+import static com.google.common.collect.Streams.stream;
 import static com.google.errorprone.matchers.JUnitMatchers.JUNIT4_RUN_WITH_ANNOTATION;
 import static com.google.errorprone.matchers.Matchers.isSubtypeOf;
 import static com.sun.tools.javac.code.Scope.LookupKind.NON_RECURSIVE;
@@ -31,11 +32,11 @@ import com.github.benmanes.caffeine.cache.Caffeine;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.CharMatcher;
+import com.google.common.collect.AbstractIterator;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.SetMultimap;
-import com.google.common.collect.Streams;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.dataflow.nullnesspropagation.Nullness;
 import com.google.errorprone.dataflow.nullnesspropagation.NullnessAnalysis;
@@ -554,6 +555,35 @@ public class ASTHelpers {
   }
 
   /**
+   * Returns a {@link Stream} of {@link ExpressionTree}s resulting from calling {@link
+   * #getReceiver(ExpressionTree)} repeatedly until no receiver exists.
+   *
+   * <p>For example, give {@code foo().bar().baz()}, returns a stream of {@code [foo().bar(),
+   * foo()]}.
+   *
+   * <p>This can be more convenient than manually traversing up a tree, as it handles the
+   * termination condition automatically. Typical uses cases would include traversing fluent call
+   * chains.
+   */
+  public static Stream<ExpressionTree> streamReceivers(ExpressionTree tree) {
+    return stream(
+        new AbstractIterator<ExpressionTree>() {
+          private ExpressionTree current = tree;
+
+          @Override
+          protected ExpressionTree computeNext() {
+            if (current instanceof MethodInvocationTree
+                || current instanceof MemberSelectTree
+                || current instanceof MemberReferenceTree) {
+              current = getReceiver(current);
+              return current;
+            }
+            return endOfData();
+          }
+        });
+  }
+
+  /**
    * Given a BinaryTree to match against and a list of two matchers, applies the matchers to the
    * operands in both orders. If both matchers match, returns a list with the operand that matched
    * each matcher in the corresponding position.
@@ -667,7 +697,7 @@ public class ASTHelpers {
               if (superClassSymbols == null) { // Can be null if superClass is a type variable
                 return Stream.empty();
               }
-              return Streams.stream(
+              return stream(
                       scope(superClassSymbols)
                           .getSymbolsByName(name, matchesMethodPredicate, NON_RECURSIVE))
                   // By definition of the filter, we know that the symbol is a MethodSymbol.
@@ -1372,7 +1402,7 @@ public class ASTHelpers {
    * cases of that happening, so it isn't supported here.
    */
   public static ImmutableSet<String> getGeneratedBy(VisitorState state) {
-    return Streams.stream(state.getPath())
+    return stream(state.getPath())
         .filter(ClassTree.class::isInstance)
         .flatMap(enclosing -> getGeneratedBy(getSymbol(enclosing), state).stream())
         .collect(toImmutableSet());
