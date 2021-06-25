@@ -95,6 +95,10 @@ public final class UnusedMethod extends BugChecker implements CompilationUnitTre
           "javax.annotation.PostConstruct",
           "javax.persistence.PostLoad",
           "javax.inject.Inject",
+          "org.junit.jupiter.api.AfterAll",
+          "org.junit.jupiter.api.AfterEach",
+          "org.junit.jupiter.api.BeforeAll",
+          "org.junit.jupiter.api.BeforeEach",
           "org.testng.annotations.DataProvider");
 
   /** The set of types exempting a type that is extending or implementing them. */
