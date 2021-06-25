@@ -32,7 +32,6 @@ import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.JUnitMatchers;
 import com.google.errorprone.matchers.Matcher;
-import com.google.errorprone.matchers.method.MethodMatchers.MethodClassMatcher;
 import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
@@ -60,35 +59,39 @@ import javax.lang.model.element.ElementKind;
     severity = ERROR)
 public final class MissingTestCall extends BugChecker implements MethodTreeMatcher {
 
-  private static final MethodClassMatcher EQUALS_TESTER =
-      instanceMethod().onDescendantOf("com.google.common.testing.EqualsTester");
-  private static final MethodClassMatcher REFACTORING_HELPER =
-      instanceMethod().onDescendantOf("com.google.errorprone.BugCheckerRefactoringTestHelper");
-  private static final MethodClassMatcher COMPILATION_HELPER =
-      instanceMethod().onDescendantOf("com.google.errorprone.CompilationTestHelper");
-
   private static final ImmutableSet<MethodPairing> PAIRINGS =
       ImmutableSet.of(
           MethodPairing.of(
               "EqualsTester",
-              EQUALS_TESTER.named("addEqualityGroup"),
-              EQUALS_TESTER.named("testEquals")),
+              instanceMethod()
+                  .onDescendantOf("com.google.common.testing.EqualsTester")
+                  .named("addEqualityGroup"),
+              instanceMethod()
+                  .onDescendantOf("com.google.common.testing.EqualsTester")
+                  .named("testEquals")),
           MethodPairing.of(
               "BugCheckerRefactoringTestHelper",
-              REFACTORING_HELPER.namedAnyOf(
-                  "addInput",
-                  "addInputLines",
-                  "addInputFile",
-                  "addOutput",
-                  "addOutputLines",
-                  "addOutputFile",
-                  "expectUnchanged"),
-              REFACTORING_HELPER.named("doTest")),
+              instanceMethod()
+                  .onDescendantOf("com.google.errorprone.BugCheckerRefactoringTestHelper")
+                  .namedAnyOf(
+                      "addInput",
+                      "addInputLines",
+                      "addInputFile",
+                      "addOutput",
+                      "addOutputLines",
+                      "addOutputFile",
+                      "expectUnchanged"),
+              instanceMethod()
+                  .onDescendantOf("com.google.errorprone.BugCheckerRefactoringTestHelper")
+                  .named("doTest")),
           MethodPairing.of(
               "CompilationTestHelper",
-              COMPILATION_HELPER.namedAnyOf(
-                  "addSourceLines", "addSourceFile", "expectNoDiagnostics"),
-              COMPILATION_HELPER.named("doTest")));
+              instanceMethod()
+                  .onDescendantOf("com.google.errorprone.CompilationTestHelper")
+                  .namedAnyOf("addSourceLines", "addSourceFile", "expectNoDiagnostics"),
+              instanceMethod()
+                  .onDescendantOf("com.google.errorprone.CompilationTestHelper")
+                  .named("doTest")));
 
   @Override
   public Description matchMethod(MethodTree tree, VisitorState state) {
