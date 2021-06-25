@@ -93,6 +93,10 @@ public class Description {
     T res = (T) metadata.get(key);
     return Optional.ofNullable(res);
   }
+  
+  public Map<String, Object> getMetadata() {
+    return metadata;
+  }
 
   /** Returns the raw message, not including a link or check name. */
   public String getRawMessage() {
