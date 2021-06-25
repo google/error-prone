@@ -223,4 +223,56 @@ public final class UnusedMethodTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void qualifiedMethodSource() {
+    helper
+        .addSourceLines(
+            "MethodSource.java",
+            "package org.junit.jupiter.params.provider;",
+            "public @interface MethodSource {",
+            "  String[] value();",
+            "}")
+        .addSourceLines(
+            "Test.java",
+            "import java.util.stream.Stream;",
+            "import org.junit.jupiter.params.provider.MethodSource;",
+            "class Test {",
+            "  @MethodSource(\"Test#parameters\")",
+            "  void test() {}",
+            "",
+            "",
+            "  private static Stream<String> parameters() {",
+            "    return Stream.of();",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void nestedQualifiedMethodSource() {
+    helper
+        .addSourceLines(
+            "MethodSource.java",
+            "package org.junit.jupiter.params.provider;",
+            "public @interface MethodSource {",
+            "  String[] value();",
+            "}")
+        .addSourceLines(
+            "Test.java",
+            "import java.util.stream.Stream;",
+            "import org.junit.jupiter.params.provider.MethodSource;",
+            "class Test {",
+            "  // @Nested",
+            "  public class NestedTest {",
+            "    @MethodSource(\"Test#parameters\")",
+            "    void test() {}",
+            "  }",
+            "",
+            "  private static Stream<String> parameters() {",
+            "    return Stream.of();",
+            "  }",
+            "}")
+        .doTest();
+  }
 }
