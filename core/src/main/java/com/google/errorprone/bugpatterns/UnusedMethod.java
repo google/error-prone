@@ -254,14 +254,20 @@ public final class UnusedMethod extends BugChecker implements CompilationUnitTre
             .findAny()
             // get the annotation value array as a set of Names
             .flatMap(a -> getAnnotationValue(a, "value"))
-            .map(y -> asStrings(y).map(state::getName).collect(toImmutableSet()))
-            // remove all potentially unused methods whose simple name is referenced by the
-            // @MethodSource
+            .map(y -> asStrings(y).map(state::getName).map(Name::toString).collect(toImmutableSet()))
+            // remove all potentially unused methods referenced by the @MethodSource
             .ifPresent(
                 referencedNames ->
                     unusedMethods
                         .entrySet()
-                        .removeIf(e -> referencedNames.contains(e.getKey().getSimpleName())));
+                        .removeIf(e -> {
+                              Symbol unusedSym = e.getKey();
+                              String simpleName = unusedSym.getSimpleName().toString();
+                              return referencedNames.contains(simpleName)
+                                  || referencedNames.contains(unusedSym.owner.getQualifiedName() + "#" + simpleName);
+                            }
+                        )
+            );
       }
     }
 
