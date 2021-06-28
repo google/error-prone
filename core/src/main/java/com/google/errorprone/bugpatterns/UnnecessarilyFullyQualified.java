@@ -32,6 +32,7 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.CompilationUnitTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
+import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.ImportTree;
@@ -188,7 +189,7 @@ public final class UnnecessarilyFullyQualified extends BugChecker
   }
 
   private static boolean isPackageInfo(CompilationUnitTree tree) {
-    String name = tree.getSourceFile().getName();
+    String name = ASTHelpers.getFileName(tree);
     int idx = name.lastIndexOf('/');
     if (idx != -1) {
       name = name.substring(idx + 1);
