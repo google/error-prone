@@ -145,7 +145,7 @@ public class HubSpotUtils {
 
   public static void recordListenerDescribeError(DescriptionListener listener, Throwable t) {
     DATA.computeIfAbsent(LISTENER_ON_DESCRIBE_ERROR, ignored -> ConcurrentHashMap.newKeySet())
-        .add(toInitErrorMessage(t));
+        .add(toErrorMessage(t));
   }
 
   public static void init(JavacTask task) {
@@ -179,15 +179,15 @@ public class HubSpotUtils {
 
   private static void recordCheckLoadError(Throwable t) {
     DATA.computeIfAbsent(INIT_ERROR, ignored -> ConcurrentHashMap.newKeySet())
-        .add(toInitErrorMessage(t));
+        .add(toErrorMessage(t));
   }
 
   private static void recordListenerInitError(Throwable t) {
     DATA.computeIfAbsent(LISTENER_INIT_ERRORS, ignored -> ConcurrentHashMap.newKeySet())
-        .add(toInitErrorMessage(t));
+        .add(toErrorMessage(t));
   }
 
-  private static String toInitErrorMessage(Throwable e) {
+  private static String toErrorMessage(Throwable e) {
     if (Strings.isNullOrEmpty(e.getMessage())) {
       return "Unknown error";
     } else {
