@@ -101,27 +101,27 @@ public class FormatStringTest {
 
   @Test
   public void testCStyleLongConversion() throws Exception {
-    testFormat("use %d for all integral types", "String.format(\"%l\", 42);");
+    testFormat("use %d to format integral types", "String.format(\"%l\", 42);");
   }
 
   @Test
   public void testCStyleLongConversion2() throws Exception {
-    testFormat("use %d for all integral types", "String.format(\"%ld\", 42);");
+    testFormat("use %d to format integral types", "String.format(\"%ld\", 42);");
   }
 
   @Test
   public void testCStyleLongConversion3() throws Exception {
-    testFormat("use %d for all integral types", "String.format(\"%lld\", 42);");
+    testFormat("use %d to format integral types", "String.format(\"%lld\", 42);");
   }
 
   @Test
   public void testCStyleLongConversion4() throws Exception {
-    testFormat("%f for all floating point ", "String.format(\"%lf\", 42);");
+    testFormat("%f, %g or %e to format floating point types", "String.format(\"%lf\", 42);");
   }
 
   @Test
   public void testCStyleLongConversion5() throws Exception {
-    testFormat("%f for all floating point ", "String.format(\"%llf\", 42);");
+    testFormat("%f, %g or %e to format floating point types", "String.format(\"%llf\", 42);");
   }
 
   @Test

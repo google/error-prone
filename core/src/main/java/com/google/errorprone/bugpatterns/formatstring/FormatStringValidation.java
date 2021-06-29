@@ -297,8 +297,9 @@ public final class FormatStringValidation {
 
   private static String unknownFormatConversion(String conversion) {
     if (conversion.equals("l")) {
-      return "%l is not a valid format specifier; use %d for all integral types and %f for all "
-          + "floating point types";
+      return "%l is not a valid format specifier; use %d to format integral types as a decimal "
+          + "integer, and %f, %g or %e to format floating point types (depending on your "
+          + "formatting needs)";
     }
     return String.format("unknown format conversion: '%s'", conversion);
   }
