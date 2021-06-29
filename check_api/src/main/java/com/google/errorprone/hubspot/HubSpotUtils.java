@@ -68,6 +68,7 @@ public class HubSpotUtils {
   private static final String MISSING = "errorProneMissingChecks";
   private static final String INIT_ERROR = "errorProneInitErrors";
   private static final String LISTENER_INIT_ERRORS = "errorProneListenerInitErrors";
+  private static final String LISTENER_ON_DESCRIBE_ERROR = "errorProneListenerDescribeErrors";
   private static final String ERROR_REPORTING_FLAG = "hubspot:error-reporting";
   private static final String GENERATED_SOURCES_FLAG = "hubspot:generated-sources-pattern";
   private static final Map<String, Set<String>> DATA = loadExistingData();
@@ -140,6 +141,11 @@ public class HubSpotUtils {
     ErrorProneTimings.instance(context)
         .timings()
         .forEach((k, v) -> TIMING_DATA.put(k, v.toMillis()));
+  }
+
+  public static void recordListenerDescribeError(DescriptionListener listener, Throwable t) {
+    DATA.computeIfAbsent(LISTENER_ON_DESCRIBE_ERROR, ignored -> ConcurrentHashMap.newKeySet())
+        .add(toInitErrorMessage(t));
   }
 
   public static void init(JavacTask task) {

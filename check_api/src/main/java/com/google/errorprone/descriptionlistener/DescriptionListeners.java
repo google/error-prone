@@ -38,16 +38,27 @@ public class DescriptionListeners {
   }
 
   private static class MultiDescriptionListener implements DescriptionListener {
-    private List<DescriptionListener> delegates;
+    private final DescriptionListenerResources resources;
+    private final List<DescriptionListener> delegates;
 
-    private MultiDescriptionListener(List<DescriptionListener> delegates) {
+    private MultiDescriptionListener(DescriptionListenerResources resources, List<DescriptionListener> delegates) {
+      this.resources = resources;
       this.delegates = delegates;
     }
 
     @Override
     public void onDescribed(Description description) {
+      boolean handleErrors = HubSpotUtils.isErrorHandlingEnabled(resources);
       for (DescriptionListener listener : delegates) {
-        listener.onDescribed(description);
+        try {
+          listener.onDescribed(description);
+        } catch (Throwable t) {
+          if (handleErrors) {
+            HubSpotUtils.recordListenerDescribeError(listener, t);
+          } else {
+            throw t;
+          }
+        }
       }
     }
   }
@@ -70,7 +81,7 @@ public class DescriptionListeners {
           descriptionListeners.add(delegate.createFactory(resources));
         }
       }
-      return new MultiDescriptionListener(descriptionListeners);
+      return new MultiDescriptionListener(resources, descriptionListeners);
     }
   }
 }
