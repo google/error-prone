@@ -15,7 +15,10 @@
  */
 package com.google.errorprone.bugpatterns;
 
+import static org.junit.Assume.assumeTrue;
+
 import com.google.errorprone.CompilationTestHelper;
+import com.google.errorprone.util.RuntimeVersion;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -51,6 +54,25 @@ public class OptionalNotPresentTest {
             "  int g(Map<String, Optional<Integer>> m) {",
             "    if (!m.get(\"one\").isPresent()) {",
             "      return m.get(\"two\").get();",
+            "    }",
+            "    return -1;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void isEmpty() {
+    assumeTrue(RuntimeVersion.isAtLeast11());
+    compilationTestHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.util.Optional;",
+            "class Test {",
+            "  int g(Optional<Integer> o) {",
+            "    // BUG: Diagnostic contains:",
+            "    if (o.isEmpty()) {",
+            "      return o.get();",
             "    }",
             "    return -1;",
             "  }",

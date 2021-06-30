@@ -16,13 +16,14 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
+import static com.google.errorprone.matchers.Description.NO_MATCH;
+import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
-import com.google.errorprone.matchers.Matchers;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.BinaryTree;
@@ -47,40 +48,45 @@ import javax.annotation.Nullable;
     severity = WARNING)
 public class OptionalNotPresent extends BugChecker implements MethodInvocationTreeMatcher {
 
-  private static final Matcher<ExpressionTree> GOOGLE_OPTIONAL_PRESENT =
-      Matchers.instanceMethod()
-          .onDescendantOf(com.google.common.base.Optional.class.getName())
+  private static final Matcher<ExpressionTree> OPTIONAL_PRESENT =
+      instanceMethod()
+          .onDescendantOfAny("com.google.common.base.Optional", "java.util.Optional")
           .named("isPresent");
 
-  private static final Matcher<ExpressionTree> OPTIONAL_PRESENT =
-      Matchers.instanceMethod().onDescendantOf("java.util.Optional").named("isPresent");
+  private static final Matcher<ExpressionTree> OPTIONAL_EMPTY =
+      instanceMethod().onDescendantOf("java.util.Optional").named("isEmpty");
 
   @Override
   public Description matchMethodInvocation(
       MethodInvocationTree methodInvocationTree, VisitorState visitorState) {
-    if (GOOGLE_OPTIONAL_PRESENT.matches(methodInvocationTree, visitorState)
-        || OPTIONAL_PRESENT.matches(methodInvocationTree, visitorState)) {
-      ExpressionTree optionalVar = ASTHelpers.getReceiver(methodInvocationTree);
+    Iterator<Tree> iter = visitorState.getPath().iterator();
+    Tree upTree;
+    if (OPTIONAL_PRESENT.matches(methodInvocationTree, visitorState)) {
       // using an iterator to make sure that only !optional.isPresent() matches and not
       // !(optional.isPresent() || foo == 7)
-      Iterator<Tree> iter = visitorState.getPath().iterator();
       iter.next();
-      Tree upTree = iter.next();
+      upTree = iter.next();
       if (!(upTree instanceof UnaryTree) || upTree.getKind() != Kind.LOGICAL_COMPLEMENT) {
-        return Description.NO_MATCH;
+        return NO_MATCH;
       }
-      IfTree ifTree = null;
-      ifTree = possibleIf(ifTree, upTree, iter);
-      if (ifTree == null) {
-        return Description.NO_MATCH;
-      }
-      TreeScannerInside treeScannerInside = new TreeScannerInside();
-      treeScannerInside.scan(ifTree.getThenStatement(), optionalVar);
-      if (treeScannerInside.hasGet && !treeScannerInside.hasAssignment) {
-        return describeMatch(methodInvocationTree);
-      }
+    } else if (OPTIONAL_EMPTY.matches(methodInvocationTree, visitorState)) {
+      iter = visitorState.getPath().iterator();
+      upTree = methodInvocationTree;
+    } else {
+      return NO_MATCH;
     }
-    return Description.NO_MATCH;
+    IfTree ifTree = null;
+    ifTree = possibleIf(ifTree, upTree, iter);
+    if (ifTree == null) {
+      return NO_MATCH;
+    }
+    TreeScannerInside treeScannerInside = new TreeScannerInside();
+    ExpressionTree optionalVar = ASTHelpers.getReceiver(methodInvocationTree);
+    treeScannerInside.scan(ifTree.getThenStatement(), optionalVar);
+    if (treeScannerInside.hasGet && !treeScannerInside.hasAssignment) {
+      return describeMatch(methodInvocationTree);
+    }
+    return NO_MATCH;
   }
 
   @Nullable
