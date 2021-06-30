@@ -267,4 +267,17 @@ public class UnnecessaryLambdaTest {
         .expectUnchanged()
         .doTest();
   }
+
+  @Test
+  public void variable_notAFunctionalInterface() {
+    testHelper
+        .addInputLines(
+            "Test.java",
+            "import java.util.function.Function;",
+            "class Test {",
+            "  private static final Object F = (Function<String, String>) x -> \"hello \" + x;",
+            "}")
+        .expectUnchanged()
+        .doTest();
+  }
 }

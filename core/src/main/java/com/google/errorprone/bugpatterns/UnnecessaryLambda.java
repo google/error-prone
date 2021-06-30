@@ -58,6 +58,7 @@ import com.sun.source.util.TreePathScanner;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.TypeTag;
+import com.sun.tools.javac.code.Types.FunctionDescriptorLookupError;
 import java.util.Objects;
 import java.util.function.Predicate;
 import javax.lang.model.element.ElementKind;
@@ -176,7 +177,12 @@ public class UnnecessaryLambda extends BugChecker
    * {#link Predicate#add}.
    */
   boolean canFix(Tree type, Symbol sym, VisitorState state) {
-    Symbol descriptor = state.getTypes().findDescriptorSymbol(getType(type).asElement());
+    Symbol descriptor;
+    try {
+      descriptor = state.getTypes().findDescriptorSymbol(getType(type).asElement());
+    } catch (FunctionDescriptorLookupError e) {
+      return false;
+    }
     if (!PACKAGES_TO_FIX.contains(descriptor.packge().getQualifiedName().toString())) {
       return false;
     }
