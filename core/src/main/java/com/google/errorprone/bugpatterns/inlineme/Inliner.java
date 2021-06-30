@@ -179,7 +179,7 @@ public final class Inliner extends BugChecker
     if (symbol.isVarArgs()) {
       // If we're calling a varargs method, its inlining *should* have the varargs parameter in a
       // reasonable position. If there are are 0 arguments, we'll need to do more surgery
-      if (callingVars.size() - 1 == varNames.size()) {
+      if (callingVars.size() == varNames.size() - 1) {
         varargsWithEmptyArguments = true;
       } else {
         ImmutableList<String> nonvarargs = callingVars.subList(0, varNames.size() - 1);
@@ -233,13 +233,16 @@ public final class Inliner extends BugChecker
       // Ex: foo(int a, int... others) -> this.bar(a, others)
       // If caller passes 0 args in the varargs position, we want to remove the preceding comma to
       // make this.bar(a) (as opposed to "this.bar(a, )"
-      String capturePrefixForVarargs =
-          (varargsWithEmptyArguments && i == varNames.size() - 1) ? "(,\\s*)?" : "";
+      boolean terminalVarargsReplacement = varargsWithEmptyArguments && i == varNames.size() - 1;
+      String capturePrefixForVarargs = terminalVarargsReplacement ? "(?:,\\s*)?" : "";
       // We want to avoid replacing a method invocation with the same name as the method.
-      String findArgName =
-          "\\b" + capturePrefixForVarargs + Pattern.quote(varNames.get(i)) + "\\b([^(])";
-      replacement =
-          replacement.replaceAll(findArgName, Matcher.quoteReplacement(callingVars.get(i)) + "$1");
+      Pattern extractArgAndNextToken =
+          Pattern.compile(
+              "\\b" + capturePrefixForVarargs + Pattern.quote(varNames.get(i)) + "\\b([^(])");
+      String replacementResult =
+          Matcher.quoteReplacement(terminalVarargsReplacement ? "" : callingVars.get(i)) + "$1";
+      Matcher matcher = extractArgAndNextToken.matcher(replacement);
+      replacement = matcher.replaceAll(replacementResult);
     }
 
     builder.replace(replacementStart, replacementEnd, replacement);

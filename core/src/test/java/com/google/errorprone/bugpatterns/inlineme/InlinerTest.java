@@ -852,6 +852,42 @@ public class InlinerTest {
   }
 
   @Test
+  public void testVarargsWithPrecedingElements() {
+    refactoringTestHelper
+        .addInputLines(
+            "Client.java",
+            "import com.google.errorprone.annotations.InlineMe;",
+            "public final class Client {",
+            "  @Deprecated",
+            "  @InlineMe(replacement = \"this.after(first, inputs)\")",
+            "  public void before(int first, int... inputs) {",
+            "    after(first, inputs);",
+            "  }",
+            "  public void after(int first, int... inputs) {}",
+            "}")
+        .expectUnchanged()
+        .addInputLines(
+            "Caller.java",
+            "public final class Caller {",
+            "  public void doTest() {",
+            "    Client client = new Client();",
+            "    client.before(1);",
+            "    client.before(1, 2, 3);",
+            "  }",
+            "}")
+        .addOutputLines(
+            "out/Caller.java",
+            "public final class Caller {",
+            "  public void doTest() {",
+            "    Client client = new Client();",
+            "    client.after(1);",
+            "    client.after(1, 2, 3);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void testReplaceWithJustParameter() {
     refactoringTestHelper
         .allowBreakingChanges()
