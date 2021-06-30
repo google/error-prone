@@ -22,6 +22,8 @@ import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.bugpatterns.flogger.FloggerHelpers.inferFormatSpecifier;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.constValue;
+import static com.google.errorprone.util.ASTHelpers.getType;
+import static com.google.errorprone.util.ASTHelpers.isSameType;
 import static java.util.stream.Collectors.joining;
 
 import com.google.errorprone.BugPattern;
@@ -83,7 +85,11 @@ public class FloggerStringConcatenation extends BugChecker implements MethodInvo
 
           @Override
           public Void visitParenthesized(ParenthesizedTree node, Void unused) {
-            node.getExpression().accept(this, null);
+            if (isSameType(getType(node), state.getSymtab().stringType, state)) {
+              node.getExpression().accept(this, null);
+            } else {
+              pieces.add(node.getExpression());
+            }
             return null;
           }
 

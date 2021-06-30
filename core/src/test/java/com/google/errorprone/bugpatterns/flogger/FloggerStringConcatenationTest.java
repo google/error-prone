@@ -69,4 +69,28 @@ public class FloggerStringConcatenationTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void minus() {
+    testHelper
+        .addInputLines(
+            "in/Test.java",
+            "import com.google.common.flogger.FluentLogger;",
+            "class Test {",
+            "  private static final FluentLogger logger = FluentLogger.forEnclosingClass();",
+            "  public void method(String world, int i) {",
+            "    logger.atInfo().log(\"hello \" + world + \" \" + (i - 1));",
+            "  }",
+            "}")
+        .addOutputLines(
+            "out/Test.java",
+            "import com.google.common.flogger.FluentLogger;",
+            "class Test {",
+            "  private static final FluentLogger logger = FluentLogger.forEnclosingClass();",
+            "  public void method(String world, int i) {",
+            "    logger.atInfo().log(\"hello %s %d\", world, i - 1);",
+            "  }",
+            "}")
+        .doTest();
+  }
 }
