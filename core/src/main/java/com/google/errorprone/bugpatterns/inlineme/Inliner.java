@@ -16,6 +16,7 @@
 
 package com.google.errorprone.bugpatterns.inlineme;
 
+import static com.google.common.base.Preconditions.checkState;
 import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.common.collect.MoreCollectors.onlyElement;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
@@ -95,16 +96,24 @@ public final class Inliner extends BugChecker
 
   @Override
   public Description matchNewClass(NewClassTree tree, VisitorState state) {
+    MethodSymbol symbol = getSymbol(tree);
+    if (!hasAnnotation(symbol, INLINE_ME, state)) {
+      return Description.NO_MATCH;
+    }
     ImmutableList<String> callingVars =
         tree.getArguments().stream().map(state::getSourceForNode).collect(toImmutableList());
 
     String receiverString = "new " + state.getSourceForNode(tree.getIdentifier());
 
-    return match(tree, getSymbol(tree), callingVars, receiverString, null, state);
+    return match(tree, symbol, callingVars, receiverString, null, state);
   }
 
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
+    MethodSymbol symbol = getSymbol(tree);
+    if (!hasAnnotation(symbol, INLINE_ME, state)) {
+      return Description.NO_MATCH;
+    }
     ImmutableList<String> callingVars =
         tree.getArguments().stream().map(state::getSourceForNode).collect(toImmutableList());
 
@@ -127,7 +136,7 @@ public final class Inliner extends BugChecker
       }
     }
 
-    return match(tree, getSymbol(tree), callingVars, receiverString, receiver, state);
+    return match(tree, symbol, callingVars, receiverString, receiver, state);
   }
 
   private Description match(
@@ -137,9 +146,7 @@ public final class Inliner extends BugChecker
       String receiverString,
       ExpressionTree receiver,
       VisitorState state) {
-    if (!hasAnnotation(symbol, INLINE_ME, state)) {
-      return Description.NO_MATCH;
-    }
+    checkState(hasAnnotation(symbol, INLINE_ME, state));
 
     Api api = Api.create(symbol, state);
     if (!matchesApiPrefixes(api)) {
