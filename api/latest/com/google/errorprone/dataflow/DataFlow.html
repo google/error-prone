@@ -108,7 +108,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <tbody>
 <tr class="alt-color">
 <td class="col-first"><code>static interface&nbsp;</code></td>
-<th class="col-second" scope="row"><code><span class="member-name-link"><a href="DataFlow.Result.html" title="interface in com.google.errorprone.dataflow">DataFlow.Result</a>&lt;<a href="DataFlow.Result.html" title="type parameter in DataFlow.Result">A</a> extends org.checkerframework.shaded.dataflow.analysis.AbstractValue&lt;<a href="DataFlow.Result.html" title="type parameter in DataFlow.Result">A</a>&gt;,&#8203;<a href="DataFlow.Result.html" title="type parameter in DataFlow.Result">S</a> extends org.checkerframework.shaded.dataflow.analysis.Store&lt;<a href="DataFlow.Result.html" title="type parameter in DataFlow.Result">S</a>&gt;,&#8203;<a href="DataFlow.Result.html" title="type parameter in DataFlow.Result">T</a> extends org.checkerframework.shaded.dataflow.analysis.TransferFunction&lt;<a href="DataFlow.Result.html" title="type parameter in DataFlow.Result">A</a>,&#8203;<a href="DataFlow.Result.html" title="type parameter in DataFlow.Result">S</a>&gt;&gt;</span></code></th>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="DataFlow.Result.html" title="interface in com.google.errorprone.dataflow">DataFlow.Result</a>&lt;<a href="DataFlow.Result.html" title="type parameter in DataFlow.Result">A</a> extends org.checkerframework.errorprone.dataflow.analysis.AbstractValue&lt;<a href="DataFlow.Result.html" title="type parameter in DataFlow.Result">A</a>&gt;,&#8203;<a href="DataFlow.Result.html" title="type parameter in DataFlow.Result">S</a> extends org.checkerframework.errorprone.dataflow.analysis.Store&lt;<a href="DataFlow.Result.html" title="type parameter in DataFlow.Result">S</a>&gt;,&#8203;<a href="DataFlow.Result.html" title="type parameter in DataFlow.Result">T</a> extends org.checkerframework.errorprone.dataflow.analysis.TransferFunction&lt;<a href="DataFlow.Result.html" title="type parameter in DataFlow.Result">A</a>,&#8203;<a href="DataFlow.Result.html" title="type parameter in DataFlow.Result">S</a>&gt;&gt;</span></code></th>
 <td class="col-last">
 <div class="block">A pair of Analysis and ControlFlowGraph.</div>
 </td>
@@ -135,9 +135,9 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 </thead>
 <tbody>
 <tr class="alt-color" id="i0">
-<td class="col-first"><code>static &lt;A extends org.checkerframework.shaded.dataflow.analysis.AbstractValue&lt;A&gt;,&#8203;
-S extends org.checkerframework.shaded.dataflow.analysis.Store&lt;S&gt;,&#8203;
-T extends org.checkerframework.shaded.dataflow.analysis.ForwardTransferFunction&lt;A,&#8203;
+<td class="col-first"><code>static &lt;A extends org.checkerframework.errorprone.dataflow.analysis.AbstractValue&lt;A&gt;,&#8203;
+S extends org.checkerframework.errorprone.dataflow.analysis.Store&lt;S&gt;,&#8203;
+T extends org.checkerframework.errorprone.dataflow.analysis.ForwardTransferFunction&lt;A,&#8203;
 S&gt;&gt;<br>A</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#expressionDataflow(com.sun.source.util.TreePath,com.sun.tools.javac.util.Context,T)">expressionDataflow</a></span>&#8203;(com.sun.source.util.TreePath&nbsp;exprPath,
 com.sun.tools.javac.util.Context&nbsp;context,
@@ -167,11 +167,11 @@ T&nbsp;transfer)</code></th>
 <ul class="member-list">
 <li>
 <section class="detail" id="expressionDataflow(com.sun.source.util.TreePath,com.sun.tools.javac.util.Context,T)">
-<h3 id="expressionDataflow(com.sun.source.util.TreePath,com.sun.tools.javac.util.Context,org.checkerframework.shaded.dataflow.analysis.ForwardTransferFunction)">expressionDataflow</h3>
+<h3 id="expressionDataflow(com.sun.source.util.TreePath,com.sun.tools.javac.util.Context,org.checkerframework.errorprone.dataflow.analysis.ForwardTransferFunction)">expressionDataflow</h3>
 <div class="member-signature"><span class="annotations"><a href="https://docs.oracle.com/javase/8/docs/api/javax/annotation/Nullable.html" title="class or interface in javax.annotation" class="external-link">@Nullable</a>
-</span><span class="modifiers">public static</span>&nbsp;<span class="type-parameters-long">&lt;A extends org.checkerframework.shaded.dataflow.analysis.AbstractValue&lt;A&gt;,&#8203;
-S extends org.checkerframework.shaded.dataflow.analysis.Store&lt;S&gt;,&#8203;
-T extends org.checkerframework.shaded.dataflow.analysis.ForwardTransferFunction&lt;A,&#8203;
+</span><span class="modifiers">public static</span>&nbsp;<span class="type-parameters-long">&lt;A extends org.checkerframework.errorprone.dataflow.analysis.AbstractValue&lt;A&gt;,&#8203;
+S extends org.checkerframework.errorprone.dataflow.analysis.Store&lt;S&gt;,&#8203;
+T extends org.checkerframework.errorprone.dataflow.analysis.ForwardTransferFunction&lt;A,&#8203;
 S&gt;&gt;</span>
 <span class="return-type">A</span>&nbsp;<span class="member-name">expressionDataflow</span>&#8203;(<span class="parameters">com.sun.source.util.TreePath&nbsp;exprPath,
 com.sun.tools.javac.util.Context&nbsp;context,
