@@ -82,6 +82,9 @@ public class OptionalNotPresent extends BugChecker implements MethodInvocationTr
     }
     TreeScannerInside treeScannerInside = new TreeScannerInside();
     ExpressionTree optionalVar = ASTHelpers.getReceiver(methodInvocationTree);
+    if (optionalVar == null) {
+      return NO_MATCH;
+    }
     treeScannerInside.scan(ifTree.getThenStatement(), optionalVar);
     if (treeScannerInside.hasGet && !treeScannerInside.hasAssignment) {
       return describeMatch(methodInvocationTree);
