@@ -31,6 +31,7 @@ import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.VariableTreeMatcher;
 import com.google.errorprone.matchers.Description;
 import com.sun.source.doctree.DocTree.Kind;
+import com.sun.source.doctree.LinkTree;
 import com.sun.source.doctree.LiteralTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.MethodTree;
@@ -43,17 +44,17 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.annotation.Nullable;
 
-/** Flags code blocks which haven't been recognised by the Javadoc parser. */
+/** Flags tags which haven't been recognised by the Javadoc parser. */
 @BugPattern(
-    name = "UnrecognisedCodeBlock",
+    name = "UnrecognisedJavadocTag",
     summary =
-        "This {@code } tag wasn't recognised by the parser. Is it malformed somehow, perhaps with"
+        "This Javadoc tag wasn't recognised by the parser. Is it malformed somehow, perhaps with"
             + " mismatched braces?",
     severity = WARNING,
     documentSuppression = false)
-public final class UnrecognisedCodeBlock extends BugChecker
+public final class UnrecognisedJavadocTag extends BugChecker
     implements ClassTreeMatcher, MethodTreeMatcher, VariableTreeMatcher {
-  private static final Pattern CODE_TAG = Pattern.compile("\\{@code");
+  private static final Pattern TAG = Pattern.compile("\\{@(code|link)");
 
   @Override
   public Description matchClass(ClassTree classTree, VisitorState state) {
@@ -74,11 +75,10 @@ public final class UnrecognisedCodeBlock extends BugChecker
     if (path == null) {
       return NO_MATCH;
     }
-    ImmutableSet<Integer> recognisedCodeTags = findRecognisedCodeTags(path, state);
-    ImmutableSet<Integer> codeTagStrings =
-        findCodeTags(((DCDocComment) path.getDocComment()).comment);
+    ImmutableSet<Integer> recognisedTags = findRecognisedTags(path, state);
+    ImmutableSet<Integer> tagStrings = findTags(((DCDocComment) path.getDocComment()).comment);
 
-    for (int pos : Sets.difference(codeTagStrings, recognisedCodeTags)) {
+    for (int pos : Sets.difference(tagStrings, recognisedTags)) {
       state.reportMatch(
           buildDescription(getDiagnosticPosition(pos, path.getTreePath().getLeaf())).build());
     }
@@ -86,26 +86,32 @@ public final class UnrecognisedCodeBlock extends BugChecker
     return NO_MATCH;
   }
 
-  private ImmutableSet<Integer> findRecognisedCodeTags(DocTreePath path, VisitorState state) {
-    ImmutableSet.Builder<Integer> codeTags = ImmutableSet.builder();
+  private ImmutableSet<Integer> findRecognisedTags(DocTreePath path, VisitorState state) {
+    ImmutableSet.Builder<Integer> tags = ImmutableSet.builder();
     new DocTreePathScanner<Void, Void>() {
+      @Override
+      public Void visitLink(LinkTree linkTree, Void unused) {
+        tags.add(getStartPosition(linkTree, state));
+        return super.visitLink(linkTree, null);
+      }
+
       @Override
       public Void visitLiteral(LiteralTree literalTree, Void unused) {
         if (literalTree.getKind().equals(Kind.CODE)) {
-          codeTags.add(getStartPosition(literalTree, state));
+          tags.add(getStartPosition(literalTree, state));
         }
         return super.visitLiteral(literalTree, null);
       }
     }.scan(path, null);
-    return codeTags.build();
+    return tags.build();
   }
 
-  private static ImmutableSet<Integer> findCodeTags(Comment comment) {
-    Matcher matcher = CODE_TAG.matcher(comment.getText());
-    ImmutableSet.Builder<Integer> codeTags = ImmutableSet.builder();
+  private static ImmutableSet<Integer> findTags(Comment comment) {
+    Matcher matcher = TAG.matcher(comment.getText());
+    ImmutableSet.Builder<Integer> tags = ImmutableSet.builder();
     while (matcher.find()) {
-      codeTags.add(comment.getSourcePos(matcher.start()));
+      tags.add(comment.getSourcePos(matcher.start()));
     }
-    return codeTags.build();
+    return tags.build();
   }
 }

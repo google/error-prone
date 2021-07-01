@@ -1,7 +1,13 @@
-This `{@code }` tag isn't being recognised by the Javadoc parser. This can
-happen very easily if the tag is malformed in some way.
+This Javadoc tag isn't being recognised by the Javadoc parser. This can happen
+very easily if the tag is malformed in some way.
 
-Common cases include:
+Common cases for `{@link` tags include:
+
+*   Mismatched end braces, for example `{@link Foo)`
+*   Totally malformed links, for example `{@link #Optional.empty()}` (should be
+    `{@link Optional#empty()}`)
+
+Common cases include, for `{@code` tags:
 
 *   The tag not being terminated correctly, i.e. via a parenthesis (`{@code
     foo)`)
@@ -38,5 +44,5 @@ interface Frobnicator {}
 
 ## Suppression
 
-Suppress by applying `@SuppressWarnings("UnrecognisedCodeBlock")` to the element
-being documented.
+Suppress by applying `@SuppressWarnings("UnrecognisedJavadocTag")` to the
+element being documented.

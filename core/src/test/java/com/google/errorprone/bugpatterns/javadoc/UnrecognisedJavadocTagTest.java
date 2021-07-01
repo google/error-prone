@@ -21,11 +21,11 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** Tests for {@link UnrecognisedCodeBlock}. */
+/** Tests for {@link UnrecognisedJavadocTag}. */
 @RunWith(JUnit4.class)
-public final class UnrecognisedCodeBlockTest {
+public final class UnrecognisedJavadocTagTest {
   private final CompilationTestHelper helper =
-      CompilationTestHelper.newInstance(UnrecognisedCodeBlock.class, getClass());
+      CompilationTestHelper.newInstance(UnrecognisedJavadocTag.class, getClass());
 
   @Test
   public void positive() {
@@ -51,6 +51,31 @@ public final class UnrecognisedCodeBlockTest {
             " * <pre>{@code",
             " *  foo() {}",
             " * }</pre>",
+            " */",
+            "class Test {}")
+        .doTest();
+  }
+
+  @Test
+  public void link() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            "/**",
+            " * // BUG: Diagnostic contains:",
+            " * {@link Test)",
+            " */",
+            "class Test {}")
+        .doTest();
+  }
+
+  @Test
+  public void correctLink() {
+    helper
+        .addSourceLines(
+            "Test.java", //
+            "/**",
+            " * {@link Test}, {@link Bar}",
             " */",
             "class Test {}")
         .doTest();
