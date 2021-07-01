@@ -31,11 +31,11 @@ import com.sun.tools.javac.tree.JCTree.JCVariableDecl;
 import com.sun.tools.javac.util.Context;
 import java.io.Serializable;
 import javax.lang.model.element.ElementKind;
-import org.checkerframework.shaded.dataflow.analysis.Analysis;
-import org.checkerframework.shaded.dataflow.analysis.ForwardAnalysisImpl;
-import org.checkerframework.shaded.dataflow.cfg.ControlFlowGraph;
-import org.checkerframework.shaded.dataflow.cfg.UnderlyingAST;
-import org.checkerframework.shaded.dataflow.cfg.builder.CFGBuilder;
+import org.checkerframework.errorprone.dataflow.analysis.Analysis;
+import org.checkerframework.errorprone.dataflow.analysis.ForwardAnalysisImpl;
+import org.checkerframework.errorprone.dataflow.cfg.ControlFlowGraph;
+import org.checkerframework.errorprone.dataflow.cfg.UnderlyingAST;
+import org.checkerframework.errorprone.dataflow.cfg.builder.CFGBuilder;
 
 /**
  * An interface to the "trusting" nullness analysis. This variant "trusts" {@code Nullable}
