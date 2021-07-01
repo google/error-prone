@@ -1159,6 +1159,40 @@ public class InlinerTest {
         .doTest();
   }
 
+  @Test
+  public void testTrailingSemicolon() {
+    refactoringTestHelper
+        .addInputLines(
+            "Client.java",
+            "import com.google.errorprone.annotations.InlineMe;",
+            "public final class Client {",
+            "  @InlineMe(replacement = \"this.after(/* foo= */ isAdmin);;;;\")",
+            "  @Deprecated",
+            "  public boolean before(boolean isAdmin) {",
+            "    return after(/* foo= */ isAdmin);",
+            "  }",
+            "  public boolean after(boolean isAdmin) { return isAdmin; }",
+            "}")
+        .expectUnchanged()
+        .addInputLines(
+            "Caller.java",
+            "public final class Caller {",
+            "  public void doTest() {",
+            "    Client client = new Client();",
+            "    boolean x = (client.before(false) || true);",
+            "  }",
+            "}")
+        .addOutputLines(
+            "out/Caller.java",
+            "public final class Caller {",
+            "  public void doTest() {",
+            "    Client client = new Client();",
+            "    boolean x = (client.after(/* false = */ false) || true);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
   private BugCheckerRefactoringTestHelper buildBugCheckerWithPrefixFlag(String prefix) {
     return BugCheckerRefactoringTestHelper.newInstance(Inliner.class, getClass())
         .setArgs("-XepOpt:" + PREFIX_FLAG + "=" + prefix);

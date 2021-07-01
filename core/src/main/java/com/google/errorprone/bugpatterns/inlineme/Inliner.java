@@ -28,6 +28,7 @@ import static com.google.errorprone.util.MoreAnnotations.getValue;
 import static com.google.errorprone.util.SideEffectAnalysis.hasSideEffect;
 
 import com.google.auto.value.AutoValue;
+import com.google.common.base.CharMatcher;
 import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
 import com.google.common.base.Strings;
@@ -193,7 +194,8 @@ public final class Inliner extends BugChecker
       }
     }
 
-    String replacement = asStringValue(getValue(inlineMe, "replacement").get()).get();
+    String replacement =
+        trimTrailingSemicolons(asStringValue(getValue(inlineMe, "replacement").get()).get());
     int replacementStart = ((DiagnosticPosition) tree).getStartPosition();
     int replacementEnd = state.getEndPosition(tree);
 
@@ -335,5 +337,11 @@ public final class Inliner extends BugChecker
       }
     }
     return false;
+  }
+
+  private static final CharMatcher SEMICOLON = CharMatcher.is(';');
+
+  private static String trimTrailingSemicolons(String s) {
+    return SEMICOLON.trimTrailingFrom(s);
   }
 }
