@@ -1099,8 +1099,8 @@ This method reference is unnecessary, and can be replaced with the variable itse
 __[UnnecessaryParentheses](bugpattern/UnnecessaryParentheses)__<br>
 These grouping parentheses are unnecessary; it is unlikely the code will be misinterpreted without them
 
-__[UnrecognisedCodeBlock](bugpattern/UnrecognisedCodeBlock)__<br>
-This {@code } tag wasn&#39;t recognised by the parser. Is it malformed somehow, perhaps with mismatched braces?
+__[UnrecognisedJavadocTag](bugpattern/UnrecognisedJavadocTag)__<br>
+This Javadoc tag wasn&#39;t recognised by the parser. Is it malformed somehow, perhaps with mismatched braces?
 
 __[UnsafeFinalization](bugpattern/UnsafeFinalization)__<br>
 Finalizer may run before native code finishes execution
