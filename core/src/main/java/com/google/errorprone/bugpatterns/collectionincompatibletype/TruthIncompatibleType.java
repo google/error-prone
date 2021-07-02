@@ -76,7 +76,14 @@ public class TruthIncompatibleType extends BugChecker implements MethodInvocatio
               .onDescendantOf("com.google.common.truth.StandardSubjectBuilder")
               .named("that"));
 
-  private final Matcher<ExpressionTree> isEqualTo;
+  private static final Matcher<ExpressionTree> IS_EQUAL_TO =
+      anyOf(
+          instanceMethod()
+              .onDescendantOf("com.google.common.truth.Subject")
+              .namedAnyOf("isEqualTo", "isNotEqualTo"),
+          instanceMethod()
+              .onDescendantOf("com.google.common.truth.extensions.proto.ProtoFluentAssertion")
+              .namedAnyOf("isEqualTo", "isNotEqualTo"));
 
   private static final Matcher<ExpressionTree> FLUENT_PROTO_CHAIN =
       anyOf(
@@ -142,21 +149,7 @@ public class TruthIncompatibleType extends BugChecker implements MethodInvocatio
   private final TypeCompatibilityUtils typeCompatibilityUtils;
 
   public TruthIncompatibleType(ErrorProneFlags flags) {
-    boolean handleProtoTruth = flags.getBoolean("TruthIncompatibleType:ProtoTruth").orElse(true);
-
     this.typeCompatibilityUtils = TypeCompatibilityUtils.fromFlags(flags);
-    this.isEqualTo =
-        handleProtoTruth
-            ? anyOf(
-                instanceMethod()
-                    .onDescendantOf("com.google.common.truth.Subject")
-                    .namedAnyOf("isEqualTo", "isNotEqualTo"),
-                instanceMethod()
-                    .onDescendantOf("com.google.common.truth.extensions.proto.ProtoFluentAssertion")
-                    .namedAnyOf("isEqualTo", "isNotEqualTo"))
-            : instanceMethod()
-                .onDescendantOf("com.google.common.truth.Subject")
-                .namedAnyOf("isEqualTo", "isNotEqualTo");
   }
 
   @Override
@@ -175,7 +168,7 @@ public class TruthIncompatibleType extends BugChecker implements MethodInvocatio
   }
 
   private Stream<Description> matchEquality(MethodInvocationTree tree, VisitorState state) {
-    if (!isEqualTo.matches(tree, state)) {
+    if (!IS_EQUAL_TO.matches(tree, state)) {
       return Stream.empty();
     }
     ExpressionTree receiver = getReceiver(tree);
