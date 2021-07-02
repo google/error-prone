@@ -16,7 +16,7 @@ if (o.isEmpty()) {
 }
 ```
 
-This cases are almost definitely bugs, the intent may have been to invert the
+These cases are almost definitely bugs; the intent may have been to invert the
 test:
 
 ```java
