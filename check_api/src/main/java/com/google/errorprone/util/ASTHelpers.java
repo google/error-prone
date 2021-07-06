@@ -576,7 +576,7 @@ public class ASTHelpers {
                 || current instanceof MemberSelectTree
                 || current instanceof MemberReferenceTree) {
               current = getReceiver(current);
-              return current;
+              return current == null ? endOfData() : current;
             }
             return endOfData();
           }
