@@ -1,7 +1,8 @@
 ---
 title: IgnoredPureGetter
 summary: Getters on AutoValue classes and protos are side-effect free, so there is
-  no point in calling them if the return value is ignored.
+  no point in calling them if the return value is ignored. While there are no side
+  effects from the getter, the receiver may have side effects.
 layout: bugpattern
 tags: ''
 severity: WARNING

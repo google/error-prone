@@ -707,7 +707,7 @@ __[IdentityHashMapUsage](bugpattern/IdentityHashMapUsage)__<br>
 IdentityHashMap usage shouldn&#39;t be intermingled with Map
 
 __[IgnoredPureGetter](bugpattern/IgnoredPureGetter)__<br>
-Getters on AutoValue classes and protos are side-effect free, so there is no point in calling them if the return value is ignored.
+Getters on AutoValue classes and protos are side-effect free, so there is no point in calling them if the return value is ignored. While there are no side effects from the getter, the receiver may have side effects.
 
 __[ImmutableAnnotationChecker](bugpattern/ImmutableAnnotationChecker)__<br>
 Annotations should always be immutable
