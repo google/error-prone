@@ -39,7 +39,8 @@ import com.sun.tools.javac.code.Symbol.MethodSymbol;
     severity = WARNING,
     summary =
         "Getters on AutoValue classes and protos are side-effect free, so there is no point in"
-            + " calling them if the return value is ignored.")
+            + " calling them if the return value is ignored. While there are no side effects from"
+            + " the getter, the receiver may have side effects.")
 public final class IgnoredPureGetter extends AbstractReturnValueIgnored {
   private static final String MESSAGE_LITE = "com.google.protobuf.MessageLite";
 
@@ -57,14 +58,14 @@ public final class IgnoredPureGetter extends AbstractReturnValueIgnored {
         buildDescription(methodInvocationTree)
             .addFix(
                 SuggestedFix.builder()
-                    .setShortDescription("Delete entire statement")
+                    .setShortDescription("Remove with any side effects from the receiver")
                     .delete(methodInvocationTree)
                     .build());
     ExpressionTree receiver = getReceiver(methodInvocationTree);
     if (receiver instanceof MethodInvocationTree) {
       builder.addFix(
           SuggestedFix.builder()
-              .setShortDescription("Delete getter only")
+              .setShortDescription("Remove but keep side effects from the receiver")
               .replace(methodInvocationTree, state.getSourceForNode(receiver))
               .build());
     }
