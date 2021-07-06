@@ -22,14 +22,14 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** Unit tests for {@link AssignmentToMock}. */
+/** Unit tests for {@link UnnecessaryAssignment}. */
 @RunWith(JUnit4.class)
-public final class AssignmentToMockTest {
+public final class UnnecessaryAssignmentTest {
   private final CompilationTestHelper testHelper =
-      CompilationTestHelper.newInstance(AssignmentToMock.class, getClass());
+      CompilationTestHelper.newInstance(UnnecessaryAssignment.class, getClass());
 
   private final BugCheckerRefactoringTestHelper refactoringHelper =
-      BugCheckerRefactoringTestHelper.newInstance(AssignmentToMock.class, getClass());
+      BugCheckerRefactoringTestHelper.newInstance(UnnecessaryAssignment.class, getClass());
 
   @Test
   public void positive() {
@@ -144,6 +144,67 @@ public final class AssignmentToMockTest {
             "@RunWith(MockitoJUnitRunner.class)",
             "public class Test {",
             "  @Mock Object mockObject;",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void positiveOnTestParameter() {
+    testHelper
+        .addSourceLines(
+            "Test.java", //
+            "import com.google.testing.junit.testparameterinjector.TestParameter;",
+            "class Test {",
+            "  // BUG: Diagnostic contains: @TestParameter",
+            "  @TestParameter boolean myFoo = false;",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void optionalInject_notFlagged() {
+    testHelper
+        .addSourceLines(
+            "Test.java", //
+            "import com.google.inject.Inject;",
+            "class Test {",
+            "  @Inject(optional = true) boolean myFoo = false;",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void fixForTestParameter_deletesAssignment() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java", //
+            "import com.google.testing.junit.testparameterinjector.TestParameter;",
+            "class Test {",
+            "  @TestParameter boolean myFoo = false;",
+            "}")
+        .addOutputLines(
+            "Test.java", //
+            "import com.google.testing.junit.testparameterinjector.TestParameter;",
+            "class Test {",
+            "  @TestParameter boolean myFoo;",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void fixForTestParameter_ifFinal_deletesAnnotation() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java", //
+            "import com.google.testing.junit.testparameterinjector.TestParameter;",
+            "class Test {",
+            "  @TestParameter final boolean myFoo = false;",
+            "}")
+        .addOutputLines(
+            "Test.java", //
+            "import com.google.testing.junit.testparameterinjector.TestParameter;",
+            "class Test {",
+            "  final boolean myFoo = false;",
             "}")
         .doTest();
   }

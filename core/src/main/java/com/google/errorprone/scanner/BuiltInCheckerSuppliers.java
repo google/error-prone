@@ -33,7 +33,6 @@ import com.google.errorprone.bugpatterns.ArraysAsListPrimitiveArray;
 import com.google.errorprone.bugpatterns.AssertFalse;
 import com.google.errorprone.bugpatterns.AssertThrowsMultipleStatements;
 import com.google.errorprone.bugpatterns.AssertionFailureIgnored;
-import com.google.errorprone.bugpatterns.AssignmentToMock;
 import com.google.errorprone.bugpatterns.AsyncCallableReturnsNull;
 import com.google.errorprone.bugpatterns.AsyncFunctionReturnsNull;
 import com.google.errorprone.bugpatterns.AutoValueFinalMethods;
@@ -346,6 +345,7 @@ import com.google.errorprone.bugpatterns.UngroupedOverloads;
 import com.google.errorprone.bugpatterns.UnnecessarilyFullyQualified;
 import com.google.errorprone.bugpatterns.UnnecessarilyVisible;
 import com.google.errorprone.bugpatterns.UnnecessaryAnonymousClass;
+import com.google.errorprone.bugpatterns.UnnecessaryAssignment;
 import com.google.errorprone.bugpatterns.UnnecessaryBoxedAssignment;
 import com.google.errorprone.bugpatterns.UnnecessaryBoxedVariable;
 import com.google.errorprone.bugpatterns.UnnecessaryDefaultInEnumSwitch;
@@ -736,7 +736,6 @@ public class BuiltInCheckerSuppliers {
           AssertEqualsArgumentOrderChecker.class,
           AssertThrowsMultipleStatements.class,
           AssertionFailureIgnored.class,
-          AssignmentToMock.class,
           AssistedInjectAndInjectOnSameConstructor.class,
           AutoValueFinalMethods.class,
           AutoValueImmutableFields.class,
@@ -924,6 +923,7 @@ public class BuiltInCheckerSuppliers {
           URLEqualsHashCode.class,
           UndefinedEquals.class,
           UnescapedEntity.class,
+          UnnecessaryAssignment.class,
           UnnecessaryLambda.class,
           UnnecessaryMethodInvocationMatcher.class,
           UnnecessaryMethodReference.class,
