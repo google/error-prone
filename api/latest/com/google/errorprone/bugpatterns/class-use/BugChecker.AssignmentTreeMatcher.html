@@ -94,13 +94,6 @@ loadScripts(document, 'script');</script>
 <tbody>
 <tr class="alt-color">
 <td class="col-first"><code>class&nbsp;</code></td>
-<th class="col-second" scope="row"><code><span class="member-name-link"><a href="../AssignmentToMock.html" title="class in com.google.errorprone.bugpatterns">AssignmentToMock</a></span></code></th>
-<td class="col-last">
-<div class="block">Discourage manual initialization or assignment to fields annotated with <code>@Mock</code>.</div>
-</td>
-</tr>
-<tr class="row-color">
-<td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../CompileTimeConstantChecker.html" title="class in com.google.errorprone.bugpatterns">CompileTimeConstantChecker</a></span></code></th>
 <td class="col-last">
 <div class="block">Detects invocations of methods with a parameter annotated <code>@CompileTimeConstant</code> such that
@@ -109,46 +102,53 @@ loadScripts(document, 'script');</script>
  compile-time constant expression.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../IdentityHashMapUsage.html" title="class in com.google.errorprone.bugpatterns">IdentityHashMapUsage</a></span></code></th>
 <td class="col-last">
 <div class="block">A <a href="../BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>; see the associated <a href="../../BugPattern.html" title="annotation in com.google.errorprone"><code>BugPattern</code></a> annotation for details.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../IntLongMath.html" title="class in com.google.errorprone.bugpatterns">IntLongMath</a></span></code></th>
 <td class="col-last">
 <div class="block">A <a href="../BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>; see the associated <a href="../../BugPattern.html" title="annotation in com.google.errorprone"><code>BugPattern</code></a> annotation for details.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../NoAllocationChecker.html" title="class in com.google.errorprone.bugpatterns">NoAllocationChecker</a></span></code></th>
 <td class="col-last">
 <div class="block">Checks methods annotated with <code>@NoAllocation</code> to ensure they really do not allocate.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../NonAtomicVolatileUpdate.html" title="class in com.google.errorprone.bugpatterns">NonAtomicVolatileUpdate</a></span></code></th>
 <td class="col-last">
 <div class="block">Detects non-atomic updates to volatile variables.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../RedundantCondition.html" title="class in com.google.errorprone.bugpatterns">RedundantCondition</a></span></code></th>
 <td class="col-last">
 <div class="block">Checks if condition or assignment is always true.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../SelfAssignment.html" title="class in com.google.errorprone.bugpatterns">SelfAssignment</a></span></code></th>
 <td class="col-last">
 <div class="block">TODO(eaftan): Consider cases where the parent is not a statement or there is no parent?</div>
+</td>
+</tr>
+<tr class="row-color">
+<td class="col-first"><code>class&nbsp;</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="../UnnecessaryAssignment.html" title="class in com.google.errorprone.bugpatterns">UnnecessaryAssignment</a></span></code></th>
+<td class="col-last">
+<div class="block">Discourage manual initialization or assignment to fields annotated with framework annotations.</div>
 </td>
 </tr>
 <tr class="alt-color">

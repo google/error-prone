@@ -523,9 +523,6 @@ The lambda passed to assertThrows should contain exactly one statement
 __[AssertionFailureIgnored](bugpattern/AssertionFailureIgnored)__<br>
 This assertion throws an AssertionError if it fails, which will be caught by an enclosing try block.
 
-__[AssignmentToMock](bugpattern/AssignmentToMock)__<br>
-Fields annotated with @Mock should not be manually assigned to.
-
 __[AssistedInjectAndInjectOnSameConstructor](bugpattern/AssistedInjectAndInjectOnSameConstructor)__<br>
 @AssistedInject and @Inject cannot be used on the same constructor.
 
@@ -1086,6 +1083,9 @@ This type is not guaranteed to implement a useful #equals method.
 
 __[UnescapedEntity](bugpattern/UnescapedEntity)__<br>
 Javadoc is interpreted as HTML, so HTML entities such as &amp;, &lt;, &gt; must be escaped. If this finding seems wrong (e.g. is within a @code or @literal tag), check whether the tag could be malformed and not recognised by the compiler.
+
+__[UnnecessaryAssignment](bugpattern/UnnecessaryAssignment)__<br>
+Fields annotated with @Inject/@Mock should not be manually assigned to, as they should be initialized by a framework. Remove the assignment if a framework is being used, or the annotation if one isn&#39;t.
 
 __[UnnecessaryLambda](bugpattern/UnnecessaryLambda)__<br>
 Returning a lambda from a helper method or saving it in a constant is unnecessary; prefer to implement the functional interface method directly and use a method reference instead.
