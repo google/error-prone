@@ -516,4 +516,25 @@ public final class MixedMutabilityReturnTypeTest {
         .setFixChooser(FixChoosers.SECOND)
         .doTest();
   }
+
+  /** Regression test for b/192399621 */
+  @Test
+  public void biMap_doesNotCrash() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.common.collect.BiMap;",
+            "import com.google.common.collect.HashBiMap;",
+            "import com.google.common.collect.ImmutableBiMap;",
+            "class Test {",
+            "  // BUG: Diagnostic contains: MixedMutabilityReturnType",
+            "  public BiMap<String, String> foo() {",
+            "      if (hashCode() > 0) {",
+            "      return ImmutableBiMap.of();",
+            "    }",
+            "    return HashBiMap.create(5);",
+            "  }",
+            "}")
+        .doTest();
+  }
 }
