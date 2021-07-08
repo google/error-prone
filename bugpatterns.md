@@ -1126,9 +1126,6 @@ __[UseBinds](bugpattern/UseBinds)__<br>
 __[UseCorrectAssertInTests](bugpattern/UseCorrectAssertInTests)__<br>
 Java assert is used in test. For testing purposes Assert.* matchers should be used.
 
-__[UseTimeInScope](bugpattern/UseTimeInScope)__<br>
-Prefer to reuse time sources rather than creating new ones. Having multiple unsynchronized time sources in scope risks accidents.
-
 __[VariableNameSameAsType](bugpattern/VariableNameSameAsType)__<br>
 variableName and type with the same name would refer to the static field instead of the class
 
