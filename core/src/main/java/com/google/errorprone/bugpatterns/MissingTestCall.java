@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.common.collect.Iterables.getLast;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
@@ -30,17 +29,13 @@ import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.matchers.Description;
-import com.google.errorprone.matchers.JUnitMatchers;
 import com.google.errorprone.matchers.Matcher;
-import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
-import com.sun.source.tree.StatementTree;
-import com.sun.source.tree.Tree;
-import com.sun.source.util.TreePath;
+import com.sun.source.tree.ReturnTree;
 import com.sun.source.util.TreePathScanner;
 import com.sun.tools.javac.code.Symbol;
 import java.util.HashSet;
@@ -95,22 +90,22 @@ public final class MissingTestCall extends BugChecker implements MethodTreeMatch
 
   @Override
   public Description matchMethod(MethodTree tree, VisitorState state) {
-    if (!JUnitMatchers.TEST_CASE.matches(tree, state)) {
-      return NO_MATCH;
-    }
+    ImmutableSet<MethodPairing> pairings = PAIRINGS;
+
     Set<MethodPairing> required = new HashSet<>();
     Set<MethodPairing> called = new HashSet<>();
     new TreePathScanner<Void, Void>() {
       @Override
       public Void visitMethodInvocation(MethodInvocationTree node, Void unused) {
-        for (MethodPairing pairing : PAIRINGS) {
-          if (pairing.ifCall().matches(node, state)) {
+        for (MethodPairing pairing : pairings) {
+          VisitorState stateWithPath = state.withPath(getCurrentPath());
+          if (pairing.ifCall().matches(node, stateWithPath)) {
             if (!isField(getUltimateReceiver(node))
-                || isLastStatementInBlock(state.findPathToEnclosing(StatementTree.class))) {
+                && stateWithPath.findPathToEnclosing(ReturnTree.class) == null) {
               required.add(pairing);
             }
           }
-          if (pairing.mustCall().matches(node, state)) {
+          if (pairing.mustCall().matches(node, stateWithPath)) {
             called.add(pairing);
           }
         }
@@ -133,7 +128,6 @@ public final class MissingTestCall extends BugChecker implements MethodTreeMatch
   private static ExpressionTree getUltimateReceiver(ExpressionTree tree) {
     ExpressionTree receiver = getReceiver(tree);
     while (receiver instanceof MemberSelectTree || receiver instanceof MethodInvocationTree) {
-      tree = receiver;
       receiver = getReceiver(receiver);
     }
     return receiver;
@@ -145,17 +139,6 @@ public final class MissingTestCall extends BugChecker implements MethodTreeMatch
     }
     Symbol symbol = getSymbol(tree);
     return symbol != null && symbol.getKind() == ElementKind.FIELD;
-  }
-
-  private static boolean isLastStatementInBlock(@Nullable TreePath pathToStatement) {
-    if (pathToStatement == null) {
-      return false;
-    }
-    Tree parent = pathToStatement.getParentPath().getLeaf();
-    if (!(parent instanceof BlockTree)) {
-      return false;
-    }
-    return getLast(((BlockTree) parent).getStatements()).equals(pathToStatement.getLeaf());
   }
 
   @AutoValue
