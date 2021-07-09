@@ -36,6 +36,7 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
+import com.sun.source.tree.BinaryTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.LiteralTree;
 import com.sun.source.tree.MethodInvocationTree;
@@ -141,7 +142,7 @@ public class CanonicalDuration extends BugChecker implements MethodInvocationTre
     List<Number> constValues =
         allInvocationsInParentExpression.stream()
             .map(t -> getOnlyElement(t.getArguments()))
-            .map(arg -> (arg instanceof LiteralTree) ? arg : null)
+            .map(arg -> entirelyLiterals(arg) ? arg : null)
             .map(arg -> constValue(arg, Number.class))
             .collect(toList());
 
@@ -214,6 +215,20 @@ public class CanonicalDuration extends BugChecker implements MethodInvocationTre
       }
     }
     return NO_MATCH;
+  }
+
+  private static boolean entirelyLiterals(ExpressionTree arg) {
+    AtomicBoolean anyNonLiterals = new AtomicBoolean();
+    new TreeScanner<Void, Void>() {
+      @Override
+      public Void scan(Tree tree, Void unused) {
+        if (!(tree instanceof LiteralTree) && !(tree instanceof BinaryTree)) {
+          anyNonLiterals.set(true);
+        }
+        return super.scan(tree, null);
+      }
+    }.scan(arg, null);
+    return !anyNonLiterals.get();
   }
 
   private Description handleAllZeros(
