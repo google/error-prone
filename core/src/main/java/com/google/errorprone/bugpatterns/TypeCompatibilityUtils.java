@@ -82,7 +82,8 @@ public final class TypeCompatibilityUtils {
     }
 
     // If they're the exact same type, they are definitely compatible.
-    if (state.getTypes().isSameType(upperBound(leftType), upperBound(rightType))) {
+    Types types = state.getTypes();
+    if (types.isSameType(upperBound(leftType), upperBound(rightType))) {
       return TypeCompatibilityReport.compatible();
     }
 
@@ -103,7 +104,7 @@ public final class TypeCompatibilityUtils {
     // class Bar extends Super<String>
     // class Foo extends Super<Integer>
     // Bar and Foo would least-upper-bound to Super, and we compare String and Integer to each-other
-    Type commonSupertype = state.getTypes().lub(rightType, leftType);
+    Type commonSupertype = types.lub(types.erasure(rightType), types.erasure(leftType));
     // primitives, etc. can't have a common superclass.
     if (commonSupertype.getTag().equals(TypeTag.BOT)
         || commonSupertype.getTag().equals(TypeTag.ERROR)) {

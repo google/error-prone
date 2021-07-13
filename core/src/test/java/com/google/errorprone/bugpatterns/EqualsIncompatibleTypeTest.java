@@ -120,4 +120,35 @@ public class EqualsIncompatibleTypeTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void wildcards_whenIncompatible() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "",
+            "public class Test {",
+            "  public void test(Class<? extends Integer> a, Class<? extends String> b) {",
+            "    // BUG: Diagnostic contains:",
+            "    a.equals(b);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void unconstrainedWildcard_compatibleWithAnything() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;",
+            "",
+            "public class Test {",
+            "  public void test(java.lang.reflect.Method m, Class<?> c) {",
+            "    TestProtoMessage.class.equals(m.getParameterTypes()[0]);",
+            "    TestProtoMessage.class.equals(c);",
+            "  }",
+            "}")
+        .doTest();
+  }
 }
