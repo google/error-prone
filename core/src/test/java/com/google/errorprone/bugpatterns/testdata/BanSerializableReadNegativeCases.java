@@ -116,4 +116,17 @@ public class BanSerializableReadNegativeCases implements Serializable {
     c.readObject(ois);
     ois.defaultReadObject();
   }
+
+  private static class ObjectInputStreamIsExempt extends ObjectInputStream {
+    ObjectInputStreamIsExempt() throws IOException, ClassNotFoundException {
+      super();
+    }
+
+    @Override
+    public Object readObjectOverride() throws IOException, ClassNotFoundException {
+      // Calling readObjectOverride is banned by the checker; therefore, overrides can
+      // call other banned methods without added risk.
+      return super.readObject();
+    }
+  }
 }

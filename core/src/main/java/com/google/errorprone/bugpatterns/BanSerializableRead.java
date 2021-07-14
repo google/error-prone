@@ -25,6 +25,7 @@ import static com.google.errorprone.matchers.Matchers.isSubtypeOf;
 import static com.google.errorprone.matchers.Matchers.methodIsNamed;
 import static com.google.errorprone.matchers.Matchers.not;
 
+import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.VisitorState;
@@ -41,16 +42,41 @@ import com.sun.source.tree.MethodInvocationTree;
     severity = SeverityLevel.ERROR)
 public final class BanSerializableRead extends BugChecker implements MethodInvocationTreeMatcher {
 
-  // We allow the `readObject` method to be defined, since it defines what a value
-  // *would* deserialize to, *if* it would deserialize.
-  private static final Matcher<ExpressionTree> EXEMPT_IS_READOBJECT_METHOD =
-      allOf(
-          enclosingClass(isSubtypeOf("java.io.Serializable")),
-          enclosingMethod(methodIsNamed("readObject")));
+  private static final ImmutableSet<String> BANNED_OBJECT_INPUT_STREAM_METHODS =
+      ImmutableSet.of(
+          // Prevent reading objects unsafely into memory
+          "readObject",
+
+          // This is the same, the default value
+          "defaultReadObject",
+
+          // This is for trusted subclasses
+          "readObjectOverride",
+
+          // Ultimately, a lot of the safety worries come
+          // from being able to construct arbitrary classes via
+          // reading in class descriptors. I don't think anyone
+          // will bother calling this directly, but I don't see
+          // any reason not to block it.
+          "readClassDescriptor",
+
+          // These are basically the same as above
+          "resolveClass",
+          "resolveObject");
 
   private static final Matcher<ExpressionTree> EXEMPT =
       anyOf(
-          EXEMPT_IS_READOBJECT_METHOD);
+          //  This is called through ObjectInputStream; a call further up the callstack will have
+          // been exempt.
+          allOf(
+              enclosingClass(isSubtypeOf("java.io.Serializable")),
+              enclosingMethod(methodIsNamed("readObject"))),
+          allOf(
+              enclosingClass(isSubtypeOf("java.io.ObjectInputStream")),
+              enclosingMethod(
+                  (methodTree, state) ->
+                      BANNED_OBJECT_INPUT_STREAM_METHODS.contains(
+                          methodTree.getName().toString()))));
 
   /** Checks for unsafe deserialization calls on an ObjectInputStream in an ExpressionTree. */
   private static final Matcher<ExpressionTree> OBJECT_INPUT_STREAM_DESERIALIZE_MATCHER =
@@ -59,26 +85,7 @@ public final class BanSerializableRead extends BugChecker implements MethodInvoc
               // this matches calls to the ObjectInputStream to read some objects
               instanceMethod()
                   .onDescendantOf("java.io.ObjectInputStream")
-                  .namedAnyOf(
-                      // Prevent reading objects unsafely into memory
-                      "readObject",
-
-                      // This is the same, the default value
-                      "defaultReadObject",
-
-                      // This is for trusted subclasses
-                      "readObjectOverride",
-
-                      // Ultimately, a lot of the safety worries come
-                      // from being able to construct arbitrary classes via
-                      // reading in class descriptors. I don't think anyone
-                      // will bother calling this directly, but I don't see
-                      // any reason not to block it.
-                      "readClassDescriptor",
-
-                      // These are basically the same as above
-                      "resolveClass",
-                      "resolveObject"),
+                  .namedAnyOf(BANNED_OBJECT_INPUT_STREAM_METHODS),
 
               // because in the next part we exempt readObject functions, here we
               // check for calls to those functions
