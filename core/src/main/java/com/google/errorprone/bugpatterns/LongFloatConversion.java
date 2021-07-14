@@ -26,6 +26,7 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
+import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.util.TreePath;
@@ -43,11 +44,15 @@ public class LongFloatConversion extends BugChecker implements MethodInvocationT
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
     for (ExpressionTree arg : tree.getArguments()) {
-      if (getType(arg).getKind().equals(TypeKind.LONG)
-          && targetType(state.withPath(new TreePath(state.getPath(), arg)))
-              .type()
-              .getKind()
-              .equals(TypeKind.FLOAT)) {
+      if (!getType(arg).getKind().equals(TypeKind.LONG)) {
+        continue;
+      }
+      ASTHelpers.TargetType targetType =
+          targetType(state.withPath(new TreePath(state.getPath(), arg)));
+      if (targetType == null) {
+        continue;
+      }
+      if (targetType.type().getKind().equals(TypeKind.FLOAT)) {
         state.reportMatch(describeMatch(arg, SuggestedFix.prefixWith(arg, "(float) ")));
       }
     }
