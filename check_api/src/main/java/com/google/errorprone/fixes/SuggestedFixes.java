@@ -445,6 +445,11 @@ public final class SuggestedFixes {
   /**
    * Provides a name to use for the (fully qualified) method provided in {@code qualifiedName},
    * trying to static import it if possible. Adds imports to {@code fix} as appropriate.
+   *
+   * <p>The heuristic is quite conservative: it won't add a static import if an identifier with the
+   * same name is referenced anywhere in the class. Otherwise, we'd have to implement overload
+   * resolution, and ensure that adding a new static import doesn't change the semantics of existing
+   * code.
    */
   public static String qualifyStaticImport(
       String qualifiedName, SuggestedFix.Builder fix, VisitorState state) {
