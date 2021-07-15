@@ -79,6 +79,9 @@ public final class InvalidInlineTag extends BugChecker
 
   private static final Pattern PARAM_MATCHER = Pattern.compile("\\{?@param ([a-zA-Z0-9]+)}?");
 
+  private static final Pattern ANCHORED_PARAM_MATCHER =
+      Pattern.compile("^\\{?@param ([a-zA-Z0-9]+)}?");
+
   private static final Splitter DOT_SPLITTER = Splitter.on('.');
 
   @Override
@@ -146,7 +149,7 @@ public final class InvalidInlineTag extends BugChecker
 
     @Override
     public Void visitErroneous(ErroneousTree erroneousTree, Void unused) {
-      Matcher matcher = PARAM_MATCHER.matcher(erroneousTree.getBody());
+      Matcher matcher = ANCHORED_PARAM_MATCHER.matcher(erroneousTree.getBody());
       if (matcher.find()) {
         String parameterName = matcher.group(1);
         if (parameters.contains(parameterName)) {
