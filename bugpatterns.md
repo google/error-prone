@@ -350,6 +350,9 @@ Comparison using reference equality instead of value equality
 __[OptionalMapUnusedValue](bugpattern/OptionalMapUnusedValue)__<br>
 Optional.ifPresent is preferred over Optional.map when the return value is unused
 
+__[OptionalOfRedundantMethod](bugpattern/OptionalOfRedundantMethod)__<br>
+Optional.of() always returns a non-empty optional. Using ifPresent/isPresent/orElse/orElseGet/orElseThrow/isPresent/or/orNull method on it is unnecessary and most probably a bug.
+
 __[OverlappingQualifierAndScopeAnnotation](bugpattern/OverlappingQualifierAndScopeAnnotation)__<br>
 Annotations cannot be both Scope annotations and Qualifier annotations: this causes confusion when trying to use them.
 
