@@ -587,7 +587,12 @@ com.sun.tools.javac.code.Symbol&nbsp;sym)</span></div>
 <a href="SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a>&nbsp;fix,
 <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
 <div class="block">Provides a name to use for the (fully qualified) method provided in <code>qualifiedName</code>,
- trying to static import it if possible. Adds imports to <code>fix</code> as appropriate.</div>
+ trying to static import it if possible. Adds imports to <code>fix</code> as appropriate.
+
+ <p>The heuristic is quite conservative: it won't add a static import if an identifier with the
+ same name is referenced anywhere in the class. Otherwise, we'd have to implement overload
+ resolution, and ensure that adding a new static import doesn't change the semantics of existing
+ code.</div>
 </section>
 </li>
 <li>
