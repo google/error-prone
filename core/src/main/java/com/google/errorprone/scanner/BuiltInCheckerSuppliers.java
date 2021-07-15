@@ -250,6 +250,7 @@ import com.google.errorprone.bugpatterns.OptionalEquality;
 import com.google.errorprone.bugpatterns.OptionalMapToOptional;
 import com.google.errorprone.bugpatterns.OptionalMapUnusedValue;
 import com.google.errorprone.bugpatterns.OptionalNotPresent;
+import com.google.errorprone.bugpatterns.OptionalOfRedundantMethod;
 import com.google.errorprone.bugpatterns.OrphanedFormatString;
 import com.google.errorprone.bugpatterns.OutlineNone;
 import com.google.errorprone.bugpatterns.OverrideThrowableToString;
@@ -669,6 +670,7 @@ public class BuiltInCheckerSuppliers {
           NullTernary.class,
           OptionalEquality.class,
           OptionalMapUnusedValue.class,
+          OptionalOfRedundantMethod.class,
           OverlappingQualifierAndScopeAnnotation.class,
           OverridesJavaxInjectableMethod.class,
           PackageInfo.class,
