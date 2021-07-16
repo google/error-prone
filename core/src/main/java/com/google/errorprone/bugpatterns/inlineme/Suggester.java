@@ -22,6 +22,7 @@ import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
+import com.google.errorprone.annotations.DoNotCall;
 import com.google.errorprone.annotations.InlineMe;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
@@ -57,6 +58,11 @@ public final class Suggester extends BugChecker implements MethodTreeMatcher {
 
     // if the API is already annotated with @InlineMe, then return no match
     if (hasAnnotation(tree, InlineMe.class, state)) {
+      return Description.NO_MATCH;
+    }
+
+    // if the API is already annotated with @DoNotCall, then return no match
+    if (hasAnnotation(tree, DoNotCall.class, state)) {
       return Description.NO_MATCH;
     }
 

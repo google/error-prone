@@ -829,4 +829,23 @@ public class SuggesterTest {
         .expectUnchanged()
         .doTest();
   }
+
+  @Test
+  public void deprecatedMethodWithDoNotCall() {
+    refactoringTestHelper
+        .addInputLines(
+            "Client.java",
+            "package com.google.frobber;",
+            "import com.google.errorprone.annotations.DoNotCall;",
+            "public class Client {",
+            "  @DoNotCall",
+            "  @Deprecated",
+            "  public void before() {",
+            "    after();",
+            "  }",
+            "  public void after() {}",
+            "}")
+        .expectUnchanged()
+        .doTest();
+  }
 }
