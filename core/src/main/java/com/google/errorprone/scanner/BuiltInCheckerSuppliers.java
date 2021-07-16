@@ -466,6 +466,7 @@ import com.google.errorprone.bugpatterns.javadoc.UnescapedEntity;
 import com.google.errorprone.bugpatterns.javadoc.UnrecognisedJavadocTag;
 import com.google.errorprone.bugpatterns.javadoc.UrlInSee;
 import com.google.errorprone.bugpatterns.nullness.EqualsBrokenForNull;
+import com.google.errorprone.bugpatterns.nullness.ReturnMissingNullable;
 import com.google.errorprone.bugpatterns.nullness.UnnecessaryCheckNotNull;
 import com.google.errorprone.bugpatterns.overloading.InconsistentOverloads;
 import com.google.errorprone.bugpatterns.threadsafety.DoubleCheckedLocking;
@@ -1032,6 +1033,7 @@ public class BuiltInCheckerSuppliers {
           RedundantThrows.class,
           RefersToDaggerCodegen.class,
           RemoveUnusedImports.class,
+          ReturnMissingNullable.class,
           ReturnsNullCollection.class,
           ScopeOnModule.class,
           ScopeOrQualifierAnnotationRetention.class,
