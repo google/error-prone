@@ -1462,6 +1462,9 @@ Constructors of an abstract class can be declared protected as there is never a 
 __[RemoveUnusedImports](bugpattern/RemoveUnusedImports)__<br>
 Unused imports
 
+__[ReturnMissingNullable](bugpattern/ReturnMissingNullable)__<br>
+Method returns a definitely null value but is not annotated @Nullable
+
 __[ReturnsNullCollection](bugpattern/ReturnsNullCollection)__<br>
 Method has a collection return type and returns {@code null} in some cases but does not annotate the method as @Nullable. See Effective Java 3rd Edition Item 54.
 
