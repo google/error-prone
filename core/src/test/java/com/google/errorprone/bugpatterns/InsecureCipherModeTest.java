@@ -25,7 +25,8 @@ import org.junit.runners.JUnit4;
 @RunWith(JUnit4.class)
 public class InsecureCipherModeTest {
   private final CompilationTestHelper compilationHelper =
-      CompilationTestHelper.newInstance(InsecureCipherMode.class, getClass());
+      CompilationTestHelper.newInstance(InsecureCipherMode.class, getClass())
+      ;
 
   @Test
   public void testPositiveCase() {
