@@ -23,7 +23,9 @@ import com.google.common.collect.Streams;
 import com.google.errorprone.BugCheckerInfo;
 import com.google.errorprone.bugpatterns.AmbiguousMethodReference;
 import com.google.errorprone.bugpatterns.AnnotateFormatMethod;
+import com.google.errorprone.bugpatterns.AnnotationMirrorToString;
 import com.google.errorprone.bugpatterns.AnnotationPosition;
+import com.google.errorprone.bugpatterns.AnnotationValueToString;
 import com.google.errorprone.bugpatterns.ArrayAsKeyOfSetOrMap;
 import com.google.errorprone.bugpatterns.ArrayEquals;
 import com.google.errorprone.bugpatterns.ArrayFillIncompatibleType;
@@ -951,7 +953,9 @@ public class BuiltInCheckerSuppliers {
       getSuppliers(
           // keep-sorted start
           AndroidJdkLibsChecker.class,
+          AnnotationMirrorToString.class,
           AnnotationPosition.class,
+          AnnotationValueToString.class,
           AssertFalse.class,
           AssistedInjectAndInjectOnConstructors.class,
           AutoFactoryAtInject.class,
