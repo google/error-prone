@@ -1390,6 +1390,12 @@ Non-constant variable missing @Var annotation
 
 ## Experimental : SUGGESTION
 
+__[AnnotationMirrorToString](bugpattern/AnnotationMirrorToString)__<br>
+AnnotationMirror#toString doesn&#39;t use fully qualified type names, prefer auto-common&#39;s AnnotationMirrors#toString
+
+__[AnnotationValueToString](bugpattern/AnnotationValueToString)__<br>
+AnnotationValue#toString doesn&#39;t use fully qualified type names, prefer auto-common&#39;s AnnotationValues#toString
+
 __[BooleanParameter](bugpattern/BooleanParameter)__<br>
 Use parameter comments to document ambiguous literals
 

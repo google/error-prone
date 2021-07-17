@@ -584,6 +584,12 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Utilities for matching annotations.</div>
 </dd>
+<dt><a href="com/google/errorprone/bugpatterns/AnnotationMirrorToString.html" title="class in com.google.errorprone.bugpatterns"><span class="type-name-link">AnnotationMirrorToString</span></a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
+<dd>
+<div class="block">A <a href="com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>; see the associated <a href="com/google/errorprone/BugPattern.html" title="annotation in com.google.errorprone"><code>BugPattern</code></a> annotation for details.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/AnnotationMirrorToString.html#%3Cinit%3E()">AnnotationMirrorToString()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/AnnotationMirrorToString.html" title="class in com.google.errorprone.bugpatterns">AnnotationMirrorToString</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/AnnotationPosition.html" title="class in com.google.errorprone.bugpatterns"><span class="type-name-link">AnnotationPosition</span></a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
 <dd>
 <div class="block">Checks annotation positioning, and orphaned Javadocs.</div>
@@ -620,6 +626,12 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/google/errorprone/matchers/AnnotationType.html" title="class in com.google.errorprone.matchers"><span class="type-name-link">AnnotationType</span></a> - Class in <a href="com/google/errorprone/matchers/package-summary.html">com.google.errorprone.matchers</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/matchers/AnnotationType.html#%3Cinit%3E(java.lang.String)">AnnotationType(String)</a></span> - Constructor for class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/AnnotationType.html" title="class in com.google.errorprone.matchers">AnnotationType</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/bugpatterns/AnnotationValueToString.html" title="class in com.google.errorprone.bugpatterns"><span class="type-name-link">AnnotationValueToString</span></a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
+<dd>
+<div class="block">A <a href="com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>; see the associated <a href="com/google/errorprone/BugPattern.html" title="annotation in com.google.errorprone"><code>BugPattern</code></a> annotation for details.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/AnnotationValueToString.html#%3Cinit%3E()">AnnotationValueToString()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/AnnotationValueToString.html" title="class in com.google.errorprone.bugpatterns">AnnotationValueToString</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/refaster/Choice.html#any(java.util.Collection)">any(Collection&lt;Choice&lt;T&gt;&gt;)</a></span> - Static method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/Choice.html" title="class in com.google.errorprone.refaster">Choice</a></dt>
 <dd>
@@ -5497,6 +5509,10 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Constructs a fix for an implicit toString call, e.g.</div>
 </dd>
+<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/AnnotationMirrorToString.html#implicitToStringFix(com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)">implicitToStringFix(ExpressionTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/AnnotationMirrorToString.html" title="class in com.google.errorprone.bugpatterns">AnnotationMirrorToString</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/AnnotationValueToString.html#implicitToStringFix(com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)">implicitToStringFix(ExpressionTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/AnnotationValueToString.html" title="class in com.google.errorprone.bugpatterns">AnnotationValueToString</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/ArrayToString.html#implicitToStringFix(com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)">implicitToStringFix(ExpressionTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/ArrayToString.html" title="class in com.google.errorprone.bugpatterns">ArrayToString</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/LiteProtoToString.html#implicitToStringFix(com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)">implicitToStringFix(ExpressionTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/LiteProtoToString.html" title="class in com.google.errorprone.bugpatterns">LiteProtoToString</a></dt>
@@ -11680,6 +11696,10 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Constructs a fix for an explicit toString call, e.g.</div>
 </dd>
+<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/AnnotationMirrorToString.html#toStringFix(com.sun.source.tree.Tree,com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)">toStringFix(Tree, ExpressionTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/AnnotationMirrorToString.html" title="class in com.google.errorprone.bugpatterns">AnnotationMirrorToString</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/AnnotationValueToString.html#toStringFix(com.sun.source.tree.Tree,com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)">toStringFix(Tree, ExpressionTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/AnnotationValueToString.html" title="class in com.google.errorprone.bugpatterns">AnnotationValueToString</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/ArrayToString.html#toStringFix(com.sun.source.tree.Tree,com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)">toStringFix(Tree, ExpressionTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/ArrayToString.html" title="class in com.google.errorprone.bugpatterns">ArrayToString</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/LiteProtoToString.html#toStringFix(com.sun.source.tree.Tree,com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)">toStringFix(Tree, ExpressionTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/LiteProtoToString.html" title="class in com.google.errorprone.bugpatterns">LiteProtoToString</a></dt>
@@ -11896,6 +11916,10 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">The type to match on.</div>
 </dd>
+<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/AnnotationMirrorToString.html#typePredicate()">typePredicate()</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/AnnotationMirrorToString.html" title="class in com.google.errorprone.bugpatterns">AnnotationMirrorToString</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/AnnotationValueToString.html#typePredicate()">typePredicate()</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/AnnotationValueToString.html" title="class in com.google.errorprone.bugpatterns">AnnotationValueToString</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/ArrayToString.html#typePredicate()">typePredicate()</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/ArrayToString.html" title="class in com.google.errorprone.bugpatterns">ArrayToString</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/LiteProtoToString.html#typePredicate()">typePredicate()</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/LiteProtoToString.html" title="class in com.google.errorprone.bugpatterns">LiteProtoToString</a></dt>
