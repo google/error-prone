@@ -21,6 +21,7 @@ import static com.google.errorprone.matchers.Description.NO_MATCH;
 
 import com.google.common.base.Joiner;
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.LambdaExpressionTreeMatcher;
@@ -53,6 +54,13 @@ public class GuardedByChecker extends BugChecker
 
   private final GuardedByFlags flags = GuardedByFlags.allOn();
 
+  private final boolean reportMissingGuards;
+
+  public GuardedByChecker(ErrorProneFlags errorProneFlags) {
+    reportMissingGuards =
+        errorProneFlags.getBoolean("GuardedByChecker:reportMissingGuards").orElse(false);
+  }
+
   @Override
   public Description matchMethod(MethodTree tree, final VisitorState state) {
     // Constructors (and field initializers, instance initalizers, and class initalizers) are free
@@ -77,7 +85,8 @@ public class GuardedByChecker extends BugChecker
         (ExpressionTree tree, GuardedByExpression guard, HeldLockSet live) ->
             report(GuardedByChecker.this.checkGuardedAccess(tree, guard, live, state), state),
         this::isSuppressed,
-        flags);
+        flags,
+        reportMissingGuards);
   }
 
   @Override

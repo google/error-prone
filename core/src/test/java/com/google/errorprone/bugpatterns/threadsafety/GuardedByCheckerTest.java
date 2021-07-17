@@ -1670,10 +1670,12 @@ public class GuardedByCheckerTest {
             "  }",
             "  public void m(Baz b) {",
             "    synchronized (mu) {",
+            "      // BUG: Diagnostic contains: 'mu', which could not be resolved",
             "      b.x++;",
             "    }",
             "  }",
             "}")
+        .setArgs("-XepOpt:GuardedByChecker:reportMissingGuards=true")
         .doTest();
   }
 
@@ -1746,6 +1748,31 @@ public class GuardedByCheckerTest {
             "    }",
             "  }",
             "}")
+        .doTest();
+  }
+
+  @Test
+  public void testMissingGuard() {
+    compilationHelper
+        .addSourceLines(
+            "threadsafety/Lib.java",
+            "package threadsafety;",
+            "import javax.annotation.concurrent.GuardedBy;",
+            "@SuppressWarnings(\"GuardedBy\")",
+            "class Lib {",
+            "  @GuardedBy(\"lock\")",
+            "  public void doSomething() {}",
+            "}")
+        .addSourceLines(
+            "threadsafety/Test.java",
+            "package threadsafety;",
+            "class Test {",
+            "  void m(Lib lib) {",
+            "    // BUG: Diagnostic contains: 'lock', which could not be resolved",
+            "    lib.doSomething();",
+            "  }",
+            "}")
+        .setArgs("-XepOpt:GuardedByChecker:reportMissingGuards=true")
         .doTest();
   }
 }
