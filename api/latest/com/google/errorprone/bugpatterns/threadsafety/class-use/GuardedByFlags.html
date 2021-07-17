@@ -107,10 +107,11 @@ loadScripts(document, 'script');</script>
 <tbody>
 <tr class="alt-color">
 <td class="col-first"><code>static void</code></td>
-<th class="col-second" scope="row"><span class="type-name-label">HeldLockAnalyzer.</span><code><span class="member-name-link"><a href="../HeldLockAnalyzer.html#analyze(com.google.errorprone.VisitorState,com.google.errorprone.bugpatterns.threadsafety.HeldLockAnalyzer.LockEventListener,com.google.common.base.Predicate,com.google.errorprone.bugpatterns.threadsafety.GuardedByFlags)">analyze</a></span>&#8203;(<a href="../../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
+<th class="col-second" scope="row"><span class="type-name-label">HeldLockAnalyzer.</span><code><span class="member-name-link"><a href="../HeldLockAnalyzer.html#analyze(com.google.errorprone.VisitorState,com.google.errorprone.bugpatterns.threadsafety.HeldLockAnalyzer.LockEventListener,com.google.common.base.Predicate,com.google.errorprone.bugpatterns.threadsafety.GuardedByFlags,boolean)">analyze</a></span>&#8203;(<a href="../../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
 <a href="../HeldLockAnalyzer.LockEventListener.html" title="interface in com.google.errorprone.bugpatterns.threadsafety">HeldLockAnalyzer.LockEventListener</a>&nbsp;listener,
 com.google.common.base.Predicate&lt;com.sun.source.tree.Tree&gt;&nbsp;isSuppressed,
-<a href="../GuardedByFlags.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByFlags</a>&nbsp;flags)</code></th>
+<a href="../GuardedByFlags.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByFlags</a>&nbsp;flags,
+boolean&nbsp;reportMissingGuards)</code></th>
 <td class="col-last">
 <div class="block">Analyzes a method body, tracking the set of held locks and checking accesses to guarded
  members.</div>
