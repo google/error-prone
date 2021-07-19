@@ -29,6 +29,7 @@ import static com.google.errorprone.matchers.Matchers.isStatic;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
+import static com.google.errorprone.util.ASTHelpers.streamReceivers;
 import static java.util.stream.Collectors.toMap;
 
 import com.google.common.collect.ImmutableList;
@@ -177,11 +178,9 @@ public final class ImmutableSetForContains extends BugChecker implements ClassTr
 
   private static Optional<ExpressionTree> getRootMethod(
       MethodInvocationTree methodInvocationTree, VisitorState state) {
-    ExpressionTree receiver = getReceiver(methodInvocationTree);
-    while (receiver != null && IMMUTABLE_BUILDER_METHODS.matches(receiver, state)) {
-      receiver = getReceiver(receiver);
-    }
-    return Optional.ofNullable(receiver);
+    return streamReceivers(methodInvocationTree)
+        .filter(t -> !IMMUTABLE_BUILDER_METHODS.matches(t, state))
+        .findFirst();
   }
 
   // Scans the tree for all usages of immutable list vars and determines if any usage will prevent

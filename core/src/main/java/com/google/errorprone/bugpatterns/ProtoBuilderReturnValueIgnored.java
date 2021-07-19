@@ -22,6 +22,7 @@ import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
+import static com.google.errorprone.util.ASTHelpers.streamReceivers;
 import static com.google.errorprone.util.SideEffectAnalysis.hasSideEffect;
 
 import com.google.common.collect.ImmutableList;
@@ -117,13 +118,6 @@ public final class ProtoBuilderReturnValueIgnored extends AbstractReturnValueIgn
   }
 
   private static boolean doesNotTerminateInNewBuilder(ExpressionTree tree, VisitorState state) {
-    for (ExpressionTree receiver = getReceiver(tree);
-        receiver instanceof MethodInvocationTree;
-        receiver = getReceiver(receiver)) {
-      if (ROOT_INVOCATIONS_TO_IGNORE.matches(receiver, state)) {
-        return false;
-      }
-    }
-    return true;
+    return streamReceivers(tree).noneMatch(t -> ROOT_INVOCATIONS_TO_IGNORE.matches(t, state));
   }
 }

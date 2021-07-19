@@ -16,11 +16,12 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.common.collect.Streams.findLast;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
-import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
+import static com.google.errorprone.util.ASTHelpers.streamReceivers;
 
 import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableSet;
@@ -32,7 +33,6 @@ import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
-import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.ReturnTree;
@@ -126,11 +126,7 @@ public final class MissingTestCall extends BugChecker implements MethodTreeMatch
 
   @Nullable
   private static ExpressionTree getUltimateReceiver(ExpressionTree tree) {
-    ExpressionTree receiver = getReceiver(tree);
-    while (receiver instanceof MemberSelectTree || receiver instanceof MethodInvocationTree) {
-      receiver = getReceiver(receiver);
-    }
-    return receiver;
+    return findLast(streamReceivers(tree)).orElse(null);
   }
 
   private static boolean isField(@Nullable ExpressionTree tree) {

@@ -21,10 +21,10 @@ import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
-import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
+import static com.google.errorprone.util.ASTHelpers.streamReceivers;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
@@ -93,14 +93,11 @@ public final class ProtoTruthMixedDescriptors extends BugChecker
       return Description.NO_MATCH;
     }
     TypeSymbol type = getOnlyElement(types);
-    for (ExpressionTree receiver = getReceiver(tree);
-        receiver instanceof MethodInvocationTree;
-        receiver = getReceiver(receiver)) {
-      if (ASSERT_THAT.matches(receiver, state)) {
-        return validateReceiver(tree, (MethodInvocationTree) receiver, type, state);
-      }
-    }
-    return Description.NO_MATCH;
+    return streamReceivers(tree)
+        .filter(t -> ASSERT_THAT.matches(t, state))
+        .map(t -> validateReceiver(tree, (MethodInvocationTree) t, type, state))
+        .findFirst()
+        .orElse(Description.NO_MATCH);
   }
 
   // Tries to resolve the proto which owns the symbol at `tree`, or absent if there isn't one.

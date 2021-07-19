@@ -22,6 +22,7 @@ import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
+import static com.google.errorprone.util.ASTHelpers.streamReceivers;
 
 import com.google.common.base.Ascii;
 import com.google.errorprone.BugPattern;
@@ -189,13 +190,7 @@ public final class TruthAssertExpected extends BugChecker implements MethodInvoc
   @Nullable
   private static ExpressionTree findReceiverMatching(
       ExpressionTree tree, VisitorState state, Matcher<ExpressionTree> matcher) {
-    while (tree instanceof MethodInvocationTree) {
-      tree = ASTHelpers.getReceiver(tree);
-      if (tree == null || matcher.matches(tree, state)) {
-        return tree;
-      }
-    }
-    return null;
+    return streamReceivers(tree).filter(t -> matcher.matches(t, state)).findFirst().orElse(null);
   }
 
   /**
