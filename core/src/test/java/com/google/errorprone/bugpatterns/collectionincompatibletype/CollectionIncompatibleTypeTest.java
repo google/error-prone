@@ -296,4 +296,20 @@ public class CollectionIncompatibleTypeTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void wildcardBoundedCollectionTypes() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.util.List;",
+            "import java.util.Set;",
+            "public interface Test {",
+            "  static void test(Set<? extends List<Integer>> xs, Set<? extends Set<Integer>> ys) {",
+            "    // BUG: Diagnostic contains:",
+            "    xs.containsAll(ys);",
+            "  }",
+            "}")
+        .doTest();
+  }
 }

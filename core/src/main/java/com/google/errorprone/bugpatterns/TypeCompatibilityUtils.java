@@ -82,7 +82,10 @@ public final class TypeCompatibilityUtils {
     }
 
     // If they're the exact same type, they are definitely compatible.
-    if (state.getTypes().isSameType(upperBound(leftType), upperBound(rightType))) {
+    Types types = state.getTypes();
+    Type leftUpperBound = getUpperBound(leftType, types);
+    Type rightUpperBound = getUpperBound(rightType, types);
+    if (types.isSameType(leftUpperBound, rightUpperBound)) {
       return TypeCompatibilityReport.compatible();
     }
 
@@ -103,7 +106,9 @@ public final class TypeCompatibilityUtils {
     // class Bar extends Super<String>
     // class Foo extends Super<Integer>
     // Bar and Foo would least-upper-bound to Super, and we compare String and Integer to each-other
-    Type commonSupertype = state.getTypes().lub(rightType, leftType);
+    Type erasedLeftType = types.erasure(leftType);
+    Type erasedRightType = types.erasure(rightType);
+    Type commonSupertype = types.lub(erasedRightType, erasedLeftType);
     // primitives, etc. can't have a common superclass.
     if (commonSupertype.getTag().equals(TypeTag.BOT)
         || commonSupertype.getTag().equals(TypeTag.ERROR)) {
@@ -130,7 +135,7 @@ public final class TypeCompatibilityUtils {
     // compatible, but due to the way that certain classes' equals methods are constructed, they
     // deceive the normal processing into thinking they're compatible, but they are not.
     return areTypesIncompatibleCollections(leftType, rightType, commonSupertype, state)
-            || areIncompatibleProtoTypes(leftType, rightType, commonSupertype, state)
+            || areIncompatibleProtoTypes(erasedLeftType, erasedRightType, commonSupertype, state)
         ? TypeCompatibilityReport.incompatible(leftType, rightType)
         : TypeCompatibilityReport.compatible();
   }
@@ -248,21 +253,17 @@ public final class TypeCompatibilityUtils {
     // consider them incompatible with each other.
     Type messageLite = state.getTypeFromString("com.google.protobuf.MessageLite");
     return isSubtype(nearestCommonSupertype, messageLite, state)
-        && isConcrete(leftType)
-        && isConcrete(rightType);
+        && isConcrete(leftType, state.getTypes())
+        && isConcrete(rightType, state.getTypes());
   }
 
-  private static boolean isConcrete(Type type) {
-    Type toEvaluate = upperBound(type);
+  private static boolean isConcrete(Type type, Types types) {
+    Type toEvaluate = getUpperBound(type, types);
     return (toEvaluate.tsym.flags() & (Flags.ABSTRACT | Flags.INTERFACE)) == 0;
   }
 
   private static boolean classesAreMutableAndImmutableOfSameType(String l, String r) {
     return l.startsWith("Mutable") && l.substring("Mutable".length()).equals(r);
-  }
-
-  private static Type upperBound(Type type) {
-    return type.getUpperBound() == null ? type : type.getUpperBound();
   }
 
   private static String classNamePart(Type type) {
