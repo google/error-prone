@@ -216,8 +216,6 @@ public class TemplateIntegrationTest extends CompilerBasedTest {
 
   @Test
   public void freeIdentWildcardCapture() throws IOException {
-    // TODO(b/67786978): investigate JDK 9 test failures
-    assumeFalse(isAtLeast9());
     runTest("WildcardUnificationTemplate");
   }
 
@@ -278,8 +276,6 @@ public class TemplateIntegrationTest extends CompilerBasedTest {
 
   @Test
   public void returnPlaceholder() throws IOException {
-    // TODO(b/67786978): investigate JDK 9 test failures
-    assumeFalse(isAtLeast9());
     runTest("ReturnPlaceholderTemplate");
   }
 
@@ -301,14 +297,12 @@ public class TemplateIntegrationTest extends CompilerBasedTest {
   @Test
   public void samePackageImports() throws IOException {
     // TODO(b/67786978): investigate JDK 9 test failures
-    assumeFalse(isAtLeast9());
+    assumeFalse(isAtLeast9()); // error: package exists in another module: java.base
     runTest("SamePackageImportsTemplate");
   }
 
   @Test
   public void ifFallthrough() throws IOException {
-    // TODO(b/67786978): investigate JDK 9 test failures
-    assumeFalse(isAtLeast9());
     runTest("IfFallthroughTemplate");
   }
 
