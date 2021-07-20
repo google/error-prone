@@ -1405,6 +1405,9 @@ This class&#39;s name looks like a Type Parameter.
 __[ConstantField](bugpattern/ConstantField)__<br>
 Field name is CONSTANT_CASE, but field is not static and final
 
+__[EqualsMissingNullable](bugpattern/EqualsMissingNullable)__<br>
+Method overrides Object.equals but does not have @Nullable on its parameter
+
 __[FieldCanBeFinal](bugpattern/FieldCanBeFinal)__<br>
 This field is only assigned during initialization; consider making it final
 
