@@ -134,8 +134,8 @@ parameter must also be set:
           </compilerArgs>
         </configuration>
       </build>
-    </plugins>
-  </plugin>
+    </plugin>
+  </plugins>
 </project>
 ```
 
