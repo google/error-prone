@@ -133,9 +133,9 @@ parameter must also be set:
             <arg>-Xplugin:ErrorProne -Xep:DeadException:WARN -Xep:GuardedBy:OFF</arg>
           </compilerArgs>
         </configuration>
-      </build>
-    </plugin>
-  </plugins>
+      </plugin>
+    </plugins>
+  </build>
 </project>
 ```
 
