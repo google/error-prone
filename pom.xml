@@ -24,6 +24,9 @@
   <version>HEAD-SNAPSHOT</version>
   <packaging>pom</packaging>
 
+  <description>Error Prone is a static analysis tool for Java that catches common programming mistakes at compile-time.</description>
+  <url>https://errorprone.info</url>
+
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <guava.version>30.1-jre</guava.version>
@@ -41,6 +44,17 @@
     <maven-javadoc-plugin.version>3.1.0</maven-javadoc-plugin.version>
     <maven-source-plugin.version>3.2.1</maven-source-plugin.version>
   </properties>
+
+  <organization>
+    <name>Google LLC</name>
+    <url>http://www.google.com</url>
+  </organization>
+
+  <developers>
+    <developer>
+      <name>Eddie Aftandilian</name>
+    </developer>
+  </developers>
 
   <modules>
     <module>check_api</module>
