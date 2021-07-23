@@ -16,6 +16,8 @@
 
 package com.google.errorprone.bugpatterns;
 
+import com.google.errorprone.BugCheckerRefactoringTestHelper;
+import com.google.errorprone.BugCheckerRefactoringTestHelper.FixChoosers;
 import com.google.errorprone.CompilationTestHelper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -27,6 +29,8 @@ public class OptionalOfRedundantMethodTest {
 
   private final CompilationTestHelper compilationTestHelper =
       CompilationTestHelper.newInstance(OptionalOfRedundantMethod.class, getClass());
+  private final BugCheckerRefactoringTestHelper refactoringTestHelper =
+      BugCheckerRefactoringTestHelper.newInstance(OptionalOfRedundantMethod.class, getClass());
 
   @Test
   public void positive_ifPresent() {
@@ -38,6 +42,28 @@ public class OptionalOfRedundantMethodTest {
             " void f() {",
             "    // BUG: Diagnostic contains: ifPresent",
             "    Optional.of(\"test\").ifPresent(String::length);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void positive_ifPresent_refactoring_ofNullableFix() {
+    refactoringTestHelper
+        .addInputLines(
+            "Test.java",
+            "import java.util.Optional;",
+            "class Test {",
+            " void f() {",
+            "    Optional.of(\"test\").ifPresent(String::length);",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "import java.util.Optional;",
+            "class Test {",
+            " void f() {",
+            "    Optional.ofNullable(\"test\").ifPresent(String::length);",
             "  }",
             "}")
         .doTest();
@@ -59,6 +85,52 @@ public class OptionalOfRedundantMethodTest {
   }
 
   @Test
+  public void positive_orElse_refactoring_ofNullableFix() {
+    refactoringTestHelper
+        .addInputLines(
+            "Test.java",
+            "import java.util.Optional;",
+            "class Test {",
+            " String f() {",
+            "    return Optional.of(\"test\").orElse(\"test2\");",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "import java.util.Optional;",
+            "class Test {",
+            " String f() {",
+            "    return Optional.ofNullable(\"test\").orElse(\"test2\");",
+            "  }",
+            "}")
+        .setFixChooser(FixChoosers.FIRST)
+        .doTest();
+  }
+
+  @Test
+  public void positive_orElse_refactoring_simplifyExpressionFix() {
+    refactoringTestHelper
+        .addInputLines(
+            "Test.java",
+            "import java.util.Optional;",
+            "class Test {",
+            " String f() {",
+            "    return Optional.of(\"test\").orElse(\"test2\");",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "import java.util.Optional;",
+            "class Test {",
+            " String f() {",
+            "    return \"test\";",
+            "  }",
+            "}")
+        .setFixChooser(FixChoosers.SECOND)
+        .doTest();
+  }
+
+  @Test
   public void positive_orElseGet() {
     compilationTestHelper
         .addSourceLines(
@@ -70,6 +142,52 @@ public class OptionalOfRedundantMethodTest {
             "    Optional.of(\"test\").orElseGet(() -> \"test2\");",
             "  }",
             "}")
+        .doTest();
+  }
+
+  @Test
+  public void positive_orElseGet_refactoring_ofNullableFix() {
+    refactoringTestHelper
+        .addInputLines(
+            "Test.java",
+            "import java.util.Optional;",
+            "class Test {",
+            " String f() {",
+            "    return Optional.of(\"test\").orElseGet(() -> \"test2\");",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "import java.util.Optional;",
+            "class Test {",
+            " String f() {",
+            "    return Optional.ofNullable(\"test\").orElseGet(() -> \"test2\");",
+            "  }",
+            "}")
+        .setFixChooser(FixChoosers.FIRST)
+        .doTest();
+  }
+
+  @Test
+  public void positive_orElseGet_refactoring_simplifyExpressionFix() {
+    refactoringTestHelper
+        .addInputLines(
+            "Test.java",
+            "import java.util.Optional;",
+            "class Test {",
+            " String f() {",
+            "    return Optional.of(\"test\").orElseGet(() -> \"test2\");",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "import java.util.Optional;",
+            "class Test {",
+            " String f() {",
+            "    return \"test\";",
+            "  }",
+            "}")
+        .setFixChooser(FixChoosers.SECOND)
         .doTest();
   }
 
@@ -90,6 +208,57 @@ public class OptionalOfRedundantMethodTest {
   }
 
   @Test
+  public void positive_orElseThrow_refactoring_ofNullableFix() {
+    refactoringTestHelper
+        .addInputLines(
+            "Test.java",
+            "import java.util.Optional;",
+            "import com.google.common.collect.ImmutableMap;",
+            "class Test {",
+            " static String f(ImmutableMap<String,String> map){",
+            "    return Optional.of(map.get(\"test\")).orElseThrow(IllegalArgumentException::new);",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "import java.util.Optional;",
+            "import com.google.common.collect.ImmutableMap;",
+            "class Test {",
+            " static String f(ImmutableMap<String,String> map){",
+            "    return"
+                + " Optional.ofNullable(map.get(\"test\")).orElseThrow(IllegalArgumentException::new);",
+            "  }",
+            "}")
+        .setFixChooser(FixChoosers.FIRST)
+        .doTest();
+  }
+
+  @Test
+  public void positive_orElseThrow_refactoring_simplifyExpressionFix() {
+    refactoringTestHelper
+        .addInputLines(
+            "Test.java",
+            "import java.util.Optional;",
+            "import com.google.common.collect.ImmutableMap;",
+            "class Test {",
+            " static String f(ImmutableMap<String,String> map){",
+            "    return Optional.of(map.get(\"test\")).orElseThrow(IllegalArgumentException::new);",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "import java.util.Optional;",
+            "import com.google.common.collect.ImmutableMap;",
+            "class Test {",
+            " static String f(ImmutableMap<String,String> map){",
+            "    return map.get(\"test\");",
+            "  }",
+            "}")
+        .setFixChooser(FixChoosers.SECOND)
+        .doTest();
+  }
+
+  @Test
   public void positive_isPresent() {
     compilationTestHelper
         .addSourceLines(
@@ -101,6 +270,52 @@ public class OptionalOfRedundantMethodTest {
             "    if(Optional.of(\"test\").isPresent()) {}",
             "  }",
             "}")
+        .doTest();
+  }
+
+  @Test
+  public void positive_isPresent_refactoring_ofNullableFix() {
+    refactoringTestHelper
+        .addInputLines(
+            "Test.java",
+            "import java.util.Optional;",
+            "class Test {",
+            " void f() {",
+            "    if(Optional.of(\"test\").isPresent()) {}",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "import java.util.Optional;",
+            "class Test {",
+            " void f() {",
+            "    if(Optional.ofNullable(\"test\").isPresent()) {}",
+            "  }",
+            "}")
+        .setFixChooser(FixChoosers.FIRST)
+        .doTest();
+  }
+
+  @Test
+  public void positive_isPresent_refactoring_simplifyExpressionFix() {
+    refactoringTestHelper
+        .addInputLines(
+            "Test.java",
+            "import java.util.Optional;",
+            "class Test {",
+            " void f() {",
+            "    if(Optional.of(\"test\").isPresent()) {}",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "import java.util.Optional;",
+            "class Test {",
+            " void f() {",
+            "    if(true) {}",
+            "  }",
+            "}")
+        .setFixChooser(FixChoosers.SECOND)
         .doTest();
   }
 
@@ -120,6 +335,52 @@ public class OptionalOfRedundantMethodTest {
   }
 
   @Test
+  public void positive_guavaIsPresent_refactoring_fromNullableFix() {
+    refactoringTestHelper
+        .addInputLines(
+            "Test.java",
+            "import com.google.common.base.Optional;",
+            "class Test {",
+            " void f() {",
+            "    Optional.of(\"test\").isPresent();",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "import com.google.common.base.Optional;",
+            "class Test {",
+            " void f() {",
+            "    Optional.fromNullable(\"test\").isPresent();",
+            "  }",
+            "}")
+        .setFixChooser(FixChoosers.FIRST)
+        .doTest();
+  }
+
+  @Test
+  public void positive_guavaIsPresent_refactoring_simplifyExpressionFix() {
+    refactoringTestHelper
+        .addInputLines(
+            "Test.java",
+            "import com.google.common.base.Optional;",
+            "class Test {",
+            " void f() {",
+            "    if(Optional.of(\"test\").isPresent()){}",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "import com.google.common.base.Optional;",
+            "class Test {",
+            " void f() {",
+            "    if(true){}",
+            "  }",
+            "}")
+        .setFixChooser(FixChoosers.SECOND)
+        .doTest();
+  }
+
+  @Test
   public void positive_guavaOr() {
     compilationTestHelper
         .addSourceLines(
@@ -135,6 +396,52 @@ public class OptionalOfRedundantMethodTest {
   }
 
   @Test
+  public void positive_guavaOr_refactoring_fromNullableFix() {
+    refactoringTestHelper
+        .addInputLines(
+            "Test.java",
+            "import com.google.common.base.Optional;",
+            "class Test {",
+            " void f() {",
+            "    Optional.of(\"test\").or(\"\");",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "import com.google.common.base.Optional;",
+            "class Test {",
+            " void f() {",
+            "    Optional.fromNullable(\"test\").or(\"\");",
+            "  }",
+            "}")
+        .setFixChooser(FixChoosers.FIRST)
+        .doTest();
+  }
+
+  @Test
+  public void positive_guavaOr_refactoring_simplifyExpressionFix() {
+    refactoringTestHelper
+        .addInputLines(
+            "Test.java",
+            "import com.google.common.base.Optional;",
+            "class Test {",
+            " String f() {",
+            "    return Optional.of(\"test\").or(\"\");",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "import com.google.common.base.Optional;",
+            "class Test {",
+            " String f() {",
+            "    return \"test\";",
+            "  }",
+            "}")
+        .setFixChooser(FixChoosers.SECOND)
+        .doTest();
+  }
+
+  @Test
   public void positive_guavaOrNull() {
     compilationTestHelper
         .addSourceLines(
@@ -146,6 +453,52 @@ public class OptionalOfRedundantMethodTest {
             "    Optional.of(\"test\").orNull();",
             "  }",
             "}")
+        .doTest();
+  }
+
+  @Test
+  public void positive_guavaOrNull_refactoring_fromNullableFix() {
+    refactoringTestHelper
+        .addInputLines(
+            "Test.java",
+            "import com.google.common.base.Optional;",
+            "class Test {",
+            " void f() {",
+            "    Optional.of(\"test\").orNull();",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "import com.google.common.base.Optional;",
+            "class Test {",
+            " void f() {",
+            "    Optional.fromNullable(\"test\").orNull();",
+            "  }",
+            "}")
+        .setFixChooser(FixChoosers.FIRST)
+        .doTest();
+  }
+
+  @Test
+  public void positive_guavaOrNull_refactoring_simplifyExpressionFix() {
+    refactoringTestHelper
+        .addInputLines(
+            "Test.java",
+            "import com.google.common.base.Optional;",
+            "class Test {",
+            " String f() {",
+            "    return Optional.of(\"test\").orNull();",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "import com.google.common.base.Optional;",
+            "class Test {",
+            " String f() {",
+            "    return \"test\";",
+            "  }",
+            "}")
+        .setFixChooser(FixChoosers.SECOND)
         .doTest();
   }
 

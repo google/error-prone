@@ -22,14 +22,20 @@ import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.instanceMethod;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
 
+import com.google.common.collect.ImmutableList;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
+import com.google.errorprone.fixes.SuggestedFix;
+import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
+import com.sun.source.tree.ExpressionStatementTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
+import com.sun.source.tree.Tree;
+import com.sun.tools.javac.util.Name;
 
 /**
  * Checks if {@code Optional#of} is chained with a redundant method.
@@ -58,10 +64,11 @@ import com.sun.source.tree.MethodInvocationTree;
     severity = ERROR)
 public class OptionalOfRedundantMethod extends BugChecker implements MethodInvocationTreeMatcher {
 
+  private static final Matcher<ExpressionTree> GUAVA_OPTIONAL_OF_MATCHER =
+      staticMethod().onClass("com.google.common.base.Optional").named("of");
+
   private static final Matcher<ExpressionTree> OPTIONAL_OF_MATCHER =
-      anyOf(
-          staticMethod().onClass("java.util.Optional").named("of"),
-          staticMethod().onClass("com.google.common.base.Optional").named("of"));
+      anyOf(staticMethod().onClass("java.util.Optional").named("of"), GUAVA_OPTIONAL_OF_MATCHER);
 
   private static final Matcher<ExpressionTree> REDUNDANT_METHOD_MATCHER =
       anyOf(
@@ -90,6 +97,47 @@ public class OptionalOfRedundantMethod extends BugChecker implements MethodInvoc
                 "Optional.of() always returns a non-empty Optional. Using '%s' method on it is"
                     + " unnecessary and most probably a bug.",
                 methodName))
+        .addAllFixes(getSuggestedFixes(tree, state))
         .build();
+  }
+
+  private ImmutableList<SuggestedFix> getSuggestedFixes(
+      MethodInvocationTree tree, VisitorState state) {
+    MethodInvocationTree optionalOfInvocationTree =
+        (MethodInvocationTree) ASTHelpers.getReceiver(tree);
+    String nullableMethodName =
+        GUAVA_OPTIONAL_OF_MATCHER.matches(optionalOfInvocationTree, state)
+            ? "fromNullable"
+            : "ofNullable";
+
+    ImmutableList.Builder<SuggestedFix> fixesBuilder = ImmutableList.builder();
+    fixesBuilder.add(
+        SuggestedFixes.renameMethodInvocation(optionalOfInvocationTree, nullableMethodName, state));
+
+    if (state.getPath().getParentPath().getLeaf() instanceof ExpressionStatementTree) {
+      return fixesBuilder.build();
+    }
+
+    Name methodSimpleName = ASTHelpers.getSymbol(tree).getSimpleName();
+    if (methodSimpleName.contentEquals("orElse")
+        || methodSimpleName.contentEquals("orElseGet")
+        || methodSimpleName.contentEquals("orElseThrow")
+        || methodSimpleName.contentEquals("or")
+        || methodSimpleName.contentEquals("orNull")) {
+      Tree argument = optionalOfInvocationTree.getArguments().get(0);
+      SuggestedFix.Builder fixBuilder =
+          SuggestedFix.builder().replace(tree, state.getSourceForNode(argument));
+      fixBuilder.setShortDescription("Simplify expression.");
+      if (methodSimpleName.contentEquals("orElse")) {
+        fixBuilder.setShortDescription(
+            "Simplify expression. Note that this may change semantics if arguments have side"
+                + " effects");
+      }
+      fixesBuilder.add(fixBuilder.build());
+    } else if (methodSimpleName.contentEquals("isPresent")) {
+      fixesBuilder.add(SuggestedFix.builder().replace(tree, "true").build());
+    }
+    // TODO(b/192550897): Add suggested fix for ifpresent
+    return fixesBuilder.build();
   }
 }
