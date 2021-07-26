@@ -16,6 +16,7 @@
 
 package com.google.errorprone.bugpatterns.nullness;
 
+import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.util.FindIdentifiers;
@@ -63,8 +64,14 @@ class NullnessFixes {
      */
     // TODO(cpovirk): Suggest @NullableDecl if the code uses that.
     Symbol sym = FindIdentifiers.findIdent("Nullable", state, KindSelector.VAL_TYP);
+    ErrorProneFlags flags = state.errorProneOptions().getFlags();
     String defaultType =
-        state.isAndroidCompatible() ? "androidx.annotation.Nullable" : "javax.annotation.Nullable";
+        flags
+            .get("Nullness:DefaultNullnessAnnotation")
+            .orElse(
+                state.isAndroidCompatible()
+                    ? "androidx.annotation.Nullable"
+                    : "javax.annotation.Nullable");
     if (sym != null) {
       ClassSymbol classSym = (ClassSymbol) sym;
       if (classSym.isAnnotationType()) {
