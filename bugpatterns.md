@@ -865,6 +865,9 @@ Assignment where a boolean expression was expected; use == if this assignment wa
 __[LongFloatConversion](bugpattern/LongFloatConversion)__<br>
 Conversion from long to float may lose precision; use an explicit cast to float if this was intentional
 
+__[LoopOverCharArray](bugpattern/LoopOverCharArray)__<br>
+toCharArray allocates a new array, using charAt is more efficient
+
 __[MathAbsoluteRandom](bugpattern/MathAbsoluteRandom)__<br>
 Math.abs does not always give a positive result. Please consider other methods for positive random numbers.
 
