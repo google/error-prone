@@ -44,11 +44,13 @@ import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
+import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.SwitchTree;
 import com.sun.source.util.TreePath;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -100,8 +102,9 @@ public final class WrongOneof extends BugChecker implements SwitchTreeMatcher {
 
       scanForInvalidGetters(getters, allowableGetters, caseTree, receiverSymbolChain.get(), state);
 
-      if (!caseTree.getStatements().isEmpty()
-          && !canCompleteNormally(getLast(caseTree.getStatements()))) {
+      List<? extends StatementTree> statements = caseTree.getStatements();
+      if (statements != null && !statements.isEmpty()
+          && !canCompleteNormally(getLast(statements))) {
         allowableGetters.clear();
       }
     }
