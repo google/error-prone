@@ -16,6 +16,7 @@
 
 package com.google.errorprone.refaster.annotation;
 
+import com.google.auto.common.AnnotationMirrors;
 import com.google.errorprone.annotations.FormatMethod;
 import com.google.errorprone.annotations.FormatString;
 import java.util.List;
@@ -98,7 +99,7 @@ public final class RequiredAnnotationProcessor extends AbstractProcessor {
                 element,
                 annotation,
                 "Annotation %s on %s also requires %s",
-                annotation,
+                AnnotationMirrors.toString(annotation),
                 element,
                 t);
           }
