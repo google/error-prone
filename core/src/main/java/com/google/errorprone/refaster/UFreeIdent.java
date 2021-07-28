@@ -23,6 +23,8 @@ import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.code.Symbol;
+import com.sun.tools.javac.code.Symbol.MethodSymbol;
+import com.sun.tools.javac.code.Symbol.TypeSymbol;
 import com.sun.tools.javac.tree.JCTree.JCExpression;
 import com.sun.tools.javac.util.Names;
 import javax.annotation.Nullable;
@@ -99,7 +101,14 @@ public abstract class UFreeIdent extends UIdent {
       if (!isGood) {
         return Choice.none();
       } else if (currentBinding == null) {
+        Symbol currentExprSymbol = ASTHelpers.getSymbol(expression);
+        if (currentExprSymbol instanceof TypeSymbol
+            || (currentExprSymbol instanceof MethodSymbol && target instanceof IdentifierTree)) {
+          // The `JCExpression` by itself does not represent a valid Java expression.
+          return Choice.none();
+        }
         unifier.putBinding(key(), expression);
+
         return Choice.of(unifier);
       } else if (currentBinding.toString().equals(expression.toString())) {
         // TODO(lowasser): try checking types here in a way that doesn't reject
