@@ -15,7 +15,13 @@
 <script type="text/javascript" src="../../../../../script-dir/jquery-ui.min.js"></script>
 </head>
 <body class="class-declaration-page">
-<script type="text/javascript">var pathtoroot = "../../../../../";
+<script type="text/javascript">var data = {"i0":10};
+var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
+var altColor = "alt-color";
+var rowColor = "row-color";
+var tableTab = "table-tab";
+var activeTableTab = "active-table-tab";
+var pathtoroot = "../../../../../";
 loadScripts(document, 'script');</script>
 <noscript>
 <div>JavaScript is disabled on your browser.</div>
@@ -50,7 +56,7 @@ loadScripts(document, 'script');</script>
 <li>Detail:&nbsp;</li>
 <li>Field&nbsp;|&nbsp;</li>
 <li><a href="#constructor.detail">Constr</a>&nbsp;|&nbsp;</li>
-<li>Method</li>
+<li><a href="#method.detail">Method</a></li>
 </ul>
 </div>
 <div class="nav-list-search"><label for="search">SEARCH:</label>
@@ -135,6 +141,28 @@ extends <a href="ApiDiffChecker.html" title="class in com.google.errorprone.bugp
 <li>
 <section class="method-summary" id="method.summary">
 <h2>Method Summary</h2>
+<div class="member-summary" id="method-summary-table">
+<div class="table-tabs" role="tablist" aria-orientation="horizontal"><button role="tab" aria-selected="true" aria-controls="method-summary-table.tabpanel" tabindex="0" onkeydown="switchTab(event)" id="t0" class="active-table-tab">All Methods</button><button role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" id="t2" class="table-tab" onclick="show(2);">Instance Methods</button><button role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" id="t4" class="table-tab" onclick="show(8);">Concrete Methods</button></div>
+<div id="method-summary-table.tabpanel" role="tabpanel">
+<table class="summary-table" aria-labelledby="t0">
+<thead>
+<tr>
+<th class="col-first" scope="col">Modifier and Type</th>
+<th class="col-second" scope="col">Method</th>
+<th class="col-last" scope="col">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="alt-color" id="i0">
+<td class="col-first"><code>protected <a href="../../matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#check(com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)">check</a></span>&#8203;(com.sun.source.tree.ExpressionTree&nbsp;tree,
+<a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
+<td class="col-last">&nbsp;</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <div class="inherited-list">
 <h3 id="methods.inherited.from.class.com.google.errorprone.bugpatterns.apidiff.ApiDiffChecker">Methods inherited from class&nbsp;com.google.errorprone.bugpatterns.apidiff.<a href="ApiDiffChecker.html" title="class in com.google.errorprone.bugpatterns.apidiff">ApiDiffChecker</a></h3>
 <code><a href="ApiDiffChecker.html#matchIdentifier(com.sun.source.tree.IdentifierTree,com.google.errorprone.VisitorState)">matchIdentifier</a>, <a href="ApiDiffChecker.html#matchMemberSelect(com.sun.source.tree.MemberSelectTree,com.google.errorprone.VisitorState)">matchMemberSelect</a></code></div>
@@ -173,6 +201,25 @@ extends <a href="ApiDiffChecker.html" title="class in com.google.errorprone.bugp
 </ul>
 </section>
 </li>
+<!-- ============ METHOD DETAIL ========== -->
+<li>
+<section class="method-details" id="method.detail">
+<h2>Method Details</h2>
+<ul class="member-list">
+<li>
+<section class="detail" id="check(com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)">
+<h3>check</h3>
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type"><a href="../../matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></span>&nbsp;<span class="member-name">check</span>&#8203;(<span class="parameters">com.sun.source.tree.ExpressionTree&nbsp;tree,
+<a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
+<dl class="notes">
+<dt>Overrides:</dt>
+<dd><code><a href="ApiDiffChecker.html#check(com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)">check</a></code>&nbsp;in class&nbsp;<code><a href="ApiDiffChecker.html" title="class in com.google.errorprone.bugpatterns.apidiff">ApiDiffChecker</a></code></dd>
+</dl>
+</section>
+</li>
+</ul>
+</section>
+</li>
 </ul>
 </section>
 <!-- ========= END OF CLASS DATA ========= -->
@@ -206,7 +253,7 @@ extends <a href="ApiDiffChecker.html" title="class in com.google.errorprone.bugp
 <li>Detail:&nbsp;</li>
 <li>Field&nbsp;|&nbsp;</li>
 <li><a href="#constructor.detail">Constr</a>&nbsp;|&nbsp;</li>
-<li>Method</li>
+<li><a href="#method.detail">Method</a></li>
 </ul>
 </div>
 </div>
