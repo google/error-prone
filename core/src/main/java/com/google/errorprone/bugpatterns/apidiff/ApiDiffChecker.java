@@ -66,7 +66,7 @@ public abstract class ApiDiffChecker extends BugChecker
     return check(tree, state);
   }
 
-  private Description check(ExpressionTree tree, VisitorState state) {
+  protected Description check(ExpressionTree tree, VisitorState state) {
     if (state.findEnclosing(ImportTree.class) != null) {
       return Description.NO_MATCH;
     }

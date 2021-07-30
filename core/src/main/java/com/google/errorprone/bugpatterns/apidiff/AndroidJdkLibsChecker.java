@@ -17,13 +17,19 @@
 package com.google.errorprone.bugpatterns.apidiff;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.matchers.Description.NO_MATCH;
+import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ImmutableSetMultimap;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.ErrorProneFlags;
+import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.apidiff.ApiDiff.ClassMemberKey;
+import com.google.errorprone.matchers.Description;
+import com.google.errorprone.matchers.Matcher;
+import com.sun.source.tree.ExpressionTree;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -40,6 +46,8 @@ import java.util.stream.Collectors;
 // TODO(b/32513850): Allow Android N+ APIs, e.g., by computing API diff using android.jar
 public class AndroidJdkLibsChecker extends ApiDiffChecker {
 
+  private final boolean allowJava8;
+
   public AndroidJdkLibsChecker(ErrorProneFlags flags) {
     this(flags.getBoolean("Android:Java8Libs").orElse(false));
   }
@@ -50,6 +58,25 @@ public class AndroidJdkLibsChecker extends ApiDiffChecker {
 
   private AndroidJdkLibsChecker(boolean allowJava8) {
     super(deriveApiDiff(allowJava8));
+    this.allowJava8 = allowJava8;
+  }
+
+  private static final Matcher<ExpressionTree> FOREACH_ON_COLLECTION =
+      instanceMethod()
+          .onDescendantOf("java.util.Collection")
+          .named("forEach")
+          .withParameters("java.util.function.Consumer");
+
+  @Override
+  protected Description check(ExpressionTree tree, VisitorState state) {
+    Description description = super.check(tree, state);
+    if (description.equals(NO_MATCH)) {
+      return NO_MATCH;
+    }
+    if (allowJava8 && FOREACH_ON_COLLECTION.matches(tree, state)) {
+      return NO_MATCH;
+    }
+    return description;
   }
 
   private static ApiDiff deriveApiDiff(boolean allowJava8) {
