@@ -65,6 +65,45 @@ public class ReturnMissingNullableTest {
   }
 
   @Test
+  public void testAssignmentOfLiteralNullReturn() {
+    createCompilationTestHelper()
+        .addSourceLines(
+            "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
+            "package com.google.errorprone.bugpatterns.nullness;",
+            "public class LiteralNullReturnTest {",
+            "  String cachedMessage;",
+            "  public String getMessage(boolean b) {",
+            "    if (b) {",
+            "      // BUG: Diagnostic contains: @Nullable",
+            "      return cachedMessage = null;",
+            "    } else {",
+            "      return \"negative\";",
+            "    }",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void testCastLiteralNullReturn() {
+    createCompilationTestHelper()
+        .addSourceLines(
+            "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
+            "package com.google.errorprone.bugpatterns.nullness;",
+            "public class LiteralNullReturnTest {",
+            "  public String getMessage(boolean b) {",
+            "    if (b) {",
+            "      // BUG: Diagnostic contains: @Nullable",
+            "      return (String) null;",
+            "    } else {",
+            "      return \"negative\";",
+            "    }",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void testConditionalLiteralNullReturn() {
     createCompilationTestHelper()
         .addSourceLines(
@@ -74,6 +113,21 @@ public class ReturnMissingNullableTest {
             "  public String getMessage(int x) {",
             "    // BUG: Diagnostic contains: @Nullable",
             "    return x >= 0 ? null : \"negative\";",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void testParenthesizedConditionalLiteralNullReturn() {
+    createCompilationTestHelper()
+        .addSourceLines(
+            "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
+            "package com.google.errorprone.bugpatterns.nullness;",
+            "public class LiteralNullReturnTest {",
+            "  public String getMessage(int x) {",
+            "    // BUG: Diagnostic contains: @Nullable",
+            "    return (x >= 0 ? null : \"negative\");",
             "  }",
             "}")
         .doTest();

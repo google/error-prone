@@ -34,12 +34,15 @@ import com.google.errorprone.bugpatterns.BugChecker.ReturnTreeMatcher;
 import com.google.errorprone.dataflow.nullnesspropagation.Nullness;
 import com.google.errorprone.dataflow.nullnesspropagation.NullnessAnnotations;
 import com.google.errorprone.matchers.Description;
+import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.ConditionalExpressionTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodTree;
+import com.sun.source.tree.ParenthesizedTree;
 import com.sun.source.tree.ReturnTree;
 import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree;
+import com.sun.source.tree.TypeCastTree;
 import com.sun.source.util.SimpleTreeVisitor;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Type;
@@ -103,6 +106,10 @@ public class ReturnMissingNullable extends BugChecker implements ReturnTreeMatch
       // `@Nullable Void` is accurate but noisy, so some users won't want it.
       return NO_MATCH;
     }
+    if (returnType.isPrimitive()) {
+      // Buggy code, but adding @Nullable just makes it worse.
+      return NO_MATCH;
+    }
     if (beingConservative && state.getTypes().isArray(returnType)) {
       /*
        * Type-annotation syntax on arrays can be confusing, and this refactoring doesn't get it
@@ -123,12 +130,17 @@ public class ReturnMissingNullable extends BugChecker implements ReturnTreeMatch
       return NO_MATCH;
     }
 
-    return makeFix(state, methodTree, returnTree);
+    return describeMatch(returnTree, NullnessFixes.makeFix(state, methodTree));
   }
 
   // VisitorState will have the TreePath of the `return` statement. That's OK for our purposes.
   private static final SimpleTreeVisitor<Boolean, VisitorState> HAS_DEFINITELY_NULL_BRANCH =
       new SimpleTreeVisitor<Boolean, VisitorState>() {
+        @Override
+        public Boolean visitAssignment(AssignmentTree tree, VisitorState state) {
+          return visit(tree.getExpression(), state);
+        }
+
         @Override
         public Boolean visitConditionalExpression(
             ConditionalExpressionTree tree, VisitorState state) {
@@ -136,16 +148,28 @@ public class ReturnMissingNullable extends BugChecker implements ReturnTreeMatch
         }
 
         @Override
+        public Boolean visitParenthesized(ParenthesizedTree tree, VisitorState state) {
+          return visit(tree.getExpression(), state);
+        }
+
+        @Override
+        public Boolean visitTypeCast(TypeCastTree tree, VisitorState state) {
+          return visit(tree.getExpression(), state);
+        }
+
+        @Override
         protected Boolean defaultAction(Tree tree, VisitorState state) {
+          /*
+           * This covers not only "Void" and "CAP#1 extends Void" but also the null literal. (It
+           * covers the null literal even through parenthesized expressions. Still, we end up
+           * needing special handling for parenthesized expressions for cases like `(foo ? bar :
+           * null)`.)
+           */
           return isVoid(getType(tree), state);
         }
       };
 
   private static boolean isVoid(Type type, VisitorState state) {
     return type != null && state.getTypes().isSubtype(type, JAVA_LANG_VOID_TYPE.get(state));
-  }
-
-  private Description makeFix(VisitorState state, Tree declaration, Tree matchedTree) {
-    return buildDescription(matchedTree).addFix(NullnessFixes.makeFix(state, declaration)).build();
   }
 }
