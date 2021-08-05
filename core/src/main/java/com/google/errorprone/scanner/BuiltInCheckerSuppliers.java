@@ -92,6 +92,7 @@ import com.google.errorprone.bugpatterns.DeduplicateConstants;
 import com.google.errorprone.bugpatterns.DefaultCharset;
 import com.google.errorprone.bugpatterns.DefaultPackage;
 import com.google.errorprone.bugpatterns.DepAnn;
+import com.google.errorprone.bugpatterns.DeprecatedVariable;
 import com.google.errorprone.bugpatterns.DescribeMatch;
 import com.google.errorprone.bugpatterns.DifferentNameButSame;
 import com.google.errorprone.bugpatterns.DiscardedPostfixExpression;
@@ -773,6 +774,7 @@ public class BuiltInCheckerSuppliers {
           DateFormatConstant.class,
           DefaultCharset.class,
           DefaultPackage.class,
+          DeprecatedVariable.class,
           DoNotCallSuggester.class,
           DoNotClaimAnnotations.class,
           DoNotMockAutoValue.class,
