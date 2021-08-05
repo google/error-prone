@@ -619,6 +619,9 @@ Implicit use of the platform default charset, which can result in differing beha
 __[DefaultPackage](bugpattern/DefaultPackage)__<br>
 Java classes shouldn&#39;t use default package
 
+__[DeprecatedVariable](bugpattern/DeprecatedVariable)__<br>
+Applying the @Deprecated annotation to local variables or parameters has no effect
+
 __[DoNotCallSuggester](bugpattern/DoNotCallSuggester)__<br>
 Consider annotating methods that always throw with @DoNotCall. Read more at https://errorprone.info/bugpattern/DoNotCall
 
