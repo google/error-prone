@@ -40,7 +40,7 @@
     <mockito.version>2.25.0</mockito.version>
     <compile.testing.version>0.18</compile.testing.version>
     <caffeine.version>2.8.8</caffeine.version>
-    <flogger.version>0.5.1</flogger.version>
+    <flogger.version>0.6</flogger.version>
     <maven-javadoc-plugin.version>3.1.0</maven-javadoc-plugin.version>
     <maven-source-plugin.version>3.2.1</maven-source-plugin.version>
     <nexus-staging-maven-plugin.version>1.6.7</nexus-staging-maven-plugin.version>
