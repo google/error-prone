@@ -16,6 +16,7 @@
 
 package com.google.errorprone.bugpatterns.inlineme;
 
+import static com.google.common.base.Preconditions.checkState;
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
@@ -46,6 +47,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 import javax.lang.model.element.Modifier;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
@@ -59,17 +61,33 @@ abstract class InlinabilityResult {
 
   abstract @Nullable ExpressionTree body();
 
+  abstract @Nullable String additionalErrorInfo();
+
+  final String errorMessage() {
+    checkState(error() != null);
+    String message = error().getErrorMessage();
+    if (additionalErrorInfo() != null) {
+      message += " " + additionalErrorInfo();
+    }
+    return message;
+  }
+
   static InlinabilityResult fromError(InlineValidationErrorReason errorReason) {
     return fromError(errorReason, null);
   }
 
   static InlinabilityResult fromError(
       InlineValidationErrorReason errorReason, ExpressionTree body) {
-    return new AutoValue_InlinabilityResult(errorReason, body);
+    return fromError(errorReason, body, null);
+  }
+
+  static InlinabilityResult fromError(
+      InlineValidationErrorReason errorReason, ExpressionTree body, String additionalErrorInfo) {
+    return new AutoValue_InlinabilityResult(errorReason, body, additionalErrorInfo);
   }
 
   static InlinabilityResult inlinable(ExpressionTree body) {
-    return new AutoValue_InlinabilityResult(null, body);
+    return new AutoValue_InlinabilityResult(null, body, null);
   }
 
   boolean isValidForSuggester() {
@@ -89,7 +107,7 @@ abstract class InlinabilityResult {
         ),
     CALLS_DEPRECATED_OR_PRIVATE_APIS(
         "InlineMe cannot be applied when the implementation references deprecated or non-public"
-            + " APIs."),
+            + " API elements:"),
     API_IS_PRIVATE("InlineMe cannot be applied to private APIs."),
     LAMBDA_CAPTURES_PARAMETER(
         "Inlining this method will result in a change in evaluation timing for one or more"
@@ -107,7 +125,7 @@ abstract class InlinabilityResult {
         "When using a varargs parameter, it must only be passed in the last position of a method"
             + " call to another varargs method"),
     EMPTY_VOID("InlineMe cannot yet be applied to no-op void methods"),
-    REUSE_OF_ARGUMENTS("Implementations cannot use an argument more than once");
+    REUSE_OF_ARGUMENTS("Implementations cannot use an argument more than once:");
 
     @Nullable private final String errorMessage;
 
@@ -169,12 +187,20 @@ abstract class InlinabilityResult {
       return fromError(InlineValidationErrorReason.COMPLEX_STATEMENT, body);
     }
 
-    if (checkForArgumentReuse && usesVariablesMultipleTimes(body, methSymbol.params(), state)) {
-      return fromError(InlineValidationErrorReason.REUSE_OF_ARGUMENTS, body);
+    if (checkForArgumentReuse) {
+      Symbol usedMultipledTimes = usesVariablesMultipleTimes(body, methSymbol.params(), state);
+      if (usedMultipledTimes != null) {
+        return fromError(
+            InlineValidationErrorReason.REUSE_OF_ARGUMENTS, body, usedMultipledTimes.toString());
+      }
     }
 
-    if (usesPrivateOrDeprecatedApis(body, state)) {
-      return fromError(InlineValidationErrorReason.CALLS_DEPRECATED_OR_PRIVATE_APIS, body);
+    Tree privateOrDeprecatedApi = usesPrivateOrDeprecatedApis(body, state);
+    if (privateOrDeprecatedApi != null) {
+      return fromError(
+          InlineValidationErrorReason.CALLS_DEPRECATED_OR_PRIVATE_APIS,
+          body,
+          state.getSourceForNode(privateOrDeprecatedApi));
     }
 
     if (hasLambdaCapturingParameters(tree, body)) {
@@ -194,11 +220,9 @@ abstract class InlinabilityResult {
     return inlinable(body);
   }
 
-  // TODO(glorioso): Carry forward the set of used symbols and their use count as a
-  // custom error message.
-  private static boolean usesVariablesMultipleTimes(
+  private static Symbol usesVariablesMultipleTimes(
       ExpressionTree body, List<VarSymbol> parameterVariables, VisitorState state) {
-    AtomicBoolean usesVarsTwice = new AtomicBoolean(false);
+    AtomicReference<Symbol> usesVarsTwice = new AtomicReference<>();
     new TreePathScanner<Void, Void>() {
       final Set<Symbol> usedVariables = new HashSet<>();
 
@@ -206,7 +230,7 @@ abstract class InlinabilityResult {
       public Void visitIdentifier(IdentifierTree identifierTree, Void aVoid) {
         Symbol usedSymbol = getSymbol(identifierTree);
         if (parameterVariables.contains(usedSymbol) && !usedVariables.add(usedSymbol)) {
-          usesVarsTwice.set(true);
+          usesVarsTwice.set(usedSymbol);
         }
         return super.visitIdentifier(identifierTree, aVoid);
       }
@@ -257,8 +281,8 @@ abstract class InlinabilityResult {
     return usesVarargsPoorly.get();
   }
 
-  private static boolean usesPrivateOrDeprecatedApis(ExpressionTree statement, VisitorState state) {
-    AtomicBoolean usesDeprecatedOrNonPublicApis = new AtomicBoolean(false);
+  private static Tree usesPrivateOrDeprecatedApis(ExpressionTree statement, VisitorState state) {
+    AtomicReference<Tree> usesDeprecatedOrNonPublicApis = new AtomicReference<>();
     new TreeScanner<Void, Void>() {
       @Override
       public Void visitLambdaExpression(LambdaExpressionTree node, Void unused) {
@@ -308,11 +332,11 @@ abstract class InlinabilityResult {
       private boolean isDeprecatedOrNonPublic(Tree tree) {
         Symbol sym = getSymbol(tree);
         if (!(sym instanceof PackageSymbol) && !sym.getModifiers().contains(Modifier.PUBLIC)) {
-          usesDeprecatedOrNonPublicApis.set(true);
+          usesDeprecatedOrNonPublicApis.set(tree);
           return true;
         }
         if (hasAnnotation(sym, "java.lang.Deprecated", state)) {
-          usesDeprecatedOrNonPublicApis.set(true);
+          usesDeprecatedOrNonPublicApis.set(tree);
           return true;
         }
 

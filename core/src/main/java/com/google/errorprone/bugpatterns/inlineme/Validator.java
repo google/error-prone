@@ -70,7 +70,7 @@ public final class Validator extends BugChecker implements MethodTreeMatcher {
     InlinabilityResult result = InlinabilityResult.forMethod(tree, state, checkForArgumentReuse);
     if (!result.isValidForValidator()) {
       return buildDescription(tree)
-          .setMessage(result.error().getErrorMessage())
+          .setMessage(result.errorMessage())
           // This method is un-inlineable, so let's remove the annotation (since we can't fix it)
           .addFix(SuggestedFix.delete(getInlineMeAnnotationTree(tree)))
           .build();
