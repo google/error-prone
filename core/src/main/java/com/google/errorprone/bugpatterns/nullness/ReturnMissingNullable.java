@@ -30,11 +30,12 @@ import com.google.errorprone.BugPattern;
 import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
-import com.google.errorprone.bugpatterns.BugChecker.ReturnTreeMatcher;
+import com.google.errorprone.bugpatterns.BugChecker.CompilationUnitTreeMatcher;
 import com.google.errorprone.dataflow.nullnesspropagation.Nullness;
 import com.google.errorprone.dataflow.nullnesspropagation.NullnessAnnotations;
 import com.google.errorprone.matchers.Description;
 import com.sun.source.tree.AssignmentTree;
+import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.ConditionalExpressionTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodTree;
@@ -44,6 +45,7 @@ import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.TypeCastTree;
 import com.sun.source.util.SimpleTreeVisitor;
+import com.sun.source.util.TreePathScanner;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Type;
 import java.util.List;
@@ -53,7 +55,7 @@ import java.util.List;
     name = "ReturnMissingNullable",
     summary = "Method returns a definitely null value but is not annotated @Nullable",
     severity = SUGGESTION)
-public class ReturnMissingNullable extends BugChecker implements ReturnTreeMatcher {
+public class ReturnMissingNullable extends BugChecker implements CompilationUnitTreeMatcher {
   private final boolean beingConservative;
 
   public ReturnMissingNullable(ErrorProneFlags flags) {
@@ -61,76 +63,101 @@ public class ReturnMissingNullable extends BugChecker implements ReturnTreeMatch
   }
 
   @Override
-  /*
-   * TODO(cpovirk): Maybe implement matchMethod instead so that we can report only one finding per
-   * method? Our patching infrastructure is smart enough not to mind duplicate suggested fixes, but
-   * users might be annoyed by multiple robocomments with the same fix.
-   */
-  public Description matchReturn(ReturnTree returnTree, VisitorState state) {
-    if (beingConservative && state.errorProneOptions().isTestOnlyTarget()) {
+  public Description matchCompilationUnit(
+      CompilationUnitTree tree, VisitorState stateForCompilationUnit) {
+    if (beingConservative && stateForCompilationUnit.errorProneOptions().isTestOnlyTarget()) {
       // Annotating test code for nullness can be useful, but it's not our primary focus.
       return NO_MATCH;
     }
 
-    ExpressionTree returnExpression = returnTree.getExpression();
-    if (returnExpression == null) {
-      return NO_MATCH;
-    }
+    new TreePathScanner<Void, Void>() {
+      @Override
+      public Void visitReturn(ReturnTree tree, Void unused) {
+        doVisitReturn(tree);
+        return super.visitReturn(tree, unused);
+      }
 
-    if (!HAS_DEFINITELY_NULL_BRANCH.visit(returnExpression, state)) {
-      return NO_MATCH;
-    }
-
-    MethodTree methodTree = findEnclosingMethod(state);
-    if (methodTree == null) {
-      return NO_MATCH;
-    }
-
-    List<? extends StatementTree> statements = methodTree.getBody().getStatements();
-    if (beingConservative
-        && statements.size() == 1
-        && getOnlyElement(statements) == returnTree
-        && returnExpression.getKind() == NULL_LITERAL) {
       /*
-       * When the entire method body is `return null`, I worry that this may be a stub
-       * implementation that all "real" implementations are meant to override. Ideally such stubs
-       * would use implementation like `throw new UnsupportedOperationException()`, but let's assume
-       * the worst.
+       * Helper method so that we can return early without the verbosity of
+       * `return super.visitReturn(...)`.
        */
-      return NO_MATCH;
-    }
+      void doVisitReturn(ReturnTree returnTree) {
+        /*
+         * We need the the VisitorState to have the correct TreePath for (a) the call to
+         * findEnclosingMethod and (b) the call to NullnessFixes (which looks up identifiers).
+         */
+        VisitorState state = stateForCompilationUnit.withPath(getCurrentPath());
 
-    MethodSymbol method = getSymbol(methodTree);
-    Type returnType = method.getReturnType();
-    if (beingConservative && isVoid(returnType, state)) {
-      // `@Nullable Void` is accurate but noisy, so some users won't want it.
-      return NO_MATCH;
-    }
-    if (returnType.isPrimitive()) {
-      // Buggy code, but adding @Nullable just makes it worse.
-      return NO_MATCH;
-    }
-    if (beingConservative && state.getTypes().isArray(returnType)) {
-      /*
-       * Type-annotation syntax on arrays can be confusing, and this refactoring doesn't get it
-       * right yet.
-       */
-      return NO_MATCH;
-    }
-    if (beingConservative && returnType.getKind() == TYPEVAR) {
-      /*
-       * Consider AbstractFuture.getDoneValue: It returns a literal `null`, but it shouldn't be
-       * annotated @Nullable because it returns null *only* if the AbstractFuture's type argument
-       * permits that.
-       */
-      return NO_MATCH;
-    }
+        ExpressionTree returnExpression = returnTree.getExpression();
+        if (returnExpression == null) {
+          return;
+        }
 
-    if (NullnessAnnotations.fromAnnotationsOn(method).orElse(null) == Nullness.NULLABLE) {
-      return NO_MATCH;
-    }
+        if (!HAS_DEFINITELY_NULL_BRANCH.visit(returnExpression, state)) {
+          return;
+        }
 
-    return describeMatch(returnTree, NullnessFixes.makeFix(state, methodTree));
+        MethodTree methodTree = findEnclosingMethod(state);
+        if (methodTree == null) {
+          return;
+        }
+
+        List<? extends StatementTree> statements = methodTree.getBody().getStatements();
+        if (beingConservative
+            && statements.size() == 1
+            && getOnlyElement(statements) == returnTree
+            && returnExpression.getKind() == NULL_LITERAL) {
+          /*
+           * When the entire method body is `return null`, I worry that this may be a stub
+           * implementation that all "real" implementations are meant to override. Ideally such
+           * stubs would use implementation like `throw new UnsupportedOperationException()`, but
+           * let's assume the worst.
+           */
+          return;
+        }
+
+        MethodSymbol method = getSymbol(methodTree);
+        Type returnType = method.getReturnType();
+        if (beingConservative && isVoid(returnType, state)) {
+          // `@Nullable Void` is accurate but noisy, so some users won't want it.
+          return;
+        }
+        if (returnType.isPrimitive()) {
+          // Buggy code, but adding @Nullable just makes it worse.
+          return;
+        }
+        if (beingConservative && state.getTypes().isArray(returnType)) {
+          /*
+           * Type-annotation syntax on arrays can be confusing, and this refactoring doesn't get it
+           * right yet.
+           */
+          return;
+        }
+        if (beingConservative && returnType.getKind() == TYPEVAR) {
+          /*
+           * Consider AbstractFuture.getDoneValue: It returns a literal `null`, but it shouldn't be
+           * annotated @Nullable because it returns null *only* if the AbstractFuture's type
+           * argument permits that.
+           */
+          return;
+        }
+
+        if (NullnessAnnotations.fromAnnotationsOn(method).orElse(null) == Nullness.NULLABLE) {
+          return;
+        }
+
+        /*
+         * TODO(cpovirk): Consider reporting only one finding per method? Our patching
+         * infrastructure is smart enough not to mind duplicate suggested fixes, but users might be
+         * annoyed by multiple robocomments with the same fix.
+         */
+        state.reportMatch(
+            describeMatch(
+                returnTree, NullnessFixes.makeFix(state.withPath(getCurrentPath()), methodTree)));
+      }
+    }.scan(tree, null);
+
+    return NO_MATCH; // Any reports were made through state.reportMatch.
   }
 
   // VisitorState will have the TreePath of the `return` statement. That's OK for our purposes.

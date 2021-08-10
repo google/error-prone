@@ -554,6 +554,22 @@ public class ReturnMissingNullableTest {
   }
 
   @Test
+  public void testNegativeCases_lambda() {
+    createCompilationTestHelper()
+        .addSourceLines(
+            "com/google/errorprone/bugpatterns/nullness/MissingNullableReturnTest.java",
+            "package com.google.errorprone.bugpatterns.nullness;",
+            "import javax.annotation.Nullable;",
+            "import java.util.concurrent.Callable;",
+            "public class MissingNullableReturnTest {",
+            "  public Callable<?> get() {",
+            "    return () -> { return null; };",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void testSuggestNonJsr305Nullable() {
     createRefactoringTestHelper()
         .addInputLines(
