@@ -84,12 +84,12 @@ loadScripts(document, 'script');</script>
 <section class="description">
 <dl class="notes">
 <dt>All Implemented Interfaces:</dt>
-<dd><code><a href="../BugChecker.ReturnTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.ReturnTreeMatcher</a></code>, <code><a href="../../matchers/Suppressible.html" title="interface in com.google.errorprone.matchers">Suppressible</a></code>, <code><a href="https://docs.oracle.com/javase/8/docs/api/java/io/Serializable.html" title="class or interface in java.io" class="external-link">Serializable</a></code></dd>
+<dd><code><a href="../BugChecker.CompilationUnitTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.CompilationUnitTreeMatcher</a></code>, <code><a href="../../matchers/Suppressible.html" title="interface in com.google.errorprone.matchers">Suppressible</a></code>, <code><a href="https://docs.oracle.com/javase/8/docs/api/java/io/Serializable.html" title="class or interface in java.io" class="external-link">Serializable</a></code></dd>
 </dl>
 <hr>
 <pre>public class <span class="type-name-label">ReturnMissingNullable</span>
 extends <a href="../BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a>
-implements <a href="../BugChecker.ReturnTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.ReturnTreeMatcher</a></pre>
+implements <a href="../BugChecker.CompilationUnitTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.CompilationUnitTreeMatcher</a></pre>
 <div class="block">A <a href="../BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>; see the associated <a href="../../BugPattern.html" title="annotation in com.google.errorprone"><code>BugPattern</code></a> annotation for details.</div>
 <dl class="notes">
 <dt>See Also:</dt>
@@ -148,8 +148,8 @@ implements <a href="../BugChecker.ReturnTreeMatcher.html" title="interface in co
 <tbody>
 <tr class="alt-color" id="i0">
 <td class="col-first"><code><a href="../../matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
-<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#matchReturn(com.sun.source.tree.ReturnTree,com.google.errorprone.VisitorState)">matchReturn</a></span>&#8203;(com.sun.source.tree.ReturnTree&nbsp;returnTree,
-<a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#matchCompilationUnit(com.sun.source.tree.CompilationUnitTree,com.google.errorprone.VisitorState)">matchCompilationUnit</a></span>&#8203;(com.sun.source.tree.CompilationUnitTree&nbsp;tree,
+<a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;stateForCompilationUnit)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
 </tbody>
@@ -191,13 +191,13 @@ implements <a href="../BugChecker.ReturnTreeMatcher.html" title="interface in co
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="matchReturn(com.sun.source.tree.ReturnTree,com.google.errorprone.VisitorState)">
-<h3>matchReturn</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../../matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></span>&nbsp;<span class="member-name">matchReturn</span>&#8203;(<span class="parameters">com.sun.source.tree.ReturnTree&nbsp;returnTree,
-<a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
+<section class="detail" id="matchCompilationUnit(com.sun.source.tree.CompilationUnitTree,com.google.errorprone.VisitorState)">
+<h3>matchCompilationUnit</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../../matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></span>&nbsp;<span class="member-name">matchCompilationUnit</span>&#8203;(<span class="parameters">com.sun.source.tree.CompilationUnitTree&nbsp;tree,
+<a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;stateForCompilationUnit)</span></div>
 <dl class="notes">
 <dt>Specified by:</dt>
-<dd><code><a href="../BugChecker.ReturnTreeMatcher.html#matchReturn(com.sun.source.tree.ReturnTree,com.google.errorprone.VisitorState)">matchReturn</a></code>&nbsp;in interface&nbsp;<code><a href="../BugChecker.ReturnTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.ReturnTreeMatcher</a></code></dd>
+<dd><code><a href="../BugChecker.CompilationUnitTreeMatcher.html#matchCompilationUnit(com.sun.source.tree.CompilationUnitTree,com.google.errorprone.VisitorState)">matchCompilationUnit</a></code>&nbsp;in interface&nbsp;<code><a href="../BugChecker.CompilationUnitTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.CompilationUnitTreeMatcher</a></code></dd>
 </dl>
 </section>
 </li>
