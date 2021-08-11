@@ -168,17 +168,180 @@ public class ReturnMissingNullableTest {
   }
 
   @Test
-  public void testLimitation_fieldConstantNullReturn() {
+  public void testStaticFinalFieldAboveUsage() {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
             "package com.google.errorprone.bugpatterns.nullness;",
-            "public class LiteralNullReturnTest {",
-            "  static final String MESSAGE = null;",
-            "  public String getMessage() {",
-            // TODO(cpovirk): Pre-scan field initializers so we can recognize this as a null return.
-            // TODO(cpovirk): And conceivably even scan static initializer blocks, too....
-            "    return MESSAGE;",
+            "abstract class LiteralNullReturnTest {",
+            "  static final Object NULL = null;",
+            "  Object get() {",
+            "    // BUG: Diagnostic contains: @Nullable",
+            "    return NULL;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void testStaticFinalFieldBelowUsage() {
+    createCompilationTestHelper()
+        .addSourceLines(
+            "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
+            "package com.google.errorprone.bugpatterns.nullness;",
+            "abstract class LiteralNullReturnTest {",
+            "  Object get() {",
+            "    // BUG: Diagnostic contains: @Nullable",
+            "    return NULL;",
+            "  }",
+            "  static final Object NULL = null;",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void testInstanceFinalField() {
+    createCompilationTestHelper()
+        .addSourceLines(
+            "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
+            "package com.google.errorprone.bugpatterns.nullness;",
+            "abstract class LiteralNullReturnTest {",
+            "  final Object nullObject = null;",
+            "  Object get() {",
+            "    // BUG: Diagnostic contains: @Nullable",
+            "    return nullObject;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void testMemberSelectFinalField() {
+    createCompilationTestHelper()
+        .addSourceLines(
+            "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
+            "package com.google.errorprone.bugpatterns.nullness;",
+            "abstract class LiteralNullReturnTest {",
+            "  final Object nullObject = null;",
+            "  Object get() {",
+            "    // BUG: Diagnostic contains: @Nullable",
+            "    return this.nullObject;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void testVoidField() {
+    createCompilationTestHelper()
+        .addSourceLines(
+            "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
+            "package com.google.errorprone.bugpatterns.nullness;",
+            "abstract class LiteralNullReturnTest {",
+            "  Void nullObject;",
+            "  Object get() {",
+            "    // BUG: Diagnostic contains: @Nullable",
+            "    return nullObject;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void testFinalLocalVariable() {
+    createCompilationTestHelper()
+        .addSourceLines(
+            "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
+            "package com.google.errorprone.bugpatterns.nullness;",
+            "abstract class LiteralNullReturnTest {",
+            "  Object get() {",
+            "    final Object nullObject = null;",
+            "    // BUG: Diagnostic contains: @Nullable",
+            "    return nullObject;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void testEffectivelyFinalLocalVariable() {
+    createCompilationTestHelper()
+        .addSourceLines(
+            "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
+            "package com.google.errorprone.bugpatterns.nullness;",
+            "abstract class LiteralNullReturnTest {",
+            "  Object get() {",
+            "    Object nullObject = null;",
+            "    // BUG: Diagnostic contains: @Nullable",
+            "    return nullObject;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void testFinalLocalVariableComplexTree() {
+    createCompilationTestHelper()
+        .addSourceLines(
+            "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
+            "package com.google.errorprone.bugpatterns.nullness;",
+            "abstract class LiteralNullReturnTest {",
+            "  Object get(boolean b1, boolean b2, Object someObject) {",
+            "    final Object nullObject = null;",
+            "    // BUG: Diagnostic contains: @Nullable",
+            "    return (b1 ? someObject : b2 ? nullObject : \"\");",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void testLimitation_staticFinalFieldInitializedLater() {
+    createCompilationTestHelper()
+        .addSourceLines(
+            "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
+            "package com.google.errorprone.bugpatterns.nullness;",
+            "abstract class LiteralNullReturnTest {",
+            "  static final Object NULL;",
+            "  static {",
+            "    NULL = null;",
+            "  }",
+            "  Object get() {",
+            "    return NULL;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void testLimitation_instanceFinalFieldInitializedLater() {
+    createCompilationTestHelper()
+        .addSourceLines(
+            "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
+            "package com.google.errorprone.bugpatterns.nullness;",
+            "abstract class LiteralNullReturnTest {",
+            "  final Object nullObject;",
+            "  {",
+            "    nullObject = null;", // or, more likely, in a constructor
+            "  }",
+            "  Object get() {",
+            "    return nullObject;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void testLimitation_finalLocalVariableInitializedLater() {
+    createCompilationTestHelper()
+        .addSourceLines(
+            "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
+            "package com.google.errorprone.bugpatterns.nullness;",
+            "abstract class LiteralNullReturnTest {",
+            "  Object get() {",
+            "    final Object nullObject;",
+            "    nullObject = null;",
+            "    return nullObject;",
             "  }",
             "}")
         .doTest();
@@ -564,6 +727,36 @@ public class ReturnMissingNullableTest {
             "public class MissingNullableReturnTest {",
             "  public Callable<?> get() {",
             "    return () -> { return null; };",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void testNegativeCases_staticNonFinalField() {
+    createCompilationTestHelper()
+        .addSourceLines(
+            "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
+            "package com.google.errorprone.bugpatterns.nullness;",
+            "abstract class LiteralNullReturnTest {",
+            "  static Object NULL = null;",
+            "  Object get() {",
+            "    return NULL;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void testNegativeCases_staticFinalNonNullField() {
+    createCompilationTestHelper()
+        .addSourceLines(
+            "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
+            "package com.google.errorprone.bugpatterns.nullness;",
+            "abstract class LiteralNullReturnTest {",
+            "  static final Object SOMETHING = 1;",
+            "  Object get() {",
+            "    return SOMETHING;",
             "  }",
             "}")
         .doTest();

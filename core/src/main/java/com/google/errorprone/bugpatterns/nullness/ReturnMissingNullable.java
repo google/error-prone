@@ -23,9 +23,11 @@ import static com.google.errorprone.suppliers.Suppliers.JAVA_LANG_VOID_TYPE;
 import static com.google.errorprone.util.ASTHelpers.findEnclosingMethod;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
+import static com.google.errorprone.util.ASTHelpers.isConsideredFinal;
 import static com.sun.source.tree.Tree.Kind.NULL_LITERAL;
 import static javax.lang.model.type.TypeKind.TYPEVAR;
 
+import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
@@ -44,9 +46,11 @@ import com.sun.source.tree.ReturnTree;
 import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.TypeCastTree;
+import com.sun.source.tree.VariableTree;
 import com.sun.source.util.SimpleTreeVisitor;
 import com.sun.source.util.TreePathScanner;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
+import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type;
 import java.util.List;
 
@@ -70,6 +74,39 @@ public class ReturnMissingNullable extends BugChecker implements CompilationUnit
       return NO_MATCH;
     }
 
+    /*
+     * In each scanner below, we define helper methods so that we can return early without the
+     * verbosity of `return super.visitFoo(...)`.
+     */
+
+    ImmutableSet.Builder<VarSymbol> definitelyNullVarsBuilder = ImmutableSet.builder();
+    new TreePathScanner<Void, Void>() {
+      @Override
+      public Void visitVariable(VariableTree tree, Void unused) {
+        doVisitVariable(tree);
+        return super.visitVariable(tree, unused);
+      }
+
+      void doVisitVariable(VariableTree tree) {
+        VarSymbol symbol = getSymbol(tree);
+        if (!isConsideredFinal(symbol)) {
+          return;
+        }
+
+        ExpressionTree initializer = tree.getInitializer();
+        if (initializer == null) {
+          return;
+        }
+
+        if (initializer.getKind() != NULL_LITERAL) {
+          return;
+        }
+
+        definitelyNullVarsBuilder.add(symbol);
+      }
+    }.scan(tree, null);
+    ImmutableSet<VarSymbol> definitelyNullVars = definitelyNullVarsBuilder.build();
+
     new TreePathScanner<Void, Void>() {
       @Override
       public Void visitReturn(ReturnTree tree, Void unused) {
@@ -77,10 +114,6 @@ public class ReturnMissingNullable extends BugChecker implements CompilationUnit
         return super.visitReturn(tree, unused);
       }
 
-      /*
-       * Helper method so that we can return early without the verbosity of
-       * `return super.visitReturn(...)`.
-       */
       void doVisitReturn(ReturnTree returnTree) {
         /*
          * We need the the VisitorState to have the correct TreePath for (a) the call to
@@ -90,10 +123,6 @@ public class ReturnMissingNullable extends BugChecker implements CompilationUnit
 
         ExpressionTree returnExpression = returnTree.getExpression();
         if (returnExpression == null) {
-          return;
-        }
-
-        if (!HAS_DEFINITELY_NULL_BRANCH.visit(returnExpression, state)) {
           return;
         }
 
@@ -151,50 +180,56 @@ public class ReturnMissingNullable extends BugChecker implements CompilationUnit
          * infrastructure is smart enough not to mind duplicate suggested fixes, but users might be
          * annoyed by multiple robocomments with the same fix.
          */
-        state.reportMatch(
-            describeMatch(
-                returnTree, NullnessFixes.makeFix(state.withPath(getCurrentPath()), methodTree)));
+        if (hasDefinitelyNullBranch(
+            returnExpression, definitelyNullVars, stateForCompilationUnit)) {
+          state.reportMatch(
+              describeMatch(
+                  returnTree, NullnessFixes.makeFix(state.withPath(getCurrentPath()), methodTree)));
+        }
       }
     }.scan(tree, null);
 
     return NO_MATCH; // Any reports were made through state.reportMatch.
   }
 
-  // VisitorState will have the TreePath of the `return` statement. That's OK for our purposes.
-  private static final SimpleTreeVisitor<Boolean, VisitorState> HAS_DEFINITELY_NULL_BRANCH =
-      new SimpleTreeVisitor<Boolean, VisitorState>() {
-        @Override
-        public Boolean visitAssignment(AssignmentTree tree, VisitorState state) {
-          return visit(tree.getExpression(), state);
-        }
+  private static boolean hasDefinitelyNullBranch(
+      ExpressionTree tree,
+      ImmutableSet<VarSymbol> definitelyNullVars,
+      VisitorState stateForCompilationUnit) {
+    return new SimpleTreeVisitor<Boolean, Void>() {
+      @Override
+      public Boolean visitAssignment(AssignmentTree tree, Void unused) {
+        return visit(tree.getExpression(), unused);
+      }
 
-        @Override
-        public Boolean visitConditionalExpression(
-            ConditionalExpressionTree tree, VisitorState state) {
-          return visit(tree.getTrueExpression(), state) || visit(tree.getFalseExpression(), state);
-        }
+      @Override
+      public Boolean visitConditionalExpression(ConditionalExpressionTree tree, Void unused) {
+        return visit(tree.getTrueExpression(), unused) || visit(tree.getFalseExpression(), unused);
+      }
 
-        @Override
-        public Boolean visitParenthesized(ParenthesizedTree tree, VisitorState state) {
-          return visit(tree.getExpression(), state);
-        }
+      @Override
+      public Boolean visitParenthesized(ParenthesizedTree tree, Void unused) {
+        return visit(tree.getExpression(), unused);
+      }
 
-        @Override
-        public Boolean visitTypeCast(TypeCastTree tree, VisitorState state) {
-          return visit(tree.getExpression(), state);
-        }
+      @Override
+      public Boolean visitTypeCast(TypeCastTree tree, Void unused) {
+        return visit(tree.getExpression(), unused);
+      }
 
-        @Override
-        protected Boolean defaultAction(Tree tree, VisitorState state) {
-          /*
-           * This covers not only "Void" and "CAP#1 extends Void" but also the null literal. (It
-           * covers the null literal even through parenthesized expressions. Still, we end up
-           * needing special handling for parenthesized expressions for cases like `(foo ? bar :
-           * null)`.)
-           */
-          return isVoid(getType(tree), state);
-        }
-      };
+      @Override
+      protected Boolean defaultAction(Tree tree, Void unused) {
+        /*
+         * This covers not only "Void" and "CAP#1 extends Void" but also the null literal. (It
+         * covers the null literal even through parenthesized expressions. Still, we end up
+         * needing special handling for parenthesized expressions for cases like `(foo ? bar :
+         * null)`.)
+         */
+        return isVoid(getType(tree), stateForCompilationUnit)
+            || definitelyNullVars.contains(getSymbol(tree));
+      }
+    }.visit(tree, null);
+  }
 
   private static boolean isVoid(Type type, VisitorState state) {
     return type != null && state.getTypes().isSubtype(type, JAVA_LANG_VOID_TYPE.get(state));
