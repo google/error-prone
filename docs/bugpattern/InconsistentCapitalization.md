@@ -6,4 +6,5 @@ than one option is possible.
 This checker will only find parameters that differ in capitalization with fields
 that can be accessed from the parameter's scope.
 
+
 [styleCamelCase]: https://google.github.io/styleguide/javaguide.html#s5.3-camel-case

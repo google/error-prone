@@ -58,7 +58,7 @@ import javax.lang.model.element.ElementKind;
     linkType = CUSTOM,
     documentSuppression = false,
     tags = StandardTags.STYLE,
-    link = "https://google.github.io/styleguide/javaguide.html#s3.3.1-wildcard-imports"
+    link = "https://google.github.io/styleguide/javaguide.html?cl=head#s3.3.1-wildcard-imports"
     )
 public class WildcardImport extends BugChecker implements CompilationUnitTreeMatcher {
 
