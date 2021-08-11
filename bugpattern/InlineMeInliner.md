@@ -1,6 +1,6 @@
 ---
 title: InlineMeInliner
-summary: This API is deprecated and the caller should be 'inlined'.
+summary: Callers of this API should be inlined.
 layout: bugpattern
 tags: JavaInlineMe
 severity: WARNING

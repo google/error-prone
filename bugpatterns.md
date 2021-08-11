@@ -746,7 +746,7 @@ __[InlineFormatString](bugpattern/InlineFormatString)__<br>
 Prefer to create format strings inline, instead of extracting them to a single-use constant
 
 __[InlineMeInliner](bugpattern/InlineMeInliner)__<br>
-This API is deprecated and the caller should be &#39;inlined&#39;.
+Callers of this API should be inlined.
 
 __[InlineMeSuggester](bugpattern/InlineMeSuggester)__<br>
 This deprecated API looks inlineable. If you&#39;d like the body of the API to be inlined to its callers, please annotate it with @InlineMe.
