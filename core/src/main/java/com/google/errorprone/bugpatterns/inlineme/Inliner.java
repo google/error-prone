@@ -65,7 +65,7 @@ import java.util.stream.Stream;
  */
 @BugPattern(
     name = "InlineMeInliner",
-    summary = "This API is deprecated and the caller should be 'inlined'.",
+    summary = "Callers of this API should be inlined.",
     severity = WARNING,
     tags = Inliner.FINDING_TAG)
 public final class Inliner extends BugChecker
@@ -270,7 +270,7 @@ public final class Inliner extends BugChecker
   }
 
   private Description describe(Tree tree, SuggestedFix fix, Api api) {
-    return buildDescription(tree).setMessage(api.deprecationMessage()).addFix(fix).build();
+    return buildDescription(tree).setMessage(api.message()).addFix(fix).build();
   }
 
   @AutoValue
@@ -302,9 +302,9 @@ public final class Inliner extends BugChecker
 
     abstract String extraMessage();
 
-    final String deprecationMessage() {
+    final String message() {
       return shortName()
-          + " is deprecated and should be inlined"
+          + " should be inlined"
           + extraMessage();
     }
 
@@ -314,11 +314,11 @@ public final class Inliner extends BugChecker
     }
 
     /**
-     * Returns a short, human readable description of this API (e.g., {@code
-     * ClassName.methodName()}).
+     * Returns a short, human readable description of this API in markdown format (e.g., {@code
+     * `ClassName.methodName()`}).
      */
     final String shortName() {
-      return String.format("%s.%s()", simpleClassName(), methodName());
+      return String.format("`%s.%s()`", simpleClassName(), methodName());
     }
 
     /** Returns the simple class name (e.g., {@code ClassName}). */
