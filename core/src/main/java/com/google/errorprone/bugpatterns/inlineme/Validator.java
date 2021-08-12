@@ -23,7 +23,6 @@ import com.google.common.base.CharMatcher;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.annotations.InlineMe;
 import com.google.errorprone.annotations.InlineMeValidationDisabled;
@@ -50,12 +49,6 @@ import java.util.function.Predicate;
     documentSuppression = false,
     severity = ERROR)
 public final class Validator extends BugChecker implements MethodTreeMatcher {
-  private final boolean checkForArgumentReuse;
-
-  public Validator(ErrorProneFlags flags) {
-    checkForArgumentReuse =
-        flags.getBoolean(InlinabilityResult.DISALLOW_ARGUMENT_REUSE).orElse(true);
-  }
 
   @Override
   public Description matchMethod(MethodTree tree, VisitorState state) {
@@ -67,7 +60,7 @@ public final class Validator extends BugChecker implements MethodTreeMatcher {
       return Description.NO_MATCH;
     }
 
-    InlinabilityResult result = InlinabilityResult.forMethod(tree, state, checkForArgumentReuse);
+    InlinabilityResult result = InlinabilityResult.forMethod(tree, state);
     if (!result.isValidForValidator()) {
       return buildDescription(tree)
           .setMessage(result.errorMessage())

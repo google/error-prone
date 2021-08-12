@@ -55,8 +55,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 @AutoValue
 abstract class InlinabilityResult {
 
-  static final String DISALLOW_ARGUMENT_REUSE = "InlineMe:DisallowArgumentReuse";
-
   abstract @Nullable InlineValidationErrorReason error();
 
   abstract @Nullable ExpressionTree body();
@@ -138,8 +136,7 @@ abstract class InlinabilityResult {
     }
   }
 
-  static InlinabilityResult forMethod(
-      MethodTree tree, VisitorState state, boolean checkForArgumentReuse) {
+  static InlinabilityResult forMethod(MethodTree tree, VisitorState state) {
     if (tree.getBody() == null) {
       return fromError(InlineValidationErrorReason.NO_BODY);
     }
@@ -187,12 +184,10 @@ abstract class InlinabilityResult {
       return fromError(InlineValidationErrorReason.COMPLEX_STATEMENT, body);
     }
 
-    if (checkForArgumentReuse) {
-      Symbol usedMultipledTimes = usesVariablesMultipleTimes(body, methSymbol.params(), state);
-      if (usedMultipledTimes != null) {
-        return fromError(
-            InlineValidationErrorReason.REUSE_OF_ARGUMENTS, body, usedMultipledTimes.toString());
-      }
+    Symbol usedMultipledTimes = usesVariablesMultipleTimes(body, methSymbol.params(), state);
+    if (usedMultipledTimes != null) {
+      return fromError(
+          InlineValidationErrorReason.REUSE_OF_ARGUMENTS, body, usedMultipledTimes.toString());
     }
 
     Tree privateOrDeprecatedApi = usesPrivateOrDeprecatedApis(body, state);

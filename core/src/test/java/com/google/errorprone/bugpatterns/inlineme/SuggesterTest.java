@@ -612,9 +612,7 @@ public class SuggesterTest {
 
   @Test
   public void testTernaryOverMultipleLines() {
-    // This is suggested/works only if we allow users to use the argument more than once
     refactoringTestHelper
-        .setArgs("-XepOpt:" + InlinabilityResult.DISALLOW_ARGUMENT_REUSE + "=false")
         .addInputLines(
             "Client.java",
             "package com.google.frobber;",
@@ -623,7 +621,7 @@ public class SuggesterTest {
             "  @Deprecated",
             "  public Duration getDeadline(Duration deadline) {",
             "    return deadline.compareTo(Duration.ZERO) > 0",
-            "        ? deadline",
+            "        ? Duration.ofSeconds(42)",
             "        : Duration.ZERO;",
             "  }",
             "}")
@@ -633,13 +631,13 @@ public class SuggesterTest {
             "import com.google.errorprone.annotations.InlineMe;",
             "import java.time.Duration;",
             "public final class Client {",
-            "  @InlineMe(replacement = \""
-                + "deadline.compareTo(Duration.ZERO) > 0 ? deadline : Duration.ZERO\", ",
+            "  @InlineMe(replacement = \"deadline.compareTo(Duration.ZERO) > 0 ?"
+                + " Duration.ofSeconds(42) : Duration.ZERO\", ",
             "imports = \"java.time.Duration\")",
             "  @Deprecated",
             "  public Duration getDeadline(Duration deadline) {",
             "    return deadline.compareTo(Duration.ZERO) > 0",
-            "        ? deadline",
+            "        ? Duration.ofSeconds(42)",
             "        : Duration.ZERO;",
             "  }",
             "}")
