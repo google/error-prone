@@ -79,4 +79,23 @@ public class OptionalNotPresentTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void orElseThrow() {
+    assumeTrue(RuntimeVersion.isAtLeast11());
+    compilationTestHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.util.Optional;",
+            "class Test {",
+            "  int g(Optional<Integer> o) {",
+            "    // BUG: Diagnostic contains:",
+            "    if (o.isEmpty()) {",
+            "      return o.orElseThrow();",
+            "    }",
+            "    return -1;",
+            "  }",
+            "}")
+        .doTest();
+  }
 }

@@ -38,6 +38,7 @@ import com.sun.source.tree.UnaryTree;
 import com.sun.source.util.TreeScanner;
 import java.util.Iterator;
 import javax.annotation.Nullable;
+import javax.lang.model.element.Name;
 
 /** @author mariasam@google.com (Maria Sam) */
 @BugPattern(
@@ -132,7 +133,8 @@ public class OptionalNotPresent extends BugChecker implements MethodInvocationTr
       if (receiver != null && ASTHelpers.sameVariable(receiver, optionalVar)) {
         ExpressionTree treeIdent = tree.getMethodSelect();
         if (treeIdent instanceof MemberSelectTree) {
-          if (((MemberSelectTree) treeIdent).getIdentifier().contentEquals("get")) {
+          Name identifier = ((MemberSelectTree) treeIdent).getIdentifier();
+          if (identifier.contentEquals("get") || identifier.contentEquals("orElseThrow")) {
             hasGet = true;
           }
         }

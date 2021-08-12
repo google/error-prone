@@ -16,7 +16,10 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static org.junit.Assume.assumeTrue;
+
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
+import com.google.errorprone.util.RuntimeVersion;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -29,6 +32,7 @@ public final class UnnecessaryOptionalGetTest {
 
   @Test
   public void genericOptionalVars_sameVarGet_replacesWithLambdaArg() {
+    assumeTrue(RuntimeVersion.isAtLeast11());
     refactoringTestHelper
         .addInputLines(
             "Test.java",
@@ -40,6 +44,7 @@ public final class UnnecessaryOptionalGetTest {
             "    op.map(x -> Long.parseLong(op.get()));",
             "    op.filter(x -> op.get().isEmpty());",
             "    op.flatMap(x -> Optional.of(op.get()));",
+            "    op.flatMap(x -> Optional.of(op.orElseThrow()));",
             "  }",
             "}")
         .addOutputLines(
@@ -51,6 +56,7 @@ public final class UnnecessaryOptionalGetTest {
             "    op.ifPresent(x -> System.out.println(x));",
             "    op.map(x -> Long.parseLong(x));",
             "    op.filter(x -> x.isEmpty());",
+            "    op.flatMap(x -> Optional.of(x));",
             "    op.flatMap(x -> Optional.of(x));",
             "  }",
             "}")
@@ -278,6 +284,31 @@ public final class UnnecessaryOptionalGetTest {
             "  }",
             "}")
         .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
+  public void orElseThrow() {
+    assumeTrue(RuntimeVersion.isAtLeast11());
+    refactoringTestHelper
+        .addInputLines(
+            "Test.java",
+            "import java.util.Optional;",
+            "public class Test {",
+            "  private void home() {",
+            "    Optional<String> op = Optional.of(\"hello\");",
+            "    op.flatMap(x -> Optional.of(op.orElseThrow()));",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "import java.util.Optional;",
+            "public class Test {",
+            "  private void home() {",
+            "    Optional<String> op = Optional.of(\"hello\");",
+            "    op.flatMap(x -> Optional.of(x));",
+            "  }",
+            "}")
         .doTest();
   }
 }

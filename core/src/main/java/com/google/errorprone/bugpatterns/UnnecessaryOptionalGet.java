@@ -61,7 +61,7 @@ public final class UnnecessaryOptionalGet extends BugChecker
       anyOf(
           instanceMethod()
               .onExactClass("java.util.Optional")
-              .namedAnyOf("get", "orElse", "orElseGet", "orElseThrow"),
+              .namedAnyOf("get", "orElseThrow", "orElse", "orElseGet", "orElseThrow"),
           instanceMethod()
               .onExactClass("java.util.OptionalLong")
               .namedAnyOf("getAsLong", "orElse", "orElseGet", "orElseThrow"),
