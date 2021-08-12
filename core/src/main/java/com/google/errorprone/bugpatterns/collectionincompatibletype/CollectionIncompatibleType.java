@@ -72,12 +72,10 @@ public class CollectionIncompatibleType extends BugChecker
   }
 
   private final FixType fixType;
-  private final TypeCompatibilityUtils typeCompatibilityUtils;
 
   public CollectionIncompatibleType(ErrorProneFlags flags) {
     this.fixType =
         flags.getEnum("CollectionIncompatibleType:FixType", FixType.class).orElse(FixType.NONE);
-    this.typeCompatibilityUtils = TypeCompatibilityUtils.fromFlags(flags);
   }
 
 
@@ -99,7 +97,7 @@ public class CollectionIncompatibleType extends BugChecker
 
     Types types = state.getTypes();
     TypeCompatibilityReport compatibilityReport =
-        typeCompatibilityUtils.compatibilityOfTypes(
+        TypeCompatibilityUtils.compatibilityOfTypes(
             result.targetType(), result.sourceType(), state);
     if (compatibilityReport.isCompatible()) {
       return NO_MATCH;

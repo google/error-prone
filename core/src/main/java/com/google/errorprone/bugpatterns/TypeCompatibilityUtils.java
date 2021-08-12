@@ -24,7 +24,6 @@ import static com.google.errorprone.util.ASTHelpers.isSubtype;
 
 import com.google.auto.value.AutoValue;
 import com.google.common.collect.Streams;
-import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.sun.tools.javac.code.Flags;
 import com.sun.tools.javac.code.Symbol;
@@ -47,27 +46,12 @@ import javax.lang.model.type.TypeKind;
  * <p>i.e.: It is possible that an object of one type could be equal to an object of the other type.
  */
 public final class TypeCompatibilityUtils {
-  private final boolean treatDifferentProtosAsIncomparable;
-
-  public static TypeCompatibilityUtils fromFlags(ErrorProneFlags flags) {
-    return new TypeCompatibilityUtils(
-        flags.getBoolean("TypeCompatibility:TreatDifferentProtosAsIncomparable").orElse(true));
-  }
-
-  public static TypeCompatibilityUtils allOn() {
-    return new TypeCompatibilityUtils(/* treatDifferentProtosAsIncomparable= */ true);
-  }
-
-  private TypeCompatibilityUtils(boolean treatDifferentProtosAsIncomparable) {
-    this.treatDifferentProtosAsIncomparable = treatDifferentProtosAsIncomparable;
-  }
-
-  public TypeCompatibilityReport compatibilityOfTypes(
+  public static TypeCompatibilityReport compatibilityOfTypes(
       Type receiverType, Type argumentType, VisitorState state) {
     return compatibilityOfTypes(receiverType, argumentType, typeSet(state), typeSet(state), state);
   }
 
-  private TypeCompatibilityReport compatibilityOfTypes(
+  private static TypeCompatibilityReport compatibilityOfTypes(
       Type leftType,
       Type rightType,
       Set<Type> previouslySeenComponentsOfLeftType,
@@ -198,11 +182,8 @@ public final class TypeCompatibilityUtils {
         && !isSameType(rightType, collectionType, state);
   }
 
-  private boolean areIncompatibleProtoTypes(
+  private static boolean areIncompatibleProtoTypes(
       Type leftType, Type rightType, Type nearestCommonSupertype, VisitorState state) {
-    if (!treatDifferentProtosAsIncomparable) {
-      return false;
-    }
     // See discussion in b/152428396 - Proto equality is defined as having the "same message type",
     // with the same corresponding field values. However - there are 3 flavors of Java Proto API
     // that could represent the same message (proto1, mutable proto2, and immutable proto2 [as well
@@ -283,7 +264,7 @@ public final class TypeCompatibilityUtils {
    * report showing that a specific generic type in the projection of {@code leftType} is
    * incompatible with the specific generic type in the projection of {@code rightType}.
    */
-  private TypeCompatibilityReport checkForGenericsMismatch(
+  private static TypeCompatibilityReport checkForGenericsMismatch(
       Type leftType,
       Type rightType,
       Type superType,
