@@ -37,6 +37,8 @@ mvn clean
 
 mvn -P run-annotation-processor compile site
 rsync -a docgen/target/generated-wiki/ ${GH_PAGES_DIR}
+# remove docs from deleted checkers
+rsync --delete -a docgen/target/generated-wiki/bugpattern/ ${GH_PAGES_DIR}/bugpattern/
 
 cd $GH_PAGES_DIR
 git add --all .
