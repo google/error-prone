@@ -1471,6 +1471,9 @@ Add a private constructor to modules that will not be instantiated by Dagger.
 __[PrivateConstructorForUtilityClass](bugpattern/PrivateConstructorForUtilityClass)__<br>
 Classes which are not intended to be instantiated should be made non-instantiable with a private constructor. This includes utility classes (classes with only static members), and the main class.
 
+__[PublicApiNamedStreamShouldReturnStream](bugpattern/PublicApiNamedStreamShouldReturnStream)__<br>
+Public methods named stream() are generally expected to return a type whose name ends with Stream. Consider choosing a different method name instead.
+
 __[PublicConstructorForAbstractClass](bugpattern/PublicConstructorForAbstractClass)__<br>
 Constructors of an abstract class can be declared protected as there is never a need for them to be public
 
