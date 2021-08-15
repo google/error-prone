@@ -18,6 +18,7 @@ matrix:
         # https://github.com/travis-ci/travis-ci/issues/9368#issuecomment-395354755
         - rm "${JAVA_HOME}/lib/security/cacerts"
         - ln -s /etc/ssl/certs/java/cacerts "${JAVA_HOME}/lib/security/cacerts"
+        - echo google
     - jdk: openjdk15
       script:
         # default Maven command
