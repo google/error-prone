@@ -356,6 +356,13 @@ public class ReturnValueIgnoredTest {
             "    // BUG: Diagnostic contains: ReturnValueIgnored",
             "    map.containsValue(42);",
             "  }",
+            "  void doTest(Map.Entry<Integer, Integer> entry) {",
+            "    // BUG: Diagnostic contains: ReturnValueIgnored",
+            "    entry.getKey();",
+            "    // BUG: Diagnostic contains: ReturnValueIgnored",
+            "    entry.getValue();",
+            "    entry.setValue(42);",
+            "  }",
             "}")
         .doTest();
   }
