@@ -12,6 +12,7 @@ jdk:
   - openjdk-ea
 
 matrix:
+  fast_finish: true
   include:
     - jdk: openjdk10
       before_install:
