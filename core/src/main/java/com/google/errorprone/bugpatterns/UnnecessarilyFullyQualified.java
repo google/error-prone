@@ -46,10 +46,8 @@ import com.sun.tools.javac.code.Symbol.PackageSymbol;
 import com.sun.tools.javac.code.Symbol.TypeSymbol;
 import com.sun.tools.javac.util.Position;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import javax.lang.model.element.Name;
 
@@ -74,7 +72,6 @@ public final class UnnecessarilyFullyQualified extends BugChecker
       return NO_MATCH;
     }
     Table<Name, TypeSymbol, List<TreePath>> table = HashBasedTable.create();
-    Set<Name> identifiersSeen = new HashSet<>();
     new SuppressibleTreePathScanner<Void, Void>() {
       @Override
       public Void visitImport(ImportTree importTree, Void unused) {
@@ -87,12 +84,6 @@ public final class UnnecessarilyFullyQualified extends BugChecker
           handle(getCurrentPath());
         }
         return super.visitMemberSelect(memberSelectTree, null);
-      }
-
-      @Override
-      public Void visitIdentifier(IdentifierTree identifierTree, Void unused) {
-        identifiersSeen.add(identifierTree.getName());
-        return null;
       }
 
       private boolean shouldIgnore() {
@@ -161,20 +152,25 @@ public final class UnnecessarilyFullyQualified extends BugChecker
       if (Ascii.isLowerCase(name.charAt(0))) {
         continue;
       }
-      if (identifiersSeen.contains(name)) {
-        continue;
-      }
       String nameString = name.toString();
       if (EXEMPTED_NAMES.contains(nameString)) {
         continue;
       }
+      TypeSymbol type = getOnlyElement(types.keySet());
       List<TreePath> pathsToFix = getOnlyElement(types.values());
       if (pathsToFix.stream()
-          .anyMatch(path -> findIdent(nameString, state.withPath(path), VAL_TYP) != null)) {
+          .anyMatch(
+              path -> {
+                Symbol ident = findIdent(nameString, state.withPath(path), VAL_TYP);
+                return ident != null && !ident.equals(type);
+              })) {
         continue;
       }
       SuggestedFix.Builder fixBuilder = SuggestedFix.builder();
-      fixBuilder.addImport(getOnlyElement(types.keySet()).getQualifiedName().toString());
+      String newImport = type.getQualifiedName().toString();
+      if (!newImport.startsWith("java.lang.")) {
+        fixBuilder.addImport(newImport);
+      }
       for (TreePath path : pathsToFix) {
         fixBuilder.replace(path.getLeaf(), nameString);
       }
