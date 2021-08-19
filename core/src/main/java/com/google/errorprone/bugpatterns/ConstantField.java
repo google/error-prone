@@ -37,7 +37,7 @@ import javax.lang.model.element.Modifier;
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
     name = "ConstantField",
-    summary = "Field name is CONSTANT_CASE, but field is not static and final",
+    summary = "Fields with CONSTANT_CASE names should be both static and final",
     severity = SUGGESTION,
     tags = BugPattern.StandardTags.STYLE)
 public class ConstantField extends BugChecker implements VariableTreeMatcher {
