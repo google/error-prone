@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns.flogger;
 
-import static com.google.common.base.Preconditions.checkState;
 import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.bugpatterns.flogger.FloggerHelpers.inferFormatSpecifier;
@@ -77,20 +76,20 @@ public class FloggerStringConcatenation extends BugChecker implements MethodInvo
         new SimpleTreeVisitor<Void, Void>() {
           @Override
           public Void visitBinary(BinaryTree tree, Void unused) {
-            checkState(tree.getKind().equals(Kind.PLUS));
-            tree.getLeftOperand().accept(this, null);
-            tree.getRightOperand().accept(this, null);
-            return null;
+            if (tree.getKind().equals(Kind.PLUS)
+                && isSameType(getType(tree), state.getSymtab().stringType, state)) {
+              // + yielding a String is concatenation, and should use placeholders for each part.
+              tree.getLeftOperand().accept(this, null);
+              return tree.getRightOperand().accept(this, null);
+            } else {
+              // Otherwise it's not concatenation, and should be its own placeholder
+              return defaultAction(tree, null);
+            }
           }
 
           @Override
           public Void visitParenthesized(ParenthesizedTree node, Void unused) {
-            if (isSameType(getType(node), state.getSymtab().stringType, state)) {
-              node.getExpression().accept(this, null);
-            } else {
-              pieces.add(node.getExpression());
-            }
-            return null;
+            return node.getExpression().accept(this, null);
           }
 
           @Override
