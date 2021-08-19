@@ -281,6 +281,19 @@ public class ReturnValueIgnored extends AbstractReturnValueIgnored {
   private static final Matcher<ExpressionTree> TIME_UNIT_METHODS =
       anyMethod().onClass("java.util.concurrent.TimeUnit");
 
+  /** APIs to check on {@code JodaTime} types. */
+  // TODO(kak): there's a ton more we could do here
+  private static final Matcher<ExpressionTree> JODA_TIME_METHODS =
+      anyOf(
+          instanceMethod()
+              .onDescendantOf("org.joda.time.ReadableInstant")
+              .named("getMillis")
+              .withNoParameters(),
+          instanceMethod()
+              .onDescendantOf("org.joda.time.ReadableDuration")
+              .named("getMillis")
+              .withNoParameters());
+
   private static final String PROTO_MESSAGE = "com.google.protobuf.MessageLite";
 
   /**
@@ -328,12 +341,14 @@ public class ReturnValueIgnored extends AbstractReturnValueIgnored {
     boolean checkOptionalMethods = flags.getBoolean("ReturnValueIgnored:MoreOptional").orElse(true);
     boolean checkObjectMethods = flags.getBoolean("ReturnValueIgnored:ObjectMethods").orElse(true);
     boolean checkMapEntryMethods = flags.getBoolean("ReturnValueIgnored:MapEntry").orElse(true);
+    boolean checkJodaTimeMethods = flags.getBoolean("ReturnValueIgnored:JodaTime").orElse(true);
 
     this.matcher =
         anyOf(
             SPECIALIZED_MATCHER,
             checkOptionalMethods ? MORE_OPTIONAL_METHODS : nothing(),
             checkObjectMethods ? OBJECT_METHODS : nothing(),
+            checkJodaTimeMethods ? JODA_TIME_METHODS : nothing(),
             checkMapEntryMethods ? MAP_ENTRY_METHODS : nothing());
   }
 
