@@ -180,4 +180,22 @@ public class UnnecessaryParenthesesTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void switchExpression() {
+    helper
+            .addSourceLines(
+                    "Test.java",
+                    "class Test {",
+                    "  public boolean match(String value) {",
+                    "    return switch (value) {",
+                    "    case \"true\" -> true;",
+                    "    case \"false\" -> false;",
+                    "    default -> throw new RuntimeException(\"Unable to match\");",
+                    "    };",
+                    "  }",
+                    "}")
+            .expectNoDiagnostics()
+            .doTest();
+  }
 }

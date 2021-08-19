@@ -30,6 +30,8 @@ import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.ParenthesizedTree;
 import com.sun.source.tree.StatementTree;
+import com.sun.source.tree.SwitchExpressionTree;
+import com.sun.source.tree.Tree;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
@@ -44,7 +46,10 @@ public class UnnecessaryParentheses extends BugChecker implements ParenthesizedT
   @Override
   public Description matchParenthesized(ParenthesizedTree tree, VisitorState state) {
     ExpressionTree expression = tree.getExpression();
-    if (state.getPath().getParentPath().getLeaf() instanceof StatementTree) {
+    Tree parent = state.getPath().getParentPath().getLeaf();
+    if (parent instanceof StatementTree) {
+      return NO_MATCH;
+    }else if (parent instanceof SwitchExpressionTree){
       return NO_MATCH;
     }
     if (ASTHelpers.requiresParentheses(expression, state)) {
