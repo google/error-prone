@@ -156,7 +156,7 @@ public final class InvalidLink extends BugChecker
         element =
             JavacTrees.instance(state.context)
                 .getElement(new DocTreePath(getCurrentPath(), linkTree.getReference()));
-      } catch (NullPointerException e) {
+      } catch (NullPointerException | AssertionError e) {
         // TODO(b/176098078): remove once JDK 12 is the minimum supported version
         // https://bugs.openjdk.java.net/browse/JDK-8200432
       } finally {
