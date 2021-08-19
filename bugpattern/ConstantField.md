@@ -1,6 +1,6 @@
 ---
 title: ConstantField
-summary: Field name is CONSTANT_CASE, but field is not static and final
+summary: Fields with CONSTANT_CASE names should be both static and final
 layout: bugpattern
 tags: Style
 severity: SUGGESTION

@@ -1409,7 +1409,7 @@ __[ClassNamedLikeTypeParameter](bugpattern/ClassNamedLikeTypeParameter)__<br>
 This class&#39;s name looks like a Type Parameter.
 
 __[ConstantField](bugpattern/ConstantField)__<br>
-Field name is CONSTANT_CASE, but field is not static and final
+Fields with CONSTANT_CASE names should be both static and final
 
 __[EqualsMissingNullable](bugpattern/EqualsMissingNullable)__<br>
 Method overrides Object.equals but does not have @Nullable on its parameter
