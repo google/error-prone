@@ -41,10 +41,10 @@ public class NullnessAnnotations {
   private static final Predicate<String> ANNOTATION_RELEVANT_TO_NULLNESS =
       Pattern.compile(
               ".*\\.((Recently)?Nullable(Decl)?|(Recently)?NotNull(Decl)?|NonNull(Decl)?|Nonnull|"
-                  + "CheckForNull)$")
+                  + "CheckForNull|PolyNull)$")
           .asPredicate();
   private static final Predicate<String> NULLABLE_ANNOTATION =
-      Pattern.compile(".*\\.((Recently)?Nullable(Decl)?|CheckForNull)$").asPredicate();
+      Pattern.compile(".*\\.((Recently)?Nullable(Decl)?|CheckForNull|PolyNull)$").asPredicate();
 
   private NullnessAnnotations() {} // static methods only
 

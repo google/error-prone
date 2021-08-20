@@ -748,6 +748,25 @@ public class ReturnMissingNullableTest {
   }
 
   @Test
+  public void testNegativeCases_polyNull() {
+    createCompilationTestHelper()
+        .addSourceLines(
+            "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
+            "package com.google.errorprone.bugpatterns.nullness;",
+            "import org.checkerframework.checker.nullness.qual.PolyNull;",
+            "public class LiteralNullReturnTest {",
+            "  public @PolyNull String getMessage(@PolyNull String s) {",
+            "    if (s == null) {",
+            "      return null;",
+            "    } else {",
+            "      return \"negative\";",
+            "    }",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void testNegativeCases_staticFinalNonNullField() {
     createCompilationTestHelper()
         .addSourceLines(
@@ -830,8 +849,76 @@ public class ReturnMissingNullableTest {
         .doTest();
   }
 
+  @Test
+  public void testAggressive_onlyStatementIsNullReturn() {
+    createAggressiveCompilationTestHelper()
+        .addSourceLines(
+            "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
+            "package com.google.errorprone.bugpatterns.nullness;",
+            "public class LiteralNullReturnTest {",
+            "  public String getMessage() {",
+            "    // BUG: Diagnostic contains: @Nullable",
+            "    return null;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void testAggressive_array() {
+    createAggressiveCompilationTestHelper()
+        .addSourceLines(
+            "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
+            "package com.google.errorprone.bugpatterns.nullness;",
+            "public class LiteralNullReturnTest {",
+            "  public String[] getMessage(boolean b) {",
+            "    // BUG: Diagnostic contains: @Nullable",
+            "    return b ? null : new String[0];",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void testAggressive_typeVariableUsage() {
+    createAggressiveCompilationTestHelper()
+        .addSourceLines(
+            "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
+            "package com.google.errorprone.bugpatterns.nullness;",
+            "public class LiteralNullReturnTest {",
+            "  public <T> T getMessage(boolean b, T t) {",
+            "    // BUG: Diagnostic contains: @Nullable",
+            "    return b ? null : t;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void testAggressive_voidTypedMethod() {
+    createAggressiveCompilationTestHelper()
+        .addSourceLines(
+            "com/google/errorprone/bugpatterns/nullness/VoidTypeTest.java",
+            "package com.google.errorprone.bugpatterns.nullness;",
+            "public class VoidTypeTest {",
+            "  public Void run(int iterations) {",
+            "    // BUG: Diagnostic contains: @Nullable",
+            "    if (iterations <= 0) { return null; }",
+            "    run(iterations - 1);",
+            "    // BUG: Diagnostic contains: @Nullable",
+            "    return null;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
   private CompilationTestHelper createCompilationTestHelper() {
     return CompilationTestHelper.newInstance(ReturnMissingNullable.class, getClass());
+  }
+
+  private CompilationTestHelper createAggressiveCompilationTestHelper() {
+    return createCompilationTestHelper()
+        .setArgs("-XepOpt:ReturnMissingNullable:Conservative=false");
   }
 
   private BugCheckerRefactoringTestHelper createRefactoringTestHelper() {
