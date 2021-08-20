@@ -1,6 +1,6 @@
 Including a default case is redundant when switching on an enum type if the
-switch handles all possible values of the enum, and execution cannot continue
-below the switch from any of the non-default statement groups.
+switch handles all possible values of the enum, and execution cannot fall
+through from a `case` into the `default`.
 
 Note: This check does not apply to pseudo-enums such as Android `@IntDef`s,
 which are integers that are treated specially by other tools.
@@ -15,7 +15,8 @@ explicitly or restore the default case.
 ## When the default can be removed
 
 This check does not report cases where execution can continue after the switch
-statement from any non-default statement groups. For example, consider:
+statement from any non-default statement groups, and removing the `default`
+would prevent the code from compiling. For example, consider:
 
 ```java
 enum TrafficLightColour { RED, GREEN, YELLOW }
