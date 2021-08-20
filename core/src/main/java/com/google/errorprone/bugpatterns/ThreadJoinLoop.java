@@ -47,8 +47,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 @BugPattern(
     name = "ThreadJoinLoop",
     summary =
-        "Thread.join needs to be surrounded by a loop until it succeeds, "
-            + "as in Uninterruptibles.joinUninterruptibly.",
+        "Thread.join needs to be immediately surrounded by a loop until it succeeds. "
+            + "Consider using Uninterruptibles.joinUninterruptibly.",
     severity = SeverityLevel.WARNING)
 public class ThreadJoinLoop extends BugChecker implements MethodInvocationTreeMatcher {
 
