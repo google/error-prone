@@ -1043,7 +1043,7 @@ __[SynchronizeOnNonFinalField](bugpattern/SynchronizeOnNonFinalField)__<br>
 Synchronizing on non-final fields is not safe: if the field is ever updated, different threads may end up locking on different objects.
 
 __[ThreadJoinLoop](bugpattern/ThreadJoinLoop)__<br>
-Thread.join needs to be surrounded by a loop until it succeeds, as in Uninterruptibles.joinUninterruptibly.
+Thread.join needs to be immediately surrounded by a loop until it succeeds. Consider using Uninterruptibles.joinUninterruptibly.
 
 __[ThreadLocalUsage](bugpattern/ThreadLocalUsage)__<br>
 ThreadLocals should be stored in static fields
