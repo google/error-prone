@@ -1353,4 +1353,14 @@ public class UnusedVariableTest {
         .setFixChooser(FixChoosers.SECOND)
         .doTest();
   }
+
+  @Test
+  public void recordConstructor() {
+    helper
+            .addSourceLines(
+                    "SimpleRecord.java",
+                    "public record SimpleRecord (Integer foo, Long bar) {}")
+            .expectNoDiagnostics()
+            .doTest();
+  }
 }

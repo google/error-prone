@@ -174,6 +174,10 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
       return Description.NO_MATCH;
     }
 
+    if(tree.getTypeDecls().stream().anyMatch(e -> e.getKind() == Tree.Kind.RECORD)){
+      return Description.NO_MATCH;
+    }
+
     VariableFinder variableFinder = new VariableFinder(state);
     variableFinder.scan(state.getPath(), null);
 
