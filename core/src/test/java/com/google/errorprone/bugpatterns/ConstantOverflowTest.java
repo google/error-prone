@@ -16,8 +16,11 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static org.junit.Assume.assumeTrue;
+
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
+import com.google.errorprone.util.RuntimeVersion;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -161,6 +164,27 @@ public class ConstantOverflowTest {
     BugCheckerRefactoringTestHelper.newInstance(ConstantOverflow.class, getClass())
         .addInputLines("in/Test.java", "class Test {", "  int a = 'a' + Integer.MAX_VALUE;", "}")
         .addOutputLines("out/Test.java", "class Test {", "  int a = 'a' + Integer.MAX_VALUE;", "}")
+        .doTest();
+  }
+
+  @Test
+  public void varType() {
+    assumeTrue(RuntimeVersion.isAtLeast9());
+    BugCheckerRefactoringTestHelper.newInstance(ConstantOverflow.class, getClass())
+        .addInputLines(
+            "Test.java", //
+            "class Test {",
+            "  void f() {",
+            "    var x = 1 + Integer.MAX_VALUE;",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java", //
+            "class Test {",
+            "  void f() {",
+            "    var x = 1L + Integer.MAX_VALUE;",
+            "  }",
+            "}")
         .doTest();
   }
 }
