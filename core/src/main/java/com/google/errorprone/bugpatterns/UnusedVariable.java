@@ -266,14 +266,16 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
     Optional<VariableTree> removedVariableTree =
         allUsageSites.stream()
             .filter(tp -> tp.getLeaf() instanceof VariableTree)
-            .findFirst()
+            // Use last usage site to avoid issues with whitespace cleanup
+            .reduce((first, second) -> second)
             .map(tp -> (VariableTree) tp.getLeaf());
     Optional<AssignmentTree> reassignment =
         specs.stream()
             .map(UnusedSpec::terminatingAssignment)
             .flatMap(Streams::stream)
             .filter(a -> allUsageSites.stream().noneMatch(tp -> tp.getLeaf().equals(a)))
-            .findFirst();
+            // Use last assignment to avoid issues with whitespace cleanup
+            .reduce((first, second) -> second);
     if (removedVariableTree.isPresent()
         && reassignment.isPresent()
         && !TOP_LEVEL_EXPRESSIONS.contains(reassignment.get().getExpression().getKind())) {
@@ -383,11 +385,11 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
                     varSymbol.isStatic() ? "static " : "", state.getSourceForNode(initializer));
             keepSideEffectsFix.merge(
                 SuggestedFixes.replaceIncludingComments(usagePath, newContent, state));
-            removeSideEffectsFix.replace(statement, "");
+            removeSideEffectsFix.replace(statement, state, "");
           } else {
             keepSideEffectsFix.replace(
                 statement, String.format("%s;", state.getSourceForNode(initializer)));
-            removeSideEffectsFix.replace(statement, "");
+            removeSideEffectsFix.replace(statement, state, "");
           }
         } else if (isEnhancedForLoopVar(usagePath)) {
           String modifiers =
@@ -407,9 +409,9 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
         } else {
           String replacement = needsBlock(usagePath) ? "{}" : "";
           keepSideEffectsFix.merge(
-              SuggestedFixes.replaceIncludingComments(usagePath, replacement, state));
+              SuggestedFixes.replaceIncludingComments(usagePath, replacement, state, true));
           removeSideEffectsFix.merge(
-              SuggestedFixes.replaceIncludingComments(usagePath, replacement, state));
+              SuggestedFixes.replaceIncludingComments(usagePath, replacement, state, true));
         }
         continue;
       } else if (statement.getKind() == Kind.EXPRESSION_STATEMENT) {
@@ -433,13 +435,13 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
             encounteredSideEffects = true;
             keepSideEffectsFix.replace(
                 tree.getStartPosition(), ((JCAssign) tree).getExpression().getStartPosition(), "");
-            removeSideEffectsFix.replace(statement, "");
+            removeSideEffectsFix.replace(statement, state,"");
             continue;
           }
         }
       }
       String replacement = needsBlock(usagePath) ? "{}" : "";
-      keepSideEffectsFix.replace(statement, replacement);
+      keepSideEffectsFix.replace(statement, state, replacement);
       removeSideEffectsFix.replace(statement, replacement);
     }
     return encounteredSideEffects
@@ -453,7 +455,7 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
     int index = methodSymbol.params.indexOf(varSymbol);
     SuggestedFix.Builder fix = SuggestedFix.builder();
     for (TreePath path : usagePaths) {
-      fix.delete(path.getLeaf());
+      fix.delete(path.getLeaf(), state);
     }
     new TreePathScanner<Void, Void>() {
       @Override
