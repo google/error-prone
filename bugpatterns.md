@@ -877,6 +877,9 @@ toCharArray allocates a new array, using charAt is more efficient
 __[MathAbsoluteRandom](bugpattern/MathAbsoluteRandom)__<br>
 Math.abs does not always give a positive result. Please consider other methods for positive random numbers.
 
+__[MemoizeConstantVisitorStateLookups](bugpattern/MemoizeConstantVisitorStateLookups)__<br>
+Anytime you need to look up a constant value from VisitorState, improve performance by creating a cache for it with VisitorState.memoize
+
 __[MissingCasesInEnumSwitch](bugpattern/MissingCasesInEnumSwitch)__<br>
 Switches on enum types should either handle all values, or have a default case.
 
