@@ -1534,6 +1534,9 @@ Using static imports for types is unnecessary
 __[UseEnumSwitch](bugpattern/UseEnumSwitch)__<br>
 Prefer using a switch instead of a chained if-else for enums
 
+__[VoidMissingNullable](bugpattern/VoidMissingNullable)__<br>
+The type Void is not annotated @Nullable
+
 __[WildcardImport](bugpattern/WildcardImport)__<br>
 Wildcard imports, static or otherwise, should not be used
 
