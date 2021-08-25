@@ -66,7 +66,7 @@ public class CanonicalDuration extends BugChecker implements MethodInvocationTre
 
     private final String durationFullyQualifiedName;
 
-    private Api(String durationFullyQualifiedName) {
+    Api(String durationFullyQualifiedName) {
       this.durationFullyQualifiedName = durationFullyQualifiedName;
     }
 

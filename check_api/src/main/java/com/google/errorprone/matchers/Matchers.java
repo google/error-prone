@@ -1523,7 +1523,7 @@ public class Matchers {
   /**
    * Matches the {@code Tree} if it returns an expression matching {@code expressionTreeMatcher}.
    */
-  public static final Matcher<StatementTree> matchExpressionReturn(
+  public static Matcher<StatementTree> matchExpressionReturn(
       Matcher<ExpressionTree> expressionTreeMatcher) {
     return (statement, state) -> {
       if (!(statement instanceof ReturnTree)) {
@@ -1541,7 +1541,7 @@ public class Matchers {
    * Matches a {@link BlockTree} if it single statement block with statement matching {@code
    * statementMatcher}.
    */
-  public static final Matcher<BlockTree> matchSingleStatementBlock(
+  public static Matcher<BlockTree> matchSingleStatementBlock(
       Matcher<StatementTree> statementMatcher) {
     return (blockTree, state) -> {
       if (blockTree == null) {

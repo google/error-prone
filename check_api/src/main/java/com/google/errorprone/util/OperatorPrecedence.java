@@ -41,7 +41,7 @@ public enum OperatorPrecedence {
 
   private final int precedence;
 
-  private OperatorPrecedence(int precedence) {
+  OperatorPrecedence(int precedence) {
     this.precedence = precedence;
   }
 

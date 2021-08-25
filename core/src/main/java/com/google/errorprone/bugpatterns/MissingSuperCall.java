@@ -62,7 +62,7 @@ public class MissingSuperCall extends BugChecker
 
     private final String fullyQualifiedName;
 
-    private AnnotationType(String fullyQualifiedName) {
+    AnnotationType(String fullyQualifiedName) {
       this.fullyQualifiedName = fullyQualifiedName;
     }
 
