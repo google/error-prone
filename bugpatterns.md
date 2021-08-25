@@ -1426,6 +1426,9 @@ This field can be replaced with a local variable in the methods that use it.
 __[FieldCanBeStatic](bugpattern/FieldCanBeStatic)__<br>
 A final field initialized at compile-time with an instance of an immutable type can be static.
 
+__[FieldMissingNullable](bugpattern/FieldMissingNullable)__<br>
+Fields is assigned (or compared against) a definitely null value but is not annotated @Nullable
+
 __[ForEachIterable](bugpattern/ForEachIterable)__<br>
 This loop can be replaced with an enhanced for loop.
 
