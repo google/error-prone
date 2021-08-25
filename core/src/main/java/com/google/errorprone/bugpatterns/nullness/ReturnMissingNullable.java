@@ -192,7 +192,8 @@ public class ReturnMissingNullable extends BugChecker implements CompilationUnit
     return NO_MATCH; // Any reports were made through state.reportMatch.
   }
 
-  private static boolean hasDefinitelyNullBranch(
+  // TODO(cpovirk): Move this somewhere sensible, maybe into a renamed NullnessFixes?
+  static boolean hasDefinitelyNullBranch(
       ExpressionTree tree,
       ImmutableSet<VarSymbol> definitelyNullVars,
       VisitorState stateForCompilationUnit) {

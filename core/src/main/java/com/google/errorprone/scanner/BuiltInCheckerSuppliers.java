@@ -473,6 +473,7 @@ import com.google.errorprone.bugpatterns.javadoc.UnrecognisedJavadocTag;
 import com.google.errorprone.bugpatterns.javadoc.UrlInSee;
 import com.google.errorprone.bugpatterns.nullness.EqualsBrokenForNull;
 import com.google.errorprone.bugpatterns.nullness.EqualsMissingNullable;
+import com.google.errorprone.bugpatterns.nullness.FieldMissingNullable;
 import com.google.errorprone.bugpatterns.nullness.ReturnMissingNullable;
 import com.google.errorprone.bugpatterns.nullness.UnnecessaryCheckNotNull;
 import com.google.errorprone.bugpatterns.overloading.InconsistentOverloads;
@@ -992,6 +993,7 @@ public class BuiltInCheckerSuppliers {
           FieldCanBeFinal.class,
           FieldCanBeLocal.class,
           FieldCanBeStatic.class,
+          FieldMissingNullable.class,
           FloggerLogWithCause.class,
           FloggerMessageFormat.class,
           FloggerPassedAround.class,
