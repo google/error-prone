@@ -35,6 +35,7 @@ class NullnessFixes {
 
   /** Make the {@link SuggestedFix} to add the {@code Nullable} annotation. */
   static SuggestedFix makeFix(VisitorState state, Tree declaration) {
+    // TODO(cpovirk): Remove any @NonNull, etc. annotation that is present?
     SuggestedFix.Builder builder = SuggestedFix.builder();
     String qualifiedName = getQualifiedName(state, builder);
     return builder.prefixWith(declaration, "@" + qualifiedName + " ").build();

@@ -232,7 +232,8 @@ public class ReturnMissingNullable extends BugChecker implements CompilationUnit
     }.visit(tree, null);
   }
 
-  private static boolean isVoid(Type type, VisitorState state) {
+  // TODO(cpovirk): Move this somewhere sensible, maybe into a renamed NullnessFixes?
+  static boolean isVoid(Type type, VisitorState state) {
     return type != null && state.getTypes().isSubtype(type, JAVA_LANG_VOID_TYPE.get(state));
   }
 }
