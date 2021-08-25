@@ -45,7 +45,7 @@ public class IndexOfChar extends BugChecker implements MethodInvocationTreeMatch
   private static final Matcher<ExpressionTree> MATCHER =
       MethodMatchers.instanceMethod()
           .onExactClass(Suppliers.STRING_TYPE)
-          .named("indexOf")
+          .namedAnyOf("indexOf", "lastIndexOf")
           .withParameters("int", "int");
 
   @Override

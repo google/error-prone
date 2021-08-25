@@ -36,6 +36,8 @@ public class IndexOfCharTest {
             "class Test {{",
             "  // BUG: Diagnostic contains: \"\".indexOf('$', 0);",
             "  \"\".indexOf(0, '$');",
+            "  // BUG: Diagnostic contains: \"\".lastIndexOf('$', 0);",
+            "  \"\".lastIndexOf(0, '$');",
             "}}")
         .doTest();
   }
