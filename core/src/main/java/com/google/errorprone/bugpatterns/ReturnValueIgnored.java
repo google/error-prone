@@ -334,21 +334,20 @@ public class ReturnValueIgnored extends AbstractReturnValueIgnored {
           MAP_METHODS,
           MAP_ENTRY_METHODS,
           ITERABLE_METHODS,
-          ITERATOR_METHODS);
+          ITERATOR_METHODS,
+          JODA_TIME_METHODS);
 
   private final Matcher<? super ExpressionTree> matcher;
 
   public ReturnValueIgnored(ErrorProneFlags flags) {
     boolean checkOptionalMethods = flags.getBoolean("ReturnValueIgnored:MoreOptional").orElse(true);
     boolean checkObjectMethods = flags.getBoolean("ReturnValueIgnored:ObjectMethods").orElse(true);
-    boolean checkJodaTimeMethods = flags.getBoolean("ReturnValueIgnored:JodaTime").orElse(true);
 
     this.matcher =
         anyOf(
             SPECIALIZED_MATCHER,
             checkOptionalMethods ? MORE_OPTIONAL_METHODS : nothing(),
-            checkObjectMethods ? OBJECT_METHODS : nothing(),
-            checkJodaTimeMethods ? JODA_TIME_METHODS : nothing());
+            checkObjectMethods ? OBJECT_METHODS : nothing());
   }
 
   @Override
