@@ -1355,11 +1355,23 @@ public class UnusedVariableTest {
   }
 
   @Test
-  public void recordConstructor() {
+  public void simpleRecord() {
     helper
             .addSourceLines(
                     "SimpleRecord.java",
                     "public record SimpleRecord (Integer foo, Long bar) {}")
+            .expectNoDiagnostics()
+            .doTest();
+  }
+
+  @Test
+  public void nestedRecord() {
+    helper
+            .addSourceLines(
+                    "SimpleClass.java",
+                    "public class SimpleClass {",
+                    "   public record SimpleRecord (Integer foo, Long bar) {}",
+                    "}")
             .expectNoDiagnostics()
             .doTest();
   }

@@ -174,10 +174,6 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
       return Description.NO_MATCH;
     }
 
-    if(tree.getTypeDecls().stream().anyMatch(e -> e.getKind() == Tree.Kind.RECORD)){
-      return Description.NO_MATCH;
-    }
-
     VariableFinder variableFinder = new VariableFinder(state);
     variableFinder.scan(state.getPath(), null);
 
@@ -227,6 +223,12 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
       if (onlyCheckForReassignments.contains(unusedSymbol) && specs.size() <= 1) {
         continue;
       }
+
+      // Don't complain if the parent of this variable is a Record
+      if(allUsageSites.stream().anyMatch(e -> e.getParentPath().getLeaf().getKind()== Tree.Kind.RECORD)){
+        continue;
+      }
+
       Tree unused = specs.iterator().next().assignmentPath().getLeaf();
       VarSymbol symbol = (VarSymbol) unusedSymbol;
       ImmutableList<SuggestedFix> fixes;
