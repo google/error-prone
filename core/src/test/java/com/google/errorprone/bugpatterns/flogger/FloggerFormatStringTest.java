@@ -70,12 +70,9 @@ public class FloggerFormatStringTest {
             "import com.google.common.flogger.FluentLogger;",
             "class Test {",
             "  private static final FluentLogger logger = FluentLogger.forEnclosingClass();",
-            "  public void f(Exception e, Throwable t, String s) {",
+            "  public void f(Exception e, Throwable t) {",
             "    logger.atInfo().withCause(e).log(\"hello %s\", e);",
             "    logger.atInfo().log();",
-            "    logger.atInfo().log(\"hello\");",
-            "    logger.atInfo().log(\"hello \" + t);",
-            "    logger.atInfo().log(s);",
             "  }",
             "}")
         .doTest();
