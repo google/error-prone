@@ -49,7 +49,7 @@ import javax.annotation.Nullable;
 @BugPattern(
     name = "FieldMissingNullable",
     summary =
-        "Fields is assigned (or compared against) a definitely null value but is not annotated"
+        "Field is assigned (or compared against) a definitely null value but is not annotated"
             + " @Nullable",
     severity = SUGGESTION)
 public class FieldMissingNullable extends BugChecker
@@ -117,15 +117,16 @@ public class FieldMissingNullable extends BugChecker
     return describeMatch(treeToReportOn, NullnessFixes.makeFix(state, fieldDecl));
   }
 
+  // TODO(cpovirk): Move this somewhere sensible, maybe into a renamed NullnessFixes?
   @Nullable
-  private static VariableTree findDeclaration(VisitorState state, Symbol field) {
+  static VariableTree findDeclaration(VisitorState state, Symbol sym) {
     JavacProcessingEnvironment javacEnv = JavacProcessingEnvironment.instance(state.context);
-    TreePath fieldDeclPath = Trees.instance(javacEnv).getPath(field);
+    TreePath declPath = Trees.instance(javacEnv).getPath(sym);
     // Skip fields declared in other compilation units since we can't make a fix for them here.
-    if (fieldDeclPath != null
-        && fieldDeclPath.getCompilationUnit() == state.getPath().getCompilationUnit()
-        && (fieldDeclPath.getLeaf() instanceof VariableTree)) {
-      return (VariableTree) fieldDeclPath.getLeaf();
+    if (declPath != null
+        && declPath.getCompilationUnit() == state.getPath().getCompilationUnit()
+        && (declPath.getLeaf() instanceof VariableTree)) {
+      return (VariableTree) declPath.getLeaf();
     }
     return null;
   }
