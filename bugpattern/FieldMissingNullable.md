@@ -1,6 +1,6 @@
 ---
 title: FieldMissingNullable
-summary: Fields is assigned (or compared against) a definitely null value but is not
+summary: Field is assigned (or compared against) a definitely null value but is not
   annotated @Nullable
 layout: bugpattern
 tags: ''

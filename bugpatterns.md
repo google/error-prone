@@ -1430,7 +1430,7 @@ __[FieldCanBeStatic](bugpattern/FieldCanBeStatic)__<br>
 A final field initialized at compile-time with an instance of an immutable type can be static.
 
 __[FieldMissingNullable](bugpattern/FieldMissingNullable)__<br>
-Fields is assigned (or compared against) a definitely null value but is not annotated @Nullable
+Field is assigned (or compared against) a definitely null value but is not annotated @Nullable
 
 __[ForEachIterable](bugpattern/ForEachIterable)__<br>
 This loop can be replaced with an enhanced for loop.
@@ -1473,6 +1473,9 @@ Package names should match the directory they are declared in
 
 __[ParameterComment](bugpattern/ParameterComment)__<br>
 Non-standard parameter comment; prefer `/* paramName= */ arg`
+
+__[ParameterMissingNullable](bugpattern/ParameterMissingNullable)__<br>
+Parameter has handling for null but is not annotated @Nullable
 
 __[PrivateConstructorForNoninstantiableModule](bugpattern/PrivateConstructorForNoninstantiableModule)__<br>
 Add a private constructor to modules that will not be instantiated by Dagger.
