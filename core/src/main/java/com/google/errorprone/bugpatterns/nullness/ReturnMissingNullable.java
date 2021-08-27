@@ -19,12 +19,19 @@ package com.google.errorprone.bugpatterns.nullness;
 import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
+import static com.google.errorprone.matchers.Matchers.anyMethod;
+import static com.google.errorprone.matchers.Matchers.anyOf;
+import static com.google.errorprone.matchers.Matchers.expressionStatement;
+import static com.google.errorprone.matchers.Matchers.staticMethod;
 import static com.google.errorprone.suppliers.Suppliers.JAVA_LANG_VOID_TYPE;
+import static com.google.errorprone.util.ASTHelpers.constValue;
 import static com.google.errorprone.util.ASTHelpers.findEnclosingMethod;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.isConsideredFinal;
 import static com.sun.source.tree.Tree.Kind.NULL_LITERAL;
+import static java.lang.Boolean.FALSE;
+import static java.util.regex.Pattern.compile;
 import static javax.lang.model.type.TypeKind.TYPEVAR;
 
 import com.google.common.collect.ImmutableSet;
@@ -36,10 +43,14 @@ import com.google.errorprone.bugpatterns.BugChecker.CompilationUnitTreeMatcher;
 import com.google.errorprone.dataflow.nullnesspropagation.Nullness;
 import com.google.errorprone.dataflow.nullnesspropagation.NullnessAnnotations;
 import com.google.errorprone.matchers.Description;
+import com.google.errorprone.matchers.Matcher;
 import com.sun.source.tree.AssignmentTree;
+import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.ConditionalExpressionTree;
+import com.sun.source.tree.ExpressionStatementTree;
 import com.sun.source.tree.ExpressionTree;
+import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.ParenthesizedTree;
 import com.sun.source.tree.ReturnTree;
@@ -60,6 +71,31 @@ import java.util.List;
     summary = "Method returns a definitely null value but is not annotated @Nullable",
     severity = SUGGESTION)
 public class ReturnMissingNullable extends BugChecker implements CompilationUnitTreeMatcher {
+  private static final Matcher<StatementTree> METHODS_THAT_NEVER_RETURN =
+      expressionStatement(
+          anyOf(
+              anyMethod().anyClass().withNameMatching(compile("throw.*Exception")),
+              staticMethod()
+                  .onClassAny(
+                      "org.junit.Assert",
+                      "junit.framework.Assert",
+                      /*
+                       * I'm not sure if TestCase is necessary, as it doesn't define its own fail()
+                       * method, but it commonly appears in lists like this one, so I've included
+                       * it. (Maybe the method was defined on TestCase many versions ago?)
+                       *
+                       * TODO(cpovirk): Confirm need, or remove from everywhere.
+                       */
+                      "junit.framework.TestCase")
+                  .named("fail"),
+              staticMethod().onClass("java.lang.System").named("exit")));
+
+  private static final Matcher<StatementTree> FAILS_IF_PASSED_FALSE =
+      expressionStatement(
+          staticMethod()
+              .onClassAny("com.google.common.base.Preconditions", "com.google.common.base.Verify")
+              .namedAnyOf("checkArgument", "checkState", "verify"));
+
   private final boolean beingConservative;
 
   public ReturnMissingNullable(ErrorProneFlags flags) {
@@ -108,6 +144,25 @@ public class ReturnMissingNullable extends BugChecker implements CompilationUnit
     ImmutableSet<VarSymbol> definitelyNullVars = definitelyNullVarsBuilder.build();
 
     new TreePathScanner<Void, Void>() {
+      @Override
+      public Void visitBlock(BlockTree block, Void unused) {
+        for (StatementTree statement : block.getStatements()) {
+          if (METHODS_THAT_NEVER_RETURN.matches(statement, stateForCompilationUnit)) {
+            break;
+          }
+          if (FAILS_IF_PASSED_FALSE.matches(statement, stateForCompilationUnit)
+              && constValue(
+                      ((MethodInvocationTree) ((ExpressionStatementTree) statement).getExpression())
+                          .getArguments()
+                          .get(0))
+                  == FALSE) {
+            break;
+          }
+          scan(statement, null);
+        }
+        return null;
+      }
+
       @Override
       public Void visitReturn(ReturnTree tree, Void unused) {
         doVisitReturn(tree);
@@ -212,6 +267,8 @@ public class ReturnMissingNullable extends BugChecker implements CompilationUnit
       public Boolean visitParenthesized(ParenthesizedTree tree, Void unused) {
         return visit(tree.getExpression(), unused);
       }
+
+      // TODO(cpovirk): visitSwitchExpression
 
       @Override
       public Boolean visitTypeCast(TypeCastTree tree, Void unused) {

@@ -296,6 +296,23 @@ public class ReturnMissingNullableTest {
   }
 
   @Test
+  public void testOtherVerify() {
+    createCompilationTestHelper()
+        .addSourceLines(
+            "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
+            "package com.google.errorprone.bugpatterns.nullness;",
+            "import static com.google.common.base.Verify.verify;",
+            "class LiteralNullReturnTest {",
+            "  public String getMessage(boolean b) {",
+            "    verify(b);",
+            "    // BUG: Diagnostic contains: @Nullable",
+            "    return null;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void testLimitation_staticFinalFieldInitializedLater() {
     createCompilationTestHelper()
         .addSourceLines(
@@ -761,6 +778,86 @@ public class ReturnMissingNullableTest {
             "    } else {",
             "      return \"negative\";",
             "    }",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void testNegativeCases_unreachableExit() {
+    createCompilationTestHelper()
+        .addSourceLines(
+            "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
+            "package com.google.errorprone.bugpatterns.nullness;",
+            "class LiteralNullReturnTest {",
+            "  public String getMessage() {",
+            "    System.exit(1);",
+            "    return null;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void testNegativeCases_unreachableFail() {
+    createCompilationTestHelper()
+        .addSourceLines(
+            "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
+            "package com.google.errorprone.bugpatterns.nullness;",
+            "import static org.junit.Assert.fail;",
+            "class LiteralNullReturnTest {",
+            "  public String getMessage() {",
+            "    fail();",
+            "    return null;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void testNegativeCases_unreachableThrowExceptionMethod() {
+    createCompilationTestHelper()
+        .addSourceLines(
+            "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
+            "package com.google.errorprone.bugpatterns.nullness;",
+            "import static org.junit.Assert.fail;",
+            "class LiteralNullReturnTest {",
+            "  void throwRuntimeException() {}",
+            "  public String getMessage() {",
+            "    throwRuntimeException();",
+            "    return null;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void testNegativeCases_unreachableCheckFalse() {
+    createCompilationTestHelper()
+        .addSourceLines(
+            "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
+            "package com.google.errorprone.bugpatterns.nullness;",
+            "import static com.google.common.base.Preconditions.checkState;",
+            "class LiteralNullReturnTest {",
+            "  public String getMessage() {",
+            "    checkState(false);",
+            "    return null;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void testNegativeCases_unreachableVerifyFalse() {
+    createCompilationTestHelper()
+        .addSourceLines(
+            "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
+            "package com.google.errorprone.bugpatterns.nullness;",
+            "import static com.google.common.base.Verify.verify;",
+            "class LiteralNullReturnTest {",
+            "  public String getMessage() {",
+            "    verify(false);",
+            "    return null;",
             "  }",
             "}")
         .doTest();
