@@ -16,28 +16,31 @@
 
 package com.google.errorprone.bugpatterns.nullness;
 
+import static com.google.errorprone.bugpatterns.nullness.NullnessFixes.NullCheck.Polarity.IS_NOT_NULL;
+import static com.google.errorprone.bugpatterns.nullness.NullnessFixes.NullCheck.Polarity.IS_NULL;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.stripParentheses;
 import static com.sun.source.tree.Tree.Kind.IDENTIFIER;
 import static com.sun.source.tree.Tree.Kind.NULL_LITERAL;
-import static javax.lang.model.element.ElementKind.LOCAL_VARIABLE;
-import static javax.lang.model.element.ElementKind.PARAMETER;
 
-import com.google.auto.value.AutoValue;
-import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
+import com.google.errorprone.bugpatterns.nullness.NullnessFixes.NullCheck.Polarity;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.util.FindIdentifiers;
 import com.sun.source.tree.BinaryTree;
+import com.sun.source.tree.ConditionalExpressionTree;
 import com.sun.source.tree.ExpressionTree;
+import com.sun.source.tree.IdentifierTree;
+import com.sun.source.tree.IfTree;
+import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Kinds.KindSelector;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import javax.annotation.Nullable;
-import javax.lang.model.element.ElementKind;
+import javax.lang.model.element.Name;
 
 /**
  * Static utility methods for common functionality in the nullable checkers.
@@ -102,8 +105,21 @@ class NullnessFixes {
     return "Nullable";
   }
 
-  static BareIdentifierNullCheck getBareIdentifierNullCheck(ExpressionTree tree) {
+  @Nullable
+  static NullCheck getNullCheck(ExpressionTree tree) {
     tree = stripParentheses(tree);
+
+    Polarity polarity;
+    switch (tree.getKind()) {
+      case EQUAL_TO:
+        polarity = IS_NULL;
+        break;
+      case NOT_EQUAL_TO:
+        polarity = IS_NOT_NULL;
+        break;
+      default:
+        return null;
+    }
 
     BinaryTree equalityTree = (BinaryTree) tree;
     ExpressionTree nullChecked;
@@ -115,52 +131,72 @@ class NullnessFixes {
       return null;
     }
 
-    if (nullChecked.getKind() != IDENTIFIER) {
-      return null;
-    }
+    Name name =
+        nullChecked.getKind() == IDENTIFIER ? ((IdentifierTree) nullChecked).getName() : null;
 
     Symbol symbol = getSymbol(nullChecked);
-    VarSymbol locallyDefinedSymbol =
-        symbol != null && LOCALLY_DEFINED_ELEMENT_KINDS.contains(symbol.getKind())
-            ? (VarSymbol) symbol
-            : null;
+    VarSymbol varSymbol = symbol instanceof VarSymbol ? (VarSymbol) symbol : null;
 
-    return new AutoValue_NullnessFixes_BareIdentifierNullCheck(locallyDefinedSymbol);
+    return new AutoValue_NullnessFixes_NullCheck(name, varSymbol, polarity);
   }
 
   /**
-   * A check of a bare identifier against {@code null}, like {@code foo == null}.
+   * A check of a variable against {@code null}, like {@code foo == null}.
    *
-   * <p>We restrict ourselves to bare identifiers because it's easy and safe. The obvious easy
-   * alternative would be to accept any value for which we can get a {@link Symbol}. However, using
-   * {@code Symbol} might lead code to assume that a null check of {@code foo.bar} guarantees
-   * something about {@code otherFoo.bar}, which is represented by the same symbol.
+   * <p>This class exposes the variable in two forms: the {@link VarSymbol} (if available) and the
+   * {@link Name} (if the null check was performed on a bare identifier, like {@code foo}). Many
+   * callers restrict themselves to bare identifiers because it's easy and safe: Using {@code
+   * Symbol} might lead code to assume that a null check of {@code foo.bar} guarantees something
+   * about {@code otherFoo.bar}, which is represented by the same symbol.
    *
-   * <p>Even with this restriction, callers should be wary when examining code that might:
+   * <p>Even when restricting themselves to bare identifiers, callers should be wary when examining
+   * code that might:
    *
    * <ul>
    *   <li>assign a new value to the identifier after the null check but before some usage
    *   <li>declare a new identifier that hides the old
    * </ul>
    *
-   * TODO(cpovirk): Consider looking for more than just bare identifiers. For example, we could
-   * probably assume that a null check of {@code foo.bar} ensures that {@code foo.bar} is non-null
-   * in the future. One case that might be particularly useful is {@code this.bar}. We might even go
-   * further, assuming that {@code foo.bar()} will continue to have the same value.
+   * TODO(cpovirk): What our callers really care about is not "bare identifiers" but "this
+   * particular 'instance' of a variable," so we could generalize to cover more cases of that. For
+   * example, we could probably assume that a null check of {@code foo.bar} ensures that {@code
+   * foo.bar} is non-null in the future. One case that might be particularly useful is {@code
+   * this.bar}. We might even go further, assuming that {@code foo.bar()} will continue to have the
+   * same value in some cases.
    */
-  @AutoValue
-  abstract static class BareIdentifierNullCheck {
+  @com.google.auto.value.AutoValue // fully qualified to work around JDK-7177813(?) in JDK8 build
+  abstract static class NullCheck {
     /**
-     * Returns the symbol that was checked against null but only if it was a local variable or
-     * parameter.
-     *
-     * <p>This restriction avoids the problems discussed in the class documentation, but it comes at
-     * the cost of not handling fields.
+     * Returns the bare identifier that was checked against {@code null}, if the null check took
+     * that form. Prefer this over {@link #varSymbolButUsuallyPreferBareIdentifier} in most cases,
+     * as discussed in the class documentation.
      */
     @Nullable
-    abstract VarSymbol locallyDefinedSymbol();
-  }
+    abstract Name bareIdentifier();
 
-  private static final ImmutableSet<ElementKind> LOCALLY_DEFINED_ELEMENT_KINDS =
-      ImmutableSet.of(LOCAL_VARIABLE, PARAMETER);
+    /** Returns the symbol that was checked against {@code null}. */
+    @Nullable
+    abstract VarSymbol varSymbolButUsuallyPreferBareIdentifier();
+
+    abstract Polarity polarity();
+
+    boolean bareIdentifierMatches(ExpressionTree other) {
+      return other.getKind() == IDENTIFIER
+          && bareIdentifier() != null
+          && bareIdentifier().equals(((IdentifierTree) other).getName());
+    }
+
+    ExpressionTree nullCase(ConditionalExpressionTree tree) {
+      return polarity() == IS_NULL ? tree.getTrueExpression() : tree.getFalseExpression();
+    }
+
+    StatementTree nullCase(IfTree tree) {
+      return polarity() == IS_NULL ? tree.getThenStatement() : tree.getElseStatement();
+    }
+
+    enum Polarity {
+      IS_NULL,
+      IS_NOT_NULL,
+    }
+  }
 }

@@ -18,7 +18,7 @@ package com.google.errorprone.bugpatterns.nullness;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
 import static com.google.errorprone.bugpatterns.nullness.FieldMissingNullable.findDeclaration;
-import static com.google.errorprone.bugpatterns.nullness.NullnessFixes.getBareIdentifierNullCheck;
+import static com.google.errorprone.bugpatterns.nullness.NullnessFixes.getNullCheck;
 import static com.google.errorprone.bugpatterns.nullness.VoidMissingNullable.hasNoExplicitType;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.getType;
@@ -28,7 +28,7 @@ import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.BinaryTreeMatcher;
-import com.google.errorprone.bugpatterns.nullness.NullnessFixes.BareIdentifierNullCheck;
+import com.google.errorprone.bugpatterns.nullness.NullnessFixes.NullCheck;
 import com.google.errorprone.dataflow.nullnesspropagation.Nullness;
 import com.google.errorprone.dataflow.nullnesspropagation.NullnessAnnotations;
 import com.google.errorprone.matchers.Description;
@@ -72,11 +72,17 @@ public class ParameterMissingNullable extends BugChecker implements BinaryTreeMa
      * about more complex expressions like `checkArgument(!(a == null || b == null))` and about
      * "inverted" methods like `Assert.not(param == null)`.
      */
-    BareIdentifierNullCheck nullCheck = getBareIdentifierNullCheck(tree);
+    NullCheck nullCheck = getNullCheck(tree);
     if (nullCheck == null) {
       return NO_MATCH;
     }
-    Symbol symbol = nullCheck.locallyDefinedSymbol();
+    /*
+     * We really do want to use the Symbol here. NullCheck exposes a symbol only in the case of a
+     * local variable or parameter, but that's OK here because we care only about parameters. And
+     * ultimately we need the Symbol so that we can look at its annotations and find its
+     * declaration.
+     */
+    Symbol symbol = nullCheck.varSymbolButUsuallyPreferBareIdentifier();
     if (!isParameterWithoutNullable(symbol)) {
       return NO_MATCH;
     }

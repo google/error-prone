@@ -59,6 +59,26 @@ public class FieldMissingNullableTest {
   }
 
   @Test
+  public void testAssignmentInsideIfNull() {
+    createCompilationTestHelper()
+        .addSourceLines(
+            "com/google/errorprone/bugpatterns/nullness/FieldMissingNullTest.java",
+            "package com.google.errorprone.bugpatterns.nullness;",
+            "public class FieldMissingNullTest {",
+            "  private String message;",
+            "  public void setMessage(String message) {",
+            "    if (message == null) {",
+            "      // BUG: Diagnostic contains: @Nullable",
+            "      this.message = message;",
+            "    } else {",
+            "      this.message = \"hello\";",
+            "    }",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void testMaybeNullAssignment() {
     createCompilationTestHelper()
         .addSourceLines(
@@ -117,6 +137,23 @@ public class FieldMissingNullableTest {
             "  public void reset() {",
             "    // BUG: Diagnostic contains: @Nullable",
             "    if (message != null) {",
+            "    }",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void testComparisonToNullOnOtherInstance() {
+    createCompilationTestHelper()
+        .addSourceLines(
+            "com/google/errorprone/bugpatterns/nullness/FieldMissingNullTest.java",
+            "package com.google.errorprone.bugpatterns.nullness;",
+            "public class FieldMissingNullTest {",
+            "  private String message;",
+            "  public void reset(FieldMissingNullTest other) {",
+            "    // BUG: Diagnostic contains: @Nullable",
+            "    if (other.message != null) {",
             "    }",
             "  }",
             "}")

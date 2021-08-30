@@ -18,6 +18,7 @@ package com.google.errorprone.bugpatterns.nullness;
 
 import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
+import static com.google.errorprone.bugpatterns.nullness.NullnessFixes.getNullCheck;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.anyMethod;
 import static com.google.errorprone.matchers.Matchers.anyOf;
@@ -40,6 +41,7 @@ import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.CompilationUnitTreeMatcher;
+import com.google.errorprone.bugpatterns.nullness.NullnessFixes.NullCheck;
 import com.google.errorprone.dataflow.nullnesspropagation.Nullness;
 import com.google.errorprone.dataflow.nullnesspropagation.NullnessAnnotations;
 import com.google.errorprone.matchers.Description;
@@ -50,6 +52,8 @@ import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.ConditionalExpressionTree;
 import com.sun.source.tree.ExpressionStatementTree;
 import com.sun.source.tree.ExpressionTree;
+import com.sun.source.tree.IdentifierTree;
+import com.sun.source.tree.IfTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.ParenthesizedTree;
@@ -59,11 +63,14 @@ import com.sun.source.tree.Tree;
 import com.sun.source.tree.TypeCastTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.SimpleTreeVisitor;
+import com.sun.source.util.TreePath;
 import com.sun.source.util.TreePathScanner;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type;
 import java.util.List;
+import java.util.Set;
+import javax.lang.model.element.Name;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
@@ -230,13 +237,17 @@ public class ReturnMissingNullable extends BugChecker implements CompilationUnit
           return;
         }
 
+        ImmutableSet<Name> varsProvenNullByParentIf = varsProvenNullByParentIf(getCurrentPath());
         /*
          * TODO(cpovirk): Consider reporting only one finding per method? Our patching
          * infrastructure is smart enough not to mind duplicate suggested fixes, but users might be
          * annoyed by multiple robocomments with the same fix.
          */
         if (hasDefinitelyNullBranch(
-            returnExpression, definitelyNullVars, stateForCompilationUnit)) {
+            returnExpression,
+            definitelyNullVars,
+            varsProvenNullByParentIf,
+            stateForCompilationUnit)) {
           state.reportMatch(
               describeMatch(
                   returnTree, NullnessFixes.makeFix(state.withPath(getCurrentPath()), methodTree)));
@@ -250,7 +261,15 @@ public class ReturnMissingNullable extends BugChecker implements CompilationUnit
   // TODO(cpovirk): Move this somewhere sensible, maybe into a renamed NullnessFixes?
   static boolean hasDefinitelyNullBranch(
       ExpressionTree tree,
-      ImmutableSet<VarSymbol> definitelyNullVars,
+      Set<VarSymbol> definitelyNullVars,
+      /*
+       * TODO(cpovirk): Compute varsProvenNullByParentIf inside this method, using the TreePath from
+       * an instance of VisitorState, which must be an instance with the current path instead of
+       * stateForCompilationUnit? (This would also let us eliminate the `tree` parameter, since that
+       * would be accessible through getLeaf().) But we'll need to be consistent about whether we
+       * pass the path of the expression or its enclosing statement.
+       */
+      ImmutableSet<Name> varsProvenNullByParentIf,
       VisitorState stateForCompilationUnit) {
     return new SimpleTreeVisitor<Boolean, Void>() {
       @Override
@@ -260,7 +279,15 @@ public class ReturnMissingNullable extends BugChecker implements CompilationUnit
 
       @Override
       public Boolean visitConditionalExpression(ConditionalExpressionTree tree, Void unused) {
-        return visit(tree.getTrueExpression(), unused) || visit(tree.getFalseExpression(), unused);
+        return visit(tree.getTrueExpression(), unused)
+            || visit(tree.getFalseExpression(), unused)
+            || isTernaryXIfXIsNull(tree);
+      }
+
+      @Override
+      public Boolean visitIdentifier(IdentifierTree tree, Void unused) {
+        return super.visitIdentifier(tree, unused)
+            || varsProvenNullByParentIf.contains(tree.getName());
       }
 
       @Override
@@ -287,6 +314,44 @@ public class ReturnMissingNullable extends BugChecker implements CompilationUnit
             || definitelyNullVars.contains(getSymbol(tree));
       }
     }.visit(tree, null);
+  }
+
+  /** Returns true if this is {@code x == null ? x : ...} or similar. */
+  private static boolean isTernaryXIfXIsNull(ConditionalExpressionTree tree) {
+    NullCheck nullCheck = getNullCheck(tree.getCondition());
+    if (nullCheck == null) {
+      return false;
+    }
+    ExpressionTree needsToBeKnownNull = nullCheck.nullCase(tree);
+    return nullCheck.bareIdentifierMatches(needsToBeKnownNull);
+  }
+
+  /** Returns x if the path's leaf is the only statement inside {@code if (x == null) { ... }}. */
+  // TODO(cpovirk): Move this somewhere sensible, maybe into a renamed NullnessFixes?
+  static ImmutableSet<Name> varsProvenNullByParentIf(TreePath path) {
+    Tree parent = path.getParentPath().getLeaf();
+    if (!(parent instanceof BlockTree)) {
+      return ImmutableSet.of();
+    }
+    if (((BlockTree) parent).getStatements().size() > 1) {
+      return ImmutableSet.of();
+    }
+    Tree grandparent = path.getParentPath().getParentPath().getLeaf();
+    if (!(grandparent instanceof IfTree)) {
+      return ImmutableSet.of();
+    }
+    IfTree ifTree = (IfTree) grandparent;
+    NullCheck nullCheck = getNullCheck(ifTree.getCondition());
+    if (nullCheck == null) {
+      return ImmutableSet.of();
+    }
+    if (parent != nullCheck.nullCase(ifTree)) {
+      return ImmutableSet.of();
+    }
+    if (nullCheck.bareIdentifier() == null) {
+      return ImmutableSet.of();
+    }
+    return ImmutableSet.of(nullCheck.bareIdentifier());
   }
 
   // TODO(cpovirk): Move this somewhere sensible, maybe into a renamed NullnessFixes?
