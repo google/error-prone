@@ -26,7 +26,9 @@ import org.junit.runners.JUnit4;
 public class MemoizeConstantVisitorStateLookupsTest {
   private final BugCheckerRefactoringTestHelper refactoringTestHelper =
       BugCheckerRefactoringTestHelper.newInstance(
-          MemoizeConstantVisitorStateLookups.class, getClass());
+              MemoizeConstantVisitorStateLookups.class, getClass())
+          .addModules(
+              "jdk.compiler/com.sun.tools.javac.util", "jdk.compiler/com.sun.tools.javac.code");
 
   @Test
   public void replaceSingleUsage() {
