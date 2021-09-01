@@ -27,6 +27,7 @@ import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.NewClassTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.VariableTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
+import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
@@ -88,13 +89,11 @@ public class IdentityHashMapUsage extends BugChecker
     if (ASTHelpers.isSameType(ASTHelpers.getType(tree.getType()), ihmType, state)) {
       return Description.NO_MATCH;
     }
-    if (ASTHelpers.isSameType(ASTHelpers.getType(tree.getInitializer()), ihmType, state)) {
-      return describeMatch(
-          tree,
-          SuggestedFix.builder()
-              .replace(tree.getType(), "IdentityHashMap")
-              .addImport(IDENTITY_HASH_MAP)
-              .build());
+    Type type = ASTHelpers.getType(tree.getInitializer());
+    if (ASTHelpers.isSameType(type, ihmType, state)) {
+      SuggestedFix.Builder fix = SuggestedFix.builder();
+      fix.replace(tree.getType(), SuggestedFixes.qualifyType(state, fix, type));
+      return describeMatch(tree, fix.build());
     }
     return Description.NO_MATCH;
   }
