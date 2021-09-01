@@ -340,6 +340,7 @@ import com.google.errorprone.bugpatterns.TruthGetOrDefault;
 import com.google.errorprone.bugpatterns.TruthSelfEquals;
 import com.google.errorprone.bugpatterns.TryFailRefactoring;
 import com.google.errorprone.bugpatterns.TryFailThrowable;
+import com.google.errorprone.bugpatterns.TryWithResourcesVariable;
 import com.google.errorprone.bugpatterns.TypeEqualsChecker;
 import com.google.errorprone.bugpatterns.TypeNameShadowing;
 import com.google.errorprone.bugpatterns.TypeParameterNaming;
@@ -1073,6 +1074,7 @@ public class BuiltInCheckerSuppliers {
           TimeUnitMismatch.class,
           TransientMisuse.class,
           TryFailRefactoring.class,
+          TryWithResourcesVariable.class,
           TypeParameterNaming.class,
           TypeToString.class,
           UngroupedOverloads.class,
