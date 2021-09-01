@@ -1373,6 +1373,9 @@ An value that appears to be represented in one unit is used where another appear
 __[TransientMisuse](bugpattern/TransientMisuse)__<br>
 Static fields are implicitly transient, so the explicit modifier is unnecessary
 
+__[TryWithResourcesVariable](bugpattern/TryWithResourcesVariable)__<br>
+This variable is unnecessary, the try-with-resources resource can be a reference to a final or effectively final variable
+
 __[UnnecessarilyFullyQualified](bugpattern/UnnecessarilyFullyQualified)__<br>
 This fully qualified name is unambiguous to the compiler if imported.
 
