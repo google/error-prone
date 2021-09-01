@@ -50,7 +50,7 @@ jobs:
         uses: actions/setup-java@v2
         with:
           java-version: ${{ matrix.java }}
-          distribution: 'adopt'
+          distribution: 'zulu'
       - name: 'Install'
         shell: bash
         run: mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
@@ -80,7 +80,7 @@ jobs:
         uses: actions/setup-java@v2
         with:
           java-version: 8
-          distribution: 'adopt'
+          distribution: 'zulu'
           server-id: sonatype-nexus-snapshots
           server-username: CI_DEPLOY_USERNAME
           server-password: CI_DEPLOY_PASSWORD
@@ -109,7 +109,7 @@ jobs:
         uses: actions/setup-java@v2
         with:
           java-version: 15
-          distribution: 'adopt'
+          distribution: 'zulu'
       - name: 'Generate latest docs'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
