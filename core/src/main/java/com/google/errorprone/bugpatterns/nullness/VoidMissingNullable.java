@@ -17,9 +17,10 @@
 package com.google.errorprone.bugpatterns.nullness;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
-import static com.google.errorprone.bugpatterns.nullness.ReturnMissingNullable.isVoid;
+import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.fixByAddingNullableAnnotation;
+import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.hasNoExplicitType;
+import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.isVoid;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
-import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static javax.lang.model.element.ElementKind.LOCAL_VARIABLE;
@@ -107,19 +108,6 @@ public class VoidMissingNullable extends BugChecker
     return matchType(sym.type, sym, tree, state);
   }
 
-  // TODO(cpovirk): Move this somewhere sensible, maybe into a renamed NullnessFixes?
-  /** Returns {@code true} if this is a `var` or a lambda parameter that has no explicit type. */
-  static boolean hasNoExplicitType(VariableTree tree, VisitorState state) {
-    /*
-     * We detect the absence of an explicit type by looking for an absent start position for the
-     * type tree. But under javac8, the nonexistent type tree still has a start position. So, if
-     * we see a start position, we then also look for an end position, which *is* absent for
-     * lambda parameters, even under javac8. Possibly we could get by looking *only* for the end
-     * position, but I'm keeping both checks now that I have something that appears to work.
-     */
-    return getStartPosition(tree.getType()) == -1 || state.getEndPosition(tree.getType()) == -1;
-  }
-
   private void checkType(Type type, Tree treeToAnnotate, VisitorState state) {
     if (!isVoid(type, state)) {
       return;
@@ -147,6 +135,6 @@ public class VoidMissingNullable extends BugChecker
      * Or run this refactoring as part of a suite that migrates from existing annotations to
      * type-use annotations? For now, we rely on users to patch things up.
      */
-    return describeMatch(treeToAnnotate, NullnessFixes.makeFix(state, treeToAnnotate));
+    return describeMatch(treeToAnnotate, fixByAddingNullableAnnotation(state, treeToAnnotate));
   }
 }

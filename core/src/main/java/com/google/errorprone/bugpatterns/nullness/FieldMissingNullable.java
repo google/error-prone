@@ -17,9 +17,11 @@
 package com.google.errorprone.bugpatterns.nullness;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
-import static com.google.errorprone.bugpatterns.nullness.NullnessFixes.getNullCheck;
-import static com.google.errorprone.bugpatterns.nullness.ReturnMissingNullable.hasDefinitelyNullBranch;
-import static com.google.errorprone.bugpatterns.nullness.ReturnMissingNullable.varsProvenNullByParentIf;
+import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.findDeclaration;
+import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.fixByAddingNullableAnnotation;
+import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.getNullCheck;
+import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.hasDefinitelyNullBranch;
+import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.varsProvenNullByParentIf;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static javax.lang.model.element.ElementKind.FIELD;
@@ -31,7 +33,7 @@ import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.AssignmentTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.BinaryTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.VariableTreeMatcher;
-import com.google.errorprone.bugpatterns.nullness.NullnessFixes.NullCheck;
+import com.google.errorprone.bugpatterns.nullness.NullnessUtils.NullCheck;
 import com.google.errorprone.dataflow.nullnesspropagation.Nullness;
 import com.google.errorprone.dataflow.nullnesspropagation.NullnessAnnotations;
 import com.google.errorprone.matchers.Description;
@@ -39,11 +41,7 @@ import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.BinaryTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.VariableTree;
-import com.sun.source.util.TreePath;
-import com.sun.source.util.Trees;
 import com.sun.tools.javac.code.Symbol;
-import com.sun.tools.javac.processing.JavacProcessingEnvironment;
-import javax.annotation.Nullable;
 import javax.lang.model.element.Name;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
@@ -125,20 +123,7 @@ public class FieldMissingNullable extends BugChecker
       return NO_MATCH;
     }
 
-    return describeMatch(treeToReportOn, NullnessFixes.makeFix(state, fieldDecl));
+    return describeMatch(treeToReportOn, fixByAddingNullableAnnotation(state, fieldDecl));
   }
 
-  // TODO(cpovirk): Move this somewhere sensible, maybe into a renamed NullnessFixes?
-  @Nullable
-  static VariableTree findDeclaration(VisitorState state, Symbol sym) {
-    JavacProcessingEnvironment javacEnv = JavacProcessingEnvironment.instance(state.context);
-    TreePath declPath = Trees.instance(javacEnv).getPath(sym);
-    // Skip fields declared in other compilation units since we can't make a fix for them here.
-    if (declPath != null
-        && declPath.getCompilationUnit() == state.getPath().getCompilationUnit()
-        && (declPath.getLeaf() instanceof VariableTree)) {
-      return (VariableTree) declPath.getLeaf();
-    }
-    return null;
-  }
 }

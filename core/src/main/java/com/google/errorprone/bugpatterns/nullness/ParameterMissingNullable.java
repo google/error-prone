@@ -17,9 +17,10 @@
 package com.google.errorprone.bugpatterns.nullness;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
-import static com.google.errorprone.bugpatterns.nullness.FieldMissingNullable.findDeclaration;
-import static com.google.errorprone.bugpatterns.nullness.NullnessFixes.getNullCheck;
-import static com.google.errorprone.bugpatterns.nullness.VoidMissingNullable.hasNoExplicitType;
+import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.findDeclaration;
+import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.fixByAddingNullableAnnotation;
+import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.getNullCheck;
+import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.hasNoExplicitType;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static javax.lang.model.element.ElementKind.PARAMETER;
@@ -28,7 +29,7 @@ import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.BinaryTreeMatcher;
-import com.google.errorprone.bugpatterns.nullness.NullnessFixes.NullCheck;
+import com.google.errorprone.bugpatterns.nullness.NullnessUtils.NullCheck;
 import com.google.errorprone.dataflow.nullnesspropagation.Nullness;
 import com.google.errorprone.dataflow.nullnesspropagation.NullnessAnnotations;
 import com.google.errorprone.matchers.Description;
@@ -119,7 +120,7 @@ public class ParameterMissingNullable extends BugChecker implements BinaryTreeMa
     if (hasNoExplicitType(param, state)) {
       return NO_MATCH;
     }
-    return describeMatch(tree, NullnessFixes.makeFix(state, param));
+    return describeMatch(tree, fixByAddingNullableAnnotation(state, param));
   }
 
   private static boolean isLoopCondition(TreePath path) {

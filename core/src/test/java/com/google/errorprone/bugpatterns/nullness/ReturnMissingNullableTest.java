@@ -1232,8 +1232,7 @@ public class ReturnMissingNullableTest {
   }
 
   private CompilationTestHelper createAggressiveCompilationTestHelper() {
-    return createCompilationTestHelper()
-        .setArgs("-XepOpt:ReturnMissingNullable:Conservative=false");
+    return createCompilationTestHelper().setArgs("-XepOpt:Nullness:Conservative=false");
   }
 
   private BugCheckerRefactoringTestHelper createRefactoringTestHelper() {
