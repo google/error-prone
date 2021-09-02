@@ -118,6 +118,21 @@ public final class AnnotationPositionTest {
   }
 
   @Test
+  public void interspersedJavadoc_treeAlreadyHasJavadoc_noSuggestion() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            "interface Test {",
+            "  /** Actually Javadoc. */",
+            "  @NonTypeUse",
+            "  /** Javadoc! */",
+            "  public void foo();",
+            "}")
+        .expectUnchanged()
+        .doTest(TEXT_MATCH);
+  }
+
+  @Test
   public void interspersedJavadoc_withComment() {
     refactoringHelper
         .addInputLines(

@@ -50,6 +50,7 @@ import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.ModifiersTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
+import com.sun.tools.javac.api.JavacTrees;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.TypeAnnotations.AnnotationType;
 import com.sun.tools.javac.parser.Tokens.Comment;
@@ -132,17 +133,22 @@ public final class AnnotationPosition extends BugChecker
     if (!description.equals(NO_MATCH)) {
       return description;
     }
-    if (danglingJavadoc != null) {
-      SuggestedFix.Builder builder = SuggestedFix.builder();
-      String javadoc = removeJavadoc(state, danglingJavadoc, builder);
-
-      String message = "Javadocs should appear before any modifiers or annotations.";
-      return buildDescription(tree)
-          .setMessage(message)
-          .addFix(builder.prefixWith(tree, javadoc).build())
-          .build();
+    if (danglingJavadoc == null) {
+      return NO_MATCH;
     }
-    return NO_MATCH;
+    // If the tree already has Javadoc, don't suggest double-Javadoccing it. It has dangling Javadoc
+    // but the suggestion will be rubbish.
+    if (JavacTrees.instance(state.context).getDocCommentTree(state.getPath()) != null) {
+      return NO_MATCH;
+    }
+    SuggestedFix.Builder builder = SuggestedFix.builder();
+    String javadoc = removeJavadoc(state, danglingJavadoc, builder);
+
+    String message = "Javadocs should appear before any modifiers or annotations.";
+    return buildDescription(tree)
+        .setMessage(message)
+        .addFix(builder.prefixWith(tree, javadoc).build())
+        .build();
   }
 
   /** Tokenizes as little of the {@code tree} as possible to ensure we grab all the annotations. */
