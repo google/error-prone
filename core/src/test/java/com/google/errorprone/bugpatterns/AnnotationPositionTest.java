@@ -33,29 +33,53 @@ import org.junit.runners.JUnit4;
  */
 @RunWith(JUnit4.class)
 public final class AnnotationPositionTest {
-  private static final String[] typeUseLines =
-      new String[] {
-        "import java.lang.annotation.ElementType;",
-        "import java.lang.annotation.Target;",
-        "@Target({ElementType.TYPE_USE, ElementType.METHOD, ElementType.TYPE})",
-        "@interface TypeUse {",
-        "  String value() default \"\";",
-        "}"
-      };
-
-  private static final String[] nonTypeUseLines = new String[] {"@interface NonTypeUse {}"};
 
   private final BugCheckerRefactoringTestHelper refactoringHelper =
       BugCheckerRefactoringTestHelper.newInstance(AnnotationPosition.class, getClass())
-          .addInputLines("TypeUse.java", typeUseLines)
+          .addInputLines(
+              "TypeUse.java",
+              "import java.lang.annotation.ElementType;",
+              "import java.lang.annotation.Target;",
+              "@Target({ElementType.TYPE_USE})",
+              "@interface TypeUse {",
+              "  String value() default \"\";",
+              "}")
           .expectUnchanged()
-          .addInputLines("NonTypeUse.java", nonTypeUseLines)
+          .addInputLines(
+              "EitherUse.java",
+              "import java.lang.annotation.ElementType;",
+              "import java.lang.annotation.Target;",
+              "@Target({ElementType.TYPE_USE, ElementType.METHOD, ElementType.TYPE})",
+              "@interface EitherUse {",
+              "  String value() default \"\";",
+              "}")
+          .expectUnchanged()
+          .addInputLines(
+              "NonTypeUse.java", //
+              "@interface NonTypeUse {}")
           .expectUnchanged();
 
   private final CompilationTestHelper helper =
       CompilationTestHelper.newInstance(AnnotationPosition.class, getClass())
-          .addSourceLines("TypeUse.java", typeUseLines)
-          .addSourceLines("NonTypeUse.java", nonTypeUseLines);
+          .addSourceLines(
+              "TypeUse.java",
+              "import java.lang.annotation.ElementType;",
+              "import java.lang.annotation.Target;",
+              "@Target({ElementType.TYPE_USE, ElementType.METHOD, ElementType.TYPE})",
+              "@interface TypeUse {",
+              "  String value() default \"\";",
+              "}")
+          .addSourceLines(
+              "NonTypeUse.java", //
+              "@interface NonTypeUse {}")
+          .addSourceLines(
+              "EitherUse.java",
+              "import java.lang.annotation.ElementType;",
+              "import java.lang.annotation.Target;",
+              "@Target({ElementType.TYPE_USE, ElementType.METHOD, ElementType.TYPE})",
+              "@interface EitherUse {",
+              "  String value() default \"\";",
+              "}");
 
   @Test
   public void nonTypeAnnotation() {
@@ -126,7 +150,7 @@ public final class AnnotationPositionTest {
             "  public boolean foo();",
             "  @NonTypeUse",
             "  public boolean bar();",
-            "  public @TypeUse boolean baz();",
+            "  public @EitherUse boolean baz();",
             "  /** Javadoc */",
             "  @NonTypeUse",
             "  // comment",
@@ -155,22 +179,22 @@ public final class AnnotationPositionTest {
             "Test.java",
             "interface Test {",
             "  /** Javadoc */",
-            "  public @NonTypeUse @TypeUse String foo();",
+            "  public @NonTypeUse @EitherUse String foo();",
             "  /** Javadoc */",
-            "  public @TypeUse @NonTypeUse String bar();",
-            "  public @TypeUse /** Javadoc */ @NonTypeUse String baz();",
-            "  public @TypeUse static @NonTypeUse int quux() { return 1; }",
+            "  public @EitherUse @NonTypeUse String bar();",
+            "  public @EitherUse /** Javadoc */ @NonTypeUse String baz();",
+            "  public @EitherUse static @NonTypeUse int quux() { return 1; }",
             "}")
         .addOutputLines(
             "Test.java",
             "interface Test {",
             "  /** Javadoc */",
-            "  @NonTypeUse public @TypeUse String foo();",
+            "  @NonTypeUse public @EitherUse String foo();",
             "  /** Javadoc */",
-            "  @NonTypeUse public @TypeUse String bar();",
+            "  @NonTypeUse public @EitherUse String bar();",
             "  /** Javadoc */",
-            "  @NonTypeUse public @TypeUse String baz();",
-            "  @NonTypeUse public static @TypeUse int quux() { return 1; }",
+            "  @NonTypeUse public @EitherUse String baz();",
+            "  @NonTypeUse public static @EitherUse int quux() { return 1; }",
             "}")
         .doTest(TEXT_MATCH);
   }
@@ -181,13 +205,13 @@ public final class AnnotationPositionTest {
         .addInputLines(
             "Test.java",
             "interface Test {",
-            "  public @TypeUse static /** Javadoc */ @NonTypeUse int foo = 1;",
+            "  public @EitherUse static /** Javadoc */ @NonTypeUse int foo = 1;",
             "}")
         .addOutputLines(
             "Test.java",
             "interface Test {",
             "  /** Javadoc */",
-            "  @NonTypeUse public static @TypeUse int foo = 1;",
+            "  @NonTypeUse public static @EitherUse int foo = 1;",
             "}")
         .doTest(TEXT_MATCH);
   }
@@ -211,10 +235,10 @@ public final class AnnotationPositionTest {
     refactoringHelper
         .addInputLines(
             "Test.java", //
-            "public @TypeUse interface Test {}")
+            "public @EitherUse interface Test {}")
         .addOutputLines(
             "Test.java", //
-            "@TypeUse",
+            "@EitherUse",
             "public interface Test {}")
         .doTest(TEXT_MATCH);
   }
@@ -238,14 +262,14 @@ public final class AnnotationPositionTest {
         .addInputLines(
             "Test.java",
             "interface Test {",
-            "  public @TypeUse static @NonTypeUse int foo() { return 1; }",
-            "  public @TypeUse @NonTypeUse static int bar() { return 1; }",
+            "  public @EitherUse static @NonTypeUse int foo() { return 1; }",
+            "  public @EitherUse @NonTypeUse static int bar() { return 1; }",
             "}")
         .addOutputLines(
             "Test.java",
             "interface Test {",
-            "  @NonTypeUse public static @TypeUse int foo() { return 1; }",
-            "  @NonTypeUse public static @TypeUse int bar() { return 1; }",
+            "  @NonTypeUse public static @EitherUse int foo() { return 1; }",
+            "  @NonTypeUse public static @EitherUse int bar() { return 1; }",
             "}")
         .doTest(TEXT_MATCH);
   }
@@ -256,12 +280,12 @@ public final class AnnotationPositionTest {
         .addInputLines(
             "Test.java",
             "class Test {",
-            "  public final @TypeUse(\"foo\") int foo(final int a) { return 1; }",
+            "  public final @EitherUse(\"foo\") int foo(final int a) { return 1; }",
             "}")
         .addOutputLines(
             "Test.java",
             "class Test {",
-            "  public final @TypeUse(\"foo\") int foo(final int a) { return 1; }",
+            "  public final @EitherUse(\"foo\") int foo(final int a) { return 1; }",
             "}")
         .doTest(TEXT_MATCH);
   }
@@ -272,16 +296,16 @@ public final class AnnotationPositionTest {
         .addInputLines(
             "Test.java",
             "interface Test {",
-            "  public @TypeUse /** Javadoc */ @NonTypeUse String baz();",
-            "  /* a */ public /* b */ @TypeUse /* c */ static /* d */ "
+            "  public @EitherUse /** Javadoc */ @NonTypeUse String baz();",
+            "  /* a */ public /* b */ @EitherUse /* c */ static /* d */ "
                 + "@NonTypeUse /* e */ int quux() { return 1; }",
             "}")
         .addOutputLines(
             "Test.java",
             "interface Test {",
             "  /** Javadoc */",
-            "  @NonTypeUse public @TypeUse String baz();",
-            "  /* a */ @NonTypeUse public /* b */ /* c */ static @TypeUse "
+            "  @NonTypeUse public @EitherUse String baz();",
+            "  /* a */ @NonTypeUse public /* b */ /* c */ static @EitherUse "
                 + "/* d */ /* e */ int quux() { return 1; }",
             "}")
         .doTest(TEXT_MATCH);
@@ -310,7 +334,7 @@ public final class AnnotationPositionTest {
             "Test.java", //
             "interface Test {",
             "  // BUG: Diagnostic contains: is a TYPE_USE",
-            "  public @TypeUse static int foo = 1;",
+            "  public @EitherUse static int foo = 1;",
             "}")
         .doTest();
   }
@@ -334,5 +358,50 @@ public final class AnnotationPositionTest {
             "}")
         .setArgs("--enable-preview", "--release", Integer.toString(RuntimeVersion.release()))
         .doTest(TEXT_MATCH);
+  }
+
+  @Test
+  public void typeArgument() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java", //
+            "interface T {",
+            "  @EitherUse <T> T f();",
+            "}")
+        .addOutputLines(
+            "Test.java", //
+            "interface T {",
+            "  <T> @EitherUse T f();",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void typeUseAndNonTypeUse_inWrongOrder() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java", //
+            "interface T {",
+            "  @TypeUse @NonTypeUse T f();",
+            "}")
+        .addOutputLines(
+            "Test.java", //
+            "interface T {",
+            "  @NonTypeUse @TypeUse T f();",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void annotationOfEitherUse_isAllowedToRemainBeforeModifiers() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java", //
+            "interface T {",
+            "  @NonTypeUse @EitherUse public T a();",
+            "  @NonTypeUse public @EitherUse T b();",
+            "}")
+        .expectUnchanged()
+        .doTest();
   }
 }

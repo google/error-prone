@@ -19,18 +19,22 @@ package com.google.errorprone.bugpatterns;
 import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.common.collect.ImmutableMap.toImmutableMap;
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
-import static com.google.common.collect.Iterables.getLast;
+import static com.google.common.collect.Iterables.concat;
+import static com.google.common.collect.Streams.stream;
 import static com.google.errorprone.BugPattern.LinkType.CUSTOM;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.BugPattern.StandardTags.STYLE;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
+import static com.google.errorprone.util.ASTHelpers.getAnnotationType;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
+import static java.util.Comparator.naturalOrder;
 import static java.util.stream.Collectors.joining;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Streams;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
@@ -53,10 +57,10 @@ import com.sun.tools.javac.parser.Tokens.TokenKind;
 import com.sun.tools.javac.tree.JCTree.JCClassDecl;
 import com.sun.tools.javac.tree.JCTree.JCMethodDecl;
 import com.sun.tools.javac.tree.JCTree.JCVariableDecl;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Stream;
 import javax.annotation.Nullable;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
@@ -73,8 +77,7 @@ import javax.lang.model.element.Name;
     severity = WARNING,
     tags = STYLE,
     linkType = CUSTOM,
-    link = "https://google.github.io/styleguide/javaguide.html#s4.8.5-annotations"
-    )
+    link = "https://google.github.io/styleguide/javaguide.html#s4.8.5-annotations")
 public final class AnnotationPosition extends BugChecker
     implements ClassTreeMatcher, MethodTreeMatcher, VariableTreeMatcher {
 
@@ -119,16 +122,15 @@ public final class AnnotationPosition extends BugChecker
 
     ImmutableList<ErrorProneToken> modifierTokens =
         tokens.stream().filter(t -> MODIFIERS.contains(t.kind())).collect(toImmutableList());
-    if (!modifierTokens.isEmpty()) {
-      int firstModifierPos = modifierTokens.get(0).pos();
-      int lastModifierPos = getLast(modifierTokens).endPos();
+    int firstModifierPos =
+        modifierTokens.stream().findFirst().map(x -> x.pos()).orElse(Integer.MAX_VALUE);
+    int lastModifierPos = Streams.findLast(modifierTokens.stream()).map(x -> x.endPos()).orElse(0);
 
-      Description description =
-          checkAnnotations(
-              tree, annotations, danglingJavadoc, firstModifierPos, lastModifierPos, state);
-      if (!description.equals(NO_MATCH)) {
-        return description;
-      }
+    Description description =
+        checkAnnotations(
+            tree, annotations, danglingJavadoc, firstModifierPos, lastModifierPos, state);
+    if (!description.equals(NO_MATCH)) {
+      return description;
     }
     if (danglingJavadoc != null) {
       SuggestedFix.Builder builder = SuggestedFix.builder();
@@ -178,54 +180,57 @@ public final class AnnotationPosition extends BugChecker
       int firstModifierPos,
       int lastModifierPos,
       VisitorState state) {
-    SuggestedFix.Builder builder = SuggestedFix.builder();
-    List<AnnotationTree> moveBefore = new ArrayList<>();
-    List<AnnotationTree> moveAfter = new ArrayList<>();
+    Symbol symbol = getSymbol(tree);
+    ImmutableList<AnnotationTree> shouldBeBefore =
+        annotations.stream()
+            .filter(
+                a -> {
+                  Position position = annotationPosition(tree, getAnnotationType(a, symbol, state));
+                  return position == Position.BEFORE
+                      || (position == Position.EITHER && getStartPosition(a) < firstModifierPos);
+                })
+            .collect(toImmutableList());
+    ImmutableList<AnnotationTree> shouldBeAfter =
+        annotations.stream()
+            .filter(
+                a -> {
+                  Position position = annotationPosition(tree, getAnnotationType(a, symbol, state));
+                  return position == Position.AFTER
+                      || (position == Position.EITHER && getStartPosition(a) > firstModifierPos);
+                })
+            .collect(toImmutableList());
 
-    boolean annotationProblem = false;
-    for (AnnotationTree annotation : annotations) {
-      int annotationPos = getStartPosition(annotation);
-      if (annotationPos <= firstModifierPos) {
-        continue;
-      }
-      AnnotationType annotationType =
-          ASTHelpers.getAnnotationType(annotation, getSymbol(tree), state);
-      if (annotationPos >= lastModifierPos) {
-        if (tree instanceof ClassTree || annotationType == AnnotationType.DECLARATION) {
-          annotationProblem = true;
-          moveBefore.add(annotation);
-        }
-      } else {
-        annotationProblem = true;
-        if (tree instanceof ClassTree
-            || annotationType == AnnotationType.DECLARATION
-            || annotationType == null) {
-          moveBefore.add(annotation);
-        } else {
-          moveAfter.add(annotation);
-        }
-      }
-    }
-    if (!annotationProblem) {
+    boolean annotationsInCorrectPlace =
+        shouldBeBefore.stream().allMatch(a -> getStartPosition(a) < firstModifierPos)
+            && shouldBeAfter.stream().allMatch(a -> getStartPosition(a) > lastModifierPos);
+
+    if (annotationsInCorrectPlace && isOrderingIsCorrect(shouldBeBefore, shouldBeAfter)) {
       return NO_MATCH;
     }
-    for (AnnotationTree annotation : moveBefore) {
-      builder.delete(annotation);
+    SuggestedFix.Builder fix = SuggestedFix.builder();
+    for (AnnotationTree annotation : concat(shouldBeBefore, shouldBeAfter)) {
+      fix.delete(annotation);
     }
-    for (AnnotationTree annotation : moveAfter) {
-      builder.delete(annotation);
+    String javadoc = danglingJavadoc == null ? "" : removeJavadoc(state, danglingJavadoc, fix);
+    if (lastModifierPos == 0) {
+      fix.replace(
+          getStartPosition(tree),
+          getStartPosition(tree),
+          String.format(
+              "%s%s ", javadoc, joinSource(state, concat(shouldBeBefore, shouldBeAfter))));
+    } else {
+      fix.replace(
+              firstModifierPos,
+              firstModifierPos,
+              String.format("%s%s ", javadoc, joinSource(state, shouldBeBefore)))
+          .replace(
+              lastModifierPos,
+              lastModifierPos,
+              String.format("%s ", joinSource(state, shouldBeAfter)));
     }
-    String javadoc = danglingJavadoc == null ? "" : removeJavadoc(state, danglingJavadoc, builder);
-    builder
-        .replace(
-            firstModifierPos,
-            firstModifierPos,
-            String.format("%s%s ", javadoc, joinSource(state, moveBefore)))
-        .replace(
-            lastModifierPos, lastModifierPos, String.format("%s ", joinSource(state, moveAfter)));
-    List<String> messages = new ArrayList<>();
-    if (!moveBefore.isEmpty()) {
-      ImmutableList<String> names = annotationNames(moveBefore);
+    Stream.Builder<String> messages = Stream.builder();
+    if (!shouldBeBefore.isEmpty()) {
+      ImmutableList<String> names = annotationNames(shouldBeBefore);
       String flattened = String.join(", ", names);
       String isAre =
           names.size() > 1 ? "are not TYPE_USE annotations" : "is not a TYPE_USE annotation";
@@ -234,18 +239,47 @@ public final class AnnotationPosition extends BugChecker
               "%s %s, so should appear before any modifiers and after Javadocs.",
               flattened, isAre));
     }
-    if (!moveAfter.isEmpty()) {
-      ImmutableList<String> names = annotationNames(moveAfter);
+    if (!shouldBeAfter.isEmpty()) {
+      ImmutableList<String> names = annotationNames(shouldBeAfter);
       String flattened = String.join(", ", names);
       String isAre = names.size() > 1 ? "are TYPE_USE annotations" : "is a TYPE_USE annotation";
       messages.add(
           String.format(
-              "%s %s, so can appear after modifiers and before the type.", flattened, isAre));
+              "%s %s, so should appear after modifiers and directly before the type.",
+              flattened, isAre));
     }
     return buildDescription(tree)
-        .setMessage(String.join(" ", messages))
-        .addFix(builder.build())
+        .setMessage(messages.build().collect(joining(" ")))
+        .addFix(fix.build())
         .build();
+  }
+
+  private static boolean isOrderingIsCorrect(
+      List<AnnotationTree> shouldBeBefore, List<AnnotationTree> shouldBeAfter) {
+    if (shouldBeBefore.isEmpty() || shouldBeAfter.isEmpty()) {
+      return true;
+    }
+    int largestNonTypeAnnotationPosition =
+        shouldBeBefore.stream().map(ASTHelpers::getStartPosition).max(naturalOrder()).get();
+    int smallestTypeAnnotationPosition =
+        shouldBeAfter.stream().map(ASTHelpers::getStartPosition).min(naturalOrder()).get();
+    return largestNonTypeAnnotationPosition < smallestTypeAnnotationPosition;
+  }
+
+  private static Position annotationPosition(Tree tree, AnnotationType annotationType) {
+    if (tree instanceof ClassTree || annotationType == null) {
+      return Position.BEFORE;
+    }
+    switch (annotationType) {
+      case DECLARATION:
+        return Position.BEFORE;
+      case TYPE:
+        return Position.AFTER;
+      case NONE:
+      case BOTH:
+        return Position.EITHER;
+    }
+    throw new AssertionError();
   }
 
   private static ImmutableList<String> annotationNames(List<AnnotationTree> annotations) {
@@ -257,8 +291,8 @@ public final class AnnotationPosition extends BugChecker
         .collect(toImmutableList());
   }
 
-  private static String joinSource(VisitorState state, List<AnnotationTree> moveBefore) {
-    return moveBefore.stream().map(state::getSourceForNode).collect(joining(" "));
+  private static String joinSource(VisitorState state, Iterable<AnnotationTree> moveBefore) {
+    return stream(moveBefore).map(state::getSourceForNode).collect(joining(" "));
   }
 
   private static String removeJavadoc(
@@ -286,5 +320,11 @@ public final class AnnotationPosition extends BugChecker
       }
     }
     return null;
+  }
+
+  private enum Position {
+    BEFORE,
+    AFTER,
+    EITHER
   }
 }
