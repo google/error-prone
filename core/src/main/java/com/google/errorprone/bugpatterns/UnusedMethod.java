@@ -89,9 +89,7 @@ public final class UnusedMethod extends BugChecker implements CompilationUnitTre
           "org.testng.annotations.DataProvider");
 
   /** The set of types exempting a type that is extending or implementing them. */
-  private static final ImmutableSet<String> EXEMPTING_SUPER_TYPES =
-      ImmutableSet.of(
-          );
+  private static final ImmutableSet<String> EXEMPTING_SUPER_TYPES = ImmutableSet.of();
 
   @Override
   public Description matchCompilationUnit(CompilationUnitTree tree, VisitorState state) {

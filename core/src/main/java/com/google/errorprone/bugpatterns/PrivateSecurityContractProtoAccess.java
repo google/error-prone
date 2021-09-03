@@ -39,7 +39,6 @@ import java.util.regex.Pattern;
         "Access to a private protocol buffer field is forbidden. This protocol buffer carries"
             + " a security contract, and can only be created using an approved library."
             + " Direct access to the fields is forbidden.",
-
     severity = ERROR,
     linkType = NONE)
 public class PrivateSecurityContractProtoAccess extends BugChecker
@@ -60,7 +59,8 @@ public class PrivateSecurityContractProtoAccess extends BugChecker
           not(packageStartsWith("com.google.common.html.types")));
 
   private static final String MESSAGE = "Forbidden access to a private proto field. See ";
-  private static final String SAFEHTML_LINK = "https://github.com/google/safe-html-types/blob/master/doc/safehtml-types.md#protocol-buffer-conversion";
+  private static final String SAFEHTML_LINK =
+      "https://github.com/google/safe-html-types/blob/master/doc/safehtml-types.md#protocol-buffer-conversion";
 
   // Matches instance methods with PrivateDoNotAccessOrElse in their names.
   private static Matcher<MethodInvocationTree> createFieldMatcher(String className) {

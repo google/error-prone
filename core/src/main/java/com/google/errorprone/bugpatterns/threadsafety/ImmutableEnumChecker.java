@@ -110,8 +110,7 @@ public class ImmutableEnumChecker extends BugChecker implements ClassTreeMatcher
   }
 
   private static final ImmutableSet<String> EXEMPT_ANNOTATIONS =
-      ImmutableSet.of(
-          "com.google.errorprone.annotations.Immutable");
+      ImmutableSet.of("com.google.errorprone.annotations.Immutable");
 
   private static boolean hasExemptAnnotation(Symbol symbol, VisitorState state) {
     return EXEMPT_ANNOTATIONS.stream()

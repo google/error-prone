@@ -125,5 +125,4 @@ public class FieldMissingNullable extends BugChecker
 
     return describeMatch(treeToReportOn, fixByAddingNullableAnnotation(state, fieldDecl));
   }
-
 }

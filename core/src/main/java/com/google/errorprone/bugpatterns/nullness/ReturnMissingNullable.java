@@ -248,5 +248,4 @@ public class ReturnMissingNullable extends BugChecker implements CompilationUnit
 
     return NO_MATCH; // Any reports were made through state.reportMatch.
   }
-
 }

@@ -60,8 +60,7 @@ import java.util.Optional;
     tags = BugPattern.StandardTags.STYLE,
     severity = WARNING,
     linkType = CUSTOM,
-    link = "https://google.github.io/styleguide/javaguide.html#s8.4.2-how-to-handle-a-warning"
-    )
+    link = "https://google.github.io/styleguide/javaguide.html#s8.4.2-how-to-handle-a-warning")
 public final class SuppressWarningsWithoutExplanation extends BugChecker
     implements CompilationUnitTreeMatcher {
   private static final Matcher<AnnotationTree> SUPPRESS_WARNINGS =

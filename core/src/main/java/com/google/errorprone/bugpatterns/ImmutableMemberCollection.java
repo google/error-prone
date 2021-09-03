@@ -115,9 +115,7 @@ public final class ImmutableMemberCollection extends BugChecker implements Class
 
   // TODO(ashishkedia) : Share this with ImmutableSetForContains.
   private static final Matcher<Tree> EXCLUSIONS =
-      anyOf(
-          hasAnnotationWithSimpleName("Bind"),
-          hasAnnotationWithSimpleName("Inject"));
+      anyOf(hasAnnotationWithSimpleName("Bind"), hasAnnotationWithSimpleName("Inject"));
 
   @Override
   public Description matchClass(ClassTree classTree, VisitorState state) {

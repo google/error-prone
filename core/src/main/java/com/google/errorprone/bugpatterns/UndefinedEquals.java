@@ -169,5 +169,4 @@ public final class UndefinedEquals extends BugChecker implements MethodInvocatio
     }
     return Optional.empty();
   }
-
 }

@@ -61,8 +61,7 @@ public final class MemberName extends BugChecker implements MethodTreeMatcher, V
   private static final Supplier<ImmutableSet<Name>> EXEMPTED_CLASS_ANNOTATIONS =
       VisitorState.memoize(
           s ->
-              Stream.of(
-                      "org.robolectric.annotation.Implements")
+              Stream.of("org.robolectric.annotation.Implements")
                   .map(s::getName)
                   .collect(toImmutableSet()));
 

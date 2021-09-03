@@ -82,9 +82,7 @@ public class ScopeOrQualifierAnnotationRetention extends BugChecker implements C
         // Is this in a dagger component?
         ClassTree outer = ASTHelpers.findEnclosingNode(state.getPath(), ClassTree.class);
         if (outer != null
-            && allOf(
-                    InjectMatchers.IS_DAGGER_COMPONENT_OR_MODULE)
-                .matches(outer, state)) {
+            && allOf(InjectMatchers.IS_DAGGER_COMPONENT_OR_MODULE).matches(outer, state)) {
           return Description.NO_MATCH;
         }
         return describe(classTree, state, ASTHelpers.getAnnotation(classSymbol, Retention.class));

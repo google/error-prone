@@ -205,7 +205,6 @@ public class MissingSuperCall extends BugChecker
       return result || super.visitMethodInvocation(tree, unused);
     }
 
-
     @Override
     public Boolean reduce(Boolean b1, Boolean b2) {
       return firstNonNull(b1, false) || firstNonNull(b2, false);
@@ -219,5 +218,4 @@ public class MissingSuperCall extends BugChecker
   private static String getMethodName(MethodSymbol methodSym) {
     return String.format("%s#%s", methodSym.owner, methodSym.getSimpleName());
   }
-
 }

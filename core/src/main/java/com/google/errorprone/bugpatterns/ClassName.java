@@ -40,8 +40,7 @@ import javax.lang.model.element.Modifier;
     severity = ERROR,
     documentSuppression = false,
     linkType = CUSTOM,
-    link = "https://google.github.io/styleguide/javaguide.html#s2.1-file-name"
-    )
+    link = "https://google.github.io/styleguide/javaguide.html#s2.1-file-name")
 public class ClassName extends BugChecker implements CompilationUnitTreeMatcher {
 
   @Override

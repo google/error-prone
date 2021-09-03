@@ -62,8 +62,7 @@ import javax.lang.model.element.Name;
     severity = SUGGESTION,
     tags = StandardTags.STYLE,
     linkType = LinkType.CUSTOM,
-    link = "https://google.github.io/styleguide/javaguide.html#s5.2.8-type-variable-names"
-    )
+    link = "https://google.github.io/styleguide/javaguide.html#s5.2.8-type-variable-names")
 public class TypeParameterNaming extends BugChecker implements TypeParameterTreeMatcher {
 
   private static final Pattern TRAILING_DIGIT_EXTRACTOR = Pattern.compile("^(.*?)(\\d+)$");

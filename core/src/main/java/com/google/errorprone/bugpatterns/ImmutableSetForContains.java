@@ -80,9 +80,7 @@ public final class ImmutableSetForContains extends BugChecker implements ClassTr
           isSameType(ImmutableList.class));
 
   private static final Matcher<Tree> EXCLUSIONS =
-      anyOf(
-          hasAnnotationWithSimpleName("Bind"),
-          hasAnnotationWithSimpleName("Inject"));
+      anyOf(hasAnnotationWithSimpleName("Bind"), hasAnnotationWithSimpleName("Inject"));
 
   private static final Matcher<ExpressionTree> IMMUTABLE_LIST_FACTORIES =
       staticMethod().onClass(ImmutableList.class.getName()).namedAnyOf("of", "copyOf");

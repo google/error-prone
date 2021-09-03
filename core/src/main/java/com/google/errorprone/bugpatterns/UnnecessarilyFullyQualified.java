@@ -61,9 +61,7 @@ import javax.lang.model.element.Name;
 public final class UnnecessarilyFullyQualified extends BugChecker
     implements CompilationUnitTreeMatcher {
 
-  private static final ImmutableSet<String> EXEMPTED_NAMES =
-      ImmutableSet.of(
-          "Annotation");
+  private static final ImmutableSet<String> EXEMPTED_NAMES = ImmutableSet.of("Annotation");
 
   @Override
   public Description matchCompilationUnit(CompilationUnitTree tree, VisitorState state) {

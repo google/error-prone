@@ -101,8 +101,7 @@ public final class UnnecessaryAssignment extends BugChecker
       staticMethod().onClass("org.mockito.Mockito").named("mock");
 
   private static final Matcher<ExpressionTree> INITIALIZES_MOCKS =
-      anyOf(
-          staticMethod().onClass("org.mockito.MockitoAnnotations").named("initMocks"));
+      anyOf(staticMethod().onClass("org.mockito.MockitoAnnotations").named("initMocks"));
 
   private static final MultiMatcher<ClassTree, AnnotationTree> MOCKITO_RUNNER =
       annotations(

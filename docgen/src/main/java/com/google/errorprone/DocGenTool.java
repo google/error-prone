@@ -109,7 +109,7 @@ public final class DocGenTool {
             explanationDir,
             options.target == Target.EXTERNAL,
             options.baseUrl,
-                input -> input.severity);
+            input -> input.severity);
     try (Writer w =
         Files.newBufferedWriter(wikiDir.resolve("bugpatterns.md"), StandardCharsets.UTF_8)) {
       List<BugPatternInstance> patterns =
@@ -120,11 +120,7 @@ public final class DocGenTool {
 
   private static ImmutableSet<String> enabledCheckNames() {
     return StreamSupport.stream(
-            Iterables.concat(
-                    ENABLED_ERRORS,
-                    ENABLED_WARNINGS)
-                .spliterator(),
-            false)
+            Iterables.concat(ENABLED_ERRORS, ENABLED_WARNINGS).spliterator(), false)
         .map(BugCheckerInfo::canonicalName)
         .collect(toImmutableSet());
   }

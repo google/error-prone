@@ -25,7 +25,6 @@ import java.lang.annotation.Target;
 /**
  * Indicates that callers of this API should be inlined. That is, this API is trivially expressible
  * in terms of another API, for example a method that just calls another method.
- *
  */
 @Documented
 @Target({METHOD, CONSTRUCTOR})

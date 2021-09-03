@@ -146,9 +146,7 @@ public @interface BugPattern {
 
   SeverityLevel severity();
 
-  /**
-   * The severity of the diagnostic.
-   */
+  /** The severity of the diagnostic. */
   enum SeverityLevel {
     ERROR,
     WARNING,

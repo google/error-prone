@@ -281,9 +281,7 @@ public abstract class AbstractReturnValueIgnored extends BugChecker
               isLastStatementInBlock(),
               previousStatement(
                   expressionStatement(
-                      anyOf(
-                          instanceMethod().onExactClass("org.junit.rules.ExpectedException")
-                          )))),
+                      anyOf(instanceMethod().onExactClass("org.junit.rules.ExpectedException"))))),
           // try { me(); fail(); } catch (Throwable t) {}
           allOf(enclosingNode(kindIs(Kind.TRY)), nextStatement(expressionStatement(FAIL_METHOD))),
           // assertThrows(Throwable.class, () => { me(); })

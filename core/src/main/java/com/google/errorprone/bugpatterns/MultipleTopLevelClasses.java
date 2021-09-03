@@ -41,8 +41,7 @@ import java.util.List;
     documentSuppression = false,
     linkType = CUSTOM,
     tags = StandardTags.STYLE,
-    link = "https://google.github.io/styleguide/javaguide.html#s3.4.1-one-top-level-class"
-    )
+    link = "https://google.github.io/styleguide/javaguide.html#s3.4.1-one-top-level-class")
 public class MultipleTopLevelClasses extends BugChecker implements CompilationUnitTreeMatcher {
 
   @Override

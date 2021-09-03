@@ -101,8 +101,7 @@ abstract class InlinabilityResult {
     NO_BODY("InlineMe cannot be applied to abstract methods."),
     NOT_EXACTLY_ONE_STATEMENT("InlineMe cannot inline methods with more than 1 statement."),
     COMPLEX_STATEMENT(
-        "InlineMe cannot inline complex statements. Consider using a different refactoring tool"
-        ),
+        "InlineMe cannot inline complex statements. Consider using a different refactoring tool"),
     CALLS_DEPRECATED_OR_PRIVATE_APIS(
         "InlineMe cannot be applied when the implementation references deprecated or non-public"
             + " API elements:"),

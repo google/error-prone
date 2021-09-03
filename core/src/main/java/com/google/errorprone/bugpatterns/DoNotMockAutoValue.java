@@ -32,10 +32,7 @@ import java.util.stream.Stream;
     severity = WARNING)
 public final class DoNotMockAutoValue extends AbstractMockChecker<AutoValue> {
   private static final TypeExtractor<VariableTree> MOCKED_VAR =
-      fieldAnnotatedWithOneOf(
-          Stream.of(
-              "org.mockito.Mock",
-              "org.mockito.Spy"));
+      fieldAnnotatedWithOneOf(Stream.of("org.mockito.Mock", "org.mockito.Spy"));
 
   public DoNotMockAutoValue() {
     super(

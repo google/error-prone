@@ -1029,7 +1029,6 @@ public class InlinerTest {
         .doTest();
   }
 
-
   @Test
   public void testBooleanParameterWithInlineComment() {
     refactoringTestHelper

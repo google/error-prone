@@ -40,8 +40,7 @@ public class CloseableProvides extends BugChecker implements MethodTreeMatcher {
   private static final Matcher<MethodTree> CLOSEABLE_PROVIDES_MATCHER =
       allOf(
           InjectMatchers.hasProvidesAnnotation(),
-          methodReturns(Matchers.isSubtypeOf("java.io.Closeable"))
-          );
+          methodReturns(Matchers.isSubtypeOf("java.io.Closeable")));
 
   @Override
   public Description matchMethod(MethodTree tree, VisitorState state) {

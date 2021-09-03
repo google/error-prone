@@ -31,7 +31,6 @@ import java.lang.annotation.Target;
  *
  * <p>Mockito tests can enforce this annotation by using a custom MockMaker which intercepts
  * creation of mocks.
- *
  */
 @Inherited
 @Documented

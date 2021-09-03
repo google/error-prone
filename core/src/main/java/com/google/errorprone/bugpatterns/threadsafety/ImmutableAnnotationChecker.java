@@ -55,9 +55,7 @@ public class ImmutableAnnotationChecker extends BugChecker implements ClassTreeM
           + " @com.google.errorprone.annotations.Immutable is unnecessary";
 
   private static final ImmutableSet<String> IGNORED_PROCESSORS =
-      ImmutableSet.of(
-          "com.google.auto.value.processor.AutoAnnotationProcessor"
-          );
+      ImmutableSet.of("com.google.auto.value.processor.AutoAnnotationProcessor");
 
   private final WellKnownMutability wellKnownMutability;
 

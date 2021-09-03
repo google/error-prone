@@ -36,10 +36,7 @@ import java.util.stream.Stream;
 public class DoNotMockChecker extends AbstractMockChecker<DoNotMock> {
 
   private static final TypeExtractor<VariableTree> MOCKED_VAR =
-      fieldAnnotatedWithOneOf(
-          Stream.of(
-              "org.mockito.Mock",
-              "org.mockito.Spy"));
+      fieldAnnotatedWithOneOf(Stream.of("org.mockito.Mock", "org.mockito.Spy"));
 
   public DoNotMockChecker() {
     super(MOCKED_VAR, MOCKING_METHOD, DoNotMock.class, DoNotMock::value);

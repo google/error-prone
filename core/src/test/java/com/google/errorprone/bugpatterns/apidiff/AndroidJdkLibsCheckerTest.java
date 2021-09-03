@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns.apidiff;
 
-
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.CompilationTestHelper;
 import org.junit.Test;
@@ -24,7 +23,6 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
 /** {@link AndroidJdkLibsChecker}Test. */
-
 @RunWith(JUnit4.class)
 public class AndroidJdkLibsCheckerTest extends Java7ApiCheckerTest {
 

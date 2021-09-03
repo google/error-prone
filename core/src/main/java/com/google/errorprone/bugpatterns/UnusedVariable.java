@@ -139,9 +139,7 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
   private final ImmutableSet<String> methodAnnotationsExemptingParameters;
 
   /** The set of types exempting a type that is extending or implementing them. */
-  private static final ImmutableSet<String> EXEMPTING_SUPER_TYPES =
-      ImmutableSet.of(
-          );
+  private static final ImmutableSet<String> EXEMPTING_SUPER_TYPES = ImmutableSet.of();
 
   /** The set of types exempting a field of type extending them. */
   private static final ImmutableSet<String> EXEMPTING_FIELD_SUPER_TYPES =
@@ -157,8 +155,7 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
 
   public UnusedVariable(ErrorProneFlags flags) {
     ImmutableSet.Builder<String> methodAnnotationsExemptingParameters =
-        ImmutableSet.<String>builder()
-            .add("org.robolectric.annotation.Implementation");
+        ImmutableSet.<String>builder().add("org.robolectric.annotation.Implementation");
     flags
         .getList("Unused:methodAnnotationsExemptingParameters")
         .ifPresent(methodAnnotationsExemptingParameters::addAll);

@@ -16,11 +16,10 @@
 package com.google.errorprone.bugpatterns.time;
 
 import com.google.errorprone.CompilationTestHelper;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-
-import org.junit.Ignore;
 
 /**
  * Tests for {@link ProtoTimestampGetSecondsGetNano}.

@@ -281,8 +281,7 @@ public final class TimeUnitMismatch extends BugChecker
       message +=
           " WARNING: The suggested replacement truncates fractional seconds, so a value "
               + "like 999ms becomes 0.";
-      message +=
-          "Consider performing a floating-point division instead.";
+      message += "Consider performing a floating-point division instead.";
       // TODO(cpovirk): Offer this as a suggested fix.
     }
 

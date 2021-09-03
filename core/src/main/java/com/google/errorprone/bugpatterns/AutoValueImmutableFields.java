@@ -52,8 +52,7 @@ public class AutoValueImmutableFields extends BugChecker implements ClassTreeMat
   private static final String MESSAGE =
       "AutoValue instances should be deeply immutable. Therefore, we recommend returning %s "
           + "instead. Read more at "
-          + "http://goo.gl/qWo9sC"
-      ;
+          + "http://goo.gl/qWo9sC";
 
   private static final ImmutableListMultimap<String, Matcher<MethodTree>> REPLACEMENT_TO_MATCHERS =
       ImmutableListMultimap.<String, Matcher<MethodTree>>builder()

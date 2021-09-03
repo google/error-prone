@@ -78,7 +78,6 @@ public class CollectionIncompatibleType extends BugChecker
         flags.getEnum("CollectionIncompatibleType:FixType", FixType.class).orElse(FixType.NONE);
   }
 
-
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
     return match(tree, state);
@@ -141,5 +140,4 @@ public class CollectionIncompatibleType extends BugChecker
 
     return description.build();
   }
-
 }

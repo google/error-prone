@@ -95,5 +95,4 @@ public class ConstantField extends BugChecker implements VariableTreeMatcher {
         return !owningClass.isInner();
     }
   }
-
 }

@@ -195,5 +195,4 @@ public class EqualsIncompatibleType extends BugChecker
       return argumentTypeString;
     }
   }
-
 }

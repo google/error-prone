@@ -86,8 +86,7 @@ public final class FuturesGetCheckedIllegalExceptionType extends BugChecker
   }
 
   private static final Matcher<ExpressionTree> FUTURES_GET_CHECKED_MATCHER =
-      anyOf(
-          staticMethod().onClass(Futures.class.getName()).named("getChecked"));
+      anyOf(staticMethod().onClass(Futures.class.getName()).named("getChecked"));
 
   private static final Matcher<ExpressionTree> CLASS_OBJECT_FOR_CLASS_EXTENDING_RUNTIME_EXCEPTION =
       new Matcher<ExpressionTree>() {

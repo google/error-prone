@@ -47,7 +47,6 @@ import com.sun.source.tree.ThrowTree;
             + "\n\n"
             + "2. Clarity: Base exception classes offer no information on the nature of the"
             + " failure.",
-
     severity = WARNING)
 public final class ThrowSpecificExceptions extends BugChecker implements NewClassTreeMatcher {
   private static final ImmutableList<AbstractLikeException> ABSTRACT_LIKE_EXCEPTIONS =

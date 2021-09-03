@@ -48,8 +48,7 @@ import com.sun.source.tree.WhileLoopTree;
     severity = SeverityLevel.SUGGESTION,
     tags = StandardTags.STYLE,
     linkType = LinkType.CUSTOM,
-    link = "https://google.github.io/styleguide/javaguide.html#s4.1.1-braces-always-used"
-    )
+    link = "https://google.github.io/styleguide/javaguide.html#s4.1.1-braces-always-used")
 public class MissingBraces extends BugChecker
     implements IfTreeMatcher,
         ForLoopTreeMatcher,

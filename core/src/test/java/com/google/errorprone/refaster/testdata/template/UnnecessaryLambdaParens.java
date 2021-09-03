@@ -30,6 +30,6 @@ public class UnnecessaryLambdaParen<T> {
 
   @AfterTemplate
   Optional<T> reduce(Stream<T> stream) {
-    return stream.map((x) -> x).reduce((a,b) -> b);
+    return stream.map((x) -> x).reduce((a, b) -> b);
   }
 }

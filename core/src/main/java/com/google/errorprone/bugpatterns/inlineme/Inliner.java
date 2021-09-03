@@ -303,9 +303,7 @@ public final class Inliner extends BugChecker
     abstract String extraMessage();
 
     final String message() {
-      return shortName()
-          + " should be inlined"
-          + extraMessage();
+      return shortName() + " should be inlined" + extraMessage();
     }
 
     /** Returns {@code FullyQualifiedClassName#methodName}. */

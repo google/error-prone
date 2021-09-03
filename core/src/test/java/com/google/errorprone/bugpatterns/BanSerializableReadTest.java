@@ -26,8 +26,7 @@ import org.junit.runners.JUnit4;
 @RunWith(JUnit4.class)
 public class BanSerializableReadTest {
   private final CompilationTestHelper compilationHelper =
-      CompilationTestHelper.newInstance(BanSerializableRead.class, getClass())
-      ;
+      CompilationTestHelper.newInstance(BanSerializableRead.class, getClass());
 
   private final BugCheckerRefactoringTestHelper refactoringHelper =
       BugCheckerRefactoringTestHelper.newInstance(BanSerializableRead.class, getClass());

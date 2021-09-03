@@ -225,7 +225,6 @@ public class NullnessPropagationTest {
         .doTest();
   }
 
-  
   @Test
   public void testProtoGetters() {
     compilationHelper

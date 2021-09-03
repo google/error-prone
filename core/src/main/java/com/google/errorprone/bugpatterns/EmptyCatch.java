@@ -36,8 +36,7 @@ import com.sun.source.tree.CatchTree;
     tags = BugPattern.StandardTags.STYLE,
     documentSuppression = false,
     linkType = CUSTOM,
-    link = "https://google.github.io/styleguide/javaguide.html#s6.2-caught-exceptions"
-    )
+    link = "https://google.github.io/styleguide/javaguide.html#s6.2-caught-exceptions")
 public class EmptyCatch extends BugChecker implements CatchTreeMatcher {
 
   @Override

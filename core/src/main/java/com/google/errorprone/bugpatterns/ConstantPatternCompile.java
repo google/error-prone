@@ -66,18 +66,10 @@ import javax.lang.model.element.NestingKind;
 public final class ConstantPatternCompile extends BugChecker implements VariableTreeMatcher {
 
   private static final Matcher<ExpressionTree> PATTERN_COMPILE_CHECK =
-      staticMethod()
-          .onClassAny(
-              "java.util.regex.Pattern"
-              )
-          .named("compile");
+      staticMethod().onClassAny("java.util.regex.Pattern").named("compile");
 
   private static final Matcher<ExpressionTree> MATCHER_MATCHER =
-      instanceMethod()
-          .onExactClassAny(
-              "java.util.regex.Pattern"
-              )
-          .named("matcher");
+      instanceMethod().onExactClassAny("java.util.regex.Pattern").named("matcher");
 
   @Override
   public Description matchVariable(VariableTree tree, VisitorState state) {

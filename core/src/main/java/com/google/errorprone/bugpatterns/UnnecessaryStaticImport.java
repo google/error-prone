@@ -31,7 +31,6 @@ import com.sun.source.tree.ImportTree;
 @BugPattern(
     name = "UnnecessaryStaticImport",
     summary = "Using static imports for types is unnecessary",
-
     severity = SUGGESTION,
     documentSuppression = false,
     tags = StandardTags.STYLE)
