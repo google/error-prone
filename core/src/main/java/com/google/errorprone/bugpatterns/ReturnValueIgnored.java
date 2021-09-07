@@ -128,7 +128,7 @@ public class ReturnValueIgnored extends AbstractReturnValueIgnored {
    * The return value of stream methods should always be checked (except for forEach and
    * forEachOrdered, which are void-returning and won't be checked by AbstractReturnValueIgnored).
    */
-  private static final Matcher<ExpressionTree> STREAM_METHOD =
+  private static final Matcher<ExpressionTree> STREAM_METHODS =
       instanceMethod().onDescendantOf("java.util.stream.BaseStream");
 
   /**
@@ -251,6 +251,11 @@ public class ReturnValueIgnored extends AbstractReturnValueIgnored {
   private static final Matcher<ExpressionTree> ITERATOR_METHODS =
       instanceMethod().onDescendantOf("java.util.Iterator").named("hasNext").withNoParameters();
 
+  private static final Matcher<ExpressionTree> COLLECTOR_METHODS =
+      anyOf(
+          anyMethod().onClass("java.util.stream.Collector"),
+          anyMethod().onClass("java.util.stream.Collectors"));
+
   /**
    * The return values of primitive types (e.g., {@link java.lang.Integer}) should always be checked
    * (except for parsing-type methods and void-returning methods, which won't be checked by
@@ -318,11 +323,41 @@ public class ReturnValueIgnored extends AbstractReturnValueIgnored {
               .namedAnyOf("equals")
               .withParameters("java.lang.Object"));
 
+  private static final Matcher<ExpressionTree> CHAR_SEQUENCE_METHODS =
+      anyOf(
+          instanceMethod().onDescendantOf("java.lang.CharSequence"),
+          staticMethod().onClass("java.lang.CharSequence"));
+
+  private static final Matcher<ExpressionTree> ENUM_METHODS =
+      anyOf(
+          instanceMethod().onDescendantOf("java.lang.Enum"),
+          staticMethod().onClass("java.lang.Enum"));
+
+  private static final Matcher<ExpressionTree> THROWABLE_METHODS =
+      instanceMethod()
+          .onDescendantOf("java.lang.Throwable")
+          .namedAnyOf(
+              "getCause", "getLocalizedMessage", "getMessage", "getStackTrace", "getSuppressed");
+
+  private static final Matcher<ExpressionTree> OBJECTS_METHODS =
+      allOf(
+          not(
+              staticMethod()
+                  .onClass("java.util.Objects")
+                  .namedAnyOf(
+                      "checkFromIndexSize",
+                      "checkFromToIndex",
+                      "checkIndex",
+                      "requireNonNull",
+                      "requireNonNullElse",
+                      "requireNonNullElseGet")),
+          staticMethod().onClass("java.util.Objects"));
+
   private static final Matcher<? super ExpressionTree> SPECIALIZED_MATCHER =
       anyOf(
           RETURNS_SAME_TYPE,
           ReturnValueIgnored::functionalMethod,
-          STREAM_METHOD,
+          STREAM_METHODS,
           STRING_METHODS,
           PROTO_METHODS,
           PRIMITIVE_METHODS,
@@ -340,14 +375,21 @@ public class ReturnValueIgnored extends AbstractReturnValueIgnored {
   private final Matcher<? super ExpressionTree> matcher;
 
   public ReturnValueIgnored(ErrorProneFlags flags) {
-    boolean checkOptionalMethods = flags.getBoolean("ReturnValueIgnored:MoreOptional").orElse(true);
-    boolean checkObjectMethods = flags.getBoolean("ReturnValueIgnored:ObjectMethods").orElse(true);
-
     this.matcher =
         anyOf(
             SPECIALIZED_MATCHER,
-            checkOptionalMethods ? MORE_OPTIONAL_METHODS : nothing(),
-            checkObjectMethods ? OBJECT_METHODS : nothing());
+            getMatcher(flags, "ReturnValueIgnored:MoreOptional", MORE_OPTIONAL_METHODS),
+            getMatcher(flags, "ReturnValueIgnored:ObjectMethods", OBJECT_METHODS),
+            getMatcher(flags, "ReturnValueIgnored:ObjectsMethods", OBJECTS_METHODS),
+            getMatcher(flags, "ReturnValueIgnored:CharSequenceMethods", CHAR_SEQUENCE_METHODS),
+            getMatcher(flags, "ReturnValueIgnored:EnumMethods", ENUM_METHODS),
+            getMatcher(flags, "ReturnValueIgnored:ThrowableMethods", THROWABLE_METHODS),
+            getMatcher(flags, "ReturnValueIgnored:CollectorMethods", COLLECTOR_METHODS));
+  }
+
+  private static Matcher<? super ExpressionTree> getMatcher(
+      ErrorProneFlags flags, String flagName, Matcher<ExpressionTree> matcher) {
+    return flags.getBoolean(flagName).orElse(true) ? matcher : nothing();
   }
 
   @Override
