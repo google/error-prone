@@ -30,6 +30,7 @@ import static javax.lang.model.element.Modifier.PRIVATE;
 import static javax.lang.model.element.Modifier.STATIC;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
@@ -41,6 +42,7 @@ import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
+import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import javax.lang.model.element.Modifier;
 
 /** @author gak@google.com (Gregory Kick) */
@@ -54,16 +56,26 @@ import javax.lang.model.element.Modifier;
 public final class PrivateConstructorForUtilityClass extends BugChecker
     implements ClassTreeMatcher {
 
+  private static final ImmutableSet<String> ANNOTATIONS_TO_IGNORE =
+      ImmutableSet.of(
+          "org.junit.runner.RunWith",
+          "org.robolectric.annotation.Implements",
+          "com.google.auto.value.AutoValue");
+
   @Override
   public Description matchClass(ClassTree classTree, VisitorState state) {
     if (!classTree.getKind().equals(CLASS)
         || classTree.getModifiers().getFlags().contains(Modifier.ABSTRACT)
         || classTree.getExtendsClause() != null
         || !classTree.getImplementsClause().isEmpty()
-        || isInPrivateScope(state)
-        || hasAnnotation(getSymbol(classTree), "org.junit.runner.RunWith", state)
-        || hasAnnotation(getSymbol(classTree), "org.robolectric.annotation.Implements", state)) {
+        || isInPrivateScope(state)) {
       return NO_MATCH;
+    }
+    ClassSymbol sym = getSymbol(classTree);
+    for (String annotation : ANNOTATIONS_TO_IGNORE) {
+      if (hasAnnotation(sym, annotation, state)) {
+        return NO_MATCH;
+      }
     }
 
     ImmutableList<Tree> nonSyntheticMembers =
