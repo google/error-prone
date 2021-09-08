@@ -312,6 +312,9 @@ public class ReturnValueIgnored extends AbstractReturnValueIgnored {
               .onDescendantOf(PROTO_MESSAGE + ".Builder")
               .namedAnyOf("build", "buildPartial"));
 
+  private static final Matcher<ExpressionTree> CLASS_METHODS =
+      anyMethod().onClass("java.lang.Class");
+
   private static final Matcher<ExpressionTree> OBJECT_METHODS =
       anyOf(
           instanceMethod()
@@ -330,7 +333,7 @@ public class ReturnValueIgnored extends AbstractReturnValueIgnored {
 
   private static final Matcher<ExpressionTree> ENUM_METHODS =
       anyOf(
-          instanceMethod().onDescendantOf("java.lang.Enum"),
+          instanceMethod().onExactClass("java.lang.Enum"),
           staticMethod().onClass("java.lang.Enum"));
 
   private static final Matcher<ExpressionTree> THROWABLE_METHODS =
@@ -379,6 +382,7 @@ public class ReturnValueIgnored extends AbstractReturnValueIgnored {
         anyOf(
             SPECIALIZED_MATCHER,
             getMatcher(flags, "ReturnValueIgnored:MoreOptional", MORE_OPTIONAL_METHODS),
+            getMatcher(flags, "ReturnValueIgnored:ClassMethods", CLASS_METHODS),
             getMatcher(flags, "ReturnValueIgnored:ObjectMethods", OBJECT_METHODS),
             getMatcher(flags, "ReturnValueIgnored:ObjectsMethods", OBJECTS_METHODS),
             getMatcher(flags, "ReturnValueIgnored:CharSequenceMethods", CHAR_SEQUENCE_METHODS),

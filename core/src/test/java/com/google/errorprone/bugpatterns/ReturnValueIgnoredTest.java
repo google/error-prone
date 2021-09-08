@@ -624,6 +624,21 @@ public class ReturnValueIgnoredTest {
   }
 
   @Test
+  public void enumMethodsOnSubtype() {
+    assumeTrue(RuntimeVersion.isAtLeast9());
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.lang.invoke.VarHandle;",
+            "class Test {",
+            "  void test(VarHandle.AccessMode accessMode) {",
+            "    accessMode.methodName();",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void throwableMethods() {
     compilationHelper
         .addSourceLines(
@@ -686,6 +701,20 @@ public class ReturnValueIgnoredTest {
             "    Objects.toString(o);",
             "    // BUG: Diagnostic contains: ReturnValueIgnored",
             "    Objects.toString(o, \"defaultValue\");",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void classMethods() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  void test(Class<?> c) {",
+            "    // BUG: Diagnostic contains: ReturnValueIgnored",
+            "    c.desiredAssertionStatus();",
             "  }",
             "}")
         .doTest();
