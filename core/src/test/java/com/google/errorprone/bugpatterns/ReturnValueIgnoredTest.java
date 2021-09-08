@@ -598,6 +598,9 @@ public class ReturnValueIgnoredTest {
             "    // BUG: Diagnostic contains: ReturnValueIgnored",
             "    cs.toString();",
             "  }",
+            "  void test(StringBuilder sb) {",
+            "    sb.append(\"hi\");",
+            "  }",
             "}")
         .doTest();
   }

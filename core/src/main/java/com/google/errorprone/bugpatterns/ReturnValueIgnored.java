@@ -327,14 +327,9 @@ public class ReturnValueIgnored extends AbstractReturnValueIgnored {
               .withParameters("java.lang.Object"));
 
   private static final Matcher<ExpressionTree> CHAR_SEQUENCE_METHODS =
-      anyOf(
-          instanceMethod().onDescendantOf("java.lang.CharSequence"),
-          staticMethod().onClass("java.lang.CharSequence"));
+      anyMethod().onClass("java.lang.CharSequence");
 
-  private static final Matcher<ExpressionTree> ENUM_METHODS =
-      anyOf(
-          instanceMethod().onExactClass("java.lang.Enum"),
-          staticMethod().onClass("java.lang.Enum"));
+  private static final Matcher<ExpressionTree> ENUM_METHODS = anyMethod().onClass("java.lang.Enum");
 
   private static final Matcher<ExpressionTree> THROWABLE_METHODS =
       instanceMethod()
