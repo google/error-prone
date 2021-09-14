@@ -2,7 +2,7 @@ This error is triggered by a Javadoc `@link` tag that either is syntactically
 invalid or can't be resolved. See [javadoc documentation][javadoc] for an
 explanation of how to correctly format the contents of this tag.
 
-https://docs.oracle.com/javase/8/docs/technotes/tools/unix/javadoc.html#JSSOR654
+[javadoc]: https://docs.oracle.com/javase/8/docs/technotes/tools/unix/javadoc.html#JSSOR654
 
 ### Linking to generic types
 
