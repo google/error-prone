@@ -136,6 +136,23 @@ public class UnnecessaryParenthesesTest {
   }
 
   @Test
+  public void lambda() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            "import java.util.function.Function;",
+            "class Test {",
+            "  Function<Void, Void> f() {",
+            "    // BUG: Diagnostic contains:",
+            "    Function<Void, Void> r = (y -> y);",
+            "    // BUG: Diagnostic contains:",
+            "    return (y -> y);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void unaryPostFixParenthesesNotNeeded() {
     testHelper
         .addInputLines(
@@ -176,6 +193,45 @@ public class UnnecessaryParenthesesTest {
             "class Test {",
             "  void print(Integer i) {",
             "    (++i).toString();",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void negativeStatements() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  void print(boolean b, int i) {",
+            "    if (b) {}",
+            "    while (b) {}",
+            "    do {} while (b);",
+            "    switch (i) {}",
+            "    synchronized (this) {}",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void positiveStatements() {
+    testHelper
+        .addInputLines(
+            "Test.java",
+            "class Test {",
+            "  int f(boolean b, Integer x) {",
+            "    assert(b);",
+            "    return(x);",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "class Test {",
+            "  int f(boolean b, Integer x) {",
+            "    assert b;",
+            "    return x;",
             "  }",
             "}")
         .doTest();

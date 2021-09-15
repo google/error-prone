@@ -29,7 +29,7 @@ import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.ParenthesizedTree;
-import com.sun.source.tree.StatementTree;
+import com.sun.source.tree.Tree;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
@@ -44,8 +44,16 @@ public class UnnecessaryParentheses extends BugChecker implements ParenthesizedT
   @Override
   public Description matchParenthesized(ParenthesizedTree tree, VisitorState state) {
     ExpressionTree expression = tree.getExpression();
-    if (state.getPath().getParentPath().getLeaf() instanceof StatementTree) {
-      return NO_MATCH;
+    Tree parent = state.getPath().getParentPath().getLeaf();
+    switch (parent.getKind()) {
+      case IF:
+      case WHILE_LOOP:
+      case DO_WHILE_LOOP:
+      case FOR_LOOP:
+      case SWITCH:
+      case SYNCHRONIZED:
+        return NO_MATCH;
+      default: // fall out
     }
     if (ASTHelpers.requiresParentheses(expression, state)) {
       return NO_MATCH;
@@ -53,7 +61,8 @@ public class UnnecessaryParentheses extends BugChecker implements ParenthesizedT
     return describeMatch(
         tree,
         SuggestedFix.builder()
-            .replace(getStartPosition(tree), getStartPosition(expression), "")
+            // add an extra leading space to handle e.g. `return(x)`
+            .replace(getStartPosition(tree), getStartPosition(expression), " ")
             .replace(state.getEndPosition(expression), state.getEndPosition(tree), "")
             .build());
   }
