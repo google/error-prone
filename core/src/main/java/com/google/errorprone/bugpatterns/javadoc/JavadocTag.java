@@ -33,6 +33,7 @@ abstract class JavadocTag {
           blockTag("hide"),
           blockTag("implNote"),
           blockTag("implSpec"),
+          blockTag("removed"), // Used in the android framework (metalava)
           blockTag("required"),
           blockTag("team"));
 
