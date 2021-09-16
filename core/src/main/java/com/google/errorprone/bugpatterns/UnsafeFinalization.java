@@ -33,7 +33,6 @@ import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.util.TreeScanner;
-import com.sun.tools.javac.code.Flags;
 import com.sun.tools.javac.code.Flags.Flag;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
@@ -61,7 +60,9 @@ public class UnsafeFinalization extends BugChecker implements MethodInvocationTr
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
     MethodSymbol sym = ASTHelpers.getSymbol(tree);
     // Match invocations of static native methods.
-    if (sym == null || !sym.isStatic() || !Flags.asFlagSet(sym.flags()).contains(Flag.NATIVE)) {
+    if (sym == null
+        || !sym.isStatic()
+        || !ASTHelpers.asFlagSet(sym.flags()).contains(Flag.NATIVE)) {
       return NO_MATCH;
     }
     // Find the enclosing method declaration where the invocation occurs.

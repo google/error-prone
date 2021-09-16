@@ -201,7 +201,7 @@ public final class EmptySetMultibindingContributions extends BugChecker
       }
     }
 
-    EnumSet<Flag> methodFlags = Flags.asFlagSet(modifiers.flags);
+    EnumSet<Flag> methodFlags = ASTHelpers.asFlagSet(modifiers.flags);
     methodFlags.remove(Flags.Flag.STATIC);
     methodFlags.remove(Flags.Flag.FINAL);
     methodFlags.add(Flags.Flag.ABSTRACT);
@@ -221,7 +221,7 @@ public final class EmptySetMultibindingContributions extends BugChecker
       classModifierStringsBuilder.add(state.getSourceForNode(annotation));
     }
 
-    EnumSet<Flag> classFlags = Flags.asFlagSet(enclosingClassModifiers.flags);
+    EnumSet<Flag> classFlags = ASTHelpers.asFlagSet(enclosingClassModifiers.flags);
     classFlags.remove(Flags.Flag.FINAL);
     classFlags.add(Flags.Flag.ABSTRACT);
     for (Flag flag : classFlags) {

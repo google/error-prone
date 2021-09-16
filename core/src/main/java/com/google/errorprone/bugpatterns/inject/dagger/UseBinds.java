@@ -185,7 +185,7 @@ public class UseBinds extends BugChecker implements MethodTreeMatcher {
       }
     }
 
-    EnumSet<Flag> methodFlags = Flags.asFlagSet(modifiers.flags);
+    EnumSet<Flag> methodFlags = ASTHelpers.asFlagSet(modifiers.flags);
     methodFlags.remove(Flags.Flag.STATIC);
     methodFlags.remove(Flags.Flag.FINAL);
     methodFlags.add(Flags.Flag.ABSTRACT);

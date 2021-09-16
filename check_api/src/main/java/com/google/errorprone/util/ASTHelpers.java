@@ -2210,5 +2210,13 @@ public class ASTHelpers {
     return new ErrorProneScope(scope);
   }
 
+  public static EnumSet<Flags.Flag> asFlagSet(long flags) {
+    flags &= ~(ANONCONSTR_BASED | Flags.POTENTIALLY_AMBIGUOUS);
+    return Flags.asFlagSet(flags);
+  }
+
+  // TODO(cushon): replace with Flags.ANONCONSTR_BASED once we're on JDK >= 10
+  static final long ANONCONSTR_BASED = 1L << 57;
+
   private ASTHelpers() {}
 }
