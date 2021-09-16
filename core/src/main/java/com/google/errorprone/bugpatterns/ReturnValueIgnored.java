@@ -313,7 +313,10 @@ public class ReturnValueIgnored extends AbstractReturnValueIgnored {
               .namedAnyOf("build", "buildPartial"));
 
   private static final Matcher<ExpressionTree> CLASS_METHODS =
-      anyMethod().onClass("java.lang.Class");
+      allOf(
+          anyMethod().onClass("java.lang.Class"),
+          not(staticMethod().onClass("java.lang.Class").named("forName")),
+          not(instanceMethod().onExactClass("java.lang.Class").named("getMethod")));
 
   private static final Matcher<ExpressionTree> OBJECT_METHODS =
       anyOf(
@@ -339,6 +342,7 @@ public class ReturnValueIgnored extends AbstractReturnValueIgnored {
 
   private static final Matcher<ExpressionTree> OBJECTS_METHODS =
       allOf(
+          staticMethod().onClass("java.util.Objects"),
           not(
               staticMethod()
                   .onClass("java.util.Objects")
@@ -348,8 +352,7 @@ public class ReturnValueIgnored extends AbstractReturnValueIgnored {
                       "checkIndex",
                       "requireNonNull",
                       "requireNonNullElse",
-                      "requireNonNullElseGet")),
-          staticMethod().onClass("java.util.Objects"));
+                      "requireNonNullElseGet")));
 
   private static final Matcher<? super ExpressionTree> SPECIALIZED_MATCHER =
       anyOf(

@@ -715,7 +715,9 @@ public class ReturnValueIgnoredTest {
         .addSourceLines(
             "Test.java",
             "class Test {",
-            "  void test(Class<?> c) {",
+            "  void test(Class<?> c) throws Exception {",
+            "    Class.forName(\"java.sql.Date\");",
+            "    c.getMethod(\"toString\");",
             "    // BUG: Diagnostic contains: ReturnValueIgnored",
             "    c.desiredAssertionStatus();",
             "  }",
