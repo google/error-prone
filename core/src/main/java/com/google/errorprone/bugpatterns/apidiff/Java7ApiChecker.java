@@ -39,7 +39,7 @@ public class Java7ApiChecker extends ApiDiffChecker {
     try {
       ApiDiffProto.Diff.Builder diffBuilder = ApiDiffProto.Diff.newBuilder();
       byte[] diffData =
-          Resources.toByteArray(Resources.getResource(Java7ApiChecker.class, "7to8diff.binarypb"));
+          Resources.toByteArray(Resources.getResource(Java7ApiChecker.class, "7to11diff.binarypb"));
       diffBuilder
           .mergeFrom(diffData)
           .addClassDiff(

@@ -89,6 +89,7 @@ public class Java7ApiCheckerTest {
             "    return map.keySet();",
             "  }",
             "  Set<String> getKeySet(ConcurrentHashMap<String, String> map) {",
+            "    // BUG: Diagnostic contains: keySet()",
             "    return map.keySet();",
             "  }",
             "}")

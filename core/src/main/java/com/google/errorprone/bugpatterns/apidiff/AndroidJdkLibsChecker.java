@@ -129,7 +129,7 @@ public class AndroidJdkLibsChecker extends ApiDiffChecker {
       allowedPackages = allowJava8 ? DESUGAR_ALLOWED_PACKAGES : ImmutableSet.of();
       allowedClasses = allowJava8 ? DESUGAR_ALLOWED_CLASSES : BASE_ALLOWED_CLASSES;
       bannedClasses = BASE_BANNED_CLASSES;
-      allowedMembers = allowJava8 ? DESUGAR_ALLOWED_MEMBERS : ImmutableSetMultimap.of();
+      allowedMembers = allowJava8 ? DESUGAR_ALLOWED_MEMBERS : BASE_ALLOWED_MEMBERS;
       bannedMembers = allowJava8 ? DESUGAR_BANNED_MEMBERS : ADDITIONAL_MEMBERS_REQUIRING_DESUGAR;
     }
 
@@ -155,7 +155,21 @@ public class AndroidJdkLibsChecker extends ApiDiffChecker {
     private static final ImmutableSet<String> BASE_ALLOWED_CLASSES =
         ImmutableSet.of(
             "java/lang/annotation/Repeatable", //
-            "java/lang/annotation/ElementType");
+            "java/lang/annotation/ElementType",
+            "java/nio/IntBuffer",
+            "java/nio/CharBuffer",
+            "java/nio/FloatBuffer",
+            "java/nio/DoubleBuffer",
+            "java/nio/ShortBuffer",
+            "java/nio/LongBuffer",
+            "java/nio/ByteBuffer",
+            "java/nio/MappedIntBuffer",
+            "java/nio/MappedCharBuffer",
+            "java/nio/MappedFloatBuffer",
+            "java/nio/MappedDoubleBuffer",
+            "java/nio/MappedShortBuffer",
+            "java/nio/MappedLongBuffer",
+            "java/nio/MappedByteBuffer");
     private static final ImmutableSet<String> DESUGAR_ALLOWED_CLASSES =
         ImmutableSet.<String>builder()
             .addAll(BASE_ALLOWED_CLASSES)
@@ -198,10 +212,15 @@ public class AndroidJdkLibsChecker extends ApiDiffChecker {
     private static final ImmutableSet<String> BASE_BANNED_CLASSES =
         // see b/72354470, https://github.com/typetools/checker-framework/issues/1781
         ImmutableSet.of("javax/lang/model/type/TypeKind");
+    private static final ImmutableSetMultimap<String, ClassMemberKey> BASE_ALLOWED_MEMBERS =
+        ImmutableSetMultimap.<String, ClassMemberKey>builder()
+            .put("java/util/zip/Checksum", ClassMemberKey.create("update", ""))
+            .build();
     // Descriptor is empty string to match on any member with same simple name.
     // TODO(b/185137972): Automate the generation of desugar-supported method-level APIs.
     private static final ImmutableSetMultimap<String, ClassMemberKey> DESUGAR_ALLOWED_MEMBERS =
         ImmutableSetMultimap.<String, ClassMemberKey>builder()
+            .putAll(BASE_ALLOWED_MEMBERS)
             .put("java/util/Arrays", ClassMemberKey.create("stream", ""))
             .put("java/util/Date", ClassMemberKey.create("from", ""))
             .put("java/util/Date", ClassMemberKey.create("toInstant", ""))
