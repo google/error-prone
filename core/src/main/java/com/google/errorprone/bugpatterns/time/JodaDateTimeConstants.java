@@ -50,7 +50,6 @@ public final class JodaDateTimeConstants extends BugChecker
   private static final Matcher<ExpressionTree> DATE_TIME_CONSTANTS_MATCHER =
       anyOf(
           Stream.of(
-                  "DAYS_PER_WEEK",
                   "HOURS_PER_DAY",
                   "HOURS_PER_WEEK",
                   "MILLIS_PER_DAY",
