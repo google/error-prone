@@ -930,7 +930,13 @@ public class UTemplater extends SimpleTreeVisitor<Tree, Void> {
             (Class) annotationClazz,
             AnnotationProxyMaker.generateAnnotation(compound, annotationClazz));
       } catch (ClassNotFoundException e) {
-        throw new IllegalArgumentException("Unrecognized annotation type", e);
+        String friendlyMessage =
+            "Tried to instantiate an instance of the annotation "
+                + annotationClassName
+                + " while processing "
+                + symbol.getSimpleName()
+                + ", but the annotation class file was not present on the classpath.";
+        throw new LinkageError(friendlyMessage, e);
       }
     }
     return builder.build();
