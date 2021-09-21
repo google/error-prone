@@ -48,12 +48,6 @@ import javax.lang.model.element.Modifier;
     severity = WARNING,
     documentSuppression = false)
 public class AutoValueImmutableFields extends BugChecker implements ClassTreeMatcher {
-
-  private static final String MESSAGE =
-      "AutoValue instances should be deeply immutable. Therefore, we recommend returning %s "
-          + "instead. Read more at "
-          + "http://goo.gl/qWo9sC";
-
   private static final ImmutableListMultimap<String, Matcher<MethodTree>> REPLACEMENT_TO_MATCHERS =
       ImmutableListMultimap.<String, Matcher<MethodTree>>builder()
           .put("ImmutableCollection", returning("java.util.Collection"))
@@ -145,7 +139,11 @@ public class AutoValueImmutableFields extends BugChecker implements ClassTreeMat
               if (entry.getValue().matches(methodTree, state)) {
                 state.reportMatch(
                     buildDescription(methodTree)
-                        .setMessage(String.format(MESSAGE, entry.getKey()))
+                        .setMessage(
+                            String.format(
+                                "AutoValue instances should be deeply immutable. Therefore, we"
+                                    + " recommend returning %s instead.",
+                                entry.getKey()))
                         .build());
               }
             }
