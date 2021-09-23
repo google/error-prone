@@ -86,10 +86,14 @@ public final class AnnotationPosition extends BugChecker
       Arrays.stream(TokenKind.values()).collect(toImmutableMap(tk -> tk.name(), tk -> tk));
 
   private static final ImmutableSet<TokenKind> MODIFIERS =
-      Arrays.stream(Modifier.values())
-          .map(m -> TOKEN_KIND_BY_NAME.get(m.name()))
-          // TODO(b/168625474): sealed doesn't have a token kind in Java 15
-          .filter(m -> m != null)
+      Streams.concat(
+              Arrays.stream(Modifier.values())
+                  .map(m -> TOKEN_KIND_BY_NAME.get(m.name()))
+                  // TODO(b/168625474): sealed doesn't have a token kind in Java 15
+                  .filter(Objects::nonNull),
+              // Pretend that "<" and ">" are modifiers, so that type arguments wind up grouped with
+              // modifiers.
+              Stream.of(TokenKind.LT, TokenKind.GT, TokenKind.GTGT))
           .collect(toImmutableSet());
 
   @Override
@@ -123,6 +127,7 @@ public final class AnnotationPosition extends BugChecker
 
     ImmutableList<ErrorProneToken> modifierTokens =
         tokens.stream().filter(t -> MODIFIERS.contains(t.kind())).collect(toImmutableList());
+
     int firstModifierPos =
         modifierTokens.stream().findFirst().map(x -> x.pos()).orElse(Integer.MAX_VALUE);
     int lastModifierPos = Streams.findLast(modifierTokens.stream()).map(x -> x.endPos()).orElse(0);
@@ -157,13 +162,7 @@ public final class AnnotationPosition extends BugChecker
     int endPos;
     if (tree instanceof JCMethodDecl) {
       JCMethodDecl methodTree = (JCMethodDecl) tree;
-      if (!methodTree.getParameters().isEmpty()) {
-        endPos = methodTree.getParameters().get(0).getStartPosition();
-      } else if (methodTree.getBody() == null) {
-        endPos = state.getEndPosition(methodTree);
-      } else {
-        endPos = methodTree.getBody().getStartPosition();
-      }
+      endPos = getStartPosition(methodTree.getReturnType());
     } else if (tree instanceof JCVariableDecl) {
       endPos = ((JCVariableDecl) tree).getType().getStartPosition();
     } else if (tree instanceof JCClassDecl) {

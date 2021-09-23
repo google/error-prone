@@ -376,7 +376,7 @@ public final class AnnotationPositionTest {
   }
 
   @Test
-  public void typeArgument() {
+  public void typeArgument_annotationOfEitherUse_canRemainBefore() {
     refactoringHelper
         .addInputLines(
             "Test.java", //
@@ -386,9 +386,43 @@ public final class AnnotationPositionTest {
         .addOutputLines(
             "Test.java", //
             "interface T {",
-            "  <T> @EitherUse T f();",
+            "  @EitherUse <T> T f();",
             "}")
-        .doTest();
+        .doTest(TEXT_MATCH);
+  }
+
+  @Test
+  public void typeArgument_typeUseAnnotation_movesAfter() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java", //
+            "interface T {",
+            "  @TypeUse <T> T f();",
+            "}")
+        .addOutputLines(
+            "Test.java", //
+            "interface T {",
+            "  <T> @TypeUse T f();",
+            "}")
+        .doTest(TEXT_MATCH);
+  }
+
+  @Test
+  public void genericsWithBounds() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java", //
+            "import java.util.List;",
+            "interface T {",
+            "  @TypeUse <T extends List<T>> T f();",
+            "}")
+        .addOutputLines(
+            "Test.java", //
+            "import java.util.List;",
+            "interface T {",
+            "  <T extends List<T>> @TypeUse T f();",
+            "}")
+        .doTest(TEXT_MATCH);
   }
 
   @Test
@@ -404,7 +438,7 @@ public final class AnnotationPositionTest {
             "interface T {",
             "  @NonTypeUse @TypeUse T f();",
             "}")
-        .doTest();
+        .doTest(TEXT_MATCH);
   }
 
   @Test
@@ -417,6 +451,6 @@ public final class AnnotationPositionTest {
             "  @NonTypeUse public @EitherUse T b();",
             "}")
         .expectUnchanged()
-        .doTest();
+        .doTest(TEXT_MATCH);
   }
 }
