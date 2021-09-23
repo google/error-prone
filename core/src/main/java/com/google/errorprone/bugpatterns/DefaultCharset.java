@@ -20,7 +20,6 @@ import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.anyOf;
-import static com.google.errorprone.matchers.Matchers.nothing;
 import static com.google.errorprone.matchers.Matchers.toType;
 import static com.google.errorprone.matchers.method.MethodMatchers.constructor;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
@@ -29,7 +28,6 @@ import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
-import com.google.common.io.Files;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.StandardTags;
 import com.google.errorprone.VisitorState;
@@ -41,7 +39,6 @@ import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.suppliers.Suppliers;
 import com.google.errorprone.util.ASTHelpers;
-import com.google.errorprone.util.RuntimeVersion;
 import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.ImportTree;
@@ -54,7 +51,6 @@ import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Type;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -160,23 +156,11 @@ public class DefaultCharset extends BugChecker
   private static final Matcher<ExpressionTree> STRING_GET_BYTES =
       instanceMethod().onExactClass(String.class.getName()).named("getBytes").withNoParameters();
 
-  private static final Matcher<ExpressionTree> BYTE_ARRAY_OUTPUT_STREAM_TO_STRING =
-      instanceMethod()
-          .onDescendantOf(ByteArrayOutputStream.class.getName())
-          .named("toString")
-          .withNoParameters();
-
   private static final Matcher<ExpressionTree> FILE_NEW_WRITER =
       staticMethod()
-          .onClass(Files.class.getName())
+          .onClass(com.google.common.io.Files.class.getName())
           .named("newWriter")
           .withParameters("java.lang.String");
-
-  private static final Matcher<ExpressionTree> APPEND_CHARSETS_MATCHER =
-      anyOf(
-          // ByteArrayOutputStream.toString(Charset) was added in JDK 10.
-          RuntimeVersion.isAtLeast10() ? BYTE_ARRAY_OUTPUT_STREAM_TO_STRING : nothing(),
-          FILE_NEW_WRITER);
 
   private static final Matcher<ExpressionTree> PRINT_WRITER =
       anyOf(
@@ -221,7 +205,7 @@ public class DefaultCharset extends BugChecker
       }
       return description.build();
     }
-    if (APPEND_CHARSETS_MATCHER.matches(tree, state)) {
+    if (FILE_NEW_WRITER.matches(tree, state)) {
       Description.Builder description = buildDescription(tree);
       appendCharsets(description, tree, tree.getMethodSelect(), tree.getArguments(), state);
       return description.build();
