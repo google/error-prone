@@ -529,4 +529,28 @@ public class DefaultCharsetTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void byteArrayOutputStream() {
+    assumeTrue(RuntimeVersion.isAtLeast10());
+    refactoringTest()
+        .addInputLines(
+            "in/Test.java",
+            "import java.io.ByteArrayOutputStream;",
+            "class Test {",
+            "  String f(ByteArrayOutputStream b) throws Exception {",
+            "    return b.toString();",
+            "  }",
+            "}")
+        .addOutputLines(
+            "out/Test.java",
+            "import static java.nio.charset.StandardCharsets.UTF_8;",
+            "import java.io.ByteArrayOutputStream;",
+            "class Test {",
+            "  String f(ByteArrayOutputStream b) throws Exception {",
+            "    return b.toString(UTF_8);",
+            "  }",
+            "}")
+        .doTest();
+  }
 }
