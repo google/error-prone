@@ -118,12 +118,7 @@ public class DoNotCallChecker extends BugChecker
 
   static final String DO_NOT_CALL = "com.google.errorprone.annotations.DoNotCall";
 
-  private final boolean checkThirdPartyMethods;
-
-  public DoNotCallChecker(ErrorProneFlags flags) {
-    this.checkThirdPartyMethods =
-        flags.getBoolean("DoNotCallChecker:CheckThirdPartyMethods").orElse(true);
-  }
+  public DoNotCallChecker(ErrorProneFlags flags) {}
 
   @Override
   public Description matchMethod(MethodTree tree, VisitorState state) {
@@ -172,11 +167,9 @@ public class DoNotCallChecker extends BugChecker
 
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
-    if (checkThirdPartyMethods) {
-      for (Map.Entry<Matcher<ExpressionTree>, String> matcher : THIRD_PARTY_METHODS.entrySet()) {
-        if (matcher.getKey().matches(tree, state)) {
-          return buildDescription(tree).setMessage(matcher.getValue()).build();
-        }
+    for (Map.Entry<Matcher<ExpressionTree>, String> matcher : THIRD_PARTY_METHODS.entrySet()) {
+      if (matcher.getKey().matches(tree, state)) {
+        return buildDescription(tree).setMessage(matcher.getValue()).build();
       }
     }
     return checkTree(tree, ASTHelpers.getSymbol(tree), state);
