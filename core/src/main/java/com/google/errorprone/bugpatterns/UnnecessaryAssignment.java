@@ -108,8 +108,7 @@ public final class UnnecessaryAssignment extends BugChecker
           AT_LEAST_ONE,
           hasArgumentWithValue(
               "value",
-              isJUnit4TestRunnerOfType(
-                  ImmutableList.of("org.mockito.runners.MockitoJUnitRunner"))));
+              isJUnit4TestRunnerOfType(ImmutableList.of("org.mockito.junit.MockitoJUnitRunner"))));
 
   @Override
   public Description matchAssignment(AssignmentTree tree, VisitorState state) {

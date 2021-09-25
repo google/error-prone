@@ -214,7 +214,7 @@ public final class JUnitMatchers {
    */
   private static final Collection<String> TEST_RUNNERS =
       Arrays.asList(
-          "org.mockito.runners.MockitoJUnitRunner", "org.junit.runners.BlockJUnit4ClassRunner");
+          "org.mockito.junit.MockitoJUnitRunner", "org.junit.runners.BlockJUnit4ClassRunner");
 
   /**
    * Matches an argument of type {@code Class<T>}, where T is a subtype of one of the test runners
