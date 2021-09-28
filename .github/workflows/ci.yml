@@ -15,20 +15,20 @@ jobs:
       fail-fast: false
       matrix:
         os: [ ubuntu-latest ]
-        java: [ 16, 11, 8 ]
+        java: [ 17, 11, 8 ]
         experimental: [ false ]
         # Only test on macos and windows with a single recent JDK to avoid a
         # combinatorial explosion of test configurations.
         # Most OS-specific issues are not specific to a particular JDK version.
         include:
           - os: macos-latest
-            java: 16
+            java: 17
             experimental: false
           - os: windows-latest
-            java: 16
+            java: 17
             experimental: false
           - os: ubuntu-latest
-            java: 17-ea
+            java: 18-ea
             experimental: true
     runs-on: ${{ matrix.os }}
     continue-on-error: ${{ matrix.experimental }}
@@ -43,7 +43,7 @@ jobs:
         uses: actions/setup-java@v2
         with:
           java-version: ${{ matrix.java }}
-          distribution: 'temurin'
+          distribution: 'zulu'
           cache: 'maven'
       - name: 'Install'
         shell: bash
@@ -67,7 +67,7 @@ jobs:
         uses: actions/setup-java@v2
         with:
           java-version: 8
-          distribution: 'temurin'
+          distribution: 'zulu'
           cache: 'maven'
           server-id: sonatype-nexus-snapshots
           server-username: CI_DEPLOY_USERNAME
@@ -90,7 +90,7 @@ jobs:
         uses: actions/setup-java@v2
         with:
           java-version: 15
-          distribution: 'temurin'
+          distribution: 'zulu'
           cache: 'maven'
       - name: 'Generate latest docs'
         env:
