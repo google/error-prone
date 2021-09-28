@@ -53,9 +53,9 @@ or this:
 // Use `.array()` only if you also check `.hasArray()`, `.arrayOffset()`, and `.remaining()`.
 public void foo(ByteBuffer buffer) throws Exception {
   if (buffer.hasArray()) {
-    int startIndex = byteBuffer.arrayOffset();
-    int curIndex = byteBuffer.arrayOffset() + byteBuffer.position();
-    int endIndex = curIndex + byteBuffer.remaining();
+    int startIndex = buffer.arrayOffset();
+    int curIndex = buffer.arrayOffset() + buffer.position();
+    int endIndex = curIndex + buffer.remaining();
     // Access elements of `.array()` with the above indices ...
   }
 }

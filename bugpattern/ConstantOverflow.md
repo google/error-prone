@@ -31,11 +31,10 @@ The intent was probably for the multiplication expression to be evaluated as a
 static final long NANOS_PER_DAY = 24L * 60 * 60 * 1000 * 1000 * 1000;
 ```
 
-If you find yourself doing this kind of time based math, consider using an API
-that provides a safer, more readable solution. For example, on the sub-second
-scale, see [`TimeUnit.convert`].
-
-[`TimeUnit.convert`]: https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/TimeUnit.html#convert(long,%20java.util.concurrent.TimeUnit)
+If you find yourself doing this kind of time-based math, consider using an API
+that provides a safer, more readable and strongly-typed solution like the
+[`java.time.Duration`](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/time/Duration.html)
+API.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("ConstantOverflow")` to the enclosing element.

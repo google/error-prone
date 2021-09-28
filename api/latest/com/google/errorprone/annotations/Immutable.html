@@ -107,8 +107,8 @@ public @interface <span class="type-name-label">Immutable</span></pre>
  implementation of <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html#hashCode()" title="class or interface in java.lang" class="external-link"><code>String.hashCode()</code></a> for an example), but doing this correctly requires
  subtle reasoning about safe data races and deep knowledge of the Java Memory Model.
 
- <p>Use of this annotation is validated by <a href="https://errorprone.info/bugpattern/Immutable">Error Prone's immutability analysis</a>, which
- ensures that all <code>@Immutable</code>-annotated classes are deeply immutable according to the
+ <p>Use of this annotation is validated by <a href="https://errorprone.info/bugpattern/Immutable">Error Prone's immutability analysis</a>,
+ which ensures that all <code>@Immutable</code>-annotated classes are deeply immutable according to the
  conservative definition above. Non-final classes may be annotated with <code>@Immutable</code>, and
  any code compiled by Error Prone will be checked to ensure that no mutable subtypes of
  <code>@Immutable</code>-annotated classes exist.
