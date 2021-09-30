@@ -28,8 +28,10 @@ import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
+import com.google.common.io.Files;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.StandardTags;
+import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.NewClassTreeMatcher;
@@ -39,6 +41,7 @@ import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.suppliers.Suppliers;
 import com.google.errorprone.util.ASTHelpers;
+import com.google.errorprone.util.RuntimeVersion;
 import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.ImportTree;
@@ -51,6 +54,7 @@ import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Type;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -156,9 +160,15 @@ public class DefaultCharset extends BugChecker
   private static final Matcher<ExpressionTree> STRING_GET_BYTES =
       instanceMethod().onExactClass(String.class.getName()).named("getBytes").withNoParameters();
 
+  private static final Matcher<ExpressionTree> BYTE_ARRAY_OUTPUT_STREAM_TO_STRING =
+      instanceMethod()
+          .onDescendantOf(ByteArrayOutputStream.class.getName())
+          .named("toString")
+          .withNoParameters();
+
   private static final Matcher<ExpressionTree> FILE_NEW_WRITER =
       staticMethod()
-          .onClass(com.google.common.io.Files.class.getName())
+          .onClass(Files.class.getName())
           .named("newWriter")
           .withParameters("java.lang.String");
 
@@ -189,42 +199,48 @@ public class DefaultCharset extends BugChecker
               .forClass(Scanner.class.getName())
               .withParameters(ReadableByteChannel.class.getName()));
 
+  private final boolean byteArrayOutputStreamToString;
+
+  public DefaultCharset(ErrorProneFlags flags) {
+    this.byteArrayOutputStreamToString =
+        RuntimeVersion.isAtLeast10()
+            && flags.getBoolean("DefaultCharset:ByteArrayOutputStreamToString").orElse(true);
+  }
+
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
     if (state.isAndroidCompatible()) { // Android's default platform Charset is always UTF-8
       return NO_MATCH;
     }
     if (STRING_GET_BYTES.matches(tree, state)) {
-      Description.Builder description = buildDescription(tree);
       Tree parent = state.getPath().getParentPath().getLeaf();
       if (parent instanceof ExpressionTree
           && BYTESTRING_COPY_FROM.matches((ExpressionTree) parent, state)) {
-        byteStringFixes(description, tree, (ExpressionTree) parent, state);
+        return byteStringFixes(tree, (ExpressionTree) parent, state);
       } else {
-        appendCharsets(description, tree, tree.getMethodSelect(), tree.getArguments(), state);
+        return appendCharsets(tree, tree.getMethodSelect(), tree.getArguments(), state);
       }
-      return description.build();
     }
     if (FILE_NEW_WRITER.matches(tree, state)) {
-      Description.Builder description = buildDescription(tree);
-      appendCharsets(description, tree, tree.getMethodSelect(), tree.getArguments(), state);
-      return description.build();
+      return appendCharsets(tree, tree.getMethodSelect(), tree.getArguments(), state);
+    }
+    if (byteArrayOutputStreamToString && BYTE_ARRAY_OUTPUT_STREAM_TO_STRING.matches(tree, state)) {
+      return appendCharsets(tree, tree.getMethodSelect(), tree.getArguments(), state);
     }
     return NO_MATCH;
   }
 
-  private static void byteStringFixes(
-      Description.Builder description,
-      MethodInvocationTree tree,
-      ExpressionTree parent,
-      VisitorState state) {
-    description.addFix(byteStringFix(tree, parent, state, "copyFromUtf8(", "").build());
-
+  private Description byteStringFixes(
+      MethodInvocationTree tree, ExpressionTree parent, VisitorState state) {
     SuggestedFix.Builder builder =
         byteStringFix(
             tree, parent, state, "copyFrom(", ", " + CharsetFix.DEFAULT_CHARSET_FIX.replacement());
     CharsetFix.DEFAULT_CHARSET_FIX.addImport(builder, state);
-    description.addFix(builder.build());
+
+    return buildDescription(tree)
+        .addFix(byteStringFix(tree, parent, state, "copyFromUtf8(", "").build())
+        .addFix(builder.build())
+        .build();
   }
 
   private static SuggestedFix.Builder byteStringFix(
@@ -257,9 +273,7 @@ public class DefaultCharset extends BugChecker
       return NO_MATCH;
     }
     if (CTOR.matches(tree, state)) {
-      Description.Builder description = buildDescription(tree);
-      appendCharsets(description, tree, tree.getIdentifier(), tree.getArguments(), state);
-      return description.build();
+      return appendCharsets(tree, tree.getIdentifier(), tree.getArguments(), state);
     }
     if (FILE_READER.matches(tree, state)) {
       return handleFileReader(tree, state);
@@ -495,15 +509,12 @@ public class DefaultCharset extends BugChecker
     }
   }
 
-  private static void appendCharsets(
-      Description.Builder description,
-      Tree tree,
-      Tree select,
-      List<? extends ExpressionTree> arguments,
-      VisitorState state) {
-    description.addFix(appendCharset(tree, select, arguments, state, CharsetFix.UTF_8_FIX));
-    description.addFix(
-        appendCharset(tree, select, arguments, state, CharsetFix.DEFAULT_CHARSET_FIX));
+  private Description appendCharsets(
+      Tree tree, Tree select, List<? extends ExpressionTree> arguments, VisitorState state) {
+    return buildDescription(tree)
+        .addFix(appendCharset(tree, select, arguments, state, CharsetFix.UTF_8_FIX))
+        .addFix(appendCharset(tree, select, arguments, state, CharsetFix.DEFAULT_CHARSET_FIX))
+        .build();
   }
 
   private static Fix appendCharset(
