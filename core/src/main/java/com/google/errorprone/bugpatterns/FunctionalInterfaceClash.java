@@ -123,6 +123,7 @@ public class FunctionalInterfaceClash extends BugChecker implements ClassTreeMat
                 + " disambiguate with: "
                 + clash.stream()
                     .map(m -> "\n    " + Signatures.prettyMethodSignature(origin, m))
+                    .sorted()
                     .collect(joining(""));
         state.reportMatch(buildDescription(member).setMessage(message).build());
       }
