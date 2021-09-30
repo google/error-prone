@@ -453,4 +453,20 @@ public final class AnnotationPositionTest {
         .expectUnchanged()
         .doTest(TEXT_MATCH);
   }
+
+  @Test
+  public void constructor() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java", //
+            "import javax.inject.Inject;",
+            "class T {",
+            "  @Inject T(int x) {}",
+            "  @Inject T() {",
+            "    System.err.println();",
+            "  }",
+            "}")
+        .expectUnchanged()
+        .doTest(TEXT_MATCH);
+  }
 }
