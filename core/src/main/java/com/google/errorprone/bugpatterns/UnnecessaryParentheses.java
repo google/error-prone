@@ -55,6 +55,11 @@ public class UnnecessaryParentheses extends BugChecker implements ParenthesizedT
         return NO_MATCH;
       default: // fall out
     }
+    switch (parent.getKind().name()) {
+      case "SWITCH_EXPRESSION":
+        return NO_MATCH;
+      default: // fall out
+    }
     if (ASTHelpers.requiresParentheses(expression, state)) {
       return NO_MATCH;
     }

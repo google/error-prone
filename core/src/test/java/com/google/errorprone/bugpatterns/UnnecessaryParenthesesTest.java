@@ -16,8 +16,11 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static org.junit.Assume.assumeTrue;
+
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
+import com.google.errorprone.util.RuntimeVersion;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -234,6 +237,25 @@ public class UnnecessaryParenthesesTest {
             "    return x;",
             "  }",
             "}")
+        .doTest();
+  }
+
+  @Test
+  public void switchExpression() {
+    assumeTrue(RuntimeVersion.isAtLeast12());
+    helper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  public boolean match(String value) {",
+            "    return switch (value) {",
+            "    case \"true\" -> true;",
+            "    case \"false\" -> false;",
+            "    default -> throw new RuntimeException(\"Unable to match\");",
+            "    };",
+            "  }",
+            "}")
+        .expectNoDiagnostics()
         .doTest();
   }
 }
