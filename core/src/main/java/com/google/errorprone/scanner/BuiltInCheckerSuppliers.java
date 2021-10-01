@@ -400,6 +400,7 @@ import com.google.errorprone.bugpatterns.android.StaticOrDefaultInterfaceMethod;
 import com.google.errorprone.bugpatterns.android.WakelockReleasedDangerously;
 import com.google.errorprone.bugpatterns.apidiff.AndroidJdkLibsChecker;
 import com.google.errorprone.bugpatterns.apidiff.Java7ApiChecker;
+import com.google.errorprone.bugpatterns.apidiff.Java8ApiChecker;
 import com.google.errorprone.bugpatterns.argumentselectiondefects.ArgumentSelectionDefectChecker;
 import com.google.errorprone.bugpatterns.argumentselectiondefects.AssertEqualsArgumentOrderChecker;
 import com.google.errorprone.bugpatterns.argumentselectiondefects.AutoValueConstructorOrderChecker;
@@ -1025,6 +1026,7 @@ public class BuiltInCheckerSuppliers {
           IterablePathParameter.class,
           JMockTestWithoutRunWithOrRuleAnnotation.class,
           Java7ApiChecker.class,
+          Java8ApiChecker.class,
           LambdaFunctionalInterface.class,
           LockMethodChecker.class,
           LongLiteralLowerCaseSuffix.class,
