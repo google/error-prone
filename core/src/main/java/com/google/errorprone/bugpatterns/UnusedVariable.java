@@ -610,9 +610,14 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
           && ASTHelpers.hasDirectAnnotationWithSimpleName(variableTree, "Inject")) {
         return true;
       }
+      if ((symbol.flags() & RECORD_FLAG) == RECORD_FLAG) {
+        return false;
+      }
       return variableTree.getModifiers().getFlags().contains(Modifier.PRIVATE)
           && !SPECIAL_FIELDS.contains(symbol.getSimpleName().toString());
     }
+
+    private static final long RECORD_FLAG = 1L << 61;
 
     /** Returns whether {@code sym} can be removed without updating call sites in other files. */
     private boolean isParameterSubjectToAnalysis(Symbol sym) {

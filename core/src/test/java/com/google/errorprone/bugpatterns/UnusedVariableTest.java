@@ -14,12 +14,15 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static org.junit.Assume.assumeTrue;
+
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.BugCheckerRefactoringTestHelper.FixChoosers;
 import com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode;
 import com.google.errorprone.CompilationTestHelper;
 import com.google.errorprone.ErrorProneFlags;
+import com.google.errorprone.util.RuntimeVersion;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -1351,6 +1354,47 @@ public class UnusedVariableTest {
             "  }",
             "}")
         .setFixChooser(FixChoosers.SECOND)
+        .doTest();
+  }
+
+  @Test
+  public void simpleRecord() {
+    assumeTrue(RuntimeVersion.isAtLeast16());
+    helper
+        .addSourceLines(
+            "SimpleRecord.java", //
+            "public record SimpleRecord (Integer foo, Long bar) {}")
+        .expectNoDiagnostics()
+        .doTest();
+  }
+
+  @Test
+  public void nestedRecord() {
+    assumeTrue(RuntimeVersion.isAtLeast16());
+    helper
+        .addSourceLines(
+            "SimpleClass.java",
+            "public class SimpleClass {",
+            "   public record SimpleRecord (Integer foo, Long bar) {}",
+            "}")
+        .expectNoDiagnostics()
+        .doTest();
+  }
+
+  @Test
+  public void unusedInRecord() {
+    assumeTrue(RuntimeVersion.isAtLeast16());
+    helper
+        .addSourceLines(
+            "SimpleClass.java",
+            "public class SimpleClass {",
+            "  public record SimpleRecord (Integer foo, Long bar) {",
+            "    void f() {",
+            "      // BUG: Diagnostic contains: is never read",
+            "      int x = foo;",
+            "    }",
+            "  }",
+            "}")
         .doTest();
   }
 }
