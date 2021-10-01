@@ -1212,6 +1212,9 @@ jMock tests must have a @RunWith(JMock.class) annotation, or the Mockery field m
 __[Java7ApiChecker](bugpattern/Java7ApiChecker)__<br>
 Use of class, field, or method that is not compatible with JDK 7
 
+__[Java8ApiChecker](bugpattern/Java8ApiChecker)__<br>
+Use of class, field, or method that is not compatible with JDK 8
+
 __[LockMethodChecker](bugpattern/LockMethodChecker)__<br>
 This method does not acquire the locks specified by its @LockMethod annotation
 
