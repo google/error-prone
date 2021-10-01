@@ -846,4 +846,45 @@ public class SuggesterTest {
         .expectUnchanged()
         .doTest();
   }
+
+  @Test
+  public void testCustom() {
+    refactoringTestHelper
+        .addInputLines(
+            "InlineMe.java", //
+            "package bespoke;",
+            "public @interface InlineMe {",
+            "  String replacement();",
+            "  String[] imports() default {};",
+            "  String[] staticImports() default {};",
+            "}")
+        .expectUnchanged()
+        .addInputLines(
+            "Client.java",
+            "package com.google.frobber;",
+            "import java.time.Duration;",
+            "import java.util.Optional;",
+            "public final class Client {",
+            "  @Deprecated",
+            "  public Optional<Duration> silly(Optional<Long> input) {",
+            "    return input.map(Duration::ofMillis);",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Client.java",
+            "package com.google.frobber;",
+            "import bespoke.InlineMe;",
+            "import java.time.Duration;",
+            "import java.util.Optional;",
+            "public final class Client {",
+            "  @InlineMe(replacement = \"input.map(Duration::ofMillis)\", ",
+            "      imports = \"java.time.Duration\")",
+            "  @Deprecated",
+            "  public Optional<Duration> silly(Optional<Long> input) {",
+            "    return input.map(Duration::ofMillis);",
+            "  }",
+            "}")
+        .setArgs("-XepOpt:InlineMe:annotation=bespoke.InlineMe")
+        .doTest();
+  }
 }

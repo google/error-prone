@@ -1099,6 +1099,52 @@ public class InlinerTest {
         .doTest();
   }
 
+  @Test
+  public void testCustomInlineMe() {
+    refactoringTestHelper
+        .addInputLines(
+            "InlineMe.java", //
+            "package bespoke;",
+            "public @interface InlineMe {",
+            "  String replacement();",
+            "  String[] imports() default {};",
+            "  String[] staticImports() default {};",
+            "}")
+        .expectUnchanged()
+        .addInputLines(
+            "Client.java",
+            "import bespoke.InlineMe;",
+            "public final class Client {",
+            "  @Deprecated",
+            "  @InlineMe(replacement = \"this.foo2(value)\")",
+            "  public void foo1(String value) {",
+            "    foo2(value);",
+            "  }",
+            "  public void foo2(String value) {",
+            "  }",
+            "}")
+        .expectUnchanged()
+        .addInputLines(
+            "Caller.java",
+            "public final class Caller {",
+            "  public void doTest() {",
+            "    Client client = new Client();",
+            "    client.foo1(\"frobber!\");",
+            "    client.foo1(\"don't change this!\");",
+            "  }",
+            "}")
+        .addOutputLines(
+            "out/Caller.java",
+            "public final class Caller {",
+            "  public void doTest() {",
+            "    Client client = new Client();",
+            "    client.foo2(\"frobber!\");",
+            "    client.foo2(\"don't change this!\");",
+            "  }",
+            "}")
+        .doTest();
+  }
+
   private BugCheckerRefactoringTestHelper buildBugCheckerWithPrefixFlag(String prefix) {
     return BugCheckerRefactoringTestHelper.newInstance(Inliner.class, getClass())
         .setArgs("-XepOpt:" + PREFIX_FLAG + "=" + prefix);

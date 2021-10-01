@@ -22,7 +22,7 @@ import static com.google.common.collect.MoreCollectors.onlyElement;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
-import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
+import static com.google.errorprone.util.ASTHelpers.hasDirectAnnotationWithSimpleName;
 import static com.google.errorprone.util.MoreAnnotations.asStringValue;
 import static com.google.errorprone.util.MoreAnnotations.getValue;
 import static com.google.errorprone.util.SideEffectAnalysis.hasSideEffect;
@@ -79,10 +79,9 @@ public final class Inliner extends BugChecker
 
   static final String ALLOW_BREAKING_CHANGES_FLAG = "InlineMe:AllowBreakingChanges";
 
-  private static final String INLINE_ME = "com.google.errorprone.annotations.InlineMe";
+  private static final String INLINE_ME = "InlineMe";
 
-  private static final String VALIDATION_DISABLED =
-      "com.google.errorprone.annotations.InlineMeValidationDisabled";
+  private static final String VALIDATION_DISABLED = "InlineMeValidationDisabled";
 
   private final ImmutableSet<String> apiPrefixes;
   private final boolean allowBreakingChanges;
@@ -98,7 +97,7 @@ public final class Inliner extends BugChecker
   @Override
   public Description matchNewClass(NewClassTree tree, VisitorState state) {
     MethodSymbol symbol = getSymbol(tree);
-    if (!hasAnnotation(symbol, INLINE_ME, state)) {
+    if (!hasDirectAnnotationWithSimpleName(symbol, INLINE_ME)) {
       return Description.NO_MATCH;
     }
     ImmutableList<String> callingVars =
@@ -112,7 +111,7 @@ public final class Inliner extends BugChecker
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
     MethodSymbol symbol = getSymbol(tree);
-    if (!hasAnnotation(symbol, INLINE_ME, state)) {
+    if (!hasDirectAnnotationWithSimpleName(symbol, INLINE_ME)) {
       return Description.NO_MATCH;
     }
     ImmutableList<String> callingVars =
@@ -147,7 +146,7 @@ public final class Inliner extends BugChecker
       String receiverString,
       ExpressionTree receiver,
       VisitorState state) {
-    checkState(hasAnnotation(symbol, INLINE_ME, state));
+    checkState(hasDirectAnnotationWithSimpleName(symbol, INLINE_ME));
 
     Api api = Api.create(symbol, state);
     if (!matchesApiPrefixes(api)) {
@@ -156,7 +155,7 @@ public final class Inliner extends BugChecker
 
     Attribute.Compound inlineMe =
         symbol.getRawAttributes().stream()
-            .filter(a -> a.type.tsym.getQualifiedName().contentEquals(INLINE_ME))
+            .filter(a -> a.type.tsym.getSimpleName().contentEquals(INLINE_ME))
             .collect(onlyElement());
 
     SuggestedFix.Builder builder = SuggestedFix.builder();
@@ -279,10 +278,10 @@ public final class Inliner extends BugChecker
 
     static Api create(MethodSymbol method, VisitorState state) {
       String extraMessage = "";
-      if (hasAnnotation(method, VALIDATION_DISABLED, state)) {
+      if (hasDirectAnnotationWithSimpleName(method, VALIDATION_DISABLED)) {
         Attribute.Compound inlineMeValidationDisabled =
             method.getRawAttributes().stream()
-                .filter(a -> a.type.tsym.getQualifiedName().contentEquals(VALIDATION_DISABLED))
+                .filter(a -> a.type.tsym.getSimpleName().contentEquals(VALIDATION_DISABLED))
                 .collect(onlyElement());
         String reason = Iterables.getOnlyElement(getStrings(inlineMeValidationDisabled, "value"));
         extraMessage = " NOTE: this is an unvalidated inlining! Reasoning: " + reason;

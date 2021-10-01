@@ -20,9 +20,9 @@ import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
 
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.annotations.DoNotCall;
-import com.google.errorprone.annotations.InlineMe;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.bugpatterns.inlineme.InlinabilityResult.InlineValidationErrorReason;
@@ -41,6 +41,15 @@ import javax.lang.model.element.Modifier;
     severity = WARNING)
 public final class Suggester extends BugChecker implements MethodTreeMatcher {
 
+  private final String inlineMe;
+
+  public Suggester(ErrorProneFlags errorProneFlags) {
+    inlineMe =
+        errorProneFlags
+            .get("InlineMe:annotation")
+            .orElse("com.google.errorprone.annotations.InlineMe");
+  }
+
   @Override
   public Description matchMethod(MethodTree tree, VisitorState state) {
     // only suggest @InlineMe on @Deprecated APIs
@@ -49,7 +58,7 @@ public final class Suggester extends BugChecker implements MethodTreeMatcher {
     }
 
     // if the API is already annotated with @InlineMe, then return no match
-    if (hasAnnotation(tree, InlineMe.class, state)) {
+    if (hasAnnotation(tree, inlineMe, state)) {
       return Description.NO_MATCH;
     }
 
@@ -67,7 +76,7 @@ public final class Suggester extends BugChecker implements MethodTreeMatcher {
     // We attempt to actually build the annotation as a SuggestedFix.
     SuggestedFix.Builder fixBuilder =
         SuggestedFix.builder()
-            .addImport(InlineMe.class.getCanonicalName())
+            .addImport(inlineMe)
             .prefixWith(
                 tree,
                 InlineMeData.buildExpectedInlineMeAnnotation(state, inlinabilityResult.body())
