@@ -46,4 +46,68 @@ public class Java8ApiCheckerTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void bufferPositive() {
+    assumeTrue(RuntimeVersion.isAtLeast11());
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.nio.ByteBuffer;",
+            "class Test {",
+            "  void f(ByteBuffer b, int i) {",
+            "    // BUG: Diagnostic contains: ByteBuffer#position(int) is not available",
+            "    b.position(i);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void bufferNegative() {
+    assumeTrue(RuntimeVersion.isAtLeast11());
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.nio.ByteBuffer;",
+            "class Test {",
+            "  void f(ByteBuffer b, int i) {",
+            "    b.position(i);",
+            "  }",
+            "}")
+        .setArgs("-XepOpt:Java8ApiChecker:checkBuffer=false")
+        .doTest();
+  }
+
+  @Test
+  public void checksumPositive() {
+    assumeTrue(RuntimeVersion.isAtLeast11());
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.util.zip.CRC32;",
+            "class Test {",
+            "  void f(CRC32 c, byte[] b) {",
+            "    // BUG: Diagnostic contains: Checksum#update(byte[]) is not available",
+            "    c.update(b);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void checksumNegative() {
+    assumeTrue(RuntimeVersion.isAtLeast11());
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.util.zip.CRC32;",
+            "class Test {",
+            "  void f(CRC32 c, byte[] b) {",
+            "    c.update(b);",
+            "  }",
+            "}")
+        .setArgs("-XepOpt:Java8ApiChecker:checkChecksum=false")
+        .doTest();
+  }
 }

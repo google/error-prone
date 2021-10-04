@@ -16,12 +16,19 @@
 
 package com.google.errorprone.bugpatterns.apidiff;
 
+import static com.google.common.collect.ImmutableSetMultimap.toImmutableSetMultimap;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 
+import com.google.common.collect.ImmutableMultimap;
 import com.google.common.io.Resources;
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.ErrorProneFlags;
+import com.google.errorprone.bugpatterns.apidiff.ApiDiff.ClassMemberKey;
+import com.google.protobuf.ExtensionRegistry;
 import java.io.IOException;
 import java.io.UncheckedIOException;
+import java.util.Map;
+import java.util.regex.Pattern;
 
 /** Checks for uses of classes, fields, or methods that are not compatible with JDK 8 */
 @BugPattern(
@@ -33,21 +40,37 @@ import java.io.UncheckedIOException;
     severity = ERROR)
 public class Java8ApiChecker extends ApiDiffChecker {
 
-  static final ApiDiff API_DIFF = loadApiDiff();
-
-  private static ApiDiff loadApiDiff() {
+  private static ApiDiff loadApiDiff(ErrorProneFlags errorProneFlags) {
     try {
-      ApiDiffProto.Diff.Builder diffBuilder = ApiDiffProto.Diff.newBuilder();
       byte[] diffData =
           Resources.toByteArray(Resources.getResource(Java8ApiChecker.class, "8to11diff.binarypb"));
-      diffBuilder.mergeFrom(diffData);
-      return ApiDiff.fromProto(diffBuilder.build());
+      ApiDiff diff =
+          ApiDiff.fromProto(
+              ApiDiffProto.Diff.newBuilder()
+                  .mergeFrom(diffData, ExtensionRegistry.getEmptyRegistry())
+                  .build());
+      boolean checkBuffer = errorProneFlags.getBoolean("Java8ApiChecker:checkBuffer").orElse(true);
+      boolean checkChecksum =
+          errorProneFlags.getBoolean("Java8ApiChecker:checkChecksum").orElse(true);
+      if (checkBuffer && checkChecksum) {
+        return diff;
+      }
+      ImmutableMultimap<String, ClassMemberKey> unsupportedMembers =
+          diff.unsupportedMembersByClass().entries().stream()
+              .filter(e -> checkBuffer || !BUFFER.matcher(e.getKey()).matches())
+              .filter(e -> checkChecksum || !e.getKey().equals(CHECKSUM))
+              .collect(toImmutableSetMultimap(Map.Entry::getKey, Map.Entry::getValue));
+      return ApiDiff.fromMembers(diff.unsupportedClasses(), unsupportedMembers);
     } catch (IOException e) {
       throw new UncheckedIOException(e);
     }
   }
 
-  public Java8ApiChecker() {
-    super(API_DIFF);
+  private static final Pattern BUFFER = Pattern.compile("java/nio/.*Buffer");
+
+  private static final String CHECKSUM = "java/util/zip/Checksum";
+
+  public Java8ApiChecker(ErrorProneFlags errorProneFlags) {
+    super(loadApiDiff(errorProneFlags));
   }
 }
