@@ -18,16 +18,15 @@ package com.google.errorprone.bugpatterns.testdata;
 /** @author mariasam@google.com (Maria Sam) */
 class OverrideThrowableToStringPositiveCases {
 
-  // BUG: Diagnostic contains: override
   class BasicTest extends Throwable {
 
     @Override
+    // BUG: Diagnostic contains: override
     public String toString() {
       return "";
     }
   }
 
-  // BUG: Diagnostic contains: override
   class MultipleMethods extends Throwable {
 
     public MultipleMethods() {
@@ -35,14 +34,15 @@ class OverrideThrowableToStringPositiveCases {
     }
 
     @Override
+    // BUG: Diagnostic contains: override
     public String toString() {
       return "";
     }
   }
 
-  // BUG: Diagnostic contains: override
   class NoOverride extends Throwable {
 
+    // BUG: Diagnostic contains: override
     public String toString() {
       return "";
     }

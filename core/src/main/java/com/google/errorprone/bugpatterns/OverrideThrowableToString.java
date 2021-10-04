@@ -60,7 +60,7 @@ public final class OverrideThrowableToString extends BugChecker implements Class
     return methods.stream()
         .filter(m -> Matchers.toStringMethodDeclaration().matches(m, state))
         .findFirst()
-        .map(m -> describeMatch(classTree, SuggestedFixes.renameMethod(m, "getMessage", state)))
+        .map(m -> describeMatch(m, SuggestedFixes.renameMethod(m, "getMessage", state)))
         .orElse(Description.NO_MATCH);
   }
 }
