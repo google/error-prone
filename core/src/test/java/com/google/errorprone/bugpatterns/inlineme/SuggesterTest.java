@@ -887,4 +887,43 @@ public class SuggesterTest {
         .setArgs("-XepOpt:InlineMe:annotation=bespoke.InlineMe")
         .doTest();
   }
+
+  @Test
+  public void implementationUsingPublicStaticField() {
+    refactoringTestHelper
+        .addInputLines(
+            "Client.java",
+            "package com.google.frobber;",
+            "import java.util.function.Supplier;",
+            "public class Client {",
+            "  public static final Supplier<Integer> MAGIC = () -> 42;",
+            "  @Deprecated",
+            "  public static int before() {",
+            "    return after(MAGIC.get());",
+            "  }",
+            "  public static int after(int value) {",
+            "    return value;",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Client.java",
+            "package com.google.frobber;",
+            "import com.google.errorprone.annotations.InlineMe;",
+            "import java.util.function.Supplier;",
+            "public class Client {",
+            "  public static final Supplier<Integer> MAGIC = () -> 42;",
+            "  @InlineMe("
+                // TODO(b/202145711): MAGIC.get() should be Client.MAGIC.get()
+                + "replacement = \"Client.after(MAGIC.get())\", "
+                + "imports = \"com.google.frobber.Client\")",
+            "  @Deprecated",
+            "  public static int before() {",
+            "    return after(MAGIC.get());",
+            "  }",
+            "  public static int after(int value) {",
+            "    return value;",
+            "  }",
+            "}")
+        .doTest();
+  }
 }
