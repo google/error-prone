@@ -200,9 +200,6 @@ Using IdentityHashMap with a boxed type as the key is risky since boxing may pro
 __[Immutable](bugpattern/Immutable)__<br>
 Type declaration annotated with @Immutable is not immutable
 
-__[ImmutableModification](bugpattern/ImmutableModification)__<br>
-Modifying an immutable collection is guaranteed to throw an exception and leave the collection unmodified
-
 __[Incomparable](bugpattern/Incomparable)__<br>
 Types contained in sorted collections must implement Comparable.
 

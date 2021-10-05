@@ -48,9 +48,9 @@ static final Iterable<String> COUNTRIES =
 
 TIP: Using the immutable type for the field declaration allows Error Prone to
 prevent accidental attempts to modify the collection at compile-time (see
-[`ImmutableModification`]).
+[`DoNotCall`]).
 
-[`ImmutableModification`]: https://errorprone.info/bugpattern/ImmutableModification
+[`DoNotCall`]: https://errorprone.info/bugpattern/DoNotCall
 [ej3e-64]: https://books.google.com/books?id=BIpDDwAAQBAJ
 [javadoc]: https://guava.dev/releases/snapshot-jre/api/docs/com/google/common/collect/ImmutableCollection.html
 
