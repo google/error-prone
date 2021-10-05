@@ -333,6 +333,7 @@ import com.google.errorprone.bugpatterns.ThrowNull;
 import com.google.errorprone.bugpatterns.ThrowSpecificExceptions;
 import com.google.errorprone.bugpatterns.ThrowsUncheckedException;
 import com.google.errorprone.bugpatterns.ToStringReturnsNull;
+import com.google.errorprone.bugpatterns.TooManyParameters;
 import com.google.errorprone.bugpatterns.TransientMisuse;
 import com.google.errorprone.bugpatterns.TreeToString;
 import com.google.errorprone.bugpatterns.TruthAssertExpected;
@@ -1076,6 +1077,7 @@ public class BuiltInCheckerSuppliers {
           ThrowSpecificExceptions.class,
           ThrowsUncheckedException.class,
           TimeUnitMismatch.class,
+          TooManyParameters.class,
           TransientMisuse.class,
           TryFailRefactoring.class,
           TryWithResourcesVariable.class,
