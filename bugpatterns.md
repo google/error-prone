@@ -1376,6 +1376,9 @@ Base exception classes should be treated as abstract. If the exception is intend
 __[TimeUnitMismatch](bugpattern/TimeUnitMismatch)__<br>
 An value that appears to be represented in one unit is used where another appears to be required (e.g., seconds where nanos are needed)
 
+__[TooManyParameters](bugpattern/TooManyParameters)__<br>
+A large number of parameters on public APIs should be avoided.
+
 __[TransientMisuse](bugpattern/TransientMisuse)__<br>
 Static fields are implicitly transient, so the explicit modifier is unnecessary
 
