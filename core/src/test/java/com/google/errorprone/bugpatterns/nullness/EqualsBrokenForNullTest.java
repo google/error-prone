@@ -56,4 +56,25 @@ public class EqualsBrokenForNullTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void nullableParameter() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.util.Optional;",
+            "class Test {",
+            "  public boolean equals(Object other) {",
+            "    if (other == null) {",
+            "      return false;",
+            "    }",
+            "    if (other instanceof Test) {",
+            "      Test otherTest = (Test) other;",
+            "      Optional.empty().map(x -> otherTest.toString());",
+            "    }",
+            "    return other.equals(this);",
+            "  }",
+            "}")
+        .doTest();
+  }
 }

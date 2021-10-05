@@ -37,6 +37,7 @@ import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.IfTree;
 import com.sun.source.tree.InstanceOfTree;
+import com.sun.source.tree.LambdaExpressionTree;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.ParenthesizedTree;
@@ -119,6 +120,12 @@ public class EqualsBrokenForNull extends BugChecker implements MethodTreeMatcher
           return scan(ifTree.getElseStatement(), null);
         }
         return super.visitIf(ifTree, unused);
+      }
+
+      @Override
+      public Void visitLambdaExpression(LambdaExpressionTree node, Void unused) {
+        // Our nullness analyzer isn't good at straddling lambda boundaries.
+        return null;
       }
 
       /**
