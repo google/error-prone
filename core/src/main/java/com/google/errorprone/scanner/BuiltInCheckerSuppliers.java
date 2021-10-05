@@ -147,7 +147,6 @@ import com.google.errorprone.bugpatterns.IdentityHashMapBoxing;
 import com.google.errorprone.bugpatterns.IdentityHashMapUsage;
 import com.google.errorprone.bugpatterns.IgnoredPureGetter;
 import com.google.errorprone.bugpatterns.ImmutableMemberCollection;
-import com.google.errorprone.bugpatterns.ImmutableModification;
 import com.google.errorprone.bugpatterns.ImmutableSetForContains;
 import com.google.errorprone.bugpatterns.ImplementAssertionWithChaining;
 import com.google.errorprone.bugpatterns.Incomparable;
@@ -636,7 +635,6 @@ public class BuiltInCheckerSuppliers {
           IdentityBinaryExpression.class,
           IdentityHashMapBoxing.class,
           ImmutableChecker.class,
-          ImmutableModification.class,
           Incomparable.class,
           IncompatibleArgumentType.class,
           IncompatibleModifiersChecker.class,
