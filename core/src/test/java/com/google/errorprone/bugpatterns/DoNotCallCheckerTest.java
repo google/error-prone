@@ -62,6 +62,99 @@ public class DoNotCallCheckerTest {
   }
 
   @Test
+  public void positiveWhereDeclaredTypeIsSuper() {
+    testHelperWithImmutableList()
+        .addSourceLines(
+            "Test.java",
+            "import java.util.List;",
+            "class Test {",
+            "  void foo() {",
+            "    List<Integer> xs = ImmutableList.of();",
+            "    // BUG: Diagnostic contains:",
+            "    xs.add(1);",
+            "    xs.get(1);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void positiveWhereDeclaredTypeIsSuper_butAssignedMultipleTimes() {
+    testHelperWithImmutableList()
+        .addSourceLines(
+            "Test.java",
+            "import java.util.List;",
+            "class Test {",
+            "  void foo() {",
+            "    List<Integer> xs;",
+            "    if (hashCode() == 0) {",
+            "      xs = ImmutableList.of();",
+            "    } else {",
+            "      xs = ImmutableList.of();",
+            "    }",
+            "    // BUG: Diagnostic contains:",
+            "    xs.add(1);",
+            "    xs.get(1);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  private CompilationTestHelper testHelperWithImmutableList() {
+    // Stub out an ImmutableList with the annotations we need for testing.
+    return testHelper.addSourceLines(
+        "ImmutableList.java",
+        "import com.google.errorprone.annotations.DoNotCall;",
+        "import java.util.List;",
+        "interface ImmutableList<T> extends List<T> {",
+        "  @DoNotCall @Override boolean add(T t);",
+        "  static <T> ImmutableList<T> of() {",
+        "    return null;",
+        "  }",
+        "}");
+  }
+
+  @Test
+  public void positiveWhereDeclaredTypeIsSuper_flaggedOff() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.common.collect.ImmutableList;",
+            "import java.util.List;",
+            "class Test {",
+            "  void foo() {",
+            "    List<Integer> xs = ImmutableList.of();",
+            "    xs.add(1);",
+            "    xs.get(1);",
+            "  }",
+            "}")
+        .setArgs("-XepOpt:DoNotCallChecker:CheckAssignedTypes=false")
+        .doTest();
+  }
+
+  @Test
+  public void positiveWhereDeclaredTypeIsSuper_butNotAssignedOnce() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.common.collect.ImmutableList;",
+            "import java.util.ArrayList;",
+            "import java.util.List;",
+            "class Test {",
+            "  void foo() {",
+            "    List<Integer> xs;",
+            "    if (true) {",
+            "      xs = ImmutableList.of();",
+            "    } else {",
+            "      xs = new ArrayList<>();",
+            "      xs.add(2);",
+            "    }",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void concreteFinal() {
     testHelper
         .addSourceLines(
