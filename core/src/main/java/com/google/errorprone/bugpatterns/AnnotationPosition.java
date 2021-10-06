@@ -63,7 +63,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Stream;
 import javax.annotation.Nullable;
-import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.Name;
 
@@ -108,10 +107,6 @@ public final class AnnotationPosition extends BugChecker
 
   @Override
   public Description matchVariable(VariableTree tree, VisitorState state) {
-    Symbol symbol = getSymbol(tree);
-    if (symbol.getKind() != ElementKind.FIELD) {
-      return NO_MATCH;
-    }
     return handle(tree, tree.getName(), tree.getModifiers(), state);
   }
 

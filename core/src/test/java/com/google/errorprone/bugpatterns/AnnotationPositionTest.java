@@ -183,7 +183,11 @@ public final class AnnotationPositionTest {
             "interface Test {",
             "  public boolean foo(final @NonTypeUse String s);",
             "}")
-        .expectUnchanged()
+        .addOutputLines(
+            "Test.java",
+            "interface Test {",
+            "  public boolean foo(@NonTypeUse final String s);",
+            "}")
         .doTest(TEXT_MATCH);
   }
 
@@ -467,6 +471,46 @@ public final class AnnotationPositionTest {
             "  }",
             "}")
         .expectUnchanged()
+        .doTest(TEXT_MATCH);
+  }
+
+  @Test
+  public void parameters_withAnnotationsOutOfOrder() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java", //
+            "class T {",
+            "  Object foo(@TypeUse @NonTypeUse Object a) {",
+            "    return null;",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java", //
+            "class T {",
+            "  Object foo(@NonTypeUse @TypeUse Object a) {",
+            "    return null;",
+            "  }",
+            "}")
+        .doTest(TEXT_MATCH);
+  }
+
+  @Test
+  public void parameters_withInterspersedModifiers() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java", //
+            "class T {",
+            "  Object foo(@TypeUse final Object a) {",
+            "    return null;",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java", //
+            "class T {",
+            "  Object foo(final @TypeUse Object a) {",
+            "    return null;",
+            "  }",
+            "}")
         .doTest(TEXT_MATCH);
   }
 }
