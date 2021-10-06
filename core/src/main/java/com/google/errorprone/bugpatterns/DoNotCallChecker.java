@@ -135,9 +135,12 @@ public class DoNotCallChecker extends BugChecker
   static final String DO_NOT_CALL = "com.google.errorprone.annotations.DoNotCall";
 
   private final boolean checkAssignedTypes;
+  private final boolean checkMemberReferencesToThirdPartyTypes;
 
   public DoNotCallChecker(ErrorProneFlags flags) {
     this.checkAssignedTypes = flags.getBoolean("DoNotCallChecker:CheckAssignedTypes").orElse(true);
+    this.checkMemberReferencesToThirdPartyTypes =
+        flags.getBoolean("DoNotCallChecker:CheckMemberReferencesToThirdPartyTypes").orElse(true);
   }
 
   @Override
@@ -192,8 +195,6 @@ public class DoNotCallChecker extends BugChecker
     new SuppressibleTreePathScanner<Void, Void>() {
       @Override
       public Void visitMethodInvocation(MethodInvocationTree tree, Void unused) {
-        // TODO(ghm): I think this should be moved into checkTree. We could have member references
-        // to these external methods too.
         for (Entry<Matcher<ExpressionTree>, String> matcher : THIRD_PARTY_METHODS.entrySet()) {
           if (matcher.getKey().matches(tree, state)) {
             state.reportMatch(buildDescription(tree).setMessage(matcher.getValue()).build());
@@ -206,6 +207,14 @@ public class DoNotCallChecker extends BugChecker
 
       @Override
       public Void visitMemberReference(MemberReferenceTree tree, Void unused) {
+        if (checkMemberReferencesToThirdPartyTypes) {
+          for (Entry<Matcher<ExpressionTree>, String> matcher : THIRD_PARTY_METHODS.entrySet()) {
+            if (matcher.getKey().matches(tree, state)) {
+              state.reportMatch(buildDescription(tree).setMessage(matcher.getValue()).build());
+              return super.visitMemberReference(tree, null);
+            }
+          }
+        }
         checkTree(tree, getSymbol(tree), state);
         return super.visitMemberReference(tree, null);
       }

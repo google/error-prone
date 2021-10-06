@@ -516,6 +516,23 @@ public class DoNotCallCheckerTest {
   }
 
   @Test
+  public void memberReferencesOnThirdPartyMethods() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.util.concurrent.ThreadLocalRandom;",
+            "import java.util.Optional;",
+            "public class Test {",
+            "  public void foo(Optional<Long> x) {",
+            "    ThreadLocalRandom random = ThreadLocalRandom.current();",
+            "    // BUG: Diagnostic contains: DoNotCall",
+            "    x.ifPresent(random::setSeed);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void thread_stop() {
     // Thread.stop(Throwable) was removed in JDK11:
     //   https://bugs.openjdk.java.net/browse/JDK-8204243
