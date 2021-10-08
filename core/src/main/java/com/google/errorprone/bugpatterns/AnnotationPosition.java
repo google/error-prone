@@ -234,7 +234,7 @@ public final class AnnotationPosition extends BugChecker
           .replace(
               lastModifierPos,
               lastModifierPos,
-              String.format("%s ", joinSource(state, shouldBeAfter)));
+              String.format(" %s ", joinSource(state, shouldBeAfter)));
     }
     Stream.Builder<String> messages = Stream.builder();
     if (!shouldBeBefore.isEmpty()) {
