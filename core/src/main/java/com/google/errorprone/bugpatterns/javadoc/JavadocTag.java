@@ -16,8 +16,11 @@
 
 package com.google.errorprone.bugpatterns.javadoc;
 
+import static com.google.common.collect.ImmutableSet.toImmutableSet;
+
 import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableSet;
+import java.util.stream.Stream;
 
 /** Describes Javadoc tags, and contains lists of valid tags. */
 @AutoValue
@@ -85,6 +88,12 @@ abstract class JavadocTag {
               inlineTag("value"),
               blockTag("version"))
           .build();
+
+  static final ImmutableSet<JavadocTag> ALL_INLINE_TAGS =
+      Stream.of(VALID_CLASS_TAGS, VALID_VARIABLE_TAGS, VALID_METHOD_TAGS)
+          .flatMap(ImmutableSet::stream)
+          .filter(tag -> tag.type() == TagType.INLINE)
+          .collect(toImmutableSet());
 
   abstract String name();
 

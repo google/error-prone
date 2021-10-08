@@ -470,6 +470,7 @@ import com.google.errorprone.bugpatterns.javadoc.InvalidLink;
 import com.google.errorprone.bugpatterns.javadoc.InvalidParam;
 import com.google.errorprone.bugpatterns.javadoc.InvalidThrows;
 import com.google.errorprone.bugpatterns.javadoc.InvalidThrowsLink;
+import com.google.errorprone.bugpatterns.javadoc.MalformedInlineTag;
 import com.google.errorprone.bugpatterns.javadoc.MissingSummary;
 import com.google.errorprone.bugpatterns.javadoc.ReturnFromVoid;
 import com.google.errorprone.bugpatterns.javadoc.UnescapedEntity;
@@ -866,6 +867,7 @@ public class BuiltInCheckerSuppliers {
           LogicalAssignment.class,
           LongFloatConversion.class,
           LoopOverCharArray.class,
+          MalformedInlineTag.class,
           MathAbsoluteRandom.class,
           MemoizeConstantVisitorStateLookups.class,
           MissingCasesInEnumSwitch.class,
