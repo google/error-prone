@@ -103,7 +103,7 @@ abstract class InlinabilityResult {
     COMPLEX_STATEMENT(
         "InlineMe cannot inline complex statements. Consider using a different refactoring tool"),
     CALLS_DEPRECATED_OR_PRIVATE_APIS(
-        "InlineMe cannot be applied when the implementation references deprecated or non-public"
+        "InlineMe cannot be applied when the implementation references deprecated or less visible"
             + " API elements:"),
     API_IS_PRIVATE("InlineMe cannot be applied to private APIs."),
     LAMBDA_CAPTURES_PARAMETER(
@@ -124,7 +124,7 @@ abstract class InlinabilityResult {
     EMPTY_VOID("InlineMe cannot yet be applied to no-op void methods"),
     REUSE_OF_ARGUMENTS("Implementations cannot use an argument more than once:");
 
-    @Nullable private final String errorMessage;
+    private final @Nullable String errorMessage;
 
     InlineValidationErrorReason(@Nullable String errorMessage) {
       this.errorMessage = errorMessage;
@@ -189,7 +189,8 @@ abstract class InlinabilityResult {
           InlineValidationErrorReason.REUSE_OF_ARGUMENTS, body, usedMultipledTimes.toString());
     }
 
-    Tree privateOrDeprecatedApi = usesPrivateOrDeprecatedApis(body, state);
+    Tree privateOrDeprecatedApi =
+        usesPrivateOrDeprecatedApis(body, state, getVisibility(methSymbol));
     if (privateOrDeprecatedApi != null) {
       return fromError(
           InlineValidationErrorReason.CALLS_DEPRECATED_OR_PRIVATE_APIS,
@@ -275,8 +276,9 @@ abstract class InlinabilityResult {
     return usesVarargsPoorly.get();
   }
 
-  private static Tree usesPrivateOrDeprecatedApis(ExpressionTree statement, VisitorState state) {
-    AtomicReference<Tree> usesDeprecatedOrNonPublicApis = new AtomicReference<>();
+  private static Tree usesPrivateOrDeprecatedApis(
+      ExpressionTree statement, VisitorState state, Visibility minVisibility) {
+    AtomicReference<Tree> usesDeprecatedOrLessVisibleApis = new AtomicReference<>();
     new TreeScanner<Void, Void>() {
       @Override
       public Void visitLambdaExpression(LambdaExpressionTree node, Void unused) {
@@ -288,7 +290,7 @@ abstract class InlinabilityResult {
       public Void visitMemberSelect(MemberSelectTree memberSelectTree, Void aVoid) {
         // This check is necessary as the TreeScanner doesn't visit the "name" part of the
         // left-hand of an assignment.
-        if (isDeprecatedOrNonPublic(memberSelectTree)) {
+        if (isDeprecatedOrLessVisible(memberSelectTree, minVisibility)) {
           // short circuit
           return null;
         }
@@ -299,7 +301,7 @@ abstract class InlinabilityResult {
       public Void visitIdentifier(IdentifierTree node, Void unused) {
         if (!ASTHelpers.isLocal(getSymbol(node))) {
           if (!node.getName().contentEquals("this")) {
-            if (isDeprecatedOrNonPublic(node)) {
+            if (isDeprecatedOrLessVisible(node, minVisibility)) {
               return null; // short-circuit
             }
           }
@@ -309,7 +311,7 @@ abstract class InlinabilityResult {
 
       @Override
       public Void visitNewClass(NewClassTree newClassTree, Void aVoid) {
-        if (isDeprecatedOrNonPublic(newClassTree)) {
+        if (isDeprecatedOrLessVisible(newClassTree, minVisibility)) {
           return null;
         }
         return super.visitNewClass(newClassTree, aVoid);
@@ -317,20 +319,21 @@ abstract class InlinabilityResult {
 
       @Override
       public Void visitMethodInvocation(MethodInvocationTree node, Void unused) {
-        if (isDeprecatedOrNonPublic(node)) {
+        if (isDeprecatedOrLessVisible(node, minVisibility)) {
           return null; // short-circuit
         }
         return super.visitMethodInvocation(node, null);
       }
 
-      private boolean isDeprecatedOrNonPublic(Tree tree) {
+      private boolean isDeprecatedOrLessVisible(Tree tree, Visibility minVisibility) {
         Symbol sym = getSymbol(tree);
-        if (!(sym instanceof PackageSymbol) && !sym.getModifiers().contains(Modifier.PUBLIC)) {
-          usesDeprecatedOrNonPublicApis.set(tree);
+        Visibility visibility = getVisibility(sym);
+        if (!(sym instanceof PackageSymbol) && visibility.compareTo(minVisibility) < 0) {
+          usesDeprecatedOrLessVisibleApis.set(tree);
           return true;
         }
         if (hasAnnotation(sym, "java.lang.Deprecated", state)) {
-          usesDeprecatedOrNonPublicApis.set(tree);
+          usesDeprecatedOrLessVisibleApis.set(tree);
           return true;
         }
 
@@ -338,7 +341,26 @@ abstract class InlinabilityResult {
       }
     }.scan(statement, null);
 
-    return usesDeprecatedOrNonPublicApis.get();
+    return usesDeprecatedOrLessVisibleApis.get();
+  }
+
+  private enum Visibility {
+    PRIVATE,
+    PACKAGE,
+    PROTECTED,
+    PUBLIC;
+  }
+
+  private static Visibility getVisibility(Symbol symbol) {
+    if (symbol.getModifiers().contains(Modifier.PRIVATE)) {
+      return Visibility.PRIVATE;
+    } else if (symbol.getModifiers().contains(Modifier.PROTECTED)) {
+      return Visibility.PROTECTED;
+    } else if (symbol.getModifiers().contains(Modifier.PUBLIC)) {
+      return Visibility.PUBLIC;
+    } else {
+      return Visibility.PACKAGE;
+    }
   }
 
   private static boolean hasLambdaCapturingParameters(MethodTree meth, ExpressionTree statement) {
