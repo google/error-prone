@@ -874,6 +874,9 @@ Conversion from long to float may lose precision; use an explicit cast to float 
 __[LoopOverCharArray](bugpattern/LoopOverCharArray)__<br>
 toCharArray allocates a new array, using charAt is more efficient
 
+__[MalformedInlineTag](bugpattern/MalformedInlineTag)__<br>
+This Javadoc tag is malformed. The correct syntax is {@tag and not @{tag.
+
 __[MathAbsoluteRandom](bugpattern/MathAbsoluteRandom)__<br>
 Math.abs does not always give a positive result. Please consider other methods for positive random numbers.
 
