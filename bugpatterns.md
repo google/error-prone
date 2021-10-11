@@ -1102,6 +1102,9 @@ This type is not guaranteed to implement a useful #equals method.
 __[UnescapedEntity](bugpattern/UnescapedEntity)__<br>
 Javadoc is interpreted as HTML, so HTML entities such as &amp;, &lt;, &gt; must be escaped. If this finding seems wrong (e.g. is within a @code or @literal tag), check whether the tag could be malformed and not recognised by the compiler.
 
+__[UnicodeEscape](bugpattern/UnicodeEscape)__<br>
+Using unicode escape sequences for printable ASCII characters is obfuscated, and potentially dangerous.
+
 __[UnnecessaryAssignment](bugpattern/UnnecessaryAssignment)__<br>
 Fields annotated with @Inject/@Mock should not be manually assigned to, as they should be initialized by a framework. Remove the assignment if a framework is being used, or the annotation if one isn&#39;t.
 

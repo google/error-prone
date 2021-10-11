@@ -3554,6 +3554,12 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Represents a source code transformation, usually used to fix a bug detected by error-prone.</div>
 </dd>
+<dt><a href="com/google/errorprone/fixes/FixedPosition.html" title="class in com.google.errorprone.fixes"><span class="type-name-link">FixedPosition</span></a> - Class in <a href="com/google/errorprone/fixes/package-summary.html">com.google.errorprone.fixes</a></dt>
+<dd>
+<div class="block">A <code>JCDiagnostic.DiagnosticPosition</code> with a fixed position.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/google/errorprone/fixes/FixedPosition.html#%3Cinit%3E(com.sun.source.tree.Tree,int)">FixedPosition(Tree, int)</a></span> - Constructor for class com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/FixedPosition.html" title="class in com.google.errorprone.fixes">FixedPosition</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/matchers/Description.html#fixes">fixes</a></span> - Variable in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></dt>
 <dd>
 <div class="block">A list of fixes to suggest in an error message or use in automated refactoring.</div>
@@ -4327,6 +4333,8 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/fixes/AdjustedPosition.html#getEndPosition(com.sun.tools.javac.tree.EndPosTable)">getEndPosition(EndPosTable)</a></span> - Method in class com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/AdjustedPosition.html" title="class in com.google.errorprone.fixes">AdjustedPosition</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/google/errorprone/fixes/FixedPosition.html#getEndPosition(com.sun.tools.javac.tree.EndPosTable)">getEndPosition(EndPosTable)</a></span> - Method in class com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/FixedPosition.html" title="class in com.google.errorprone.fixes">FixedPosition</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/fixes/IndexedPosition.html#getEndPosition(com.sun.tools.javac.tree.EndPosTable)">getEndPosition(EndPosTable)</a></span> - Method in class com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/IndexedPosition.html" title="class in com.google.errorprone.fixes">IndexedPosition</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/ErrorProneFlags.html#getEnum(java.lang.String,java.lang.Class)">getEnum(String, Class&lt;T&gt;)</a></span> - Method in class com.google.errorprone.<a href="com/google/errorprone/ErrorProneFlags.html" title="class in com.google.errorprone">ErrorProneFlags</a></dt>
@@ -4780,6 +4788,8 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/fixes/AdjustedPosition.html#getPreferredPosition()">getPreferredPosition()</a></span> - Method in class com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/AdjustedPosition.html" title="class in com.google.errorprone.fixes">AdjustedPosition</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/google/errorprone/fixes/FixedPosition.html#getPreferredPosition()">getPreferredPosition()</a></span> - Method in class com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/FixedPosition.html" title="class in com.google.errorprone.fixes">FixedPosition</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/fixes/IndexedPosition.html#getPreferredPosition()">getPreferredPosition()</a></span> - Method in class com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/IndexedPosition.html" title="class in com.google.errorprone.fixes">IndexedPosition</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.html#getPrettyName(com.sun.tools.javac.code.Symbol)">getPrettyName(Symbol)</a></span> - Method in class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety</a></dt>
@@ -4873,6 +4883,8 @@ loadScripts(document, 'script');</script>
 <div class="block">Return the start position of the import statements.</div>
 </dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/fixes/AdjustedPosition.html#getStartPosition()">getStartPosition()</a></span> - Method in class com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/AdjustedPosition.html" title="class in com.google.errorprone.fixes">AdjustedPosition</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/google/errorprone/fixes/FixedPosition.html#getStartPosition()">getStartPosition()</a></span> - Method in class com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/FixedPosition.html" title="class in com.google.errorprone.fixes">FixedPosition</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/fixes/IndexedPosition.html#getStartPosition()">getStartPosition()</a></span> - Method in class com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/IndexedPosition.html" title="class in com.google.errorprone.fixes">IndexedPosition</a></dt>
 <dd>&nbsp;</dd>
@@ -4974,6 +4986,8 @@ loadScripts(document, 'script');</script>
 <div class="block">Returns the list of <code>Tokens.Token</code>s for the given <code>JCTree</code>.</div>
 </dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/fixes/AdjustedPosition.html#getTree()">getTree()</a></span> - Method in class com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/AdjustedPosition.html" title="class in com.google.errorprone.fixes">AdjustedPosition</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/google/errorprone/fixes/FixedPosition.html#getTree()">getTree()</a></span> - Method in class com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/FixedPosition.html" title="class in com.google.errorprone.fixes">FixedPosition</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/fixes/IndexedPosition.html#getTree()">getTree()</a></span> - Method in class com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/IndexedPosition.html" title="class in com.google.errorprone.fixes">IndexedPosition</a></dt>
 <dd>&nbsp;</dd>
@@ -7350,6 +7364,8 @@ loadScripts(document, 'script');</script>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/threadsafety/ImmutableRefactoring.html#matchCompilationUnit(com.sun.source.tree.CompilationUnitTree,com.google.errorprone.VisitorState)">matchCompilationUnit(CompilationUnitTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/ImmutableRefactoring.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ImmutableRefactoring</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/time/StronglyTypeTime.html#matchCompilationUnit(com.sun.source.tree.CompilationUnitTree,com.google.errorprone.VisitorState)">matchCompilationUnit(CompilationUnitTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.time.<a href="com/google/errorprone/bugpatterns/time/StronglyTypeTime.html" title="class in com.google.errorprone.bugpatterns.time">StronglyTypeTime</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/UnicodeEscape.html#matchCompilationUnit(com.sun.source.tree.CompilationUnitTree,com.google.errorprone.VisitorState)">matchCompilationUnit(CompilationUnitTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/UnicodeEscape.html" title="class in com.google.errorprone.bugpatterns">UnicodeEscape</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/UnnecessarilyFullyQualified.html#matchCompilationUnit(com.sun.source.tree.CompilationUnitTree,com.google.errorprone.VisitorState)">matchCompilationUnit(CompilationUnitTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/UnnecessarilyFullyQualified.html" title="class in com.google.errorprone.bugpatterns">UnnecessarilyFullyQualified</a></dt>
 <dd>&nbsp;</dd>
@@ -12160,6 +12176,12 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/google/errorprone/bugpatterns/UngroupedOverloads.html" title="class in com.google.errorprone.bugpatterns"><span class="type-name-link">UngroupedOverloads</span></a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/UngroupedOverloads.html#%3Cinit%3E(com.google.errorprone.ErrorProneFlags)">UngroupedOverloads(ErrorProneFlags)</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/UngroupedOverloads.html" title="class in com.google.errorprone.bugpatterns">UngroupedOverloads</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/bugpatterns/UnicodeEscape.html" title="class in com.google.errorprone.bugpatterns"><span class="type-name-link">UnicodeEscape</span></a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
+<dd>
+<div class="block">Replaces printable ASCII unicode escapes with the literal version.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/UnicodeEscape.html#%3Cinit%3E()">UnicodeEscape()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/UnicodeEscape.html" title="class in com.google.errorprone.bugpatterns">UnicodeEscape</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/refaster/Unifiable.html" title="interface in com.google.errorprone.refaster"><span class="type-name-link">Unifiable</span></a>&lt;<a href="com/google/errorprone/refaster/Unifiable.html" title="type parameter in Unifiable">T</a>&gt; - Interface in <a href="com/google/errorprone/refaster/package-summary.html">com.google.errorprone.refaster</a></dt>
 <dd>
