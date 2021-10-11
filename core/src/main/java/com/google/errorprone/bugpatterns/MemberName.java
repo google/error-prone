@@ -117,7 +117,13 @@ public final class MemberName extends BugChecker implements MethodTreeMatcher, V
     }
     String suggested = suggestedRename(name);
     return suggested.equals(name) || !symbol.isPrivate()
-        ? describeMatch(tree)
+        ? buildDescription(tree)
+            .setMessage(
+                String.format(
+                    "Methods and non-static variables should be named in lowerCamelCase; did you"
+                        + " mean '%s'?",
+                    suggested))
+            .build()
         : describeMatch(tree, renameMethodWithInvocations(tree, suggested, state));
   }
 
