@@ -450,9 +450,7 @@ public class InlinerTest {
             "  protected final void before(int value) {",
             "    after(Duration.ofMillis(value));",
             "  }",
-            // TODO(b/187169365): Validator currently doesn't like inlining non-public members.
-            //   Consider allowing protected members if the method being inlined is also protected?
-            "  public void after(Duration value) {",
+            "  protected void after(Duration value) {",
             "  }",
             "}")
         .expectUnchanged()
@@ -492,9 +490,7 @@ public class InlinerTest {
             "  protected Parent(int value) {",
             "    this(Duration.ofMillis(value));",
             "  }",
-            // TODO(b/187169365): Validator currently doesn't like inlining non-public members.
-            //   Consider allowing protected members if the method being inlined is also protected?
-            "  public Parent(Duration value) {",
+            "  protected Parent(Duration value) {",
             "  }",
             "}")
         .expectUnchanged()
