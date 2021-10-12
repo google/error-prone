@@ -178,6 +178,18 @@ loadScripts(document, 'script');</script>
 <td class="col-last"></td>
 </tr>
 <tr class="row-color">
+<th class="col-deprecated-item-name" scope="row"><a href="com/google/errorprone/bugpatterns/BugChecker.html#describeMatch(com.sun.source.tree.Tree,java.util.Optional)">com.google.errorprone.bugpatterns.BugChecker.describeMatch&#8203;(Tree, Optional&lt;? extends Fix&gt;)</a></th>
+<td class="col-last">
+<div class="deprecation-comment">prefer referring to empty fixes using <a href="com/google/errorprone/fixes/SuggestedFix.html#emptyFix()"><code>SuggestedFix.emptyFix()</code></a>.</div>
+</td>
+</tr>
+<tr class="alt-color">
+<th class="col-deprecated-item-name" scope="row"><a href="com/google/errorprone/bugpatterns/BugChecker.html#describeMatch(com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition,java.util.Optional)">com.google.errorprone.bugpatterns.BugChecker.describeMatch&#8203;(JCDiagnostic.DiagnosticPosition, Optional&lt;? extends Fix&gt;)</a></th>
+<td class="col-last">
+<div class="deprecation-comment">prefer referring to empty fixes using <a href="com/google/errorprone/fixes/SuggestedFix.html#emptyFix()"><code>SuggestedFix.emptyFix()</code></a>.</div>
+</td>
+</tr>
+<tr class="row-color">
 <th class="col-deprecated-item-name" scope="row"><a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.html#isThreadSafeType(java.util.Set,com.sun.tools.javac.code.Type)">com.google.errorprone.bugpatterns.threadsafety.ThreadSafety.isThreadSafeType&#8203;(Set&lt;String&gt;, Type)</a></th>
 <td class="col-last">
 <div class="deprecation-comment">use <a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.html#isThreadSafeType(boolean,java.util.Set,com.sun.tools.javac.code.Type)"><code>ThreadSafety.isThreadSafeType(boolean, Set, Type)</code></a> instead.</div>
@@ -190,18 +202,24 @@ loadScripts(document, 'script');</script>
 </td>
 </tr>
 <tr class="row-color">
+<th class="col-deprecated-item-name" scope="row"><a href="com/google/errorprone/matchers/Description.Builder.html#addFix(java.util.Optional)">com.google.errorprone.matchers.Description.Builder.addFix&#8203;(Optional&lt;? extends Fix&gt;)</a></th>
+<td class="col-last">
+<div class="deprecation-comment">prefer referring to empty fixes using <a href="com/google/errorprone/fixes/SuggestedFix.html#emptyFix()"><code>SuggestedFix.emptyFix()</code></a>.</div>
+</td>
+</tr>
+<tr class="alt-color">
 <th class="col-deprecated-item-name" scope="row"><a href="com/google/errorprone/matchers/Matchers.html#isNonNull()">com.google.errorprone.matchers.Matchers.isNonNull()</a></th>
 <td class="col-last">
 <div class="deprecation-comment">use <a href="com/google/errorprone/matchers/Matchers.html#isNonNullUsingDataflow()"><code>Matchers.isNonNullUsingDataflow()</code></a> instead.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <th class="col-deprecated-item-name" scope="row"><a href="com/google/errorprone/matchers/Matchers.html#isNull()">com.google.errorprone.matchers.Matchers.isNull()</a></th>
 <td class="col-last">
 <div class="deprecation-comment">use <a href="com/google/errorprone/matchers/Matchers.html#isNullUsingDataflow()"><code>Matchers.isNullUsingDataflow()</code></a> instead.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <th class="col-deprecated-item-name" scope="row"><a href="com/google/errorprone/util/ASTHelpers.html#getAnnotation(com.sun.source.tree.Tree,java.lang.Class)">com.google.errorprone.util.ASTHelpers.getAnnotation&#8203;(Tree, Class&lt;T&gt;)</a></th>
 <td class="col-last">
 <div class="deprecation-comment">If <code>annotationClass</code> contains a member that is a <code>Class</code> or an array of
@@ -210,7 +228,7 @@ loadScripts(document, 'script');</script>
      meta-syntactically inspect the annotation.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <th class="col-deprecated-item-name" scope="row"><a href="com/google/errorprone/util/ASTHelpers.html#getAnnotation(com.sun.tools.javac.code.Symbol,java.lang.Class)">com.google.errorprone.util.ASTHelpers.getAnnotation&#8203;(Symbol, Class&lt;T&gt;)</a></th>
 <td class="col-last">
 <div class="deprecation-comment">If <code>annotationClass</code> contains a member that is a <code>Class</code> or an array of

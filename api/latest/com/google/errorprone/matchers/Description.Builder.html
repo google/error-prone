@@ -15,8 +15,8 @@
 <script type="text/javascript" src="../../../../script-dir/jquery-ui.min.js"></script>
 </head>
 <body class="class-declaration-page">
-<script type="text/javascript">var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10};
-var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
+<script type="text/javascript">var data = {"i0":10,"i1":10,"i2":42,"i3":10,"i4":10,"i5":10};
+var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"],32:["t6","Deprecated Methods"]};
 var altColor = "alt-color";
 var rowColor = "row-color";
 var tableTab = "table-tab";
@@ -96,7 +96,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <section class="method-summary" id="method.summary">
 <h2>Method Summary</h2>
 <div class="member-summary" id="method-summary-table">
-<div class="table-tabs" role="tablist" aria-orientation="horizontal"><button role="tab" aria-selected="true" aria-controls="method-summary-table.tabpanel" tabindex="0" onkeydown="switchTab(event)" id="t0" class="active-table-tab">All Methods</button><button role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" id="t2" class="table-tab" onclick="show(2);">Instance Methods</button><button role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" id="t4" class="table-tab" onclick="show(8);">Concrete Methods</button></div>
+<div class="table-tabs" role="tablist" aria-orientation="horizontal"><button role="tab" aria-selected="true" aria-controls="method-summary-table.tabpanel" tabindex="0" onkeydown="switchTab(event)" id="t0" class="active-table-tab">All Methods</button><button role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" id="t2" class="table-tab" onclick="show(2);">Instance Methods</button><button role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" id="t4" class="table-tab" onclick="show(8);">Concrete Methods</button><button role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" id="t6" class="table-tab" onclick="show(32);">Deprecated Methods</button></div>
 <div id="method-summary-table.tabpanel" role="tabpanel">
 <table class="summary-table" aria-labelledby="t0">
 <thead>
@@ -125,7 +125,9 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <td class="col-first"><code><a href="Description.Builder.html" title="class in com.google.errorprone.matchers">Description.Builder</a></code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#addFix(java.util.Optional)">addFix</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;? extends <a href="../fixes/Fix.html" title="interface in com.google.errorprone.fixes">Fix</a>&gt;&nbsp;fix)</code></th>
 <td class="col-last">
-<div class="block">Adds a suggested fix for this <code>Description</code> if <code>fix</code> is present.</div>
+<div class="block"><span class="deprecated-label">Deprecated.</span>
+<div class="deprecation-comment">prefer referring to empty fixes using <a href="../fixes/SuggestedFix.html#emptyFix()"><code>SuggestedFix.emptyFix()</code></a>.</div>
+</div>
 </td>
 </tr>
 <tr class="row-color" id="i3">
@@ -182,7 +184,11 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <li>
 <section class="detail" id="addFix(java.util.Optional)">
 <h3>addFix</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="Description.Builder.html" title="class in com.google.errorprone.matchers">Description.Builder</a></span>&nbsp;<span class="member-name">addFix</span>&#8203;(<span class="parameters"><a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;? extends <a href="../fixes/Fix.html" title="interface in com.google.errorprone.fixes">Fix</a>&gt;&nbsp;fix)</span></div>
+<div class="member-signature"><span class="annotations"><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Deprecated.html" title="class or interface in java.lang" class="external-link">@Deprecated</a>
+</span><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="Description.Builder.html" title="class in com.google.errorprone.matchers">Description.Builder</a></span>&nbsp;<span class="member-name">addFix</span>&#8203;(<span class="parameters"><a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;? extends <a href="../fixes/Fix.html" title="interface in com.google.errorprone.fixes">Fix</a>&gt;&nbsp;fix)</span></div>
+<div class="deprecation-block"><span class="deprecated-label">Deprecated.</span>
+<div class="deprecation-comment">prefer referring to empty fixes using <a href="../fixes/SuggestedFix.html#emptyFix()"><code>SuggestedFix.emptyFix()</code></a>.</div>
+</div>
 <div class="block">Adds a suggested fix for this <code>Description</code> if <code>fix</code> is present. Fixes should be
  added in order of decreasing preference. Adding an empty fix is a no-op.</div>
 <dl class="notes">
