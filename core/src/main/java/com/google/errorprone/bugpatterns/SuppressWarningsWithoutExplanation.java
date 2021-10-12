@@ -43,7 +43,6 @@ import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.LineMap;
 import com.sun.source.tree.Tree;
 import com.sun.tools.javac.parser.Tokens.Comment;
-import java.util.Optional;
 
 /**
  * Finds occurrences of {@code @SuppressWarnings} where there is definitely no explanation for why
@@ -103,8 +102,8 @@ public final class SuppressWarningsWithoutExplanation extends BugChecker
               describeMatch(
                   annotationTree,
                   emitDummyFixes
-                      ? Optional.of(SuggestedFix.postfixWith(annotationTree, " // Safe because..."))
-                      : Optional.empty()));
+                      ? SuggestedFix.postfixWith(annotationTree, " // Safe because...")
+                      : SuggestedFix.emptyFix()));
         }
         return super.visitAnnotation(annotationTree, null);
       }

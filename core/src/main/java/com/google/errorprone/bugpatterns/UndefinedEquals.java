@@ -103,7 +103,9 @@ public final class UndefinedEquals extends BugChecker implements MethodInvocatio
             b ->
                 buildDescription(tree)
                     .setMessage(b.shortName() + " does not have well-defined equals behavior.")
-                    .addFix(generateFix(tree, state, receiver, argument))
+                    .addFix(
+                        generateFix(tree, state, receiver, argument)
+                            .orElse(SuggestedFix.emptyFix()))
                     .build())
         .orElse(Description.NO_MATCH);
   }

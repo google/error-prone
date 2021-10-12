@@ -23,6 +23,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.VariableTreeMatcher;
+import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
 import com.sun.source.tree.VariableTree;
@@ -42,7 +43,10 @@ public class TransientMisuse extends BugChecker implements VariableTreeMatcher {
     if (tree.getModifiers()
         .getFlags()
         .containsAll(ImmutableList.of(Modifier.STATIC, Modifier.TRANSIENT))) {
-      return describeMatch(tree, SuggestedFixes.removeModifiers(tree, state, Modifier.TRANSIENT));
+      return describeMatch(
+          tree,
+          SuggestedFixes.removeModifiers(tree, state, Modifier.TRANSIENT)
+              .orElse(SuggestedFix.emptyFix()));
     }
     return Description.NO_MATCH;
   }

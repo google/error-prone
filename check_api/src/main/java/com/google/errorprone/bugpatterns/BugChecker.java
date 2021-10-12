@@ -25,6 +25,7 @@ import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.annotations.CheckReturnValue;
 import com.google.errorprone.fixes.Fix;
+import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Suppressible;
 import com.google.errorprone.suppliers.Supplier;
@@ -164,16 +165,26 @@ public abstract class BugChecker implements Suppressible, Serializable {
     return buildDescription(node).build();
   }
 
-  /** Helper to create a Description for the common case where there is an {@link Optional} fix. */
+  /**
+   * Helper to create a Description for the common case where there is an {@link Optional} fix.
+   *
+   * @deprecated prefer referring to empty fixes using {@link SuggestedFix#emptyFix()}.
+   */
   @CheckReturnValue
+  @Deprecated
   protected Description describeMatch(Tree node, Optional<? extends Fix> fix) {
-    return buildDescription(node).addFix(fix).build();
+    return describeMatch(node, fix.map(f -> (Fix) f).orElse(SuggestedFix.emptyFix()));
   }
 
-  /** Helper to create a Description for the common case where there is an {@link Optional} fix. */
+  /**
+   * Helper to create a Description for the common case where there is an {@link Optional} fix.
+   *
+   * @deprecated prefer referring to empty fixes using {@link SuggestedFix#emptyFix()}.
+   */
   @CheckReturnValue
+  @Deprecated
   protected Description describeMatch(DiagnosticPosition position, Optional<? extends Fix> fix) {
-    return buildDescription(position).addFix(fix).build();
+    return describeMatch(position, fix.map(f -> (Fix) f).orElse(SuggestedFix.emptyFix()));
   }
 
   /**

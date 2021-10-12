@@ -24,6 +24,7 @@ import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.StandardTags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
+import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
@@ -80,6 +81,8 @@ public class ClassCanBeStatic extends BugChecker implements ClassTreeMatcher {
     if (tree.getMembers().stream().anyMatch(m -> hasAnnotation(m, REFASTER_ANNOTATION, state))) {
       return NO_MATCH;
     }
-    return describeMatch(tree, SuggestedFixes.addModifiers(tree, state, Modifier.STATIC));
+    return describeMatch(
+        tree,
+        SuggestedFixes.addModifiers(tree, state, Modifier.STATIC).orElse(SuggestedFix.emptyFix()));
   }
 }

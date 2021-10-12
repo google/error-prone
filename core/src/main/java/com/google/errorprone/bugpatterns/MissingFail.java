@@ -232,7 +232,10 @@ public class MissingFail extends BugChecker implements TryTreeMatcher {
       Optional<Fix> assertThrowsFix =
           AssertThrowsUtils.tryFailToAssertThrows(tree, tryStatements, Optional.empty(), state);
       Fix failFix = addFailCall(tree, lastTryStatement, state);
-      return buildDescription(lastTryStatement).addFix(assertThrowsFix).addFix(failFix).build();
+      return buildDescription(lastTryStatement)
+          .addFix(assertThrowsFix.orElse(SuggestedFix.emptyFix()))
+          .addFix(failFix)
+          .build();
     } else {
       return Description.NO_MATCH;
     }

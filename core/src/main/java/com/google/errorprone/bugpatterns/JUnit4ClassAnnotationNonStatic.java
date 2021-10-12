@@ -28,6 +28,7 @@ import static com.google.errorprone.matchers.Matchers.isType;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
+import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.MultiMatcher;
@@ -62,7 +63,9 @@ public class JUnit4ClassAnnotationNonStatic extends BugChecker implements Method
 
     return buildDescription(tree)
         .setMessage(messageForAnnos(matchResult.matchingNodes()))
-        .addFix(SuggestedFixes.addModifiers(tree, state, Modifier.STATIC))
+        .addFix(
+            SuggestedFixes.addModifiers(tree, state, Modifier.STATIC)
+                .orElse(SuggestedFix.emptyFix()))
         .build();
   }
 

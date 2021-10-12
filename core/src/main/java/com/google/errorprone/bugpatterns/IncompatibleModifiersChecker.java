@@ -25,6 +25,7 @@ import com.google.common.collect.Sets;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.AnnotationTreeMatcher;
+import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
@@ -99,7 +100,9 @@ public class IncompatibleModifiersChecker extends BugChecker implements Annotati
             "%s has specified that it should not be used together with the following modifiers: %s",
             nameString, incompatible);
     return buildDescription(tree)
-        .addFix(SuggestedFixes.removeModifiers((ModifiersTree) parent, state, incompatible))
+        .addFix(
+            SuggestedFixes.removeModifiers((ModifiersTree) parent, state, incompatible)
+                .orElse(SuggestedFix.emptyFix()))
         .setMessage(message)
         .build();
   }

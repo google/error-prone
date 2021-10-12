@@ -83,6 +83,6 @@ public class TryFailRefactoring extends BugChecker implements TryTreeMatcher {
     Optional<Tree> message = Optional.ofNullable(Iterables.get(failArgs, 0, null));
     Optional<Fix> fix =
         AssertThrowsUtils.tryFailToAssertThrows(tree, throwingStatements, message, state);
-    return fix.isPresent() ? describeMatch(tree, fix) : NO_MATCH;
+    return fix.map(f -> describeMatch(tree, f)).orElse(NO_MATCH);
   }
 }

@@ -26,6 +26,7 @@ import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.StandardTags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
+import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
@@ -67,7 +68,9 @@ public class UnsynchronizedOverridesSynchronized extends BugChecker implements M
           return NO_MATCH;
         }
         return buildDescription(methodTree)
-            .addFix(SuggestedFixes.addModifiers(methodTree, state, Modifier.SYNCHRONIZED))
+            .addFix(
+                SuggestedFixes.addModifiers(methodTree, state, Modifier.SYNCHRONIZED)
+                    .orElse(SuggestedFix.emptyFix()))
             .setMessage(
                 String.format(
                     "Unsynchronized method %s overrides synchronized method in %s",

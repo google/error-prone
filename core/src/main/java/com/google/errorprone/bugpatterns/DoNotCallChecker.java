@@ -163,7 +163,9 @@ public class DoNotCallChecker extends BugChecker
       }
       return buildDescription(tree)
           .setMessage("Methods annotated with @DoNotCall should be final or static.")
-          .addFix(SuggestedFixes.addModifiers(tree, state, Modifier.FINAL))
+          .addFix(
+              SuggestedFixes.addModifiers(tree, state, Modifier.FINAL)
+                  .orElse(SuggestedFix.emptyFix()))
           .build();
     }
     return findSuperMethods(symbol, state.getTypes()).stream()
