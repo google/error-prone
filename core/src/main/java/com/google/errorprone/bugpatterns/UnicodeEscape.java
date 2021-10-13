@@ -59,6 +59,9 @@ public final class UnicodeEscape extends BugChecker implements CompilationUnitTr
     public void scan() {
       for (; position < source.length(); processCharacter()) {
         if (isUnicode && isBanned(currentCharacter)) {
+          if (currentCharacter == '\\' && peek() == 'u') {
+            continue;
+          }
           state.reportMatch(
               describeMatch(
                   new FixedPosition(state.getPath().getCompilationUnit(), position),
@@ -96,6 +99,11 @@ public final class UnicodeEscape extends BugChecker implements CompilationUnitTr
       if (position < source.length()) {
         currentCharacter = source.charAt(position);
       }
+    }
+
+    /** Returns the next character, or {@code 0} if we're at the end of the file. */
+    private char peek() {
+      return position + 1 < source.length() ? source.charAt(position + 1) : 0;
     }
   }
 

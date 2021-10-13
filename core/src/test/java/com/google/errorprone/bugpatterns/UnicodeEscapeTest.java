@@ -121,4 +121,15 @@ public final class UnicodeEscapeTest {
         .addOutputLines("A.java", "class A{}")
         .doTest(TEXT_MATCH);
   }
+
+  @Test
+  public void escapedLiteralBackslashU() {
+    refactoring
+        .addInputLines(
+            "A.java", //
+            "/** \\u005Cu */",
+            "class A {}")
+        .expectUnchanged()
+        .doTest(TEXT_MATCH);
+  }
 }
