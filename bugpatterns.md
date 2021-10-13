@@ -1400,6 +1400,9 @@ Implementing a functional interface is unnecessary; prefer to implement the func
 __[UnnecessaryDefaultInEnumSwitch](bugpattern/UnnecessaryDefaultInEnumSwitch)__<br>
 Switch handles all enum values: an explicit default case is unnecessary and defeats error checking for non-exhaustive switches.
 
+__[UnnecessaryFinal](bugpattern/UnnecessaryFinal)__<br>
+Since Java 8, it&#39;s been unnecessary to make local variables and parameters `final` for use in lambdas or anonymous classes. Marking them as `final` is weakly discouraged, as it adds a fair amount of noise for minimal benefit.
+
 __[UnnecessaryOptionalGet](bugpattern/UnnecessaryOptionalGet)__<br>
 This code can be simplified by directly using the lambda parameters instead of calling get..() on optional.
 
