@@ -102,16 +102,24 @@ public class DoNotCallCheckerTest {
 
   private CompilationTestHelper testHelperWithImmutableList() {
     // Stub out an ImmutableList with the annotations we need for testing.
-    return testHelper.addSourceLines(
-        "ImmutableList.java",
-        "import com.google.errorprone.annotations.DoNotCall;",
-        "import java.util.List;",
-        "interface ImmutableList<T> extends List<T> {",
-        "  @DoNotCall @Override boolean add(T t);",
-        "  static <T> ImmutableList<T> of() {",
-        "    return null;",
-        "  }",
-        "}");
+    return testHelper
+        .addSourceLines(
+            "ImmutableCollection.java",
+            "import com.google.errorprone.annotations.DoNotCall;",
+            "import java.util.List;",
+            "abstract class ImmutableCollection<T> implements java.util.Collection<T> {",
+            "  @DoNotCall @Override public final boolean add(T t) { throw new"
+                + " UnsupportedOperationException(); }",
+            "}")
+        .addSourceLines(
+            "ImmutableList.java",
+            "import com.google.errorprone.annotations.DoNotCall;",
+            "import java.util.List;",
+            "abstract class ImmutableList<T> extends ImmutableCollection<T> implements List<T> {",
+            "  public static <T> ImmutableList<T> of() {",
+            "    return null;",
+            "  }",
+            "}");
   }
 
   @Test
@@ -544,6 +552,21 @@ public class DoNotCallCheckerTest {
             "  public void foo() {",
             "    // BUG: Diagnostic contains: DoNotCall",
             "    Thread.currentThread().stop(new Throwable());",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void typeArgs_dontCrash() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.util.List;",
+            "class Test<T extends java.util.Collection<Object>> {",
+            "  @Override public boolean equals(Object o) {",
+            "    T foo = (T) o;",
+            "    return foo.equals(1);",
             "  }",
             "}")
         .doTest();
