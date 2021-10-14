@@ -18,7 +18,7 @@ package com.google.errorprone.bugpatterns.nullness;
 
 import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
-import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.fixByAddingNullableAnnotation;
+import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.fixByAddingNullableAnnotationToReturnType;
 import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.hasDefinitelyNullBranch;
 import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.isVoid;
 import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.varsProvenNullByParentIf;
@@ -241,7 +241,8 @@ public class ReturnMissingNullable extends BugChecker implements CompilationUnit
           state.reportMatch(
               describeMatch(
                   returnTree,
-                  fixByAddingNullableAnnotation(state.withPath(getCurrentPath()), methodTree)));
+                  fixByAddingNullableAnnotationToReturnType(
+                      state.withPath(getCurrentPath()), methodTree)));
         }
       }
     }.scan(tree, null);

@@ -17,7 +17,7 @@
 package com.google.errorprone.bugpatterns.nullness;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
-import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.fixByAddingNullableAnnotation;
+import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.fixByPrefixingWithNullableAnnotation;
 import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.hasNoExplicitType;
 import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.isVoid;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
@@ -135,6 +135,7 @@ public class VoidMissingNullable extends BugChecker
      * Or run this refactoring as part of a suite that migrates from existing annotations to
      * type-use annotations? For now, we rely on users to patch things up.
      */
-    return describeMatch(treeToAnnotate, fixByAddingNullableAnnotation(state, treeToAnnotate));
+    return describeMatch(
+        treeToAnnotate, fixByPrefixingWithNullableAnnotation(state, treeToAnnotate));
   }
 }

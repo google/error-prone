@@ -16,6 +16,8 @@
 
 package com.google.errorprone.bugpatterns.nullness;
 
+import static com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH;
+
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
 import org.junit.Test;
@@ -242,6 +244,22 @@ public class ReturnMissingNullableTest {
             "  Object get() {",
             "    // BUG: Diagnostic contains: @Nullable",
             "    return nullObject;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void testTypeAnnotatedArrayElement() {
+    createAggressiveCompilationTestHelper()
+        .addSourceLines(
+            "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
+            "package com.google.errorprone.bugpatterns.nullness;",
+            "import org.checkerframework.checker.nullness.qual.Nullable;",
+            "public class LiteralNullReturnTest {",
+            "  @Nullable String[] getMessage(boolean b, String[] s) {",
+            "    // BUG: Diagnostic contains: @Nullable",
+            "    return b ? s : null;",
             "  }",
             "}")
         .doTest();
@@ -562,6 +580,52 @@ public class ReturnMissingNullableTest {
             "public class TypeAnnoReturnTest {",
             "  public @com.google.anno.my.Nullable String getMessage() {",
             "    return null;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void testNegativeCases_alreadyDeclarationAnnotatedArray() {
+    createAggressiveCompilationTestHelper()
+        .addSourceLines(
+            "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
+            "package com.google.errorprone.bugpatterns.nullness;",
+            "import javax.annotation.Nullable;",
+            "public class LiteralNullReturnTest {",
+            "  @Nullable",
+            "  String[] getMessage(boolean b, String[] s) {",
+            "    return b ? s : null;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void testNegativeCases_alreadyTypeAnnotatedArray() {
+    createAggressiveCompilationTestHelper()
+        .addSourceLines(
+            "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
+            "package com.google.errorprone.bugpatterns.nullness;",
+            "import org.checkerframework.checker.nullness.qual.Nullable;",
+            "public class LiteralNullReturnTest {",
+            "  String @Nullable [] getMessage(boolean b, String[] s) {",
+            "    return b ? s : null;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void testNegativeCases_alreadyTypeAnnotatedMemberSelect() {
+    createAggressiveCompilationTestHelper()
+        .addSourceLines(
+            "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
+            "package com.google.errorprone.bugpatterns.nullness;",
+            "import org.checkerframework.checker.nullness.qual.Nullable;",
+            "public class LiteralNullReturnTest {",
+            "  java.lang.@Nullable String getMessage(boolean b) {",
+            "    return b ? \"\" : null;",
             "  }",
             "}")
         .doTest();
@@ -1165,6 +1229,158 @@ public class ReturnMissingNullableTest {
   }
 
   @Test
+  public void testMemberSelectReturnType() {
+    createRefactoringTestHelper()
+        .addInputLines(
+            "in/Test.java",
+            "import org.checkerframework.checker.nullness.qual.Nullable;",
+            "class T {",
+            "  java.lang.Object method(boolean b) {",
+            "    if (b) {",
+            "      return null;",
+            "    } else {",
+            "      return null;",
+            "    }",
+            "  }",
+            "}")
+        .addOutputLines(
+            "out/Test.java",
+            "import org.checkerframework.checker.nullness.qual.Nullable;",
+            "class T {",
+            "  java.lang.@Nullable Object method(boolean b) {",
+            "    if (b) {",
+            "      return null;",
+            "    } else {",
+            "      return null;",
+            "    }",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void testAnnotationInsertedAfterModifiers() {
+    createRefactoringTestHelper()
+        .addInputLines(
+            "in/Test.java",
+            "import org.checkerframework.checker.nullness.qual.Nullable;",
+            "class T {",
+            "  final Object method(boolean b) {",
+            "    if (b) {",
+            "      return null;",
+            "    } else {",
+            "      return null;",
+            "    }",
+            "  }",
+            "}")
+        .addOutputLines(
+            "out/Test.java",
+            "import org.checkerframework.checker.nullness.qual.Nullable;",
+            "class T {",
+            "  final @Nullable Object method(boolean b) {",
+            "    if (b) {",
+            "      return null;",
+            "    } else {",
+            "      return null;",
+            "    }",
+            "  }",
+            "}")
+        .doTest(TEXT_MATCH);
+  }
+
+  @Test
+  public void testParameterizedMemberSelectReturnType() {
+    createRefactoringTestHelper()
+        .addInputLines(
+            "in/Test.java",
+            "import org.checkerframework.checker.nullness.qual.Nullable;",
+            "class T {",
+            "  java.util.List<java.lang.Object> method(boolean b) {",
+            "    if (b) {",
+            "      return null;",
+            "    } else {",
+            "      return null;",
+            "    }",
+            "  }",
+            "}")
+        .addOutputLines(
+            "out/Test.java",
+            "import org.checkerframework.checker.nullness.qual.Nullable;",
+            "class T {",
+            "  java.util.@Nullable List<java.lang.Object> method(boolean b) {",
+            "    if (b) {",
+            "      return null;",
+            "    } else {",
+            "      return null;",
+            "    }",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void testAnnotatedMemberSelectReturnType() {
+    createRefactoringTestHelper()
+        .addInputLines(
+            "in/Test.java",
+            "import org.checkerframework.checker.initialization.qual.UnderInitialization;",
+            "import org.checkerframework.checker.nullness.qual.Nullable;",
+            "class T {",
+            "  java.lang.@UnderInitialization Object method(boolean b) {",
+            "    if (b) {",
+            "      return null;",
+            "    } else {",
+            "      return null;",
+            "    }",
+            "  }",
+            "}")
+        .addOutputLines(
+            "out/Test.java",
+            "import org.checkerframework.checker.initialization.qual.UnderInitialization;",
+            "import org.checkerframework.checker.nullness.qual.Nullable;",
+            "class T {",
+            "  java.lang.@Nullable @UnderInitialization Object method(boolean b) {",
+            "    if (b) {",
+            "      return null;",
+            "    } else {",
+            "      return null;",
+            "    }",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void testAnnotationNotNamedNullable() {
+    createRefactoringTestHelper()
+        .setArgs("-XepOpt:Nullness:DefaultNullnessAnnotation=javax.annotation.CheckForNull")
+        .addInputLines(
+            "in/Test.java",
+            "class T {",
+            "  Object method(boolean b) {",
+            "    if (b) {",
+            "      return null;",
+            "    } else {",
+            "      return null;",
+            "    }",
+            "  }",
+            "}")
+        .addOutputLines(
+            "out/Test.java",
+            "import javax.annotation.CheckForNull;",
+            "class T {",
+            "  @CheckForNull Object method(boolean b) {",
+            "    if (b) {",
+            "      return null;",
+            "    } else {",
+            "      return null;",
+            "    }",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void testAggressive_onlyStatementIsNullReturn() {
     createAggressiveCompilationTestHelper()
         .addSourceLines(
@@ -1180,15 +1396,72 @@ public class ReturnMissingNullableTest {
   }
 
   @Test
-  public void testAggressive_array() {
-    createAggressiveCompilationTestHelper()
-        .addSourceLines(
-            "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
+  public void testAggressive_arrayDeclaration() {
+    createAggressiveRefactoringTestHelper()
+        .addInputLines(
+            "in/com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
             "package com.google.errorprone.bugpatterns.nullness;",
+            "import javax.annotation.Nullable;",
             "public class LiteralNullReturnTest {",
             "  public String[] getMessage(boolean b) {",
-            "    // BUG: Diagnostic contains: @Nullable",
             "    return b ? null : new String[0];",
+            "  }",
+            "}")
+        .addOutputLines(
+            "out/com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
+            "package com.google.errorprone.bugpatterns.nullness;",
+            "import javax.annotation.Nullable;",
+            "public class LiteralNullReturnTest {",
+            "  @Nullable public String[] getMessage(boolean b) {",
+            "    return b ? null : new String[0];",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void testAggressive_arrayTypeUse() {
+    createAggressiveRefactoringTestHelper()
+        .addInputLines(
+            "in/com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
+            "package com.google.errorprone.bugpatterns.nullness;",
+            "import org.checkerframework.checker.nullness.qual.Nullable;",
+            "public class LiteralNullReturnTest {",
+            "  public String[] getMessage(boolean b) {",
+            "    return b ? null : new String[0];",
+            "  }",
+            "}")
+        .addOutputLines(
+            "out/com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
+            "package com.google.errorprone.bugpatterns.nullness;",
+            "import org.checkerframework.checker.nullness.qual.Nullable;",
+            "public class LiteralNullReturnTest {",
+            "  public String @Nullable [] getMessage(boolean b) {",
+            "    return b ? null : new String[0];",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void testAggressive_arrayTypeUseTwoDimensional() {
+    createAggressiveRefactoringTestHelper()
+        .addInputLines(
+            "in/com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
+            "package com.google.errorprone.bugpatterns.nullness;",
+            "import org.checkerframework.checker.nullness.qual.Nullable;",
+            "public class LiteralNullReturnTest {",
+            "  public String[][] getMessage(boolean b, String[][] s) {",
+            "    return b ? null : s;",
+            "  }",
+            "}")
+        .addOutputLines(
+            "out/com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
+            "package com.google.errorprone.bugpatterns.nullness;",
+            "import org.checkerframework.checker.nullness.qual.Nullable;",
+            "public class LiteralNullReturnTest {",
+            "  public String @Nullable [][] getMessage(boolean b, String[][] s) {",
+            "    return b ? null : s;",
             "  }",
             "}")
         .doTest();
@@ -1237,5 +1510,9 @@ public class ReturnMissingNullableTest {
 
   private BugCheckerRefactoringTestHelper createRefactoringTestHelper() {
     return BugCheckerRefactoringTestHelper.newInstance(ReturnMissingNullable.class, getClass());
+  }
+
+  private BugCheckerRefactoringTestHelper createAggressiveRefactoringTestHelper() {
+    return createRefactoringTestHelper().setArgs("-XepOpt:Nullness:Conservative=false");
   }
 }
