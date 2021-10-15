@@ -21,6 +21,7 @@ import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.NullCheck
 import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.NullCheck.Polarity.IS_NULL;
 import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.NullableAnnotationToUse.annotationToBeImported;
 import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.NullableAnnotationToUse.annotationWithoutImporting;
+import static com.google.errorprone.fixes.SuggestedFix.emptyFix;
 import static com.google.errorprone.suppliers.Suppliers.JAVA_LANG_VOID_TYPE;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
@@ -82,8 +83,12 @@ class NullnessUtils {
   static SuggestedFix fixByAddingNullableAnnotationToReturnType(
       VisitorState state, MethodTree method) {
     NullableAnnotationToUse nullableAnnotationToUse = pickNullableAnnotation(state);
+    if (!nullableAnnotationToUse.isAlreadyInScope() && applyOnlyIfAlreadyInScope(state)) {
+      return emptyFix();
+    }
+
     if (!nullableAnnotationToUse.isTypeUse()) {
-      return fixByPrefixingWithNullableAnnotation(method, nullableAnnotationToUse);
+      return nullableAnnotationToUse.fixPrefixingOnto(method);
     }
 
     Tree returnType = method.getReturnType();
@@ -97,7 +102,7 @@ class NullnessUtils {
             beforeBrackets.getKind() == ARRAY_TYPE;
             beforeBrackets = ((ArrayTypeTree) beforeBrackets).getType()) {}
         // For an explanation of "int @Foo [][] f," etc., see JLS 4.11.
-        return fixByPostfixingWithNullableAnnotation(beforeBrackets, nullableAnnotationToUse);
+        return nullableAnnotationToUse.fixPostfixingOnto(beforeBrackets);
 
       case MEMBER_SELECT:
         int lastDot =
@@ -106,14 +111,14 @@ class NullnessUtils {
                 .findFirst()
                 .get()
                 .pos();
-        return fixByPostfixingWithNullableAnnotation(lastDot, nullableAnnotationToUse);
+        return nullableAnnotationToUse.fixPostfixingOnto(lastDot);
 
       case ANNOTATED_TYPE:
-        return fixByPrefixingWithNullableAnnotation(
-            ((AnnotatedTypeTree) returnType).getAnnotations().get(0), nullableAnnotationToUse);
+        return nullableAnnotationToUse.fixPrefixingOnto(
+            ((AnnotatedTypeTree) returnType).getAnnotations().get(0));
 
       case IDENTIFIER:
-        return fixByPrefixingWithNullableAnnotation(returnType, nullableAnnotationToUse);
+        return nullableAnnotationToUse.fixPrefixingOnto(returnType);
 
       default:
         throw new AssertionError(
@@ -131,47 +136,42 @@ class NullnessUtils {
    * above.
    */
   static SuggestedFix fixByPrefixingWithNullableAnnotation(VisitorState state, Tree tree) {
-    return fixByPrefixingWithNullableAnnotation(tree, pickNullableAnnotation(state));
-  }
-
-  /** Returns a {@link SuggestedFix} to add a {@code Nullable} annotation before the given tree. */
-  private static SuggestedFix fixByPrefixingWithNullableAnnotation(
-      Tree tree, NullableAnnotationToUse nullableAnnotationToUse) {
-    return nullableAnnotationToUse
-        .fixBuilderWithImport()
-        .prefixWith(tree, "@" + nullableAnnotationToUse.use() + " ")
-        .build();
-  }
-
-  /** Returns a {@link SuggestedFix} to add a {@code Nullable} annotation after the given tree. */
-  private static SuggestedFix fixByPostfixingWithNullableAnnotation(
-      Tree tree, NullableAnnotationToUse nullableAnnotationToUse) {
-    return nullableAnnotationToUse
-        .fixBuilderWithImport()
-        .postfixWith(tree, " @" + nullableAnnotationToUse.use() + " ")
-        .build();
-  }
-
-  /**
-   * Returns a {@link SuggestedFix} to add a {@code Nullable} annotation after the given position.
-   */
-  private static SuggestedFix fixByPostfixingWithNullableAnnotation(
-      int position, NullableAnnotationToUse nullableAnnotationToUse) {
-    return nullableAnnotationToUse
-        .fixBuilderWithImport()
-        .replace(position + 1, position + 1, " @" + nullableAnnotationToUse.use() + " ")
-        .build();
+    return pickNullableAnnotation(state).fixPrefixingOnto(tree);
   }
 
   @com.google.auto.value.AutoValue // fully qualified to work around JDK-7177813(?) in JDK8 build
   abstract static class NullableAnnotationToUse {
     static NullableAnnotationToUse annotationToBeImported(String qualifiedName, boolean isTypeUse) {
       return new AutoValue_NullnessUtils_NullableAnnotationToUse(
-          qualifiedName, qualifiedName.replaceFirst(".*[.]", ""), isTypeUse);
+          qualifiedName,
+          qualifiedName.replaceFirst(".*[.]", ""),
+          isTypeUse,
+          /*isAlreadyInScope=*/ false);
     }
 
-    static NullableAnnotationToUse annotationWithoutImporting(String name, boolean isTypeUse) {
-      return new AutoValue_NullnessUtils_NullableAnnotationToUse(null, name, isTypeUse);
+    static NullableAnnotationToUse annotationWithoutImporting(
+        String name, boolean isTypeUse, boolean isAlreadyInScope) {
+      return new AutoValue_NullnessUtils_NullableAnnotationToUse(
+          null, name, isTypeUse, isAlreadyInScope);
+    }
+
+    /**
+     * Returns a {@link SuggestedFix} to add a {@code Nullable} annotation after the given position.
+     */
+    final SuggestedFix fixPostfixingOnto(int position) {
+      return fixBuilderWithImport().replace(position + 1, position + 1, " @" + use() + " ").build();
+    }
+
+    /** Returns a {@link SuggestedFix} to add a {@code Nullable} annotation after the given tree. */
+    final SuggestedFix fixPostfixingOnto(Tree tree) {
+      return fixBuilderWithImport().postfixWith(tree, " @" + use() + " ").build();
+    }
+
+    /**
+     * Returns a {@link SuggestedFix} to add a {@code Nullable} annotation before the given tree.
+     */
+    final SuggestedFix fixPrefixingOnto(Tree tree) {
+      return fixBuilderWithImport().prefixWith(tree, "@" + use() + " ").build();
     }
 
     @Nullable
@@ -181,7 +181,9 @@ class NullnessUtils {
 
     abstract boolean isTypeUse();
 
-    final SuggestedFix.Builder fixBuilderWithImport() {
+    abstract boolean isAlreadyInScope();
+
+    private SuggestedFix.Builder fixBuilderWithImport() {
       SuggestedFix.Builder builder = SuggestedFix.builder();
       if (importToAdd() != null) {
         builder.addImport(importToAdd());
@@ -222,10 +224,12 @@ class NullnessUtils {
       ClassSymbol classSym = (ClassSymbol) sym;
       if (classSym.isAnnotationType()) {
         // We've got an existing annotation called Nullable. We can use this.
-        return annotationWithoutImporting("Nullable", isTypeUse(classSym.className()));
+        return annotationWithoutImporting(
+            "Nullable", isTypeUse(classSym.className()), /*isAlreadyInScope=*/ true);
       } else {
         // It's not an annotation type. We have to fully-qualify the import.
-        return annotationWithoutImporting(defaultType, isTypeUse(defaultType));
+        return annotationWithoutImporting(
+            defaultType, isTypeUse(defaultType), /*isAlreadyInScope=*/ false);
       }
     }
     // There is no symbol already. Import and use.
@@ -459,5 +463,13 @@ class NullnessUtils {
       return (VariableTree) declPath.getLeaf();
     }
     return null;
+  }
+
+  private static boolean applyOnlyIfAlreadyInScope(VisitorState state) {
+    return state
+        .errorProneOptions()
+        .getFlags()
+        .getBoolean("Nullness:OnlyIfAnnotationAlreadyInScope")
+        .orElse(false);
   }
 }

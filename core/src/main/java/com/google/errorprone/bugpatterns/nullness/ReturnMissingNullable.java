@@ -44,6 +44,7 @@ import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.CompilationUnitTreeMatcher;
 import com.google.errorprone.dataflow.nullnesspropagation.Nullness;
 import com.google.errorprone.dataflow.nullnesspropagation.NullnessAnnotations;
+import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.sun.source.tree.BlockTree;
@@ -238,11 +239,12 @@ public class ReturnMissingNullable extends BugChecker implements CompilationUnit
             definitelyNullVars,
             varsProvenNullByParentIf,
             stateForCompilationUnit)) {
-          state.reportMatch(
-              describeMatch(
-                  returnTree,
-                  fixByAddingNullableAnnotationToReturnType(
-                      state.withPath(getCurrentPath()), methodTree)));
+          SuggestedFix fix =
+              fixByAddingNullableAnnotationToReturnType(
+                  state.withPath(getCurrentPath()), methodTree);
+          if (!fix.isEmpty()) {
+            state.reportMatch(describeMatch(returnTree, fix));
+          }
         }
       }
     }.scan(tree, null);

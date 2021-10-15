@@ -417,6 +417,23 @@ public class ReturnMissingNullableTest {
   }
 
   @Test
+  public void testOnlyIfAlreadyInScopeAndItIs() {
+    createCompilationTestHelper()
+        .setArgs("-XepOpt:Nullness:OnlyIfAnnotationAlreadyInScope=true")
+        .addSourceLines(
+            "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
+            "package com.google.errorprone.bugpatterns.nullness;",
+            "import org.checkerframework.checker.nullness.qual.Nullable;",
+            "public class LiteralNullReturnTest {",
+            "  String getMessage(boolean b) {",
+            "    // BUG: Diagnostic contains: @Nullable",
+            "    return b ? \"\" : null;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void testLimitation_staticFinalFieldInitializedLater() {
     createCompilationTestHelper()
         .addSourceLines(
@@ -1137,6 +1154,21 @@ public class ReturnMissingNullableTest {
             "      return o;",
             "    }",
             "    return \"\";",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void testNegativeCases_onlyIfAlreadyInScopeAndItIsNot() {
+    createCompilationTestHelper()
+        .setArgs("-XepOpt:Nullness:OnlyIfAnnotationAlreadyInScope=true")
+        .addSourceLines(
+            "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
+            "package com.google.errorprone.bugpatterns.nullness;",
+            "public class LiteralNullReturnTest {",
+            "  String getMessage(boolean b) {",
+            "    return b ? \"\" : null;",
             "  }",
             "}")
         .doTest();
