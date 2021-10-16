@@ -486,7 +486,7 @@ public class ReturnMissingNullableTest {
   }
 
   @Test
-  public void testLimitationReturnThisXInsideIfNull() {
+  public void testLimitation_returnThisXInsideIfNull() {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
@@ -498,6 +498,42 @@ public class ReturnMissingNullableTest {
             "      return this.o;",
             "    }",
             "    return \"\";",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void testLimitation_alreadyTypeAnnotatedInnerClassMemberSelect() {
+    createCompilationTestHelper()
+        .addSourceLines(
+            "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
+            "package com.google.errorprone.bugpatterns.nullness;",
+            "import org.checkerframework.checker.nullness.qual.Nullable;",
+            "public class LiteralNullReturnTest {",
+            "  class Inner {}",
+            "  LiteralNullReturnTest.@Nullable Inner getMessage(boolean b, Inner i) {",
+            // TODO(b/203207989): Recognize existing @Nullable on inner class.
+            "    // BUG: Diagnostic contains: @Nullable",
+            "    return b ? i : null;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void testLimitation_alreadyTypeAnnotatedInnerClassNonMemberSelect() {
+    createCompilationTestHelper()
+        .addSourceLines(
+            "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
+            "package com.google.errorprone.bugpatterns.nullness;",
+            "import org.checkerframework.checker.nullness.qual.Nullable;",
+            "public class LiteralNullReturnTest {",
+            "  class Inner {}",
+            "  @Nullable Inner getMessage(boolean b, Inner i) {",
+            // TODO(b/203207989): Recognize existing @Nullable on inner class.
+            "    // BUG: Diagnostic contains: @Nullable",
+            "    return b ? i : null;",
             "  }",
             "}")
         .doTest();
