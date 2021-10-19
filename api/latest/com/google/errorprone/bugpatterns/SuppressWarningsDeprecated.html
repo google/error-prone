@@ -15,7 +15,7 @@
 <script type="text/javascript" src="../../../../script-dir/jquery-ui.min.js"></script>
 </head>
 <body class="class-declaration-page">
-<script type="text/javascript">var data = {"i0":10,"i1":10,"i2":10};
+<script type="text/javascript">var data = {"i0":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "alt-color";
 var rowColor = "row-color";
@@ -88,7 +88,8 @@ loadScripts(document, 'script');</script>
 </dl>
 <hr>
 <pre>public class <span class="type-name-label">SuppressWarningsDeprecated</span>
-extends <a href="BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a></pre>
+extends <a href="BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a>
+implements <a href="BugChecker.AnnotationTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.AnnotationTreeMatcher</a></pre>
 <div class="block">Find uses of SuppressWarnings with "deprecated".</div>
 <dl class="notes">
 <dt>Author:</dt>
@@ -148,22 +149,10 @@ extends <a href="BugChecker.html" title="class in com.google.errorprone.bugpatte
 </thead>
 <tbody>
 <tr class="alt-color" id="i0">
-<td class="col-first"><code>protected <a href="../fixes/Fix.html" title="interface in com.google.errorprone.fixes">Fix</a></code></td>
-<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#getSuggestedFix(com.sun.source.tree.AnnotationTree)">getSuggestedFix</a></span>&#8203;(com.sun.source.tree.AnnotationTree&nbsp;annotationTree)</code></th>
-<td class="col-last">&nbsp;</td>
-</tr>
-<tr class="row-color" id="i1">
 <td class="col-first"><code><a href="../matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#matchAnnotation(com.sun.source.tree.AnnotationTree,com.google.errorprone.VisitorState)">matchAnnotation</a></span>&#8203;(com.sun.source.tree.AnnotationTree&nbsp;annotationTree,
 <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
 <td class="col-last">&nbsp;</td>
-</tr>
-<tr class="alt-color" id="i2">
-<td class="col-first"><code>protected void</code></td>
-<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#processSuppressWarningsValues(java.util.List)">processSuppressWarningsValues</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;values)</code></th>
-<td class="col-last">
-<div class="block">Processes the list of SuppressWarnings values in-place when creating a <a href="../fixes/SuggestedFix.html" title="class in com.google.errorprone.fixes"><code>SuggestedFix</code></a>.</div>
-</td>
 </tr>
 </tbody>
 </table>
@@ -208,25 +197,10 @@ extends <a href="BugChecker.html" title="class in com.google.errorprone.bugpatte
 <h3>matchAnnotation</h3>
 <div class="member-signature"><span class="modifiers">public final</span>&nbsp;<span class="return-type"><a href="../matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></span>&nbsp;<span class="member-name">matchAnnotation</span>&#8203;(<span class="parameters">com.sun.source.tree.AnnotationTree&nbsp;annotationTree,
 <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
-</section>
-</li>
-<li>
-<section class="detail" id="processSuppressWarningsValues(java.util.List)">
-<h3>processSuppressWarningsValues</h3>
-<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="member-name">processSuppressWarningsValues</span>&#8203;(<span class="parameters"><a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;values)</span></div>
-<div class="block">Processes the list of SuppressWarnings values in-place when creating a <a href="../fixes/SuggestedFix.html" title="class in com.google.errorprone.fixes"><code>SuggestedFix</code></a>.
- Items may be added, removed or re-ordered as necessary. The initial input are the values in the
- order specified in the code being processed.</div>
 <dl class="notes">
-<dt>Parameters:</dt>
-<dd><code>values</code> - list of suppressed warnings in the order in which they appear in the code</dd>
+<dt>Specified by:</dt>
+<dd><code><a href="BugChecker.AnnotationTreeMatcher.html#matchAnnotation(com.sun.source.tree.AnnotationTree,com.google.errorprone.VisitorState)">matchAnnotation</a></code>&nbsp;in interface&nbsp;<code><a href="BugChecker.AnnotationTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.AnnotationTreeMatcher</a></code></dd>
 </dl>
-</section>
-</li>
-<li>
-<section class="detail" id="getSuggestedFix(com.sun.source.tree.AnnotationTree)">
-<h3>getSuggestedFix</h3>
-<div class="member-signature"><span class="modifiers">protected final</span>&nbsp;<span class="return-type"><a href="../fixes/Fix.html" title="interface in com.google.errorprone.fixes">Fix</a></span>&nbsp;<span class="member-name">getSuggestedFix</span>&#8203;(<span class="parameters">com.sun.source.tree.AnnotationTree&nbsp;annotationTree)</span></div>
 </section>
 </li>
 </ul>
