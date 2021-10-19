@@ -58,11 +58,11 @@ public class SuppressWarningsDeprecatedPositiveCases {
     class Foo {};
   }
 
-  // BUG: Diagnostic contains: @SuppressWarnings("deprecation")
+  // BUG: Diagnostic contains: @SuppressWarnings(value = "deprecation")
   @SuppressWarnings(value = {"deprecated"})
   public static void positiveCase8() {}
 
-  // BUG: Diagnostic contains: @SuppressWarnings("deprecation")
+  // BUG: Diagnostic contains: @SuppressWarnings(value = "deprecation")
   @SuppressWarnings(value = "deprecated")
   public static void positiveCase9() {}
 }
