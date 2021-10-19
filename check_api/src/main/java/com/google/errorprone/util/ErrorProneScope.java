@@ -48,6 +48,11 @@ public final class ErrorProneScope {
     return (Iterable<Symbol>) invoke(getSymbols, maybeAsFilter(predicate));
   }
 
+  @SuppressWarnings("unchecked") // reflection
+  public Iterable<Symbol> getSymbols(Predicate<Symbol> predicate, LookupKind lookupKind) {
+    return (Iterable<Symbol>) invoke(getSymbolsLookupKind, maybeAsFilter(predicate), lookupKind);
+  }
+
   public boolean anyMatch(Predicate<Symbol> predicate) {
     return (boolean) invoke(anyMatch, maybeAsFilter(predicate));
   }
@@ -74,6 +79,9 @@ public final class ErrorProneScope {
       getImpl("getSymbolsByName", Name.class, Predicate.class, LookupKind.class);
 
   private static final Method getSymbols = getImpl("getSymbols", Predicate.class);
+
+  private static final Method getSymbolsLookupKind =
+      getImpl("getSymbols", Predicate.class, LookupKind.class);
 
   private static Method getImpl(String name, Class<?>... parameters) {
     return FILTER_CLASS != null
