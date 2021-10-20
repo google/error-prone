@@ -77,19 +77,15 @@ public final class Inliner extends BugChecker
 
   static final String PREFIX_FLAG = "InlineMe:Prefix";
 
-  static final String ALLOW_BREAKING_CHANGES_FLAG = "InlineMe:AllowBreakingChanges";
-
   private static final String INLINE_ME = "InlineMe";
 
   private static final String VALIDATION_DISABLED = "InlineMeValidationDisabled";
 
   private final ImmutableSet<String> apiPrefixes;
-  private final boolean allowBreakingChanges;
 
   public Inliner(ErrorProneFlags flags) {
     this.apiPrefixes =
         ImmutableSet.copyOf(flags.getSet(PREFIX_FLAG).orElse(ImmutableSet.<String>of()));
-    this.allowBreakingChanges = flags.getBoolean(ALLOW_BREAKING_CHANGES_FLAG).orElse(false);
   }
 
   // TODO(b/163596864): Add support for inlining fields
@@ -252,7 +248,7 @@ public final class Inliner extends BugChecker
 
     // If there are no imports to add, then there's no new dependencies, so we can verify that it
     // compilesWithFix(); if there are new imports to add, then we can't validate that it compiles.
-    if (fix.getImportsToAdd().isEmpty() && !allowBreakingChanges) {
+    if (fix.getImportsToAdd().isEmpty()) {
       return SuggestedFixes.compilesWithFix(fix, state)
           ? describe(tree, fix, api)
           : Description.NO_MATCH;
