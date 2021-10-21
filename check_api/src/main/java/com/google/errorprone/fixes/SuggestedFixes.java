@@ -98,15 +98,18 @@ import com.sun.tools.javac.parser.Tokens.Comment;
 import com.sun.tools.javac.parser.Tokens.TokenKind;
 import com.sun.tools.javac.tree.DCTree;
 import com.sun.tools.javac.tree.DCTree.DCDocComment;
+import com.sun.tools.javac.tree.EndPosTable;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 import com.sun.tools.javac.util.Context;
+import com.sun.tools.javac.util.JCDiagnostic;
 import com.sun.tools.javac.util.Options;
 import com.sun.tools.javac.util.Position;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Target;
+import java.lang.reflect.Method;
 import java.net.JarURLConnection;
 import java.net.URI;
 import java.util.ArrayDeque;
@@ -502,7 +505,25 @@ public final class SuggestedFixes {
         leaf instanceof DCTree.DCEndPosTree, "no end position information for %s", leaf.getKind());
     DCTree.DCEndPosTree<?> node = (DCTree.DCEndPosTree<?>) leaf;
     DCTree.DCDocComment comment = (DCTree.DCDocComment) docPath.getDocComment();
-    fix.replace((int) node.getSourcePosition(comment), node.getEndPos(comment), replacement);
+    fix.replace(
+        node.pos(comment).getStartPosition(), endPosition(node, comment, docPath), replacement);
+  }
+
+  private static int endPosition(
+      DCTree.DCEndPosTree<?> node, DCTree.DCDocComment comment, DocTreePath docPath) {
+    try {
+      Method method = DCTree.DCEndPosTree.class.getMethod("getEndPos", DCTree.DCDocComment.class);
+      return (int) method.invoke(node, comment);
+    } catch (NoSuchMethodException e) {
+      // continue below
+    } catch (ReflectiveOperationException e) {
+      throw new LinkageError(e.getMessage(), e);
+    }
+
+    JCDiagnostic.DiagnosticPosition pos = node.pos(comment);
+    EndPosTable endPositions =
+        ((JCCompilationUnit) docPath.getTreePath().getCompilationUnit()).endPositions;
+    return pos.getEndPosition(endPositions);
   }
 
   /**
