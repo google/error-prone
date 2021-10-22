@@ -52,7 +52,12 @@ import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Attribute;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
+import com.sun.tools.javac.parser.JavaTokenizer;
+import com.sun.tools.javac.parser.ScannerFactory;
+import com.sun.tools.javac.parser.Tokens.Token;
+import com.sun.tools.javac.parser.Tokens.TokenKind;
 import com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition;
+import java.nio.CharBuffer;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -73,19 +78,21 @@ public final class Inliner extends BugChecker
 
   public static final String FINDING_TAG = "JavaInlineMe";
 
+  static final String PREFIX_FLAG = "InlineMe:Prefix";
+  static final String SKIP_COMMENTS_FLAG = "InlineMe:SkipInliningsWithComments";
+
   private static final Splitter PACKAGE_SPLITTER = Splitter.on('.');
 
-  static final String PREFIX_FLAG = "InlineMe:Prefix";
-
   private static final String INLINE_ME = "InlineMe";
-
   private static final String VALIDATION_DISABLED = "InlineMeValidationDisabled";
 
   private final ImmutableSet<String> apiPrefixes;
+  private final boolean skipCallsitesWithComments;
 
   public Inliner(ErrorProneFlags flags) {
     this.apiPrefixes =
         ImmutableSet.copyOf(flags.getSet(PREFIX_FLAG).orElse(ImmutableSet.<String>of()));
+    this.skipCallsitesWithComments = flags.getBoolean(SKIP_COMMENTS_FLAG).orElse(true);
   }
 
   // TODO(b/163596864): Add support for inlining fields
@@ -146,6 +153,10 @@ public final class Inliner extends BugChecker
 
     Api api = Api.create(symbol, state);
     if (!matchesApiPrefixes(api)) {
+      return Description.NO_MATCH;
+    }
+
+    if (skipCallsitesWithComments && stringContainsComments(state.getSourceForNode(tree), state)) {
       return Description.NO_MATCH;
     }
 
@@ -255,6 +266,20 @@ public final class Inliner extends BugChecker
     }
 
     return describe(tree, fix, api);
+  }
+
+  // Implementation borrowed from Refaster's comment-checking code.
+  private static boolean stringContainsComments(String source, VisitorState state) {
+    JavaTokenizer tokenizer =
+        new JavaTokenizer(ScannerFactory.instance(state.context), CharBuffer.wrap(source)) {};
+    for (Token token = tokenizer.readToken();
+        token.kind != TokenKind.EOF;
+        token = tokenizer.readToken()) {
+      if (token.comments != null && !token.comments.isEmpty()) {
+        return true;
+      }
+    }
+    return false;
   }
 
   private static ImmutableList<String> getStrings(Attribute.Compound attribute, String name) {
