@@ -83,19 +83,21 @@ public final class Inliner extends BugChecker
 
   private static final Splitter PACKAGE_SPLITTER = Splitter.on('.');
 
+  private static final String CHECK_FIX_COMPILES = "InlineMe:CheckFixCompiles";
+
   private static final String INLINE_ME = "InlineMe";
   private static final String VALIDATION_DISABLED = "InlineMeValidationDisabled";
 
   private final ImmutableSet<String> apiPrefixes;
   private final boolean skipCallsitesWithComments;
+  private final boolean checkFixCompiles;
 
   public Inliner(ErrorProneFlags flags) {
     this.apiPrefixes =
         ImmutableSet.copyOf(flags.getSet(PREFIX_FLAG).orElse(ImmutableSet.<String>of()));
     this.skipCallsitesWithComments = flags.getBoolean(SKIP_COMMENTS_FLAG).orElse(true);
+    this.checkFixCompiles = flags.getBoolean(CHECK_FIX_COMPILES).orElse(false);
   }
-
-  // TODO(b/163596864): Add support for inlining fields
 
   @Override
   public Description matchNewClass(NewClassTree tree, VisitorState state) {
@@ -257,9 +259,9 @@ public final class Inliner extends BugChecker
 
     SuggestedFix fix = builder.build();
 
-    // If there are no imports to add, then there's no new dependencies, so we can verify that it
-    // compilesWithFix(); if there are new imports to add, then we can't validate that it compiles.
-    if (fix.getImportsToAdd().isEmpty()) {
+    if (checkFixCompiles && fix.getImportsToAdd().isEmpty()) {
+      // If there are no new imports being added (then there are no new dependencies). Therefore, we
+      // can verify that the fix compiles (if CHECK_FIX_COMPILES is enabled).
       return SuggestedFixes.compilesWithFix(fix, state)
           ? describe(tree, fix, api)
           : Description.NO_MATCH;

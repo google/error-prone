@@ -885,7 +885,7 @@ public class InlinerTest {
 
   @Test
   public void testReplaceWithJustParameter() {
-    refactoringTestHelper
+    bugCheckerWithCheckFixCompiles()
         .allowBreakingChanges()
         .addInputLines(
             "Client.java",
@@ -922,7 +922,7 @@ public class InlinerTest {
 
   @Test
   public void testOrderOfOperations() {
-    refactoringTestHelper
+    bugCheckerWithCheckFixCompiles()
         .allowBreakingChanges()
         .addInputLines(
             "Client.java",
@@ -957,7 +957,7 @@ public class InlinerTest {
 
   @Test
   public void testOrderOfOperationsWithParamAddition() {
-    refactoringTestHelper
+    bugCheckerWithCheckFixCompiles()
         .allowBreakingChanges()
         .addInputLines(
             "Client.java",
@@ -992,7 +992,7 @@ public class InlinerTest {
 
   @Test
   public void testOrderOfOperationsWithTrailingOperand() {
-    refactoringTestHelper
+    bugCheckerWithCheckFixCompiles()
         .allowBreakingChanges()
         .addInputLines(
             "Client.java",
@@ -1141,8 +1141,13 @@ public class InlinerTest {
         .doTest();
   }
 
-  private BugCheckerRefactoringTestHelper buildBugCheckerWithPrefixFlag(String prefix) {
+  private BugCheckerRefactoringTestHelper bugCheckerWithPrefixFlag(String prefix) {
     return BugCheckerRefactoringTestHelper.newInstance(Inliner.class, getClass())
         .setArgs("-XepOpt:" + PREFIX_FLAG + "=" + prefix);
+  }
+
+  private BugCheckerRefactoringTestHelper bugCheckerWithCheckFixCompiles() {
+    return BugCheckerRefactoringTestHelper.newInstance(Inliner.class, getClass())
+        .setArgs("-XepOpt:InlineMe:CheckFixCompiles=true");
   }
 }
