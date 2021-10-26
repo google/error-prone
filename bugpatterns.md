@@ -625,6 +625,9 @@ Java classes shouldn&#39;t use default package
 __[DeprecatedVariable](bugpattern/DeprecatedVariable)__<br>
 Applying the @Deprecated annotation to local variables or parameters has no effect
 
+__[DistinctVarargsChecker](bugpattern/DistinctVarargsChecker)__<br>
+Method expects distinct arguments at some/all positions
+
 __[DoNotCallSuggester](bugpattern/DoNotCallSuggester)__<br>
 Consider annotating methods that always throw with @DoNotCall. Read more at https://errorprone.info/bugpattern/DoNotCall
 
