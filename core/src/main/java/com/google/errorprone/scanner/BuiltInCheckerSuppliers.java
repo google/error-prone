@@ -97,6 +97,7 @@ import com.google.errorprone.bugpatterns.DeprecatedVariable;
 import com.google.errorprone.bugpatterns.DescribeMatch;
 import com.google.errorprone.bugpatterns.DifferentNameButSame;
 import com.google.errorprone.bugpatterns.DiscardedPostfixExpression;
+import com.google.errorprone.bugpatterns.DistinctVarargsChecker;
 import com.google.errorprone.bugpatterns.DivZero;
 import com.google.errorprone.bugpatterns.DoNotCallChecker;
 import com.google.errorprone.bugpatterns.DoNotCallSuggester;
@@ -788,6 +789,7 @@ public class BuiltInCheckerSuppliers {
           DefaultCharset.class,
           DefaultPackage.class,
           DeprecatedVariable.class,
+          DistinctVarargsChecker.class,
           DoNotCallSuggester.class,
           DoNotClaimAnnotations.class,
           DoNotMockAutoValue.class,
