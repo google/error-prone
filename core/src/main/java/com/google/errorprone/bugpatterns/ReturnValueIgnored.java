@@ -265,10 +265,19 @@ public class ReturnValueIgnored extends AbstractReturnValueIgnored {
       allOf(not(PRIMITIVE_PARSING_METHODS), PRIMITIVE_NON_PARSING_METHODS);
 
   /**
+   * The return values of {@link java.util.Optional} static methods and some instance methods should
+   * always be checked.
+   */
+  private static final Matcher<ExpressionTree> OPTIONAL_METHODS =
+      anyOf(
+          staticMethod().onClass("java.util.Optional"),
+          instanceMethod().onExactClass("java.util.Optional").namedAnyOf("isEmpty", "isPresent"));
+
+  /**
    * The return values of {@link java.util.Optional} methods should always be checked (except for
    * void-returning ones, which won't be checked by AbstractReturnValueIgnored).
    */
-  private static final Matcher<ExpressionTree> OPTIONAL_METHODS =
+  private static final Matcher<ExpressionTree> MORE_OPTIONAL_METHODS =
       anyMethod().onClass("java.util.Optional");
 
   /**
@@ -347,30 +356,22 @@ public class ReturnValueIgnored extends AbstractReturnValueIgnored {
 
   private static final Matcher<? super ExpressionTree> SPECIALIZED_MATCHER =
       anyOf(
-          // keep-sorted start
-          ARRAYS_METHODS,
-          CHAR_SEQUENCE_METHODS,
-          COLLECTION_METHODS,
-          COLLECTOR_METHODS,
-          ENUM_METHODS,
-          ITERABLE_METHODS,
-          ITERATOR_METHODS,
-          JODA_TIME_METHODS,
-          MAP_ENTRY_METHODS,
-          MAP_METHODS,
-          OBJECTS_METHODS,
-          OPTIONAL_METHODS,
-          PRIMITIVE_METHODS,
-          PROTO_METHODS,
           RETURNS_SAME_TYPE,
           ReturnValueIgnored::functionalMethod,
-          ReturnValueIgnored::javaTimeTypes,
           STREAM_METHODS,
           STRING_METHODS,
-          THROWABLE_METHODS,
-          TIME_UNIT_METHODS
-          // keep-sorted end
-          );
+          PROTO_METHODS,
+          PRIMITIVE_METHODS,
+          ARRAYS_METHODS,
+          OPTIONAL_METHODS,
+          TIME_UNIT_METHODS,
+          ReturnValueIgnored::javaTimeTypes,
+          COLLECTION_METHODS,
+          MAP_METHODS,
+          MAP_ENTRY_METHODS,
+          ITERABLE_METHODS,
+          ITERATOR_METHODS,
+          JODA_TIME_METHODS);
 
   private final Matcher<? super ExpressionTree> matcher;
 
@@ -378,8 +379,14 @@ public class ReturnValueIgnored extends AbstractReturnValueIgnored {
     this.matcher =
         anyOf(
             SPECIALIZED_MATCHER,
+            getMatcher(flags, "ReturnValueIgnored:MoreOptional", MORE_OPTIONAL_METHODS),
             getMatcher(flags, "ReturnValueIgnored:ClassMethods", CLASS_METHODS),
-            getMatcher(flags, "ReturnValueIgnored:ObjectMethods", OBJECT_METHODS));
+            getMatcher(flags, "ReturnValueIgnored:ObjectMethods", OBJECT_METHODS),
+            getMatcher(flags, "ReturnValueIgnored:ObjectsMethods", OBJECTS_METHODS),
+            getMatcher(flags, "ReturnValueIgnored:CharSequenceMethods", CHAR_SEQUENCE_METHODS),
+            getMatcher(flags, "ReturnValueIgnored:EnumMethods", ENUM_METHODS),
+            getMatcher(flags, "ReturnValueIgnored:ThrowableMethods", THROWABLE_METHODS),
+            getMatcher(flags, "ReturnValueIgnored:CollectorMethods", COLLECTOR_METHODS));
   }
 
   private static Matcher<? super ExpressionTree> getMatcher(
