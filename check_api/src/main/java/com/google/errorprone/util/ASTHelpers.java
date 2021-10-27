@@ -45,6 +45,7 @@ import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.TestNgMatchers;
 import com.google.errorprone.suppliers.Supplier;
 import com.google.errorprone.suppliers.Suppliers;
+import com.sun.source.tree.AnnotatedTypeTree;
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.ArrayAccessTree;
 import com.sun.source.tree.AssertTree;
@@ -70,6 +71,7 @@ import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.ModifiersTree;
+import com.sun.source.tree.ModuleTree;
 import com.sun.source.tree.NewArrayTree;
 import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.PackageTree;
@@ -1168,13 +1170,41 @@ public class ASTHelpers {
   public static ModifiersTree getModifiers(Tree tree) {
     if (tree instanceof ClassTree) {
       return ((ClassTree) tree).getModifiers();
-    } else if (tree instanceof MethodTree) {
-      return ((MethodTree) tree).getModifiers();
-    } else if (tree instanceof VariableTree) {
-      return ((VariableTree) tree).getModifiers();
-    } else {
-      return null;
     }
+    if (tree instanceof MethodTree) {
+      return ((MethodTree) tree).getModifiers();
+    }
+    if (tree instanceof VariableTree) {
+      return ((VariableTree) tree).getModifiers();
+    }
+    if (tree instanceof ModifiersTree) {
+      return (ModifiersTree) tree;
+    }
+    return null;
+  }
+
+  /** Returns the annotations of the given tree, or an empty list. */
+  public static List<? extends AnnotationTree> getAnnotations(Tree tree) {
+    if (tree instanceof TypeParameterTree) {
+      return ((TypeParameterTree) tree).getAnnotations();
+    }
+    if (tree instanceof ModuleTree) {
+      return ((ModuleTree) tree).getAnnotations();
+    }
+    if (tree instanceof PackageTree) {
+      return ((PackageTree) tree).getAnnotations();
+    }
+    if (tree instanceof NewArrayTree) {
+      return ((NewArrayTree) tree).getAnnotations();
+    }
+    if (tree instanceof AnnotatedTypeTree) {
+      return ((AnnotatedTypeTree) tree).getAnnotations();
+    }
+    if (tree instanceof ModifiersTree) {
+      return ((ModifiersTree) tree).getAnnotations();
+    }
+    ModifiersTree modifiersTree = getModifiers(tree);
+    return modifiersTree == null ? ImmutableList.of() : modifiersTree.getAnnotations();
   }
 
   /**
