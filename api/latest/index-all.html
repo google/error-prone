@@ -152,7 +152,7 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/refaster/UAnyOf.html#accept(com.sun.source.tree.TreeVisitor,D)">accept(TreeVisitor&lt;R, D&gt;, D)</a></span> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/UAnyOf.html" title="class in com.google.errorprone.refaster">UAnyOf</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="member-name-link"><a href="com/google/errorprone/refaster/UFreeIdent.html#accept(com.sun.source.tree.TreeVisitor,D)">accept(TreeVisitor&lt;R, D&gt;, D)</a></span> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/UFreeIdent.html" title="class in com.google.errorprone.refaster">UFreeIdent</a></dt>
+<dt><span class="member-name-link"><a href="com/google/errorprone/refaster/UStaticIdent.html#accept(com.sun.source.tree.TreeVisitor,D)">accept(TreeVisitor&lt;R, D&gt;, D)</a></span> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/UStaticIdent.html" title="class in com.google.errorprone.refaster">UStaticIdent</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/refaster/ULiteral.html#accept(com.sun.source.tree.TreeVisitor,D)">accept(TreeVisitor&lt;R, D&gt;, D)</a></span> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/ULiteral.html" title="class in com.google.errorprone.refaster">ULiteral</a></dt>
 <dd>&nbsp;</dd>
@@ -1086,6 +1086,12 @@ loadScripts(document, 'script');</script>
 <div class="block">A <a href="com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a> that detects use of the unsafe <a href="https://docs.oracle.com/javase/8/docs/api/java/io/Serializable.html" title="class or interface in java.io" class="external-link"><code>Serializable</code></a> API.</div>
 </dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/BanSerializableRead.html#%3Cinit%3E()">BanSerializableRead()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/BanSerializableRead.html" title="class in com.google.errorprone.bugpatterns">BanSerializableRead</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/bugpatterns/BareDotMetacharacter.html" title="class in com.google.errorprone.bugpatterns"><span class="type-name-link">BareDotMetacharacter</span></a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
+<dd>
+<div class="block">A BugChecker; see the associated BugPattern for details.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/BareDotMetacharacter.html#%3Cinit%3E()">BareDotMetacharacter()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/BareDotMetacharacter.html" title="class in com.google.errorprone.bugpatterns">BareDotMetacharacter</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/threadsafety/GuardedByExpression.Select.html#base()">base()</a></span> - Method in class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/GuardedByExpression.Select.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByExpression.Select</a></dt>
 <dd>&nbsp;</dd>
@@ -4514,7 +4520,7 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/refaster/UAnyOf.html#getKind()">getKind()</a></span> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/UAnyOf.html" title="class in com.google.errorprone.refaster">UAnyOf</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="member-name-link"><a href="com/google/errorprone/refaster/UFreeIdent.html#getKind()">getKind()</a></span> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/UFreeIdent.html" title="class in com.google.errorprone.refaster">UFreeIdent</a></dt>
+<dt><span class="member-name-link"><a href="com/google/errorprone/refaster/UStaticIdent.html#getKind()">getKind()</a></span> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/UStaticIdent.html" title="class in com.google.errorprone.refaster">UStaticIdent</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/refaster/ULiteral.html#getKind()">getKind()</a></span> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/ULiteral.html" title="class in com.google.errorprone.refaster">ULiteral</a></dt>
 <dd>&nbsp;</dd>
@@ -7666,7 +7672,7 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/TypeParameterQualifier.html#matchMemberSelect(com.sun.source.tree.MemberSelectTree,com.google.errorprone.VisitorState)">matchMemberSelect(MemberSelectTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/TypeParameterQualifier.html" title="class in com.google.errorprone.bugpatterns">TypeParameterQualifier</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/JUnit4TearDownNotRun.html#matchMethod(com.sun.source.tree.MethodTree,com.google.errorprone.VisitorState)">matchMethod(MethodTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/JUnit4TearDownNotRun.html" title="class in com.google.errorprone.bugpatterns">JUnit4TearDownNotRun</a></dt>
+<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/JUnit4SetUpNotRun.html#matchMethod(com.sun.source.tree.MethodTree,com.google.errorprone.VisitorState)">matchMethod(MethodTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/JUnit4SetUpNotRun.html" title="class in com.google.errorprone.bugpatterns">JUnit4SetUpNotRun</a></dt>
 <dd>
 <div class="block">Matches if all of the following conditions are true: 1) The method matches <code>AbstractJUnit4InitMethodNotRun.methodMatcher()</code>, (looks like setUp() or tearDown(), and none of the overrides in the
  hierarchy of the method have the appropriate @Before or @After annotations) 2) The method is
@@ -7883,6 +7889,8 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/AbstractMockChecker.html#matchMethodInvocation(com.sun.source.tree.MethodInvocationTree,com.google.errorprone.VisitorState)">matchMethodInvocation(MethodInvocationTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/AbstractMockChecker.html" title="class in com.google.errorprone.bugpatterns">AbstractMockChecker</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/BareDotMetacharacter.html#matchMethodInvocation(com.sun.source.tree.MethodInvocationTree,com.google.errorprone.VisitorState)">matchMethodInvocation(MethodInvocationTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/BareDotMetacharacter.html" title="class in com.google.errorprone.bugpatterns">BareDotMetacharacter</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/AbstractReturnValueIgnored.html#matchMethodInvocation(com.sun.source.tree.MethodInvocationTree,com.google.errorprone.VisitorState)">matchMethodInvocation(MethodInvocationTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/AbstractReturnValueIgnored.html" title="class in com.google.errorprone.bugpatterns">AbstractReturnValueIgnored</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/AbstractToString.html#matchMethodInvocation(com.sun.source.tree.MethodInvocationTree,com.google.errorprone.VisitorState)">matchMethodInvocation(MethodInvocationTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/AbstractToString.html" title="class in com.google.errorprone.bugpatterns">AbstractToString</a></dt>
@@ -8028,8 +8036,6 @@ loadScripts(document, 'script');</script>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/inlineme/Inliner.html#matchMethodInvocation(com.sun.source.tree.MethodInvocationTree,com.google.errorprone.VisitorState)">matchMethodInvocation(MethodInvocationTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.inlineme.<a href="com/google/errorprone/bugpatterns/inlineme/Inliner.html" title="class in com.google.errorprone.bugpatterns.inlineme">Inliner</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/InsecureCipherMode.html#matchMethodInvocation(com.sun.source.tree.MethodInvocationTree,com.google.errorprone.VisitorState)">matchMethodInvocation(MethodInvocationTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/InsecureCipherMode.html" title="class in com.google.errorprone.bugpatterns">InsecureCipherMode</a></dt>
-<dd>&nbsp;</dd>
-<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/InvalidPatternSyntax.html#matchMethodInvocation(com.sun.source.tree.MethodInvocationTree,com.google.errorprone.VisitorState)">matchMethodInvocation(MethodInvocationTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/InvalidPatternSyntax.html" title="class in com.google.errorprone.bugpatterns">InvalidPatternSyntax</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/InvalidTimeZoneID.html#matchMethodInvocation(com.sun.source.tree.MethodInvocationTree,com.google.errorprone.VisitorState)">matchMethodInvocation(MethodInvocationTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/InvalidTimeZoneID.html" title="class in com.google.errorprone.bugpatterns">InvalidTimeZoneID</a></dt>
 <dd>&nbsp;</dd>
@@ -8378,9 +8384,13 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/BugChecker.PrimitiveTypeTreeMatcher.html#matchPrimitiveType(com.sun.source.tree.PrimitiveTypeTree,com.google.errorprone.VisitorState)">matchPrimitiveType(PrimitiveTypeTree, VisitorState)</a></span> - Method in interface com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/BugChecker.PrimitiveTypeTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.PrimitiveTypeTreeMatcher</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/BareDotMetacharacter.html#matchRegexLiteral(com.sun.source.tree.MethodInvocationTree,java.lang.String)">matchRegexLiteral(MethodInvocationTree, String)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/BareDotMetacharacter.html" title="class in com.google.errorprone.bugpatterns">BareDotMetacharacter</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/InvalidPatternSyntax.html#matchRegexLiteral(com.sun.source.tree.MethodInvocationTree,java.lang.String)">matchRegexLiteral(MethodInvocationTree, String)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/InvalidPatternSyntax.html" title="class in com.google.errorprone.bugpatterns">InvalidPatternSyntax</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/collectionincompatibletype/AbstractCollectionIncompatibleTypeMatcher.MatchResult.html#%3Cinit%3E()">MatchResult()</a></span> - Constructor for class com.google.errorprone.bugpatterns.collectionincompatibletype.<a href="com/google/errorprone/bugpatterns/collectionincompatibletype/AbstractCollectionIncompatibleTypeMatcher.MatchResult.html" title="class in com.google.errorprone.bugpatterns.collectionincompatibletype">AbstractCollectionIncompatibleTypeMatcher.MatchResult</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/ReturnsNullCollection.html#matchReturn(com.sun.source.tree.ReturnTree,com.google.errorprone.VisitorState)">matchReturn(ReturnTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/ReturnsNullCollection.html" title="class in com.google.errorprone.bugpatterns">ReturnsNullCollection</a></dt>
+<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/AsyncCallableReturnsNull.html#matchReturn(com.sun.source.tree.ReturnTree,com.google.errorprone.VisitorState)">matchReturn(ReturnTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/AsyncCallableReturnsNull.html" title="class in com.google.errorprone.bugpatterns">AsyncCallableReturnsNull</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/AbstractReturnValueIgnored.html#matchReturn(com.sun.source.tree.ReturnTree,com.google.errorprone.VisitorState)">matchReturn(ReturnTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/AbstractReturnValueIgnored.html" title="class in com.google.errorprone.bugpatterns">AbstractReturnValueIgnored</a></dt>
 <dd>
@@ -10249,7 +10259,7 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/ProtoTruthMixedDescriptors.html#%3Cinit%3E()">ProtoTruthMixedDescriptors()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/ProtoTruthMixedDescriptors.html" title="class in com.google.errorprone.bugpatterns">ProtoTruthMixedDescriptors</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/AsyncFunctionReturnsNull.html#provideFix(com.sun.source.tree.ReturnTree)">provideFix(ReturnTree)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/AsyncFunctionReturnsNull.html" title="class in com.google.errorprone.bugpatterns">AsyncFunctionReturnsNull</a></dt>
+<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/AsyncCallableReturnsNull.html#provideFix(com.sun.source.tree.ReturnTree)">provideFix(ReturnTree)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/AsyncCallableReturnsNull.html" title="class in com.google.errorprone.bugpatterns">AsyncCallableReturnsNull</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/ReturnsNullCollection.html#provideFix(com.sun.source.tree.ReturnTree)">provideFix(ReturnTree)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/ReturnsNullCollection.html" title="class in com.google.errorprone.bugpatterns">ReturnsNullCollection</a></dt>
 <dd>&nbsp;</dd>

@@ -550,6 +550,9 @@ Importing nested classes/static methods/static fields with commonly-used names c
 __[BadInstanceof](bugpattern/BadInstanceof)__<br>
 instanceof used in a way that is equivalent to a null check.
 
+__[BareDotMetacharacter](bugpattern/BareDotMetacharacter)__<br>
+&quot;.&quot; is rarely useful as a regex, as it matches any character. To match a literal &#39;.&#39; character, instead write &quot;\\.&quot;.
+
 __[BigDecimalEquals](bugpattern/BigDecimalEquals)__<br>
 BigDecimal#equals has surprising behavior: it also compares scale.
 
