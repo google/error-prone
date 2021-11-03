@@ -16,13 +16,11 @@
 
 package com.google.errorprone.bugpatterns.testdata;
 
-import com.google.common.base.Splitter;
 import java.util.regex.Pattern;
 
 /** @author mdempsky@google.com (Matthew Dempsky) */
 public class InvalidPatternSyntaxPositiveCases {
   public static final String INVALID = "*";
-  public static final String DOT = ".";
 
   {
     // BUG: Diagnostic contains: Unclosed character class
@@ -44,13 +42,5 @@ public class InvalidPatternSyntaxPositiveCases {
     "".split(INVALID);
     // BUG: Diagnostic contains:
     "".split(INVALID, 0);
-
-    // BUG: Diagnostic contains: "foo.bar".split("\\.")
-    "foo.bar".split(".");
-    // BUG: Diagnostic contains:
-    "foo.bonk".split(DOT);
-
-    // BUG: Diagnostic contains: Splitter.onPattern("\\.")
-    Splitter.onPattern(".");
   }
 }

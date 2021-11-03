@@ -47,6 +47,7 @@ import com.google.errorprone.bugpatterns.BadImport;
 import com.google.errorprone.bugpatterns.BadInstanceof;
 import com.google.errorprone.bugpatterns.BadShiftAmount;
 import com.google.errorprone.bugpatterns.BanSerializableRead;
+import com.google.errorprone.bugpatterns.BareDotMetacharacter;
 import com.google.errorprone.bugpatterns.BigDecimalEquals;
 import com.google.errorprone.bugpatterns.BigDecimalLiteralDouble;
 import com.google.errorprone.bugpatterns.BooleanParameter;
@@ -764,6 +765,7 @@ public class BuiltInCheckerSuppliers {
           BadComparable.class,
           BadImport.class,
           BadInstanceof.class,
+          BareDotMetacharacter.class,
           BigDecimalEquals.class,
           BigDecimalLiteralDouble.class,
           BoxedPrimitiveConstructor.class,
