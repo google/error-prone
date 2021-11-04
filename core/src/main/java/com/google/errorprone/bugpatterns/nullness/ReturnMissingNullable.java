@@ -208,13 +208,6 @@ public class ReturnMissingNullable extends BugChecker implements CompilationUnit
           // Buggy code, but adding @Nullable just makes it worse.
           return;
         }
-        if (beingConservative && state.getTypes().isArray(returnType)) {
-          /*
-           * Type-annotation syntax on arrays can be confusing, and this refactoring doesn't get it
-           * right yet.
-           */
-          return;
-        }
         if (beingConservative && returnType.getKind() == TYPEVAR) {
           /*
            * Consider AbstractFuture.getDoneValue: It returns a literal `null`, but it shouldn't be
