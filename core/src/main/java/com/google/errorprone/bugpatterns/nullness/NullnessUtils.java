@@ -237,7 +237,12 @@ class NullnessUtils {
   }
 
   private static boolean isTypeUse(String className) {
+    /*
+     * TODO(b/205115472): Make this tri-state ({type-use, declaration, both}) and avoid using "both"
+     * annotations in any cases in which they would be ambiguous (e.g., arrays/elements).
+     */
     switch (className) {
+      case "libcore.util.Nullable":
       case "org.checkerframework.checker.nullness.qual.Nullable":
       case "org.jspecify.nullness.Nullable":
         return true;
