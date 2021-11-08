@@ -1364,6 +1364,9 @@ Thrown exception is a subtype of another
 __[StringEquality](bugpattern/StringEquality)__<br>
 String comparison using reference equality instead of value equality
 
+__[StronglyTypeByteString](bugpattern/StronglyTypeByteString)__<br>
+This primitive byte array is only used to construct ByteStrings. It would be clearer to strongly type the field instead.
+
 __[StronglyTypeTime](bugpattern/StronglyTypeTime)__<br>
 This primitive integral type is only used to construct time types. It would be clearer to strongly type the field instead.
 
