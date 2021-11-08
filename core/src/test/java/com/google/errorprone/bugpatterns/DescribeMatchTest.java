@@ -58,6 +58,36 @@ public class DescribeMatchTest {
   }
 
   @Test
+  public void refactoringWithReceiver() {
+    testHelper
+        .addInputLines(
+            "Test.java",
+            "import com.google.errorprone.bugpatterns.BugChecker;",
+            "import com.google.errorprone.fixes.Fix;",
+            "import com.sun.source.tree.Tree;",
+            "import com.google.errorprone.matchers.Description;",
+            "class Test extends BugChecker {",
+            "  Description fix(Tree tree, Fix fix) {",
+            "    return this.buildDescription(tree).addFix(fix).build();",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "import com.google.errorprone.bugpatterns.BugChecker;",
+            "import com.google.errorprone.fixes.Fix;",
+            "import com.sun.source.tree.Tree;",
+            "import com.google.errorprone.matchers.Description;",
+            "class Test extends BugChecker {",
+            "  Description fix(Tree tree, Fix fix) {",
+            "    return this.describeMatch(tree, fix);",
+            "  }",
+            "}")
+        .addModules(
+            "jdk.compiler/com.sun.tools.javac.util", "jdk.compiler/com.sun.tools.javac.tree")
+        .doTest();
+  }
+
+  @Test
   public void noMatchInBugChecker() {
     testHelper
         .addInputLines(

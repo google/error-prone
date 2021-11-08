@@ -21,6 +21,7 @@ import static com.google.common.collect.Streams.stream;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
+import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 
 import com.google.errorprone.BugPattern;
@@ -29,7 +30,6 @@ import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
-import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
@@ -62,21 +62,24 @@ public class DescribeMatch extends BugChecker implements MethodInvocationTreeMat
     if (withinBugChecker(state)) {
       return NO_MATCH;
     }
-    ExpressionTree addFix = ASTHelpers.getReceiver(build);
+    ExpressionTree addFix = getReceiver(build);
     if (!ADD_FIX.matches(addFix, state)) {
       return NO_MATCH;
     }
-    ExpressionTree buildDescription = ASTHelpers.getReceiver(addFix);
+    ExpressionTree buildDescription = getReceiver(addFix);
     if (!BUILD_DESCRIPTION.matches(buildDescription, state)) {
       return NO_MATCH;
     }
+
     return describeMatch(
         build,
         SuggestedFix.replace(
             build,
             String.format(
-                "describeMatch(%s, %s)",
-                getArgument(state, buildDescription), getArgument(state, addFix))));
+                "%sdescribeMatch(%s, %s)",
+                getReceiverSourceAndDotOrBlank(buildDescription, state),
+                getArgumentSource(buildDescription, state),
+                getArgumentSource(addFix, state))));
   }
 
   private static boolean withinBugChecker(VisitorState state) {
@@ -89,7 +92,12 @@ public class DescribeMatch extends BugChecker implements MethodInvocationTreeMat
                         .contentEquals(BugChecker.class.getCanonicalName()));
   }
 
-  private static String getArgument(VisitorState state, ExpressionTree tree) {
+  private static String getReceiverSourceAndDotOrBlank(ExpressionTree tree, VisitorState state) {
+    ExpressionTree receiver = getReceiver(tree);
+    return receiver != null ? state.getSourceForNode(receiver) + "." : "";
+  }
+
+  private static String getArgumentSource(ExpressionTree tree, VisitorState state) {
     return state.getSourceForNode(getOnlyElement(((MethodInvocationTree) tree).getArguments()));
   }
 }
