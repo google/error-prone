@@ -479,6 +479,9 @@ Catching Throwable/Error masks failures from fail() or assert*() in the try bloc
 __[TypeParameterQualifier](bugpattern/TypeParameterQualifier)__<br>
 Type parameter used as type qualifier
 
+__[UnicodeInCode](bugpattern/UnicodeInCode)__<br>
+Avoid using non-ASCII Unicode characters outside of comments and literals, as they can be confusing.
+
 __[UnnecessaryCheckNotNull](bugpattern/UnnecessaryCheckNotNull)__<br>
 This null check is unnecessary; the expression can never be null
 
