@@ -74,7 +74,7 @@ public class DescriptionTest {
       severity = ERROR)
   public static class MyChecker extends BugChecker {
     Description getDescription() {
-      return describeMatch(new MockTree());
+      return describeMatch((Tree) new MockTree());
     }
   }
 
@@ -111,7 +111,7 @@ public class DescriptionTest {
       link = "https://www.google.com/")
   public static class CustomLinkChecker extends BugChecker {
     Description getDescription() {
-      return describeMatch(new MockTree());
+      return describeMatch((Tree) new MockTree());
     }
   }
 
