@@ -3,7 +3,7 @@ title: TypeParameterNaming
 summary: Type parameters must be a single letter with an optional numeric suffix,
   or an UpperCamelCase name followed by the letter 'T'.
 layout: bugpattern
-tags: Style
+tags: ''
 severity: SUGGESTION
 ---
 
