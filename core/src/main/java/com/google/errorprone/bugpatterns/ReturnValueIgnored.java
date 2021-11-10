@@ -356,22 +356,30 @@ public class ReturnValueIgnored extends AbstractReturnValueIgnored {
 
   private static final Matcher<? super ExpressionTree> SPECIALIZED_MATCHER =
       anyOf(
-          RETURNS_SAME_TYPE,
-          ReturnValueIgnored::functionalMethod,
-          STREAM_METHODS,
-          STRING_METHODS,
-          PROTO_METHODS,
-          PRIMITIVE_METHODS,
+          // keep-sorted start
           ARRAYS_METHODS,
-          OPTIONAL_METHODS,
-          TIME_UNIT_METHODS,
-          ReturnValueIgnored::javaTimeTypes,
+          CHAR_SEQUENCE_METHODS,
           COLLECTION_METHODS,
-          MAP_METHODS,
-          MAP_ENTRY_METHODS,
+          COLLECTOR_METHODS,
+          ENUM_METHODS,
           ITERABLE_METHODS,
           ITERATOR_METHODS,
-          JODA_TIME_METHODS);
+          JODA_TIME_METHODS,
+          MAP_ENTRY_METHODS,
+          MAP_METHODS,
+          OBJECTS_METHODS,
+          OPTIONAL_METHODS,
+          PRIMITIVE_METHODS,
+          PROTO_METHODS,
+          RETURNS_SAME_TYPE,
+          ReturnValueIgnored::functionalMethod,
+          ReturnValueIgnored::javaTimeTypes,
+          STREAM_METHODS,
+          STRING_METHODS,
+          THROWABLE_METHODS,
+          TIME_UNIT_METHODS
+          // keep-sorted end
+          );
 
   private final Matcher<? super ExpressionTree> matcher;
 
@@ -381,12 +389,7 @@ public class ReturnValueIgnored extends AbstractReturnValueIgnored {
             SPECIALIZED_MATCHER,
             getMatcher(flags, "ReturnValueIgnored:MoreOptional", MORE_OPTIONAL_METHODS),
             getMatcher(flags, "ReturnValueIgnored:ClassMethods", CLASS_METHODS),
-            getMatcher(flags, "ReturnValueIgnored:ObjectMethods", OBJECT_METHODS),
-            getMatcher(flags, "ReturnValueIgnored:ObjectsMethods", OBJECTS_METHODS),
-            getMatcher(flags, "ReturnValueIgnored:CharSequenceMethods", CHAR_SEQUENCE_METHODS),
-            getMatcher(flags, "ReturnValueIgnored:EnumMethods", ENUM_METHODS),
-            getMatcher(flags, "ReturnValueIgnored:ThrowableMethods", THROWABLE_METHODS),
-            getMatcher(flags, "ReturnValueIgnored:CollectorMethods", COLLECTOR_METHODS));
+            getMatcher(flags, "ReturnValueIgnored:ObjectMethods", OBJECT_METHODS));
   }
 
   private static Matcher<? super ExpressionTree> getMatcher(
