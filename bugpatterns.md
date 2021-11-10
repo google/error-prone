@@ -479,6 +479,9 @@ Catching Throwable/Error masks failures from fail() or assert*() in the try bloc
 __[TypeParameterQualifier](bugpattern/TypeParameterQualifier)__<br>
 Type parameter used as type qualifier
 
+__[UnicodeDirectionalityCharacters](bugpattern/UnicodeDirectionalityCharacters)__<br>
+Unicode directionality modifiers can be used to conceal code in many editors.
+
 __[UnicodeInCode](bugpattern/UnicodeInCode)__<br>
 Avoid using non-ASCII Unicode characters outside of comments and literals, as they can be confusing.
 
