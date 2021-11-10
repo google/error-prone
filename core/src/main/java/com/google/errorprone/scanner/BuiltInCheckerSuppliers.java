@@ -355,6 +355,7 @@ import com.google.errorprone.bugpatterns.TypeToString;
 import com.google.errorprone.bugpatterns.URLEqualsHashCode;
 import com.google.errorprone.bugpatterns.UndefinedEquals;
 import com.google.errorprone.bugpatterns.UngroupedOverloads;
+import com.google.errorprone.bugpatterns.UnicodeDirectionalityCharacters;
 import com.google.errorprone.bugpatterns.UnicodeEscape;
 import com.google.errorprone.bugpatterns.UnicodeInCode;
 import com.google.errorprone.bugpatterns.UnnecessarilyFullyQualified;
@@ -736,6 +737,7 @@ public class BuiltInCheckerSuppliers {
           TruthSelfEquals.class,
           TryFailThrowable.class,
           TypeParameterQualifier.class,
+          UnicodeDirectionalityCharacters.class,
           UnicodeInCode.class,
           UnnecessaryCheckNotNull.class,
           UnnecessaryTypeArgument.class,
