@@ -14,7 +14,7 @@ To make changes, edit the @BugPattern annotation or the explanation in docs/bugp
 
 
 ## The problem
-If a conditional expression evalutes to `null`, unboxing it will result in a
+If a conditional expression evaluates to `null`, unboxing it will result in a
 `NullPointerException`.
 
 For example:
