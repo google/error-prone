@@ -1,5 +1,7 @@
 # Error Prone
 
+[![Maintainability](https://cloud.quality-gate.com/dashboard/api/badge?projectName=google_error-prone&branchName=master)](https://cloud.quality-gate.com/dashboard/branches/272643#overview)
+
 Error Prone is a static analysis tool for Java that catches common programming
 mistakes at compile-time.
 
