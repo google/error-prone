@@ -20,6 +20,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
+import com.google.errorprone.VisitorState;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
@@ -100,6 +101,10 @@ public class SuggestedFix implements Fix {
     return builder().replace(tree, replaceWith).build();
   }
 
+  public static SuggestedFix replace(Tree tree, VisitorState state, String replaceWith) {
+    return builder().replace(tree, state, replaceWith).build();
+  }
+
   /**
    * Replace the characters from startPos, inclusive, until endPos, exclusive, with the given
    * string.
@@ -136,14 +141,98 @@ public class SuggestedFix implements Fix {
     return builder().prefixWith(node, prefix).build();
   }
 
+  /** {@link Builder#prefixWith(Tree, VisitorState, String)} */
+  public static SuggestedFix prefixWith(Tree node, VisitorState state, String prefix) {
+    return builder().prefixWith(node, state, prefix).build();
+  }
+
   /** {@link Builder#postfixWith(Tree, String)} */
   public static SuggestedFix postfixWith(Tree node, String postfix) {
     return builder().postfixWith(node, postfix).build();
   }
 
+  /**
+   * Returns a number to adjust the start position of a piece of source code that encompasses any
+   * whitespace between that source's starting position and any prior non-whitespace character
+   *
+   * <p>This is useful when removing source code to not leave extra whitespace gaps where removed source used to be
+   */
+  public static int getAdjustedStartPosition(Tree node, VisitorState state) {
+    String source = state.getSourceForNode(node);
+    if (source == null) {
+      return 0;
+    }
+
+    int endPosition = state.getEndPosition(node);
+    int startPosition = endPosition - source.length();
+
+    Tree parentTree = state.getPath().getParentPath() != null
+        ? state.getPath().getParentPath().getLeaf()
+        : state.getPath().getCompilationUnit();
+
+    String parentSource = state.getSourceForNode(parentTree);
+    if (parentSource == null) {
+      return 0;
+    }
+
+    int parentEndPosition = state.getEndPosition(parentTree);
+    int parentStartPosition = parentEndPosition - parentSource.length();
+
+    // Finding position in parent source
+    // This is because child source may not contain the surrounding whitespace
+    //
+    // -1 to get whitespace character before starting position
+    int position = startPosition - parentStartPosition - 1;
+    if (position < 0 || position >= parentSource.length()) {
+      // This should only happen if our source is invalid
+      return 0;
+    }
+
+    int adjustment = 0;
+    char currentChar = parentSource.charAt(position);
+
+    while (Character.isWhitespace(currentChar)) {
+      if (position + adjustment < 0 || position + adjustment > parentSource.length()) {
+        // This should only happen if our source is invalid
+        return 0;
+      }
+
+      // We are at the beginning of the file
+      if (position + adjustment == 0) {
+        return adjustment;
+      }
+
+      // Only remove up to a single line of whitespace
+      if (isNewline(currentChar)) {
+        if (position + adjustment > 1) {
+          char previousChar = parentSource.charAt(position + adjustment - 1);
+          // Clean up Windows-style line ending
+          if (previousChar == '\r') {
+            return adjustment - 2;
+          }
+        }
+        return adjustment - 1;
+      }
+
+      adjustment--;
+      currentChar = parentSource.charAt(position + adjustment);
+    }
+
+    return adjustment;
+  }
+
+  private static boolean isNewline(char c) {
+    return c == '\n' || c == '\r';
+  }
+
   /** {@link Builder#delete(Tree)} */
   public static SuggestedFix delete(Tree node) {
     return builder().delete(node).build();
+  }
+
+  public static SuggestedFix delete(Tree node, VisitorState state) {
+    int startPos = getAdjustedStartPosition(node, state);
+    return builder().replace(node, "", startPos, 0).build();
   }
 
   /** {@link Builder#swap(Tree, Tree)} */
@@ -202,6 +291,23 @@ public class SuggestedFix implements Fix {
     }
 
     /**
+     * Similar to {@link Builder#replace(Tree, String)}, but uses the extra VisitorState parameter
+     * to get source and remove extra leading whitespace. This avoids leaving whitespace gaps
+     * behind when removing a line of code.
+     */
+    public Builder replace(
+            Tree node,
+            VisitorState state,
+            String replaceWith) {
+      checkNotSyntheticConstructor(node);
+      int startPos = getAdjustedStartPosition(node, state);
+      return with(
+              new ReplacementFix(
+                      new AdjustedPosition((JCTree) node, startPos, 0),
+                      replaceWith));
+    }
+
+    /**
      * Replace the characters from startPos, inclusive, until endPos, exclusive, with the given
      * string.
      *
@@ -242,6 +348,18 @@ public class SuggestedFix implements Fix {
       return with(new PrefixInsertion((DiagnosticPosition) node, prefix));
     }
 
+    /**
+     * Similar to {@link Builder#prefixWith(Tree, String)}, but uses the extra VisitorState
+     * parameter to get source and remove extra leading whitespace. This avoids leaving whitespace
+     * gaps behind when removing a line of code.
+     */
+    public Builder prefixWith(Tree node, VisitorState state, String prefix) {
+      checkNotSyntheticConstructor(node);
+      int startPosAdj = getAdjustedStartPosition(node, state);
+      DiagnosticPosition pos = new AdjustedPosition((JCTree) node, startPosAdj, 0);
+      return with(new PrefixInsertion(pos, prefix));
+    }
+
     public Builder postfixWith(Tree node, String postfix) {
       checkNotSyntheticConstructor(node);
       return with(new PostfixInsertion((DiagnosticPosition) node, postfix));
@@ -250,6 +368,17 @@ public class SuggestedFix implements Fix {
     public Builder delete(Tree node) {
       checkNotSyntheticConstructor(node);
       return replace(node, "");
+    }
+
+    /**
+     * Similar to {@link Builder#delete(Tree)}, but uses the extra VisitorState parameter to get
+     * source and remove extra leading whitespace. This avoids leaving whitespace gaps behind when
+     * removing a line of code.
+     */
+    public Builder delete(Tree node, VisitorState state) {
+      checkNotSyntheticConstructor(node);
+      int startPos = getAdjustedStartPosition(node, state);
+      return replace(node, "", startPos, 0);
     }
 
     public Builder swap(Tree node1, Tree node2) {

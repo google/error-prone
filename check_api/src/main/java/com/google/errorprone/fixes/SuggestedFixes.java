@@ -22,6 +22,7 @@ import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.common.collect.Iterables.getLast;
 import static com.google.common.collect.Streams.stream;
+import static com.google.errorprone.fixes.SuggestedFix.getAdjustedStartPosition;
 import static com.google.errorprone.util.ASTHelpers.getAnnotation;
 import static com.google.errorprone.util.ASTHelpers.getAnnotationWithSimpleName;
 import static com.google.errorprone.util.ASTHelpers.getModifiers;
@@ -1597,10 +1598,19 @@ public final class SuggestedFixes {
    */
   public static SuggestedFix replaceIncludingComments(
       TreePath path, String replacement, VisitorState state) {
+    return replaceIncludingComments(path, replacement, state, false);
+  }
+
+  /**
+   * Includes a parameter to also remove leading whitespace. If set to true, this avoids leaving
+   * behind extra whitespace when removing a tree.
+   */
+  public static SuggestedFix replaceIncludingComments(
+      TreePath path, String replacement, VisitorState state, boolean removeWhitespace) {
     Tree tree = path.getLeaf();
     Tree parent = path.getParentPath().getLeaf();
     if (!(parent instanceof ClassTree)) {
-      return SuggestedFix.replace(tree, replacement);
+      return SuggestedFix.replace(tree, state, replacement);
     }
     Tree previousMember = null;
     ClassTree classTree = (ClassTree) parent;
@@ -1627,10 +1637,15 @@ public final class SuggestedFixes {
       tokens = getTokensAfterOpeningBrace(tokens);
     }
     if (tokens.isEmpty()) {
+      if (removeWhitespace) {
+        return SuggestedFix.replace(tree, state, replacement);
+      }
       return SuggestedFix.replace(tree, replacement);
     }
     if (tokens.get(0).comments().isEmpty()) {
-      return SuggestedFix.replace(tokens.get(0).pos(), state.getEndPosition(tree), replacement);
+      int tokenPos = tokens.get(0).pos();
+      int startPosAdjustment = removeWhitespace ? getAdjustedStartPosition(tree, state) : 0;
+      return SuggestedFix.replace(tokenPos + startPosAdjustment, state.getEndPosition(tree), replacement);
     }
     ImmutableList<Comment> comments =
         ImmutableList.sortedCopyOf(
@@ -1651,7 +1666,8 @@ public final class SuggestedFixes {
       }
       startPos = comment.getSourcePos(0);
     }
-    return SuggestedFix.replace(startPos, state.getEndPosition(tree), replacement);
+    int startPosAdjustment = removeWhitespace ? getAdjustedStartPosition(tree, state) : 0;
+    return SuggestedFix.replace(startPos + startPosAdjustment, state.getEndPosition(tree), replacement);
   }
 
   private static List<ErrorProneToken> getTokensAfterOpeningBrace(List<ErrorProneToken> tokens) {

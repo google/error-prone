@@ -85,6 +85,12 @@ public class BugCheckerRefactoringTestHelper {
 
   /** Test mode for matching refactored source against expected source. */
   public enum TestMode {
+    EXACT_TEXT_MATCH {
+      @Override
+      void verifyMatch(JavaFileObject refactoredSource, JavaFileObject expectedSource) throws IOException {
+        assertThat(refactoredSource.getCharContent(false).toString()).isEqualTo(expectedSource.getCharContent(false).toString());
+      }
+    },
     TEXT_MATCH {
       @Override
       void verifyMatch(JavaFileObject refactoredSource, JavaFileObject expectedSource)

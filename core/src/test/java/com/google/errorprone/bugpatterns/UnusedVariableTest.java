@@ -143,7 +143,7 @@ public class UnusedVariableTest {
             "    return output;",
             "  }",
             "}")
-        .doTest();
+        .doTest(TestMode.EXACT_TEXT_MATCH);
   }
 
   @Test
@@ -401,7 +401,7 @@ public class UnusedVariableTest {
             "    System.out.println(CONST_STR);",
             "  }",
             "}")
-        .doTest();
+        .doTest(TestMode.EXACT_TEXT_MATCH);
   }
 
   @Test
@@ -526,7 +526,7 @@ public class UnusedVariableTest {
             "package unusedvars;",
             "public class UnusedWithComment {",
             "}")
-        .doTest(TestMode.TEXT_MATCH);
+        .doTest(TestMode.EXACT_TEXT_MATCH);
   }
 
   @Test
@@ -543,8 +543,9 @@ public class UnusedVariableTest {
             "Test.java", //
             "public class Test {",
             "  public static final int A = 1; // foo",
+            "",
             "}")
-        .doTest(TestMode.TEXT_MATCH);
+        .doTest(TestMode.EXACT_TEXT_MATCH);
   }
 
   @Test
@@ -564,8 +565,9 @@ public class UnusedVariableTest {
             "Test.java", //
             "public class Test {",
             "  public static final int A = 1; // foo",
+            "",
             "}")
-        .doTest(TestMode.TEXT_MATCH);
+        .doTest(TestMode.EXACT_TEXT_MATCH);
   }
 
   @Test
@@ -582,7 +584,7 @@ public class UnusedVariableTest {
             "@SuppressWarnings(\"foo\" /* { */)",
             "public class Test {",
             "}")
-        .doTest(TestMode.TEXT_MATCH);
+        .doTest(TestMode.EXACT_TEXT_MATCH);
   }
 
   @Test
@@ -746,7 +748,7 @@ public class UnusedVariableTest {
             "  }",
             "}")
         .setFixChooser(FixChoosers.SECOND)
-        .doTest();
+        .doTest(TestMode.EXACT_TEXT_MATCH);
   }
 
   @Test
@@ -768,7 +770,7 @@ public class UnusedVariableTest {
             "  void test() {",
             "  }",
             "}")
-        .doTest();
+        .doTest(TestMode.EXACT_TEXT_MATCH);
   }
 
   @Test
@@ -822,7 +824,7 @@ public class UnusedVariableTest {
             "    return 1;",
             "  }",
             "}")
-        .doTest();
+        .doTest(TestMode.EXACT_TEXT_MATCH);
   }
 
   @Test
@@ -947,7 +949,7 @@ public class UnusedVariableTest {
             "Test.java", //
             "class Test {",
             "}")
-        .doTest();
+        .doTest(TestMode.EXACT_TEXT_MATCH);
   }
 
   @Test
@@ -971,7 +973,7 @@ public class UnusedVariableTest {
             "  }",
             "}")
         .setFixChooser(FixChoosers.SECOND)
-        .doTest();
+        .doTest(TestMode.EXACT_TEXT_MATCH);
   }
 
   @Test
@@ -1075,7 +1077,7 @@ public class UnusedVariableTest {
             "    a = null;",
             "  }",
             "}")
-        .doTest();
+        .doTest(TestMode.EXACT_TEXT_MATCH);
   }
 
   @Test
@@ -1117,7 +1119,7 @@ public class UnusedVariableTest {
             "    System.out.println(a);",
             "  }",
             "}")
-        .doTest();
+        .doTest(TestMode.EXACT_TEXT_MATCH);
   }
 
   @Test
@@ -1143,7 +1145,7 @@ public class UnusedVariableTest {
             "    System.out.println(a);",
             "  }",
             "}")
-        .doTest();
+        .doTest(TestMode.EXACT_TEXT_MATCH);
   }
 
   @Test
@@ -1180,7 +1182,7 @@ public class UnusedVariableTest {
             "  public void test(int a) {",
             "  }",
             "}")
-        .doTest();
+        .doTest(TestMode.EXACT_TEXT_MATCH);
   }
 
   @Test
@@ -1222,7 +1224,7 @@ public class UnusedVariableTest {
             "    }",
             "  }",
             "}")
-        .doTest();
+        .doTest(TestMode.EXACT_TEXT_MATCH);
   }
 
   @Test
@@ -1320,7 +1322,7 @@ public class UnusedVariableTest {
             "  }",
             "}")
         .setFixChooser(FixChoosers.FIRST)
-        .doTest();
+        .doTest(TestMode.EXACT_TEXT_MATCH);
   }
 
   @Test
@@ -1354,7 +1356,7 @@ public class UnusedVariableTest {
             "  }",
             "}")
         .setFixChooser(FixChoosers.SECOND)
-        .doTest();
+        .doTest(TestMode.EXACT_TEXT_MATCH);
   }
 
   @Test
