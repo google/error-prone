@@ -134,7 +134,9 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
           "org.junit.Rule",
           "org.openqa.selenium.support.FindAll",
           "org.openqa.selenium.support.FindBy",
-          "org.openqa.selenium.support.FindBys");
+          "org.openqa.selenium.support.FindBys",
+          "org.apache.beam.sdk.transforms.DoFn.TimerId",
+          "org.apache.beam.sdk.transforms.DoFn.StateId");
 
   private final ImmutableSet<String> methodAnnotationsExemptingParameters;
 
