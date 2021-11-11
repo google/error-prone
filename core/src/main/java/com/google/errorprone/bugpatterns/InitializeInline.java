@@ -16,6 +16,7 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
@@ -32,9 +33,12 @@ import com.sun.source.tree.ModifiersTree;
 import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
+import com.sun.source.util.TreePath;
 import com.sun.source.util.TreePathScanner;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.util.Position;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Bugpattern to encourage initializing effectively final variables inline with their declaration,
@@ -55,26 +59,24 @@ public final class InitializeInline extends BugChecker implements VariableTreeMa
     if (symbol == null || !isConsideredFinal(symbol)) {
       return NO_MATCH;
     }
-    AssignmentTree assignment =
-        new TreePathScanner<AssignmentTree, Void>() {
-          @Override
-          public AssignmentTree reduce(AssignmentTree a, AssignmentTree b) {
-            return a == null ? b : a;
-          }
+    List<TreePath> assignments = new ArrayList<>();
+    new TreePathScanner<Void, Void>() {
+      @Override
+      public Void visitAssignment(AssignmentTree node, Void unused) {
+        if (symbol.equals(getSymbol(node.getVariable()))) {
+          assignments.add(getCurrentPath());
+        }
+        return super.visitAssignment(node, null);
+      }
+    }.scan(state.getPath().getParentPath(), null);
+    if (assignments.size() != 1) {
+      return NO_MATCH;
+    }
+    TreePath soleAssignmentPath = getOnlyElement(assignments);
+    Tree grandParent = soleAssignmentPath.getParentPath().getParentPath().getLeaf();
 
-          @Override
-          public AssignmentTree visitAssignment(AssignmentTree node, Void unused) {
-            if (symbol.equals(getSymbol(node.getVariable()))) {
-              Tree grandParent = getCurrentPath().getParentPath().getParentPath().getLeaf();
-              if (getCurrentPath().getParentPath().getLeaf() instanceof StatementTree
-                  && grandParent.equals(declarationParent)) {
-                return node;
-              }
-            }
-            return super.visitAssignment(node, null);
-          }
-        }.scan(state.getPath().getParentPath(), null);
-    if (assignment == null) {
+    if (!(soleAssignmentPath.getParentPath().getLeaf() instanceof StatementTree
+        && grandParent.equals(declarationParent))) {
       return NO_MATCH;
     }
     ModifiersTree modifiersTree = tree.getModifiers();
@@ -86,7 +88,9 @@ public final class InitializeInline extends BugChecker implements VariableTreeMa
         tree,
         SuggestedFix.builder()
             .replace(tree, "")
-            .prefixWith(assignment, modifiers + state.getSourceForNode(tree.getType()) + " ")
+            .prefixWith(
+                soleAssignmentPath.getLeaf(),
+                modifiers + state.getSourceForNode(tree.getType()) + " ")
             .build());
   }
 }
