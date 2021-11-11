@@ -68,7 +68,7 @@ public class CheckReturnValueTest {
             "test/TestCustomCanIgnoreReturnValueAnnotation.java",
             "package test;",
             "import foo.bar.CanIgnoreReturnValue;",
-            "@javax.annotation.CheckReturnValue",
+            "@com.google.errorprone.annotations.CheckReturnValue",
             "public class TestCustomCanIgnoreReturnValueAnnotation {",
             "  @CanIgnoreReturnValue",
             "  public String ignored() {",
@@ -91,7 +91,7 @@ public class CheckReturnValueTest {
     compilationHelper
         .addSourceLines(
             "package-info.java", //
-            "@javax.annotation.CheckReturnValue",
+            "@com.google.errorprone.annotations.CheckReturnValue",
             "package lib;")
         .addSourceLines(
             "lib/Lib.java",
@@ -116,7 +116,7 @@ public class CheckReturnValueTest {
         .addSourceLines(
             "lib/Lib.java",
             "package lib;",
-            "@javax.annotation.CheckReturnValue",
+            "@com.google.errorprone.annotations.CheckReturnValue",
             "public class Lib {",
             "  public static int f() { return 42; }",
             "}")
@@ -137,7 +137,7 @@ public class CheckReturnValueTest {
     compilationHelper
         .addSourceLines(
             "package-info.java", //
-            "@javax.annotation.CheckReturnValue",
+            "@com.google.errorprone.annotations.CheckReturnValue",
             "package lib;")
         .addSourceLines(
             "lib/Lib.java",
@@ -161,11 +161,11 @@ public class CheckReturnValueTest {
         .addSourceLines(
             "Test.java",
             "package lib;",
-            "@javax.annotation.CheckReturnValue",
+            "@com.google.errorprone.annotations.CheckReturnValue",
             "public class Test {",
             "  // BUG: Diagnostic contains:",
             "  // @CheckReturnValue may not be applied to void-returning methods",
-            "  @javax.annotation.CheckReturnValue public static void f() {}",
+            "  @com.google.errorprone.annotations.CheckReturnValue public static void f() {}",
             "}")
         .doTest();
   }
@@ -176,11 +176,11 @@ public class CheckReturnValueTest {
         .addSourceLines(
             "Test.java",
             "package lib;",
-            "@javax.annotation.CheckReturnValue",
+            "@com.google.errorprone.annotations.CheckReturnValue",
             "public class Test {",
             "  // BUG: Diagnostic contains:",
             "  // @CheckReturnValue may not be applied to void-returning methods",
-            "  @javax.annotation.CheckReturnValue public static Void f() {",
+            "  @com.google.errorprone.annotations.CheckReturnValue public static Void f() {",
             "    return null;",
             "  }",
             "}")
@@ -195,7 +195,7 @@ public class CheckReturnValueTest {
             "Test.java",
             "package lib;",
             "public class Test {",
-            "  @javax.annotation.CheckReturnValue",
+            "  @com.google.errorprone.annotations.CheckReturnValue",
             " public int f() {",
             "    return 0;",
             "  }",
@@ -220,7 +220,10 @@ public class CheckReturnValueTest {
   @Test
   public void testPackageAnnotationButCanIgnoreReturnValue() {
     compilationHelper
-        .addSourceLines("package-info.java", "@javax.annotation.CheckReturnValue", "package lib;")
+        .addSourceLines(
+            "package-info.java",
+            "@com.google.errorprone.annotations.CheckReturnValue",
+            "package lib;")
         .addSourceLines(
             "lib/Lib.java",
             "package lib;",
@@ -244,7 +247,7 @@ public class CheckReturnValueTest {
         .addSourceLines(
             "lib/Lib.java",
             "package lib;",
-            "@javax.annotation.CheckReturnValue",
+            "@com.google.errorprone.annotations.CheckReturnValue",
             "public class Lib {",
             "  @com.google.errorprone.annotations.CanIgnoreReturnValue",
             "  public static int f() { return 42; }",
@@ -265,7 +268,7 @@ public class CheckReturnValueTest {
         .addSourceLines(
             "Test.java",
             "package lib;",
-            "@javax.annotation.CheckReturnValue",
+            "@com.google.errorprone.annotations.CheckReturnValue",
             "public class Test {",
             "  // BUG: Diagnostic contains:",
             "  // @CanIgnoreReturnValue may not be applied to void-returning methods",
@@ -280,7 +283,7 @@ public class CheckReturnValueTest {
         .addSourceLines(
             "lib/Lib.java",
             "package lib;",
-            "@javax.annotation.CheckReturnValue",
+            "@com.google.errorprone.annotations.CheckReturnValue",
             "public class Lib {",
             "  public static class Inner {",
             "    public static class InnerMost {",
@@ -305,7 +308,7 @@ public class CheckReturnValueTest {
         .addSourceLines(
             "lib/Lib.java",
             "package lib;",
-            "@javax.annotation.CheckReturnValue",
+            "@com.google.errorprone.annotations.CheckReturnValue",
             "public class Lib {",
             "  @com.google.errorprone.annotations.CanIgnoreReturnValue",
             "  public static class Inner {",
@@ -327,7 +330,10 @@ public class CheckReturnValueTest {
   @Test
   public void testPackageWithCanIgnoreAnnotation() {
     compilationHelper
-        .addSourceLines("package-info.java", "@javax.annotation.CheckReturnValue", "package lib;")
+        .addSourceLines(
+            "package-info.java",
+            "@com.google.errorprone.annotations.CheckReturnValue",
+            "package lib;")
         .addSourceLines(
             "lib/Lib.java",
             "package lib;",
@@ -351,7 +357,7 @@ public class CheckReturnValueTest {
         .addSourceLines(
             "Test.java",
             "@com.google.errorprone.annotations.CanIgnoreReturnValue",
-            "@javax.annotation.CheckReturnValue",
+            "@com.google.errorprone.annotations.CheckReturnValue",
             "// BUG: Diagnostic contains: @CheckReturnValue and @CanIgnoreReturnValue cannot"
                 + " both be applied to the same class",
             "class Test {}")
@@ -365,7 +371,7 @@ public class CheckReturnValueTest {
             "Test.java",
             "class Test {",
             "  @com.google.errorprone.annotations.CanIgnoreReturnValue",
-            "  @javax.annotation.CheckReturnValue",
+            "  @com.google.errorprone.annotations.CheckReturnValue",
             "  // BUG: Diagnostic contains: @CheckReturnValue and @CanIgnoreReturnValue cannot"
                 + " both be applied to the same method",
             "  void m() {}",
@@ -377,7 +383,10 @@ public class CheckReturnValueTest {
   @Test
   public void testJavaLangVoidReturningMethodInAnnotatedPackage() {
     compilationHelper
-        .addSourceLines("package-info.java", "@javax.annotation.CheckReturnValue", "package lib;")
+        .addSourceLines(
+            "package-info.java",
+            "@com.google.errorprone.annotations.CheckReturnValue",
+            "package lib;")
         .addSourceLines(
             "lib/Lib.java",
             "package lib;",
@@ -401,7 +410,7 @@ public class CheckReturnValueTest {
     compilationHelper
         .addSourceLines(
             "Foo.java",
-            "@javax.annotation.CheckReturnValue",
+            "@com.google.errorprone.annotations.CheckReturnValue",
             "public class Foo {",
             "  public int f() {",
             "    return 42;",
@@ -433,7 +442,7 @@ public class CheckReturnValueTest {
     compilationHelper
         .addSourceLines(
             "Foo.java",
-            "@javax.annotation.CheckReturnValue",
+            "@com.google.errorprone.annotations.CheckReturnValue",
             "public class Foo {",
             "  public int f() {",
             "    return 42;",
@@ -456,7 +465,7 @@ public class CheckReturnValueTest {
     compilationHelper
         .addSourceLines(
             "Foo.java",
-            "@javax.annotation.CheckReturnValue",
+            "@com.google.errorprone.annotations.CheckReturnValue",
             "public class Foo {",
             "  public int f() {",
             "    return 42;",
@@ -488,7 +497,7 @@ public class CheckReturnValueTest {
     compilationHelper
         .addSourceLines(
             "Foo.java",
-            "@javax.annotation.CheckReturnValue",
+            "@com.google.errorprone.annotations.CheckReturnValue",
             "public class Foo {",
             "  public int f() {",
             "    return 42;",
@@ -530,7 +539,7 @@ public class CheckReturnValueTest {
     compilationHelper
         .addSourceLines(
             "Foo.java",
-            "@javax.annotation.CheckReturnValue",
+            "@com.google.errorprone.annotations.CheckReturnValue",
             "public class Foo {",
             "  public int f() {",
             "    return 42;",
@@ -555,7 +564,7 @@ public class CheckReturnValueTest {
     compilationHelper
         .addSourceLines(
             "Foo.java",
-            "@javax.annotation.CheckReturnValue",
+            "@com.google.errorprone.annotations.CheckReturnValue",
             "public class Foo {",
             "  public int f() {",
             "    return 42;",
@@ -586,7 +595,7 @@ public class CheckReturnValueTest {
         .addSourceLines(
             "Lib.java",
             "public class Lib {",
-            "  @javax.annotation.CheckReturnValue",
+            "  @com.google.errorprone.annotations.CheckReturnValue",
             "  public int f() {",
             "    return 0;",
             "  }",
@@ -607,7 +616,7 @@ public class CheckReturnValueTest {
     compilationHelper
         .addSourceLines(
             "Lib.java",
-            "@javax.annotation.CheckReturnValue",
+            "@com.google.errorprone.annotations.CheckReturnValue",
             "public class Lib {",
             "  public static void consume(Object o) {}",
             "}")
@@ -623,7 +632,7 @@ public class CheckReturnValueTest {
 
   /** Test class containing a method annotated with @CRV. */
   public static final class CRVTest {
-    @javax.annotation.CheckReturnValue
+    @com.google.errorprone.annotations.CheckReturnValue
     public static int f() {
       return 42;
     }
