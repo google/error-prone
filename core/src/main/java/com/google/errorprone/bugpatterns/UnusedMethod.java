@@ -24,6 +24,7 @@ import static com.google.errorprone.suppliers.Suppliers.typeFromString;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
+import static com.google.errorprone.util.ASTHelpers.isUsedReflectively;
 import static com.google.errorprone.util.MoreAnnotations.asStrings;
 import static com.google.errorprone.util.MoreAnnotations.getAnnotationValue;
 
@@ -186,7 +187,10 @@ public final class UnusedMethod extends BugChecker implements CompilationUnitTre
           return false;
         }
         // Assume the method is called if annotated with a called-reflectively annotation.
-        if (exemptedByAnnotation(tree.getModifiers().getAnnotations(), state)) {
+        if (exemptedByAnnotation(tree.getModifiers().getAnnotations())) {
+          return false;
+        }
+        if (isUsedReflectively(tree)) {
           return false;
         }
         // Skip constructors and special methods.
@@ -317,8 +321,7 @@ public final class UnusedMethod extends BugChecker implements CompilationUnitTre
    * Looks at the list of {@code annotations} and see if there is any annotation which exists {@code
    * exemptingAnnotations}.
    */
-  private static boolean exemptedByAnnotation(
-      List<? extends AnnotationTree> annotations, VisitorState state) {
+  private static boolean exemptedByAnnotation(List<? extends AnnotationTree> annotations) {
     for (AnnotationTree annotation : annotations) {
       Type annotationType = getType(annotation);
       if (annotationType == null) {

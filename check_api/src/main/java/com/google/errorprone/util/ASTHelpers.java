@@ -927,6 +927,37 @@ public class ASTHelpers {
   }
 
   /**
+   * Returns true if any of the given tree is a declaration annotated with an annotation with the
+   * simple name {@code @UsedReflectively}, or any annotations meta-annotated with an annotation
+   * with that simple name.
+   *
+   * <p>This indicates the annotated element is used (e.g. by reflection, or referenced by generated
+   * code) and should not be removed.
+   */
+  public static boolean isUsedReflectively(Tree tree) {
+    ModifiersTree modifiers = getModifiers(tree);
+    if (modifiers == null) {
+      return false;
+    }
+    for (AnnotationTree annotation : modifiers.getAnnotations()) {
+      Type annotationType = getType(annotation);
+      if (annotationType == null) {
+        continue;
+      }
+      TypeSymbol tsym = annotationType.tsym;
+      if (tsym.getSimpleName().contentEquals(USED_REFLECTIVELY)) {
+        return true;
+      }
+      if (hasDirectAnnotationWithSimpleName(tsym, USED_REFLECTIVELY)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  private static final String USED_REFLECTIVELY = "UsedReflectively";
+
+  /**
    * Retrieves an annotation, considering annotation inheritance.
    *
    * @deprecated If {@code annotationClass} contains a member that is a {@code Class} or an array of

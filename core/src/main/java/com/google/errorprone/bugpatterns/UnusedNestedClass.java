@@ -20,6 +20,7 @@ import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.enclosingClass;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
+import static com.google.errorprone.util.ASTHelpers.isUsedReflectively;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -51,7 +52,7 @@ public final class UnusedNestedClass extends BugChecker implements CompilationUn
 
   @Override
   public Description matchCompilationUnit(CompilationUnitTree tree, VisitorState state) {
-    PrivateNestedClassScanner privateNestedClassScanner = new PrivateNestedClassScanner(state);
+    PrivateNestedClassScanner privateNestedClassScanner = new PrivateNestedClassScanner();
     privateNestedClassScanner.scan(state.getPath(), null);
 
     Map<ClassSymbol, TreePath> privateNestedClasses = privateNestedClassScanner.classes;
@@ -68,11 +69,8 @@ public final class UnusedNestedClass extends BugChecker implements CompilationUn
 
   private final class PrivateNestedClassScanner extends TreePathScanner<Void, Void> {
     private final Map<ClassSymbol, TreePath> classes = new HashMap<>();
-    private final VisitorState state;
 
-    private PrivateNestedClassScanner(VisitorState state) {
-      this.state = state;
-    }
+    private PrivateNestedClassScanner() {}
 
     @Override
     public Void visitClass(ClassTree classTree, Void unused) {
@@ -88,6 +86,9 @@ public final class UnusedNestedClass extends BugChecker implements CompilationUn
 
     private boolean ignoreUnusedClass(ClassTree classTree) {
       if (isSuppressed(classTree)) {
+        return true;
+      }
+      if (isUsedReflectively(classTree)) {
         return true;
       }
       return false;

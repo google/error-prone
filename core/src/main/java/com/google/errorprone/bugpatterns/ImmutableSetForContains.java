@@ -29,6 +29,7 @@ import static com.google.errorprone.matchers.Matchers.isStatic;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
+import static com.google.errorprone.util.ASTHelpers.isUsedReflectively;
 import static com.google.errorprone.util.ASTHelpers.streamReceivers;
 import static java.util.stream.Collectors.toMap;
 
@@ -80,7 +81,10 @@ public final class ImmutableSetForContains extends BugChecker implements ClassTr
           isSameType(ImmutableList.class));
 
   private static final Matcher<Tree> EXCLUSIONS =
-      anyOf(hasAnnotationWithSimpleName("Bind"), hasAnnotationWithSimpleName("Inject"));
+      anyOf(
+          (t, s) -> isUsedReflectively(t),
+          hasAnnotationWithSimpleName("Bind"),
+          hasAnnotationWithSimpleName("Inject"));
 
   private static final Matcher<ExpressionTree> IMMUTABLE_LIST_FACTORIES =
       staticMethod().onClass(ImmutableList.class.getName()).namedAnyOf("of", "copyOf");

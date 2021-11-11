@@ -21,6 +21,7 @@ import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
 import static com.google.errorprone.util.ASTHelpers.getAnnotation;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
+import static com.google.errorprone.util.ASTHelpers.isUsedReflectively;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
@@ -85,7 +86,8 @@ public final class FieldCanBeLocal extends BugChecker implements CompilationUnit
         if (symbol != null
             && symbol.getKind() == ElementKind.FIELD
             && symbol.isPrivate()
-            && canBeLocal(variableTree)) {
+            && canBeLocal(variableTree)
+            && !isUsedReflectively(variableTree)) {
           potentialFields.put(symbol, getCurrentPath());
         }
         return null;
