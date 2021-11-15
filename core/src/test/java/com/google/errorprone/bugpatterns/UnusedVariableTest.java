@@ -1080,16 +1080,26 @@ public class UnusedVariableTest {
 
   @Test
   public void unusedAssignment_initialAssignmentNull_givesWarning() {
-    helper
-        .addSourceLines(
+    refactoringHelper
+        .addInputLines(
             "Test.java",
             "package unusedvars;",
             "public class Test {",
-            "  public void test() {",
-            "    // BUG: Diagnostic contains: assignment",
-            "    Integer a = null;",
-            "    a = 1;",
-            "    a.hashCode();",
+            "  public String test() {",
+            "    String a = null;",
+            "    hashCode();",
+            "    a = toString();",
+            "    return a;",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "package unusedvars;",
+            "public class Test {",
+            "  public String test() {",
+            "    hashCode();",
+            "    String a = toString();",
+            "    return a;",
             "  }",
             "}")
         .doTest();
@@ -1393,6 +1403,30 @@ public class UnusedVariableTest {
             "      // BUG: Diagnostic contains: is never read",
             "      int x = foo;",
             "    }",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void manyUnusedAssignments_terminalAssignmentBecomesVariable() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            "public class Test {",
+            "  public void test () {",
+            "    Integer a = 1;",
+            "    a = 2;",
+            "    a = 3;",
+            "    a.hashCode();",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "public class Test {",
+            "  public void test () {",
+            "    Integer a = 3;",
+            "    a.hashCode();",
             "  }",
             "}")
         .doTest();

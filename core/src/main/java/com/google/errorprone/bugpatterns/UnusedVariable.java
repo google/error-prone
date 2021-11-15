@@ -267,15 +267,24 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
             .filter(tp -> tp.getLeaf() instanceof VariableTree)
             .findFirst()
             .map(tp -> (VariableTree) tp.getLeaf());
+
+    // Find the first reassignment which wasn't only used by an ultimately unused assignment. If
+    // there is one, it should become a variable declaration.
     Optional<AssignmentTree> reassignment =
         specs.stream()
             .map(UnusedSpec::terminatingAssignment)
             .flatMap(Streams::stream)
-            .filter(a -> allUsageSites.stream().noneMatch(tp -> tp.getLeaf().equals(a)))
+            .filter(
+                a ->
+                    allUsageSites.stream()
+                        .noneMatch(
+                            tp ->
+                                tp.getLeaf() instanceof ExpressionStatementTree
+                                    && ((ExpressionStatementTree) tp.getLeaf())
+                                        .getExpression()
+                                        .equals(a)))
             .findFirst();
-    if (removedVariableTree.isPresent()
-        && reassignment.isPresent()
-        && !TOP_LEVEL_EXPRESSIONS.contains(reassignment.get().getExpression().getKind())) {
+    if (removedVariableTree.isPresent() && reassignment.isPresent()) {
       return SuggestedFix.prefixWith( // not needed if top-level statement
           reassignment.get(), state.getSourceForNode(removedVariableTree.get().getType()) + " ");
     }
