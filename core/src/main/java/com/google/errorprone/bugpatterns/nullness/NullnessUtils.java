@@ -209,7 +209,8 @@ class NullnessUtils {
      *
      * - When we suggest a jsr305 annotation, might we want to suggest @CheckForNull over @Nullable?
      *   It's more verbose, but it's more obviously a declaration annotation, and it's the
-     *   annotation that is *technically* defined to produce the behaviors that users want.
+     *   annotation that is *technically* defined to produce the behaviors that users want. (But do
+     *   tools like Dagger recognize it?)
      */
     Symbol sym = FindIdentifiers.findIdent("Nullable", state, KindSelector.VAL_TYP);
     ErrorProneFlags flags = state.errorProneOptions().getFlags();
@@ -243,6 +244,7 @@ class NullnessUtils {
      */
     switch (className) {
       case "libcore.util.Nullable":
+      case "org.checkerframework.checker.nullness.compatqual.NullableType":
       case "org.checkerframework.checker.nullness.qual.Nullable":
       case "org.jspecify.nullness.Nullable":
         return true;

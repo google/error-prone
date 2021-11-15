@@ -40,11 +40,12 @@ public class NullnessAnnotations {
   // TODO(kmb): Correctly handle JSR 305 @Nonnull(NEVER) etc.
   private static final Predicate<String> ANNOTATION_RELEVANT_TO_NULLNESS =
       Pattern.compile(
-              ".*\\b((Recently)?Nullable(Decl)?|(Recently)?NotNull(Decl)?|NonNull(Decl)?|Nonnull|"
-                  + "CheckForNull|PolyNull)$")
+              ".*\\b((Recently)?Nullable(Decl|Type)?|(Recently)?NotNull|NonNull(Decl|Type)?|"
+                  + "Nonnull|CheckForNull|PolyNull)$")
           .asPredicate();
   private static final Predicate<String> NULLABLE_ANNOTATION =
-      Pattern.compile(".*\\b((Recently)?Nullable(Decl)?|CheckForNull|PolyNull)$").asPredicate();
+      Pattern.compile(".*\\b((Recently)?Nullable(Decl|Type)?|CheckForNull|PolyNull)$")
+          .asPredicate();
 
   private NullnessAnnotations() {} // static methods only
 

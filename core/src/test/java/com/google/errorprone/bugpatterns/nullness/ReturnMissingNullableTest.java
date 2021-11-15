@@ -648,8 +648,8 @@ public class ReturnMissingNullableTest {
             "import javax.annotation.Nullable;",
             "public class LiteralNullReturnTest {",
             "  @Nullable",
-            "  public String getMessage() {",
-            "    return null;",
+            "  public String getMessage(boolean b) {",
+            "    return b ? \"\" :null;",
             "  }",
             "}")
         .doTest();
@@ -668,8 +668,23 @@ public class ReturnMissingNullableTest {
             "import com.google.anno.my.NullableDecl;",
             "public class LiteralNullReturnTest {",
             "  @NullableDecl",
-            "  public String getMessage() {",
-            "    return null;",
+            "  public String getMessage(boolean b) {",
+            "    return b ? \"\" :null;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void testNegativeCases_alreadyAnnotatedNullableType() {
+    createCompilationTestHelper()
+        .addSourceLines(
+            "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
+            "package com.google.errorprone.bugpatterns.nullness;",
+            "import org.checkerframework.checker.nullness.compatqual.NullableType;",
+            "public class LiteralNullReturnTest {",
+            "  public @NullableType String getMessage(boolean b) {",
+            "    return b ? \"\" : null;",
             "  }",
             "}")
         .doTest();
@@ -689,8 +704,8 @@ public class ReturnMissingNullableTest {
             "com/google/errorprone/bugpatterns/nullness/TypeAnnoReturnTest.java",
             "package com.google.errorprone.bugpatterns.nullness;",
             "public class TypeAnnoReturnTest {",
-            "  public @com.google.anno.my.Nullable String getMessage() {",
-            "    return null;",
+            "  public @com.google.anno.my.Nullable String getMessage(boolean b) {",
+            "    return b ? \"\" : null;",
             "  }",
             "}")
         .doTest();
