@@ -19,6 +19,7 @@ package com.google.errorprone.matchers;
 import com.google.errorprone.VisitorState;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.LiteralTree;
+import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
 /**
@@ -27,14 +28,14 @@ import java.util.regex.Pattern;
  */
 public class StringLiteral implements Matcher<ExpressionTree> {
 
-  private final Pattern pattern;
+  private final Predicate<String> matcher;
 
   public StringLiteral(String value) {
-    this.pattern = Pattern.compile(value, Pattern.LITERAL);
+    this.matcher = value::equals;
   }
 
   public StringLiteral(Pattern pattern) {
-    this.pattern = pattern;
+    this.matcher = pattern.asPredicate();
   }
 
   @Override
@@ -42,7 +43,7 @@ public class StringLiteral implements Matcher<ExpressionTree> {
     if (expressionTree instanceof LiteralTree) {
       LiteralTree literalTree = (LiteralTree) expressionTree;
       Object actualValue = literalTree.getValue();
-      return actualValue instanceof String && pattern.matcher((String) actualValue).matches();
+      return actualValue instanceof String && matcher.test((String) actualValue);
     } else {
       return false;
     }

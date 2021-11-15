@@ -91,6 +91,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.function.BiPredicate;
+import java.util.function.Predicate;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 import javax.lang.model.element.ElementKind;
@@ -1364,14 +1365,18 @@ public class Matchers {
     }
   }
 
+  private static <T extends Tree> Matcher<T> packageMatches(Predicate<String> predicate) {
+    return (tree, state) -> predicate.test(getPackageFullName(state));
+  }
+
   /** Matches an AST node whose compilation unit's package name matches the given pattern. */
   public static <T extends Tree> Matcher<T> packageMatches(Pattern pattern) {
-    return (tree, state) -> pattern.matcher(getPackageFullName(state)).matches();
+    return packageMatches(pattern.asPredicate());
   }
 
   /** Matches an AST node whose compilation unit starts with this prefix. */
   public static <T extends Tree> Matcher<T> packageStartsWith(String prefix) {
-    return (tree, state) -> getPackageFullName(state).startsWith(prefix);
+    return packageMatches(s -> s.startsWith(prefix));
   }
 
   private static String getPackageFullName(VisitorState state) {

@@ -295,6 +295,8 @@ public class ValidatorTest {
         .doTest();
   }
 
+  private static final Pattern FROM_ANNOTATION = Pattern.compile("FromAnnotation: \\[.*;]");
+
   @Test
   public void testConstructor() {
     helper
@@ -492,6 +494,9 @@ public class ValidatorTest {
         .doTest();
   }
 
+  private static final Pattern INFERRED_FROM_BODY =
+      Pattern.compile("InferredFromBody: .*\\.Builder]");
+
   @Test
   public void testAllowingNestedClassImport() {
     helper
@@ -518,8 +523,7 @@ public class ValidatorTest {
             "    }",
             "  }",
             "}")
-        .expectErrorMessage(
-            "BAR", Pattern.compile("InferredFromBody: .*\\.Builder]").asPredicate()::test)
+        .expectErrorMessage("BAR", INFERRED_FROM_BODY.asPredicate()::test)
         .doTest();
   }
 

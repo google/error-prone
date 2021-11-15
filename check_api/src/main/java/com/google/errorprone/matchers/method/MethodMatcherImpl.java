@@ -53,6 +53,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
 final class MethodMatcherImpl
@@ -388,15 +389,19 @@ final class MethodMatcherImpl
     return this;
   }
 
-  @Override
-  public MethodNameMatcher withNameMatching(Pattern pattern) {
+  private MethodNameMatcher stringConstraint(Predicate<String> constraint) {
     return append(
         new OpaqueConstraint() {
           @Override
           public boolean matches(MatchState m, VisitorState s) {
-            return pattern.matcher(m.sym().getSimpleName().toString()).matches();
+            return constraint.test(m.sym().getSimpleName().toString());
           }
         });
+  }
+
+  @Override
+  public MethodNameMatcher withNameMatching(Pattern pattern) {
+    return stringConstraint(s -> pattern.matcher(s).matches());
   }
 
   @Override

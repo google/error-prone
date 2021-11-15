@@ -69,6 +69,10 @@ public class FloggerArgumentToString extends BugChecker implements MethodInvocat
    * used incredibly rarely and not worth automating.
    */
   private static final Pattern PRINTF_TERM_CAPTURE_PATTERN =
+      // TODO(amalloy): I think this can be done without possessive quantifiers:
+      // (?:^|[^%])(?:%%)*(%[^%a-zA-Z]*[a-zA-Z])
+      // I think this also means we no longer need the special-case "at current position" check,
+      // since skipping % characters can't cause it to match.
       Pattern.compile(
           // Skip escaped pairs of '%' before the next term.
           "[^%]*+(?:%%[^%]*+)*+"

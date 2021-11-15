@@ -19,6 +19,7 @@ package com.google.errorprone.bugpatterns;
 import static com.google.common.collect.ImmutableList.toImmutableList;
 import static java.util.stream.Collectors.joining;
 
+import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Streams;
@@ -466,6 +467,11 @@ public class WildcardImportTest {
         .doTest();
   }
 
+  private static final Predicate<String> QUALIFY_MEMBERS_FIX =
+      Predicates.and(
+          Predicates.containsPattern("Wildcard imports.*should not be used"),
+          Predicates.not(Predicates.contains(Pattern.compile("Did you mean"))));
+
   @Test
   public void qualifyMembersFix() {
     String[] enumLines = {
@@ -503,11 +509,7 @@ public class WildcardImportTest {
     CompilationTestHelper.newInstance(WildcardImport.class, getClass())
         .addSourceLines("e/E.java", enumLines)
         .addSourceLines("e/Test.java", testLines)
-        .expectErrorMessage(
-            "X",
-            Predicates.and(
-                Predicates.containsPattern("Wildcard imports.*should not be used"),
-                Predicates.not(Predicates.contains(Pattern.compile("Did you mean")))))
+        .expectErrorMessage("X", QUALIFY_MEMBERS_FIX)
         .doTest();
 
     testHelper
