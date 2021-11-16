@@ -13,7 +13,7 @@ To make changes, edit the @BugPattern annotation or the explanation in docs/bugp
 
 
 ## The problem
-While the Java programming langauge requires that `public` top-level classes are
+While the Java programming language requires that `public` top-level classes are
 declared in a source file matching their name (e.g.: `Foo.java` for `public
 class Foo {}`, it is possible to declare a non-public top-level class in a file
 with a different name (e.g.: `Bar.java` for `class Foo {}`).

@@ -14,7 +14,7 @@ To make changes, edit the @BugPattern annotation or the explanation in docs/bugp
 
 
 ## The problem
-@AutoValue-annotated classes may form part of your API, but the AutoValue_ generated classes should not. The fact that the generated classes are visible to other classes within the same package is an implementation detail, and is best avoided. Ideally, any reference to the AutoValue_-prefixed class sould be confined to a single factory method, with other factories delegating to it if necessary.
+@AutoValue-annotated classes may form part of your API, but the AutoValue_ generated classes should not. The fact that the generated classes are visible to other classes within the same package is an implementation detail, and is best avoided. Ideally, any reference to the AutoValue_-prefixed class should be confined to a single factory method, with other factories delegating to it if necessary.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("AutoValueSubclassLeaked")` to the enclosing element.

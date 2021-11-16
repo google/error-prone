@@ -21,8 +21,8 @@ execution will continue in the catch block, and the `fail()` or `assert*()` will
 not be executed.
 
 `fail()` and `assert*()` throw AssertionErrors, which are a subtype of
-Throwable. That means that if if the catch block catches Throwable, then
-execution will always jump to the catch block, and the test will always pass.
+Throwable. That means that if the catch block catches Throwable, then execution
+will always jump to the catch block, and the test will always pass.
 
 To fix this, you usually want to catch Exception rather than Throwable. If you
 need to catch throwable (e.g., the expected exception is an AssertionError),

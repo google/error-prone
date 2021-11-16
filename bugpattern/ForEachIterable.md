@@ -13,7 +13,8 @@ To make changes, edit the @BugPattern annotation or the explanation in docs/bugp
 
 
 ## The problem
-Prefer enhanced for loops intead of explicitly using an iterator where possible.
+Prefer enhanced for loops instead of explicitly using an iterator where
+possible.
 
 That is, prefer this:
 
