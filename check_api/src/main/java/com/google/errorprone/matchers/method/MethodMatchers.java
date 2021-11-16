@@ -53,10 +53,10 @@ public final class MethodMatchers {
     /** Match on the given type exactly. */
     MethodClassMatcher onExactClass(Supplier<Type> classType);
 
-    /** Match on types that are exactly the same as any of the the given types. */
+    /** Match on types that are exactly the same as any of the given types. */
     MethodClassMatcher onExactClassAny(Iterable<String> classTypes);
 
-    /** Match on types that are exactly the same as any of the the given types. */
+    /** Match on types that are exactly the same as any of the given types. */
     MethodClassMatcher onExactClassAny(String... classTypes);
 
     /** Match on descendants of the given fully-qualified type name. */

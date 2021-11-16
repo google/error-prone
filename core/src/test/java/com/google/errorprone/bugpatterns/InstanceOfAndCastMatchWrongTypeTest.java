@@ -58,7 +58,7 @@ public class InstanceOfAndCastMatchWrongTypeTest {
   }
 
   @Test
-  public void handlesArrayAccessOnIdentifer() {
+  public void handlesArrayAccessOnIdentifier() {
     compilationHelper
         .addSourceLines(
             "Foo.java",

@@ -951,7 +951,7 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
 
   @AutoValue
   abstract static class UnusedSpec {
-    /** {@link Symbol} of the unsued element. */
+    /** {@link Symbol} of the unused element. */
     abstract Symbol symbol();
 
     /** {@link VariableTree} or {@link AssignmentTree} for the original assignment site. */

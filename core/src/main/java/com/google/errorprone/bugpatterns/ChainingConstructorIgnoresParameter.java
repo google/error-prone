@@ -170,7 +170,7 @@ public final class ChainingConstructorIgnoresParameter extends BugChecker
         }
         /*
          * If formal parameter is of an incompatible type, the caller might in theory still intend
-         * to pass a dervied expression. For example, "Foo(String file)" might intend to call
+         * to pass a derived expression. For example, "Foo(String file)" might intend to call
          * "Foo(File file)" by passing "new File(file)." If this comes up in practice, we could
          * provide the dummy suggested fix "someExpression(formalParamName)." However, my research
          * suggests that this will rarely if ever be what the user wants.

@@ -130,7 +130,7 @@ public class RestrictedApiChecker extends BugChecker
   /**
    * Returns the constructor type for the supplied constructor symbol of an anonymous class object
    * that can be matched with a corresponding constructor in its direct superclass. If the anonymous
-   * object creation expression is qualified, i.e, is of the form {@code enclosingExpression.new
+   * object creation expression is qualified, i.e., is of the form {@code enclosingExpression.new
    * identifier (arguments)} the constructor type includes an implicit first parameter with type
    * matching enclosingExpression. In such a case a matching constructor type is created by dropping
    * this implicit parameter.

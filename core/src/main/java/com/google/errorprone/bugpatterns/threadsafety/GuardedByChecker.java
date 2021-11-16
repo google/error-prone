@@ -63,7 +63,7 @@ public class GuardedByChecker extends BugChecker
 
   @Override
   public Description matchMethod(MethodTree tree, final VisitorState state) {
-    // Constructors (and field initializers, instance initalizers, and class initalizers) are free
+    // Constructors (and field initializers, instance initializers, and class initializers) are free
     // to mutate guarded state without holding the necessary locks. It is assumed that all objects
     // (and classes) are thread-local during initialization.
     if (ASTHelpers.getSymbol(tree).isConstructor()) {

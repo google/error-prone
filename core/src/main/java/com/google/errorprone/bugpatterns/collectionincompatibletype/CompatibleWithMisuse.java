@@ -122,7 +122,7 @@ public class CompatibleWithMisuse extends BugChecker implements AnnotationTreeMa
   // @CompatibleWith("X"), @CompatibleWith(value = "X"),
   // @CompatibleWith(SOME_FIELD_WHOSE_CONSTANT_VALUE_IS_X)
   // => X
-  // This function assumes the the annotation tree will only have one argument, of type String, that
+  // This function assumes the annotation tree will only have one argument, of type String, that
   // is required.
   private static String valueArgumentFromCompatibleWithAnnotation(AnnotationTree tree) {
     ExpressionTree argumentValue = Iterables.getOnlyElement(tree.getArguments());

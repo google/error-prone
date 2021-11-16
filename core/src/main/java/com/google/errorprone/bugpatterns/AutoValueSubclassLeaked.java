@@ -50,7 +50,7 @@ import com.sun.tools.javac.code.Type;
         "@AutoValue-annotated classes may form part of your API, but the AutoValue_ generated"
             + " classes should not. The fact that the generated classes are visible to other"
             + " classes within the same package is an implementation detail, and is best avoided."
-            + " Ideally, any reference to the AutoValue_-prefixed class sould be confined to a"
+            + " Ideally, any reference to the AutoValue_-prefixed class should be confined to a"
             + " single factory method, with other factories delegating to it if necessary.")
 public final class AutoValueSubclassLeaked extends BugChecker
     implements CompilationUnitTreeMatcher {

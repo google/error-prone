@@ -54,7 +54,7 @@ abstract class ArgumentChangeFinder {
     abstract ImmutableList.Builder<Heuristic> heuristicsBuilder();
 
     /**
-     * Add the given heuristic to the list to be considered by {@code ArugmentChangeFinder} for
+     * Add the given heuristic to the list to be considered by {@code ArgumentChangeFinder} for
      * eliminating spurious findings. Heuristics are applied in order so add more expensive checks
      * last.
      */

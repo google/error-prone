@@ -162,7 +162,7 @@ public final class FragmentInjectionTest {
   }
 
   @Test
-  public void isValidFragmentImpelementedOnSuperClass() {
+  public void isValidFragmentImplementedOnSuperClass() {
     compilationHelper
         .addSourceLines(
             "MySuperPrefActivity.java",
@@ -183,7 +183,7 @@ public final class FragmentInjectionTest {
   }
 
   @Test
-  public void isValidFragmentImpelementedOnAbstractSuperClass() {
+  public void isValidFragmentImplementedOnAbstractSuperClass() {
     compilationHelper
         .addSourceLines(
             "MySuperPrefActivity.java",

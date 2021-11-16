@@ -31,7 +31,7 @@ public class OverlappingQualifierAndScopeAnnotationNegativeCases {
   @com.google.inject.BindingAnnotation
   @interface MyGuiceBindingAnnotation {}
 
-  // supression tests
+  // suppression tests
   @SuppressWarnings("OverlappingQualifierAndScopeAnnotation")
   @javax.inject.Scope
   @javax.inject.Qualifier

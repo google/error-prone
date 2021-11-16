@@ -169,7 +169,7 @@ public class ReturnMissingNullable extends BugChecker implements CompilationUnit
 
       void doVisitReturn(ReturnTree returnTree) {
         /*
-         * We need the the VisitorState to have the correct TreePath for (a) the call to
+         * We need the VisitorState to have the correct TreePath for (a) the call to
          * findEnclosingMethod and (b) the call to NullnessFixes (which looks up identifiers).
          */
         VisitorState state = stateForCompilationUnit.withPath(getCurrentPath());

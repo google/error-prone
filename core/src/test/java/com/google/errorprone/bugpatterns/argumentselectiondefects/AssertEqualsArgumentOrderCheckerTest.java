@@ -124,7 +124,7 @@ public class AssertEqualsArgumentOrderCheckerTest {
         .addSourceLines(
             "ErrorProneTest.java",
             "abstract class ErrorProneTest {",
-            "  static void assertEquals(String mesasge, Object expected, Object actual) {};",
+            "  static void assertEquals(String message, Object expected, Object actual) {};",
             "  void test(Object other) {",
             "    assertEquals(\"\",1, other);",
             "  }",

@@ -101,7 +101,7 @@ public class RxReturnValueIgnoredPositiveCases {
     }
   }
 
-  public void inheritenceTest() {
+  public void inheritanceTest() {
     NonIgnoringObservableChild observableChild = new NonIgnoringObservableChild();
     NonIgnoringSingleChild singleChild = new NonIgnoringSingleChild();
     NonIgnoringFlowableChild flowableChild = new NonIgnoringFlowableChild();

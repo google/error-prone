@@ -147,7 +147,7 @@ public class BugCheckerInfo implements Serializable {
 
   /**
    * @return a BugCheckerInfo with the same information as this class, except that its default
-   *     severity is the passed in paramter. If this checker's current defaultSeverity is the same
+   *     severity is the passed in parameter. If this checker's current defaultSeverity is the same
    *     as the argument, return this.
    */
   public BugCheckerInfo withCustomDefaultSeverity(SeverityLevel defaultSeverity) {

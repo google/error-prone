@@ -46,7 +46,7 @@ public class CreatesDuplicateCallHeuristicTest {
   @BugPattern(
       name = "CreatesDuplicateCallHeuristicChecker",
       severity = SeverityLevel.ERROR,
-      summary = "Runs CreateDuplicateCallHeursitic and prints the result")
+      summary = "Runs CreateDuplicateCallHeuristic and prints the result")
   public static class CreatesDuplicateCallHeuristicChecker extends BugChecker
       implements MethodInvocationTreeMatcher {
 

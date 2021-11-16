@@ -16,9 +16,7 @@
 
 package com.google.errorprone.bugpatterns.inject.guice.testdata;
 
-/**
- * @author sgoldfeder@gooogle.com (Steven Goldfeder)
- */
+/** @author sgoldfeder@google.com (Steven Goldfeder) */
 public class OverridesJavaxInjectableMethodPositiveCases {
 
   /** Class with foo() */

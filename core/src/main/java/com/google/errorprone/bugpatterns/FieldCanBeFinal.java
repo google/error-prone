@@ -95,7 +95,7 @@ public class FieldCanBeFinal extends BugChecker implements CompilationUnitTreeMa
           Kind.PREFIX_INCREMENT,
           Kind.POSTFIX_INCREMENT);
 
-  /** The initalization context where an assignment occurred. */
+  /** The initialization context where an assignment occurred. */
   private enum InitializationContext {
     /** A class (static) initializer. */
     STATIC,

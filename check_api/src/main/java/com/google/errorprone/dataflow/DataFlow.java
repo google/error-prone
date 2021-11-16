@@ -202,7 +202,7 @@ public final class DataFlow {
    * initializer block). Example of an expression outside of such constructs is the identifier in an
    * import statement.
    *
-   * <p>Note that for intializers, each inline field initializer or initializer block is treated
+   * <p>Note that for initializers, each inline field initializer or initializer block is treated
    * separately. I.e., we don't merge all initializers into one virtual block for dataflow.
    *
    * @return dataflow result for the given expression or {@code null} if the expression is not part

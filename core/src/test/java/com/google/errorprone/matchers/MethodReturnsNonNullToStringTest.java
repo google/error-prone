@@ -98,7 +98,7 @@ public class MethodReturnsNonNullToStringTest extends CompilerBasedAbstractTest 
   }
 
   @Test
-  public void shoudlNotMatchWhenMethodSignatureDiffers() {
+  public void shouldNotMatchWhenMethodSignatureDiffers() {
     writeFile(
         "A.java",
         "  public String toString(int i) {",

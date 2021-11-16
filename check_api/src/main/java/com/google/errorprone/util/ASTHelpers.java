@@ -471,7 +471,7 @@ public class ASTHelpers {
   }
 
   /**
-   * Returns the type that this expression tree will evaluate to. If its a literal, an identifier,
+   * Returns the type that this expression tree will evaluate to. If it's a literal, an identifier,
    * or a member select this is the actual type, if it's a method invocation then it's the return
    * type of the method (after instantiating generic types), if it's a constructor then it's the
    * type of the returned class.
@@ -1010,7 +1010,7 @@ public class ASTHelpers {
     return new LinkedHashSet<>(values);
   }
 
-  /** Returns true if the given tree is a generated constructor. * */
+  /** Returns true if the given tree is a generated constructor. */
   public static boolean isGeneratedConstructor(MethodTree tree) {
     if (!(tree instanceof JCMethodDecl)) {
       return false;

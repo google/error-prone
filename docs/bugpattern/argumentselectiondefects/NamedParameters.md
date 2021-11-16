@@ -38,7 +38,7 @@ after the comma) and `param2` is not even in the same parse tree node as the
 method invocation (its after the semi-colon).
 
 *Shortcomings with the use of block comments after the argument* arise because
-its not always natural to put them in the right place. For example:
+it's not always natural to put them in the right place. For example:
 
 ```java
 // not as intended

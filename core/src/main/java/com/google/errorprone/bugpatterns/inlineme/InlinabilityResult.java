@@ -183,10 +183,10 @@ abstract class InlinabilityResult {
       return fromError(InlineValidationErrorReason.COMPLEX_STATEMENT, body);
     }
 
-    Symbol usedMultipledTimes = usesVariablesMultipleTimes(body, methSymbol.params(), state);
-    if (usedMultipledTimes != null) {
+    Symbol usedMultipliedTimes = usesVariablesMultipleTimes(body, methSymbol.params(), state);
+    if (usedMultipliedTimes != null) {
       return fromError(
-          InlineValidationErrorReason.REUSE_OF_ARGUMENTS, body, usedMultipledTimes.toString());
+          InlineValidationErrorReason.REUSE_OF_ARGUMENTS, body, usedMultipliedTimes.toString());
     }
 
     Tree privateOrDeprecatedApi =

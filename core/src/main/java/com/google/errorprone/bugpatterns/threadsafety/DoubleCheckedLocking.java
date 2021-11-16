@@ -189,7 +189,7 @@ public class DoubleCheckedLocking extends BugChecker implements IfTreeMatcher {
     /** The synchronized statement */
     abstract SynchronizedTree synchTree();
 
-    /** The inner if statement * */
+    /** The inner if statement */
     abstract IfTree innerIf();
 
     /** The variable (local or field) that is double-checked */

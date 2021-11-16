@@ -1,4 +1,5 @@
-Prefer enhanced for loops intead of explicitly using an iterator where possible.
+Prefer enhanced for loops instead of explicitly using an iterator where
+possible.
 
 That is, prefer this:
 

@@ -61,7 +61,7 @@ public class MethodReturnsNonNullNextTokenTest extends CompilerBasedAbstractTest
   }
 
   @Test
-  public void shouldNotMatchOverridenMethod() {
+  public void shouldNotMatchOverriddenMethod() {
     writeFile(
         "A.java",
         "import java.util.StringTokenizer;",
@@ -73,7 +73,7 @@ public class MethodReturnsNonNullNextTokenTest extends CompilerBasedAbstractTest
         "  public String nextToken() {",
         "    return \"overridden method\";",
         "  }",
-        "  public void testOverridenNextToken() {",
+        "  public void testOverriddenNextToken() {",
         "    nextToken();",
         "  }",
         "}");
