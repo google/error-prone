@@ -46,8 +46,8 @@ public class ScopeAnnotationOnInterfaceOrAbstractClass extends BugChecker
     implements AnnotationTreeMatcher {
 
   /**
-   * Matches annotations that are themselves annotated with @ScopeAnnotation(Guice)
-   * or @Scope(Javax).
+   * Matches annotations that are themselves annotated with {@code @ScopeAnnotation(Guice)} or
+   * {@code @Scope(Javax)}.
    */
   private static final Matcher<AnnotationTree> SCOPE_ANNOTATION_MATCHER =
       Matchers.<AnnotationTree>anyOf(
