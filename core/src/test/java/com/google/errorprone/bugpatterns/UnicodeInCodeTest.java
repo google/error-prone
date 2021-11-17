@@ -83,4 +83,30 @@ public final class UnicodeInCodeTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void suppressibleAtClassLevel() {
+    helper
+        .addSourceLines(
+            "Test.java", //
+            "@SuppressWarnings(\"UnicodeInCode\")",
+            "class Test {",
+            "  static final double \u03C0 = 3;",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void suppressibleAtMethodLevel() {
+    helper
+        .addSourceLines(
+            "Test.java", //
+            "class Test {",
+            "  @SuppressWarnings(\"UnicodeInCode\")",
+            "  void test() {",
+            "    double \u03C0 = 3;",
+            "  }",
+            "}")
+        .doTest();
+  }
 }

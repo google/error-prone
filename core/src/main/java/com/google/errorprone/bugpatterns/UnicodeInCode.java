@@ -20,6 +20,7 @@ import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.common.collect.Streams.concat;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
+import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static com.google.errorprone.util.ErrorProneTokens.getTokens;
 
 import com.google.common.collect.ImmutableList;
@@ -31,8 +32,15 @@ import com.google.errorprone.bugpatterns.BugChecker.CompilationUnitTreeMatcher;
 import com.google.errorprone.fixes.FixedPosition;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ErrorProneToken;
+import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
+import com.sun.source.tree.MethodTree;
+import com.sun.source.tree.Tree;
+import com.sun.source.tree.VariableTree;
+import com.sun.source.util.TreePathScanner;
 import com.sun.tools.javac.parser.Tokens.TokenKind;
+import java.util.ArrayList;
+import java.util.List;
 
 /** Bans using non-ASCII Unicode characters outside string literals and comments. */
 @BugPattern(
@@ -46,13 +54,27 @@ public final class UnicodeInCode extends BugChecker implements CompilationUnitTr
   public Description matchCompilationUnit(CompilationUnitTree tree, VisitorState state) {
     ImmutableRangeSet<Integer> commentsAndLiterals = commentsAndLiterals(state);
 
+    List<Integer> violatingLocations = new ArrayList<>();
+
     CharSequence sourceCode = state.getSourceCode();
 
     for (int i = 0; i < sourceCode.length(); ++i) {
       char c = sourceCode.charAt(i);
 
       if (!isAcceptableAscii(c) && !commentsAndLiterals.contains(i)) {
-        state.reportMatch(describeMatch(new FixedPosition(tree, i)));
+        violatingLocations.add(i);
+      }
+    }
+
+    if (violatingLocations.isEmpty()) {
+      return NO_MATCH;
+    }
+
+    ImmutableRangeSet<Integer> suppressedRegions = suppressedRegions(state);
+
+    for (Integer violatingLocation : violatingLocations) {
+      if (!suppressedRegions.contains(violatingLocation)) {
+        state.reportMatch(describeMatch(new FixedPosition(tree, violatingLocation)));
       }
     }
     return NO_MATCH;
@@ -80,5 +102,36 @@ public final class UnicodeInCode extends BugChecker implements CompilationUnitTr
                             Range.closed(
                                 c.getSourcePos(0), c.getSourcePos(0) + c.getText().length())))
             .collect(toImmutableList()));
+  }
+
+  private ImmutableRangeSet<Integer> suppressedRegions(VisitorState state) {
+    ImmutableRangeSet.Builder<Integer> suppressedRegions = ImmutableRangeSet.builder();
+    new TreePathScanner<Void, Void>() {
+
+      @Override
+      public Void visitClass(ClassTree tree, Void unused) {
+        handle(tree);
+        return super.visitClass(tree, null);
+      }
+
+      @Override
+      public Void visitMethod(MethodTree tree, Void unused) {
+        handle(tree);
+        return super.visitMethod(tree, null);
+      }
+
+      @Override
+      public Void visitVariable(VariableTree tree, Void unused) {
+        handle(tree);
+        return super.visitVariable(tree, null);
+      }
+
+      private void handle(Tree tree) {
+        if (isSuppressed(tree)) {
+          suppressedRegions.add(Range.closed(getStartPosition(tree), state.getEndPosition(tree)));
+        }
+      }
+    }.scan(state.getPath(), null);
+    return suppressedRegions.build();
   }
 }
