@@ -20,6 +20,7 @@ import static com.google.common.base.Preconditions.checkState;
 import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.common.collect.MoreCollectors.onlyElement;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
+import static com.google.errorprone.util.ASTHelpers.enclosingPackage;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.hasDirectAnnotationWithSimpleName;
@@ -312,6 +313,7 @@ public final class Inliner extends BugChecker
       return new AutoValue_Inliner_Api(
           method.owner.getQualifiedName().toString(),
           method.getSimpleName().toString(),
+          enclosingPackage(method).toString(),
           method.isConstructor(),
           extraMessage);
     }
@@ -319,6 +321,8 @@ public final class Inliner extends BugChecker
     abstract String className();
 
     abstract String methodName();
+
+    abstract String packageName();
 
     abstract boolean isConstructor();
 
@@ -338,7 +342,8 @@ public final class Inliner extends BugChecker
      * `ClassName.methodName()`}).
      */
     final String shortName() {
-      return String.format("`%s.%s()`", simpleClassName(), methodName());
+      String humanReadableClassName = className().replaceFirst(packageName() + ".", "");
+      return String.format("`%s.%s()`", humanReadableClassName, methodName());
     }
 
     /** Returns the simple class name (e.g., {@code ClassName}). */
