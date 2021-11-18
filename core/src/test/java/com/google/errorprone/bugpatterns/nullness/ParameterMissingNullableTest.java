@@ -109,6 +109,24 @@ public class ParameterMissingNullableTest {
   }
 
   @Test
+  public void testNegativeCasesAlreadyTypeAnnotatedInnerClass() {
+    helper
+        .addSourceLines(
+            "Foo.java",
+            "import org.checkerframework.checker.nullness.qual.Nullable;",
+            "public class Foo {",
+            "  class Inner {}",
+            "  @Nullable Inner message;",
+            "  void foo(@Nullable Inner i) {",
+            "    if (i == null) {",
+            "      return;",
+            "    }",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void testNegativePreconditionCheckMethod() {
     helper
         .addSourceLines(
