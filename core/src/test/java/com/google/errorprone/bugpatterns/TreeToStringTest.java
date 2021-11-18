@@ -95,4 +95,9 @@ public class TreeToStringTest {
             "jdk.compiler/com.sun.tools.javac.util")
         .doTest();
   }
+
+  @Test
+  public void testPositiveCases() {
+    testHelper.addSourceFile("TreeToStringPositiveCases.java").doTest();
+  }
 }
