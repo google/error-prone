@@ -16,6 +16,7 @@
 
 package com.google.errorprone.bugpatterns.nullness;
 
+import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
 import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.fixByPrefixingWithNullableAnnotation;
 import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.hasNoExplicitType;
@@ -25,6 +26,7 @@ import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static javax.lang.model.element.ElementKind.LOCAL_VARIABLE;
 
+import com.google.common.collect.ImmutableList;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
@@ -34,6 +36,8 @@ import com.google.errorprone.bugpatterns.BugChecker.VariableTreeMatcher;
 import com.google.errorprone.dataflow.nullnesspropagation.Nullness;
 import com.google.errorprone.dataflow.nullnesspropagation.NullnessAnnotations;
 import com.google.errorprone.matchers.Description;
+import com.google.errorprone.util.ASTHelpers;
+import com.sun.source.tree.AnnotatedTypeTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.ParameterizedTypeTree;
 import com.sun.source.tree.Tree;
@@ -73,7 +77,7 @@ public class VoidMissingNullable extends BugChecker
       if (tree instanceof WildcardTree) {
         tree = ((WildcardTree) tree).getBound();
       }
-      checkType(getType(tree), tree, state);
+      checkTree(tree, state);
     }
     return NO_MATCH; // Any reports were made through state.reportMatch.
   }
@@ -108,14 +112,26 @@ public class VoidMissingNullable extends BugChecker
     return matchType(sym.type, sym, tree, state);
   }
 
-  private void checkType(Type type, Tree treeToAnnotate, VisitorState state) {
+  private void checkTree(Tree tree, VisitorState state) {
+    Type type = getType(tree);
     if (!isVoid(type, state)) {
       return;
     }
     if (NullnessAnnotations.fromAnnotationsOn(type).orElse(null) == Nullness.NULLABLE) {
       return;
     }
-    state.reportMatch(describeMatch(treeToAnnotate, state));
+    /*
+     * Redundant-looking check required for anonymous classes because JCTree.type doesn't show the
+     * annotations in that case -- presumably a bug?
+     *
+     * TODO(cpovirk): Provide this pair of checks as NullnessAnnotations.fromAnnotationsOn(Tree),
+     * which might also be useful for a hypothetical future TypeArgumentMissingNullable?
+     */
+    if (NullnessAnnotations.fromAnnotations(annotationsIfAnnotatedTypeTree(tree)).orElse(null)
+        == Nullness.NULLABLE) {
+      return;
+    }
+    state.reportMatch(describeMatch(tree, state));
   }
 
   private Description matchType(Type type, Symbol sym, Tree treeToAnnotate, VisitorState state) {
@@ -137,5 +153,15 @@ public class VoidMissingNullable extends BugChecker
      */
     return describeMatch(
         treeToAnnotate, fixByPrefixingWithNullableAnnotation(state, treeToAnnotate));
+  }
+
+  private static ImmutableList<String> annotationsIfAnnotatedTypeTree(Tree tree) {
+    if (tree instanceof AnnotatedTypeTree) {
+      AnnotatedTypeTree annotated = ((AnnotatedTypeTree) tree);
+      return annotated.getAnnotations().stream()
+          .map(ASTHelpers::getAnnotationName)
+          .collect(toImmutableList());
+    }
+    return ImmutableList.of();
   }
 }

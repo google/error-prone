@@ -156,6 +156,29 @@ public class VoidMissingNullableTest {
   }
 
   @Test
+  public void negativeTypeArgumentAlreadyAnnotatedAnonymous() {
+    compilationHelper
+        .addSourceLines(
+            "Nullable.java",
+            "import java.lang.annotation.ElementType;",
+            "import java.lang.annotation.Retention;",
+            "import java.lang.annotation.RetentionPolicy;",
+            "import java.lang.annotation.Target;",
+            "@Retention(RetentionPolicy.RUNTIME)",
+            "@Target(ElementType.TYPE_USE)",
+            "public @interface Nullable {}")
+        .addSourceLines("Bystander.java", "public interface Bystander<T> {}")
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  static {",
+            "    new Bystander<@Nullable Void>() {};",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void negativeTypeArgumentNotVoid() {
     compilationHelper
         .addSourceLines(
