@@ -934,6 +934,9 @@ Non-empty arrays are mutable, so this `public static final` array is not a const
 __[NarrowingCompoundAssignment](bugpattern/NarrowingCompoundAssignment)__<br>
 Compound assignments may hide dangerous casts
 
+__[NegativeCharLiteral](bugpattern/NegativeCharLiteral)__<br>
+Casting a negative signed literal to an (unsigned) char might be misleading.
+
 __[NestedInstanceOfConditions](bugpattern/NestedInstanceOfConditions)__<br>
 Nested instanceOf conditions of disjoint types create blocks of code that never execute
 
