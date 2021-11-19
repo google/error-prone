@@ -246,7 +246,9 @@ public final class HeldLockAnalyzer {
       for (String guardString : GuardedByUtils.getGuardValues(tree, visitorState)) {
         Optional<GuardedByExpression> guard =
             GuardedByBinder.bindString(
-                guardString, GuardedBySymbolResolver.from(tree, visitorState), flags);
+                guardString,
+                GuardedBySymbolResolver.from(tree, visitorState.withPath(getCurrentPath())),
+                flags);
         if (!guard.isPresent()) {
           if (reportMissingGuards) {
             invalidLock(tree, locks, guardString);

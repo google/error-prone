@@ -14,9 +14,12 @@
 
 package com.google.errorprone.bugpatterns.threadsafety;
 
+import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.errorprone.bugpatterns.threadsafety.IllegalGuardedBy.checkGuardedBy;
 import static java.util.Objects.requireNonNull;
 
+import com.google.auto.value.AutoValue;
+import com.google.common.collect.ImmutableList;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.CompilationUnitTree;
@@ -28,6 +31,8 @@ import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Scope;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
+import com.sun.tools.javac.code.Symbol.MethodSymbol;
+import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Types;
 import com.sun.tools.javac.comp.Attr;
@@ -35,7 +40,9 @@ import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 import com.sun.tools.javac.tree.TreeMaker;
 import com.sun.tools.javac.util.Context;
+import javax.annotation.Nullable;
 import javax.lang.model.element.ElementKind;
+import javax.lang.model.element.Name;
 
 /**
  * A symbol resolver used while binding guardedby expressions from string literals.
@@ -45,6 +52,7 @@ import javax.lang.model.element.ElementKind;
 public class GuardedBySymbolResolver implements GuardedByBinder.Resolver {
 
   private final ClassSymbol enclosingClass;
+  private final MethodInfo method;
   private final Tree decl;
   private final JCTree.JCCompilationUnit compilationUnit;
   private final Context context;
@@ -54,6 +62,7 @@ public class GuardedBySymbolResolver implements GuardedByBinder.Resolver {
   public static GuardedBySymbolResolver from(Tree tree, VisitorState visitorState) {
     return GuardedBySymbolResolver.from(
         ASTHelpers.getSymbol(tree).owner.enclClass(),
+        MethodInfo.create(tree, visitorState),
         visitorState.getPath().getCompilationUnit(),
         visitorState.context,
         tree,
@@ -62,21 +71,24 @@ public class GuardedBySymbolResolver implements GuardedByBinder.Resolver {
 
   public static GuardedBySymbolResolver from(
       ClassSymbol owner,
+      MethodInfo method,
       CompilationUnitTree compilationUnit,
       Context context,
       Tree leaf,
       VisitorState visitorState) {
-    return new GuardedBySymbolResolver(owner, compilationUnit, context, leaf, visitorState);
+    return new GuardedBySymbolResolver(owner, method, compilationUnit, context, leaf, visitorState);
   }
 
   private GuardedBySymbolResolver(
       ClassSymbol enclosingClass,
+      MethodInfo method,
       CompilationUnitTree compilationUnit,
       Context context,
       Tree leaf,
       VisitorState visitorState) {
     this.compilationUnit = (JCCompilationUnit) compilationUnit;
     this.enclosingClass = requireNonNull(enclosingClass);
+    this.method = method;
     this.context = context;
     this.types = visitorState.getTypes();
     this.decl = leaf;
@@ -113,9 +125,14 @@ public class GuardedBySymbolResolver implements GuardedByBinder.Resolver {
       return sym;
     }
 
-    Symbol.VarSymbol field = getField(enclosingClass, name);
+    VarSymbol field = getField(enclosingClass, name);
     if (field != null) {
       return field;
+    }
+
+    VarSymbol param = getParam(method, name);
+    if (param != null) {
+      return param;
     }
 
     Symbol type = resolveType(name, SearchSuperTypes.YES);
@@ -127,23 +144,20 @@ public class GuardedBySymbolResolver implements GuardedByBinder.Resolver {
   }
 
   @Override
-  public Symbol.MethodSymbol resolveMethod(
-      MethodInvocationTree node, javax.lang.model.element.Name name) {
+  public MethodSymbol resolveMethod(MethodInvocationTree node, Name name) {
     return getMethod(enclosingClass, name.toString());
   }
 
   @Override
-  public Symbol.MethodSymbol resolveMethod(
-      MethodInvocationTree node,
-      GuardedByExpression base,
-      javax.lang.model.element.Name identifier) {
+  public MethodSymbol resolveMethod(
+      MethodInvocationTree node, GuardedByExpression base, Name identifier) {
     Symbol baseSym =
         base.kind() == GuardedByExpression.Kind.THIS ? enclosingClass : base.type().asElement();
     return getMethod(baseSym, identifier.toString());
   }
 
-  private Symbol.MethodSymbol getMethod(Symbol classSymbol, String name) {
-    return getMember(Symbol.MethodSymbol.class, ElementKind.METHOD, classSymbol, name);
+  private MethodSymbol getMethod(Symbol classSymbol, String name) {
+    return getMember(MethodSymbol.class, ElementKind.METHOD, classSymbol, name);
   }
 
   @Override
@@ -153,8 +167,8 @@ public class GuardedBySymbolResolver implements GuardedByBinder.Resolver {
     return getField(baseSym, node.getIdentifier().toString());
   }
 
-  private Symbol.VarSymbol getField(Symbol classSymbol, String name) {
-    return getMember(Symbol.VarSymbol.class, ElementKind.FIELD, classSymbol, name);
+  private VarSymbol getField(Symbol classSymbol, String name) {
+    return getMember(VarSymbol.class, ElementKind.FIELD, classSymbol, name);
   }
 
   private <T extends Symbol> T getMember(
@@ -183,6 +197,29 @@ public class GuardedBySymbolResolver implements GuardedByBinder.Resolver {
       if (sym != null && sym.isStatic()) {
         return sym;
       }
+    }
+    return null;
+  }
+
+  @Nullable
+  private VarSymbol getParam(@Nullable MethodInfo method, String name) {
+    if (method == null) {
+      return null;
+    }
+    int idx = 0;
+    for (VarSymbol param : method.sym().getParameters()) {
+      if (!param.getSimpleName().contentEquals(name)) {
+        idx++;
+        continue;
+      }
+      ExpressionTree arg = method.argument(idx);
+      if (arg != null) {
+        Symbol sym = ASTHelpers.getSymbol(arg);
+        if (sym instanceof VarSymbol) {
+          return (VarSymbol) sym;
+        }
+      }
+      return param;
     }
     return null;
   }
@@ -267,5 +304,55 @@ public class GuardedBySymbolResolver implements GuardedByBinder.Resolver {
       return type;
     }
     return null;
+  }
+
+  /** Information about a method that is associated with a {@link GuardedBy} annotation. */
+  @AutoValue
+  abstract static class MethodInfo {
+    /** The method symbol. */
+    abstract MethodSymbol sym();
+
+    /**
+     * The method arguments, if the site is a method invocation expression for a method annotated
+     * with {@code @GuardedBy}.
+     */
+    @Nullable
+    abstract ImmutableList<ExpressionTree> arguments();
+
+    @Nullable
+    ExpressionTree argument(int idx) {
+      return arguments() != null ? arguments().get(idx) : null;
+    }
+
+    static MethodInfo create(MethodSymbol sym) {
+      return create(sym, null);
+    }
+
+    static MethodInfo create(MethodSymbol sym, ImmutableList<ExpressionTree> arguments) {
+      // There may be more arguments than parameters due to varargs, but there shouldn't be fewer
+      checkArgument(arguments == null || arguments.size() >= sym.getParameters().size());
+      return new AutoValue_GuardedBySymbolResolver_MethodInfo(sym, arguments);
+    }
+
+    static MethodInfo create(Tree tree, VisitorState visitorState) {
+      Symbol sym = ASTHelpers.getSymbol(tree);
+      if (!(sym instanceof MethodSymbol)) {
+        return null;
+      }
+      MethodSymbol methodSym = (MethodSymbol) sym;
+      if (!(tree instanceof MemberSelectTree)) {
+        return create(methodSym);
+      }
+      Tree parent = visitorState.getPath().getParentPath().getLeaf();
+      if (!(parent instanceof MethodInvocationTree)) {
+        return create(methodSym);
+      }
+      MethodInvocationTree invocation = (MethodInvocationTree) parent;
+      if (!invocation.getMethodSelect().equals(tree)) {
+        return create(methodSym);
+      }
+      return create(
+          methodSym, ImmutableList.copyOf(((MethodInvocationTree) parent).getArguments()));
+    }
   }
 }
