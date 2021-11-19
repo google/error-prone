@@ -58,7 +58,7 @@ public class GuardedByChecker extends BugChecker
 
   public GuardedByChecker(ErrorProneFlags errorProneFlags) {
     reportMissingGuards =
-        errorProneFlags.getBoolean("GuardedByChecker:reportMissingGuards").orElse(false);
+        errorProneFlags.getBoolean("GuardedByChecker:reportMissingGuards").orElse(true);
   }
 
   @Override
