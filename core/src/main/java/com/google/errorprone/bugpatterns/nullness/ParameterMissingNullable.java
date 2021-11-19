@@ -18,7 +18,7 @@ package com.google.errorprone.bugpatterns.nullness;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
 import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.findDeclaration;
-import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.fixByPrefixingWithNullableAnnotation;
+import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.fixByAddingNullableAnnotationToType;
 import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.getNullCheck;
 import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.hasNoExplicitType;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
@@ -120,7 +120,7 @@ public class ParameterMissingNullable extends BugChecker implements BinaryTreeMa
     if (hasNoExplicitType(param, state)) {
       return NO_MATCH;
     }
-    return describeMatch(tree, fixByPrefixingWithNullableAnnotation(state, param));
+    return describeMatch(tree, fixByAddingNullableAnnotationToType(state, param));
   }
 
   private static boolean isLoopCondition(TreePath path) {

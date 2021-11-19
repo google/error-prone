@@ -16,6 +16,9 @@
 
 package com.google.errorprone.bugpatterns.nullness;
 
+import static com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH;
+
+import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,6 +29,8 @@ import org.junit.runners.JUnit4;
 public class ParameterMissingNullableTest {
   private final CompilationTestHelper helper =
       CompilationTestHelper.newInstance(ParameterMissingNullable.class, getClass());
+  private final BugCheckerRefactoringTestHelper refactoringHelper =
+      BugCheckerRefactoringTestHelper.newInstance(ParameterMissingNullable.class, getClass());
 
   @Test
   public void testPositiveIf() {
@@ -64,6 +69,8 @@ public class ParameterMissingNullableTest {
 
   @Test
   public void testPositiveDespiteWhileLoop() {
+    // TODO(cpovirk): This doesn't look "positive" to me.
+    // TODO(cpovirk): Also, I *think* the lack of braces on the while() loop is intentional?
     helper
         .addSourceLines(
             "Foo.java",
@@ -90,6 +97,58 @@ public class ParameterMissingNullableTest {
             "  }",
             "}")
         .doTest();
+  }
+
+  @Test
+  public void testDeclarationAnnotatedLocation() {
+    refactoringHelper
+        .addInputLines(
+            "in/Foo.java",
+            "import javax.annotation.Nullable;",
+            "class Foo {",
+            "  void foo(java.lang.Integer i) {",
+            "    if (i == null) {",
+            "      i = 0;",
+            "    }",
+            "  }",
+            "}")
+        .addOutputLines(
+            "out/Foo.java",
+            "import javax.annotation.Nullable;",
+            "class Foo {",
+            "  void foo(@Nullable java.lang.Integer i) {",
+            "    if (i == null) {",
+            "      i = 0;",
+            "    }",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void testTypeAnnotatedLocation() {
+    refactoringHelper
+        .addInputLines(
+            "in/Foo.java",
+            "import org.checkerframework.checker.nullness.qual.Nullable;",
+            "class Foo {",
+            "  void foo(java.lang.Integer i) {",
+            "    if (i == null) {",
+            "      i = 0;",
+            "    }",
+            "  }",
+            "}")
+        .addOutputLines(
+            "out/Foo.java",
+            "import org.checkerframework.checker.nullness.qual.Nullable;",
+            "class Foo {",
+            "  void foo(java.lang.@Nullable Integer i) {",
+            "    if (i == null) {",
+            "      i = 0;",
+            "    }",
+            "  }",
+            "}")
+        .doTest(TEXT_MATCH);
   }
 
   @Test

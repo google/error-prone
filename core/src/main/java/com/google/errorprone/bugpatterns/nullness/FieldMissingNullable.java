@@ -18,7 +18,7 @@ package com.google.errorprone.bugpatterns.nullness;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
 import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.findDeclaration;
-import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.fixByPrefixingWithNullableAnnotation;
+import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.fixByAddingNullableAnnotationToType;
 import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.getNullCheck;
 import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.hasDefinitelyNullBranch;
 import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.varsProvenNullByParentIf;
@@ -123,6 +123,6 @@ public class FieldMissingNullable extends BugChecker
       return NO_MATCH;
     }
 
-    return describeMatch(treeToReportOn, fixByPrefixingWithNullableAnnotation(state, fieldDecl));
+    return describeMatch(treeToReportOn, fixByAddingNullableAnnotationToType(state, fieldDecl));
   }
 }

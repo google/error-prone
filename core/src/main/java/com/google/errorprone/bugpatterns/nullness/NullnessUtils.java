@@ -82,23 +82,36 @@ class NullnessUtils {
    */
   static SuggestedFix fixByAddingNullableAnnotationToReturnType(
       VisitorState state, MethodTree method) {
+    return fixByAddingNullableAnnotationToElementOrType(state, method, method.getReturnType());
+  }
+
+  /**
+   * Returns a {@link SuggestedFix} to add a {@code Nullable} annotation to the given variable's
+   * type.
+   */
+  static SuggestedFix fixByAddingNullableAnnotationToType(
+      VisitorState state, VariableTree variable) {
+    return fixByAddingNullableAnnotationToElementOrType(state, variable, variable.getType());
+  }
+
+  private static SuggestedFix fixByAddingNullableAnnotationToElementOrType(
+      VisitorState state, Tree elementTree, Tree typeTree) {
     NullableAnnotationToUse nullableAnnotationToUse = pickNullableAnnotation(state);
     if (!nullableAnnotationToUse.isAlreadyInScope() && applyOnlyIfAlreadyInScope(state)) {
       return emptyFix();
     }
 
     if (!nullableAnnotationToUse.isTypeUse()) {
-      return nullableAnnotationToUse.fixPrefixingOnto(method);
+      return nullableAnnotationToUse.fixPrefixingOnto(elementTree);
     }
 
-    Tree returnType = method.getReturnType();
-    if (returnType.getKind() == PARAMETERIZED_TYPE) {
-      returnType = ((ParameterizedTypeTree) returnType).getType();
+    if (typeTree.getKind() == PARAMETERIZED_TYPE) {
+      typeTree = ((ParameterizedTypeTree) typeTree).getType();
     }
-    switch (returnType.getKind()) {
+    switch (typeTree.getKind()) {
       case ARRAY_TYPE:
         Tree beforeBrackets;
-        for (beforeBrackets = returnType;
+        for (beforeBrackets = typeTree;
             beforeBrackets.getKind() == ARRAY_TYPE;
             beforeBrackets = ((ArrayTypeTree) beforeBrackets).getType()) {}
         // For an explanation of "int @Foo [][] f," etc., see JLS 4.11.
@@ -106,7 +119,7 @@ class NullnessUtils {
 
       case MEMBER_SELECT:
         int lastDot =
-            reverse(state.getOffsetTokensForNode(returnType)).stream()
+            reverse(state.getOffsetTokensForNode(typeTree)).stream()
                 .filter(t -> t.kind() == DOT)
                 .findFirst()
                 .get()
@@ -115,17 +128,14 @@ class NullnessUtils {
 
       case ANNOTATED_TYPE:
         return nullableAnnotationToUse.fixPrefixingOnto(
-            ((AnnotatedTypeTree) returnType).getAnnotations().get(0));
+            ((AnnotatedTypeTree) typeTree).getAnnotations().get(0));
 
       case IDENTIFIER:
-        return nullableAnnotationToUse.fixPrefixingOnto(returnType);
+        return nullableAnnotationToUse.fixPrefixingOnto(typeTree);
 
       default:
         throw new AssertionError(
-            "unexpected tree kind for getReturnType: "
-                + returnType.getKind()
-                + " for "
-                + returnType);
+            "unexpected kind for type tree: " + typeTree.getKind() + " for " + typeTree);
     }
     // TODO(cpovirk): Remove any @NonNull, etc. annotation that is present?
   }
