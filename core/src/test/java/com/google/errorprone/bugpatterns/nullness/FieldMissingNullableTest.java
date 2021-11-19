@@ -200,6 +200,23 @@ public class FieldMissingNullableTest {
   }
 
   @Test
+  public void testNegativeCases_alreadyAnnotatedMonotonic() {
+    createCompilationTestHelper()
+        .addSourceLines(
+            "com/google/errorprone/bugpatterns/nullness/FieldMissingNullTest.java",
+            "package com.google.errorprone.bugpatterns.nullness;",
+            "import org.checkerframework.checker.nullness.qual.MonotonicNonNull;",
+            "public class FieldMissingNullTest {",
+            "  private @MonotonicNonNull String message;",
+            "  public void reset() {",
+            "    if (message != null) {",
+            "    }",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void testNegativeCases_alreadyTypeAnnotatedInnerClass() {
     createCompilationTestHelper()
         .addSourceLines(
