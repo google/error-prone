@@ -232,6 +232,7 @@ import com.google.errorprone.bugpatterns.MutableMethodReturnType;
 import com.google.errorprone.bugpatterns.MutablePublicArray;
 import com.google.errorprone.bugpatterns.NCopiesOfChar;
 import com.google.errorprone.bugpatterns.NarrowingCompoundAssignment;
+import com.google.errorprone.bugpatterns.NegativeCharLiteral;
 import com.google.errorprone.bugpatterns.NestedInstanceOfConditions;
 import com.google.errorprone.bugpatterns.NoAllocationChecker;
 import com.google.errorprone.bugpatterns.NoFunctionalReturnType;
@@ -894,6 +895,7 @@ public class BuiltInCheckerSuppliers {
           MutableConstantField.class,
           MutablePublicArray.class,
           NarrowingCompoundAssignment.class,
+          NegativeCharLiteral.class,
           NestedInstanceOfConditions.class,
           NonAtomicVolatileUpdate.class,
           NonCanonicalType.class,
