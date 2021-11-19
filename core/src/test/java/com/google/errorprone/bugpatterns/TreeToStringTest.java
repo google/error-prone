@@ -100,4 +100,13 @@ public class TreeToStringTest {
   public void testPositiveCases() {
     testHelper.addSourceFile("TreeToStringPositiveCases.java").doTest();
   }
+
+  @Test
+  public void testNegativeCases() {
+    testHelper
+        .addSourceFile("TreeToStringNegativeCases.java")
+        .addModules(
+            "jdk.compiler/com.sun.tools.javac.code", "jdk.compiler/com.sun.tools.javac.util")
+        .doTest();
+  }
 }
