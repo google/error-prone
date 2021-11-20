@@ -24,6 +24,7 @@ import static com.google.errorprone.util.ASTHelpers.enclosingPackage;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.hasDirectAnnotationWithSimpleName;
+import static com.google.errorprone.util.ASTHelpers.stringContainsComments;
 import static com.google.errorprone.util.MoreAnnotations.asStringValue;
 import static com.google.errorprone.util.MoreAnnotations.getValue;
 import static com.google.errorprone.util.SideEffectAnalysis.hasSideEffect;
@@ -53,12 +54,7 @@ import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Attribute;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
-import com.sun.tools.javac.parser.JavaTokenizer;
-import com.sun.tools.javac.parser.ScannerFactory;
-import com.sun.tools.javac.parser.Tokens.Token;
-import com.sun.tools.javac.parser.Tokens.TokenKind;
 import com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition;
-import java.nio.CharBuffer;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -159,7 +155,8 @@ public final class Inliner extends BugChecker
       return Description.NO_MATCH;
     }
 
-    if (skipCallsitesWithComments && stringContainsComments(state.getSourceForNode(tree), state)) {
+    if (skipCallsitesWithComments
+        && stringContainsComments(state.getSourceForNode(tree), state.context)) {
       return Description.NO_MATCH;
     }
 
@@ -269,20 +266,6 @@ public final class Inliner extends BugChecker
     }
 
     return describe(tree, fix, api);
-  }
-
-  // Implementation borrowed from Refaster's comment-checking code.
-  private static boolean stringContainsComments(String source, VisitorState state) {
-    JavaTokenizer tokenizer =
-        new JavaTokenizer(ScannerFactory.instance(state.context), CharBuffer.wrap(source)) {};
-    for (Token token = tokenizer.readToken();
-        token.kind != TokenKind.EOF;
-        token = tokenizer.readToken()) {
-      if (token.comments != null && !token.comments.isEmpty()) {
-        return true;
-      }
-    }
-    return false;
   }
 
   private static ImmutableList<String> getStrings(Attribute.Compound attribute, String name) {

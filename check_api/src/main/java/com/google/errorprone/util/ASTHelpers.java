@@ -118,6 +118,9 @@ import com.sun.tools.javac.code.TypeTag;
 import com.sun.tools.javac.code.Types;
 import com.sun.tools.javac.comp.Enter;
 import com.sun.tools.javac.comp.Resolve;
+import com.sun.tools.javac.parser.JavaTokenizer;
+import com.sun.tools.javac.parser.ScannerFactory;
+import com.sun.tools.javac.parser.Tokens.Token;
 import com.sun.tools.javac.parser.Tokens.TokenKind;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCAnnotatedType;
@@ -134,6 +137,7 @@ import com.sun.tools.javac.tree.JCTree.JCNewClass;
 import com.sun.tools.javac.tree.JCTree.JCPackageDecl;
 import com.sun.tools.javac.tree.JCTree.JCTypeParameter;
 import com.sun.tools.javac.tree.JCTree.JCVariableDecl;
+import com.sun.tools.javac.util.Context;
 import com.sun.tools.javac.util.FatalError;
 import com.sun.tools.javac.util.Log;
 import com.sun.tools.javac.util.Log.DeferredDiagnosticHandler;
@@ -143,6 +147,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.net.JarURLConnection;
 import java.net.URI;
+import java.nio.CharBuffer;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -2278,6 +2283,20 @@ public class ASTHelpers {
 
   // TODO(cushon): replace with Flags.ANONCONSTR_BASED once we're on JDK >= 10
   static final long ANONCONSTR_BASED = 1L << 57;
+
+  /** Returns true if the given source code contains comments. */
+  public static boolean stringContainsComments(CharSequence source, Context context) {
+    JavaTokenizer tokenizer =
+        new JavaTokenizer(ScannerFactory.instance(context), CharBuffer.wrap(source)) {};
+    for (Token token = tokenizer.readToken();
+        token.kind != TokenKind.EOF;
+        token = tokenizer.readToken()) {
+      if (token.comments != null && !token.comments.isEmpty()) {
+        return true;
+      }
+    }
+    return false;
+  }
 
   private ASTHelpers() {}
 }
