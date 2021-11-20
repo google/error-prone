@@ -16,8 +16,10 @@
 
 package com.google.errorprone.bugpatterns.nullness;
 
+import static com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH;
 import static org.junit.Assume.assumeTrue;
 
+import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
 import com.google.errorprone.util.RuntimeVersion;
 import org.junit.Test;
@@ -29,6 +31,8 @@ import org.junit.runners.JUnit4;
 public class VoidMissingNullableTest {
   private final CompilationTestHelper compilationHelper =
       CompilationTestHelper.newInstance(VoidMissingNullable.class, getClass());
+  private final BugCheckerRefactoringTestHelper refactoringHelper =
+      BugCheckerRefactoringTestHelper.newInstance(VoidMissingNullable.class, getClass());
 
   @Test
   public void positive() {
@@ -45,6 +49,54 @@ public class VoidMissingNullableTest {
             "  }",
             "}")
         .doTest();
+  }
+
+  @Test
+  public void testDeclarationAnnotatedLocation() {
+    refactoringHelper
+        .addInputLines(
+            "in/Foo.java",
+            "import javax.annotation.Nullable;",
+            "abstract class Foo {",
+            "  java.lang.Void v;",
+            "  final Void f() {",
+            "    return v;",
+            "  }",
+            "}")
+        .addOutputLines(
+            "out/Foo.java",
+            "import javax.annotation.Nullable;",
+            "abstract class Foo {",
+            "  @Nullable java.lang.Void v;",
+            "  @Nullable final Void f() {",
+            "    return v;",
+            "  }",
+            "}")
+        .doTest(TEXT_MATCH);
+  }
+
+  @Test
+  public void testTypeAnnotatedLocation() {
+    refactoringHelper
+        .addInputLines(
+            "in/Foo.java",
+            "import org.checkerframework.checker.nullness.qual.Nullable;",
+            "abstract class Foo {",
+            "  java.lang.Void v;",
+            "  final Void f() {",
+            "    return v;",
+            "  }",
+            "}")
+        .addOutputLines(
+            "out/Foo.java",
+            "import org.checkerframework.checker.nullness.qual.Nullable;",
+            "abstract class Foo {",
+            "  java.lang.@Nullable Void v;",
+            "  final @Nullable Void f() {",
+            "    return v;",
+            "  }",
+            "}")
+        .doTest(TEXT_MATCH);
   }
 
   @Test
@@ -81,17 +133,9 @@ public class VoidMissingNullableTest {
   public void positiveTypeArgument() {
     compilationHelper
         .addSourceLines(
-            "Nullable.java",
-            "import java.lang.annotation.ElementType;",
-            "import java.lang.annotation.Retention;",
-            "import java.lang.annotation.RetentionPolicy;",
-            "import java.lang.annotation.Target;",
-            "@Retention(RetentionPolicy.RUNTIME)",
-            "@Target(ElementType.TYPE_USE)",
-            "public @interface Nullable {}")
-        .addSourceLines(
             "Test.java",
             "import java.util.List;",
+            "import org.checkerframework.checker.nullness.qual.Nullable;",
             "class Test {",
             "  // BUG: Diagnostic contains: @Nullable",
             "  List<Void> a;",
@@ -119,6 +163,7 @@ public class VoidMissingNullableTest {
         .addSourceLines(
             "Test.java",
             "import java.util.List;",
+            "import org.checkerframework.checker.nullness.qual.Nullable;",
             "class Test {",
             "  // BUG: Diagnostic contains: @Nullable",
             "  List<@NonNull Void> a;",
@@ -197,6 +242,22 @@ public class VoidMissingNullableTest {
             "  List<String> a;",
             "  List<? extends String> b;",
             "  List<? super String> c;",
+            "  List<?> d;",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void negativeTypeArgumentDeclarationNullable() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.util.List;",
+            "import javax.annotation.Nullable;",
+            "class Test {",
+            "  List<Void> a;",
+            "  List<? extends Void> b;",
+            "  List<? super Void> c;",
             "  List<?> d;",
             "}")
         .doTest();

@@ -406,7 +406,7 @@ public class FieldMissingNullableTest {
             "  @Nullable private final Object obj2 = null;",
             "  @interface Nullable {}",
             "}")
-        .doTest();
+        .doTest(TEXT_MATCH);
   }
 
   @Test

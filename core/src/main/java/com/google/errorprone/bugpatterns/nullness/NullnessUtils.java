@@ -140,10 +140,10 @@ class NullnessUtils {
     // TODO(cpovirk): Remove any @NonNull, etc. annotation that is present?
   }
 
-  /** Returns a {@link SuggestedFix} to add a {@code Nullable} annotation before the given tree. */
-  /*
-   * TODO(cpovirk): Evaluate callers to see if they need special cases like the *ToReturnType method
-   * above.
+  /**
+   * Returns a {@link SuggestedFix} to add a {@code Nullable} annotation before the given tree.
+   * Prefer to use {@link #fixByAddingNullableAnnotationToReturnType} and {@link
+   * #fixByAddingNullableAnnotationToType} instead of this when applicable.
    */
   static SuggestedFix fixByPrefixingWithNullableAnnotation(VisitorState state, Tree tree) {
     return pickNullableAnnotation(state).fixPrefixingOnto(tree);
@@ -202,7 +202,7 @@ class NullnessUtils {
     }
   }
 
-  private static NullableAnnotationToUse pickNullableAnnotation(VisitorState state) {
+  static NullableAnnotationToUse pickNullableAnnotation(VisitorState state) {
     /*
      * TODO(cpovirk): Instead of hardcoding these two annotations, pick the one that seems most
      * appropriate for each user:

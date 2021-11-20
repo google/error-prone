@@ -122,7 +122,7 @@ public class ParameterMissingNullableTest {
             "    }",
             "  }",
             "}")
-        .doTest();
+        .doTest(TEXT_MATCH);
   }
 
   @Test

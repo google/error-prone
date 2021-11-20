@@ -18,9 +18,12 @@ package com.google.errorprone.bugpatterns.nullness;
 
 import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
+import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.fixByAddingNullableAnnotationToReturnType;
+import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.fixByAddingNullableAnnotationToType;
 import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.fixByPrefixingWithNullableAnnotation;
 import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.hasNoExplicitType;
 import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.isVoid;
+import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.pickNullableAnnotation;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
@@ -88,7 +91,10 @@ public class VoidMissingNullable extends BugChecker
     if (sym == null) {
       return NO_MATCH;
     }
-    return matchType(sym.getReturnType(), sym, tree, state);
+    if (!typeMatches(sym.getReturnType(), sym, state)) {
+      return NO_MATCH;
+    }
+    return describeMatch(tree, fixByAddingNullableAnnotationToReturnType(state, tree));
   }
 
   @Override
@@ -109,15 +115,14 @@ public class VoidMissingNullable extends BugChecker
     if (sym.getKind() == LOCAL_VARIABLE) {
       return NO_MATCH; // Local variables are discussed in the comment about `var`, etc. above.
     }
-    return matchType(sym.type, sym, tree, state);
+    if (!typeMatches(sym.type, sym, state)) {
+      return NO_MATCH;
+    }
+    return describeMatch(tree, fixByAddingNullableAnnotationToType(state, tree));
   }
 
   private void checkTree(Tree tree, VisitorState state) {
-    Type type = getType(tree);
-    if (!isVoid(type, state)) {
-      return;
-    }
-    if (NullnessAnnotations.fromAnnotationsOn(type).orElse(null) == Nullness.NULLABLE) {
+    if (!typeMatches(getType(tree), state)) {
       return;
     }
     /*
@@ -131,28 +136,24 @@ public class VoidMissingNullable extends BugChecker
         == Nullness.NULLABLE) {
       return;
     }
-    state.reportMatch(describeMatch(tree, state));
+    if (!pickNullableAnnotation(state).isTypeUse()) {
+      return;
+    }
+    state.reportMatch(describeMatch(tree, fixByPrefixingWithNullableAnnotation(state, tree)));
   }
 
-  private Description matchType(Type type, Symbol sym, Tree treeToAnnotate, VisitorState state) {
-    if (!isVoid(type, state)) {
-      return NO_MATCH;
-    }
-    if (NullnessAnnotations.fromAnnotationsOn(sym).orElse(null) == Nullness.NULLABLE) {
-      return NO_MATCH;
-    }
-    return describeMatch(treeToAnnotate, state);
+  private boolean typeMatches(Type type, Symbol sym, VisitorState state) {
+    return isVoid(type, state)
+        && NullnessAnnotations.fromAnnotationsOn(sym).orElse(null) != Nullness.NULLABLE;
   }
 
-  private Description describeMatch(Tree treeToAnnotate, VisitorState state) {
-    /*
-     * TODO(cpovirk): For the case of type arguments, this fix makes sense only if we use a
-     * @Nullable that is a type-use annotation. If non-type-use annotations, don't suggest a change?
-     * Or run this refactoring as part of a suite that migrates from existing annotations to
-     * type-use annotations? For now, we rely on users to patch things up.
-     */
-    return describeMatch(
-        treeToAnnotate, fixByPrefixingWithNullableAnnotation(state, treeToAnnotate));
+  /**
+   * Like the other overload but without looking for annotations on the Symbol (like declaration
+   * annotations on a method or variable).
+   */
+  private boolean typeMatches(Type type, VisitorState state) {
+    return isVoid(type, state)
+        && NullnessAnnotations.fromAnnotationsOn(type).orElse(null) != Nullness.NULLABLE;
   }
 
   private static ImmutableList<String> annotationsIfAnnotatedTypeTree(Tree tree) {

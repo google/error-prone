@@ -16,6 +16,9 @@
 
 package com.google.errorprone.bugpatterns.nullness;
 
+import static com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH;
+
+import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,6 +29,8 @@ import org.junit.runners.JUnit4;
 public class EqualsMissingNullableTest {
   private final CompilationTestHelper helper =
       CompilationTestHelper.newInstance(EqualsMissingNullable.class, getClass());
+  private final BugCheckerRefactoringTestHelper refactoringHelper =
+      BugCheckerRefactoringTestHelper.newInstance(EqualsMissingNullable.class, getClass());
 
   @Test
   public void testPositive() {
@@ -37,6 +42,42 @@ public class EqualsMissingNullableTest {
             "  public abstract boolean equals(Object o);",
             "}")
         .doTest();
+  }
+
+  @Test
+  public void testDeclarationAnnotatedLocation() {
+    refactoringHelper
+        .addInputLines(
+            "in/Foo.java",
+            "import javax.annotation.Nullable;",
+            "abstract class Foo {",
+            "  public abstract boolean equals(final Object o);",
+            "}")
+        .addOutputLines(
+            "out/Foo.java",
+            "import javax.annotation.Nullable;",
+            "abstract class Foo {",
+            "  public abstract boolean equals(@Nullable final Object o);",
+            "}")
+        .doTest(TEXT_MATCH);
+  }
+
+  @Test
+  public void testTypeAnnotatedLocation() {
+    refactoringHelper
+        .addInputLines(
+            "in/Foo.java",
+            "import org.checkerframework.checker.nullness.qual.Nullable;",
+            "abstract class Foo {",
+            "  public abstract boolean equals(final Object o);",
+            "}")
+        .addOutputLines(
+            "out/Foo.java",
+            "import org.checkerframework.checker.nullness.qual.Nullable;",
+            "abstract class Foo {",
+            "  public abstract boolean equals(final @Nullable Object o);",
+            "}")
+        .doTest(TEXT_MATCH);
   }
 
   @Test
