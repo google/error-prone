@@ -38,6 +38,7 @@ import com.google.errorprone.bugpatterns.BugChecker.ParameterizedTypeTreeMatcher
 import com.google.errorprone.bugpatterns.BugChecker.VariableTreeMatcher;
 import com.google.errorprone.dataflow.nullnesspropagation.Nullness;
 import com.google.errorprone.dataflow.nullnesspropagation.NullnessAnnotations;
+import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.AnnotatedTypeTree;
@@ -118,7 +119,11 @@ public class VoidMissingNullable extends BugChecker
     if (!typeMatches(sym.type, sym, state)) {
       return NO_MATCH;
     }
-    return describeMatch(tree, fixByAddingNullableAnnotationToType(state, tree));
+    SuggestedFix fix = fixByAddingNullableAnnotationToType(state, tree);
+    if (fix == null) {
+      return NO_MATCH;
+    }
+    return describeMatch(tree, fix);
   }
 
   private void checkTree(Tree tree, VisitorState state) {
@@ -139,7 +144,11 @@ public class VoidMissingNullable extends BugChecker
     if (!pickNullableAnnotation(state).isTypeUse()) {
       return;
     }
-    state.reportMatch(describeMatch(tree, fixByPrefixingWithNullableAnnotation(state, tree)));
+    SuggestedFix fix = fixByPrefixingWithNullableAnnotation(state, tree);
+    if (fix == null) {
+      return;
+    }
+    state.reportMatch(describeMatch(tree, fix));
   }
 
   private boolean typeMatches(Type type, Symbol sym, VisitorState state) {

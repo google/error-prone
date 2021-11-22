@@ -32,6 +32,7 @@ import com.google.errorprone.bugpatterns.BugChecker.BinaryTreeMatcher;
 import com.google.errorprone.bugpatterns.nullness.NullnessUtils.NullCheck;
 import com.google.errorprone.dataflow.nullnesspropagation.Nullness;
 import com.google.errorprone.dataflow.nullnesspropagation.NullnessAnnotations;
+import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.sun.source.tree.AssertTree;
 import com.sun.source.tree.BinaryTree;
@@ -120,7 +121,11 @@ public class ParameterMissingNullable extends BugChecker implements BinaryTreeMa
     if (hasNoExplicitType(param, state)) {
       return NO_MATCH;
     }
-    return describeMatch(tree, fixByAddingNullableAnnotationToType(state, param));
+    SuggestedFix fix = fixByAddingNullableAnnotationToType(state, param);
+    if (fix == null) {
+      return NO_MATCH;
+    }
+    return describeMatch(tree, fix);
   }
 
   private static boolean isLoopCondition(TreePath path) {

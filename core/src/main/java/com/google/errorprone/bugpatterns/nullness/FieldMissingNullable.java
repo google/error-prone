@@ -36,6 +36,7 @@ import com.google.errorprone.bugpatterns.BugChecker.VariableTreeMatcher;
 import com.google.errorprone.bugpatterns.nullness.NullnessUtils.NullCheck;
 import com.google.errorprone.dataflow.nullnesspropagation.Nullness;
 import com.google.errorprone.dataflow.nullnesspropagation.NullnessAnnotations;
+import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.BinaryTree;
@@ -123,6 +124,10 @@ public class FieldMissingNullable extends BugChecker
       return NO_MATCH;
     }
 
-    return describeMatch(treeToReportOn, fixByAddingNullableAnnotationToType(state, fieldDecl));
+    SuggestedFix fix = fixByAddingNullableAnnotationToType(state, fieldDecl);
+    if (fix == null) {
+      return NO_MATCH;
+    }
+    return describeMatch(treeToReportOn, fix);
   }
 }
