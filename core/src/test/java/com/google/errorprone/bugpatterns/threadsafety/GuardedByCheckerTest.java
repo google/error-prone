@@ -1851,4 +1851,31 @@ public class GuardedByCheckerTest {
         .setArgs("-XepOpt:GuardedByChecker:reportMissingGuards=true")
         .doTest();
   }
+
+  @Test
+  public void parameterGuardNegativeSimpleName() {
+    compilationHelper
+        .addSourceLines(
+            "threadsafety/Test.java",
+            "import javax.annotation.concurrent.GuardedBy;",
+            "class Work {",
+            "  final Object lock = new Object();",
+            "  Object getLock() {",
+            "    return lock;",
+            "  }",
+            "}",
+            "class Worker {",
+            "  @GuardedBy(\"work.getLock()\")",
+            "  void f(Work work) {",
+            "  }",
+            "  void g() {",
+            "    Work work = new Work();",
+            "    synchronized(work.getLock()) {",
+            "      f(work);",
+            "    }",
+            "  }",
+            "}")
+        .setArgs("-XepOpt:GuardedByChecker:reportMissingGuards=true")
+        .doTest();
+  }
 }

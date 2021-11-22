@@ -340,9 +340,6 @@ public class GuardedBySymbolResolver implements GuardedByBinder.Resolver {
         return null;
       }
       MethodSymbol methodSym = (MethodSymbol) sym;
-      if (!(tree instanceof MemberSelectTree)) {
-        return create(methodSym);
-      }
       Tree parent = visitorState.getPath().getParentPath().getLeaf();
       if (!(parent instanceof MethodInvocationTree)) {
         return create(methodSym);
