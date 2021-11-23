@@ -7410,6 +7410,8 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/PackageLocation.html#matchCompilationUnit(com.sun.source.tree.CompilationUnitTree,com.google.errorprone.VisitorState)">matchCompilationUnit(CompilationUnitTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/PackageLocation.html" title="class in com.google.errorprone.bugpatterns">PackageLocation</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/PreferredInterfaceType.html#matchCompilationUnit(com.sun.source.tree.CompilationUnitTree,com.google.errorprone.VisitorState)">matchCompilationUnit(CompilationUnitTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/PreferredInterfaceType.html" title="class in com.google.errorprone.bugpatterns">PreferredInterfaceType</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/ProtoFieldNullComparison.html#matchCompilationUnit(com.sun.source.tree.CompilationUnitTree,com.google.errorprone.VisitorState)">matchCompilationUnit(CompilationUnitTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/ProtoFieldNullComparison.html" title="class in com.google.errorprone.bugpatterns">ProtoFieldNullComparison</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/RemoveUnusedImports.html#matchCompilationUnit(com.sun.source.tree.CompilationUnitTree,com.google.errorprone.VisitorState)">matchCompilationUnit(CompilationUnitTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/RemoveUnusedImports.html" title="class in com.google.errorprone.bugpatterns">RemoveUnusedImports</a></dt>
@@ -7855,8 +7857,6 @@ loadScripts(document, 'script');</script>
 <div class="block">Check that the <a href="com/google/errorprone/annotations/MustBeClosed.html" title="annotation in com.google.errorprone.annotations"><code>MustBeClosed</code></a> annotation is only used for constructors of AutoCloseables
  and methods that return an AutoCloseable.</div>
 </dd>
-<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/MutableMethodReturnType.html#matchMethod(com.sun.source.tree.MethodTree,com.google.errorprone.VisitorState)">matchMethod(MethodTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/MutableMethodReturnType.html" title="class in com.google.errorprone.bugpatterns">MutableMethodReturnType</a></dt>
-<dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/NoAllocationChecker.html#matchMethod(com.sun.source.tree.MethodTree,com.google.errorprone.VisitorState)">matchMethod(MethodTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/NoAllocationChecker.html" title="class in com.google.errorprone.bugpatterns">NoAllocationChecker</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/NoFunctionalReturnType.html#matchMethod(com.sun.source.tree.MethodTree,com.google.errorprone.VisitorState)">matchMethod(MethodTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/NoFunctionalReturnType.html" title="class in com.google.errorprone.bugpatterns">NoFunctionalReturnType</a></dt>
@@ -9253,10 +9253,6 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Returns an enclosing instance for the specified type if it is thread-safe.</div>
 </dd>
-<dt><a href="com/google/errorprone/bugpatterns/MutableMethodReturnType.html" title="class in com.google.errorprone.bugpatterns"><span class="type-name-link">MutableMethodReturnType</span></a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
-<dd>&nbsp;</dd>
-<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/MutableMethodReturnType.html#%3Cinit%3E()">MutableMethodReturnType()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/MutableMethodReturnType.html" title="class in com.google.errorprone.bugpatterns">MutableMethodReturnType</a></dt>
-<dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/MutablePublicArray.html" title="class in com.google.errorprone.bugpatterns"><span class="type-name-link">MutablePublicArray</span></a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
 <dd>
 <div class="block">Check for public static final declaration of Arrays.</div>
@@ -10152,6 +10148,12 @@ loadScripts(document, 'script');</script>
 <div class="block">This check suggests the use of <code>java.time</code>-based APIs, when available.</div>
 </dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/time/PreferJavaTimeOverload.html#%3Cinit%3E(com.google.errorprone.ErrorProneFlags)">PreferJavaTimeOverload(ErrorProneFlags)</a></span> - Constructor for class com.google.errorprone.bugpatterns.time.<a href="com/google/errorprone/bugpatterns/time/PreferJavaTimeOverload.html" title="class in com.google.errorprone.bugpatterns.time">PreferJavaTimeOverload</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/bugpatterns/PreferredInterfaceType.html" title="class in com.google.errorprone.bugpatterns"><span class="type-name-link">PreferredInterfaceType</span></a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
+<dd>
+<div class="block">Tightens types which refer to an Iterable, Map, Multimap, etc.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/PreferredInterfaceType.html#%3Cinit%3E()">PreferredInterfaceType()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/PreferredInterfaceType.html" title="class in com.google.errorprone.bugpatterns">PreferredInterfaceType</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/ErrorProneFlags.html#PREFIX">PREFIX</a></span> - Static variable in class com.google.errorprone.<a href="com/google/errorprone/ErrorProneFlags.html" title="class in com.google.errorprone">ErrorProneFlags</a></dt>
 <dd>&nbsp;</dd>
@@ -11127,6 +11129,8 @@ loadScripts(document, 'script');</script>
 <div class="block">Replaces the operators when visiting the binary nodes</div>
 </dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/TypesWithUndefinedEquality.html#shortName()">shortName()</a></span> - Method in enum com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/TypesWithUndefinedEquality.html" title="enum in com.google.errorprone.bugpatterns">TypesWithUndefinedEquality</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/PreferredInterfaceType.html#SHOULD_IGNORE">SHOULD_IGNORE</a></span> - Static variable in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/PreferredInterfaceType.html" title="class in com.google.errorprone.bugpatterns">PreferredInterfaceType</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/util/Visibility.html#shouldBeVisible(com.sun.source.tree.Tree,com.google.errorprone.VisitorState)">shouldBeVisible(Tree, VisitorState)</a></span> - Method in enum com.google.errorprone.util.<a href="com/google/errorprone/util/Visibility.html" title="enum in com.google.errorprone.util">Visibility</a></dt>
 <dd>

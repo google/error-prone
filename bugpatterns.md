@@ -1340,9 +1340,6 @@ Methods and non-static variables should be named in lowerCamelCase.
 __[MissingDefault](bugpattern/MissingDefault)__<br>
 The Google Java Style Guide requires that each switch statement includes a default statement group, even if it contains no code. (This requirement is lifted for any switch statement that covers all values of an enum.)
 
-__[MutableMethodReturnType](bugpattern/MutableMethodReturnType)__<br>
-Method return type should use the immutable type (such as ImmutableList) instead of the general collection interface type (such as List).
-
 __[NoFunctionalReturnType](bugpattern/NoFunctionalReturnType)__<br>
 Instead of returning a functional type, return the actual type that the returned function would return and use lambdas at use site.
 
@@ -1351,6 +1348,9 @@ Static import of member uses non-canonical name
 
 __[PreferJavaTimeOverload](bugpattern/PreferJavaTimeOverload)__<br>
 Prefer using java.time-based APIs when available. Note that this checker does not and cannot guarantee that the overloads have equivalent semantics, but that is generally the case with overloaded methods.
+
+__[PreferredInterfaceType](bugpattern/PreferredInterfaceType)__<br>
+This type can be more specific.
 
 __[PrimitiveArrayPassedToVarargsMethod](bugpattern/PrimitiveArrayPassedToVarargsMethod)__<br>
 Passing a primitive array to a varargs method is usually wrong

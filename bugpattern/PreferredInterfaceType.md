@@ -1,7 +1,6 @@
 ---
-title: MutableMethodReturnType
-summary: Method return type should use the immutable type (such as ImmutableList)
-  instead of the general collection interface type (such as List).
+title: PreferredInterfaceType
+summary: This type can be more specific.
 layout: bugpattern
 tags: ''
 severity: WARNING
@@ -12,12 +11,12 @@ severity: WARNING
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+_Alternate names: MutableMethodReturnType_
 
 ## The problem
-For method return type, you should use the immutable type (such as
-`ImmutableList`) instead of the general collection interface type (such as
-`List`). This communicates to your callers important
-[semantic guarantees][javadoc].
+Prefer referring to types by the immutable type (such as `ImmutableList`)
+instead of the general collection interface type (such as `List`). This
+communicates important [semantic guarantees][javadoc].
 
 This is consistent with [Effective Java 3rd Edition §64][ej3e-64], which says to
 refer to objects by their interfaces. Guava's immutable collection classes offer
@@ -51,4 +50,4 @@ prevent accidental attempts to modify the collection at compile-time (see
 [javadoc]: https://guava.dev/releases/21.0/api/docs/com/google/common/collect/ImmutableCollection.html
 
 ## Suppression
-Suppress false positives by adding the suppression annotation `@SuppressWarnings("MutableMethodReturnType")` to the enclosing element.
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("PreferredInterfaceType")` to the enclosing element.
