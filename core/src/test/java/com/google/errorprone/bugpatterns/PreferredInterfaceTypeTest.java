@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 The Error Prone Authors.
+ * Copyright 2021 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,25 +16,144 @@
 
 package com.google.errorprone.bugpatterns;
 
+import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** {@link MutableMethodReturnType}Test */
+/** Tests for {@link PreferredInterfaceType}. */
 @RunWith(JUnit4.class)
-public class MutableMethodReturnTypeTest {
+public final class PreferredInterfaceTypeTest {
   private final CompilationTestHelper testHelper =
-      CompilationTestHelper.newInstance(MutableMethodReturnType.class, getClass());
+      CompilationTestHelper.newInstance(PreferredInterfaceType.class, getClass());
+  private final BugCheckerRefactoringTestHelper refactoringHelper =
+      BugCheckerRefactoringTestHelper.newInstance(PreferredInterfaceType.class, getClass());
+
+  @Test
+  public void assigned() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            "import java.util.ArrayList;",
+            "import java.util.List;",
+            "class Test {",
+            "  private static final Iterable<Integer> FOO = new ArrayList<>();",
+            "  public static final Iterable<Integer> BAR = new ArrayList<>();",
+            "  public static final Iterable<Integer> RAW = new ArrayList<>();",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "import java.util.ArrayList;",
+            "import java.util.List;",
+            "class Test {",
+            "  private static final List<Integer> FOO = new ArrayList<>();",
+            "  public static final List<Integer> BAR = new ArrayList<>();",
+            "  public static final List<Integer> RAW = new ArrayList<>();",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void assignedMultipleTypesCompatibleWithSuper() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.util.ArrayList;",
+            "import java.util.Collection;",
+            "import java.util.HashSet;",
+            "class Test {",
+            "  void test() {",
+            "    Collection<Integer> foo = new ArrayList<>();",
+            "    foo = new HashSet<>();",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void alreadyTightenedType() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.util.ArrayList;",
+            "import java.util.List;",
+            "class Test {",
+            "  void test() {",
+            "    List<Integer> foo = new ArrayList<>();",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void immutables() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            "import com.google.common.collect.ImmutableList;",
+            "import java.util.List;",
+            "class Test {",
+            "  void test() {",
+            "    List<Integer> foo = ImmutableList.of(1);",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "import com.google.common.collect.ImmutableList;",
+            "import java.util.List;",
+            "class Test {",
+            "  void test() {",
+            "    ImmutableList<Integer> foo = ImmutableList.of(1);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void immutableMap() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            "import com.google.common.collect.ImmutableMap;",
+            "import java.util.Map;",
+            "class Test {",
+            "  void test() {",
+            "    Map<Integer, Integer> foo = ImmutableMap.of(1, 1);",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "import com.google.common.collect.ImmutableMap;",
+            "import java.util.Map;",
+            "class Test {",
+            "  void test() {",
+            "    ImmutableMap<Integer, Integer> foo = ImmutableMap.of(1, 1);",
+            "  }",
+            "}")
+        .doTest();
+  }
 
   @Test
   public void constructor_doesNotSuggestFix() {
-    testHelper.addSourceLines("Test.java", "class Test {", "  Test() { }", "}").doTest();
+    testHelper
+        .addSourceLines(
+            "Test.java", //
+            "class Test {",
+            "  Test() { }",
+            "}")
+        .doTest();
   }
 
   @Test
   public void returnTypeVoid_doesNotSuggestFix() {
-    testHelper.addSourceLines("Test.java", "class Test {", "  void foo() { }", "}").doTest();
+    testHelper
+        .addSourceLines(
+            "Test.java", //
+            "class Test {",
+            "  void foo() { }",
+            "}")
+        .doTest();
   }
 
   @Test
@@ -94,7 +213,7 @@ public class MutableMethodReturnTypeTest {
             "import com.google.common.collect.ImmutableList;",
             "import java.util.List;",
             "final class Test {",
-            "  // BUG: Diagnostic contains: ImmutableList<String> foo()",
+            "  // BUG: Diagnostic contains:",
             "  List<String> foo() {",
             "    return ImmutableList.of();",
             "  }",
@@ -166,7 +285,7 @@ public class MutableMethodReturnTypeTest {
   }
 
   @Test
-  public void returnTypeImmutableCollection_doesNotSuggestFix() {
+  public void returnTypeImmutableCollection_suggestsTighterType() {
     testHelper
         .addSourceLines(
             "Test.java",
@@ -174,7 +293,7 @@ public class MutableMethodReturnTypeTest {
             "import com.google.common.collect.ImmutableList;",
             "import java.util.List;",
             "class Test {",
-            "  final ImmutableCollection<String> foo() {",
+            "  final ImmutableList<String> foo() {",
             "    return ImmutableList.of();",
             "  }",
             "}")
@@ -217,12 +336,11 @@ public class MutableMethodReturnTypeTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.common.collect.ImmutableList;",
+            "import java.util.ArrayList;",
             "import java.util.List;",
             "class Test {",
             "  final List<String> foo() {",
-            "    List<String> bar = ImmutableList.of();",
-            "    return bar;",
+            "    return new ArrayList<>();",
             "  }",
             "}")
         .doTest();
@@ -421,13 +539,13 @@ public class MutableMethodReturnTypeTest {
   }
 
   @Test
-  public void negative_iterable() {
+  public void iterable_givenMoreTypeInformationAvailable_refactored() {
     testHelper
         .addSourceLines(
             "Test.java",
             "import com.google.common.collect.ImmutableList;",
             "class Test {",
-            "  final Iterable<String> foo() {",
+            "  final ImmutableList<String> foo() {",
             "    return ImmutableList.of();",
             "  }",
             "}")

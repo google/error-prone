@@ -228,7 +228,6 @@ import com.google.errorprone.bugpatterns.MultipleTopLevelClasses;
 import com.google.errorprone.bugpatterns.MultipleUnaryOperatorsInMethodCall;
 import com.google.errorprone.bugpatterns.MustBeClosedChecker;
 import com.google.errorprone.bugpatterns.MutableConstantField;
-import com.google.errorprone.bugpatterns.MutableMethodReturnType;
 import com.google.errorprone.bugpatterns.MutablePublicArray;
 import com.google.errorprone.bugpatterns.NCopiesOfChar;
 import com.google.errorprone.bugpatterns.NarrowingCompoundAssignment;
@@ -270,6 +269,7 @@ import com.google.errorprone.bugpatterns.ParameterName;
 import com.google.errorprone.bugpatterns.ParametersButNotParameterized;
 import com.google.errorprone.bugpatterns.PreconditionsCheckNotNullRepeated;
 import com.google.errorprone.bugpatterns.PreconditionsInvalidPlaceholder;
+import com.google.errorprone.bugpatterns.PreferredInterfaceType;
 import com.google.errorprone.bugpatterns.PrimitiveArrayPassedToVarargsMethod;
 import com.google.errorprone.bugpatterns.PrimitiveAtomicReference;
 import com.google.errorprone.bugpatterns.PrivateConstructorForUtilityClass;
@@ -1053,7 +1053,6 @@ public class BuiltInCheckerSuppliers {
           MoreThanOneQualifier.class,
           MultiVariableDeclaration.class,
           MultipleTopLevelClasses.class,
-          MutableMethodReturnType.class,
           NoAllocationChecker.class,
           NoFunctionalReturnType.class,
           NonCanonicalStaticMemberImport.class,
@@ -1062,6 +1061,7 @@ public class BuiltInCheckerSuppliers {
           ParameterComment.class,
           ParameterMissingNullable.class,
           PreferJavaTimeOverload.class,
+          PreferredInterfaceType.class,
           PrimitiveArrayPassedToVarargsMethod.class,
           PrivateConstructorForNoninstantiableModule.class,
           PrivateConstructorForUtilityClass.class,

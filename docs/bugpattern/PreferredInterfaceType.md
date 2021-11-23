@@ -1,7 +1,6 @@
-For method return type, you should use the immutable type (such as
-`ImmutableList`) instead of the general collection interface type (such as
-`List`). This communicates to your callers important
-[semantic guarantees][javadoc].
+Prefer referring to types by the immutable type (such as `ImmutableList`)
+instead of the general collection interface type (such as `List`). This
+communicates important [semantic guarantees][javadoc].
 
 This is consistent with [Effective Java 3rd Edition §64][ej3e-64], which says to
 refer to objects by their interfaces. Guava's immutable collection classes offer
