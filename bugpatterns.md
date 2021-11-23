@@ -1433,6 +1433,9 @@ This catch block catches an exception and re-throws another, but swallows the ca
 __[UrlInSee](bugpattern/UrlInSee)__<br>
 URLs should not be used in @see tags; they are designed for Java elements which could be used with @link.
 
+__[UsingJsr305CheckReturnValue](bugpattern/UsingJsr305CheckReturnValue)__<br>
+Prefer ErrorProne&#39;s @CheckReturnValue over JSR305&#39;s version.
+
 __[Var](bugpattern/Var)__<br>
 Non-constant variable missing @Var annotation
 
