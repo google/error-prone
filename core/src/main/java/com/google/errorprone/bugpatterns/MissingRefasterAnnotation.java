@@ -53,7 +53,7 @@ public final class MissingRefasterAnnotation extends BugChecker implements Class
 
   @Override
   public Description matchClass(ClassTree tree, VisitorState state) {
-    long methodTypes =
+    long methodTypeCount =
         tree.getMembers().stream()
             .filter(member -> member.getKind() == Tree.Kind.METHOD)
             .map(MethodTree.class::cast)
@@ -62,6 +62,6 @@ public final class MissingRefasterAnnotation extends BugChecker implements Class
             .distinct()
             .count();
 
-    return methodTypes < 2 ? Description.NO_MATCH : buildDescription(tree).build();
+    return methodTypeCount < 2 ? Description.NO_MATCH : buildDescription(tree).build();
   }
 }
