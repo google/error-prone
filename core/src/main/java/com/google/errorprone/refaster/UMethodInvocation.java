@@ -34,13 +34,27 @@ import javax.annotation.Nullable;
  */
 @AutoValue
 public abstract class UMethodInvocation extends UExpression implements MethodInvocationTree {
-  public static UMethodInvocation create(UExpression methodSelect, List<UExpression> arguments) {
-    return new AutoValue_UMethodInvocation(methodSelect, ImmutableList.copyOf(arguments));
+  public static UMethodInvocation create(
+      List<? extends UExpression> typeArguments,
+      UExpression methodSelect,
+      List<UExpression> arguments) {
+    return new AutoValue_UMethodInvocation(
+        ImmutableList.copyOf(typeArguments), methodSelect, ImmutableList.copyOf(arguments));
+  }
+
+  public static UMethodInvocation create(
+      List<? extends UExpression> typeArguments,
+      UExpression methodSelect,
+      UExpression... arguments) {
+    return create(typeArguments, methodSelect, ImmutableList.copyOf(arguments));
   }
 
   public static UMethodInvocation create(UExpression methodSelect, UExpression... arguments) {
-    return create(methodSelect, ImmutableList.copyOf(arguments));
+    return create(ImmutableList.of(), methodSelect, ImmutableList.copyOf(arguments));
   }
+
+  @Override
+  public abstract ImmutableList<UExpression> getTypeArguments();
 
   @Override
   public abstract UExpression getMethodSelect();
@@ -70,16 +84,11 @@ public abstract class UMethodInvocation extends UExpression implements MethodInv
   }
 
   @Override
-  public List<UTree<?>> getTypeArguments() {
-    return ImmutableList.of();
-  }
-
-  @Override
   public JCMethodInvocation inline(Inliner inliner) throws CouldNotResolveImportException {
     return inliner
         .maker()
         .Apply(
-            com.sun.tools.javac.util.List.<JCExpression>nil(),
+            inliner.<JCExpression>inlineList(getTypeArguments()),
             getMethodSelect().inline(inliner),
             inliner.<JCExpression>inlineList(getArguments()));
   }
