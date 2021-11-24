@@ -269,6 +269,10 @@ public class TruthIncompatibleType extends BugChecker implements MethodInvocatio
             getOnlyElement(getSymbol((MethodInvocationTree) receiver).getParameters()).type,
             ignoringCasts(getOnlyElement(((MethodInvocationTree) receiver).getArguments())),
             state);
+    if (targetType == null) {
+      // The target collection may be raw.
+      return Stream.empty();
+    }
     ExpressionTree argument = getOnlyElement(tree.getArguments());
     Type sourceType = getCorrespondenceTypeArg(argument, state);
     // This is different to the others: we're checking for castability, not possible equality.
