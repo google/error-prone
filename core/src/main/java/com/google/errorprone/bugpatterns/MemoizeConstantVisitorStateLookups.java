@@ -20,6 +20,7 @@ import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.instanceMethod;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
 import static com.sun.source.tree.Tree.Kind.STRING_LITERAL;
+import static java.util.Comparator.comparingInt;
 import static java.util.Comparator.naturalOrder;
 import static java.util.stream.Collectors.groupingBy;
 
@@ -125,7 +126,14 @@ public class MemoizeConstantVisitorStateLookups extends BugChecker
 
     SuggestedFixes.addMembers(tree, state, AdditionPosition.LAST, membersToAdd.build())
         .ifPresent(fix::merge);
-    return describeMatch(tree, fix.build());
+
+    // Report the fix on the first of the call site trees.
+    MethodInvocationTree fixTree =
+        lookups.stream()
+            .map(cs -> cs.entireTree)
+            .min(comparingInt(ASTHelpers::getStartPosition))
+            .get(); // Always succeeds, lookups is not empty.
+    return describeMatch(fixTree, fix.build());
   }
 
   private static final class CallSite {

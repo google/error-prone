@@ -17,6 +17,7 @@
 package com.google.errorprone.bugpatterns;
 
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
+import com.google.errorprone.CompilationTestHelper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -24,6 +25,10 @@ import org.junit.runners.JUnit4;
 /** Tests for {@link com.google.errorprone.bugpatterns.MemoizeConstantVisitorStateLookups}. */
 @RunWith(JUnit4.class)
 public class MemoizeConstantVisitorStateLookupsTest {
+  private final CompilationTestHelper compilationTestHelper =
+      CompilationTestHelper.newInstance(MemoizeConstantVisitorStateLookups.class, getClass())
+          .addModules(
+              "jdk.compiler/com.sun.tools.javac.util", "jdk.compiler/com.sun.tools.javac.code");
   private final BugCheckerRefactoringTestHelper refactoringTestHelper =
       BugCheckerRefactoringTestHelper.newInstance(
               MemoizeConstantVisitorStateLookups.class, getClass())
@@ -119,6 +124,23 @@ public class MemoizeConstantVisitorStateLookupsTest {
             "    VisitorState.memoize(state -> state.getName(\"java.lang.Class\"));",
             "  private static final Supplier<Type> JAVA_LANG_CLASS_TYPE = ",
             "    VisitorState.memoize(state -> state.getTypeFromString(\"java.lang.Class\"));",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void findingOnLookup() {
+    compilationTestHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.errorprone.VisitorState;",
+            "import com.sun.tools.javac.code.Type;",
+            "import com.sun.tools.javac.util.Name;",
+            "class Test {",
+            "  public Test(VisitorState state) {",
+            "    // BUG: Diagnostic contains:",
+            "    Name className = state.getName(\"java.lang.Class\");",
+            "  }",
             "}")
         .doTest();
   }
