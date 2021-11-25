@@ -93,10 +93,7 @@ public final class PreferredInterfaceType extends BugChecker implements Compilat
               "java.util.List",
               "java.util.Set",
               "java.util.Collection"),
-          BetterTypes.of(
-              isDescendantOf("java.util.Map"),
-              "com.google.common.collect.ImmutableBiMap",
-              "com.google.common.collect.ImmutableMap"),
+          BetterTypes.of(isDescendantOf("java.util.Map"), "com.google.common.collect.ImmutableMap"),
           BetterTypes.of(
               isDescendantOf("com.google.common.collect.Table"),
               "com.google.common.collect.ImmutableTable"),
@@ -106,12 +103,6 @@ public final class PreferredInterfaceType extends BugChecker implements Compilat
           BetterTypes.of(
               isDescendantOf("com.google.common.collect.RangeMap"),
               "com.google.common.collect.ImmutableRangeMap"),
-          BetterTypes.of(
-              isDescendantOf("com.google.common.collect.ListMultimap"),
-              "com.google.common.collect.ImmutableListMultimap"),
-          BetterTypes.of(
-              isDescendantOf("com.google.common.collect.SetMultimap"),
-              "com.google.common.collect.ImmutableSetMultimap"),
           BetterTypes.of(
               isDescendantOf("com.google.common.collect.Multimap"),
               "com.google.common.collect.ImmutableListMultimap",
@@ -246,28 +237,46 @@ public final class PreferredInterfaceType extends BugChecker implements Compilat
                         .build();
                 state.reportMatch(
                     buildDescription(tree)
-                        .setMessage(getMessage(symbol, state))
+                        .setMessage(getMessage(symbol, type, state))
                         .addFix(fix)
                         .build());
               });
     }
   }
 
-  private static String getMessage(Symbol symbol, VisitorState state) {
+  private static String getMessage(Symbol symbol, Type newType, VisitorState state) {
+    String messageBase =
+        !isImmutable(targetType(symbol)) && isImmutable(newType)
+            ? IMMUTABLE_MESSAGE
+            : NON_IMMUTABLE_MESSAGE;
     if (symbol instanceof MethodSymbol) {
       if (!findSuperMethods((MethodSymbol) symbol, state.getTypes()).isEmpty()) {
-        return "Method return" + MESSAGE + OVERRIDE_NOTE;
+        return "Method return" + messageBase + OVERRIDE_NOTE;
       } else {
-        return "Method return" + MESSAGE;
+        return "Method return" + messageBase;
       }
     } else {
-      return "Variable" + MESSAGE;
+      return "Variable" + messageBase;
     }
   }
 
-  private static final String MESSAGE =
+  private static Type targetType(Symbol symbol) {
+    return symbol instanceof MethodSymbol ? ((MethodSymbol) symbol).getReturnType() : symbol.type;
+  }
+
+  private static boolean isImmutable(Type type) {
+    return type.tsym
+        .getQualifiedName()
+        .toString()
+        .startsWith("com.google.common.collect.Immutable");
+  }
+
+  private static final String IMMUTABLE_MESSAGE =
       " type should use the immutable type (such as ImmutableList) instead of the general"
           + " collection interface type (such as List).";
+
+  private static final String NON_IMMUTABLE_MESSAGE =
+      " type can use a more specific type to convey more information to callers.";
 
   private static final String OVERRIDE_NOTE =
       " Note that it is legal to narrow the return type when overriding a parent method. And"

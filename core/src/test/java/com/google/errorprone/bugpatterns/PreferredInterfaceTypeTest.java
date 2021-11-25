@@ -213,7 +213,7 @@ public final class PreferredInterfaceTypeTest {
             "import com.google.common.collect.ImmutableList;",
             "import java.util.List;",
             "final class Test {",
-            "  // BUG: Diagnostic contains:",
+            "  // BUG: Diagnostic contains: immutable type",
             "  List<String> foo() {",
             "    return ImmutableList.of();",
             "  }",
@@ -547,6 +547,53 @@ public final class PreferredInterfaceTypeTest {
             "class Test {",
             "  final ImmutableList<String> foo() {",
             "    return ImmutableList.of();",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void immutableMap_notReplacedWithBiMap() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.common.collect.ImmutableBiMap;",
+            "import com.google.common.collect.ImmutableMap;",
+            "class Test {",
+            "  final ImmutableMap<String, String> foo() {",
+            "    return ImmutableBiMap.of();",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void diagnosticMessage_whenReplacingWithNonImmutableType() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.common.collect.ArrayListMultimap;",
+            "import com.google.common.collect.HashMultimap;",
+            "import com.google.common.collect.Multimap;",
+            "import com.google.common.collect.ImmutableListMultimap;",
+            "import com.google.common.collect.ImmutableMultimap;",
+            "import com.google.common.collect.ImmutableSetMultimap;",
+            "class Test {",
+            "  // BUG: Diagnostic contains: convey more information",
+            "  final Multimap<?, ?> foo() {",
+            "    return ArrayListMultimap.create();",
+            "  }",
+            "  // BUG: Diagnostic contains: convey more information",
+            "  final Multimap<?, ?> bar() {",
+            "    return HashMultimap.create();",
+            "  }",
+            "  // BUG: Diagnostic contains: convey more information",
+            "  final ImmutableMultimap<?, ?> baz() {",
+            "    return ImmutableListMultimap.of();",
+            "  }",
+            "  // BUG: Diagnostic contains: convey more information",
+            "  final ImmutableMultimap<?, ?> quux() {",
+            "    return ImmutableSetMultimap.of();",
             "  }",
             "}")
         .doTest();
