@@ -293,7 +293,8 @@ public final class PreferredInterfaceTypeTest {
             "import com.google.common.collect.ImmutableList;",
             "import java.util.List;",
             "class Test {",
-            "  final ImmutableList<String> foo() {",
+            "  // BUG: Diagnostic contains: convey more information",
+            "  final ImmutableCollection<String> foo() {",
             "    return ImmutableList.of();",
             "  }",
             "}")
