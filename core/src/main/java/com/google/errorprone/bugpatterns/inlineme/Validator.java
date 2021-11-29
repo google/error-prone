@@ -17,14 +17,12 @@
 package com.google.errorprone.bugpatterns.inlineme;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
-import static com.google.errorprone.util.ASTHelpers.getAnnotation;
+import static com.google.errorprone.util.ASTHelpers.getSymbol;
 
 import com.google.common.base.CharMatcher;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
-import com.google.errorprone.annotations.InlineMe;
 import com.google.errorprone.annotations.InlineMeValidationDisabled;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
@@ -52,14 +50,12 @@ public final class Validator extends BugChecker implements MethodTreeMatcher {
 
   @Override
   public Description matchMethod(MethodTree tree, VisitorState state) {
-    // if the API doesn't have the @InlineMe annotation, then return no match
-    // TODO(glorioso): Use meta-annotation methods/variables to avoid a compile-time dependency on
-    // the annotation class.
-    InlineMe anno = getAnnotation(tree, InlineMe.class);
-    if (anno == null) {
-      return Description.NO_MATCH;
-    }
+    return InlineMeData.createFromSymbol(getSymbol(tree))
+        .map(data -> match(data, tree, state))
+        .orElse(Description.NO_MATCH);
+  }
 
+  private Description match(InlineMeData existingAnnotation, MethodTree tree, VisitorState state) {
     InlinabilityResult result = InlinabilityResult.forMethod(tree, state);
     if (!result.isValidForValidator()) {
       return buildDescription(tree)
@@ -72,13 +68,12 @@ public final class Validator extends BugChecker implements MethodTreeMatcher {
     InlineMeData inferredFromMethodBody =
         InlineMeData.buildExpectedInlineMeAnnotation(state, result.body());
     Set<MismatchedInlineMeComponents> mismatches =
-        compatibleWithAnnotation(inferredFromMethodBody, anno, state.context);
+        compatibleWithAnnotation(inferredFromMethodBody, existingAnnotation, state.context);
     if (mismatches.isEmpty()) {
       return Description.NO_MATCH;
     }
 
     // There's some mismatch, render an error.
-    InlineMeData existingAnnotation = InlineMeData.fromAnnotationInstance(anno);
     return buildDescription(tree)
         .setMessage(renderInlineMeMismatch(inferredFromMethodBody, existingAnnotation, mismatches))
         .addFix(
@@ -128,7 +123,7 @@ public final class Validator extends BugChecker implements MethodTreeMatcher {
   }
 
   private static Set<MismatchedInlineMeComponents> compatibleWithAnnotation(
-      InlineMeData inferredFromMethodBody, InlineMe anno, Context context) {
+      InlineMeData inferredFromMethodBody, InlineMeData anno, Context context) {
     EnumSet<MismatchedInlineMeComponents> mismatches =
         EnumSet.noneOf(MismatchedInlineMeComponents.class);
 
@@ -138,10 +133,10 @@ public final class Validator extends BugChecker implements MethodTreeMatcher {
         anno.replacement(), inferredFromMethodBody.replacement(), context)) {
       mismatches.add(MismatchedInlineMeComponents.REPLACEMENT_STRING);
     }
-    if (!inferredFromMethodBody.imports().equals(ImmutableSet.copyOf(anno.imports()))) {
+    if (!inferredFromMethodBody.imports().equals(anno.imports())) {
       mismatches.add(MismatchedInlineMeComponents.IMPORTS);
     }
-    if (!inferredFromMethodBody.staticImports().equals(ImmutableSet.copyOf(anno.staticImports()))) {
+    if (!inferredFromMethodBody.staticImports().equals(anno.staticImports())) {
       mismatches.add(MismatchedInlineMeComponents.STATIC_IMPORTS);
     }
     return mismatches;

@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns.inlineme;
 
-import static com.google.common.base.Preconditions.checkState;
 import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.common.collect.MoreCollectors.onlyElement;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
@@ -25,12 +24,10 @@ import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.hasDirectAnnotationWithSimpleName;
 import static com.google.errorprone.util.ASTHelpers.stringContainsComments;
-import static com.google.errorprone.util.MoreAnnotations.asStringValue;
 import static com.google.errorprone.util.MoreAnnotations.getValue;
 import static com.google.errorprone.util.SideEffectAnalysis.hasSideEffect;
 
 import com.google.auto.value.AutoValue;
-import com.google.common.base.CharMatcher;
 import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
 import com.google.common.base.Strings;
@@ -57,6 +54,7 @@ import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
@@ -148,7 +146,10 @@ public final class Inliner extends BugChecker
       String receiverString,
       ExpressionTree receiver,
       VisitorState state) {
-    checkState(hasDirectAnnotationWithSimpleName(symbol, INLINE_ME));
+    Optional<InlineMeData> inlineMe = InlineMeData.createFromSymbol(symbol);
+    if (!inlineMe.isPresent()) {
+      return Description.NO_MATCH;
+    }
 
     Api api = Api.create(symbol, state);
     if (!matchesApiPrefixes(api)) {
@@ -160,20 +161,15 @@ public final class Inliner extends BugChecker
       return Description.NO_MATCH;
     }
 
-    Attribute.Compound inlineMe =
-        symbol.getRawAttributes().stream()
-            .filter(a -> a.type.tsym.getSimpleName().contentEquals(INLINE_ME))
-            .collect(onlyElement());
-
     SuggestedFix.Builder builder = SuggestedFix.builder();
 
     Map<String, String> typeNames = new HashMap<>();
-    for (String newImport : getStrings(inlineMe, "imports")) {
+    for (String newImport : inlineMe.get().imports()) {
       String typeName = Iterables.getLast(PACKAGE_SPLITTER.split(newImport));
       String qualifiedTypeName = SuggestedFixes.qualifyType(state, builder, newImport);
       typeNames.put(typeName, qualifiedTypeName);
     }
-    for (String newStaticImport : getStrings(inlineMe, "staticImports")) {
+    for (String newStaticImport : inlineMe.get().staticImports()) {
       builder.addStaticImport(newStaticImport);
     }
 
@@ -200,8 +196,7 @@ public final class Inliner extends BugChecker
       }
     }
 
-    String replacement =
-        trimTrailingSemicolons(asStringValue(getValue(inlineMe, "replacement").get()).get());
+    String replacement = inlineMe.get().replacement();
     int replacementStart = ((DiagnosticPosition) tree).getStartPosition();
     int replacementEnd = state.getEndPosition(tree);
 
@@ -345,11 +340,5 @@ public final class Inliner extends BugChecker
       }
     }
     return false;
-  }
-
-  private static final CharMatcher SEMICOLON = CharMatcher.is(';');
-
-  private static String trimTrailingSemicolons(String s) {
-    return SEMICOLON.trimTrailingFrom(s);
   }
 }

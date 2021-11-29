@@ -704,4 +704,31 @@ public class ValidatorTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void testCustomInlineMe() {
+    helper
+        .addSourceLines(
+            "InlineMe.java", //
+            "package bespoke;",
+            "public @interface InlineMe {",
+            "  String replacement();",
+            "  String[] imports() default {};",
+            "  String[] staticImports() default {};",
+            "}")
+        .addSourceLines(
+            "Client.java",
+            "import bespoke.InlineMe;",
+            "public final class Client {",
+            "  @Deprecated",
+            "  @InlineMe(replacement = \"this.foo3(value)\")", // should be foo2(value)!!!
+            "  // BUG: Diagnostic contains: @InlineMe(replacement = \"this.foo2(value)\")",
+            "  public void foo1(String value) {",
+            "    foo2(value);",
+            "  }",
+            "  public void foo2(String value) {",
+            "  }",
+            "}")
+        .doTest();
+  }
 }
