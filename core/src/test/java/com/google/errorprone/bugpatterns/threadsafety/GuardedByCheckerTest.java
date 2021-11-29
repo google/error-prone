@@ -1878,4 +1878,27 @@ public class GuardedByCheckerTest {
         .setArgs("-XepOpt:GuardedByChecker:reportMissingGuards=true")
         .doTest();
   }
+
+  @Test
+  public void varargsArity() {
+    compilationHelper
+        .addSourceLines(
+            "threadsafety/Test.java",
+            "import javax.annotation.concurrent.GuardedBy;",
+            "class Test {",
+            "  @GuardedBy(\"xs.toString()\")",
+            "  void f(int x, Object... xs) {",
+            "  }",
+            "  void g() {",
+            "    Object[] xs = null;",
+            "    synchronized(xs.toString()) {",
+            "      f(0, xs);",
+            "    }",
+            "    // BUG: Diagnostic contains:",
+            "    f(0);",
+            "  }",
+            "}")
+        .setArgs("-XepOpt:GuardedByChecker:reportMissingGuards=true")
+        .doTest();
+  }
 }

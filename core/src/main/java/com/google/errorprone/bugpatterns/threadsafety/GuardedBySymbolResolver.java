@@ -15,6 +15,7 @@
 package com.google.errorprone.bugpatterns.threadsafety;
 
 import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkState;
 import static com.google.errorprone.bugpatterns.threadsafety.IllegalGuardedBy.checkGuardedBy;
 import static java.util.Objects.requireNonNull;
 
@@ -321,7 +322,15 @@ public class GuardedBySymbolResolver implements GuardedByBinder.Resolver {
 
     @Nullable
     ExpressionTree argument(int idx) {
-      return arguments() != null ? arguments().get(idx) : null;
+      if (arguments() == null) {
+        return null;
+      }
+      // handle a varargs parameter with no corresponding arguments
+      if (idx == arguments().size()) {
+        checkState(sym().isVarArgs());
+        return null;
+      }
+      return arguments().get(idx);
     }
 
     static MethodInfo create(MethodSymbol sym) {
@@ -329,8 +338,15 @@ public class GuardedBySymbolResolver implements GuardedByBinder.Resolver {
     }
 
     static MethodInfo create(MethodSymbol sym, ImmutableList<ExpressionTree> arguments) {
-      // There may be more arguments than parameters due to varargs, but there shouldn't be fewer
-      checkArgument(arguments == null || arguments.size() >= sym.getParameters().size());
+      checkArgument(
+          arguments == null
+              || arguments.size() == sym.getParameters().size()
+              // If the method is varargs, there can be one fewer arguments than parameters if no
+              // arguments are passed for the varargs parameter.
+              || (sym.isVarArgs() && arguments.size() >= sym.getParameters().size() - 1),
+          "arguments (%s) don't match parameters (%s)",
+          arguments,
+          sym.getParameters());
       return new AutoValue_GuardedBySymbolResolver_MethodInfo(sym, arguments);
     }
 
