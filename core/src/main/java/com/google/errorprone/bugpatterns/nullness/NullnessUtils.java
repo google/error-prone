@@ -113,6 +113,27 @@ class NullnessUtils {
       return nullableAnnotationToUse.fixPrefixingOnto(elementTree);
     }
 
+    return fixByAddingKnownTypeUseNullableAnnotation(state, typeTree, nullableAnnotationToUse);
+  }
+
+  /**
+   * Returns a {@link SuggestedFix} to add a <b>type-use</b> {@code Nullable} annotation to the
+   * given tree. The tree should be a "type-use-only" location, like a type argument or a bounds of
+   * a type parameter or wildcard. Prefer to use {@link #fixByAddingNullableAnnotationToReturnType}
+   * and {@link #fixByAddingNullableAnnotationToType} instead of this method when applicable.
+   */
+  static SuggestedFix fixByAnnotatingTypeUseOnlyLocationWithNullableAnnotation(
+      VisitorState state, Tree typeTree) {
+    NullableAnnotationToUse nullableAnnotationToUse = pickNullableAnnotation(state);
+    if (!nullableAnnotationToUse.isTypeUse()) {
+      return emptyFix();
+    }
+
+    return fixByAddingKnownTypeUseNullableAnnotation(state, typeTree, nullableAnnotationToUse);
+  }
+
+  private static SuggestedFix fixByAddingKnownTypeUseNullableAnnotation(
+      VisitorState state, Tree typeTree, NullableAnnotationToUse nullableAnnotationToUse) {
     if (typeTree.getKind() == PARAMETERIZED_TYPE) {
       typeTree = ((ParameterizedTypeTree) typeTree).getType();
     }
@@ -146,15 +167,6 @@ class NullnessUtils {
             "unexpected kind for type tree: " + typeTree.getKind() + " for " + typeTree);
     }
     // TODO(cpovirk): Remove any @NonNull, etc. annotation that is present?
-  }
-
-  /**
-   * Returns a {@link SuggestedFix} to add a {@code Nullable} annotation before the given tree.
-   * Prefer to use {@link #fixByAddingNullableAnnotationToReturnType} and {@link
-   * #fixByAddingNullableAnnotationToType} instead of this when applicable.
-   */
-  static SuggestedFix fixByPrefixingWithNullableAnnotation(VisitorState state, Tree tree) {
-    return pickNullableAnnotation(state).fixPrefixingOnto(tree);
   }
 
   @com.google.auto.value.AutoValue // fully qualified to work around JDK-7177813(?) in JDK8 build
@@ -210,7 +222,7 @@ class NullnessUtils {
     }
   }
 
-  static NullableAnnotationToUse pickNullableAnnotation(VisitorState state) {
+  private static NullableAnnotationToUse pickNullableAnnotation(VisitorState state) {
     /*
      * TODO(cpovirk): Instead of hardcoding these two annotations, pick the one that seems most
      * appropriate for each user:

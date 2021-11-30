@@ -20,10 +20,9 @@ import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
 import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.fixByAddingNullableAnnotationToReturnType;
 import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.fixByAddingNullableAnnotationToType;
-import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.fixByPrefixingWithNullableAnnotation;
+import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.fixByAnnotatingTypeUseOnlyLocationWithNullableAnnotation;
 import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.hasNoExplicitType;
 import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.isVoid;
-import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.pickNullableAnnotation;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
@@ -141,10 +140,7 @@ public class VoidMissingNullable extends BugChecker
         == Nullness.NULLABLE) {
       return;
     }
-    if (!pickNullableAnnotation(state).isTypeUse()) {
-      return;
-    }
-    SuggestedFix fix = fixByPrefixingWithNullableAnnotation(state, tree);
+    SuggestedFix fix = fixByAnnotatingTypeUseOnlyLocationWithNullableAnnotation(state, tree);
     if (fix.isEmpty()) {
       return;
     }
