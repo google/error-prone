@@ -38,13 +38,11 @@ import java.util.TimeZone;
 /** @author awturner@google.com (Andy Turner) */
 @BugPattern(
     name = "ThreeLetterTimeZoneID",
-    summary = ThreeLetterTimeZoneID.SUMMARY,
+    summary =
+        "Three-letter time zone identifiers are deprecated, may be ambiguous, and might not do "
+            + "what you intend; the full IANA time zone ID should be used instead.",
     severity = WARNING)
 public class ThreeLetterTimeZoneID extends BugChecker implements MethodInvocationTreeMatcher {
-  static final String SUMMARY =
-      "Three-letter time zone identifiers are deprecated, may be ambiguous, and might not do what "
-          + "you intend; the full IANA time zone ID should be used instead.";
-
   private static final Matcher<ExpressionTree> METHOD_MATCHER =
       MethodMatchers.staticMethod()
           .onClass("java.util.TimeZone")
@@ -67,7 +65,7 @@ public class ThreeLetterTimeZoneID extends BugChecker implements MethodInvocatio
       // Value isn't a compile-time constant, so we can't know if it's unsafe.
       return Description.NO_MATCH;
     }
-    Replacement replacement = getReplacement(value, isInJodaTimeContext(state));
+    Replacement replacement = getReplacement(value, isInJodaTimeContext(state), message());
     if (replacement.replacements.isEmpty()) {
       return Description.NO_MATCH;
     }
@@ -80,14 +78,18 @@ public class ThreeLetterTimeZoneID extends BugChecker implements MethodInvocatio
     return builder.build();
   }
 
-  static Replacement getReplacement(String id, boolean inJodaTimeContext) {
+  @VisibleForTesting
+  static Replacement getReplacement(String id, boolean inJodaTimeContext, String message) {
     switch (id) {
       case "EST":
-        return handleNonDaylightSavingsZone(inJodaTimeContext, "America/New_York", "Etc/GMT+5");
+        return handleNonDaylightSavingsZone(
+            inJodaTimeContext, "America/New_York", "Etc/GMT+5", message);
       case "HST":
-        return handleNonDaylightSavingsZone(inJodaTimeContext, "Pacific/Honolulu", "Etc/GMT+10");
+        return handleNonDaylightSavingsZone(
+            inJodaTimeContext, "Pacific/Honolulu", "Etc/GMT+10", message);
       case "MST":
-        return handleNonDaylightSavingsZone(inJodaTimeContext, "America/Denver", "Etc/GMT+7");
+        return handleNonDaylightSavingsZone(
+            inJodaTimeContext, "America/Denver", "Etc/GMT+7", message);
       default:
         // Fall through, we will handle it below.
     }
@@ -110,30 +112,30 @@ public class ThreeLetterTimeZoneID extends BugChecker implements MethodInvocatio
           // offset.
           String fixedOffset = String.format("Etc/GMT%+d", -hours);
           String newDescription =
-              SUMMARY
+              message
                   + "\n\n"
                   + observesDaylightSavingsMessage("TimeZone", zoneIdReplacement, fixedOffset);
           return new Replacement(newDescription, ImmutableList.of(zoneIdReplacement, fixedOffset));
         }
       }
     }
-    return new Replacement(SUMMARY, ImmutableList.of(zoneIdReplacement));
+    return new Replacement(message, ImmutableList.of(zoneIdReplacement));
   }
 
   // American time zones for which the TLA doesn't observe daylight savings.
   // http://www-01.ibm.com/support/docview.wss?uid=swg21250503#3char
   // How we handle it depends upon whether we are in a JodaTime context or not.
   static Replacement handleNonDaylightSavingsZone(
-      boolean inJodaTimeContext, String daylightSavingsZone, String fixedOffset) {
+      boolean inJodaTimeContext, String daylightSavingsZone, String fixedOffset, String message) {
     if (inJodaTimeContext) {
       String newDescription =
-          SUMMARY
+          message
               + "\n\n"
               + observesDaylightSavingsMessage("DateTimeZone", daylightSavingsZone, fixedOffset);
       return new Replacement(newDescription, ImmutableList.of(daylightSavingsZone, fixedOffset));
     } else {
       String newDescription =
-          SUMMARY
+          message
               + "\n\n"
               + "This TimeZone will not observe daylight savings. "
               + "If this is intended, use "
