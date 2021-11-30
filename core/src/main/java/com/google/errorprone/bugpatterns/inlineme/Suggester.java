@@ -19,6 +19,7 @@ package com.google.errorprone.bugpatterns.inlineme;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.InjectMatchers.hasProvidesAnnotation;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
+import static com.google.errorprone.util.ASTHelpers.hasDirectAnnotationWithSimpleName;
 import static com.google.errorprone.util.ASTHelpers.isUsedReflectively;
 
 import com.google.errorprone.BugPattern;
@@ -42,6 +43,7 @@ import javax.lang.model.element.Modifier;
             + " its callers, please annotate it with @InlineMe.",
     severity = WARNING)
 public final class Suggester extends BugChecker implements MethodTreeMatcher {
+  private static final String INLINE_ME = "InlineMe";
 
   private final String inlineMe;
 
@@ -60,7 +62,7 @@ public final class Suggester extends BugChecker implements MethodTreeMatcher {
     }
 
     // if the API is already annotated with @InlineMe, then return no match
-    if (hasAnnotation(tree, inlineMe, state)) {
+    if (hasDirectAnnotationWithSimpleName(tree, INLINE_ME)) {
       return Description.NO_MATCH;
     }
 
