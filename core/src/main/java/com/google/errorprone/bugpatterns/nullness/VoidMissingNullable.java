@@ -120,7 +120,7 @@ public class VoidMissingNullable extends BugChecker
       return NO_MATCH;
     }
     SuggestedFix fix = fixByAddingNullableAnnotationToType(state, tree);
-    if (fix == null) {
+    if (fix.isEmpty()) {
       return NO_MATCH;
     }
     return describeMatch(tree, fix);
@@ -145,7 +145,7 @@ public class VoidMissingNullable extends BugChecker
       return;
     }
     SuggestedFix fix = fixByPrefixingWithNullableAnnotation(state, tree);
-    if (fix == null) {
+    if (fix.isEmpty()) {
       return;
     }
     state.reportMatch(describeMatch(tree, fix));

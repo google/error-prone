@@ -125,7 +125,7 @@ public class FieldMissingNullable extends BugChecker
     }
 
     SuggestedFix fix = fixByAddingNullableAnnotationToType(state, fieldDecl);
-    if (fix == null) {
+    if (fix.isEmpty()) {
       return NO_MATCH;
     }
     return describeMatch(treeToReportOn, fix);

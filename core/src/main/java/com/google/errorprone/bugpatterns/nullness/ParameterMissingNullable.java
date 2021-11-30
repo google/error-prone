@@ -122,7 +122,7 @@ public class ParameterMissingNullable extends BugChecker implements BinaryTreeMa
       return NO_MATCH;
     }
     SuggestedFix fix = fixByAddingNullableAnnotationToType(state, param);
-    if (fix == null) {
+    if (fix.isEmpty()) {
       return NO_MATCH;
     }
     return describeMatch(tree, fix);
