@@ -22,6 +22,7 @@ import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.NullCheck
 import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.NullableAnnotationToUse.annotationToBeImported;
 import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.NullableAnnotationToUse.annotationWithoutImporting;
 import static com.google.errorprone.fixes.SuggestedFix.emptyFix;
+import static com.google.errorprone.matchers.Matchers.instanceMethod;
 import static com.google.errorprone.suppliers.Suppliers.JAVA_LANG_VOID_TYPE;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
@@ -38,6 +39,7 @@ import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.nullness.NullnessUtils.NullCheck.Polarity;
 import com.google.errorprone.fixes.SuggestedFix;
+import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.FindIdentifiers;
 import com.sun.source.tree.AnnotatedTypeTree;
 import com.sun.source.tree.ArrayTypeTree;
@@ -48,6 +50,7 @@ import com.sun.source.tree.ConditionalExpressionTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.IfTree;
+import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.ParameterizedTypeTree;
 import com.sun.source.tree.ParenthesizedTree;
@@ -75,6 +78,11 @@ import javax.lang.model.element.Name;
  */
 class NullnessUtils {
   private NullnessUtils() {}
+
+  private static final Matcher<ExpressionTree> OPTIONAL_OR_NULL =
+      instanceMethod().onDescendantOf("com.google.common.base.Optional").named("orNull");
+  private static final Matcher<ExpressionTree> OPTIONAL_OR_ELSE =
+      instanceMethod().onDescendantOf("java.util.Optional").named("orElse");
 
   /**
    * Returns a {@link SuggestedFix} to add a {@code Nullable} annotation to the given method's
@@ -391,6 +399,11 @@ class NullnessUtils {
       }
 
       @Override
+      public Boolean visitMethodInvocation(MethodInvocationTree tree, Void unused) {
+        return super.visitMethodInvocation(tree, unused) || isOptionalOrNull(tree);
+      }
+
+      @Override
       public Boolean visitParenthesized(ParenthesizedTree tree, Void unused) {
         return visit(tree.getExpression(), unused);
       }
@@ -412,6 +425,16 @@ class NullnessUtils {
          */
         return isVoid(getType(tree), stateForCompilationUnit)
             || definitelyNullVars.contains(getSymbol(tree));
+      }
+
+      boolean isOptionalOrNull(MethodInvocationTree tree) {
+        return OPTIONAL_OR_NULL.matches(tree, stateForCompilationUnit)
+            || (OPTIONAL_OR_ELSE.matches(tree, stateForCompilationUnit)
+                && tree.getArguments().get(0).getKind() == NULL_LITERAL);
+        /*
+         * TODO(cpovirk): Instead of checking only for NULL_LITERAL, call hasDefinitelyNullBranch?
+         * But consider whether that would interfere with the TODO at the top of that method.
+         */
       }
     }.visit(tree, null);
   }

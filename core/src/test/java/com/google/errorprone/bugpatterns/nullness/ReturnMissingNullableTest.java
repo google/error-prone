@@ -417,6 +417,38 @@ public class ReturnMissingNullableTest {
   }
 
   @Test
+  public void testOrNull() {
+    createCompilationTestHelper()
+        .addSourceLines(
+            "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
+            "package com.google.errorprone.bugpatterns.nullness;",
+            "import com.google.common.base.Optional;",
+            "class LiteralNullReturnTest {",
+            "  public String getMessage(Optional<String> m) {",
+            "    // BUG: Diagnostic contains: @Nullable",
+            "    return m.orNull();",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void testOrElseNull() {
+    createCompilationTestHelper()
+        .addSourceLines(
+            "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
+            "package com.google.errorprone.bugpatterns.nullness;",
+            "import java.util.Optional;",
+            "class LiteralNullReturnTest {",
+            "  public String getMessage(Optional<String> m) {",
+            "    // BUG: Diagnostic contains: @Nullable",
+            "    return m.orElse(null);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void testOnlyIfAlreadyInScopeAndItIs() {
     createCompilationTestHelper()
         .setArgs("-XepOpt:Nullness:OnlyIfAnnotationAlreadyInScope=true")
@@ -1274,6 +1306,21 @@ public class ReturnMissingNullableTest {
             "public class LiteralNullReturnTest {",
             "  String getMessage(boolean b) {",
             "    return b ? \"\" : null;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void testNegativeCases_orElseNotNull() {
+    createCompilationTestHelper()
+        .addSourceLines(
+            "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
+            "package com.google.errorprone.bugpatterns.nullness;",
+            "import java.util.Optional;",
+            "class LiteralNullReturnTest {",
+            "  public String getMessage(Optional<String> m) {",
+            "    return m.orElse(\"\");",
             "  }",
             "}")
         .doTest();
