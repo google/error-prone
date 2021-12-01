@@ -473,6 +473,28 @@ public class ReturnMissingNullableTest {
   }
 
   @Test
+  public void testImplementsMap() {
+    createCompilationTestHelper()
+        .addSourceLines(
+            "NotMap.java", //
+            "interface NotMap {",
+            "  Integer get(String o);",
+            "}")
+        .addSourceLines(
+            "MyMap.java",
+            "import java.util.Map;",
+            "interface MyMap<K, V> extends Map<K, V>, NotMap {",
+            "  // BUG: Diagnostic contains: @Nullable",
+            "  @Override V get(Object o);",
+            "  // BUG: Diagnostic contains: @Nullable",
+            "  @Override V replace(K k, V v);",
+            "  @Override boolean replace(K k, V expect, V update);",
+            "  @Override Integer get(String o);",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void testOnlyIfAlreadyInScopeAndItIs() {
     createCompilationTestHelper()
         .setArgs("-XepOpt:Nullness:OnlyIfAnnotationAlreadyInScope=true")
@@ -1346,6 +1368,24 @@ public class ReturnMissingNullableTest {
             "  public String getMessage(Optional<String> m) {",
             "    return m.orElse(\"\");",
             "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void testNegativeCases_doesNotImplementMap() {
+    createCompilationTestHelper()
+        .addSourceLines(
+            "NotMap.java",
+            "interface NotMap<K, V> {",
+            "  String get(Object o);",
+            "  V replace(K k, V v);",
+            "}")
+        .addSourceLines(
+            "MyMap.java",
+            "interface MyMap extends NotMap<Integer, Double> {",
+            "  @Override String get(Object o);",
+            "  @Override Double replace(Integer k, Double v);",
             "}")
         .doTest();
   }
