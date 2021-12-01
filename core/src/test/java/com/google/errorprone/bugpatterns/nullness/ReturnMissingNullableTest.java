@@ -234,6 +234,30 @@ public class ReturnMissingNullableTest {
   }
 
   @Test
+  public void testMultipleFilesFinalField() {
+    createCompilationTestHelper()
+        .addSourceLines(
+            "Foo.java",
+            "class Foo {",
+            "  final Object nullObject = null;",
+            "  Object get() {",
+            "    // BUG: Diagnostic contains: @Nullable",
+            "    return nullObject;",
+            "  }",
+            "}")
+        .addSourceLines(
+            "Bar.java",
+            "class Bar {",
+            "  final Object nullObject = null;",
+            "  Object get() {",
+            "    // BUG: Diagnostic contains: @Nullable",
+            "    return nullObject;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void testVoidField() {
     createCompilationTestHelper()
         .addSourceLines(
