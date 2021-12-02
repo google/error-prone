@@ -185,13 +185,35 @@ public class CompileTimeConstantExpressionMatcherTest {
             "Test.java",
             "abstract class Test {",
             "  abstract boolean g();",
-            "  public void m(boolean flag) { ",
+            "  public void m(boolean flag) {",
             "    // BUG: Diagnostic contains: false",
             "    boolean bool1 = flag ? true : g();",
             "    // BUG: Diagnostic contains: false",
             "    boolean bool2 = flag ? g() : false;",
             "    // BUG: Diagnostic contains: true",
             "    boolean bool3 = flag ? true : false;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void concatenatedStrings() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "package test;",
+            "import com.google.errorprone.annotations.CompileTimeConstant;",
+            "abstract class Test {",
+            "  public void m(@CompileTimeConstant String ctc, String nonCtc) {",
+            "    // BUG: Diagnostic contains: true",
+            "    String a = \"foo\" + ctc;",
+            "    // BUG: Diagnostic contains: true",
+            "    String b = ctc + \"foo\";",
+            "    // BUG: Diagnostic contains: false",
+            "    String c = nonCtc + \"foo\";",
+            "    // BUG: Diagnostic contains: false",
+            "    String d = nonCtc + ctc;",
             "  }",
             "}")
         .doTest();
