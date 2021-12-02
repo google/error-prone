@@ -16,15 +16,15 @@
 
 package com.google.errorprone.matchers;
 
-import static com.google.common.base.MoreObjects.firstNonNull;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
+import static com.google.errorprone.util.ASTHelpers.constValue;
+import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.isConsideredFinal;
 
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.annotations.CompileTimeConstant;
 import com.google.errorprone.suppliers.Supplier;
-import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ConditionalExpressionTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
@@ -51,7 +51,7 @@ public class CompileTimeConstantExpressionMatcher implements Matcher<ExpressionT
   private static final Supplier<Symbol> COMPILE_TIME_CONSTANT_ANNOTATION =
       VisitorState.memoize(state -> state.getSymbolFromString(CompileTimeConstant.class.getName()));
 
-  private final Matcher<ExpressionTree> matcher =
+  private static final Matcher<ExpressionTree> INSTANCE =
       Matchers.anyOf(
           // TODO(xtof): Consider utilising mdempsky's closed-over-addition matcher
           // (perhaps extended for other arithmetic operations).
@@ -59,9 +59,13 @@ public class CompileTimeConstantExpressionMatcher implements Matcher<ExpressionT
           Matchers.kindIs(Tree.Kind.NULL_LITERAL),
           new FinalCompileTimeConstantIdentifierMatcher());
 
+  public static Matcher<ExpressionTree> instance() {
+    return INSTANCE;
+  }
+
   @Override
   public boolean matches(ExpressionTree t, VisitorState state) {
-    return matcher.matches(t, state);
+    return INSTANCE.matches(t, state);
   }
 
   private static final Matcher<ExpressionTree> IMMUTABLE_FACTORY =
@@ -76,43 +80,27 @@ public class CompileTimeConstantExpressionMatcher implements Matcher<ExpressionT
   private static final class ExpressionWithConstValueMatcher implements Matcher<ExpressionTree> {
 
     @Override
-    public boolean matches(ExpressionTree t, VisitorState state) {
-      return firstNonNull(
-          t.accept(
-              new SimpleTreeVisitor<Boolean, Void>() {
-                @Override
-                public Boolean visitConditionalExpression(
-                    ConditionalExpressionTree tree, Void unused) {
-                  return reduce(
-                      tree.getTrueExpression().accept(this, null),
-                      tree.getFalseExpression().accept(this, null));
-                }
+    public boolean matches(ExpressionTree tree, VisitorState state) {
+      return tree.accept(
+          new SimpleTreeVisitor<Boolean, Void>() {
+            @Override
+            public Boolean visitConditionalExpression(ConditionalExpressionTree tree, Void unused) {
+              return tree.getTrueExpression().accept(this, null)
+                  && tree.getFalseExpression().accept(this, null);
+            }
 
-                @Override
-                public Boolean visitMethodInvocation(MethodInvocationTree node, Void unused) {
-                  if (!IMMUTABLE_FACTORY.matches(node, state)) {
-                    return false;
-                  }
-                  for (ExpressionTree argument : node.getArguments()) {
-                    if (!argument.accept(this, null)) {
-                      return false;
-                    }
-                  }
-                  return true;
-                }
+            @Override
+            public Boolean visitMethodInvocation(MethodInvocationTree tree, Void unused) {
+              return IMMUTABLE_FACTORY.matches(tree, state)
+                  && tree.getArguments().stream().allMatch(a -> a.accept(this, null));
+            }
 
-                @Override
-                protected Boolean defaultAction(Tree node, Void unused) {
-                  Object constValue = ASTHelpers.constValue(node);
-                  return constValue != null;
-                }
-
-                public Boolean reduce(Boolean lhs, Boolean rhs) {
-                  return firstNonNull(lhs, false) && firstNonNull(rhs, false);
-                }
-              },
-              null),
-          false);
+            @Override
+            protected Boolean defaultAction(Tree tree, Void unused) {
+              return constValue(tree) != null;
+            }
+          },
+          null);
     }
   }
 
@@ -128,7 +116,7 @@ public class CompileTimeConstantExpressionMatcher implements Matcher<ExpressionT
       if (t.getKind() != Tree.Kind.IDENTIFIER) {
         return false;
       }
-      Symbol.VarSymbol varSymbol = (Symbol.VarSymbol) ASTHelpers.getSymbol(t);
+      Symbol.VarSymbol varSymbol = (Symbol.VarSymbol) getSymbol(t);
       Symbol owner = varSymbol.owner;
       ElementKind ownerKind = owner.getKind();
       // Check that the identifier is a formal method/constructor parameter or a class field.
@@ -149,7 +137,6 @@ public class CompileTimeConstantExpressionMatcher implements Matcher<ExpressionT
     }
   }
 
-  // public since this is also used by CompileTimeConstantChecker.
   public static boolean hasCompileTimeConstantAnnotation(VisitorState state, Symbol symbol) {
     Symbol annotation = COMPILE_TIME_CONSTANT_ANNOTATION.get(state);
     // If we can't look up the annotation in the current VisitorState, then presumably it couldn't

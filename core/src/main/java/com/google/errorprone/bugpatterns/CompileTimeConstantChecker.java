@@ -108,7 +108,7 @@ public class CompileTimeConstantChecker extends BugChecker
   private static final String DID_YOU_MEAN_FINAL_FMT_MESSAGE = " Did you mean to make '%s' final?";
 
   private final Matcher<ExpressionTree> compileTimeConstExpressionMatcher =
-      new CompileTimeConstantExpressionMatcher();
+      CompileTimeConstantExpressionMatcher.instance();
 
   /**
    * Matches formal parameters with {@link com.google.errorprone.annotations.CompileTimeConstant}
