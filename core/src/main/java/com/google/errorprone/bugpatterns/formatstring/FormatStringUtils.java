@@ -43,6 +43,7 @@ public final class FormatStringUtils {
                   "java.io.Console")
               .namedAnyOf("format", "printf"),
           staticMethod().onClass("java.lang.String").named("format"),
+          instanceMethod().onExactClass("java.lang.String").named("formatted"),
           // Exclude zero-arg java.io.Console.readPassword from format methods.
           instanceMethod()
               .onExactClass("java.io.Console")

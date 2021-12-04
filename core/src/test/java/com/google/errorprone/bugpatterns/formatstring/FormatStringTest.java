@@ -318,6 +318,32 @@ public class FormatStringTest {
   }
 
   @Test
+  public void stringFormattedValid() {
+    compilationHelper
+        .addSourceLines(
+                "Test.java",
+                "class Test {",
+                "  void f() {",
+                "    \"%s %s\".formatted(1, 2);",
+                "  }",
+                "}")
+        .doTest();
+  }
+
+  @Test
+  public void stringFormattedMissing() {
+    compilationHelper
+        .addSourceLines(
+                "Test.java",
+                "class Test {",
+                "  void f() {",
+                "    \"%s %s\".formatted(1);",
+                "  }",
+                "}")
+        .doTest();
+  }
+
+  @Test
   public void javaUtilTime() {
     compilationHelper
         .addSourceLines(
