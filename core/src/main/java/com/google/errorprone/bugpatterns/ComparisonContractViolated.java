@@ -17,6 +17,7 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.matchers.Matchers.allOf;
+import static com.google.errorprone.matchers.Matchers.compareToMethodDeclaration;
 import static com.google.errorprone.matchers.Matchers.isSubtypeOf;
 import static com.google.errorprone.matchers.Matchers.methodHasArity;
 import static com.google.errorprone.matchers.Matchers.methodHasVisibility;
@@ -61,13 +62,6 @@ import java.util.Set;
     summary = "This comparison method violates the contract",
     severity = SeverityLevel.ERROR)
 public class ComparisonContractViolated extends BugChecker implements MethodTreeMatcher {
-  /** Matcher for the overriding method of 'int java.lang.Comparable.compareTo(T other)' */
-  private static final Matcher<MethodTree> COMPARABLE_METHOD_MATCHER =
-      allOf(
-          methodIsNamed("compareTo"),
-          methodHasVisibility(PUBLIC),
-          methodReturns(INT_TYPE),
-          methodHasArity(1));
 
   private static final Matcher<ClassTree> COMPARABLE_CLASS_MATCHER =
       isSubtypeOf("java.lang.Comparable");
@@ -146,7 +140,7 @@ public class ComparisonContractViolated extends BugChecker implements MethodTree
         && !COMPARATOR_CLASS_MATCHER.matches(declaringClass, state)) {
       return Description.NO_MATCH;
     }
-    if (!COMPARABLE_METHOD_MATCHER.matches(tree, state)
+    if (!compareToMethodDeclaration().matches(tree, state)
         && !COMPARATOR_METHOD_MATCHER.matches(tree, state)) {
       return Description.NO_MATCH;
     }

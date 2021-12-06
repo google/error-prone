@@ -209,6 +209,7 @@ import com.google.errorprone.bugpatterns.MissingBraces;
 import com.google.errorprone.bugpatterns.MissingCasesInEnumSwitch;
 import com.google.errorprone.bugpatterns.MissingDefault;
 import com.google.errorprone.bugpatterns.MissingFail;
+import com.google.errorprone.bugpatterns.MissingImplementsComparable;
 import com.google.errorprone.bugpatterns.MissingOverride;
 import com.google.errorprone.bugpatterns.MissingSuperCall;
 import com.google.errorprone.bugpatterns.MissingTestCall;
@@ -885,6 +886,7 @@ public class BuiltInCheckerSuppliers {
           MemoizeConstantVisitorStateLookups.class,
           MissingCasesInEnumSwitch.class,
           MissingFail.class,
+          MissingImplementsComparable.class,
           MissingOverride.class,
           MissingSummary.class,
           MixedMutabilityReturnType.class,

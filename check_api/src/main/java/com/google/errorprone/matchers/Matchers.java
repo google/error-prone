@@ -1501,6 +1501,19 @@ public class Matchers {
     return HASH_CODE_DECLARATION;
   }
 
+  /** Matcher for the overriding method of 'int java.lang.Comparable.compareTo(T other)' */
+  private static final Matcher<MethodTree> COMPARABLE_METHOD_MATCHER =
+      allOf(
+          methodIsNamed("compareTo"),
+          methodHasVisibility(Visibility.PUBLIC),
+          methodReturns(INT_TYPE),
+          methodHasArity(1));
+
+  /** Matches {@code compareTo} method declaration. */
+  public static Matcher<MethodTree> compareToMethodDeclaration() {
+    return COMPARABLE_METHOD_MATCHER;
+  }
+
   /** Method signature of serialization methods. */
   public static final Matcher<MethodTree> SERIALIZATION_METHODS =
       allOf(
