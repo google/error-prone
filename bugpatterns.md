@@ -901,6 +901,9 @@ Switches on enum types should either handle all values, or have a default case.
 __[MissingFail](bugpattern/MissingFail)__<br>
 Not calling fail() when expecting an exception masks bugs
 
+__[MissingImplementsComparable](bugpattern/MissingImplementsComparable)__<br>
+Classes implementing valid compareTo function should implement Comparable interface
+
 __[MissingOverride](bugpattern/MissingOverride)__<br>
 method overrides method in supertype; expected @Override
 
