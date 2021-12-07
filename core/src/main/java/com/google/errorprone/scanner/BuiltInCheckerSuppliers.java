@@ -21,6 +21,7 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Streams;
 import com.google.errorprone.BugCheckerInfo;
+import com.google.errorprone.bugpatterns.AlreadyChecked;
 import com.google.errorprone.bugpatterns.AlwaysThrows;
 import com.google.errorprone.bugpatterns.AmbiguousMethodReference;
 import com.google.errorprone.bugpatterns.AnnotateFormatMethod;
@@ -759,6 +760,7 @@ public class BuiltInCheckerSuppliers {
       getSuppliers(
           // keep-sorted start
           AlmostJavadoc.class,
+          AlreadyChecked.class,
           AmbiguousMethodReference.class,
           AnnotateFormatMethod.class,
           ArgumentSelectionDefectChecker.class,
