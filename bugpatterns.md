@@ -514,6 +514,9 @@ Use ZoneOffset.UTC instead of ZoneId.of(&quot;Z&quot;).
 __[AlmostJavadoc](bugpattern/AlmostJavadoc)__<br>
 This comment contains Javadoc or HTML tags, but isn&#39;t started with a double asterisk (/**); is it meant to be Javadoc?
 
+__[AlreadyChecked](bugpattern/AlreadyChecked)__<br>
+This condition has already been checked.
+
 __[AmbiguousMethodReference](bugpattern/AmbiguousMethodReference)__<br>
 Method reference is ambiguous
 
