@@ -498,7 +498,7 @@ loadScripts(document, 'script');</script>
 <div class="block">Bugpattern to find conditions which are checked more than once, and either vacuously true or
  false.</div>
 </dd>
-<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/AlreadyChecked.html#%3Cinit%3E()">AlreadyChecked()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/AlreadyChecked.html" title="class in com.google.errorprone.bugpatterns">AlreadyChecked</a></dt>
+<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/AlreadyChecked.html#%3Cinit%3E(com.google.errorprone.ErrorProneFlags)">AlreadyChecked(ErrorProneFlags)</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/AlreadyChecked.html" title="class in com.google.errorprone.bugpatterns">AlreadyChecked</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/refaster/annotation/AlsoNegation.html" title="annotation in com.google.errorprone.refaster.annotation"><span class="type-name-link">AlsoNegation</span></a> - Annotation Type in <a href="com/google/errorprone/refaster/annotation/package-summary.html">com.google.errorprone.refaster.annotation</a></dt>
 <dd>
@@ -11627,6 +11627,11 @@ loadScripts(document, 'script');</script>
 <dt><span class="member-name-link"><a href="com/google/errorprone/matchers/Matchers.html#symbolHasAnnotation(java.lang.String)">symbolHasAnnotation(String)</a></span> - Static method in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/Matchers.html" title="class in com.google.errorprone.matchers">Matchers</a></dt>
 <dd>
 <div class="block">Determines whether an expression refers to a symbol that has an annotation of the given type.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/AlreadyChecked.html#symbolizeImmutableExpression(com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)">symbolizeImmutableExpression(ExpressionTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/AlreadyChecked.html" title="class in com.google.errorprone.bugpatterns">AlreadyChecked</a></dt>
+<dd>
+<div class="block">Returns a list of the methods called to get to this expression, as well as a terminating
+ variable if needed.</div>
 </dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/matchers/Matchers.html#symbolMatcher(java.util.function.BiPredicate)">symbolMatcher(BiPredicate&lt;Symbol, VisitorState&gt;)</a></span> - Static method in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/Matchers.html" title="class in com.google.errorprone.matchers">Matchers</a></dt>
 <dd>
