@@ -211,7 +211,7 @@ public class DoubleBraceInitializationTest {
             "          .put(4, \"d\")",
             "          .put(5, \"e\")",
             "          .put(6, \"f\")",
-            "          .build();",
+            "          .buildOrThrow();",
             "}")
         .doTest();
   }
