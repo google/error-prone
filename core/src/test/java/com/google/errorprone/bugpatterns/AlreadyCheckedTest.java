@@ -182,4 +182,75 @@ public final class AlreadyCheckedTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void equalsCheckedTwice() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  public int test(String a) {",
+            "    if (a.equals(\"a\")) {",
+            "      // BUG: Diagnostic contains: true",
+            "      return a.equals(\"a\") ? 1 : 2;",
+            "    }",
+            "    return 0;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void equalsCheckedTwice_comparedUsingDifferentEqualsImplementation() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            "import java.util.Objects;",
+            "class Test {",
+            "  public int test(String a) {",
+            "    if (a.equals(\"a\")) {",
+            "      // BUG: Diagnostic contains: true",
+            "      return Objects.equals(a, \"a\") ? 1 : 2;",
+            "    }",
+            "    return 0;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void equalsCheckedTwice_comparedToDifferentConstant() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  public int test(String a) {",
+            "    if (a.equals(\"b\")) {",
+            "      return a.equals(\"a\") ? 1 : 2;",
+            "    }",
+            "    return 0;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void comparedUsingBinaryEquals() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  public int test(int a, int b) {",
+            "    if (a == 1) {",
+            "      if (a == b) {",
+            "        return 3;",
+            "      }",
+            "      // BUG: Diagnostic contains:",
+            "      return a != 1 ? 1 : 2;",
+            "    }",
+            "    return 0;",
+            "  }",
+            "}")
+        .doTest();
+  }
 }
