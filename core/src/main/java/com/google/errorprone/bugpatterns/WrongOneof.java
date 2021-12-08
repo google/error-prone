@@ -119,8 +119,8 @@ public final class WrongOneof extends BugChecker implements SwitchTreeMatcher {
    * <p>Absent if the chain of calls is not a sequence of immutable proto getters ending in an
    * effectively final variable.
    *
-   * <p>For example {@code a.getFoo().getBar()} would return {@code MethodSymbol[getFoo],
-   * MethodSymbol[getBar], VarSymbol[a]}.
+   * <p>For example {@code a.getFoo().getBar()} would return {@code MethodSymbol[getBar],
+   * MethodSymbol[getFoo], VarSymbol[a]}.
    */
   private static Optional<ImmutableList<Symbol>> symbolizeImmutableExpression(
       ExpressionTree tree, VisitorState state) {
