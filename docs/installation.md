@@ -4,9 +4,9 @@ layout: documentation
 ---
 
 Our goal is to make it simple to add Error Prone checks to your existing Java
-compilation. Please note that Error Prone must be run on JDK 8 or newer. It can
-be used to build Java 6 or 7 code by setting the appropriate `-source` /
-`-target` / `-bootclasspath` flags.
+compilation. Please note that Error Prone must be run on JDK 11 or newer. (It
+can still be used to build Java 8 code by setting the appropriate `-source` /
+`-target` / `-bootclasspath` flags.)
 
 Please join our
 [mailing list](http://groups.google.com/group/error-prone-announce) to know when
@@ -123,43 +123,6 @@ Default](https://openjdk.java.net/jeps/396):
   </build>
 ```
 
-### JDK 8
-
-Using the `error-prone-javac` is required when running on JDK 8, but using the
-`-J-Xbootclasspath/p:` flag to override the system javac is not supported on JDK
-9 and up. To support building with JDK 8, use the following profile for JDK 8
-support:
-
-```xml
-  <properties>
-    <javac.version>9+181-r4173-1</javac.version>
-  </properties>
-
-  <!-- using github.com/google/error-prone-javac is required when running on JDK 8 -->
-  <profiles>
-    <profile>
-      <id>jdk8</id>
-      <activation>
-        <jdk>1.8</jdk>
-      </activation>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-compiler-plugin</artifactId>
-            <configuration>
-              <fork>true</fork>
-              <compilerArgs combine.children="append">
-                <arg>-J-Xbootclasspath/p:${settings.localRepository}/com/google/errorprone/javac/${javac.version}/javac-${javac.version}.jar</arg>
-              </compilerArgs>
-            </configuration>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-  </profiles>
-```
-
 See the [flags documentation](http://errorprone.info/docs/flags#maven) for details on
 how to customize the plugin's behavior.
 
@@ -175,33 +138,52 @@ Download the following artifacts from maven:
 *   `error_prone_core-${EP_VERSION?}-with-dependencies.jar` from https://repo1.maven.org/maven2/com/google/errorprone/error_prone_core/
 *   [jFormatString-3.0.0.jar](https://repo1.maven.org/maven2/com/google/code/findbugs/jFormatString/3.0.0/jFormatString-3.0.0.jar)
 *   [dataflow-errorprone-3.15.0.jar](https://repo1.maven.org/maven2/org/checkerframework/dataflow-errorprone/3.15.0/dataflow-errorprone-3.15.0.jar)
-*   [javac-9+181-r4173-1.jar](https://repo1.maven.org/maven2/com/google/errorprone/javac/9+181-r4173-1/javac-9+181-r4173-1.jar)
 
 and add the following javac task to your project's `build.xml` file:
 
 ```xml
-   <property name="javac.jar" location="${user.home}/.m2/repository/com/google/errorprone/javac/9+181-r4173-1/javac-9+181-r4173-1.jar"/>
-
-    <!-- using github.com/google/error-prone-javac is required when running on JDK 8 -->
-    <condition property="jdk9orlater">
-      <javaversion atleast="9"/>
-    </condition>
-
     <path id="processorpath.ref">
       <pathelement location="${user.home}/.m2/repository/com/google/errorprone/error_prone_core/${error-prone.version}/error_prone_core-${error-prone.version}-with-dependencies.jar"/>
       <pathelement location="${user.home}/.m2/repository/com/google/code/findbugs/jFormatString/3.0.0/jFormatString-3.0.0.jar"/>
       <pathelement location="${user.home}/.m2/repository/org/checkerframework/dataflow-errorprone/3.15.0/dataflow-errorprone-3.15.0.jar"/>
-      <!-- Add annotation processors and Error Prone custom checks here if needed -->
     </path>
 
     <javac srcdir="src" destdir="build" fork="yes" includeantruntime="no">
-      <compilerarg value="-J-Xbootclasspath/p:${javac.jar}" unless:set="jdk9orlater"/>
       <compilerarg value="-XDcompilePolicy=simple"/>
       <compilerarg value="-processorpath"/>
       <compilerarg pathref="processorpath.ref"/>
       <compilerarg value="-Xplugin:ErrorProne -Xep:DeadException:ERROR" />
     </javac>
-  </target>
+```
+
+### JDK 16
+
+Setting the following `--add-exports=` flags is required on JDK 16 due to
+[JEP 396: Strongly Encapsulate JDK Internals by Default](https://openjdk.java.net/jeps/396):
+
+```xml
+    <path id="processorpath.ref">
+      <pathelement location="${user.home}/.m2/repository/com/google/errorprone/error_prone_core/2.19.0/error_prone_core-2.19.0-with-dependencies.jar"/>
+      <pathelement location="${user.home}/.m2/repository/com/google/code/findbugs/jFormatString/3.0.0/jFormatString-3.0.0.jar"/>
+      <pathelement location="${user.home}/.m2/repository/org/checkerframework/dataflow-errorprone/3.15.0/dataflow-errorprone-3.15.0.jar"/>
+    </path>
+
+    <javac srcdir="src" destdir="build" fork="yes" includeantruntime="no">
+      <compilerarg value="-XDcompilePolicy=simple"/>
+      <compilerarg value="-processorpath"/>
+      <compilerarg pathref="processorpath.ref"/>
+      <compilerarg value="-Xplugin:ErrorProne -Xep:DeadException:ERROR" />
+      <compilerarg value="-J--add-exports=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED" />
+      <compilerarg value="-J--add-exports=jdk.compiler/com.sun.tools.javac.file=ALL-UNNAMED" />
+      <compilerarg value="-J--add-exports=jdk.compiler/com.sun.tools.javac.main=ALL-UNNAMED" />
+      <compilerarg value="-J--add-exports=jdk.compiler/com.sun.tools.javac.model=ALL-UNNAMED" />
+      <compilerarg value="-J--add-exports=jdk.compiler/com.sun.tools.javac.parser=ALL-UNNAMED" />
+      <compilerarg value="-J--add-exports=jdk.compiler/com.sun.tools.javac.processing=ALL-UNNAMED" />
+      <compilerarg value="-J--add-exports=jdk.compiler/com.sun.tools.javac.tree=ALL-UNNAMED" />
+      <compilerarg value="-J--add-exports=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED" />
+      <compilerarg value="-J--add-opens=jdk.compiler/com.sun.tools.javac.code=ALL-UNNAMED" />
+      <compilerarg value="-J--add-opens=jdk.compiler/com.sun.tools.javac.comp=ALL-UNNAMED" />
+    </javac>
 ```
 
 ## IntelliJ IDEA
@@ -226,8 +208,6 @@ For now, Eclipse users should use the Findbugs eclipse plugin instead, as it
 catches many of the same issues.
 
 ## Command Line
-
-### Java 9 and newer
 
 Error Prone supports the
 [`com.sun.source.util.Plugin`](https://docs.oracle.com/javase/8/docs/jdk/api/javac/tree/com/sun/source/util/Plugin.html)
@@ -269,23 +249,6 @@ The `--add-exports` and `--add-opens` flags are required when using JDK 16+ due 
 396: Strongly Encapsulate JDK Internals by
 Default](https://openjdk.java.net/jeps/396):
 
-### Java 8
-
-To use Error Prone from the command line as a javac replacement:
-
-```
-wget https://repo1.maven.org/maven2/com/google/errorprone/error_prone_core/${EP_VERSION?}/error_prone_core-${EP_VERSION?}-with-dependencies.jar
-wget https://repo1.maven.org/maven2/org/checkerframework/dataflow-errorprone/3.15.0/dataflow-errorprone-3.15.0.jar
-wget https://repo1.maven.org/maven2/com/google/code/findbugs/jFormatString/3.0.0/jFormatString-3.0.0.jar
-wget https://repo1.maven.org/maven2/com/google/errorprone/javac/9+181-r4173-1/javac-9+181-r4173-1.jar
-javac \
-  -J-Xbootclasspath/p:javac-9+181-r4173-1.jar \
-  -XDcompilePolicy=simple \
-  -processorpath error_prone_core-${EP_VERSION?}-with-dependencies.jar:dataflow-errorprone-3.15.0.jar:jFormatString-3.0.0.jar \
-  '-Xplugin:ErrorProne -XepDisableAllChecks -Xep:CollectionIncompatibleType:ERROR' \
-  ShortSet.java
-```
-
 ## My build system isn't listed here
 
 If you're an end-user of the build system, you can
@@ -318,3 +281,13 @@ to Error Prone, such as
 [AutoValue](https://github.com/google/auto/tree/master/value), then you will
 need to add their JARs to your `-processorpath` argument. The mechanics of this
 will vary according to the build tool you are using.
+
+## JDK 8
+
+Error Prone 2.19.0 is the latest version to support running on JDK 8. (Compiling
+the Java 8 language level is still supported by using a javac from a newer JDK,
+and setting the appropriate `-source`/`-target`/`-bootclasspath` or `--release`
+flags).
+
+For instructions on using Error Prone 2.10.0 with JDK 8, see
+[this older version of the installation instructions](https://github.com/google/error-prone/blob/f8e33bc460be82ab22256a7ef8b979d7a2cacaba/docs/installation.md).
