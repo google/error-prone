@@ -1394,6 +1394,12 @@ public class Matchers {
               Matchers::methodReturnsBoolean),
           allOf(
               staticMethod()
+                  .onClass("androidx.v4.util.ObjectsCompat")
+                  .named("equals")
+                  .withParameters("java.lang.Object", "java.lang.Object"),
+              Matchers::methodReturnsBoolean),
+          allOf(
+              staticMethod()
                   .onClass("java.util.Objects")
                   .named("equals")
                   .withParameters("java.lang.Object", "java.lang.Object"),
