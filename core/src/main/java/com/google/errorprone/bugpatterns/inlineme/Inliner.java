@@ -147,7 +147,7 @@ public final class Inliner extends BugChecker
       ExpressionTree receiver,
       VisitorState state) {
     Optional<InlineMeData> inlineMe = InlineMeData.createFromSymbol(symbol);
-    if (!inlineMe.isPresent()) {
+    if (inlineMe.isEmpty()) {
       return Description.NO_MATCH;
     }
 
