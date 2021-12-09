@@ -52,7 +52,7 @@ public class HardCodedSdCardPath extends BugChecker implements LiteralTreeMatche
           .put("file:///sdcard", SDCARD)
           .put("/data/data", DATA)
           .put("/data/user", DATA)
-          .build();
+          .buildOrThrow();
 
   @Override
   public Description matchLiteral(LiteralTree tree, VisitorState state) {

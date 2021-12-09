@@ -50,7 +50,8 @@ abstract class UPlaceholderStatement implements UStatement {
     for (int i = 0; i < placeholderParams.size(); i++) {
       builder.put(placeholderParams.get(i), argumentsList.get(i));
     }
-    return new AutoValue_UPlaceholderStatement(placeholder, builder.build(), implementationFlow);
+    return new AutoValue_UPlaceholderStatement(
+        placeholder, builder.buildOrThrow(), implementationFlow);
   }
 
   abstract PlaceholderMethod placeholder();

@@ -205,7 +205,7 @@ public final class PreferredInterfaceType extends BugChecker implements Compilat
         return super.visitMethod(node, null);
       }
     }.scan(state.getPath(), null);
-    return fixableTypes.build();
+    return fixableTypes.buildOrThrow();
   }
 
   private void reportFixes(

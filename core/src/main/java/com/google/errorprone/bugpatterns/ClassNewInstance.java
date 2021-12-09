@@ -106,7 +106,7 @@ public class ClassNewInstance extends BugChecker implements MethodInvocationTree
     for (CatchTree c : tryTree.getCatches()) {
       catches.put(ASTHelpers.getType(c.getParameter().getType()), c);
     }
-    UnhandledResult<CatchTree> result = unhandled(catches.build(), state);
+    UnhandledResult<CatchTree> result = unhandled(catches.buildOrThrow(), state);
     if (result.unhandled.isEmpty()) {
       // no fix needed
       return true;
@@ -199,7 +199,7 @@ public class ClassNewInstance extends BugChecker implements MethodInvocationTree
     for (ExpressionTree e : methodTree.getThrows()) {
       thrown.put(ASTHelpers.getType(e), e);
     }
-    UnhandledResult<ExpressionTree> result = unhandled(thrown.build(), state);
+    UnhandledResult<ExpressionTree> result = unhandled(thrown.buildOrThrow(), state);
     if (result.unhandled.isEmpty()) {
       return;
     }
@@ -260,6 +260,6 @@ public class ClassNewInstance extends BugChecker implements MethodInvocationTree
         toHandle.removeIf((Type elem) -> ASTHelpers.isSubtype(elem, precise, state));
       }
     }
-    return new UnhandledResult<>(ImmutableSet.copyOf(toHandle), newHandles.build());
+    return new UnhandledResult<>(ImmutableSet.copyOf(toHandle), newHandles.buildOrThrow());
   }
 }

@@ -130,7 +130,7 @@ public class DoNotCallChecker extends BugChecker
                   .onExactClass("java.util.concurrent.locks.ReentrantReadWriteLock.ReadLock")
                   .named("newCondition"),
               "ReadLocks do not support conditions.")
-          .build();
+          .buildOrThrow();
 
   static final String DO_NOT_CALL = "com.google.errorprone.annotations.DoNotCall";
 

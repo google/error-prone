@@ -98,7 +98,7 @@ public class CompilerBasedTest {
           }
         },
         fileObject);
-    this.methods = methodsBuilder.build();
+    this.methods = methodsBuilder.buildOrThrow();
     this.compilationUnits = compilationUnitsBuilder.build();
   }
 

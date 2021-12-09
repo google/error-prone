@@ -204,7 +204,7 @@ public final class TimeUnitMismatch extends BugChecker
           .put(MINUTES, "toMinutes")
           .put(HOURS, "toHours")
           .put(DAYS, "toDays")
-          .build();
+          .buildOrThrow();
 
   private boolean checkAll(
       List<VarSymbol> formals, List<? extends ExpressionTree> actuals, VisitorState state) {

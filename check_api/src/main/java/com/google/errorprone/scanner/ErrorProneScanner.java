@@ -205,7 +205,7 @@ public class ErrorProneScanner extends Scanner {
     for (BugChecker check : checkers) {
       builder.put(check.canonicalName(), check.defaultSeverity());
     }
-    return builder.build();
+    return builder.buildOrThrow();
   }
 
   @Override

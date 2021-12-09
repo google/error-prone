@@ -58,7 +58,7 @@ public class AlwaysThrows extends BugChecker implements MethodInvocationTreeMatc
           .put("java.time.Year", java.time.Year::parse)
           .put("java.time.YearMonth", java.time.YearMonth::parse)
           .put("java.time.ZonedDateTime", java.time.ZonedDateTime::parse)
-          .build();
+          .buildOrThrow();
 
   enum Apis {
     PARSE_TIME(

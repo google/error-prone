@@ -412,7 +412,7 @@ public final class FromTemporalAccessor extends BugChecker implements MethodInvo
                   "org.threeten.extra.DayOfYear",
                   "org.threeten.extra.Quarter",
                   "org.threeten.extra.YearQuarter"))
-          .build();
+          .buildOrThrow();
 
   private static Matcher<ExpressionTree> makeValue(String... classes) {
     return staticMethod().onClassAny(classes).named("from").withParameters(TEMPORAL_ACCESSOR);

@@ -53,7 +53,7 @@ public abstract class UPlaceholderExpression extends UExpression {
     for (int i = 0; i < placeholderParams.size(); i++) {
       builder.put(placeholderParams.get(i), argumentsList.get(i));
     }
-    return new AutoValue_UPlaceholderExpression(placeholder, builder.build());
+    return new AutoValue_UPlaceholderExpression(placeholder, builder.buildOrThrow());
   }
 
   abstract PlaceholderMethod placeholder();

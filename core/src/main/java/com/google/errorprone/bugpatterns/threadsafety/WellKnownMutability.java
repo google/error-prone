@@ -115,7 +115,7 @@ public final class WellKnownMutability implements ThreadSafety.KnownTypes {
     }
 
     public ImmutableMap<String, AnnotationInfo> build() {
-      return mapBuilder.build();
+      return mapBuilder.buildOrThrow();
     }
   }
 

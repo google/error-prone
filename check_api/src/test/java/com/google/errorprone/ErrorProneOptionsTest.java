@@ -77,7 +77,7 @@ public class ErrorProneOptionsTest {
             .put("Check1", Severity.DEFAULT)
             .put("Check2", Severity.OFF)
             .put("Check3", Severity.WARN)
-            .build();
+            .buildOrThrow();
     assertThat(options.getSeverityMap()).isEqualTo(expectedSeverityMap);
   }
 
@@ -90,7 +90,7 @@ public class ErrorProneOptionsTest {
             .put("Flag1", "true")
             .put("Flag2", "Value2")
             .put("Flag3", "a,b,c")
-            .build();
+            .buildOrThrow();
     assertThat(options.getFlags().getFlagsMap()).isEqualTo(expectedFlagsMap);
   }
 
@@ -111,7 +111,7 @@ public class ErrorProneOptionsTest {
         ImmutableMap.<String, Severity>builder()
             .put("Check1", Severity.WARN)
             .put("Check2", Severity.ERROR)
-            .build();
+            .buildOrThrow();
     assertThat(options.getSeverityMap()).isEqualTo(expectedSeverityMap);
     Map<String, String> expectedFlagsMap = ImmutableMap.of("Check1:Flag1", "Value1");
     assertThat(options.getFlags().getFlagsMap()).containsExactlyEntriesIn(expectedFlagsMap);

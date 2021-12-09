@@ -24,6 +24,6 @@ import com.google.common.collect.ImmutableMap.Builder;
 public class SamePackageImportsTemplateExample {
   public void example() {
     ImmutableMap.Builder<String, Integer> builder = new Builder<>();
-    System.out.println(builder.build());
+    System.out.println(builder.buildOrThrow());
   }
 }

@@ -125,7 +125,7 @@ class BugPatternFileGenerator implements LineProcessor<List<BugPatternInstance>>
                 .put("layout", "bugpattern")
                 .put("tags", Joiner.on(", ").join(pattern.tags))
                 .put("severity", pattern.severity.toString())
-                .build();
+                .buildOrThrow();
         DumperOptions options = new DumperOptions();
         options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
         Yaml yaml = new Yaml(new SafeConstructor(), new Representer(), options);
@@ -159,7 +159,7 @@ class BugPatternFileGenerator implements LineProcessor<List<BugPatternInstance>>
 
       MustacheFactory mf = new DefaultMustacheFactory();
       Mustache mustache = mf.compile("com/google/errorprone/resources/bugpattern.mustache");
-      mustache.execute(writer, templateData.build());
+      mustache.execute(writer, templateData.buildOrThrow());
     }
     return true;
   }

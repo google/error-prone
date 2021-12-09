@@ -513,6 +513,6 @@ final class MethodMatcherImpl
       builder.put(rulePart.type, rulePart.tokensAllowed);
     }
 
-    return Optional.of(Rule.create(builder.build()));
+    return Optional.of(Rule.create(builder.buildOrThrow()));
   }
 }

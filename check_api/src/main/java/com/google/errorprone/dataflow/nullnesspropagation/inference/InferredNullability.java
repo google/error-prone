@@ -60,7 +60,7 @@ public class InferredNullability {
         getNullness(iv).ifPresent(nullness -> result.put(tvs, nullness));
       }
     }
-    return result.build();
+    return result.buildOrThrow();
   }
 
   /** Get inferred nullness qualifier for an expression, if possible. */

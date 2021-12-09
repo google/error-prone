@@ -104,7 +104,7 @@ public final class DurationToLongTimeUnit extends BugChecker
           // ProtoTime
           .put(instanceMethod().onExactClass(PROTO_DURATION).named("getSeconds"), SECONDS)
           .put(instanceMethod().onExactClass(PROTO_TIMESTAMP).named("getSeconds"), SECONDS)
-          .build();
+          .buildOrThrow();
 
   private static final Matcher<ExpressionTree> TIME_UNIT_DECOMPOSITION =
       instanceMethod().onExactClass(TIME_UNIT).named("convert").withParameters(JAVA_DURATION);

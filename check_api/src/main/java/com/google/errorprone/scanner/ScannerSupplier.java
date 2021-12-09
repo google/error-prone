@@ -61,7 +61,7 @@ public abstract class ScannerSupplier implements Supplier<Scanner> {
     for (BugCheckerInfo check : checkers) {
       severities.put(check.canonicalName(), check.defaultSeverity());
     }
-    return severities.build();
+    return severities.buildOrThrow();
   }
 
   /** Returns a {@link ScannerSupplier} with a specific list of {@link BugChecker} classes. */

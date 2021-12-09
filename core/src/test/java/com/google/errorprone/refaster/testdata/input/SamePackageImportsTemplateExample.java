@@ -22,6 +22,6 @@ package com.google.common.collect;
 public class SamePackageImportsTemplateExample {
   public void example() {
     ImmutableMap.Builder<String, Integer> builder = ImmutableMap.builder();
-    System.out.println(builder.build());
+    System.out.println(builder.buildOrThrow());
   }
 }

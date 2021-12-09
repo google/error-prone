@@ -84,7 +84,7 @@ public abstract class AccessPathStore<V extends AbstractValue<V>>
     for (AccessPath aPath : intersection(heap().keySet(), other.heap().keySet())) {
       resultHeap.put(aPath, heap().get(aPath).leastUpperBound(other.heap().get(aPath)));
     }
-    return AccessPathStore.create(resultHeap.build());
+    return AccessPathStore.create(resultHeap.buildOrThrow());
   }
 
   @Override

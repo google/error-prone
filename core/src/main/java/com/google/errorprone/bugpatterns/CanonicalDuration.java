@@ -108,7 +108,7 @@ public class CanonicalDuration extends BugChecker implements MethodInvocationTre
           .put(ChronoUnit.SECONDS, Converter.from(Duration::getSeconds, Duration::ofSeconds))
           .put(ChronoUnit.MILLIS, Converter.from(Duration::toMillis, Duration::ofMillis))
           .put(ChronoUnit.NANOS, Converter.from(Duration::toNanos, Duration::ofNanos))
-          .build();
+          .buildOrThrow();
 
   // Represent a single day/hour/minute as hours/minutes/seconds is sometimes used to allow a block
   // of durations to have consistent units.

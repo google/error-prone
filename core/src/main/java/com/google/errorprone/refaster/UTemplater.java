@@ -192,7 +192,7 @@ public class UTemplater extends SimpleTreeVisitor<Tree, Void> {
     for (VariableTree param : templateMethodDecl.getParameters()) {
       builder.put(param.getName().toString(), ASTHelpers.getSymbol(param));
     }
-    return builder.build();
+    return builder.buildOrThrow();
   }
 
   private final ImmutableMap<String, VarSymbol> freeVariables;

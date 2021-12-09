@@ -63,10 +63,7 @@ public final class DurationGetTemporalUnit extends BugChecker
           .put(ChronoUnit.MINUTES, ".toMinutes()")
           // SECONDS is omitted because it's a valid parameter
           .put(ChronoUnit.MILLIS, ".toMillis()")
-          // TODO(kak): Do we want to add MICROS here? We'd need to add a static import for
-          // com.google.common.time.Durations.toMicros;
-          // NANOS is omitted because it's a valid parameter
-          .build();
+          .buildOrThrow();
 
   private static final Matcher<ExpressionTree> MATCHER =
       Matchers.instanceMethod()

@@ -103,7 +103,7 @@ public class SuggestedFixesTest {
       for (Modifier mod : Modifier.values()) {
         builder.put(mod.toString(), mod);
       }
-      return builder.build();
+      return builder.buildOrThrow();
     }
 
     @Override

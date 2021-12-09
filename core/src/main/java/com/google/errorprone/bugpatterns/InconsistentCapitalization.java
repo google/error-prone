@@ -185,7 +185,7 @@ public class InconsistentCapitalization extends BugChecker implements ClassTreeM
         ImmutableMap<String, Symbol> fieldNamesMap, TreePath path) {
       ImmutableMap.Builder<TreePath, Symbol> matchedParametersBuilder = ImmutableMap.builder();
       new MatchingParametersScanner(fieldNamesMap, matchedParametersBuilder).scan(path, null);
-      return matchedParametersBuilder.build();
+      return matchedParametersBuilder.buildOrThrow();
     }
 
     private final ImmutableMap<String, Symbol> fields;

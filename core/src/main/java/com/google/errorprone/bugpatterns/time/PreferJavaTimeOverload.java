@@ -88,7 +88,7 @@ public final class PreferJavaTimeOverload extends BugChecker
               .put(staticMethod().onClass(JODA_DURATION).named("standardMinutes"), MINUTES)
               .put(staticMethod().onClass(JODA_DURATION).named("standardHours"), HOURS)
               .put(staticMethod().onClass(JODA_DURATION).named("standardDays"), DAYS)
-              .build();
+              .buildOrThrow();
 
   private static final ImmutableMap<TimeUnit, String> TIMEUNIT_TO_DURATION_FACTORY =
       new ImmutableMap.Builder<TimeUnit, String>()
@@ -99,7 +99,7 @@ public final class PreferJavaTimeOverload extends BugChecker
           .put(MINUTES, "%s.ofMinutes(%s)")
           .put(HOURS, "%s.ofHours(%s)")
           .put(DAYS, "%s.ofDays(%s)")
-          .build();
+          .buildOrThrow();
 
   private static final String JAVA_INSTANT = "java.time.Instant";
   private static final String JODA_INSTANT = "org.joda.time.Instant";

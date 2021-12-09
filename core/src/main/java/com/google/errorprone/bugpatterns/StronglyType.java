@@ -216,6 +216,6 @@ public abstract class StronglyType {
         return super.visitVariable(variableTree, null);
       }
     }.scan(state.getPath().getCompilationUnit(), null);
-    return fields.build();
+    return fields.buildOrThrow();
   }
 }

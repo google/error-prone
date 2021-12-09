@@ -206,7 +206,7 @@ public class UnnecessarySetDefault extends BugChecker implements MethodInvocatio
           .put("OptionalInt.class", factoryMatcher(OptionalInt.class, "empty"))
           .put("OptionalLong.class", factoryMatcher(OptionalLong.class, "empty"))
           .put("OptionalDouble.class", factoryMatcher(OptionalDouble.class, "empty"))
-          .build();
+          .buildOrThrow();
 
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {

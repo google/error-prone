@@ -102,7 +102,7 @@ public class LambdaFunctionalInterface extends BugChecker implements MethodTreeM
           .put(
               JAVA_UTIL_FUNCTION_FUNCTION + "<T,java.lang.Double>",
               "java.util.function.ToDoubleFunction<T>")
-          .build();
+          .buildOrThrow();
 
   private static final ImmutableMap<String, String> applyMappings =
       ImmutableMap.<String, String>builder()
@@ -115,7 +115,7 @@ public class LambdaFunctionalInterface extends BugChecker implements MethodTreeM
           .put("java.util.function.ToIntFunction<T>", "applyAsInt")
           .put("java.util.function.ToDoubleFunction<T>", "applyAsDouble")
           .put("java.util.function.ToLongFunction<T>", "applyAsLong")
-          .build();
+          .buildOrThrow();
 
   /**
    * Identifies methods with parameters that have a generic argument with Int, Long, or Double. If
