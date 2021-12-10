@@ -154,7 +154,7 @@ implements <a href="BugChecker.CompilationUnitTreeMatcher.html" title="interface
 <td class="col-last">&nbsp;</td>
 </tr>
 <tr class="row-color" id="i1">
-<td class="col-first"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;com.google.common.collect.ImmutableList&lt;com.sun.tools.javac.code.Symbol&gt;&gt;</code></td>
+<td class="col-first"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;com.google.common.collect.ImmutableList&lt;com.google.errorprone.bugpatterns.AlreadyChecked.PureMethodInvocation&gt;&gt;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#symbolizeImmutableExpression(com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)">symbolizeImmutableExpression</a></span>&#8203;(com.sun.source.tree.ExpressionTree&nbsp;tree,
 <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
 <td class="col-last">
@@ -214,7 +214,7 @@ implements <a href="BugChecker.CompilationUnitTreeMatcher.html" title="interface
 <li>
 <section class="detail" id="symbolizeImmutableExpression(com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)">
 <h3>symbolizeImmutableExpression</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;com.google.common.collect.ImmutableList&lt;com.sun.tools.javac.code.Symbol&gt;&gt;</span>&nbsp;<span class="member-name">symbolizeImmutableExpression</span>&#8203;(<span class="parameters">com.sun.source.tree.ExpressionTree&nbsp;tree,
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;com.google.common.collect.ImmutableList&lt;com.google.errorprone.bugpatterns.AlreadyChecked.PureMethodInvocation&gt;&gt;</span>&nbsp;<span class="member-name">symbolizeImmutableExpression</span>&#8203;(<span class="parameters">com.sun.source.tree.ExpressionTree&nbsp;tree,
 <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
 <div class="block">Returns a list of the methods called to get to this expression, as well as a terminating
  variable if needed.
