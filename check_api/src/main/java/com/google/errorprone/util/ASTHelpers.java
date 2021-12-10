@@ -385,6 +385,15 @@ public class ASTHelpers {
   }
 
   /**
+   * Returns a stream of the owner hierarchy starting from {@code sym}, as described by {@link
+   * Symbol#owner}. Returns {@code sym} itself first, followed by its owners, closest first, up to
+   * the owning package and possibly module.
+   */
+  public static Stream<Symbol> enclosingElements(Symbol sym) {
+    return Stream.iterate(sym, Symbol::getEnclosingElement).takeWhile(s -> s != null);
+  }
+
+  /**
    * Given a TreePath, walks up the tree until it finds a node of the given type. Returns null if no
    * such node is found.
    */

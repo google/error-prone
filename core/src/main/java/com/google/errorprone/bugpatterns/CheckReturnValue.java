@@ -17,8 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
-import static com.google.errorprone.util.ASTHelpers.enclosingClass;
-import static com.google.errorprone.util.ASTHelpers.enclosingPackage;
 import static com.google.errorprone.util.ASTHelpers.hasDirectAnnotationWithSimpleName;
 
 import com.google.errorprone.BugPattern;
@@ -33,9 +31,8 @@ import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.tools.javac.code.Symbol;
-import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
-import java.util.Optional;
+import java.util.stream.Stream;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Name;
 
@@ -51,32 +48,14 @@ public class CheckReturnValue extends AbstractReturnValueIgnored
   private static final String CHECK_RETURN_VALUE = "CheckReturnValue";
   private static final String CAN_IGNORE_RETURN_VALUE = "CanIgnoreReturnValue";
 
-  // TODO(amalloy): After java 9, these two methods can be simplified with a Stream<Boolean> using
-  // iterate/takeWhile.
-  private static Optional<Boolean> shouldCheckReturnValue(Symbol sym) {
+  private static Stream<Boolean> shouldCheckReturnValue(Symbol sym) {
     if (hasDirectAnnotationWithSimpleName(sym, CAN_IGNORE_RETURN_VALUE)) {
-      return Optional.of(false);
+      return Stream.of(false);
     }
     if (hasDirectAnnotationWithSimpleName(sym, CHECK_RETURN_VALUE)) {
-      return Optional.of(true);
+      return Stream.of(true);
     }
-    return Optional.empty();
-  }
-
-  private static Optional<Boolean> checkEnclosingClasses(MethodSymbol method) {
-    Symbol enclosingClass = enclosingClass(method);
-    while (enclosingClass instanceof ClassSymbol) {
-      Optional<Boolean> result = shouldCheckReturnValue(enclosingClass);
-      if (result.isPresent()) {
-        return result;
-      }
-      enclosingClass = enclosingClass.owner;
-    }
-    return Optional.empty();
-  }
-
-  private static Optional<Boolean> checkPackage(MethodSymbol method) {
-    return shouldCheckReturnValue(enclosingPackage(method));
+    return Stream.empty();
   }
 
   /**
@@ -90,12 +69,10 @@ public class CheckReturnValue extends AbstractReturnValueIgnored
       if (!(sym instanceof MethodSymbol)) {
         return false;
       }
-      MethodSymbol method = (MethodSymbol) sym;
-      return shouldCheckReturnValue(method)
-          .orElseGet(
-              () ->
-                  checkEnclosingClasses(method)
-                      .orElseGet(() -> checkPackage(method).orElse(false)));
+      return ASTHelpers.enclosingElements(sym)
+          .flatMap(CheckReturnValue::shouldCheckReturnValue)
+          .findFirst()
+          .orElse(false);
     };
   }
 
