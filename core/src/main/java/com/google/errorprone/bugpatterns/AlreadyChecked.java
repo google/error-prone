@@ -31,9 +31,11 @@ import static com.google.errorprone.predicates.TypePredicates.isDescendantOf;
 import static com.google.errorprone.util.ASTHelpers.constValue;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
+import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
 import static com.google.errorprone.util.ASTHelpers.isConsideredFinal;
 import static java.lang.String.format;
 import static java.util.stream.Collectors.joining;
+import static javax.lang.model.element.Modifier.ABSTRACT;
 
 import com.google.auto.value.AutoOneOf;
 import com.google.auto.value.AutoValue;
@@ -50,6 +52,7 @@ import com.google.errorprone.bugpatterns.BugChecker.CompilationUnitTreeMatcher;
 import com.google.errorprone.bugpatterns.threadsafety.WellKnownMutability;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
+import com.google.errorprone.matchers.Matchers;
 import com.sun.source.tree.BinaryTree;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.ConditionalExpressionTree;
@@ -88,13 +91,20 @@ public final class AlreadyChecked extends BugChecker implements CompilationUnitT
     // Bit of a heuristic: instance and static factories on known-immutable classes tend to be pure.
     pureMethods =
         anyOf(
-            wellKnownMutability.getKnownImmutableClasses().keySet().stream()
-                .map(
-                    className ->
-                        anyOf(
-                            staticMethod().onClass(isDescendantOf(className)),
-                            instanceMethod().onDescendantOf(className)))
-                .collect(toImmutableList()));
+            anyOf(
+                wellKnownMutability.getKnownImmutableClasses().keySet().stream()
+                    .map(
+                        className ->
+                            anyOf(
+                                staticMethod().onClass(isDescendantOf(className)),
+                                instanceMethod().onDescendantOf(className)))
+                    .collect(toImmutableList())),
+            Matchers.hasAnnotation("org.checkerframework.dataflow.qual.Pure"),
+            (tree, state) -> {
+              Symbol symbol = getSymbol(tree);
+              return hasAnnotation(symbol.owner, "com.google.auto.value.AutoValue", state)
+                  && symbol.getModifiers().contains(ABSTRACT);
+            });
   }
 
   @Override
@@ -317,10 +327,6 @@ public final class AlreadyChecked extends BugChecker implements CompilationUnitT
     if (symbol instanceof VarSymbol && isConsideredFinal(symbol)) {
       return Optional.of(ConstantBooleanExpression.booleanLiteral((VarSymbol) symbol));
     }
-    Optional<ConstantExpression> constantExpression = constantExpression(tree, state);
-    if (constantExpression.isPresent()) {
-      return constantExpression.map(ConstantBooleanExpression::constantExpression);
-    }
     if (staticEqualsInvocation().matches(tree, state)) {
       Optional<ConstantExpression> lhs =
           constantExpression(((MethodInvocationTree) tree).getArguments().get(0), state);
@@ -340,6 +346,10 @@ public final class AlreadyChecked extends BugChecker implements CompilationUnitT
               ConstantBooleanExpression.constantEquals(ConstantEquals.of(lhs.get(), rhs.get())))
           : Optional.empty();
     }
+    Optional<ConstantExpression> constantExpression = constantExpression(tree, state);
+    if (constantExpression.isPresent()) {
+      return constantExpression.map(ConstantBooleanExpression::constantExpression);
+    }
     return Optional.empty();
   }
 
@@ -358,9 +368,10 @@ public final class AlreadyChecked extends BugChecker implements CompilationUnitT
       return AutoOneOf_AlreadyChecked_ConstantExpression.constant(object);
     }
 
-    abstract ImmutableList<Symbol> constantAccessor();
+    abstract ImmutableList<PureMethodInvocation> constantAccessor();
 
-    private static ConstantExpression constantAccessor(ImmutableList<Symbol> constantAccessor) {
+    private static ConstantExpression constantAccessor(
+        ImmutableList<PureMethodInvocation> constantAccessor) {
       return AutoOneOf_AlreadyChecked_ConstantExpression.constantAccessor(constantAccessor);
     }
 
@@ -415,6 +426,27 @@ public final class AlreadyChecked extends BugChecker implements CompilationUnitT
     }
   }
 
+  @AutoValue
+  abstract static class PureMethodInvocation {
+    abstract Symbol symbol();
+
+    abstract ImmutableList<ConstantExpression> arguments();
+
+    @Override
+    public final String toString() {
+      if (symbol() instanceof VarSymbol || symbol() instanceof ClassSymbol) {
+        return symbol().getSimpleName().toString();
+      }
+      return symbol().getSimpleName()
+          + arguments().stream().map(Object::toString).collect(joining(", ", "(", ")"));
+    }
+
+    private static PureMethodInvocation of(Symbol symbol, Iterable<ConstantExpression> arguments) {
+      return new AutoValue_AlreadyChecked_PureMethodInvocation(
+          symbol, ImmutableList.copyOf(arguments));
+    }
+  }
+
   /**
    * Returns a list of the methods called to get to this expression, as well as a terminating
    * variable if needed.
@@ -422,13 +454,23 @@ public final class AlreadyChecked extends BugChecker implements CompilationUnitT
    * <p>For example {@code a.getFoo().getBar()} would return {@code MethodSymbol[getBar],
    * MethodSymbol[getFoo], VarSymbol[a]}.
    */
-  public Optional<ImmutableList<Symbol>> symbolizeImmutableExpression(
+  public Optional<ImmutableList<PureMethodInvocation>> symbolizeImmutableExpression(
       ExpressionTree tree, VisitorState state) {
-    ImmutableList.Builder<Symbol> symbolized = ImmutableList.builder();
+    ImmutableList.Builder<PureMethodInvocation> symbolized = ImmutableList.builder();
     ExpressionTree receiver = tree;
-    while (true) {
-      if (isPure(receiver, state)) {
-        symbolized.add(getSymbol(receiver));
+    while (receiver != null) {
+      if (isPureIdentifier(receiver)) {
+        symbolized.add(PureMethodInvocation.of(getSymbol(receiver), ImmutableList.of()));
+      } else if (receiver instanceof MethodInvocationTree && pureMethods.matches(receiver, state)) {
+        ImmutableList.Builder<ConstantExpression> arguments = ImmutableList.builder();
+        for (ExpressionTree argument : ((MethodInvocationTree) receiver).getArguments()) {
+          Optional<ConstantExpression> argumentConstant = constantExpression(argument, state);
+          if (!argumentConstant.isPresent()) {
+            return Optional.empty();
+          }
+          arguments.add(argumentConstant.get());
+        }
+        symbolized.add(PureMethodInvocation.of(getSymbol(receiver), arguments.build()));
       } else {
         return Optional.empty();
       }
@@ -441,16 +483,13 @@ public final class AlreadyChecked extends BugChecker implements CompilationUnitT
     return Optional.of(symbolized.build());
   }
 
-  private boolean isPure(ExpressionTree receiver, VisitorState state) {
-    if (receiver instanceof IdentifierTree) {
-      Symbol symbol = getSymbol(receiver);
-      return (symbol instanceof VarSymbol && isConsideredFinal(symbol))
-          || symbol instanceof ClassSymbol;
+  private static boolean isPureIdentifier(ExpressionTree receiver) {
+    if (!(receiver instanceof IdentifierTree || receiver instanceof MemberSelectTree)) {
+      return false;
     }
-    // TODO(ghm): Be cleverer about pure methods taking the same constant parameters each time?
-    if (pureMethods.matches(receiver, state)) {
-      return ((MethodInvocationTree) receiver).getArguments().isEmpty();
-    }
-    return false;
+    Symbol symbol = getSymbol(receiver);
+    return symbol.owner.isEnum()
+        || (symbol instanceof VarSymbol && isConsideredFinal(symbol))
+        || symbol instanceof ClassSymbol;
   }
 }

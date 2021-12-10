@@ -253,4 +253,85 @@ public final class AlreadyCheckedTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void durationsComparedUsingFactoryMethods() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            "import java.time.Duration;",
+            "class Test {",
+            "  public void test(Duration a, Duration b) {",
+            "    if (a.equals(Duration.ofSeconds(1))) {",
+            "      if (a.equals(Duration.ofSeconds(2))) {}",
+            "      // BUG: Diagnostic contains:",
+            "      if (a.equals(Duration.ofSeconds(1))) {}",
+            "    }",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void autoValues() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.auto.value.AutoValue;",
+            "class Test {",
+            "  public void test(Foo a, Foo b) {",
+            "    if (a.bar().equals(\"foo\") && a.bar().equals(b.bar())) {",
+            "      // BUG: Diagnostic contains:",
+            "      if (a.bar().equals(\"foo\")) {}",
+            "      // BUG: Diagnostic contains:",
+            "      if (a.bar().equals(b.bar())) {}",
+            "    }",
+            "  }",
+            "  @AutoValue abstract static class Foo {",
+            "    abstract String bar();",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void autoValue_withEnum() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.auto.value.AutoValue;",
+            "class Test {",
+            "  public void test(Foo a, Foo b) {",
+            "    if (a.bar().equals(E.A)) {",
+            "      // BUG: Diagnostic contains:",
+            "      if (a.bar().equals(E.A)) {}",
+            "    }",
+            "  }",
+            "  @AutoValue abstract static class Foo {",
+            "    abstract E bar();",
+            "  }",
+            "  private enum E {",
+            "    A",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void fieldCheckedTwice() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.auto.value.AutoValue;",
+            "class Test {",
+            "  private final String a = \"foo\";",
+            "  public void test(String a) {",
+            "    if (this.a.equals(a)) {",
+            "      // BUG: Diagnostic contains:",
+            "      if (this.a.equals(a)) {}",
+            "    }",
+            "  }",
+            "}")
+        .doTest();
+  }
 }
