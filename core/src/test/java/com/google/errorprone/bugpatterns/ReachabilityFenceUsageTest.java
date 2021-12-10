@@ -48,6 +48,24 @@ public final class ReachabilityFenceUsageTest {
   }
 
   @Test
+  public void positive_try() {
+    assumeTrue(RuntimeVersion.isAtLeast9());
+    compilationTestHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.lang.ref.Reference;",
+            "class Test {",
+            "  public void run() {",
+            "    try {",
+            "      // BUG: Diagnostic contains:",
+            "      Reference.reachabilityFence(this);",
+            "    } catch (Exception e) {}",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void negative() {
     assumeTrue(RuntimeVersion.isAtLeast9());
     compilationTestHelper
