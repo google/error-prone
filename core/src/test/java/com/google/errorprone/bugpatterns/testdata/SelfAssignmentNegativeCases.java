@@ -82,6 +82,10 @@ public class SelfAssignmentNegativeCases {
     this.a = requireNonNull(that.a);
   }
 
+  public void test9(int a) {
+    a += a;
+  }
+
   private static class Foo {
     int a;
   }

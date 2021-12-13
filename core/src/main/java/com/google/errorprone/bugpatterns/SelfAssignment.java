@@ -42,6 +42,7 @@ import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.ParenthesizedTree;
 import com.sun.source.tree.Tree;
+import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.TypeCastTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.SimpleTreeVisitor;
@@ -72,9 +73,11 @@ public class SelfAssignment extends BugChecker
 
   @Override
   public Description matchAssignment(AssignmentTree tree, VisitorState state) {
-    ExpressionTree expression = stripNullCheck(tree.getExpression(), state);
+    if (!tree.getKind().equals(Kind.ASSIGNMENT)) {
+      return Description.NO_MATCH;
+    }
     // TODO(cushon): consider handling assignment expressions too, i.e. `x = y = x`
-    expression = skipCast(expression);
+    ExpressionTree expression = skipCast(stripNullCheck(tree.getExpression(), state));
     if (ASTHelpers.sameVariable(tree.getVariable(), expression)) {
       return describeForAssignment(tree, state);
     }
