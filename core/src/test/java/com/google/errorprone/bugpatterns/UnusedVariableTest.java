@@ -436,7 +436,15 @@ public class UnusedVariableTest {
             "  private int unusedInt;",
             "  private static final int UNUSED_CONSTANT = 5;",
             "  private int ignored;",
+            "  private int customUnused1;",
+            "  private int customUnused2;",
+            "  private int prefixUnused1Field;",
+            "  private int prefixUnused2Field;",
             "}")
+        .setArgs(
+            "-XepOpt:Unused:exemptNames=customUnused1,customUnused2",
+            "-XepOpt:Unused:exemptPrefixes=prefixunused1,prefixunused2"
+        )
         .doTest();
   }
 

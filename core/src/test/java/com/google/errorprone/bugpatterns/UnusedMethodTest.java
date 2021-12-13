@@ -14,6 +14,7 @@
 
 package com.google.errorprone.bugpatterns;
 
+import com.google.common.collect.ImmutableList;
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode;
 import com.google.errorprone.CompilationTestHelper;
@@ -102,10 +103,18 @@ public final class UnusedMethodTest {
             "Unuseds.java",
             "package unusedvars;",
             "class ExemptedByName {",
-            "  private void unused1(int a, int unusedParam) {",
+            "  private void unused1(" +
+            "     int a, int unusedParam, " +
+            "     int customUnused1, int customUnused2, " +
+            "     int prefixUnused1Param, int prefixUnused2Param" +
+            "  ) {",
             "    int unusedLocal = a;",
             "  }",
             "}")
+        .setArgs(
+            "-XepOpt:Unused:exemptNames=customUnused1,customUnused2",
+            "-XepOpt:Unused:exemptPrefixes=prefixunused1,prefixunused2"
+        )
         .doTest();
   }
 
