@@ -201,24 +201,6 @@ public final class AlreadyCheckedTest {
   }
 
   @Test
-  public void equalsCheckedTwice_comparedUsingDifferentEqualsImplementation() {
-    helper
-        .addSourceLines(
-            "Test.java",
-            "import java.util.Objects;",
-            "class Test {",
-            "  public int test(String a) {",
-            "    if (a.equals(\"a\")) {",
-            "      // BUG: Diagnostic contains: true",
-            "      return Objects.equals(a, \"a\") ? 1 : 2;",
-            "    }",
-            "    return 0;",
-            "  }",
-            "}")
-        .doTest();
-  }
-
-  @Test
   public void equalsCheckedTwice_comparedToDifferentConstant() {
     helper
         .addSourceLines(

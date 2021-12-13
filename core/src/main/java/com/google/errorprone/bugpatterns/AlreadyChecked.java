@@ -100,6 +100,8 @@ public final class AlreadyChecked extends BugChecker implements CompilationUnitT
                                 instanceMethod().onDescendantOf(className)))
                     .collect(toImmutableList())),
             Matchers.hasAnnotation("org.checkerframework.dataflow.qual.Pure"),
+            staticEqualsInvocation(),
+            instanceEqualsInvocation(),
             (tree, state) -> {
               Symbol symbol = getSymbol(tree);
               return hasAnnotation(symbol.owner, "com.google.auto.value.AutoValue", state)
@@ -326,25 +328,6 @@ public final class AlreadyChecked extends BugChecker implements CompilationUnitT
     Symbol symbol = getSymbol(tree);
     if (symbol instanceof VarSymbol && isConsideredFinal(symbol)) {
       return Optional.of(ConstantBooleanExpression.booleanLiteral((VarSymbol) symbol));
-    }
-    if (staticEqualsInvocation().matches(tree, state)) {
-      Optional<ConstantExpression> lhs =
-          constantExpression(((MethodInvocationTree) tree).getArguments().get(0), state);
-      Optional<ConstantExpression> rhs =
-          constantExpression(((MethodInvocationTree) tree).getArguments().get(1), state);
-      return lhs.isPresent() && rhs.isPresent()
-          ? Optional.of(
-              ConstantBooleanExpression.constantEquals(ConstantEquals.of(lhs.get(), rhs.get())))
-          : Optional.empty();
-    }
-    if (instanceEqualsInvocation().matches(tree, state)) {
-      Optional<ConstantExpression> lhs =
-          constantExpression(((MethodInvocationTree) tree).getArguments().get(0), state);
-      Optional<ConstantExpression> rhs = constantExpression(getReceiver(tree), state);
-      return lhs.isPresent() && rhs.isPresent()
-          ? Optional.of(
-              ConstantBooleanExpression.constantEquals(ConstantEquals.of(lhs.get(), rhs.get())))
-          : Optional.empty();
     }
     Optional<ConstantExpression> constantExpression = constantExpression(tree, state);
     if (constantExpression.isPresent()) {
