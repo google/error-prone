@@ -41,4 +41,117 @@ public class AlwaysThrowsTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void immutableMapThrows() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.common.collect.ImmutableMap;",
+            "class Test {",
+            "  private static final ImmutableMap<Integer, Integer> xs =",
+            "    ImmutableMap.<Integer, Integer>builder()",
+            "      .put(1, 1)",
+            "      // BUG: Diagnostic contains:",
+            "      .put(1, 2)",
+            "      .buildOrThrow();",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void immutableBiMapThrows() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.common.collect.ImmutableBiMap;",
+            "class Test {",
+            "  private static final ImmutableBiMap<Integer, Integer> xs =",
+            "    ImmutableBiMap.<Integer, Integer>builder()",
+            "      .put(1, 1)",
+            "      // BUG: Diagnostic contains:",
+            "      .put(2, 1)",
+            "      .buildOrThrow();",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void immutableMapDoesNotThrow() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.common.collect.ImmutableMap;",
+            "class Test {",
+            "  private static final ImmutableMap<Integer, Integer> xs =",
+            "    ImmutableMap.<Integer, Integer>builder()",
+            "      .put(1, 1)",
+            "      .put(2, 2)",
+            "      .buildOrThrow();",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void immutableMapOfThrows() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.common.collect.ImmutableMap;",
+            "class Test {",
+            "  private static final ImmutableMap<Integer, Integer> xs =",
+            "    // BUG: Diagnostic contains:",
+            "    ImmutableMap.of(1, 1, 1, 2);",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void immutableMapOfThrowsWithEnums() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.common.collect.ImmutableMap;",
+            "class Test {",
+            "  private enum E {A, B}",
+            "  private static final ImmutableMap<E, Integer> xs =",
+            "    // BUG: Diagnostic contains:",
+            "    ImmutableMap.of(E.A, 1, E.A, 2);",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void immutableBiMapOfThrowsWithEnums() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.common.collect.ImmutableMap;",
+            "class Test {",
+            "  private enum E {A, B}",
+            "  private static final ImmutableMap<E, Integer> xs =",
+            "    // BUG: Diagnostic contains:",
+            "    ImmutableMap.of(E.A, 1, E.A, 2);",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void immutableMapOfThrowsWithRepeatedFinalVariable() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.common.collect.ImmutableBiMap;",
+            "class Test {",
+            "  ImmutableBiMap<String, Integer> map(String s) {",
+            "    // BUG: Diagnostic contains:",
+            "    return ImmutableBiMap.of(s, 1, s, 2);",
+            "  }",
+            "  ImmutableBiMap<Integer, String> values(String s) {",
+            "    // BUG: Diagnostic contains:",
+            "    return ImmutableBiMap.of(1, s, 2, s);",
+            "  }",
+            "}")
+        .doTest();
+  }
 }

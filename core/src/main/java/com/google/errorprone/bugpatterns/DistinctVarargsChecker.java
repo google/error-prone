@@ -63,9 +63,7 @@ public final class DistinctVarargsChecker extends BugChecker
               .onClass("com.google.common.collect.Ordering")
               .withSignature("<T>explicit(T,T...)"));
   private static final Matcher<ExpressionTree> EVEN_PARITY_DISTINCT_ARG_MATCHER =
-      anyOf(
-          staticMethod().onClass("com.google.common.collect.ImmutableMap").named("of"),
-          staticMethod().onClass("com.google.common.collect.ImmutableSortedMap").named("of"));
+      staticMethod().onClass("com.google.common.collect.ImmutableSortedMap").named("of");
   private static final Matcher<ExpressionTree> EVEN_AND_ODD_PARITY_DISTINCT_ARG_MATCHER =
       staticMethod().onClass("com.google.common.collect.ImmutableBiMap").named("of");
 
