@@ -94,15 +94,6 @@ class Costs {
             p -> costMatrix[p.formal().index()][p.actual().index()] != Double.POSITIVE_INFINITY);
   }
 
-  /** Set the cost of all the alternatives for this formal parameter to be Inf. */
-  void invalidateAllAlternatives(Parameter formal) {
-    for (int actualIndex = 0; actualIndex < costMatrix[formal.index()].length; actualIndex++) {
-      if (actualIndex != formal.index()) {
-        costMatrix[formal.index()][actualIndex] = Double.POSITIVE_INFINITY;
-      }
-    }
-  }
-
   /** Update the cost of the given pairing. */
   void updatePair(ParameterPair p, double cost) {
     costMatrix[p.formal().index()][p.actual().index()] = cost;

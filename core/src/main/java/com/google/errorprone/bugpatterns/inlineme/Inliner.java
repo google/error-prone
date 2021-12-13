@@ -151,7 +151,7 @@ public final class Inliner extends BugChecker
       return Description.NO_MATCH;
     }
 
-    Api api = Api.create(symbol, state);
+    Api api = Api.create(symbol);
     if (!matchesApiPrefixes(api)) {
       return Description.NO_MATCH;
     }
@@ -278,7 +278,7 @@ public final class Inliner extends BugChecker
   abstract static class Api {
     private static final Splitter CLASS_NAME_SPLITTER = Splitter.on('.');
 
-    static Api create(MethodSymbol method, VisitorState state) {
+    static Api create(MethodSymbol method) {
       String extraMessage = "";
       if (hasDirectAnnotationWithSimpleName(method, VALIDATION_DISABLED)) {
         Attribute.Compound inlineMeValidationDisabled =

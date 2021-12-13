@@ -67,8 +67,7 @@ public class AlwaysThrows extends BugChecker implements MethodInvocationTreeMatc
             .named("parse")
             .withParameters("java.lang.CharSequence")) {
       @Override
-      void validate(MethodInvocationTree tree, String argument, VisitorState state)
-          throws Throwable {
+      void validate(MethodInvocationTree tree, String argument) {
         MethodSymbol sym = ASTHelpers.getSymbol(tree);
         VALIDATORS.get(sym.owner.getQualifiedName().toString()).accept(argument);
       }
@@ -79,8 +78,7 @@ public class AlwaysThrows extends BugChecker implements MethodInvocationTreeMatc
             .named("fromHex")
             .withParameters("java.lang.String")) {
       @Override
-      void validate(MethodInvocationTree tree, String argument, VisitorState state)
-          throws Throwable {
+      void validate(MethodInvocationTree tree, String argument) throws Throwable {
         try {
           ByteString.class.getMethod("fromHex", String.class).invoke(null, argument);
         } catch (NoSuchMethodException | IllegalAccessException e) {
@@ -98,8 +96,7 @@ public class AlwaysThrows extends BugChecker implements MethodInvocationTreeMatc
     @SuppressWarnings("ImmutableEnumChecker") // is immutable
     private final Matcher<ExpressionTree> matcher;
 
-    abstract void validate(MethodInvocationTree tree, String argument, VisitorState state)
-        throws Throwable;
+    abstract void validate(MethodInvocationTree tree, String argument) throws Throwable;
   }
 
   @Override
@@ -115,7 +112,7 @@ public class AlwaysThrows extends BugChecker implements MethodInvocationTreeMatc
       return NO_MATCH;
     }
     try {
-      api.validate(tree, argument, state);
+      api.validate(tree, argument);
     } catch (Throwable t) {
       return buildDescription(tree)
           .setMessage(

@@ -59,8 +59,4 @@ public enum TypesWithUndefinedEquality {
   public String shortName() {
     return shortName;
   }
-
-  public ImmutableSet<String> typeNames() {
-    return typeNames;
-  }
 }

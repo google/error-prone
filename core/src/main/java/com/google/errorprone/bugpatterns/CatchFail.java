@@ -41,7 +41,6 @@ import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.CatchTree;
 import com.sun.source.tree.ExpressionStatementTree;
-import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
@@ -67,9 +66,6 @@ import java.util.stream.Stream;
         "Ignoring exceptions and calling fail() is unnecessary, and makes test output less useful",
     severity = WARNING)
 public class CatchFail extends BugChecker implements TryTreeMatcher {
-
-  public static final Matcher<ExpressionTree> ASSERT_WITH_MESSAGE =
-      staticMethod().onClass("com.google.common.truth.Truth").named("assertWithMessage");
 
   private static final Matcher<StatementTree> FAIL_METHOD =
       expressionStatement(

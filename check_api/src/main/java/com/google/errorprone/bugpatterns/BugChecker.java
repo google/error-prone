@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.common.base.MoreObjects.firstNonNull;
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
 
 import com.google.common.collect.Iterables;
@@ -91,7 +90,6 @@ import java.io.Serializable;
 import java.lang.annotation.Annotation;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
@@ -243,10 +241,6 @@ public abstract class BugChecker implements Suppressible, Serializable {
 
   public SeverityLevel defaultSeverity() {
     return info.defaultSeverity();
-  }
-
-  public SeverityLevel severity(Map<String, SeverityLevel> severities) {
-    return firstNonNull(severities.get(canonicalName()), defaultSeverity());
   }
 
   public String linkUrl() {

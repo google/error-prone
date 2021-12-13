@@ -338,7 +338,6 @@ public abstract class AbstractMustBeClosedChecker extends BugChecker {
     }
     return Optional.of(
         new TryBlock(
-            tree,
             stmt,
             fix.prefixWith(
                 stmt,
@@ -357,7 +356,6 @@ public abstract class AbstractMustBeClosedChecker extends BugChecker {
     SuggestedFix.Builder fix = SuggestedFix.builder();
     return Optional.of(
         new TryBlock(
-            tree,
             fix.prefixWith(
                     declaringStatement,
                     String.format(
@@ -378,7 +376,6 @@ public abstract class AbstractMustBeClosedChecker extends BugChecker {
     SuggestedFix.Builder fix = SuggestedFix.builder();
     return Optional.of(
         new TryBlock(
-            tree,
             var,
             fix.replace(
                     afterTypePos,
@@ -401,7 +398,6 @@ public abstract class AbstractMustBeClosedChecker extends BugChecker {
     }
     return Optional.of(
         new TryBlock(
-            decl,
             enclosingBlock,
             SuggestedFix.builder()
                 .prefixWith(
@@ -438,19 +434,16 @@ public abstract class AbstractMustBeClosedChecker extends BugChecker {
    * all be inserted at once atomically.
    */
   private static class TryBlock {
-    final Tree location;
     final Optional<Tree> closeBraceAfter;
     final SuggestedFix.Builder otherChanges;
 
     /** For changes that don't need to insert a close brace. */
-    TryBlock(Tree location, SuggestedFix.Builder changes) {
-      this.location = location;
+    TryBlock(SuggestedFix.Builder changes) {
       this.closeBraceAfter = Optional.empty();
       this.otherChanges = changes;
     }
 
-    TryBlock(Tree location, Tree closeBraceAfter, SuggestedFix.Builder otherChanges) {
-      this.location = location;
+    TryBlock(Tree closeBraceAfter, SuggestedFix.Builder otherChanges) {
       this.closeBraceAfter = Optional.of(closeBraceAfter);
       this.otherChanges = otherChanges;
     }

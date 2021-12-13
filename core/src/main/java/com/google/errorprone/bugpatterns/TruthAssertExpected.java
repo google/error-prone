@@ -122,7 +122,7 @@ public final class TruthAssertExpected extends BugChecker implements MethodInvoc
    * Matches expressions that look like they should be considered constant, i.e. {@code
    * ImmutableList.of(1, 2)}, {@code Long.valueOf(10L)}.
    */
-  static boolean isConstantCreator(ExpressionTree tree, VisitorState state) {
+  private static boolean isConstantCreator(ExpressionTree tree) {
     List<? extends ExpressionTree> arguments =
         tree.accept(
             new SimpleTreeVisitor<List<? extends ExpressionTree>, Void>() {
@@ -169,7 +169,7 @@ public final class TruthAssertExpected extends BugChecker implements MethodInvoc
     // compile-time constant.
     if (ASTHelpers.constValue(terminatingArgument) != null
         || Matchers.staticFieldAccess().matches(terminatingArgument, state)
-        || isConstantCreator(terminatingArgument, state)) {
+        || isConstantCreator(terminatingArgument)) {
       return Description.NO_MATCH;
     }
     SuggestedFix fix = SuggestedFix.swap(assertedArgument, terminatingArgument);
