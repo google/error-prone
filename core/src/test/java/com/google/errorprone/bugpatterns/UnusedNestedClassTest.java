@@ -106,6 +106,19 @@ public class UnusedNestedClassTest {
   }
 
   @Test
+  public void usedReflectively_suppressed() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.errorprone.annotations.Keep;",
+            "class A {",
+            "  @Keep",
+            "  private class B {}",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void refactoring() {
     BugCheckerRefactoringTestHelper.newInstance(UnusedNestedClass.class, getClass())
         .addInputLines(

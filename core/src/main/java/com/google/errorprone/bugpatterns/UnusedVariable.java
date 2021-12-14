@@ -121,11 +121,14 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
 
   private static final ImmutableSet<String> EXEMPT_NAMES = ImmutableSet.of("ignored");
 
+  private static final String KEEP = "com.google.errorprone.annotations.Keep";
+
   /**
    * The set of annotation full names which exempt annotated element from being reported as unused.
    */
   private static final ImmutableSet<String> EXEMPTING_VARIABLE_ANNOTATIONS =
       ImmutableSet.of(
+          KEEP,
           "javax.persistence.Basic",
           "javax.persistence.Column",
           "javax.persistence.Id",
@@ -536,6 +539,9 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
       }
       TypeSymbol tsym = annotationType.tsym;
       if (EXEMPTING_VARIABLE_ANNOTATIONS.contains(tsym.getQualifiedName().toString())) {
+        return true;
+      }
+      if (ASTHelpers.hasAnnotation(tsym, KEEP, state)) {
         return true;
       }
     }

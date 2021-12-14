@@ -926,4 +926,29 @@ public class SuggesterTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void apisLikelyUsedReflectively() {
+    refactoringTestHelper
+        .addInputLines(
+            "Test.java",
+            "import com.google.errorprone.annotations.Keep;",
+            "import com.google.inject.Provides;",
+            "import java.time.Duration;",
+            "import java.util.Optional;",
+            "public class Test {",
+            "  @Deprecated",
+            "  @Provides",
+            "  public Optional<Duration> provides(Optional<Long> input) {",
+            "    return input.map(Duration::ofMillis);",
+            "  }",
+            "  @Deprecated",
+            "  @Keep",
+            "  public Optional<Duration> reflective(Optional<Long> input) {",
+            "    return input.map(Duration::ofMillis);",
+            "  }",
+            "}")
+        .expectUnchanged()
+        .doTest();
+  }
 }

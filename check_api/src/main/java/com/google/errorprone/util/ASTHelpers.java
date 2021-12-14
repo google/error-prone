@@ -38,6 +38,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.SetMultimap;
 import com.google.errorprone.VisitorState;
+import com.google.errorprone.annotations.InlineMe;
 import com.google.errorprone.dataflow.nullnesspropagation.Nullness;
 import com.google.errorprone.dataflow.nullnesspropagation.NullnessAnalysis;
 import com.google.errorprone.matchers.JUnitMatchers;
@@ -940,15 +941,24 @@ public class ASTHelpers {
     return hasDirectAnnotationWithSimpleName(getDeclaredSymbol(tree), simpleName);
   }
 
+  /** @deprecated use {@link #shouldKeep} instead */
+  @Deprecated
+  @InlineMe(
+      replacement = "ASTHelpers.shouldKeep(tree)",
+      imports = "com.google.errorprone.util.ASTHelpers")
+  public static boolean isUsedReflectively(Tree tree) {
+    return shouldKeep(tree);
+  }
+
   /**
    * Returns true if any of the given tree is a declaration annotated with an annotation with the
-   * simple name {@code @UsedReflectively}, or any annotations meta-annotated with an annotation
-   * with that simple name.
+   * simple name {@code @UsedReflectively} or {@code @Keep}, or any annotations meta-annotated with
+   * an annotation with that simple name.
    *
    * <p>This indicates the annotated element is used (e.g. by reflection, or referenced by generated
    * code) and should not be removed.
    */
-  public static boolean isUsedReflectively(Tree tree) {
+  public static boolean shouldKeep(Tree tree) {
     ModifiersTree modifiers = getModifiers(tree);
     if (modifiers == null) {
       return false;
@@ -959,10 +969,12 @@ public class ASTHelpers {
         continue;
       }
       TypeSymbol tsym = annotationType.tsym;
-      if (tsym.getSimpleName().contentEquals(USED_REFLECTIVELY)) {
+      if (tsym.getSimpleName().contentEquals(USED_REFLECTIVELY)
+          || tsym.getSimpleName().contentEquals(KEEP)) {
         return true;
       }
-      if (hasDirectAnnotationWithSimpleName(tsym, USED_REFLECTIVELY)) {
+      if (hasDirectAnnotationWithSimpleName(tsym, USED_REFLECTIVELY)
+          || hasDirectAnnotationWithSimpleName(tsym, KEEP)) {
         return true;
       }
     }
@@ -970,6 +982,8 @@ public class ASTHelpers {
   }
 
   private static final String USED_REFLECTIVELY = "UsedReflectively";
+
+  private static final String KEEP = "Keep";
 
   /**
    * Retrieves an annotation, considering annotation inheritance.

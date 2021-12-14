@@ -43,6 +43,35 @@ public final class UnusedMethodTest {
   }
 
   @Test
+  public void unusedPrivateMethod() {
+    helper
+        .addSourceLines(
+            "UnusedPrivateMethod.java",
+            "package unusedvars;",
+            "import com.google.errorprone.annotations.Keep;",
+            "import java.lang.annotation.ElementType;",
+            "import java.lang.annotation.Retention;",
+            "import java.lang.annotation.RetentionPolicy;",
+            "import java.lang.annotation.Target;",
+            "import javax.inject.Inject;",
+            "public class UnusedPrivateMethod {",
+            "  public void test() {",
+            "    used();",
+            "  }",
+            "  private void used() {}",
+            "  // BUG: Diagnostic contains: Private method 'notUsed' is never used.",
+            "  private void notUsed() {}",
+            "  @Inject",
+            "  private void notUsedExempted() {}",
+            "  @Keep",
+            "  @Target(ElementType.METHOD)",
+            "  @Retention(RetentionPolicy.SOURCE)",
+            "  private @interface ProvidesCustom {}",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void unuseds() {
     helper
         .addSourceLines(
