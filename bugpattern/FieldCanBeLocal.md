@@ -51,3 +51,6 @@ class Frobnicator {
 
 This check is suppressed by `@SuppressWarnings("FieldCanBeLocal")`.
 
+It will also be suppressed if the field is annotated with `@Keep` or an
+annotation annotated with `@Keep`.
+

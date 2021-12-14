@@ -6518,9 +6518,9 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/util/ASTHelpers.html#isUsedReflectively(com.sun.source.tree.Tree)">isUsedReflectively(Tree)</a></span> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/ASTHelpers.html" title="class in com.google.errorprone.util">ASTHelpers</a></dt>
 <dd>
-<div class="block">Returns true if any of the given tree is a declaration annotated with an annotation with the
- simple name <code>@UsedReflectively</code>, or any annotations meta-annotated with an annotation
- with that simple name.</div>
+<div class="deprecation-block"><span class="deprecated-label">Deprecated.</span>
+<div class="deprecation-comment">use <a href="com/google/errorprone/util/ASTHelpers.html#shouldKeep(com.sun.source.tree.Tree)"><code>ASTHelpers.shouldKeep(com.sun.source.tree.Tree)</code></a> instead</div>
+</div>
 </dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/TypeParameterNaming.TypeParameterNamingClassification.html#isValidName()">isValidName()</a></span> - Method in enum com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/TypeParameterNaming.TypeParameterNamingClassification.html" title="enum in com.google.errorprone.bugpatterns">TypeParameterNaming.TypeParameterNamingClassification</a></dt>
 <dd>&nbsp;</dd>
@@ -6813,6 +6813,11 @@ loadScripts(document, 'script');</script>
 </dl>
 <h2 class="title" id="I:K">K</h2>
 <dl class="index">
+<dt><a href="com/google/errorprone/annotations/Keep.html" title="annotation in com.google.errorprone.annotations"><span class="type-name-link">Keep</span></a> - Annotation Type in <a href="com/google/errorprone/annotations/package-summary.html">com.google.errorprone.annotations</a></dt>
+<dd>
+<div class="block">Indicates that the annotated element should not be removed, and that its visibility, modifiers,
+ type, and name should not be modified.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/refaster/UFreeIdent.html#key()">key()</a></span> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/UFreeIdent.html" title="class in com.google.errorprone.refaster">UFreeIdent</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/refaster/UTypeVar.html#key()">key()</a></span> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/UTypeVar.html" title="class in com.google.errorprone.refaster">UTypeVar</a></dt>
@@ -11169,6 +11174,12 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/ShouldHaveEvenArgs.html#%3Cinit%3E()">ShouldHaveEvenArgs()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/ShouldHaveEvenArgs.html" title="class in com.google.errorprone.bugpatterns">ShouldHaveEvenArgs</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/google/errorprone/util/ASTHelpers.html#shouldKeep(com.sun.source.tree.Tree)">shouldKeep(Tree)</a></span> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/ASTHelpers.html" title="class in com.google.errorprone.util">ASTHelpers</a></dt>
+<dd>
+<div class="block">Returns true if any of the given tree is a declaration annotated with an annotation with the
+ simple name <code>@UsedReflectively</code> or <code>@Keep</code>, or any annotations meta-annotated with
+ an annotation with that simple name.</div>
+</dd>
 <dt><a href="com/google/errorprone/util/SideEffectAnalysis.html" title="class in com.google.errorprone.util"><span class="type-name-link">SideEffectAnalysis</span></a> - Class in <a href="com/google/errorprone/util/package-summary.html">com.google.errorprone.util</a></dt>
 <dd>
 <div class="block">This class is responsible for analyzing an expression and telling if the expression can have side
