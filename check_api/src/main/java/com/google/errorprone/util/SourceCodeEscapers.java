@@ -16,10 +16,10 @@
 
 package com.google.errorprone.util;
 
+import com.google.common.collect.ImmutableMap;
 import com.google.common.escape.ArrayBasedCharEscaper;
 import com.google.common.escape.CharEscaper;
 import com.google.common.escape.Escaper;
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -53,20 +53,17 @@ public final class SourceCodeEscapers {
     return JAVA_CHAR_ESCAPER;
   }
 
-  private static final CharEscaper JAVA_CHAR_ESCAPER;
-
-  static {
-    Map<Character, String> javaMap = new HashMap<>();
-    javaMap.put('\b', "\\b");
-    javaMap.put('\f', "\\f");
-    javaMap.put('\n', "\\n");
-    javaMap.put('\r', "\\r");
-    javaMap.put('\t', "\\t");
-    javaMap.put('\"', "\\\"");
-    javaMap.put('\\', "\\\\");
-    javaMap.put('\'', "\\'");
-    JAVA_CHAR_ESCAPER = new JavaCharEscaper(javaMap);
-  }
+  private static final CharEscaper JAVA_CHAR_ESCAPER =
+      new JavaCharEscaper(
+          ImmutableMap.of(
+              '\b', "\\b",
+              '\f', "\\f",
+              '\n', "\\n",
+              '\r', "\\r",
+              '\t', "\\t",
+              '\"', "\\\"",
+              '\\', "\\\\",
+              '\'', "\\'"));
 
   // This escaper does not produce octal escape sequences. See:
   // http://java.sun.com/docs/books/jls/third_edition/html/lexical.html#101089
