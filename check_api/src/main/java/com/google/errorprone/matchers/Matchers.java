@@ -334,12 +334,6 @@ public class Matchers {
     return new ConstructorOfClass(matchType, constructorMatcher);
   }
 
-  // TODO(cushon): expunge
-  public static Matcher<MethodInvocationTree> methodSelect(
-      Matcher<ExpressionTree> methodSelectMatcher) {
-    return new MethodInvocationMethodSelect(methodSelectMatcher);
-  }
-
   public static Matcher<MethodInvocationTree> argument(
       final int position, final Matcher<ExpressionTree> argumentMatcher) {
     return new MethodInvocationArgument(position, argumentMatcher);
