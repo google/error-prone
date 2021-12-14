@@ -18,6 +18,7 @@ package com.google.errorprone.bugpatterns.formatstring;
 
 import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.util.ASTHelpers.isSameType;
+import static java.util.Arrays.asList;
 
 import com.google.auto.value.AutoValue;
 import com.google.common.base.Preconditions;
@@ -31,8 +32,6 @@ import com.sun.source.util.SimpleTreeVisitor;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Types;
-import edu.umd.cs.findbugs.formatStringChecker.ExtraFormatArgumentsException;
-import edu.umd.cs.findbugs.formatStringChecker.Formatter;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.Instant;
@@ -40,7 +39,6 @@ import java.time.ZoneId;
 import java.time.temporal.TemporalAccessor;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
@@ -50,6 +48,7 @@ import java.util.FormatFlagsConversionMismatchException;
 import java.util.GregorianCalendar;
 import java.util.IllegalFormatCodePointException;
 import java.util.IllegalFormatConversionException;
+import java.util.IllegalFormatException;
 import java.util.IllegalFormatFlagsException;
 import java.util.IllegalFormatPrecisionException;
 import java.util.IllegalFormatWidthException;
@@ -58,6 +57,7 @@ import java.util.MissingFormatArgumentException;
 import java.util.MissingFormatWidthException;
 import java.util.UnknownFormatConversionException;
 import java.util.UnknownFormatFlagsException;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 import javax.annotation.Nullable;
 import javax.lang.model.type.TypeKind;
@@ -68,7 +68,7 @@ public final class FormatStringValidation {
   /** Description of an incorrect format method call. */
   @AutoValue
   public abstract static class ValidationResult {
-    /** The exception thrown by {@code String.format} or {@code Formatter.check}. */
+    /** The exception thrown by {@code String.format}. */
     @Nullable
     public abstract Exception exception();
 
@@ -280,19 +280,32 @@ public final class FormatStringValidation {
       // TODO(cushon): I don't think the implementation ever throws this.
       return ValidationResult.create(e, String.format("unknown format flag(s): %s", e.getFlags()));
     }
+    return extraFormatArguments(formatString, asList(arguments));
+  }
 
-    try {
-      // arguments are specified as type descriptors, and all we care about checking is the arity
-      String[] argDescriptors = new String[arguments.length];
-      Arrays.fill(argDescriptors, "Ljava/lang/Object;");
-      Formatter.check(formatString, argDescriptors);
-    } catch (ExtraFormatArgumentsException e) {
-      return ValidationResult.create(
-          e, String.format("extra format arguments: used %d, provided %d", e.used, e.provided));
-    } catch (Exception ignored) {
-      // everything else is validated by String.format above
+  @Nullable
+  private static ValidationResult extraFormatArguments(
+      String formatString, List<Object> arguments) {
+    int used =
+        IntStream.rangeClosed(0, arguments.size())
+            .filter(i -> doesItFormat(formatString, arguments.subList(0, i)))
+            .findFirst()
+            .orElse(0);
+    if (used == arguments.size()) {
+      return null;
     }
-    return null;
+    return ValidationResult.create(
+        /* exception= */ null,
+        String.format("extra format arguments: used %d, provided %d", used, arguments.size()));
+  }
+
+  private static boolean doesItFormat(String formatString, List<Object> arguments) {
+    try {
+      String unused = String.format(formatString, arguments.toArray());
+      return true;
+    } catch (IllegalFormatException e) {
+      return false;
+    }
   }
 
   private static String unknownFormatConversion(String conversion) {

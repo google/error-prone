@@ -46,9 +46,9 @@ import com.sun.source.tree.Tree.Kind;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
-import edu.umd.cs.findbugs.formatStringChecker.Formatter;
-import edu.umd.cs.findbugs.formatStringChecker.MissingFormatArgumentException;
+import java.util.IllegalFormatException;
 import java.util.List;
+import java.util.MissingFormatArgumentException;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
@@ -152,12 +152,13 @@ public class OrphanedFormatString extends BugChecker implements LiteralTreeMatch
   }
 
   /** Returns true for strings that contain format specifiers. */
+  @SuppressWarnings("StringFormatWithoutAnyParams")
   private static boolean missingFormatArgs(String value) {
     try {
-      Formatter.check(value);
+      String unused = String.format(value);
     } catch (MissingFormatArgumentException e) {
       return true;
-    } catch (Exception ignored) {
+    } catch (IllegalFormatException ignored) {
       // we don't care about other errors (it isn't supposed to be a format string)
     }
     return false;
