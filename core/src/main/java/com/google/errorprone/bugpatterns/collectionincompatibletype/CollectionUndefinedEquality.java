@@ -19,9 +19,7 @@ package com.google.errorprone.bugpatterns.collectionincompatibletype;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.anyMethod;
-import static com.google.errorprone.predicates.TypePredicates.isDescendantOfAny;
 
-import com.google.common.collect.ImmutableList;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.StandardTags;
 import com.google.errorprone.VisitorState;
@@ -52,13 +50,11 @@ public final class CollectionUndefinedEquality extends BugChecker
   // equality constraints on the value type.
   private static final Matcher<ExpressionTree> TYPES_NOT_DEPENDING_ON_OBJECT_EQUALITY =
       anyMethod()
-          .onClass(
-              isDescendantOfAny(
-                  ImmutableList.of(
-                      "java.util.IdentityHashMap",
-                      "java.util.IdentityHashSet",
-                      "java.util.SortedMap",
-                      "java.util.SortedSet")));
+          .onDescendantOfAny(
+              "java.util.IdentityHashMap",
+              "java.util.IdentityHashSet",
+              "java.util.SortedMap",
+              "java.util.SortedSet");
 
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {

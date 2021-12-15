@@ -25,7 +25,6 @@ import static com.google.errorprone.matchers.Matchers.nothing;
 import static com.google.errorprone.matchers.Matchers.packageStartsWith;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
-import static com.google.errorprone.predicates.TypePredicates.isDescendantOf;
 import static com.google.errorprone.predicates.TypePredicates.isExactTypeAny;
 import static com.google.errorprone.util.ASTHelpers.isSameType;
 
@@ -307,7 +306,7 @@ public class ReturnValueIgnored extends AbstractReturnValueIgnored {
    */
   private static final Matcher<ExpressionTree> PROTO_METHODS =
       anyOf(
-          staticMethod().onClass(isDescendantOf(PROTO_MESSAGE)).named("newBuilder"),
+          staticMethod().onDescendantOf(PROTO_MESSAGE).named("newBuilder"),
           instanceMethod()
               .onDescendantOf(PROTO_MESSAGE + ".Builder")
               .namedAnyOf("build", "buildPartial"));

@@ -20,7 +20,6 @@ import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
-import static com.google.errorprone.predicates.TypePredicates.isDescendantOf;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
@@ -58,7 +57,7 @@ import java.util.Optional;
 public final class MixedDescriptors extends BugChecker implements MethodInvocationTreeMatcher {
 
   private static final Matcher<ExpressionTree> GET_DESCRIPTOR =
-      staticMethod().onClass(isDescendantOf("com.google.protobuf.Message")).named("getDescriptor");
+      staticMethod().onDescendantOf("com.google.protobuf.Message").named("getDescriptor");
 
   private static final Matcher<ExpressionTree> FIND_FIELD =
       instanceMethod()

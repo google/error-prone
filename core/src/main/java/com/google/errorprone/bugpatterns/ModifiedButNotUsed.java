@@ -26,8 +26,6 @@ import static com.google.errorprone.matchers.Matchers.kindIs;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
 import static com.google.errorprone.matchers.method.MethodMatchers.constructor;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
-import static com.google.errorprone.predicates.TypePredicates.isDescendantOf;
-import static com.google.errorprone.predicates.TypePredicates.isDescendantOfAny;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.isConsideredFinal;
@@ -151,12 +149,12 @@ public class ModifiedButNotUsed extends BugChecker
                               .map(i -> Suppliers.typeFromString(i + ".Builder"))
                               .collect(toImmutableList())))),
           staticMethod()
-              .onClass(isDescendantOfAny(GUAVA_IMMUTABLES))
+              .onDescendantOfAny(GUAVA_IMMUTABLES)
               .namedAnyOf("builder", "builderWithExpectedSize"),
           allOf(
               kindIs(Kind.NEW_CLASS),
               constructor().forClass(new DescendantOf(Suppliers.typeFromString(MESSAGE_BUILDER)))),
-          staticMethod().onClass(isDescendantOf(MESSAGE)).named("newBuilder"),
+          staticMethod().onDescendantOf(MESSAGE).named("newBuilder"),
           instanceMethod().onDescendantOf(MESSAGE).namedAnyOf("toBuilder", "newBuilderForType"));
 
   private static final Matcher<ExpressionTree> NEW_COLLECTION =

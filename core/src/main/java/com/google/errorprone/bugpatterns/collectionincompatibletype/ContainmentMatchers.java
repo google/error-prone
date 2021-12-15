@@ -16,8 +16,6 @@
 
 package com.google.errorprone.bugpatterns.collectionincompatibletype;
 
-import static com.google.errorprone.predicates.TypePredicates.isDescendantOfAny;
-
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.collectionincompatibletype.AbstractCollectionIncompatibleTypeMatcher.MatchResult;
@@ -35,14 +33,12 @@ public final class ContainmentMatchers {
    */
   private static final Matcher<ExpressionTree> FIRST_ORDER_MATCHER =
       Matchers.anyMethod()
-          .onClass(
-              isDescendantOfAny(
-                  ImmutableList.of(
-                      "java.util.Collection",
-                      "java.util.Dictionary",
-                      "java.util.Map",
-                      "java.util.Collections",
-                      "com.google.common.collect.Sets")));
+          .onDescendantOfAny(
+              "java.util.Collection",
+              "java.util.Dictionary",
+              "java.util.Map",
+              "java.util.Collections",
+              "com.google.common.collect.Sets");
 
   /** The "normal" case of extracting the type of a method argument */
   private static final ImmutableList<MethodArgMatcher> DIRECT_MATCHERS =

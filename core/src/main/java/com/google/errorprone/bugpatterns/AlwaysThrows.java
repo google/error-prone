@@ -21,7 +21,6 @@ import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
-import static com.google.errorprone.predicates.TypePredicates.isDescendantOf;
 import static com.google.errorprone.util.ASTHelpers.constValue;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
@@ -77,12 +76,10 @@ public class AlwaysThrows extends BugChecker implements MethodInvocationTreeMatc
           .buildOrThrow();
 
   private static final Matcher<ExpressionTree> IMMUTABLE_MAP_OF =
-      staticMethod().onClass(isDescendantOf("com.google.common.collect.ImmutableMap")).named("of");
+      staticMethod().onDescendantOf("com.google.common.collect.ImmutableMap").named("of");
 
   private static final Matcher<ExpressionTree> IMMUTABLE_BI_MAP_OF =
-      staticMethod()
-          .onClass(isDescendantOf("com.google.common.collect.ImmutableBiMap"))
-          .named("of");
+      staticMethod().onDescendantOf("com.google.common.collect.ImmutableBiMap").named("of");
 
   private static final Matcher<ExpressionTree> IMMUTABLE_MAP_PUT =
       instanceMethod()

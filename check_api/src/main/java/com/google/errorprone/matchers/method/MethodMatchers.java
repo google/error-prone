@@ -47,7 +47,7 @@ public final class MethodMatchers {
     /** Match on types that satisfy the given predicate. */
     MethodClassMatcher onClass(TypePredicate predicate);
 
-    /** Match on types with the given fully-qualified name. (e.g. java.lang.String) */
+    /** Match on types with the given fully-qualified name. (e.g. {@code java.lang.String}) */
     MethodClassMatcher onExactClass(String className);
 
     /** Match on the given type exactly. */
@@ -81,7 +81,7 @@ public final class MethodMatchers {
     /** Match on types that satisfy the given predicate. */
     MethodClassMatcher onClass(TypePredicate predicate);
 
-    /** Match on types with the given fully-qualified name. (e.g. {@code java.lang.String} */
+    /** Match on types with the given fully-qualified name. (e.g. {@code java.lang.String}) */
     MethodClassMatcher onClass(String className);
 
     /** Match on the given type exactly. */
@@ -93,6 +93,18 @@ public final class MethodMatchers {
     /** Match on types that are equal to any of the given types. */
     MethodClassMatcher onClassAny(String... classNames);
 
+    /** Match on descendants of the given fully-qualified type name. */
+    MethodClassMatcher onDescendantOf(String className);
+
+    /** Match on descendants of the given type. */
+    MethodClassMatcher onDescendantOf(Supplier<Type> classType);
+
+    /** Match on types that are descendants of any of the given types. */
+    MethodClassMatcher onDescendantOfAny(String... classTypes);
+
+    /** Match on types that are descendants of any of the given types. */
+    MethodClassMatcher onDescendantOfAny(Iterable<String> classTypes);
+
     /** Match on any class. */
     MethodClassMatcher anyClass();
   }
@@ -103,8 +115,20 @@ public final class MethodMatchers {
     /** Match the given type exactly. */
     MethodClassMatcher onClass(TypePredicate predicate);
 
-    /** Match on types with the given fully-qualified name. (e.g. {@code java.lang.String} */
+    /** Match on types with the given fully-qualified name. (e.g. {@code java.lang.String}) */
     MethodClassMatcher onClass(String className);
+
+    /** Match on descendants of the given fully-qualified type name. */
+    MethodClassMatcher onDescendantOf(String className);
+
+    /** Match on descendants of the given type. */
+    MethodClassMatcher onDescendantOf(Supplier<Type> classType);
+
+    /** Match on types that are descendants of any of the given types. */
+    MethodClassMatcher onDescendantOfAny(String... classTypes);
+
+    /** Match on types that are descendants of any of the given types. */
+    MethodClassMatcher onDescendantOfAny(Iterable<String> classTypes);
 
     /** Match on any class. */
     MethodClassMatcher anyClass();
