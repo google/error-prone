@@ -3,7 +3,7 @@ title: DescribeMatch
 summary: '`describeMatch(tree, fix)` is equivalent to and simpler than `buildDescription(tree).addFix(fix).build()`'
 layout: bugpattern
 tags: ''
-severity: ERROR
+severity: WARNING
 ---
 
 <!--
