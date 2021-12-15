@@ -18,7 +18,7 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.common.collect.Streams.stream;
-import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
@@ -40,7 +40,7 @@ import com.sun.source.tree.MethodInvocationTree;
     summary =
         "`describeMatch(tree, fix)` is equivalent to and simpler than"
             + " `buildDescription(tree).addFix(fix).build()`",
-    severity = ERROR)
+    severity = WARNING)
 public class DescribeMatch extends BugChecker implements MethodInvocationTreeMatcher {
 
   private static final Matcher<ExpressionTree> BUILD_DESCRIPTION =
