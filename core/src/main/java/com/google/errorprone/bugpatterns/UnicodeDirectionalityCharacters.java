@@ -31,8 +31,10 @@ import com.sun.source.tree.CompilationUnitTree;
 @BugPattern(
     name = "UnicodeDirectionalityCharacters",
     severity = ERROR,
-    summary = "Unicode directionality modifiers can be used to conceal code in many editors.",
-    disableable = false)
+    summary = "Unicode directionality modifiers can be used to conceal code in many editors."
+    // This has to be non-disableable, otherwise the suppression could be hidden.
+    // TODO(b/205609703): Make this non-disableable after the depot is clean.
+    )
 public final class UnicodeDirectionalityCharacters extends BugChecker
     implements CompilationUnitTreeMatcher {
   @Override
