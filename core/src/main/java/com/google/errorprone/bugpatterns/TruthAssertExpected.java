@@ -90,7 +90,9 @@ public final class TruthAssertExpected extends BugChecker implements MethodInvoc
       return false;
     }
     Type throwable = Suppliers.typeFromClass(Throwable.class).get(state);
-    return Ascii.toLowerCase(identifier.getName().toString()).contains("expected")
+    String identifierName = Ascii.toLowerCase(identifier.getName().toString());
+    return identifierName.contains("expected")
+        && !identifierName.contains("actual")
         && !ASTHelpers.isSubtype(ASTHelpers.getType(identifier), throwable, state);
   }
 

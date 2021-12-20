@@ -43,6 +43,11 @@ final class TruthAssertExpectedNegativeCases {
     assertThat(hashCode()).isEqualTo(foo);
   }
 
+  private void actualAndExpectedTogether(int delay) {
+    int actualDelayInExpectedUnits = 1;
+    assertThat(actualDelayInExpectedUnits).isEqualTo(delay);
+  }
+
   private void expectedExceptions() {
     Exception expectedException = new Exception("Oh no.");
     assertThat(expectedException).hasMessageThat().isEqualTo("Oh no.");
