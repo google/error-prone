@@ -59,6 +59,7 @@ import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.ReturnTree;
 import com.sun.source.tree.StatementTree;
+import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePathScanner;
 import com.sun.tools.javac.code.Symbol;
@@ -365,6 +366,14 @@ public class ReturnMissingNullable extends BugChecker implements CompilationUnit
             state.reportMatch(describeMatch(returnTree, fix));
           }
         }
+      }
+
+      @Override
+      public Void scan(Tree tree, Void unused) {
+        if (isSuppressed(tree)) {
+          return null;
+        }
+        return super.scan(tree, unused);
       }
     }.scan(tree, null);
 

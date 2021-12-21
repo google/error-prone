@@ -1391,6 +1391,58 @@ public class ReturnMissingNullableTest {
   }
 
   @Test
+  public void testNegativeCases_suppressionForReturnTreeBased() {
+    createCompilationTestHelper()
+        .addSourceLines(
+            "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
+            "package com.google.errorprone.bugpatterns.nullness;",
+            "import java.util.Optional;",
+            "class LiteralNullReturnTest {",
+            "  @SuppressWarnings(\"ReturnMissingNullable\")",
+            "  public String getMessage(Optional<String> m) {",
+            "    return m.orElse(null);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void testNegativeCases_suppressionForMethodTreeBased() {
+    createCompilationTestHelper()
+        .addSourceLines(
+            "NotMap.java", //
+            "interface NotMap {",
+            "  Integer get(String o);",
+            "}")
+        .addSourceLines(
+            "MyMap.java",
+            "import java.util.Map;",
+            "interface MyMap<K, V> extends Map<K, V>, NotMap {",
+            "  @SuppressWarnings(\"ReturnMissingNullable\")",
+            "  @Override V get(Object o);",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void testNegativeCases_suppressionAboveMethodLevel() {
+    createCompilationTestHelper()
+        .addSourceLines(
+            "NotMap.java", //
+            "interface NotMap {",
+            "  Integer get(String o);",
+            "}")
+        .addSourceLines(
+            "MyMap.java",
+            "import java.util.Map;",
+            "@SuppressWarnings(\"ReturnMissingNullable\")",
+            "interface MyMap<K, V> extends Map<K, V>, NotMap {",
+            "  @Override V get(Object o);",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void testReturnSameSymbolDifferentObjectInsideIfNull() {
     createCompilationTestHelper()
         .addSourceLines(
