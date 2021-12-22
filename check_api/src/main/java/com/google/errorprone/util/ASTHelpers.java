@@ -35,8 +35,10 @@ import com.google.common.base.CharMatcher;
 import com.google.common.collect.AbstractIterator;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableListMultimap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.SetMultimap;
+import com.google.common.collect.Streams;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.annotations.InlineMe;
 import com.google.errorprone.dataflow.nullnesspropagation.Nullness;
@@ -152,6 +154,7 @@ import java.nio.CharBuffer;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Deque;
 import java.util.EnumSet;
 import java.util.HashSet;
@@ -2319,6 +2322,74 @@ public class ASTHelpers {
       }
     }
     return false;
+  }
+
+  /**
+   * Returns the mapping between type variables and their instantiations in the given type. For
+   * example, the instantiation of {@code Map<K, V>} as {@code Map<String, Integer>} would be
+   * represented as a {@code TypeSubstitution} from {@code [K, V]} to {@code [String, Integer]}.
+   */
+  public static ImmutableListMultimap<Symbol.TypeVariableSymbol, Type> getTypeSubstitution(
+      Type type, Symbol sym) {
+    ImmutableListMultimap.Builder<Symbol.TypeVariableSymbol, Type> result =
+        ImmutableListMultimap.builder();
+    class Visitor extends Types.DefaultTypeVisitor<Void, Type> {
+
+      @Override
+      public Void visitMethodType(Type.MethodType t, Type other) {
+        scan(t.getParameterTypes(), other.getParameterTypes());
+        scan(t.getThrownTypes(), other.getThrownTypes());
+        scan(t.getReturnType(), other.getReturnType());
+        return null;
+      }
+
+      @Override
+      public Void visitClassType(ClassType t, Type other) {
+        scan(t.getTypeArguments(), other.getTypeArguments());
+        return null;
+      }
+
+      @Override
+      public Void visitTypeVar(TypeVar t, Type other) {
+        result.put((Symbol.TypeVariableSymbol) t.asElement(), other);
+        return null;
+      }
+
+      @Override
+      public Void visitForAll(Type.ForAll t, Type other) {
+        scan(t.getParameterTypes(), other.getParameterTypes());
+        scan(t.getThrownTypes(), other.getThrownTypes());
+        scan(t.getReturnType(), other.getReturnType());
+        return null;
+      }
+
+      @Override
+      public Void visitWildcardType(WildcardType t, Type type) {
+        if (type instanceof WildcardType) {
+          WildcardType other = (WildcardType) type;
+          scan(t.getExtendsBound(), other.getExtendsBound());
+          scan(t.getSuperBound(), other.getSuperBound());
+        }
+        return null;
+      }
+
+      @Override
+      public Void visitType(Type t, Type other) {
+        return null;
+      }
+
+      private void scan(Collection<Type> from, Collection<Type> to) {
+        Streams.forEachPair(from.stream(), to.stream(), this::scan);
+      }
+
+      private void scan(Type from, Type to) {
+        if (from != null) {
+          from.accept(this, to);
+        }
+      }
+    }
+    sym.asType().accept(new Visitor(), type);
+    return result.build();
   }
 
   private ASTHelpers() {}

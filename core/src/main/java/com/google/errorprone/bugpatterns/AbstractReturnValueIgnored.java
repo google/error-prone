@@ -35,10 +35,11 @@ import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.isVoidType;
 
 import com.google.common.base.Suppliers;
+import com.google.common.collect.ImmutableListMultimap;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.ListMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapBuilder;
-import com.google.common.collect.Streams;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MemberReferenceTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
@@ -68,10 +69,8 @@ import com.sun.tools.javac.code.TypeTag;
 import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
 import com.sun.tools.javac.tree.JCTree.JCIdent;
 import com.sun.tools.javac.tree.JCTree.JCMethodInvocation;
-import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.util.ArrayDeque;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -426,39 +425,16 @@ public abstract class AbstractReturnValueIgnored extends BugChecker
     }
   }
 
-  private static Multimap<TypeVariableSymbol, TypeInfo> getResolvedGenerics(
+  private static ListMultimap<TypeVariableSymbol, TypeInfo> getResolvedGenerics(
       MethodInvocationTree tree) {
     Type type = ASTHelpers.getType(tree.getMethodSelect());
-    List<Type> from = new ArrayList<>();
-    List<Type> to = new ArrayList<>();
-    getSubst(type, from, to);
-    Multimap<TypeVariableSymbol, TypeInfo> result =
-        Streams.zip(
-                from.stream(),
-                to.stream(),
-                (f, t) -> new TypeInfo((TypeVariableSymbol) f.asElement(), t, tree))
-            .collect(
-                toMultimap(
-                    k -> k.sym, k -> k, MultimapBuilder.linkedHashKeys().arrayListValues()::build));
-    return result;
-  }
-
-  @SuppressWarnings("unchecked")
-  public static void getSubst(Type m, List<Type> from, List<Type> to) {
-    try {
-      // Reflectively extract the mapping from an enclosing instance of Types.Subst
-      Field substField = m.getClass().getDeclaredField("this$0");
-      substField.setAccessible(true);
-      Object subst = substField.get(m);
-      Field fromField = subst.getClass().getDeclaredField("from");
-      Field toField = subst.getClass().getDeclaredField("to");
-      fromField.setAccessible(true);
-      toField.setAccessible(true);
-      from.addAll((Collection<Type>) fromField.get(subst));
-      to.addAll((Collection<Type>) toField.get(subst));
-    } catch (ReflectiveOperationException e) {
-      return;
-    }
+    ImmutableListMultimap<TypeVariableSymbol, Type> subst =
+        ASTHelpers.getTypeSubstitution(type, getSymbol(tree));
+    return subst.entries().stream()
+        .map(e -> new TypeInfo(e.getKey(), e.getValue(), tree))
+        .collect(
+            toMultimap(
+                k -> k.sym, k -> k, MultimapBuilder.linkedHashKeys().arrayListValues()::build));
   }
 
   private static boolean isObjectReturningMethodReferenceExpression(

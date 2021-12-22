@@ -20,6 +20,7 @@ import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.bugpatterns.collectionincompatibletype.AbstractCollectionIncompatibleTypeMatcher.extractTypeArgAsMemberOfSupertype;
 
 import com.google.auto.value.AutoValue;
+import com.google.common.collect.ImmutableListMultimap;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.annotations.CheckReturnValue;
@@ -35,13 +36,14 @@ import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
+import com.sun.tools.javac.code.Symbol.TypeVariableSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Types;
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import javax.annotation.Nullable;
 import javax.lang.model.element.Parameterizable;
 import javax.lang.model.element.TypeParameterElement;
@@ -220,35 +222,22 @@ public class IncompatibleArgumentType extends BugChecker implements MethodInvoca
     int tyargIndex = findTypeArgInList(declaredMethod, typeArgName);
     return tyargIndex == -1
         ? null
-        : RequiredType.create(getTypeFromTypeMapping(calledMethodType, typeArgName));
+        : RequiredType.create(
+            getTypeFromTypeMapping(calledMethodType, declaredMethod, typeArgName));
   }
 
-  @SuppressWarnings("unchecked")
   // Plumb through a type which is supposed to be a Types.Subst, then find the replacement
   // type that the compiler resolved.
-  private static Type getTypeFromTypeMapping(Type m, String namedTypeArg) {
-    try {
-      // Reflectively extract the mapping from an enclosing instance of Types.Subst
-      Field substField = m.getClass().getDeclaredField("this$0");
-      substField.setAccessible(true);
-      Object subst = substField.get(m);
-      Field fromField = subst.getClass().getDeclaredField("from");
-      Field toField = subst.getClass().getDeclaredField("to");
-      fromField.setAccessible(true);
-      toField.setAccessible(true);
-
-      // Search for `namedTypeArg` in `from`, and return the parallel instance in `to`.
-      List<Type> types = (List<Type>) fromField.get(subst);
-      List<Type> calledTypes = (List<Type>) toField.get(subst);
-      for (int i = 0; i < types.size(); i++) {
-        Type type = types.get(i);
-        if (type.toString().equals(namedTypeArg)) {
-          return calledTypes.get(i);
-        }
+  private static Type getTypeFromTypeMapping(
+      Type m, MethodSymbol declaredMethod, String namedTypeArg) {
+    ImmutableListMultimap<TypeVariableSymbol, Type> substitutions =
+        ASTHelpers.getTypeSubstitution(m, declaredMethod);
+    for (Map.Entry<TypeVariableSymbol, Type> e : substitutions.entries()) {
+      if (e.getKey().getSimpleName().contentEquals(namedTypeArg)) {
+        return e.getValue();
       }
-    } catch (ReflectiveOperationException ignored) {
-      // Nothing we can do here.
     }
+
     return null;
   }
 
