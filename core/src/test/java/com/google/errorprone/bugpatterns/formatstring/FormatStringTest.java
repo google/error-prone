@@ -16,7 +16,10 @@
 
 package com.google.errorprone.bugpatterns.formatstring;
 
+import static org.junit.Assume.assumeTrue;
+
 import com.google.errorprone.CompilationTestHelper;
+import com.google.errorprone.util.RuntimeVersion;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -343,6 +346,21 @@ public class FormatStringTest {
             "class Test {",
             "  void f(Number n) {",
             "    System.err.printf(\"%x\", n);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void invalidIndex() {
+    assumeTrue(RuntimeVersion.isAtLeast16());
+    compilationHelper
+        .addSourceLines(
+            "T.java",
+            "class T {",
+            "  public static void main(String[] args) {",
+            "    // BUG: Diagnostic contains: Illegal format argument index",
+            "    System.err.printf(\" %0$2s) %s\", args[0], args[1]);",
             "  }",
             "}")
         .doTest();

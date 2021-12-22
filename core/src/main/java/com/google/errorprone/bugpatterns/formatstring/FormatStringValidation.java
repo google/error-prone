@@ -279,6 +279,10 @@ public final class FormatStringValidation {
     } catch (UnknownFormatFlagsException e) {
       // TODO(cushon): I don't think the implementation ever throws this.
       return ValidationResult.create(e, String.format("unknown format flag(s): %s", e.getFlags()));
+    } catch (IllegalFormatException e) {
+      // Fall back for other invalid format strings, e.g. IllegalFormatArgumentIndexException that
+      // was added in JDK 16
+      return ValidationResult.create(e, e.getMessage());
     }
     return extraFormatArguments(formatString, asList(arguments));
   }
