@@ -16,83 +16,64 @@
 
 package com.google.errorprone.util;
 
-import java.lang.reflect.Method;
-
 /** JDK version string utilities. */
 public final class RuntimeVersion {
 
-  private static final int MAJOR = getMajor();
-
-  private static int getMajor() {
-    try {
-      Method versionMethod = Runtime.class.getMethod("version");
-      Object version = versionMethod.invoke(null);
-      return (int) version.getClass().getMethod("major").invoke(version);
-    } catch (Exception e) {
-      // continue below
-    }
-
-    int version = (int) Double.parseDouble(System.getProperty("java.class.version"));
-    if (49 <= version && version <= 52) {
-      return version - (49 - 5);
-    }
-    throw new IllegalStateException(
-        "Unknown Java version: " + System.getProperty("java.specification.version"));
-  }
+  private static final int FEATURE = Runtime.version().feature();
 
   /** Returns true if the current runtime is JDK 8 or newer. */
   public static boolean isAtLeast8() {
-    return MAJOR >= 8;
+    return FEATURE >= 8;
   }
 
   /** Returns true if the current runtime is JDK 9 or newer. */
   public static boolean isAtLeast9() {
-    return MAJOR >= 9;
+    return FEATURE >= 9;
   }
 
   /** Returns true if the current runtime is JDK 10 or newer. */
   public static boolean isAtLeast10() {
-    return MAJOR >= 10;
+    return FEATURE >= 10;
   }
 
   /** Returns true if the current runtime is JDK 10 or earlier. */
   public static boolean isAtMost10() {
-    return MAJOR <= 10;
+    return FEATURE <= 10;
   }
 
   /** Returns true if the current runtime is JDK 11 or newer. */
   public static boolean isAtLeast11() {
-    return MAJOR >= 11;
+    return FEATURE >= 11;
   }
 
   /** Returns true if the current runtime is JDK 12 or newer. */
   public static boolean isAtLeast12() {
-    return MAJOR >= 12;
+    return FEATURE >= 12;
   }
 
   /** Returns true if the current runtime is JDK 13 or newer. */
   public static boolean isAtLeast13() {
-    return MAJOR >= 13;
+    return FEATURE >= 13;
   }
 
   /** Returns true if the current runtime is JDK 14 or newer. */
   public static boolean isAtLeast14() {
-    return MAJOR >= 14;
+    return FEATURE >= 14;
   }
 
   /** Returns true if the current runtime is JDK 15 or newer. */
   public static boolean isAtLeast15() {
-    return MAJOR >= 15;
+    return FEATURE >= 15;
   }
 
   /** Returns true if the current runtime is JDK 16 or newer. */
   public static boolean isAtLeast16() {
-    return MAJOR >= 16;
+    return FEATURE >= 16;
   }
 
   /** Returns true if the current runtime is JDK 17 or newer. */
   public static boolean isAtLeast17() {
-    return MAJOR >= 17;
+    return FEATURE >= 17;
   }
 
   /**
@@ -101,7 +82,7 @@ public final class RuntimeVersion {
    * <p>Prefer the {@code isAtLeast} methods for assumption checks in tests.
    */
   public static int release() {
-    return MAJOR;
+    return FEATURE;
   }
 
   private RuntimeVersion() {}
