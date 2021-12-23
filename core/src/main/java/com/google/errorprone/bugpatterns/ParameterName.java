@@ -16,6 +16,7 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.common.base.MoreObjects.firstNonNull;
 import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.common.collect.Iterables.getLast;
 import static com.google.common.collect.Streams.forEachPair;
@@ -258,7 +259,8 @@ public class ParameterName extends BugChecker
               Comments.getTextFromComment(comment));
       if (m.matches()) {
         SuggestedFix rewriteCommentFix =
-            rewriteComment(comment, String.format("/* %s%s */", m.group(1), m.group(2)));
+            rewriteComment(
+                comment, String.format("/* %s%s */", m.group(1), firstNonNull(m.group(2), "")));
         state.reportMatch(
             buildDescription(arg)
                 .addFix(rewriteCommentFix)
