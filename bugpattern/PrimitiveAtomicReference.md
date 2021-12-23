@@ -1,8 +1,8 @@
 ---
 title: PrimitiveAtomicReference
 summary: Using compareAndSet with boxed primitives is dangerous, as reference rather
-  than value equality is used. Consider using AtomicInteger, AtomicLong, or AtomicBoolean
-  instead.
+  than value equality is used. Consider using AtomicInteger, AtomicLong, AtomicBoolean
+  from JDK or AtomicDouble from Guava instead.
 layout: bugpattern
 tags: ''
 severity: WARNING

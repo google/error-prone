@@ -1010,7 +1010,7 @@ __[PreconditionsCheckNotNullRepeated](bugpattern/PreconditionsCheckNotNullRepeat
 Including the first argument of checkNotNull in the failure message is not useful, as it will always be `null`.
 
 __[PrimitiveAtomicReference](bugpattern/PrimitiveAtomicReference)__<br>
-Using compareAndSet with boxed primitives is dangerous, as reference rather than value equality is used. Consider using AtomicInteger, AtomicLong, or AtomicBoolean instead.
+Using compareAndSet with boxed primitives is dangerous, as reference rather than value equality is used. Consider using AtomicInteger, AtomicLong, AtomicBoolean from JDK or AtomicDouble from Guava instead.
 
 __[ProtectedMembersInFinalClass](bugpattern/ProtectedMembersInFinalClass)__<br>
 Protected members in final classes can be package-private
