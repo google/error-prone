@@ -16,10 +16,13 @@
 
 package com.google.errorprone.bugpatterns.threadsafety;
 
+import static org.junit.Assume.assumeFalse;
+
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.CompilationTestHelper;
 import com.google.errorprone.annotations.Immutable;
 import com.google.errorprone.annotations.concurrent.LazyInit;
+import com.google.errorprone.util.RuntimeVersion;
 import java.util.Arrays;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -1555,6 +1558,8 @@ public class ImmutableCheckerTest {
 
   @Test
   public void immutableTypeParameter_notAllTypeVarsInstantiated() {
+    // TODO(b/211523579): re-enable once ThreadSafety uses ASTHelpers.getTypeSubstitution
+    assumeFalse(RuntimeVersion.isAtLeast18());
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -1825,6 +1830,8 @@ public class ImmutableCheckerTest {
   // regression test for b/148734874
   @Test
   public void immutableTypeParameter_instantiations_negative() {
+    // TODO(b/211523579): re-enable once ThreadSafety uses ASTHelpers.getTypeSubstitution
+    assumeFalse(RuntimeVersion.isAtLeast18());
     compilationHelper
         .addSourceLines(
             "Test.java",
