@@ -151,6 +151,3 @@ but *not* on JDK 8:
   -Xep:GuardedBy:OFF
 </arg>
 ```
-
-When wrapping the arguments across multiple lines, escaping the newlines with
-`\` is required when using `<fork>true</fork>`, and optional otherwise.
