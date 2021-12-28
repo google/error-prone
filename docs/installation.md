@@ -161,7 +161,7 @@ Setting the following `--add-exports=` flags is required on JDK 16 due to
 
 ```xml
     <path id="processorpath.ref">
-      <pathelement location="${user.home}/.m2/repository/com/google/errorprone/error_prone_core/2.19.0/error_prone_core-2.19.0-with-dependencies.jar"/>
+      <pathelement location="${user.home}/.m2/repository/com/google/errorprone/error_prone_core/${EP_VERSION}/error_prone_core-${EP_VERSION}-with-dependencies.jar"/>
       <pathelement location="${user.home}/.m2/repository/org/checkerframework/dataflow-errorprone/3.15.0/dataflow-errorprone-3.15.0.jar"/>
     </path>
 
@@ -280,7 +280,7 @@ will vary according to the build tool you are using.
 
 ## JDK 8
 
-Error Prone 2.19.0 is the latest version to support running on JDK 8. (Compiling
+Error Prone 2.10.0 is the latest version to support running on JDK 8. (Compiling
 the Java 8 language level is still supported by using a javac from a newer JDK,
 and setting the appropriate `-source`/`-target`/`-bootclasspath` or `--release`
 flags).
