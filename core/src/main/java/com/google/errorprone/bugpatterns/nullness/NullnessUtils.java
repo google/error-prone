@@ -39,6 +39,7 @@ import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.nullness.NullnessUtils.NullCheck.Polarity;
 import com.google.errorprone.fixes.SuggestedFix;
+import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.FindIdentifiers;
 import com.sun.source.tree.AnnotatedTypeTree;
@@ -90,7 +91,8 @@ class NullnessUtils {
    */
   static SuggestedFix fixByAddingNullableAnnotationToReturnType(
       VisitorState state, MethodTree method) {
-    return fixByAddingNullableAnnotationToElementOrType(state, method, method.getReturnType());
+    return fixByAddingNullableAnnotationToElementOrType(
+        state, method, method.getReturnType(), "nullness:return");
   }
 
   /**
@@ -99,21 +101,23 @@ class NullnessUtils {
    */
   static SuggestedFix fixByAddingNullableAnnotationToType(
       VisitorState state, VariableTree variable) {
-    return fixByAddingNullableAnnotationToElementOrType(state, variable, variable.getType());
+    return fixByAddingNullableAnnotationToElementOrType(
+        state, variable, variable.getType(), /* suppressionToRemove= */ null);
   }
 
   private static SuggestedFix fixByAddingNullableAnnotationToElementOrType(
-      VisitorState state, Tree elementTree, Tree typeTree) {
+      VisitorState state, Tree elementTree, Tree typeTree, @Nullable String suppressionToRemove) {
     NullableAnnotationToUse nullableAnnotationToUse = pickNullableAnnotation(state);
     if (!nullableAnnotationToUse.isAlreadyInScope() && applyOnlyIfAlreadyInScope(state)) {
       return emptyFix();
     }
 
     if (!nullableAnnotationToUse.isTypeUse()) {
-      return nullableAnnotationToUse.fixPrefixingOnto(elementTree);
+      return nullableAnnotationToUse.fixPrefixingOnto(elementTree, state, suppressionToRemove);
     }
 
-    return fixByAddingKnownTypeUseNullableAnnotation(state, typeTree, nullableAnnotationToUse);
+    return fixByAddingKnownTypeUseNullableAnnotation(
+        state, typeTree, nullableAnnotationToUse, suppressionToRemove);
   }
 
   /**
@@ -129,11 +133,15 @@ class NullnessUtils {
       return emptyFix();
     }
 
-    return fixByAddingKnownTypeUseNullableAnnotation(state, typeTree, nullableAnnotationToUse);
+    return fixByAddingKnownTypeUseNullableAnnotation(
+        state, typeTree, nullableAnnotationToUse, /* suppressionToRemove= */ null);
   }
 
   private static SuggestedFix fixByAddingKnownTypeUseNullableAnnotation(
-      VisitorState state, Tree typeTree, NullableAnnotationToUse nullableAnnotationToUse) {
+      VisitorState state,
+      Tree typeTree,
+      NullableAnnotationToUse nullableAnnotationToUse,
+      @Nullable String suppressionToRemove) {
     if (typeTree.getKind() == PARAMETERIZED_TYPE) {
       typeTree = ((ParameterizedTypeTree) typeTree).getType();
     }
@@ -144,7 +152,8 @@ class NullnessUtils {
             beforeBrackets.getKind() == ARRAY_TYPE;
             beforeBrackets = ((ArrayTypeTree) beforeBrackets).getType()) {}
         // For an explanation of "int @Foo [][] f," etc., see JLS 4.11.
-        return nullableAnnotationToUse.fixPostfixingOnto(beforeBrackets);
+        return nullableAnnotationToUse.fixPostfixingOnto(
+            beforeBrackets, state, suppressionToRemove);
 
       case MEMBER_SELECT:
         int lastDot =
@@ -153,14 +162,14 @@ class NullnessUtils {
                 .findFirst()
                 .get()
                 .pos();
-        return nullableAnnotationToUse.fixPostfixingOnto(lastDot);
+        return nullableAnnotationToUse.fixPostfixingOnto(lastDot, state, suppressionToRemove);
 
       case ANNOTATED_TYPE:
         return nullableAnnotationToUse.fixPrefixingOnto(
-            ((AnnotatedTypeTree) typeTree).getAnnotations().get(0));
+            ((AnnotatedTypeTree) typeTree).getAnnotations().get(0), state, suppressionToRemove);
 
       case IDENTIFIER:
-        return nullableAnnotationToUse.fixPrefixingOnto(typeTree);
+        return nullableAnnotationToUse.fixPrefixingOnto(typeTree, state, suppressionToRemove);
 
       default:
         throw new AssertionError(
@@ -188,20 +197,27 @@ class NullnessUtils {
     /**
      * Returns a {@link SuggestedFix} to add a {@code Nullable} annotation after the given position.
      */
-    final SuggestedFix fixPostfixingOnto(int position) {
-      return fixBuilderWithImport().replace(position + 1, position + 1, " @" + use() + " ").build();
+    final SuggestedFix fixPostfixingOnto(
+        int position, VisitorState state, @Nullable String suppressionToRemove) {
+      return prepareBuilder(state, suppressionToRemove)
+          .replace(position + 1, position + 1, " @" + use() + " ")
+          .build();
     }
 
     /** Returns a {@link SuggestedFix} to add a {@code Nullable} annotation after the given tree. */
-    final SuggestedFix fixPostfixingOnto(Tree tree) {
-      return fixBuilderWithImport().postfixWith(tree, " @" + use() + " ").build();
+    final SuggestedFix fixPostfixingOnto(
+        Tree tree, VisitorState state, @Nullable String suppressionToRemove) {
+      return prepareBuilder(state, suppressionToRemove)
+          .postfixWith(tree, " @" + use() + " ")
+          .build();
     }
 
     /**
      * Returns a {@link SuggestedFix} to add a {@code Nullable} annotation before the given tree.
      */
-    final SuggestedFix fixPrefixingOnto(Tree tree) {
-      return fixBuilderWithImport().prefixWith(tree, "@" + use() + " ").build();
+    final SuggestedFix fixPrefixingOnto(
+        Tree tree, VisitorState state, @Nullable String suppressionToRemove) {
+      return prepareBuilder(state, suppressionToRemove).prefixWith(tree, "@" + use() + " ").build();
     }
 
     @Nullable
@@ -213,10 +229,14 @@ class NullnessUtils {
 
     abstract boolean isAlreadyInScope();
 
-    private SuggestedFix.Builder fixBuilderWithImport() {
+    private SuggestedFix.Builder prepareBuilder(
+        VisitorState state, @Nullable String suppressionToRemove) {
       SuggestedFix.Builder builder = SuggestedFix.builder();
       if (importToAdd() != null) {
         builder.addImport(importToAdd());
+      }
+      if (applyRemoveSuppressWarnings(state)) {
+        SuggestedFixes.removeSuppressWarnings(builder, state, suppressionToRemove);
       }
       return builder;
     }
@@ -522,6 +542,14 @@ class NullnessUtils {
         .errorProneOptions()
         .getFlags()
         .getBoolean("Nullness:OnlyIfAnnotationAlreadyInScope")
+        .orElse(false);
+  }
+
+  private static boolean applyRemoveSuppressWarnings(VisitorState state) {
+    return state
+        .errorProneOptions()
+        .getFlags()
+        .getBoolean("Nullness:RemoveSuppressWarnings")
         .orElse(false);
   }
 }

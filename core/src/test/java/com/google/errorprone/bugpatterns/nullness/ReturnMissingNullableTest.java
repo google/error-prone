@@ -686,6 +686,40 @@ public class ReturnMissingNullableTest {
   }
 
   @Test
+  public void testRemoveSuppressWarnings_removeNullnessReturnWarning() {
+    createRefactoringTestHelper()
+        .setArgs("-XepOpt:Nullness:RemoveSuppressWarnings=true")
+        .addInputLines(
+            "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
+            "package com.google.errorprone.bugpatterns.nullness;",
+            "public class LiteralNullReturnTest {",
+            "  @SuppressWarnings(\"nullness:return\")",
+            "  public String getMessage(boolean b) {",
+            "    if (b) {",
+            "      return null;",
+            "    } else {",
+            "      return \"negative\";",
+            "    }",
+            "  }",
+            "}")
+        .addOutputLines(
+            "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
+            "package com.google.errorprone.bugpatterns.nullness;",
+            "import javax.annotation.Nullable;",
+            "public class LiteralNullReturnTest {",
+            "  @Nullable ",
+            "  public String getMessage(boolean b) {",
+            "    if (b) {",
+            "      return null;",
+            "    } else {",
+            "      return \"negative\";",
+            "    }",
+            "  }",
+            "}")
+        .doTest(TEXT_MATCH);
+  }
+
+  @Test
   public void testNegativeCases_onlyStatementIsNullReturn() {
     createCompilationTestHelper()
         .addSourceLines(
@@ -1726,6 +1760,47 @@ public class ReturnMissingNullableTest {
             "  }",
             "}")
         .doTest();
+  }
+
+  @Test
+  public void testNegativeCases_doesNotRemoveNecessarySuppressWarnings() {
+    createRefactoringTestHelper()
+        .setArgs("-XepOpt:Nullness:RemoveSuppressWarnings=true")
+        .addInputLines(
+            "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
+            "package com.google.errorprone.bugpatterns.nullness;",
+            "public class LiteralNullReturnTest {",
+            "  @SuppressWarnings(\"nullness:argument\")",
+            "  public String getMessage(boolean b) {",
+            "    if (b) {",
+            "      doSomethingElse(null);",
+            "     return \"negative\";",
+            "    } else {",
+            "      return \"negative\";",
+            "    }",
+            "  }",
+            "  public void doSomethingElse(Object c) {",
+            "      return;",
+            "  }",
+            "}")
+        .addOutputLines(
+            "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
+            "package com.google.errorprone.bugpatterns.nullness;",
+            "public class LiteralNullReturnTest {",
+            "  @SuppressWarnings(\"nullness:argument\")",
+            "  public String getMessage(boolean b) {",
+            "    if (b) {",
+            "      doSomethingElse(null);",
+            "     return \"negative\";",
+            "    } else {",
+            "      return \"negative\";",
+            "    }",
+            "  }",
+            "  public void doSomethingElse(Object c) {",
+            "      return;",
+            "  }",
+            "}")
+        .doTest(TEXT_MATCH);
   }
 
   private CompilationTestHelper createCompilationTestHelper() {
