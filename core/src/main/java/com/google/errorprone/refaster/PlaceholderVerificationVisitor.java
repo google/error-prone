@@ -17,7 +17,6 @@ package com.google.errorprone.refaster;
 import static com.google.common.base.MoreObjects.firstNonNull;
 
 import com.google.common.base.Preconditions;
-import com.google.common.collect.ImmutableCollection;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.google.errorprone.util.ASTHelpers;
@@ -28,6 +27,7 @@ import com.sun.tools.javac.tree.JCTree.JCExpression;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Cheap visitor to verify that a tree or set of trees could conceivably match a placeholder, by
@@ -37,8 +37,8 @@ import java.util.LinkedList;
  * @author lowasser@google.com (Louis Wasserman)
  */
 final class PlaceholderVerificationVisitor extends TreeScanner<Boolean, Unifier> {
-  private final Collection<UExpression> unmatched;
-  private final ImmutableCollection<UExpression> allowed;
+  private final List<UExpression> unmatched;
+  private final ImmutableList<UExpression> allowed;
 
   /**
    * @param required UExpressions that must potentially match at least one expression in the tested

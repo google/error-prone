@@ -138,7 +138,7 @@ public abstract class ScannerSupplier implements Supplier<Scanner> {
    */
   @CheckReturnValue
   public ScannerSupplier applyOverrides(ErrorProneOptions errorProneOptions) {
-    Map<String, Severity> severityOverrides = errorProneOptions.getSeverityMap();
+    ImmutableMap<String, Severity> severityOverrides = errorProneOptions.getSeverityMap();
     if (severityOverrides.isEmpty()
         && errorProneOptions.getFlags().isEmpty()
         && !errorProneOptions.isEnableAllChecksAsWarnings()

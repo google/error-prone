@@ -26,6 +26,7 @@ import static com.google.errorprone.matchers.JUnitMatchers.JUNIT4_RUN_WITH_ANNOT
 import static com.google.errorprone.matchers.Matchers.isSubtypeOf;
 import static com.sun.tools.javac.code.Scope.LookupKind.NON_RECURSIVE;
 import static java.util.Objects.requireNonNull;
+import static java.util.stream.Collectors.toCollection;
 
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
@@ -38,6 +39,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableListMultimap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.SetMultimap;
+import com.google.common.collect.Sets;
 import com.google.common.collect.Streams;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.annotations.InlineMe;
@@ -164,7 +166,6 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.annotation.Nullable;
 import javax.lang.model.element.AnnotationMirror;
@@ -206,7 +207,7 @@ public class ASTHelpers {
           && sameVariable(((JCFieldAccess) expr1).selected, ((JCFieldAccess) expr2).selected);
     } else {
       // this.foo == foo?
-      ExpressionTree selected = null;
+      ExpressionTree selected;
       if (expr1.getKind() == Kind.IDENTIFIER) {
         selected = ((JCFieldAccess) expr2).selected;
       } else {
@@ -670,15 +671,7 @@ public class ASTHelpers {
 
   public static Set<MethodSymbol> findSuperMethods(MethodSymbol methodSymbol, Types types) {
     return findSuperMethods(methodSymbol, types, /* skipInterfaces= */ false)
-        .collect(Collectors.toCollection(LinkedHashSet::new));
-  }
-
-  /**
-   * Finds (if it exists) first (in the class hierarchy) non-interface super method of given {@code
-   * method}.
-   */
-  public static Optional<MethodSymbol> findSuperMethod(MethodSymbol methodSymbol, Types types) {
-    return findSuperMethods(methodSymbol, types, /* skipInterfaces= */ true).findFirst();
+        .collect(toCollection(LinkedHashSet::new));
   }
 
   private static Stream<MethodSymbol> findSuperMethods(
@@ -691,6 +684,14 @@ public class ASTHelpers {
     return typeStream
         .map(type -> findSuperMethodInType(methodSymbol, type, types))
         .filter(Objects::nonNull);
+  }
+
+  /**
+   * Finds (if it exists) first (in the class hierarchy) non-interface super method of given {@code
+   * method}.
+   */
+  public static Optional<MethodSymbol> findSuperMethod(MethodSymbol methodSymbol, Types types) {
+    return findSuperMethods(methodSymbol, types, /* skipInterfaces= */ true).findFirst();
   }
 
   /**
@@ -733,7 +734,7 @@ public class ASTHelpers {
    *     have the given {@code name}. The set's iteration order will be the same as the order
    *     documented in {@link #matchingMethods(Name, java.util.function.Predicate, Type, Types)}.
    */
-  public static Set<MethodSymbol> findMatchingMethods(
+  public static ImmutableSet<MethodSymbol> findMatchingMethods(
       Name name, Predicate<MethodSymbol> predicate, Type startClass, Types types) {
     return matchingMethods(name, predicate, startClass, types).collect(toImmutableSet());
   }
@@ -791,6 +792,38 @@ public class ASTHelpers {
       } while (sym instanceof ClassSymbol);
     }
     return false;
+  }
+
+  /**
+   * Check for the presence of an annotation, considering annotation inheritance.
+   *
+   * @return true if the symbol is annotated with given type.
+   */
+  public static boolean hasAnnotation(
+      Symbol sym, Class<? extends Annotation> annotationClass, VisitorState state) {
+    return hasAnnotation(sym, annotationClass.getName(), state);
+  }
+
+  /**
+   * Check for the presence of an annotation, considering annotation inheritance.
+   *
+   * @param annotationClass the binary class name of the annotation (e.g.
+   *     "javax.annotation.Nullable", or "some.package.OuterClassName$InnerClassName")
+   * @return true if the tree is annotated with given type.
+   */
+  public static boolean hasAnnotation(Tree tree, String annotationClass, VisitorState state) {
+    Symbol sym = getDeclaredSymbol(tree);
+    return hasAnnotation(sym, annotationClass, state);
+  }
+
+  /**
+   * Check for the presence of an annotation, considering annotation inheritance.
+   *
+   * @return true if the tree is annotated with given type.
+   */
+  public static boolean hasAnnotation(
+      Tree tree, Class<? extends Annotation> annotationClass, VisitorState state) {
+    return hasAnnotation(tree, annotationClass.getName(), state);
   }
 
   private static final Supplier<Cache<Name, Boolean>> inheritedAnnotationCache =
@@ -881,38 +914,6 @@ public class ASTHelpers {
       }
     }
     return result;
-  }
-
-  /**
-   * Check for the presence of an annotation, considering annotation inheritance.
-   *
-   * @return true if the symbol is annotated with given type.
-   */
-  public static boolean hasAnnotation(
-      Symbol sym, Class<? extends Annotation> annotationClass, VisitorState state) {
-    return hasAnnotation(sym, annotationClass.getName(), state);
-  }
-
-  /**
-   * Check for the presence of an annotation, considering annotation inheritance.
-   *
-   * @param annotationClass the binary class name of the annotation (e.g.
-   *     "javax.annotation.Nullable", or "some.package.OuterClassName$InnerClassName")
-   * @return true if the tree is annotated with given type.
-   */
-  public static boolean hasAnnotation(Tree tree, String annotationClass, VisitorState state) {
-    Symbol sym = getDeclaredSymbol(tree);
-    return hasAnnotation(sym, annotationClass, state);
-  }
-
-  /**
-   * Check for the presence of an annotation, considering annotation inheritance.
-   *
-   * @return true if the tree is annotated with given type.
-   */
-  public static boolean hasAnnotation(
-      Tree tree, Class<? extends Annotation> annotationClass, VisitorState state) {
-    return hasAnnotation(tree, annotationClass.getName(), state);
   }
 
   /**
@@ -1183,8 +1184,9 @@ public class ASTHelpers {
         || state.getTypes().isSameType(Suppliers.JAVA_LANG_VOID_TYPE.get(state), type);
   }
 
-  private static final Set<TypeTag> SUBTYPE_UNDEFINED =
-      EnumSet.of(TypeTag.METHOD, TypeTag.PACKAGE, TypeTag.UNKNOWN, TypeTag.ERROR, TypeTag.FORALL);
+  private static final ImmutableSet<TypeTag> SUBTYPE_UNDEFINED =
+      Sets.immutableEnumSet(
+          TypeTag.METHOD, TypeTag.PACKAGE, TypeTag.UNKNOWN, TypeTag.ERROR, TypeTag.FORALL);
 
   /** Returns true if {@code erasure(s) <: erasure(t)}. */
   public static boolean isSubtype(Type s, Type t, VisitorState state) {

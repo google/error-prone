@@ -20,6 +20,7 @@ import static com.google.auto.common.MoreElements.asType;
 import static com.google.common.collect.ImmutableList.toImmutableList;
 import static javax.lang.model.util.ElementFilter.constructorsIn;
 
+import com.google.common.collect.ImmutableList;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.Arrays;
@@ -68,7 +69,7 @@ public final class ElementPredicates {
     return retentionPolicy;
   }
 
-  private static List<ExecutableElement> getConstructorsWithAnnotations(
+  private static ImmutableList<ExecutableElement> getConstructorsWithAnnotations(
       Element exploringConstructor, List<String> annotations) {
     return constructorsIn(exploringConstructor.getEnclosingElement().getEnclosedElements()).stream()
         .filter(constructor -> hasAnyOfAnnotation(constructor, annotations))

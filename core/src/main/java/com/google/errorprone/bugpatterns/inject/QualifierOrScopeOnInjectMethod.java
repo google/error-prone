@@ -24,6 +24,7 @@ import static com.google.errorprone.matchers.InjectMatchers.hasProvidesAnnotatio
 import static com.google.errorprone.matchers.Matchers.annotations;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 
+import com.google.common.collect.ImmutableList;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.BugPattern.StandardTags;
@@ -70,7 +71,7 @@ public class QualifierOrScopeOnInjectMethod extends BugChecker implements Method
     }
 
     SuggestedFix.Builder fixBuilder = SuggestedFix.builder();
-    List<AnnotationTree> matchingAnnotations = qualifierAnnotations.matchingNodes();
+    ImmutableList<AnnotationTree> matchingAnnotations = qualifierAnnotations.matchingNodes();
 
     // If we're looking at an @Inject constructor, move the scope annotation to the class instead,
     // and delete all of the other qualifiers

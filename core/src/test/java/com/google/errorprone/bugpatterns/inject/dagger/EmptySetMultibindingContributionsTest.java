@@ -20,11 +20,11 @@ import com.google.common.collect.ImmutableSortedSet;
 import com.google.common.collect.Sets;
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.TreeSet;
 import org.junit.Before;
 import org.junit.Test;
@@ -36,7 +36,7 @@ import org.junit.runners.Parameterized.Parameters;
 @RunWith(Parameterized.class)
 public final class EmptySetMultibindingContributionsTest {
   @Parameters(name = "{0}")
-  public static Collection<Object[]> data() {
+  public static List<Object[]> data() {
     return Arrays.asList(
         new Object[][] {
           {Collections.class.getCanonicalName() + ".emptySet()"},

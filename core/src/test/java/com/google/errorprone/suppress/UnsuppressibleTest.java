@@ -22,6 +22,7 @@ import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
+import com.google.common.collect.ImmutableList;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.DiagnosticTestHelper;
 import com.google.errorprone.ErrorProneTestCompiler;
@@ -32,7 +33,6 @@ import com.google.errorprone.matchers.Description;
 import com.google.errorprone.scanner.ScannerSupplier;
 import com.sun.source.tree.ReturnTree;
 import com.sun.tools.javac.main.Main.Result;
-import java.util.List;
 import javax.tools.JavaFileObject;
 import org.junit.Before;
 import org.junit.Test;
@@ -75,7 +75,8 @@ public class UnsuppressibleTest {
 
   @Test
   public void testPositiveCase() {
-    List<JavaFileObject> sources = forResources(getClass(), "UnsuppressiblePositiveCases.java");
+    ImmutableList<JavaFileObject> sources =
+        forResources(getClass(), "UnsuppressiblePositiveCases.java");
     assertThat(compiler.compile(sources), is(Result.ERROR));
     assertThat(diagnosticHelper.getDiagnostics().toString(), containsString("[MyChecker]"));
   }

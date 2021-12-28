@@ -40,8 +40,6 @@ import java.util.List;
     severity = ERROR)
 public class MockitoUsage extends BugChecker implements MethodInvocationTreeMatcher {
 
-  private static final String MESSAGE_FORMAT = "Missing method call for %s here";
-
   private static final Matcher<ExpressionTree> MOCK_METHOD =
       anyOf(
           staticMethod().onClass("org.mockito.Mockito").withSignature("<T>when(T)"),
@@ -61,7 +59,7 @@ public class MockitoUsage extends BugChecker implements MethodInvocationTreeMatc
     if (state.getPath().getParentPath().getLeaf().getKind() != Tree.Kind.EXPRESSION_STATEMENT) {
       return Description.NO_MATCH;
     }
-    String message = String.format(MESSAGE_FORMAT, state.getSourceForNode(tree));
+    String message = String.format("Missing method call for %s here", state.getSourceForNode(tree));
     Description.Builder builder = buildDescription(tree).setMessage(message);
     buildFix(builder, tree, state);
     return builder.build();

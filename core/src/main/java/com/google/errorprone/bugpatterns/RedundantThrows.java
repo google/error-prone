@@ -80,7 +80,7 @@ public class RedundantThrows extends BugChecker implements MethodTreeMatcher {
       return NO_MATCH;
     }
     // sort by order in input
-    List<ExpressionTree> delete =
+    ImmutableList<ExpressionTree> delete =
         ImmutableList.<ExpressionTree>copyOf(
             Iterables.filter(tree.getThrows(), Predicates.in(toRemove)));
     return buildDescription(delete.get(0))

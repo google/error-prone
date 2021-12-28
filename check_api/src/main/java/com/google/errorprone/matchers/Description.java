@@ -62,7 +62,7 @@ public class Description {
    * A list of fixes to suggest in an error message or use in automated refactoring. Fixes are in
    * order of decreasing preference, from most preferred to least preferred.
    */
-  public final List<Fix> fixes;
+  public final ImmutableList<Fix> fixes;
 
   /** Is this a warning, error, etc.? */
   public final BugPattern.SeverityLevel severity;

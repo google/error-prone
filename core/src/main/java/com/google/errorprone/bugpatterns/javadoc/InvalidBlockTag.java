@@ -65,10 +65,6 @@ import java.util.Set;
 public final class InvalidBlockTag extends BugChecker
     implements ClassTreeMatcher, MethodTreeMatcher, VariableTreeMatcher {
 
-  private static final String INVALID_TAG_IS_PARAMETER_NAME =
-      "@%1$s is not a valid tag, but is a parameter name. "
-          + "Use {@code %1%s} to refer to parameter names inline.";
-
   /**
    * HTML tags which imply we're showing code, and should therefore probably escape unknown block
    * tags.
@@ -203,7 +199,11 @@ public final class InvalidBlockTag extends BugChecker
       }
       if (parameters.contains(tagName)) {
         int startPos = Utils.getStartPosition(unknownBlockTagTree, state);
-        String message = String.format(INVALID_TAG_IS_PARAMETER_NAME, tagName);
+        String message =
+            String.format(
+                "@%1$s is not a valid tag, but is a parameter name. "
+                    + "Use {@code %1%s} to refer to parameter names inline.",
+                tagName);
         state.reportMatch(
             buildDescription(diagnosticPosition(getCurrentPath(), state))
                 .setMessage(message)

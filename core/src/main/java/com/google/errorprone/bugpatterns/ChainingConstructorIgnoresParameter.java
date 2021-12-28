@@ -27,7 +27,7 @@ import static com.sun.source.tree.Tree.Kind.IDENTIFIER;
 import static java.util.Collections.unmodifiableList;
 
 import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.Multimap;
+import com.google.common.collect.ListMultimap;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.CompilationUnitTreeMatcher;
@@ -74,7 +74,7 @@ import java.util.Map;
 public final class ChainingConstructorIgnoresParameter extends BugChecker
     implements CompilationUnitTreeMatcher, MethodInvocationTreeMatcher, MethodTreeMatcher {
   private final Map<MethodSymbol, List<VariableTree>> paramTypesForMethod = newHashMap();
-  private final Multimap<MethodSymbol, Caller> callersToEvaluate = ArrayListMultimap.create();
+  private final ListMultimap<MethodSymbol, Caller> callersToEvaluate = ArrayListMultimap.create();
 
   @Override
   public Description matchCompilationUnit(CompilationUnitTree tree, VisitorState state) {

@@ -22,6 +22,8 @@ import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Sets;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
@@ -35,8 +37,6 @@ import com.sun.source.tree.Tree;
 import com.sun.source.tree.TypeCastTree;
 import com.sun.source.util.TreePath;
 import com.sun.tools.javac.code.Type;
-import java.util.EnumSet;
-import java.util.Set;
 import javax.lang.model.type.TypeKind;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
@@ -53,7 +53,8 @@ public class RandomCast extends BugChecker implements MethodInvocationTreeMatche
           instanceMethod().onExactClass("java.util.Random").namedAnyOf("nextFloat", "nextDouble"),
           staticMethod().onClass("java.lang.Math").named("random"));
 
-  private static final Set<TypeKind> INTEGRAL = EnumSet.of(TypeKind.LONG, TypeKind.INT);
+  private static final ImmutableSet<TypeKind> INTEGRAL =
+      Sets.immutableEnumSet(TypeKind.LONG, TypeKind.INT);
 
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {

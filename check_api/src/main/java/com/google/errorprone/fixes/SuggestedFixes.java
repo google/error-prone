@@ -273,7 +273,7 @@ public final class SuggestedFixes {
   /** Removes modifiers from the given class, method, or field declaration. */
   public static Optional<SuggestedFix> removeModifiers(
       Tree tree, VisitorState state, Modifier... modifiers) {
-    Set<Modifier> toRemove = ImmutableSet.copyOf(modifiers);
+    ImmutableSet<Modifier> toRemove = ImmutableSet.copyOf(modifiers);
     ModifiersTree originalModifiers = getModifiers(tree);
     if (originalModifiers == null) {
       return Optional.empty();
@@ -527,8 +527,8 @@ public final class SuggestedFixes {
   }
 
   /**
-   * Fully qualifies a javadoc reference, e.g. for replacing {@code {@link List}} with {@code {@link
-   * java.util.List}}
+   * Fully qualifies a javadoc reference, e.g. for replacing <code>{&#64;link List}</code> with
+   * <code>{&#64;link java.util.List}</code>.
    *
    * @param fix the fix builder to add to
    * @param docPath the path to a {@link DCTree.DCReference} element
@@ -570,7 +570,7 @@ public final class SuggestedFixes {
       int pos(ClassTree tree, VisitorState state) {
         // We scan backwards from the first member, looking for the class's opening { token.
         int classStart = getStartPosition(tree);
-        List<? extends Tree> members =
+        ImmutableList<? extends Tree> members =
             tree.getMembers().stream()
                 /* Throw away generated members, which may be synthetic, or whose start
                 position may be the same as the class's. We only want to look at members defined

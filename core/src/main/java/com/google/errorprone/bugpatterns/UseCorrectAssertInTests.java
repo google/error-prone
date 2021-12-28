@@ -53,13 +53,10 @@ public class UseCorrectAssertInTests extends BugChecker implements MethodTreeMat
   private static final String STATIC_ASSERT_WITH_MESSAGE_IMPORT =
       "static com.google.common.truth.Truth.assertWithMessage";
 
-  private static final String ASSERT_THAT = "assertThat(%s).";
-  private static final String ASSERT_WITH_MESSAGE = "assertWithMessage(%s).that(%s).";
   private static final String IS_TRUE = "isTrue();";
   private static final String IS_FALSE = "isFalse();";
   private static final String IS_SAME_AS = "isSameInstanceAs(%s);";
   private static final String IS_NOT_SAME_AS = "isNotSameInstanceAs(%s);";
-  private static final String IS_EQUAL_TO = "isEqualTo(%s);";
   private static final String IS_NULL = "isNull();";
   private static final String IS_NOT_NULL = "isNotNull();";
 
@@ -113,7 +110,7 @@ public class UseCorrectAssertInTests extends BugChecker implements MethodTreeMat
           expr1,
           foundAssert,
           state,
-          String.format(IS_EQUAL_TO, normalizedSourceForExpression(expr2, state)));
+          String.format("isEqualTo(%s);", normalizedSourceForExpression(expr2, state)));
       return;
     }
 
@@ -138,12 +135,12 @@ public class UseCorrectAssertInTests extends BugChecker implements MethodTreeMat
 
     if (foundAssert.getDetail() == null) {
       fix.addImport(STATIC_ASSERT_THAT_IMPORT);
-      assertToUse = String.format(ASSERT_THAT, normalizedSourceForExpression(expr, state));
+      assertToUse = String.format("assertThat(%s).", normalizedSourceForExpression(expr, state));
     } else {
       fix.addImport(STATIC_ASSERT_WITH_MESSAGE_IMPORT);
       assertToUse =
           String.format(
-              ASSERT_WITH_MESSAGE,
+              "assertWithMessage(%s).that(%s).",
               convertToString(foundAssert.getDetail(), state),
               normalizedSourceForExpression(expr, state));
     }

@@ -53,7 +53,6 @@ import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Type.UnionClassType;
 import com.sun.tools.javac.code.Types;
-import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -180,7 +179,7 @@ public class CatchFail extends BugChecker implements TryTreeMatcher {
     }
 
     // Fix up the enclosing method's throws declaration to include the new thrown exception types.
-    Collection<Type> thrownTypes = ASTHelpers.getSymbol(enclosing).getThrownTypes();
+    List<Type> thrownTypes = ASTHelpers.getSymbol(enclosing).getThrownTypes();
     Types types = state.getTypes();
     // Find all types in the deleted catch blocks that are not already in the throws declaration.
     ImmutableList<Type> toThrow =

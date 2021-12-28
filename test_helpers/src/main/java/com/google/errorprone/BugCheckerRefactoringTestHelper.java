@@ -152,7 +152,7 @@ public class BugCheckerRefactoringTestHelper {
   private final ScannerSupplier scannerSupplier;
 
   private FixChooser fixChooser = FixChoosers.FIRST;
-  private List<String> options = ImmutableList.of();
+  private ImmutableList<String> options = ImmutableList.of();
   private boolean allowBreakingChanges = false;
   private String importOrder = "static-first";
 

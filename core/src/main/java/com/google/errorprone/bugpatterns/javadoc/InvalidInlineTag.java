@@ -73,10 +73,6 @@ import java.util.regex.Pattern;
 public final class InvalidInlineTag extends BugChecker
     implements ClassTreeMatcher, MethodTreeMatcher, VariableTreeMatcher {
 
-  private static final String INVALID_TAG_IS_PARAMETER_NAME =
-      "@%1$s is not a valid tag, but is a parameter name. "
-          + "Use {@code %1$s} to refer to parameter names inline.";
-
   private static final Pattern PARAM_MATCHER = Pattern.compile("\\{?@param ([a-zA-Z0-9]+)}?");
 
   private static final Pattern ANCHORED_PARAM_MATCHER =
@@ -127,7 +123,10 @@ public final class InvalidInlineTag extends BugChecker
   }
 
   static String getMessageForInvalidTag(String paramName) {
-    return String.format(INVALID_TAG_IS_PARAMETER_NAME, paramName);
+    return String.format(
+        "@%1$s is not a valid tag, but is a parameter name. "
+            + "Use {@code %1$s} to refer to parameter names inline.",
+        paramName);
   }
 
   final class InvalidTagChecker extends DocTreePathScanner<Void, Void> implements AutoCloseable {

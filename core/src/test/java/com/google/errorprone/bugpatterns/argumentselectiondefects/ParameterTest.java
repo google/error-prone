@@ -16,6 +16,7 @@
 
 package com.google.errorprone.bugpatterns.argumentselectiondefects;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.SeverityLevel;
@@ -52,7 +53,8 @@ public class ParameterTest {
 
     @Override
     public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
-      List<Parameter> arguments = Parameter.createListFromExpressionTrees(tree.getArguments());
+      ImmutableList<Parameter> arguments =
+          Parameter.createListFromExpressionTrees(tree.getArguments());
       if (arguments.size() != 2) {
         return Description.NO_MATCH;
       }
@@ -312,7 +314,7 @@ public class ParameterTest {
       if (arguments.isEmpty()) {
         return Description.NO_MATCH;
       }
-      List<Parameter> parameters = Parameter.createListFromExpressionTrees(arguments);
+      ImmutableList<Parameter> parameters = Parameter.createListFromExpressionTrees(arguments);
       Parameter first = Iterables.getFirst(parameters, null);
       return buildDescription(tree).setMessage(String.valueOf(first.constant())).build();
     }

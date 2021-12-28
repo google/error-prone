@@ -21,6 +21,7 @@ import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 
 import com.google.common.base.Joiner;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -95,7 +96,7 @@ public class CompatibleWithMisuse extends BugChecker implements AnnotationTreeMa
           annoTree, "There are no type arguments in scope to match against.");
     }
 
-    Set<String> validNames =
+    ImmutableSet<String> validNames =
         potentialTypeVars.stream()
             .map(TypeVariableSymbol::getSimpleName)
             .map(Object::toString)

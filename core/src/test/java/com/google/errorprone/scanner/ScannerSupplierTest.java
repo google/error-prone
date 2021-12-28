@@ -472,7 +472,7 @@ public class ScannerSupplierTest {
                 "-Xep:ChainingConstructorIgnoresParameter:WARN", "-Xep:StringEquality:ERROR"));
     ScannerSupplier overriddenScannerSupplier = ss.applyOverrides(epOptions);
 
-    Map<String, SeverityLevel> expected =
+    ImmutableMap<String, SeverityLevel> expected =
         ImmutableMap.of(
             "BadShiftAmount", SeverityLevel.ERROR,
             "ChainingConstructorIgnoresParameter", SeverityLevel.WARNING,
@@ -492,7 +492,7 @@ public class ScannerSupplierTest {
                 "-XepOpt:FirstFlag=overridden", "-XepOpt:SecondFlag=AValue", "-XepOpt:FirstFlag"));
     ScannerSupplier overriddenScannerSupplier = ss.applyOverrides(epOptions);
 
-    Map<String, String> expected =
+    ImmutableMap<String, String> expected =
         ImmutableMap.of(
             "FirstFlag", "true",
             "SecondFlag", "AValue");

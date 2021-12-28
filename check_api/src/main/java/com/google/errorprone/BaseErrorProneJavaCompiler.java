@@ -19,6 +19,7 @@ package com.google.errorprone;
 import static com.google.common.base.StandardSystemProperty.JAVA_SPECIFICATION_VERSION;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.RefactoringCollection.RefactoringResult;
 import com.google.errorprone.scanner.ErrorProneScannerTransformer;
 import com.google.errorprone.scanner.ScannerSupplier;
@@ -229,7 +230,7 @@ public class BaseErrorProneJavaCompiler implements JavaCompiler {
                   ScannerSupplier toUse =
                       ErrorPronePlugins.loadPlugins(scannerSupplier, context)
                           .applyOverrides(epOptions);
-                  Set<String> namedCheckers = epOptions.patchingOptions().namedCheckers();
+                  ImmutableSet<String> namedCheckers = epOptions.patchingOptions().namedCheckers();
                   if (!namedCheckers.isEmpty()) {
                     toUse = toUse.filter(bci -> namedCheckers.contains(bci.canonicalName()));
                   }

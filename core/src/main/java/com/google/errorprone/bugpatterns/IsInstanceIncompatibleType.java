@@ -37,7 +37,7 @@ import com.sun.source.tree.MemberReferenceTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Type;
-import java.util.Collection;
+import java.util.List;
 
 /**
  * @author cushon@google.com (Liam Miller-Cushon)
@@ -92,7 +92,7 @@ public final class IsInstanceIncompatibleType extends BugChecker
     if (receiver == null) {
       return null;
     }
-    Collection<Type> receiverTypeArguments = getType(receiver).getTypeArguments();
+    List<Type> receiverTypeArguments = getType(receiver).getTypeArguments();
     return !receiverTypeArguments.isEmpty() ? getOnlyElement(receiverTypeArguments) : null;
   }
 

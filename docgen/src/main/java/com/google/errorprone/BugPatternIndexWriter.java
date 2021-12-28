@@ -99,7 +99,7 @@ public class BugPatternIndexWriter {
     templateData.put("bugpatterns", bugpatternData);
 
     if (target == Target.EXTERNAL) {
-      Map<String, String> frontmatterData =
+      ImmutableMap<String, String> frontmatterData =
           ImmutableMap.<String, String>builder()
               .put("title", "Bug Patterns")
               .put("layout", "bugpatterns")

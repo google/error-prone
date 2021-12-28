@@ -204,11 +204,11 @@ public final class Inliner {
     return result.toList();
   }
 
-  public Set<String> getImportsToAdd() {
+  public ImmutableSet<String> getImportsToAdd() {
     return ImmutableSet.copyOf(importsToAdd);
   }
 
-  public Set<String> getStaticImportsToAdd() {
+  public ImmutableSet<String> getStaticImportsToAdd() {
     return ImmutableSet.copyOf(staticImportsToAdd);
   }
 

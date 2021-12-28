@@ -35,7 +35,7 @@ import com.google.common.base.CaseFormat;
 import com.google.common.base.Strings;
 import com.google.common.base.Verify;
 import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.Multimap;
+import com.google.common.collect.ListMultimap;
 import com.google.common.collect.Streams;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.annotations.MustBeClosed;
@@ -468,7 +468,7 @@ public abstract class AbstractMustBeClosedChecker extends BugChecker {
   private static final class FindingPerMethod implements FixAggregator {
     private FindingPerMethod() {}
 
-    private final Multimap<Optional<Tree>, TryBlock> reports = ArrayListMultimap.create();
+    private final ListMultimap<Optional<Tree>, TryBlock> reports = ArrayListMultimap.create();
 
     @Override
     public Optional<SuggestedFix> report(TryBlock fix) {

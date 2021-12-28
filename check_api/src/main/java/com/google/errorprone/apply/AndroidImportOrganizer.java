@@ -24,7 +24,6 @@ import com.google.common.collect.Ordering;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 
@@ -100,13 +99,13 @@ class AndroidImportOrganizer implements ImportOrganizer {
                     toImmutableSortedSet(Comparator.comparing(Import::getType))));
 
     // Get the third party roots by removing the roots that are handled specially and sorting.
-    Set<String> thirdParty =
+    ImmutableSortedSet<String> thirdParty =
         groupedByRoot.keySet().stream()
             .filter(r -> !SPECIAL_ROOTS.contains(r))
             .collect(toImmutableSortedSet(Ordering.natural()));
 
     // Construct a list of the possible roots in the correct order.
-    List<String> roots =
+    ImmutableList<String> roots =
         ImmutableList.<String>builder()
             .add(ANDROID)
             .add(COM_ANDROID)

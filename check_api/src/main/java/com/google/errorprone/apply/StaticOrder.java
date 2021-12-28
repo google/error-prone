@@ -37,7 +37,7 @@ enum StaticOrder {
     this.groupOrder = groupOrder;
   }
 
-  public Iterable<Boolean> groupOrder() {
+  public ImmutableList<Boolean> groupOrder() {
     return groupOrder;
   }
 }

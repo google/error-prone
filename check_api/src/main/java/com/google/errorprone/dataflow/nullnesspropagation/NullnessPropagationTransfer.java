@@ -406,7 +406,7 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
     ImmutableList<String> annotations =
         node.getType().getAnnotationMirrors().stream()
             .map(Object::toString)
-            .collect(ImmutableList.toImmutableList());
+            .collect(toImmutableList());
     return NullnessAnnotations.fromAnnotations(annotations)
         .orElseGet(
             () -> hasPrimitiveType(node) ? NONNULL : inputs.valueOfSubNode(node.getOperand()));
@@ -516,7 +516,7 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
    * <p>Edge case: {@code node} can be a captured local variable accessed from inside a local or
    * anonymous inner class, or possibly from inside a lambda expression (even though these manifest
    * as fields in bytecode). As of 7/2016 this analysis doesn't have any knowledge of captured local
-   * variables will essentially assume whatever default is used in {@link #values}.
+   * variables will essentially assume whatever default is used in {@code values}.
    */
   @Override
   Nullness visitLocalVariable(LocalVariableNode node, AccessPathValues<Nullness> values) {
@@ -759,7 +759,7 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
     }
 
     Optional<Nullness> declaredNullness = NullnessAnnotations.fromAnnotationsOn(accessed.symbol);
-    if (!declaredNullness.isPresent()) {
+    if (declaredNullness.isEmpty()) {
       Type ftype = accessed.symbol.type;
       if (ftype instanceof TypeVariable) {
         declaredNullness = NullnessAnnotations.getUpperBound((TypeVariable) ftype);
@@ -857,7 +857,8 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
    */
   private static void setUnconditionalArgumentNullness(
       Updates bothUpdates, List<Node> arguments, ClassAndMethod callee) {
-    Set<Integer> requiredNonNullParameters = REQUIRED_NON_NULL_PARAMETERS.get(callee.name());
+    ImmutableSet<Integer> requiredNonNullParameters =
+        REQUIRED_NON_NULL_PARAMETERS.get(callee.name());
     for (LocalVariableNode var : variablesAtIndexes(requiredNonNullParameters, arguments)) {
       bothUpdates.set(var, NONNULL);
     }

@@ -394,7 +394,7 @@ public final class TimeUnitMismatch extends BugChecker
       return SECONDS;
     }
 
-    List<String> words = fixUnitCamelCase(splitToLowercaseTerms(name));
+    ImmutableList<String> words = fixUnitCamelCase(splitToLowercaseTerms(name));
 
     // People use variable names like "firstTimestamp" and "secondTimestamp."
     // This check is somewhat redundant with the "second" check above.
@@ -492,7 +492,7 @@ public final class TimeUnitMismatch extends BugChecker
     return out.build();
   }
 
-  private static Set<TimeUnit> timeUnits(List<String> wordsLists) {
+  private static ImmutableSet<TimeUnit> timeUnits(List<String> wordsLists) {
     return wordsLists.stream()
         .map(UNIT_FOR_SUFFIX::get)
         .filter(x -> x != null)

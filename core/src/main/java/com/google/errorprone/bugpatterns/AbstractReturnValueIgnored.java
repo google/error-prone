@@ -38,7 +38,6 @@ import com.google.common.base.Suppliers;
 import com.google.common.collect.ImmutableListMultimap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ListMultimap;
-import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapBuilder;
 import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
@@ -449,7 +448,7 @@ public abstract class AbstractReturnValueIgnored extends BugChecker
       // type, check each passed parameter to ensure that it is never passed as a subtype
       // of the type.
       if (!returnTypeChoosing.isEmpty()) {
-        Multimap<TypeVariableSymbol, TypeInfo> resolved = getResolvedGenerics(tree);
+        ListMultimap<TypeVariableSymbol, TypeInfo> resolved = getResolvedGenerics(tree);
         for (TypeVariableSymbol returnTypeChoosingSymbol : returnTypeChoosing) {
           Collection<TypeInfo> types = resolved.get(returnTypeChoosingSymbol);
           for (TypeInfo type : types) {

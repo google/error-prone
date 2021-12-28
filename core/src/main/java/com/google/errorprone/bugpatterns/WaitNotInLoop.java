@@ -46,9 +46,6 @@ import com.sun.tools.javac.tree.JCTree.JCIf;
     tags = StandardTags.FRAGILE_CODE)
 public class WaitNotInLoop extends BugChecker implements MethodInvocationTreeMatcher {
 
-  private static final String MESSAGE_TEMPLATE =
-      "Because of spurious wakeups, %s must always be called in a loop";
-
   private static final Matcher<MethodInvocationTree> matcher = allOf(waitMethod, not(inLoop()));
 
   @Override
@@ -60,7 +57,8 @@ public class WaitNotInLoop extends BugChecker implements MethodInvocationTreeMat
     Description.Builder description = buildDescription(tree);
     MethodSymbol sym = ASTHelpers.getSymbol(tree);
     if (sym != null) {
-      description.setMessage(String.format(MESSAGE_TEMPLATE, sym));
+      description.setMessage(
+          String.format("Because of spurious wakeups, %s must always be called in a loop", sym));
     }
 
     // If this looks like the "Wait until a condition becomes true" case from the wiki content,

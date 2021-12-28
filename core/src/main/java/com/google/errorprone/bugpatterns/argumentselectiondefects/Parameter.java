@@ -184,7 +184,7 @@ abstract class Parameter {
         MethodSymbol methodSym = ASTHelpers.getSymbol(methodInvocationTree);
         if (methodSym != null) {
           String name = methodSym.getSimpleName().toString();
-          List<String> terms = NamingConventions.splitToLowercaseTerms(name);
+          ImmutableList<String> terms = NamingConventions.splitToLowercaseTerms(name);
           String firstTerm = Iterables.getFirst(terms, null);
           if (METHODNAME_PREFIXES_TO_REMOVE.contains(firstTerm)) {
             if (terms.size() == 1) {
