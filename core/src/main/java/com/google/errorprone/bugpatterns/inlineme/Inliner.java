@@ -22,6 +22,7 @@ import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.util.ASTHelpers.enclosingPackage;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
+import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
 import static com.google.errorprone.util.ASTHelpers.hasDirectAnnotationWithSimpleName;
 import static com.google.errorprone.util.ASTHelpers.stringContainsComments;
 import static com.google.errorprone.util.MoreAnnotations.getValue;
@@ -151,7 +152,7 @@ public final class Inliner extends BugChecker
       return Description.NO_MATCH;
     }
 
-    Api api = Api.create(symbol);
+    Api api = Api.create(symbol, state);
     if (!matchesApiPrefixes(api)) {
       return Description.NO_MATCH;
     }
@@ -278,7 +279,7 @@ public final class Inliner extends BugChecker
   abstract static class Api {
     private static final Splitter CLASS_NAME_SPLITTER = Splitter.on('.');
 
-    static Api create(MethodSymbol method) {
+    static Api create(MethodSymbol method, VisitorState state) {
       String extraMessage = "";
       if (hasDirectAnnotationWithSimpleName(method, VALIDATION_DISABLED)) {
         Attribute.Compound inlineMeValidationDisabled =
@@ -293,6 +294,7 @@ public final class Inliner extends BugChecker
           method.getSimpleName().toString(),
           enclosingPackage(method).toString(),
           method.isConstructor(),
+          hasAnnotation(method, "java.lang.Deprecated", state),
           extraMessage);
     }
 
@@ -304,10 +306,15 @@ public final class Inliner extends BugChecker
 
     abstract boolean isConstructor();
 
+    abstract boolean isDeprecated();
+
     abstract String extraMessage();
 
     final String message() {
-      return shortName() + " should be inlined" + extraMessage();
+      return shortName()
+          + (isDeprecated() ? " is deprecated and" : "")
+          + " should be inlined"
+          + extraMessage();
     }
 
     /** Returns {@code FullyQualifiedClassName#methodName}. */
