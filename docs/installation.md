@@ -51,45 +51,6 @@ Edit your `pom.xml` file to add settings to the maven-compiler-plugin:
           <source>8</source>
           <target>8</target>
           <encoding>UTF-8</encoding>
-          <compilerArgs>
-            <arg>-XDcompilePolicy=simple</arg>
-            <arg>-Xplugin:ErrorProne</arg>
-          </compilerArgs>
-          <annotationProcessorPaths>
-            <path>
-              <groupId>com.google.errorprone</groupId>
-              <artifactId>error_prone_core</artifactId>
-              <version>${error-prone.version}</version>
-            </path>
-            <!-- Other annotation processors go here.
-
-            If 'annotationProcessorPaths' is set, processors will no longer be
-            discovered on the regular -classpath; see also 'Using Error Prone
-            together with other annotation processors' below. -->
-          </annotationProcessorPaths>
-        </configuration>
-      </plugin>
-    </plugins>
-  </build>
-```
-
-### JDK 16
-
-Enabling `<fork>true</fork>` and setting the following `--add-exports=` flags is
-required on JDK 16 due to [JEP 396: Strongly Encapsulate JDK Internals by
-Default](https://openjdk.java.net/jeps/396):
-
-```
-  <build>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.8.0</version>
-        <configuration>
-          <source>8</source>
-          <target>8</target>
-          <encoding>UTF-8</encoding>
           <fork>true</fork>
           <compilerArgs>
             <arg>-XDcompilePolicy=simple</arg>
@@ -123,6 +84,10 @@ Default](https://openjdk.java.net/jeps/396):
   </build>
 ```
 
+Enabling `<fork>true</fork>` and setting the following `--add-exports=` flags is
+required on JDK 16 and newer due to
+[JEP 396: Strongly Encapsulate JDK Internals by Default](https://openjdk.java.net/jeps/396):
+
 See the [flags documentation](http://errorprone.info/docs/flags#maven) for details on
 how to customize the plugin's behavior.
 
@@ -151,25 +116,6 @@ and add the following javac task to your project's `build.xml` file:
       <compilerarg value="-processorpath"/>
       <compilerarg pathref="processorpath.ref"/>
       <compilerarg value="-Xplugin:ErrorProne -Xep:DeadException:ERROR" />
-    </javac>
-```
-
-### JDK 16
-
-Setting the following `--add-exports=` flags is required on JDK 16 due to
-[JEP 396: Strongly Encapsulate JDK Internals by Default](https://openjdk.java.net/jeps/396):
-
-```xml
-    <path id="processorpath.ref">
-      <pathelement location="${user.home}/.m2/repository/com/google/errorprone/error_prone_core/${EP_VERSION}/error_prone_core-${EP_VERSION}-with-dependencies.jar"/>
-      <pathelement location="${user.home}/.m2/repository/org/checkerframework/dataflow-errorprone/3.15.0/dataflow-errorprone-3.15.0.jar"/>
-    </path>
-
-    <javac srcdir="src" destdir="build" fork="yes" includeantruntime="no">
-      <compilerarg value="-XDcompilePolicy=simple"/>
-      <compilerarg value="-processorpath"/>
-      <compilerarg pathref="processorpath.ref"/>
-      <compilerarg value="-Xplugin:ErrorProne -Xep:DeadException:ERROR" />
       <compilerarg value="-J--add-exports=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED" />
       <compilerarg value="-J--add-exports=jdk.compiler/com.sun.tools.javac.file=ALL-UNNAMED" />
       <compilerarg value="-J--add-exports=jdk.compiler/com.sun.tools.javac.main=ALL-UNNAMED" />
@@ -182,6 +128,10 @@ Setting the following `--add-exports=` flags is required on JDK 16 due to
       <compilerarg value="-J--add-opens=jdk.compiler/com.sun.tools.javac.comp=ALL-UNNAMED" />
     </javac>
 ```
+
+Setting the following `--add-exports=` flags is required on JDK 16 and newer due
+to
+[JEP 396: Strongly Encapsulate JDK Internals by Default](https://openjdk.java.net/jeps/396):
 
 ## IntelliJ IDEA
 
@@ -241,9 +191,9 @@ ShortSet.java:8: error: [CollectionIncompatibleType] Argument 'i - 1' should not
 1 error
 ```
 
-The `--add-exports` and `--add-opens` flags are required when using JDK 16+ due to [JEP
-396: Strongly Encapsulate JDK Internals by
-Default](https://openjdk.java.net/jeps/396):
+The `--add-exports` and `--add-opens` flags are required when using JDK 16 and
+newer due to
+[JEP 396: Strongly Encapsulate JDK Internals by Default](https://openjdk.java.net/jeps/396):
 
 ## My build system isn't listed here
 
