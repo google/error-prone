@@ -20,7 +20,7 @@ import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.InjectMatchers.hasProvidesAnnotation;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
 import static com.google.errorprone.util.ASTHelpers.hasDirectAnnotationWithSimpleName;
-import static com.google.errorprone.util.ASTHelpers.isUsedReflectively;
+import static com.google.errorprone.util.ASTHelpers.shouldKeep;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.ErrorProneFlags;
@@ -72,7 +72,7 @@ public final class Suggester extends BugChecker implements MethodTreeMatcher {
     }
 
     // don't suggest on APIs that get called reflectively
-    if (isUsedReflectively(tree) || hasProvidesAnnotation().matches(tree, state)) {
+    if (shouldKeep(tree) || hasProvidesAnnotation().matches(tree, state)) {
       return Description.NO_MATCH;
     }
 

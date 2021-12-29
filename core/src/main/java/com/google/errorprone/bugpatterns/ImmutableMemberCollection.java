@@ -26,7 +26,7 @@ import static com.google.errorprone.matchers.Matchers.isSameType;
 import static com.google.errorprone.matchers.Matchers.kindIs;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
-import static com.google.errorprone.util.ASTHelpers.isUsedReflectively;
+import static com.google.errorprone.util.ASTHelpers.shouldKeep;
 
 import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableList;
@@ -117,7 +117,7 @@ public final class ImmutableMemberCollection extends BugChecker implements Class
   // TODO(ashishkedia) : Share this with ImmutableSetForContains.
   private static final Matcher<Tree> EXCLUSIONS =
       anyOf(
-          (t, s) -> isUsedReflectively(t),
+          (t, s) -> shouldKeep(t),
           hasAnnotationWithSimpleName("Bind"),
           hasAnnotationWithSimpleName("Inject"));
 

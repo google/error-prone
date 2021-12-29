@@ -29,7 +29,7 @@ import static com.google.errorprone.matchers.Matchers.isStatic;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
-import static com.google.errorprone.util.ASTHelpers.isUsedReflectively;
+import static com.google.errorprone.util.ASTHelpers.shouldKeep;
 import static com.google.errorprone.util.ASTHelpers.streamReceivers;
 import static java.util.stream.Collectors.toMap;
 
@@ -82,7 +82,7 @@ public final class ImmutableSetForContains extends BugChecker implements ClassTr
 
   private static final Matcher<Tree> EXCLUSIONS =
       anyOf(
-          (t, s) -> isUsedReflectively(t),
+          (t, s) -> shouldKeep(t),
           hasAnnotationWithSimpleName("Bind"),
           hasAnnotationWithSimpleName("Inject"));
 

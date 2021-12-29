@@ -20,7 +20,7 @@ import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.enclosingClass;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
-import static com.google.errorprone.util.ASTHelpers.isUsedReflectively;
+import static com.google.errorprone.util.ASTHelpers.shouldKeep;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -88,7 +88,7 @@ public final class UnusedNestedClass extends BugChecker implements CompilationUn
       if (isSuppressed(classTree)) {
         return true;
       }
-      if (isUsedReflectively(classTree)) {
+      if (shouldKeep(classTree)) {
         return true;
       }
       return false;

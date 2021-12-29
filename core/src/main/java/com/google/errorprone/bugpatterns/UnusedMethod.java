@@ -24,7 +24,7 @@ import static com.google.errorprone.suppliers.Suppliers.typeFromString;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
-import static com.google.errorprone.util.ASTHelpers.isUsedReflectively;
+import static com.google.errorprone.util.ASTHelpers.shouldKeep;
 import static com.google.errorprone.util.MoreAnnotations.asStrings;
 import static com.google.errorprone.util.MoreAnnotations.getAnnotationValue;
 
@@ -190,7 +190,7 @@ public final class UnusedMethod extends BugChecker implements CompilationUnitTre
         if (exemptedByAnnotation(tree.getModifiers().getAnnotations())) {
           return false;
         }
-        if (isUsedReflectively(tree)) {
+        if (shouldKeep(tree)) {
           return false;
         }
         // Skip constructors and special methods.
