@@ -15,7 +15,7 @@
 <script type="text/javascript" src="../../../../script-dir/jquery-ui.min.js"></script>
 </head>
 <body class="class-declaration-page">
-<script type="text/javascript">var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":6};
+<script type="text/javascript">var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":6};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],4:["t3","Abstract Methods"],8:["t4","Concrete Methods"]};
 var altColor = "alt-color";
 var rowColor = "row-color";
@@ -84,7 +84,7 @@ loadScripts(document, 'script');</script>
 <section class="description">
 <dl class="notes">
 <dt>All Implemented Interfaces:</dt>
-<dd><code><a href="BugChecker.MemberReferenceTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.MemberReferenceTreeMatcher</a></code>, <code><a href="BugChecker.MethodInvocationTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.MethodInvocationTreeMatcher</a></code>, <code><a href="BugChecker.ReturnTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.ReturnTreeMatcher</a></code>, <code><a href="../matchers/Suppressible.html" title="interface in com.google.errorprone.matchers">Suppressible</a></code>, <code><a href="https://docs.oracle.com/javase/8/docs/api/java/io/Serializable.html" title="class or interface in java.io" class="external-link">Serializable</a></code></dd>
+<dd><code><a href="BugChecker.MemberReferenceTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.MemberReferenceTreeMatcher</a></code>, <code><a href="BugChecker.MethodInvocationTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.MethodInvocationTreeMatcher</a></code>, <code><a href="BugChecker.NewClassTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.NewClassTreeMatcher</a></code>, <code><a href="BugChecker.ReturnTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.ReturnTreeMatcher</a></code>, <code><a href="../matchers/Suppressible.html" title="interface in com.google.errorprone.matchers">Suppressible</a></code>, <code><a href="https://docs.oracle.com/javase/8/docs/api/java/io/Serializable.html" title="class or interface in java.io" class="external-link">Serializable</a></code></dd>
 </dl>
 <dl class="notes">
 <dt>Direct Known Subclasses:</dt>
@@ -93,8 +93,15 @@ loadScripts(document, 'script');</script>
 <hr>
 <pre>public abstract class <span class="type-name-label">AbstractReturnValueIgnored</span>
 extends <a href="BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a>
-implements <a href="BugChecker.MethodInvocationTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.MethodInvocationTreeMatcher</a>, <a href="BugChecker.MemberReferenceTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.MemberReferenceTreeMatcher</a>, <a href="BugChecker.ReturnTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.ReturnTreeMatcher</a></pre>
-<div class="block">An abstract base class to match method invocations in which the return value is not used.</div>
+implements <a href="BugChecker.MethodInvocationTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.MethodInvocationTreeMatcher</a>, <a href="BugChecker.MemberReferenceTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.MemberReferenceTreeMatcher</a>, <a href="BugChecker.ReturnTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.ReturnTreeMatcher</a>, <a href="BugChecker.NewClassTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.NewClassTreeMatcher</a></pre>
+<div class="block">An abstract base class to match API usages in which the return value is not used.
+
+ <p>In addition to regular contexts in which a return value isn't used (e.g.: the result of <code>
+ String.trim()</code> is just ignored), this class has the capacity to determine if the result is cast
+ in such a way as to lose important static type information.
+
+ <p>If an analysis extending this base class chooses to care about this circumstance, they can
+ override <a href="#lostType(com.google.errorprone.VisitorState)"><code>lostType(com.google.errorprone.VisitorState)</code></a> to define the type information they wish to keep.</div>
 <dl class="notes">
 <dt>Author:</dt>
 <dd>eaftan@google.com (Eddie Aftandilian)</dd>
@@ -122,13 +129,20 @@ implements <a href="BugChecker.MethodInvocationTreeMatcher.html" title="interfac
 <caption><span>Constructors</span></caption>
 <thead>
 <tr>
-<th class="col-first" scope="col">Constructor</th>
+<th class="col-first" scope="col">Modifier</th>
+<th class="col-second" scope="col">Constructor</th>
 <th class="col-last" scope="col">Description</th>
 </tr>
 </thead>
 <tbody>
 <tr class="alt-color">
+<td class="col-first"><code>protected </code></td>
 <th class="col-constructor-name" scope="row"><code><span class="member-name-link"><a href="#%3Cinit%3E()">AbstractReturnValueIgnored</a></span>()</code></th>
+<td class="col-last">&nbsp;</td>
+</tr>
+<tr class="row-color">
+<td class="col-first"><code>protected </code></td>
+<th class="col-constructor-name" scope="row"><code><span class="member-name-link"><a href="#%3Cinit%3E(com.google.errorprone.ErrorProneFlags)">AbstractReturnValueIgnored</a></span>&#8203;(<a href="../ErrorProneFlags.html" title="class in com.google.errorprone">ErrorProneFlags</a>&nbsp;flags)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
 </tbody>
@@ -178,38 +192,52 @@ implements <a href="BugChecker.MethodInvocationTreeMatcher.html" title="interfac
 </td>
 </tr>
 <tr class="row-color" id="i3">
+<td class="col-first"><code>protected <a href="../matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#describeReturnValueIgnored(com.sun.source.tree.NewClassTree,com.google.errorprone.VisitorState)">describeReturnValueIgnored</a></span>&#8203;(com.sun.source.tree.NewClassTree&nbsp;newClassTree,
+<a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
+<td class="col-last">
+<div class="block">Uses the default description for results ignored via a constructor call.</div>
+</td>
+</tr>
+<tr class="alt-color" id="i4">
 <td class="col-first"><code>protected <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#getMessage(javax.lang.model.element.Name)">getMessage</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/javax/lang/model/element/Name.html" title="class or interface in javax.lang.model.element" class="external-link">Name</a>&nbsp;name)</code></th>
 <td class="col-last">
 <div class="block">Returns the diagnostic message.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i4">
+<tr class="row-color" id="i5">
 <td class="col-first"><code>protected <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;com.sun.tools.javac.code.Type&gt;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#lostType(com.google.errorprone.VisitorState)">lostType</a></span>&#8203;(<a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
 <td class="col-last">
 <div class="block">Check for occurrences of this type being lost, i.e.</div>
 </td>
 </tr>
-<tr class="row-color" id="i5">
+<tr class="alt-color" id="i6">
 <td class="col-first"><code>protected <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#lostTypeMessage(java.lang.String,java.lang.String)">lostTypeMessage</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;returnedType,
 <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;declaredReturnType)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color" id="i6">
+<tr class="row-color" id="i7">
 <td class="col-first"><code><a href="../matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#matchMemberReference(com.sun.source.tree.MemberReferenceTree,com.google.errorprone.VisitorState)">matchMemberReference</a></span>&#8203;(com.sun.source.tree.MemberReferenceTree&nbsp;tree,
 <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color" id="i7">
+<tr class="alt-color" id="i8">
 <td class="col-first"><code><a href="../matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#matchMethodInvocation(com.sun.source.tree.MethodInvocationTree,com.google.errorprone.VisitorState)">matchMethodInvocation</a></span>&#8203;(com.sun.source.tree.MethodInvocationTree&nbsp;methodInvocationTree,
 <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color" id="i8">
+<tr class="row-color" id="i9">
+<td class="col-first"><code><a href="../matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#matchNewClass(com.sun.source.tree.NewClassTree,com.google.errorprone.VisitorState)">matchNewClass</a></span>&#8203;(com.sun.source.tree.NewClassTree&nbsp;newClassTree,
+<a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
+<td class="col-last">&nbsp;</td>
+</tr>
+<tr class="alt-color" id="i10">
 <td class="col-first"><code><a href="../matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#matchReturn(com.sun.source.tree.ReturnTree,com.google.errorprone.VisitorState)">matchReturn</a></span>&#8203;(com.sun.source.tree.ReturnTree&nbsp;tree,
 <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
@@ -217,7 +245,7 @@ implements <a href="BugChecker.MethodInvocationTreeMatcher.html" title="interfac
 <div class="block">Returning a type from a lambda or method that returns Object loses the type information.</div>
 </td>
 </tr>
-<tr class="row-color" id="i9">
+<tr class="row-color" id="i11">
 <td class="col-first"><code>protected abstract <a href="../matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;? super com.sun.source.tree.ExpressionTree&gt;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#specializedMatcher()">specializedMatcher</a></span>()</code></th>
 <td class="col-last">
@@ -252,7 +280,13 @@ implements <a href="BugChecker.MethodInvocationTreeMatcher.html" title="interfac
 <li>
 <section class="detail" id="&lt;init&gt;()">
 <h3>AbstractReturnValueIgnored</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="member-name">AbstractReturnValueIgnored</span>()</div>
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="member-name">AbstractReturnValueIgnored</span>()</div>
+</section>
+</li>
+<li>
+<section class="detail" id="&lt;init&gt;(com.google.errorprone.ErrorProneFlags)">
+<h3>AbstractReturnValueIgnored</h3>
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="member-name">AbstractReturnValueIgnored</span>&#8203;(<span class="parameters"><a href="../ErrorProneFlags.html" title="class in com.google.errorprone">ErrorProneFlags</a>&nbsp;flags)</span></div>
 </section>
 </li>
 </ul>
@@ -271,6 +305,17 @@ implements <a href="BugChecker.MethodInvocationTreeMatcher.html" title="interfac
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code><a href="BugChecker.MethodInvocationTreeMatcher.html#matchMethodInvocation(com.sun.source.tree.MethodInvocationTree,com.google.errorprone.VisitorState)">matchMethodInvocation</a></code>&nbsp;in interface&nbsp;<code><a href="BugChecker.MethodInvocationTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.MethodInvocationTreeMatcher</a></code></dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="matchNewClass(com.sun.source.tree.NewClassTree,com.google.errorprone.VisitorState)">
+<h3>matchNewClass</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></span>&nbsp;<span class="member-name">matchNewClass</span>&#8203;(<span class="parameters">com.sun.source.tree.NewClassTree&nbsp;newClassTree,
+<a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
+<dl class="notes">
+<dt>Specified by:</dt>
+<dd><code><a href="BugChecker.NewClassTreeMatcher.html#matchNewClass(com.sun.source.tree.NewClassTree,com.google.errorprone.VisitorState)">matchNewClass</a></code>&nbsp;in interface&nbsp;<code><a href="BugChecker.NewClassTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.NewClassTreeMatcher</a></code></dd>
 </dl>
 </section>
 </li>
@@ -330,6 +375,15 @@ implements <a href="BugChecker.MethodInvocationTreeMatcher.html" title="interfac
 <div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type"><a href="../matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></span>&nbsp;<span class="member-name">describeReturnValueIgnored</span>&#8203;(<span class="parameters">com.sun.source.tree.MemberReferenceTree&nbsp;memberReferenceTree,
 <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
 <div class="block">Uses the default description for results ignored via a method reference. Subclasses may
+ override if they prefer a different description.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="describeReturnValueIgnored(com.sun.source.tree.NewClassTree,com.google.errorprone.VisitorState)">
+<h3>describeReturnValueIgnored</h3>
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type"><a href="../matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></span>&nbsp;<span class="member-name">describeReturnValueIgnored</span>&#8203;(<span class="parameters">com.sun.source.tree.NewClassTree&nbsp;newClassTree,
+<a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
+<div class="block">Uses the default description for results ignored via a constructor call. Subclasses may
  override if they prefer a different description.</div>
 </section>
 </li>
