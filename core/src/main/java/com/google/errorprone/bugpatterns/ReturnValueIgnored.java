@@ -383,6 +383,7 @@ public class ReturnValueIgnored extends AbstractReturnValueIgnored {
   private final Matcher<? super ExpressionTree> matcher;
 
   public ReturnValueIgnored(ErrorProneFlags flags) {
+    super(flags);
     this.matcher =
         anyOf(
             SPECIALIZED_MATCHER,

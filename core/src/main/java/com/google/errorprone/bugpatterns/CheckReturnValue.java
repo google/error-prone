@@ -20,6 +20,7 @@ import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.util.ASTHelpers.hasDirectAnnotationWithSimpleName;
 
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
@@ -56,6 +57,10 @@ public class CheckReturnValue extends AbstractReturnValueIgnored
       return Stream.of(true);
     }
     return Stream.empty();
+  }
+
+  public CheckReturnValue(ErrorProneFlags flags) {
+    super(flags);
   }
 
   /**

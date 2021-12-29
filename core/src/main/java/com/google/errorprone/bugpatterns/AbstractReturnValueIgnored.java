@@ -40,9 +40,11 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ListMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapBuilder;
+import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MemberReferenceTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
+import com.google.errorprone.bugpatterns.BugChecker.NewClassTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.ReturnTreeMatcher;
 import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.SuggestedFix;
@@ -57,6 +59,7 @@ import com.sun.source.tree.MemberReferenceTree;
 import com.sun.source.tree.MemberReferenceTree.ReferenceMode;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
+import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.ReturnTree;
 import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree;
@@ -77,18 +80,31 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Queue;
 import java.util.Set;
+import java.util.function.Supplier;
 import javax.lang.model.element.Name;
 import javax.lang.model.type.TypeKind;
 
 /**
- * An abstract base class to match method invocations in which the return value is not used.
+ * An abstract base class to match API usages in which the return value is not used.
+ *
+ * <p>In addition to regular contexts in which a return value isn't used (e.g.: the result of {@code
+ * String.trim()} is just ignored), this class has the capacity to determine if the result is cast
+ * in such a way as to lose important static type information.
+ *
+ * <p>If an analysis extending this base class chooses to care about this circumstance, they can
+ * override {@link #lostType} to define the type information they wish to keep.
  *
  * @author eaftan@google.com (Eddie Aftandilian)
  */
 public abstract class AbstractReturnValueIgnored extends BugChecker
-    implements MethodInvocationTreeMatcher, MemberReferenceTreeMatcher, ReturnTreeMatcher {
+    implements MethodInvocationTreeMatcher,
+        MemberReferenceTreeMatcher,
+        ReturnTreeMatcher,
+        NewClassTreeMatcher {
 
-  private final java.util.function.Supplier<Matcher<ExpressionTree>> methodInvocationMatcher =
+  private static final String CRV_CONSTRUCTOR_FLAG = "CheckConstructorReturnValue";
+
+  private final Supplier<Matcher<ExpressionTree>> methodInvocationMatcher =
       Suppliers.memoize(
           () ->
               allOf(
@@ -101,23 +117,50 @@ public abstract class AbstractReturnValueIgnored extends BugChecker
                   not(AbstractReturnValueIgnored::mockitoInvocation),
                   not((t, s) -> allowInExceptionThrowers() && expectedExceptionTest(t, s))));
 
-  private final java.util.function.Supplier<Matcher<MemberReferenceTree>>
-      memberReferenceTreeMatcher =
-          Suppliers.memoize(
-              () ->
-                  allOf(
-                      (t, s) -> t.getMode() == ReferenceMode.INVOKE,
-                      AbstractReturnValueIgnored::isVoidReturningMethodReferenceExpression,
-                      // Skip cases where the method we're referencing really does return void.
-                      // We're only looking for cases where the referenced method does not return
-                      // void, but it's being used on a void-returning functional interface.
-                      not((t, s) -> isVoidType(getSymbol(t).getReturnType(), s)),
-                      not(
-                          (t, s) ->
-                              allowInExceptionThrowers()
-                                  && Matchers.isThrowingFunctionalInterface(
-                                      ASTHelpers.getType(t), s)),
-                      specializedMatcher()));
+  private final Supplier<Matcher<MemberReferenceTree>> memberReferenceTreeMatcher =
+      Suppliers.memoize(
+          () ->
+              allOf(
+                  this::isValidMemberReferenceType,
+                  AbstractReturnValueIgnored::isVoidReturningMethodReferenceExpression,
+                  // Skip cases where the method we're referencing really does return void.
+                  // We're only looking for cases where the referenced method does not return
+                  // void, but it's being used on a void-returning functional interface.
+                  not((t, s) -> isVoidReturningMethod(getSymbol(t), s)),
+                  not(
+                      (t, s) ->
+                          allowInExceptionThrowers()
+                              && Matchers.isThrowingFunctionalInterface(ASTHelpers.getType(t), s)),
+                  specializedMatcher()));
+
+  private final Supplier<Matcher<MemberReferenceTree>> lostReferenceTreeMatcher =
+      Suppliers.memoize(
+          () ->
+              allOf(
+                  this::isValidMemberReferenceType,
+                  AbstractReturnValueIgnored::isObjectReturningMethodReferenceExpression,
+                  not((t, s) -> isExemptedInterfaceType(ASTHelpers.getType(t), s)),
+                  not((t, s) -> Matchers.isThrowingFunctionalInterface(ASTHelpers.getType(t), s)),
+                  specializedMatcher()));
+
+  private final boolean checkConstructors;
+
+  protected AbstractReturnValueIgnored() {
+    this(ErrorProneFlags.empty());
+  }
+
+  protected AbstractReturnValueIgnored(ErrorProneFlags flags) {
+    checkConstructors = flags.getBoolean(CRV_CONSTRUCTOR_FLAG).orElse(false);
+  }
+
+  private boolean isValidMemberReferenceType(MemberReferenceTree mrt, VisitorState state) {
+    return checkConstructors || mrt.getMode() == ReferenceMode.INVOKE;
+  }
+
+  private static boolean isVoidReturningMethod(MethodSymbol meth, VisitorState state) {
+    // Constructors "return" void but produce a real non-void value.
+    return !meth.isConstructor() && isVoidType(meth.getReturnType(), state);
+  }
 
   @Override
   public Description matchMethodInvocation(
@@ -133,6 +176,13 @@ public abstract class AbstractReturnValueIgnored extends BugChecker
   }
 
   @Override
+  public Description matchNewClass(NewClassTree newClassTree, VisitorState state) {
+    return checkConstructors && methodInvocationMatcher.get().matches(newClassTree, state)
+        ? describeReturnValueIgnored(newClassTree, state)
+        : NO_MATCH;
+  }
+
+  @Override
   public Description matchMemberReference(MemberReferenceTree tree, VisitorState state) {
     Description description =
         memberReferenceTreeMatcher.get().matches(tree, state)
@@ -141,13 +191,7 @@ public abstract class AbstractReturnValueIgnored extends BugChecker
     if (!lostType(state).isPresent() || !description.equals(NO_MATCH)) {
       return description;
     }
-    if (allOf(
-            (t, s) -> t.getMode() == ReferenceMode.INVOKE,
-            AbstractReturnValueIgnored::isObjectReturningMethodReferenceExpression,
-            not((t, s) -> isExemptedInterfaceType(ASTHelpers.getType(t), s)),
-            not((t, s) -> Matchers.isThrowingFunctionalInterface(ASTHelpers.getType(t), s)),
-            specializedMatcher())
-        .matches(tree, state)) {
+    if (lostReferenceTreeMatcher.get().matches(tree, state)) {
       return describeMatch(tree);
     }
     return description;
@@ -251,8 +295,32 @@ public abstract class AbstractReturnValueIgnored extends BugChecker
   protected Description describeReturnValueIgnored(
       MemberReferenceTree memberReferenceTree, VisitorState state) {
     return buildDescription(memberReferenceTree)
-        .setMessage(getMessage(memberReferenceTree.getName()))
+        .setMessage(
+            getMessage(
+                state.getName(descriptiveNameForMemberReference(memberReferenceTree, state))))
         .build();
+  }
+
+  /**
+   * Uses the default description for results ignored via a constructor call. Subclasses may
+   * override if they prefer a different description.
+   */
+  protected Description describeReturnValueIgnored(NewClassTree newClassTree, VisitorState state) {
+    return buildDescription(newClassTree)
+        .setMessage(
+            String.format(
+                "Ignored return value of '%s'",
+                state.getSourceForNode(newClassTree.getIdentifier())))
+        .build();
+  }
+
+  private static String descriptiveNameForMemberReference(
+      MemberReferenceTree memberReferenceTree, VisitorState state) {
+    if (memberReferenceTree.getMode() == ReferenceMode.NEW) {
+      // The qualifier expression *should* just be the name of the class here
+      return state.getSourceForNode(memberReferenceTree.getQualifierExpression());
+    }
+    return memberReferenceTree.getName().toString();
   }
 
   /**

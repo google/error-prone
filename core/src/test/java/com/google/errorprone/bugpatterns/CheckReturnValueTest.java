@@ -654,4 +654,111 @@ public class CheckReturnValueTest {
         .withClasspath(CRVTest.class, CheckReturnValueTest.class)
         .doTest();
   }
+
+  @Test
+  public void constructor_flagOff() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  @com.google.errorprone.annotations.CheckReturnValue",
+            "  public Test() {",
+            "  }",
+            "  public static void foo() {",
+            "    new Test();",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void constructor() {
+    compilationHelperLookingAtConstructors()
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  @com.google.errorprone.annotations.CheckReturnValue",
+            "  public Test() {}",
+            "  public static void foo() {",
+            "    // BUG: Diagnostic contains: Ignored return value of 'Test'",
+            "    new Test();",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void constructor_telescoping() {
+    compilationHelperLookingAtConstructors()
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  @com.google.errorprone.annotations.CheckReturnValue",
+            "  public Test() {}",
+            "  public Test(int foo) { this(); }",
+            "  public static void foo() {",
+            "    Test foo = new Test(42);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void constructor_superCall() {
+    compilationHelperLookingAtConstructors()
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  @com.google.errorprone.annotations.CheckReturnValue",
+            "  public Test() {}",
+            "  static class SubTest extends Test { SubTest() { super(); } }",
+            "  public static void foo() {",
+            "    Test derived = new SubTest();",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void constructor_throwingContexts() {
+    compilationHelperLookingAtConstructors()
+        .addSourceLines(
+            "Foo.java",
+            "@com.google.errorprone.annotations.CheckReturnValue",
+            "public class Foo {}")
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  void f() {",
+            "    try {",
+            "      new Foo();",
+            "      org.junit.Assert.fail();",
+            "    } catch (Exception expected) {}",
+            "    org.junit.Assert.assertThrows(IllegalArgumentException.class, () -> new Foo());",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void constructor_reference() {
+    compilationHelperLookingAtConstructors()
+        .addSourceLines(
+            "Foo.java",
+            "@com.google.errorprone.annotations.CheckReturnValue",
+            "public class Foo {}")
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  void f() {",
+            "    // BUG: Diagnostic contains: Ignored return value of 'Foo', which is annotated",
+            "    Runnable ignoresResult = Foo::new;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  private CompilationTestHelper compilationHelperLookingAtConstructors() {
+    return compilationHelper.setArgs("-XepOpt:CheckConstructorReturnValue=true");
+  }
 }
