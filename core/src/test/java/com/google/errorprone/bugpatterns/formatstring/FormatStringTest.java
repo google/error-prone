@@ -365,4 +365,47 @@ public class FormatStringTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void stringFormattedNegativeCase() {
+    assumeTrue(RuntimeVersion.isAtLeast15());
+    compilationHelper
+            .addSourceLines(
+                    "Test.java",
+                    "class Test {",
+                    "  void f() {",
+                    "    \"%s %s\".formatted(\"foo\", \"baz\");",
+                    "  }",
+                    "}")
+            .doTest();
+  }
+
+  @Test
+  public void stringFormattedPositiveCase() {
+    assumeTrue(RuntimeVersion.isAtLeast15());
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  void f() {",
+            "    // BUG: Diagnostic contains: missing argument for format specifier",
+            "    \"%s %s %s\".formatted(\"foo\", \"baz\");",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void nonConstantStringFormattedNegativeCase() {
+    assumeTrue(RuntimeVersion.isAtLeast15());
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  void f(String f) {",
+            "    f.formatted(\"foo\", \"baz\");",
+            "  }",
+            "}")
+        .doTest();
+  }
 }
