@@ -16,10 +16,7 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static org.junit.Assume.assumeTrue;
-
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
-import com.google.errorprone.util.RuntimeVersion;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -32,7 +29,6 @@ public class TryWithResourcesVariableTest {
 
   @Test
   public void refactoring() {
-    assumeTrue(RuntimeVersion.isAtLeast9());
     testHelper
         .addInputLines(
             "Test.java",
@@ -59,7 +55,6 @@ public class TryWithResourcesVariableTest {
 
   @Test
   public void refactoringTwoVariables() {
-    assumeTrue(RuntimeVersion.isAtLeast9());
     testHelper
         .addInputLines(
             "Test.java",
@@ -88,7 +83,6 @@ public class TryWithResourcesVariableTest {
 
   @Test
   public void negativeNonFinal() {
-    assumeTrue(RuntimeVersion.isAtLeast9());
     testHelper
         .addInputLines(
             "Test.java",

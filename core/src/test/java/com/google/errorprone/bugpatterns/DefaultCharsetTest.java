@@ -532,7 +532,6 @@ public class DefaultCharsetTest {
 
   @Test
   public void byteArrayOutputStream() {
-    assumeTrue(RuntimeVersion.isAtLeast10());
     refactoringTest()
         .addInputLines(
             "in/Test.java",

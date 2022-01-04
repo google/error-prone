@@ -16,10 +16,7 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static org.junit.Assume.assumeTrue;
-
 import com.google.errorprone.CompilationTestHelper;
-import com.google.errorprone.util.RuntimeVersion;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -160,7 +157,6 @@ public class UnsafeFinalizationTest {
 
   @Test
   public void negativeFence() {
-    assumeTrue(RuntimeVersion.isAtLeast9());
     compilationTestHelper
         .addSourceLines(
             "MyAwesomeGame.java",

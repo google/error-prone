@@ -16,10 +16,7 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static org.junit.Assume.assumeTrue;
-
 import com.google.errorprone.CompilationTestHelper;
-import com.google.errorprone.util.RuntimeVersion;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -37,7 +34,6 @@ public class DuplicateMapKeysTest {
 
   @Test
   public void testPositiveCase() {
-    assumeTrue(RuntimeVersion.isAtLeast9());
     compilationHelper
         .addSourceLines(
             "a/A.java",
@@ -59,7 +55,6 @@ public class DuplicateMapKeysTest {
 
   @Test
   public void testNegativeCase() {
-    assumeTrue(RuntimeVersion.isAtLeast9());
     compilationHelper
         .addSourceLines(
             "a/A.java",

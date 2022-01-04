@@ -17,11 +17,9 @@
 package com.google.errorprone.bugpatterns;
 
 import static org.junit.Assert.assertThrows;
-import static org.junit.Assume.assumeTrue;
 
 import com.google.errorprone.CompilationTestHelper;
 import com.google.errorprone.annotations.DoNotCall;
-import com.google.errorprone.util.RuntimeVersion;
 import java.sql.Date;
 import java.sql.Time;
 import java.util.concurrent.ThreadLocalRandom;
@@ -535,23 +533,6 @@ public class DoNotCallCheckerTest {
             "    ThreadLocalRandom random = ThreadLocalRandom.current();",
             "    // BUG: Diagnostic contains: DoNotCall",
             "    x.ifPresent(random::setSeed);",
-            "  }",
-            "}")
-        .doTest();
-  }
-
-  @Test
-  public void thread_stop() {
-    // Thread.stop(Throwable) was removed in JDK11:
-    //   https://bugs.openjdk.java.net/browse/JDK-8204243
-    assumeTrue(RuntimeVersion.isAtMost10());
-    testHelper
-        .addSourceLines(
-            "Test.java",
-            "public class Test {",
-            "  public void foo() {",
-            "    // BUG: Diagnostic contains: DoNotCall",
-            "    Thread.currentThread().stop(new Throwable());",
             "  }",
             "}")
         .doTest();

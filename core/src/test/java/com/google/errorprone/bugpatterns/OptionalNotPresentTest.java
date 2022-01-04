@@ -15,10 +15,7 @@
  */
 package com.google.errorprone.bugpatterns;
 
-import static org.junit.Assume.assumeTrue;
-
 import com.google.errorprone.CompilationTestHelper;
-import com.google.errorprone.util.RuntimeVersion;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -63,7 +60,6 @@ public class OptionalNotPresentTest {
 
   @Test
   public void isEmpty() {
-    assumeTrue(RuntimeVersion.isAtLeast11());
     compilationTestHelper
         .addSourceLines(
             "Test.java",
@@ -82,7 +78,6 @@ public class OptionalNotPresentTest {
 
   @Test
   public void orElseThrow() {
-    assumeTrue(RuntimeVersion.isAtLeast11());
     compilationTestHelper
         .addSourceLines(
             "Test.java",

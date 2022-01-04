@@ -16,10 +16,7 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static org.junit.Assume.assumeFalse;
-
 import com.google.errorprone.CompilationTestHelper;
-import com.google.errorprone.util.RuntimeVersion;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -170,24 +167,6 @@ public class HashCodeToStringTest {
             "class Test {",
             "  public int hashCode() {",
             "    return super.hashCode();",
-            "  }",
-            "}")
-        .doTest();
-  }
-
-  @Test
-  public void dontFlagJavaLangObject() {
-    assumeFalse(RuntimeVersion.isAtLeast9());
-    compilationHelper
-        .addSourceLines(
-            "Object.java",
-            "package java.lang;",
-            "public class Object {",
-            "  public int hashCode() {",
-            "    return 0;",
-            "  }",
-            "  public String toString() {",
-            "    return \"42\";",
             "  }",
             "}")
         .doTest();

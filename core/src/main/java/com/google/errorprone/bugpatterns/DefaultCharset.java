@@ -41,7 +41,6 @@ import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.suppliers.Suppliers;
 import com.google.errorprone.util.ASTHelpers;
-import com.google.errorprone.util.RuntimeVersion;
 import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.ImportTree;
@@ -203,8 +202,7 @@ public class DefaultCharset extends BugChecker
 
   public DefaultCharset(ErrorProneFlags flags) {
     this.byteArrayOutputStreamToString =
-        RuntimeVersion.isAtLeast10()
-            && flags.getBoolean("DefaultCharset:ByteArrayOutputStreamToString").orElse(true);
+        flags.getBoolean("DefaultCharset:ByteArrayOutputStreamToString").orElse(true);
   }
 
   @Override

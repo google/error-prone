@@ -47,7 +47,6 @@ import com.google.errorprone.scanner.ErrorProneScanner;
 import com.google.errorprone.scanner.ErrorProneScannerTransformer;
 import com.google.errorprone.scanner.Scanner;
 import com.google.errorprone.scanner.ScannerSupplier;
-import com.google.errorprone.util.RuntimeVersion;
 import com.google.googlejavaformat.java.Formatter;
 import com.google.googlejavaformat.java.FormatterException;
 import com.google.testing.compile.JavaFileObjects;
@@ -203,9 +202,6 @@ public class BugCheckerRefactoringTestHelper {
   }
 
   public BugCheckerRefactoringTestHelper addModules(String... modules) {
-    if (!RuntimeVersion.isAtLeast9()) {
-      return this;
-    }
     return setArgs(
         Arrays.stream(modules)
             .map(m -> String.format("--add-exports=%s=ALL-UNNAMED", m))

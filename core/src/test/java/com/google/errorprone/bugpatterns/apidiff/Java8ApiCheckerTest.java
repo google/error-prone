@@ -16,10 +16,7 @@
 
 package com.google.errorprone.bugpatterns.apidiff;
 
-import static org.junit.Assume.assumeTrue;
-
 import com.google.errorprone.CompilationTestHelper;
-import com.google.errorprone.util.RuntimeVersion;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -33,7 +30,6 @@ public class Java8ApiCheckerTest {
 
   @Test
   public void positive() {
-    assumeTrue(RuntimeVersion.isAtLeast11());
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -49,7 +45,6 @@ public class Java8ApiCheckerTest {
 
   @Test
   public void bufferPositive() {
-    assumeTrue(RuntimeVersion.isAtLeast11());
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -65,7 +60,6 @@ public class Java8ApiCheckerTest {
 
   @Test
   public void bufferNegative() {
-    assumeTrue(RuntimeVersion.isAtLeast11());
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -81,7 +75,6 @@ public class Java8ApiCheckerTest {
 
   @Test
   public void checksumPositive() {
-    assumeTrue(RuntimeVersion.isAtLeast11());
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -97,7 +90,6 @@ public class Java8ApiCheckerTest {
 
   @Test
   public void checksumNegative() {
-    assumeTrue(RuntimeVersion.isAtLeast11());
     compilationHelper
         .addSourceLines(
             "Test.java",

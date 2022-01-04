@@ -15,10 +15,7 @@
  */
 package com.google.errorprone.bugpatterns.time;
 
-import static org.junit.Assume.assumeFalse;
-
 import com.google.errorprone.CompilationTestHelper;
-import com.google.errorprone.util.RuntimeVersion;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -322,22 +319,6 @@ public class JavaPeriodGetDaysTest {
             "    // BUG: Diagnostic contains: JavaPeriodGetDays",
             "    Runnable r = () -> PERIOD.getDays();",
             "    long months = PERIOD.getMonths();",
-            "  }",
-            "}")
-        .doTest();
-  }
-
-  @Test
-  public void testByJavaTime() {
-    assumeFalse(RuntimeVersion.isAtLeast9());
-    compilationHelper
-        .addSourceLines(
-            "test/TestCase.java",
-            "package java.time;",
-            "public class TestCase {",
-            "  private static final Period PERIOD = Period.ZERO;",
-            "  public static void foo() {",
-            "    int nanos = PERIOD.getDays();",
             "  }",
             "}")
         .doTest();

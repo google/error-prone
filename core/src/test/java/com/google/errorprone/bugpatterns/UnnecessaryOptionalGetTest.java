@@ -16,10 +16,7 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static org.junit.Assume.assumeTrue;
-
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
-import com.google.errorprone.util.RuntimeVersion;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -32,7 +29,6 @@ public final class UnnecessaryOptionalGetTest {
 
   @Test
   public void genericOptionalVars_sameVarGet_replacesWithLambdaArg() {
-    assumeTrue(RuntimeVersion.isAtLeast11());
     refactoringTestHelper
         .addInputLines(
             "Test.java",
@@ -289,7 +285,6 @@ public final class UnnecessaryOptionalGetTest {
 
   @Test
   public void orElseThrow() {
-    assumeTrue(RuntimeVersion.isAtLeast11());
     refactoringTestHelper
         .addInputLines(
             "Test.java",

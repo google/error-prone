@@ -294,7 +294,6 @@ import com.google.errorprone.bugpatterns.RedundantOverride;
 import com.google.errorprone.bugpatterns.RedundantThrows;
 import com.google.errorprone.bugpatterns.ReferenceEquality;
 import com.google.errorprone.bugpatterns.RemoveUnusedImports;
-import com.google.errorprone.bugpatterns.RemovedInJDK11;
 import com.google.errorprone.bugpatterns.RequiredModifiersChecker;
 import com.google.errorprone.bugpatterns.RestrictedApiChecker;
 import com.google.errorprone.bugpatterns.RethrowReflectiveOperationExceptionAsLinkageError;
@@ -718,7 +717,6 @@ public class BuiltInCheckerSuppliers {
           RandomCast.class,
           RandomModInteger.class,
           RectIntersectReturnValueIgnored.class,
-          RemovedInJDK11.class,
           RequiredModifiersChecker.class,
           RestrictedApiChecker.class,
           ReturnValueIgnored.class,

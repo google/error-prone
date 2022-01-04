@@ -16,12 +16,9 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static org.junit.Assume.assumeTrue;
-
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode;
 import com.google.errorprone.CompilationTestHelper;
-import com.google.errorprone.util.RuntimeVersion;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -57,7 +54,6 @@ public class StringSplitterTest {
   // Regression test for issue #1124
   @Test
   public void positive_localVarTypeInference() {
-    assumeTrue(RuntimeVersion.isAtLeast10());
     testHelper
         .addInputLines(
             "Test.java",

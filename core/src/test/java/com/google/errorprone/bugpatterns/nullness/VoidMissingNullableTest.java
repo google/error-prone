@@ -17,11 +17,9 @@
 package com.google.errorprone.bugpatterns.nullness;
 
 import static com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH;
-import static org.junit.Assume.assumeTrue;
 
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
-import com.google.errorprone.util.RuntimeVersion;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -296,7 +294,6 @@ public class VoidMissingNullableTest {
 
   @Test
   public void negativeVar() {
-    assumeTrue(RuntimeVersion.isAtLeast10());
     compilationHelper
         .addSourceLines(
             "Test.java",

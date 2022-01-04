@@ -18,7 +18,6 @@ package com.google.errorprone.bugpatterns;
 
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.CompilationTestHelper;
-import com.google.errorprone.util.RuntimeVersion;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -69,9 +68,7 @@ public class MissingOverrideTest {
     compilationHelper
         .addSourceLines(
             "Test.java", //
-            (RuntimeVersion.isAtLeast9()
-                ? "import javax.annotation.processing.Generated;"
-                : "import javax.annotation.Generated;"),
+            "import javax.annotation.processing.Generated;",
             "@Generated(\"foo\")",
             "public abstract class Test {",
             "  public abstract int hashCode();",

@@ -15,10 +15,7 @@
  */
 package com.google.errorprone.bugpatterns.time;
 
-import static org.junit.Assume.assumeFalse;
-
 import com.google.errorprone.CompilationTestHelper;
-import com.google.errorprone.util.RuntimeVersion;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -52,19 +49,6 @@ public class JavaDurationWithNanosTest {
             "  private static final Duration DURATION1 = Duration.ZERO;",
             "  // BUG: Diagnostic contains: Duration.ofSeconds(DURATION1.getSeconds(), 44);",
             "  private static final Duration DURATION2 = DURATION1.withNanos(44);",
-            "}")
-        .doTest();
-  }
-
-  @Test
-  public void durationWithNanosInsideJavaTime() {
-    assumeFalse(RuntimeVersion.isAtLeast9());
-    helper
-        .addSourceLines(
-            "TestClass.java",
-            "package java.time;",
-            "public class TestClass {",
-            "  private static final Duration DURATION = Duration.ZERO.withNanos(42);",
             "}")
         .doTest();
   }

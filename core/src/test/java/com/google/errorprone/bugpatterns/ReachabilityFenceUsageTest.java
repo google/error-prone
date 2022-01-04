@@ -16,10 +16,7 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static org.junit.Assume.assumeTrue;
-
 import com.google.errorprone.CompilationTestHelper;
-import com.google.errorprone.util.RuntimeVersion;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -33,7 +30,6 @@ public final class ReachabilityFenceUsageTest {
 
   @Test
   public void positive() {
-    assumeTrue(RuntimeVersion.isAtLeast9());
     compilationTestHelper
         .addSourceLines(
             "Test.java",
@@ -49,7 +45,6 @@ public final class ReachabilityFenceUsageTest {
 
   @Test
   public void positive_try() {
-    assumeTrue(RuntimeVersion.isAtLeast9());
     compilationTestHelper
         .addSourceLines(
             "Test.java",
@@ -67,7 +62,6 @@ public final class ReachabilityFenceUsageTest {
 
   @Test
   public void negative() {
-    assumeTrue(RuntimeVersion.isAtLeast9());
     compilationTestHelper
         .addSourceLines(
             "Test.java",

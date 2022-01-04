@@ -16,10 +16,7 @@
 
 package com.google.errorprone.bugpatterns.flogger;
 
-import static org.junit.Assume.assumeTrue;
-
 import com.google.errorprone.CompilationTestHelper;
-import com.google.errorprone.util.RuntimeVersion;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -53,7 +50,6 @@ public final class FloggerSplitLogStatementTest {
 
   @Test
   public void positiveVar() {
-    assumeTrue(RuntimeVersion.isAtLeast10());
     compilationHelper
         .addSourceLines(
             "Test.java",
