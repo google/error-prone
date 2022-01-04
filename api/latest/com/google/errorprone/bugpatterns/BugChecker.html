@@ -15,8 +15,8 @@
 <script type="text/javascript" src="../../../../script-dir/jquery-ui.min.js"></script>
 </head>
 <body class="class-declaration-page">
-<script type="text/javascript">var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":42,"i10":10,"i11":10,"i12":10,"i13":10,"i14":42,"i15":10,"i16":10,"i17":10,"i18":10,"i19":10,"i20":10,"i21":10,"i22":10,"i23":10};
-var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"],32:["t6","Deprecated Methods"]};
+<script type="text/javascript">var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10,"i13":10,"i14":10,"i15":10,"i16":10,"i17":10,"i18":10,"i19":10,"i20":10,"i21":10};
+var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "alt-color";
 var rowColor = "row-color";
 var tableTab = "table-tab";
@@ -415,7 +415,7 @@ implements <a href="../matchers/Suppressible.html" title="interface in com.googl
 <section class="method-summary" id="method.summary">
 <h2>Method Summary</h2>
 <div class="member-summary" id="method-summary-table">
-<div class="table-tabs" role="tablist" aria-orientation="horizontal"><button role="tab" aria-selected="true" aria-controls="method-summary-table.tabpanel" tabindex="0" onkeydown="switchTab(event)" id="t0" class="active-table-tab">All Methods</button><button role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" id="t2" class="table-tab" onclick="show(2);">Instance Methods</button><button role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" id="t4" class="table-tab" onclick="show(8);">Concrete Methods</button><button role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" id="t6" class="table-tab" onclick="show(32);">Deprecated Methods</button></div>
+<div class="table-tabs" role="tablist" aria-orientation="horizontal"><button role="tab" aria-selected="true" aria-controls="method-summary-table.tabpanel" tabindex="0" onkeydown="switchTab(event)" id="t0" class="active-table-tab">All Methods</button><button role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" id="t2" class="table-tab" onclick="show(2);">Instance Methods</button><button role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" id="t4" class="table-tab" onclick="show(8);">Concrete Methods</button></div>
 <div id="method-summary-table.tabpanel" role="tabpanel">
 <table class="summary-table" aria-labelledby="t0">
 <thead>
@@ -494,22 +494,12 @@ implements <a href="../matchers/Suppressible.html" title="interface in com.googl
 </tr>
 <tr class="row-color" id="i9">
 <td class="col-first"><code>protected <a href="../matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
-<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#describeMatch(com.sun.source.tree.Tree,java.util.Optional)">describeMatch</a></span>&#8203;(com.sun.source.tree.Tree&nbsp;node,
-<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;? extends <a href="../fixes/Fix.html" title="interface in com.google.errorprone.fixes">Fix</a>&gt;&nbsp;fix)</code></th>
-<td class="col-last">
-<div class="block"><span class="deprecated-label">Deprecated.</span>
-<div class="deprecation-comment">prefer referring to empty fixes using <a href="../fixes/SuggestedFix.html#emptyFix()"><code>SuggestedFix.emptyFix()</code></a>.</div>
-</div>
-</td>
-</tr>
-<tr class="alt-color" id="i10">
-<td class="col-first"><code>protected <a href="../matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#describeMatch(com.sun.tools.javac.tree.JCTree)">describeMatch</a></span>&#8203;(com.sun.tools.javac.tree.JCTree&nbsp;node)</code></th>
 <td class="col-last">
 <div class="block">Helper to create a Description for the common case where there is no fix.</div>
 </td>
 </tr>
-<tr class="row-color" id="i11">
+<tr class="alt-color" id="i10">
 <td class="col-first"><code>protected <a href="../matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#describeMatch(com.sun.tools.javac.tree.JCTree,com.google.errorprone.fixes.Fix)">describeMatch</a></span>&#8203;(com.sun.tools.javac.tree.JCTree&nbsp;node,
 <a href="../fixes/Fix.html" title="interface in com.google.errorprone.fixes">Fix</a>&nbsp;fix)</code></th>
@@ -517,14 +507,14 @@ implements <a href="../matchers/Suppressible.html" title="interface in com.googl
 <div class="block">Helper to create a Description for the common case where there is a fix.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i12">
+<tr class="row-color" id="i11">
 <td class="col-first"><code>protected <a href="../matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#describeMatch(com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition)">describeMatch</a></span>&#8203;(com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition&nbsp;position)</code></th>
 <td class="col-last">
 <div class="block">Helper to create a Description for the common case where there is no fix.</div>
 </td>
 </tr>
-<tr class="row-color" id="i13">
+<tr class="alt-color" id="i12">
 <td class="col-first"><code>protected <a href="../matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#describeMatch(com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition,com.google.errorprone.fixes.Fix)">describeMatch</a></span>&#8203;(com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition&nbsp;position,
 <a href="../fixes/Fix.html" title="interface in com.google.errorprone.fixes">Fix</a>&nbsp;fix)</code></th>
@@ -532,32 +522,22 @@ implements <a href="../matchers/Suppressible.html" title="interface in com.googl
 <div class="block">Helper to create a Description for the common case where there is a fix.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i14">
-<td class="col-first"><code>protected <a href="../matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
-<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#describeMatch(com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition,java.util.Optional)">describeMatch</a></span>&#8203;(com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition&nbsp;position,
-<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;? extends <a href="../fixes/Fix.html" title="interface in com.google.errorprone.fixes">Fix</a>&gt;&nbsp;fix)</code></th>
-<td class="col-last">
-<div class="block"><span class="deprecated-label">Deprecated.</span>
-<div class="deprecation-comment">prefer referring to empty fixes using <a href="../fixes/SuggestedFix.html#emptyFix()"><code>SuggestedFix.emptyFix()</code></a>.</div>
-</div>
-</td>
-</tr>
-<tr class="row-color" id="i15">
+<tr class="row-color" id="i13">
 <td class="col-first"><code>boolean</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#disableable()">disableable</a></span>()</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color" id="i16">
+<tr class="alt-color" id="i14">
 <td class="col-first"><code>boolean</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#equals(java.lang.Object)">equals</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;obj)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color" id="i17">
+<tr class="row-color" id="i15">
 <td class="col-first"><code>int</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#hashCode()">hashCode</a></span>()</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color" id="i18">
+<tr class="alt-color" id="i16">
 <td class="col-first"><code>boolean</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#isSuppressed(com.sun.source.tree.Tree)">isSuppressed</a></span>&#8203;(com.sun.source.tree.Tree&nbsp;tree)</code></th>
 <td class="col-last">
@@ -565,7 +545,7 @@ implements <a href="../matchers/Suppressible.html" title="interface in com.googl
  bug checker.</div>
 </td>
 </tr>
-<tr class="row-color" id="i19">
+<tr class="row-color" id="i17">
 <td class="col-first"><code>boolean</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#isSuppressed(com.sun.tools.javac.code.Symbol)">isSuppressed</a></span>&#8203;(com.sun.tools.javac.code.Symbol&nbsp;symbol)</code></th>
 <td class="col-last">
@@ -573,24 +553,24 @@ implements <a href="../matchers/Suppressible.html" title="interface in com.googl
  this bug checker.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i20">
+<tr class="alt-color" id="i18">
 <td class="col-first"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#linkUrl()">linkUrl</a></span>()</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color" id="i21">
+<tr class="row-color" id="i19">
 <td class="col-first"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#message()">message</a></span>()</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color" id="i22">
+<tr class="alt-color" id="i20">
 <td class="col-first"><code>boolean</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#supportsSuppressWarnings()">supportsSuppressWarnings</a></span>()</code></th>
 <td class="col-last">
 <div class="block">Returns true if this checker can be suppressed using <code>@SuppressWarnings</code>.</div>
 </td>
 </tr>
-<tr class="row-color" id="i23">
+<tr class="row-color" id="i21">
 <td class="col-first"><code>boolean</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#suppressedByAnyOf(java.util.Set,com.google.errorprone.VisitorState)">suppressedByAnyOf</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a>&lt;com.sun.tools.javac.util.Name&gt;&nbsp;annotations,
 <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;s)</code></th>
@@ -677,32 +657,6 @@ implements <a href="../matchers/Suppressible.html" title="interface in com.googl
 <div class="member-signature"><span class="annotations"><a href="../annotations/CheckReturnValue.html" title="annotation in com.google.errorprone.annotations">@CheckReturnValue</a>
 </span><span class="modifiers">protected</span>&nbsp;<span class="return-type"><a href="../matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></span>&nbsp;<span class="member-name">describeMatch</span>&#8203;(<span class="parameters">com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition&nbsp;position)</span></div>
 <div class="block">Helper to create a Description for the common case where there is no fix.</div>
-</section>
-</li>
-<li>
-<section class="detail" id="describeMatch(com.sun.source.tree.Tree,java.util.Optional)">
-<h3>describeMatch</h3>
-<div class="member-signature"><span class="annotations"><a href="../annotations/CheckReturnValue.html" title="annotation in com.google.errorprone.annotations">@CheckReturnValue</a>
-<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Deprecated.html" title="class or interface in java.lang" class="external-link">@Deprecated</a>
-</span><span class="modifiers">protected</span>&nbsp;<span class="return-type"><a href="../matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></span>&nbsp;<span class="member-name">describeMatch</span>&#8203;(<span class="parameters">com.sun.source.tree.Tree&nbsp;node,
-<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;? extends <a href="../fixes/Fix.html" title="interface in com.google.errorprone.fixes">Fix</a>&gt;&nbsp;fix)</span></div>
-<div class="deprecation-block"><span class="deprecated-label">Deprecated.</span>
-<div class="deprecation-comment">prefer referring to empty fixes using <a href="../fixes/SuggestedFix.html#emptyFix()"><code>SuggestedFix.emptyFix()</code></a>.</div>
-</div>
-<div class="block">Helper to create a Description for the common case where there is an <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html" title="class or interface in java.util" class="external-link"><code>Optional</code></a> fix.</div>
-</section>
-</li>
-<li>
-<section class="detail" id="describeMatch(com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition,java.util.Optional)">
-<h3>describeMatch</h3>
-<div class="member-signature"><span class="annotations"><a href="../annotations/CheckReturnValue.html" title="annotation in com.google.errorprone.annotations">@CheckReturnValue</a>
-<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Deprecated.html" title="class or interface in java.lang" class="external-link">@Deprecated</a>
-</span><span class="modifiers">protected</span>&nbsp;<span class="return-type"><a href="../matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></span>&nbsp;<span class="member-name">describeMatch</span>&#8203;(<span class="parameters">com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition&nbsp;position,
-<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;? extends <a href="../fixes/Fix.html" title="interface in com.google.errorprone.fixes">Fix</a>&gt;&nbsp;fix)</span></div>
-<div class="deprecation-block"><span class="deprecated-label">Deprecated.</span>
-<div class="deprecation-comment">prefer referring to empty fixes using <a href="../fixes/SuggestedFix.html#emptyFix()"><code>SuggestedFix.emptyFix()</code></a>.</div>
-</div>
-<div class="block">Helper to create a Description for the common case where there is an <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html" title="class or interface in java.util" class="external-link"><code>Optional</code></a> fix.</div>
 </section>
 </li>
 <li>
