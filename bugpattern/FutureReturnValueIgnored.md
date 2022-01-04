@@ -26,4 +26,24 @@ exceptions - see
 for details.
 
 ## Suppression
-Suppress false positives by adding the suppression annotation `@SuppressWarnings("FutureReturnValueIgnored")` to the enclosing element.
+
+In certain scenarios like tests, there might be a need of not using the future
+values. One can suppress such false positives by either suppressing the check
+directly or by saving the future in variables named with prefix `unused`. For
+example:
+
+```java
+@SuppressWarnings("FutureReturnValueIgnored")
+@Test
+public void futureInvocation_noMemoryLeak() {
+  functionReturningFuture();
+}
+```
+
+```java
+@Test
+public void futureInvocation_noMemoryLeak() {
+  Future<?> unusedFuture = functionReturningFuture();
+}
+```
+
