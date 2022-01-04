@@ -15,7 +15,7 @@
 <script type="text/javascript" src="../../../../../script-dir/jquery-ui.min.js"></script>
 </head>
 <body class="class-declaration-page">
-<script type="text/javascript">var data = {"i0":9,"i1":9};
+<script type="text/javascript">var data = {"i0":9};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],8:["t4","Concrete Methods"]};
 var altColor = "alt-color";
 var rowColor = "row-color";
@@ -160,14 +160,6 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
  satisfying at least one of the given Rule specifications.</div>
 </td>
 </tr>
-<tr class="row-color" id="i1">
-<td class="col-first"><code>static &lt;T extends com.sun.source.tree.Tree&gt;<br><a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;T&gt;</code></td>
-<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#compiledAnyOf(java.lang.Iterable)">compiledAnyOf</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Iterable.html" title="class or interface in java.lang" class="external-link">Iterable</a>&lt;<a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;? super T&gt;&gt;&nbsp;inputs)</code></th>
-<td class="col-last">
-<div class="block">Compose several matchers together, such that the composite matches an AST node if any of the
- given matchers do.</div>
-</td>
-</tr>
 </tbody>
 </table>
 </div>
@@ -186,22 +178,6 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <section class="method-details" id="method.detail">
 <h2>Method Details</h2>
 <ul class="member-list">
-<li>
-<section class="detail" id="compiledAnyOf(java.lang.Iterable)">
-<h3>compiledAnyOf</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="type-parameters">&lt;T extends com.sun.source.tree.Tree&gt;</span>
-<span class="return-type"><a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;T&gt;</span>&nbsp;<span class="member-name">compiledAnyOf</span>&#8203;(<span class="parameters"><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Iterable.html" title="class or interface in java.lang" class="external-link">Iterable</a>&lt;<a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;? super T&gt;&gt;&nbsp;inputs)</span></div>
-<div class="block">Compose several matchers together, such that the composite matches an AST node if any of the
- given matchers do.
-
- <p>This is semantically equivalent to <a href="../Matchers.html#anyOf(java.lang.Iterable)"><code>Matchers.anyOf(Iterable)</code></a>, but if the list of
- matchers contains more than one <a href="MethodMatchers.MethodMatcher.html" title="interface in com.google.errorprone.matchers.method"><code>MethodMatchers.MethodMatcher</code></a>, then anyMethod will do
- some work up front to try and optimize out the repeated work that those matchers would
- otherwise do. Consider profiling your matcher before using this method: the up-front work can
- be substantial, and if the list of matchers is small or the result of this method is not used
- often, the extra work may not pay for itself.</div>
-</section>
-</li>
 <li>
 <section class="detail" id="compile(java.lang.Iterable)">
 <h3>compile</h3>
