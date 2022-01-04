@@ -45,7 +45,8 @@ import java.util.concurrent.ForkJoinTask;
         "Return value of methods returning Future must be checked. Ignoring returned Futures "
             + "suppresses exceptions thrown from the code that completes the Future.",
     severity = WARNING,
-    tags = StandardTags.FRAGILE_CODE)
+    tags = StandardTags.FRAGILE_CODE,
+    documentSuppression = false)
 public final class FutureReturnValueIgnored extends AbstractReturnValueIgnored
     implements ReturnTreeMatcher {
 
