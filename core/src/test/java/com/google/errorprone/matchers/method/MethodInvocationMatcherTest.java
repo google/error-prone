@@ -16,7 +16,6 @@
 
 package com.google.errorprone.matchers.method;
 
-import static com.google.common.truth.Truth.assertThat;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.anyMethod;
 import static com.google.errorprone.matchers.Matchers.instanceMethod;
@@ -30,10 +29,10 @@ import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
+import com.google.errorprone.matchers.Matchers;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import java.util.List;
-import java.util.stream.Collectors;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -78,12 +77,7 @@ public class MethodInvocationMatcherTest {
               anyMethod().anyClass().named("valueOf").withParameters("int"),
               staticMethod().anyClass().named("valueOf").withParameters("long"),
               instanceMethod().onDescendantOf("java.lang.Number"));
-      assertThat(matchers.stream().allMatch(m -> m.asRule().isPresent())).isTrue();
-      this.matcher =
-          MethodInvocationMatcher.compile(
-              matchers.stream()
-                  .map(m -> m.asRule().orElseThrow(RuntimeException::new))
-                  .collect(Collectors.toList()));
+      this.matcher = Matchers.anyOf(matchers);
     }
 
     @Override

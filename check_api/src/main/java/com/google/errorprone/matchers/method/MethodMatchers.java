@@ -17,27 +17,17 @@
 package com.google.errorprone.matchers.method;
 
 import com.google.errorprone.matchers.Matcher;
-import com.google.errorprone.matchers.method.MethodInvocationMatcher.Rule;
 import com.google.errorprone.predicates.TypePredicate;
 import com.google.errorprone.suppliers.Supplier;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.tools.javac.code.Type;
-import java.util.Optional;
 import java.util.regex.Pattern;
 
 public final class MethodMatchers {
 
   /** @deprecated use {@code Matcher<ExpressionTree>} instead of referring directly to this type. */
   @Deprecated
-  public interface MethodMatcher extends Matcher<ExpressionTree> {
-
-    /**
-     * A rule for expressing this matcher as a MethodInvocationMatcher, if possible. If this matcher
-     * uses predicates not supported by the MethodInvocationMatcher evaluator, this method will
-     * return empty().
-     */
-    Optional<Rule> asRule();
-  }
+  public interface MethodMatcher extends Matcher<ExpressionTree> {}
 
   // Language definition for fluent method matchers.
 

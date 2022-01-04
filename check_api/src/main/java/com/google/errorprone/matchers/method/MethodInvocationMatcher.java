@@ -28,10 +28,8 @@ import com.google.common.collect.SetMultimap;
 import com.google.common.collect.Table;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.matchers.Matcher;
-import com.google.errorprone.matchers.Matchers;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
-import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Type;
@@ -51,65 +49,6 @@ import javax.lang.model.element.ElementKind;
  * of a list of {@link com.google.errorprone.matchers.method.MethodMatchers.MethodMatcher}s.
  */
 public class MethodInvocationMatcher {
-
-  /**
-   * Compose several matchers together, such that the composite matches an AST node if any of the
-   * given matchers do.
-   *
-   * <p>This is semantically equivalent to {@link Matchers#anyOf(Iterable)}, but if the list of
-   * matchers contains more than one {@link MethodMatchers.MethodMatcher}, then anyMethod will do
-   * some work up front to try and optimize out the repeated work that those matchers would
-   * otherwise do. Consider profiling your matcher before using this method: the up-front work can
-   * be substantial, and if the list of matchers is small or the result of this method is not used
-   * often, the extra work may not pay for itself.
-   */
-  public static <T extends Tree> Matcher<T> compiledAnyOf(
-      final Iterable<Matcher<? super T>> inputs) {
-    // We want to combine all MethodMatchers in the input, since running N of them at once
-    // is as fast as running just one. But we don't want to move it to the front of the list or
-    // the end of the list unconditionally, because that could change performance characteristics
-    // in a surprising way. Instead, we split the list into 3 segments: those matchers that were
-    // before any MethodMatcher, then all MethodMatchers, then those matchers that were after the
-    // first MethodMatcher. This way we run the remaining N MethodMatchers "for free".
-    ImmutableList<? extends Matcher<? super T>> matchers = ImmutableList.copyOf(inputs);
-    ImmutableList.Builder<Matcher<? super T>> before = ImmutableList.builder();
-    ImmutableSet.Builder<Rule> methodMatchers = ImmutableSet.builder();
-    ImmutableList.Builder<Matcher<? super T>> after = ImmutableList.builder();
-    int methodMatchersSeen = 0;
-    for (Matcher<? super T> matcher : matchers) {
-      if (matcher instanceof MethodMatchers.MethodMatcher) {
-        Optional<Rule> rule = ((MethodMatchers.MethodMatcher) matcher).asRule();
-        if (rule.isPresent()) { // Can't use rules.map, because we need to continue the loop.
-          methodMatchers.add(rule.get());
-          methodMatchersSeen++;
-          continue;
-        }
-      }
-      (methodMatchersSeen > 0 ? after : before).add(matcher);
-    }
-
-    ImmutableList<? extends Matcher<? super T>> effective;
-    if (methodMatchersSeen > 1) {
-      ImmutableList.Builder<Matcher<? super T>> all = ImmutableList.builder();
-      all.addAll(before.build());
-      ImmutableSet<Rule> rules = methodMatchers.build();
-      all.add(Matchers.toType(ExpressionTree.class, compile(rules)));
-      all.addAll(after.build());
-      effective = all.build();
-    } else {
-      // We only expect a speedup if we can combine 2 or more MethodMatchers.
-      effective = matchers;
-    }
-
-    return (t, state) -> {
-      for (Matcher<? super T> matcher : effective) {
-        if (matcher.matches(t, state)) {
-          return true;
-        }
-      }
-      return false;
-    };
-  }
 
   static final class Context {
     final MethodSymbol sym;
