@@ -15,7 +15,7 @@
 <script type="text/javascript" src="../../../../script-dir/jquery-ui.min.js"></script>
 </head>
 <body class="class-declaration-page">
-<script type="text/javascript">var data = {"i0":10,"i1":10};
+<script type="text/javascript">var data = {"i0":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "alt-color";
 var rowColor = "row-color";
@@ -153,15 +153,6 @@ implements <a href="BugChecker.CompilationUnitTreeMatcher.html" title="interface
 <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color" id="i1">
-<td class="col-first"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;com.google.common.collect.ImmutableList&lt;com.google.errorprone.bugpatterns.AlreadyChecked.PureMethodInvocation&gt;&gt;</code></td>
-<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#symbolizeImmutableExpression(com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)">symbolizeImmutableExpression</a></span>&#8203;(com.sun.source.tree.ExpressionTree&nbsp;tree,
-<a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
-<td class="col-last">
-<div class="block">Returns a list of the methods called to get to this expression, as well as a terminating
- variable if needed.</div>
-</td>
-</tr>
 </tbody>
 </table>
 </div>
@@ -209,18 +200,6 @@ implements <a href="BugChecker.CompilationUnitTreeMatcher.html" title="interface
 <dt>Specified by:</dt>
 <dd><code><a href="BugChecker.CompilationUnitTreeMatcher.html#matchCompilationUnit(com.sun.source.tree.CompilationUnitTree,com.google.errorprone.VisitorState)">matchCompilationUnit</a></code>&nbsp;in interface&nbsp;<code><a href="BugChecker.CompilationUnitTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.CompilationUnitTreeMatcher</a></code></dd>
 </dl>
-</section>
-</li>
-<li>
-<section class="detail" id="symbolizeImmutableExpression(com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)">
-<h3>symbolizeImmutableExpression</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;com.google.common.collect.ImmutableList&lt;com.google.errorprone.bugpatterns.AlreadyChecked.PureMethodInvocation&gt;&gt;</span>&nbsp;<span class="member-name">symbolizeImmutableExpression</span>&#8203;(<span class="parameters">com.sun.source.tree.ExpressionTree&nbsp;tree,
-<a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
-<div class="block">Returns a list of the methods called to get to this expression, as well as a terminating
- variable if needed.
-
- <p>For example <code>a.getFoo().getBar()</code> would return <code>MethodSymbol[getBar],
- MethodSymbol[getFoo], VarSymbol[a]</code>.</div>
 </section>
 </li>
 </ul>
