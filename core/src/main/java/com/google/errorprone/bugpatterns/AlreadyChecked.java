@@ -39,10 +39,7 @@ import com.sun.source.tree.IfTree;
 import com.sun.source.tree.Tree;
 import java.util.Set;
 
-/**
- * Bugpattern to find conditions which are checked more than once, and either vacuously true or
- * false.
- */
+/** Bugpattern to find conditions which are checked more than once. */
 @BugPattern(
     name = "AlreadyChecked",
     severity = WARNING,
@@ -103,28 +100,32 @@ public final class AlreadyChecked extends BugChecker implements CompilationUnitT
     }
 
     void checkCondition(Tree tree, Truthiness truthiness) {
-      Set<ConstantBooleanExpression> vacuousFalsehoods =
+      Set<ConstantBooleanExpression> alreadyKnownFalsehoods =
           union(
               intersection(truthiness.requiredTrue(), falsehoods.elementSet()),
               intersection(truthiness.requiredFalse(), truths.elementSet()));
-      if (!vacuousFalsehoods.isEmpty()) {
-        state.reportMatch(
-            buildDescription(tree)
-                .setMessage(format("This condition (on %s) is vacuously false.", vacuousFalsehoods))
-                .build());
-      }
-      Set<ConstantBooleanExpression> vacuousTruths =
-          union(
-              intersection(truthiness.requiredTrue(), truths.elementSet()),
-              intersection(truthiness.requiredFalse(), falsehoods.elementSet()));
-      if (!vacuousTruths.isEmpty()) {
+      if (!alreadyKnownFalsehoods.isEmpty()) {
         state.reportMatch(
             buildDescription(tree)
                 .setMessage(
                     format(
-                        "This condition (on %s) is vacuously true; it's already been checked by"
-                            + " this point.",
-                        vacuousTruths))
+                        "This condition (on %s) is known to be false here. It (or its complement)"
+                            + " has already been checked.",
+                        alreadyKnownFalsehoods))
+                .build());
+      }
+      Set<ConstantBooleanExpression> alreadyKnownTruths =
+          union(
+              intersection(truthiness.requiredTrue(), truths.elementSet()),
+              intersection(truthiness.requiredFalse(), falsehoods.elementSet()));
+      if (!alreadyKnownTruths.isEmpty()) {
+        state.reportMatch(
+            buildDescription(tree)
+                .setMessage(
+                    format(
+                        "This condition (on %s) is already known to be true; it (or its complement)"
+                            + " has already been checked.",
+                        alreadyKnownTruths))
                 .build());
       }
     }
