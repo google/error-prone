@@ -23,8 +23,6 @@ import static com.google.errorprone.matchers.method.MethodMatchers.instanceMetho
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
 import static com.google.errorprone.util.ASTHelpers.constValue;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
-import static com.google.errorprone.util.ASTHelpers.getSymbol;
-import static com.google.errorprone.util.ASTHelpers.isConsideredFinal;
 import static java.util.Arrays.stream;
 
 import com.google.common.collect.HashMultiset;
@@ -33,23 +31,22 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Multiset;
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
+import com.google.errorprone.bugpatterns.threadsafety.ConstantExpressions;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.method.MethodMatchers;
 import com.google.errorprone.util.ASTHelpers;
 import com.google.protobuf.ByteString;
 import com.sun.source.tree.ExpressionTree;
-import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.Tree;
-import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import java.lang.reflect.InvocationTargetException;
 import java.util.function.Consumer;
-import javax.lang.model.element.ElementKind;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
@@ -132,6 +129,12 @@ public class AlwaysThrows extends BugChecker implements MethodInvocationTreeMatc
     abstract void validate(MethodInvocationTree tree, String argument) throws Throwable;
   }
 
+  private final ConstantExpressions constantExpressions;
+
+  public AlwaysThrows(ErrorProneFlags flags) {
+    this.constantExpressions = ConstantExpressions.fromFlags(flags);
+  }
+
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
     if (IMMUTABLE_MAP_PUT.matches(tree, state)) {
@@ -152,12 +155,12 @@ public class AlwaysThrows extends BugChecker implements MethodInvocationTreeMatc
       }
     }
     if (IMMUTABLE_MAP_OF.matches(tree, state)) {
-      Description description = checkImmutableMapOf(tree, /* index= */ 0);
+      Description description = checkImmutableMapOf(tree, /* index= */ 0, state);
       if (!description.equals(NO_MATCH)) {
         return description;
       }
       if (IMMUTABLE_BI_MAP_OF.matches(tree, state)) {
-        return checkImmutableMapOf(tree, /* index= */ 1);
+        return checkImmutableMapOf(tree, /* index= */ 1, state);
       }
     }
     Apis api =
@@ -190,7 +193,7 @@ public class AlwaysThrows extends BugChecker implements MethodInvocationTreeMatc
         receiver instanceof MethodInvocationTree && IMMUTABLE_MAP_PUT.matches(receiver, state);
         receiver = getReceiver(receiver)) {
       Object constantKey =
-          getConstantKey(((MethodInvocationTree) receiver).getArguments().get(index));
+          getConstantKey(((MethodInvocationTree) receiver).getArguments().get(index), state);
       if (constantKey == null) {
         continue;
       }
@@ -199,10 +202,11 @@ public class AlwaysThrows extends BugChecker implements MethodInvocationTreeMatc
     return checkForRepeatedKeys(tree, keys);
   }
 
-  private Description checkImmutableMapOf(MethodInvocationTree tree, int index) {
+  private Description checkImmutableMapOf(
+      MethodInvocationTree tree, int index, VisitorState state) {
     Multiset<Object> keys = HashMultiset.create();
     for (int i = 0; i < tree.getArguments().size(); i += 2) {
-      Object constantKey = getConstantKey(tree.getArguments().get(i + index));
+      Object constantKey = getConstantKey(tree.getArguments().get(i + index), state);
       if (constantKey == null) {
         continue;
       }
@@ -211,22 +215,8 @@ public class AlwaysThrows extends BugChecker implements MethodInvocationTreeMatc
     return checkForRepeatedKeys(tree, keys);
   }
 
-  private static Object getConstantKey(ExpressionTree key) {
-    Object constValue = constValue(key);
-    if (constValue != null) {
-      return constValue;
-    }
-    Symbol symbol = getSymbol(key);
-    if (symbol == null) {
-      return null;
-    }
-    if (symbol.getKind().equals(ElementKind.ENUM_CONSTANT)) {
-      return symbol;
-    }
-    if (key instanceof IdentifierTree && isConsideredFinal(symbol)) {
-      return symbol;
-    }
-    return null;
+  private Object getConstantKey(ExpressionTree key, VisitorState state) {
+    return constantExpressions.constantExpression(key, state).orElse(null);
   }
 
   private Description checkForRepeatedKeys(MethodInvocationTree tree, Multiset<Object> keys) {
