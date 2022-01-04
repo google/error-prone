@@ -19,12 +19,16 @@ import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.getGeneratedBy;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
+import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.FindIdentifiers.findIdent;
 import static com.sun.tools.javac.code.Kinds.KindSelector.VAL_TYP;
+import static java.util.stream.Collectors.toCollection;
 
 import com.google.common.base.Ascii;
 import com.google.common.collect.HashBasedTable;
+import com.google.common.collect.HashMultimap;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.SetMultimap;
 import com.google.common.collect.Table;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.SeverityLevel;
@@ -44,11 +48,13 @@ import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.PackageSymbol;
 import com.sun.tools.javac.code.Symbol.TypeSymbol;
+import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.util.Position;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import javax.lang.model.element.Name;
@@ -74,7 +80,7 @@ public final class UnnecessarilyFullyQualified extends BugChecker
       return NO_MATCH;
     }
     Table<Name, TypeSymbol, List<TreePath>> table = HashBasedTable.create();
-    Set<Name> identifiersSeen = new HashSet<>();
+    SetMultimap<Name, TypeSymbol> identifiersSeen = HashMultimap.create();
     new SuppressibleTreePathScanner<Void, Void>() {
       @Override
       public Void visitImport(ImportTree importTree, Void unused) {
@@ -91,7 +97,10 @@ public final class UnnecessarilyFullyQualified extends BugChecker
 
       @Override
       public Void visitIdentifier(IdentifierTree identifierTree, Void unused) {
-        identifiersSeen.add(identifierTree.getName());
+        Type type = getType(identifierTree);
+        if (type != null) {
+          identifiersSeen.put(identifierTree.getName(), type.tsym);
+        }
         return null;
       }
 
@@ -157,11 +166,13 @@ public final class UnnecessarilyFullyQualified extends BugChecker
       if (types.size() > 1) {
         continue;
       }
+      TypeSymbol type = getOnlyElement(types.keySet());
       // Skip weird Android classes which don't look like classes.
       if (Ascii.isLowerCase(name.charAt(0))) {
         continue;
       }
-      if (identifiersSeen.contains(name)) {
+      // Don't replace if this name is already used in the file to refer to a _different_ type.
+      if (identifiersSeen.get(name).stream().anyMatch(s -> !s.equals(type))) {
         continue;
       }
       String nameString = name.toString();
@@ -169,12 +180,19 @@ public final class UnnecessarilyFullyQualified extends BugChecker
         continue;
       }
       List<TreePath> pathsToFix = getOnlyElement(types.values());
-      if (pathsToFix.stream()
-          .anyMatch(path -> findIdent(nameString, state.withPath(path), VAL_TYP) != null)) {
+      Set<Symbol> meaningAtUsageSites =
+          pathsToFix.stream()
+              .map(path -> findIdent(nameString, state.withPath(path), VAL_TYP))
+              .collect(toCollection(HashSet::new));
+      // Don't report a finding if the simple name has a different meaning elsewhere.
+      if (meaningAtUsageSites.stream().anyMatch(s -> s != null && !s.equals(type))) {
         continue;
       }
       SuggestedFix.Builder fixBuilder = SuggestedFix.builder();
-      fixBuilder.addImport(getOnlyElement(types.keySet()).getQualifiedName().toString());
+      // Only add the import if any of the usage sites don't already resolve to this type.
+      if (meaningAtUsageSites.stream().anyMatch(Objects::isNull)) {
+        fixBuilder.addImport(getOnlyElement(types.keySet()).getQualifiedName().toString());
+      }
       for (TreePath path : pathsToFix) {
         fixBuilder.replace(path.getLeaf(), nameString);
       }
