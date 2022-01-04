@@ -8,6 +8,7 @@
 
 # intellij
 .idea/ant.xml
+/.idea/codestream.xml
 .idea/codeStyleSettings.xml
 .idea/compiler.xml
 .idea/copyright
