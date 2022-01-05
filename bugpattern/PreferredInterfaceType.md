@@ -11,7 +11,7 @@ severity: WARNING
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
-_Alternate names: MutableMethodReturnType_
+_Alternate names: MutableConstantField, MutableMethodReturnType_
 
 ## The problem
 Prefer referring to types by the immutable type (such as `ImmutableList`)

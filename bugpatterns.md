@@ -928,9 +928,6 @@ Multiple calls to either parallel or sequential are unnecessary and cause confus
 __[MultipleUnaryOperatorsInMethodCall](bugpattern/MultipleUnaryOperatorsInMethodCall)__<br>
 Avoid having multiple unary operators acting on the same variable in a method call
 
-__[MutableConstantField](bugpattern/MutableConstantField)__<br>
-Constant field declarations should use the immutable type (such as ImmutableList) instead of the general collection interface type (such as List)
-
 __[MutablePublicArray](bugpattern/MutablePublicArray)__<br>
 Non-empty arrays are mutable, so this `public static final` array is not a constant and can be modified by clients of this class.  Prefer an ImmutableList, or provide an accessor method that returns a defensive copy.
 
