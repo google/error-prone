@@ -19,7 +19,7 @@ package com.google.errorprone.bugpatterns.apidiff;
 import static com.google.common.collect.ImmutableSetMultimap.toImmutableSetMultimap;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 
-import com.google.common.collect.ImmutableMultimap;
+import com.google.common.collect.ImmutableSetMultimap;
 import com.google.common.io.Resources;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.ErrorProneFlags;
@@ -55,7 +55,7 @@ public class Java8ApiChecker extends ApiDiffChecker {
       if (checkBuffer && checkChecksum) {
         return diff;
       }
-      ImmutableMultimap<String, ClassMemberKey> unsupportedMembers =
+      ImmutableSetMultimap<String, ClassMemberKey> unsupportedMembers =
           diff.unsupportedMembersByClass().entries().stream()
               .filter(e -> checkBuffer || !BUFFER.matcher(e.getKey()).matches())
               .filter(e -> checkChecksum || !e.getKey().equals(CHECKSUM))

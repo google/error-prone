@@ -31,6 +31,7 @@ import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.Tree;
 import java.io.IOException;
+import java.util.List;
 import javax.tools.JavaFileObject;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -52,7 +53,7 @@ public class TemplateIntegrationTest extends CompilerBasedTest {
                 .transformAndConcat(
                     new Function<CompilationUnitTree, Iterable<? extends Tree>>() {
                       @Override
-                      public Iterable<? extends Tree> apply(CompilationUnitTree input) {
+                      public List<? extends Tree> apply(CompilationUnitTree input) {
                         return input.getTypeDecls();
                       }
                     })

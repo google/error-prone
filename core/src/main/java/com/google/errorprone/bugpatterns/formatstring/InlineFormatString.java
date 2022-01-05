@@ -25,8 +25,8 @@ import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapBuilder;
+import com.google.common.collect.SetMultimap;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.annotations.FormatMethod;
@@ -121,7 +121,7 @@ public class InlineFormatString extends BugChecker implements CompilationUnitTre
 
   @Override
   public Description matchCompilationUnit(CompilationUnitTree tree, VisitorState state) {
-    Multimap<Symbol, Tree> uses = MultimapBuilder.linkedHashKeys().linkedHashSetValues().build();
+    SetMultimap<Symbol, Tree> uses = MultimapBuilder.linkedHashKeys().linkedHashSetValues().build();
     Map<Symbol, VariableTree> declarations = new LinkedHashMap<>();
     // find calls to String.format and similar where the format string is a private compile-time
     // constant field

@@ -144,7 +144,7 @@ abstract class UPlaceholderStatement implements UStatement {
               .containsAll(placeholder().requiredParameters())) {
             Unifier resultUnifier = consumptionState.unifier().fork();
             int nConsumedStatements = consumptionState.result().consumedStatements();
-            java.util.List<? extends StatementTree> remainingStatements =
+            ImmutableList<? extends StatementTree> remainingStatements =
                 initState
                     .unconsumedStatements()
                     .subList(nConsumedStatements, initState.unconsumedStatements().size());

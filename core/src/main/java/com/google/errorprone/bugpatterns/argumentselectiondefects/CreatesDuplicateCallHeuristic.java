@@ -73,7 +73,7 @@ class CreatesDuplicateCallHeuristic implements Heuristic {
    * @param state is the current visitor state
    * @return a list containing argument lists for each call found
    */
-  private static List<List<Parameter>> findArgumentsForOtherInstances(
+  private static ImmutableList<List<Parameter>> findArgumentsForOtherInstances(
       MethodSymbol calledMethod, Tree currentNode, VisitorState state) {
 
     Tree enclosingNode = ASTHelpers.findEnclosingNode(state.getPath(), MethodTree.class);

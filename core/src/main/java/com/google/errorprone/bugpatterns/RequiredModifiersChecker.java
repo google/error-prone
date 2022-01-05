@@ -53,8 +53,6 @@ import javax.lang.model.util.SimpleAnnotationValueVisitor8;
     severity = ERROR)
 public class RequiredModifiersChecker extends BugChecker implements AnnotationTreeMatcher {
 
-  private static final String MESSAGE_TEMPLATE =
-      "%s has specified that it must be used together with the following modifiers: %s";
   private static final String REQUIRED_MODIFIERS =
       "com.google.errorprone.annotations.RequiredModifiers";
 
@@ -96,7 +94,10 @@ public class RequiredModifiersChecker extends BugChecker implements AnnotationTr
         annotationName != null
             ? String.format("The annotation '@%s'", annotationName)
             : "This annotation";
-    String customMessage = String.format(MESSAGE_TEMPLATE, nameString, missing);
+    String customMessage =
+        String.format(
+            "%s has specified that it must be used together with the following modifiers: %s",
+            nameString, missing);
     return buildDescription(tree)
         .addFix(
             SuggestedFixes.addModifiers(

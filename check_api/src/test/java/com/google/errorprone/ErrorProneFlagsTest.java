@@ -23,7 +23,6 @@ import static org.junit.Assert.assertThrows;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
-import java.util.Map;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -113,7 +112,7 @@ public final class ErrorProneFlagsTest {
             .put("c", "c2")
             .build();
 
-    Map<String, String> actualCombinedMap = flags1.plus(flags2).getFlagsMap();
+    ImmutableMap<String, String> actualCombinedMap = flags1.plus(flags2).getFlagsMap();
 
     assertThat(actualCombinedMap).containsExactlyEntriesIn(expectedCombinedMap);
   }

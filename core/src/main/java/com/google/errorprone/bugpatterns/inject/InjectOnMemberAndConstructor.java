@@ -25,6 +25,7 @@ import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.constructor;
 import static com.google.errorprone.matchers.Matchers.isField;
 
+import com.google.common.collect.ImmutableList;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
@@ -74,7 +75,7 @@ public class InjectOnMemberAndConstructor extends BugChecker implements ClassTre
     }
 
     List<MethodTree> ctors = ASTHelpers.getConstructors(classTree);
-    List<MethodTree> ctorsWithInject =
+    ImmutableList<MethodTree> ctorsWithInject =
         ctors.stream()
             .filter(c -> hasInjectAnnotation().matches(c, state))
             .collect(toImmutableList());

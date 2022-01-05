@@ -35,7 +35,6 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import javax.annotation.Nullable;
@@ -118,7 +117,7 @@ class BugPatternFileGenerator implements LineProcessor<List<BugPatternInstance>>
       }
 
       if (generateFrontMatter) {
-        Map<String, String> frontmatterData =
+        ImmutableMap<String, String> frontmatterData =
             ImmutableMap.<String, String>builder()
                 .put("title", pattern.name)
                 .put("summary", pattern.summary)

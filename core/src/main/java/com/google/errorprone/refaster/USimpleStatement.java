@@ -17,6 +17,7 @@
 package com.google.errorprone.refaster;
 
 import com.google.common.base.Function;
+import com.google.common.collect.ImmutableList;
 import com.sun.source.tree.StatementTree;
 import com.sun.tools.javac.tree.JCTree.JCStatement;
 import com.sun.tools.javac.util.List;
@@ -40,7 +41,7 @@ abstract class USimpleStatement extends UTree<JCStatement> implements UStatement
 
   @Override
   public Choice<UnifierWithUnconsumedStatements> apply(UnifierWithUnconsumedStatements state) {
-    java.util.List<? extends StatementTree> unconsumedStatements = state.unconsumedStatements();
+    ImmutableList<? extends StatementTree> unconsumedStatements = state.unconsumedStatements();
     if (unconsumedStatements.isEmpty()) {
       return Choice.none();
     }

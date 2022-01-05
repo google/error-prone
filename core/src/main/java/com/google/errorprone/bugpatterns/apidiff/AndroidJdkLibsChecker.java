@@ -20,7 +20,6 @@ import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 
-import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ImmutableSetMultimap;
 import com.google.errorprone.BugPattern;
@@ -91,7 +90,7 @@ public class AndroidJdkLibsChecker extends ApiDiffChecker {
             .addAll(support.bannedClasses)
             .build();
 
-    ImmutableMultimap<String, ClassMemberKey> unsupportedMembers =
+    ImmutableSetMultimap<String, ClassMemberKey> unsupportedMembers =
         ImmutableSetMultimap.<String, ClassMemberKey>builder()
             .putAll(
                 Java7ApiChecker.API_DIFF.unsupportedMembersByClass().entries().stream()

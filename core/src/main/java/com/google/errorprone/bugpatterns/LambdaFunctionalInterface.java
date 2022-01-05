@@ -55,7 +55,7 @@ public class LambdaFunctionalInterface extends BugChecker implements MethodTreeM
   private static final String JAVA_UTIL_FUNCTION_FUNCTION = "java.util.function.Function";
   private static final String JAVA_LANG_NUMBER = "java.lang.Number";
 
-  private static final ImmutableMap<String, String> methodMappings =
+  private static final ImmutableMap<String, String> METHOD_MAPPINGS =
       ImmutableMap.<String, String>builder()
           .put(
               JAVA_UTIL_FUNCTION_FUNCTION + "<java.lang.Double,java.lang.Double>",
@@ -104,7 +104,7 @@ public class LambdaFunctionalInterface extends BugChecker implements MethodTreeM
               "java.util.function.ToDoubleFunction<T>")
           .buildOrThrow();
 
-  private static final ImmutableMap<String, String> applyMappings =
+  private static final ImmutableMap<String, String> APPLY_MAPPINGS =
       ImmutableMap.<String, String>builder()
           .put("java.util.function.DoubleToIntFunction", "applyAsInt")
           .put("java.util.function.DoubleToLongFunction", "applyAsLong")
@@ -275,11 +275,11 @@ public class LambdaFunctionalInterface extends BugChecker implements MethodTreeM
   }
 
   private static Optional<String> getMappingForFunction(String function) {
-    return ofNullable(methodMappings.get(function));
+    return ofNullable(METHOD_MAPPINGS.get(function));
   }
 
   private static Optional<String> getMappingForApply(String apply) {
-    return ofNullable(applyMappings.get(apply));
+    return ofNullable(APPLY_MAPPINGS.get(apply));
   }
 
   private static String getFunctionName(String fullyQualifiedName) {

@@ -134,7 +134,7 @@ public class CompilationTestHelper {
    * Creates a list of arguments to pass to the compiler. Uses DEFAULT_ARGS as the base and appends
    * the overridden classpath, if provided, and any extraArgs that were provided.
    */
-  private static List<String> buildArguments(
+  private static ImmutableList<String> buildArguments(
       @Nullable List<Class<?>> overrideClasspath, List<String> extraArgs) {
     ImmutableList.Builder<String> result = ImmutableList.<String>builder().addAll(DEFAULT_ARGS);
     getOverrideClasspath(overrideClasspath)

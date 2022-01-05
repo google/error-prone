@@ -40,7 +40,6 @@ import com.sun.source.tree.ExpressionTree;
 import com.sun.tools.javac.code.Type;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
@@ -200,7 +199,7 @@ final class MethodMatcherImpl
 
   @Override
   public MethodNameMatcher namedAnyOf(Iterable<String> names) {
-    Set<String> expected = ImmutableSet.copyOf(names);
+    ImmutableSet<String> expected = ImmutableSet.copyOf(names);
     return append((m, s) -> expected.contains(m.sym().getSimpleName().toString()));
   }
 

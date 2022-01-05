@@ -118,7 +118,7 @@ public class DoubleBraceInitialization extends BugChecker implements NewClassTre
           .anyMatch(a -> a.getKind() == Kind.NULL_LITERAL)) {
         return Optional.empty();
       }
-      List<String> args =
+      ImmutableList<String> args =
           arguments.stream()
               .map(
                   arg ->

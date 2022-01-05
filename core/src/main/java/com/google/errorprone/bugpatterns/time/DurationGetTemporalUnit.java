@@ -18,6 +18,7 @@ package com.google.errorprone.bugpatterns.time;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -53,8 +54,8 @@ import java.util.Optional;
     severity = ERROR)
 public final class DurationGetTemporalUnit extends BugChecker
     implements MethodInvocationTreeMatcher {
-  private static final EnumSet<ChronoUnit> INVALID_TEMPORAL_UNITS =
-      EnumSet.complementOf(EnumSet.of(ChronoUnit.SECONDS, ChronoUnit.NANOS));
+  private static final ImmutableSet<ChronoUnit> INVALID_TEMPORAL_UNITS =
+      ImmutableSet.copyOf(EnumSet.complementOf(EnumSet.of(ChronoUnit.SECONDS, ChronoUnit.NANOS)));
 
   private static final ImmutableMap<ChronoUnit, String> SUGGESTIONS =
       ImmutableMap.<ChronoUnit, String>builder()

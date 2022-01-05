@@ -99,7 +99,7 @@ public class JUnitParameterMethodNotFound extends BugChecker implements MethodTr
       return Description.NO_MATCH;
     }
 
-    Set<String> methodsInSourceClass = ImmutableSet.of();
+    ImmutableSet<String> methodsInSourceClass = ImmutableSet.of();
     Set<String> requiredMethods = new TreeSet<>();
 
     ImmutableList<? extends AssignmentTree> annotationsArguments =

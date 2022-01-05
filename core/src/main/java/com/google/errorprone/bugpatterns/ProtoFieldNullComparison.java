@@ -30,7 +30,9 @@ import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.isConsideredFinal;
 import static com.google.errorprone.util.ASTHelpers.isSameType;
 
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
+import com.google.common.collect.Sets;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
@@ -59,7 +61,6 @@ import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
 import java.util.Arrays;
-import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -98,8 +99,8 @@ public class ProtoFieldNullComparison extends BugChecker implements CompilationU
 
   private static final Matcher<Tree> RETURNS_LIST = Matchers.isSubtypeOf("java.util.List");
 
-  private static final Set<Kind> COMPARISON_OPERATORS =
-      EnumSet.of(Kind.EQUAL_TO, Kind.NOT_EQUAL_TO);
+  private static final ImmutableSet<Kind> COMPARISON_OPERATORS =
+      Sets.immutableEnumSet(Kind.EQUAL_TO, Kind.NOT_EQUAL_TO);
 
   private static final Matcher<ExpressionTree> EXTENSION_METHODS_WITH_FIX =
       instanceMethod()

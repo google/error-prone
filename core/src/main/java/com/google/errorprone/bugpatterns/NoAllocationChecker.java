@@ -56,6 +56,7 @@ import static com.sun.source.tree.Tree.Kind.RIGHT_SHIFT_ASSIGNMENT;
 import static com.sun.source.tree.Tree.Kind.UNSIGNED_RIGHT_SHIFT_ASSIGNMENT;
 import static com.sun.source.tree.Tree.Kind.XOR_ASSIGNMENT;
 
+import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.annotations.NoAllocation;
@@ -98,11 +99,9 @@ import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type.ArrayType;
 import com.sun.tools.javac.tree.JCTree.JCExpression;
 import com.sun.tools.javac.tree.JCTree.JCMethodInvocation;
-import java.util.Collections;
 import java.util.EnumSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Checks methods annotated with {@code @NoAllocation} to ensure they really do not allocate.
@@ -163,8 +162,8 @@ public class NoAllocationChecker extends BugChecker
 
   private static final Matcher<ExpressionTree> primitiveArrayExpression = isPrimitiveArrayType();
 
-  private static final Set<Kind> ALL_COMPOUND_OPERATORS =
-      Collections.unmodifiableSet(
+  private static final ImmutableSet<Kind> ALL_COMPOUND_OPERATORS =
+      ImmutableSet.copyOf(
           EnumSet.of(
               AND_ASSIGNMENT,
               DIVIDE_ASSIGNMENT,

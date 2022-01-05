@@ -32,7 +32,6 @@ import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
-import java.util.List;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -71,7 +70,7 @@ public class MethodInvocationMatcherTest {
     private final Matcher<ExpressionTree> matcher;
 
     public MethodInvocationChecker() {
-      List<MethodMatchers.MethodMatcher> matchers =
+      ImmutableList<MethodMatchers.MethodMatcher> matchers =
           ImmutableList.of(
               instanceMethod().anyClass().named("toString").withNoParameters(),
               anyMethod().anyClass().named("valueOf").withParameters("int"),

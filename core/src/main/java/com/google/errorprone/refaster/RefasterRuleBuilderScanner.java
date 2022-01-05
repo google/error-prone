@@ -85,7 +85,7 @@ public final class RefasterRuleBuilderScanner extends SimpleTreeVisitor<Void, Vo
     ClassSymbol sym = ASTHelpers.getSymbol(tree);
     RefasterRuleBuilderScanner scanner = new RefasterRuleBuilderScanner(context);
     // visit abstract methods first
-    List<MethodTree> methods =
+    ImmutableList<MethodTree> methods =
         new Ordering<MethodTree>() {
           @Override
           public int compare(MethodTree l, MethodTree r) {
@@ -149,7 +149,7 @@ public final class RefasterRuleBuilderScanner extends SimpleTreeVisitor<Void, Vo
     }
   }
 
-  private Collection<? extends CodeTransformer> createMatchers(
+  private ImmutableList<? extends CodeTransformer> createMatchers(
       Iterable<UTypeVar> typeVars,
       String qualifiedTemplateClass,
       ImmutableClassToInstanceMap<Annotation> annotationMap) {

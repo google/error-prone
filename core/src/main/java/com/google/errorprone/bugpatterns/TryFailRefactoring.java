@@ -77,7 +77,7 @@ public class TryFailRefactoring extends BugChecker implements TryTreeMatcher {
     }
     // try body statements, excluding the trailing `fail()`
     List<? extends StatementTree> throwingStatements = body.subList(0, body.size() - 1);
-    Iterable<? extends ExpressionTree> failArgs =
+    List<? extends ExpressionTree> failArgs =
         ((MethodInvocationTree) ((ExpressionStatementTree) getLast(body)).getExpression())
             .getArguments();
     Optional<Tree> message = Optional.ofNullable(Iterables.get(failArgs, 0, null));

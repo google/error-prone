@@ -84,7 +84,7 @@ public final class ReplacementVariableFinder {
 
     // find a method parameter matching the input predicate and similar name and suggest it
     // as the new argument
-    Multimap<Integer, JCVariableDecl> potentialReplacements =
+    ImmutableMultimap<Integer, JCVariableDecl> potentialReplacements =
         ASTHelpers.findEnclosingNode(state.getPath(), JCMethodDecl.class).getParameters().stream()
             .filter(validParameterPredicate)
             .collect(collectByEditDistanceTo(simpleNameOfIdentifierOrMemberAccess(input)));

@@ -24,6 +24,7 @@ import static com.google.errorprone.matchers.InjectMatchers.IS_SCOPING_ANNOTATIO
 import static com.google.errorprone.matchers.InjectMatchers.hasProvidesAnnotation;
 import static com.google.errorprone.matchers.Matchers.annotations;
 
+import com.google.common.collect.ImmutableList;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.VisitorState;
@@ -65,7 +66,7 @@ public class MisplacedScopeAnnotations extends BugChecker
     if (!HAS_INJECT.matches(tree, state) && !HAS_PROVIDES.matches(tree, state)) {
       return Description.NO_MATCH;
     }
-    List<AnnotationTree> scopeAnnotations =
+    ImmutableList<AnnotationTree> scopeAnnotations =
         tree.getParameters().stream()
             .flatMap(
                 variable ->
@@ -87,7 +88,7 @@ public class MisplacedScopeAnnotations extends BugChecker
     if (!hasInject) {
       return Description.NO_MATCH;
     }
-    List<AnnotationTree> scopeAnnotations =
+    ImmutableList<AnnotationTree> scopeAnnotations =
         tree.getModifiers().getAnnotations().stream()
             .filter(annotation -> IS_SCOPING_ANNOTATION.matches(annotation, state))
             .filter(annotation -> !IS_BINDING_ANNOTATION.matches(annotation, state))

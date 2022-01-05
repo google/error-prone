@@ -22,7 +22,7 @@ import dagger.Provides;
 import dagger.producers.ProducerModule;
 import dagger.producers.Produces;
 import java.util.Arrays;
-import java.util.Collection;
+import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -33,7 +33,7 @@ import org.junit.runners.Parameterized.Parameters;
 @RunWith(Parameterized.class)
 public class UseBindsTest {
   @Parameters(name = "{0}")
-  public static Collection<Object[]> data() {
+  public static List<Object[]> data() {
     return Arrays.asList(
         new Object[][] {
           {Provides.class.getCanonicalName(), Module.class.getCanonicalName()},

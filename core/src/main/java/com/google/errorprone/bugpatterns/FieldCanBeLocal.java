@@ -25,8 +25,8 @@ import static com.google.errorprone.util.ASTHelpers.shouldKeep;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
-import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapBuilder;
+import com.google.common.collect.SetMultimap;
 import com.google.common.collect.Sets;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -75,9 +75,10 @@ public final class FieldCanBeLocal extends BugChecker implements CompilationUnit
   @Override
   public Description matchCompilationUnit(CompilationUnitTree tree, VisitorState state) {
     Map<VarSymbol, TreePath> potentialFields = new LinkedHashMap<>();
-    Multimap<VarSymbol, TreePath> unconditionalAssignments =
+    SetMultimap<VarSymbol, TreePath> unconditionalAssignments =
         MultimapBuilder.linkedHashKeys().linkedHashSetValues().build();
-    Multimap<VarSymbol, Tree> uses = MultimapBuilder.linkedHashKeys().linkedHashSetValues().build();
+    SetMultimap<VarSymbol, Tree> uses =
+        MultimapBuilder.linkedHashKeys().linkedHashSetValues().build();
 
     new SuppressibleTreePathScanner<Void, Void>() {
       @Override

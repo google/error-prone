@@ -19,6 +19,7 @@ package com.google.errorprone.bugpatterns;
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.MoreCollectors;
 import com.google.common.collect.Streams;
 import com.google.errorprone.BugPattern;
@@ -104,7 +105,7 @@ public class TypeParameterShadowing extends BugChecker
     descriptionBuilder.setMessage(message);
 
     // Map conflictingTypeSymbol to its new name
-    Set<String> typeVarsInScope =
+    ImmutableSet<String> typeVarsInScope =
         Streams.concat(enclosingTypeSymbols.stream(), symbol.getTypeParameters().stream())
             .map(v -> v.name.toString())
             .collect(toImmutableSet());

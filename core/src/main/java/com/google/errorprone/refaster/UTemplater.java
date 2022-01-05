@@ -150,7 +150,7 @@ public class UTemplater extends SimpleTreeVisitor<Tree, Void> {
                 freeExpressionVars, (VarSymbol sym) -> templater.template(sym.type)));
 
     UType genericType = templater.template(declSym.type);
-    List<UTypeVar> typeParameters;
+    ImmutableList<UTypeVar> typeParameters;
     UMethodType methodType;
     if (genericType instanceof UForAll) {
       UForAll forAllType = (UForAll) genericType;
@@ -212,7 +212,7 @@ public class UTemplater extends SimpleTreeVisitor<Tree, Void> {
   }
 
   @Nullable
-  private List<Tree> templateTrees(@Nullable Iterable<? extends Tree> trees) {
+  private ImmutableList<Tree> templateTrees(@Nullable Iterable<? extends Tree> trees) {
     if (trees == null) {
       return null;
     }
@@ -254,7 +254,7 @@ public class UTemplater extends SimpleTreeVisitor<Tree, Void> {
   }
 
   @Nullable
-  private List<UExpression> templateExpressions(
+  private ImmutableList<UExpression> templateExpressions(
       @Nullable Iterable<? extends ExpressionTree> expressions) {
     if (expressions == null) {
       return null;
@@ -275,7 +275,8 @@ public class UTemplater extends SimpleTreeVisitor<Tree, Void> {
   }
 
   @Nullable
-  private List<UExpression> templateTypeExpressions(@Nullable Iterable<? extends Tree> types) {
+  private ImmutableList<UExpression> templateTypeExpressions(
+      @Nullable Iterable<? extends Tree> types) {
     if (types == null) {
       return null;
     }
@@ -682,7 +683,8 @@ public class UTemplater extends SimpleTreeVisitor<Tree, Void> {
   }
 
   @Nullable
-  private List<UStatement> templateStatements(@Nullable List<? extends StatementTree> statements) {
+  private ImmutableList<UStatement> templateStatements(
+      @Nullable List<? extends StatementTree> statements) {
     if (statements == null) {
       return null;
     }
@@ -696,7 +698,7 @@ public class UTemplater extends SimpleTreeVisitor<Tree, Void> {
   @Override
   public UTry visitTry(TryTree tree, Void v) {
     @SuppressWarnings({"unchecked", "rawtypes"})
-    List<UTree<?>> resources =
+    ImmutableList<UTree<?>> resources =
         cast(templateTrees(tree.getResources()), (Class<UTree<?>>) (Class) UTree.class);
     UBlock block = visitBlock(tree.getBlock(), null);
     ImmutableList.Builder<UCatch> catchesBuilder = ImmutableList.builder();
@@ -912,7 +914,8 @@ public class UTemplater extends SimpleTreeVisitor<Tree, Void> {
 
         @Override
         public UForAll visitForAll(ForAll type, Void v) {
-          List<UTypeVar> vars = cast(templateTypes(type.getTypeVariables()), UTypeVar.class);
+          ImmutableList<UTypeVar> vars =
+              cast(templateTypes(type.getTypeVariables()), UTypeVar.class);
           return UForAll.create(vars, type.qtype.accept(this, null));
         }
       };

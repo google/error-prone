@@ -19,6 +19,7 @@ package com.google.errorprone.refaster;
 import com.google.auto.value.AutoValue;
 import com.google.common.base.Function;
 import com.google.common.base.Optional;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.google.errorprone.refaster.ControlFlowVisitor.Result;
 import com.sun.source.tree.IfTree;
@@ -77,7 +78,7 @@ abstract class UIf implements UStatement, IfTree {
   @Override
   @Nullable
   public Choice<UnifierWithUnconsumedStatements> apply(UnifierWithUnconsumedStatements state) {
-    java.util.List<? extends StatementTree> unconsumedStatements = state.unconsumedStatements();
+    ImmutableList<? extends StatementTree> unconsumedStatements = state.unconsumedStatements();
     if (unconsumedStatements.isEmpty()) {
       return Choice.none();
     }

@@ -78,26 +78,29 @@ public class BugCheckerRefactoringTestHelperTest {
         .doTest();
   }
 
-  @Test(expected = AssertionError.class)
+  @Test
   public void testReplaceFail() {
-    helper
-        .addInputLines(
-            "in/Test.java",
-            "public class Test {",
-            "  public Object foo() {",
-            "    Integer i = 1 + 2;",
-            "    return i;",
-            "  }",
-            "}")
-        .addOutputLines(
-            "out/Test.java",
-            "public class Test {",
-            "  public Object foo() {",
-            "    Integer i = 1 + 2;",
-            "    return i;",
-            "  }",
-            "}")
-        .doTest();
+    assertThrows(
+        AssertionError.class,
+        () ->
+            helper
+                .addInputLines(
+                    "in/Test.java",
+                    "public class Test {",
+                    "  public Object foo() {",
+                    "    Integer i = 1 + 2;",
+                    "    return i;",
+                    "  }",
+                    "}")
+                .addOutputLines(
+                    "out/Test.java",
+                    "public class Test {",
+                    "  public Object foo() {",
+                    "    Integer i = 1 + 2;",
+                    "    return i;",
+                    "  }",
+                    "}")
+                .doTest());
   }
 
   @Test
@@ -141,26 +144,29 @@ public class BugCheckerRefactoringTestHelperTest {
         .doTest(TestMode.TEXT_MATCH);
   }
 
-  @Test(expected = AssertionError.class)
+  @Test
   public void testReplaceTextMatchFail() {
-    helper
-        .addInputLines(
-            "in/Test.java",
-            "public class Test {",
-            "  public Object foo() {",
-            "    Integer i = 1 + 2;",
-            "    return i;",
-            "  }",
-            "}")
-        .addOutputLines(
-            "out/Test.java",
-            "public class Test {",
-            "  public Object foo() {",
-            "    Integer i = 2 + 1;",
-            "  return null;",
-            "  }",
-            "}")
-        .doTest(TestMode.TEXT_MATCH);
+    assertThrows(
+        AssertionError.class,
+        () ->
+            helper
+                .addInputLines(
+                    "in/Test.java",
+                    "public class Test {",
+                    "  public Object foo() {",
+                    "    Integer i = 1 + 2;",
+                    "    return i;",
+                    "  }",
+                    "}")
+                .addOutputLines(
+                    "out/Test.java",
+                    "public class Test {",
+                    "  public Object foo() {",
+                    "    Integer i = 2 + 1;",
+                    "  return null;",
+                    "  }",
+                    "}")
+                .doTest(TestMode.TEXT_MATCH));
   }
 
   @Test

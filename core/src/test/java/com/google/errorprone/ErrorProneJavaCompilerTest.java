@@ -294,7 +294,7 @@ public class ErrorProneJavaCompilerTest {
             tempDir.getRoot().getAbsolutePath(),
             "-proc:none",
             "-Xep:ChainingConstructorIgnoresParameter:WARN");
-    List<JavaFileObject> sources =
+    ImmutableList<JavaFileObject> sources =
         forResources(
             ChainingConstructorIgnoresParameter.class,
             "testdata/ChainingConstructorIgnoresParameterPositiveCases.java");
@@ -332,7 +332,7 @@ public class ErrorProneJavaCompilerTest {
     JavaCompiler errorProneJavaCompiler = new ErrorProneJavaCompiler();
     List<String> args =
         Lists.newArrayList("-d", tempDir.getRoot().getAbsolutePath(), "-proc:none", "-Xep:EmptyIf");
-    List<JavaFileObject> sources =
+    ImmutableList<JavaFileObject> sources =
         forResources(BadShiftAmount.class, "testdata/EmptyIfStatementPositiveCases.java");
 
     JavaCompiler.CompilationTask task =

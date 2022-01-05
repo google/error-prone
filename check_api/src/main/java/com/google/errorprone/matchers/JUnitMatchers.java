@@ -41,6 +41,7 @@ import static com.google.errorprone.util.ASTHelpers.findSuperMethods;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static javax.lang.model.element.NestingKind.TOP_LEVEL;
 
+import com.google.common.collect.ImmutableList;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.AnnotationTree;
@@ -54,8 +55,6 @@ import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Type.ClassType;
-import java.util.Arrays;
-import java.util.Collection;
 import javax.lang.model.element.Modifier;
 
 /**
@@ -212,8 +211,8 @@ public final class JUnitMatchers {
    * A list of test runners that this matcher should look for in the @RunWith annotation. Subclasses
    * of the test runners are also matched.
    */
-  private static final Collection<String> TEST_RUNNERS =
-      Arrays.asList(
+  private static final ImmutableList<String> TEST_RUNNERS =
+      ImmutableList.of(
           "org.mockito.junit.MockitoJUnitRunner", "org.junit.runners.BlockJUnit4ClassRunner");
 
   /**

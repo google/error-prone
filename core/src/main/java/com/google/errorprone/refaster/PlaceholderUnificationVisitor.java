@@ -21,6 +21,7 @@ import static com.google.common.base.Preconditions.checkState;
 import com.google.auto.value.AutoValue;
 import com.google.common.base.Function;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.errorprone.refaster.PlaceholderUnificationVisitor.State;
 import com.google.errorprone.refaster.UPlaceholderExpression.PlaceholderParamIdent;
@@ -103,10 +104,8 @@ import com.sun.tools.javac.tree.JCTree.Tag;
 import com.sun.tools.javac.tree.TreeMaker;
 import com.sun.tools.javac.util.List;
 import com.sun.tools.javac.util.Name;
-import java.util.Collections;
 import java.util.EnumSet;
 import java.util.Map;
-import java.util.Set;
 import java.util.function.BiFunction;
 import javax.annotation.Nullable;
 
@@ -439,8 +438,8 @@ abstract class PlaceholderUnificationVisitor
     return chooseSubtrees(state, s -> unifyExpression(node.getExpression(), s), maker()::Parens);
   }
 
-  private static final Set<Tag> MUTATING_UNARY_TAGS =
-      Collections.unmodifiableSet(EnumSet.of(Tag.PREINC, Tag.PREDEC, Tag.POSTINC, Tag.POSTDEC));
+  private static final ImmutableSet<Tag> MUTATING_UNARY_TAGS =
+      ImmutableSet.copyOf(EnumSet.of(Tag.PREINC, Tag.PREDEC, Tag.POSTINC, Tag.POSTDEC));
 
   @Override
   public Choice<State<JCUnary>> visitUnary(UnaryTree node, State<?> state) {

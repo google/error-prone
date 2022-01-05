@@ -24,13 +24,14 @@ import static com.google.errorprone.matchers.Matchers.hasAnnotation;
 import static com.google.errorprone.matchers.Matchers.methodHasParameters;
 import static com.google.errorprone.matchers.Matchers.methodIsConstructor;
 
+import com.google.auto.common.MoreElements;
 import com.google.auto.value.AutoValue;
-import com.google.common.base.Function;
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableListMultimap;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.LinkedListMultimap;
+import com.google.common.collect.ListMultimap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Multimaps;
@@ -55,7 +56,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import javax.lang.model.element.TypeElement;
 
 /** @author sgoldfeder@google.com (Steven Goldfeder) */
 @BugPattern(
@@ -73,25 +73,6 @@ public class AssistedParameters extends BugChecker implements MethodTreeMatcher 
 
   private static final MultiMatcher<MethodTree, VariableTree> ASSISTED_PARAMETER_MATCHER =
       methodHasParameters(MatchType.AT_LEAST_ONE, Matchers.hasAnnotation(ASSISTED_ANNOTATION));
-
-  private static final Function<VariableTree, String> VALUE_FROM_ASSISTED_ANNOTATION =
-      new Function<VariableTree, String>() {
-        @Override
-        public String apply(VariableTree variableTree) {
-          for (Compound c : ASTHelpers.getSymbol(variableTree).getAnnotationMirrors()) {
-            if (((TypeElement) c.getAnnotationType().asElement())
-                .getQualifiedName()
-                .contentEquals(ASSISTED_ANNOTATION)) {
-              // Assisted only has 'value', and value can only contain 1 element.
-              Collection<Attribute> valueEntries = c.getElementValues().values();
-              if (!valueEntries.isEmpty()) {
-                return Iterables.getOnlyElement(valueEntries).getValue().toString();
-              }
-            }
-          }
-          return "";
-        }
-      };
 
   @Override
   public final Description matchMethod(MethodTree constructor, final VisitorState state) {
@@ -122,7 +103,7 @@ public class AssistedParameters extends BugChecker implements MethodTreeMatcher 
       // Gather the @Assisted value from each parameter. If any value is repeated amongst the
       // parameters in this type, it's a compile error.
       ImmutableListMultimap<String, VariableTree> keyForAssistedVariable =
-          Multimaps.index(parametersForThisType, VALUE_FROM_ASSISTED_ANNOTATION);
+          Multimaps.index(parametersForThisType, AssistedParameters::valueFromAssistedAnnotation);
 
       for (Map.Entry<String, List<VariableTree>> assistedValueToParameters :
           Multimaps.asMap(keyForAssistedVariable).entrySet()) {
@@ -143,6 +124,21 @@ public class AssistedParameters extends BugChecker implements MethodTreeMatcher 
     return buildDescription(constructor).setMessage(buildErrorMessage(conflicts)).build();
   }
 
+  private static String valueFromAssistedAnnotation(VariableTree variableTree) {
+    for (Compound c : ASTHelpers.getSymbol(variableTree).getAnnotationMirrors()) {
+      if (MoreElements.asType(c.getAnnotationType().asElement())
+          .getQualifiedName()
+          .contentEquals(ASSISTED_ANNOTATION)) {
+        // Assisted only has 'value', and value can only contain 1 element.
+        Collection<Attribute> valueEntries = c.getElementValues().values();
+        if (!valueEntries.isEmpty()) {
+          return Iterables.getOnlyElement(valueEntries).getValue().toString();
+        }
+      }
+    }
+    return "";
+  }
+
   private static String buildErrorMessage(List<ConflictResult> conflicts) {
     StringBuilder sb =
         new StringBuilder(
@@ -158,14 +154,7 @@ public class AssistedParameters extends BugChecker implements MethodTreeMatcher 
       sb.append(": ");
 
       List<String> simpleParameterNames =
-          Lists.transform(
-              conflict.parameters(),
-              new Function<VariableTree, String>() {
-                @Override
-                public String apply(VariableTree variableTree) {
-                  return variableTree.getName().toString();
-                }
-              });
+          Lists.transform(conflict.parameters(), t -> t.getName().toString());
       Joiner.on(", ").appendTo(sb, simpleParameterNames);
     }
 
@@ -187,11 +176,11 @@ public class AssistedParameters extends BugChecker implements MethodTreeMatcher 
 
   // Since Type doesn't have strong equality semantics, we have to use Types.isSameType to
   // determine which parameters are conflicting with each other.
-  private static Multimap<Type, VariableTree> partitionParametersByType(
+  private static ListMultimap<Type, VariableTree> partitionParametersByType(
       List<VariableTree> parameters, VisitorState state) {
 
     Types types = state.getTypes();
-    Multimap<Type, VariableTree> multimap = LinkedListMultimap.create();
+    ListMultimap<Type, VariableTree> multimap = LinkedListMultimap.create();
 
     variables:
     for (VariableTree node : parameters) {

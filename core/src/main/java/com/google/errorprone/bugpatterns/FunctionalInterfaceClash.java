@@ -25,7 +25,7 @@ import static java.util.stream.Collectors.joining;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Multimap;
+import com.google.common.collect.SetMultimap;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
@@ -43,11 +43,10 @@ import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Types;
 import com.sun.tools.javac.comp.Check;
 import com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition;
-import com.sun.tools.javac.util.List;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Deque;
+import java.util.List;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
@@ -60,7 +59,7 @@ public class FunctionalInterfaceClash extends BugChecker implements ClassTreeMat
     ClassSymbol origin = getSymbol(tree);
     Types types = state.getTypes();
     // collect declared and inherited methods whose signature contains a functional interface
-    Multimap<String, MethodSymbol> methods = HashMultimap.create();
+    SetMultimap<String, MethodSymbol> methods = HashMultimap.create();
     for (Symbol sym : types.membersClosure(getType(tree), /*skipInterface=*/ false).getSymbols()) {
       if (!(sym instanceof MethodSymbol)) {
         continue;
@@ -86,7 +85,7 @@ public class FunctionalInterfaceClash extends BugChecker implements ClassTreeMat
           .noneMatch(p -> maybeFunctionalInterface(p.type, types, state))) {
         continue;
       }
-      Collection<MethodSymbol> clash =
+      List<MethodSymbol> clash =
           new ArrayList<>(methods.removeAll(functionalInterfaceSignature(state, msym)));
 
       // Ignore inherited methods that are overridden in the original class. Note that we have to

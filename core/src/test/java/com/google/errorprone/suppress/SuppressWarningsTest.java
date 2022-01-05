@@ -20,13 +20,13 @@ import static com.google.errorprone.FileObjects.forResources;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
+import com.google.common.collect.ImmutableList;
 import com.google.errorprone.ErrorProneTestCompiler;
 import com.google.errorprone.bugpatterns.DeadException;
 import com.google.errorprone.bugpatterns.EmptyIfStatement;
 import com.google.errorprone.bugpatterns.SelfAssignment;
 import com.google.errorprone.scanner.ScannerSupplier;
 import com.sun.tools.javac.main.Main.Result;
-import java.util.List;
 import javax.tools.JavaFileObject;
 import org.junit.Before;
 import org.junit.Test;
@@ -52,7 +52,8 @@ public class SuppressWarningsTest {
 
   @Test
   public void testNegativeCase() {
-    List<JavaFileObject> sources = forResources(getClass(), "SuppressWarningsNegativeCases.java");
+    ImmutableList<JavaFileObject> sources =
+        forResources(getClass(), "SuppressWarningsNegativeCases.java");
     assertThat(compiler.compile(sources), is(Result.OK));
   }
 }
