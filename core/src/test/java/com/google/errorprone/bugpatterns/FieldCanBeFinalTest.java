@@ -57,6 +57,21 @@ public class FieldCanBeFinalTest {
   }
 
   @Test
+  public void keepAnnotatedFields_ignored() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.errorprone.annotations.Keep;",
+            "class Test {",
+            "  @Keep private int x;",
+            "  Test() {",
+            "    x = 42;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void initializerBlocks() {
     compilationHelper
         .addSourceLines(

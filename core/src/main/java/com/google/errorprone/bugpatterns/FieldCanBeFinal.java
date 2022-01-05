@@ -17,6 +17,7 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
+import static com.google.errorprone.util.ASTHelpers.shouldKeep;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
@@ -207,6 +208,9 @@ public class FieldCanBeFinal extends BugChecker implements CompilationUnitTreeMa
         continue;
       }
       if (!var.sym.isPrivate()) {
+        continue;
+      }
+      if (shouldKeep(var.declaration)) {
         continue;
       }
       for (String annotation : IMPLICIT_VAR_ANNOTATIONS) {
