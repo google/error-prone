@@ -232,7 +232,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 </td>
 </tr>
 <tr class="row-color" id="i13">
-<td class="col-first"><code>static <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a>&lt;com.sun.tools.javac.code.Symbol.MethodSymbol&gt;</code></td>
+<td class="col-first"><code>static com.google.common.collect.ImmutableSet&lt;com.sun.tools.javac.code.Symbol.MethodSymbol&gt;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#findMatchingMethods(com.sun.tools.javac.util.Name,java.util.function.Predicate,com.sun.tools.javac.code.Type,com.sun.tools.javac.code.Types)">findMatchingMethods</a></span>&#8203;(com.sun.tools.javac.util.Name&nbsp;name,
 <a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/Predicate.html" title="class or interface in java.util.function" class="external-link">Predicate</a>&lt;com.sun.tools.javac.code.Symbol.MethodSymbol&gt;&nbsp;predicate,
 com.sun.tools.javac.code.Type&nbsp;startClass,
@@ -1195,7 +1195,7 @@ com.sun.tools.javac.code.Types&nbsp;types)</span></div>
 <li>
 <section class="detail" id="findMatchingMethods(com.sun.tools.javac.util.Name,java.util.function.Predicate,com.sun.tools.javac.code.Type,com.sun.tools.javac.code.Types)">
 <h3>findMatchingMethods</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/javase/8/docs/api/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a>&lt;com.sun.tools.javac.code.Symbol.MethodSymbol&gt;</span>&nbsp;<span class="member-name">findMatchingMethods</span>&#8203;(<span class="parameters">com.sun.tools.javac.util.Name&nbsp;name,
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">com.google.common.collect.ImmutableSet&lt;com.sun.tools.javac.code.Symbol.MethodSymbol&gt;</span>&nbsp;<span class="member-name">findMatchingMethods</span>&#8203;(<span class="parameters">com.sun.tools.javac.util.Name&nbsp;name,
 <a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/Predicate.html" title="class or interface in java.util.function" class="external-link">Predicate</a>&lt;com.sun.tools.javac.code.Symbol.MethodSymbol&gt;&nbsp;predicate,
 com.sun.tools.javac.code.Type&nbsp;startClass,
 com.sun.tools.javac.code.Types&nbsp;types)</span></div>
@@ -1238,23 +1238,6 @@ com.sun.tools.javac.code.Types&nbsp;types)</span></div>
 </section>
 </li>
 <li>
-<section class="detail" id="annotationsAmong(com.sun.tools.javac.code.Symbol,java.util.Set,com.google.errorprone.VisitorState)">
-<h3>annotationsAmong</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/javase/8/docs/api/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a>&lt;com.sun.tools.javac.util.Name&gt;</span>&nbsp;<span class="member-name">annotationsAmong</span>&#8203;(<span class="parameters">com.sun.tools.javac.code.Symbol&nbsp;sym,
-<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a>&lt;? extends com.sun.tools.javac.util.Name&gt;&nbsp;annotationClasses,
-<a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
-<div class="block">Determines which of a set of annotations are present on a symbol.</div>
-<dl class="notes">
-<dt>Parameters:</dt>
-<dd><code>sym</code> - The symbol to inspect for annotations</dd>
-<dd><code>annotationClasses</code> - The annotations of interest to look for, Each name must be in binary
-     form, e.g. "com.google.Foo$Bar", not "com.google.Foo.Bar".</dd>
-<dt>Returns:</dt>
-<dd>A possibly-empty set of annotations present on the queried element.</dd>
-</dl>
-</section>
-</li>
-<li>
 <section class="detail" id="hasAnnotation(com.sun.tools.javac.code.Symbol,java.lang.Class,com.google.errorprone.VisitorState)">
 <h3>hasAnnotation</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="member-name">hasAnnotation</span>&#8203;(<span class="parameters">com.sun.tools.javac.code.Symbol&nbsp;sym,
@@ -1293,6 +1276,23 @@ com.sun.tools.javac.code.Types&nbsp;types)</span></div>
 <dl class="notes">
 <dt>Returns:</dt>
 <dd>true if the tree is annotated with given type.</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="annotationsAmong(com.sun.tools.javac.code.Symbol,java.util.Set,com.google.errorprone.VisitorState)">
+<h3>annotationsAmong</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/javase/8/docs/api/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a>&lt;com.sun.tools.javac.util.Name&gt;</span>&nbsp;<span class="member-name">annotationsAmong</span>&#8203;(<span class="parameters">com.sun.tools.javac.code.Symbol&nbsp;sym,
+<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a>&lt;? extends com.sun.tools.javac.util.Name&gt;&nbsp;annotationClasses,
+<a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
+<div class="block">Determines which of a set of annotations are present on a symbol.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>sym</code> - The symbol to inspect for annotations</dd>
+<dd><code>annotationClasses</code> - The annotations of interest to look for, Each name must be in binary
+     form, e.g. "com.google.Foo$Bar", not "com.google.Foo.Bar".</dd>
+<dt>Returns:</dt>
+<dd>A possibly-empty set of annotations present on the queried element.</dd>
 </dl>
 </section>
 </li>
