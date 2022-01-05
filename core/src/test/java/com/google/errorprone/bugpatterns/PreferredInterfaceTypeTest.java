@@ -87,6 +87,73 @@ public final class PreferredInterfaceTypeTest {
   }
 
   @Test
+  public void parameters_notFlagged() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.util.ArrayList;",
+            "import java.util.List;",
+            "class Test {",
+            "  void test(Iterable<Object> xs) {",
+            "    xs = new ArrayList<>();",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void nonPrivateNonFinalFields_notFlagged() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.util.ArrayList;",
+            "import java.util.List;",
+            "class Test {",
+            "  Iterable<Object> xs;",
+            "  Test(List<Object> xs) {",
+            "    this.xs = xs;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void nonFinalButPrivateFields() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.util.ArrayList;",
+            "import java.util.List;",
+            "class Test {",
+            "  // BUG: Diagnostic contains:",
+            "  private Iterable<Object> xs;",
+            "  void test(List<Object> xs) {",
+            "    this.xs = xs;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void nonFinalButFieldInPrivateClass() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.util.ArrayList;",
+            "import java.util.List;",
+            "class Test {",
+            "  private static class Inner {",
+            "    // BUG: Diagnostic contains:",
+            "    Iterable<Object> xs;",
+            "    void test(List<Object> xs) {",
+            "      this.xs = xs;",
+            "    }",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void immutables() {
     refactoringHelper
         .addInputLines(
@@ -206,7 +273,7 @@ public final class PreferredInterfaceTypeTest {
   }
 
   @Test
-  public void nonFinalNonPrivateNonStaticMethodInFinalClass_suggestsFix() {
+  public void nonFinalNonPrivateNonStaticMethodInFinalClass() {
     testHelper
         .addSourceLines(
             "Test.java",
@@ -222,7 +289,7 @@ public final class PreferredInterfaceTypeTest {
   }
 
   @Test
-  public void finalMethodInNonFinalClass_suggestsFix() {
+  public void finalMethodInNonFinalClass() {
     testHelper
         .addSourceLines(
             "Test.java",
@@ -238,7 +305,7 @@ public final class PreferredInterfaceTypeTest {
   }
 
   @Test
-  public void privateMethodInNonFinalClass_suggestsFix() {
+  public void privateMethodInNonFinalClass() {
     testHelper
         .addSourceLines(
             "Test.java",
@@ -254,7 +321,7 @@ public final class PreferredInterfaceTypeTest {
   }
 
   @Test
-  public void staticMethodInNonFinalClass_suggestsFix() {
+  public void staticMethodInNonFinalClass() {
     testHelper
         .addSourceLines(
             "Test.java",
@@ -596,6 +663,196 @@ public final class PreferredInterfaceTypeTest {
             "  final ImmutableMultimap<?, ?> quux() {",
             "    return ImmutableSetMultimap.of();",
             "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void staticFinalIterableInitializedInDeclarationWithImmutableSetOf() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.common.collect.ImmutableSet;",
+            "class Test {",
+            "  // BUG: Diagnostic contains: static final ImmutableSet<String> FOO =",
+            "  static final Iterable<String> FOO = ImmutableSet.of();",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void bind() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.common.collect.ImmutableList;",
+            "import com.google.inject.testing.fieldbinder.Bind;",
+            "import java.util.List;",
+            "class Test {",
+            "   @Bind ",
+            "   private static final List<String> LABELS = ImmutableList.of(\"MiniCluster\");",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void staticFinalMapInitializedInDeclarationWithImmutableBiMapOf() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.common.collect.ImmutableBiMap;",
+            "import java.util.Map;",
+            "class Test {",
+            "  // BUG: Diagnostic contains: static final ImmutableMap<String, String> FOO =",
+            "  static final Map<String, String> FOO = ImmutableBiMap.of();",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void staticFinalSetInitializedInDeclarationWithImmutableSetOf() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.common.collect.ImmutableSet;",
+            "import java.util.Set;",
+            "class Test {",
+            "  // BUG: Diagnostic contains: static final ImmutableSet<String> FOO =",
+            "  static final Set<String> FOO = ImmutableSet.of();",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void staticFinalRawSetInitializedInDeclarationWithImmutableSetOf() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.common.collect.ImmutableSet;",
+            "import java.util.Set;",
+            "class Test {",
+            "  // BUG: Diagnostic contains: static final ImmutableSet FOO =",
+            "  static final Set FOO = ImmutableSet.of();",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void staticFinalSetInitializedInDeclarationWithImmutableSetBuilder() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.common.collect.ImmutableSet;",
+            "import java.util.Set;",
+            "class Test {",
+            "  // BUG: Diagnostic contains: static final ImmutableSet<String> FOO =",
+            "  static final Set<String> FOO = ImmutableSet.<String>builder().build();",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void staticFinalListInitializedInDeclarationWithImmutableListOf() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.common.collect.ImmutableList;",
+            "import java.util.List;",
+            "class Test {",
+            "  // BUG: Diagnostic contains: static final ImmutableList<String> FOO =",
+            "  static final List<String> FOO = ImmutableList.of();",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void staticFinalMapInitializedInDeclarationWithImmutableMapOf() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.common.collect.ImmutableMap;",
+            "import java.util.Map;",
+            "class Test {",
+            "  // BUG: Diagnostic contains: static final ImmutableMap<Integer, String> FOO =",
+            "  static final Map<Integer, String> FOO = ImmutableMap.of();",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void staticFinalImmutableSetInitializedInDeclarationWithImmutableSet_doesNotSuggestFix() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.common.collect.ImmutableSet;",
+            "class Test {",
+            "  static final ImmutableSet<String> FOO = ImmutableSet.of();",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void staticFinalSetInitializedInStaticBlock() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.common.collect.ImmutableSet;",
+            "class Test {",
+            "  private static final ImmutableSet<String> FOO;",
+            "  static {",
+            "    FOO = ImmutableSet.of();",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void nonStatic() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.common.collect.ImmutableSet;",
+            "class Test {",
+            "  final ImmutableSet<String> NON_STATIC = ImmutableSet.of();",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void nonFinal() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.common.collect.ImmutableSet;",
+            "import java.util.Set;",
+            "class Test {",
+            "  static Set<String> NON_FINAL = ImmutableSet.of();",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void nonCapitalCase_doesNotSuggestFix() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.common.collect.ImmutableSet;",
+            "import java.util.Set;",
+            "class Test {",
+            "  static final ImmutableSet<String> nonCapitalCase = ImmutableSet.of();",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void mutable_doesNotSuggestFix() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.util.ArrayList;",
+            "import java.util.List;",
+            "class Test {",
+            "  static final List<String> MUTABLE = new ArrayList<>();",
             "}")
         .doTest();
   }

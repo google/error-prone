@@ -18,6 +18,7 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.common.collect.Multimaps.asMap;
+import static com.google.common.collect.Streams.stream;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.fixes.SuggestedFixes.qualifyType;
 import static com.google.errorprone.matchers.ChildMultiMatcher.MatchType.AT_LEAST_ONE;
@@ -35,6 +36,7 @@ import static com.google.errorprone.util.ASTHelpers.getErasedTypeTree;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.getUpperBound;
+import static com.google.errorprone.util.ASTHelpers.isConsideredFinal;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
 import static com.google.errorprone.util.ASTHelpers.methodCanBeOverridden;
 
@@ -52,6 +54,7 @@ import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
 import com.google.errorprone.predicates.TypePredicate;
+import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.LambdaExpressionTree;
@@ -75,7 +78,7 @@ import javax.lang.model.type.TypeKind;
 /** Tightens types which refer to an Iterable, Map, Multimap, etc. */
 @BugPattern(
     name = "PreferredInterfaceType",
-    altNames = "MutableMethodReturnType",
+    altNames = {"MutableConstantField", "MutableMethodReturnType"},
     summary = "This type can be more specific.",
     severity = WARNING)
 public final class PreferredInterfaceType extends BugChecker implements CompilationUnitTreeMatcher {
@@ -182,15 +185,33 @@ public final class PreferredInterfaceType extends BugChecker implements Compilat
     ImmutableMap.Builder<Symbol, Tree> fixableTypes = ImmutableMap.builder();
     new SuppressibleTreePathScanner<Void, Void>() {
       @Override
-      public Void visitVariable(VariableTree node, Void unused) {
-        VarSymbol symbol = getSymbol(node);
-        if (variableType(INTERESTING_TYPE).matches(node, state)
-            && symbol != null
-            && symbol.getKind() != ElementKind.PARAMETER
-            && !SHOULD_IGNORE.matches(node, state)) {
-          fixableTypes.put(symbol, node.getType());
+      public Void visitVariable(VariableTree tree, Void unused) {
+        VarSymbol symbol = getSymbol(tree);
+        if (variableIsFixable(tree, symbol)) {
+          fixableTypes.put(symbol, tree.getType());
         }
-        return super.visitVariable(node, null);
+        return super.visitVariable(tree, null);
+      }
+
+      private boolean variableIsFixable(VariableTree tree, VarSymbol symbol) {
+        if (symbol == null) {
+          return false;
+        }
+        if (symbol.getKind() == ElementKind.PARAMETER) {
+          return false;
+        }
+        if (SHOULD_IGNORE.matches(tree, state)) {
+          return false;
+        }
+        if (symbol.getKind() == ElementKind.FIELD) {
+          if (!isConsideredFinal(symbol)
+              && stream(getCurrentPath())
+                  .map(ASTHelpers::getSymbol)
+                  .noneMatch(s -> s != null && s.isPrivate())) {
+            return false;
+          }
+        }
+        return variableType(INTERESTING_TYPE).matches(tree, state);
       }
 
       @Override
