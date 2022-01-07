@@ -15,7 +15,7 @@
 <script type="text/javascript" src="../../../../../script-dir/jquery-ui.min.js"></script>
 </head>
 <body class="class-declaration-page">
-<script type="text/javascript">var data = {"i0":10,"i1":9,"i2":10,"i3":10};
+<script type="text/javascript">var data = {"i0":10,"i1":10,"i2":9,"i3":10,"i4":10};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "alt-color";
 var rowColor = "row-color";
@@ -164,7 +164,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 </thead>
 <tbody>
 <tr class="alt-color">
-<th class="col-constructor-name" scope="row"><code><span class="member-name-link"><a href="#%3Cinit%3E()">ConstantExpressions</a></span>()</code></th>
+<th class="col-constructor-name" scope="row"><code><span class="member-name-link"><a href="#%3Cinit%3E(com.google.errorprone.matchers.Matcher)">ConstantExpressions</a></span>&#8203;(<a href="../../matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.ExpressionTree&gt;&nbsp;pureMethods)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
 </tbody>
@@ -189,17 +189,23 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 </thead>
 <tbody>
 <tr class="alt-color" id="i0">
+<td class="col-first"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="ConstantExpressions.ConstantBooleanExpression.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ConstantExpressions.ConstantBooleanExpression</a>&gt;</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#constantBooleanExpression(com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)">constantBooleanExpression</a></span>&#8203;(com.sun.source.tree.ExpressionTree&nbsp;tree,
+<a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
+<td class="col-last">&nbsp;</td>
+</tr>
+<tr class="row-color" id="i1">
 <td class="col-first"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="ConstantExpressions.ConstantExpression.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ConstantExpressions.ConstantExpression</a>&gt;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#constantExpression(com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)">constantExpression</a></span>&#8203;(com.sun.source.tree.ExpressionTree&nbsp;tree,
 <a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color" id="i1">
+<tr class="alt-color" id="i2">
 <td class="col-first"><code>static <a href="ConstantExpressions.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ConstantExpressions</a></code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#fromFlags(com.google.errorprone.ErrorProneFlags)">fromFlags</a></span>&#8203;(<a href="../../ErrorProneFlags.html" title="class in com.google.errorprone">ErrorProneFlags</a>&nbsp;flags)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color" id="i2">
+<tr class="row-color" id="i3">
 <td class="col-first"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;com.google.common.collect.ImmutableList&lt;<a href="ConstantExpressions.PureMethodInvocation.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ConstantExpressions.PureMethodInvocation</a>&gt;&gt;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#symbolizeImmutableExpression(com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)">symbolizeImmutableExpression</a></span>&#8203;(com.sun.source.tree.ExpressionTree&nbsp;tree,
 <a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
@@ -208,7 +214,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
  variable if needed.</div>
 </td>
 </tr>
-<tr class="row-color" id="i3">
+<tr class="alt-color" id="i4">
 <td class="col-first"><code><a href="ConstantExpressions.Truthiness.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ConstantExpressions.Truthiness</a></code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#truthiness(com.sun.source.tree.ExpressionTree,boolean,com.google.errorprone.VisitorState)">truthiness</a></span>&#8203;(com.sun.source.tree.ExpressionTree&nbsp;tree,
 boolean&nbsp;not,
@@ -237,9 +243,9 @@ boolean&nbsp;not,
 <h2>Constructor Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="&lt;init&gt;()">
+<section class="detail" id="&lt;init&gt;(com.google.errorprone.matchers.Matcher)">
 <h3>ConstantExpressions</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="member-name">ConstantExpressions</span>()</div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="member-name">ConstantExpressions</span>&#8203;(<span class="parameters"><a href="../../matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.ExpressionTree&gt;&nbsp;pureMethods)</span></div>
 </section>
 </li>
 </ul>
@@ -264,6 +270,13 @@ boolean&nbsp;not,
 <a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
 <div class="block">Scans an <code>ExpressionTree</code> to find anything guaranteed to be false or true if this
  expression is true.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="constantBooleanExpression(com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)">
+<h3>constantBooleanExpression</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="ConstantExpressions.ConstantBooleanExpression.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ConstantExpressions.ConstantBooleanExpression</a>&gt;</span>&nbsp;<span class="member-name">constantBooleanExpression</span>&#8203;(<span class="parameters">com.sun.source.tree.ExpressionTree&nbsp;tree,
+<a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
 </section>
 </li>
 <li>
