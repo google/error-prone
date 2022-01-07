@@ -67,24 +67,30 @@ loadScripts(document, 'script');</script>
 </thead>
 <tbody>
 <tr class="alt-color">
+<th class="col-first" scope="row"><a href="ConstantExpressions.ConstantExpressionVisitor.html" title="interface in com.google.errorprone.bugpatterns.threadsafety">ConstantExpressions.ConstantExpressionVisitor</a></th>
+<td class="col-last">
+<div class="block">Visitor for scanning over the components of a constant expression.</div>
+</td>
+</tr>
+<tr class="row-color">
 <th class="col-first" scope="row"><a href="GuardedByBinder.Resolver.html" title="interface in com.google.errorprone.bugpatterns.threadsafety">GuardedByBinder.Resolver</a></th>
 <td class="col-last">
 <div class="block">A context containing the information necessary to resolve a <code>Symbol</code> from an AST node.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <th class="col-first" scope="row"><a href="HeldLockAnalyzer.LockEventListener.html" title="interface in com.google.errorprone.bugpatterns.threadsafety">HeldLockAnalyzer.LockEventListener</a></th>
 <td class="col-last">
 <div class="block">Listener interface for accesses to guarded members.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <th class="col-first" scope="row"><a href="ImmutableAnalysis.ViolationReporter.html" title="interface in com.google.errorprone.bugpatterns.threadsafety">ImmutableAnalysis.ViolationReporter</a></th>
 <td class="col-last">
 <div class="block">Accepts <a href="ThreadSafety.Violation.html" title="class in com.google.errorprone.bugpatterns.threadsafety"><code>violations</code></a> that are found during the analysis.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <th class="col-first" scope="row"><a href="ThreadSafety.KnownTypes.html" title="interface in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.KnownTypes</a></th>
 <td class="col-last">
 <div class="block">Information about known types and whether they're known to be safe or unsafe.</div>
@@ -116,6 +122,42 @@ loadScripts(document, 'script');</script>
 <td class="col-last">
 <div class="block">Specifies information about a type which may be a container specified by generic type arguments,
  e.g.</div>
+</td>
+</tr>
+<tr class="alt-color">
+<th class="col-first" scope="row"><a href="ConstantExpressions.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ConstantExpressions</a></th>
+<td class="col-last">
+<div class="block">Helper for establishing whether expressions correspond to a constant expression.</div>
+</td>
+</tr>
+<tr class="row-color">
+<th class="col-first" scope="row"><a href="ConstantExpressions.ConstantBooleanExpression.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ConstantExpressions.ConstantBooleanExpression</a></th>
+<td class="col-last">
+<div class="block">Represents a constant boolean expression.</div>
+</td>
+</tr>
+<tr class="alt-color">
+<th class="col-first" scope="row"><a href="ConstantExpressions.ConstantEquals.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ConstantExpressions.ConstantEquals</a></th>
+<td class="col-last">
+<div class="block">Represents a binary equals call on two constant expressions.</div>
+</td>
+</tr>
+<tr class="row-color">
+<th class="col-first" scope="row"><a href="ConstantExpressions.ConstantExpression.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ConstantExpressions.ConstantExpression</a></th>
+<td class="col-last">
+<div class="block">Represents a constant expression.</div>
+</td>
+</tr>
+<tr class="alt-color">
+<th class="col-first" scope="row"><a href="ConstantExpressions.PureMethodInvocation.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ConstantExpressions.PureMethodInvocation</a></th>
+<td class="col-last">
+<div class="block">Represents a method invocation of a pure method on constant arguments.</div>
+</td>
+</tr>
+<tr class="row-color">
+<th class="col-first" scope="row"><a href="ConstantExpressions.Truthiness.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ConstantExpressions.Truthiness</a></th>
+<td class="col-last">
+<div class="block">Represents sets of things known to be true and false if a boolean statement evaluated true.</div>
 </td>
 </tr>
 <tr class="alt-color">
