@@ -64,25 +64,27 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 public final class ConstantExpressions {
   private static final Matcher<ExpressionTree> PURE_METHODS =
       anyOf(
-          staticMethod().onClass("com.google.common.base.Optional"),
-          staticMethod().onClass("com.google.common.base.Pair"),
-          staticMethod().onClass("com.google.common.base.Splitter"),
-          staticMethod().onClass("com.google.common.collect.ImmutableBiMap"),
-          staticMethod().onClass("com.google.common.collect.ImmutableCollection"),
-          staticMethod().onClass("com.google.common.collect.ImmutableList"),
-          staticMethod().onClass("com.google.common.collect.ImmutableListMultimap"),
-          staticMethod().onClass("com.google.common.collect.ImmutableMap"),
-          staticMethod().onClass("com.google.common.collect.ImmutableMultimap"),
-          staticMethod().onClass("com.google.common.collect.ImmutableMultiset"),
-          staticMethod().onClass("com.google.common.collect.ImmutableRangeMap"),
-          staticMethod().onClass("com.google.common.collect.ImmutableRangeSet"),
-          staticMethod().onClass("com.google.common.collect.ImmutableSet"),
-          staticMethod().onClass("com.google.common.collect.ImmutableSetMultimap"),
-          staticMethod().onClass("com.google.common.collect.ImmutableSortedMap"),
-          staticMethod().onClass("com.google.common.collect.ImmutableSortedMultiset"),
-          staticMethod().onClass("com.google.common.collect.ImmutableSortedSet"),
-          staticMethod().onClass("com.google.common.collect.ImmutableTable"),
-          staticMethod().onClass("com.google.common.collect.Range"),
+          staticMethod()
+              .onClassAny(
+                  "com.google.common.base.Optional",
+                  "com.google.common.base.Pair",
+                  "com.google.common.base.Splitter",
+                  "com.google.common.collect.ImmutableBiMap",
+                  "com.google.common.collect.ImmutableCollection",
+                  "com.google.common.collect.ImmutableList",
+                  "com.google.common.collect.ImmutableListMultimap",
+                  "com.google.common.collect.ImmutableMap",
+                  "com.google.common.collect.ImmutableMultimap",
+                  "com.google.common.collect.ImmutableMultiset",
+                  "com.google.common.collect.ImmutableRangeMap",
+                  "com.google.common.collect.ImmutableRangeSet",
+                  "com.google.common.collect.ImmutableSet",
+                  "com.google.common.collect.ImmutableSetMultimap",
+                  "com.google.common.collect.ImmutableSortedMap",
+                  "com.google.common.collect.ImmutableSortedMultiset",
+                  "com.google.common.collect.ImmutableSortedSet",
+                  "com.google.common.collect.ImmutableTable",
+                  "com.google.common.collect.Range"),
           staticMethod().onClass("com.google.protobuf.GeneratedMessage"),
           staticMethod()
               .onClass("java.time.Duration")
@@ -128,48 +130,61 @@ public final class ConstantExpressions {
           staticMethod()
               .onClass("java.time.OffsetTime")
               .withNameMatching(Pattern.compile("^?!(now)")),
-          staticMethod().onClass("java.time.Period"),
-          staticMethod().onClass("java.time.Year"),
-          staticMethod().onClass("java.time.YearMonth"),
-          staticMethod().onClass("java.time.ZoneId"),
-          staticMethod().onClass("java.time.ZoneOffset"),
+          staticMethod()
+              .onClassAny(
+                  "java.time.Period",
+                  "java.time.Year",
+                  "java.time.YearMonth",
+                  "java.time.ZoneId",
+                  "java.time.ZoneOffset"),
+          instanceMethod().onDescendantOf("java.lang.String"),
           staticMethod()
               .onClass("java.time.ZonedDateTime")
               .withNameMatching(Pattern.compile("^?!(now)")),
-          staticMethod().onClass("java.util.Optional"),
-          staticMethod().onClass("java.util.OptionalDouble"),
-          staticMethod().onClass("java.util.OptionalInt"),
-          staticMethod().onClass("java.util.OptionalLong"),
+          staticMethod()
+              .onClassAny(
+                  "java.util.Optional",
+                  "java.util.OptionalDouble",
+                  "java.util.OptionalInt",
+                  "java.util.OptionalLong"),
           staticMethod().onClass("java.util.regex.Pattern"),
-          staticMethod().onClass("org.joda.time.DateTime"),
-          staticMethod().onClass("org.joda.time.DateTimeZone"),
-          staticMethod().onClass("org.joda.time.Days"),
-          staticMethod().onClass("org.joda.time.Duration"),
-          staticMethod().onClass("org.joda.time.Instant"),
-          staticMethod().onClass("org.joda.time.Interval"),
-          staticMethod().onClass("org.joda.time.LocalDate"),
-          staticMethod().onClass("org.joda.time.LocalDateTime"),
-          staticMethod().onClass("org.joda.time.Period"),
-          staticMethod().onClass("org.joda.time.format.DateTimeFormatter"),
+          staticMethod()
+              .onClassAny(
+                  "org.joda.time.DateTime",
+                  "org.joda.time.DateTimeZone",
+                  "org.joda.time.Days",
+                  "org.joda.time.Duration",
+                  "org.joda.time.Instant",
+                  "org.joda.time.Interval",
+                  "org.joda.time.LocalDate",
+                  "org.joda.time.LocalDateTime",
+                  "org.joda.time.Period",
+                  "org.joda.time.format.DateTimeFormatter"),
           Matchers.hasAnnotation("org.checkerframework.dataflow.qual.Pure"),
           (tree, state) -> {
             Symbol symbol = getSymbol(tree);
             return hasAnnotation(symbol.owner, "com.google.auto.value.AutoValue", state)
                 && symbol.getModifiers().contains(ABSTRACT);
           },
-          instanceMethod().onDescendantOf("com.google.protobuf.MessageLite"),
-          instanceMethod()
-              .onDescendantOf("com.google.protobuf.MessageLite.Builder")
-              .withNameMatching(Pattern.compile("get|has.*")),
           staticMethod()
               .onDescendantOf("com.google.protobuf.MessageLite")
               .named("getDefaultInstance"),
           instanceEqualsInvocation(),
           staticEqualsInvocation());
 
+  private final Matcher<ExpressionTree> pureMethods;
+
+  public ConstantExpressions(Matcher<ExpressionTree> pureMethods) {
+    this.pureMethods = pureMethods;
+  }
+
   public static ConstantExpressions fromFlags(ErrorProneFlags flags) {
-    // No dependence on flags yet, but this is instantiable to make future flagging easier.
-    return new ConstantExpressions();
+    WellKnownMutability wellKnownMutability = WellKnownMutability.fromFlags(flags);
+    return new ConstantExpressions(
+        anyOf(
+            PURE_METHODS,
+            instanceMethod()
+                .onDescendantOfAny(wellKnownMutability.getKnownImmutableClasses().keySet())));
   }
 
   /** Represents sets of things known to be true and false if a boolean statement evaluated true. */
@@ -217,17 +232,15 @@ public final class ConstantExpressions {
       @Override
       public Void visitBinary(BinaryTree tree, Void unused) {
         if (tree.getKind().equals(Kind.EQUAL_TO) || tree.getKind().equals(Kind.NOT_EQUAL_TO)) {
-          Optional<ConstantExpression> lhs = constantExpression(tree.getLeftOperand(), state);
-          Optional<ConstantExpression> rhs = constantExpression(tree.getRightOperand(), state);
-          if (lhs.isPresent() && rhs.isPresent()) {
-            ConstantBooleanExpression expression =
-                ConstantBooleanExpression.constantEquals(ConstantEquals.of(lhs.get(), rhs.get()));
-            if (tree.getKind().equals(Kind.NOT_EQUAL_TO)) {
-              withNegation(() -> add(expression));
-            } else {
-              add(expression);
-            }
-          }
+          constantBooleanExpression(tree, state)
+              .ifPresent(
+                  e -> {
+                    if (tree.getKind().equals(Kind.NOT_EQUAL_TO)) {
+                      withNegation(() -> add(e));
+                    } else {
+                      add(e);
+                    }
+                  });
         } else if (negated
             ? tree.getKind().equals(Kind.CONDITIONAL_OR)
             : tree.getKind().equals(Kind.CONDITIONAL_AND)) {
@@ -318,11 +331,21 @@ public final class ConstantExpressions {
     }
   }
 
-  private Optional<ConstantBooleanExpression> constantBooleanExpression(
+  public Optional<ConstantBooleanExpression> constantBooleanExpression(
       ExpressionTree tree, VisitorState state) {
     Symbol symbol = getSymbol(tree);
     if (symbol instanceof VarSymbol && isConsideredFinal(symbol)) {
       return Optional.of(ConstantBooleanExpression.booleanLiteral((VarSymbol) symbol));
+    }
+    if (tree.getKind().equals(Kind.EQUAL_TO) || tree.getKind().equals(Kind.NOT_EQUAL_TO)) {
+      BinaryTree binaryTree = (BinaryTree) tree;
+
+      Optional<ConstantExpression> lhs = constantExpression(binaryTree.getLeftOperand(), state);
+      Optional<ConstantExpression> rhs = constantExpression(binaryTree.getRightOperand(), state);
+      if (lhs.isPresent() && rhs.isPresent()) {
+        return Optional.of(
+            ConstantBooleanExpression.constantEquals(ConstantEquals.of(lhs.get(), rhs.get())));
+      }
     }
     Optional<ConstantExpression> constantExpression = constantExpression(tree, state);
     if (constantExpression.isPresent()) {
@@ -459,8 +482,7 @@ public final class ConstantExpressions {
     while (receiver != null) {
       if (isPureIdentifier(receiver)) {
         symbolized.add(PureMethodInvocation.of(getSymbol(receiver), ImmutableList.of()));
-      } else if (receiver instanceof MethodInvocationTree
-          && PURE_METHODS.matches(receiver, state)) {
+      } else if (receiver instanceof MethodInvocationTree && pureMethods.matches(receiver, state)) {
         ImmutableList.Builder<ConstantExpression> arguments = ImmutableList.builder();
         for (ExpressionTree argument : ((MethodInvocationTree) receiver).getArguments()) {
           Optional<ConstantExpression> argumentConstant = constantExpression(argument, state);

@@ -496,7 +496,7 @@ public abstract class BugChecker implements Suppressible, Serializable {
   /** A {@link TreePathScanner} which skips trees which are suppressed for this check. */
   protected class SuppressibleTreePathScanner<A, B> extends TreePathScanner<A, B> {
     @Override
-    public final A scan(Tree tree, B b) {
+    public A scan(Tree tree, B b) {
       boolean isSuppressible =
           tree instanceof ClassTree || tree instanceof MethodTree || tree instanceof VariableTree;
       return isSuppressible && isSuppressed(tree) ? null : super.scan(tree, b);

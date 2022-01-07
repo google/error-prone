@@ -43,6 +43,101 @@ public final class AlreadyCheckedTest {
   }
 
   @Test
+  public void guardBlock() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  public void test(boolean a) {",
+            "    if (a) {",
+            "      return;",
+            "    }",
+            "    // BUG: Diagnostic contains: false",
+            "    if (a) {}",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void guardBlock_returnFromElse() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  public void test(boolean a) {",
+            "    if (!a) {",
+            "    } else {",
+            "      return;",
+            "    }",
+            "    // BUG: Diagnostic contains: false",
+            "    if (a) {}",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void withinLambda() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            "import java.util.stream.Stream;",
+            "class Test {",
+            "  public Stream<String> test(Stream<String> xs, String x) {",
+            "    if (x.isEmpty()) {",
+            "      return Stream.empty();",
+            "    }",
+            "    return xs.filter(",
+            "        // BUG: Diagnostic contains: x.isEmpty()",
+            "        y -> x.isEmpty() || y.equals(x));",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void checkedInDifferentMethods() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.common.collect.ImmutableList;",
+            "class Test {",
+            "  private final ImmutableList<Integer> foos = null;",
+            "  public boolean a() {",
+            "    if (foos.isEmpty()) {",
+            "      return true;",
+            "    }",
+            "    return false;",
+            "  }",
+            "  public boolean b() {",
+            "    return foos.isEmpty();",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void checkedInLambdaAndAfter() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.common.collect.ImmutableList;",
+            "class Test {",
+            "  private final ImmutableList<Integer> foos = null;",
+            "  public boolean a() {",
+            "    ImmutableList.of().stream().anyMatch(x -> true);",
+            "    if (foos.isEmpty()) {",
+            "      return true;",
+            "    }",
+            "    // BUG: Diagnostic contains:",
+            "    return foos.isEmpty();",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void sameVariableCheckedTwice() {
     helper
         .addSourceLines(
@@ -84,7 +179,7 @@ public final class AlreadyCheckedTest {
             "class Test {",
             "  public void test(boolean a) {",
             "    if (a) {",
-            "      // BUG: Diagnostic contains: false",
+            "      // BUG: Diagnostic contains: true",
             "      if (!a) {}",
             "    }",
             "  }",
@@ -237,6 +332,20 @@ public final class AlreadyCheckedTest {
   }
 
   @Test
+  public void checkedTwiceWithinTernary() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  public int test(int a) {",
+            "    // BUG: Diagnostic contains:",
+            "    return a == 1 ? (a == 1 ? 1 : 2) : 2;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void durationsComparedUsingFactoryMethods() {
     helper
         .addSourceLines(
@@ -313,6 +422,23 @@ public final class AlreadyCheckedTest {
             "      if (this.a.equals(a)) {}",
             "    }",
             "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void knownQuantityPassedToMethod() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.auto.value.AutoValue;",
+            "class Test {",
+            "  void test(boolean a) {",
+            "    if (a) {",
+            "      set(a);",
+            "    }",
+            "  }",
+            "  void set(boolean a) {}",
             "}")
         .doTest();
   }
