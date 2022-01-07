@@ -154,4 +154,19 @@ public class AlwaysThrowsTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void immutableMapWithComplexKeys() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.common.collect.ImmutableMap;",
+            "import java.time.Duration;",
+            "class Test {",
+            "  private static final ImmutableMap<Duration, Integer> xs =",
+            "    // BUG: Diagnostic contains: Duration.ofMillis(1)",
+            "    ImmutableMap.of(Duration.ofMillis(1), 1, Duration.ofMillis(1), 2);",
+            "}")
+        .doTest();
+  }
 }

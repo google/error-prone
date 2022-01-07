@@ -309,4 +309,18 @@ public class FieldCanBeStaticTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void instanceFieldsCannotBeStatic() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  private final int foo;",
+            "  Test(int foo) {",
+            "    this.foo = foo;",
+            "  }",
+            "}")
+        .doTest();
+  }
 }
