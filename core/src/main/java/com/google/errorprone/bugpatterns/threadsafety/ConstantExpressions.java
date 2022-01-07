@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns.threadsafety;
 
-import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.instanceEqualsInvocation;
 import static com.google.errorprone.matchers.Matchers.staticEqualsInvocation;
@@ -38,7 +37,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
-import com.google.errorprone.bugpatterns.threadsafety.ConstantExpressions.ConstantBooleanExpression.ConstantBooleanExpressionKind;
 import com.google.errorprone.bugpatterns.threadsafety.ConstantExpressions.ConstantExpression.ConstantExpressionKind;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
@@ -190,13 +188,12 @@ public final class ConstantExpressions {
   /** Represents sets of things known to be true and false if a boolean statement evaluated true. */
   @AutoValue
   public abstract static class Truthiness {
-    public abstract ImmutableSet<ConstantBooleanExpression> requiredTrue();
+    public abstract ImmutableSet<ConstantExpression> requiredTrue();
 
-    public abstract ImmutableSet<ConstantBooleanExpression> requiredFalse();
+    public abstract ImmutableSet<ConstantExpression> requiredFalse();
 
     private static Truthiness create(
-        Iterable<ConstantBooleanExpression> requiredTrue,
-        Iterable<ConstantBooleanExpression> requiredFalse) {
+        Iterable<ConstantExpression> requiredTrue, Iterable<ConstantExpression> requiredFalse) {
       return new AutoValue_ConstantExpressions_Truthiness(
           ImmutableSet.copyOf(requiredTrue), ImmutableSet.copyOf(requiredFalse));
     }
@@ -207,8 +204,8 @@ public final class ConstantExpressions {
    * expression is true.
    */
   public Truthiness truthiness(ExpressionTree tree, boolean not, VisitorState state) {
-    ImmutableSet.Builder<ConstantBooleanExpression> requiredTrue = ImmutableSet.builder();
-    ImmutableSet.Builder<ConstantBooleanExpression> requiredFalse = ImmutableSet.builder();
+    ImmutableSet.Builder<ConstantExpression> requiredTrue = ImmutableSet.builder();
+    ImmutableSet.Builder<ConstantExpression> requiredFalse = ImmutableSet.builder();
 
     // Keep track of whether we saw an expression too complex for us to handle, and failed.
     AtomicBoolean failed = new AtomicBoolean();
@@ -232,7 +229,7 @@ public final class ConstantExpressions {
       @Override
       public Void visitBinary(BinaryTree tree, Void unused) {
         if (tree.getKind().equals(Kind.EQUAL_TO) || tree.getKind().equals(Kind.NOT_EQUAL_TO)) {
-          constantBooleanExpression(tree, state)
+          constantExpression(tree, state)
               .ifPresent(
                   e -> {
                     if (tree.getKind().equals(Kind.NOT_EQUAL_TO)) {
@@ -254,13 +251,13 @@ public final class ConstantExpressions {
 
       @Override
       public Void visitMethodInvocation(MethodInvocationTree tree, Void unused) {
-        constantBooleanExpression(tree, state).ifPresent(this::add);
+        constantExpression(tree, state).ifPresent(this::add);
         return null;
       }
 
       @Override
       public Void visitIdentifier(IdentifierTree tree, Void unused) {
-        constantBooleanExpression(tree, state).ifPresent(this::add);
+        constantExpression(tree, state).ifPresent(this::add);
         return null;
       }
 
@@ -270,7 +267,7 @@ public final class ConstantExpressions {
         negated = !negated;
       }
 
-      private void add(ConstantBooleanExpression e) {
+      private void add(ConstantExpression e) {
         if (negated) {
           requiredFalse.add(e);
         } else {
@@ -286,79 +283,12 @@ public final class ConstantExpressions {
     return Truthiness.create(requiredTrue.build(), requiredFalse.build());
   }
 
-  /** Represents a constant boolean expression. */
-  @AutoOneOf(ConstantBooleanExpressionKind.class)
-  public abstract static class ConstantBooleanExpression {
-    enum ConstantBooleanExpressionKind {
-      BOOLEAN_LITERAL,
-      CONSTANT_EQUALS,
-      CONSTANT_EXPRESSION,
-    }
-
-    abstract ConstantBooleanExpressionKind kind();
-
-    abstract VarSymbol booleanLiteral();
-
-    private static ConstantBooleanExpression booleanLiteral(VarSymbol varSymbol) {
-      return AutoOneOf_ConstantExpressions_ConstantBooleanExpression.booleanLiteral(varSymbol);
-    }
-
-    abstract ConstantEquals constantEquals();
-
-    private static ConstantBooleanExpression constantEquals(ConstantEquals constantEquals) {
-      return AutoOneOf_ConstantExpressions_ConstantBooleanExpression.constantEquals(constantEquals);
-    }
-
-    abstract ConstantExpression constantExpression();
-
-    private static ConstantBooleanExpression constantExpression(
-        ConstantExpression constantExpression) {
-      return AutoOneOf_ConstantExpressions_ConstantBooleanExpression.constantExpression(
-          constantExpression);
-    }
-
-    @Override
-    public String toString() {
-      switch (kind()) {
-        case BOOLEAN_LITERAL:
-          return booleanLiteral().toString();
-        case CONSTANT_EQUALS:
-          return constantEquals().toString();
-        case CONSTANT_EXPRESSION:
-          return constantExpression().toString();
-      }
-      throw new AssertionError();
-    }
-  }
-
-  public Optional<ConstantBooleanExpression> constantBooleanExpression(
-      ExpressionTree tree, VisitorState state) {
-    Symbol symbol = getSymbol(tree);
-    if (symbol instanceof VarSymbol && isConsideredFinal(symbol)) {
-      return Optional.of(ConstantBooleanExpression.booleanLiteral((VarSymbol) symbol));
-    }
-    if (tree.getKind().equals(Kind.EQUAL_TO) || tree.getKind().equals(Kind.NOT_EQUAL_TO)) {
-      BinaryTree binaryTree = (BinaryTree) tree;
-
-      Optional<ConstantExpression> lhs = constantExpression(binaryTree.getLeftOperand(), state);
-      Optional<ConstantExpression> rhs = constantExpression(binaryTree.getRightOperand(), state);
-      if (lhs.isPresent() && rhs.isPresent()) {
-        return Optional.of(
-            ConstantBooleanExpression.constantEquals(ConstantEquals.of(lhs.get(), rhs.get())));
-      }
-    }
-    Optional<ConstantExpression> constantExpression = constantExpression(tree, state);
-    if (constantExpression.isPresent()) {
-      return constantExpression.map(ConstantBooleanExpression::constantExpression);
-    }
-    return Optional.empty();
-  }
-
   /** Represents a constant expression. */
   @AutoOneOf(ConstantExpressionKind.class)
   public abstract static class ConstantExpression {
     enum ConstantExpressionKind {
       LITERAL,
+      CONSTANT_EQUALS,
       CONSTANT_ACCESSOR
     }
 
@@ -368,6 +298,12 @@ public final class ConstantExpressions {
 
     private static ConstantExpression literal(Object object) {
       return AutoOneOf_ConstantExpressions_ConstantExpression.literal(object);
+    }
+
+    abstract ConstantEquals constantEquals();
+
+    private static ConstantExpression constantEquals(ConstantEquals constantEquals) {
+      return AutoOneOf_ConstantExpressions_ConstantExpression.constantEquals(constantEquals);
     }
 
     abstract ImmutableList<PureMethodInvocation> constantAccessor();
@@ -382,6 +318,8 @@ public final class ConstantExpressions {
       switch (kind()) {
         case LITERAL:
           return literal().toString();
+        case CONSTANT_EQUALS:
+          return constantEquals().toString();
         case CONSTANT_ACCESSOR:
           return constantAccessor().reverse().stream().map(Object::toString).collect(joining("."));
       }
@@ -393,6 +331,10 @@ public final class ConstantExpressions {
         case LITERAL:
           visitor.visitConstant(literal());
           break;
+        case CONSTANT_EQUALS:
+          constantEquals().lhs().accept(visitor);
+          constantEquals().rhs().accept(visitor);
+          break;
         case CONSTANT_ACCESSOR:
           constantAccessor().forEach(pmi -> pmi.accept(visitor));
           break;
@@ -401,7 +343,16 @@ public final class ConstantExpressions {
   }
 
   public Optional<ConstantExpression> constantExpression(ExpressionTree tree, VisitorState state) {
-    checkNotNull(tree);
+    if (tree.getKind().equals(Kind.EQUAL_TO) || tree.getKind().equals(Kind.NOT_EQUAL_TO)) {
+      BinaryTree binaryTree = (BinaryTree) tree;
+
+      Optional<ConstantExpression> lhs = constantExpression(binaryTree.getLeftOperand(), state);
+      Optional<ConstantExpression> rhs = constantExpression(binaryTree.getRightOperand(), state);
+      if (lhs.isPresent() && rhs.isPresent()) {
+        return Optional.of(
+            ConstantExpression.constantEquals(ConstantEquals.of(lhs.get(), rhs.get())));
+      }
+    }
     Object value = constValue(tree);
     if (value != null && tree instanceof LiteralTree) {
       return Optional.of(ConstantExpression.literal(value));

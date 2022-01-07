@@ -30,7 +30,7 @@ import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.CompilationUnitTreeMatcher;
 import com.google.errorprone.bugpatterns.threadsafety.ConstantExpressions;
-import com.google.errorprone.bugpatterns.threadsafety.ConstantExpressions.ConstantBooleanExpression;
+import com.google.errorprone.bugpatterns.threadsafety.ConstantExpressions.ConstantExpression;
 import com.google.errorprone.bugpatterns.threadsafety.ConstantExpressions.Truthiness;
 import com.google.errorprone.matchers.Description;
 import com.sun.source.tree.BlockTree;
@@ -75,11 +75,11 @@ public final class AlreadyChecked extends BugChecker implements CompilationUnitT
   /** Scans a compilation unit, keeping track of which things are known to be true and false. */
   private final class IfScanner extends SuppressibleTreePathScanner<Void, Void> {
     private final Deque<TreePath> enclosingMethod = new ArrayDeque<>();
-    private final Deque<Set<ConstantBooleanExpression>> truthsInMethod = new ArrayDeque<>();
-    private final Deque<Set<ConstantBooleanExpression>> falsehoodsInMethod = new ArrayDeque<>();
+    private final Deque<Set<ConstantExpression>> truthsInMethod = new ArrayDeque<>();
+    private final Deque<Set<ConstantExpression>> falsehoodsInMethod = new ArrayDeque<>();
 
-    private final Multiset<ConstantBooleanExpression> truths = HashMultiset.create();
-    private final Multiset<ConstantBooleanExpression> falsehoods = HashMultiset.create();
+    private final Multiset<ConstantExpression> truths = HashMultiset.create();
+    private final Multiset<ConstantExpression> falsehoods = HashMultiset.create();
     private final VisitorState state;
 
     private IfScanner(VisitorState state) {
@@ -212,7 +212,7 @@ public final class AlreadyChecked extends BugChecker implements CompilationUnitT
         return super.scan(tree, null);
       }
       constantExpressions
-          .constantBooleanExpression((ExpressionTree) tree, state)
+          .constantExpression((ExpressionTree) tree, state)
           .ifPresent(
               e -> {
                 if (truths.contains(e)) {
