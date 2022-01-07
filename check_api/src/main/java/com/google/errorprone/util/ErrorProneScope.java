@@ -28,7 +28,7 @@ import java.lang.reflect.Proxy;
 import java.util.Arrays;
 import java.util.function.Predicate;
 
-/** A compatibility wrapper around {@link com.sun.tools.javac.util.Filter} */
+/** A compatibility wrapper around {@code com.sun.tools.javac.util.Filter} */
 public final class ErrorProneScope {
 
   @SuppressWarnings("unchecked") // reflection
