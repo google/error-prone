@@ -228,7 +228,7 @@
       <!-- Apache 2.0 -->
       <groupId>com.google.protobuf</groupId>
       <artifactId>protobuf-java</artifactId>
-      <version>3.4.0</version>
+      <version>3.16.1</version>
     </dependency>
     <dependency>
       <!-- Apache 2.0 -->
