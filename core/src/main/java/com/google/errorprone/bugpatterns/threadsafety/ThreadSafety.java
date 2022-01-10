@@ -90,14 +90,8 @@ public final class ThreadSafety {
    * checkers is using this utility, different messages become appropriate.
    */
   public enum Purpose {
-
     /** This is being used by the immutability bug checker */
     FOR_IMMUTABLE_CHECKER {
-      @Override
-      String immutableOrThreadSafe() {
-        return "immutable";
-      }
-
       @Override
       String mutableOrNonThreadSafe() {
         return "mutable";
@@ -112,11 +106,6 @@ public final class ThreadSafety {
     /** This is being used by the thread-safety bug checker */
     FOR_THREAD_SAFE_CHECKER {
       @Override
-      String immutableOrThreadSafe() {
-        return "thread-safe";
-      }
-
-      @Override
       String mutableOrNonThreadSafe() {
         return "non-thread-safe";
       }
@@ -127,12 +116,6 @@ public final class ThreadSafety {
       }
     },
     ;
-
-    /**
-     * Returns either the string {@code "immutable"} or {@code "thread-safe"} depending on the
-     * purpose.
-     */
-    abstract String immutableOrThreadSafe();
 
     /**
      * Returns either the string {@code "mutable"} or {@code "non-thread-safe"} depending on the
@@ -249,6 +232,7 @@ public final class ThreadSafety {
   }
 
   /** Use {@link #builder()} instead. */
+  // TODO(ghm): Delete after a JB release.
   @Deprecated
   public ThreadSafety(
       VisitorState state,
@@ -472,6 +456,7 @@ public final class ThreadSafety {
   }
 
   /** @deprecated use {@link #isThreadSafeType(boolean, Set, Type)} instead. */
+  // TODO(ghm): Delete after a JB release.
   @Deprecated
   public Violation isThreadSafeType(Set<String> containerTypeParameters, Type type) {
     return isThreadSafeType(
