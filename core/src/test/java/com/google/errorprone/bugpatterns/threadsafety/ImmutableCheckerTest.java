@@ -1423,7 +1423,7 @@ public class ImmutableCheckerTest {
   @Test
   public void knownUnsafeFlag() {
     CompilationTestHelper.newInstance(ImmutableChecker.class, getClass())
-        .setArgs(ImmutableList.of("-XepOpt:Immutable:KnownUnsafe=threadsafety.SomeUnsafe"))
+        .setArgs(ImmutableList.of("-XepOpt:Immutable:KnownMutable=threadsafety.SomeUnsafe"))
         .addSourceLines(
             "threadsafety/SomeUnsafe.java", "package threadsafety;", "class SomeUnsafe {}")
         .addSourceLines(
