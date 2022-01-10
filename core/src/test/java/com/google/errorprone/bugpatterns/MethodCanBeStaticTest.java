@@ -19,7 +19,6 @@ package com.google.errorprone.bugpatterns;
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
-import com.google.errorprone.ErrorProneFlags;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -31,8 +30,7 @@ public class MethodCanBeStaticTest {
       CompilationTestHelper.newInstance(MethodCanBeStatic.class, getClass());
 
   private final BugCheckerRefactoringTestHelper refactoringHelper =
-      BugCheckerRefactoringTestHelper.newInstance(
-          new MethodCanBeStatic(ErrorProneFlags.empty()), getClass());
+      BugCheckerRefactoringTestHelper.newInstance(MethodCanBeStatic.class, getClass());
 
   @Test
   public void positive() {

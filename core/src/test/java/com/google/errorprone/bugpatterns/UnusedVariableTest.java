@@ -21,7 +21,6 @@ import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.BugCheckerRefactoringTestHelper.FixChoosers;
 import com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode;
 import com.google.errorprone.CompilationTestHelper;
-import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.util.RuntimeVersion;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -35,8 +34,7 @@ public class UnusedVariableTest {
   private final CompilationTestHelper helper =
       CompilationTestHelper.newInstance(UnusedVariable.class, getClass());
   private final BugCheckerRefactoringTestHelper refactoringHelper =
-      BugCheckerRefactoringTestHelper.newInstance(
-          new UnusedVariable(ErrorProneFlags.empty()), getClass());
+      BugCheckerRefactoringTestHelper.newInstance(UnusedVariable.class, getClass());
 
   @Test
   public void exemptedByReceiverParameter() {

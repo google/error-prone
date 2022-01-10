@@ -20,7 +20,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode;
 import com.google.errorprone.CompilationTestHelper;
-import com.google.errorprone.ErrorProneFlags;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -34,8 +33,7 @@ public final class UngroupedOverloadsTest {
       CompilationTestHelper.newInstance(UngroupedOverloads.class, getClass());
 
   private final BugCheckerRefactoringTestHelper refactoringHelper =
-      BugCheckerRefactoringTestHelper.newInstance(
-          new UngroupedOverloads(ErrorProneFlags.empty()), getClass());
+      BugCheckerRefactoringTestHelper.newInstance(UngroupedOverloads.class, getClass());
 
   @Test
   public void ungroupedOverloadsPositiveCasesSingle() {
