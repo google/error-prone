@@ -1062,7 +1062,7 @@ public final class SuggestedFixes {
       return;
     }
     fixBuilder.merge(
-        updateAnnotationArgumentValues(suppressAnnotationTree, "value", newWarningSet));
+        updateAnnotationArgumentValues(suppressAnnotationTree, "value", newWarningSet, state));
   }
 
   private static List<? extends AnnotationTree> findAnnotationsTree(Tree tree) {
@@ -1137,14 +1137,17 @@ public final class SuggestedFixes {
    * <p>N.B.: {@code newValues} are source-code strings, not string literal values.
    */
   public static SuggestedFix.Builder updateAnnotationArgumentValues(
-      AnnotationTree annotation, String parameterName, Collection<String> newValues) {
+      AnnotationTree annotation,
+      String parameterName,
+      Collection<String> newValues,
+      VisitorState state) {
     if (annotation.getArguments().isEmpty()) {
       String parameterPrefix = parameterName.equals("value") ? "" : (parameterName + " = ");
       return SuggestedFix.builder()
           .replace(
               annotation,
               '@'
-                  + annotation.getAnnotationType().toString()
+                  + state.getSourceForNode(annotation.getAnnotationType())
                   + '('
                   + parameterPrefix
                   + newArgument(newValues)

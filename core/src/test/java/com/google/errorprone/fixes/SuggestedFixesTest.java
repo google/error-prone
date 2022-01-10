@@ -1223,7 +1223,8 @@ public class SuggestedFixesTest {
     @Override
     public Description matchAnnotation(AnnotationTree tree, VisitorState state) {
       SuggestedFix.Builder fixBuilder =
-          SuggestedFixes.updateAnnotationArgumentValues(tree, "value", ImmutableList.of("\"Danger\""));
+          SuggestedFixes.updateAnnotationArgumentValues(
+              tree, "value", ImmutableList.of("\"Danger\""), state);
       return describeMatch(tree, fixBuilder.build());
     }
   }

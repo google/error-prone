@@ -67,6 +67,7 @@ public class SuppressWarningsDeprecated extends BugChecker implements Annotation
 
     return describeMatch(
         annotationTree,
-        SuggestedFixes.updateAnnotationArgumentValues(annotationTree, "value", values).build());
+        SuggestedFixes.updateAnnotationArgumentValues(annotationTree, "value", values, state)
+            .build());
   }
 }
