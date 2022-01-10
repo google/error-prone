@@ -33,6 +33,7 @@ import com.google.errorprone.BugPattern;
 import com.google.errorprone.CompilationTestHelper;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
+import com.google.errorprone.bugpatterns.BugChecker.AnnotationTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.LiteralTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
@@ -45,6 +46,7 @@ import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.doctree.LinkTree;
+import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.LambdaExpressionTree;
@@ -1210,6 +1212,40 @@ public class SuggestedFixesTest {
             "out/Test.java",
             "public class Test {",
             "  @SuppressWarnings(value=\"KeepMe\") int BEST = 42;",
+            "}")
+        .doTest(TestMode.AST_MATCH);
+  }
+
+  /** A {@link BugChecker} for testing. */
+  @BugPattern(name = "UpdateDoNotCallArgument", summary = "", severity = ERROR)
+  public static final class UpdateDoNotCallArgumentChecker extends BugChecker
+      implements AnnotationTreeMatcher {
+    @Override
+    public Description matchAnnotation(AnnotationTree tree, VisitorState state) {
+      SuggestedFix.Builder fixBuilder =
+          SuggestedFixes.updateAnnotationArgumentValues(
+              tree, "value", ImmutableList.of("\"Danger\""));
+      return describeMatch(tree, fixBuilder.build());
+    }
+  }
+
+  @Test
+  public void updateAnnotationArgumentValues_noArguments() {
+    BugCheckerRefactoringTestHelper refactorTestHelper =
+        BugCheckerRefactoringTestHelper.newInstance(
+            UpdateDoNotCallArgumentChecker.class, getClass());
+    refactorTestHelper
+        .addInputLines(
+            "in/Test.java",
+            "import com.google.errorprone.annotations.DoNotCall;",
+            "public class Test {",
+            "  @DoNotCall void m() {}",
+            "}")
+        .addOutputLines(
+            "out/Test.java",
+            "import com.google.errorprone.annotations.DoNotCall;",
+            "public class Test {",
+            "  @DoNotCall(\"Danger\") void m() {}",
             "}")
         .doTest(TestMode.AST_MATCH);
   }

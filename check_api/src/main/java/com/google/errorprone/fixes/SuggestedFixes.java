@@ -1143,9 +1143,12 @@ public final class SuggestedFixes {
       return SuggestedFix.builder()
           .replace(
               annotation,
-              annotation
-                  .toString()
-                  .replaceFirst("\\(\\)", "(" + parameterPrefix + newArgument(newValues) + ")"));
+              '@'
+                  + annotation.getAnnotationType().toString()
+                  + '('
+                  + parameterPrefix
+                  + newArgument(newValues)
+                  + ')');
     }
     Optional<ExpressionTree> maybeExistingArgument = findArgument(annotation, parameterName);
     if (!maybeExistingArgument.isPresent()) {
