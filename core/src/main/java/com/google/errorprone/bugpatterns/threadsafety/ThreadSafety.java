@@ -23,7 +23,7 @@ import static com.google.common.collect.ImmutableList.toImmutableList;
 import com.google.auto.value.AutoValue;
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMultimap;
+import com.google.common.collect.ImmutableListMultimap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
@@ -49,8 +49,6 @@ import com.sun.tools.javac.code.Types;
 import java.lang.annotation.Annotation;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Target;
-import java.lang.reflect.Field;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
@@ -868,7 +866,8 @@ public final class ThreadSafety {
       // fast path
       return Violation.absent();
     }
-    ImmutableMultimap<TypeVariableSymbol, Type> instantiation = getInstantiation(methodType);
+    ImmutableListMultimap<TypeVariableSymbol, Type> instantiation =
+        ASTHelpers.getTypeSubstitution(methodType, symbol);
 
     for (TypeVariableSymbol typeParameter : typeParameters) {
       Violation violation = checkInstantiation(typeParameter, instantiation.get(typeParameter));
@@ -877,47 +876,5 @@ public final class ThreadSafety {
       }
     }
     return Violation.absent();
-  }
-
-  private static ImmutableMultimap<TypeVariableSymbol, Type> getInstantiation(Type methodType) {
-    List<Type> to = new ArrayList<>();
-    ArrayList<Type> from = new ArrayList<>();
-    getSubst(getMapping(methodType), from, to);
-    ImmutableMultimap.Builder<TypeVariableSymbol, Type> mapping = ImmutableMultimap.builder();
-    Streams.forEachPair(
-        from.stream(), to.stream(), (f, t) -> mapping.put((TypeVariableSymbol) f.asElement(), t));
-    return mapping.build();
-  }
-
-  private static Type getMapping(Type type) {
-    if (type == null) {
-      return null;
-    }
-    try {
-      // Reflectively extract the mapping from Type.createMethodTypeWithReturn
-      Field valField = type.getClass().getDeclaredField("val$t");
-      valField.setAccessible(true);
-      return (Type) valField.get(type);
-    } catch (ReflectiveOperationException e) {
-      return type;
-    }
-  }
-
-  @SuppressWarnings("unchecked")
-  private static void getSubst(Type m, List<Type> from, List<Type> to) {
-    try {
-      // Reflectively extract the mapping from an enclosing instance of Types.Subst
-      Field substField = m.getClass().getDeclaredField("this$0");
-      substField.setAccessible(true);
-      Object subst = substField.get(m);
-      Field fromField = subst.getClass().getDeclaredField("from");
-      Field toField = subst.getClass().getDeclaredField("to");
-      fromField.setAccessible(true);
-      toField.setAccessible(true);
-      from.addAll((Collection<Type>) fromField.get(subst));
-      to.addAll((Collection<Type>) toField.get(subst));
-    } catch (ReflectiveOperationException e) {
-      return;
-    }
   }
 }
