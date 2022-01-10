@@ -328,6 +328,7 @@ public final class WellKnownMutability implements ThreadSafety.KnownTypes {
     return ImmutableSet.<String>builder()
         .addAll(knownUnsafes)
         .addAll(ImmutableCollections.MUTABLE_TO_IMMUTABLE_CLASS_NAME_MAP.keySet())
+        .add("com.google.common.util.concurrent.AtomicDouble")
         .add("com.google.protobuf.util.FieldMaskUtil.MergeOptions")
         .add(java.util.BitSet.class.getName())
         .add(java.util.Calendar.class.getName())
@@ -344,10 +345,14 @@ public final class WellKnownMutability implements ThreadSafety.KnownTypes {
         .add(java.util.HashSet.class.getName())
         .add(java.util.NavigableMap.class.getName())
         .add(java.util.NavigableSet.class.getName())
+        .add(java.util.Random.class.getName())
         .add(java.util.TreeMap.class.getName())
         .add(java.util.TreeSet.class.getName())
         .add(java.util.Vector.class.getName())
         .add(java.util.Set.class.getName())
+        .add(java.util.concurrent.atomic.AtomicBoolean.class.getName())
+        .add(java.util.concurrent.atomic.AtomicReference.class.getName())
+        .add(java.util.concurrent.atomic.AtomicLong.class.getName())
         .build();
   }
 
