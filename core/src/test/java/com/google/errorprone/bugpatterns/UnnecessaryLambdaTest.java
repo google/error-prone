@@ -239,17 +239,19 @@ public class UnnecessaryLambdaTest {
   }
 
   @Test
-  public void variable_bind() {
+  public void variable_keepAnnotatedMember() {
     testHelper
         .addInputLines(
             "Bind.java",
             "package com.google.inject.testing.fieldbinder;",
             "import static java.lang.annotation.ElementType.FIELD;",
             "import static java.lang.annotation.RetentionPolicy.RUNTIME;",
+            "import com.google.errorprone.annotations.Keep;",
             "import java.lang.annotation.Retention;",
             "import java.lang.annotation.Target;",
             "@Retention(RUNTIME)",
             "@Target({FIELD})",
+            "@Keep",
             "public @interface Bind {}")
         .expectUnchanged()
         .addInputLines(

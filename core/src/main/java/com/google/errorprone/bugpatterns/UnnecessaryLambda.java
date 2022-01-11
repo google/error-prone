@@ -125,7 +125,7 @@ public class UnnecessaryLambda extends BugChecker
         || !sym.getModifiers().contains(Modifier.FINAL)) {
       return NO_MATCH;
     }
-    if (ASTHelpers.hasAnnotation(tree, "com.google.inject.testing.fieldbinder.Bind", state)) {
+    if (ASTHelpers.shouldKeep(tree)) {
       return NO_MATCH;
     }
     Tree type = tree.getType();

@@ -21,12 +21,9 @@ import static com.google.common.collect.Multimaps.asMap;
 import static com.google.common.collect.Streams.stream;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.fixes.SuggestedFixes.qualifyType;
-import static com.google.errorprone.matchers.ChildMultiMatcher.MatchType.AT_LEAST_ONE;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.InjectMatchers.hasProvidesAnnotation;
-import static com.google.errorprone.matchers.Matchers.annotations;
 import static com.google.errorprone.matchers.Matchers.anyOf;
-import static com.google.errorprone.matchers.Matchers.isType;
 import static com.google.errorprone.matchers.Matchers.methodReturns;
 import static com.google.errorprone.matchers.Matchers.variableType;
 import static com.google.errorprone.predicates.TypePredicates.isDescendantOf;
@@ -39,6 +36,7 @@ import static com.google.errorprone.util.ASTHelpers.getUpperBound;
 import static com.google.errorprone.util.ASTHelpers.isConsideredFinal;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
 import static com.google.errorprone.util.ASTHelpers.methodCanBeOverridden;
+import static com.google.errorprone.util.ASTHelpers.shouldKeep;
 
 import com.google.auto.value.AutoValue;
 import com.google.common.collect.ArrayListMultimap;
@@ -119,11 +117,6 @@ public final class PreferredInterfaceType extends BugChecker implements Compilat
               .map(bt -> Matchers.typePredicateMatcher(bt.predicate()))
               .collect(toImmutableList()));
 
-  public static final Matcher<Tree> SHOULD_IGNORE =
-      anyOf(
-          hasProvidesAnnotation(),
-          annotations(AT_LEAST_ONE, anyOf(isType("com.google.inject.testing.fieldbinder.Bind"))));
-
   @Override
   public Description matchCompilationUnit(CompilationUnitTree tree, VisitorState state) {
     ImmutableMap<Symbol, Tree> fixableTypes = getFixableTypes(state);
@@ -199,7 +192,7 @@ public final class PreferredInterfaceType extends BugChecker implements Compilat
         if (symbol.getKind() == ElementKind.PARAMETER) {
           return false;
         }
-        if (SHOULD_IGNORE.matches(tree, state)) {
+        if (hasProvidesAnnotation().matches(tree, state) || shouldKeep(tree)) {
           return false;
         }
         if (symbol.getKind() == ElementKind.FIELD) {
@@ -219,7 +212,7 @@ public final class PreferredInterfaceType extends BugChecker implements Compilat
         if (methodReturns(INTERESTING_TYPE).matches(node, state)
             && methodSymbol != null
             && !methodCanBeOverridden(methodSymbol)
-            && !SHOULD_IGNORE.matches(node, state)) {
+            && !shouldKeep(node)) {
           fixableTypes.put(methodSymbol, node.getReturnType());
         }
         return super.visitMethod(node, null);
