@@ -52,6 +52,7 @@
         <configuration>
           <source>8</source>
           <target>8</target>
+          <compilerArgs combine.self="override" />
         </configuration>
       </plugin>
     </plugins>
