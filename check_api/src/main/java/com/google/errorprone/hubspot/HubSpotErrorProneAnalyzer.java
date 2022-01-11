@@ -17,6 +17,7 @@
 package com.google.errorprone.hubspot;
 
 import com.google.errorprone.ErrorProneAnalyzer;
+import com.google.errorprone.ErrorProneOptions;
 import com.sun.source.util.TaskEvent;
 import com.sun.source.util.TaskListener;
 
@@ -24,8 +25,12 @@ public class HubSpotErrorProneAnalyzer implements TaskListener {
   private final ErrorProneAnalyzer delegate;
 
 
-  public static HubSpotErrorProneAnalyzer wrap(ErrorProneAnalyzer analyzer) {
-    return new HubSpotErrorProneAnalyzer(analyzer);
+  public static TaskListener wrap(ErrorProneOptions options, ErrorProneAnalyzer analyzer) {
+    if (HubSpotUtils.isErrorHandlingEnabled(options)) {
+      return new HubSpotErrorProneAnalyzer(analyzer);
+    } else {
+      return analyzer;
+    }
   }
 
   private HubSpotErrorProneAnalyzer(ErrorProneAnalyzer delegate) {

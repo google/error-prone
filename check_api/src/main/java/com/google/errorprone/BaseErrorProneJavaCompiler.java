@@ -97,7 +97,9 @@ public class BaseErrorProneJavaCompiler implements JavaCompiler {
     setupMessageBundle(context);
     RefactoringCollection[] refactoringCollection = {null};
     javacTask.addTaskListener(
-        HubSpotErrorProneAnalyzer.wrap(createAnalyzer(scannerSupplier, errorProneOptions, context, refactoringCollection)));
+        HubSpotErrorProneAnalyzer.wrap(
+            errorProneOptions,
+            createAnalyzer(scannerSupplier, errorProneOptions, context, refactoringCollection)));
     if (refactoringCollection[0] != null) {
       javacTask.addTaskListener(new RefactoringTask(context, refactoringCollection[0]));
     }
