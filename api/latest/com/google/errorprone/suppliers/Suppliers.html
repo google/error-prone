@@ -76,13 +76,13 @@ loadScripts(document, 'script');</script>
 <div class="sub-title"><span class="package-label-in-type">Package</span>&nbsp;<a href="package-summary.html">com.google.errorprone.suppliers</a></div>
 <h1 title="Class Suppliers" class="title">Class Suppliers</h1>
 </div>
-<div class="inheritance" title="Inheritance Tree"><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html" title="class or interface in java.lang" class="external-link">java.lang.Object</a>
+<div class="inheritance" title="Inheritance Tree"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">java.lang.Object</a>
 <div class="inheritance">com.google.errorprone.suppliers.Suppliers</div>
 </div>
 <section class="description">
 <hr>
 <pre>public final class <span class="type-name-label">Suppliers</span>
-extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></pre>
+extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></pre>
 <dl class="notes">
 <dt>Author:</dt>
 <dd>alexeagle@google.com (Alex Eagle)</dd>
@@ -218,12 +218,12 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 </tr>
 <tr class="row-color" id="i1">
 <td class="col-first"><code>static com.google.common.collect.ImmutableList&lt;<a href="Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a>&lt;com.sun.tools.javac.code.Type&gt;&gt;</code></td>
-<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#fromStrings(java.lang.Iterable)">fromStrings</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Iterable.html" title="class or interface in java.lang" class="external-link">Iterable</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;types)</code></th>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#fromStrings(java.lang.Iterable)">fromStrings</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Iterable.html" title="class or interface in java.lang" class="external-link">Iterable</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;types)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
 <tr class="alt-color" id="i2">
 <td class="col-first"><code>static <a href="Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a>&lt;com.sun.tools.javac.code.Type&gt;</code></td>
-<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#genericTypeOf(com.google.errorprone.suppliers.Supplier,int)">genericTypeOf</a></span>&#8203;(<a href="Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a>&lt;com.sun.source.tree.ExpressionTree&gt;&nbsp;expressionSupplier,
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#genericTypeOf(com.google.errorprone.suppliers.Supplier,int)">genericTypeOf</a></span>&#8203;(<a href="Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&gt;&nbsp;expressionSupplier,
 int&nbsp;n)</code></th>
 <td class="col-last">
 <div class="block">Supplies the n'th generic type of the given expression.</div>
@@ -245,7 +245,7 @@ int&nbsp;n)</code></th>
 </td>
 </tr>
 <tr class="row-color" id="i5">
-<td class="col-first"><code>static <a href="Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a>&lt;com.sun.source.tree.ExpressionTree&gt;</code></td>
+<td class="col-first"><code>static <a href="Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&gt;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#receiverInstance()">receiverInstance</a></span>()</code></th>
 <td class="col-last">
 <div class="block">Supplies the expression which gives the instance of an object that will receive the method
@@ -262,14 +262,14 @@ int&nbsp;n)</code></th>
 </tr>
 <tr class="row-color" id="i7">
 <td class="col-first"><code>static <a href="Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a>&lt;com.sun.tools.javac.code.Type&gt;</code></td>
-<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#typeFromClass(java.lang.Class)">typeFromClass</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;inputClass)</code></th>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#typeFromClass(java.lang.Class)">typeFromClass</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;inputClass)</code></th>
 <td class="col-last">
 <div class="block">Given the class representation of a type, supplies the corresponding type.</div>
 </td>
 </tr>
 <tr class="alt-color" id="i8">
 <td class="col-first"><code>static <a href="Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a>&lt;com.sun.tools.javac.code.Type&gt;</code></td>
-<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#typeFromString(java.lang.String)">typeFromString</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;typeString)</code></th>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#typeFromString(java.lang.String)">typeFromString</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;typeString)</code></th>
 <td class="col-last">
 <div class="block">Given the string representation of a type, supplies the corresponding type.</div>
 </td>
@@ -279,8 +279,8 @@ int&nbsp;n)</code></th>
 </div>
 </div>
 <div class="inherited-list">
-<h3 id="methods.inherited.from.class.java.lang.Object">Methods inherited from class&nbsp;java.lang.<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></h3>
-<code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#clone()" title="class or interface in java.lang" class="external-link">clone</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#equals(java.lang.Object)" title="class or interface in java.lang" class="external-link">equals</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#finalize()" title="class or interface in java.lang" class="external-link">finalize</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#getClass()" title="class or interface in java.lang" class="external-link">getClass</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#hashCode()" title="class or interface in java.lang" class="external-link">hashCode</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#notify()" title="class or interface in java.lang" class="external-link">notify</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#notifyAll()" title="class or interface in java.lang" class="external-link">notifyAll</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#toString()" title="class or interface in java.lang" class="external-link">toString</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#wait()" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#wait(long)" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#wait(long,int)" title="class or interface in java.lang" class="external-link">wait</a></code></div>
+<h3 id="methods.inherited.from.class.java.lang.Object">Methods inherited from class&nbsp;java.lang.<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></h3>
+<code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#clone()" title="class or interface in java.lang" class="external-link">clone</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#equals(java.lang.Object)" title="class or interface in java.lang" class="external-link">equals</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#finalize()" title="class or interface in java.lang" class="external-link">finalize</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#getClass()" title="class or interface in java.lang" class="external-link">getClass</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#hashCode()" title="class or interface in java.lang" class="external-link">hashCode</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#notify()" title="class or interface in java.lang" class="external-link">notify</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#notifyAll()" title="class or interface in java.lang" class="external-link">notifyAll</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#toString()" title="class or interface in java.lang" class="external-link">toString</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#wait()" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#wait(long)" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#wait(long,int)" title="class or interface in java.lang" class="external-link">wait</a></code></div>
 </section>
 </li>
 </ul>
@@ -405,7 +405,7 @@ int&nbsp;n)</code></th>
 <li>
 <section class="detail" id="genericTypeOf(com.google.errorprone.suppliers.Supplier,int)">
 <h3>genericTypeOf</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a>&lt;com.sun.tools.javac.code.Type&gt;</span>&nbsp;<span class="member-name">genericTypeOf</span>&#8203;(<span class="parameters"><a href="Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a>&lt;com.sun.source.tree.ExpressionTree&gt;&nbsp;expressionSupplier,
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a>&lt;com.sun.tools.javac.code.Type&gt;</span>&nbsp;<span class="member-name">genericTypeOf</span>&#8203;(<span class="parameters"><a href="Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&gt;&nbsp;expressionSupplier,
 int&nbsp;n)</span></div>
 <div class="block">Supplies the n'th generic type of the given expression. For example, in <code>Map&lt;A,B&gt; c;</code> for
  the expression c and n=1, the result is the type of <code>B</code>. If there are an insufficient
@@ -445,7 +445,7 @@ int&nbsp;n)</span></div>
 <li>
 <section class="detail" id="receiverInstance()">
 <h3>receiverInstance</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a>&lt;com.sun.source.tree.ExpressionTree&gt;</span>&nbsp;<span class="member-name">receiverInstance</span>()</div>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&gt;</span>&nbsp;<span class="member-name">receiverInstance</span>()</div>
 <div class="block">Supplies the expression which gives the instance of an object that will receive the method
  call. For example, in <code>a.getB().getC()</code> if the visitor is currently visiting the <code>
  getC()</code> method invocation, then this supplier gives the expression <code>a.getB()</code>.</div>
@@ -454,7 +454,7 @@ int&nbsp;n)</span></div>
 <li>
 <section class="detail" id="typeFromString(java.lang.String)">
 <h3>typeFromString</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a>&lt;com.sun.tools.javac.code.Type&gt;</span>&nbsp;<span class="member-name">typeFromString</span>&#8203;(<span class="parameters"><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;typeString)</span></div>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a>&lt;com.sun.tools.javac.code.Type&gt;</span>&nbsp;<span class="member-name">typeFromString</span>&#8203;(<span class="parameters"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;typeString)</span></div>
 <div class="block">Given the string representation of a type, supplies the corresponding type.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
@@ -465,7 +465,7 @@ int&nbsp;n)</span></div>
 <li>
 <section class="detail" id="typeFromClass(java.lang.Class)">
 <h3>typeFromClass</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a>&lt;com.sun.tools.javac.code.Type&gt;</span>&nbsp;<span class="member-name">typeFromClass</span>&#8203;(<span class="parameters"><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;inputClass)</span></div>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a>&lt;com.sun.tools.javac.code.Type&gt;</span>&nbsp;<span class="member-name">typeFromClass</span>&#8203;(<span class="parameters"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;inputClass)</span></div>
 <div class="block">Given the class representation of a type, supplies the corresponding type.</div>
 </section>
 </li>
@@ -489,7 +489,7 @@ int&nbsp;n)</span></div>
 <li>
 <section class="detail" id="fromStrings(java.lang.Iterable)">
 <h3>fromStrings</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">com.google.common.collect.ImmutableList&lt;<a href="Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a>&lt;com.sun.tools.javac.code.Type&gt;&gt;</span>&nbsp;<span class="member-name">fromStrings</span>&#8203;(<span class="parameters"><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Iterable.html" title="class or interface in java.lang" class="external-link">Iterable</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;types)</span></div>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">com.google.common.collect.ImmutableList&lt;<a href="Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a>&lt;com.sun.tools.javac.code.Type&gt;&gt;</span>&nbsp;<span class="member-name">fromStrings</span>&#8203;(<span class="parameters"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Iterable.html" title="class or interface in java.lang" class="external-link">Iterable</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;types)</span></div>
 </section>
 </li>
 </ul>

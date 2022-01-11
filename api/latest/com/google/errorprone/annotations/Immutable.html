@@ -70,10 +70,10 @@ loadScripts(document, 'script');</script>
 </div>
 <section class="description">
 <hr>
-<pre><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/Documented.html" title="class or interface in java.lang.annotation" class="external-link">@Documented</a>
-<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/Target.html" title="class or interface in java.lang.annotation" class="external-link">@Target</a>(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/ElementType.html#TYPE" title="class or interface in java.lang.annotation" class="external-link">TYPE</a>)
-<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/Retention.html" title="class or interface in java.lang.annotation" class="external-link">@Retention</a>(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/RetentionPolicy.html#RUNTIME" title="class or interface in java.lang.annotation" class="external-link">RUNTIME</a>)
-<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/Inherited.html" title="class or interface in java.lang.annotation" class="external-link">@Inherited</a>
+<pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/annotation/Documented.html" title="class or interface in java.lang.annotation" class="external-link">@Documented</a>
+<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/annotation/Target.html" title="class or interface in java.lang.annotation" class="external-link">@Target</a>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/annotation/ElementType.html#TYPE" title="class or interface in java.lang.annotation" class="external-link">TYPE</a>)
+<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/annotation/Retention.html" title="class or interface in java.lang.annotation" class="external-link">@Retention</a>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/annotation/RetentionPolicy.html#RUNTIME" title="class or interface in java.lang.annotation" class="external-link">RUNTIME</a>)
+<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/annotation/Inherited.html" title="class or interface in java.lang.annotation" class="external-link">@Inherited</a>
 public @interface <span class="type-name-label">Immutable</span></pre>
 <div class="block">The class to which this annotation is applied is immutable.
 
@@ -104,7 +104,7 @@ public @interface <span class="type-name-label">Immutable</span></pre>
  initialized to improve performance.
 
  <p>It is also technically possible to have an immutable object with non-final fields (see the
- implementation of <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html#hashCode()" title="class or interface in java.lang" class="external-link"><code>String.hashCode()</code></a> for an example), but doing this correctly requires
+ implementation of <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html#hashCode()" title="class or interface in java.lang" class="external-link"><code>String.hashCode()</code></a> for an example), but doing this correctly requires
  subtle reasoning about safe data races and deep knowledge of the Java Memory Model.
 
  <p>Use of this annotation is validated by <a href="https://errorprone.info/bugpattern/Immutable">Error Prone's immutability analysis</a>,
@@ -138,7 +138,7 @@ public @interface <span class="type-name-label">Immutable</span></pre>
 </thead>
 <tbody>
 <tr class="alt-color">
-<td class="col-first"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>[]</code></td>
+<td class="col-first"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>[]</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#containerOf()">containerOf</a></span></code></th>
 <td class="col-last">
 <div class="block">When annotating a generic type as immutable, <code>containerOf</code> specifies which type
@@ -162,7 +162,7 @@ public @interface <span class="type-name-label">Immutable</span></pre>
 <li>
 <section class="detail" id="containerOf()">
 <h3>containerOf</h3>
-<div class="member-signature"><span class="return-type"><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>[]</span>&nbsp;<span class="member-name">containerOf</span></div>
+<div class="member-signature"><span class="return-type"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>[]</span>&nbsp;<span class="member-name">containerOf</span></div>
 <div class="block">When annotating a generic type as immutable, <code>containerOf</code> specifies which type
  parameters must be instantiated with immutable types for the container to be deeply immutable.</div>
 <dl class="notes">

@@ -76,13 +76,13 @@ loadScripts(document, 'script');</script>
 <div class="sub-title"><span class="package-label-in-type">Package</span>&nbsp;<a href="package-summary.html">com.google.errorprone.bugpatterns.threadsafety</a></div>
 <h1 title="Class GuardedByUtils" class="title">Class GuardedByUtils</h1>
 </div>
-<div class="inheritance" title="Inheritance Tree"><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html" title="class or interface in java.lang" class="external-link">java.lang.Object</a>
+<div class="inheritance" title="Inheritance Tree"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">java.lang.Object</a>
 <div class="inheritance">com.google.errorprone.bugpatterns.threadsafety.GuardedByUtils</div>
 </div>
 <section class="description">
 <hr>
 <pre>public final class <span class="type-name-label">GuardedByUtils</span>
-extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></pre>
+extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></pre>
 <dl class="notes">
 <dt>Author:</dt>
 <dd>cushon@google.com (Liam Miller-Cushon)</dd>
@@ -108,20 +108,20 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <tbody>
 <tr class="alt-color" id="i0">
 <td class="col-first"><code>static com.sun.tools.javac.code.Symbol</code></td>
-<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#bindGuardedByString(com.sun.source.tree.Tree,java.lang.String,com.google.errorprone.VisitorState,com.google.errorprone.bugpatterns.threadsafety.GuardedByFlags)">bindGuardedByString</a></span>&#8203;(com.sun.source.tree.Tree&nbsp;tree,
-<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;guard,
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#bindGuardedByString(com.sun.source.tree.Tree,java.lang.String,com.google.errorprone.VisitorState,com.google.errorprone.bugpatterns.threadsafety.GuardedByFlags)">bindGuardedByString</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&nbsp;tree,
+<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;guard,
 <a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;visitorState,
 <a href="GuardedByFlags.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByFlags</a>&nbsp;flags)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
 <tr class="row-color" id="i1">
-<td class="col-first"><code>static com.google.common.collect.ImmutableSet&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></td>
+<td class="col-first"><code>static com.google.common.collect.ImmutableSet&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#getGuardValues(com.sun.tools.javac.code.Symbol)">getGuardValues</a></span>&#8203;(com.sun.tools.javac.code.Symbol&nbsp;sym)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
 <tr class="alt-color" id="i2">
 <td class="col-first"><code>static com.google.errorprone.bugpatterns.threadsafety.GuardedByUtils.GuardedByValidationResult</code></td>
-<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#isGuardedByValid(com.sun.source.tree.Tree,com.google.errorprone.VisitorState,com.google.errorprone.bugpatterns.threadsafety.GuardedByFlags)">isGuardedByValid</a></span>&#8203;(com.sun.source.tree.Tree&nbsp;tree,
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#isGuardedByValid(com.sun.source.tree.Tree,com.google.errorprone.VisitorState,com.google.errorprone.bugpatterns.threadsafety.GuardedByFlags)">isGuardedByValid</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&nbsp;tree,
 <a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
 <a href="GuardedByFlags.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByFlags</a>&nbsp;flags)</code></th>
 <td class="col-last">&nbsp;</td>
@@ -131,8 +131,8 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 </div>
 </div>
 <div class="inherited-list">
-<h3 id="methods.inherited.from.class.java.lang.Object">Methods inherited from class&nbsp;java.lang.<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></h3>
-<code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#clone()" title="class or interface in java.lang" class="external-link">clone</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#equals(java.lang.Object)" title="class or interface in java.lang" class="external-link">equals</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#finalize()" title="class or interface in java.lang" class="external-link">finalize</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#getClass()" title="class or interface in java.lang" class="external-link">getClass</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#hashCode()" title="class or interface in java.lang" class="external-link">hashCode</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#notify()" title="class or interface in java.lang" class="external-link">notify</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#notifyAll()" title="class or interface in java.lang" class="external-link">notifyAll</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#toString()" title="class or interface in java.lang" class="external-link">toString</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#wait()" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#wait(long)" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#wait(long,int)" title="class or interface in java.lang" class="external-link">wait</a></code></div>
+<h3 id="methods.inherited.from.class.java.lang.Object">Methods inherited from class&nbsp;java.lang.<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></h3>
+<code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#clone()" title="class or interface in java.lang" class="external-link">clone</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#equals(java.lang.Object)" title="class or interface in java.lang" class="external-link">equals</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#finalize()" title="class or interface in java.lang" class="external-link">finalize</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#getClass()" title="class or interface in java.lang" class="external-link">getClass</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#hashCode()" title="class or interface in java.lang" class="external-link">hashCode</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#notify()" title="class or interface in java.lang" class="external-link">notify</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#notifyAll()" title="class or interface in java.lang" class="external-link">notifyAll</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#toString()" title="class or interface in java.lang" class="external-link">toString</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#wait()" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#wait(long)" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#wait(long,int)" title="class or interface in java.lang" class="external-link">wait</a></code></div>
 </section>
 </li>
 </ul>
@@ -147,13 +147,13 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <li>
 <section class="detail" id="getGuardValues(com.sun.tools.javac.code.Symbol)">
 <h3>getGuardValues</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">com.google.common.collect.ImmutableSet&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</span>&nbsp;<span class="member-name">getGuardValues</span>&#8203;(<span class="parameters">com.sun.tools.javac.code.Symbol&nbsp;sym)</span></div>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">com.google.common.collect.ImmutableSet&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</span>&nbsp;<span class="member-name">getGuardValues</span>&#8203;(<span class="parameters">com.sun.tools.javac.code.Symbol&nbsp;sym)</span></div>
 </section>
 </li>
 <li>
 <section class="detail" id="isGuardedByValid(com.sun.source.tree.Tree,com.google.errorprone.VisitorState,com.google.errorprone.bugpatterns.threadsafety.GuardedByFlags)">
 <h3>isGuardedByValid</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">com.google.errorprone.bugpatterns.threadsafety.GuardedByUtils.GuardedByValidationResult</span>&nbsp;<span class="member-name">isGuardedByValid</span>&#8203;(<span class="parameters">com.sun.source.tree.Tree&nbsp;tree,
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">com.google.errorprone.bugpatterns.threadsafety.GuardedByUtils.GuardedByValidationResult</span>&nbsp;<span class="member-name">isGuardedByValid</span>&#8203;(<span class="parameters"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&nbsp;tree,
 <a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
 <a href="GuardedByFlags.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByFlags</a>&nbsp;flags)</span></div>
 </section>
@@ -161,8 +161,8 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <li>
 <section class="detail" id="bindGuardedByString(com.sun.source.tree.Tree,java.lang.String,com.google.errorprone.VisitorState,com.google.errorprone.bugpatterns.threadsafety.GuardedByFlags)">
 <h3>bindGuardedByString</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">com.sun.tools.javac.code.Symbol</span>&nbsp;<span class="member-name">bindGuardedByString</span>&#8203;(<span class="parameters">com.sun.source.tree.Tree&nbsp;tree,
-<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;guard,
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">com.sun.tools.javac.code.Symbol</span>&nbsp;<span class="member-name">bindGuardedByString</span>&#8203;(<span class="parameters"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&nbsp;tree,
+<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;guard,
 <a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;visitorState,
 <a href="GuardedByFlags.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByFlags</a>&nbsp;flags)</span></div>
 </section>

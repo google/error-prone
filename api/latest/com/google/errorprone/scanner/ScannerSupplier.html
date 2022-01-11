@@ -76,17 +76,17 @@ loadScripts(document, 'script');</script>
 <div class="sub-title"><span class="package-label-in-type">Package</span>&nbsp;<a href="package-summary.html">com.google.errorprone.scanner</a></div>
 <h1 title="Class ScannerSupplier" class="title">Class ScannerSupplier</h1>
 </div>
-<div class="inheritance" title="Inheritance Tree"><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html" title="class or interface in java.lang" class="external-link">java.lang.Object</a>
+<div class="inheritance" title="Inheritance Tree"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">java.lang.Object</a>
 <div class="inheritance">com.google.errorprone.scanner.ScannerSupplier</div>
 </div>
 <section class="description">
 <dl class="notes">
 <dt>All Implemented Interfaces:</dt>
-<dd><code>com.google.common.base.Supplier&lt;<a href="Scanner.html" title="class in com.google.errorprone.scanner">Scanner</a>&gt;</code>, <code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;<a href="Scanner.html" title="class in com.google.errorprone.scanner">Scanner</a>&gt;</code></dd>
+<dd><code>com.google.common.base.Supplier&lt;<a href="Scanner.html" title="class in com.google.errorprone.scanner">Scanner</a>&gt;</code>, <code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;<a href="Scanner.html" title="class in com.google.errorprone.scanner">Scanner</a>&gt;</code></dd>
 </dl>
 <hr>
 <pre>public abstract class <span class="type-name-label">ScannerSupplier</span>
-extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>
+extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>
 implements com.google.common.base.Supplier&lt;<a href="Scanner.html" title="class in com.google.errorprone.scanner">Scanner</a>&gt;</pre>
 <div class="block">Supplies <a href="Scanner.html" title="class in com.google.errorprone.scanner"><code>Scanner</code></a>s and provides access to the backing sets of all <a href="../bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>s and
  enabled <a href="../bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>s.</div>
@@ -140,12 +140,12 @@ implements com.google.common.base.Supplier&lt;<a href="Scanner.html" title="clas
 </td>
 </tr>
 <tr class="row-color" id="i1">
-<td class="col-first"><code>protected abstract com.google.common.collect.ImmutableSet&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></td>
+<td class="col-first"><code>protected abstract com.google.common.collect.ImmutableSet&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#disabled()">disabled</a></span>()</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
 <tr class="alt-color" id="i2">
-<td class="col-first"><code>protected <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></td>
+<td class="col-first"><code>protected <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#enabled()">enabled</a></span>()</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
@@ -158,21 +158,21 @@ implements com.google.common.base.Supplier&lt;<a href="Scanner.html" title="clas
 </tr>
 <tr class="alt-color" id="i4">
 <td class="col-first"><code>static <a href="ScannerSupplier.html" title="class in com.google.errorprone.scanner">ScannerSupplier</a></code></td>
-<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#fromBugCheckerClasses(java.lang.Class...)">fromBugCheckerClasses</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;? extends <a href="../bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a>&gt;...&nbsp;checkerClasses)</code></th>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#fromBugCheckerClasses(java.lang.Class...)">fromBugCheckerClasses</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;? extends <a href="../bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a>&gt;...&nbsp;checkerClasses)</code></th>
 <td class="col-last">
 <div class="block">Returns a <a href="ScannerSupplier.html" title="class in com.google.errorprone.scanner"><code>ScannerSupplier</code></a> with a specific list of <a href="../bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a> classes.</div>
 </td>
 </tr>
 <tr class="row-color" id="i5">
 <td class="col-first"><code>static <a href="ScannerSupplier.html" title="class in com.google.errorprone.scanner">ScannerSupplier</a></code></td>
-<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#fromBugCheckerClasses(java.lang.Iterable)">fromBugCheckerClasses</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Iterable.html" title="class or interface in java.lang" class="external-link">Iterable</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;? extends <a href="../bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a>&gt;&gt;&nbsp;checkers)</code></th>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#fromBugCheckerClasses(java.lang.Iterable)">fromBugCheckerClasses</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Iterable.html" title="class or interface in java.lang" class="external-link">Iterable</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;? extends <a href="../bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a>&gt;&gt;&nbsp;checkers)</code></th>
 <td class="col-last">
 <div class="block">Returns a <a href="ScannerSupplier.html" title="class in com.google.errorprone.scanner"><code>ScannerSupplier</code></a> with a specific list of <a href="../bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a> classes.</div>
 </td>
 </tr>
 <tr class="alt-color" id="i6">
 <td class="col-first"><code>static <a href="ScannerSupplier.html" title="class in com.google.errorprone.scanner">ScannerSupplier</a></code></td>
-<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#fromBugCheckerInfos(java.lang.Iterable)">fromBugCheckerInfos</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Iterable.html" title="class or interface in java.lang" class="external-link">Iterable</a>&lt;<a href="../BugCheckerInfo.html" title="class in com.google.errorprone">BugCheckerInfo</a>&gt;&nbsp;checkers)</code></th>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#fromBugCheckerInfos(java.lang.Iterable)">fromBugCheckerInfos</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Iterable.html" title="class or interface in java.lang" class="external-link">Iterable</a>&lt;<a href="../BugCheckerInfo.html" title="class in com.google.errorprone">BugCheckerInfo</a>&gt;&nbsp;checkers)</code></th>
 <td class="col-last">
 <div class="block">Returns a <a href="ScannerSupplier.html" title="class in com.google.errorprone.scanner"><code>ScannerSupplier</code></a> built from a list of <a href="../BugCheckerInfo.html" title="class in com.google.errorprone"><code>BugCheckerInfo</code></a>s.</div>
 </td>
@@ -185,7 +185,7 @@ implements com.google.common.base.Supplier&lt;<a href="Scanner.html" title="clas
 </td>
 </tr>
 <tr class="alt-color" id="i8">
-<td class="col-first"><code>abstract com.google.common.collect.ImmutableBiMap&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,&#8203;<a href="../BugCheckerInfo.html" title="class in com.google.errorprone">BugCheckerInfo</a>&gt;</code></td>
+<td class="col-first"><code>abstract com.google.common.collect.ImmutableBiMap&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,&#8203;<a href="../BugCheckerInfo.html" title="class in com.google.errorprone">BugCheckerInfo</a>&gt;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#getAllChecks()">getAllChecks</a></span>()</code></th>
 <td class="col-last">
 <div class="block">Returns a map of check name to <a href="../BugCheckerInfo.html" title="class in com.google.errorprone"><code>BugCheckerInfo</code></a> for all <a href="../BugCheckerInfo.html" title="class in com.google.errorprone"><code>BugCheckerInfo</code></a>s in this
@@ -212,7 +212,7 @@ implements com.google.common.base.Supplier&lt;<a href="Scanner.html" title="clas
 </td>
 </tr>
 <tr class="alt-color" id="i12">
-<td class="col-first"><code>abstract com.google.common.collect.ImmutableMap&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,&#8203;<a href="../BugPattern.SeverityLevel.html" title="enum in com.google.errorprone">BugPattern.SeverityLevel</a>&gt;</code></td>
+<td class="col-first"><code>abstract com.google.common.collect.ImmutableMap&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,&#8203;<a href="../BugPattern.SeverityLevel.html" title="enum in com.google.errorprone">BugPattern.SeverityLevel</a>&gt;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#severities()">severities</a></span>()</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
@@ -221,8 +221,8 @@ implements com.google.common.base.Supplier&lt;<a href="Scanner.html" title="clas
 </div>
 </div>
 <div class="inherited-list">
-<h3 id="methods.inherited.from.class.java.lang.Object">Methods inherited from class&nbsp;java.lang.<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></h3>
-<code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#clone()" title="class or interface in java.lang" class="external-link">clone</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#equals(java.lang.Object)" title="class or interface in java.lang" class="external-link">equals</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#finalize()" title="class or interface in java.lang" class="external-link">finalize</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#getClass()" title="class or interface in java.lang" class="external-link">getClass</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#hashCode()" title="class or interface in java.lang" class="external-link">hashCode</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#notify()" title="class or interface in java.lang" class="external-link">notify</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#notifyAll()" title="class or interface in java.lang" class="external-link">notifyAll</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#toString()" title="class or interface in java.lang" class="external-link">toString</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#wait()" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#wait(long)" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#wait(long,int)" title="class or interface in java.lang" class="external-link">wait</a></code></div>
+<h3 id="methods.inherited.from.class.java.lang.Object">Methods inherited from class&nbsp;java.lang.<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></h3>
+<code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#clone()" title="class or interface in java.lang" class="external-link">clone</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#equals(java.lang.Object)" title="class or interface in java.lang" class="external-link">equals</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#finalize()" title="class or interface in java.lang" class="external-link">finalize</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#getClass()" title="class or interface in java.lang" class="external-link">getClass</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#hashCode()" title="class or interface in java.lang" class="external-link">hashCode</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#notify()" title="class or interface in java.lang" class="external-link">notify</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#notifyAll()" title="class or interface in java.lang" class="external-link">notifyAll</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#toString()" title="class or interface in java.lang" class="external-link">toString</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#wait()" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#wait(long)" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#wait(long,int)" title="class or interface in java.lang" class="external-link">wait</a></code></div>
 <div class="inherited-list">
 <h3 id="methods.inherited.from.class.com.google.common.base.Supplier">Methods inherited from interface&nbsp;com.google.common.base.Supplier</h3>
 <code>get</code></div>
@@ -254,22 +254,22 @@ implements com.google.common.base.Supplier&lt;<a href="Scanner.html" title="clas
 <li>
 <section class="detail" id="fromBugCheckerClasses(java.lang.Class...)">
 <h3>fromBugCheckerClasses</h3>
-<div class="member-signature"><span class="annotations"><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/SafeVarargs.html" title="class or interface in java.lang" class="external-link">@SafeVarargs</a>
-</span><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="ScannerSupplier.html" title="class in com.google.errorprone.scanner">ScannerSupplier</a></span>&nbsp;<span class="member-name">fromBugCheckerClasses</span>&#8203;(<span class="parameters"><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;? extends <a href="../bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a>&gt;...&nbsp;checkerClasses)</span></div>
+<div class="member-signature"><span class="annotations"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/SafeVarargs.html" title="class or interface in java.lang" class="external-link">@SafeVarargs</a>
+</span><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="ScannerSupplier.html" title="class in com.google.errorprone.scanner">ScannerSupplier</a></span>&nbsp;<span class="member-name">fromBugCheckerClasses</span>&#8203;(<span class="parameters"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;? extends <a href="../bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a>&gt;...&nbsp;checkerClasses)</span></div>
 <div class="block">Returns a <a href="ScannerSupplier.html" title="class in com.google.errorprone.scanner"><code>ScannerSupplier</code></a> with a specific list of <a href="../bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a> classes.</div>
 </section>
 </li>
 <li>
 <section class="detail" id="fromBugCheckerClasses(java.lang.Iterable)">
 <h3>fromBugCheckerClasses</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="ScannerSupplier.html" title="class in com.google.errorprone.scanner">ScannerSupplier</a></span>&nbsp;<span class="member-name">fromBugCheckerClasses</span>&#8203;(<span class="parameters"><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Iterable.html" title="class or interface in java.lang" class="external-link">Iterable</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;? extends <a href="../bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a>&gt;&gt;&nbsp;checkers)</span></div>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="ScannerSupplier.html" title="class in com.google.errorprone.scanner">ScannerSupplier</a></span>&nbsp;<span class="member-name">fromBugCheckerClasses</span>&#8203;(<span class="parameters"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Iterable.html" title="class or interface in java.lang" class="external-link">Iterable</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;? extends <a href="../bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a>&gt;&gt;&nbsp;checkers)</span></div>
 <div class="block">Returns a <a href="ScannerSupplier.html" title="class in com.google.errorprone.scanner"><code>ScannerSupplier</code></a> with a specific list of <a href="../bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a> classes.</div>
 </section>
 </li>
 <li>
 <section class="detail" id="fromBugCheckerInfos(java.lang.Iterable)">
 <h3>fromBugCheckerInfos</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="ScannerSupplier.html" title="class in com.google.errorprone.scanner">ScannerSupplier</a></span>&nbsp;<span class="member-name">fromBugCheckerInfos</span>&#8203;(<span class="parameters"><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Iterable.html" title="class or interface in java.lang" class="external-link">Iterable</a>&lt;<a href="../BugCheckerInfo.html" title="class in com.google.errorprone">BugCheckerInfo</a>&gt;&nbsp;checkers)</span></div>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="ScannerSupplier.html" title="class in com.google.errorprone.scanner">ScannerSupplier</a></span>&nbsp;<span class="member-name">fromBugCheckerInfos</span>&#8203;(<span class="parameters"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Iterable.html" title="class or interface in java.lang" class="external-link">Iterable</a>&lt;<a href="../BugCheckerInfo.html" title="class in com.google.errorprone">BugCheckerInfo</a>&gt;&nbsp;checkers)</span></div>
 <div class="block">Returns a <a href="ScannerSupplier.html" title="class in com.google.errorprone.scanner"><code>ScannerSupplier</code></a> built from a list of <a href="../BugCheckerInfo.html" title="class in com.google.errorprone"><code>BugCheckerInfo</code></a>s.</div>
 </section>
 </li>
@@ -284,7 +284,7 @@ implements com.google.common.base.Supplier&lt;<a href="Scanner.html" title="clas
 <li>
 <section class="detail" id="getAllChecks()">
 <h3>getAllChecks</h3>
-<div class="member-signature"><span class="modifiers">public abstract</span>&nbsp;<span class="return-type">com.google.common.collect.ImmutableBiMap&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,&#8203;<a href="../BugCheckerInfo.html" title="class in com.google.errorprone">BugCheckerInfo</a>&gt;</span>&nbsp;<span class="member-name">getAllChecks</span>()</div>
+<div class="member-signature"><span class="modifiers">public abstract</span>&nbsp;<span class="return-type">com.google.common.collect.ImmutableBiMap&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,&#8203;<a href="../BugCheckerInfo.html" title="class in com.google.errorprone">BugCheckerInfo</a>&gt;</span>&nbsp;<span class="member-name">getAllChecks</span>()</div>
 <div class="block">Returns a map of check name to <a href="../BugCheckerInfo.html" title="class in com.google.errorprone"><code>BugCheckerInfo</code></a> for all <a href="../BugCheckerInfo.html" title="class in com.google.errorprone"><code>BugCheckerInfo</code></a>s in this
  <a href="ScannerSupplier.html" title="class in com.google.errorprone.scanner"><code>ScannerSupplier</code></a>, including disabled ones.</div>
 </section>
@@ -299,19 +299,19 @@ implements com.google.common.base.Supplier&lt;<a href="Scanner.html" title="clas
 <li>
 <section class="detail" id="severities()">
 <h3>severities</h3>
-<div class="member-signature"><span class="modifiers">public abstract</span>&nbsp;<span class="return-type">com.google.common.collect.ImmutableMap&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,&#8203;<a href="../BugPattern.SeverityLevel.html" title="enum in com.google.errorprone">BugPattern.SeverityLevel</a>&gt;</span>&nbsp;<span class="member-name">severities</span>()</div>
+<div class="member-signature"><span class="modifiers">public abstract</span>&nbsp;<span class="return-type">com.google.common.collect.ImmutableMap&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,&#8203;<a href="../BugPattern.SeverityLevel.html" title="enum in com.google.errorprone">BugPattern.SeverityLevel</a>&gt;</span>&nbsp;<span class="member-name">severities</span>()</div>
 </section>
 </li>
 <li>
 <section class="detail" id="disabled()">
 <h3>disabled</h3>
-<div class="member-signature"><span class="modifiers">protected abstract</span>&nbsp;<span class="return-type">com.google.common.collect.ImmutableSet&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</span>&nbsp;<span class="member-name">disabled</span>()</div>
+<div class="member-signature"><span class="modifiers">protected abstract</span>&nbsp;<span class="return-type">com.google.common.collect.ImmutableSet&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</span>&nbsp;<span class="member-name">disabled</span>()</div>
 </section>
 </li>
 <li>
 <section class="detail" id="enabled()">
 <h3>enabled</h3>
-<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/javase/8/docs/api/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</span>&nbsp;<span class="member-name">enabled</span>()</div>
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</span>&nbsp;<span class="member-name">enabled</span>()</div>
 </section>
 </li>
 <li>

@@ -86,7 +86,7 @@ loadScripts(document, 'script');</script>
 <dd>This is a functional interface and can therefore be used as the assignment target for a lambda expression or method reference.</dd>
 </dl>
 <hr>
-<pre><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/FunctionalInterface.html" title="class or interface in java.lang" class="external-link">@FunctionalInterface</a>
+<pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/FunctionalInterface.html" title="class or interface in java.lang" class="external-link">@FunctionalInterface</a>
 public static interface <span class="type-name-label">ImmutableAnalysis.ViolationReporter</span></pre>
 <div class="block">Accepts <a href="ThreadSafety.Violation.html" title="class in com.google.errorprone.bugpatterns.threadsafety"><code>violations</code></a> that are found during the analysis.</div>
 </section>
@@ -110,15 +110,15 @@ public static interface <span class="type-name-label">ImmutableAnalysis.Violatio
 <tbody>
 <tr class="alt-color" id="i0">
 <td class="col-first"><code><a href="../../matchers/Description.Builder.html" title="class in com.google.errorprone.matchers">Description.Builder</a></code></td>
-<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#describe(com.sun.source.tree.Tree,com.google.errorprone.bugpatterns.threadsafety.ThreadSafety.Violation)">describe</a></span>&#8203;(com.sun.source.tree.Tree&nbsp;tree,
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#describe(com.sun.source.tree.Tree,com.google.errorprone.bugpatterns.threadsafety.ThreadSafety.Violation)">describe</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&nbsp;tree,
 <a href="ThreadSafety.Violation.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.Violation</a>&nbsp;info)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
 <tr class="row-color" id="i1">
 <td class="col-first"><code>default <a href="../../matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
-<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#report(com.sun.source.tree.Tree,com.google.errorprone.bugpatterns.threadsafety.ThreadSafety.Violation,java.util.Optional)">report</a></span>&#8203;(com.sun.source.tree.Tree&nbsp;tree,
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#report(com.sun.source.tree.Tree,com.google.errorprone.bugpatterns.threadsafety.ThreadSafety.Violation,java.util.Optional)">report</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&nbsp;tree,
 <a href="ThreadSafety.Violation.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.Violation</a>&nbsp;info,
-<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="../../fixes/SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a>&gt;&nbsp;suggestedFix)</code></th>
+<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="../../fixes/SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a>&gt;&nbsp;suggestedFix)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
 </tbody>
@@ -139,7 +139,7 @@ public static interface <span class="type-name-label">ImmutableAnalysis.Violatio
 <li>
 <section class="detail" id="describe(com.sun.source.tree.Tree,com.google.errorprone.bugpatterns.threadsafety.ThreadSafety.Violation)">
 <h3>describe</h3>
-<div class="member-signature"><span class="return-type"><a href="../../matchers/Description.Builder.html" title="class in com.google.errorprone.matchers">Description.Builder</a></span>&nbsp;<span class="member-name">describe</span>&#8203;(<span class="parameters">com.sun.source.tree.Tree&nbsp;tree,
+<div class="member-signature"><span class="return-type"><a href="../../matchers/Description.Builder.html" title="class in com.google.errorprone.matchers">Description.Builder</a></span>&nbsp;<span class="member-name">describe</span>&#8203;(<span class="parameters"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&nbsp;tree,
 <a href="ThreadSafety.Violation.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.Violation</a>&nbsp;info)</span></div>
 </section>
 </li>
@@ -147,9 +147,9 @@ public static interface <span class="type-name-label">ImmutableAnalysis.Violatio
 <section class="detail" id="report(com.sun.source.tree.Tree,com.google.errorprone.bugpatterns.threadsafety.ThreadSafety.Violation,java.util.Optional)">
 <h3>report</h3>
 <div class="member-signature"><span class="annotations"><a href="../../annotations/CheckReturnValue.html" title="annotation in com.google.errorprone.annotations">@CheckReturnValue</a>
-</span><span class="modifiers">default</span>&nbsp;<span class="return-type"><a href="../../matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></span>&nbsp;<span class="member-name">report</span>&#8203;(<span class="parameters">com.sun.source.tree.Tree&nbsp;tree,
+</span><span class="modifiers">default</span>&nbsp;<span class="return-type"><a href="../../matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></span>&nbsp;<span class="member-name">report</span>&#8203;(<span class="parameters"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&nbsp;tree,
 <a href="ThreadSafety.Violation.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.Violation</a>&nbsp;info,
-<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="../../fixes/SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a>&gt;&nbsp;suggestedFix)</span></div>
+<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="../../fixes/SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a>&gt;&nbsp;suggestedFix)</span></div>
 </section>
 </li>
 </ul>

@@ -76,13 +76,13 @@ loadScripts(document, 'script');</script>
 <div class="sub-title"><span class="package-label-in-type">Package</span>&nbsp;<a href="package-summary.html">com.google.errorprone.util</a></div>
 <h1 title="Class FindIdentifiers" class="title">Class FindIdentifiers</h1>
 </div>
-<div class="inheritance" title="Inheritance Tree"><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html" title="class or interface in java.lang" class="external-link">java.lang.Object</a>
+<div class="inheritance" title="Inheritance Tree"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">java.lang.Object</a>
 <div class="inheritance">com.google.errorprone.util.FindIdentifiers</div>
 </div>
 <section class="description">
 <hr>
 <pre>public final class <span class="type-name-label">FindIdentifiers</span>
-extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></pre>
+extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></pre>
 <div class="block">A helper class to find all identifiers in scope at a given program point.</div>
 </section>
 <section class="summary">
@@ -120,7 +120,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 </tr>
 <tr class="alt-color" id="i2">
 <td class="col-first"><code>static com.sun.tools.javac.code.Symbol</code></td>
-<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#findIdent(java.lang.String,com.google.errorprone.VisitorState)">findIdent</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;name,
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#findIdent(java.lang.String,com.google.errorprone.VisitorState)">findIdent</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;name,
 <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
 <td class="col-last">
 <div class="block">Finds a variable declaration with the given name that is in scope at the current location.</div>
@@ -128,7 +128,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 </tr>
 <tr class="row-color" id="i3">
 <td class="col-first"><code>static com.sun.tools.javac.code.Symbol</code></td>
-<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#findIdent(java.lang.String,com.google.errorprone.VisitorState,com.sun.tools.javac.code.Kinds.KindSelector)">findIdent</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;name,
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#findIdent(java.lang.String,com.google.errorprone.VisitorState,com.sun.tools.javac.code.Kinds.KindSelector)">findIdent</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;name,
 <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
 com.sun.tools.javac.code.Kinds.KindSelector&nbsp;kind)</code></th>
 <td class="col-last">
@@ -137,7 +137,7 @@ com.sun.tools.javac.code.Kinds.KindSelector&nbsp;kind)</code></th>
 </tr>
 <tr class="alt-color" id="i4">
 <td class="col-first"><code>static com.google.common.collect.ImmutableSet&lt;com.sun.tools.javac.code.Symbol&gt;</code></td>
-<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#findReferencedIdentifiers(com.sun.source.tree.Tree)">findReferencedIdentifiers</a></span>&#8203;(com.sun.source.tree.Tree&nbsp;tree)</code></th>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#findReferencedIdentifiers(com.sun.source.tree.Tree)">findReferencedIdentifiers</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&nbsp;tree)</code></th>
 <td class="col-last">
 <div class="block">Find the set of all identifiers referenced within this Tree</div>
 </td>
@@ -154,8 +154,8 @@ com.sun.tools.javac.code.Kinds.KindSelector&nbsp;kind)</code></th>
 </div>
 </div>
 <div class="inherited-list">
-<h3 id="methods.inherited.from.class.java.lang.Object">Methods inherited from class&nbsp;java.lang.<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></h3>
-<code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#clone()" title="class or interface in java.lang" class="external-link">clone</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#equals(java.lang.Object)" title="class or interface in java.lang" class="external-link">equals</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#finalize()" title="class or interface in java.lang" class="external-link">finalize</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#getClass()" title="class or interface in java.lang" class="external-link">getClass</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#hashCode()" title="class or interface in java.lang" class="external-link">hashCode</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#notify()" title="class or interface in java.lang" class="external-link">notify</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#notifyAll()" title="class or interface in java.lang" class="external-link">notifyAll</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#toString()" title="class or interface in java.lang" class="external-link">toString</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#wait()" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#wait(long)" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#wait(long,int)" title="class or interface in java.lang" class="external-link">wait</a></code></div>
+<h3 id="methods.inherited.from.class.java.lang.Object">Methods inherited from class&nbsp;java.lang.<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></h3>
+<code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#clone()" title="class or interface in java.lang" class="external-link">clone</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#equals(java.lang.Object)" title="class or interface in java.lang" class="external-link">equals</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#finalize()" title="class or interface in java.lang" class="external-link">finalize</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#getClass()" title="class or interface in java.lang" class="external-link">getClass</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#hashCode()" title="class or interface in java.lang" class="external-link">hashCode</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#notify()" title="class or interface in java.lang" class="external-link">notify</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#notifyAll()" title="class or interface in java.lang" class="external-link">notifyAll</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#toString()" title="class or interface in java.lang" class="external-link">toString</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#wait()" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#wait(long)" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#wait(long,int)" title="class or interface in java.lang" class="external-link">wait</a></code></div>
 </section>
 </li>
 </ul>
@@ -170,7 +170,7 @@ com.sun.tools.javac.code.Kinds.KindSelector&nbsp;kind)</code></th>
 <li>
 <section class="detail" id="findIdent(java.lang.String,com.google.errorprone.VisitorState)">
 <h3>findIdent</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">com.sun.tools.javac.code.Symbol</span>&nbsp;<span class="member-name">findIdent</span>&#8203;(<span class="parameters"><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;name,
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">com.sun.tools.javac.code.Symbol</span>&nbsp;<span class="member-name">findIdent</span>&#8203;(<span class="parameters"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;name,
 <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
 <div class="block">Finds a variable declaration with the given name that is in scope at the current location.</div>
 </section>
@@ -178,8 +178,8 @@ com.sun.tools.javac.code.Kinds.KindSelector&nbsp;kind)</code></th>
 <li>
 <section class="detail" id="findIdent(java.lang.String,com.google.errorprone.VisitorState,com.sun.tools.javac.code.Kinds.KindSelector)">
 <h3>findIdent</h3>
-<div class="member-signature"><span class="annotations"><a href="https://docs.oracle.com/javase/8/docs/api/javax/annotation/Nullable.html" title="class or interface in javax.annotation" class="external-link">@Nullable</a>
-</span><span class="modifiers">public static</span>&nbsp;<span class="return-type">com.sun.tools.javac.code.Symbol</span>&nbsp;<span class="member-name">findIdent</span>&#8203;(<span class="parameters"><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;name,
+<div class="member-signature"><span class="annotations">@Nullable
+</span><span class="modifiers">public static</span>&nbsp;<span class="return-type">com.sun.tools.javac.code.Symbol</span>&nbsp;<span class="member-name">findIdent</span>&#8203;(<span class="parameters"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;name,
 <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
 com.sun.tools.javac.code.Kinds.KindSelector&nbsp;kind)</span></div>
 <div class="block">Finds a declaration with the given name and type that is in scope at the current location.</div>
@@ -210,7 +210,7 @@ com.sun.tools.javac.code.Kinds.KindSelector&nbsp;kind)</span></div>
 <li>
 <section class="detail" id="findReferencedIdentifiers(com.sun.source.tree.Tree)">
 <h3>findReferencedIdentifiers</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">com.google.common.collect.ImmutableSet&lt;com.sun.tools.javac.code.Symbol&gt;</span>&nbsp;<span class="member-name">findReferencedIdentifiers</span>&#8203;(<span class="parameters">com.sun.source.tree.Tree&nbsp;tree)</span></div>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">com.google.common.collect.ImmutableSet&lt;com.sun.tools.javac.code.Symbol&gt;</span>&nbsp;<span class="member-name">findReferencedIdentifiers</span>&#8203;(<span class="parameters"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&nbsp;tree)</span></div>
 <div class="block">Find the set of all identifiers referenced within this Tree</div>
 </section>
 </li>

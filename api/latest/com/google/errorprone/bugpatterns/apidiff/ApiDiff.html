@@ -76,13 +76,13 @@ loadScripts(document, 'script');</script>
 <div class="sub-title"><span class="package-label-in-type">Package</span>&nbsp;<a href="package-summary.html">com.google.errorprone.bugpatterns.apidiff</a></div>
 <h1 title="Class ApiDiff" class="title">Class ApiDiff</h1>
 </div>
-<div class="inheritance" title="Inheritance Tree"><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html" title="class or interface in java.lang" class="external-link">java.lang.Object</a>
+<div class="inheritance" title="Inheritance Tree"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">java.lang.Object</a>
 <div class="inheritance">com.google.errorprone.bugpatterns.apidiff.ApiDiff</div>
 </div>
 <section class="description">
 <hr>
 <pre>public abstract class <span class="type-name-label">ApiDiff</span>
-extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></pre>
+extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></pre>
 <div class="block">The difference between two APIs.</div>
 </section>
 <section class="summary">
@@ -155,8 +155,8 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <tbody>
 <tr class="alt-color" id="i0">
 <td class="col-first"><code>static <a href="ApiDiff.html" title="class in com.google.errorprone.bugpatterns.apidiff">ApiDiff</a></code></td>
-<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#fromMembers(java.util.Set,com.google.common.collect.Multimap)">fromMembers</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;unsupportedClasses,
-com.google.common.collect.Multimap&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,&#8203;<a href="ApiDiff.ClassMemberKey.html" title="class in com.google.errorprone.bugpatterns.apidiff">ApiDiff.ClassMemberKey</a>&gt;&nbsp;unsupportedMembersByClass)</code></th>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#fromMembers(java.util.Set,com.google.common.collect.Multimap)">fromMembers</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;unsupportedClasses,
+com.google.common.collect.Multimap&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,&#8203;<a href="ApiDiff.ClassMemberKey.html" title="class in com.google.errorprone.bugpatterns.apidiff">ApiDiff.ClassMemberKey</a>&gt;&nbsp;unsupportedMembersByClass)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
 <tr class="row-color" id="i1">
@@ -174,14 +174,14 @@ com.google.common.collect.Multimap&lt;<a href="https://docs.oracle.com/javase/8/
 </td>
 </tr>
 <tr class="row-color" id="i3">
-<td class="col-first"><code>abstract com.google.common.collect.ImmutableSet&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></td>
+<td class="col-first"><code>abstract com.google.common.collect.ImmutableSet&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#unsupportedClasses()">unsupportedClasses</a></span>()</code></th>
 <td class="col-last">
 <div class="block">Binary names of classes only present in the new API.</div>
 </td>
 </tr>
 <tr class="alt-color" id="i4">
-<td class="col-first"><code>abstract com.google.common.collect.ImmutableSetMultimap&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,&#8203;<a href="ApiDiff.ClassMemberKey.html" title="class in com.google.errorprone.bugpatterns.apidiff">ApiDiff.ClassMemberKey</a>&gt;</code></td>
+<td class="col-first"><code>abstract com.google.common.collect.ImmutableSetMultimap&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,&#8203;<a href="ApiDiff.ClassMemberKey.html" title="class in com.google.errorprone.bugpatterns.apidiff">ApiDiff.ClassMemberKey</a>&gt;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#unsupportedMembersByClass()">unsupportedMembersByClass</a></span>()</code></th>
 <td class="col-last">
 <div class="block">Members only present in the new API, grouped by binary name of their declaring class.</div>
@@ -192,8 +192,8 @@ com.google.common.collect.Multimap&lt;<a href="https://docs.oracle.com/javase/8/
 </div>
 </div>
 <div class="inherited-list">
-<h3 id="methods.inherited.from.class.java.lang.Object">Methods inherited from class&nbsp;java.lang.<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></h3>
-<code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#clone()" title="class or interface in java.lang" class="external-link">clone</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#equals(java.lang.Object)" title="class or interface in java.lang" class="external-link">equals</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#finalize()" title="class or interface in java.lang" class="external-link">finalize</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#getClass()" title="class or interface in java.lang" class="external-link">getClass</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#hashCode()" title="class or interface in java.lang" class="external-link">hashCode</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#notify()" title="class or interface in java.lang" class="external-link">notify</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#notifyAll()" title="class or interface in java.lang" class="external-link">notifyAll</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#toString()" title="class or interface in java.lang" class="external-link">toString</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#wait()" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#wait(long)" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#wait(long,int)" title="class or interface in java.lang" class="external-link">wait</a></code></div>
+<h3 id="methods.inherited.from.class.java.lang.Object">Methods inherited from class&nbsp;java.lang.<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></h3>
+<code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#clone()" title="class or interface in java.lang" class="external-link">clone</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#equals(java.lang.Object)" title="class or interface in java.lang" class="external-link">equals</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#finalize()" title="class or interface in java.lang" class="external-link">finalize</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#getClass()" title="class or interface in java.lang" class="external-link">getClass</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#hashCode()" title="class or interface in java.lang" class="external-link">hashCode</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#notify()" title="class or interface in java.lang" class="external-link">notify</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#notifyAll()" title="class or interface in java.lang" class="external-link">notifyAll</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#toString()" title="class or interface in java.lang" class="external-link">toString</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#wait()" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#wait(long)" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#wait(long,int)" title="class or interface in java.lang" class="external-link">wait</a></code></div>
 </section>
 </li>
 </ul>
@@ -222,22 +222,22 @@ com.google.common.collect.Multimap&lt;<a href="https://docs.oracle.com/javase/8/
 <li>
 <section class="detail" id="unsupportedClasses()">
 <h3>unsupportedClasses</h3>
-<div class="member-signature"><span class="modifiers">public abstract</span>&nbsp;<span class="return-type">com.google.common.collect.ImmutableSet&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</span>&nbsp;<span class="member-name">unsupportedClasses</span>()</div>
+<div class="member-signature"><span class="modifiers">public abstract</span>&nbsp;<span class="return-type">com.google.common.collect.ImmutableSet&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</span>&nbsp;<span class="member-name">unsupportedClasses</span>()</div>
 <div class="block">Binary names of classes only present in the new API.</div>
 </section>
 </li>
 <li>
 <section class="detail" id="unsupportedMembersByClass()">
 <h3>unsupportedMembersByClass</h3>
-<div class="member-signature"><span class="modifiers">public abstract</span>&nbsp;<span class="return-type">com.google.common.collect.ImmutableSetMultimap&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,&#8203;<a href="ApiDiff.ClassMemberKey.html" title="class in com.google.errorprone.bugpatterns.apidiff">ApiDiff.ClassMemberKey</a>&gt;</span>&nbsp;<span class="member-name">unsupportedMembersByClass</span>()</div>
+<div class="member-signature"><span class="modifiers">public abstract</span>&nbsp;<span class="return-type">com.google.common.collect.ImmutableSetMultimap&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,&#8203;<a href="ApiDiff.ClassMemberKey.html" title="class in com.google.errorprone.bugpatterns.apidiff">ApiDiff.ClassMemberKey</a>&gt;</span>&nbsp;<span class="member-name">unsupportedMembersByClass</span>()</div>
 <div class="block">Members only present in the new API, grouped by binary name of their declaring class.</div>
 </section>
 </li>
 <li>
 <section class="detail" id="fromMembers(java.util.Set,com.google.common.collect.Multimap)">
 <h3>fromMembers</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="ApiDiff.html" title="class in com.google.errorprone.bugpatterns.apidiff">ApiDiff</a></span>&nbsp;<span class="member-name">fromMembers</span>&#8203;(<span class="parameters"><a href="https://docs.oracle.com/javase/8/docs/api/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;unsupportedClasses,
-com.google.common.collect.Multimap&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,&#8203;<a href="ApiDiff.ClassMemberKey.html" title="class in com.google.errorprone.bugpatterns.apidiff">ApiDiff.ClassMemberKey</a>&gt;&nbsp;unsupportedMembersByClass)</span></div>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="ApiDiff.html" title="class in com.google.errorprone.bugpatterns.apidiff">ApiDiff</a></span>&nbsp;<span class="member-name">fromMembers</span>&#8203;(<span class="parameters"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;unsupportedClasses,
+com.google.common.collect.Multimap&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,&#8203;<a href="ApiDiff.ClassMemberKey.html" title="class in com.google.errorprone.bugpatterns.apidiff">ApiDiff.ClassMemberKey</a>&gt;&nbsp;unsupportedMembersByClass)</span></div>
 </section>
 </li>
 <li>

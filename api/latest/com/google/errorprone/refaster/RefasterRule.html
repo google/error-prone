@@ -76,7 +76,7 @@ loadScripts(document, 'script');</script>
 <div class="sub-title"><span class="package-label-in-type">Package</span>&nbsp;<a href="package-summary.html">com.google.errorprone.refaster</a></div>
 <h1 title="Class RefasterRule" class="title">Class RefasterRule&lt;M extends <a href="TemplateMatch.html" title="class in com.google.errorprone.refaster">TemplateMatch</a>,&#8203;T extends <a href="Template.html" title="class in com.google.errorprone.refaster">Template</a>&lt;M&gt;&gt;</h1>
 </div>
-<div class="inheritance" title="Inheritance Tree"><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html" title="class or interface in java.lang" class="external-link">java.lang.Object</a>
+<div class="inheritance" title="Inheritance Tree"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">java.lang.Object</a>
 <div class="inheritance">com.google.errorprone.refaster.RefasterRule&lt;M,&#8203;T&gt;</div>
 </div>
 <section class="description">
@@ -87,12 +87,12 @@ loadScripts(document, 'script');</script>
 </dl>
 <dl class="notes">
 <dt>All Implemented Interfaces:</dt>
-<dd><code><a href="../CodeTransformer.html" title="interface in com.google.errorprone">CodeTransformer</a></code>, <code><a href="https://docs.oracle.com/javase/8/docs/api/java/io/Serializable.html" title="class or interface in java.io" class="external-link">Serializable</a></code></dd>
+<dd><code><a href="../CodeTransformer.html" title="interface in com.google.errorprone">CodeTransformer</a></code>, <code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/io/Serializable.html" title="class or interface in java.io" class="external-link">Serializable</a></code></dd>
 </dl>
 <hr>
 <pre>public abstract class <span class="type-name-label">RefasterRule&lt;M extends <a href="TemplateMatch.html" title="class in com.google.errorprone.refaster">TemplateMatch</a>,&#8203;T extends <a href="Template.html" title="class in com.google.errorprone.refaster">Template</a>&lt;M&gt;&gt;</span>
-extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>
-implements <a href="../CodeTransformer.html" title="interface in com.google.errorprone">CodeTransformer</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/io/Serializable.html" title="class or interface in java.io" class="external-link">Serializable</a></pre>
+extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>
+implements <a href="../CodeTransformer.html" title="interface in com.google.errorprone">CodeTransformer</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/io/Serializable.html" title="class or interface in java.io" class="external-link">Serializable</a></pre>
 <div class="block">A representation of an entire Refaster rule, corresponding to a class with @BeforeTemplates
  and @AfterTemplates.</div>
 <dl class="notes">
@@ -121,7 +121,7 @@ implements <a href="../CodeTransformer.html" title="interface in com.google.erro
 </thead>
 <tbody>
 <tr class="alt-color" id="i0">
-<td class="col-first"><code>abstract com.google.common.collect.ImmutableClassToInstanceMap&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/Annotation.html" title="class or interface in java.lang.annotation" class="external-link">Annotation</a>&gt;</code></td>
+<td class="col-first"><code>abstract com.google.common.collect.ImmutableClassToInstanceMap&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/annotation/Annotation.html" title="class or interface in java.lang.annotation" class="external-link">Annotation</a>&gt;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#annotations()">annotations</a></span>()</code></th>
 <td class="col-last">
 <div class="block">Returns a map of annotation data logically applied to this code transformer.</div>
@@ -129,31 +129,31 @@ implements <a href="../CodeTransformer.html" title="interface in com.google.erro
 </tr>
 <tr class="row-color" id="i1">
 <td class="col-first"><code>void</code></td>
-<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#apply(com.sun.source.util.TreePath,com.sun.tools.javac.util.Context,com.google.errorprone.DescriptionListener)">apply</a></span>&#8203;(com.sun.source.util.TreePath&nbsp;path,
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#apply(com.sun.source.util.TreePath,com.sun.tools.javac.util.Context,com.google.errorprone.DescriptionListener)">apply</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/util/TreePath.html" title="class or interface in com.sun.source.util" class="external-link">TreePath</a>&nbsp;path,
 com.sun.tools.javac.util.Context&nbsp;context,
 <a href="../DescriptionListener.html" title="interface in com.google.errorprone">DescriptionListener</a>&nbsp;listener)</code></th>
 <td class="col-last">
-<div class="block">Apply recursively from the leaf node in the given <code>TreePath</code>.</div>
+<div class="block">Apply recursively from the leaf node in the given <a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/util/TreePath.html" title="class or interface in com.sun.source.util" class="external-link"><code>TreePath</code></a>.</div>
 </td>
 </tr>
 <tr class="alt-color" id="i2">
 <td class="col-first"><code>static <a href="RefasterRule.html" title="class in com.google.errorprone.refaster">RefasterRule</a>&lt;?,&#8203;?&gt;</code></td>
-<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#create(java.lang.String,java.lang.Iterable,java.util.Collection,java.util.Collection,com.google.common.collect.ImmutableClassToInstanceMap)">create</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;qualifiedTemplateClass,
-<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Iterable.html" title="class or interface in java.lang" class="external-link">Iterable</a>&lt;<a href="UTypeVar.html" title="class in com.google.errorprone.refaster">UTypeVar</a>&gt;&nbsp;typeVariables,
-<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;? extends <a href="Template.html" title="class in com.google.errorprone.refaster">Template</a>&lt;?&gt;&gt;&nbsp;beforeTemplates,
-<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;? extends <a href="Template.html" title="class in com.google.errorprone.refaster">Template</a>&lt;?&gt;&gt;&nbsp;afterTemplates,
-com.google.common.collect.ImmutableClassToInstanceMap&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/Annotation.html" title="class or interface in java.lang.annotation" class="external-link">Annotation</a>&gt;&nbsp;annotations)</code></th>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#create(java.lang.String,java.lang.Iterable,java.util.Collection,java.util.Collection,com.google.common.collect.ImmutableClassToInstanceMap)">create</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;qualifiedTemplateClass,
+<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Iterable.html" title="class or interface in java.lang" class="external-link">Iterable</a>&lt;<a href="UTypeVar.html" title="class in com.google.errorprone.refaster">UTypeVar</a>&gt;&nbsp;typeVariables,
+<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;? extends <a href="Template.html" title="class in com.google.errorprone.refaster">Template</a>&lt;?&gt;&gt;&nbsp;beforeTemplates,
+<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;? extends <a href="Template.html" title="class in com.google.errorprone.refaster">Template</a>&lt;?&gt;&gt;&nbsp;afterTemplates,
+com.google.common.collect.ImmutableClassToInstanceMap&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/annotation/Annotation.html" title="class or interface in java.lang.annotation" class="external-link">Annotation</a>&gt;&nbsp;annotations)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
 <tr class="row-color" id="i3">
 <td class="col-first"><code>static <a href="RefasterRule.html" title="class in com.google.errorprone.refaster">RefasterRule</a>&lt;?,&#8203;?&gt;</code></td>
-<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#create(java.lang.String,java.util.Collection,java.util.Collection)">create</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;qualifiedTemplateClass,
-<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;? extends <a href="Template.html" title="class in com.google.errorprone.refaster">Template</a>&lt;?&gt;&gt;&nbsp;beforeTemplates,
-<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;? extends <a href="Template.html" title="class in com.google.errorprone.refaster">Template</a>&lt;?&gt;&gt;&nbsp;afterTemplates)</code></th>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#create(java.lang.String,java.util.Collection,java.util.Collection)">create</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;qualifiedTemplateClass,
+<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;? extends <a href="Template.html" title="class in com.google.errorprone.refaster">Template</a>&lt;?&gt;&gt;&nbsp;beforeTemplates,
+<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;? extends <a href="Template.html" title="class in com.google.errorprone.refaster">Template</a>&lt;?&gt;&gt;&nbsp;afterTemplates)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
 <tr class="alt-color" id="i4">
-<td class="col-first"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></td>
+<td class="col-first"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#toString()">toString</a></span>()</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
@@ -162,8 +162,8 @@ com.google.common.collect.ImmutableClassToInstanceMap&lt;<a href="https://docs.o
 </div>
 </div>
 <div class="inherited-list">
-<h3 id="methods.inherited.from.class.java.lang.Object">Methods inherited from class&nbsp;java.lang.<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></h3>
-<code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#clone()" title="class or interface in java.lang" class="external-link">clone</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#equals(java.lang.Object)" title="class or interface in java.lang" class="external-link">equals</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#finalize()" title="class or interface in java.lang" class="external-link">finalize</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#getClass()" title="class or interface in java.lang" class="external-link">getClass</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#hashCode()" title="class or interface in java.lang" class="external-link">hashCode</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#notify()" title="class or interface in java.lang" class="external-link">notify</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#notifyAll()" title="class or interface in java.lang" class="external-link">notifyAll</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#wait()" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#wait(long)" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#wait(long,int)" title="class or interface in java.lang" class="external-link">wait</a></code></div>
+<h3 id="methods.inherited.from.class.java.lang.Object">Methods inherited from class&nbsp;java.lang.<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></h3>
+<code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#clone()" title="class or interface in java.lang" class="external-link">clone</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#equals(java.lang.Object)" title="class or interface in java.lang" class="external-link">equals</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#finalize()" title="class or interface in java.lang" class="external-link">finalize</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#getClass()" title="class or interface in java.lang" class="external-link">getClass</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#hashCode()" title="class or interface in java.lang" class="external-link">hashCode</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#notify()" title="class or interface in java.lang" class="external-link">notify</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#notifyAll()" title="class or interface in java.lang" class="external-link">notifyAll</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#wait()" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#wait(long)" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#wait(long,int)" title="class or interface in java.lang" class="external-link">wait</a></code></div>
 </section>
 </li>
 </ul>
@@ -178,25 +178,25 @@ com.google.common.collect.ImmutableClassToInstanceMap&lt;<a href="https://docs.o
 <li>
 <section class="detail" id="create(java.lang.String,java.util.Collection,java.util.Collection)">
 <h3>create</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="RefasterRule.html" title="class in com.google.errorprone.refaster">RefasterRule</a>&lt;?,&#8203;?&gt;</span>&nbsp;<span class="member-name">create</span>&#8203;(<span class="parameters"><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;qualifiedTemplateClass,
-<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;? extends <a href="Template.html" title="class in com.google.errorprone.refaster">Template</a>&lt;?&gt;&gt;&nbsp;beforeTemplates,
-<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;? extends <a href="Template.html" title="class in com.google.errorprone.refaster">Template</a>&lt;?&gt;&gt;&nbsp;afterTemplates)</span></div>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="RefasterRule.html" title="class in com.google.errorprone.refaster">RefasterRule</a>&lt;?,&#8203;?&gt;</span>&nbsp;<span class="member-name">create</span>&#8203;(<span class="parameters"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;qualifiedTemplateClass,
+<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;? extends <a href="Template.html" title="class in com.google.errorprone.refaster">Template</a>&lt;?&gt;&gt;&nbsp;beforeTemplates,
+<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;? extends <a href="Template.html" title="class in com.google.errorprone.refaster">Template</a>&lt;?&gt;&gt;&nbsp;afterTemplates)</span></div>
 </section>
 </li>
 <li>
 <section class="detail" id="create(java.lang.String,java.lang.Iterable,java.util.Collection,java.util.Collection,com.google.common.collect.ImmutableClassToInstanceMap)">
 <h3>create</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="RefasterRule.html" title="class in com.google.errorprone.refaster">RefasterRule</a>&lt;?,&#8203;?&gt;</span>&nbsp;<span class="member-name">create</span>&#8203;(<span class="parameters"><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;qualifiedTemplateClass,
-<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Iterable.html" title="class or interface in java.lang" class="external-link">Iterable</a>&lt;<a href="UTypeVar.html" title="class in com.google.errorprone.refaster">UTypeVar</a>&gt;&nbsp;typeVariables,
-<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;? extends <a href="Template.html" title="class in com.google.errorprone.refaster">Template</a>&lt;?&gt;&gt;&nbsp;beforeTemplates,
-<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;? extends <a href="Template.html" title="class in com.google.errorprone.refaster">Template</a>&lt;?&gt;&gt;&nbsp;afterTemplates,
-com.google.common.collect.ImmutableClassToInstanceMap&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/Annotation.html" title="class or interface in java.lang.annotation" class="external-link">Annotation</a>&gt;&nbsp;annotations)</span></div>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="RefasterRule.html" title="class in com.google.errorprone.refaster">RefasterRule</a>&lt;?,&#8203;?&gt;</span>&nbsp;<span class="member-name">create</span>&#8203;(<span class="parameters"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;qualifiedTemplateClass,
+<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Iterable.html" title="class or interface in java.lang" class="external-link">Iterable</a>&lt;<a href="UTypeVar.html" title="class in com.google.errorprone.refaster">UTypeVar</a>&gt;&nbsp;typeVariables,
+<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;? extends <a href="Template.html" title="class in com.google.errorprone.refaster">Template</a>&lt;?&gt;&gt;&nbsp;beforeTemplates,
+<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;? extends <a href="Template.html" title="class in com.google.errorprone.refaster">Template</a>&lt;?&gt;&gt;&nbsp;afterTemplates,
+com.google.common.collect.ImmutableClassToInstanceMap&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/annotation/Annotation.html" title="class or interface in java.lang.annotation" class="external-link">Annotation</a>&gt;&nbsp;annotations)</span></div>
 </section>
 </li>
 <li>
 <section class="detail" id="annotations()">
 <h3>annotations</h3>
-<div class="member-signature"><span class="modifiers">public abstract</span>&nbsp;<span class="return-type">com.google.common.collect.ImmutableClassToInstanceMap&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/Annotation.html" title="class or interface in java.lang.annotation" class="external-link">Annotation</a>&gt;</span>&nbsp;<span class="member-name">annotations</span>()</div>
+<div class="member-signature"><span class="modifiers">public abstract</span>&nbsp;<span class="return-type">com.google.common.collect.ImmutableClassToInstanceMap&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/annotation/Annotation.html" title="class or interface in java.lang.annotation" class="external-link">Annotation</a>&gt;</span>&nbsp;<span class="member-name">annotations</span>()</div>
 <div class="block"><span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../CodeTransformer.html#annotations()">CodeTransformer</a></code></span></div>
 <div class="block">Returns a map of annotation data logically applied to this code transformer.
 
@@ -221,11 +221,11 @@ com.google.common.collect.ImmutableClassToInstanceMap&lt;<a href="https://docs.o
 <li>
 <section class="detail" id="apply(com.sun.source.util.TreePath,com.sun.tools.javac.util.Context,com.google.errorprone.DescriptionListener)">
 <h3>apply</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="member-name">apply</span>&#8203;(<span class="parameters">com.sun.source.util.TreePath&nbsp;path,
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="member-name">apply</span>&#8203;(<span class="parameters"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/util/TreePath.html" title="class or interface in com.sun.source.util" class="external-link">TreePath</a>&nbsp;path,
 com.sun.tools.javac.util.Context&nbsp;context,
 <a href="../DescriptionListener.html" title="interface in com.google.errorprone">DescriptionListener</a>&nbsp;listener)</span></div>
 <div class="block"><span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../CodeTransformer.html#apply(com.sun.source.util.TreePath,com.sun.tools.javac.util.Context,com.google.errorprone.DescriptionListener)">CodeTransformer</a></code></span></div>
-<div class="block">Apply recursively from the leaf node in the given <code>TreePath</code>.</div>
+<div class="block">Apply recursively from the leaf node in the given <a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/util/TreePath.html" title="class or interface in com.sun.source.util" class="external-link"><code>TreePath</code></a>.</div>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code><a href="../CodeTransformer.html#apply(com.sun.source.util.TreePath,com.sun.tools.javac.util.Context,com.google.errorprone.DescriptionListener)">apply</a></code>&nbsp;in interface&nbsp;<code><a href="../CodeTransformer.html" title="interface in com.google.errorprone">CodeTransformer</a></code></dd>
@@ -235,10 +235,10 @@ com.sun.tools.javac.util.Context&nbsp;context,
 <li>
 <section class="detail" id="toString()">
 <h3>toString</h3>
-<div class="member-signature"><span class="modifiers">public final</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="member-name">toString</span>()</div>
+<div class="member-signature"><span class="modifiers">public final</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="member-name">toString</span>()</div>
 <dl class="notes">
 <dt>Overrides:</dt>
-<dd><code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#toString()" title="class or interface in java.lang" class="external-link">toString</a></code>&nbsp;in class&nbsp;<code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></code></dd>
+<dd><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#toString()" title="class or interface in java.lang" class="external-link">toString</a></code>&nbsp;in class&nbsp;<code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></code></dd>
 </dl>
 </section>
 </li>

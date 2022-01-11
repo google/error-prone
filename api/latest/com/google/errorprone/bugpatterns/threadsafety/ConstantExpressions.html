@@ -76,13 +76,13 @@ loadScripts(document, 'script');</script>
 <div class="sub-title"><span class="package-label-in-type">Package</span>&nbsp;<a href="package-summary.html">com.google.errorprone.bugpatterns.threadsafety</a></div>
 <h1 title="Class ConstantExpressions" class="title">Class ConstantExpressions</h1>
 </div>
-<div class="inheritance" title="Inheritance Tree"><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html" title="class or interface in java.lang" class="external-link">java.lang.Object</a>
+<div class="inheritance" title="Inheritance Tree"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">java.lang.Object</a>
 <div class="inheritance">com.google.errorprone.bugpatterns.threadsafety.ConstantExpressions</div>
 </div>
 <section class="description">
 <hr>
 <pre>public final class <span class="type-name-label">ConstantExpressions</span>
-extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></pre>
+extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></pre>
 <div class="block">Helper for establishing whether expressions correspond to a constant expression.</div>
 </section>
 <section class="summary">
@@ -157,7 +157,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 </thead>
 <tbody>
 <tr class="alt-color">
-<th class="col-constructor-name" scope="row"><code><span class="member-name-link"><a href="#%3Cinit%3E(com.google.errorprone.matchers.Matcher)">ConstantExpressions</a></span>&#8203;(<a href="../../matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.ExpressionTree&gt;&nbsp;pureMethods)</code></th>
+<th class="col-constructor-name" scope="row"><code><span class="member-name-link"><a href="#%3Cinit%3E(com.google.errorprone.matchers.Matcher)">ConstantExpressions</a></span>&#8203;(<a href="../../matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&gt;&nbsp;pureMethods)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
 </tbody>
@@ -182,8 +182,8 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 </thead>
 <tbody>
 <tr class="alt-color" id="i0">
-<td class="col-first"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="ConstantExpressions.ConstantExpression.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ConstantExpressions.ConstantExpression</a>&gt;</code></td>
-<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#constantExpression(com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)">constantExpression</a></span>&#8203;(com.sun.source.tree.ExpressionTree&nbsp;tree,
+<td class="col-first"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="ConstantExpressions.ConstantExpression.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ConstantExpressions.ConstantExpression</a>&gt;</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#constantExpression(com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)">constantExpression</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&nbsp;tree,
 <a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
@@ -193,8 +193,8 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <td class="col-last">&nbsp;</td>
 </tr>
 <tr class="alt-color" id="i2">
-<td class="col-first"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;com.google.common.collect.ImmutableList&lt;<a href="ConstantExpressions.PureMethodInvocation.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ConstantExpressions.PureMethodInvocation</a>&gt;&gt;</code></td>
-<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#symbolizeImmutableExpression(com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)">symbolizeImmutableExpression</a></span>&#8203;(com.sun.source.tree.ExpressionTree&nbsp;tree,
+<td class="col-first"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;com.google.common.collect.ImmutableList&lt;<a href="ConstantExpressions.PureMethodInvocation.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ConstantExpressions.PureMethodInvocation</a>&gt;&gt;</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#symbolizeImmutableExpression(com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)">symbolizeImmutableExpression</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&nbsp;tree,
 <a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
 <td class="col-last">
 <div class="block">Returns a list of the methods called to get to this expression, as well as a terminating
@@ -203,11 +203,11 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 </tr>
 <tr class="row-color" id="i3">
 <td class="col-first"><code><a href="ConstantExpressions.Truthiness.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ConstantExpressions.Truthiness</a></code></td>
-<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#truthiness(com.sun.source.tree.ExpressionTree,boolean,com.google.errorprone.VisitorState)">truthiness</a></span>&#8203;(com.sun.source.tree.ExpressionTree&nbsp;tree,
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#truthiness(com.sun.source.tree.ExpressionTree,boolean,com.google.errorprone.VisitorState)">truthiness</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&nbsp;tree,
 boolean&nbsp;not,
 <a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
 <td class="col-last">
-<div class="block">Scans an <code>ExpressionTree</code> to find anything guaranteed to be false or true if this
+<div class="block">Scans an <a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link"><code>ExpressionTree</code></a> to find anything guaranteed to be false or true if this
  expression is true.</div>
 </td>
 </tr>
@@ -216,8 +216,8 @@ boolean&nbsp;not,
 </div>
 </div>
 <div class="inherited-list">
-<h3 id="methods.inherited.from.class.java.lang.Object">Methods inherited from class&nbsp;java.lang.<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></h3>
-<code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#clone()" title="class or interface in java.lang" class="external-link">clone</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#equals(java.lang.Object)" title="class or interface in java.lang" class="external-link">equals</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#finalize()" title="class or interface in java.lang" class="external-link">finalize</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#getClass()" title="class or interface in java.lang" class="external-link">getClass</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#hashCode()" title="class or interface in java.lang" class="external-link">hashCode</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#notify()" title="class or interface in java.lang" class="external-link">notify</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#notifyAll()" title="class or interface in java.lang" class="external-link">notifyAll</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#toString()" title="class or interface in java.lang" class="external-link">toString</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#wait()" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#wait(long)" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#wait(long,int)" title="class or interface in java.lang" class="external-link">wait</a></code></div>
+<h3 id="methods.inherited.from.class.java.lang.Object">Methods inherited from class&nbsp;java.lang.<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></h3>
+<code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#clone()" title="class or interface in java.lang" class="external-link">clone</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#equals(java.lang.Object)" title="class or interface in java.lang" class="external-link">equals</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#finalize()" title="class or interface in java.lang" class="external-link">finalize</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#getClass()" title="class or interface in java.lang" class="external-link">getClass</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#hashCode()" title="class or interface in java.lang" class="external-link">hashCode</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#notify()" title="class or interface in java.lang" class="external-link">notify</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#notifyAll()" title="class or interface in java.lang" class="external-link">notifyAll</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#toString()" title="class or interface in java.lang" class="external-link">toString</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#wait()" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#wait(long)" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#wait(long,int)" title="class or interface in java.lang" class="external-link">wait</a></code></div>
 </section>
 </li>
 </ul>
@@ -232,7 +232,7 @@ boolean&nbsp;not,
 <li>
 <section class="detail" id="&lt;init&gt;(com.google.errorprone.matchers.Matcher)">
 <h3>ConstantExpressions</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="member-name">ConstantExpressions</span>&#8203;(<span class="parameters"><a href="../../matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.ExpressionTree&gt;&nbsp;pureMethods)</span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="member-name">ConstantExpressions</span>&#8203;(<span class="parameters"><a href="../../matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&gt;&nbsp;pureMethods)</span></div>
 </section>
 </li>
 </ul>
@@ -252,24 +252,24 @@ boolean&nbsp;not,
 <li>
 <section class="detail" id="truthiness(com.sun.source.tree.ExpressionTree,boolean,com.google.errorprone.VisitorState)">
 <h3>truthiness</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="ConstantExpressions.Truthiness.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ConstantExpressions.Truthiness</a></span>&nbsp;<span class="member-name">truthiness</span>&#8203;(<span class="parameters">com.sun.source.tree.ExpressionTree&nbsp;tree,
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="ConstantExpressions.Truthiness.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ConstantExpressions.Truthiness</a></span>&nbsp;<span class="member-name">truthiness</span>&#8203;(<span class="parameters"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&nbsp;tree,
 boolean&nbsp;not,
 <a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
-<div class="block">Scans an <code>ExpressionTree</code> to find anything guaranteed to be false or true if this
+<div class="block">Scans an <a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link"><code>ExpressionTree</code></a> to find anything guaranteed to be false or true if this
  expression is true.</div>
 </section>
 </li>
 <li>
 <section class="detail" id="constantExpression(com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)">
 <h3>constantExpression</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="ConstantExpressions.ConstantExpression.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ConstantExpressions.ConstantExpression</a>&gt;</span>&nbsp;<span class="member-name">constantExpression</span>&#8203;(<span class="parameters">com.sun.source.tree.ExpressionTree&nbsp;tree,
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="ConstantExpressions.ConstantExpression.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ConstantExpressions.ConstantExpression</a>&gt;</span>&nbsp;<span class="member-name">constantExpression</span>&#8203;(<span class="parameters"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&nbsp;tree,
 <a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
 </section>
 </li>
 <li>
 <section class="detail" id="symbolizeImmutableExpression(com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)">
 <h3>symbolizeImmutableExpression</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;com.google.common.collect.ImmutableList&lt;<a href="ConstantExpressions.PureMethodInvocation.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ConstantExpressions.PureMethodInvocation</a>&gt;&gt;</span>&nbsp;<span class="member-name">symbolizeImmutableExpression</span>&#8203;(<span class="parameters">com.sun.source.tree.ExpressionTree&nbsp;tree,
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;com.google.common.collect.ImmutableList&lt;<a href="ConstantExpressions.PureMethodInvocation.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ConstantExpressions.PureMethodInvocation</a>&gt;&gt;</span>&nbsp;<span class="member-name">symbolizeImmutableExpression</span>&#8203;(<span class="parameters"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&nbsp;tree,
 <a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
 <div class="block">Returns a list of the methods called to get to this expression, as well as a terminating
  variable if needed.

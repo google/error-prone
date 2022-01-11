@@ -74,7 +74,7 @@ loadScripts(document, 'script');</script>
 <!-- ======== START OF CLASS DATA ======== -->
 <div class="header">
 <div class="sub-title"><span class="package-label-in-type">Package</span>&nbsp;<a href="package-summary.html">com.google.errorprone.bugpatterns</a></div>
-<h1 title="Interface AbstractMockChecker.TypeExtractor" class="title">Interface AbstractMockChecker.TypeExtractor&lt;T extends com.sun.source.tree.Tree&gt;</h1>
+<h1 title="Interface AbstractMockChecker.TypeExtractor" class="title">Interface AbstractMockChecker.TypeExtractor&lt;T extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&gt;</h1>
 </div>
 <section class="description">
 <dl class="notes">
@@ -83,10 +83,10 @@ loadScripts(document, 'script');</script>
 </dl>
 <dl class="notes">
 <dt>Enclosing class:</dt>
-<dd><a href="AbstractMockChecker.html" title="class in com.google.errorprone.bugpatterns">AbstractMockChecker</a>&lt;<a href="AbstractMockChecker.html" title="type parameter in AbstractMockChecker">T</a> extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/Annotation.html" title="class or interface in java.lang.annotation" class="external-link">Annotation</a>&gt;</dd>
+<dd><a href="AbstractMockChecker.html" title="class in com.google.errorprone.bugpatterns">AbstractMockChecker</a>&lt;<a href="AbstractMockChecker.html" title="type parameter in AbstractMockChecker">T</a> extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/annotation/Annotation.html" title="class or interface in java.lang.annotation" class="external-link">Annotation</a>&gt;</dd>
 </dl>
 <hr>
-<pre>public static interface <span class="type-name-label">AbstractMockChecker.TypeExtractor&lt;T extends com.sun.source.tree.Tree&gt;</span></pre>
+<pre>public static interface <span class="type-name-label">AbstractMockChecker.TypeExtractor&lt;T extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&gt;</span></pre>
 <div class="block">An extension of <a href="../matchers/Matcher.html" title="interface in com.google.errorprone.matchers"><code>Matcher</code></a> to return, not just a boolean `matches`, but also extract some
  type information about the Tree of interest.
 
@@ -111,7 +111,7 @@ loadScripts(document, 'script');</script>
 </thead>
 <tbody>
 <tr class="alt-color" id="i0">
-<td class="col-first"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;com.sun.tools.javac.code.Type&gt;</code></td>
+<td class="col-first"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;com.sun.tools.javac.code.Type&gt;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#extract(T,com.google.errorprone.VisitorState)">extract</a></span>&#8203;(<a href="AbstractMockChecker.TypeExtractor.html" title="type parameter in AbstractMockChecker.TypeExtractor">T</a>&nbsp;tree,
 <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
 <td class="col-last">
@@ -143,7 +143,7 @@ loadScripts(document, 'script');</script>
 <li>
 <section class="detail" id="extract(T,com.google.errorprone.VisitorState)">
 <h3 id="extract(com.sun.source.tree.Tree,com.google.errorprone.VisitorState)">extract</h3>
-<div class="member-signature"><span class="return-type"><a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;com.sun.tools.javac.code.Type&gt;</span>&nbsp;<span class="member-name">extract</span>&#8203;(<span class="parameters"><a href="AbstractMockChecker.TypeExtractor.html" title="type parameter in AbstractMockChecker.TypeExtractor">T</a>&nbsp;tree,
+<div class="member-signature"><span class="return-type"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;com.sun.tools.javac.code.Type&gt;</span>&nbsp;<span class="member-name">extract</span>&#8203;(<span class="parameters"><a href="AbstractMockChecker.TypeExtractor.html" title="type parameter in AbstractMockChecker.TypeExtractor">T</a>&nbsp;tree,
 <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
 <div class="block">Investigate the provided Tree, and return type information about it if it matches.</div>
 <dl class="notes">

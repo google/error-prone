@@ -95,8 +95,8 @@ loadScripts(document, 'script');</script>
 </tr>
 <tr class="row-color">
 <td class="col-first"><code><a href="../ThreadSafety.Violation.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.Violation</a></code></td>
-<th class="col-second" scope="row"><span class="type-name-label">ImmutableAnalysis.</span><code><span class="member-name-link"><a href="../ImmutableAnalysis.html#checkForImmutability(java.util.Optional,com.google.common.collect.ImmutableSet,com.sun.tools.javac.code.Type.ClassType,com.google.errorprone.bugpatterns.threadsafety.ImmutableAnalysis.ViolationReporter)">checkForImmutability</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;com.sun.source.tree.ClassTree&gt;&nbsp;tree,
-com.google.common.collect.ImmutableSet&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;immutableTyParams,
+<th class="col-second" scope="row"><span class="type-name-label">ImmutableAnalysis.</span><code><span class="member-name-link"><a href="../ImmutableAnalysis.html#checkForImmutability(java.util.Optional,com.google.common.collect.ImmutableSet,com.sun.tools.javac.code.Type.ClassType,com.google.errorprone.bugpatterns.threadsafety.ImmutableAnalysis.ViolationReporter)">checkForImmutability</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/ClassTree.html" title="class or interface in com.sun.source.tree" class="external-link">ClassTree</a>&gt;&nbsp;tree,
+com.google.common.collect.ImmutableSet&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;immutableTyParams,
 com.sun.tools.javac.code.Type.ClassType&nbsp;type,
 <a href="../ImmutableAnalysis.ViolationReporter.html" title="interface in com.google.errorprone.bugpatterns.threadsafety">ImmutableAnalysis.ViolationReporter</a>&nbsp;reporter)</code></th>
 <td class="col-last">
@@ -112,15 +112,15 @@ com.sun.tools.javac.code.Type.ClassType&nbsp;type,
 <tr class="alt-color">
 <td class="col-first"><code><a href="../ThreadSafety.Violation.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.Violation</a></code></td>
 <th class="col-second" scope="row"><span class="type-name-label">ThreadSafety.</span><code><span class="member-name-link"><a href="../ThreadSafety.html#checkInstantiation(com.sun.tools.javac.code.Symbol.TypeVariableSymbol,java.util.Collection)">checkInstantiation</a></span>&#8203;(com.sun.tools.javac.code.Symbol.TypeVariableSymbol&nbsp;typeParameter,
-<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;com.sun.tools.javac.code.Type&gt;&nbsp;instantiations)</code></th>
+<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;com.sun.tools.javac.code.Type&gt;&nbsp;instantiations)</code></th>
 <td class="col-last">
 <div class="block">Checks that any thread-safe type parameters are instantiated with thread-safe types.</div>
 </td>
 </tr>
 <tr class="row-color">
 <td class="col-first"><code><a href="../ThreadSafety.Violation.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.Violation</a></code></td>
-<th class="col-second" scope="row"><span class="type-name-label">ThreadSafety.</span><code><span class="member-name-link"><a href="../ThreadSafety.html#checkInstantiation(java.util.Collection,java.util.Collection)">checkInstantiation</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;com.sun.tools.javac.code.Symbol.TypeVariableSymbol&gt;&nbsp;typeParameters,
-<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;com.sun.tools.javac.code.Type&gt;&nbsp;typeArguments)</code></th>
+<th class="col-second" scope="row"><span class="type-name-label">ThreadSafety.</span><code><span class="member-name-link"><a href="../ThreadSafety.html#checkInstantiation(java.util.Collection,java.util.Collection)">checkInstantiation</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;com.sun.tools.javac.code.Symbol.TypeVariableSymbol&gt;&nbsp;typeParameters,
+<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;com.sun.tools.javac.code.Type&gt;&nbsp;typeArguments)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
 <tr class="alt-color">
@@ -139,7 +139,7 @@ com.sun.tools.javac.code.Symbol&nbsp;symbol)</code></th>
 </tr>
 <tr class="alt-color">
 <td class="col-first"><code><a href="../ThreadSafety.Violation.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.Violation</a></code></td>
-<th class="col-second" scope="row"><span class="type-name-label">ThreadSafety.</span><code><span class="member-name-link"><a href="../ThreadSafety.html#checkSuperInstantiation(java.util.Set,com.google.errorprone.bugpatterns.threadsafety.AnnotationInfo,com.sun.tools.javac.code.Type)">checkSuperInstantiation</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;containerTypeParameters,
+<th class="col-second" scope="row"><span class="type-name-label">ThreadSafety.</span><code><span class="member-name-link"><a href="../ThreadSafety.html#checkSuperInstantiation(java.util.Set,com.google.errorprone.bugpatterns.threadsafety.AnnotationInfo,com.sun.tools.javac.code.Type)">checkSuperInstantiation</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;containerTypeParameters,
 <a href="../AnnotationInfo.html" title="class in com.google.errorprone.bugpatterns.threadsafety">AnnotationInfo</a>&nbsp;annotation,
 com.sun.tools.javac.code.Type&nbsp;type)</code></th>
 <td class="col-last">
@@ -151,13 +151,13 @@ com.sun.tools.javac.code.Type&nbsp;type)</code></th>
 </tr>
 <tr class="row-color">
 <td class="col-first"><code>static <a href="../ThreadSafety.Violation.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.Violation</a></code></td>
-<th class="col-second" scope="row"><span class="type-name-label">ThreadSafety.Violation.</span><code><span class="member-name-link"><a href="../ThreadSafety.Violation.html#create(org.pcollections.ConsPStack)">create</a></span>&#8203;(org.pcollections.ConsPStack&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;path)</code></th>
+<th class="col-second" scope="row"><span class="type-name-label">ThreadSafety.Violation.</span><code><span class="member-name-link"><a href="../ThreadSafety.Violation.html#create(org.pcollections.ConsPStack)">create</a></span>&#8203;(org.pcollections.ConsPStack&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;path)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
 <tr class="alt-color">
 <td class="col-first"><code><a href="../ThreadSafety.Violation.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.Violation</a></code></td>
 <th class="col-second" scope="row"><span class="type-name-label">ThreadSafety.</span><code><span class="member-name-link"><a href="../ThreadSafety.html#isThreadSafeType(boolean,java.util.Set,com.sun.tools.javac.code.Type)">isThreadSafeType</a></span>&#8203;(boolean&nbsp;allowContainerTypeParameters,
-<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;containerTypeParameters,
+<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;containerTypeParameters,
 com.sun.tools.javac.code.Type&nbsp;type)</code></th>
 <td class="col-last">
 <div class="block">Returns an <a href="../ThreadSafety.Violation.html" title="class in com.google.errorprone.bugpatterns.threadsafety"><code>ThreadSafety.Violation</code></a> explaining whether the type is threadsafe.</div>
@@ -165,7 +165,7 @@ com.sun.tools.javac.code.Type&nbsp;type)</code></th>
 </tr>
 <tr class="row-color">
 <td class="col-first"><code><a href="../ThreadSafety.Violation.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.Violation</a></code></td>
-<th class="col-second" scope="row"><span class="type-name-label">ThreadSafety.</span><code><span class="member-name-link"><a href="../ThreadSafety.html#isThreadSafeType(java.util.Set,com.sun.tools.javac.code.Type)">isThreadSafeType</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;containerTypeParameters,
+<th class="col-second" scope="row"><span class="type-name-label">ThreadSafety.</span><code><span class="member-name-link"><a href="../ThreadSafety.html#isThreadSafeType(java.util.Set,com.sun.tools.javac.code.Type)">isThreadSafeType</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;containerTypeParameters,
 com.sun.tools.javac.code.Type&nbsp;type)</code></th>
 <td class="col-last">
 <div class="block"><span class="deprecated-label">Deprecated.</span>
@@ -175,21 +175,21 @@ com.sun.tools.javac.code.Type&nbsp;type)</code></th>
 </tr>
 <tr class="alt-color">
 <td class="col-first"><code>static <a href="../ThreadSafety.Violation.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.Violation</a></code></td>
-<th class="col-second" scope="row"><span class="type-name-label">ThreadSafety.Violation.</span><code><span class="member-name-link"><a href="../ThreadSafety.Violation.html#of(java.lang.String)">of</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;reason)</code></th>
+<th class="col-second" scope="row"><span class="type-name-label">ThreadSafety.Violation.</span><code><span class="member-name-link"><a href="../ThreadSafety.Violation.html#of(java.lang.String)">of</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;reason)</code></th>
 <td class="col-last">
 <div class="block">Creates an explanation with one step.</div>
 </td>
 </tr>
 <tr class="row-color">
 <td class="col-first"><code><a href="../ThreadSafety.Violation.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.Violation</a></code></td>
-<th class="col-second" scope="row"><span class="type-name-label">ThreadSafety.Violation.</span><code><span class="member-name-link"><a href="../ThreadSafety.Violation.html#plus(java.lang.String)">plus</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;edge)</code></th>
+<th class="col-second" scope="row"><span class="type-name-label">ThreadSafety.Violation.</span><code><span class="member-name-link"><a href="../ThreadSafety.Violation.html#plus(java.lang.String)">plus</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;edge)</code></th>
 <td class="col-last">
 <div class="block">Adds a step.</div>
 </td>
 </tr>
 <tr class="alt-color">
 <td class="col-first"><code><a href="../ThreadSafety.Violation.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.Violation</a></code></td>
-<th class="col-second" scope="row"><span class="type-name-label">ThreadSafety.</span><code><span class="member-name-link"><a href="../ThreadSafety.html#threadSafeInstantiation(java.util.Set,com.google.errorprone.bugpatterns.threadsafety.AnnotationInfo,com.sun.tools.javac.code.Type)">threadSafeInstantiation</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;containerTypeParameters,
+<th class="col-second" scope="row"><span class="type-name-label">ThreadSafety.</span><code><span class="member-name-link"><a href="../ThreadSafety.html#threadSafeInstantiation(java.util.Set,com.google.errorprone.bugpatterns.threadsafety.AnnotationInfo,com.sun.tools.javac.code.Type)">threadSafeInstantiation</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;containerTypeParameters,
 <a href="../AnnotationInfo.html" title="class in com.google.errorprone.bugpatterns.threadsafety">AnnotationInfo</a>&nbsp;annotation,
 com.sun.tools.javac.code.Type&nbsp;type)</code></th>
 <td class="col-last">
@@ -213,15 +213,15 @@ com.sun.tools.javac.code.Type&nbsp;type)</code></th>
 <tbody>
 <tr class="alt-color">
 <td class="col-first"><code><a href="../../../matchers/Description.Builder.html" title="class in com.google.errorprone.matchers">Description.Builder</a></code></td>
-<th class="col-second" scope="row"><span class="type-name-label">ImmutableAnalysis.ViolationReporter.</span><code><span class="member-name-link"><a href="../ImmutableAnalysis.ViolationReporter.html#describe(com.sun.source.tree.Tree,com.google.errorprone.bugpatterns.threadsafety.ThreadSafety.Violation)">describe</a></span>&#8203;(com.sun.source.tree.Tree&nbsp;tree,
+<th class="col-second" scope="row"><span class="type-name-label">ImmutableAnalysis.ViolationReporter.</span><code><span class="member-name-link"><a href="../ImmutableAnalysis.ViolationReporter.html#describe(com.sun.source.tree.Tree,com.google.errorprone.bugpatterns.threadsafety.ThreadSafety.Violation)">describe</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&nbsp;tree,
 <a href="../ThreadSafety.Violation.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.Violation</a>&nbsp;info)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
 <tr class="row-color">
 <td class="col-first"><code>default <a href="../../../matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
-<th class="col-second" scope="row"><span class="type-name-label">ImmutableAnalysis.ViolationReporter.</span><code><span class="member-name-link"><a href="../ImmutableAnalysis.ViolationReporter.html#report(com.sun.source.tree.Tree,com.google.errorprone.bugpatterns.threadsafety.ThreadSafety.Violation,java.util.Optional)">report</a></span>&#8203;(com.sun.source.tree.Tree&nbsp;tree,
+<th class="col-second" scope="row"><span class="type-name-label">ImmutableAnalysis.ViolationReporter.</span><code><span class="member-name-link"><a href="../ImmutableAnalysis.ViolationReporter.html#report(com.sun.source.tree.Tree,com.google.errorprone.bugpatterns.threadsafety.ThreadSafety.Violation,java.util.Optional)">report</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&nbsp;tree,
 <a href="../ThreadSafety.Violation.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.Violation</a>&nbsp;info,
-<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="../../../fixes/SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a>&gt;&nbsp;suggestedFix)</code></th>
+<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="../../../fixes/SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a>&gt;&nbsp;suggestedFix)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
 </tbody>
