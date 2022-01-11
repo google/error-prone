@@ -64,7 +64,6 @@ import java.util.stream.Stream;
 import javax.lang.model.element.Modifier;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
-// TODO(cushon): this should subsume LocalizableWrongToString
 @BugPattern(name = "DoNotCall", summary = "This method should not be called.", severity = ERROR)
 public class DoNotCallChecker extends BugChecker
     implements MethodTreeMatcher, CompilationUnitTreeMatcher {
