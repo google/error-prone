@@ -267,12 +267,12 @@ public class DoNotCallChecker extends BugChecker
                             symbol ->
                                 !sym.isStatic()
                                     && (sym.flags() & Flags.SYNTHETIC) == 0
+                                    && hasAnnotation(symbol, DO_NOT_CALL, state)
                                     && symbol.overrides(
                                         sym,
                                         types.erasure(typeSeen).tsym,
                                         types,
-                                        /* checkResult= */ true)
-                                    && hasAnnotation(symbol, DO_NOT_CALL, state)))
+                                        /* checkResult= */ true)))
             .findFirst();
       }
     }.scan(state.getPath(), null);
