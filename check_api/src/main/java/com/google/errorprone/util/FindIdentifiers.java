@@ -128,6 +128,10 @@ public final class FindIdentifiers {
 
   @Nullable
   private static ClassTree getEnclosingClass(TreePath treePath) {
+    if (treePath.getLeaf() instanceof ClassTree) {
+      return (ClassTree) treePath.getLeaf();
+    }
+
     while (treePath != null) {
       TreePath parent = treePath.getParentPath();
       if (parent == null) {
