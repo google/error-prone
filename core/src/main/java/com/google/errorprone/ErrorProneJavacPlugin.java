@@ -32,8 +32,17 @@ public class ErrorProneJavacPlugin implements Plugin {
 
   @Override
   public void init(JavacTask javacTask, String... args) {
-    HubSpotUtils.init(javacTask);
-    BaseErrorProneJavaCompiler.addTaskListener(
-        javacTask, BuiltInCheckerSuppliers.defaultChecks(), ErrorProneOptions.processArgs(args));
+    ErrorProneOptions options = null;
+    try {
+      HubSpotUtils.init(javacTask);
+      options = ErrorProneOptions.processArgs(args);
+      BaseErrorProneJavaCompiler.addTaskListener(
+          javacTask, BuiltInCheckerSuppliers.defaultChecks(), options);
+    } catch (Throwable t) {
+      if (options == null || HubSpotUtils.isErrorHandlingEnabled(options)) {
+        HubSpotUtils.recordUncaughtException(t);
+      }
+      throw t;
+    }
   }
 }

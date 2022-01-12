@@ -46,6 +46,11 @@ class FileManager {
         .map(o -> o.resolve(String.format("lifecycle-canary-%s.json", id)));
   }
 
+  static Optional<Path> getUncaughtExceptionPath() {
+    return getDataDir(BLAZAR_DIR_ENV_VAR, "error-prone")
+        .map(o -> o.resolve("error-prone-exception.log"));
+  }
+
   static void write(Object data, Path path) {
     try (OutputStream stream = Files.newOutputStream(path)) {
       MAPPER.writerWithDefaultPrettyPrinter().writeValue(stream, data);

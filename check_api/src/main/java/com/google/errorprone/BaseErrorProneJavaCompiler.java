@@ -20,6 +20,7 @@ import static com.google.common.base.StandardSystemProperty.JAVA_SPECIFICATION_V
 
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.RefactoringCollection.RefactoringResult;
+import com.google.errorprone.hubspot.HubSpotErrorProneAnalyzer;
 import com.google.errorprone.scanner.ErrorProneScannerTransformer;
 import com.google.errorprone.scanner.ScannerSupplier;
 import com.sun.source.util.JavacTask;
@@ -96,7 +97,9 @@ public class BaseErrorProneJavaCompiler implements JavaCompiler {
     setupMessageBundle(context);
     RefactoringCollection[] refactoringCollection = {null};
     javacTask.addTaskListener(
-        createAnalyzer(scannerSupplier, errorProneOptions, context, refactoringCollection));
+        HubSpotErrorProneAnalyzer.wrap(
+            errorProneOptions,
+            createAnalyzer(scannerSupplier, errorProneOptions, context, refactoringCollection)));
     if (refactoringCollection[0] != null) {
       javacTask.addTaskListener(new RefactoringTask(context, refactoringCollection[0]));
     }

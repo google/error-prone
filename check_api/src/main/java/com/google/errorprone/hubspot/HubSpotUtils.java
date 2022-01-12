@@ -17,6 +17,7 @@
 package com.google.errorprone.hubspot;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -33,6 +34,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import com.fasterxml.jackson.databind.JavaType;
 import com.google.common.base.Strings;
+import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.errorprone.BugCheckerInfo;
@@ -153,6 +155,19 @@ public class HubSpotUtils {
     HubSpotLifecycleManager.instance(context).addShutdownListener(() -> {
       FileManager.getErrorOutputPath().ifPresent(p -> FileManager.write(DATA, p));
       FileManager.getTimingsOutputPath().ifPresent(p -> FileManager.write(computeFinalTimings(), p));
+    });
+  }
+
+  public static void recordUncaughtException(Throwable throwable) {
+    FileManager.getUncaughtExceptionPath().ifPresent(p -> {
+      // this should only ever be called once so overwriting is fine
+      try {
+        Files.write(p, Throwables.getStackTraceAsString(throwable).getBytes(StandardCharsets.UTF_8));
+      } catch (IOException e) {
+        RuntimeException ex = new RuntimeException("Failed to record uncaught exception", e);
+        ex.addSuppressed(throwable);
+        throw ex;
+      }
     });
   }
 
