@@ -5,7 +5,7 @@ summary: The contract of Object.equals() states that for any non-null reference 
   Consider replacing equals() with the == operator.
 layout: bugpattern
 tags: FragileCode
-severity: WARNING
+severity: ERROR
 ---
 
 <!--

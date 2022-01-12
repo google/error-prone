@@ -137,6 +137,9 @@ Classes that override equals should also override hashCode.
 __[EqualsNaN](bugpattern/EqualsNaN)__<br>
 == NaN always returns false; use the isNaN methods instead
 
+__[EqualsNull](bugpattern/EqualsNull)__<br>
+The contract of Object.equals() states that for any non-null reference value x, x.equals(null) should return false. If x is null, a NullPointerException is thrown. Consider replacing equals() with the == operator.
+
 __[EqualsReference](bugpattern/EqualsReference)__<br>
 == must be used in equals method to check equality to itself or an infinite loop will occur.
 
@@ -666,9 +669,6 @@ Prefer instanceof to getClass when implementing Object#equals.
 
 __[EqualsIncompatibleType](bugpattern/EqualsIncompatibleType)__<br>
 An equality test between objects with incompatible types always returns false
-
-__[EqualsNull](bugpattern/EqualsNull)__<br>
-The contract of Object.equals() states that for any non-null reference value x, x.equals(null) should return false. If x is null, a NullPointerException is thrown. Consider replacing equals() with the == operator.
 
 __[EqualsUnsafeCast](bugpattern/EqualsUnsafeCast)__<br>
 The contract of #equals states that it should return false for incompatible types, while this implementation may throw ClassCastException.
