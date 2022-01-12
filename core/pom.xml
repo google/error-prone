@@ -193,7 +193,7 @@
     <dependency>
       <groupId>com.google.inject.extensions</groupId>
       <artifactId>guice-testlib</artifactId>
-      <version>4.0</version>
+      <version>5.0.1</version>
       <scope>test</scope>
     </dependency>
     <dependency>
