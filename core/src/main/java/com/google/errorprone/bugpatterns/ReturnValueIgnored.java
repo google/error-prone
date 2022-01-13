@@ -20,6 +20,7 @@ import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.anyMethod;
 import static com.google.errorprone.matchers.Matchers.anyOf;
+import static com.google.errorprone.matchers.Matchers.kindIs;
 import static com.google.errorprone.matchers.Matchers.not;
 import static com.google.errorprone.matchers.Matchers.nothing;
 import static com.google.errorprone.matchers.Matchers.packageStartsWith;
@@ -35,8 +36,10 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
+import com.sun.source.tree.Tree.Kind;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
+import com.sun.tools.javac.code.Type;
 import java.util.regex.Pattern;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.Name;
@@ -65,8 +68,12 @@ public class ReturnValueIgnored extends AbstractReturnValueIgnored {
    */
   private static final Matcher<ExpressionTree> RETURNS_SAME_TYPE =
       allOf(
-          (t, s) -> TYPES_TO_CHECK.contains(ASTHelpers.getReceiverType(t).toString()),
-          (t, s) -> isSameType(ASTHelpers.getReceiverType(t), ASTHelpers.getReturnType(t), s));
+          not(kindIs(Kind.NEW_CLASS)), // Constructor calls don't have a "receiver"
+          (tree, state) -> {
+            Type receiverType = ASTHelpers.getReceiverType(tree);
+            return TYPES_TO_CHECK.contains(receiverType.toString())
+                && isSameType(receiverType, ASTHelpers.getReturnType(tree), state);
+          });
 
   /**
    * This matcher allows the following methods in {@code java.time}:

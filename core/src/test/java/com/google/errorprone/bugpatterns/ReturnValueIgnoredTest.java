@@ -427,6 +427,22 @@ public class ReturnValueIgnoredTest {
   }
 
   @Test
+  public void constructors() {
+    compilationHelper
+        .setArgs("-XepOpt:CheckConstructorReturnValue=true")
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  void f() throws Exception {",
+            // TODO: we haven't yet enabled constructor checking for basic types yet,
+            //   just making sure it doesn't crash
+            "    new String(\"Hello\");",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void testProtoMessageNewBuilder() {
     compilationHelper
         .addSourceLines(
