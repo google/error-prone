@@ -2154,6 +2154,8 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/ConditionalExpressionNumericPromotion.html#%3Cinit%3E()">ConditionalExpressionNumericPromotion()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/ConditionalExpressionNumericPromotion.html" title="class in com.google.errorprone.bugpatterns">ConditionalExpressionNumericPromotion</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/threadsafety/ConstantExpressions.ConstantExpression.ConstantExpressionKind.html#CONSTANT_EQUALS">CONSTANT_EQUALS</a></span> - com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/ConstantExpressions.ConstantExpression.ConstantExpressionKind.html" title="enum in com.google.errorprone.bugpatterns.threadsafety">ConstantExpressions.ConstantExpression.ConstantExpressionKind</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/threadsafety/ConstantExpressions.ConstantEquals.html#%3Cinit%3E()">ConstantEquals()</a></span> - Constructor for class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/ConstantExpressions.ConstantEquals.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ConstantExpressions.ConstantEquals</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/threadsafety/ConstantExpressions.html#constantExpression(com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)">constantExpression(ExpressionTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/ConstantExpressions.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ConstantExpressions</a></dt>
@@ -2174,13 +2176,18 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Represents a constant expression.</div>
 </dd>
+<dt><a href="com/google/errorprone/bugpatterns/threadsafety/ConstantExpressions.ConstantExpression.ConstantExpressionKind.html" title="enum in com.google.errorprone.bugpatterns.threadsafety"><span class="type-name-link">ConstantExpressions.ConstantExpression.ConstantExpressionKind</span></a> - Enum in <a href="com/google/errorprone/bugpatterns/threadsafety/package-summary.html">com.google.errorprone.bugpatterns.threadsafety</a></dt>
+<dd>
+<div class="block">The kind of a constant expression.</div>
+</dd>
 <dt><a href="com/google/errorprone/bugpatterns/threadsafety/ConstantExpressions.ConstantExpressionVisitor.html" title="interface in com.google.errorprone.bugpatterns.threadsafety"><span class="type-name-link">ConstantExpressions.ConstantExpressionVisitor</span></a> - Interface in <a href="com/google/errorprone/bugpatterns/threadsafety/package-summary.html">com.google.errorprone.bugpatterns.threadsafety</a></dt>
 <dd>
 <div class="block">Visitor for scanning over the components of a constant expression.</div>
 </dd>
 <dt><a href="com/google/errorprone/bugpatterns/threadsafety/ConstantExpressions.PureMethodInvocation.html" title="class in com.google.errorprone.bugpatterns.threadsafety"><span class="type-name-link">ConstantExpressions.PureMethodInvocation</span></a> - Class in <a href="com/google/errorprone/bugpatterns/threadsafety/package-summary.html">com.google.errorprone.bugpatterns.threadsafety</a></dt>
 <dd>
-<div class="block">Represents a method invocation of a pure method on constant arguments.</div>
+<div class="block">Represents both a constant method call or a constant field/local access, depending on the
+ actual type of <code>symbol</code>.</div>
 </dd>
 <dt><a href="com/google/errorprone/bugpatterns/threadsafety/ConstantExpressions.Truthiness.html" title="class in com.google.errorprone.bugpatterns.threadsafety"><span class="type-name-link">ConstantExpressions.Truthiness</span></a> - Class in <a href="com/google/errorprone/bugpatterns/threadsafety/package-summary.html">com.google.errorprone.bugpatterns.threadsafety</a></dt>
 <dd>
@@ -6855,6 +6862,8 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/refaster/Bindings.Key.html#%3Cinit%3E(java.lang.String)">Key(String)</a></span> - Constructor for class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/Bindings.Key.html" title="class in com.google.errorprone.refaster">Bindings.Key</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/threadsafety/ConstantExpressions.ConstantExpression.html#kind()">kind()</a></span> - Method in class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/ConstantExpressions.ConstantExpression.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ConstantExpressions.ConstantExpression</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/threadsafety/GuardedByExpression.Erroneous.html#kind()">kind()</a></span> - Method in class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/GuardedByExpression.Erroneous.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByExpression.Erroneous</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/threadsafety/GuardedByExpression.html#kind()">kind()</a></span> - Method in class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/GuardedByExpression.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByExpression</a></dt>
@@ -6957,6 +6966,8 @@ loadScripts(document, 'script');</script>
 <div class="block">Flags calls to <code>toString</code> on lite protos.</div>
 </dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/LiteProtoToString.html#%3Cinit%3E()">LiteProtoToString()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/LiteProtoToString.html" title="class in com.google.errorprone.bugpatterns">LiteProtoToString</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/threadsafety/ConstantExpressions.ConstantExpression.ConstantExpressionKind.html#LITERAL">LITERAL</a></span> - com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/ConstantExpressions.ConstantExpression.ConstantExpressionKind.html" title="enum in com.google.errorprone.bugpatterns.threadsafety">ConstantExpressions.ConstantExpression.ConstantExpressionKind</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/ErrorPronePlugins.html#loadPlugins(com.google.errorprone.scanner.ScannerSupplier,com.sun.tools.javac.util.Context)">loadPlugins(ScannerSupplier, Context)</a></span> - Static method in class com.google.errorprone.<a href="com/google/errorprone/ErrorPronePlugins.html" title="class in com.google.errorprone">ErrorPronePlugins</a></dt>
 <dd>&nbsp;</dd>
@@ -7462,6 +7473,8 @@ loadScripts(document, 'script');</script>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/MultipleTopLevelClasses.html#matchCompilationUnit(com.sun.source.tree.CompilationUnitTree,com.google.errorprone.VisitorState)">matchCompilationUnit(CompilationUnitTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/MultipleTopLevelClasses.html" title="class in com.google.errorprone.bugpatterns">MultipleTopLevelClasses</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/nullness/ReturnMissingNullable.html#matchCompilationUnit(com.sun.source.tree.CompilationUnitTree,com.google.errorprone.VisitorState)">matchCompilationUnit(CompilationUnitTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.nullness.<a href="com/google/errorprone/bugpatterns/nullness/ReturnMissingNullable.html" title="class in com.google.errorprone.bugpatterns.nullness">ReturnMissingNullable</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/OptionalNotPresent.html#matchCompilationUnit(com.sun.source.tree.CompilationUnitTree,com.google.errorprone.VisitorState)">matchCompilationUnit(CompilationUnitTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/OptionalNotPresent.html" title="class in com.google.errorprone.bugpatterns">OptionalNotPresent</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/PackageInfo.html#matchCompilationUnit(com.sun.source.tree.CompilationUnitTree,com.google.errorprone.VisitorState)">matchCompilationUnit(CompilationUnitTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/PackageInfo.html" title="class in com.google.errorprone.bugpatterns">PackageInfo</a></dt>
 <dd>&nbsp;</dd>
@@ -8204,8 +8217,6 @@ loadScripts(document, 'script');</script>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/OptionalMapToOptional.html#matchMethodInvocation(com.sun.source.tree.MethodInvocationTree,com.google.errorprone.VisitorState)">matchMethodInvocation(MethodInvocationTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/OptionalMapToOptional.html" title="class in com.google.errorprone.bugpatterns">OptionalMapToOptional</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/OptionalMapUnusedValue.html#matchMethodInvocation(com.sun.source.tree.MethodInvocationTree,com.google.errorprone.VisitorState)">matchMethodInvocation(MethodInvocationTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/OptionalMapUnusedValue.html" title="class in com.google.errorprone.bugpatterns">OptionalMapUnusedValue</a></dt>
-<dd>&nbsp;</dd>
-<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/OptionalNotPresent.html#matchMethodInvocation(com.sun.source.tree.MethodInvocationTree,com.google.errorprone.VisitorState)">matchMethodInvocation(MethodInvocationTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/OptionalNotPresent.html" title="class in com.google.errorprone.bugpatterns">OptionalNotPresent</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/OptionalOfRedundantMethod.html#matchMethodInvocation(com.sun.source.tree.MethodInvocationTree,com.google.errorprone.VisitorState)">matchMethodInvocation(MethodInvocationTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/OptionalOfRedundantMethod.html" title="class in com.google.errorprone.bugpatterns">OptionalOfRedundantMethod</a></dt>
 <dd>&nbsp;</dd>
@@ -9852,7 +9863,7 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/OptionalNotPresent.html" title="class in com.google.errorprone.bugpatterns"><span class="type-name-link">OptionalNotPresent</span></a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/OptionalNotPresent.html#%3Cinit%3E()">OptionalNotPresent()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/OptionalNotPresent.html" title="class in com.google.errorprone.bugpatterns">OptionalNotPresent</a></dt>
+<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/OptionalNotPresent.html#%3Cinit%3E(com.google.errorprone.ErrorProneFlags)">OptionalNotPresent(ErrorProneFlags)</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/OptionalNotPresent.html" title="class in com.google.errorprone.bugpatterns">OptionalNotPresent</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/OptionalOfRedundantMethod.html" title="class in com.google.errorprone.bugpatterns"><span class="type-name-link">OptionalOfRedundantMethod</span></a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
 <dd>
@@ -10427,6 +10438,10 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/PublicConstructorForAbstractClass.html#%3Cinit%3E()">PublicConstructorForAbstractClass()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/PublicConstructorForAbstractClass.html" title="class in com.google.errorprone.bugpatterns">PublicConstructorForAbstractClass</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/threadsafety/ConstantExpressions.ConstantExpression.ConstantExpressionKind.html#PURE_METHOD">PURE_METHOD</a></span> - com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/ConstantExpressions.ConstantExpression.ConstantExpressionKind.html" title="enum in com.google.errorprone.bugpatterns.threadsafety">ConstantExpressions.ConstantExpression.ConstantExpressionKind</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/threadsafety/ConstantExpressions.ConstantExpression.html#pureMethod()">pureMethod()</a></span> - Method in class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/ConstantExpressions.ConstantExpression.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ConstantExpressions.ConstantExpression</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/threadsafety/ConstantExpressions.PureMethodInvocation.html#%3Cinit%3E()">PureMethodInvocation()</a></span> - Constructor for class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/ConstantExpressions.PureMethodInvocation.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ConstantExpressions.PureMethodInvocation</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/apply/DiffApplier.html#put(com.google.errorprone.apply.Diff)">put(Diff)</a></span> - Method in class com.google.errorprone.apply.<a href="com/google/errorprone/apply/DiffApplier.html" title="class in com.google.errorprone.apply">DiffApplier</a></dt>
@@ -10522,6 +10537,8 @@ loadScripts(document, 'script');</script>
  forbid mocking" but may also provide a suggested workaround.</div>
 </dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/AbstractMockChecker.Reason.html#%3Cinit%3E()">Reason()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/AbstractMockChecker.Reason.html" title="class in com.google.errorprone.bugpatterns">AbstractMockChecker.Reason</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/threadsafety/ConstantExpressions.PureMethodInvocation.html#receiver()">receiver()</a></span> - Method in class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/ConstantExpressions.PureMethodInvocation.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ConstantExpressions.PureMethodInvocation</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/matchers/method/MethodInvocationMatcher.TokenType.html#RECEIVER_SUPERTYPE">RECEIVER_SUPERTYPE</a></span> - com.google.errorprone.matchers.method.<a href="com/google/errorprone/matchers/method/MethodInvocationMatcher.TokenType.html" title="enum in com.google.errorprone.matchers.method">MethodInvocationMatcher.TokenType</a></dt>
 <dd>&nbsp;</dd>
@@ -11690,6 +11707,8 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">The method being matched.</div>
 </dd>
+<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/threadsafety/ConstantExpressions.PureMethodInvocation.html#symbol()">symbol()</a></span> - Method in class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/ConstantExpressions.PureMethodInvocation.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ConstantExpressions.PureMethodInvocation</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/matchers/Matchers.html#symbolHasAnnotation(java.lang.Class)">symbolHasAnnotation(Class&lt;? extends Annotation&gt;)</a></span> - Static method in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/Matchers.html" title="class in com.google.errorprone.matchers">Matchers</a></dt>
 <dd>
 <div class="block">Determines whether an expression refers to a symbol that has an annotation of the given type.</div>
@@ -12876,6 +12895,10 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Returns the enum constant of this type with the specified name.</div>
 </dd>
+<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/threadsafety/ConstantExpressions.ConstantExpression.ConstantExpressionKind.html#valueOf(java.lang.String)">valueOf(String)</a></span> - Static method in enum com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/ConstantExpressions.ConstantExpression.ConstantExpressionKind.html" title="enum in com.google.errorprone.bugpatterns.threadsafety">ConstantExpressions.ConstantExpression.ConstantExpressionKind</a></dt>
+<dd>
+<div class="block">Returns the enum constant of this type with the specified name.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/threadsafety/GuardedByExpression.Kind.html#valueOf(java.lang.String)">valueOf(String)</a></span> - Static method in enum com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/GuardedByExpression.Kind.html" title="enum in com.google.errorprone.bugpatterns.threadsafety">GuardedByExpression.Kind</a></dt>
 <dd>
 <div class="block">Returns the enum constant of this type with the specified name.</div>
@@ -12982,6 +13005,11 @@ the order they are declared.</div>
 the order they are declared.</div>
 </dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/apidiff/ApiDiffProto.ClassDiff.DiffCase.html#values()">values()</a></span> - Static method in enum com.google.errorprone.bugpatterns.apidiff.<a href="com/google/errorprone/bugpatterns/apidiff/ApiDiffProto.ClassDiff.DiffCase.html" title="enum in com.google.errorprone.bugpatterns.apidiff">ApiDiffProto.ClassDiff.DiffCase</a></dt>
+<dd>
+<div class="block">Returns an array containing the constants of this enum type, in
+the order they are declared.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/threadsafety/ConstantExpressions.ConstantExpression.ConstantExpressionKind.html#values()">values()</a></span> - Static method in enum com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/ConstantExpressions.ConstantExpression.ConstantExpressionKind.html" title="enum in com.google.errorprone.bugpatterns.threadsafety">ConstantExpressions.ConstantExpression.ConstantExpressionKind</a></dt>
 <dd>
 <div class="block">Returns an array containing the constants of this enum type, in
 the order they are declared.</div>

@@ -145,7 +145,8 @@ loadScripts(document, 'script');</script>
 <tr class="row-color">
 <th class="col-first" scope="row"><a href="ConstantExpressions.PureMethodInvocation.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ConstantExpressions.PureMethodInvocation</a></th>
 <td class="col-last">
-<div class="block">Represents a method invocation of a pure method on constant arguments.</div>
+<div class="block">Represents both a constant method call or a constant field/local access, depending on the
+ actual type of <code>symbol</code>.</div>
 </td>
 </tr>
 <tr class="alt-color">
@@ -347,12 +348,18 @@ loadScripts(document, 'script');</script>
 </thead>
 <tbody>
 <tr class="alt-color">
+<th class="col-first" scope="row"><a href="ConstantExpressions.ConstantExpression.ConstantExpressionKind.html" title="enum in com.google.errorprone.bugpatterns.threadsafety">ConstantExpressions.ConstantExpression.ConstantExpressionKind</a></th>
+<td class="col-last">
+<div class="block">The kind of a constant expression.</div>
+</td>
+</tr>
+<tr class="row-color">
 <th class="col-first" scope="row"><a href="GuardedByExpression.Kind.html" title="enum in com.google.errorprone.bugpatterns.threadsafety">GuardedByExpression.Kind</a></th>
 <td class="col-last">
 <div class="block"><a href="GuardedByExpression.html" title="class in com.google.errorprone.bugpatterns.threadsafety"><code>GuardedByExpression</code></a> kind.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <th class="col-first" scope="row"><a href="ThreadSafety.Purpose.html" title="enum in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.Purpose</a></th>
 <td class="col-last">
 <div class="block">The <a href="ThreadSafety.html" title="class in com.google.errorprone.bugpatterns.threadsafety"><code>ThreadSafety</code></a> utility class can be used by either the bug checker that enforces

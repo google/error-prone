@@ -983,7 +983,7 @@ __[OptionalMapToOptional](bugpattern/OptionalMapToOptional)__<br>
 Mapping to another Optional will yield a nested Optional. Did you mean flatMap?
 
 __[OptionalNotPresent](bugpattern/OptionalNotPresent)__<br>
-One should not call optional.get() inside an if statement that checks !optional.isPresent
+This Optional has been confirmed to be empty at this point, so the call to `get` will throw.
 
 __[OrphanedFormatString](bugpattern/OrphanedFormatString)__<br>
 String literal contains format specifiers, but is not passed to a format method

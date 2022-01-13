@@ -1,6 +1,7 @@
 ---
 title: OptionalNotPresent
-summary: One should not call optional.get() inside an if statement that checks !optional.isPresent
+summary: This Optional has been confirmed to be empty at this point, so the call to
+  `get` will throw.
 layout: bugpattern
 tags: ''
 severity: WARNING

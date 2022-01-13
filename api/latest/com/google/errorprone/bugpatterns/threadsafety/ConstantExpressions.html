@@ -127,7 +127,8 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <td class="col-first"><code>static class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="ConstantExpressions.PureMethodInvocation.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ConstantExpressions.PureMethodInvocation</a></span></code></th>
 <td class="col-last">
-<div class="block">Represents a method invocation of a pure method on constant arguments.</div>
+<div class="block">Represents both a constant method call or a constant field/local access, depending on the
+ actual type of <code>symbol</code>.</div>
 </td>
 </tr>
 <tr class="alt-color">
@@ -193,7 +194,7 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <td class="col-last">&nbsp;</td>
 </tr>
 <tr class="alt-color" id="i2">
-<td class="col-first"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;com.google.common.collect.ImmutableList&lt;<a href="ConstantExpressions.PureMethodInvocation.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ConstantExpressions.PureMethodInvocation</a>&gt;&gt;</code></td>
+<td class="col-first"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="ConstantExpressions.PureMethodInvocation.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ConstantExpressions.PureMethodInvocation</a>&gt;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#symbolizeImmutableExpression(com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)">symbolizeImmutableExpression</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&nbsp;tree,
 <a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
 <td class="col-last">
@@ -269,13 +270,10 @@ boolean&nbsp;not,
 <li>
 <section class="detail" id="symbolizeImmutableExpression(com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)">
 <h3>symbolizeImmutableExpression</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;com.google.common.collect.ImmutableList&lt;<a href="ConstantExpressions.PureMethodInvocation.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ConstantExpressions.PureMethodInvocation</a>&gt;&gt;</span>&nbsp;<span class="member-name">symbolizeImmutableExpression</span>&#8203;(<span class="parameters"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&nbsp;tree,
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="ConstantExpressions.PureMethodInvocation.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ConstantExpressions.PureMethodInvocation</a>&gt;</span>&nbsp;<span class="member-name">symbolizeImmutableExpression</span>&#8203;(<span class="parameters"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&nbsp;tree,
 <a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
 <div class="block">Returns a list of the methods called to get to this expression, as well as a terminating
- variable if needed.
-
- <p>For example <code>a.getFoo().getBar()</code> would return <code>MethodSymbol[getBar],
- MethodSymbol[getFoo], VarSymbol[a]</code>.</div>
+ variable if needed.</div>
 </section>
 </li>
 </ul>
