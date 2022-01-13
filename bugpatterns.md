@@ -574,6 +574,9 @@ valueOf or autoboxing provides better time and space performance
 __[BoxedPrimitiveEquality](bugpattern/BoxedPrimitiveEquality)__<br>
 Comparison using reference equality instead of value equality. Reference equality of boxed primitive types is usually not useful, as they are value objects, and it is bug-prone, as instances are cached for some values but not others.
 
+__[BugPatternNaming](bugpattern/BugPatternNaming)__<br>
+Giving BugPatterns a name different to the enclosing class can be confusing
+
 __[ByteBufferBackingArray](bugpattern/ByteBufferBackingArray)__<br>
 ByteBuffer.array() shouldn&#39;t be called unless ByteBuffer.arrayOffset() is used or if the ByteBuffer was initialized using ByteBuffer.wrap() or ByteBuffer.allocate().
 
