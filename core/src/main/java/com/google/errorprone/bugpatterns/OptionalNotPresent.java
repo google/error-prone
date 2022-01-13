@@ -15,139 +15,128 @@
  */
 package com.google.errorprone.bugpatterns;
 
+import static com.google.common.collect.Multisets.removeOccurrences;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
+import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
+import static com.google.errorprone.util.ASTHelpers.getReceiver;
 
+import com.google.common.collect.HashMultiset;
+import com.google.common.collect.Multiset;
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
-import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
+import com.google.errorprone.bugpatterns.BugChecker.CompilationUnitTreeMatcher;
+import com.google.errorprone.bugpatterns.threadsafety.ConstantExpressions;
+import com.google.errorprone.bugpatterns.threadsafety.ConstantExpressions.ConstantExpression;
+import com.google.errorprone.bugpatterns.threadsafety.ConstantExpressions.ConstantExpression.ConstantExpressionKind;
+import com.google.errorprone.bugpatterns.threadsafety.ConstantExpressions.PureMethodInvocation;
+import com.google.errorprone.bugpatterns.threadsafety.ConstantExpressions.Truthiness;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
-import com.google.errorprone.util.ASTHelpers;
-import com.sun.source.tree.AssignmentTree;
-import com.sun.source.tree.BinaryTree;
-import com.sun.source.tree.BlockTree;
+import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IfTree;
-import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.Tree;
-import com.sun.source.tree.Tree.Kind;
-import com.sun.source.tree.UnaryTree;
-import com.sun.source.util.TreeScanner;
-import java.util.Iterator;
-import javax.annotation.Nullable;
-import javax.lang.model.element.Name;
+import com.sun.tools.javac.code.Symbol.MethodSymbol;
+import java.util.stream.Stream;
 
 /** @author mariasam@google.com (Maria Sam) */
 @BugPattern(
     name = "OptionalNotPresent",
     summary =
-        "One should not call optional.get() inside an if statement that checks "
-            + "!optional.isPresent",
+        "This Optional has been confirmed to be empty at this point, so the call to `get` will"
+            + " throw.",
     severity = WARNING)
-public class OptionalNotPresent extends BugChecker implements MethodInvocationTreeMatcher {
+public final class OptionalNotPresent extends BugChecker implements CompilationUnitTreeMatcher {
+  private static final Matcher<ExpressionTree> OPTIONAL_GET =
+      anyOf(
+          instanceMethod().onDescendantOf("com.google.common.base.Optional").named("get"),
+          instanceMethod().onDescendantOf("java.util.Optional").namedAnyOf("get", "orElseThrow"));
 
-  private static final Matcher<ExpressionTree> OPTIONAL_PRESENT =
-      instanceMethod()
-          .onDescendantOfAny("com.google.common.base.Optional", "java.util.Optional")
-          .named("isPresent");
+  private final ConstantExpressions constantExpressions;
 
-  private static final Matcher<ExpressionTree> OPTIONAL_EMPTY =
-      instanceMethod().onDescendantOf("java.util.Optional").named("isEmpty");
+  public OptionalNotPresent(ErrorProneFlags flags) {
+    this.constantExpressions = ConstantExpressions.fromFlags(flags);
+  }
 
   @Override
-  public Description matchMethodInvocation(
-      MethodInvocationTree methodInvocationTree, VisitorState visitorState) {
-    Iterator<Tree> iter = visitorState.getPath().iterator();
-    Tree upTree;
-    if (OPTIONAL_PRESENT.matches(methodInvocationTree, visitorState)) {
-      // using an iterator to make sure that only !optional.isPresent() matches and not
-      // !(optional.isPresent() || foo == 7)
-      iter.next();
-      upTree = iter.next();
-      if (!(upTree instanceof UnaryTree) || upTree.getKind() != Kind.LOGICAL_COMPLEMENT) {
-        return NO_MATCH;
-      }
-    } else if (OPTIONAL_EMPTY.matches(methodInvocationTree, visitorState)) {
-      iter = visitorState.getPath().iterator();
-      upTree = methodInvocationTree;
-    } else {
-      return NO_MATCH;
-    }
-    IfTree ifTree = null;
-    ifTree = possibleIf(ifTree, upTree, iter);
-    if (ifTree == null) {
-      return NO_MATCH;
-    }
-    TreeScannerInside treeScannerInside = new TreeScannerInside();
-    ExpressionTree optionalVar = ASTHelpers.getReceiver(methodInvocationTree);
-    if (optionalVar == null) {
-      return NO_MATCH;
-    }
-    treeScannerInside.scan(ifTree.getThenStatement(), optionalVar);
-    if (treeScannerInside.hasGet && !treeScannerInside.hasAssignment) {
-      return describeMatch(methodInvocationTree);
-    }
+  public Description matchCompilationUnit(CompilationUnitTree tree, VisitorState state) {
+    new IfScanner(state).scan(state.getPath(), null);
+
     return NO_MATCH;
   }
 
-  @Nullable
-  private static IfTree possibleIf(IfTree ifTree, Tree upTree, Iterator<Tree> iter) {
-    while (iter.hasNext()) {
-      // if it's in the body of an if statement, and not the condition, then it does not apply,
-      // so return null
-      if (upTree instanceof BlockTree) {
-        return null;
-      }
-      if (upTree instanceof BinaryTree) {
-        // If an "or" is in the if condition, then it does not apply
-        if (upTree.getKind() == Kind.CONDITIONAL_OR) {
-          return null;
-        }
-      }
-      // if it finds an if tree, that means at this point it was not in the body of the then/else
-      // statements, so !optional.isPresent() is most definitely in the if condition
-      if (upTree instanceof IfTree) {
-        ifTree = (IfTree) upTree;
-        break;
-      }
-      // If tree is not a BlockTree or an or, it keeps going up
-      upTree = iter.next();
-    }
-    return ifTree;
-  }
+  /** Scans a compilation unit, keeping track of which things are known to be true and false. */
+  private final class IfScanner extends SuppressibleTreePathScanner<Void, Void> {
+    private final Multiset<ConstantExpression> truths = HashMultiset.create();
+    private final Multiset<ConstantExpression> falsehoods = HashMultiset.create();
+    private final VisitorState state;
 
-  private static class TreeScannerInside extends TreeScanner<Void, ExpressionTree> {
-
-    private boolean hasGet = false;
-    private boolean hasAssignment = false;
-
-    @Override
-    public Void visitMethodInvocation(MethodInvocationTree tree, ExpressionTree optionalVar) {
-      if (tree.getArguments().stream().anyMatch(m -> ASTHelpers.sameVariable(m, optionalVar))) {
-        hasAssignment = true;
-      }
-      ExpressionTree receiver = ASTHelpers.getReceiver(tree);
-      if (receiver != null && ASTHelpers.sameVariable(receiver, optionalVar)) {
-        ExpressionTree treeIdent = tree.getMethodSelect();
-        if (treeIdent instanceof MemberSelectTree) {
-          Name identifier = ((MemberSelectTree) treeIdent).getIdentifier();
-          if (identifier.contentEquals("get") || identifier.contentEquals("orElseThrow")) {
-            hasGet = true;
-          }
-        }
-      }
-      return super.visitMethodInvocation(tree, optionalVar);
+    private IfScanner(VisitorState state) {
+      this.state = state;
     }
 
     @Override
-    public Void visitAssignment(AssignmentTree assignmentTree, ExpressionTree optionalVar) {
-      if (ASTHelpers.sameVariable(assignmentTree.getVariable(), optionalVar)) {
-        hasAssignment = true;
+    public Void visitIf(IfTree tree, Void unused) {
+      Truthiness truthiness =
+          constantExpressions.truthiness(tree.getCondition(), /* not= */ false, state);
+
+      withinScope(truthiness, tree.getThenStatement());
+
+      withinScope(
+          constantExpressions.truthiness(tree.getCondition(), /* not= */ true, state),
+          tree.getElseStatement());
+      return null;
+    }
+
+    private void withinScope(Truthiness truthiness, Tree tree) {
+      truths.addAll(truthiness.requiredTrue());
+      falsehoods.addAll(truthiness.requiredFalse());
+      scan(tree, null);
+      removeOccurrences(truths, truthiness.requiredTrue());
+      removeOccurrences(falsehoods, truthiness.requiredFalse());
+    }
+
+    @Override
+    public Void visitMethodInvocation(MethodInvocationTree tree, Void unused) {
+      if (OPTIONAL_GET.matches(tree, state)) {
+        var receiver = getReceiver(tree);
+        if (receiver != null) {
+          constantExpressions
+              .constantExpression(receiver, state)
+              .ifPresent(o -> checkForEmptiness(tree, o));
+        }
       }
-      return super.visitAssignment(assignmentTree, optionalVar);
+      return super.visitMethodInvocation(tree, null);
+    }
+
+    private void checkForEmptiness(
+        MethodInvocationTree tree, ConstantExpression constantExpression) {
+      if (getMethodInvocations(truths)
+              .filter(
+                  truth ->
+                      truth.symbol() instanceof MethodSymbol
+                          && truth.symbol().getSimpleName().contentEquals("isEmpty"))
+              .flatMap(truth -> truth.receiver().stream())
+              .anyMatch(constantExpression::equals)
+          || getMethodInvocations(falsehoods)
+              .filter(
+                  truth ->
+                      truth.symbol() instanceof MethodSymbol
+                          && truth.symbol().getSimpleName().contentEquals("isPresent"))
+              .flatMap(truth -> truth.receiver().stream())
+              .anyMatch(constantExpression::equals)) {
+        state.reportMatch(describeMatch(tree));
+      }
+    }
+
+    private Stream<PureMethodInvocation> getMethodInvocations(Multiset<ConstantExpression> truths) {
+      return truths.stream()
+          .filter(truth -> truth.kind().equals(ConstantExpressionKind.PURE_METHOD))
+          .map(ConstantExpression::pureMethod);
     }
   }
 }

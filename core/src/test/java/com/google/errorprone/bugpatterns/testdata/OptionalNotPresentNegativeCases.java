@@ -18,7 +18,6 @@ package com.google.errorprone.bugpatterns.testdata;
 import java.util.Optional;
 import java.util.function.Predicate;
 
-/** Created by mariasam on 8/3/17. */
 public class OptionalNotPresentNegativeCases {
 
   // Test this doesn't trigger NullPointerException
@@ -53,20 +52,15 @@ public class OptionalNotPresentNegativeCases {
     String str = optional.get();
   }
 
+  public void doubleChecked(Optional<String> optional) {
+    if (!optional.isPresent() || 7 == 7) {
+      String foo = optional.isPresent() ? optional.get() : "";
+    }
+  }
+
   public void checkMultipleInIf(Optional<String> optional) {
     if (!optional.isPresent() || 7 == 7) {
-      String str = optional.isPresent() ? optional.get() : "";
+      String str = !optional.isPresent() ? optional.get() : "";
     }
-  }
-
-  public void checkInIf(Optional<String> optional) {
-    if (!optional.isPresent()) {
-      fillUpOptional(optional);
-      String str = optional.get();
-    }
-  }
-
-  private void fillUpOptional(Optional<String> optional) {
-    optional = Optional.of("");
   }
 }

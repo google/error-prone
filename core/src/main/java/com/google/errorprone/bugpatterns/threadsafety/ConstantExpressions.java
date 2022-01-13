@@ -286,13 +286,14 @@ public final class ConstantExpressions {
   /** Represents a constant expression. */
   @AutoOneOf(ConstantExpressionKind.class)
   public abstract static class ConstantExpression {
-    enum ConstantExpressionKind {
+    /** The kind of a constant expression. */
+    public enum ConstantExpressionKind {
       LITERAL,
       CONSTANT_EQUALS,
-      CONSTANT_ACCESSOR
+      PURE_METHOD,
     }
 
-    abstract ConstantExpressionKind kind();
+    public abstract ConstantExpressionKind kind();
 
     abstract Object literal();
 
@@ -306,11 +307,10 @@ public final class ConstantExpressions {
       return AutoOneOf_ConstantExpressions_ConstantExpression.constantEquals(constantEquals);
     }
 
-    abstract ImmutableList<PureMethodInvocation> constantAccessor();
+    public abstract PureMethodInvocation pureMethod();
 
-    private static ConstantExpression constantAccessor(
-        ImmutableList<PureMethodInvocation> constantAccessor) {
-      return AutoOneOf_ConstantExpressions_ConstantExpression.constantAccessor(constantAccessor);
+    private static ConstantExpression pureMethod(PureMethodInvocation pureMethodInvocation) {
+      return AutoOneOf_ConstantExpressions_ConstantExpression.pureMethod(pureMethodInvocation);
     }
 
     @Override
@@ -320,8 +320,8 @@ public final class ConstantExpressions {
           return literal().toString();
         case CONSTANT_EQUALS:
           return constantEquals().toString();
-        case CONSTANT_ACCESSOR:
-          return constantAccessor().reverse().stream().map(Object::toString).collect(joining("."));
+        case PURE_METHOD:
+          return pureMethod().toString();
       }
       throw new AssertionError();
     }
@@ -335,8 +335,8 @@ public final class ConstantExpressions {
           constantEquals().lhs().accept(visitor);
           constantEquals().rhs().accept(visitor);
           break;
-        case CONSTANT_ACCESSOR:
-          constantAccessor().forEach(pmi -> pmi.accept(visitor));
+        case PURE_METHOD:
+          pureMethod().accept(visitor);
           break;
       }
     }
@@ -357,7 +357,7 @@ public final class ConstantExpressions {
     if (value != null && tree instanceof LiteralTree) {
       return Optional.of(ConstantExpression.literal(value));
     }
-    return symbolizeImmutableExpression(tree, state).map(ConstantExpression::constantAccessor);
+    return symbolizeImmutableExpression(tree, state).map(ConstantExpression::pureMethod);
   }
 
   /** Represents a binary equals call on two constant expressions. */
@@ -392,67 +392,82 @@ public final class ConstantExpressions {
     }
   }
 
-  /** Represents a method invocation of a pure method on constant arguments. */
+  /**
+   * Represents both a constant method call or a constant field/local access, depending on the
+   * actual type of {@code symbol}.
+   */
   @AutoValue
   public abstract static class PureMethodInvocation {
-    abstract Symbol symbol();
+    public abstract Symbol symbol();
 
     abstract ImmutableList<ConstantExpression> arguments();
 
+    public abstract Optional<ConstantExpression> receiver();
+
     @Override
     public final String toString() {
+      String receiver = receiver().map(r -> r + ".").orElse("");
       if (symbol() instanceof VarSymbol || symbol() instanceof ClassSymbol) {
-        return symbol().getSimpleName().toString();
+        return receiver + symbol().getSimpleName();
       }
-      return symbol().getSimpleName()
+      return receiver
+          + symbol().getSimpleName()
           + arguments().stream().map(Object::toString).collect(joining(", ", "(", ")"));
     }
 
-    private static PureMethodInvocation of(Symbol symbol, Iterable<ConstantExpression> arguments) {
+    private static PureMethodInvocation of(
+        Symbol symbol,
+        Iterable<ConstantExpression> arguments,
+        Optional<ConstantExpression> receiver) {
       return new AutoValue_ConstantExpressions_PureMethodInvocation(
-          symbol, ImmutableList.copyOf(arguments));
+          symbol, ImmutableList.copyOf(arguments), receiver);
     }
 
     public void accept(ConstantExpressionVisitor visitor) {
       visitor.visitIdentifier(symbol());
       arguments().forEach(a -> a.accept(visitor));
+      receiver().ifPresent(r -> r.accept(visitor));
     }
   }
 
   /**
    * Returns a list of the methods called to get to this expression, as well as a terminating
    * variable if needed.
-   *
-   * <p>For example {@code a.getFoo().getBar()} would return {@code MethodSymbol[getBar],
-   * MethodSymbol[getFoo], VarSymbol[a]}.
    */
-  public Optional<ImmutableList<PureMethodInvocation>> symbolizeImmutableExpression(
+  public Optional<PureMethodInvocation> symbolizeImmutableExpression(
       ExpressionTree tree, VisitorState state) {
-    ImmutableList.Builder<PureMethodInvocation> symbolized = ImmutableList.builder();
-    ExpressionTree receiver = tree;
-    while (receiver != null) {
-      if (isPureIdentifier(receiver)) {
-        symbolized.add(PureMethodInvocation.of(getSymbol(receiver), ImmutableList.of()));
-      } else if (receiver instanceof MethodInvocationTree && pureMethods.matches(receiver, state)) {
-        ImmutableList.Builder<ConstantExpression> arguments = ImmutableList.builder();
-        for (ExpressionTree argument : ((MethodInvocationTree) receiver).getArguments()) {
-          Optional<ConstantExpression> argumentConstant = constantExpression(argument, state);
-          if (!argumentConstant.isPresent()) {
-            return Optional.empty();
-          }
-          arguments.add(argumentConstant.get());
-        }
-        symbolized.add(PureMethodInvocation.of(getSymbol(receiver), arguments.build()));
-      } else {
+    var receiver =
+        tree instanceof MethodInvocationTree || tree instanceof MemberSelectTree
+            ? getReceiver(tree)
+            : null;
+
+    Optional<ConstantExpression> receiverConstant;
+    if (receiver == null) {
+      receiverConstant = Optional.empty();
+    } else {
+      receiverConstant = constantExpression(receiver, state);
+      if (receiverConstant.isEmpty()) {
         return Optional.empty();
       }
-      if (receiver instanceof MethodInvocationTree || receiver instanceof MemberSelectTree) {
-        receiver = getReceiver(receiver);
-      } else {
-        break;
-      }
     }
-    return Optional.of(symbolized.build());
+
+    if (isPureIdentifier(tree)) {
+      return Optional.of(
+          PureMethodInvocation.of(getSymbol(tree), ImmutableList.of(), receiverConstant));
+    } else if (tree instanceof MethodInvocationTree && pureMethods.matches(tree, state)) {
+      ImmutableList.Builder<ConstantExpression> arguments = ImmutableList.builder();
+      for (ExpressionTree argument : ((MethodInvocationTree) tree).getArguments()) {
+        Optional<ConstantExpression> argumentConstant = constantExpression(argument, state);
+        if (argumentConstant.isEmpty()) {
+          return Optional.empty();
+        }
+        arguments.add(argumentConstant.get());
+      }
+      return Optional.of(
+          PureMethodInvocation.of(getSymbol(tree), arguments.build(), receiverConstant));
+    } else {
+      return Optional.empty();
+    }
   }
 
   private static boolean isPureIdentifier(ExpressionTree receiver) {
