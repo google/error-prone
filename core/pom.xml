@@ -290,7 +290,7 @@
       <!-- Apache 2.0 -->
       <groupId>io.netty</groupId>
       <artifactId>netty-all</artifactId>
-      <version>4.1.42.Final</version>
+      <version>4.1.73.Final</version>
       <scope>test</scope>
     </dependency>
     <dependency>
