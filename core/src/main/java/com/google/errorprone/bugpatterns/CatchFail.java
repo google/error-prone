@@ -38,6 +38,7 @@ import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.JUnitMatchers;
 import com.google.errorprone.matchers.Matcher;
+import com.google.errorprone.suppliers.Supplier;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.CatchTree;
 import com.sun.source.tree.ExpressionStatementTree;
@@ -48,11 +49,13 @@ import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.TryTree;
 import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.code.Attribute.Compound;
+import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Type.UnionClassType;
 import com.sun.tools.javac.code.Types;
+import com.sun.tools.javac.util.Name;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -217,12 +220,11 @@ public class CatchFail extends BugChecker implements TryTreeMatcher {
 
   /** Returns true if the given method symbol has a {@code @Test(expected=...)} annotation. */
   private static boolean isExpectedExceptionTest(MethodSymbol sym, VisitorState state) {
-    Compound attribute =
-        sym.attribute(state.getSymbolFromString(JUnitMatchers.JUNIT4_TEST_ANNOTATION));
+    Compound attribute = sym.attribute(ORG_JUNIT_TEST.get(state));
     if (attribute == null) {
       return false;
     }
-    return attribute.member(state.getName("expected")) != null;
+    return attribute.member(EXPECTED.get(state)) != null;
   }
 
   private boolean catchVariableIsUsed(CatchTree c) {
@@ -242,4 +244,11 @@ public class CatchFail extends BugChecker implements TryTreeMatcher {
             null);
     return found[0];
   }
+
+  private static final Supplier<Name> EXPECTED =
+      VisitorState.memoize(state -> state.getName("expected"));
+
+  private static final Supplier<Symbol> ORG_JUNIT_TEST =
+      VisitorState.memoize(
+          state -> state.getSymbolFromString(JUnitMatchers.JUNIT4_TEST_ANNOTATION));
 }

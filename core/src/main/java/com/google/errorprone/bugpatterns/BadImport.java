@@ -30,6 +30,7 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.MultiMatcher;
+import com.google.errorprone.suppliers.Supplier;
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
@@ -40,6 +41,7 @@ import com.sun.source.tree.Tree.Kind;
 import com.sun.source.util.TreePath;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.PackageSymbol;
+import com.sun.tools.javac.code.Type;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Target;
 import java.util.Arrays;
@@ -121,7 +123,7 @@ public class BadImport extends BugChecker implements ImportTreeMatcher {
       return Description.NO_MATCH;
     }
 
-    if (isSubtype(symbol.type, state.getTypeFromString(MESSAGE_LITE), state)) {
+    if (isSubtype(symbol.type, COM_GOOGLE_PROTOBUF_MESSAGELITE.get(state), state)) {
       return Description.NO_MATCH;
     }
 
@@ -251,4 +253,7 @@ public class BadImport extends BugChecker implements ImportTreeMatcher {
     List<ElementType> value = Arrays.asList(target.value());
     return value.contains(ElementType.TYPE_USE) || value.contains(ElementType.TYPE_PARAMETER);
   }
+
+  private static final Supplier<Type> COM_GOOGLE_PROTOBUF_MESSAGELITE =
+      VisitorState.memoize(state -> state.getTypeFromString(MESSAGE_LITE));
 }

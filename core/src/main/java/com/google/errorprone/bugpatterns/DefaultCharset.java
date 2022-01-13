@@ -39,6 +39,7 @@ import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
+import com.google.errorprone.suppliers.Supplier;
 import com.google.errorprone.suppliers.Suppliers;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.AssignmentTree;
@@ -487,7 +488,7 @@ public class DefaultCharset extends BugChecker
     if (ASTHelpers.isSubtype(type, state.getSymtab().stringType, state)) {
       fix.addImport("java.io.File");
       return String.format("new File(%s)", state.getSourceForNode(fileArg));
-    } else if (ASTHelpers.isSubtype(type, state.getTypeFromString("java.io.File"), state)) {
+    } else if (ASTHelpers.isSubtype(type, JAVA_IO_FILE.get(state), state)) {
       return state.getSourceForNode(fileArg);
     } else {
       throw new AssertionError("unexpected type: " + type);
@@ -500,7 +501,7 @@ public class DefaultCharset extends BugChecker
     if (ASTHelpers.isSubtype(type, state.getSymtab().stringType, state)) {
       fix.addImport("java.nio.file.Paths");
       return String.format("Paths.get(%s)", state.getSourceForNode(fileArg));
-    } else if (ASTHelpers.isSubtype(type, state.getTypeFromString("java.io.File"), state)) {
+    } else if (ASTHelpers.isSubtype(type, JAVA_IO_FILE.get(state), state)) {
       return String.format("%s.toPath()", state.getSourceForNode(fileArg));
     } else {
       throw new AssertionError("unexpected type: " + type);
@@ -564,4 +565,7 @@ public class DefaultCharset extends BugChecker
     }
     return description.build();
   }
+
+  private static final Supplier<Type> JAVA_IO_FILE =
+      VisitorState.memoize(state -> state.getTypeFromString("java.io.File"));
 }

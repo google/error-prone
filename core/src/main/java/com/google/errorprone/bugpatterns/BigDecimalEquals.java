@@ -30,6 +30,7 @@ import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.matchers.Description;
+import com.google.errorprone.suppliers.Supplier;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
@@ -55,7 +56,7 @@ public final class BigDecimalEquals extends BugChecker implements MethodInvocati
     Tree receiver;
     Tree argument;
     List<? extends ExpressionTree> arguments = tree.getArguments();
-    Type bigDecimal = state.getTypeFromString(BIG_DECIMAL);
+    Type bigDecimal = JAVA_MATH_BIGDECIMAL.get(state);
     boolean handleNulls;
 
     if (staticEqualsInvocation().matches(tree, state)) {
@@ -96,4 +97,7 @@ public final class BigDecimalEquals extends BugChecker implements MethodInvocati
       boolean handleNulls) {
     return describeMatch(tree);
   }
+
+  private static final Supplier<Type> JAVA_MATH_BIGDECIMAL =
+      VisitorState.memoize(state -> state.getTypeFromString(BIG_DECIMAL));
 }

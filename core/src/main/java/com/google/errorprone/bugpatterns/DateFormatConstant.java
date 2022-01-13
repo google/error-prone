@@ -31,12 +31,14 @@ import com.google.errorprone.bugpatterns.BugChecker.VariableTreeMatcher;
 import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
+import com.google.errorprone.suppliers.Supplier;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
+import com.sun.tools.javac.code.Type;
 import java.util.Objects;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
@@ -65,7 +67,7 @@ public class DateFormatConstant extends BugChecker implements VariableTreeMatche
     if (!name.equals(Ascii.toUpperCase(name))) {
       return NO_MATCH;
     }
-    if (!isSubtype(getType(tree), state.getTypeFromString("java.text.DateFormat"), state)) {
+    if (!isSubtype(getType(tree), JAVA_TEXT_DATEFORMAT.get(state), state)) {
       return NO_MATCH;
     }
     SuggestedFix rename =
@@ -103,4 +105,7 @@ public class DateFormatConstant extends BugChecker implements VariableTreeMatche
         null);
     return fix.build();
   }
+
+  private static final Supplier<Type> JAVA_TEXT_DATEFORMAT =
+      VisitorState.memoize(state -> state.getTypeFromString("java.text.DateFormat"));
 }

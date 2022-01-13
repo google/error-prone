@@ -32,6 +32,7 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
+import com.google.errorprone.suppliers.Supplier;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.Tree.Kind;
@@ -81,7 +82,7 @@ public class BadAnnotationImplementation extends BugChecker implements ClassTree
     MethodSymbol equals = null;
     MethodSymbol hashCode = null;
     final Types types = state.getTypes();
-    Name equalsName = state.getName("equals");
+    Name equalsName = EQUALS.get(state);
     Predicate<MethodSymbol> equalsPredicate =
         new Predicate<MethodSymbol>() {
           @Override
@@ -94,7 +95,7 @@ public class BadAnnotationImplementation extends BugChecker implements ClassTree
                     methodSymbol.getParameters().get(0).type, state.getSymtab().objectType);
           }
         };
-    Name hashCodeName = state.getName("hashCode");
+    Name hashCodeName = HASHCODE.get(state);
     Predicate<MethodSymbol> hashCodePredicate =
         new Predicate<MethodSymbol>() {
           @Override
@@ -140,4 +141,10 @@ public class BadAnnotationImplementation extends BugChecker implements ClassTree
     }
     return null;
   }
+
+  private static final Supplier<Name> EQUALS =
+      VisitorState.memoize(state -> state.getName("equals"));
+
+  private static final Supplier<Name> HASHCODE =
+      VisitorState.memoize(state -> state.getName("hashCode"));
 }
