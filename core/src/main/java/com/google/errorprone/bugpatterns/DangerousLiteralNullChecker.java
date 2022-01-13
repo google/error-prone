@@ -89,7 +89,7 @@ public class DangerousLiteralNullChecker extends BugChecker implements LiteralTr
             for (NullReplacementRule rule : RULES.get(state)) {
               builder.put(rule.klass(), rule.method(), rule.replacementBody());
             }
-            return builder.build();
+            return builder.buildOrThrow();
           });
 
   @Override

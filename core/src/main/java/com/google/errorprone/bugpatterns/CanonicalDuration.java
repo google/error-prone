@@ -93,7 +93,7 @@ public class CanonicalDuration extends BugChecker implements MethodInvocationTre
           .put(Api.JODA, ChronoUnit.HOURS, "standardHours")
           .put(Api.JODA, ChronoUnit.MINUTES, "standardMinutes")
           .put(Api.JODA, ChronoUnit.SECONDS, "standardSeconds")
-          .build();
+          .buildOrThrow();
 
   private static final ImmutableMap<String, TemporalUnit> METHOD_NAME_TO_UNIT =
       FACTORIES.rowMap().values().stream()
