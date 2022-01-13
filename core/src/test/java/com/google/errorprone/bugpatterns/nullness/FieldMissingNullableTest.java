@@ -130,7 +130,7 @@ public class FieldMissingNullableTest {
 
   @Test
   public void testComparisonToNull() {
-    createCompilationTestHelper()
+    createAggressiveCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/FieldMissingNullTest.java",
             "package com.google.errorprone.bugpatterns.nullness;",
@@ -147,7 +147,7 @@ public class FieldMissingNullableTest {
 
   @Test
   public void testComparisonToNullOnOtherInstance() {
-    createCompilationTestHelper()
+    createAggressiveCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/FieldMissingNullTest.java",
             "package com.google.errorprone.bugpatterns.nullness;",
@@ -156,6 +156,22 @@ public class FieldMissingNullableTest {
             "  public void reset(FieldMissingNullTest other) {",
             "    // BUG: Diagnostic contains: @Nullable",
             "    if (other.message != null) {",
+            "    }",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void testNegativeCases_comparisonToNullConservative() {
+    createCompilationTestHelper()
+        .addSourceLines(
+            "com/google/errorprone/bugpatterns/nullness/FieldMissingNullTest.java",
+            "package com.google.errorprone.bugpatterns.nullness;",
+            "public class FieldMissingNullTest {",
+            "  private String message;",
+            "  public void reset() {",
+            "    if (message != null) {",
             "    }",
             "  }",
             "}")
@@ -447,6 +463,10 @@ public class FieldMissingNullableTest {
 
   private CompilationTestHelper createCompilationTestHelper() {
     return CompilationTestHelper.newInstance(FieldMissingNullable.class, getClass());
+  }
+
+  private CompilationTestHelper createAggressiveCompilationTestHelper() {
+    return createCompilationTestHelper().setArgs("-XepOpt:Nullness:Conservative=false");
   }
 
   private BugCheckerRefactoringTestHelper createRefactoringTestHelper() {
