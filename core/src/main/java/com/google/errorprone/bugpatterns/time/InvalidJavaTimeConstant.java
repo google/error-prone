@@ -33,6 +33,7 @@ import static java.time.temporal.ChronoField.NANO_OF_SECOND;
 import static java.time.temporal.ChronoField.SECOND_OF_DAY;
 import static java.time.temporal.ChronoField.SECOND_OF_MINUTE;
 import static java.time.temporal.ChronoField.YEAR;
+import static java.util.Arrays.stream;
 
 import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableList;
@@ -50,7 +51,6 @@ import com.sun.source.tree.MethodInvocationTree;
 import com.sun.tools.javac.code.Type;
 import java.time.DateTimeException;
 import java.time.temporal.ChronoField;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -137,11 +137,11 @@ public final class InvalidJavaTimeConstant extends BugChecker
       }
 
       private static ImmutableList<ChronoField> getParameterUnits(Param... params) {
-        return Arrays.stream(params).map(p -> p.unit()).collect(toImmutableList());
+        return stream(params).map(p -> p.unit()).collect(toImmutableList());
       }
 
-      private static String[] getParameterTypes(Param... params) {
-        return Arrays.stream(params).map(p -> p.type()).toArray(String[]::new);
+      private static ImmutableList<String> getParameterTypes(Param... params) {
+        return stream(params).map(p -> p.type()).collect(toImmutableList());
       }
 
       public abstract JavaTimeType build();

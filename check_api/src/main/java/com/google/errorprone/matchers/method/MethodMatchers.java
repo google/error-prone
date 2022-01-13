@@ -163,8 +163,8 @@ public final class MethodMatchers {
     ParameterMatcher withNoParameters();
 
     /** Match methods whose formal parameters have the given types. */
-    // TODO(ghm): Make this require at least one argument.
-    ParameterMatcher withParameters(String... parameters);
+    ParameterMatcher withParameters(String first, String... rest);
+    /** Match methods whose formal parameters have the given types. */
 
     /** Match methods whose formal parameters have the given types. */
     ParameterMatcher withParameters(Iterable<String> parameters);
@@ -193,8 +193,7 @@ public final class MethodMatchers {
     ParameterMatcher withNoParameters();
 
     /** Match constructors whose formal parameters have the given types. */
-    // TODO(ghm): Make this require at least one argument.
-    ParameterMatcher withParameters(String... parameters);
+    ParameterMatcher withParameters(String first, String... rest);
 
     /** Match constructors whose formal parameters have the given types. */
     ParameterMatcher withParameters(Iterable<String> parameters);

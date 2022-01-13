@@ -21,6 +21,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.matchers.method.MethodMatchers.AnyMethodMatcher;
 import com.google.errorprone.matchers.method.MethodMatchers.ConstructorClassMatcher;
@@ -233,8 +234,8 @@ final class MethodMatcherImpl
   }
 
   @Override
-  public ParameterMatcher withParameters(String... parameters) {
-    return withParameters(ImmutableList.copyOf(parameters));
+  public ParameterMatcher withParameters(String first, String... rest) {
+    return withParameters(Lists.asList(first, rest));
   }
 
   @Override
