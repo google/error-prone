@@ -437,9 +437,6 @@ This method must be called with an even number of arguments.
 __[SizeGreaterThanOrEqualsZero](bugpattern/SizeGreaterThanOrEqualsZero)__<br>
 Comparison of a size &gt;= 0 is always true, did you intend to check for non-emptiness?
 
-__[StackTraceElementGetClass](bugpattern/StackTraceElementGetClass)__<br>
-Calling getClass on StackTraceElement returns the Class object for StackTraceElement, you probably meant to retrieve the class containing the execution point represented by this stack trace element.
-
 __[StreamToString](bugpattern/StreamToString)__<br>
 Calling toString on a Stream does not provide useful information
 
