@@ -103,7 +103,7 @@ public final class OptionalNotPresent extends BugChecker implements CompilationU
     @Override
     public Void visitMethodInvocation(MethodInvocationTree tree, Void unused) {
       if (OPTIONAL_GET.matches(tree, state)) {
-        ExpressionTree receiver = getReceiver(tree);
+        var receiver = getReceiver(tree);
         if (receiver != null) {
           constantExpressions
               .constantExpression(receiver, state)

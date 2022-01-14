@@ -436,7 +436,7 @@ public final class ConstantExpressions {
    */
   public Optional<PureMethodInvocation> symbolizeImmutableExpression(
       ExpressionTree tree, VisitorState state) {
-    ExpressionTree receiver =
+    var receiver =
         tree instanceof MethodInvocationTree || tree instanceof MemberSelectTree
             ? getReceiver(tree)
             : null;
