@@ -130,6 +130,11 @@ public class DoNotCallChecker extends BugChecker
                   .onExactClass("java.util.concurrent.locks.ReentrantReadWriteLock.ReadLock")
                   .named("newCondition"),
               "ReadLocks do not support conditions.")
+          .put(
+              instanceMethod().onExactClass("java.lang.StackTraceElement").named("getClass"),
+              "Calling getClass on StackTraceElement returns the Class object for"
+                  + " StackTraceElement, you probably meant to retrieve the class containing the"
+                  + " execution point represented by this stack trace element using getClassName")
           .buildOrThrow();
 
   static final String DO_NOT_CALL = "com.google.errorprone.annotations.DoNotCall";

@@ -552,4 +552,22 @@ public class DoNotCallCheckerTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void positive_getSimpleName_refactoredToGetClassName() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test{",
+            " void f() {",
+            "   try {",
+            "     throw new Exception();",
+            "   } catch (Exception ex) {",
+            "     // BUG: Diagnostic contains: getClassName",
+            "     ex.getStackTrace()[0].getClass().getSimpleName();",
+            "   }",
+            " }",
+            "}")
+        .doTest();
+  }
 }

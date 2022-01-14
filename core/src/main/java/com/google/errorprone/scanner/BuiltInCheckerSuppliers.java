@@ -307,7 +307,6 @@ import com.google.errorprone.bugpatterns.SelfEquals;
 import com.google.errorprone.bugpatterns.ShortCircuitBoolean;
 import com.google.errorprone.bugpatterns.ShouldHaveEvenArgs;
 import com.google.errorprone.bugpatterns.SizeGreaterThanOrEqualsZero;
-import com.google.errorprone.bugpatterns.StackTraceElementGetClass;
 import com.google.errorprone.bugpatterns.StaticAssignmentInConstructor;
 import com.google.errorprone.bugpatterns.StaticMockMember;
 import com.google.errorprone.bugpatterns.StaticQualifiedUsingExpression;
@@ -726,7 +725,6 @@ public class BuiltInCheckerSuppliers {
           SelfEquals.class,
           ShouldHaveEvenArgs.class,
           SizeGreaterThanOrEqualsZero.class,
-          StackTraceElementGetClass.class,
           StreamToString.class,
           StringBuilderInitWithChar.class,
           SubstringOfZero.class,
