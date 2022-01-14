@@ -17,7 +17,11 @@
 package com.google.errorprone.matchers;
 
 import static com.google.errorprone.matchers.Matchers.anyOf;
-import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
+import static com.google.errorprone.matchers.Matchers.anything;
+import static com.google.errorprone.matchers.Matchers.nullLiteral;
+import static com.google.errorprone.matchers.Matchers.staticMethod;
+import static com.google.errorprone.matchers.Matchers.toType;
+import static com.google.errorprone.matchers.Matchers.typeCast;
 import static com.google.errorprone.util.ASTHelpers.constValue;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
@@ -33,6 +37,7 @@ import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
+import com.sun.source.tree.TypeCastTree;
 import com.sun.source.util.SimpleTreeVisitor;
 import com.sun.tools.javac.code.Symbol;
 import javax.lang.model.element.ElementKind;
@@ -59,7 +64,13 @@ public class CompileTimeConstantExpressionMatcher implements Matcher<ExpressionT
       anyOf(
           // TODO(xtof): Consider utilising mdempsky's closed-over-addition matcher
           // (perhaps extended for other arithmetic operations).
-          new ExpressionWithConstValueMatcher(), Matchers.kindIs(Tree.Kind.NULL_LITERAL));
+          new ExpressionWithConstValueMatcher(),
+          nullLiteral(),
+          // Allows passing a null literal to a method with a @CompileTimeConstant parameter
+          // when A) there's an overload of the method that takes a supertype of the parameter's
+          // type and B) the overload with the @CompileTimeConstant parameter specifically needs to
+          // be the overload that is called.
+          toType(TypeCastTree.class, typeCast(anything(), nullLiteral())));
 
   public static Matcher<ExpressionTree> instance() {
     return INSTANCE;

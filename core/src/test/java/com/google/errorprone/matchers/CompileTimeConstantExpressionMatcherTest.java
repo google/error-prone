@@ -80,6 +80,8 @@ public class CompileTimeConstantExpressionMatcherTest {
             "    String s1 = null;",
             "    // BUG: Diagnostic contains: false",
             "    String s2 = static_final_string;",
+            "    // BUG: Diagnostic contains: true",
+            "    String s3 = (String) null;",
             "  }",
             "}")
         .doTest();
