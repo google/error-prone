@@ -45,6 +45,7 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
+import com.google.errorprone.suppliers.Supplier;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
@@ -185,7 +186,7 @@ public final class PreferJavaTimeOverload extends BugChecker
               if (JAVA_DURATION_DECOMPOSITION_MATCHER.matches(maybeDurationDecomposition, state)) {
                 if (isSameType(
                     ASTHelpers.getReceiverType(maybeDurationDecomposition),
-                    state.getTypeFromString(JAVA_DURATION),
+                    JAVA_TIME_DURATION.get(state),
                     state)) {
                   replacement =
                       state.getSourceForNode(ASTHelpers.getReceiver(maybeDurationDecomposition));
@@ -343,7 +344,7 @@ public final class PreferJavaTimeOverload extends BugChecker
 
   private static boolean isLongTimeUnitMethodCall(MethodInvocationTree tree, VisitorState state) {
     Type longType = state.getSymtab().longType;
-    Type timeUnitType = state.getTypeFromString("java.util.concurrent.TimeUnit");
+    Type timeUnitType = JAVA_UTIL_CONCURRENT_TIMEUNIT.get(state);
     List<VarSymbol> params = getSymbol(tree).getParameters();
     if (params.size() == 2) {
       return isSameType(params.get(0).asType(), longType, state)
@@ -417,4 +418,10 @@ public final class PreferJavaTimeOverload extends BugChecker
     }
     return false;
   }
+
+  private static final Supplier<Type> JAVA_TIME_DURATION =
+      VisitorState.memoize(state -> state.getTypeFromString(JAVA_DURATION));
+
+  private static final Supplier<Type> JAVA_UTIL_CONCURRENT_TIMEUNIT =
+      VisitorState.memoize(state -> state.getTypeFromString("java.util.concurrent.TimeUnit"));
 }

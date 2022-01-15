@@ -32,6 +32,7 @@ import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.NewClassTreeMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
+import com.google.errorprone.suppliers.Supplier;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
@@ -127,7 +128,10 @@ public class URLEqualsHashCode extends BugChecker
         return false;
       }
       return ASTHelpers.isSameType(
-          typeArguments.get(typeArgumentIndex), state.getTypeFromString(URL_CLASS), state);
+          typeArguments.get(typeArgumentIndex), JAVA_NET_URL.get(state), state);
     }
   }
+
+  private static final Supplier<Type> JAVA_NET_URL =
+      VisitorState.memoize(state -> state.getTypeFromString(URL_CLASS));
 }

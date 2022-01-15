@@ -20,6 +20,7 @@ import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
+import com.google.errorprone.suppliers.Supplier;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.tools.javac.code.Type;
 
@@ -39,7 +40,10 @@ public class ProtosAsKeyOfSetOrMap extends AbstractAsKeyOfSetOrMap {
 
   @Override
   protected boolean isBadType(Type type, VisitorState state) {
-    return ASTHelpers.isSubtype(
-        type, state.getTypeFromString("com.google.protobuf.GeneratedMessage"), state);
+    return ASTHelpers.isSubtype(type, COM_GOOGLE_PROTOBUF_GENERATEDMESSAGE.get(state), state);
   }
+
+  private static final Supplier<Type> COM_GOOGLE_PROTOBUF_GENERATEDMESSAGE =
+      VisitorState.memoize(
+          state -> state.getTypeFromString("com.google.protobuf.GeneratedMessage"));
 }

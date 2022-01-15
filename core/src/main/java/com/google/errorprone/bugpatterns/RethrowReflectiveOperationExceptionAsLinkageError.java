@@ -28,11 +28,13 @@ import com.google.errorprone.bugpatterns.BugChecker.ThrowTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
+import com.google.errorprone.suppliers.Supplier;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.ThrowTree;
 import com.sun.tools.javac.code.Symbol;
+import com.sun.tools.javac.code.Type;
 import java.util.List;
 import javax.lang.model.element.ElementKind;
 
@@ -74,8 +76,10 @@ public class RethrowReflectiveOperationExceptionAsLinkageError extends BugChecke
   }
 
   private static boolean isReflectiveOperationException(VisitorState state, Symbol symbol) {
-    return isSameType(
-            symbol.asType(), state.getTypeFromString(REFLECTIVE_OPERATION_EXCEPTION), state)
+    return isSameType(symbol.asType(), JAVA_LANG_REFLECTIVEOPERATIONEXCEPTION.get(state), state)
         && symbol.getKind().equals(ElementKind.EXCEPTION_PARAMETER);
   }
+
+  private static final Supplier<Type> JAVA_LANG_REFLECTIVEOPERATIONEXCEPTION =
+      VisitorState.memoize(state -> state.getTypeFromString(REFLECTIVE_OPERATION_EXCEPTION));
 }

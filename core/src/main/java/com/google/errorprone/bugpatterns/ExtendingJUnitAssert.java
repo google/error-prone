@@ -25,6 +25,7 @@ import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
+import com.google.errorprone.suppliers.Supplier;
 import com.google.errorprone.util.ASTHelpers;
 import com.google.errorprone.util.ErrorProneToken;
 import com.sun.source.tree.ClassTree;
@@ -52,7 +53,7 @@ public class ExtendingJUnitAssert extends BugChecker implements ClassTreeMatcher
   public Description matchClass(ClassTree tree, VisitorState state) {
     Tree extendsClause = tree.getExtendsClause();
     Type type = ASTHelpers.getType(extendsClause);
-    if (ASTHelpers.isSameType(type, state.getTypeFromString("org.junit.Assert"), state)) {
+    if (ASTHelpers.isSameType(type, ORG_JUNIT_ASSERT.get(state), state)) {
       return describeMatch(extendsClause, fixAsserts(tree, state));
     }
     return Description.NO_MATCH;
@@ -92,4 +93,7 @@ public class ExtendingJUnitAssert extends BugChecker implements ClassTreeMatcher
     }
     return fix.replace(startPos, endOfExtendsClause, "").build();
   }
+
+  private static final Supplier<Type> ORG_JUNIT_ASSERT =
+      VisitorState.memoize(state -> state.getTypeFromString("org.junit.Assert"));
 }

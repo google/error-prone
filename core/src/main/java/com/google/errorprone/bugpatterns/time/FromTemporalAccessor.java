@@ -33,6 +33,7 @@ import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
+import com.google.errorprone.suppliers.Supplier;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.Tree;
@@ -440,7 +441,7 @@ public final class FromTemporalAccessor extends BugChecker implements MethodInvo
     ExpressionTree arg0 = getOnlyElement(tree.getArguments());
     Type type0 = getType(arg0);
     // exit early if the parameter is statically typed as a TemporalAccessor
-    if (isSameType(type0, state.getTypeFromString(TEMPORAL_ACCESSOR), state)) {
+    if (isSameType(type0, JAVA_TIME_TEMPORAL_TEMPORALACCESSOR.get(state), state)) {
       return Description.NO_MATCH;
     }
 
@@ -460,4 +461,7 @@ public final class FromTemporalAccessor extends BugChecker implements MethodInvo
     }
     return Description.NO_MATCH;
   }
+
+  private static final Supplier<Type> JAVA_TIME_TEMPORAL_TEMPORALACCESSOR =
+      VisitorState.memoize(state -> state.getTypeFromString(TEMPORAL_ACCESSOR));
 }

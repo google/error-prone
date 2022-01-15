@@ -39,6 +39,7 @@ import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
+import com.google.errorprone.suppliers.Supplier;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.Tree;
@@ -137,7 +138,7 @@ public final class UndefinedEquals extends BugChecker implements MethodInvocatio
 
       // If both are subtypes of Iterable, rewrite
       Type iterableType = state.getSymtab().iterableType;
-      Type multimapType = state.getTypeFromString("com.google.common.collect.Multimap");
+      Type multimapType = COM_GOOGLE_COMMON_COLLECT_MULTIMAP.get(state);
       Optional<SuggestedFix> fix =
           firstPresent(
               generateTruthFix.apply(iterableType, "containsExactlyElementsIn"),
@@ -148,7 +149,7 @@ public final class UndefinedEquals extends BugChecker implements MethodInvocatio
     }
 
     // Generate fix for CharSequence
-    Type charSequenceType = state.getTypeFromString("java.lang.CharSequence");
+    Type charSequenceType = JAVA_LANG_CHARSEQUENCE.get(state);
     BiFunction<Tree, Tree, Optional<SuggestedFix>> generateCharSequenceFix =
         (maybeCharSequence, maybeString) -> {
           if (charSequenceType != null
@@ -171,4 +172,10 @@ public final class UndefinedEquals extends BugChecker implements MethodInvocatio
     }
     return Optional.empty();
   }
+
+  private static final Supplier<Type> COM_GOOGLE_COMMON_COLLECT_MULTIMAP =
+      VisitorState.memoize(state -> state.getTypeFromString("com.google.common.collect.Multimap"));
+
+  private static final Supplier<Type> JAVA_LANG_CHARSEQUENCE =
+      VisitorState.memoize(state -> state.getTypeFromString("java.lang.CharSequence"));
 }

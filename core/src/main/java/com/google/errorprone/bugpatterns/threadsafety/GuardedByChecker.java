@@ -31,6 +31,7 @@ import com.google.errorprone.bugpatterns.threadsafety.GuardedByExpression.Kind;
 import com.google.errorprone.bugpatterns.threadsafety.GuardedByExpression.Select;
 import com.google.errorprone.bugpatterns.threadsafety.GuardedByUtils.GuardedByValidationResult;
 import com.google.errorprone.matchers.Description;
+import com.google.errorprone.suppliers.Supplier;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.LambdaExpressionTree;
@@ -201,7 +202,7 @@ public class GuardedByChecker extends BugChecker
       return false;
     }
 
-    Symbol rwLockSymbol = state.getSymbolFromString(JUC_READ_WRITE_LOCK);
+    Symbol rwLockSymbol = JAVA_UTIL_CONCURRENT_LOCKS_READWRITELOCK.get(state);
     if (rwLockSymbol == null) {
       return false;
     }
@@ -228,4 +229,7 @@ public class GuardedByChecker extends BugChecker
         .setMessage(String.format("Invalid @GuardedBy expression: %s", result.message()))
         .build();
   }
+
+  private static final Supplier<Symbol> JAVA_UTIL_CONCURRENT_LOCKS_READWRITELOCK =
+      VisitorState.memoize(state -> state.getSymbolFromString(JUC_READ_WRITE_LOCK));
 }

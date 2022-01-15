@@ -35,6 +35,7 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.CompilationUnitTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
+import com.google.errorprone.suppliers.Supplier;
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
@@ -260,7 +261,7 @@ public final class UnusedMethod extends BugChecker implements CompilationUnitTre
         if (sym == null) {
           return;
         }
-        Name name = state.getName("org.junit.jupiter.params.provider.MethodSource");
+        Name name = ORG_JUNIT_JUPITER_PARAMS_PROVIDER_METHODSOURCE.get(state);
         sym.getRawAttributes().stream()
             .filter(a -> a.type.tsym.getQualifiedName().equals(name))
             .findAny()
@@ -338,4 +339,9 @@ public final class UnusedMethod extends BugChecker implements CompilationUnitTre
   private static boolean exemptedByName(Name name) {
     return Ascii.toLowerCase(name.toString()).startsWith(EXEMPT_PREFIX);
   }
+
+  private static final Supplier<com.sun.tools.javac.util.Name>
+      ORG_JUNIT_JUPITER_PARAMS_PROVIDER_METHODSOURCE =
+          VisitorState.memoize(
+              state -> state.getName("org.junit.jupiter.params.provider.MethodSource"));
 }

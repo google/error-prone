@@ -28,6 +28,7 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
+import com.google.errorprone.suppliers.Supplier;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
@@ -40,6 +41,7 @@ import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.TypeSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type;
+import com.sun.tools.javac.util.Name;
 import java.util.EnumSet;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -129,7 +131,7 @@ public class UnsafeFinalization extends BugChecker implements MethodInvocationTr
   }
 
   private static Symbol getFinalizer(VisitorState state, ClassSymbol enclosing) {
-    Type finalizerType = state.getTypeFromString("com.google.common.labs.base.Finalizer");
+    Type finalizerType = COM_GOOGLE_COMMON_LABS_BASE_FINALIZER.get(state);
     Optional<VarSymbol> finalizerField =
         state.getTypes().closure(enclosing.asType()).stream()
             .flatMap(s -> getFields(s.asElement()))
@@ -141,7 +143,7 @@ public class UnsafeFinalization extends BugChecker implements MethodInvocationTr
     return ASTHelpers.resolveExistingMethod(
         state,
         enclosing.enclClass(),
-        state.getName("finalize"),
+        FINALIZE.get(state),
         /* argTypes= */ ImmutableList.of(),
         /* tyargTypes= */ ImmutableList.of());
   }
@@ -151,4 +153,11 @@ public class UnsafeFinalization extends BugChecker implements MethodInvocationTr
             ASTHelpers.scope(s.members()).getSymbols(m -> m.getKind() == ElementKind.FIELD))
         .map(VarSymbol.class::cast);
   }
+
+  private static final Supplier<Name> FINALIZE =
+      VisitorState.memoize(state -> state.getName("finalize"));
+
+  private static final Supplier<Type> COM_GOOGLE_COMMON_LABS_BASE_FINALIZER =
+      VisitorState.memoize(
+          state -> state.getTypeFromString("com.google.common.labs.base.Finalizer"));
 }

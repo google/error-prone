@@ -29,6 +29,7 @@ import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
+import com.google.errorprone.suppliers.Supplier;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.ExpressionStatementTree;
@@ -41,6 +42,7 @@ import com.sun.source.tree.TypeCastTree;
 import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.code.Flags;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
+import com.sun.tools.javac.code.Type;
 import javax.lang.model.element.Modifier;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
@@ -61,7 +63,7 @@ public class UnsynchronizedOverridesSynchronized extends BugChecker implements M
       if (isSynchronized(s)) {
         // Input streams are typically not used across threads, so this case isn't
         // worth enforcing.
-        if (isSameType(s.owner.type, state.getTypeFromString("java.io.InputStream"), state)) {
+        if (isSameType(s.owner.type, JAVA_IO_INPUTSTREAM.get(state), state)) {
           continue;
         }
         if (ignore(methodTree, state)) {
@@ -135,4 +137,7 @@ public class UnsynchronizedOverridesSynchronized extends BugChecker implements M
         }.scan(method.getBody(), null),
         false);
   }
+
+  private static final Supplier<Type> JAVA_IO_INPUTSTREAM =
+      VisitorState.memoize(state -> state.getTypeFromString("java.io.InputStream"));
 }

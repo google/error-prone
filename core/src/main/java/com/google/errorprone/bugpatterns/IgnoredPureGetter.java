@@ -28,10 +28,12 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
+import com.google.errorprone.suppliers.Supplier;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
+import com.sun.tools.javac.code.Type;
 
 /** Flags ignored return values from pure getters. */
 @BugPattern(
@@ -81,12 +83,19 @@ public final class IgnoredPureGetter extends AbstractReturnValueIgnored {
         && symbol.getModifiers().contains(ABSTRACT)) {
       return true;
     }
-    if (isSubtype(symbol.owner.type, state.getTypeFromString(MESSAGE_LITE), state)
-        && !isSubtype(symbol.owner.type, state.getTypeFromString(MUTABLE_MESSAGE_LITE), state)) {
+    if (isSubtype(symbol.owner.type, COM_GOOGLE_PROTOBUF_MESSAGELITE.get(state), state)
+        && !isSubtype(
+            symbol.owner.type, COM_GOOGLE_PROTOBUF_MUTABLEMESSAGELITE.get(state), state)) {
       String name = symbol.getSimpleName().toString();
       return (name.startsWith("get") || name.startsWith("has"))
           && ((MethodSymbol) symbol).getParameters().isEmpty();
     }
     return false;
   }
+
+  private static final Supplier<Type> COM_GOOGLE_PROTOBUF_MESSAGELITE =
+      VisitorState.memoize(state -> state.getTypeFromString(MESSAGE_LITE));
+
+  private static final Supplier<Type> COM_GOOGLE_PROTOBUF_MUTABLEMESSAGELITE =
+      VisitorState.memoize(state -> state.getTypeFromString(MUTABLE_MESSAGE_LITE));
 }

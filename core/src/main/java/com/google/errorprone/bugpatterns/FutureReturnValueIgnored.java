@@ -91,7 +91,7 @@ public final class FutureReturnValueIgnored extends AbstractReturnValueIgnored
       new Matcher<ExpressionTree>() {
         @Override
         public boolean matches(ExpressionTree tree, VisitorState state) {
-          Type futureType = state.getTypeFromString("java.util.concurrent.Future");
+          Type futureType = JAVA_UTIL_CONCURRENT_FUTURE.get(state);
           if (futureType == null) {
             return false;
           }
@@ -145,4 +145,7 @@ public final class FutureReturnValueIgnored extends AbstractReturnValueIgnored
   }
 
   private final Supplier<Type> futureType = Suppliers.typeFromString("java.util.concurrent.Future");
+
+  private static final Supplier<Type> JAVA_UTIL_CONCURRENT_FUTURE =
+      VisitorState.memoize(state -> state.getTypeFromString("java.util.concurrent.Future"));
 }

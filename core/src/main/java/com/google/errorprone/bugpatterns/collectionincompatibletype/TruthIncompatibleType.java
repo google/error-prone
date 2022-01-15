@@ -469,7 +469,9 @@ public class TruthIncompatibleType extends BugChecker implements MethodInvocatio
   }
 
   private static boolean isNumericType(Type parameter, VisitorState state) {
-    return parameter.isNumeric()
-        || isSubtype(parameter, state.getTypeFromString("java.lang.Number"), state);
+    return parameter.isNumeric() || isSubtype(parameter, JAVA_LANG_NUMBER.get(state), state);
   }
+
+  private static final Supplier<Type> JAVA_LANG_NUMBER =
+      VisitorState.memoize(state -> state.getTypeFromString("java.lang.Number"));
 }

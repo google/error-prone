@@ -29,6 +29,7 @@ import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
+import com.google.errorprone.suppliers.Supplier;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MemberReferenceTree;
@@ -36,6 +37,7 @@ import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
+import com.sun.tools.javac.code.Type;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} for details. */
 @BugPattern(
@@ -79,7 +81,7 @@ public final class RxReturnValueIgnored extends AbstractReturnValueIgnored {
     }
 
     // Currently the only exempted method is Map.put().
-    return ASTHelpers.isSubtype(sym.owner.type, state.getTypeFromString("java.util.Map"), state)
+    return ASTHelpers.isSubtype(sym.owner.type, JAVA_UTIL_MAP.get(state), state)
         && sym.name.contentEquals("put");
   }
 
@@ -118,4 +120,7 @@ public final class RxReturnValueIgnored extends AbstractReturnValueIgnored {
   public Matcher<? super ExpressionTree> specializedMatcher() {
     return MATCHER;
   }
+
+  private static final Supplier<Type> JAVA_UTIL_MAP =
+      VisitorState.memoize(state -> state.getTypeFromString("java.util.Map"));
 }

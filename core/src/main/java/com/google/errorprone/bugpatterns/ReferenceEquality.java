@@ -22,6 +22,7 @@ import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.StandardTags;
 import com.google.errorprone.VisitorState;
+import com.google.errorprone.suppliers.Supplier;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ExpressionTree;
@@ -116,7 +117,7 @@ public class ReferenceEquality extends AbstractReferenceEquality {
 
   /** Check if the method declares or inherits an implementation of .equals() */
   public static boolean implementsEquals(Type type, VisitorState state) {
-    Name equalsName = state.getName("equals");
+    Name equalsName = EQUALS.get(state);
     Symbol objectEquals = getOnlyMember(state, state.getSymtab().objectType, "equals");
     for (Type sup : state.getTypes().closure(type)) {
       if (sup.tsym.isInterface()) {
@@ -137,4 +138,7 @@ public class ReferenceEquality extends AbstractReferenceEquality {
     }
     return false;
   }
+
+  private static final Supplier<Name> EQUALS =
+      VisitorState.memoize(state -> state.getName("equals"));
 }

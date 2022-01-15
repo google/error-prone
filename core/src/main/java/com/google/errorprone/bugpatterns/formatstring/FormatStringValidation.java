@@ -24,6 +24,7 @@ import com.google.auto.value.AutoValue;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Iterables;
 import com.google.errorprone.VisitorState;
+import com.google.errorprone.suppliers.Supplier;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ConditionalExpressionTree;
 import com.sun.source.tree.ExpressionTree;
@@ -227,7 +228,7 @@ public final class FormatStringValidation {
     if (isSubtype(types, type, state.getTypeFromString(TemporalAccessor.class.getName()))) {
       return Instant.now().atZone(ZoneId.systemDefault());
     }
-    Type lazyArg = state.getTypeFromString("com.google.common.flogger.LazyArg");
+    Type lazyArg = COM_GOOGLE_COMMON_FLOGGER_LAZYARG.get(state);
     if (lazyArg != null) {
       Type asLazyArg = types.asSuper(type, lazyArg.tsym);
       if (asLazyArg != null && !asLazyArg.getTypeArguments().isEmpty()) {
@@ -322,4 +323,7 @@ public final class FormatStringValidation {
   }
 
   private FormatStringValidation() {}
+
+  private static final Supplier<Type> COM_GOOGLE_COMMON_FLOGGER_LAZYARG =
+      VisitorState.memoize(state -> state.getTypeFromString("com.google.common.flogger.LazyArg"));
 }

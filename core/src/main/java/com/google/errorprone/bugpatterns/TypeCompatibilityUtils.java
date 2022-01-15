@@ -25,6 +25,7 @@ import static com.google.errorprone.util.ASTHelpers.isSubtype;
 import com.google.auto.value.AutoValue;
 import com.google.common.collect.Streams;
 import com.google.errorprone.VisitorState;
+import com.google.errorprone.suppliers.Supplier;
 import com.sun.tools.javac.code.Flags;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
@@ -32,6 +33,7 @@ import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.TypeTag;
 import com.sun.tools.javac.code.Types;
+import com.sun.tools.javac.util.Name;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -139,7 +141,7 @@ public final class TypeCompatibilityUtils {
     Types types = state.getTypes();
     Symbol rightClass = getUpperBound(rightType, state.getTypes()).tsym;
     return findMatchingMethods(
-            state.getName("equals"), m -> customEqualsMethod(m, state), leftType, types)
+            EQUALS.get(state), m -> customEqualsMethod(m, state), leftType, types)
         .stream()
         .anyMatch(method -> rightClass.isSubClass(method.enclClass(), types));
   }
@@ -176,7 +178,7 @@ public final class TypeCompatibilityUtils {
       Type leftType, Type rightType, Type nearestCommonSupertype, VisitorState state) {
     // We want to disallow equality between these collection sub-interfaces, but *do* want to
     // allow compatibility between Collection and List.
-    Type collectionType = state.getTypeFromString("java.util.Collection");
+    Type collectionType = JAVA_UTIL_COLLECTION.get(state);
     return isSameType(nearestCommonSupertype, collectionType, state)
         && !isSameType(leftType, collectionType, state)
         && !isSameType(rightType, collectionType, state);
@@ -203,13 +205,13 @@ public final class TypeCompatibilityUtils {
     // proto2-immutable: p.GeneratedMessage < p.AbstractMessage < p.Message
 
     // DynamicMessage is comparable to all other proto types.
-    Type dynamicMessage = state.getTypeFromString("com.google.protobuf.DynamicMessage");
+    Type dynamicMessage = COM_GOOGLE_PROTOBUF_DYNAMICMESSAGE.get(state);
     if (isSameType(leftType, dynamicMessage, state)
         || isSameType(rightType, dynamicMessage, state)) {
       return false;
     }
 
-    Type protoBase = state.getTypeFromString("com.google.protobuf.Message");
+    Type protoBase = COM_GOOGLE_PROTOBUF_MESSAGE.get(state);
     if (isSameType(nearestCommonSupertype, protoBase, state)
         && !isSameType(leftType, protoBase, state)
         && !isSameType(rightType, protoBase, state)) {
@@ -232,7 +234,7 @@ public final class TypeCompatibilityUtils {
 
     // Otherwise, if these two types are *concrete* proto classes, but not the same message, then
     // consider them incompatible with each other.
-    Type messageLite = state.getTypeFromString("com.google.protobuf.MessageLite");
+    Type messageLite = COM_GOOGLE_PROTOBUF_MESSAGELITE.get(state);
     return isSubtype(nearestCommonSupertype, messageLite, state)
         && isConcrete(leftType, state.getTypes())
         && isConcrete(rightType, state.getTypes());
@@ -347,4 +349,19 @@ public final class TypeCompatibilityUtils {
       this.right = right;
     }
   }
+
+  private static final Supplier<Name> EQUALS =
+      VisitorState.memoize(state -> state.getName("equals"));
+
+  private static final Supplier<Type> COM_GOOGLE_PROTOBUF_DYNAMICMESSAGE =
+      VisitorState.memoize(state -> state.getTypeFromString("com.google.protobuf.DynamicMessage"));
+
+  private static final Supplier<Type> COM_GOOGLE_PROTOBUF_MESSAGE =
+      VisitorState.memoize(state -> state.getTypeFromString("com.google.protobuf.Message"));
+
+  private static final Supplier<Type> COM_GOOGLE_PROTOBUF_MESSAGELITE =
+      VisitorState.memoize(state -> state.getTypeFromString("com.google.protobuf.MessageLite"));
+
+  private static final Supplier<Type> JAVA_UTIL_COLLECTION =
+      VisitorState.memoize(state -> state.getTypeFromString("java.util.Collection"));
 }

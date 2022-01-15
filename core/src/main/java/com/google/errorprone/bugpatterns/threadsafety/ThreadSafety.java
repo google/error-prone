@@ -30,6 +30,7 @@ import com.google.common.collect.Sets;
 import com.google.common.collect.Streams;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.CanBeStaticAnalyzer;
+import com.google.errorprone.suppliers.Supplier;
 import com.google.errorprone.util.ASTHelpers;
 import com.google.errorprone.util.MoreAnnotations;
 import com.sun.source.tree.ClassTree;
@@ -46,6 +47,7 @@ import com.sun.tools.javac.code.Type.TypeVar;
 import com.sun.tools.javac.code.Type.WildcardType;
 import com.sun.tools.javac.code.TypeTag;
 import com.sun.tools.javac.code.Types;
+import com.sun.tools.javac.util.Name;
 import java.lang.annotation.Annotation;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Target;
@@ -783,7 +785,7 @@ public final class ThreadSafety {
   }
 
   private static ImmutableList<String> containerOf(VisitorState state, Compound attr) {
-    Attribute m = attr.member(state.getName("containerOf"));
+    Attribute m = attr.member(CONTAINEROF.get(state));
     if (m == null) {
       return ImmutableList.of();
     }
@@ -862,4 +864,7 @@ public final class ThreadSafety {
     }
     return Violation.absent();
   }
+
+  private static final Supplier<Name> CONTAINEROF =
+      VisitorState.memoize(state -> state.getName("containerOf"));
 }

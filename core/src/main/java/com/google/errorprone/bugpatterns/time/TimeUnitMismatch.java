@@ -53,6 +53,7 @@ import com.google.errorprone.bugpatterns.BugChecker.VariableTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
+import com.google.errorprone.suppliers.Supplier;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.ExpressionTree;
@@ -66,6 +67,7 @@ import com.sun.source.tree.VariableTree;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
+import com.sun.tools.javac.code.Type;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
@@ -191,8 +193,7 @@ public final class TimeUnitMismatch extends BugChecker
   }
 
   private static boolean isTimeUnit(Symbol receiverSymbol, VisitorState state) {
-    return isSameType(
-        state.getTypeFromString("java.util.concurrent.TimeUnit"), receiverSymbol.type, state);
+    return isSameType(JAVA_UTIL_CONCURRENT_TIMEUNIT.get(state), receiverSymbol.type, state);
   }
 
   private static final ImmutableBiMap<TimeUnit, String> TIME_UNIT_TO_UNIT_METHODS =
@@ -549,4 +550,7 @@ public final class TimeUnitMismatch extends BugChecker
    * have already been reported by manual calls to {@link VisitorState#reportMatch}.
    */
   private static final Description ANY_MATCHES_WERE_ALREADY_REPORTED = Description.NO_MATCH;
+
+  private static final Supplier<Type> JAVA_UTIL_CONCURRENT_TIMEUNIT =
+      VisitorState.memoize(state -> state.getTypeFromString("java.util.concurrent.TimeUnit"));
 }

@@ -18,10 +18,12 @@ import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
+import com.google.errorprone.suppliers.Supplier;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.tools.javac.code.Flags;
 import com.sun.tools.javac.code.Symbol;
+import com.sun.tools.javac.code.Type;
 
 /** @author scottjohnson@google.com (Scott Johnson) */
 @BugPattern(
@@ -32,8 +34,7 @@ public class NumericEquality extends AbstractReferenceEquality {
 
   @Override
   protected boolean matchArgument(ExpressionTree tree, VisitorState state) {
-    if (!ASTHelpers.isSubtype(
-        ASTHelpers.getType(tree), state.getTypeFromString("java.lang.Number"), state)) {
+    if (!ASTHelpers.isSubtype(ASTHelpers.getType(tree), JAVA_LANG_NUMBER.get(state), state)) {
       return false;
     }
     Symbol sym = ASTHelpers.getSymbol(tree);
@@ -47,4 +48,7 @@ public class NumericEquality extends AbstractReferenceEquality {
   public static boolean isFinal(Symbol s) {
     return (s.flags() & Flags.FINAL) == Flags.FINAL;
   }
+
+  private static final Supplier<Type> JAVA_LANG_NUMBER =
+      VisitorState.memoize(state -> state.getTypeFromString("java.lang.Number"));
 }

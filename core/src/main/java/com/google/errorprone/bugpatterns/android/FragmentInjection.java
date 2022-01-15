@@ -39,6 +39,7 @@ import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
+import com.google.errorprone.suppliers.Supplier;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodTree;
@@ -49,6 +50,7 @@ import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.TypeSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.util.FatalError;
+import com.sun.tools.javac.util.Name;
 import javax.annotation.Nullable;
 import javax.lang.model.element.Modifier;
 
@@ -72,7 +74,7 @@ public class FragmentInjection extends BugChecker implements ClassTreeMatcher {
       return Description.NO_MATCH;
     }
     // Only examine classes that extend PreferenceActivity.
-    Type preferenceActivityType = state.getTypeFromString("android.preference.PreferenceActivity");
+    Type preferenceActivityType = ANDROID_PREFERENCE_PREFERENCEACTIVITY.get(state);
     if (!isSubtype(getType(tree), preferenceActivityType, state)) {
       return NO_MATCH;
     }
@@ -85,7 +87,7 @@ public class FragmentInjection extends BugChecker implements ClassTreeMatcher {
           resolveExistingMethod(
               state,
               getSymbol(tree),
-              state.getName("isValidFragment"),
+              ISVALIDFRAGMENT.get(state),
               ImmutableList.of(state.getSymtab().stringType),
               ImmutableList.<Type>of());
       methodNotImplemented = isValidFragmentMethodSymbol.owner.equals(preferenceActivityTypeSymbol);
@@ -153,4 +155,11 @@ public class FragmentInjection extends BugChecker implements ClassTreeMatcher {
           return (r1 == null || r1) && (r2 == null || r2);
         }
       };
+
+  private static final Supplier<Name> ISVALIDFRAGMENT =
+      VisitorState.memoize(state -> state.getName("isValidFragment"));
+
+  private static final Supplier<Type> ANDROID_PREFERENCE_PREFERENCEACTIVITY =
+      VisitorState.memoize(
+          state -> state.getTypeFromString("android.preference.PreferenceActivity"));
 }
