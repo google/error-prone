@@ -138,18 +138,11 @@ public @interface <span class="type-name-label">BugPattern</span></pre>
 </thead>
 <tbody>
 <tr class="alt-color">
-<td class="col-first"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></td>
-<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#name()">name</a></span></code></th>
-<td class="col-last">
-<div class="block">A unique identifier for this bug, used for @SuppressWarnings and in the compiler error message.</div>
-</td>
-</tr>
-<tr class="row-color">
 <td class="col-first"><code><a href="BugPattern.SeverityLevel.html" title="enum in com.google.errorprone">BugPattern.SeverityLevel</a></code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#severity()">severity</a></span></code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#summary()">summary</a></span></code></th>
 <td class="col-last">
@@ -228,13 +221,20 @@ public @interface <span class="type-name-label">BugPattern</span></pre>
 </td>
 </tr>
 <tr class="row-color">
+<td class="col-first"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#name()">name</a></span></code></th>
+<td class="col-last">
+<div class="block">A unique identifier for this bug, used for @SuppressWarnings and in the compiler error message.</div>
+</td>
+</tr>
+<tr class="alt-color">
 <td class="col-first"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;? extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/annotation/Annotation.html" title="class or interface in java.lang.annotation" class="external-link">Annotation</a>&gt;[]</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#suppressionAnnotations()">suppressionAnnotations</a></span></code></th>
 <td class="col-last">
 <div class="block">A set of annotation types that can be used to suppress the check.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>[]</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#tags()">tags</a></span></code></th>
 <td class="col-last">
@@ -255,13 +255,6 @@ public @interface <span class="type-name-label">BugPattern</span></pre>
 <section class="member-details">
 <h2>Element Details</h2>
 <ul class="member-list">
-<li>
-<section class="detail" id="name()">
-<h3>name</h3>
-<div class="member-signature"><span class="return-type"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="member-name">name</span></div>
-<div class="block">A unique identifier for this bug, used for @SuppressWarnings and in the compiler error message.</div>
-</section>
-</li>
 <li>
 <section class="detail" id="summary()">
 <h3>summary</h3>
@@ -286,6 +279,20 @@ public @interface <span class="type-name-label">BugPattern</span></pre>
 <li>
 <section class="member-details">
 <ul class="member-list">
+<li>
+<section class="detail" id="name()">
+<h3>name</h3>
+<div class="member-signature"><span class="return-type"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="member-name">name</span></div>
+<div class="block">A unique identifier for this bug, used for @SuppressWarnings and in the compiler error message.
+
+ <p>If this is not specified (or specified as an empty string), the class name of the check will
+ be used instead.</div>
+<dl class="notes">
+<dt>Default:</dt>
+<dd>""</dd>
+</dl>
+</section>
+</li>
 <li>
 <section class="detail" id="altNames()">
 <h3>altNames</h3>
