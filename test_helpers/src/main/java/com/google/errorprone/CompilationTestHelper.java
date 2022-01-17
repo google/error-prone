@@ -19,6 +19,7 @@ package com.google.errorprone;
 import static com.google.common.base.Preconditions.checkState;
 import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.common.truth.Truth.assertWithMessage;
+import static com.google.errorprone.BugCheckerInfo.canonicalName;
 import static com.google.errorprone.FileObjects.forResource;
 import static com.google.errorprone.FileObjects.forSourceLines;
 import static java.nio.charset.StandardCharsets.UTF_8;
@@ -113,7 +114,8 @@ public class CompilationTestHelper {
   public static CompilationTestHelper newInstance(
       Class<? extends BugChecker> checker, Class<?> clazz) {
     ScannerSupplier scannerSupplier = ScannerSupplier.fromBugCheckerClasses(checker);
-    String checkName = checker.getAnnotation(BugPattern.class).name();
+    String checkName =
+        canonicalName(checker.getSimpleName(), checker.getAnnotation(BugPattern.class));
     return new CompilationTestHelper(scannerSupplier, checkName, clazz);
   }
 

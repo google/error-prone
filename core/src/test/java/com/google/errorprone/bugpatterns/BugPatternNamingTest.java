@@ -53,4 +53,17 @@ public final class BugPatternNamingTest {
             "class Test extends BugChecker {}")
         .doTest();
   }
+
+  @Test
+  public void absentName_negative() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            "package com.google.errorprone.bugpatterns;",
+            "import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;",
+            "import com.google.errorprone.BugPattern;",
+            "@BugPattern(severity = WARNING, summary = \"\")",
+            "class Test extends BugChecker {}")
+        .doTest();
+  }
 }

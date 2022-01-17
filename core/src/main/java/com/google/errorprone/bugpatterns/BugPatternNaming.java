@@ -45,7 +45,7 @@ public final class BugPatternNaming extends BugChecker implements ClassTreeMatch
     var attribute = classSymbol.attribute(state.getSymbolFromString(BugPattern.class.getName()));
     return getValue(attribute, "name")
         .flatMap(MoreAnnotations::asStringValue)
-        .filter(name -> !classSymbol.name.contentEquals(name))
+        .filter(name -> !name.isEmpty() && !classSymbol.name.contentEquals(name))
         .map(unused -> describeMatch(tree))
         .orElse(NO_MATCH);
   }

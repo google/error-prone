@@ -93,8 +93,11 @@ public @interface BugPattern {
 
   /**
    * A unique identifier for this bug, used for @SuppressWarnings and in the compiler error message.
+   *
+   * <p>If this is not specified (or specified as an empty string), the class name of the check will
+   * be used instead.
    */
-  String name();
+  String name() default "";
 
   /** Alternate identifiers for this bug, which may also be used in @SuppressWarnings. */
   String[] altNames() default {};
