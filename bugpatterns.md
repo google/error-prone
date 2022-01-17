@@ -44,6 +44,9 @@ AsyncCallable should not return a null Future, only a Future whose result is nul
 __[AsyncFunctionReturnsNull](bugpattern/AsyncFunctionReturnsNull)__<br>
 AsyncFunction should not return a null Future, only a Future whose result is null.
 
+__[AutoValueBuilderDefaultsInConstructor](bugpattern/AutoValueBuilderDefaultsInConstructor)__<br>
+Defaults for AutoValue Builders should be set in the factory method returning Builder instances, not the constructor
+
 __[AutoValueConstructorOrderChecker](bugpattern/AutoValueConstructorOrderChecker)__<br>
 Arguments to AutoValue constructor are in the wrong order
 
