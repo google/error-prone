@@ -304,4 +304,109 @@ public final class UnusedMethodTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void unusedConstructor() {
+    helper
+        .addSourceLines(
+            "Test.java", //
+            "class Test {",
+            "  // BUG: Diagnostic contains: Private constructor 'Test'",
+            "  private Test(int a) {}",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void unusedConstructor_refactoredToPrivateNoArgVersion() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java", //
+            "class Test {",
+            "  private Test(int a) {}",
+            "}")
+        .addOutputLines(
+            "Test.java", //
+            "class Test {",
+            "  private Test() {}",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void unusedConstructor_finalFieldsLeftDangling_noFix() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java", //
+            "class Test {",
+            "  private final int a;",
+            "  private Test(int a) {",
+            "    this.a = a;",
+            "  }",
+            "}")
+        .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
+  public void unusedConstructor_nonFinalFields_stillRefactored() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java", //
+            "class Test {",
+            "  private int a;",
+            "  private Test(int a) {}",
+            "}")
+        .addOutputLines(
+            "Test.java", //
+            "class Test {",
+            "  private int a;",
+            "  private Test() {}",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void unusedConstructor_removed() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java", //
+            "class Test {",
+            "  private Test(int a) {}",
+            "  private Test(String a) {}",
+            "  public Test of() { return new Test(1); }",
+            "}")
+        .addOutputLines(
+            "Test.java", //
+            "class Test {",
+            "  private Test(int a) {}",
+            "  public Test of() { return new Test(1); }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void privateConstructor_calledWithinClass() {
+    helper
+        .addSourceLines(
+            "Test.java", //
+            "class Test {",
+            "  private Test(int a) {}",
+            "  public Test of(int a) {",
+            "    return new Test(a);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void zeroArgConstructor_notFlagged() {
+    helper
+        .addSourceLines(
+            "Test.java", //
+            "class Test {",
+            "  private Test() {}",
+            "}")
+        .doTest();
+  }
 }
