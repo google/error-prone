@@ -1280,9 +1280,6 @@ This method cannot throw a checked exception that it claims to. This may cause c
 __[ConstantPatternCompile](bugpattern/ConstantPatternCompile)__<br>
 Variables initialized with Pattern#compile calls on constants can be constants
 
-__[DescribeMatch](bugpattern/DescribeMatch)__<br>
-`describeMatch(tree, fix)` is equivalent to and simpler than `buildDescription(tree).addFix(fix).build()`
-
 __[DifferentNameButSame](bugpattern/DifferentNameButSame)__<br>
 This type is referred to in different ways within this file, which may be confusing.
 
