@@ -46,7 +46,7 @@ git config --global user.name "$GITHUB_ACTOR"
 git config --global user.email "$GITHUB_ACTOR@users.noreply.github.com"
 if git commit -m "Latest docs on successful build $GITHUB_RUN_NUMBER auto-pushed to gh-pages"; then
     git push -fq origin gh-pages > /dev/null
-    echo "Published docs to gh-pages."
+    echo -e "Published docs to gh-pages.\n"
 else
-    echo "No doc changes to publish."
+    echo -e "No doc changes to publish.\n"
 fi
