@@ -17,3 +17,11 @@ class Evil {
 
 `\u000d` encodes a newline character, so `Runtime.exec` appears on its own line
 and will execute.
+
+NOTE: Unicode escapes are defined as a preprocessing step in the Java compiler
+(see [JLS §3.3]). After compilation, there is no runtime difference whatsoever
+between a Unicode escape and using the equivalent character in source. That is,
+writing `"hello \u0077\u006f\u0072\u006c\u0064"` is equivalent to `"hello
+world"` in the compiled `.class` file and at runtime.
+
+[JLS §3.3]: https://docs.oracle.com/javase/specs/jls/se11/html/jls-3.html#jls-3.3
