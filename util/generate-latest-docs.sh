@@ -44,7 +44,9 @@ cd $GH_PAGES_DIR
 git add --all .
 git config --global user.name "$GITHUB_ACTOR"
 git config --global user.email "$GITHUB_ACTOR@users.noreply.github.com"
-git commit -m "Latest docs on successful build $GITHUB_RUN_NUMBER auto-pushed to gh-pages"
-git push -fq origin gh-pages > /dev/null
-
-echo -e "Published docs to gh-pages.\n"
+if git commit -m "Latest docs on successful build $GITHUB_RUN_NUMBER auto-pushed to gh-pages"; then
+    git push -fq origin master > /dev/null
+    echo "Published docs to gh-pages."
+else
+    echo "No doc changes to publish."
+fi
