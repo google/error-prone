@@ -391,6 +391,7 @@ public final class AlreadyCheckedTest {
         .addSourceLines(
             "Test.java",
             "import com.google.auto.value.AutoValue;",
+            "import com.google.errorprone.annotations.Immutable;",
             "class Test {",
             "  public void test(Foo a, Foo b) {",
             "    if (a.bar().equals(E.A)) {",
@@ -401,6 +402,7 @@ public final class AlreadyCheckedTest {
             "  @AutoValue abstract static class Foo {",
             "    abstract E bar();",
             "  }",
+            "  @Immutable",
             "  private enum E {",
             "    A",
             "  }",
@@ -439,6 +441,24 @@ public final class AlreadyCheckedTest {
             "    }",
             "  }",
             "  void set(boolean a) {}",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void equalsCalledTwiceOnMutableType_noFinding() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            "import java.util.List;",
+            "class Test {",
+            "  private final List<String> xs = null;",
+            "  public boolean e(List<String> ys) {",
+            "    if (xs.equals(ys)) {",
+            "      return true;",
+            "    }",
+            "    return xs.equals(ys);",
+            "  }",
             "}")
         .doTest();
   }

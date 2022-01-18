@@ -16,6 +16,8 @@
 
 package com.google.errorprone.bugpatterns.threadsafety;
 
+import static com.google.errorprone.VisitorState.memoize;
+import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.instanceEqualsInvocation;
 import static com.google.errorprone.matchers.Matchers.staticEqualsInvocation;
@@ -25,6 +27,7 @@ import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
 import static com.google.errorprone.util.ASTHelpers.constValue;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
+import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
 import static com.google.errorprone.util.ASTHelpers.isConsideredFinal;
 import static java.lang.String.format;
@@ -37,9 +40,11 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
+import com.google.errorprone.annotations.Immutable;
 import com.google.errorprone.bugpatterns.threadsafety.ConstantExpressions.ConstantExpression.ConstantExpressionKind;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
+import com.google.errorprone.suppliers.Supplier;
 import com.sun.source.tree.BinaryTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
@@ -53,6 +58,8 @@ import com.sun.source.util.SimpleTreeVisitor;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
+import com.sun.tools.javac.code.Type;
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.regex.Pattern;
@@ -60,129 +67,29 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 
 /** Helper for establishing whether expressions correspond to a constant expression. */
 public final class ConstantExpressions {
-  private static final Matcher<ExpressionTree> PURE_METHODS =
-      anyOf(
-          staticMethod()
-              .onClassAny(
-                  "com.google.common.base.Optional",
-                  "com.google.common.base.Pair",
-                  "com.google.common.base.Splitter",
-                  "com.google.common.collect.ImmutableBiMap",
-                  "com.google.common.collect.ImmutableCollection",
-                  "com.google.common.collect.ImmutableList",
-                  "com.google.common.collect.ImmutableListMultimap",
-                  "com.google.common.collect.ImmutableMap",
-                  "com.google.common.collect.ImmutableMultimap",
-                  "com.google.common.collect.ImmutableMultiset",
-                  "com.google.common.collect.ImmutableRangeMap",
-                  "com.google.common.collect.ImmutableRangeSet",
-                  "com.google.common.collect.ImmutableSet",
-                  "com.google.common.collect.ImmutableSetMultimap",
-                  "com.google.common.collect.ImmutableSortedMap",
-                  "com.google.common.collect.ImmutableSortedMultiset",
-                  "com.google.common.collect.ImmutableSortedSet",
-                  "com.google.common.collect.ImmutableTable",
-                  "com.google.common.collect.Range"),
-          staticMethod().onClass("com.google.protobuf.GeneratedMessage"),
-          staticMethod()
-              .onClass("java.time.Duration")
-              .namedAnyOf("ofNanos", "ofMillis", "ofSeconds", "ofMinutes", "ofHours", "ofDays")
-              .withParameters("long"),
-          staticMethod()
-              .onClass("java.time.Instant")
-              .namedAnyOf("ofEpochMilli", "ofEpochSecond")
-              .withParameters("long"),
-          staticMethod()
-              .onClass("com.google.protobuf.util.Timestamps")
-              .namedAnyOf("fromNanos", "fromMicros", "fromMillis", "fromSeconds"),
-          staticMethod()
-              .onClass("com.google.protobuf.util.Durations")
-              .namedAnyOf(
-                  "fromNanos",
-                  "fromMicros",
-                  "fromMillis",
-                  "fromSeconds",
-                  "fromMinutes",
-                  "fromHours",
-                  "fromDays"),
-          staticMethod()
-              .onClass("org.joda.time.Duration")
-              .namedAnyOf(
-                  "millis", "standardSeconds", "standardMinutes", "standardHours", "standardDays")
-              .withParameters("long"),
-          constructor().forClass("org.joda.time.Instant").withParameters("long"),
-          constructor().forClass("org.joda.time.DateTime").withParameters("long"),
-          staticMethod()
-              .onClass("java.time.LocalDate")
-              .withNameMatching(Pattern.compile("^?!(now)")),
-          staticMethod()
-              .onClass("java.time.LocalDateTime")
-              .withNameMatching(Pattern.compile("^?!(now)")),
-          staticMethod()
-              .onClass("java.time.LocalTime")
-              .withNameMatching(Pattern.compile("^?!(now)")),
-          staticMethod().onClass("java.time.MonthDay"),
-          staticMethod()
-              .onClass("java.time.OffsetDateTime")
-              .withNameMatching(Pattern.compile("^?!(now)")),
-          staticMethod()
-              .onClass("java.time.OffsetTime")
-              .withNameMatching(Pattern.compile("^?!(now)")),
-          staticMethod()
-              .onClassAny(
-                  "java.time.Period",
-                  "java.time.Year",
-                  "java.time.YearMonth",
-                  "java.time.ZoneId",
-                  "java.time.ZoneOffset"),
-          instanceMethod().onDescendantOf("java.lang.String"),
-          staticMethod()
-              .onClass("java.time.ZonedDateTime")
-              .withNameMatching(Pattern.compile("^?!(now)")),
-          staticMethod()
-              .onClassAny(
-                  "java.util.Optional",
-                  "java.util.OptionalDouble",
-                  "java.util.OptionalInt",
-                  "java.util.OptionalLong"),
-          staticMethod().onClass("java.util.regex.Pattern"),
-          staticMethod()
-              .onClassAny(
-                  "org.joda.time.DateTime",
-                  "org.joda.time.DateTimeZone",
-                  "org.joda.time.Days",
-                  "org.joda.time.Duration",
-                  "org.joda.time.Instant",
-                  "org.joda.time.Interval",
-                  "org.joda.time.LocalDate",
-                  "org.joda.time.LocalDateTime",
-                  "org.joda.time.Period",
-                  "org.joda.time.format.DateTimeFormatter"),
-          Matchers.hasAnnotation("org.checkerframework.dataflow.qual.Pure"),
-          (tree, state) -> {
-            Symbol symbol = getSymbol(tree);
-            return hasAnnotation(symbol.owner, "com.google.auto.value.AutoValue", state)
-                && symbol.getModifiers().contains(ABSTRACT);
-          },
-          staticMethod()
-              .onDescendantOf("com.google.protobuf.MessageLite")
-              .named("getDefaultInstance"),
-          instanceEqualsInvocation(),
-          staticEqualsInvocation());
-
   private final Matcher<ExpressionTree> pureMethods;
+  private final Supplier<ThreadSafety> threadSafety;
 
-  public ConstantExpressions(Matcher<ExpressionTree> pureMethods) {
-    this.pureMethods = pureMethods;
+  public ConstantExpressions(WellKnownMutability wellKnownMutability) {
+    this.pureMethods =
+        anyOf(
+            basePureMethods,
+            instanceMethod()
+                .onDescendantOfAny(wellKnownMutability.getKnownImmutableClasses().keySet()));
+    this.threadSafety =
+        memoize(
+            s ->
+                ThreadSafety.builder()
+                    .setPurpose(ThreadSafety.Purpose.FOR_IMMUTABLE_CHECKER)
+                    .knownTypes(wellKnownMutability)
+                    .acceptedAnnotations(ImmutableSet.of(Immutable.class.getName()))
+                    .markerAnnotations(ImmutableSet.of())
+                    .build(s));
   }
 
   public static ConstantExpressions fromFlags(ErrorProneFlags flags) {
     WellKnownMutability wellKnownMutability = WellKnownMutability.fromFlags(flags);
-    return new ConstantExpressions(
-        anyOf(
-            PURE_METHODS,
-            instanceMethod()
-                .onDescendantOfAny(wellKnownMutability.getKnownImmutableClasses().keySet())));
+    return new ConstantExpressions(wellKnownMutability);
   }
 
   /** Represents sets of things known to be true and false if a boolean statement evaluated true. */
@@ -485,5 +392,137 @@ public final class ConstantExpressions {
     default void visitConstant(Object constant) {}
 
     default void visitIdentifier(Symbol identifier) {}
+  }
+
+  private static final Pattern NOT_NOW = Pattern.compile("^?!(now)");
+
+  private final Matcher<ExpressionTree> basePureMethods =
+      anyOf(
+          staticMethod()
+              .onClassAny(
+                  "com.google.common.base.Optional",
+                  "com.google.common.base.Pair",
+                  "com.google.common.base.Splitter",
+                  "com.google.common.collect.ImmutableBiMap",
+                  "com.google.common.collect.ImmutableCollection",
+                  "com.google.common.collect.ImmutableList",
+                  "com.google.common.collect.ImmutableListMultimap",
+                  "com.google.common.collect.ImmutableMap",
+                  "com.google.common.collect.ImmutableMultimap",
+                  "com.google.common.collect.ImmutableMultiset",
+                  "com.google.common.collect.ImmutableRangeMap",
+                  "com.google.common.collect.ImmutableRangeSet",
+                  "com.google.common.collect.ImmutableSet",
+                  "com.google.common.collect.ImmutableSetMultimap",
+                  "com.google.common.collect.ImmutableSortedMap",
+                  "com.google.common.collect.ImmutableSortedMultiset",
+                  "com.google.common.collect.ImmutableSortedSet",
+                  "com.google.common.collect.ImmutableTable",
+                  "com.google.common.collect.Range"),
+          staticMethod().onClass("com.google.protobuf.GeneratedMessage"),
+          staticMethod()
+              .onClass("java.time.Duration")
+              .namedAnyOf("ofNanos", "ofMillis", "ofSeconds", "ofMinutes", "ofHours", "ofDays")
+              .withParameters("long"),
+          staticMethod()
+              .onClass("java.time.Instant")
+              .namedAnyOf("ofEpochMilli", "ofEpochSecond")
+              .withParameters("long"),
+          staticMethod()
+              .onClass("com.google.protobuf.util.Timestamps")
+              .namedAnyOf("fromNanos", "fromMicros", "fromMillis", "fromSeconds"),
+          staticMethod()
+              .onClass("com.google.protobuf.util.Durations")
+              .namedAnyOf(
+                  "fromNanos",
+                  "fromMicros",
+                  "fromMillis",
+                  "fromSeconds",
+                  "fromMinutes",
+                  "fromHours",
+                  "fromDays"),
+          staticMethod()
+              .onClass("org.joda.time.Duration")
+              .namedAnyOf(
+                  "millis", "standardSeconds", "standardMinutes", "standardHours", "standardDays")
+              .withParameters("long"),
+          constructor().forClass("org.joda.time.Instant").withParameters("long"),
+          constructor().forClass("org.joda.time.DateTime").withParameters("long"),
+          staticMethod().onClass("java.time.LocalDate").withNameMatching(NOT_NOW),
+          staticMethod().onClass("java.time.LocalDateTime").withNameMatching(NOT_NOW),
+          staticMethod().onClass("java.time.LocalTime").withNameMatching(NOT_NOW),
+          staticMethod().onClass("java.time.MonthDay"),
+          staticMethod().onClass("java.time.OffsetDateTime").withNameMatching(NOT_NOW),
+          staticMethod().onClass("java.time.OffsetTime").withNameMatching(NOT_NOW),
+          staticMethod()
+              .onClassAny(
+                  "java.time.Period",
+                  "java.time.Year",
+                  "java.time.YearMonth",
+                  "java.time.ZoneId",
+                  "java.time.ZoneOffset"),
+          instanceMethod().onDescendantOf("java.lang.String"),
+          staticMethod().onClass("java.time.ZonedDateTime").withNameMatching(NOT_NOW),
+          staticMethod()
+              .onClassAny(
+                  "java.util.Optional",
+                  "java.util.OptionalDouble",
+                  "java.util.OptionalInt",
+                  "java.util.OptionalLong"),
+          staticMethod().onClass("java.util.regex.Pattern"),
+          staticMethod()
+              .onClassAny(
+                  "org.joda.time.DateTime",
+                  "org.joda.time.DateTimeZone",
+                  "org.joda.time.Days",
+                  "org.joda.time.Duration",
+                  "org.joda.time.Instant",
+                  "org.joda.time.Interval",
+                  "org.joda.time.LocalDate",
+                  "org.joda.time.LocalDateTime",
+                  "org.joda.time.Period",
+                  "org.joda.time.format.DateTimeFormatter"),
+          Matchers.hasAnnotation("org.checkerframework.dataflow.qual.Pure"),
+          (tree, state) -> {
+            Symbol symbol = getSymbol(tree);
+            return hasAnnotation(symbol.owner, "com.google.auto.value.AutoValue", state)
+                && symbol.getModifiers().contains(ABSTRACT);
+          },
+          staticMethod()
+              .onDescendantOf("com.google.protobuf.MessageLite")
+              .named("getDefaultInstance"),
+          allOf(
+              instanceEqualsInvocation(),
+              (t, s) -> {
+                if (!(t instanceof MethodInvocationTree)) {
+                  return false;
+                }
+                ExpressionTree receiver = getReceiver(t);
+                if (receiver == null) {
+                  return false;
+                }
+                return typeIsImmutable(getType(receiver), s)
+                    && typeIsImmutable(
+                        getType(((MethodInvocationTree) t).getArguments().get(0)), s);
+              }),
+          allOf(
+              staticEqualsInvocation(),
+              (t, s) -> {
+                if (!(t instanceof MethodInvocationTree)) {
+                  return false;
+                }
+                List<? extends ExpressionTree> args = ((MethodInvocationTree) t).getArguments();
+                return typeIsImmutable(getType(args.get(0)), s)
+                    && typeIsImmutable(getType(args.get(1)), s);
+              }));
+
+  private boolean typeIsImmutable(Type type, VisitorState state) {
+    ThreadSafety threadSafety = this.threadSafety.get(state);
+    return !threadSafety
+        .isThreadSafeType(
+            /* allowContainerTypeParameters= */ true,
+            threadSafety.threadSafeTypeParametersInScope(type.tsym),
+            type)
+        .isPresent();
   }
 }
