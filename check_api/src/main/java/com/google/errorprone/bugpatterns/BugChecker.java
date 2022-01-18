@@ -17,8 +17,12 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
+import static com.google.errorprone.util.ASTHelpers.getModifiers;
+import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 
+import com.google.common.collect.ImmutableRangeSet;
 import com.google.common.collect.Iterables;
+import com.google.common.collect.Range;
 import com.google.errorprone.BugCheckerInfo;
 import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.VisitorState;
@@ -81,6 +85,7 @@ import com.sun.source.tree.VariableTree;
 import com.sun.source.tree.WhileLoopTree;
 import com.sun.source.tree.WildcardTree;
 import com.sun.source.util.TreePathScanner;
+import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition;
@@ -261,6 +266,23 @@ public abstract class BugChecker implements Suppressible, Serializable {
   private boolean isSuppressed(SuppressWarnings suppression) {
     return suppression != null
         && !Collections.disjoint(Arrays.asList(suppression.value()), allNames());
+  }
+
+  /** Computes a RangeSet of code regions which are suppressed by this bug checker. */
+  public ImmutableRangeSet<Integer> suppressedRegions(VisitorState state) {
+    ImmutableRangeSet.Builder<Integer> suppressedRegions = ImmutableRangeSet.builder();
+    new TreeScanner<Void, Void>() {
+      @Override
+      public Void scan(Tree tree, Void unused) {
+        if (getModifiers(tree) != null && isSuppressed(tree)) {
+          suppressedRegions.add(Range.closed(getStartPosition(tree), state.getEndPosition(tree)));
+        } else {
+          super.scan(tree, null);
+        }
+        return null;
+      }
+    }.scan(state.getPath().getCompilationUnit(), null);
+    return suppressedRegions.build();
   }
 
   public interface AnnotationTreeMatcher extends Suppressible {

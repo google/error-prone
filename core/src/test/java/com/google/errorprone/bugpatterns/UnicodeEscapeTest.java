@@ -45,6 +45,18 @@ public final class UnicodeEscapeTest {
   }
 
   @Test
+  public void suppression() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            "@SuppressWarnings(\"UnicodeEscape\")",
+            "class Test {",
+            "  private static final String FOO = \"\\u0020\";",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void unicodeEscapeRefactoredToLiteral() {
     refactoring
         .addInputLines(

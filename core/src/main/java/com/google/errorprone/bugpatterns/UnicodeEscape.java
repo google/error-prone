@@ -19,12 +19,14 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 
+import com.google.common.collect.ImmutableRangeSet;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.CompilationUnitTreeMatcher;
 import com.google.errorprone.fixes.FixedPosition;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
+import com.google.errorprone.suppliers.Supplier;
 import com.sun.source.tree.CompilationUnitTree;
 
 /** Replaces printable ASCII unicode escapes with the literal version. */
@@ -35,6 +37,9 @@ import com.sun.source.tree.CompilationUnitTree;
             + " potentially dangerous.",
     severity = WARNING)
 public final class UnicodeEscape extends BugChecker implements CompilationUnitTreeMatcher {
+  private final Supplier<ImmutableRangeSet<Integer>> suppressedRegions =
+      VisitorState.memoize(this::suppressedRegions);
+
   @Override
   public Description matchCompilationUnit(CompilationUnitTree tree, VisitorState state) {
     new UnicodeScanner(state.getSourceCode().toString(), state).scan();
@@ -60,6 +65,9 @@ public final class UnicodeEscape extends BugChecker implements CompilationUnitTr
       for (; position < source.length(); processCharacter()) {
         if (isUnicode && isBanned(currentCharacter)) {
           if (currentCharacter == '\\' && peek() == 'u') {
+            continue;
+          }
+          if (suppressedRegions.get(state).contains(position)) {
             continue;
           }
           state.reportMatch(
