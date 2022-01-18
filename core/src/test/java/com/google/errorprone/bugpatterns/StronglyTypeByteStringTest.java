@@ -70,4 +70,54 @@ public final class StronglyTypeByteStringTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void byteStringFactory_addNewTypeToByteArrayLiterals() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            "import com.google.protobuf.ByteString;",
+            "class Test {",
+            "  private static final byte[] FOO_BYTES = {7, 7, 7};",
+            "  public ByteString get() {",
+            "    return ByteString.copyFrom(FOO_BYTES);",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "import com.google.protobuf.ByteString;",
+            "class Test {",
+            "  private static final ByteString FOO_BYTES = ByteString.copyFrom(new byte[] {7, 7,"
+                + " 7});",
+            "  public ByteString get() {",
+            "    return FOO_BYTES;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void byteStringFactory_noNewTypeAddedIfLiteralHasType() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            "import com.google.protobuf.ByteString;",
+            "class Test {",
+            "  private static final byte[] FOO_BYTES = new byte[] {7, 7, 7};",
+            "  public ByteString get() {",
+            "    return ByteString.copyFrom(FOO_BYTES);",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "import com.google.protobuf.ByteString;",
+            "class Test {",
+            "  private static final ByteString FOO_BYTES = ByteString.copyFrom(new byte[] {7, 7,"
+                + " 7});",
+            "  public ByteString get() {",
+            "    return FOO_BYTES;",
+            "  }",
+            "}")
+        .doTest();
+  }
 }

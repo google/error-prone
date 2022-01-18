@@ -38,8 +38,10 @@ import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
+import com.sun.source.tree.NewArrayTree;
 import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.Tree;
+import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
 import com.sun.source.util.TreePathScanner;
@@ -153,6 +155,7 @@ public abstract class StronglyType {
     SuggestedFix.Builder fix = SuggestedFix.builder();
     Type targetType = getType(factory);
     String typeName = SuggestedFixes.qualifyType(state.withPath(variableTreePath), fix, targetType);
+
     fix.replace(
         variableTree,
         String.format(
@@ -161,7 +164,7 @@ public abstract class StronglyType {
             typeName,
             newName,
             getMethodSelectOrNewClass(factory, state),
-            state.getSourceForNode(variableTree.getInitializer())));
+            getWeakTypeIntitializerCode(variableTree, state)));
 
     for (ExpressionTree expressionTree : invocationTrees) {
       fix.replace(expressionTree, newName);
@@ -181,6 +184,21 @@ public abstract class StronglyType {
 
   private static String buildStringForType(Type type, VisitorState state) {
     return SuggestedFixes.prettyType(type, state);
+  }
+
+  /**
+   * Get the source code for the initializer. If the initializer is an array literal without a type,
+   * prefix with new <type>.
+   */
+  private static String getWeakTypeIntitializerCode(VariableTree weakType, VisitorState state) {
+    // If the new array type is missing, we need to add it.
+    String prefix =
+        (weakType.getInitializer().getKind() == Kind.NEW_ARRAY
+                && ((NewArrayTree) weakType.getInitializer()).getType() == null)
+            ? String.format("new %s ", state.getSourceForNode(weakType.getType()))
+            : "";
+
+    return prefix + state.getSourceForNode(weakType.getInitializer());
   }
 
   private static String getMethodSelectOrNewClass(ExpressionTree tree, VisitorState state) {
