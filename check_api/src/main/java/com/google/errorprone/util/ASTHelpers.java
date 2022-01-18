@@ -2394,5 +2394,17 @@ public class ASTHelpers {
     return result.build();
   }
 
+  /** Returns {@code true} if this is a `var` or a lambda parameter that has no explicit type. */
+  public static boolean hasNoExplicitType(VariableTree tree, VisitorState state) {
+    /*
+     * We detect the absence of an explicit type by looking for an absent start position for the
+     * type tree. But under javac8, the nonexistent type tree still has a start position. So, if
+     * we see a start position, we then also look for an end position, which *is* absent for
+     * lambda parameters, even under javac8. Possibly we could get by looking *only* for the end
+     * position, but I'm keeping both checks now that I have something that appears to work.
+     */
+    return getStartPosition(tree.getType()) == -1 || state.getEndPosition(tree.getType()) == -1;
+  }
+
   private ASTHelpers() {}
 }

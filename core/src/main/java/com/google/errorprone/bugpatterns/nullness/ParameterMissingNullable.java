@@ -20,9 +20,9 @@ import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
 import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.findDeclaration;
 import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.fixByAddingNullableAnnotationToType;
 import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.getNullCheck;
-import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.hasNoExplicitType;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.getType;
+import static com.google.errorprone.util.ASTHelpers.hasNoExplicitType;
 import static javax.lang.model.element.ElementKind.PARAMETER;
 
 import com.google.errorprone.BugPattern;

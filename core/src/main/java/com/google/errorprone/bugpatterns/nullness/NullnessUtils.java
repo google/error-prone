@@ -24,7 +24,6 @@ import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.NullableA
 import static com.google.errorprone.fixes.SuggestedFix.emptyFix;
 import static com.google.errorprone.matchers.Matchers.instanceMethod;
 import static com.google.errorprone.suppliers.Suppliers.JAVA_LANG_VOID_TYPE;
-import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.stripParentheses;
@@ -510,18 +509,6 @@ class NullnessUtils {
       return ImmutableSet.of();
     }
     return ImmutableSet.of(nullCheck.bareIdentifier());
-  }
-
-  /** Returns {@code true} if this is a `var` or a lambda parameter that has no explicit type. */
-  static boolean hasNoExplicitType(VariableTree tree, VisitorState state) {
-    /*
-     * We detect the absence of an explicit type by looking for an absent start position for the
-     * type tree. But under javac8, the nonexistent type tree still has a start position. So, if
-     * we see a start position, we then also look for an end position, which *is* absent for
-     * lambda parameters, even under javac8. Possibly we could get by looking *only* for the end
-     * position, but I'm keeping both checks now that I have something that appears to work.
-     */
-    return getStartPosition(tree.getType()) == -1 || state.getEndPosition(tree.getType()) == -1;
   }
 
   @Nullable

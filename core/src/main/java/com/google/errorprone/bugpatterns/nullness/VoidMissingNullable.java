@@ -21,11 +21,11 @@ import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
 import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.fixByAddingNullableAnnotationToReturnType;
 import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.fixByAddingNullableAnnotationToType;
 import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.fixByAnnotatingTypeUseOnlyLocationWithNullableAnnotation;
-import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.hasNoExplicitType;
 import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.isVoid;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
+import static com.google.errorprone.util.ASTHelpers.hasNoExplicitType;
 import static javax.lang.model.element.ElementKind.LOCAL_VARIABLE;
 
 import com.google.common.collect.ImmutableList;
