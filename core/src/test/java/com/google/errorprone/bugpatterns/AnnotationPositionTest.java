@@ -513,4 +513,20 @@ public final class AnnotationPositionTest {
             "}")
         .doTest(TEXT_MATCH);
   }
+
+  @Test
+  public void varKeyword() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            "import com.google.errorprone.annotations.Var;",
+            "class T {",
+            "  void m() {",
+            "    @Var var x = 1;",
+            "    x = 2;",
+            "  }",
+            "}")
+        .expectUnchanged()
+        .doTest(TEXT_MATCH);
+  }
 }
