@@ -16,6 +16,7 @@
 
 package com.google.errorprone.bugpatterns;
 
+import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,6 +27,8 @@ import org.junit.runners.JUnit4;
 public final class BugPatternNamingTest {
   private final CompilationTestHelper helper =
       CompilationTestHelper.newInstance(BugPatternNaming.class, getClass());
+  private final BugCheckerRefactoringTestHelper refactoringHelper =
+      BugCheckerRefactoringTestHelper.newInstance(BugPatternNaming.class, getClass());
 
   @Test
   public void positive() {
@@ -49,7 +52,27 @@ public final class BugPatternNamingTest {
             "package com.google.errorprone.bugpatterns;",
             "import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;",
             "import com.google.errorprone.BugPattern;",
+            "@BugPattern(severity = WARNING, summary = \"\")",
+            "class Test extends BugChecker {}")
+        .doTest();
+  }
+
+  @Test
+  public void nameMatchesClass_removed() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            "package com.google.errorprone.bugpatterns;",
+            "import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;",
+            "import com.google.errorprone.BugPattern;",
             "@BugPattern(name = \"Test\", severity = WARNING, summary = \"\")",
+            "class Test extends BugChecker {}")
+        .addOutputLines(
+            "Test.java",
+            "package com.google.errorprone.bugpatterns;",
+            "import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;",
+            "import com.google.errorprone.BugPattern;",
+            "@BugPattern(severity = WARNING, summary = \"\")",
             "class Test extends BugChecker {}")
         .doTest();
   }
