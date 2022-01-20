@@ -5942,6 +5942,16 @@ com.sun.tools.javac.code.Symbol&nbsp;sym)</code></th>
 </td>
 </tr>
 <tr class="alt-color">
+<td class="col-first"><code>static <a href="../fixes/SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a></code></td>
+<th class="col-second" scope="row"><span class="type-name-label">SuggestedFixes.</span><code><span class="member-name-link"><a href="../fixes/SuggestedFixes.html#removeElement(com.sun.source.tree.ExpressionTree,java.util.List,com.google.errorprone.VisitorState)">removeElement</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&nbsp;tree,
+<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;? extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&gt;&nbsp;trees,
+<a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
+<td class="col-last">
+<div class="block">Removes <code>tree</code> from <code>trees</code>, assuming that <code>trees</code> represents a
+ comma-separated list of expressions containing <code>tree</code>.</div>
+</td>
+</tr>
+<tr class="row-color">
 <td class="col-first"><code>static <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="../fixes/SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a>&gt;</code></td>
 <th class="col-second" scope="row"><span class="type-name-label">SuggestedFixes.</span><code><span class="member-name-link"><a href="../fixes/SuggestedFixes.html#removeModifiers(com.sun.source.tree.ModifiersTree,com.google.errorprone.VisitorState,java.util.Set)">removeModifiers</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/ModifiersTree.html" title="class or interface in com.sun.source.tree" class="external-link">ModifiersTree</a>&nbsp;originalModifiers,
 <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
@@ -5950,7 +5960,7 @@ com.sun.tools.javac.code.Symbol&nbsp;sym)</code></th>
 <div class="block">Removes modifiers to the given declaration and corresponding modifiers tree.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>static <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="../fixes/SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a>&gt;</code></td>
 <th class="col-second" scope="row"><span class="type-name-label">SuggestedFixes.</span><code><span class="member-name-link"><a href="../fixes/SuggestedFixes.html#removeModifiers(com.sun.source.tree.Tree,com.google.errorprone.VisitorState,javax.lang.model.element.Modifier...)">removeModifiers</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&nbsp;tree,
 <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
@@ -5959,7 +5969,7 @@ com.sun.tools.javac.code.Symbol&nbsp;sym)</code></th>
 <div class="block">Removes modifiers from the given class, method, or field declaration.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>static void</code></td>
 <th class="col-second" scope="row"><span class="type-name-label">SuggestedFixes.</span><code><span class="member-name-link"><a href="../fixes/SuggestedFixes.html#removeSuppressWarnings(com.google.errorprone.fixes.SuggestedFix.Builder,com.google.errorprone.VisitorState,java.lang.String)">removeSuppressWarnings</a></span>&#8203;(<a href="../fixes/SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a>&nbsp;fixBuilder,
 <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
@@ -5970,7 +5980,7 @@ com.sun.tools.javac.code.Symbol&nbsp;sym)</code></th>
  warningToRemove</code> is the only warning in that node.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>static <a href="../fixes/SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a></code></td>
 <th class="col-second" scope="row"><span class="type-name-label">SuggestedFixes.</span><code><span class="member-name-link"><a href="../fixes/SuggestedFixes.html#renameMethod(com.sun.source.tree.MethodTree,java.lang.String,com.google.errorprone.VisitorState)">renameMethod</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/MethodTree.html" title="class or interface in com.sun.source.tree" class="external-link">MethodTree</a>&nbsp;tree,
 <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;replacement,
@@ -5979,7 +5989,7 @@ com.sun.tools.javac.code.Symbol&nbsp;sym)</code></th>
 <div class="block">Be warned, only changes method name at the declaration.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>static <a href="../fixes/SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a></code></td>
 <th class="col-second" scope="row"><span class="type-name-label">SuggestedFixes.</span><code><span class="member-name-link"><a href="../fixes/SuggestedFixes.html#renameMethodInvocation(com.sun.source.tree.MethodInvocationTree,java.lang.String,com.google.errorprone.VisitorState)">renameMethodInvocation</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/MethodInvocationTree.html" title="class or interface in com.sun.source.tree" class="external-link">MethodInvocationTree</a>&nbsp;tree,
 <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;replacement,
@@ -5988,7 +5998,7 @@ com.sun.tools.javac.code.Symbol&nbsp;sym)</code></th>
 <div class="block">Replaces the name of the method being invoked in <code>tree</code> with <code>replacement</code>.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>static <a href="../fixes/SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a></code></td>
 <th class="col-second" scope="row"><span class="type-name-label">SuggestedFixes.</span><code><span class="member-name-link"><a href="../fixes/SuggestedFixes.html#renameMethodWithInvocations(com.sun.source.tree.MethodTree,java.lang.String,com.google.errorprone.VisitorState)">renameMethodWithInvocations</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/MethodTree.html" title="class or interface in com.sun.source.tree" class="external-link">MethodTree</a>&nbsp;tree,
 <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;replacement,
@@ -5998,7 +6008,7 @@ com.sun.tools.javac.code.Symbol&nbsp;sym)</code></th>
  replacement</code>.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>static <a href="../fixes/SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a></code></td>
 <th class="col-second" scope="row"><span class="type-name-label">SuggestedFixes.</span><code><span class="member-name-link"><a href="../fixes/SuggestedFixes.html#renameTypeParameter(com.sun.source.tree.TypeParameterTree,com.sun.source.tree.Tree,java.lang.String,com.google.errorprone.VisitorState)">renameTypeParameter</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/TypeParameterTree.html" title="class or interface in com.sun.source.tree" class="external-link">TypeParameterTree</a>&nbsp;typeParameter,
 <a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&nbsp;owningTree,
@@ -6009,7 +6019,7 @@ com.sun.tools.javac.code.Symbol&nbsp;sym)</code></th>
  typeVarReplacement</code>.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>static <a href="../fixes/SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a></code></td>
 <th class="col-second" scope="row"><span class="type-name-label">SuggestedFixes.</span><code><span class="member-name-link"><a href="../fixes/SuggestedFixes.html#renameVariable(com.sun.source.tree.VariableTree,java.lang.String,com.google.errorprone.VisitorState)">renameVariable</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/VariableTree.html" title="class or interface in com.sun.source.tree" class="external-link">VariableTree</a>&nbsp;tree,
 <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;replacement,
@@ -6019,7 +6029,7 @@ com.sun.tools.javac.code.Symbol&nbsp;sym)</code></th>
  replacement</code>.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>static <a href="../fixes/SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a></code></td>
 <th class="col-second" scope="row"><span class="type-name-label">SuggestedFixes.</span><code><span class="member-name-link"><a href="../fixes/SuggestedFixes.html#renameVariableUsages(com.sun.source.tree.VariableTree,java.lang.String,com.google.errorprone.VisitorState)">renameVariableUsages</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/VariableTree.html" title="class or interface in com.sun.source.tree" class="external-link">VariableTree</a>&nbsp;tree,
 <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;replacement,
@@ -6029,7 +6039,7 @@ com.sun.tools.javac.code.Symbol&nbsp;sym)</code></th>
  replacement</code>.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>static <a href="../fixes/SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a></code></td>
 <th class="col-second" scope="row"><span class="type-name-label">SuggestedFixes.</span><code><span class="member-name-link"><a href="../fixes/SuggestedFixes.html#replaceIncludingComments(com.sun.source.util.TreePath,java.lang.String,com.google.errorprone.VisitorState)">replaceIncludingComments</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/util/TreePath.html" title="class or interface in com.sun.source.util" class="external-link">TreePath</a>&nbsp;path,
 <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;replacement,
@@ -6038,7 +6048,7 @@ com.sun.tools.javac.code.Symbol&nbsp;sym)</code></th>
 <div class="block">Replaces the tree at <code>path</code> along with any Javadocs/associated single-line comments.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>static <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="../fixes/SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a>&gt;</code></td>
 <th class="col-second" scope="row"><span class="type-name-label">SuggestedFixes.</span><code><span class="member-name-link"><a href="../fixes/SuggestedFixes.html#suggestExemptingAnnotation(java.lang.String,com.sun.source.util.TreePath,com.google.errorprone.VisitorState)">suggestExemptingAnnotation</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;exemptingAnnotation,
 <a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/util/TreePath.html" title="class or interface in com.sun.source.util" class="external-link">TreePath</a>&nbsp;where,

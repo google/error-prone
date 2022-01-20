@@ -237,6 +237,16 @@ loadScripts(document, 'script');</script>
 </tr>
 <tr class="row-color">
 <td class="col-first"><code>static <a href="../SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a></code></td>
+<th class="col-second" scope="row"><span class="type-name-label">SuggestedFixes.</span><code><span class="member-name-link"><a href="../SuggestedFixes.html#removeElement(com.sun.source.tree.ExpressionTree,java.util.List,com.google.errorprone.VisitorState)">removeElement</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&nbsp;tree,
+<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;? extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&gt;&nbsp;trees,
+<a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
+<td class="col-last">
+<div class="block">Removes <code>tree</code> from <code>trees</code>, assuming that <code>trees</code> represents a
+ comma-separated list of expressions containing <code>tree</code>.</div>
+</td>
+</tr>
+<tr class="alt-color">
+<td class="col-first"><code>static <a href="../SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a></code></td>
 <th class="col-second" scope="row"><span class="type-name-label">SuggestedFixes.</span><code><span class="member-name-link"><a href="../SuggestedFixes.html#renameMethod(com.sun.source.tree.MethodTree,java.lang.String,com.google.errorprone.VisitorState)">renameMethod</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/MethodTree.html" title="class or interface in com.sun.source.tree" class="external-link">MethodTree</a>&nbsp;tree,
 <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;replacement,
 <a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
@@ -244,7 +254,7 @@ loadScripts(document, 'script');</script>
 <div class="block">Be warned, only changes method name at the declaration.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>static <a href="../SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a></code></td>
 <th class="col-second" scope="row"><span class="type-name-label">SuggestedFixes.</span><code><span class="member-name-link"><a href="../SuggestedFixes.html#renameMethodInvocation(com.sun.source.tree.MethodInvocationTree,java.lang.String,com.google.errorprone.VisitorState)">renameMethodInvocation</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/MethodInvocationTree.html" title="class or interface in com.sun.source.tree" class="external-link">MethodInvocationTree</a>&nbsp;tree,
 <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;replacement,
@@ -253,7 +263,7 @@ loadScripts(document, 'script');</script>
 <div class="block">Replaces the name of the method being invoked in <code>tree</code> with <code>replacement</code>.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>static <a href="../SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a></code></td>
 <th class="col-second" scope="row"><span class="type-name-label">SuggestedFixes.</span><code><span class="member-name-link"><a href="../SuggestedFixes.html#renameMethodWithInvocations(com.sun.source.tree.MethodTree,java.lang.String,com.google.errorprone.VisitorState)">renameMethodWithInvocations</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/MethodTree.html" title="class or interface in com.sun.source.tree" class="external-link">MethodTree</a>&nbsp;tree,
 <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;replacement,
@@ -263,7 +273,7 @@ loadScripts(document, 'script');</script>
  replacement</code>.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>static <a href="../SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a></code></td>
 <th class="col-second" scope="row"><span class="type-name-label">SuggestedFixes.</span><code><span class="member-name-link"><a href="../SuggestedFixes.html#renameTypeParameter(com.sun.source.tree.TypeParameterTree,com.sun.source.tree.Tree,java.lang.String,com.google.errorprone.VisitorState)">renameTypeParameter</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/TypeParameterTree.html" title="class or interface in com.sun.source.tree" class="external-link">TypeParameterTree</a>&nbsp;typeParameter,
 <a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&nbsp;owningTree,
@@ -274,7 +284,7 @@ loadScripts(document, 'script');</script>
  typeVarReplacement</code>.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>static <a href="../SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a></code></td>
 <th class="col-second" scope="row"><span class="type-name-label">SuggestedFixes.</span><code><span class="member-name-link"><a href="../SuggestedFixes.html#renameVariable(com.sun.source.tree.VariableTree,java.lang.String,com.google.errorprone.VisitorState)">renameVariable</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/VariableTree.html" title="class or interface in com.sun.source.tree" class="external-link">VariableTree</a>&nbsp;tree,
 <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;replacement,
@@ -284,7 +294,7 @@ loadScripts(document, 'script');</script>
  replacement</code>.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>static <a href="../SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a></code></td>
 <th class="col-second" scope="row"><span class="type-name-label">SuggestedFixes.</span><code><span class="member-name-link"><a href="../SuggestedFixes.html#renameVariableUsages(com.sun.source.tree.VariableTree,java.lang.String,com.google.errorprone.VisitorState)">renameVariableUsages</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/VariableTree.html" title="class or interface in com.sun.source.tree" class="external-link">VariableTree</a>&nbsp;tree,
 <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;replacement,
@@ -294,7 +304,7 @@ loadScripts(document, 'script');</script>
  replacement</code>.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>static <a href="../SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a></code></td>
 <th class="col-second" scope="row"><span class="type-name-label">SuggestedFix.</span><code><span class="member-name-link"><a href="../SuggestedFix.html#replace(int,int,java.lang.String)">replace</a></span>&#8203;(int&nbsp;startPos,
 int&nbsp;endPos,
@@ -304,7 +314,7 @@ int&nbsp;endPos,
  string.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>static <a href="../SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a></code></td>
 <th class="col-second" scope="row"><span class="type-name-label">SuggestedFix.</span><code><span class="member-name-link"><a href="../SuggestedFix.html#replace(com.sun.source.tree.Tree,java.lang.String)">replace</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&nbsp;tree,
 <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;replaceWith)</code></th>
@@ -312,7 +322,7 @@ int&nbsp;endPos,
 <div class="block"><a href="../SuggestedFix.Builder.html#replace(com.sun.source.tree.Tree,java.lang.String)"><code>SuggestedFix.Builder.replace(Tree, String)</code></a></div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>static <a href="../SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a></code></td>
 <th class="col-second" scope="row"><span class="type-name-label">SuggestedFix.</span><code><span class="member-name-link"><a href="../SuggestedFix.html#replace(com.sun.source.tree.Tree,java.lang.String,int,int)">replace</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&nbsp;node,
 <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;replaceWith,
@@ -322,7 +332,7 @@ int&nbsp;endPosAdjustment)</code></th>
 <div class="block">Replace a tree node with a string, but adjust the start and end positions as well.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>static <a href="../SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a></code></td>
 <th class="col-second" scope="row"><span class="type-name-label">SuggestedFixes.</span><code><span class="member-name-link"><a href="../SuggestedFixes.html#replaceIncludingComments(com.sun.source.util.TreePath,java.lang.String,com.google.errorprone.VisitorState)">replaceIncludingComments</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/util/TreePath.html" title="class or interface in com.sun.source.util" class="external-link">TreePath</a>&nbsp;path,
 <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;replacement,
@@ -331,7 +341,7 @@ int&nbsp;endPosAdjustment)</code></th>
 <div class="block">Replaces the tree at <code>path</code> along with any Javadocs/associated single-line comments.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>static <a href="../SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a></code></td>
 <th class="col-second" scope="row"><span class="type-name-label">SuggestedFix.</span><code><span class="member-name-link"><a href="../SuggestedFix.html#swap(com.sun.source.tree.Tree,com.sun.source.tree.Tree)">swap</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&nbsp;node1,
 <a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&nbsp;node2)</code></th>
