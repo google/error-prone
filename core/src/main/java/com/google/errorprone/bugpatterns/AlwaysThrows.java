@@ -227,7 +227,8 @@ public class AlwaysThrows extends BugChecker implements MethodInvocationTreeMatc
     }
     return buildDescription(tree)
         .setMessage(
-            "This ImmutableMap construction will throw due to duplicates: "
+            "This ImmutableMap construction will throw (or have known duplicates overwritten) due"
+                + " to duplicates: "
                 + repeatedKeys.stream()
                     .map(
                         k ->
