@@ -47,8 +47,10 @@ import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.doctree.LinkTree;
 import com.sun.source.tree.AnnotationTree;
+import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ExpressionTree;
+import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.LambdaExpressionTree;
 import com.sun.source.tree.LiteralTree;
 import com.sun.source.tree.MethodInvocationTree;
@@ -1989,5 +1991,50 @@ public class SuggestedFixesTest {
     assertThat(fix.getImportsToAdd())
         .containsExactly("import static " + firstImport, "import static " + secondImport)
         .inOrder();
+  }
+
+  @Test
+  public void removeElement() {
+    BugCheckerRefactoringTestHelper.newInstance(RemoveAnnotationElement.class, getClass())
+        .addInputLines(
+            "Anno.java", //
+            "@interface Anno {",
+            "  int a() default 0;",
+            "  int b() default 0;",
+            "}")
+        .expectUnchanged()
+        .addInputLines(
+            "Test.java",
+            "class Test {",
+            "  @Anno(a = 1) class A {}",
+            "  @Anno(a = 1, b = 2) class B {}",
+            "  @Anno(b = 1, a = 2) class C {}",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "class Test {",
+            "  @Anno() class A {}",
+            "  @Anno(b = 2) class B {}",
+            "  @Anno(b = 1) class C {}",
+            "}")
+        .doTest();
+  }
+
+  /** Bugpattern for testing. */
+  @BugPattern(name = "RemoveAnnotationElement", summary = "", severity = ERROR)
+  public static final class RemoveAnnotationElement extends BugChecker
+      implements AnnotationTreeMatcher {
+    @Override
+    public Description matchAnnotation(AnnotationTree tree, VisitorState state) {
+      return tree.getArguments().stream()
+          .filter(
+              t ->
+                  ((IdentifierTree) ((AssignmentTree) t).getVariable())
+                      .getName()
+                      .contentEquals("a"))
+          .findFirst()
+          .map(t -> describeMatch(t, SuggestedFixes.removeElement(t, tree.getArguments(), state)))
+          .orElse(NO_MATCH);
+    }
   }
 }

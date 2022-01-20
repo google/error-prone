@@ -560,6 +560,28 @@ public final class SuggestedFixes {
   }
 
   /**
+   * Removes {@code tree} from {@code trees}, assuming that {@code trees} represents a
+   * comma-separated list of expressions containing {@code tree}.
+   *
+   * <p>Can be used to remove a single element from an annotation. Does not remove the enclosing
+   * parentheses if no elements are left.
+   */
+  public static SuggestedFix removeElement(
+      ExpressionTree tree, List<? extends ExpressionTree> trees, VisitorState state) {
+    int indexOf = trees.indexOf(tree);
+    checkArgument(indexOf != -1, "trees must contain tree");
+    if (trees.size() == 1) {
+      return SuggestedFix.delete(tree);
+    }
+    int startPos = getStartPosition(tree);
+    int endPos = state.getEndPosition(tree);
+    if (indexOf == trees.size() - 1) {
+      return SuggestedFix.replace(state.getEndPosition(trees.get(indexOf - 1)), endPos, "");
+    }
+    return SuggestedFix.replace(startPos, getStartPosition(trees.get(indexOf + 1)), "");
+  }
+
+  /**
    * Instructs {@link #addMembers(ClassTree, VisitorState, AdditionPosition, String, String...)}
    * whether to add the new member(s) at the beginning of the class, or at the end.
    */
