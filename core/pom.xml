@@ -305,7 +305,7 @@
       <!-- Apache 2.0 -->
       <groupId>com.google.common.html.types</groupId>
       <artifactId>proto</artifactId>
-      <version>1.0.0</version>
+      <version>1.0.8</version>
       <scope>test</scope>
     </dependency>
     <dependency>
