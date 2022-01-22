@@ -78,7 +78,7 @@ __[ComparableType](bugpattern/ComparableType)__<br>
 Implementing &#39;Comparable&lt;T&gt;&#39; where T is not the same as the implementing class is incorrect, since it violates the symmetry contract of compareTo.
 
 __[ComparingThisWithNull](bugpattern/ComparingThisWithNull)__<br>
-this == null is always false, this != null is always true
+this &#61;&#61; null is always false, this !&#61; null is always true
 
 __[ComparisonOutOfRange](bugpattern/ComparisonOutOfRange)__<br>
 Comparison to value that is out of range for the compared type
@@ -138,13 +138,13 @@ __[EqualsHashCode](bugpattern/EqualsHashCode)__<br>
 Classes that override equals should also override hashCode.
 
 __[EqualsNaN](bugpattern/EqualsNaN)__<br>
-== NaN always returns false; use the isNaN methods instead
+&#61;&#61; NaN always returns false; use the isNaN methods instead
 
 __[EqualsNull](bugpattern/EqualsNull)__<br>
-The contract of Object.equals() states that for any non-null reference value x, x.equals(null) should return false. If x is null, a NullPointerException is thrown. Consider replacing equals() with the == operator.
+The contract of Object.equals() states that for any non-null reference value x, x.equals(null) should return false. If x is null, a NullPointerException is thrown. Consider replacing equals() with the &#61;&#61; operator.
 
 __[EqualsReference](bugpattern/EqualsReference)__<br>
-== must be used in equals method to check equality to itself or an infinite loop will occur.
+&#61;&#61; must be used in equals method to check equality to itself or an infinite loop will occur.
 
 __[EqualsWrongThing](bugpattern/EqualsWrongThing)__<br>
 Comparing different pairs of fields/getters in an equals implementation is probably a mistake.
@@ -303,7 +303,7 @@ __[MathRoundIntLong](bugpattern/MathRoundIntLong)__<br>
 Math.round(Integer) results in truncation
 
 __[MislabeledAndroidString](bugpattern/MislabeledAndroidString)__<br>
-Certain resources in `android.R.string` have names that do not match their content
+Certain resources in &#96;android.R.string&#96; have names that do not match their content
 
 __[MisplacedScopeAnnotations](bugpattern/MisplacedScopeAnnotations)__<br>
 Scope annotations used as qualifier annotations don&#39;t have any effect. Move the scope annotation to the binding location or delete it.
@@ -399,7 +399,7 @@ __[ProtoStringFieldReferenceEquality](bugpattern/ProtoStringFieldReferenceEquali
 Comparing protobuf fields of type String using reference equality
 
 __[ProtoTruthMixedDescriptors](bugpattern/ProtoTruthMixedDescriptors)__<br>
-The arguments passed to `ignoringFields` are inconsistent with the proto which is the subject of the assertion.
+The arguments passed to &#96;ignoringFields&#96; are inconsistent with the proto which is the subject of the assertion.
 
 __[ProtocolBufferOrdinal](bugpattern/ProtocolBufferOrdinal)__<br>
 To get the tag number of a protocol buffer enum, use getNumber() instead.
@@ -438,7 +438,7 @@ __[ShouldHaveEvenArgs](bugpattern/ShouldHaveEvenArgs)__<br>
 This method must be called with an even number of arguments.
 
 __[SizeGreaterThanOrEqualsZero](bugpattern/SizeGreaterThanOrEqualsZero)__<br>
-Comparison of a size &gt;= 0 is always true, did you intend to check for non-emptiness?
+Comparison of a size &gt;&#61; 0 is always true, did you intend to check for non-emptiness?
 
 __[StreamToString](bugpattern/StreamToString)__<br>
 Calling toString on a Stream does not provide useful information
@@ -498,13 +498,13 @@ __[UnusedCollectionModifiedInPlace](bugpattern/UnusedCollectionModifiedInPlace)_
 Collection is modified in place, but the result is not used
 
 __[VarTypeName](bugpattern/VarTypeName)__<br>
-`var` should not be used as a type name.
+&#96;var&#96; should not be used as a type name.
 
 __[WrongOneof](bugpattern/WrongOneof)__<br>
 This field is guaranteed not to be set given it&#39;s within a switch over a one_of.
 
 __[XorPower](bugpattern/XorPower)__<br>
-The `^` operator is binary XOR, not a power operator.
+The &#96;^&#96; operator is binary XOR, not a power operator.
 
 __[ZoneIdOfZ](bugpattern/ZoneIdOfZ)__<br>
 Use ZoneOffset.UTC instead of ZoneId.of(&quot;Z&quot;).
@@ -617,7 +617,7 @@ __[CollectorShouldNotUseState](bugpattern/CollectorShouldNotUseState)__<br>
 Collector.of() should not use state
 
 __[ComparableAndComparator](bugpattern/ComparableAndComparator)__<br>
-Class should not implement both `Comparable` and `Comparator`
+Class should not implement both &#96;Comparable&#96; and &#96;Comparator&#96;
 
 __[CompareToZero](bugpattern/CompareToZero)__<br>
 The result of #compareTo or #compare should only be compared to 0. It is an implementation detail whether a given type returns strictly the values {-1, 0, +1} or others.
@@ -647,7 +647,7 @@ __[DoNotCallSuggester](bugpattern/DoNotCallSuggester)__<br>
 Consider annotating methods that always throw with @DoNotCall. Read more at https://errorprone.info/bugpattern/DoNotCall
 
 __[DoNotClaimAnnotations](bugpattern/DoNotClaimAnnotations)__<br>
-Don&#39;t &#39;claim&#39; annotations in annotation processors; Processor#process should unconditionally return `false`
+Don&#39;t &#39;claim&#39; annotations in annotation processors; Processor#process should unconditionally return &#96;false&#96;
 
 __[DoNotMockAutoValue](bugpattern/DoNotMockAutoValue)__<br>
 AutoValue classes represent pure data classes, so mocking them should not be necessary. Construct a real instance of the class instead.
@@ -797,7 +797,7 @@ __[InvalidThrowsLink](bugpattern/InvalidThrowsLink)__<br>
 Javadoc links to exceptions in @throws without a @link tag (@throws Exception, not @throws {@link Exception}).
 
 __[IterableAndIterator](bugpattern/IterableAndIterator)__<br>
-Class should not implement both `Iterable` and `Iterator`
+Class should not implement both &#96;Iterable&#96; and &#96;Iterator&#96;
 
 __[JUnit3FloatingPointComparisonWithoutDelta](bugpattern/JUnit3FloatingPointComparisonWithoutDelta)__<br>
 Floating-point comparison without error tolerance
@@ -848,7 +848,7 @@ __[JodaConstructors](bugpattern/JodaConstructors)__<br>
 Use of certain JodaTime constructors are not allowed.
 
 __[JodaDateTimeConstants](bugpattern/JodaDateTimeConstants)__<br>
-Using the `_PER_` constants in `DateTimeConstants` is problematic because they encourage manual date/time math.
+Using the &#96;_PER_&#96; constants in &#96;DateTimeConstants&#96; is problematic because they encourage manual date/time math.
 
 __[JodaDurationWithMillis](bugpattern/JodaDurationWithMillis)__<br>
 Use of duration.withMillis(long) is not allowed. Please use Duration.millis(long) instead.
@@ -857,16 +857,16 @@ __[JodaInstantWithMillis](bugpattern/JodaInstantWithMillis)__<br>
 Use of instant.withMillis(long) is not allowed. Please use new Instant(long) instead.
 
 __[JodaNewPeriod](bugpattern/JodaNewPeriod)__<br>
-This may have surprising semantics, e.g. new Period(LocalDate.parse(&quot;1970-01-01&quot;), LocalDate.parse(&quot;1970-02-02&quot;)).getDays() == 1, not 32.
+This may have surprising semantics, e.g. new Period(LocalDate.parse(&quot;1970-01-01&quot;), LocalDate.parse(&quot;1970-02-02&quot;)).getDays() &#61;&#61; 1, not 32.
 
 __[JodaPlusMinusLong](bugpattern/JodaPlusMinusLong)__<br>
-Use of JodaTime&#39;s type.plus(long) or type.minus(long) is not allowed (where &lt;type&gt; = {Duration,Instant,DateTime,DateMidnight}). Please use type.plus(Duration.millis(long)) or type.minus(Duration.millis(long)) instead.
+Use of JodaTime&#39;s type.plus(long) or type.minus(long) is not allowed (where &lt;type&gt; &#61; {Duration,Instant,DateTime,DateMidnight}). Please use type.plus(Duration.millis(long)) or type.minus(Duration.millis(long)) instead.
 
 __[JodaTimeConverterManager](bugpattern/JodaTimeConverterManager)__<br>
 Joda-Time&#39;s ConverterManager makes the semantics of DateTime/Instant/etc construction subject to global static state. If you need to define your own converters, use a helper.
 
 __[JodaWithDurationAddedLong](bugpattern/JodaWithDurationAddedLong)__<br>
-Use of JodaTime&#39;s type.withDurationAdded(long, int) (where &lt;type&gt; = {Duration,Instant,DateTime}). Please use type.withDurationAdded(Duration.millis(long), int) instead.
+Use of JodaTime&#39;s type.withDurationAdded(long, int) (where &lt;type&gt; &#61; {Duration,Instant,DateTime}). Please use type.withDurationAdded(Duration.millis(long), int) instead.
 
 __[LiteEnumValueOf](bugpattern/LiteEnumValueOf)__<br>
 Instead of converting enums to string and back, its numeric value should be used instead as it is the stable part of the protocol defined by the enum.
@@ -881,7 +881,7 @@ __[LockOnBoxedPrimitive](bugpattern/LockOnBoxedPrimitive)__<br>
 It is dangerous to use a boxed primitive as a lock as it can unintentionally lead to sharing a lock with another piece of code.
 
 __[LogicalAssignment](bugpattern/LogicalAssignment)__<br>
-Assignment where a boolean expression was expected; use == if this assignment wasn&#39;t expected or add parentheses for clarity.
+Assignment where a boolean expression was expected; use &#61;&#61; if this assignment wasn&#39;t expected or add parentheses for clarity.
 
 __[LongFloatConversion](bugpattern/LongFloatConversion)__<br>
 Conversion from long to float may lose precision; use an explicit cast to float if this was intentional
@@ -932,7 +932,7 @@ __[MultipleUnaryOperatorsInMethodCall](bugpattern/MultipleUnaryOperatorsInMethod
 Avoid having multiple unary operators acting on the same variable in a method call
 
 __[MutablePublicArray](bugpattern/MutablePublicArray)__<br>
-Non-empty arrays are mutable, so this `public static final` array is not a constant and can be modified by clients of this class.  Prefer an ImmutableList, or provide an accessor method that returns a defensive copy.
+Non-empty arrays are mutable, so this &#96;public static final&#96; array is not a constant and can be modified by clients of this class.  Prefer an ImmutableList, or provide an accessor method that returns a defensive copy.
 
 __[NarrowingCompoundAssignment](bugpattern/NarrowingCompoundAssignment)__<br>
 Compound assignments may hide dangerous casts
@@ -968,7 +968,7 @@ __[NullableVoid](bugpattern/NullableVoid)__<br>
 void-returning methods should not be annotated with @Nullable, since they cannot return null
 
 __[ObjectEqualsForPrimitives](bugpattern/ObjectEqualsForPrimitives)__<br>
-Avoid unnecessary boxing by using plain == for primitive types.
+Avoid unnecessary boxing by using plain &#61;&#61; for primitive types.
 
 __[ObjectToString](bugpattern/ObjectToString)__<br>
 Calling toString on Objects that don&#39;t override toString() doesn&#39;t provide useful information
@@ -983,7 +983,7 @@ __[OptionalMapToOptional](bugpattern/OptionalMapToOptional)__<br>
 Mapping to another Optional will yield a nested Optional. Did you mean flatMap?
 
 __[OptionalNotPresent](bugpattern/OptionalNotPresent)__<br>
-This Optional has been confirmed to be empty at this point, so the call to `get` will throw.
+This Optional has been confirmed to be empty at this point, so the call to &#96;get&#96; will throw.
 
 __[OrphanedFormatString](bugpattern/OrphanedFormatString)__<br>
 String literal contains format specifiers, but is not passed to a format method
@@ -1001,10 +1001,10 @@ __[OverridesGuiceInjectableMethod](bugpattern/OverridesGuiceInjectableMethod)__<
 This method is not annotated with @Inject, but it overrides a method that is annotated with @com.google.inject.Inject. Guice will inject this method, and it is recommended to annotate it explicitly.
 
 __[ParameterName](bugpattern/ParameterName)__<br>
-Detects `/* name= */`-style comments on actual parameters where the name doesn&#39;t match the formal parameter
+Detects &#96;/* name&#61; */&#96;-style comments on actual parameters where the name doesn&#39;t match the formal parameter
 
 __[PreconditionsCheckNotNullRepeated](bugpattern/PreconditionsCheckNotNullRepeated)__<br>
-Including the first argument of checkNotNull in the failure message is not useful, as it will always be `null`.
+Including the first argument of checkNotNull in the failure message is not useful, as it will always be &#96;null&#96;.
 
 __[PrimitiveAtomicReference](bugpattern/PrimitiveAtomicReference)__<br>
 Using compareAndSet with boxed primitives is dangerous, as reference rather than value equality is used. Consider using AtomicInteger, AtomicLong, AtomicBoolean from JDK or AtomicDouble from Guava instead.
@@ -1145,7 +1145,7 @@ __[UnsafeFinalization](bugpattern/UnsafeFinalization)__<br>
 Finalizer may run before native code finishes execution
 
 __[UnsafeReflectiveConstructionCast](bugpattern/UnsafeReflectiveConstructionCast)__<br>
-Prefer `asSubclass` instead of casting the result of `newInstance`, to detect classes of incorrect type before invoking their constructors.This way, if the class is of the incorrect type,it will throw an exception before invoking its constructor.
+Prefer &#96;asSubclass&#96; instead of casting the result of &#96;newInstance&#96;, to detect classes of incorrect type before invoking their constructors.This way, if the class is of the incorrect type,it will throw an exception before invoking its constructor.
 
 __[UnsynchronizedOverridesSynchronized](bugpattern/UnsynchronizedOverridesSynchronized)__<br>
 Unsynchronized method overrides a synchronized method.
@@ -1172,7 +1172,7 @@ __[WaitNotInLoop](bugpattern/WaitNotInLoop)__<br>
 Because of spurious wakeups, Object.wait() and Condition.await() must always be called in a loop
 
 __[WakelockReleasedDangerously](bugpattern/WakelockReleasedDangerously)__<br>
-A wakelock acquired with a timeout may be released by the system before calling `release`, even after checking `isHeld()`. If so, it will throw a RuntimeException. Please wrap in a try/catch block.
+A wakelock acquired with a timeout may be released by the system before calling &#96;release&#96;, even after checking &#96;isHeld()&#96;. If so, it will throw a RuntimeException. Please wrap in a try/catch block.
 
 __[WithSignatureDiscouraged](bugpattern/WithSignatureDiscouraged)__<br>
 withSignature is discouraged. Prefer .named and/or .withParameters where possible.
@@ -1186,7 +1186,7 @@ __[AutoFactoryAtInject](bugpattern/AutoFactoryAtInject)__<br>
 @AutoFactory and @Inject should not be used in the same type.
 
 __[BanSerializableRead](bugpattern/BanSerializableRead)__<br>
-Deserializing user input via the `Serializable` API is extremely dangerous
+Deserializing user input via the &#96;Serializable&#96; API is extremely dangerous
 
 __[ClassName](bugpattern/ClassName)__<br>
 The source file name should match the name of the top-level class it contains
@@ -1275,7 +1275,7 @@ __[BindingToUnqualifiedCommonType](bugpattern/BindingToUnqualifiedCommonType)__<
 This code declares a binding for a common value type without a Qualifier annotation.
 
 __[CatchingUnchecked](bugpattern/CatchingUnchecked)__<br>
-This catch block catches `Exception`, but can only catch unchecked exceptions. Consider catching RuntimeException (or something more specific) instead so it is more apparent that no checked exceptions are being handled.
+This catch block catches &#96;Exception&#96;, but can only catch unchecked exceptions. Consider catching RuntimeException (or something more specific) instead so it is more apparent that no checked exceptions are being handled.
 
 __[CheckedExceptionNotThrown](bugpattern/CheckedExceptionNotThrown)__<br>
 This method cannot throw a checked exception that it claims to. This may cause consumers of the API to incorrectly attempt to handle, or propagate, this exception.
@@ -1389,7 +1389,7 @@ __[SystemOut](bugpattern/SystemOut)__<br>
 Printing to standard output should only be used for debugging, not in production code
 
 __[TestExceptionChecker](bugpattern/TestExceptionChecker)__<br>
-Using @Test(expected=...) is discouraged, since the test will pass if *any* statement in the test method throws the expected exception
+Using @Test(expected&#61;...) is discouraged, since the test will pass if *any* statement in the test method throws the expected exception
 
 __[ThrowSpecificExceptions](bugpattern/ThrowSpecificExceptions)__<br>
 Base exception classes should be treated as abstract. If the exception is intended to be caught, throw a domain-specific exception. Otherwise, prefer a more specific exception for clarity. Common alternatives include: AssertionError, IllegalArgumentException, IllegalStateException, and (Guava&#39;s) VerifyException.
@@ -1419,7 +1419,7 @@ __[UnnecessaryDefaultInEnumSwitch](bugpattern/UnnecessaryDefaultInEnumSwitch)__<
 Switch handles all enum values: an explicit default case is unnecessary and defeats error checking for non-exhaustive switches.
 
 __[UnnecessaryFinal](bugpattern/UnnecessaryFinal)__<br>
-Since Java 8, it&#39;s been unnecessary to make local variables and parameters `final` for use in lambdas or anonymous classes. Marking them as `final` is weakly discouraged, as it adds a fair amount of noise for minimal benefit.
+Since Java 8, it&#39;s been unnecessary to make local variables and parameters &#96;final&#96; for use in lambdas or anonymous classes. Marking them as &#96;final&#96; is weakly discouraged, as it adds a fair amount of noise for minimal benefit.
 
 __[UnnecessaryOptionalGet](bugpattern/UnnecessaryOptionalGet)__<br>
 This code can be simplified by directly using the lambda parameters instead of calling get..() on optional.
@@ -1511,7 +1511,7 @@ __[PackageLocation](bugpattern/PackageLocation)__<br>
 Package names should match the directory they are declared in
 
 __[ParameterComment](bugpattern/ParameterComment)__<br>
-Non-standard parameter comment; prefer `/* paramName= */ arg`
+Non-standard parameter comment; prefer &#96;/* paramName&#61; */ arg&#96;
 
 __[ParameterMissingNullable](bugpattern/ParameterMissingNullable)__<br>
 Parameter has handling for null but is not annotated @Nullable
