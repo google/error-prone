@@ -90,7 +90,7 @@
       <!-- BSD New -->
       <groupId>com.google.code.findbugs</groupId>
       <artifactId>jsr305</artifactId>
-      <version>3.0.0</version>
+      <version>3.0.2</version>
     </dependency>
     <dependency>
       <!-- GPLv2 with Classpath Exception -->
