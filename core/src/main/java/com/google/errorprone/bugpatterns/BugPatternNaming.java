@@ -82,8 +82,12 @@ public final class BugPatternNaming extends BugChecker implements ClassTreeMatch
                     .findFirst()
                     .map(
                         ele ->
-                            describeMatch(
-                                anno,
-                                SuggestedFixes.removeElement(ele, anno.getArguments(), state))));
+                            buildDescription(anno)
+                                .setMessage(
+                                    "Setting @BugPattern.name to the class name of the check is"
+                                        + " redundant")
+                                .addFix(
+                                    SuggestedFixes.removeElement(ele, anno.getArguments(), state))
+                                .build()));
   }
 }
