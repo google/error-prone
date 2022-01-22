@@ -89,7 +89,7 @@
     <dependency>
       <groupId>org.yaml</groupId>
       <artifactId>snakeyaml</artifactId>
-      <version>1.27</version>
+      <version>1.30</version>
     </dependency>
     <dependency>
       <groupId>junit</groupId>
@@ -100,7 +100,7 @@
     <dependency>
       <groupId>com.beust</groupId>
       <artifactId>jcommander</artifactId>
-      <version>1.35</version>
+      <version>1.82</version>
     </dependency>
     <dependency>
       <groupId>com.google.auto.value</groupId>
@@ -111,7 +111,7 @@
     <dependency>
       <groupId>com.github.spullara.mustache.java</groupId>
       <artifactId>compiler</artifactId>
-      <version>0.8.18</version>
+      <version>0.9.10</version>
     </dependency>
     <dependency>
       <groupId>com.google.code.gson</groupId>
