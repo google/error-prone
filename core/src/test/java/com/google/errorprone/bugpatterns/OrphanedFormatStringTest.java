@@ -104,15 +104,17 @@ public class OrphanedFormatStringTest {
         .doTest();
   }
 
+  // "$ f" is a valid format string, because ' ' is a flag
+  // TODO(b/165671890): consider adding a heuristic to skip these
   @Test
-  public void percent() {
+  public void spaceAfterPercent() {
     testHelper
         .addSourceLines(
             "Test.java",
             "class Test {",
             "  void f() {",
-            "    StringBuilder messageBuilder = ",
-            "        new StringBuilder(\"hakuna % matata\").append(\"y\").append(\"n\");",
+            "    // BUG: Diagnostic contains:",
+            "    StringBuilder messageBuilder = new StringBuilder(\"more than 50% finished\");",
             "  }",
             "}")
         .doTest();
