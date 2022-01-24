@@ -30,7 +30,7 @@ public class WildcardUnificationTemplate {
   @BeforeTemplate
   static void containsAllOf(IterableSubject subject, Collection<?> expected) {
     subject.hasSize(expected.size());
-    subject.containsAllIn(expected);
+    subject.containsAtLeastElementsIn(expected);
   }
 
   @AfterTemplate
