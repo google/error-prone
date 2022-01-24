@@ -311,9 +311,10 @@ public final class Inliner extends BugChecker
     abstract String extraMessage();
 
     final String message() {
-      return shortName()
-          + (isDeprecated() ? " is deprecated and" : "")
-          + " should be inlined"
+      return "Migrate (via inlining) from "
+          + (isDeprecated() ? "deprecated " : "")
+          + shortName()
+          + " to its replacement"
           + extraMessage();
     }
 
