@@ -43,6 +43,8 @@
     <maven-javadoc-plugin.version>3.1.0</maven-javadoc-plugin.version>
     <maven-source-plugin.version>3.2.1</maven-source-plugin.version>
     <nexus-staging-maven-plugin.version>1.6.7</nexus-staging-maven-plugin.version>
+    <protobuf.version>3.19.2</protobuf.version>
+    <grpc.version>1.43.2</grpc.version>
   </properties>
 
   <organization>

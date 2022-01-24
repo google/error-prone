@@ -228,7 +228,7 @@
       <!-- Apache 2.0 -->
       <groupId>com.google.protobuf</groupId>
       <artifactId>protobuf-java</artifactId>
-      <version>3.16.1</version>
+      <version>${protobuf.version}</version>
     </dependency>
     <dependency>
       <!-- Apache 2.0 -->
@@ -269,7 +269,7 @@
       <!-- BSD -->
       <groupId>com.google.protobuf</groupId>
       <artifactId>protobuf-java-util</artifactId>
-      <version>3.7.1</version>
+      <version>${protobuf.version}</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -424,9 +424,9 @@
         <configuration>
           <protoSourceRoot>src/main/proto</protoSourceRoot>
           <protoTestSourceRoot>src/test/proto</protoTestSourceRoot>
-          <protocArtifact>com.google.protobuf:protoc:3.4.0:exe:${os.detected.classifier}</protocArtifact>
+          <protocArtifact>com.google.protobuf:protoc:${protobuf.version}:exe:${os.detected.classifier}</protocArtifact>
           <pluginId>grpc-java</pluginId>
-          <pluginArtifact>io.grpc:protoc-gen-grpc-java:1.0.1:exe:${os.detected.classifier}</pluginArtifact>
+          <pluginArtifact>io.grpc:protoc-gen-grpc-java:${grpc.version}:exe:${os.detected.classifier}</pluginArtifact>
         </configuration>
         <executions>
           <execution>
