@@ -72,10 +72,6 @@ public class FloggerFormatStringTest {
             "  private static final FluentLogger logger = FluentLogger.forEnclosingClass();",
             "  public void f(Exception e, Throwable t, String s) {",
             "    logger.atInfo().withCause(e).log(\"hello %s\", e);",
-            "    logger.atInfo().log();",
-            "    logger.atInfo().log(\"hello\");",
-            "    logger.atInfo().log(\"hello \" + t);",
-            "    logger.atInfo().log(s);",
             "  }",
             "}")
         .doTest();
@@ -110,6 +106,41 @@ public class FloggerFormatStringTest {
             "  public void f(Object... xs) {",
             "    // BUG: Diagnostic contains:",
             "    logger.atInfo().log(\"hello %s %s\", xs);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void checksLogStringIfFloggerLogStringIsDisabled() {
+    // TODO(b/183117069): Remove once FloggerLogString is fully enabled
+    compilationHelper
+        .setArgs("-XepOpt:FloggerLogStringDisabled=true")
+        .addSourceLines(
+            "Test.java",
+            "package test;",
+            "import com.google.common.flogger.FluentLogger;",
+            "class Test {",
+            "  private static final FluentLogger logger = FluentLogger.forEnclosingClass();",
+            "  public void f() {",
+            "    // BUG: Diagnostic contains:",
+            "    logger.atSevere().log(\"hello %s\");",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void doesNotCheckLogStringIfFloggerLogStringIsEnabled() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "package test;",
+            "import com.google.common.flogger.FluentLogger;",
+            "class Test {",
+            "  private static final FluentLogger logger = FluentLogger.forEnclosingClass();",
+            "  public void f() {",
+            "    logger.atSevere().log(\"hello %s\");",
             "  }",
             "}")
         .doTest();

@@ -22,6 +22,7 @@ import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
@@ -37,6 +38,7 @@ import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.tree.JCTree;
+import java.util.List;
 import javax.annotation.Nullable;
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
@@ -53,12 +55,21 @@ public class FloggerFormatString extends BugChecker implements MethodInvocationT
   private static final Matcher<ExpressionTree> WITH_CAUSE =
       instanceMethod().onDescendantOf("com.google.common.flogger.LoggingApi").named("withCause");
 
+  private final int minArgs;
+
+  public FloggerFormatString(ErrorProneFlags flags) {
+    // TODO(b/183117069): Remove once FloggerLogString is fully enabled
+    this.minArgs = flags.getBoolean("FloggerLogStringDisabled").orElse(false) ? 1 : 2;
+  }
+
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
     if (!FORMAT_METHOD.matches(tree, state)) {
       return NO_MATCH;
     }
-    if (tree.getArguments().isEmpty()) {
+    List<? extends ExpressionTree> args = tree.getArguments();
+    if (args.size() < minArgs) {
+      // log(String)'s argument isn't a format string and is checked by FloggerLogString instead.
       return NO_MATCH;
     }
     MethodSymbol sym = ASTHelpers.getSymbol(tree);

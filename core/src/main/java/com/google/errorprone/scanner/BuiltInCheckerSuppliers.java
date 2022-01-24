@@ -420,6 +420,7 @@ import com.google.errorprone.bugpatterns.collectionincompatibletype.Incompatible
 import com.google.errorprone.bugpatterns.collectionincompatibletype.TruthIncompatibleType;
 import com.google.errorprone.bugpatterns.flogger.FloggerArgumentToString;
 import com.google.errorprone.bugpatterns.flogger.FloggerFormatString;
+import com.google.errorprone.bugpatterns.flogger.FloggerLogString;
 import com.google.errorprone.bugpatterns.flogger.FloggerLogVarargs;
 import com.google.errorprone.bugpatterns.flogger.FloggerLogWithCause;
 import com.google.errorprone.bugpatterns.flogger.FloggerMessageFormat;
@@ -632,6 +633,7 @@ public class BuiltInCheckerSuppliers {
           EqualsReference.class,
           EqualsWrongThing.class,
           FloggerFormatString.class,
+          FloggerLogString.class,
           FloggerLogVarargs.class,
           FloggerSplitLogStatement.class,
           ForOverrideChecker.class,
