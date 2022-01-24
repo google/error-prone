@@ -77,55 +77,62 @@ loadScripts(document, 'script');</script>
 <td class="col-last">&nbsp;</td>
 </tr>
 <tr class="alt-color">
+<th class="col-first" scope="row"><a href="FloggerLogString.html" title="class in com.google.errorprone.bugpatterns.flogger">FloggerLogString</a></th>
+<td class="col-last">
+<div class="block">Detects invocations of <code>LoggingApi.log(String)</code> for which the argument is not a
+ compile-time constant and provides suggested alternatives.</div>
+</td>
+</tr>
+<tr class="row-color">
 <th class="col-first" scope="row"><a href="FloggerLogVarargs.html" title="class in com.google.errorprone.bugpatterns.flogger">FloggerLogVarargs</a></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <th class="col-first" scope="row"><a href="FloggerLogWithCause.html" title="class in com.google.errorprone.bugpatterns.flogger">FloggerLogWithCause</a></th>
 <td class="col-last">
 <div class="block">Flags cases where there is an exception available that could be set as the cause in a log
  message.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <th class="col-first" scope="row"><a href="FloggerMessageFormat.html" title="class in com.google.errorprone.bugpatterns.flogger">FloggerMessageFormat</a></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <th class="col-first" scope="row"><a href="FloggerPassedAround.html" title="class in com.google.errorprone.bugpatterns.flogger">FloggerPassedAround</a></th>
 <td class="col-last">
 <div class="block">Flags flogger instances being passed around.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <th class="col-first" scope="row"><a href="FloggerRedundantIsEnabled.html" title="class in com.google.errorprone.bugpatterns.flogger">FloggerRedundantIsEnabled</a></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <th class="col-first" scope="row"><a href="FloggerRequiredModifiers.html" title="class in com.google.errorprone.bugpatterns.flogger">FloggerRequiredModifiers</a></th>
 <td class="col-last">
 <div class="block">Ensures that class-level FluentLogger objects are private static final.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <th class="col-first" scope="row"><a href="FloggerSplitLogStatement.html" title="class in com.google.errorprone.bugpatterns.flogger">FloggerSplitLogStatement</a></th>
 <td class="col-last">
 <div class="block">Bugpattern to prevent splitting flogger log invocations into multiple statements.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <th class="col-first" scope="row"><a href="FloggerStringConcatenation.html" title="class in com.google.errorprone.bugpatterns.flogger">FloggerStringConcatenation</a></th>
 <td class="col-last">
 <div class="block">A <a href="../BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>; see the associated <a href="../../BugPattern.html" title="annotation in com.google.errorprone"><code>BugPattern</code></a> annotation for details.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <th class="col-first" scope="row"><a href="FloggerWithCause.html" title="class in com.google.errorprone.bugpatterns.flogger">FloggerWithCause</a></th>
 <td class="col-last">
 <div class="block">Flogger's withCause(Throwable) method checks</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <th class="col-first" scope="row"><a href="FloggerWithoutCause.html" title="class in com.google.errorprone.bugpatterns.flogger">FloggerWithoutCause</a></th>
 <td class="col-last">
 <div class="block">Detects Flogger log statements that pass Exceptions to the log method instead of using withCause.</div>

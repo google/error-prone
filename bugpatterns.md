@@ -152,6 +152,9 @@ Comparing different pairs of fields/getters in an equals implementation is proba
 __[FloggerFormatString](bugpattern/FloggerFormatString)__<br>
 Invalid printf-style format string
 
+__[FloggerLogString](bugpattern/FloggerLogString)__<br>
+Arguments to log(String) must be compile-time constants or parameters annotated with @CompileTimeConstant. If possible, use Flogger&#39;s formatting log methods instead.
+
 __[FloggerLogVarargs](bugpattern/FloggerLogVarargs)__<br>
 logVarargs should be used to pass through format strings and arguments.
 
