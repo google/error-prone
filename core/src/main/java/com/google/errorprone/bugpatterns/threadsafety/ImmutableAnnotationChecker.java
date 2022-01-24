@@ -59,11 +59,6 @@ public class ImmutableAnnotationChecker extends BugChecker implements ClassTreeM
 
   private final WellKnownMutability wellKnownMutability;
 
-  @Deprecated // Used reflectively, but you should pass in ErrorProneFlags to get custom mutability
-  public ImmutableAnnotationChecker() {
-    this(ErrorProneFlags.empty());
-  }
-
   public ImmutableAnnotationChecker(ErrorProneFlags flags) {
     this.wellKnownMutability = WellKnownMutability.fromFlags(flags);
   }
