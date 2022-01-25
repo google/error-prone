@@ -50,7 +50,7 @@ public class TooManyParameters extends BugChecker implements MethodTreeMatcher {
   // https://static.googleusercontent.com/media/research.google.com/en//pubs/archive/46317.pdf
   // However, we have chosen a very conservative starting number, with hopes to decrease this in the
   // future.
-  private static final int DEFAULT_LIMIT = 10;
+  private static final int DEFAULT_LIMIT = 9;
 
   static final String TOO_MANY_PARAMETERS_FLAG_NAME = "TooManyParameters:ParameterLimit";
 
