@@ -82,8 +82,8 @@ public class InlineFormatString extends BugChecker implements CompilationUnitTre
         && isSubtype(methodSymbol.getParameters().get(1).type, state.getSymtab().stringType, state);
   }
 
-  @Nullable
-  private static ExpressionTree formatString(MethodInvocationTree tree, VisitorState state) {
+  private static @Nullable ExpressionTree formatString(
+      MethodInvocationTree tree, VisitorState state) {
     ImmutableList<ExpressionTree> args = FormatStringUtils.formatMethodArguments(tree, state);
     if (!args.isEmpty()) {
       return args.get(0);
@@ -94,8 +94,7 @@ public class InlineFormatString extends BugChecker implements CompilationUnitTre
     return formatMethodAnnotationArguments(tree, state);
   }
 
-  @Nullable
-  private static ExpressionTree formatMethodAnnotationArguments(
+  private static @Nullable ExpressionTree formatMethodAnnotationArguments(
       MethodInvocationTree tree, VisitorState state) {
     MethodSymbol sym = getSymbol(tree);
     if (sym == null) {
