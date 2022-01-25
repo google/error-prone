@@ -81,6 +81,10 @@ public class OrphanedFormatString extends BugChecker implements LiteralTreeMatch
                   .onClass("com.google.common.truth.Truth")
                   .named("assertWithMessage")
                   .withParameters("java.lang.String"),
+              instanceMethod()
+                  .onDescendantOf("com.google.common.flogger.LoggingApi")
+                  .named("log")
+                  .withParameters("java.lang.String"),
               (t, s) ->
                   t instanceof MethodInvocationTree
                       && !findMatchingMethods(

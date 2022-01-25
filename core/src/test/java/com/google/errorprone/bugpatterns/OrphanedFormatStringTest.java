@@ -134,4 +134,35 @@ public class OrphanedFormatStringTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void flogger() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.common.flogger.FluentLogger;",
+            "class Test {",
+            "  private static final FluentLogger logger = FluentLogger.forEnclosingClass();",
+            "  public void f() {",
+            "    // BUG: Diagnostic contains:",
+            "    logger.atInfo().log(\"hello %d\");",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void negativeFlogger() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.common.flogger.FluentLogger;",
+            "class Test {",
+            "  private static final FluentLogger logger = FluentLogger.forEnclosingClass();",
+            "  public void f(String arg) {",
+            "    logger.atInfo().log(\"hello %d\", arg);",
+            "  }",
+            "}")
+        .doTest();
+  }
 }

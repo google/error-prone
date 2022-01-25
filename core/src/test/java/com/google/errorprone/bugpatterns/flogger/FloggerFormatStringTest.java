@@ -111,27 +111,9 @@ public class FloggerFormatStringTest {
         .doTest();
   }
 
+  // log(String)  takes a literal string, not a format string
   @Test
-  public void checksLogStringIfFloggerLogStringIsDisabled() {
-    // TODO(b/183117069): Remove once FloggerLogString is fully enabled
-    compilationHelper
-        .setArgs("-XepOpt:FloggerLogStringDisabled=true")
-        .addSourceLines(
-            "Test.java",
-            "package test;",
-            "import com.google.common.flogger.FluentLogger;",
-            "class Test {",
-            "  private static final FluentLogger logger = FluentLogger.forEnclosingClass();",
-            "  public void f() {",
-            "    // BUG: Diagnostic contains:",
-            "    logger.atSevere().log(\"hello %s\");",
-            "  }",
-            "}")
-        .doTest();
-  }
-
-  @Test
-  public void doesNotCheckLogStringIfFloggerLogStringIsEnabled() {
+  public void negativeLogString() {
     compilationHelper
         .addSourceLines(
             "Test.java",
