@@ -297,10 +297,13 @@ public class ASTHelpers {
   }
 
   /** Gets the method symbol for a new class. */
-  @Nullable
   public static MethodSymbol getSymbol(NewClassTree tree) {
     Symbol sym = ((JCNewClass) tree).constructor;
-    return sym instanceof MethodSymbol ? (MethodSymbol) sym : null;
+    if (!(sym instanceof MethodSymbol)) {
+      // Defensive. Would only occur if there are errors in the AST.
+      throw new IllegalArgumentException(tree.toString());
+    }
+    return (MethodSymbol) sym;
   }
 
   /** Gets the symbol for a variable. */
@@ -309,21 +312,23 @@ public class ASTHelpers {
   }
 
   /** Gets the symbol for a method invocation. */
-  @Nullable
   public static MethodSymbol getSymbol(MethodInvocationTree tree) {
     Symbol sym = ASTHelpers.getSymbol(tree.getMethodSelect());
     if (!(sym instanceof MethodSymbol)) {
       // Defensive. Would only occur if there are errors in the AST.
-      return null;
+      throw new IllegalArgumentException(tree.toString());
     }
     return (MethodSymbol) sym;
   }
 
   /** Gets the symbol for a member reference. */
-  @Nullable
   public static MethodSymbol getSymbol(MemberReferenceTree tree) {
     Symbol sym = ((JCMemberReference) tree).sym;
-    return sym instanceof MethodSymbol ? (MethodSymbol) sym : null;
+    if (!(sym instanceof MethodSymbol)) {
+      // Defensive. Would only occur if there are errors in the AST.
+      throw new IllegalArgumentException(tree.toString());
+    }
+    return (MethodSymbol) sym;
   }
 
   /* Checks whether an expression requires parentheses. */
