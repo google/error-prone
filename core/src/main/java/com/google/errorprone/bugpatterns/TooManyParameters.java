@@ -117,7 +117,7 @@ public class TooManyParameters extends BugChecker implements MethodTreeMatcher {
     return true;
   }
 
-  // Copied from MissingOverride.java
+  // TODO(b/216306810): copied from MissingOverride.java
   private static boolean isEffectivelyOverride(Symbol sym, Types types) {
     // static methods can't be overrides
     if (sym.isStatic()) {
