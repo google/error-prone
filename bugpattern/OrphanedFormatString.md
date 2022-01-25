@@ -25,12 +25,24 @@ if (!isValid(arg)) {
 }
 ```
 
+or this:
+
+```java
+logger.atWarning().log("invalid arg: %s", arg);
+```
+
 Not this:
 
 ```java
 if (!isValid(arg)) {
   throw new IllegalArgumentException("invalid arg: %s");
 }
+```
+
+or this:
+
+```java
+logger.atWarning().log("invalid arg: %s");
 ```
 
 If the method you're calling actually accepts a format string, you can annotate
