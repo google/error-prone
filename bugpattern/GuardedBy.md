@@ -116,6 +116,11 @@ ClassName.methodName()
 The static method specified by methodName(). Methods called to return locks
 should be deterministic.
 
+</td></tr><tr><td><code>
+itself
+</code></td><td>
+The annotated field.
+
 </td></tr></table>
 
 ### Annotations
