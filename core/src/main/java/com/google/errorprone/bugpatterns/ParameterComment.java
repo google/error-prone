@@ -43,7 +43,6 @@ import java.util.stream.Stream;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
-    name = "ParameterComment",
     summary = "Non-standard parameter comment; prefer `/* paramName= */ arg`",
     severity = SUGGESTION,
     tags = StandardTags.STYLE)

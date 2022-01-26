@@ -44,7 +44,6 @@ import javax.lang.model.element.Modifier;
 
 /** See summary for details. */
 @BugPattern(
-    name = "AutoValueBuilderDefaultsInConstructor",
     summary =
         "Defaults for AutoValue Builders should be set in the factory method returning Builder"
             + " instances, not the constructor",

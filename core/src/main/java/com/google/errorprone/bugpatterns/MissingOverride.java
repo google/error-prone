@@ -37,7 +37,6 @@ import javax.lang.model.element.Modifier;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
-    name = "MissingOverride",
     summary = "method overrides method in supertype; expected @Override",
     severity = WARNING,
     tags = StandardTags.STYLE)

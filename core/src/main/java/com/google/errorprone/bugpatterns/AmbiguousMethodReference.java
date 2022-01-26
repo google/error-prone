@@ -42,10 +42,7 @@ import java.util.List;
 import java.util.Map;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
-@BugPattern(
-    name = "AmbiguousMethodReference",
-    summary = "Method reference is ambiguous",
-    severity = WARNING)
+@BugPattern(summary = "Method reference is ambiguous", severity = WARNING)
 public class AmbiguousMethodReference extends BugChecker implements ClassTreeMatcher {
 
   @Override

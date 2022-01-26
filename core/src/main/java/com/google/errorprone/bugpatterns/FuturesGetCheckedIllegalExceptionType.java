@@ -53,7 +53,6 @@ import java.util.List;
  * pass an incompatible exception type.
  */
 @BugPattern(
-    name = "FuturesGetCheckedIllegalExceptionType",
     summary = "Futures.getChecked requires a checked exception type with a standard constructor.",
     severity = ERROR)
 public final class FuturesGetCheckedIllegalExceptionType extends BugChecker

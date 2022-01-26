@@ -36,10 +36,7 @@ import java.util.List;
  * ErrorProne checker to generate warning when method expecting distinct varargs is invoked with
  * same variable argument.
  */
-@BugPattern(
-    name = "DistinctVarargsChecker",
-    summary = "Method expects distinct arguments at some/all positions",
-    severity = WARNING)
+@BugPattern(summary = "Method expects distinct arguments at some/all positions", severity = WARNING)
 public final class DistinctVarargsChecker extends BugChecker
     implements MethodInvocationTreeMatcher {
 

@@ -41,7 +41,6 @@ import com.sun.source.tree.WhileLoopTree;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
-    name = "MissingBraces",
     summary =
         "The Google Java Style Guide requires braces to be used with if, else, for, do and while"
             + " statements, even when the body is empty or contains only a single statement.",

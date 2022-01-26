@@ -60,7 +60,6 @@ import javax.lang.model.element.Modifier;
  * @author ghm@google.com (Graeme Morgan)
  */
 @BugPattern(
-    name = "UnusedException",
     summary =
         "This catch block catches an exception and re-throws another, but swallows the caught"
             + " exception rather than setting it as a cause. This can make debugging harder.",

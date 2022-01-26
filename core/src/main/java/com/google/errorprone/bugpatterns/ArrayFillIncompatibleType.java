@@ -40,7 +40,6 @@ import com.sun.tools.javac.code.Type;
  * result in an ArrayStoreException.
  */
 @BugPattern(
-    name = "ArrayFillIncompatibleType",
     summary = "Arrays.fill(Object[], Object) called with incompatible types.",
     severity = ERROR)
 public class ArrayFillIncompatibleType extends BugChecker implements MethodInvocationTreeMatcher {

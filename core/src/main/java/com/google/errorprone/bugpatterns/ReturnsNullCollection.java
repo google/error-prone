@@ -39,7 +39,6 @@ import java.util.Optional;
  * @author bhagwani@google.com (Sumit Bhagwani)
  */
 @BugPattern(
-    name = "ReturnsNullCollection",
     summary =
         "Method has a collection return type and returns {@code null} in some cases but does not"
             + " annotate the method as @Nullable. See Effective Java 3rd Edition Item 54.",

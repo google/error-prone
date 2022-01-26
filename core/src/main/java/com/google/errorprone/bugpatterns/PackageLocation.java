@@ -35,7 +35,6 @@ import java.util.List;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
-    name = "PackageLocation",
     summary = "Package names should match the directory they are declared in",
     severity = SUGGESTION,
     documentSuppression = false,

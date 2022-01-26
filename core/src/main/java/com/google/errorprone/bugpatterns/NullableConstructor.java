@@ -32,7 +32,6 @@ import com.sun.tools.javac.code.Symbol;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
-    name = "NullableConstructor",
     summary = "Constructors should not be annotated with @Nullable since they cannot return null",
     severity = WARNING,
     tags = StandardTags.STYLE)

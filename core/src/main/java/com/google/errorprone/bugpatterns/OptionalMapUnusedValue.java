@@ -35,7 +35,6 @@ import com.sun.source.tree.Tree.Kind;
 
 /** Replaces {@code Optional.map} with {@code Optional.ifPresent} if the value is unused. */
 @BugPattern(
-    name = "OptionalMapUnusedValue",
     summary = "Optional.ifPresent is preferred over Optional.map when the return value is unused",
     severity = ERROR)
 public final class OptionalMapUnusedValue extends BugChecker

@@ -48,7 +48,6 @@ import javax.lang.model.element.Modifier;
 
 /** @author Louis Wasserman */
 @BugPattern(
-    name = "FunctionalInterfaceMethodChanged",
     summary =
         "Casting a lambda to this @FunctionalInterface can cause a behavior change from casting to"
             + " a functional superinterface, which is surprising to users.  Prefer decorator"

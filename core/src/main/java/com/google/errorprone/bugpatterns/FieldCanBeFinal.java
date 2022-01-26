@@ -57,7 +57,6 @@ import javax.lang.model.element.TypeElement;
 
 /** @author Liam Miller-Cushon (cushon@google.com) */
 @BugPattern(
-    name = "FieldCanBeFinal",
     summary = "This field is only assigned during initialization; consider making it final",
     severity = SUGGESTION)
 public class FieldCanBeFinal extends BugChecker implements CompilationUnitTreeMatcher {

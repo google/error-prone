@@ -41,7 +41,6 @@ import javax.lang.model.element.Modifier;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
-    name = "TooManyParameters",
     summary = "A large number of parameters on public APIs should be avoided.",
     severity = WARNING)
 public class TooManyParameters extends BugChecker implements MethodTreeMatcher {

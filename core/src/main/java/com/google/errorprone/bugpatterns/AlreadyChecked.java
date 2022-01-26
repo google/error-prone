@@ -53,10 +53,7 @@ import java.util.Set;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /** Bugpattern to find conditions which are checked more than once. */
-@BugPattern(
-    name = "AlreadyChecked",
-    severity = WARNING,
-    summary = "This condition has already been checked.")
+@BugPattern(severity = WARNING, summary = "This condition has already been checked.")
 public final class AlreadyChecked extends BugChecker implements CompilationUnitTreeMatcher {
 
   private final ConstantExpressions constantExpressions;

@@ -45,7 +45,6 @@ import javax.lang.model.element.Modifier;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
-    name = "DateFormatConstant",
     summary = "DateFormat is not thread-safe, and should not be used as a constant field.",
     severity = WARNING,
     tags = StandardTags.FRAGILE_CODE)

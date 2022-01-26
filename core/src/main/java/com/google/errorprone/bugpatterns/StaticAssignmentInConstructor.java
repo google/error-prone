@@ -35,7 +35,6 @@ import com.sun.tools.javac.code.Symbol.MethodSymbol;
 
 /** Checks for static fields being assigned within constructors. */
 @BugPattern(
-    name = "StaticAssignmentInConstructor",
     severity = WARNING,
     summary =
         "This assignment is to a static field. Mutating static state from a constructor is highly"

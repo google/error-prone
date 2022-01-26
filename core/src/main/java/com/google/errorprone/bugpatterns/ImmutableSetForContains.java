@@ -66,7 +66,6 @@ import javax.lang.model.element.Modifier;
  * ImmutableList} when using only contains, containsAll and isEmpty.
  */
 @BugPattern(
-    name = "ImmutableSetForContains",
     summary =
         "This private static ImmutableList is only used for contains, containsAll or isEmpty"
             + " checks; prefer ImmutableSet.",

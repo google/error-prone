@@ -48,10 +48,7 @@ import java.util.function.Predicate;
 import javax.lang.model.element.ElementKind;
 
 /** @author scottjohnson@google.com (Scott Johnson) */
-@BugPattern(
-    name = "ModifyingCollectionWithItself",
-    summary = "Using a collection function with itself as the argument.",
-    severity = ERROR)
+@BugPattern(summary = "Using a collection function with itself as the argument.", severity = ERROR)
 public class ModifyingCollectionWithItself extends BugChecker
     implements MethodInvocationTreeMatcher {
 

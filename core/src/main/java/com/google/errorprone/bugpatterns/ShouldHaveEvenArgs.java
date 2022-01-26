@@ -39,7 +39,6 @@ import java.util.List;
  * @author bhagwani@google.com (Sumit Bhagwani)
  */
 @BugPattern(
-    name = "ShouldHaveEvenArgs",
     summary = "This method must be called with an even number of arguments.",
     severity = ERROR)
 public class ShouldHaveEvenArgs extends BugChecker implements MethodInvocationTreeMatcher {

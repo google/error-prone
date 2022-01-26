@@ -44,7 +44,6 @@ import javax.lang.model.type.TypeKind;
  * @author mariasam@google.com (Maria Sam)
  */
 @BugPattern(
-    name = "HidingField",
     summary = "Hiding fields of superclasses may cause confusion and errors",
     severity = WARNING,
     altNames = {"hiding", "OvershadowingSubclassFields"})

@@ -72,7 +72,6 @@ import javax.annotation.Nullable;
  * }</pre>
  */
 @BugPattern(
-    name = "ImplementAssertionWithChaining",
     summary = "Prefer check(...), which usually generates more readable failure messages.",
     severity = SUGGESTION)
 public final class ImplementAssertionWithChaining extends BugChecker implements IfTreeMatcher {

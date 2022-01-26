@@ -40,7 +40,6 @@ import java.util.List;
 
 /** Matches {@code Optional#map} mapping to another {@code Optional}. */
 @BugPattern(
-    name = "OptionalMapToOptional",
     summary = "Mapping to another Optional will yield a nested Optional. Did you mean flatMap?",
     severity = WARNING)
 public final class OptionalMapToOptional extends BugChecker implements MethodInvocationTreeMatcher {

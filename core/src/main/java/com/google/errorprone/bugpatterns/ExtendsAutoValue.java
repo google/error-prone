@@ -32,7 +32,6 @@ import java.util.Objects;
 
 /** Makes sure that you are not extending a class that has @AutoValue as an annotation. */
 @BugPattern(
-    name = "ExtendsAutoValue",
     summary = "Do not extend an @AutoValue/@AutoOneOf class in non-generated code.",
     severity = SeverityLevel.ERROR)
 public final class ExtendsAutoValue extends BugChecker implements ClassTreeMatcher {

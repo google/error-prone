@@ -46,7 +46,6 @@ import javax.annotation.Nullable;
 
 /** Flags passing literal null to {@code Optional}-accepting APIs. */
 @BugPattern(
-    name = "NullOptional",
     summary =
         "Passing a literal null to an Optional parameter is almost certainly a mistake. Did you"
             + " mean to provide an empty Optional?",

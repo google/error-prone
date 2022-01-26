@@ -33,7 +33,6 @@ import com.sun.source.tree.ClassTree;
 
 /** Flags uses of parameters in non-parameterized tests. */
 @BugPattern(
-    name = "ParametersButNotParameterized",
     summary =
         "This test has @Parameters but is using the default JUnit4 runner. The parameters will"
             + " have no effect.",

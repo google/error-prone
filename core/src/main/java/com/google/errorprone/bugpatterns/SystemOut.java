@@ -36,7 +36,6 @@ import com.sun.source.tree.MethodInvocationTree;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
-    name = "SystemOut",
     summary =
         "Printing to standard output should only be used for debugging, not in production code",
     severity = WARNING,

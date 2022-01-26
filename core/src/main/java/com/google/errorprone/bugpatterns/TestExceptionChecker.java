@@ -48,7 +48,6 @@ import javax.annotation.Nullable;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
-    name = "TestExceptionChecker",
     summary =
         "Using @Test(expected=...) is discouraged, since the test will pass if *any* statement in"
             + " the test method throws the expected exception",

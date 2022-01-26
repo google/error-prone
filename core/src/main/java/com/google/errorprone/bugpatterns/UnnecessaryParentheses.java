@@ -33,7 +33,6 @@ import com.sun.source.tree.Tree;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
-    name = "UnnecessaryParentheses",
     summary =
         "These grouping parentheses are unnecessary; it is unlikely the code will"
             + " be misinterpreted without them",

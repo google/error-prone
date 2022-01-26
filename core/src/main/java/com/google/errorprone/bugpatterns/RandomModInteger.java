@@ -32,7 +32,6 @@ import com.sun.source.tree.Tree.Kind;
 
 /** @author Louis Wasserman */
 @BugPattern(
-    name = "RandomModInteger",
     summary = "Use Random.nextInt(int).  Random.nextInt() % n can have negative results",
     severity = SeverityLevel.ERROR)
 public class RandomModInteger extends BugChecker implements BinaryTreeMatcher {

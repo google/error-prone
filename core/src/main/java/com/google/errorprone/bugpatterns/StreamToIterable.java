@@ -41,7 +41,6 @@ import com.sun.tools.javac.code.Symbol.VarSymbol;
 
 /** Discourage {@code stream::iterator} to create {@link Iterable}s. */
 @BugPattern(
-    name = "StreamToIterable",
     summary =
         "Using stream::iterator creates a one-shot Iterable, which may cause surprising failures.",
     severity = WARNING,

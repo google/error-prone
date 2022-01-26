@@ -55,7 +55,6 @@ import java.util.function.BiFunction;
  * @author eleanorh@google.com (Eleanor Harris)
  */
 @BugPattern(
-    name = "UndefinedEquals",
     summary = "This type is not guaranteed to implement a useful #equals method.",
     severity = WARNING)
 public final class UndefinedEquals extends BugChecker implements MethodInvocationTreeMatcher {

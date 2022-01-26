@@ -60,7 +60,6 @@ import javax.lang.model.element.NestingKind;
  * @author bhagwani@google.com (Sumit Bhagwani)
  */
 @BugPattern(
-    name = "ConstantPatternCompile",
     summary = "Variables initialized with Pattern#compile calls on constants can be constants",
     severity = WARNING)
 public final class ConstantPatternCompile extends BugChecker implements VariableTreeMatcher {

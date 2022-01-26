@@ -70,10 +70,7 @@ import java.util.Set;
 import javax.annotation.Nullable;
 
 /** Matches comparison of proto fields to {@code null}. */
-@BugPattern(
-    name = "ProtoFieldNullComparison",
-    summary = "Protobuf fields cannot be null.",
-    severity = ERROR)
+@BugPattern(summary = "Protobuf fields cannot be null.", severity = ERROR)
 public class ProtoFieldNullComparison extends BugChecker implements CompilationUnitTreeMatcher {
 
   // TODO(b/111109484): Try to consolidate these with NullnessPropagationTransfer.

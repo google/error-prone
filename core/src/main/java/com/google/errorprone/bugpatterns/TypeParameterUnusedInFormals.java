@@ -35,7 +35,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 @BugPattern(
-    name = "TypeParameterUnusedInFormals",
     summary =
         "Declaring a type parameter that is only used in the return type is a misuse of"
             + " generics: operations on the type parameter are unchecked, it hides unsafe casts at"

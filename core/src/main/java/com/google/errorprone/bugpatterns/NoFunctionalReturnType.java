@@ -33,7 +33,6 @@ import com.sun.source.tree.MethodTree;
  * @author seibelsabrina@google.com (Sabrina Seibel)
  */
 @BugPattern(
-    name = "NoFunctionalReturnType",
     summary =
         "Instead of returning a functional type, return the actual type that the returned function"
             + " would return and use lambdas at use site.",

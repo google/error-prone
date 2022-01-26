@@ -58,10 +58,7 @@ import java.util.Optional;
 import javax.annotation.Nullable;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
-@BugPattern(
-    name = "StringSplitter",
-    summary = "String.split(String) has surprising behavior",
-    severity = WARNING)
+@BugPattern(summary = "String.split(String) has surprising behavior", severity = WARNING)
 public class StringSplitter extends BugChecker implements MethodInvocationTreeMatcher {
 
   private static final Matcher<ExpressionTree> MATCHER =

@@ -31,7 +31,6 @@ import javax.lang.model.element.ElementKind;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
-    name = "TypeParameterQualifier",
     summary = "Type parameter used as type qualifier",
     severity = ERROR,
     suppressionAnnotations = {})

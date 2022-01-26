@@ -63,7 +63,6 @@ import java.util.stream.Stream;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
-    name = "CatchFail",
     summary =
         "Ignoring exceptions and calling fail() is unnecessary, and makes test output less useful",
     severity = WARNING)

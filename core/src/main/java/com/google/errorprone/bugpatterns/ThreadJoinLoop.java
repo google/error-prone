@@ -46,7 +46,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 /** @author mariasam@google.com (Maria Sam) */
 @BugPattern(
-    name = "ThreadJoinLoop",
     summary =
         "Thread.join needs to be immediately surrounded by a loop until it succeeds. "
             + "Consider using Uninterruptibles.joinUninterruptibly.",

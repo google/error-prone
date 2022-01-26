@@ -49,7 +49,6 @@ import javax.lang.model.util.SimpleAnnotationValueVisitor8;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
-    name = "NullablePrimitiveArray",
     summary =
         "@Nullable type annotations should not be used for primitive types since they cannot be"
             + " null",

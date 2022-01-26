@@ -65,7 +65,6 @@ import java.util.Map;
  * @author cpovirk@google.com (Chris Povirk)
  */
 @BugPattern(
-    name = "ChainingConstructorIgnoresParameter",
     severity = ERROR,
     summary =
         "The called constructor accepts a parameter with the same name and type as one of "

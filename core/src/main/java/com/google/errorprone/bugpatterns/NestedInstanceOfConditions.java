@@ -38,7 +38,6 @@ import com.sun.tools.javac.code.Types;
  * @author mariasam@google.com (Maria Sam)
  */
 @BugPattern(
-    name = "NestedInstanceOfConditions",
     summary =
         "Nested instanceOf conditions of disjoint types create blocks of code that never execute",
     severity = WARNING)

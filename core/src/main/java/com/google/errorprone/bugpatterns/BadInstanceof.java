@@ -39,7 +39,6 @@ import com.sun.source.tree.Tree.Kind;
  * @author ghm@google.com (Graeme Morgan)
  */
 @BugPattern(
-    name = "BadInstanceof",
     summary = "instanceof used in a way that is equivalent to a null check.",
     severity = WARNING,
     tags = SIMPLIFICATION)

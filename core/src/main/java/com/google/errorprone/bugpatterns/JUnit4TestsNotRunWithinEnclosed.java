@@ -49,7 +49,6 @@ import com.sun.tools.javac.code.Type.ClassType;
 
 /** Finds tests that won't run due to the enclosing runner. */
 @BugPattern(
-    name = "JUnit4TestsNotRunWithinEnclosed",
     summary =
         "This test is annotated @Test, but given it's within a class using the Enclosed runner,"
             + " will not run.",

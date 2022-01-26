@@ -56,7 +56,6 @@ import java.util.List;
  * resource variable initializer of a try-with-resources statement.
  */
 @BugPattern(
-    name = "MustBeClosedChecker",
     altNames = "MustBeClosed",
     summary =
         "This method returns a resource which must be managed carefully, not just left for garbage"

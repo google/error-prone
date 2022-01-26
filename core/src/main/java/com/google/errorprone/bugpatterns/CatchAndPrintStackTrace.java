@@ -33,7 +33,6 @@ import com.sun.source.tree.CatchTree;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
-    name = "CatchAndPrintStackTrace",
     summary =
         "Logging or rethrowing exceptions should usually be preferred to catching and calling"
             + " printStackTrace",

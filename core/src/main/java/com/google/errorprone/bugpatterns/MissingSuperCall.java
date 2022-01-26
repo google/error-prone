@@ -45,7 +45,6 @@ import javax.lang.model.element.Modifier;
 
 /** @author eaftan@google.com (Eddie Aftandilian) */
 @BugPattern(
-    name = "MissingSuperCall",
     summary = "Overriding method is missing a call to overridden super method",
     severity = ERROR)
 // TODO(eaftan): Add support for JDK methods that cannot be annotated, such as

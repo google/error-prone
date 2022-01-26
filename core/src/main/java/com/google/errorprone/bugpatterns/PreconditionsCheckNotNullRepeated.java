@@ -37,7 +37,6 @@ import java.util.List;
  * @author bhagwani@google.com (Sumit Bhagwani)
  */
 @BugPattern(
-    name = "PreconditionsCheckNotNullRepeated",
     summary =
         "Including the first argument of checkNotNull in the failure message is not useful, "
             + "as it will always be `null`.",

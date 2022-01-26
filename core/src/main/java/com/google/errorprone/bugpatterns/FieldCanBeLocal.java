@@ -63,7 +63,6 @@ import javax.lang.model.element.ElementKind;
 
 /** Flags fields which can be replaced with local variables. */
 @BugPattern(
-    name = "FieldCanBeLocal",
     altNames = {"unused", "Unused"},
     summary = "This field can be replaced with a local variable in the methods that use it.",
     severity = SUGGESTION,

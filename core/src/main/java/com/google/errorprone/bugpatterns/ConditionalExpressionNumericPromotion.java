@@ -35,7 +35,6 @@ import com.sun.tools.javac.code.Type;
 
 /** @author awturner@google.com (Andy Turner) */
 @BugPattern(
-    name = "ConditionalExpressionNumericPromotion",
     summary =
         "A conditional expression with numeric operands of differing types will perform binary "
             + "numeric promotion of the operands; when these operands are of reference types, "

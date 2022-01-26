@@ -45,7 +45,6 @@ import com.sun.tools.javac.code.Type;
 
 /** @author avenet@google.com (Arnaud J. Venet) */
 @BugPattern(
-    name = "EqualsIncompatibleType",
     summary = "An equality test between objects with incompatible types always returns false",
     severity = WARNING)
 public class EqualsIncompatibleType extends BugChecker

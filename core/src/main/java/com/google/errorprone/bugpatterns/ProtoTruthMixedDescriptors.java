@@ -49,7 +49,6 @@ import java.util.Optional;
  * @author ghm@google.com (Graeme Morgan)
  */
 @BugPattern(
-    name = "ProtoTruthMixedDescriptors",
     summary =
         "The arguments passed to `ignoringFields` are inconsistent with the proto which is "
             + "the subject of the assertion.",

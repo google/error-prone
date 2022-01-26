@@ -33,7 +33,6 @@ import javax.lang.model.element.Name;
 
 /** Check for variables and types with the same name */
 @BugPattern(
-    name = "VariableNameSameAsType",
     summary =
         "variableName and type with the same name "
             + "would refer to the static field instead of the class",

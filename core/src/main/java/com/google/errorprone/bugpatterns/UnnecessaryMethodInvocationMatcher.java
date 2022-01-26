@@ -40,7 +40,6 @@ import java.util.List;
  * @author amalloy@google.com (Alan Malloy)
  */
 @BugPattern(
-    name = "UnnecessaryMethodInvocationMatcher",
     summary = "It is not necessary to wrap a MethodMatcher with methodInvocation().",
     severity = WARNING)
 public class UnnecessaryMethodInvocationMatcher extends BugChecker

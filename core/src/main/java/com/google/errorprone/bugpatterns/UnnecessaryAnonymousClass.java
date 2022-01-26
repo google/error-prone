@@ -58,7 +58,6 @@ import javax.lang.model.element.Modifier;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
-    name = "UnnecessaryAnonymousClass",
     summary =
         "Implementing a functional interface is unnecessary; prefer to implement the functional"
             + " interface method directly and use a method reference instead.",

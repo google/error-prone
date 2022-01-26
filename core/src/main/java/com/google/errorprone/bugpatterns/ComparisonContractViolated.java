@@ -58,7 +58,6 @@ import java.util.Set;
 
 /** @author Louis Wasserman */
 @BugPattern(
-    name = "ComparisonContractViolated",
     summary = "This comparison method violates the contract",
     severity = SeverityLevel.ERROR)
 public class ComparisonContractViolated extends BugChecker implements MethodTreeMatcher {

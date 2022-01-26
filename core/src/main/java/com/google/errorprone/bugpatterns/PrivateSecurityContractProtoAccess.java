@@ -34,7 +34,6 @@ import java.util.regex.Pattern;
 
 /** Check for disallowed access to private_do_not_access_or_else proto fields. */
 @BugPattern(
-    name = "PrivateSecurityContractProtoAccess",
     summary =
         "Access to a private protocol buffer field is forbidden. This protocol buffer carries"
             + " a security contract, and can only be created using an approved library."

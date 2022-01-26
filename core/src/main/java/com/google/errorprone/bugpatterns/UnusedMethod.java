@@ -79,7 +79,6 @@ import javax.lang.model.element.Name;
 
 /** Bugpattern to detect unused declarations. */
 @BugPattern(
-    name = "UnusedMethod",
     altNames = {"Unused", "unused", "UnusedParameters"},
     summary = "Unused.",
     severity = WARNING,

@@ -31,7 +31,6 @@ import com.sun.source.tree.CompilationUnitTree;
 
 /** Replaces printable ASCII unicode escapes with the literal version. */
 @BugPattern(
-    name = "UnicodeEscape",
     summary =
         "Using unicode escape sequences for printable ASCII characters is obfuscated, and"
             + " potentially dangerous.",

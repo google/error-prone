@@ -68,10 +68,7 @@ import java.util.regex.Pattern;
 import javax.annotation.Nullable;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
-@BugPattern(
-    name = "ExpectedExceptionChecker",
-    summary = "Prefer assertThrows to ExpectedException",
-    severity = WARNING)
+@BugPattern(summary = "Prefer assertThrows to ExpectedException", severity = WARNING)
 public class ExpectedExceptionChecker extends BugChecker implements MethodTreeMatcher {
 
   static final Matcher<StatementTree> MATCHER =

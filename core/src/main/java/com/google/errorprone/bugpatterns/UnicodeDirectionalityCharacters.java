@@ -29,7 +29,6 @@ import com.sun.source.tree.CompilationUnitTree;
 
 /** Bans, without the possibility of suppression, the use of direction-changing Unicode escapes. */
 @BugPattern(
-    name = "UnicodeDirectionalityCharacters",
     severity = ERROR,
     summary = "Unicode directionality modifiers can be used to conceal code in many editors.",
     disableable = false)

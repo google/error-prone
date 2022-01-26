@@ -41,7 +41,6 @@ import com.sun.tools.javac.code.Type;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
-    name = "IdentityHashMapUsage",
     summary = "IdentityHashMap usage shouldn't be intermingled with Map",
     severity = WARNING)
 public class IdentityHashMapUsage extends BugChecker

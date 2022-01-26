@@ -52,7 +52,6 @@ import javax.lang.model.element.Modifier;
 
 /** Flags a few ways in which member names may violate the style guide. */
 @BugPattern(
-    name = "MemberName",
     severity = WARNING,
     summary = "Methods and non-static variables should be named in lowerCamelCase.",
     linkType = CUSTOM,

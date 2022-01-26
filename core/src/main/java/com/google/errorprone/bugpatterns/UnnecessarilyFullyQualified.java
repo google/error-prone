@@ -61,7 +61,6 @@ import javax.lang.model.element.Name;
 
 /** Flags uses of fully qualified names which are not ambiguous if imported. */
 @BugPattern(
-    name = "UnnecessarilyFullyQualified",
     severity = SeverityLevel.WARNING,
     summary = "This fully qualified name is unambiguous to the compiler if imported.")
 public final class UnnecessarilyFullyQualified extends BugChecker

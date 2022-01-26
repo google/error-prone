@@ -52,7 +52,6 @@ import javax.lang.model.element.ElementKind;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
-    name = "WildcardImport",
     summary = "Wildcard imports, static or otherwise, should not be used",
     severity = SUGGESTION,
     linkType = CUSTOM,

@@ -31,7 +31,6 @@ import com.sun.source.tree.Tree.Kind;
 
 /** Check for expressions containing {@code this != null} or {@code this == null} */
 @BugPattern(
-    name = "ComparingThisWithNull",
     summary = "this == null is always false, this != null is always true",
     explanation =
         "The boolean expression this != null always returns true"

@@ -36,7 +36,6 @@ import com.sun.source.tree.TypeCastTree;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
-    name = "NegativeCharLiteral",
     summary = "Casting a negative signed literal to an (unsigned) char might be misleading.",
     severity = WARNING)
 public class NegativeCharLiteral extends BugChecker implements TypeCastTreeMatcher {

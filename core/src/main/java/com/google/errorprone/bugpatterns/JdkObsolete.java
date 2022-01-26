@@ -64,10 +64,7 @@ import java.util.Optional;
 import javax.annotation.Nullable;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
-@BugPattern(
-    name = "JdkObsolete",
-    summary = "Suggests alternatives to obsolete JDK classes.",
-    severity = WARNING)
+@BugPattern(summary = "Suggests alternatives to obsolete JDK classes.", severity = WARNING)
 public class JdkObsolete extends BugChecker
     implements NewClassTreeMatcher, ClassTreeMatcher, MemberReferenceTreeMatcher {
 

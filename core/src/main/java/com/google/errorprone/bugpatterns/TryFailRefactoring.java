@@ -45,11 +45,7 @@ import java.util.List;
 import java.util.Optional;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
-@BugPattern(
-    name = "TryFailRefactoring",
-    summary = "Prefer assertThrows to try/fail",
-    severity = SUGGESTION,
-    tags = REFACTORING)
+@BugPattern(summary = "Prefer assertThrows to try/fail", severity = SUGGESTION, tags = REFACTORING)
 public class TryFailRefactoring extends BugChecker implements TryTreeMatcher {
 
   private static final Matcher<StatementTree> FAIL_METHOD =

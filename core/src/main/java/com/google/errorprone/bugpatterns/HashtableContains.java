@@ -40,7 +40,6 @@ import java.util.concurrent.ConcurrentHashMap;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
-    name = "HashtableContains",
     summary = "contains() is a legacy method that is equivalent to containsValue()",
     severity = ERROR)
 public class HashtableContains extends BugChecker implements MethodInvocationTreeMatcher {

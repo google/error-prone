@@ -56,7 +56,6 @@ import java.util.stream.Collectors;
  * @author bennostein@google.com (Benno Stein)
  */
 @BugPattern(
-    name = "TypeNameShadowing",
     summary = "Type parameter declaration shadows another named type",
     severity = WARNING,
     tags = StandardTags.STYLE)

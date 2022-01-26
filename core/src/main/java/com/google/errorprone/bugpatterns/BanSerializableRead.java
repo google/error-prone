@@ -37,7 +37,6 @@ import com.sun.source.tree.MethodInvocationTree;
 
 /** A {@link BugChecker} that detects use of the unsafe {@link java.io.Serializable} API. */
 @BugPattern(
-    name = "BanSerializableRead",
     summary = "Deserializing user input via the `Serializable` API is extremely dangerous",
     severity = SeverityLevel.ERROR)
 public final class BanSerializableRead extends BugChecker implements MethodInvocationTreeMatcher {

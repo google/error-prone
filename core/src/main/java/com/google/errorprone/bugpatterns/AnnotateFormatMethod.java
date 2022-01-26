@@ -46,7 +46,6 @@ import javax.annotation.Nullable;
  * @author ghm@google.com (Graeme Morgan)
  */
 @BugPattern(
-    name = "AnnotateFormatMethod",
     summary =
         "This method passes a pair of parameters through to String.format, but the enclosing"
             + " method wasn't annotated @FormatMethod. Doing so gives compile-time rather than"

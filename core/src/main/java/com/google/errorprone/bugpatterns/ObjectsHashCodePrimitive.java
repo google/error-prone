@@ -37,7 +37,6 @@ import java.util.Objects;
  * @author seibelsabrina@google.com (Sabrina Seibel)
  */
 @BugPattern(
-    name = "ObjectsHashCodePrimitive",
     summary = "Objects.hashCode(Object o) should not be passed a primitive value",
     severity = WARNING)
 public final class ObjectsHashCodePrimitive extends BugChecker

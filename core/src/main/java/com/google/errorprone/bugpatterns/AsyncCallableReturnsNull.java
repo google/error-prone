@@ -23,7 +23,6 @@ import com.google.errorprone.BugPattern;
 
 /** Checks that {@link AsyncCallable} implementations do not directly {@code return null}. */
 @BugPattern(
-    name = "AsyncCallableReturnsNull",
     summary = "AsyncCallable should not return a null Future, only a Future whose result is null.",
     severity = ERROR)
 public final class AsyncCallableReturnsNull extends AbstractAsyncTypeReturnsNull {

@@ -37,7 +37,6 @@ import javax.lang.model.element.Modifier;
 
 /** Removes {@code final} from non-field variables. */
 @BugPattern(
-    name = "UnnecessaryFinal",
     summary =
         "Since Java 8, it's been unnecessary to make local variables and parameters `final` for use"
             + " in lambdas or anonymous classes. Marking them as `final` is weakly discouraged, as"

@@ -26,10 +26,7 @@ import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
 /** @author mdempsky@google.com (Matthew Dempsky) */
-@BugPattern(
-    name = "InvalidPatternSyntax",
-    summary = "Invalid syntax used for a regular expression",
-    severity = ERROR)
+@BugPattern(summary = "Invalid syntax used for a regular expression", severity = ERROR)
 public class InvalidPatternSyntax extends AbstractPatternSyntaxChecker {
 
   private static final String MESSAGE_BASE = "Invalid syntax used for a regular expression: ";

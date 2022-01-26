@@ -42,10 +42,7 @@ import java.util.stream.Collectors;
 import javax.lang.model.element.Modifier;
 
 /** {@code @BeforeClass} or {@code @AfterClass} should be applied to static methods. */
-@BugPattern(
-    name = "JUnit4ClassAnnotationNonStatic",
-    summary = "This method should be static",
-    severity = ERROR)
+@BugPattern(summary = "This method should be static", severity = ERROR)
 public class JUnit4ClassAnnotationNonStatic extends BugChecker implements MethodTreeMatcher {
 
   private static final MultiMatcher<MethodTree, AnnotationTree> CLASS_INIT_ANNOTATION =

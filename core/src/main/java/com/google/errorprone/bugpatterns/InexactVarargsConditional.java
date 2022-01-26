@@ -36,7 +36,6 @@ import com.sun.tools.javac.code.Types;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
-    name = "InexactVarargsConditional",
     summary = "Conditional expression in varargs call contains array and non-array arguments",
     severity = ERROR)
 public class InexactVarargsConditional extends BugChecker implements MethodInvocationTreeMatcher {

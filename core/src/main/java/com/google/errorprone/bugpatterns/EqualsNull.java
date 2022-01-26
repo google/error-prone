@@ -44,7 +44,6 @@ import com.sun.source.tree.Tree.Kind;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
-    name = "EqualsNull",
     summary =
         "The contract of Object.equals() states that for any non-null reference value x,"
             + " x.equals(null) should return false. If x is null, a NullPointerException is thrown."

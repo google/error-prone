@@ -62,7 +62,6 @@ import javax.annotation.Nullable;
 
 /** Check for non-allowlisted callers to RestrictedApiChecker. */
 @BugPattern(
-    name = "RestrictedApiChecker",
     summary = "Check for non-allowlisted callers to RestrictedApiChecker.",
     severity = SeverityLevel.ERROR)
 public class RestrictedApiChecker extends BugChecker

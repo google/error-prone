@@ -37,7 +37,6 @@ import com.sun.source.tree.MethodTree;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
-    name = "MissingImplementsComparable",
     summary = "Classes implementing valid compareTo function should implement Comparable interface",
     severity = WARNING)
 public class MissingImplementsComparable extends BugChecker implements MethodTreeMatcher {

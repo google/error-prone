@@ -39,7 +39,6 @@ import javax.lang.model.element.Name;
 
 /** @author eaftan@google.com (Eddie Aftandilian) */
 @BugPattern(
-    name = "CheckReturnValue",
     altNames = {"ResultOfMethodCallIgnored", "ReturnValueIgnored"},
     summary = "Ignored return value of method that is annotated with @CheckReturnValue",
     severity = ERROR)

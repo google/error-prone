@@ -50,7 +50,6 @@ import javax.lang.model.element.Modifier;
 
 /** Removes overrides which purely pass through to the method in the super class. */
 @BugPattern(
-    name = "RedundantOverride",
     summary = "This overriding method is redundant, and can be removed.",
     severity = WARNING)
 public final class RedundantOverride extends BugChecker implements MethodTreeMatcher {

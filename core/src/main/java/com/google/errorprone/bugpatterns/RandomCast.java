@@ -41,7 +41,6 @@ import javax.lang.model.type.TypeKind;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
-    name = "RandomCast",
     summary =
         "Casting a random number in the range [0.0, 1.0) to an integer or long always results"
             + " in 0.",

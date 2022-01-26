@@ -40,7 +40,6 @@ import com.sun.source.tree.MethodTree;
  * @author bhagwani@google.com (Sumit Bhagwani)
  */
 @BugPattern(
-    name = "HashCodeToString",
     summary = "Classes that override hashCode should also consider overriding toString.",
     severity = SUGGESTION,
     tags = StandardTags.FRAGILE_CODE)

@@ -38,7 +38,6 @@ import java.util.List;
 
 /** Bans using non-ASCII Unicode characters outside string literals and comments. */
 @BugPattern(
-    name = "UnicodeInCode",
     severity = ERROR,
     summary =
         "Avoid using non-ASCII Unicode characters outside of comments and literals, as they can be"

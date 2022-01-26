@@ -60,10 +60,7 @@ import java.util.TreeSet;
  * <p>This checks for the required method in the current class and all the base classes. In case the
  * required method is present in a superclass, this check would generate a false positive.
  */
-@BugPattern(
-    name = "JUnitParameterMethodNotFound",
-    summary = "The method for providing parameters was not found.",
-    severity = ERROR)
+@BugPattern(summary = "The method for providing parameters was not found.", severity = ERROR)
 public class JUnitParameterMethodNotFound extends BugChecker implements MethodTreeMatcher {
 
   private static final Matcher<AnnotationTree> PARAMETERS_ANNOTATION_MATCHER =

@@ -37,7 +37,6 @@ import java.util.TimeZone;
 
 /** @author awturner@google.com (Andy Turner) */
 @BugPattern(
-    name = "ThreeLetterTimeZoneID",
     summary =
         "Three-letter time zone identifiers are deprecated, may be ambiguous, and might not do "
             + "what you intend; the full IANA time zone ID should be used instead.",

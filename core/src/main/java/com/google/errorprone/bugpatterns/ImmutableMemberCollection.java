@@ -69,7 +69,6 @@ import javax.lang.model.element.Modifier;
 
 /** Refactoring to suggest Immutable types for member collection that are not mutated. */
 @BugPattern(
-    name = "ImmutableMemberCollection",
     summary = "If you don't intend to mutate a member collection prefer using Immutable types.",
     severity = SUGGESTION)
 public final class ImmutableMemberCollection extends BugChecker implements ClassTreeMatcher {

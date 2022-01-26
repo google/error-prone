@@ -52,7 +52,6 @@ import javax.annotation.Nullable;
  * @author ghm@google.com (Graeme Morgan)
  */
 @BugPattern(
-    name = "TruthAssertExpected",
     summary =
         "The actual and expected values appear to be swapped, which results in poor assertion "
             + "failure messages. The actual value should come first.",

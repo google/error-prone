@@ -46,7 +46,6 @@ import javax.lang.model.element.Modifier;
  * @author bhagwani@google.com (Sumit Bhagwani)
  */
 @BugPattern(
-    name = "ProtectedMembersInFinalClass",
     summary = "Protected members in final classes can be package-private",
     severity = WARNING)
 public class ProtectedMembersInFinalClass extends BugChecker implements ClassTreeMatcher {

@@ -48,7 +48,6 @@ import java.util.Optional;
  * array, or when the buffer wasn't initialized using ByteBuffer.wrap() or ByteBuffer.allocate().
  */
 @BugPattern(
-    name = "ByteBufferBackingArray",
     summary =
         "ByteBuffer.array() shouldn't be called unless ByteBuffer.arrayOffset() is used or "
             + "if the ByteBuffer was initialized using ByteBuffer.wrap() or ByteBuffer.allocate().",

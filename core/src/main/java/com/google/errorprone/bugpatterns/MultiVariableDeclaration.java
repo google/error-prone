@@ -48,7 +48,6 @@ import java.util.List;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
-    name = "MultiVariableDeclaration",
     summary = "Variable declarations should declare only one variable",
     severity = SUGGESTION,
     linkType = CUSTOM,

@@ -37,7 +37,6 @@ import com.sun.tools.javac.tree.JCTree.JCLiteral;
 
 /** Flags unsafe usages of the {@link java.util.Locale} constructor and class methods. */
 @BugPattern(
-    name = "UnsafeLocaleUsage",
     summary = "Possible unsafe operation related to the java.util.Locale library.",
     severity = WARNING)
 public final class UnsafeLocaleUsage extends BugChecker

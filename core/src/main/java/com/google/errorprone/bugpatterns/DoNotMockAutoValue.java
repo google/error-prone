@@ -25,7 +25,6 @@ import java.util.stream.Stream;
 
 /** Suggests not mocking AutoValue classes. */
 @BugPattern(
-    name = "DoNotMockAutoValue",
     summary =
         "AutoValue classes represent pure data classes, so mocking them should not be necessary."
             + " Construct a real instance of the class instead.",

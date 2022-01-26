@@ -77,7 +77,6 @@ import javax.lang.model.type.TypeKind;
 
 /** Tightens types which refer to an Iterable, Map, Multimap, etc. */
 @BugPattern(
-    name = "PreferredInterfaceType",
     altNames = {"MutableConstantField", "MutableMethodReturnType"},
     summary = "This type can be more specific.",
     severity = WARNING)

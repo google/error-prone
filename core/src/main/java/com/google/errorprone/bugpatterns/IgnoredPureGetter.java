@@ -37,7 +37,6 @@ import com.sun.tools.javac.code.Type;
 
 /** Flags ignored return values from pure getters. */
 @BugPattern(
-    name = "IgnoredPureGetter",
     severity = WARNING,
     summary =
         "Getters on AutoValue classes and protos are side-effect free, so there is no point in"

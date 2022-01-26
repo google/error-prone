@@ -39,11 +39,7 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
-@BugPattern(
-    name = "FallThrough",
-    altNames = "fallthrough",
-    summary = "Switch case may fall through",
-    severity = WARNING)
+@BugPattern(altNames = "fallthrough", summary = "Switch case may fall through", severity = WARNING)
 public class FallThrough extends BugChecker implements SwitchTreeMatcher {
 
   private static final Pattern FALL_THROUGH_PATTERN =

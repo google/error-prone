@@ -37,7 +37,6 @@ import com.sun.tools.javac.code.Type;
  * @author sauravtiwary@google.com (Saurav Tiwary)
  */
 @BugPattern(
-    name = "PublicApiNamedStreamShouldReturnStream",
     summary =
         "Public methods named stream() are generally expected to return a type whose name ends with"
             + " Stream. Consider choosing a different method name instead.",

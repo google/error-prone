@@ -49,7 +49,6 @@ import javax.lang.model.element.Modifier;
  * calls at compile-time instead failing at runtime.
  */
 @BugPattern(
-    name = "DoNotCallSuggester",
     summary =
         "Consider annotating methods that always throw with @DoNotCall. "
             + "Read more at https://errorprone.info/bugpattern/DoNotCall",

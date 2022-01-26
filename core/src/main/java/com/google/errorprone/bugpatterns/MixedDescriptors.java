@@ -49,7 +49,6 @@ import java.util.Optional;
  * @author ghm@google.com (Graeme Morgan)
  */
 @BugPattern(
-    name = "MixedDescriptors",
     summary =
         "The field number passed into #getFieldByNumber belongs to a different proto"
             + " to the Descriptor.",

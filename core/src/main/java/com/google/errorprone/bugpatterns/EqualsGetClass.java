@@ -63,7 +63,6 @@ import javax.lang.model.element.Modifier;
  * @author ghm@google.com (Graeme Morgan)
  */
 @BugPattern(
-    name = "EqualsGetClass",
     summary = "Prefer instanceof to getClass when implementing Object#equals.",
     severity = WARNING,
     tags = StandardTags.FRAGILE_CODE)

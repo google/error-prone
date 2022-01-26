@@ -69,7 +69,6 @@ import javax.annotation.Nullable;
  * }</pre>
  */
 @BugPattern(
-    name = "ChainedAssertionLosesContext",
     summary =
         "Inside a Subject, use check(...) instead of assert*() to preserve user-supplied messages"
             + " and other settings.",

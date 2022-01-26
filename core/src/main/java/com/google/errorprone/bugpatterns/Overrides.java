@@ -38,7 +38,6 @@ import java.util.Set;
  * @author cushon@google.com (Liam Miller-Cushon)
  */
 @BugPattern(
-    name = "Overrides",
     altNames = "overrides",
     summary = "Varargs doesn't agree for overridden method",
     severity = WARNING)

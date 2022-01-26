@@ -48,7 +48,6 @@ import javax.annotation.Nullable;
  * @author cushon@google.com (Liam Miller-Cushon)
  */
 @BugPattern(
-    name = "DeduplicateConstants",
     summary =
         "This expression was previously declared as a constant;"
             + " consider replacing this occurrence.",

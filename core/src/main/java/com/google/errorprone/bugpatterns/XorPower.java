@@ -30,10 +30,7 @@ import com.sun.source.tree.BinaryTree;
 import com.sun.source.tree.Tree;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
-@BugPattern(
-    name = "XorPower",
-    summary = "The `^` operator is binary XOR, not a power operator.",
-    severity = ERROR)
+@BugPattern(summary = "The `^` operator is binary XOR, not a power operator.", severity = ERROR)
 public class XorPower extends BugChecker implements BinaryTreeMatcher {
   @Override
   public Description matchBinary(BinaryTree tree, VisitorState state) {

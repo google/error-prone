@@ -38,7 +38,6 @@ import com.sun.tools.javac.tree.JCTree.JCIf;
 /** @author eaftan@google.com (Eddie Aftandilian) */
 // TODO(eaftan): Doesn't handle the case that the enclosing method is always called in a loop.
 @BugPattern(
-    name = "WaitNotInLoop",
     summary =
         "Because of spurious wakeups, Object.wait() and Condition.await() must always be "
             + "called in a loop",

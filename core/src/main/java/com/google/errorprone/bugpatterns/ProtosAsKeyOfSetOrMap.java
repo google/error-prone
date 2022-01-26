@@ -30,7 +30,6 @@ import com.sun.tools.javac.code.Type;
  * @author seibelsabrina@google.com (Sabrina Seibel)
  */
 @BugPattern(
-    name = "ProtosAsKeyOfSetOrMap",
     summary =
         "Protos should not be used as a key to a map, in a set, or in a contains method on a "
             + "descendant of a collection. Protos have non deterministic ordering and proto "

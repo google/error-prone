@@ -37,7 +37,6 @@ import javax.lang.model.element.Modifier;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
-    name = "StaticMockMember",
     summary =
         "@Mock members of test classes shouldn't share state between tests and preferably be"
             + " non-static",

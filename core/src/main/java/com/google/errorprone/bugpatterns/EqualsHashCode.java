@@ -47,7 +47,6 @@ import javax.lang.model.element.ElementKind;
  * @author cushon@google.com (Liam Miller-Cushon)
  */
 @BugPattern(
-    name = "EqualsHashCode",
     summary = "Classes that override equals should also override hashCode.",
     severity = ERROR,
     tags = StandardTags.FRAGILE_CODE)

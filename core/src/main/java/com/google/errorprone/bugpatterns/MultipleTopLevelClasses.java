@@ -34,7 +34,6 @@ import java.util.List;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
-    name = "MultipleTopLevelClasses",
     altNames = {"TopLevel"},
     summary = "Source files should not contain multiple top-level class declarations",
     severity = SUGGESTION,

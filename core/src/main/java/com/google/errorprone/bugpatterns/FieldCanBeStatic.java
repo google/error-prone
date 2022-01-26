@@ -63,7 +63,6 @@ import javax.lang.model.element.NestingKind;
 
 /** Finds fields which can be safely made static. */
 @BugPattern(
-    name = "FieldCanBeStatic",
     summary =
         "A final field initialized at compile-time with an instance of an immutable type can be"
             + " static.",

@@ -34,7 +34,6 @@ import javax.lang.model.type.TypeKind;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
-    name = "LongFloatConversion",
     summary =
         "Conversion from long to float may lose precision; use an explicit cast to float if this"
             + " was intentional",

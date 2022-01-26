@@ -37,7 +37,6 @@ import java.util.List;
 
 /** @author eaftan@google.com (Eddie Aftandilian) */
 @BugPattern(
-    name = "PrimitiveArrayPassedToVarargsMethod",
     summary = "Passing a primitive array to a varargs method is usually wrong",
     severity = WARNING)
 public class PrimitiveArrayPassedToVarargsMethod extends BugChecker

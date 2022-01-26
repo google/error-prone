@@ -35,7 +35,6 @@ import javax.lang.model.element.Modifier;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
-    name = "ClassName",
     summary = "The source file name should match the name of the top-level class it contains",
     severity = ERROR,
     documentSuppression = false,

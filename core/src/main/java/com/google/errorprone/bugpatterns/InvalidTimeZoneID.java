@@ -34,7 +34,6 @@ import java.util.regex.Pattern;
 
 /** @author awturner@google.com (Andy Turner) */
 @BugPattern(
-    name = "InvalidTimeZoneID",
     summary =
         "Invalid time zone identifier. TimeZone.getTimeZone(String) will silently return GMT"
             + " instead of the time zone you intended.",

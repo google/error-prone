@@ -31,7 +31,6 @@ import java.util.Optional;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
-    name = "AnnotationMirrorToString",
     summary =
         "AnnotationMirror#toString doesn't use fully qualified type names, prefer auto-common's"
             + " AnnotationMirrors#toString",

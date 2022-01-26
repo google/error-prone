@@ -37,7 +37,6 @@ import java.time.ZoneId;
  * @author bhagwani@google.com (Sumit Bhagwani)
  */
 @BugPattern(
-    name = "InvalidZoneId",
     summary = "Invalid zone identifier. ZoneId.of(String) will throw exception at runtime.",
     severity = ERROR)
 public class InvalidZoneId extends BugChecker implements MethodInvocationTreeMatcher {

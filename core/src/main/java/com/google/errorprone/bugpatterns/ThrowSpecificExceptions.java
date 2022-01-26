@@ -35,7 +35,6 @@ import com.sun.source.tree.ThrowTree;
 
 /** Bugpattern to discourage throwing base exception classes. */
 @BugPattern(
-    name = "ThrowSpecificExceptions",
     summary =
         "Base exception classes should be treated as abstract. If the exception is intended to be"
             + " caught, throw a domain-specific exception. Otherwise, prefer a more specific"

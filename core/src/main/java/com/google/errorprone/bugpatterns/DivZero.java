@@ -40,11 +40,7 @@ import com.sun.source.tree.Tree.Kind;
  *
  * @author cushon@google.com (Liam Miller-Cushon)
  */
-@BugPattern(
-    name = "DivZero",
-    altNames = "divzero",
-    summary = "Division by integer literal zero",
-    severity = ERROR)
+@BugPattern(altNames = "divzero", summary = "Division by integer literal zero", severity = ERROR)
 public class DivZero extends BugChecker
     implements BinaryTreeMatcher, CompoundAssignmentTreeMatcher {
 

@@ -36,7 +36,6 @@ import java.util.List;
  * @author mariasam@google.com (Maria Sam)
  */
 @BugPattern(
-    name = "ComparableAndComparator",
     summary = "Class should not implement both `Comparable` and `Comparator`",
     severity = WARNING)
 public class ComparableAndComparator extends BugChecker implements ClassTreeMatcher {

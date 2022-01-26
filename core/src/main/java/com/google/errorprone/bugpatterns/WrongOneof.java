@@ -56,7 +56,6 @@ import java.util.Set;
 
 /** Matches always-default expressions in oneof switches. */
 @BugPattern(
-    name = "WrongOneof",
     severity = ERROR,
     summary = "This field is guaranteed not to be set given it's within a switch over a one_of.")
 public final class WrongOneof extends BugChecker implements SwitchTreeMatcher {

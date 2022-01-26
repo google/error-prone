@@ -111,7 +111,6 @@ import javax.lang.model.type.NullType;
 
 /** Bugpattern to detect unused declarations. */
 @BugPattern(
-    name = "UnusedVariable",
     altNames = {"unused", "UnusedParameters"},
     summary = "Unused.",
     severity = WARNING,

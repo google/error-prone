@@ -38,7 +38,6 @@ import java.util.List;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
-    name = "LoopOverCharArray",
     summary = "toCharArray allocates a new array, using charAt is more efficient",
     severity = WARNING)
 public class LoopOverCharArray extends BugChecker implements BugChecker.EnhancedForLoopTreeMatcher {

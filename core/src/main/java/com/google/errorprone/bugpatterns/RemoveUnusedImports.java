@@ -50,7 +50,6 @@ import javax.annotation.Nullable;
 
 /** @author gak@google.com (Gregory Kick) */
 @BugPattern(
-    name = "RemoveUnusedImports",
     summary = "Unused imports",
     severity = SUGGESTION,
     documentSuppression = false,

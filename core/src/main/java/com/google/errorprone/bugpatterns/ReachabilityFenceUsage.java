@@ -33,7 +33,6 @@ import java.util.Objects;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
-    name = "ReachabilityFenceUsage",
     summary = "reachabilityFence should always be called inside a finally block",
     severity = WARNING)
 public class ReachabilityFenceUsage extends BugChecker implements MethodInvocationTreeMatcher {

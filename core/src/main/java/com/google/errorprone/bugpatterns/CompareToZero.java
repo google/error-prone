@@ -42,7 +42,6 @@ import com.sun.source.util.TreePath;
 
 /** Suggests comparing the result of {@code compareTo} to only {@code 0}. */
 @BugPattern(
-    name = "CompareToZero",
     summary =
         "The result of #compareTo or #compare should only be compared to 0. It is an "
             + "implementation detail whether a given type returns strictly the values {-1, 0, +1} "

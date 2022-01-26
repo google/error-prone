@@ -42,7 +42,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * @author ghm@google.com (Graeme Morgan)
  */
 @BugPattern(
-    name = "EqualsUsingHashCode",
     summary =
         "Implementing #equals by just comparing hashCodes is fragile. Hashes collide "
             + "frequently, and this will lead to false positives in #equals.",

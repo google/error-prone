@@ -49,7 +49,6 @@ import javax.lang.model.element.ElementKind;
  * @author ghm@google.com (Graeme Morgan)
  */
 @BugPattern(
-    name = "MissingTestCall",
     summary = "A terminating method call is required for a test helper to have any effect.",
     severity = ERROR)
 public final class MissingTestCall extends BugChecker implements MethodTreeMatcher {

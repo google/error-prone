@@ -64,7 +64,6 @@ import javax.lang.model.element.ElementKind;
  * @author awturner@google.com (Andy Turner)
  */
 @BugPattern(
-    name = "UnnecessaryBoxedVariable",
     summary = "It is unnecessary for this variable to be boxed. Use the primitive instead.",
     explanation =
         "This variable is of boxed type, but equivalent semantics can be achieved using the"

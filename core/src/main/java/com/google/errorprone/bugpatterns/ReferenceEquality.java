@@ -37,7 +37,6 @@ import com.sun.tools.javac.util.Name;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
-    name = "ReferenceEquality",
     summary = "Comparison using reference equality instead of value equality",
     severity = WARNING,
     tags = StandardTags.FRAGILE_CODE)

@@ -56,7 +56,6 @@ import javax.lang.model.element.ElementKind;
  * @author ghm@google.com (Graeme Morgan)
  */
 @BugPattern(
-    name = "EqualsWrongThing",
     summary =
         "Comparing different pairs of fields/getters in an equals implementation is probably "
             + "a mistake.",

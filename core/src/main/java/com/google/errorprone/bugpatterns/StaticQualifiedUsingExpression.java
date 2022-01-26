@@ -40,7 +40,6 @@ import java.util.Objects;
 
 /** @author eaftan@google.com (Eddie Aftandilian) */
 @BugPattern(
-    name = "StaticQualifiedUsingExpression",
     summary = "A static variable or method should be qualified with a class name, not expression",
     severity = ERROR,
     altNames = {"static", "static-access", "StaticAccessedFromInstance"},

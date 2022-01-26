@@ -35,7 +35,6 @@ import java.util.List;
  * @author bhagwani@google.com (Sumit Bhagwani)
  */
 @BugPattern(
-    name = "JUnitAssertSameCheck",
     summary = "An object is tested for reference equality to itself using JUnit library.",
     severity = ERROR)
 public class JUnitAssertSameCheck extends BugChecker implements MethodInvocationTreeMatcher {

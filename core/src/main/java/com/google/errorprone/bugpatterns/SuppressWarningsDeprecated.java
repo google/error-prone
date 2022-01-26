@@ -42,7 +42,6 @@ import javax.lang.model.element.AnnotationMirror;
  * @author sjnickerson@google.com (Simon Nickerson)
  */
 @BugPattern(
-    name = "SuppressWarningsDeprecated",
     summary = "Suppressing \"deprecated\" is probably a typo for \"deprecation\"",
     severity = ERROR)
 public class SuppressWarningsDeprecated extends BugChecker implements AnnotationTreeMatcher {

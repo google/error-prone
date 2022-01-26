@@ -39,7 +39,6 @@ import java.util.List;
 
 /** @author kayco@google.com (Kayla Walker) */
 @BugPattern(
-    name = "ExtendingJUnitAssert",
     summary =
         "When only using JUnit Assert's static methods, "
             + "you should import statically instead of extending.",

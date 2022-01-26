@@ -33,7 +33,6 @@ import javax.lang.model.element.Modifier;
  * Warns against use of both {@code static} and {@code transient} modifiers on field declarations.
  */
 @BugPattern(
-    name = "TransientMisuse",
     summary = "Static fields are implicitly transient, so the explicit modifier is unnecessary",
     linkType = NONE,
     severity = WARNING)

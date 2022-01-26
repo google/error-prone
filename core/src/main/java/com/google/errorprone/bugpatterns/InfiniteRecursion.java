@@ -39,7 +39,6 @@ import com.sun.tools.javac.code.Symbol.MethodSymbol;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
-    name = "InfiniteRecursion",
     summary = "This method always recurses, and will cause a StackOverflowError",
     severity = ERROR)
 public class InfiniteRecursion extends BugChecker implements BugChecker.MethodTreeMatcher {

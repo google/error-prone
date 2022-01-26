@@ -39,7 +39,6 @@ import java.util.List;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
-    name = "AssertThrowsMultipleStatements",
     summary = "The lambda passed to assertThrows should contain exactly one statement",
     severity = SeverityLevel.WARNING)
 public class AssertThrowsMultipleStatements extends BugChecker

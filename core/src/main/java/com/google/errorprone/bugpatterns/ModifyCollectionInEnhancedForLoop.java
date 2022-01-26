@@ -40,7 +40,6 @@ import java.util.List;
 
 /** @author anishvisaria98@gmail.com (Anish Visaria) */
 @BugPattern(
-    name = "ModifyCollectionInEnhancedForLoop",
     summary =
         "Modifying a collection while iterating over it in a loop may cause a"
             + " ConcurrentModificationException to be thrown or lead to undefined behavior.",

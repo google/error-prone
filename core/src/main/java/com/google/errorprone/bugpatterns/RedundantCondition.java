@@ -53,10 +53,7 @@ import javax.lang.model.element.ElementKind;
  * @author abhatiya@google.com (Ankush Bhatiya)
  */
 // TODO: Use Checker Framework Dataflow Library for catching more issues.
-@BugPattern(
-    name = "RedundantCondition",
-    summary = "Redundant usage of a boolean variable with known value",
-    severity = WARNING)
+@BugPattern(summary = "Redundant usage of a boolean variable with known value", severity = WARNING)
 public class RedundantCondition extends BugChecker
     implements IfTreeMatcher,
         AssignmentTreeMatcher,

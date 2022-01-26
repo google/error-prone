@@ -45,7 +45,6 @@ import java.util.stream.Stream;
 
 /** @author mariasam@google.com (Maria Sam) */
 @BugPattern(
-    name = "OptionalNotPresent",
     summary =
         "This Optional has been confirmed to be empty at this point, so the call to `get` will"
             + " throw.",

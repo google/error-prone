@@ -28,7 +28,6 @@ import com.sun.tools.javac.code.Type;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
-    name = "BoxedPrimitiveEquality",
     summary =
         "Comparison using reference equality instead of value equality. Reference equality of"
             + " boxed primitive types is usually not useful, as they are value objects, and it is"

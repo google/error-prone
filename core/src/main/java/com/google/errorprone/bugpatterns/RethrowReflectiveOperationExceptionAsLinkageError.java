@@ -40,7 +40,6 @@ import javax.lang.model.element.ElementKind;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
-    name = "RethrowReflectiveOperationExceptionAsLinkageError",
     summary = "Prefer LinkageError for rethrowing ReflectiveOperationException as unchecked",
     severity = WARNING)
 public class RethrowReflectiveOperationExceptionAsLinkageError extends BugChecker

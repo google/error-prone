@@ -32,7 +32,6 @@ import java.util.Optional;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
-    name = "DeprecatedVariable",
     summary = "Applying the @Deprecated annotation to local variables or parameters has no effect",
     severity = WARNING)
 public class DeprecatedVariable extends BugChecker implements VariableTreeMatcher {

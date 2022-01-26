@@ -49,10 +49,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.function.Consumer;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
-@BugPattern(
-    name = "AlwaysThrows",
-    summary = "Detects calls that will fail at runtime",
-    severity = ERROR)
+@BugPattern(summary = "Detects calls that will fail at runtime", severity = ERROR)
 public class AlwaysThrows extends BugChecker implements MethodInvocationTreeMatcher {
 
   @SuppressWarnings("UnnecessarilyFullyQualified")

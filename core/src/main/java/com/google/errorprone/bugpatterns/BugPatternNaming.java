@@ -37,7 +37,6 @@ import java.util.Optional;
 
 /** See the {@code summary}. */
 @BugPattern(
-    name = "BugPatternNaming",
     summary = "Giving BugPatterns a name different to the enclosing class can be confusing",
     severity = WARNING)
 public final class BugPatternNaming extends BugChecker implements ClassTreeMatcher {

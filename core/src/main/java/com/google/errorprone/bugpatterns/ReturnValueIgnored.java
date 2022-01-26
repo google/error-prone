@@ -46,7 +46,6 @@ import javax.lang.model.element.Name;
 
 /** @author alexeagle@google.com (Alex Eagle) */
 @BugPattern(
-    name = "ReturnValueIgnored",
     altNames = {"ResultOfMethodCallIgnored", "CheckReturnValue"},
     summary = "Return value of this method must be used",
     severity = ERROR)

@@ -28,7 +28,6 @@ import com.sun.source.tree.ClassTree;
 
 /** @author glorioso@google.com */
 @BugPattern(
-    name = "ClassNamedLikeTypeParameter",
     summary = "This class's name looks like a Type Parameter.",
     severity = SUGGESTION,
     tags = StandardTags.STYLE)

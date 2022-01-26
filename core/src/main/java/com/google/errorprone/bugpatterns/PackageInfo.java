@@ -28,7 +28,6 @@ import com.sun.source.tree.CompilationUnitTree;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
-    name = "PackageInfo",
     summary = "Declaring types inside package-info.java files is very bad form",
     severity = ERROR)
 public class PackageInfo extends BugChecker implements CompilationUnitTreeMatcher {

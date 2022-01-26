@@ -43,10 +43,7 @@ import java.util.List;
  * @author cushon@google.com (Liam Miller-Cushon)
  * @author eleanorh@google.com (Eleanor Harris)
  */
-@BugPattern(
-    name = "IsInstanceIncompatibleType",
-    summary = "This use of isInstance will always evaluate to false.",
-    severity = ERROR)
+@BugPattern(summary = "This use of isInstance will always evaluate to false.", severity = ERROR)
 public final class IsInstanceIncompatibleType extends BugChecker
     implements MethodInvocationTreeMatcher, MemberReferenceTreeMatcher {
   private static final Matcher<ExpressionTree> IS_INSTANCE =

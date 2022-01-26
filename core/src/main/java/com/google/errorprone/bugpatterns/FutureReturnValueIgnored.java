@@ -40,7 +40,6 @@ import java.util.concurrent.ForkJoinTask;
 
 /** See BugPattern annotation. */
 @BugPattern(
-    name = "FutureReturnValueIgnored",
     summary =
         "Return value of methods returning Future must be checked. Ignoring returned Futures "
             + "suppresses exceptions thrown from the code that completes the Future.",

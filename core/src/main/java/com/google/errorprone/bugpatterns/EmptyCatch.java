@@ -30,7 +30,6 @@ import com.sun.source.tree.CatchTree;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
-    name = "EmptyCatch",
     summary = "Caught exceptions should not be ignored",
     severity = WARNING,
     tags = BugPattern.StandardTags.STYLE,

@@ -36,7 +36,6 @@ import com.sun.source.tree.MethodTree;
  * @author mariasam@google.com (Maria Sam)
  */
 @BugPattern(
-    name = "OverrideThrowableToString",
     summary =
         "To return a custom message with a Throwable class, one should "
             + "override getMessage() instead of toString().",

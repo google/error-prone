@@ -44,10 +44,7 @@ import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
-@BugPattern(
-    name = "ThreadLocalUsage",
-    summary = "ThreadLocals should be stored in static fields",
-    severity = WARNING)
+@BugPattern(summary = "ThreadLocals should be stored in static fields", severity = WARNING)
 public class ThreadLocalUsage extends BugChecker implements NewClassTreeMatcher {
 
   private static final Matcher<ExpressionTree> NEW_THREAD_LOCAL =

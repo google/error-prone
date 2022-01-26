@@ -55,7 +55,6 @@ import java.util.function.Consumer;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
-    name = "MemoizeConstantVisitorStateLookups",
     summary =
         "Anytime you need to look up a constant value from VisitorState, improve performance by"
             + " creating a cache for it with VisitorState.memoize",

@@ -45,7 +45,6 @@ import java.util.List;
  *     <p>TODO(eaftan): Support other types of comparisons? Are there likely to be errors in those?
  */
 @BugPattern(
-    name = "ComparisonOutOfRange",
     summary = "Comparison to value that is out of range for the compared type",
     explanation =
         "This checker looks for equality comparisons to values that are out of "

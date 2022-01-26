@@ -36,7 +36,6 @@ import java.util.Set;
  * @author bhagwani@google.com (Sumit Bhagwani)
  */
 @BugPattern(
-    name = "DuplicateMapKeys",
     summary =
         "Map#ofEntries will throw an IllegalArgumentException if there are any duplicate keys",
     severity = ERROR)

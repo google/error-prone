@@ -55,7 +55,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
-    name = "CanonicalDuration",
     summary = "Duration can be expressed more clearly with different units",
     severity = WARNING)
 public class CanonicalDuration extends BugChecker implements MethodInvocationTreeMatcher {

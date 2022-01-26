@@ -46,7 +46,6 @@ import javax.lang.model.element.Modifier;
  * @author ghm@google.com (Graeme Morgan)
  */
 @BugPattern(
-    name = "InterfaceWithOnlyStatics",
     summary =
         "This interface only contains static fields and methods; consider making it a final class "
             + "instead to prevent subclassing.",

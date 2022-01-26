@@ -36,7 +36,6 @@ import javax.lang.model.element.Modifier;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
-    name = "ConstantField",
     summary = "Fields with CONSTANT_CASE names should be both static and final",
     severity = SUGGESTION,
     tags = BugPattern.StandardTags.STYLE)

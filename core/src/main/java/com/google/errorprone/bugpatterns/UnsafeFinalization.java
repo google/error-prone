@@ -49,10 +49,7 @@ import javax.lang.model.element.ElementKind;
 import javax.lang.model.type.TypeKind;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
-@BugPattern(
-    name = "UnsafeFinalization",
-    summary = "Finalizer may run before native code finishes execution",
-    severity = WARNING)
+@BugPattern(summary = "Finalizer may run before native code finishes execution", severity = WARNING)
 public class UnsafeFinalization extends BugChecker implements MethodInvocationTreeMatcher {
 
   private static final Matcher<ExpressionTree> FENCE_MATCHER =

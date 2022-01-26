@@ -52,7 +52,6 @@ import com.sun.tools.javac.parser.Tokens.Comment;
  * {@code deprecation} as a trial.
  */
 @BugPattern(
-    name = "SuppressWarningsWithoutExplanation",
     summary =
         "Use of @SuppressWarnings should be accompanied by a comment describing why the warning is"
             + " safe to ignore.",

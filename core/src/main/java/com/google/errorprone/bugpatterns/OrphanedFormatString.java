@@ -52,7 +52,6 @@ import java.util.MissingFormatArgumentException;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
-    name = "OrphanedFormatString",
     summary = "String literal contains format specifiers, but is not passed to a format method",
     severity = WARNING)
 public class OrphanedFormatString extends BugChecker implements LiteralTreeMatcher {

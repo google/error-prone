@@ -37,7 +37,6 @@ import java.util.List;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
-    name = "Incomparable",
     summary = "Types contained in sorted collections must implement Comparable.",
     severity = ERROR)
 public class Incomparable extends BugChecker implements NewClassTreeMatcher {

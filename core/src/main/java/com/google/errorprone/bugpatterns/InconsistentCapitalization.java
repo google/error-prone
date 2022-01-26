@@ -43,7 +43,6 @@ import javax.lang.model.element.ElementKind;
 
 /** Checker for variables under the same scope that only differ in capitalization. */
 @BugPattern(
-    name = "InconsistentCapitalization",
     summary =
         "It is confusing to have a field and a parameter under the same scope that differ only in "
             + "capitalization.",

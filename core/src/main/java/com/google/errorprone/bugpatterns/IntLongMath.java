@@ -41,7 +41,6 @@ import javax.lang.model.type.TypeKind;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
-    name = "IntLongMath",
     summary = "Expression of type int may overflow before being assigned to a long",
     severity = WARNING,
     tags = FRAGILE_CODE)

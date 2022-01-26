@@ -34,7 +34,6 @@ import com.sun.source.tree.ExpressionTree;
  * Flags fields which would be better expressed as ByteStrings rather than primitive byte arrays.
  */
 @BugPattern(
-    name = "StronglyTypeByteString",
     summary =
         "This primitive byte array is only used to construct ByteStrings. It would be"
             + " clearer to strongly type the field instead.",

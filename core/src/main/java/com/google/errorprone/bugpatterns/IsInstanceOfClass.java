@@ -39,7 +39,6 @@ import com.sun.tools.javac.tree.JCTree;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
-    name = "IsInstanceOfClass",
     summary = "The argument to Class#isInstance(Object) should not be a Class",
     severity = ERROR)
 public class IsInstanceOfClass extends BugChecker implements MethodInvocationTreeMatcher {

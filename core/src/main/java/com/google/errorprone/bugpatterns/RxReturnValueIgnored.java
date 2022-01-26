@@ -41,7 +41,6 @@ import com.sun.tools.javac.code.Type;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} for details. */
 @BugPattern(
-    name = "RxReturnValueIgnored",
     summary =
         "Returned Rx objects must be checked. Ignoring a returned Rx value means it is never "
             + "scheduled for execution",

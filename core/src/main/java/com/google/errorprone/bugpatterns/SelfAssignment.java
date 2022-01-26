@@ -56,7 +56,7 @@ import com.sun.tools.javac.code.Type;
  * @author eaftan@google.com (Eddie Aftandilian)
  * @author scottjohnson@google.com (Scott Johnson)
  */
-@BugPattern(name = "SelfAssignment", summary = "Variable assigned to itself", severity = ERROR)
+@BugPattern(summary = "Variable assigned to itself", severity = ERROR)
 public class SelfAssignment extends BugChecker
     implements AssignmentTreeMatcher, VariableTreeMatcher {
   private static final Matcher<MethodInvocationTree> NON_NULL_MATCHER =

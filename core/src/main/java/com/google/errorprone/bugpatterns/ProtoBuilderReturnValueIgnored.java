@@ -40,7 +40,6 @@ import com.sun.source.tree.MethodInvocationTree;
 
 /** Highlights cases where a proto's build method has its return value ignored. */
 @BugPattern(
-    name = "ProtoBuilderReturnValueIgnored",
     summary =
         "Unnecessary call to proto's #build() method.  If you don't consume the return value of "
             + "#build(), the result is discarded and the only effect is to verify that all "

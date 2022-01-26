@@ -45,7 +45,6 @@ import java.util.List;
  * @author ghm@google.com (Graeme Morgan)
  */
 @BugPattern(
-    name = "BigDecimalEquals",
     summary = "BigDecimal#equals has surprising behavior: it also compares scale.",
     severity = WARNING)
 public final class BigDecimalEquals extends BugChecker implements MethodInvocationTreeMatcher {

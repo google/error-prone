@@ -56,7 +56,6 @@ import java.util.regex.Pattern;
  * @author glorioso@google.com (Nick Glorioso)
  */
 @BugPattern(
-    name = "SizeGreaterThanOrEqualsZero",
     summary =
         "Comparison of a size >= 0 is always true, did you intend to check for " + "non-emptiness?",
     severity = ERROR)

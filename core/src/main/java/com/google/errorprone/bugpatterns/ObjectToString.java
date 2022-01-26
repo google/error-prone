@@ -40,7 +40,6 @@ import java.util.Optional;
  * @author bhagwani@google.com (Sumit Bhagwani)
  */
 @BugPattern(
-    name = "ObjectToString",
     summary =
         "Calling toString on Objects that don't override toString() doesn't"
             + " provide useful information",

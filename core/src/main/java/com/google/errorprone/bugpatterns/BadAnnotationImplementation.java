@@ -52,7 +52,6 @@ import javax.annotation.Nullable;
  * meet the contract specified by the {@link Annotation} interface.
  */
 @BugPattern(
-    name = "BadAnnotationImplementation",
     summary =
         "Classes that implement Annotation must override equals and hashCode. Consider "
             + "using AutoAnnotation instead of implementing Annotation by hand.",

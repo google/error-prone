@@ -39,7 +39,6 @@ import java.util.Optional;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
-    name = "IdentityBinaryExpression",
     altNames = "SelfEquality",
     summary = "A binary expression where both operands are the same is usually incorrect.",
     severity = ERROR)

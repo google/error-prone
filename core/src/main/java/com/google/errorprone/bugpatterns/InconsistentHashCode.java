@@ -60,7 +60,6 @@ import javax.lang.model.element.ElementKind;
  * @author ghm@google.com (Graeme Morgan)
  */
 @BugPattern(
-    name = "InconsistentHashCode",
     summary =
         "Including fields in hashCode which are not compared in equals violates "
             + "the contract of hashCode.",

@@ -47,7 +47,6 @@ import javax.lang.model.element.Name;
 
 /** @author hanuszczak@google.com (Łukasz Hanuszczak) */
 @BugPattern(
-    name = "UngroupedOverloads",
     summary =
         "Constructors and methods with the same name should appear sequentially with no other code"
             + " in between, even when modifiers such as static or private differ between the"

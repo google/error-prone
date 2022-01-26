@@ -39,7 +39,6 @@ import java.util.Optional;
  * @author bhagwani@google.com (Sumit Bhagwani)
  */
 @BugPattern(
-    name = "TypeToString",
     summary = "Type#toString shouldn't be used for comparison as it is expensive and fragile.",
     severity = SUGGESTION)
 public class TypeToString extends AbstractToString {

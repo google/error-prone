@@ -43,7 +43,6 @@ import java.util.Set;
 
 /** Bugpattern to detect unused nested classes. */
 @BugPattern(
-    name = "UnusedNestedClass",
     altNames = "unused",
     summary = "This nested class is unused, and can be removed.",
     severity = WARNING,

@@ -38,7 +38,6 @@ import javax.lang.model.element.NestingKind;
  * @author cushon@google.com (Liam Miller-Cushon)
  */
 @BugPattern(
-    name = "ClassCanBeStatic",
     summary = "Inner class is non-static but does not reference enclosing class",
     severity = WARNING,
     tags = {StandardTags.STYLE, StandardTags.PERFORMANCE})

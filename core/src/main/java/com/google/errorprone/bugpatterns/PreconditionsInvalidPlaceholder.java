@@ -39,7 +39,6 @@ import java.util.regex.Pattern;
 
 /** @author Louis Wasserman */
 @BugPattern(
-    name = "PreconditionsInvalidPlaceholder",
     summary = "Preconditions only accepts the %s placeholder in error message strings",
     severity = ERROR,
     tags = StandardTags.LIKELY_ERROR)

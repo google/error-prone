@@ -38,7 +38,6 @@ import java.util.List;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
-    name = "UnnecessaryTypeArgument",
     summary = "Non-generic methods should not be invoked with type arguments",
     severity = ERROR)
 public class UnnecessaryTypeArgument extends BugChecker

@@ -56,7 +56,6 @@ import com.sun.tools.javac.util.Name;
  * on it is unnecessary and a potential source of bugs.
  */
 @BugPattern(
-    name = "OptionalOfRedundantMethod",
     summary =
         "Optional.of() always returns a non-empty optional. Using"
             + " ifPresent/isPresent/orElse/orElseGet/orElseThrow/isPresent/or/orNull method on it"

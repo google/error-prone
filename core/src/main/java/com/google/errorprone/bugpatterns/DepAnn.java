@@ -39,7 +39,6 @@ import com.sun.tools.javac.code.Symbol;
  * @author cushon@google.com (Liam Miller-Cushon)
  */
 @BugPattern(
-    name = "DepAnn",
     altNames = "dep-ann",
     summary = "Item documented with a @deprecated javadoc note is not annotated with @Deprecated",
     severity = ERROR)

@@ -27,7 +27,6 @@ import com.sun.source.tree.MethodInvocationTree;
 
 /** A BugChecker; see the associated BugPattern for details. */
 @BugPattern(
-    name = "BareDotMetacharacter",
     summary =
         "\".\" is rarely useful as a regex, as it matches any character. To match a literal '.'"
             + " character, instead write \"\\\\.\".",

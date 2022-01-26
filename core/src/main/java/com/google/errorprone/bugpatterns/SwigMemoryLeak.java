@@ -32,7 +32,6 @@ import javax.lang.model.element.Name;
 
 /** @author irogers@google.com (Ian Rogers) */
 @BugPattern(
-    name = "SwigMemoryLeak",
     summary = "SWIG generated code that can't call a C++ destructor will leak memory",
     severity = WARNING)
 public class SwigMemoryLeak extends BugChecker implements LiteralTreeMatcher {

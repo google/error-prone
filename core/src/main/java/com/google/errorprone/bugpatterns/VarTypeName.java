@@ -30,10 +30,7 @@ import com.sun.source.tree.TypeParameterTree;
 import javax.lang.model.element.Name;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
-@BugPattern(
-    name = "VarTypeName",
-    summary = "`var` should not be used as a type name.",
-    severity = ERROR)
+@BugPattern(summary = "`var` should not be used as a type name.", severity = ERROR)
 public class VarTypeName extends BugChecker implements ClassTreeMatcher, TypeParameterTreeMatcher {
 
   @Override

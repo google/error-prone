@@ -31,10 +31,7 @@ import com.sun.source.tree.CompilationUnitTree;
  *
  * @author bhagwani@google.com (Sumit Bhagwani)
  */
-@BugPattern(
-    name = "DefaultPackage",
-    summary = "Java classes shouldn't use default package",
-    severity = WARNING)
+@BugPattern(summary = "Java classes shouldn't use default package", severity = WARNING)
 public final class DefaultPackage extends BugChecker implements CompilationUnitTreeMatcher {
 
   @Override

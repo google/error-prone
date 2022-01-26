@@ -52,10 +52,7 @@ import javax.annotation.Nullable;
 import javax.lang.model.type.TypeKind;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
-@BugPattern(
-    name = "ConstantOverflow",
-    summary = "Compile-time constant expression overflows",
-    severity = ERROR)
+@BugPattern(summary = "Compile-time constant expression overflows", severity = ERROR)
 public class ConstantOverflow extends BugChecker implements BinaryTreeMatcher {
 
   @Override

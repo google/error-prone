@@ -27,7 +27,6 @@ import com.sun.tools.javac.code.Type;
 
 /** @author scottjohnson@google.com (Scott Johnson) */
 @BugPattern(
-    name = "NumericEquality",
     summary = "Numeric comparison using reference equality instead of value equality",
     severity = ERROR)
 public class NumericEquality extends AbstractReferenceEquality {

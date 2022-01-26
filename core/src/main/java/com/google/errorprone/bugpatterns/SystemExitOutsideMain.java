@@ -49,10 +49,7 @@ import java.util.Optional;
  *
  * @author seibelsabrina@google.com (Sabrina Seibel)
  */
-@BugPattern(
-    name = "SystemExitOutsideMain",
-    summary = "Code that contains System.exit() is untestable.",
-    severity = WARNING)
+@BugPattern(summary = "Code that contains System.exit() is untestable.", severity = WARNING)
 public class SystemExitOutsideMain extends BugChecker implements MethodInvocationTreeMatcher {
   private static final Matcher<ExpressionTree> CALLS_TO_SYSTEM_EXIT =
       staticMethod().onClass("java.lang.System").named("exit");

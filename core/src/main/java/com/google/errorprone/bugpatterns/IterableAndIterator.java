@@ -34,7 +34,6 @@ import java.util.List;
 
 /** @author jsjeon@google.com (Jinseong Jeon) */
 @BugPattern(
-    name = "IterableAndIterator",
     summary = "Class should not implement both `Iterable` and `Iterator`",
     severity = WARNING,
     tags = StandardTags.FRAGILE_CODE)

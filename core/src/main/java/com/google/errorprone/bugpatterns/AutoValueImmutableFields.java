@@ -42,7 +42,6 @@ import javax.lang.model.element.Modifier;
  * @author bhagwani@google.com (Sumit Bhagwani)
  */
 @BugPattern(
-    name = "AutoValueImmutableFields",
     altNames = "mutable",
     summary = "AutoValue recommends using immutable collections",
     severity = WARNING,

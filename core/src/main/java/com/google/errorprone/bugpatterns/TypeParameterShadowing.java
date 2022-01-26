@@ -46,7 +46,6 @@ import java.util.stream.Collectors;
 import javax.lang.model.element.Name;
 
 @BugPattern(
-    name = "TypeParameterShadowing",
     summary = "Type parameter declaration overrides another type parameter already declared",
     severity = WARNING,
     tags = StandardTags.STYLE)

@@ -45,7 +45,6 @@ import java.util.List;
  * if possible.
  */
 @BugPattern(
-    name = "InitializeInline",
     summary = "Initializing variables in their declaring statement is clearer, where possible.",
     severity = WARNING)
 public final class InitializeInline extends BugChecker implements VariableTreeMatcher {

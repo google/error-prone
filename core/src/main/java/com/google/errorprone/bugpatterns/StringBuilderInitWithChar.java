@@ -33,7 +33,6 @@ import javax.lang.model.type.TypeKind;
 
 /** @author lowasser@google.com (Louis Wasserman) */
 @BugPattern(
-    name = "StringBuilderInitWithChar",
     severity = ERROR,
     summary = "StringBuilder does not have a char constructor; this invokes the int constructor.")
 public class StringBuilderInitWithChar extends BugChecker implements NewClassTreeMatcher {

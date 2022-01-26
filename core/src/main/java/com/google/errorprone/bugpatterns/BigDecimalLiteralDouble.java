@@ -40,10 +40,7 @@ import java.util.Optional;
  *
  * @author endobson@google.com (Eric Dobson)
  */
-@BugPattern(
-    name = "BigDecimalLiteralDouble",
-    summary = "new BigDecimal(double) loses precision in this case.",
-    severity = WARNING)
+@BugPattern(summary = "new BigDecimal(double) loses precision in this case.", severity = WARNING)
 public class BigDecimalLiteralDouble extends BugChecker implements NewClassTreeMatcher {
 
   private static final BigInteger LONG_MAX = BigInteger.valueOf(Long.MAX_VALUE);

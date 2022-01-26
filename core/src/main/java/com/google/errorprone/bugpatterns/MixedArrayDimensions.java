@@ -37,7 +37,6 @@ import java.util.List;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
-    name = "MixedArrayDimensions",
     summary = "C-style array declarations should not be used",
     severity = SUGGESTION,
     tags = StandardTags.STYLE)

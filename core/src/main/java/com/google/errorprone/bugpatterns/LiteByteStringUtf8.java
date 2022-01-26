@@ -31,7 +31,6 @@ import com.sun.source.tree.MethodInvocationTree;
 
 /** @author glorioso@google.com (Nick Glorioso) */
 @BugPattern(
-    name = "LiteByteStringUtf8",
     summary =
         "This pattern will silently corrupt certain byte sequences from the serialized protocol "
             + "message. Use ByteString or byte[] directly",

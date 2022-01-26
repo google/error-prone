@@ -47,7 +47,6 @@ import javax.lang.model.element.Modifier;
 
 /** @author gak@google.com (Gregory Kick) */
 @BugPattern(
-    name = "PrivateConstructorForUtilityClass",
     summary =
         "Classes which are not intended to be instantiated should be made non-instantiable with a"
             + " private constructor. This includes utility classes (classes with only static"

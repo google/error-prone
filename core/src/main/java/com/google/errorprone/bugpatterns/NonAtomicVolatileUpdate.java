@@ -46,7 +46,6 @@ import javax.lang.model.element.Modifier;
 
 /** Detects non-atomic updates to volatile variables. */
 @BugPattern(
-    name = "NonAtomicVolatileUpdate",
     summary = "This update of a volatile variable is non-atomic",
     severity = WARNING,
     tags = StandardTags.FRAGILE_CODE)

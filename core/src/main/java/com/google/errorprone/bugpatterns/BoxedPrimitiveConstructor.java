@@ -50,7 +50,6 @@ import javax.annotation.Nullable;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
-    name = "BoxedPrimitiveConstructor",
     summary = "valueOf or autoboxing provides better time and space performance",
     severity = SeverityLevel.WARNING,
     tags = StandardTags.PERFORMANCE)

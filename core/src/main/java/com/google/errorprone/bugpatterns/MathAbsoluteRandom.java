@@ -31,7 +31,6 @@ import com.sun.source.tree.MethodInvocationTree;
 
 /** @author kayco@google.com (Kayla Walker) */
 @BugPattern(
-    name = "MathAbsoluteRandom",
     summary =
         "Math.abs does not always give a positive result. Please consider other "
             + "methods for positive random numbers.",

@@ -43,7 +43,6 @@ import javax.lang.model.element.Modifier;
 
 /** Suggests restricting the visibility of methods which should only be called by a framework. */
 @BugPattern(
-    name = "UnnecessarilyVisible",
     altNames = "RestrictInjectVisibility",
     summary =
         "Some methods (such as those annotated with @Inject or @Provides) are only intended to be"

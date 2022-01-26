@@ -77,7 +77,6 @@ import javax.lang.model.type.TypeKind;
  * others.
  */
 @BugPattern(
-    name = "MixedMutabilityReturnType",
     summary =
         "This method returns both mutable and immutable collections or maps from different "
             + "paths. This may be confusing for users of the method.",

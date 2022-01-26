@@ -72,7 +72,6 @@ import javax.lang.model.element.Name;
  * @author ghm@google.com (Graeme Morgan)
  */
 @BugPattern(
-    name = "AnnotationPosition",
     summary = "Annotations should be positioned after Javadocs, but before modifiers.",
     severity = WARNING,
     tags = STYLE,

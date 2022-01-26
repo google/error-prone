@@ -47,7 +47,6 @@ import com.sun.tools.javac.code.TypeTag;
 
 /** @author irogers@google.com (Ian Rogers) */
 @BugPattern(
-    name = "BadComparable",
     summary = "Possible sign flip from narrowing conversion",
     severity = WARNING,
     tags = StandardTags.FRAGILE_CODE)

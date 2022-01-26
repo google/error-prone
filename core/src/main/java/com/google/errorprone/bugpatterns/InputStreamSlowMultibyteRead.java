@@ -48,7 +48,6 @@ import javax.lang.model.element.ElementKind;
 
 /** Checks that InputStreams should override int read(byte[], int, int); */
 @BugPattern(
-    name = "InputStreamSlowMultibyteRead",
     summary =
         "Please also override int read(byte[], int, int), otherwise multi-byte reads from this "
             + "input stream are likely to be slow.",

@@ -49,7 +49,6 @@ import java.util.List;
  * @author ghm@google.com (Graeme Morgan)
  */
 @BugPattern(
-    name = "EqualsUnsafeCast",
     summary =
         "The contract of #equals states that it should return false for incompatible types, "
             + "while this implementation may throw ClassCastException.",

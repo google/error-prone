@@ -47,7 +47,6 @@ import javax.lang.model.element.Modifier;
 
 /** @author amesbah@google.com (Ali Mesbah) */
 @BugPattern(
-    name = "LambdaFunctionalInterface",
     summary =
         "Use Java's utility functional interfaces instead of Function<A, B> for primitive types.",
     severity = SUGGESTION)

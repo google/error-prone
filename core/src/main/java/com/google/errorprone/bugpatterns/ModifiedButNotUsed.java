@@ -76,7 +76,6 @@ import java.util.stream.Stream;
  * @author ghm@google.com (Graeme Morgan)
  */
 @BugPattern(
-    name = "ModifiedButNotUsed",
     summary = "A collection or proto builder was created, but its values were never accessed.",
     severity = WARNING)
 public class ModifiedButNotUsed extends BugChecker

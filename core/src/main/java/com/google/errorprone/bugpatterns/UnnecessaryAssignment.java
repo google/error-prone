@@ -68,7 +68,6 @@ import javax.lang.model.element.Modifier;
  * Discourage manual initialization or assignment to fields annotated with framework annotations.
  */
 @BugPattern(
-    name = "UnnecessaryAssignment",
     summary =
         "Fields annotated with @Inject/@Mock should not be manually assigned to, as they should be"
             + " initialized by a framework. Remove the assignment if a framework is being used, or"

@@ -58,7 +58,6 @@ import javax.lang.model.element.Modifier;
 
 /** @author eaftan@google.com (Eddie Aftandilian) */
 @BugPattern(
-    name = "JUnit4TestNotRun",
     summary =
         "This looks like a test method but is not run; please add @Test and @Ignore, or, if this"
             + " is a helper method, reduce its visibility.",

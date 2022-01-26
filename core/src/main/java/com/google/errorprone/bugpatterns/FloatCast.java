@@ -42,10 +42,7 @@ import com.sun.tools.javac.code.Type;
 import javax.lang.model.type.TypeKind;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
-@BugPattern(
-    name = "FloatCast",
-    summary = "Use parentheses to make the precedence explicit",
-    severity = WARNING)
+@BugPattern(summary = "Use parentheses to make the precedence explicit", severity = WARNING)
 public class FloatCast extends BugChecker implements TypeCastTreeMatcher {
 
   private static final ImmutableSet<TypeKind> INTEGRAL =

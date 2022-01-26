@@ -81,7 +81,6 @@ import javax.lang.model.element.Name;
 
 /** @author schmitt@google.com (Peter Schmitt) */
 @BugPattern(
-    name = "MissingFail",
     altNames = "missing-fail",
     summary = "Not calling fail() when expecting an exception masks bugs",
     severity = WARNING)

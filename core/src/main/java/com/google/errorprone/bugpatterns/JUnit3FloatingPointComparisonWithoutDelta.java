@@ -45,7 +45,6 @@ import javax.lang.model.type.TypeKind;
  * @author mwacker@google.com (Mike Wacker)
  */
 @BugPattern(
-    name = "JUnit3FloatingPointComparisonWithoutDelta",
     summary = "Floating-point comparison without error tolerance",
     // First sentence copied directly from JUnit 4.
 
