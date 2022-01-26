@@ -16,14 +16,17 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.common.collect.Iterables.isEmpty;
 import static com.google.errorprone.util.ASTHelpers.findMatchingMethods;
 import static com.google.errorprone.util.ASTHelpers.getUpperBound;
 import static com.google.errorprone.util.ASTHelpers.isCastable;
 import static com.google.errorprone.util.ASTHelpers.isSameType;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
+import static com.google.errorprone.util.ASTHelpers.scope;
 
 import com.google.auto.value.AutoValue;
 import com.google.common.collect.Streams;
+import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.suppliers.Supplier;
 import com.sun.tools.javac.code.Flags;
@@ -34,6 +37,7 @@ import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.TypeTag;
 import com.sun.tools.javac.code.Types;
 import com.sun.tools.javac.util.Name;
+import com.sun.tools.javac.util.Names;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -48,12 +52,29 @@ import javax.lang.model.type.TypeKind;
  * <p>i.e.: It is possible that an object of one type could be equal to an object of the other type.
  */
 public final class TypeCompatibilityUtils {
-  public static TypeCompatibilityReport compatibilityOfTypes(
+  private static final String WITHOUT_EQUALS_REASON =
+      " Though these types are the same, the type doesn't implement equals.";
+  private final boolean treatBuildersAsIncomparable;
+
+  public static TypeCompatibilityUtils fromFlags(ErrorProneFlags flags) {
+    return new TypeCompatibilityUtils(
+        flags.getBoolean("TypeCompatibility:TreatBuildersAsIncomparable").orElse(true));
+  }
+
+  public static TypeCompatibilityUtils allOn() {
+    return new TypeCompatibilityUtils(/* treatBuildersAsIncomparable= */ true);
+  }
+
+  private TypeCompatibilityUtils(boolean treatBuildersAsIncomparable) {
+    this.treatBuildersAsIncomparable = treatBuildersAsIncomparable;
+  }
+
+  public TypeCompatibilityReport compatibilityOfTypes(
       Type receiverType, Type argumentType, VisitorState state) {
     return compatibilityOfTypes(receiverType, argumentType, typeSet(state), typeSet(state), state);
   }
 
-  private static TypeCompatibilityReport compatibilityOfTypes(
+  private TypeCompatibilityReport compatibilityOfTypes(
       Type leftType,
       Type rightType,
       Set<Type> previouslySeenComponentsOfLeftType,
@@ -67,11 +88,29 @@ public final class TypeCompatibilityUtils {
       return TypeCompatibilityReport.compatible();
     }
 
-    // If they're the exact same type, they are definitely compatible.
     Types types = state.getTypes();
     Type leftUpperBound = getUpperBound(leftType, types);
     Type rightUpperBound = getUpperBound(rightType, types);
-    if (types.isSameType(leftUpperBound, rightUpperBound)) {
+    if (treatBuildersAsIncomparable && types.isSameType(leftUpperBound, rightUpperBound)) {
+      // As a special case, consider Builder classes without an equals implementation to not be
+      // comparable to themselves. It would be reasonable to mistake Builders as having value
+      // semantics, which may be misleading.
+      if (leftUpperBound.isFinal() && leftUpperBound.tsym.name.toString().endsWith("Builder")) {
+        Names names = state.getNames();
+        MethodSymbol equals =
+            (MethodSymbol)
+                state.getSymtab().objectType.tsym.members().findFirst(state.getNames().equals);
+        return isEmpty(
+                scope(types.membersClosure(leftUpperBound, /* skipInterface= */ false))
+                    .getSymbolsByName(
+                        names.toString,
+                        m ->
+                            m != equals
+                                && m.overrides(
+                                    equals, leftUpperBound.tsym, types, /* checkResult= */ false)))
+            ? TypeCompatibilityReport.incompatible(leftType, rightType, WITHOUT_EQUALS_REASON)
+            : TypeCompatibilityReport.compatible();
+      }
       return TypeCompatibilityReport.compatible();
     }
 
@@ -184,7 +223,7 @@ public final class TypeCompatibilityUtils {
         && !isSameType(rightType, collectionType, state);
   }
 
-  private static boolean areIncompatibleProtoTypes(
+  private boolean areIncompatibleProtoTypes(
       Type leftType, Type rightType, Type nearestCommonSupertype, VisitorState state) {
     // See discussion in b/152428396 - Proto equality is defined as having the "same message type",
     // with the same corresponding field values. However - there are 3 flavors of Java Proto API
@@ -266,7 +305,7 @@ public final class TypeCompatibilityUtils {
    * report showing that a specific generic type in the projection of {@code leftType} is
    * incompatible with the specific generic type in the projection of {@code rightType}.
    */
-  private static TypeCompatibilityReport checkForGenericsMismatch(
+  private TypeCompatibilityReport checkForGenericsMismatch(
       Type leftType,
       Type rightType,
       Type superType,
@@ -321,7 +360,7 @@ public final class TypeCompatibilityUtils {
   @AutoValue
   public abstract static class TypeCompatibilityReport {
     private static final TypeCompatibilityReport COMPATIBLE =
-        new AutoValue_TypeCompatibilityUtils_TypeCompatibilityReport(true, null, null);
+        new AutoValue_TypeCompatibilityUtils_TypeCompatibilityReport(true, null, null, null);
 
     public abstract boolean isCompatible();
 
@@ -331,12 +370,20 @@ public final class TypeCompatibilityUtils {
     @Nullable
     public abstract Type rhs();
 
+    @Nullable
+    public abstract String extraReason();
+
     static TypeCompatibilityReport compatible() {
       return COMPATIBLE;
     }
 
     static TypeCompatibilityReport incompatible(Type lhs, Type rhs) {
-      return new AutoValue_TypeCompatibilityUtils_TypeCompatibilityReport(false, lhs, rhs);
+      return incompatible(lhs, rhs, "");
+    }
+
+    static TypeCompatibilityReport incompatible(Type lhs, Type rhs, String extraReason) {
+      return new AutoValue_TypeCompatibilityUtils_TypeCompatibilityReport(
+          false, lhs, rhs, extraReason);
     }
   }
 
