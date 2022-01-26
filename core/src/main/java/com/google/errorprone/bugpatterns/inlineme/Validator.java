@@ -17,22 +17,28 @@
 package com.google.errorprone.bugpatterns.inlineme;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.util.ASTHelpers.findSuperMethods;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
+import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
+import static com.google.errorprone.util.ASTHelpers.hasDirectAnnotationWithSimpleName;
 
 import com.google.common.base.CharMatcher;
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.annotations.InlineMeValidationDisabled;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
+import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
 import com.google.errorprone.util.ErrorProneToken;
 import com.google.errorprone.util.ErrorProneTokens;
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.MethodTree;
+import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.util.Context;
 import java.util.EnumSet;
 import java.util.Set;
@@ -47,12 +53,42 @@ import java.util.function.Predicate;
     documentSuppression = false,
     severity = ERROR)
 public final class Validator extends BugChecker implements MethodTreeMatcher {
+  static final String CLEANUP_INLINE_ME_FLAG = "InlineMe:CleanupInlineMes";
+
+  private final boolean cleanupInlineMes;
+
+  public Validator(ErrorProneFlags flags) {
+    this.cleanupInlineMes = flags.getBoolean(CLEANUP_INLINE_ME_FLAG).orElse(false);
+  }
 
   @Override
   public Description matchMethod(MethodTree tree, VisitorState state) {
-    return InlineMeData.createFromSymbol(getSymbol(tree))
-        .map(data -> match(data, tree, state))
-        .orElse(Description.NO_MATCH);
+    MethodSymbol symbol = getSymbol(tree);
+    if (cleanupInlineMes) {
+      return shouldDelete(symbol, state)
+          // TODO(b/216312289): maybe use SuggestedFixes.delete(tree)?
+          ? describeMatch(tree, SuggestedFixes.replaceIncludingComments(state.getPath(), "", state))
+          : Description.NO_MATCH;
+    } else {
+      return InlineMeData.createFromSymbol(symbol)
+          .map(data -> match(data, tree, state))
+          .orElse(Description.NO_MATCH);
+    }
+  }
+
+  /** Whether or not the API should be deleted when run in cleanup mode. */
+  private static boolean shouldDelete(MethodSymbol symbol, VisitorState state) {
+    // Clean up (delete) the API if
+    //   * it's @InlineMe'd
+    //   * it isn't @InlineMeValidationDisabled (this prevents us from deleting default methods)
+    //   * it isn't an @Override (since the code would likely no longer compile, or it would start
+    //     inheriting behavior from the supertype).
+
+    // TODO(kak): it would be nice if we could query to see if there are still any existing
+    // usages of the API before unilaterally deleting it.
+    return hasDirectAnnotationWithSimpleName(symbol, "InlineMe")
+        && !hasAnnotation(symbol, "java.lang.Override", state)
+        && findSuperMethods(symbol, state.getTypes()).isEmpty();
   }
 
   private Description match(InlineMeData existingAnnotation, MethodTree tree, VisitorState state) {

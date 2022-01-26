@@ -16,6 +16,7 @@
 
 package com.google.errorprone.bugpatterns.inlineme;
 
+import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
 import java.util.regex.Pattern;
 import org.junit.Test;
@@ -730,5 +731,10 @@ public class ValidatorTest {
             "  }",
             "}")
         .doTest();
+  }
+
+  private BugCheckerRefactoringTestHelper getHelperInCleanupMode() {
+    return BugCheckerRefactoringTestHelper.newInstance(Validator.class, getClass())
+        .setArgs("-XepOpt:" + Validator.CLEANUP_INLINE_ME_FLAG + "=true");
   }
 }
