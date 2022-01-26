@@ -16,7 +16,9 @@
 
 package com.google.errorprone;
 
-import com.google.common.collect.Iterables;
+import static com.google.common.collect.ImmutableList.toImmutableList;
+
+import com.google.common.collect.ImmutableList;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.scanner.ScannerSupplier;
 import com.sun.tools.javac.processing.JavacProcessingEnvironment;
@@ -39,13 +41,14 @@ public final class ErrorPronePlugins {
     // when using Error Prone plugins together with the Error Prone javac plugin.
     JavacProcessingEnvironment processingEnvironment = JavacProcessingEnvironment.instance(context);
     ClassLoader loader = processingEnvironment.getProcessorClassLoader();
-    Iterable<BugChecker> extraBugCheckers = ServiceLoader.load(BugChecker.class, loader);
-    if (Iterables.isEmpty(extraBugCheckers)) {
+    ImmutableList<Class<? extends BugChecker>> extraBugCheckers =
+        ServiceLoader.load(BugChecker.class, loader).stream()
+            .map(ServiceLoader.Provider::type)
+            .collect(toImmutableList());
+    if (extraBugCheckers.isEmpty()) {
       return scannerSupplier;
     }
-    return scannerSupplier.plus(
-        ScannerSupplier.fromBugCheckerClasses(
-            Iterables.transform(extraBugCheckers, BugChecker::getClass)));
+    return scannerSupplier.plus(ScannerSupplier.fromBugCheckerClasses(extraBugCheckers));
   }
 
   private ErrorPronePlugins() {}
