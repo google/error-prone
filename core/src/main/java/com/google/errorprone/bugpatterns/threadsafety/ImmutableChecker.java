@@ -72,11 +72,6 @@ public class ImmutableChecker extends BugChecker
   private final WellKnownMutability wellKnownMutability;
   private final ImmutableSet<String> immutableAnnotations;
 
-  @Deprecated // Used reflectively, but you should pass in ErrorProneFlags to get custom mutability
-  public ImmutableChecker() {
-    this(ErrorProneFlags.empty());
-  }
-
   ImmutableChecker(ImmutableSet<String> immutableAnnotations) {
     this(ErrorProneFlags.empty(), immutableAnnotations);
   }

@@ -42,10 +42,6 @@ public class MissingOverride extends BugChecker implements MethodTreeMatcher {
   /** if true, don't warn on missing {@code @Override} annotations inside interfaces */
   private final boolean ignoreInterfaceOverrides;
 
-  public MissingOverride() {
-    this(ErrorProneFlags.empty());
-  }
-
   public MissingOverride(ErrorProneFlags flags) {
     this.ignoreInterfaceOverrides =
         flags.getBoolean("MissingOverride:IgnoreInterfaceOverrides").orElse(false);

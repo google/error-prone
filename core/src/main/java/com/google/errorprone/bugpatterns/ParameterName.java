@@ -66,10 +66,6 @@ public class ParameterName extends BugChecker
 
   private final ImmutableList<String> exemptPackages;
 
-  public ParameterName() {
-    this(ErrorProneFlags.empty());
-  }
-
   public ParameterName(ErrorProneFlags errorProneFlags) {
     this.exemptPackages =
         errorProneFlags
