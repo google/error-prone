@@ -22,7 +22,6 @@ import static com.google.errorprone.bugpatterns.collectionincompatibletype.Abstr
 import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableListMultimap;
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.annotations.CheckReturnValue;
 import com.google.errorprone.annotations.CompatibleWith;
@@ -55,12 +54,6 @@ import javax.lang.model.element.TypeParameterElement;
     summary = "Passing argument to a generic method with an incompatible type.",
     severity = ERROR)
 public class IncompatibleArgumentType extends BugChecker implements MethodInvocationTreeMatcher {
-
-  private final TypeCompatibilityUtils typeCompatibilityUtils;
-
-  public IncompatibleArgumentType(ErrorProneFlags flags) {
-    this.typeCompatibilityUtils = TypeCompatibilityUtils.fromFlags(flags);
-  }
 
   // Nonnull requiredType: The type I need is bound, in requiredType
   // null requiredType: I found the type variable, but I can't bind it to any type
@@ -131,7 +124,7 @@ public class IncompatibleArgumentType extends BugChecker implements MethodInvoca
       if (requiredType.type() != null) {
         // Report a violation for this type
         TypeCompatibilityReport report =
-            typeCompatibilityUtils.compatibilityOfTypes(requiredType.type(), argType, state);
+            TypeCompatibilityUtils.compatibilityOfTypes(requiredType.type(), argType, state);
         if (!report.isCompatible()) {
           state.reportMatch(
               describeViolation(argument, argType, requiredType.type(), types, state));
