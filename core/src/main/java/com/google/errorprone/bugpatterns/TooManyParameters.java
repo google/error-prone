@@ -20,6 +20,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.findEnclosingNode;
+import static com.google.errorprone.util.ASTHelpers.findSuperMethods;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
 
@@ -31,12 +32,6 @@ import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.matchers.Description;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.MethodTree;
-import com.sun.source.tree.Tree;
-import com.sun.tools.javac.code.Symbol;
-import com.sun.tools.javac.code.Symbol.ClassSymbol;
-import com.sun.tools.javac.code.Symbol.MethodSymbol;
-import com.sun.tools.javac.code.Type;
-import com.sun.tools.javac.code.Types;
 import javax.lang.model.element.Modifier;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
@@ -94,7 +89,7 @@ public class TooManyParameters extends BugChecker implements MethodTreeMatcher {
 
   // Copied + modified from GoodTime API checker
   // TODO(kak): we should probably move this somewhere that future API checks can use
-  private static boolean shouldApplyApiChecks(Tree tree, VisitorState state) {
+  private static boolean shouldApplyApiChecks(MethodTree tree, VisitorState state) {
     for (String annotation : ANNOTATIONS_TO_IGNORE) {
       if (hasAnnotation(tree, annotation, state)) {
         return false;
@@ -110,36 +105,9 @@ public class TooManyParameters extends BugChecker implements MethodTreeMatcher {
       return false;
     }
     // don't match overrides (even "effective overrides")
-    if (isEffectivelyOverride(getSymbol(tree), state.getTypes())) {
+    if (!findSuperMethods(getSymbol(tree), state.getTypes()).isEmpty()) {
       return false;
     }
     return true;
-  }
-
-  // TODO(b/216306810): copied from MissingOverride.java
-  private static boolean isEffectivelyOverride(Symbol sym, Types types) {
-    // static methods can't be overrides
-    if (sym.isStatic()) {
-      return false;
-    }
-    ClassSymbol owner = sym.enclClass();
-    for (Type s : types.closure(owner.type)) {
-      if (s.asElement().equals(owner)) {
-        continue;
-      }
-      for (Symbol m : s.tsym.members().getSymbolsByName(sym.name)) {
-        if (!(m instanceof MethodSymbol)) {
-          continue;
-        }
-        MethodSymbol msym = (MethodSymbol) m;
-        if (msym.isStatic()) {
-          continue;
-        }
-        if (sym.overrides(msym, owner, types, /* checkResult= */ false)) {
-          return true;
-        }
-      }
-    }
-    return false;
   }
 }

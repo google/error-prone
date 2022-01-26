@@ -17,6 +17,9 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
+import static com.google.errorprone.matchers.Description.NO_MATCH;
+import static com.google.errorprone.util.ASTHelpers.findSuperMethods;
+import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.StandardTags;
@@ -27,12 +30,6 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.MethodTree;
-import com.sun.tools.javac.code.Symbol;
-import com.sun.tools.javac.code.Symbol.ClassSymbol;
-import com.sun.tools.javac.code.Symbol.MethodSymbol;
-import com.sun.tools.javac.code.Type;
-import com.sun.tools.javac.code.Types;
-import javax.annotation.Nullable;
 import javax.lang.model.element.Modifier;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
@@ -56,68 +53,36 @@ public class MissingOverride extends BugChecker implements MethodTreeMatcher {
 
   @Override
   public Description matchMethod(MethodTree tree, VisitorState state) {
-    Symbol sym = ASTHelpers.getSymbol(tree);
+    var sym = ASTHelpers.getSymbol(tree);
     if (sym.isStatic()) {
-      return Description.NO_MATCH;
+      return NO_MATCH;
     }
-    if (ASTHelpers.hasAnnotation(sym, Override.class, state)) {
-      return Description.NO_MATCH;
+    if (hasAnnotation(sym, Override.class, state)) {
+      return NO_MATCH;
     }
-    MethodSymbol override = getFirstOverride(sym, state.getTypes());
-    if (override == null) {
-      return Description.NO_MATCH;
+    if (ignoreInterfaceOverrides && sym.enclClass().isInterface()) {
+      return NO_MATCH;
     }
-    if (!ASTHelpers.getGeneratedBy(state).isEmpty()) {
-      return Description.NO_MATCH;
-    }
-    if (ASTHelpers.hasAnnotation(override, Deprecated.class, state)) {
-      // to allow deprecated methods to be removed non-atomically, we permit overrides of
-      // @Deprecated to skip the annotation
-      return Description.NO_MATCH;
-    }
-    return buildDescription(tree)
-        .addFix(SuggestedFix.prefixWith(tree, "@Override "))
-        .setMessage(
-            String.format(
-                "%s %s method in %s; expected @Override",
-                sym.getSimpleName(),
-                override.enclClass().isInterface()
-                        || override.getModifiers().contains(Modifier.ABSTRACT)
-                    ? "implements"
-                    : "overrides",
-                override.enclClass().getSimpleName()))
-        .build();
-  }
-
-  /**
-   * Returns the {@link MethodSymbol} of the first method that sym overrides in its supertype
-   * closure, or {@code null} if no such method exists.
-   */
-  // TODO(b/216306810): consider adding a generalized version of this to ASTHelpers
-  @Nullable
-  private MethodSymbol getFirstOverride(Symbol sym, Types types) {
-    ClassSymbol owner = sym.enclClass();
-    if (ignoreInterfaceOverrides && owner.isInterface()) {
-      // pretend the method does not override anything
-      return null;
-    }
-    for (Type s : types.closure(owner.type)) {
-      if (types.isSameType(s, owner.type)) {
-        continue;
-      }
-      for (Symbol m : s.tsym.members().getSymbolsByName(sym.name)) {
-        if (!(m instanceof MethodSymbol)) {
-          continue;
-        }
-        MethodSymbol msym = (MethodSymbol) m;
-        if (msym.isStatic()) {
-          continue;
-        }
-        if (sym.overrides(msym, owner, types, /* checkResult= */ false)) {
-          return msym;
-        }
-      }
-    }
-    return null;
+    return findSuperMethods(sym, state.getTypes()).stream()
+        .findFirst()
+        .filter(unused -> ASTHelpers.getGeneratedBy(state).isEmpty())
+        // to allow deprecated methods to be removed non-atomically, we permit overrides of
+        // @Deprecated to skip the annotation
+        .filter(override -> !hasAnnotation(override, Deprecated.class, state))
+        .map(
+            override ->
+                buildDescription(tree)
+                    .addFix(SuggestedFix.prefixWith(tree, "@Override "))
+                    .setMessage(
+                        String.format(
+                            "%s %s method in %s; expected @Override",
+                            sym.getSimpleName(),
+                            override.enclClass().isInterface()
+                                    || override.getModifiers().contains(Modifier.ABSTRACT)
+                                ? "implements"
+                                : "overrides",
+                            override.enclClass().getSimpleName()))
+                    .build())
+        .orElse(NO_MATCH);
   }
 }
