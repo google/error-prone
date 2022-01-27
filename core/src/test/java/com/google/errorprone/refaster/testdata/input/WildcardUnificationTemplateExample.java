@@ -27,10 +27,9 @@ import com.google.common.collect.ImmutableList;
  */
 public class WildcardUnificationTemplateExample {
   public void example() {
-    // BUG: The template should remove the hasSize call below!
     ImmutableList<String> actual = ImmutableList.of("kurt", "kluever");
     ImmutableList<String> expected = ImmutableList.of("kluever", "kurt");
     assertThat(actual).hasSize(expected.size());
-    assertThat(actual).containsExactlyElementsIn(expected);
+    assertThat(actual).containsAtLeastElementsIn(expected);
   }
 }
