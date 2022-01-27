@@ -1364,9 +1364,6 @@ Protos should not be used as a key to a map, in a set, or in a contains method o
 __[QualifierWithTypeUse](bugpattern/QualifierWithTypeUse)__<br>
 Injection frameworks currently don&#39;t understand Qualifiers in TYPE_PARAMETER or TYPE_USE contexts.
 
-__[RedundantCondition](bugpattern/RedundantCondition)__<br>
-Redundant usage of a boolean variable with known value
-
 __[RedundantOverride](bugpattern/RedundantOverride)__<br>
 This overriding method is redundant, and can be removed.
 
