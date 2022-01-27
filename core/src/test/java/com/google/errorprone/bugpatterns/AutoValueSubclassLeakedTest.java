@@ -97,4 +97,31 @@ public final class AutoValueSubclassLeakedTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void generatedCode() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            "package test;",
+            "import com.google.auto.value.AutoValue;",
+            "class Test {",
+            "  @AutoValue",
+            "  abstract static class Foo {",
+            "    abstract int foo();",
+            "  }",
+            "}")
+        .addSourceLines(
+            "Bar.java",
+            "package test;",
+            "import javax.annotation.processing.Generated;",
+            "",
+            "@Generated(\"generator\")",
+            "class Bar {",
+            "  public static Test.Foo create(int i) {",
+            "    return new AutoValue_Test_Foo(i);",
+            "  }",
+            "}")
+        .doTest();
+  }
 }

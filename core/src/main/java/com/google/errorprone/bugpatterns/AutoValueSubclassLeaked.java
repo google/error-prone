@@ -29,6 +29,7 @@ import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.CompilationUnitTreeMatcher;
 import com.google.errorprone.matchers.Description;
+import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.IdentifierTree;
@@ -66,6 +67,15 @@ public final class AutoValueSubclassLeaked extends BugChecker
       ImmutableSet<Type> autoValueClassesFromThisFile,
       VisitorState state) {
     new SuppressibleTreePathScanner<Void, Void>() {
+
+      @Override
+      public Void visitClass(ClassTree classTree, Void unused) {
+        if (!ASTHelpers.getGeneratedBy(getSymbol(classTree), state).isEmpty()) {
+          return null;
+        }
+        return super.visitClass(classTree, null);
+      }
+
       @Override
       public Void visitMemberSelect(MemberSelectTree memberSelectTree, Void unused) {
         handle(memberSelectTree);
