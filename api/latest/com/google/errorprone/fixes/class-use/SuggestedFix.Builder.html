@@ -248,12 +248,25 @@ int&nbsp;endPosAdjustment)</code></th>
 </tr>
 <tr class="alt-color">
 <td class="col-first"><code>static <a href="../SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a></code></td>
-<th class="col-second" scope="row"><span class="type-name-label">SuggestedFixes.</span><code><span class="member-name-link"><a href="../SuggestedFixes.html#updateAnnotationArgumentValues(com.sun.source.tree.AnnotationTree,java.lang.String,java.util.Collection)">updateAnnotationArgumentValues</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/AnnotationTree.html" title="class or interface in com.sun.source.tree" class="external-link">AnnotationTree</a>&nbsp;annotation,
+<th class="col-second" scope="row"><span class="type-name-label">SuggestedFixes.</span><code><span class="member-name-link"><a href="../SuggestedFixes.html#updateAnnotationArgumentValues(com.sun.source.tree.AnnotationTree,com.google.errorprone.VisitorState,java.lang.String,java.util.Collection)">updateAnnotationArgumentValues</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/AnnotationTree.html" title="class or interface in com.sun.source.tree" class="external-link">AnnotationTree</a>&nbsp;annotation,
+<a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
 <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;parameterName,
 <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;newValues)</code></th>
 <td class="col-last">
 <div class="block">Returns a fix that updates <code>newValues</code> to the <code>parameterName</code> argument for <code>
  annotation</code>, regardless of whether there is already an argument.</div>
+</td>
+</tr>
+<tr class="row-color">
+<td class="col-first"><code>static <a href="../SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a></code></td>
+<th class="col-second" scope="row"><span class="type-name-label">SuggestedFixes.</span><code><span class="member-name-link"><a href="../SuggestedFixes.html#updateAnnotationArgumentValues(com.sun.source.tree.AnnotationTree,java.lang.String,java.util.Collection)">updateAnnotationArgumentValues</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/AnnotationTree.html" title="class or interface in com.sun.source.tree" class="external-link">AnnotationTree</a>&nbsp;annotation,
+<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;parameterName,
+<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;newValues)</code></th>
+<td class="col-last">
+<div class="block"><span class="deprecated-label">Deprecated.</span>
+<div class="deprecation-comment">use <a href="../SuggestedFixes.html#updateAnnotationArgumentValues(com.sun.source.tree.AnnotationTree,com.google.errorprone.VisitorState,java.lang.String,java.util.Collection)"><code>SuggestedFixes.updateAnnotationArgumentValues(AnnotationTree, VisitorState, String,
+     Collection)</code></a> instead</div>
+</div>
 </td>
 </tr>
 </tbody>
