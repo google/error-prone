@@ -28,6 +28,7 @@ import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
+import static com.google.errorprone.util.ASTHelpers.shouldKeep;
 import static com.google.errorprone.util.SideEffectAnalysis.hasSideEffect;
 import static com.sun.source.tree.Tree.Kind.POSTFIX_DECREMENT;
 import static com.sun.source.tree.Tree.Kind.POSTFIX_INCREMENT;
@@ -120,14 +121,11 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
 
   private static final ImmutableSet<String> EXEMPT_NAMES = ImmutableSet.of("ignored");
 
-  private static final String KEEP = "com.google.errorprone.annotations.Keep";
-
   /**
    * The set of annotation full names which exempt annotated element from being reported as unused.
    */
   private static final ImmutableSet<String> EXEMPTING_VARIABLE_ANNOTATIONS =
       ImmutableSet.of(
-          KEEP,
           "javax.persistence.Basic",
           "javax.persistence.Column",
           "javax.persistence.Id",
@@ -529,8 +527,7 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
    * Looks at the list of {@code annotations} and see if there is any annotation which exists {@code
    * exemptingAnnotations}.
    */
-  private static boolean exemptedByAnnotation(
-      List<? extends AnnotationTree> annotations, VisitorState state) {
+  private static boolean exemptedByAnnotation(List<? extends AnnotationTree> annotations) {
     for (AnnotationTree annotation : annotations) {
       Type annotationType = ASTHelpers.getType(annotation);
       if (annotationType == null) {
@@ -538,9 +535,6 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
       }
       TypeSymbol tsym = annotationType.tsym;
       if (EXEMPTING_VARIABLE_ANNOTATIONS.contains(tsym.getQualifiedName().toString())) {
-        return true;
-      }
-      if (ASTHelpers.hasAnnotation(tsym, KEEP, state)) {
         return true;
       }
     }
@@ -584,7 +578,8 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
       }
       super.visitVariable(variableTree, null);
       // Return if the element is exempted by an annotation.
-      if (exemptedByAnnotation(variableTree.getModifiers().getAnnotations(), state)) {
+      if (exemptedByAnnotation(variableTree.getModifiers().getAnnotations())
+          || shouldKeep(variableTree)) {
         return null;
       }
       switch (symbol.getKind()) {
