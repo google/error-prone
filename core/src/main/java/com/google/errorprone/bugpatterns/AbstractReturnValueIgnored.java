@@ -101,8 +101,6 @@ public abstract class AbstractReturnValueIgnored extends BugChecker
         ReturnTreeMatcher,
         NewClassTreeMatcher {
 
-  private static final String CRV_CONSTRUCTOR_FLAG = "CheckConstructorReturnValue";
-
   private final Supplier<Matcher<ExpressionTree>> methodInvocationMatcher =
       Suppliers.memoize(
           () ->
