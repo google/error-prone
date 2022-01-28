@@ -70,7 +70,7 @@ loadScripts(document, 'script');</script>
 </div>
 <section class="description">
 <hr>
-<pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/annotation/Target.html" title="class or interface in java.lang.annotation" class="external-link">@Target</a>({<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/annotation/ElementType.html#CONSTRUCTOR" title="class or interface in java.lang.annotation" class="external-link">CONSTRUCTOR</a>,<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/annotation/ElementType.html#METHOD" title="class or interface in java.lang.annotation" class="external-link">METHOD</a>})
+<pre><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/Target.html" title="class or interface in java.lang.annotation" class="external-link">@Target</a>({<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/ElementType.html#CONSTRUCTOR" title="class or interface in java.lang.annotation" class="external-link">CONSTRUCTOR</a>,<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/ElementType.html#METHOD" title="class or interface in java.lang.annotation" class="external-link">METHOD</a>})
 public @interface <span class="type-name-label">RestrictedApi</span></pre>
 <div class="block">Restrict this method to callsites with a allowlist annotation.
 
@@ -148,14 +148,14 @@ public @interface <span class="type-name-label">RestrictedApi</span></pre>
 </thead>
 <tbody>
 <tr class="alt-color">
-<td class="col-first"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></td>
+<td class="col-first"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#explanation()">explanation</a></span></code></th>
 <td class="col-last">
 <div class="block">Explanation why the API is restricted, to be inserted into the compiler output.</div>
 </td>
 </tr>
 <tr class="row-color">
-<td class="col-first"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></td>
+<td class="col-first"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#link()">link</a></span></code></th>
 <td class="col-last">
 <div class="block">Link explaining why the API is restricted</div>
@@ -182,21 +182,21 @@ public @interface <span class="type-name-label">RestrictedApi</span></pre>
 </thead>
 <tbody>
 <tr class="alt-color">
-<td class="col-first"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></td>
+<td class="col-first"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#allowedOnPath()">allowedOnPath</a></span></code></th>
 <td class="col-last">
 <div class="block">Allow the restricted API on paths matching this regular expression.</div>
 </td>
 </tr>
 <tr class="row-color">
-<td class="col-first"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;? extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/annotation/Annotation.html" title="class or interface in java.lang.annotation" class="external-link">Annotation</a>&gt;[]</code></td>
+<td class="col-first"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;? extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/Annotation.html" title="class or interface in java.lang.annotation" class="external-link">Annotation</a>&gt;[]</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#allowlistAnnotations()">allowlistAnnotations</a></span></code></th>
 <td class="col-last">
 <div class="block">Allow calls to the restricted API in methods or classes with this annotation.</div>
 </td>
 </tr>
 <tr class="alt-color">
-<td class="col-first"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;? extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/annotation/Annotation.html" title="class or interface in java.lang.annotation" class="external-link">Annotation</a>&gt;[]</code></td>
+<td class="col-first"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;? extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/Annotation.html" title="class or interface in java.lang.annotation" class="external-link">Annotation</a>&gt;[]</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#allowlistWithWarningAnnotations()">allowlistWithWarningAnnotations</a></span></code></th>
 <td class="col-last">
 <div class="block">Emit warnings, not errors, on calls to the restricted API for callers with this annotation.</div>
@@ -219,14 +219,14 @@ public @interface <span class="type-name-label">RestrictedApi</span></pre>
 <li>
 <section class="detail" id="explanation()">
 <h3>explanation</h3>
-<div class="member-signature"><span class="return-type"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="member-name">explanation</span></div>
+<div class="member-signature"><span class="return-type"><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="member-name">explanation</span></div>
 <div class="block">Explanation why the API is restricted, to be inserted into the compiler output.</div>
 </section>
 </li>
 <li>
 <section class="detail" id="link()">
 <h3>link</h3>
-<div class="member-signature"><span class="return-type"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="member-name">link</span></div>
+<div class="member-signature"><span class="return-type"><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="member-name">link</span></div>
 <div class="block">Link explaining why the API is restricted</div>
 </section>
 </li>
@@ -240,7 +240,7 @@ public @interface <span class="type-name-label">RestrictedApi</span></pre>
 <li>
 <section class="detail" id="allowedOnPath()">
 <h3>allowedOnPath</h3>
-<div class="member-signature"><span class="return-type"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="member-name">allowedOnPath</span></div>
+<div class="member-signature"><span class="return-type"><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="member-name">allowedOnPath</span></div>
 <div class="block">Allow the restricted API on paths matching this regular expression.
 
  <p>Leave empty (the default) to enforce the API restrictions on all paths.</div>
@@ -253,7 +253,7 @@ public @interface <span class="type-name-label">RestrictedApi</span></pre>
 <li>
 <section class="detail" id="allowlistAnnotations()">
 <h3>allowlistAnnotations</h3>
-<div class="member-signature"><span class="return-type"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;? extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/annotation/Annotation.html" title="class or interface in java.lang.annotation" class="external-link">Annotation</a>&gt;[]</span>&nbsp;<span class="member-name">allowlistAnnotations</span></div>
+<div class="member-signature"><span class="return-type"><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;? extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/Annotation.html" title="class or interface in java.lang.annotation" class="external-link">Annotation</a>&gt;[]</span>&nbsp;<span class="member-name">allowlistAnnotations</span></div>
 <div class="block">Allow calls to the restricted API in methods or classes with this annotation.</div>
 <dl class="notes">
 <dt>Default:</dt>
@@ -264,7 +264,7 @@ public @interface <span class="type-name-label">RestrictedApi</span></pre>
 <li>
 <section class="detail" id="allowlistWithWarningAnnotations()">
 <h3>allowlistWithWarningAnnotations</h3>
-<div class="member-signature"><span class="return-type"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;? extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/annotation/Annotation.html" title="class or interface in java.lang.annotation" class="external-link">Annotation</a>&gt;[]</span>&nbsp;<span class="member-name">allowlistWithWarningAnnotations</span></div>
+<div class="member-signature"><span class="return-type"><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;? extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/Annotation.html" title="class or interface in java.lang.annotation" class="external-link">Annotation</a>&gt;[]</span>&nbsp;<span class="member-name">allowlistWithWarningAnnotations</span></div>
 <div class="block">Emit warnings, not errors, on calls to the restricted API for callers with this annotation.
 
  <p>This should only be used if callers should aggressively move away from this API (or change

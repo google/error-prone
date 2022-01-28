@@ -102,14 +102,14 @@ loadScripts(document, 'script');</script>
 </tr>
 <tr class="alt-color">
 <td class="col-first"><code>abstract <a href="../StronglyType.Builder.html" title="class in com.google.errorprone.bugpatterns">StronglyType.Builder</a></code></td>
-<th class="col-second" scope="row"><span class="type-name-label">StronglyType.Builder.</span><code><span class="member-name-link"><a href="../StronglyType.Builder.html#setFactoryMatcher(com.google.errorprone.matchers.Matcher)">setFactoryMatcher</a></span>&#8203;(<a href="../../matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&gt;&nbsp;matcher)</code></th>
+<th class="col-second" scope="row"><span class="type-name-label">StronglyType.Builder.</span><code><span class="member-name-link"><a href="../StronglyType.Builder.html#setFactoryMatcher(com.google.errorprone.matchers.Matcher)">setFactoryMatcher</a></span>&#8203;(<a href="../../matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.ExpressionTree&gt;&nbsp;matcher)</code></th>
 <td class="col-last">
 <div class="block">Set the matcher used to check if an expression is a factory creating a stronger type.</div>
 </td>
 </tr>
 <tr class="row-color">
 <td class="col-first"><code>abstract <a href="../StronglyType.Builder.html" title="class in com.google.errorprone.bugpatterns">StronglyType.Builder</a></code></td>
-<th class="col-second" scope="row"><span class="type-name-label">StronglyType.Builder.</span><code><span class="member-name-link"><a href="../StronglyType.Builder.html#setRenameFunction(java.util.function.Function)">setRenameFunction</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,&#8203;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;renameFn)</code></th>
+<th class="col-second" scope="row"><span class="type-name-label">StronglyType.Builder.</span><code><span class="member-name-link"><a href="../StronglyType.Builder.html#setRenameFunction(java.util.function.Function)">setRenameFunction</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,&#8203;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;renameFn)</code></th>
 <td class="col-last">
 <div class="block">Set a mapping function that maps from the original name to a new name more befitting the
  strong type.</div>

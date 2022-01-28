@@ -76,7 +76,7 @@ loadScripts(document, 'script');</script>
 <div class="sub-title"><span class="package-label-in-type">Package</span>&nbsp;<a href="package-summary.html">com.google.errorprone.bugpatterns.threadsafety</a></div>
 <h1 title="Class GuardedBySymbolResolver" class="title">Class GuardedBySymbolResolver</h1>
 </div>
-<div class="inheritance" title="Inheritance Tree"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">java.lang.Object</a>
+<div class="inheritance" title="Inheritance Tree"><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html" title="class or interface in java.lang" class="external-link">java.lang.Object</a>
 <div class="inheritance">com.google.errorprone.bugpatterns.threadsafety.GuardedBySymbolResolver</div>
 </div>
 <section class="description">
@@ -86,7 +86,7 @@ loadScripts(document, 'script');</script>
 </dl>
 <hr>
 <pre>public class <span class="type-name-label">GuardedBySymbolResolver</span>
-extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>
+extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>
 implements <a href="GuardedByBinder.Resolver.html" title="interface in com.google.errorprone.bugpatterns.threadsafety">GuardedByBinder.Resolver</a></pre>
 <div class="block">A symbol resolver used while binding guardedby expressions from string literals.</div>
 <dl class="notes">
@@ -124,7 +124,7 @@ implements <a href="GuardedByBinder.Resolver.html" title="interface in com.googl
 </tr>
 <tr class="alt-color" id="i2">
 <td class="col-first"><code>static <a href="GuardedBySymbolResolver.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedBySymbolResolver</a></code></td>
-<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#from(com.sun.source.tree.Tree,com.google.errorprone.VisitorState)">from</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&nbsp;tree,
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#from(com.sun.source.tree.Tree,com.google.errorprone.VisitorState)">from</a></span>&#8203;(com.sun.source.tree.Tree&nbsp;tree,
 <a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;visitorState)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
@@ -132,44 +132,44 @@ implements <a href="GuardedByBinder.Resolver.html" title="interface in com.googl
 <td class="col-first"><code>static <a href="GuardedBySymbolResolver.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedBySymbolResolver</a></code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#from(com.sun.tools.javac.code.Symbol.ClassSymbol,com.google.errorprone.bugpatterns.threadsafety.GuardedBySymbolResolver.MethodInfo,com.sun.source.tree.CompilationUnitTree,com.sun.tools.javac.util.Context,com.sun.source.tree.Tree,com.google.errorprone.VisitorState)">from</a></span>&#8203;(com.sun.tools.javac.code.Symbol.ClassSymbol&nbsp;owner,
 com.google.errorprone.bugpatterns.threadsafety.GuardedBySymbolResolver.MethodInfo&nbsp;method,
-<a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/CompilationUnitTree.html" title="class or interface in com.sun.source.tree" class="external-link">CompilationUnitTree</a>&nbsp;compilationUnit,
+com.sun.source.tree.CompilationUnitTree&nbsp;compilationUnit,
 com.sun.tools.javac.util.Context&nbsp;context,
-<a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&nbsp;leaf,
+com.sun.source.tree.Tree&nbsp;leaf,
 <a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;visitorState)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
 <tr class="alt-color" id="i4">
 <td class="col-first"><code>com.sun.tools.javac.code.Symbol</code></td>
-<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#resolveEnclosingClass(com.sun.source.tree.ExpressionTree)">resolveEnclosingClass</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&nbsp;expr)</code></th>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#resolveEnclosingClass(com.sun.source.tree.ExpressionTree)">resolveEnclosingClass</a></span>&#8203;(com.sun.source.tree.ExpressionTree&nbsp;expr)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
 <tr class="row-color" id="i5">
 <td class="col-first"><code>com.sun.tools.javac.code.Symbol</code></td>
-<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#resolveIdentifier(com.sun.source.tree.IdentifierTree)">resolveIdentifier</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/IdentifierTree.html" title="class or interface in com.sun.source.tree" class="external-link">IdentifierTree</a>&nbsp;node)</code></th>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#resolveIdentifier(com.sun.source.tree.IdentifierTree)">resolveIdentifier</a></span>&#8203;(com.sun.source.tree.IdentifierTree&nbsp;node)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
 <tr class="alt-color" id="i6">
 <td class="col-first"><code>com.sun.tools.javac.code.Symbol.MethodSymbol</code></td>
-<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#resolveMethod(com.sun.source.tree.MethodInvocationTree,com.google.errorprone.bugpatterns.threadsafety.GuardedByExpression,javax.lang.model.element.Name)">resolveMethod</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/MethodInvocationTree.html" title="class or interface in com.sun.source.tree" class="external-link">MethodInvocationTree</a>&nbsp;node,
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#resolveMethod(com.sun.source.tree.MethodInvocationTree,com.google.errorprone.bugpatterns.threadsafety.GuardedByExpression,javax.lang.model.element.Name)">resolveMethod</a></span>&#8203;(com.sun.source.tree.MethodInvocationTree&nbsp;node,
 <a href="GuardedByExpression.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByExpression</a>&nbsp;base,
-<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.compiler/javax/lang/model/element/Name.html" title="class or interface in javax.lang.model.element" class="external-link">Name</a>&nbsp;identifier)</code></th>
+<a href="https://docs.oracle.com/javase/8/docs/api/javax/lang/model/element/Name.html" title="class or interface in javax.lang.model.element" class="external-link">Name</a>&nbsp;identifier)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
 <tr class="row-color" id="i7">
 <td class="col-first"><code>com.sun.tools.javac.code.Symbol.MethodSymbol</code></td>
-<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#resolveMethod(com.sun.source.tree.MethodInvocationTree,javax.lang.model.element.Name)">resolveMethod</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/MethodInvocationTree.html" title="class or interface in com.sun.source.tree" class="external-link">MethodInvocationTree</a>&nbsp;node,
-<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.compiler/javax/lang/model/element/Name.html" title="class or interface in javax.lang.model.element" class="external-link">Name</a>&nbsp;name)</code></th>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#resolveMethod(com.sun.source.tree.MethodInvocationTree,javax.lang.model.element.Name)">resolveMethod</a></span>&#8203;(com.sun.source.tree.MethodInvocationTree&nbsp;node,
+<a href="https://docs.oracle.com/javase/8/docs/api/javax/lang/model/element/Name.html" title="class or interface in javax.lang.model.element" class="external-link">Name</a>&nbsp;name)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
 <tr class="alt-color" id="i8">
 <td class="col-first"><code>com.sun.tools.javac.code.Symbol</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#resolveSelect(com.google.errorprone.bugpatterns.threadsafety.GuardedByExpression,com.sun.source.tree.MemberSelectTree)">resolveSelect</a></span>&#8203;(<a href="GuardedByExpression.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByExpression</a>&nbsp;base,
-<a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/MemberSelectTree.html" title="class or interface in com.sun.source.tree" class="external-link">MemberSelectTree</a>&nbsp;node)</code></th>
+com.sun.source.tree.MemberSelectTree&nbsp;node)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
 <tr class="row-color" id="i9">
 <td class="col-first"><code>com.sun.tools.javac.code.Symbol</code></td>
-<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#resolveTypeLiteral(com.sun.source.tree.ExpressionTree)">resolveTypeLiteral</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&nbsp;expr)</code></th>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#resolveTypeLiteral(com.sun.source.tree.ExpressionTree)">resolveTypeLiteral</a></span>&#8203;(com.sun.source.tree.ExpressionTree&nbsp;expr)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
 <tr class="alt-color" id="i10">
@@ -182,8 +182,8 @@ com.sun.tools.javac.util.Context&nbsp;context,
 </div>
 </div>
 <div class="inherited-list">
-<h3 id="methods.inherited.from.class.java.lang.Object">Methods inherited from class&nbsp;java.lang.<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></h3>
-<code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#clone()" title="class or interface in java.lang" class="external-link">clone</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#equals(java.lang.Object)" title="class or interface in java.lang" class="external-link">equals</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#finalize()" title="class or interface in java.lang" class="external-link">finalize</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#getClass()" title="class or interface in java.lang" class="external-link">getClass</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#hashCode()" title="class or interface in java.lang" class="external-link">hashCode</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#notify()" title="class or interface in java.lang" class="external-link">notify</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#notifyAll()" title="class or interface in java.lang" class="external-link">notifyAll</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#toString()" title="class or interface in java.lang" class="external-link">toString</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#wait()" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#wait(long)" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#wait(long,int)" title="class or interface in java.lang" class="external-link">wait</a></code></div>
+<h3 id="methods.inherited.from.class.java.lang.Object">Methods inherited from class&nbsp;java.lang.<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></h3>
+<code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#clone()" title="class or interface in java.lang" class="external-link">clone</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#equals(java.lang.Object)" title="class or interface in java.lang" class="external-link">equals</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#finalize()" title="class or interface in java.lang" class="external-link">finalize</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#getClass()" title="class or interface in java.lang" class="external-link">getClass</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#hashCode()" title="class or interface in java.lang" class="external-link">hashCode</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#notify()" title="class or interface in java.lang" class="external-link">notify</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#notifyAll()" title="class or interface in java.lang" class="external-link">notifyAll</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#toString()" title="class or interface in java.lang" class="external-link">toString</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#wait()" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#wait(long)" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#wait(long,int)" title="class or interface in java.lang" class="external-link">wait</a></code></div>
 </section>
 </li>
 </ul>
@@ -198,7 +198,7 @@ com.sun.tools.javac.util.Context&nbsp;context,
 <li>
 <section class="detail" id="from(com.sun.source.tree.Tree,com.google.errorprone.VisitorState)">
 <h3>from</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="GuardedBySymbolResolver.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedBySymbolResolver</a></span>&nbsp;<span class="member-name">from</span>&#8203;(<span class="parameters"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&nbsp;tree,
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="GuardedBySymbolResolver.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedBySymbolResolver</a></span>&nbsp;<span class="member-name">from</span>&#8203;(<span class="parameters">com.sun.source.tree.Tree&nbsp;tree,
 <a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;visitorState)</span></div>
 </section>
 </li>
@@ -207,9 +207,9 @@ com.sun.tools.javac.util.Context&nbsp;context,
 <h3>from</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="GuardedBySymbolResolver.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedBySymbolResolver</a></span>&nbsp;<span class="member-name">from</span>&#8203;(<span class="parameters">com.sun.tools.javac.code.Symbol.ClassSymbol&nbsp;owner,
 com.google.errorprone.bugpatterns.threadsafety.GuardedBySymbolResolver.MethodInfo&nbsp;method,
-<a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/CompilationUnitTree.html" title="class or interface in com.sun.source.tree" class="external-link">CompilationUnitTree</a>&nbsp;compilationUnit,
+com.sun.source.tree.CompilationUnitTree&nbsp;compilationUnit,
 com.sun.tools.javac.util.Context&nbsp;context,
-<a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&nbsp;leaf,
+com.sun.source.tree.Tree&nbsp;leaf,
 <a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;visitorState)</span></div>
 </section>
 </li>
@@ -234,7 +234,7 @@ com.sun.tools.javac.util.Context&nbsp;context,
 <li>
 <section class="detail" id="resolveIdentifier(com.sun.source.tree.IdentifierTree)">
 <h3>resolveIdentifier</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">com.sun.tools.javac.code.Symbol</span>&nbsp;<span class="member-name">resolveIdentifier</span>&#8203;(<span class="parameters"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/IdentifierTree.html" title="class or interface in com.sun.source.tree" class="external-link">IdentifierTree</a>&nbsp;node)</span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">com.sun.tools.javac.code.Symbol</span>&nbsp;<span class="member-name">resolveIdentifier</span>&#8203;(<span class="parameters">com.sun.source.tree.IdentifierTree&nbsp;node)</span></div>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code><a href="GuardedByBinder.Resolver.html#resolveIdentifier(com.sun.source.tree.IdentifierTree)">resolveIdentifier</a></code>&nbsp;in interface&nbsp;<code><a href="GuardedByBinder.Resolver.html" title="interface in com.google.errorprone.bugpatterns.threadsafety">GuardedByBinder.Resolver</a></code></dd>
@@ -244,8 +244,8 @@ com.sun.tools.javac.util.Context&nbsp;context,
 <li>
 <section class="detail" id="resolveMethod(com.sun.source.tree.MethodInvocationTree,javax.lang.model.element.Name)">
 <h3>resolveMethod</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">com.sun.tools.javac.code.Symbol.MethodSymbol</span>&nbsp;<span class="member-name">resolveMethod</span>&#8203;(<span class="parameters"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/MethodInvocationTree.html" title="class or interface in com.sun.source.tree" class="external-link">MethodInvocationTree</a>&nbsp;node,
-<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.compiler/javax/lang/model/element/Name.html" title="class or interface in javax.lang.model.element" class="external-link">Name</a>&nbsp;name)</span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">com.sun.tools.javac.code.Symbol.MethodSymbol</span>&nbsp;<span class="member-name">resolveMethod</span>&#8203;(<span class="parameters">com.sun.source.tree.MethodInvocationTree&nbsp;node,
+<a href="https://docs.oracle.com/javase/8/docs/api/javax/lang/model/element/Name.html" title="class or interface in javax.lang.model.element" class="external-link">Name</a>&nbsp;name)</span></div>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code><a href="GuardedByBinder.Resolver.html#resolveMethod(com.sun.source.tree.MethodInvocationTree,javax.lang.model.element.Name)">resolveMethod</a></code>&nbsp;in interface&nbsp;<code><a href="GuardedByBinder.Resolver.html" title="interface in com.google.errorprone.bugpatterns.threadsafety">GuardedByBinder.Resolver</a></code></dd>
@@ -255,9 +255,9 @@ com.sun.tools.javac.util.Context&nbsp;context,
 <li>
 <section class="detail" id="resolveMethod(com.sun.source.tree.MethodInvocationTree,com.google.errorprone.bugpatterns.threadsafety.GuardedByExpression,javax.lang.model.element.Name)">
 <h3>resolveMethod</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">com.sun.tools.javac.code.Symbol.MethodSymbol</span>&nbsp;<span class="member-name">resolveMethod</span>&#8203;(<span class="parameters"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/MethodInvocationTree.html" title="class or interface in com.sun.source.tree" class="external-link">MethodInvocationTree</a>&nbsp;node,
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">com.sun.tools.javac.code.Symbol.MethodSymbol</span>&nbsp;<span class="member-name">resolveMethod</span>&#8203;(<span class="parameters">com.sun.source.tree.MethodInvocationTree&nbsp;node,
 <a href="GuardedByExpression.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByExpression</a>&nbsp;base,
-<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.compiler/javax/lang/model/element/Name.html" title="class or interface in javax.lang.model.element" class="external-link">Name</a>&nbsp;identifier)</span></div>
+<a href="https://docs.oracle.com/javase/8/docs/api/javax/lang/model/element/Name.html" title="class or interface in javax.lang.model.element" class="external-link">Name</a>&nbsp;identifier)</span></div>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code><a href="GuardedByBinder.Resolver.html#resolveMethod(com.sun.source.tree.MethodInvocationTree,com.google.errorprone.bugpatterns.threadsafety.GuardedByExpression,javax.lang.model.element.Name)">resolveMethod</a></code>&nbsp;in interface&nbsp;<code><a href="GuardedByBinder.Resolver.html" title="interface in com.google.errorprone.bugpatterns.threadsafety">GuardedByBinder.Resolver</a></code></dd>
@@ -268,7 +268,7 @@ com.sun.tools.javac.util.Context&nbsp;context,
 <section class="detail" id="resolveSelect(com.google.errorprone.bugpatterns.threadsafety.GuardedByExpression,com.sun.source.tree.MemberSelectTree)">
 <h3>resolveSelect</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">com.sun.tools.javac.code.Symbol</span>&nbsp;<span class="member-name">resolveSelect</span>&#8203;(<span class="parameters"><a href="GuardedByExpression.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByExpression</a>&nbsp;base,
-<a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/MemberSelectTree.html" title="class or interface in com.sun.source.tree" class="external-link">MemberSelectTree</a>&nbsp;node)</span></div>
+com.sun.source.tree.MemberSelectTree&nbsp;node)</span></div>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code><a href="GuardedByBinder.Resolver.html#resolveSelect(com.google.errorprone.bugpatterns.threadsafety.GuardedByExpression,com.sun.source.tree.MemberSelectTree)">resolveSelect</a></code>&nbsp;in interface&nbsp;<code><a href="GuardedByBinder.Resolver.html" title="interface in com.google.errorprone.bugpatterns.threadsafety">GuardedByBinder.Resolver</a></code></dd>
@@ -278,7 +278,7 @@ com.sun.tools.javac.util.Context&nbsp;context,
 <li>
 <section class="detail" id="resolveTypeLiteral(com.sun.source.tree.ExpressionTree)">
 <h3>resolveTypeLiteral</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">com.sun.tools.javac.code.Symbol</span>&nbsp;<span class="member-name">resolveTypeLiteral</span>&#8203;(<span class="parameters"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&nbsp;expr)</span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">com.sun.tools.javac.code.Symbol</span>&nbsp;<span class="member-name">resolveTypeLiteral</span>&#8203;(<span class="parameters">com.sun.source.tree.ExpressionTree&nbsp;expr)</span></div>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code><a href="GuardedByBinder.Resolver.html#resolveTypeLiteral(com.sun.source.tree.ExpressionTree)">resolveTypeLiteral</a></code>&nbsp;in interface&nbsp;<code><a href="GuardedByBinder.Resolver.html" title="interface in com.google.errorprone.bugpatterns.threadsafety">GuardedByBinder.Resolver</a></code></dd>
@@ -288,7 +288,7 @@ com.sun.tools.javac.util.Context&nbsp;context,
 <li>
 <section class="detail" id="resolveEnclosingClass(com.sun.source.tree.ExpressionTree)">
 <h3>resolveEnclosingClass</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">com.sun.tools.javac.code.Symbol</span>&nbsp;<span class="member-name">resolveEnclosingClass</span>&#8203;(<span class="parameters"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&nbsp;expr)</span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">com.sun.tools.javac.code.Symbol</span>&nbsp;<span class="member-name">resolveEnclosingClass</span>&#8203;(<span class="parameters">com.sun.source.tree.ExpressionTree&nbsp;expr)</span></div>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code><a href="GuardedByBinder.Resolver.html#resolveEnclosingClass(com.sun.source.tree.ExpressionTree)">resolveEnclosingClass</a></code>&nbsp;in interface&nbsp;<code><a href="GuardedByBinder.Resolver.html" title="interface in com.google.errorprone.bugpatterns.threadsafety">GuardedByBinder.Resolver</a></code></dd>

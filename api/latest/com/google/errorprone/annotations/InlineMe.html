@@ -70,8 +70,8 @@ loadScripts(document, 'script');</script>
 </div>
 <section class="description">
 <hr>
-<pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/annotation/Documented.html" title="class or interface in java.lang.annotation" class="external-link">@Documented</a>
-<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/annotation/Target.html" title="class or interface in java.lang.annotation" class="external-link">@Target</a>({<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/annotation/ElementType.html#METHOD" title="class or interface in java.lang.annotation" class="external-link">METHOD</a>,<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/annotation/ElementType.html#CONSTRUCTOR" title="class or interface in java.lang.annotation" class="external-link">CONSTRUCTOR</a>})
+<pre><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/Documented.html" title="class or interface in java.lang.annotation" class="external-link">@Documented</a>
+<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/Target.html" title="class or interface in java.lang.annotation" class="external-link">@Target</a>({<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/ElementType.html#METHOD" title="class or interface in java.lang.annotation" class="external-link">METHOD</a>,<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/ElementType.html#CONSTRUCTOR" title="class or interface in java.lang.annotation" class="external-link">CONSTRUCTOR</a>})
 public @interface <span class="type-name-label">InlineMe</span></pre>
 <div class="block">Indicates that callers of this API should be inlined. That is, this API is trivially expressible
  in terms of another API, for example a method that just calls another method.</div>
@@ -94,7 +94,7 @@ public @interface <span class="type-name-label">InlineMe</span></pre>
 </thead>
 <tbody>
 <tr class="alt-color">
-<td class="col-first"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></td>
+<td class="col-first"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#replacement()">replacement</a></span></code></th>
 <td class="col-last">
 <div class="block">What the caller should be replaced with.</div>
@@ -121,14 +121,14 @@ public @interface <span class="type-name-label">InlineMe</span></pre>
 </thead>
 <tbody>
 <tr class="alt-color">
-<td class="col-first"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>[]</code></td>
+<td class="col-first"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>[]</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#imports()">imports</a></span></code></th>
 <td class="col-last">
 <div class="block">The new imports to (optionally) add to the caller.</div>
 </td>
 </tr>
 <tr class="row-color">
-<td class="col-first"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>[]</code></td>
+<td class="col-first"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>[]</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#staticImports()">staticImports</a></span></code></th>
 <td class="col-last">
 <div class="block">The new static imports to (optionally) add to the caller.</div>
@@ -151,7 +151,7 @@ public @interface <span class="type-name-label">InlineMe</span></pre>
 <li>
 <section class="detail" id="replacement()">
 <h3>replacement</h3>
-<div class="member-signature"><span class="return-type"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="member-name">replacement</span></div>
+<div class="member-signature"><span class="return-type"><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="member-name">replacement</span></div>
 <div class="block">What the caller should be replaced with. Local parameter names can be used in the replacement
  string. If you are invoking an instance method or constructor, you must include the implicit
  <code>this</code> in the replacement body. If you are invoking a static method, you must include the
@@ -168,7 +168,7 @@ public @interface <span class="type-name-label">InlineMe</span></pre>
 <li>
 <section class="detail" id="imports()">
 <h3>imports</h3>
-<div class="member-signature"><span class="return-type"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>[]</span>&nbsp;<span class="member-name">imports</span></div>
+<div class="member-signature"><span class="return-type"><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>[]</span>&nbsp;<span class="member-name">imports</span></div>
 <div class="block">The new imports to (optionally) add to the caller.</div>
 <dl class="notes">
 <dt>Default:</dt>
@@ -179,7 +179,7 @@ public @interface <span class="type-name-label">InlineMe</span></pre>
 <li>
 <section class="detail" id="staticImports()">
 <h3>staticImports</h3>
-<div class="member-signature"><span class="return-type"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>[]</span>&nbsp;<span class="member-name">staticImports</span></div>
+<div class="member-signature"><span class="return-type"><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>[]</span>&nbsp;<span class="member-name">staticImports</span></div>
 <div class="block">The new static imports to (optionally) add to the caller.</div>
 <dl class="notes">
 <dt>Default:</dt>

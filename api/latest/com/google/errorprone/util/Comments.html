@@ -76,13 +76,13 @@ loadScripts(document, 'script');</script>
 <div class="sub-title"><span class="package-label-in-type">Package</span>&nbsp;<a href="package-summary.html">com.google.errorprone.util</a></div>
 <h1 title="Class Comments" class="title">Class Comments</h1>
 </div>
-<div class="inheritance" title="Inheritance Tree"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">java.lang.Object</a>
+<div class="inheritance" title="Inheritance Tree"><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html" title="class or interface in java.lang" class="external-link">java.lang.Object</a>
 <div class="inheritance">com.google.errorprone.util.Comments</div>
 </div>
 <section class="description">
 <hr>
 <pre>public final class <span class="type-name-label">Comments</span>
-extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></pre>
+extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></pre>
 <div class="block">Utilities for attaching comments to relevant AST nodes</div>
 <dl class="notes">
 <dt>Author:</dt>
@@ -108,23 +108,23 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 </thead>
 <tbody>
 <tr class="alt-color" id="i0">
-<td class="col-first"><code>static com.google.common.collect.ImmutableList&lt;<a href="Commented.html" title="class in com.google.errorprone.util">Commented</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&gt;&gt;</code></td>
-<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#findCommentsForArguments(com.sun.source.tree.MethodInvocationTree,com.google.errorprone.VisitorState)">findCommentsForArguments</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/MethodInvocationTree.html" title="class or interface in com.sun.source.tree" class="external-link">MethodInvocationTree</a>&nbsp;methodInvocationTree,
+<td class="col-first"><code>static com.google.common.collect.ImmutableList&lt;<a href="Commented.html" title="class in com.google.errorprone.util">Commented</a>&lt;com.sun.source.tree.ExpressionTree&gt;&gt;</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#findCommentsForArguments(com.sun.source.tree.MethodInvocationTree,com.google.errorprone.VisitorState)">findCommentsForArguments</a></span>&#8203;(com.sun.source.tree.MethodInvocationTree&nbsp;methodInvocationTree,
 <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
 <td class="col-last">
 <div class="block">Attach comments to nodes on arguments of method calls.</div>
 </td>
 </tr>
 <tr class="row-color" id="i1">
-<td class="col-first"><code>static com.google.common.collect.ImmutableList&lt;<a href="Commented.html" title="class in com.google.errorprone.util">Commented</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&gt;&gt;</code></td>
-<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#findCommentsForArguments(com.sun.source.tree.NewClassTree,com.google.errorprone.VisitorState)">findCommentsForArguments</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/NewClassTree.html" title="class or interface in com.sun.source.tree" class="external-link">NewClassTree</a>&nbsp;newClassTree,
+<td class="col-first"><code>static com.google.common.collect.ImmutableList&lt;<a href="Commented.html" title="class in com.google.errorprone.util">Commented</a>&lt;com.sun.source.tree.ExpressionTree&gt;&gt;</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#findCommentsForArguments(com.sun.source.tree.NewClassTree,com.google.errorprone.VisitorState)">findCommentsForArguments</a></span>&#8203;(com.sun.source.tree.NewClassTree&nbsp;newClassTree,
 <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
 <td class="col-last">
 <div class="block">Attach comments to nodes on arguments of constructor calls.</div>
 </td>
 </tr>
 <tr class="alt-color" id="i2">
-<td class="col-first"><code>static <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></td>
+<td class="col-first"><code>static <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#getTextFromComment(com.sun.tools.javac.parser.Tokens.Comment)">getTextFromComment</a></span>&#8203;(com.sun.tools.javac.parser.Tokens.Comment&nbsp;comment)</code></th>
 <td class="col-last">
 <div class="block">Extract the text body from a comment.</div>
@@ -135,8 +135,8 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 </div>
 </div>
 <div class="inherited-list">
-<h3 id="methods.inherited.from.class.java.lang.Object">Methods inherited from class&nbsp;java.lang.<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></h3>
-<code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#clone()" title="class or interface in java.lang" class="external-link">clone</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#equals(java.lang.Object)" title="class or interface in java.lang" class="external-link">equals</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#finalize()" title="class or interface in java.lang" class="external-link">finalize</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#getClass()" title="class or interface in java.lang" class="external-link">getClass</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#hashCode()" title="class or interface in java.lang" class="external-link">hashCode</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#notify()" title="class or interface in java.lang" class="external-link">notify</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#notifyAll()" title="class or interface in java.lang" class="external-link">notifyAll</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#toString()" title="class or interface in java.lang" class="external-link">toString</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#wait()" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#wait(long)" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#wait(long,int)" title="class or interface in java.lang" class="external-link">wait</a></code></div>
+<h3 id="methods.inherited.from.class.java.lang.Object">Methods inherited from class&nbsp;java.lang.<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></h3>
+<code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#clone()" title="class or interface in java.lang" class="external-link">clone</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#equals(java.lang.Object)" title="class or interface in java.lang" class="external-link">equals</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#finalize()" title="class or interface in java.lang" class="external-link">finalize</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#getClass()" title="class or interface in java.lang" class="external-link">getClass</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#hashCode()" title="class or interface in java.lang" class="external-link">hashCode</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#notify()" title="class or interface in java.lang" class="external-link">notify</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#notifyAll()" title="class or interface in java.lang" class="external-link">notifyAll</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#toString()" title="class or interface in java.lang" class="external-link">toString</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#wait()" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#wait(long)" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#wait(long,int)" title="class or interface in java.lang" class="external-link">wait</a></code></div>
 </section>
 </li>
 </ul>
@@ -151,7 +151,7 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <li>
 <section class="detail" id="findCommentsForArguments(com.sun.source.tree.NewClassTree,com.google.errorprone.VisitorState)">
 <h3>findCommentsForArguments</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">com.google.common.collect.ImmutableList&lt;<a href="Commented.html" title="class in com.google.errorprone.util">Commented</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&gt;&gt;</span>&nbsp;<span class="member-name">findCommentsForArguments</span>&#8203;(<span class="parameters"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/NewClassTree.html" title="class or interface in com.sun.source.tree" class="external-link">NewClassTree</a>&nbsp;newClassTree,
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">com.google.common.collect.ImmutableList&lt;<a href="Commented.html" title="class in com.google.errorprone.util">Commented</a>&lt;com.sun.source.tree.ExpressionTree&gt;&gt;</span>&nbsp;<span class="member-name">findCommentsForArguments</span>&#8203;(<span class="parameters">com.sun.source.tree.NewClassTree&nbsp;newClassTree,
 <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
 <div class="block">Attach comments to nodes on arguments of constructor calls. Calls such as <code>new Test(
  param1 /* c1 *&amp;#47;, /* c2 *&amp;#47; param2)</code> will attach the comment c1 to <code>param1</code> and the
@@ -167,7 +167,7 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <li>
 <section class="detail" id="findCommentsForArguments(com.sun.source.tree.MethodInvocationTree,com.google.errorprone.VisitorState)">
 <h3>findCommentsForArguments</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">com.google.common.collect.ImmutableList&lt;<a href="Commented.html" title="class in com.google.errorprone.util">Commented</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&gt;&gt;</span>&nbsp;<span class="member-name">findCommentsForArguments</span>&#8203;(<span class="parameters"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/MethodInvocationTree.html" title="class or interface in com.sun.source.tree" class="external-link">MethodInvocationTree</a>&nbsp;methodInvocationTree,
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">com.google.common.collect.ImmutableList&lt;<a href="Commented.html" title="class in com.google.errorprone.util">Commented</a>&lt;com.sun.source.tree.ExpressionTree&gt;&gt;</span>&nbsp;<span class="member-name">findCommentsForArguments</span>&#8203;(<span class="parameters">com.sun.source.tree.MethodInvocationTree&nbsp;methodInvocationTree,
 <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
 <div class="block">Attach comments to nodes on arguments of method calls. Calls such as <code>test(param1 /* c1
  *&amp;#47;, /* c2 *&amp;#47; param2)</code> will attach the comment c1 to <code>param1</code> and the comment c2
@@ -183,7 +183,7 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <li>
 <section class="detail" id="getTextFromComment(com.sun.tools.javac.parser.Tokens.Comment)">
 <h3>getTextFromComment</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="member-name">getTextFromComment</span>&#8203;(<span class="parameters">com.sun.tools.javac.parser.Tokens.Comment&nbsp;comment)</span></div>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="member-name">getTextFromComment</span>&#8203;(<span class="parameters">com.sun.tools.javac.parser.Tokens.Comment&nbsp;comment)</span></div>
 <div class="block">Extract the text body from a comment.
 
  <p>This currently includes asterisks that start lines in the body of block comments. Do not

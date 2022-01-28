@@ -76,13 +76,13 @@ loadScripts(document, 'script');</script>
 <div class="sub-title"><span class="package-label-in-type">Package</span>&nbsp;<a href="package-summary.html">com.google.errorprone.bugpatterns</a></div>
 <h1 title="Class BugChecker" class="title">Class BugChecker</h1>
 </div>
-<div class="inheritance" title="Inheritance Tree"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">java.lang.Object</a>
+<div class="inheritance" title="Inheritance Tree"><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html" title="class or interface in java.lang" class="external-link">java.lang.Object</a>
 <div class="inheritance">com.google.errorprone.bugpatterns.BugChecker</div>
 </div>
 <section class="description">
 <dl class="notes">
 <dt>All Implemented Interfaces:</dt>
-<dd><code><a href="../matchers/Suppressible.html" title="interface in com.google.errorprone.matchers">Suppressible</a></code>, <code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/io/Serializable.html" title="class or interface in java.io" class="external-link">Serializable</a></code></dd>
+<dd><code><a href="../matchers/Suppressible.html" title="interface in com.google.errorprone.matchers">Suppressible</a></code>, <code><a href="https://docs.oracle.com/javase/8/docs/api/java/io/Serializable.html" title="class or interface in java.io" class="external-link">Serializable</a></code></dd>
 </dl>
 <dl class="notes">
 <dt>Direct Known Subclasses:</dt>
@@ -90,8 +90,8 @@ loadScripts(document, 'script');</script>
 </dl>
 <hr>
 <pre>public abstract class <span class="type-name-label">BugChecker</span>
-extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>
-implements <a href="../matchers/Suppressible.html" title="interface in com.google.errorprone.matchers">Suppressible</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/io/Serializable.html" title="class or interface in java.io" class="external-link">Serializable</a></pre>
+extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>
+implements <a href="../matchers/Suppressible.html" title="interface in com.google.errorprone.matchers">Suppressible</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/io/Serializable.html" title="class or interface in java.io" class="external-link">Serializable</a></pre>
 <div class="block">A base class for implementing bug checkers. The <code>BugChecker</code> supplies a Scanner
  implementation for this checker, making it easy to use a single checker. Subclasses should also
  implement one or more of the <code>*Matcher</code> interfaces in this class to declare which tree node
@@ -324,7 +324,7 @@ implements <a href="../matchers/Suppressible.html" title="interface in com.googl
 <td class="col-first"><code>protected class&nbsp;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="BugChecker.SuppressibleTreePathScanner.html" title="class in com.google.errorprone.bugpatterns">BugChecker.SuppressibleTreePathScanner</a>&lt;<a href="BugChecker.SuppressibleTreePathScanner.html" title="type parameter in BugChecker.SuppressibleTreePathScanner">A</a>,&#8203;<a href="BugChecker.SuppressibleTreePathScanner.html" title="type parameter in BugChecker.SuppressibleTreePathScanner">B</a>&gt;</span></code></th>
 <td class="col-last">
-<div class="block">A <a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/util/TreePathScanner.html" title="class or interface in com.sun.source.util" class="external-link"><code>TreePathScanner</code></a> which skips trees which are suppressed for this check.</div>
+<div class="block">A <code>TreePathScanner</code> which skips trees which are suppressed for this check.</div>
 </td>
 </tr>
 <tr class="row-color">
@@ -427,7 +427,7 @@ implements <a href="../matchers/Suppressible.html" title="interface in com.googl
 </thead>
 <tbody>
 <tr class="alt-color" id="i0">
-<td class="col-first"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></td>
+<td class="col-first"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#allNames()">allNames</a></span>()</code></th>
 <td class="col-last">
 <div class="block">Returns all of the name strings that this checker should respect as part of a
@@ -436,7 +436,7 @@ implements <a href="../matchers/Suppressible.html" title="interface in com.googl
 </tr>
 <tr class="row-color" id="i1">
 <td class="col-first"><code><a href="../matchers/Description.Builder.html" title="class in com.google.errorprone.matchers">Description.Builder</a></code></td>
-<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#buildDescription(com.sun.source.tree.Tree)">buildDescription</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&nbsp;node)</code></th>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#buildDescription(com.sun.source.tree.Tree)">buildDescription</a></span>&#8203;(com.sun.source.tree.Tree&nbsp;node)</code></th>
 <td class="col-last">
 <div class="block">Returns a Description builder, which allows you to customize the diagnostic with a custom
  message or multiple fixes.</div>
@@ -459,14 +459,14 @@ implements <a href="../matchers/Suppressible.html" title="interface in com.googl
 </td>
 </tr>
 <tr class="alt-color" id="i4">
-<td class="col-first"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></td>
+<td class="col-first"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#canonicalName()">canonicalName</a></span>()</code></th>
 <td class="col-last">
 <div class="block">The canonical name of the check.</div>
 </td>
 </tr>
 <tr class="row-color" id="i5">
-<td class="col-first"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;? extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/annotation/Annotation.html" title="class or interface in java.lang.annotation" class="external-link">Annotation</a>&gt;&gt;</code></td>
+<td class="col-first"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;? extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/Annotation.html" title="class or interface in java.lang.annotation" class="external-link">Annotation</a>&gt;&gt;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#customSuppressionAnnotations()">customSuppressionAnnotations</a></span>()</code></th>
 <td class="col-last">
 <div class="block">Returns the custom suppression annotations for this checker, if custom suppression is used.</div>
@@ -479,14 +479,14 @@ implements <a href="../matchers/Suppressible.html" title="interface in com.googl
 </tr>
 <tr class="row-color" id="i7">
 <td class="col-first"><code><a href="../matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
-<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#describeMatch(com.sun.source.tree.Tree)">describeMatch</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&nbsp;node)</code></th>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#describeMatch(com.sun.source.tree.Tree)">describeMatch</a></span>&#8203;(com.sun.source.tree.Tree&nbsp;node)</code></th>
 <td class="col-last">
 <div class="block">Helper to create a Description for the common case where there is no fix.</div>
 </td>
 </tr>
 <tr class="alt-color" id="i8">
 <td class="col-first"><code><a href="../matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
-<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#describeMatch(com.sun.source.tree.Tree,com.google.errorprone.fixes.Fix)">describeMatch</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&nbsp;node,
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#describeMatch(com.sun.source.tree.Tree,com.google.errorprone.fixes.Fix)">describeMatch</a></span>&#8203;(com.sun.source.tree.Tree&nbsp;node,
 <a href="../fixes/Fix.html" title="interface in com.google.errorprone.fixes">Fix</a>&nbsp;fix)</code></th>
 <td class="col-last">
 <div class="block">Helper to create a Description for the common case where there is a fix.</div>
@@ -529,7 +529,7 @@ implements <a href="../matchers/Suppressible.html" title="interface in com.googl
 </tr>
 <tr class="alt-color" id="i14">
 <td class="col-first"><code>boolean</code></td>
-<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#equals(java.lang.Object)">equals</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;obj)</code></th>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#equals(java.lang.Object)">equals</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;obj)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
 <tr class="row-color" id="i15">
@@ -539,7 +539,7 @@ implements <a href="../matchers/Suppressible.html" title="interface in com.googl
 </tr>
 <tr class="alt-color" id="i16">
 <td class="col-first"><code>boolean</code></td>
-<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#isSuppressed(com.sun.source.tree.Tree)">isSuppressed</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&nbsp;tree)</code></th>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#isSuppressed(com.sun.source.tree.Tree)">isSuppressed</a></span>&#8203;(com.sun.source.tree.Tree&nbsp;tree)</code></th>
 <td class="col-last">
 <div class="block">Returns true if the given tree is annotated with a <code>@SuppressWarnings</code> that disables this
  bug checker.</div>
@@ -554,12 +554,12 @@ implements <a href="../matchers/Suppressible.html" title="interface in com.googl
 </td>
 </tr>
 <tr class="alt-color" id="i18">
-<td class="col-first"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></td>
+<td class="col-first"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#linkUrl()">linkUrl</a></span>()</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
 <tr class="row-color" id="i19">
-<td class="col-first"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></td>
+<td class="col-first"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#message()">message</a></span>()</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
@@ -572,12 +572,12 @@ implements <a href="../matchers/Suppressible.html" title="interface in com.googl
 </tr>
 <tr class="row-color" id="i21">
 <td class="col-first"><code>boolean</code></td>
-<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#suppressedByAnyOf(java.util.Set,com.google.errorprone.VisitorState)">suppressedByAnyOf</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a>&lt;com.sun.tools.javac.util.Name&gt;&nbsp;annotations,
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#suppressedByAnyOf(java.util.Set,com.google.errorprone.VisitorState)">suppressedByAnyOf</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a>&lt;com.sun.tools.javac.util.Name&gt;&nbsp;annotations,
 <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;s)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
 <tr class="alt-color" id="i22">
-<td class="col-first"><code>com.google.common.collect.ImmutableRangeSet&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a>&gt;</code></td>
+<td class="col-first"><code>com.google.common.collect.ImmutableRangeSet&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a>&gt;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#suppressedRegions(com.google.errorprone.VisitorState)">suppressedRegions</a></span>&#8203;(<a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
 <td class="col-last">
 <div class="block">Computes a RangeSet of code regions which are suppressed by this bug checker.</div>
@@ -588,8 +588,8 @@ implements <a href="../matchers/Suppressible.html" title="interface in com.googl
 </div>
 </div>
 <div class="inherited-list">
-<h3 id="methods.inherited.from.class.java.lang.Object">Methods inherited from class&nbsp;java.lang.<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></h3>
-<code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#clone()" title="class or interface in java.lang" class="external-link">clone</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#finalize()" title="class or interface in java.lang" class="external-link">finalize</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#getClass()" title="class or interface in java.lang" class="external-link">getClass</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#notify()" title="class or interface in java.lang" class="external-link">notify</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#notifyAll()" title="class or interface in java.lang" class="external-link">notifyAll</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#toString()" title="class or interface in java.lang" class="external-link">toString</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#wait()" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#wait(long)" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#wait(long,int)" title="class or interface in java.lang" class="external-link">wait</a></code></div>
+<h3 id="methods.inherited.from.class.java.lang.Object">Methods inherited from class&nbsp;java.lang.<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></h3>
+<code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#clone()" title="class or interface in java.lang" class="external-link">clone</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#finalize()" title="class or interface in java.lang" class="external-link">finalize</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#getClass()" title="class or interface in java.lang" class="external-link">getClass</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#notify()" title="class or interface in java.lang" class="external-link">notify</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#notifyAll()" title="class or interface in java.lang" class="external-link">notifyAll</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#toString()" title="class or interface in java.lang" class="external-link">toString</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#wait()" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#wait(long)" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#wait(long,int)" title="class or interface in java.lang" class="external-link">wait</a></code></div>
 </section>
 </li>
 </ul>
@@ -619,7 +619,7 @@ implements <a href="../matchers/Suppressible.html" title="interface in com.googl
 <section class="detail" id="describeMatch(com.sun.source.tree.Tree,com.google.errorprone.fixes.Fix)">
 <h3>describeMatch</h3>
 <div class="member-signature"><span class="annotations"><a href="../annotations/CheckReturnValue.html" title="annotation in com.google.errorprone.annotations">@CheckReturnValue</a>
-</span><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></span>&nbsp;<span class="member-name">describeMatch</span>&#8203;(<span class="parameters"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&nbsp;node,
+</span><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></span>&nbsp;<span class="member-name">describeMatch</span>&#8203;(<span class="parameters">com.sun.source.tree.Tree&nbsp;node,
 <a href="../fixes/Fix.html" title="interface in com.google.errorprone.fixes">Fix</a>&nbsp;fix)</span></div>
 <div class="block">Helper to create a Description for the common case where there is a fix.</div>
 </section>
@@ -646,7 +646,7 @@ implements <a href="../matchers/Suppressible.html" title="interface in com.googl
 <section class="detail" id="describeMatch(com.sun.source.tree.Tree)">
 <h3>describeMatch</h3>
 <div class="member-signature"><span class="annotations"><a href="../annotations/CheckReturnValue.html" title="annotation in com.google.errorprone.annotations">@CheckReturnValue</a>
-</span><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></span>&nbsp;<span class="member-name">describeMatch</span>&#8203;(<span class="parameters"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&nbsp;node)</span></div>
+</span><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></span>&nbsp;<span class="member-name">describeMatch</span>&#8203;(<span class="parameters">com.sun.source.tree.Tree&nbsp;node)</span></div>
 <div class="block">Helper to create a Description for the common case where there is no fix.</div>
 </section>
 </li>
@@ -670,7 +670,7 @@ implements <a href="../matchers/Suppressible.html" title="interface in com.googl
 <section class="detail" id="buildDescription(com.sun.source.tree.Tree)">
 <h3>buildDescription</h3>
 <div class="member-signature"><span class="annotations"><a href="../annotations/CheckReturnValue.html" title="annotation in com.google.errorprone.annotations">@CheckReturnValue</a>
-</span><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../matchers/Description.Builder.html" title="class in com.google.errorprone.matchers">Description.Builder</a></span>&nbsp;<span class="member-name">buildDescription</span>&#8203;(<span class="parameters"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&nbsp;node)</span></div>
+</span><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../matchers/Description.Builder.html" title="class in com.google.errorprone.matchers">Description.Builder</a></span>&nbsp;<span class="member-name">buildDescription</span>&#8203;(<span class="parameters">com.sun.source.tree.Tree&nbsp;node)</span></div>
 <div class="block">Returns a Description builder, which allows you to customize the diagnostic with a custom
  message or multiple fixes.</div>
 </section>
@@ -696,7 +696,7 @@ implements <a href="../matchers/Suppressible.html" title="interface in com.googl
 <li>
 <section class="detail" id="canonicalName()">
 <h3>canonicalName</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="member-name">canonicalName</span>()</div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="member-name">canonicalName</span>()</div>
 <div class="block"><span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../matchers/Suppressible.html#canonicalName()">Suppressible</a></code></span></div>
 <div class="block">The canonical name of the check.</div>
 <dl class="notes">
@@ -708,7 +708,7 @@ implements <a href="../matchers/Suppressible.html" title="interface in com.googl
 <li>
 <section class="detail" id="allNames()">
 <h3>allNames</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</span>&nbsp;<span class="member-name">allNames</span>()</div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/javase/8/docs/api/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</span>&nbsp;<span class="member-name">allNames</span>()</div>
 <div class="block"><span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../matchers/Suppressible.html#allNames()">Suppressible</a></code></span></div>
 <div class="block">Returns all of the name strings that this checker should respect as part of a
  <code>@SuppressWarnings</code> annotation.</div>
@@ -721,7 +721,7 @@ implements <a href="../matchers/Suppressible.html" title="interface in com.googl
 <li>
 <section class="detail" id="message()">
 <h3>message</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="member-name">message</span>()</div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="member-name">message</span>()</div>
 </section>
 </li>
 <li>
@@ -733,7 +733,7 @@ implements <a href="../matchers/Suppressible.html" title="interface in com.googl
 <li>
 <section class="detail" id="linkUrl()">
 <h3>linkUrl</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="member-name">linkUrl</span>()</div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="member-name">linkUrl</span>()</div>
 </section>
 </li>
 <li>
@@ -757,7 +757,7 @@ implements <a href="../matchers/Suppressible.html" title="interface in com.googl
 <li>
 <section class="detail" id="customSuppressionAnnotations()">
 <h3>customSuppressionAnnotations</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;? extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/annotation/Annotation.html" title="class or interface in java.lang.annotation" class="external-link">Annotation</a>&gt;&gt;</span>&nbsp;<span class="member-name">customSuppressionAnnotations</span>()</div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/javase/8/docs/api/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;? extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/Annotation.html" title="class or interface in java.lang.annotation" class="external-link">Annotation</a>&gt;&gt;</span>&nbsp;<span class="member-name">customSuppressionAnnotations</span>()</div>
 <div class="block"><span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../matchers/Suppressible.html#customSuppressionAnnotations()">Suppressible</a></code></span></div>
 <div class="block">Returns the custom suppression annotations for this checker, if custom suppression is used.</div>
 <dl class="notes">
@@ -769,7 +769,7 @@ implements <a href="../matchers/Suppressible.html" title="interface in com.googl
 <li>
 <section class="detail" id="suppressedByAnyOf(java.util.Set,com.google.errorprone.VisitorState)">
 <h3>suppressedByAnyOf</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="member-name">suppressedByAnyOf</span>&#8203;(<span class="parameters"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a>&lt;com.sun.tools.javac.util.Name&gt;&nbsp;annotations,
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="member-name">suppressedByAnyOf</span>&#8203;(<span class="parameters"><a href="https://docs.oracle.com/javase/8/docs/api/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a>&lt;com.sun.tools.javac.util.Name&gt;&nbsp;annotations,
 <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;s)</span></div>
 <dl class="notes">
 <dt>Specified by:</dt>
@@ -780,7 +780,7 @@ implements <a href="../matchers/Suppressible.html" title="interface in com.googl
 <li>
 <section class="detail" id="isSuppressed(com.sun.source.tree.Tree)">
 <h3>isSuppressed</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="member-name">isSuppressed</span>&#8203;(<span class="parameters"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&nbsp;tree)</span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="member-name">isSuppressed</span>&#8203;(<span class="parameters">com.sun.source.tree.Tree&nbsp;tree)</span></div>
 <div class="block">Returns true if the given tree is annotated with a <code>@SuppressWarnings</code> that disables this
  bug checker.</div>
 </section>
@@ -796,17 +796,17 @@ implements <a href="../matchers/Suppressible.html" title="interface in com.googl
 <li>
 <section class="detail" id="suppressedRegions(com.google.errorprone.VisitorState)">
 <h3>suppressedRegions</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">com.google.common.collect.ImmutableRangeSet&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a>&gt;</span>&nbsp;<span class="member-name">suppressedRegions</span>&#8203;(<span class="parameters"><a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">com.google.common.collect.ImmutableRangeSet&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a>&gt;</span>&nbsp;<span class="member-name">suppressedRegions</span>&#8203;(<span class="parameters"><a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
 <div class="block">Computes a RangeSet of code regions which are suppressed by this bug checker.</div>
 </section>
 </li>
 <li>
 <section class="detail" id="equals(java.lang.Object)">
 <h3>equals</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="member-name">equals</span>&#8203;(<span class="parameters"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;obj)</span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="member-name">equals</span>&#8203;(<span class="parameters"><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;obj)</span></div>
 <dl class="notes">
 <dt>Overrides:</dt>
-<dd><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#equals(java.lang.Object)" title="class or interface in java.lang" class="external-link">equals</a></code>&nbsp;in class&nbsp;<code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></code></dd>
+<dd><code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#equals(java.lang.Object)" title="class or interface in java.lang" class="external-link">equals</a></code>&nbsp;in class&nbsp;<code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></code></dd>
 </dl>
 </section>
 </li>
@@ -816,7 +816,7 @@ implements <a href="../matchers/Suppressible.html" title="interface in com.googl
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="member-name">hashCode</span>()</div>
 <dl class="notes">
 <dt>Overrides:</dt>
-<dd><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#hashCode()" title="class or interface in java.lang" class="external-link">hashCode</a></code>&nbsp;in class&nbsp;<code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></code></dd>
+<dd><code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#hashCode()" title="class or interface in java.lang" class="external-link">hashCode</a></code>&nbsp;in class&nbsp;<code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></code></dd>
 </dl>
 </section>
 </li>

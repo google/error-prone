@@ -71,11 +71,11 @@ loadScripts(document, 'script');</script>
 <section class="description">
 <hr>
 <pre><a href="../IncompatibleModifiers.html" title="annotation in com.google.errorprone.annotations">@IncompatibleModifiers</a>(<a href="../IncompatibleModifiers.html#modifier()">modifier</a>=<a href="../Modifier.html#FINAL">FINAL</a>)
-<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/annotation/Retention.html" title="class or interface in java.lang.annotation" class="external-link">@Retention</a>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/annotation/RetentionPolicy.html#RUNTIME" title="class or interface in java.lang.annotation" class="external-link">RUNTIME</a>)
-<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/annotation/Target.html" title="class or interface in java.lang.annotation" class="external-link">@Target</a>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/annotation/ElementType.html#FIELD" title="class or interface in java.lang.annotation" class="external-link">FIELD</a>)
+<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/Retention.html" title="class or interface in java.lang.annotation" class="external-link">@Retention</a>(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/RetentionPolicy.html#RUNTIME" title="class or interface in java.lang.annotation" class="external-link">RUNTIME</a>)
+<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/Target.html" title="class or interface in java.lang.annotation" class="external-link">@Target</a>(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/ElementType.html#FIELD" title="class or interface in java.lang.annotation" class="external-link">FIELD</a>)
 public @interface <span class="type-name-label">LazyInit</span></pre>
 <div class="block">Use this annotation on any static or field that will be initialized lazily, where races yield no
- semantic difference in the code (as, for example, is the case with <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html#hashCode()" title="class or interface in java.lang" class="external-link"><code>String.hashCode()</code></a>). Note
+ semantic difference in the code (as, for example, is the case with <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html#hashCode()" title="class or interface in java.lang" class="external-link"><code>String.hashCode()</code></a>). Note
  that lazily initializing a non-volatile field is hard to do correctly, and one should rarely use
  this. It should also only be done by developers who clearly understand the potential issues, and
  then, always using the pattern as presented in the <code>getData</code> method of this sample code

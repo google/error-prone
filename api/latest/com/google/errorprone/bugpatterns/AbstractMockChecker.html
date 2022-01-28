@@ -74,9 +74,9 @@ loadScripts(document, 'script');</script>
 <!-- ======== START OF CLASS DATA ======== -->
 <div class="header">
 <div class="sub-title"><span class="package-label-in-type">Package</span>&nbsp;<a href="package-summary.html">com.google.errorprone.bugpatterns</a></div>
-<h1 title="Class AbstractMockChecker" class="title">Class AbstractMockChecker&lt;T extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/annotation/Annotation.html" title="class or interface in java.lang.annotation" class="external-link">Annotation</a>&gt;</h1>
+<h1 title="Class AbstractMockChecker" class="title">Class AbstractMockChecker&lt;T extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/Annotation.html" title="class or interface in java.lang.annotation" class="external-link">Annotation</a>&gt;</h1>
 </div>
-<div class="inheritance" title="Inheritance Tree"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">java.lang.Object</a>
+<div class="inheritance" title="Inheritance Tree"><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html" title="class or interface in java.lang" class="external-link">java.lang.Object</a>
 <div class="inheritance"><a href="BugChecker.html" title="class in com.google.errorprone.bugpatterns">com.google.errorprone.bugpatterns.BugChecker</a>
 <div class="inheritance">com.google.errorprone.bugpatterns.AbstractMockChecker&lt;T&gt;</div>
 </div>
@@ -84,14 +84,14 @@ loadScripts(document, 'script');</script>
 <section class="description">
 <dl class="notes">
 <dt>All Implemented Interfaces:</dt>
-<dd><code><a href="BugChecker.MethodInvocationTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.MethodInvocationTreeMatcher</a></code>, <code><a href="BugChecker.VariableTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.VariableTreeMatcher</a></code>, <code><a href="../matchers/Suppressible.html" title="interface in com.google.errorprone.matchers">Suppressible</a></code>, <code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/io/Serializable.html" title="class or interface in java.io" class="external-link">Serializable</a></code></dd>
+<dd><code><a href="BugChecker.MethodInvocationTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.MethodInvocationTreeMatcher</a></code>, <code><a href="BugChecker.VariableTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.VariableTreeMatcher</a></code>, <code><a href="../matchers/Suppressible.html" title="interface in com.google.errorprone.matchers">Suppressible</a></code>, <code><a href="https://docs.oracle.com/javase/8/docs/api/java/io/Serializable.html" title="class or interface in java.io" class="external-link">Serializable</a></code></dd>
 </dl>
 <dl class="notes">
 <dt>Direct Known Subclasses:</dt>
 <dd><code><a href="DoNotMockAutoValue.html" title="class in com.google.errorprone.bugpatterns">DoNotMockAutoValue</a></code>, <code><a href="DoNotMockChecker.html" title="class in com.google.errorprone.bugpatterns">DoNotMockChecker</a></code></dd>
 </dl>
 <hr>
-<pre>public abstract class <span class="type-name-label">AbstractMockChecker&lt;T extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/annotation/Annotation.html" title="class or interface in java.lang.annotation" class="external-link">Annotation</a>&gt;</span>
+<pre>public abstract class <span class="type-name-label">AbstractMockChecker&lt;T extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/Annotation.html" title="class or interface in java.lang.annotation" class="external-link">Annotation</a>&gt;</span>
 extends <a href="BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a>
 implements <a href="BugChecker.MethodInvocationTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.MethodInvocationTreeMatcher</a>, <a href="BugChecker.VariableTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.VariableTreeMatcher</a></pre>
 <div class="block">Helper for enforcing Annotations that disallow mocking.</div>
@@ -135,7 +135,7 @@ implements <a href="BugChecker.MethodInvocationTreeMatcher.html" title="interfac
 </tr>
 <tr class="alt-color">
 <td class="col-first"><code>static interface&nbsp;</code></td>
-<th class="col-second" scope="row"><code><span class="member-name-link"><a href="AbstractMockChecker.TypeExtractor.html" title="interface in com.google.errorprone.bugpatterns">AbstractMockChecker.TypeExtractor</a>&lt;<a href="AbstractMockChecker.TypeExtractor.html" title="type parameter in AbstractMockChecker.TypeExtractor">T</a> extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&gt;</span></code></th>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="AbstractMockChecker.TypeExtractor.html" title="interface in com.google.errorprone.bugpatterns">AbstractMockChecker.TypeExtractor</a>&lt;<a href="AbstractMockChecker.TypeExtractor.html" title="type parameter in AbstractMockChecker.TypeExtractor">T</a> extends com.sun.source.tree.Tree&gt;</span></code></th>
 <td class="col-last">
 <div class="block">An extension of <a href="../matchers/Matcher.html" title="interface in com.google.errorprone.matchers"><code>Matcher</code></a> to return, not just a boolean `matches`, but also extract some
  type information about the Tree of interest.</div>
@@ -165,7 +165,7 @@ implements <a href="BugChecker.MethodInvocationTreeMatcher.html" title="interfac
 </thead>
 <tbody>
 <tr class="alt-color">
-<td class="col-first"><code>static <a href="AbstractMockChecker.TypeExtractor.html" title="interface in com.google.errorprone.bugpatterns">AbstractMockChecker.TypeExtractor</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/MethodInvocationTree.html" title="class or interface in com.sun.source.tree" class="external-link">MethodInvocationTree</a>&gt;</code></td>
+<td class="col-first"><code>static <a href="AbstractMockChecker.TypeExtractor.html" title="interface in com.google.errorprone.bugpatterns">AbstractMockChecker.TypeExtractor</a>&lt;com.sun.source.tree.MethodInvocationTree&gt;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#MOCKING_METHOD">MOCKING_METHOD</a></span></code></th>
 <td class="col-last">
 <div class="block">A TypeExtractor for method invocations that create a mock using Mockito.mock, Mockito.spy, or
@@ -192,10 +192,10 @@ implements <a href="BugChecker.MethodInvocationTreeMatcher.html" title="interfac
 </thead>
 <tbody>
 <tr class="alt-color">
-<th class="col-constructor-name" scope="row"><code><span class="member-name-link"><a href="#%3Cinit%3E(com.google.errorprone.bugpatterns.AbstractMockChecker.TypeExtractor,com.google.errorprone.bugpatterns.AbstractMockChecker.TypeExtractor,java.lang.Class,java.util.function.Function)">AbstractMockChecker</a></span>&#8203;(<a href="AbstractMockChecker.TypeExtractor.html" title="interface in com.google.errorprone.bugpatterns">AbstractMockChecker.TypeExtractor</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/VariableTree.html" title="class or interface in com.sun.source.tree" class="external-link">VariableTree</a>&gt;&nbsp;varExtractor,
-<a href="AbstractMockChecker.TypeExtractor.html" title="interface in com.google.errorprone.bugpatterns">AbstractMockChecker.TypeExtractor</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/MethodInvocationTree.html" title="class or interface in com.sun.source.tree" class="external-link">MethodInvocationTree</a>&gt;&nbsp;methodExtractor,
-<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;<a href="AbstractMockChecker.html" title="type parameter in AbstractMockChecker">T</a>&gt;&nbsp;annotationClass,
-<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;<a href="AbstractMockChecker.html" title="type parameter in AbstractMockChecker">T</a>,&#8203;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;getValueFunction)</code></th>
+<th class="col-constructor-name" scope="row"><code><span class="member-name-link"><a href="#%3Cinit%3E(com.google.errorprone.bugpatterns.AbstractMockChecker.TypeExtractor,com.google.errorprone.bugpatterns.AbstractMockChecker.TypeExtractor,java.lang.Class,java.util.function.Function)">AbstractMockChecker</a></span>&#8203;(<a href="AbstractMockChecker.TypeExtractor.html" title="interface in com.google.errorprone.bugpatterns">AbstractMockChecker.TypeExtractor</a>&lt;com.sun.source.tree.VariableTree&gt;&nbsp;varExtractor,
+<a href="AbstractMockChecker.TypeExtractor.html" title="interface in com.google.errorprone.bugpatterns">AbstractMockChecker.TypeExtractor</a>&lt;com.sun.source.tree.MethodInvocationTree&gt;&nbsp;methodExtractor,
+<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;<a href="AbstractMockChecker.html" title="type parameter in AbstractMockChecker">T</a>&gt;&nbsp;annotationClass,
+<a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;<a href="AbstractMockChecker.html" title="type parameter in AbstractMockChecker">T</a>,&#8203;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;getValueFunction)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
 </tbody>
@@ -220,23 +220,23 @@ implements <a href="BugChecker.MethodInvocationTreeMatcher.html" title="interfac
 </thead>
 <tbody>
 <tr class="alt-color" id="i0">
-<td class="col-first"><code>static <a href="AbstractMockChecker.TypeExtractor.html" title="interface in com.google.errorprone.bugpatterns">AbstractMockChecker.TypeExtractor</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/MethodInvocationTree.html" title="class or interface in com.sun.source.tree" class="external-link">MethodInvocationTree</a>&gt;</code></td>
-<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#extractClassArg(com.google.errorprone.matchers.Matcher)">extractClassArg</a></span>&#8203;(<a href="../matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/MethodInvocationTree.html" title="class or interface in com.sun.source.tree" class="external-link">MethodInvocationTree</a>&gt;&nbsp;m)</code></th>
+<td class="col-first"><code>static <a href="AbstractMockChecker.TypeExtractor.html" title="interface in com.google.errorprone.bugpatterns">AbstractMockChecker.TypeExtractor</a>&lt;com.sun.source.tree.MethodInvocationTree&gt;</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#extractClassArg(com.google.errorprone.matchers.Matcher)">extractClassArg</a></span>&#8203;(<a href="../matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.MethodInvocationTree&gt;&nbsp;m)</code></th>
 <td class="col-last">
 <div class="block">Produces an extractor which, if the tree matches, extracts the type of the first argument whose
- type is <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link"><code>Class</code></a> (preserving its <code>&lt;T&gt;</code> type parameter, if it has one}.</div>
+ type is <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html" title="class or interface in java.lang" class="external-link"><code>Class</code></a> (preserving its <code>&lt;T&gt;</code> type parameter, if it has one}.</div>
 </td>
 </tr>
 <tr class="row-color" id="i1">
-<td class="col-first"><code>static <a href="AbstractMockChecker.TypeExtractor.html" title="interface in com.google.errorprone.bugpatterns">AbstractMockChecker.TypeExtractor</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/MethodInvocationTree.html" title="class or interface in com.sun.source.tree" class="external-link">MethodInvocationTree</a>&gt;</code></td>
-<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#extractFirstArg(com.google.errorprone.matchers.Matcher)">extractFirstArg</a></span>&#8203;(<a href="../matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/MethodInvocationTree.html" title="class or interface in com.sun.source.tree" class="external-link">MethodInvocationTree</a>&gt;&nbsp;m)</code></th>
+<td class="col-first"><code>static <a href="AbstractMockChecker.TypeExtractor.html" title="interface in com.google.errorprone.bugpatterns">AbstractMockChecker.TypeExtractor</a>&lt;com.sun.source.tree.MethodInvocationTree&gt;</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#extractFirstArg(com.google.errorprone.matchers.Matcher)">extractFirstArg</a></span>&#8203;(<a href="../matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.MethodInvocationTree&gt;&nbsp;m)</code></th>
 <td class="col-last">
 <div class="block">Produces an extractor which, if the tree matches, extracts the type of the first argument to
  the method invocation.</div>
 </td>
 </tr>
 <tr class="alt-color" id="i2">
-<td class="col-first"><code>static &lt;T extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&gt;<br><a href="AbstractMockChecker.TypeExtractor.html" title="interface in com.google.errorprone.bugpatterns">AbstractMockChecker.TypeExtractor</a>&lt;T&gt;</code></td>
+<td class="col-first"><code>static &lt;T extends com.sun.source.tree.Tree&gt;<br><a href="AbstractMockChecker.TypeExtractor.html" title="interface in com.google.errorprone.bugpatterns">AbstractMockChecker.TypeExtractor</a>&lt;T&gt;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#extractType(com.google.errorprone.matchers.Matcher)">extractType</a></span>&#8203;(<a href="../matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;T&gt;&nbsp;m)</code></th>
 <td class="col-last">
 <div class="block">Produces an extractor which, if the tree matches, extracts the type of that tree, as given by
@@ -244,8 +244,8 @@ implements <a href="BugChecker.MethodInvocationTreeMatcher.html" title="interfac
 </td>
 </tr>
 <tr class="row-color" id="i3">
-<td class="col-first"><code>static <a href="AbstractMockChecker.TypeExtractor.html" title="interface in com.google.errorprone.bugpatterns">AbstractMockChecker.TypeExtractor</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/VariableTree.html" title="class or interface in com.sun.source.tree" class="external-link">VariableTree</a>&gt;</code></td>
-<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#fieldAnnotatedWithOneOf(java.util.stream.Stream)">fieldAnnotatedWithOneOf</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/stream/Stream.html" title="class or interface in java.util.stream" class="external-link">Stream</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;annotationClasses)</code></th>
+<td class="col-first"><code>static <a href="AbstractMockChecker.TypeExtractor.html" title="interface in com.google.errorprone.bugpatterns">AbstractMockChecker.TypeExtractor</a>&lt;com.sun.source.tree.VariableTree&gt;</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#fieldAnnotatedWithOneOf(java.util.stream.Stream)">fieldAnnotatedWithOneOf</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/stream/Stream.html" title="class or interface in java.util.stream" class="external-link">Stream</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;annotationClasses)</code></th>
 <td class="col-last">
 <div class="block">Creates a TypeExtractor that extracts the type of a class field if that field is annotated with
  any one of the given annotations.</div>
@@ -261,13 +261,13 @@ implements <a href="BugChecker.MethodInvocationTreeMatcher.html" title="interfac
 </tr>
 <tr class="row-color" id="i5">
 <td class="col-first"><code><a href="../matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
-<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#matchMethodInvocation(com.sun.source.tree.MethodInvocationTree,com.google.errorprone.VisitorState)">matchMethodInvocation</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/MethodInvocationTree.html" title="class or interface in com.sun.source.tree" class="external-link">MethodInvocationTree</a>&nbsp;tree,
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#matchMethodInvocation(com.sun.source.tree.MethodInvocationTree,com.google.errorprone.VisitorState)">matchMethodInvocation</a></span>&#8203;(com.sun.source.tree.MethodInvocationTree&nbsp;tree,
 <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
 <tr class="alt-color" id="i6">
 <td class="col-first"><code><a href="../matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
-<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#matchVariable(com.sun.source.tree.VariableTree,com.google.errorprone.VisitorState)">matchVariable</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/VariableTree.html" title="class or interface in com.sun.source.tree" class="external-link">VariableTree</a>&nbsp;tree,
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#matchVariable(com.sun.source.tree.VariableTree,com.google.errorprone.VisitorState)">matchVariable</a></span>&#8203;(com.sun.source.tree.VariableTree&nbsp;tree,
 <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
@@ -279,8 +279,8 @@ implements <a href="BugChecker.MethodInvocationTreeMatcher.html" title="interfac
 <h3 id="methods.inherited.from.class.com.google.errorprone.bugpatterns.BugChecker">Methods inherited from class&nbsp;com.google.errorprone.bugpatterns.<a href="BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a></h3>
 <code><a href="BugChecker.html#allNames()">allNames</a>, <a href="BugChecker.html#buildDescription(com.sun.source.tree.Tree)">buildDescription</a>, <a href="BugChecker.html#buildDescription(com.sun.tools.javac.tree.JCTree)">buildDescription</a>, <a href="BugChecker.html#buildDescription(com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition)">buildDescription</a>, <a href="BugChecker.html#canonicalName()">canonicalName</a>, <a href="BugChecker.html#customSuppressionAnnotations()">customSuppressionAnnotations</a>, <a href="BugChecker.html#defaultSeverity()">defaultSeverity</a>, <a href="BugChecker.html#describeMatch(com.sun.source.tree.Tree)">describeMatch</a>, <a href="BugChecker.html#describeMatch(com.sun.source.tree.Tree,com.google.errorprone.fixes.Fix)">describeMatch</a>, <a href="BugChecker.html#describeMatch(com.sun.tools.javac.tree.JCTree)">describeMatch</a>, <a href="BugChecker.html#describeMatch(com.sun.tools.javac.tree.JCTree,com.google.errorprone.fixes.Fix)">describeMatch</a>, <a href="BugChecker.html#describeMatch(com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition)">describeMatch</a>, <a href="BugChecker.html#describeMatch(com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition,com.google.errorprone.fixes.Fix)">describeMatch</a>, <a href="BugChecker.html#disableable()">disableable</a>, <a href="BugChecker.html#equals(java.lang.Object)">equals</a>, <a href="BugChecker.html#hashCode()">hashCode</a>, <a href="BugChecker.html#isSuppressed(com.sun.source.tree.Tree)">isSuppressed</a>, <a href="BugChecker.html#isSuppressed(com.sun.tools.javac.code.Symbol)">isSuppressed</a>, <a href="BugChecker.html#linkUrl()">linkUrl</a>, <a href="BugChecker.html#message()">message</a>, <a href="BugChecker.html#supportsSuppressWarnings()">supportsSuppressWarnings</a>, <a href="BugChecker.html#suppressedByAnyOf(java.util.Set,com.google.errorprone.VisitorState)">suppressedByAnyOf</a>, <a href="BugChecker.html#suppressedRegions(com.google.errorprone.VisitorState)">suppressedRegions</a></code></div>
 <div class="inherited-list">
-<h3 id="methods.inherited.from.class.java.lang.Object">Methods inherited from class&nbsp;java.lang.<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></h3>
-<code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#clone()" title="class or interface in java.lang" class="external-link">clone</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#finalize()" title="class or interface in java.lang" class="external-link">finalize</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#getClass()" title="class or interface in java.lang" class="external-link">getClass</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#notify()" title="class or interface in java.lang" class="external-link">notify</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#notifyAll()" title="class or interface in java.lang" class="external-link">notifyAll</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#toString()" title="class or interface in java.lang" class="external-link">toString</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#wait()" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#wait(long)" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#wait(long,int)" title="class or interface in java.lang" class="external-link">wait</a></code></div>
+<h3 id="methods.inherited.from.class.java.lang.Object">Methods inherited from class&nbsp;java.lang.<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></h3>
+<code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#clone()" title="class or interface in java.lang" class="external-link">clone</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#finalize()" title="class or interface in java.lang" class="external-link">finalize</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#getClass()" title="class or interface in java.lang" class="external-link">getClass</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#notify()" title="class or interface in java.lang" class="external-link">notify</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#notifyAll()" title="class or interface in java.lang" class="external-link">notifyAll</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#toString()" title="class or interface in java.lang" class="external-link">toString</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#wait()" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#wait(long)" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#wait(long,int)" title="class or interface in java.lang" class="external-link">wait</a></code></div>
 <div class="inherited-list">
 <h3 id="methods.inherited.from.class.com.google.errorprone.matchers.Suppressible">Methods inherited from interface&nbsp;com.google.errorprone.matchers.<a href="../matchers/Suppressible.html" title="interface in com.google.errorprone.matchers">Suppressible</a></h3>
 <code><a href="../matchers/Suppressible.html#allNames()">allNames</a>, <a href="../matchers/Suppressible.html#canonicalName()">canonicalName</a>, <a href="../matchers/Suppressible.html#customSuppressionAnnotations()">customSuppressionAnnotations</a>, <a href="../matchers/Suppressible.html#supportsSuppressWarnings()">supportsSuppressWarnings</a>, <a href="../matchers/Suppressible.html#suppressedByAnyOf(java.util.Set,com.google.errorprone.VisitorState)">suppressedByAnyOf</a></code></div>
@@ -298,7 +298,7 @@ implements <a href="BugChecker.MethodInvocationTreeMatcher.html" title="interfac
 <li>
 <section class="detail" id="MOCKING_METHOD">
 <h3>MOCKING_METHOD</h3>
-<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="AbstractMockChecker.TypeExtractor.html" title="interface in com.google.errorprone.bugpatterns">AbstractMockChecker.TypeExtractor</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/MethodInvocationTree.html" title="class or interface in com.sun.source.tree" class="external-link">MethodInvocationTree</a>&gt;</span>&nbsp;<span class="member-name">MOCKING_METHOD</span></div>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="AbstractMockChecker.TypeExtractor.html" title="interface in com.google.errorprone.bugpatterns">AbstractMockChecker.TypeExtractor</a>&lt;com.sun.source.tree.MethodInvocationTree&gt;</span>&nbsp;<span class="member-name">MOCKING_METHOD</span></div>
 <div class="block">A TypeExtractor for method invocations that create a mock using Mockito.mock, Mockito.spy, or
  EasyMock.create[...]Mock, extracting the type being mocked.</div>
 </section>
@@ -314,10 +314,10 @@ implements <a href="BugChecker.MethodInvocationTreeMatcher.html" title="interfac
 <li>
 <section class="detail" id="&lt;init&gt;(com.google.errorprone.bugpatterns.AbstractMockChecker.TypeExtractor,com.google.errorprone.bugpatterns.AbstractMockChecker.TypeExtractor,java.lang.Class,java.util.function.Function)">
 <h3>AbstractMockChecker</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="member-name">AbstractMockChecker</span>&#8203;(<span class="parameters"><a href="AbstractMockChecker.TypeExtractor.html" title="interface in com.google.errorprone.bugpatterns">AbstractMockChecker.TypeExtractor</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/VariableTree.html" title="class or interface in com.sun.source.tree" class="external-link">VariableTree</a>&gt;&nbsp;varExtractor,
-<a href="AbstractMockChecker.TypeExtractor.html" title="interface in com.google.errorprone.bugpatterns">AbstractMockChecker.TypeExtractor</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/MethodInvocationTree.html" title="class or interface in com.sun.source.tree" class="external-link">MethodInvocationTree</a>&gt;&nbsp;methodExtractor,
-<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;<a href="AbstractMockChecker.html" title="type parameter in AbstractMockChecker">T</a>&gt;&nbsp;annotationClass,
-<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;<a href="AbstractMockChecker.html" title="type parameter in AbstractMockChecker">T</a>,&#8203;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;getValueFunction)</span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="member-name">AbstractMockChecker</span>&#8203;(<span class="parameters"><a href="AbstractMockChecker.TypeExtractor.html" title="interface in com.google.errorprone.bugpatterns">AbstractMockChecker.TypeExtractor</a>&lt;com.sun.source.tree.VariableTree&gt;&nbsp;varExtractor,
+<a href="AbstractMockChecker.TypeExtractor.html" title="interface in com.google.errorprone.bugpatterns">AbstractMockChecker.TypeExtractor</a>&lt;com.sun.source.tree.MethodInvocationTree&gt;&nbsp;methodExtractor,
+<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;<a href="AbstractMockChecker.html" title="type parameter in AbstractMockChecker">T</a>&gt;&nbsp;annotationClass,
+<a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;<a href="AbstractMockChecker.html" title="type parameter in AbstractMockChecker">T</a>,&#8203;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;getValueFunction)</span></div>
 </section>
 </li>
 </ul>
@@ -344,7 +344,7 @@ implements <a href="BugChecker.MethodInvocationTreeMatcher.html" title="interfac
 <li>
 <section class="detail" id="extractType(com.google.errorprone.matchers.Matcher)">
 <h3>extractType</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="type-parameters">&lt;T extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&gt;</span>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="type-parameters">&lt;T extends com.sun.source.tree.Tree&gt;</span>
 <span class="return-type"><a href="AbstractMockChecker.TypeExtractor.html" title="interface in com.google.errorprone.bugpatterns">AbstractMockChecker.TypeExtractor</a>&lt;T&gt;</span>&nbsp;<span class="member-name">extractType</span>&#8203;(<span class="parameters"><a href="../matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;T&gt;&nbsp;m)</span></div>
 <div class="block">Produces an extractor which, if the tree matches, extracts the type of that tree, as given by
  <a href="../util/ASTHelpers.html#getType(com.sun.source.tree.Tree)"><code>ASTHelpers.getType(Tree)</code></a>.</div>
@@ -353,7 +353,7 @@ implements <a href="BugChecker.MethodInvocationTreeMatcher.html" title="interfac
 <li>
 <section class="detail" id="extractFirstArg(com.google.errorprone.matchers.Matcher)">
 <h3>extractFirstArg</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="AbstractMockChecker.TypeExtractor.html" title="interface in com.google.errorprone.bugpatterns">AbstractMockChecker.TypeExtractor</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/MethodInvocationTree.html" title="class or interface in com.sun.source.tree" class="external-link">MethodInvocationTree</a>&gt;</span>&nbsp;<span class="member-name">extractFirstArg</span>&#8203;(<span class="parameters"><a href="../matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/MethodInvocationTree.html" title="class or interface in com.sun.source.tree" class="external-link">MethodInvocationTree</a>&gt;&nbsp;m)</span></div>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="AbstractMockChecker.TypeExtractor.html" title="interface in com.google.errorprone.bugpatterns">AbstractMockChecker.TypeExtractor</a>&lt;com.sun.source.tree.MethodInvocationTree&gt;</span>&nbsp;<span class="member-name">extractFirstArg</span>&#8203;(<span class="parameters"><a href="../matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.MethodInvocationTree&gt;&nbsp;m)</span></div>
 <div class="block">Produces an extractor which, if the tree matches, extracts the type of the first argument to
  the method invocation.</div>
 </section>
@@ -361,13 +361,13 @@ implements <a href="BugChecker.MethodInvocationTreeMatcher.html" title="interfac
 <li>
 <section class="detail" id="extractClassArg(com.google.errorprone.matchers.Matcher)">
 <h3>extractClassArg</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="AbstractMockChecker.TypeExtractor.html" title="interface in com.google.errorprone.bugpatterns">AbstractMockChecker.TypeExtractor</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/MethodInvocationTree.html" title="class or interface in com.sun.source.tree" class="external-link">MethodInvocationTree</a>&gt;</span>&nbsp;<span class="member-name">extractClassArg</span>&#8203;(<span class="parameters"><a href="../matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/MethodInvocationTree.html" title="class or interface in com.sun.source.tree" class="external-link">MethodInvocationTree</a>&gt;&nbsp;m)</span></div>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="AbstractMockChecker.TypeExtractor.html" title="interface in com.google.errorprone.bugpatterns">AbstractMockChecker.TypeExtractor</a>&lt;com.sun.source.tree.MethodInvocationTree&gt;</span>&nbsp;<span class="member-name">extractClassArg</span>&#8203;(<span class="parameters"><a href="../matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.MethodInvocationTree&gt;&nbsp;m)</span></div>
 <div class="block">Produces an extractor which, if the tree matches, extracts the type of the first argument whose
- type is <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link"><code>Class</code></a> (preserving its <code>&lt;T&gt;</code> type parameter, if it has one}.</div>
+ type is <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html" title="class or interface in java.lang" class="external-link"><code>Class</code></a> (preserving its <code>&lt;T&gt;</code> type parameter, if it has one}.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>m</code> - the matcher to use. It is an error for this matcher to succeed on any Tree that does
-     not include at least one argument of type <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link"><code>Class</code></a>; if such a matcher is provided, the
+     not include at least one argument of type <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html" title="class or interface in java.lang" class="external-link"><code>Class</code></a>; if such a matcher is provided, the
      behavior of the returned Extractor is undefined.</dd>
 </dl>
 </section>
@@ -375,7 +375,7 @@ implements <a href="BugChecker.MethodInvocationTreeMatcher.html" title="interfac
 <li>
 <section class="detail" id="fieldAnnotatedWithOneOf(java.util.stream.Stream)">
 <h3>fieldAnnotatedWithOneOf</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="AbstractMockChecker.TypeExtractor.html" title="interface in com.google.errorprone.bugpatterns">AbstractMockChecker.TypeExtractor</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/VariableTree.html" title="class or interface in com.sun.source.tree" class="external-link">VariableTree</a>&gt;</span>&nbsp;<span class="member-name">fieldAnnotatedWithOneOf</span>&#8203;(<span class="parameters"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/stream/Stream.html" title="class or interface in java.util.stream" class="external-link">Stream</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;annotationClasses)</span></div>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="AbstractMockChecker.TypeExtractor.html" title="interface in com.google.errorprone.bugpatterns">AbstractMockChecker.TypeExtractor</a>&lt;com.sun.source.tree.VariableTree&gt;</span>&nbsp;<span class="member-name">fieldAnnotatedWithOneOf</span>&#8203;(<span class="parameters"><a href="https://docs.oracle.com/javase/8/docs/api/java/util/stream/Stream.html" title="class or interface in java.util.stream" class="external-link">Stream</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;annotationClasses)</span></div>
 <div class="block">Creates a TypeExtractor that extracts the type of a class field if that field is annotated with
  any one of the given annotations.</div>
 </section>
@@ -383,7 +383,7 @@ implements <a href="BugChecker.MethodInvocationTreeMatcher.html" title="interfac
 <li>
 <section class="detail" id="matchMethodInvocation(com.sun.source.tree.MethodInvocationTree,com.google.errorprone.VisitorState)">
 <h3>matchMethodInvocation</h3>
-<div class="member-signature"><span class="modifiers">public final</span>&nbsp;<span class="return-type"><a href="../matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></span>&nbsp;<span class="member-name">matchMethodInvocation</span>&#8203;(<span class="parameters"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/MethodInvocationTree.html" title="class or interface in com.sun.source.tree" class="external-link">MethodInvocationTree</a>&nbsp;tree,
+<div class="member-signature"><span class="modifiers">public final</span>&nbsp;<span class="return-type"><a href="../matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></span>&nbsp;<span class="member-name">matchMethodInvocation</span>&#8203;(<span class="parameters">com.sun.source.tree.MethodInvocationTree&nbsp;tree,
 <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
 <dl class="notes">
 <dt>Specified by:</dt>
@@ -394,7 +394,7 @@ implements <a href="BugChecker.MethodInvocationTreeMatcher.html" title="interfac
 <li>
 <section class="detail" id="matchVariable(com.sun.source.tree.VariableTree,com.google.errorprone.VisitorState)">
 <h3>matchVariable</h3>
-<div class="member-signature"><span class="modifiers">public final</span>&nbsp;<span class="return-type"><a href="../matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></span>&nbsp;<span class="member-name">matchVariable</span>&#8203;(<span class="parameters"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/VariableTree.html" title="class or interface in com.sun.source.tree" class="external-link">VariableTree</a>&nbsp;tree,
+<div class="member-signature"><span class="modifiers">public final</span>&nbsp;<span class="return-type"><a href="../matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></span>&nbsp;<span class="member-name">matchVariable</span>&#8203;(<span class="parameters">com.sun.source.tree.VariableTree&nbsp;tree,
 <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
 <dl class="notes">
 <dt>Specified by:</dt>

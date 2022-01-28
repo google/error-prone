@@ -76,7 +76,7 @@ loadScripts(document, 'script');</script>
 <div class="sub-title"><span class="package-label-in-type">Package</span>&nbsp;<a href="package-summary.html">com.google.errorprone</a></div>
 <h1 title="Class SuppressionInfo" class="title">Class SuppressionInfo</h1>
 </div>
-<div class="inheritance" title="Inheritance Tree"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">java.lang.Object</a>
+<div class="inheritance" title="Inheritance Tree"><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html" title="class or interface in java.lang" class="external-link">java.lang.Object</a>
 <div class="inheritance">com.google.errorprone.SuppressionInfo</div>
 </div>
 <section class="description">
@@ -84,7 +84,7 @@ loadScripts(document, 'script');</script>
 <pre><a href="annotations/Immutable.html" title="annotation in com.google.errorprone.annotations">@Immutable</a>
 <a href="annotations/CheckReturnValue.html" title="annotation in com.google.errorprone.annotations">@CheckReturnValue</a>
 public class <span class="type-name-label">SuppressionInfo</span>
-extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></pre>
+extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></pre>
 <div class="block">Immutable container of "suppression signals" - annotations or other information gathered from
  source - that can be used to determine if a specific <a href="matchers/Suppressible.html" title="interface in com.google.errorprone.matchers"><code>Suppressible</code></a> object should be
  considered suppressed.
@@ -163,10 +163,10 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <tbody>
 <tr class="alt-color" id="i0">
 <td class="col-first"><code><a href="SuppressionInfo.html" title="class in com.google.errorprone">SuppressionInfo</a></code></td>
-<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#forCompilationUnit(com.sun.source.tree.CompilationUnitTree,com.google.errorprone.VisitorState)">forCompilationUnit</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/CompilationUnitTree.html" title="class or interface in com.sun.source.tree" class="external-link">CompilationUnitTree</a>&nbsp;tree,
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#forCompilationUnit(com.sun.source.tree.CompilationUnitTree,com.google.errorprone.VisitorState)">forCompilationUnit</a></span>&#8203;(com.sun.source.tree.CompilationUnitTree&nbsp;tree,
 <a href="VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
 <td class="col-last">
-<div class="block">Generates the <a href="SuppressionInfo.html" title="class in com.google.errorprone"><code>SuppressionInfo</code></a> for a <a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/CompilationUnitTree.html" title="class or interface in com.sun.source.tree" class="external-link"><code>CompilationUnitTree</code></a>.</div>
+<div class="block">Generates the <a href="SuppressionInfo.html" title="class in com.google.errorprone"><code>SuppressionInfo</code></a> for a <code>CompilationUnitTree</code>.</div>
 </td>
 </tr>
 <tr class="row-color" id="i1">
@@ -183,7 +183,7 @@ boolean&nbsp;suppressedInGeneratedCode,
 <td class="col-first"><code><a href="SuppressionInfo.html" title="class in com.google.errorprone">SuppressionInfo</a></code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#withExtendedSuppressions(com.sun.tools.javac.code.Symbol,com.google.errorprone.VisitorState,java.util.Set)">withExtendedSuppressions</a></span>&#8203;(com.sun.tools.javac.code.Symbol&nbsp;sym,
 <a href="VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
-<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a>&lt;? extends com.sun.tools.javac.util.Name&gt;&nbsp;customSuppressionAnnosToLookFor)</code></th>
+<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a>&lt;? extends com.sun.tools.javac.util.Name&gt;&nbsp;customSuppressionAnnosToLookFor)</code></th>
 <td class="col-last">
 <div class="block">Returns an instance of <code>SuppressionInfo</code> that takes into account any suppression signals
  present on <code>sym</code> as well as those already stored in <code>this</code>.</div>
@@ -194,8 +194,8 @@ boolean&nbsp;suppressedInGeneratedCode,
 </div>
 </div>
 <div class="inherited-list">
-<h3 id="methods.inherited.from.class.java.lang.Object">Methods inherited from class&nbsp;java.lang.<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></h3>
-<code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#clone()" title="class or interface in java.lang" class="external-link">clone</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#equals(java.lang.Object)" title="class or interface in java.lang" class="external-link">equals</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#finalize()" title="class or interface in java.lang" class="external-link">finalize</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#getClass()" title="class or interface in java.lang" class="external-link">getClass</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#hashCode()" title="class or interface in java.lang" class="external-link">hashCode</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#notify()" title="class or interface in java.lang" class="external-link">notify</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#notifyAll()" title="class or interface in java.lang" class="external-link">notifyAll</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#toString()" title="class or interface in java.lang" class="external-link">toString</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#wait()" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#wait(long)" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#wait(long,int)" title="class or interface in java.lang" class="external-link">wait</a></code></div>
+<h3 id="methods.inherited.from.class.java.lang.Object">Methods inherited from class&nbsp;java.lang.<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></h3>
+<code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#clone()" title="class or interface in java.lang" class="external-link">clone</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#equals(java.lang.Object)" title="class or interface in java.lang" class="external-link">equals</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#finalize()" title="class or interface in java.lang" class="external-link">finalize</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#getClass()" title="class or interface in java.lang" class="external-link">getClass</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#hashCode()" title="class or interface in java.lang" class="external-link">hashCode</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#notify()" title="class or interface in java.lang" class="external-link">notify</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#notifyAll()" title="class or interface in java.lang" class="external-link">notifyAll</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#toString()" title="class or interface in java.lang" class="external-link">toString</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#wait()" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#wait(long)" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#wait(long,int)" title="class or interface in java.lang" class="external-link">wait</a></code></div>
 </section>
 </li>
 </ul>
@@ -239,11 +239,11 @@ boolean&nbsp;suppressedInGeneratedCode,
 <li>
 <section class="detail" id="forCompilationUnit(com.sun.source.tree.CompilationUnitTree,com.google.errorprone.VisitorState)">
 <h3>forCompilationUnit</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="SuppressionInfo.html" title="class in com.google.errorprone">SuppressionInfo</a></span>&nbsp;<span class="member-name">forCompilationUnit</span>&#8203;(<span class="parameters"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/CompilationUnitTree.html" title="class or interface in com.sun.source.tree" class="external-link">CompilationUnitTree</a>&nbsp;tree,
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="SuppressionInfo.html" title="class in com.google.errorprone">SuppressionInfo</a></span>&nbsp;<span class="member-name">forCompilationUnit</span>&#8203;(<span class="parameters">com.sun.source.tree.CompilationUnitTree&nbsp;tree,
 <a href="VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
-<div class="block">Generates the <a href="SuppressionInfo.html" title="class in com.google.errorprone"><code>SuppressionInfo</code></a> for a <a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/CompilationUnitTree.html" title="class or interface in com.sun.source.tree" class="external-link"><code>CompilationUnitTree</code></a>. This differs in that
+<div class="block">Generates the <a href="SuppressionInfo.html" title="class in com.google.errorprone"><code>SuppressionInfo</code></a> for a <code>CompilationUnitTree</code>. This differs in that
  <code>isGenerated</code> is determined by inspecting the annotations of the outermost class so that
- matchers on <a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/CompilationUnitTree.html" title="class or interface in com.sun.source.tree" class="external-link"><code>CompilationUnitTree</code></a> will also be suppressed.</div>
+ matchers on <code>CompilationUnitTree</code> will also be suppressed.</div>
 </section>
 </li>
 <li>
@@ -251,7 +251,7 @@ boolean&nbsp;suppressedInGeneratedCode,
 <h3>withExtendedSuppressions</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="SuppressionInfo.html" title="class in com.google.errorprone">SuppressionInfo</a></span>&nbsp;<span class="member-name">withExtendedSuppressions</span>&#8203;(<span class="parameters">com.sun.tools.javac.code.Symbol&nbsp;sym,
 <a href="VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
-<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a>&lt;? extends com.sun.tools.javac.util.Name&gt;&nbsp;customSuppressionAnnosToLookFor)</span></div>
+<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a>&lt;? extends com.sun.tools.javac.util.Name&gt;&nbsp;customSuppressionAnnosToLookFor)</span></div>
 <div class="block">Returns an instance of <code>SuppressionInfo</code> that takes into account any suppression signals
  present on <code>sym</code> as well as those already stored in <code>this</code>.
 

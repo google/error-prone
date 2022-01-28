@@ -76,7 +76,7 @@ loadScripts(document, 'script');</script>
 <div class="sub-title"><span class="package-label-in-type">Package</span>&nbsp;<a href="package-summary.html">com.google.errorprone.scanner</a></div>
 <h1 title="Class ErrorProneScannerTransformer" class="title">Class ErrorProneScannerTransformer</h1>
 </div>
-<div class="inheritance" title="Inheritance Tree"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">java.lang.Object</a>
+<div class="inheritance" title="Inheritance Tree"><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html" title="class or interface in java.lang" class="external-link">java.lang.Object</a>
 <div class="inheritance">com.google.errorprone.scanner.ErrorProneScannerTransformer</div>
 </div>
 <section class="description">
@@ -86,7 +86,7 @@ loadScripts(document, 'script');</script>
 </dl>
 <hr>
 <pre>public abstract class <span class="type-name-label">ErrorProneScannerTransformer</span>
-extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>
+extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>
 implements <a href="../CodeTransformer.html" title="interface in com.google.errorprone">CodeTransformer</a></pre>
 <div class="block">Adapter from an <a href="ErrorProneScanner.html" title="class in com.google.errorprone.scanner"><code>ErrorProneScanner</code></a> to a <a href="../CodeTransformer.html" title="interface in com.google.errorprone"><code>CodeTransformer</code></a>.</div>
 </section>
@@ -132,7 +132,7 @@ implements <a href="../CodeTransformer.html" title="interface in com.google.erro
 </thead>
 <tbody>
 <tr class="alt-color" id="i0">
-<td class="col-first"><code>com.google.common.collect.ImmutableClassToInstanceMap&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/annotation/Annotation.html" title="class or interface in java.lang.annotation" class="external-link">Annotation</a>&gt;</code></td>
+<td class="col-first"><code>com.google.common.collect.ImmutableClassToInstanceMap&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/Annotation.html" title="class or interface in java.lang.annotation" class="external-link">Annotation</a>&gt;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#annotations()">annotations</a></span>()</code></th>
 <td class="col-last">
 <div class="block">Returns a map of annotation data logically applied to this code transformer.</div>
@@ -140,11 +140,11 @@ implements <a href="../CodeTransformer.html" title="interface in com.google.erro
 </tr>
 <tr class="row-color" id="i1">
 <td class="col-first"><code>void</code></td>
-<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#apply(com.sun.source.util.TreePath,com.sun.tools.javac.util.Context,com.google.errorprone.DescriptionListener)">apply</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/util/TreePath.html" title="class or interface in com.sun.source.util" class="external-link">TreePath</a>&nbsp;tree,
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#apply(com.sun.source.util.TreePath,com.sun.tools.javac.util.Context,com.google.errorprone.DescriptionListener)">apply</a></span>&#8203;(com.sun.source.util.TreePath&nbsp;tree,
 com.sun.tools.javac.util.Context&nbsp;context,
 <a href="../DescriptionListener.html" title="interface in com.google.errorprone">DescriptionListener</a>&nbsp;listener)</code></th>
 <td class="col-last">
-<div class="block">Apply recursively from the leaf node in the given <a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/util/TreePath.html" title="class or interface in com.sun.source.util" class="external-link"><code>TreePath</code></a>.</div>
+<div class="block">Apply recursively from the leaf node in the given <code>TreePath</code>.</div>
 </td>
 </tr>
 <tr class="alt-color" id="i2">
@@ -157,8 +157,8 @@ com.sun.tools.javac.util.Context&nbsp;context,
 </div>
 </div>
 <div class="inherited-list">
-<h3 id="methods.inherited.from.class.java.lang.Object">Methods inherited from class&nbsp;java.lang.<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></h3>
-<code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#clone()" title="class or interface in java.lang" class="external-link">clone</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#equals(java.lang.Object)" title="class or interface in java.lang" class="external-link">equals</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#finalize()" title="class or interface in java.lang" class="external-link">finalize</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#getClass()" title="class or interface in java.lang" class="external-link">getClass</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#hashCode()" title="class or interface in java.lang" class="external-link">hashCode</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#notify()" title="class or interface in java.lang" class="external-link">notify</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#notifyAll()" title="class or interface in java.lang" class="external-link">notifyAll</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#toString()" title="class or interface in java.lang" class="external-link">toString</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#wait()" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#wait(long)" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#wait(long,int)" title="class or interface in java.lang" class="external-link">wait</a></code></div>
+<h3 id="methods.inherited.from.class.java.lang.Object">Methods inherited from class&nbsp;java.lang.<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></h3>
+<code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#clone()" title="class or interface in java.lang" class="external-link">clone</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#equals(java.lang.Object)" title="class or interface in java.lang" class="external-link">equals</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#finalize()" title="class or interface in java.lang" class="external-link">finalize</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#getClass()" title="class or interface in java.lang" class="external-link">getClass</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#hashCode()" title="class or interface in java.lang" class="external-link">hashCode</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#notify()" title="class or interface in java.lang" class="external-link">notify</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#notifyAll()" title="class or interface in java.lang" class="external-link">notifyAll</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#toString()" title="class or interface in java.lang" class="external-link">toString</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#wait()" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#wait(long)" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#wait(long,int)" title="class or interface in java.lang" class="external-link">wait</a></code></div>
 </section>
 </li>
 </ul>
@@ -193,11 +193,11 @@ com.sun.tools.javac.util.Context&nbsp;context,
 <li>
 <section class="detail" id="apply(com.sun.source.util.TreePath,com.sun.tools.javac.util.Context,com.google.errorprone.DescriptionListener)">
 <h3>apply</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="member-name">apply</span>&#8203;(<span class="parameters"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/util/TreePath.html" title="class or interface in com.sun.source.util" class="external-link">TreePath</a>&nbsp;tree,
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="member-name">apply</span>&#8203;(<span class="parameters">com.sun.source.util.TreePath&nbsp;tree,
 com.sun.tools.javac.util.Context&nbsp;context,
 <a href="../DescriptionListener.html" title="interface in com.google.errorprone">DescriptionListener</a>&nbsp;listener)</span></div>
 <div class="block"><span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../CodeTransformer.html#apply(com.sun.source.util.TreePath,com.sun.tools.javac.util.Context,com.google.errorprone.DescriptionListener)">CodeTransformer</a></code></span></div>
-<div class="block">Apply recursively from the leaf node in the given <a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/util/TreePath.html" title="class or interface in com.sun.source.util" class="external-link"><code>TreePath</code></a>.</div>
+<div class="block">Apply recursively from the leaf node in the given <code>TreePath</code>.</div>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code><a href="../CodeTransformer.html#apply(com.sun.source.util.TreePath,com.sun.tools.javac.util.Context,com.google.errorprone.DescriptionListener)">apply</a></code>&nbsp;in interface&nbsp;<code><a href="../CodeTransformer.html" title="interface in com.google.errorprone">CodeTransformer</a></code></dd>
@@ -207,7 +207,7 @@ com.sun.tools.javac.util.Context&nbsp;context,
 <li>
 <section class="detail" id="annotations()">
 <h3>annotations</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">com.google.common.collect.ImmutableClassToInstanceMap&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/annotation/Annotation.html" title="class or interface in java.lang.annotation" class="external-link">Annotation</a>&gt;</span>&nbsp;<span class="member-name">annotations</span>()</div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">com.google.common.collect.ImmutableClassToInstanceMap&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/Annotation.html" title="class or interface in java.lang.annotation" class="external-link">Annotation</a>&gt;</span>&nbsp;<span class="member-name">annotations</span>()</div>
 <div class="block"><span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../CodeTransformer.html#annotations()">CodeTransformer</a></code></span></div>
 <div class="block">Returns a map of annotation data logically applied to this code transformer.
 

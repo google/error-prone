@@ -90,7 +90,7 @@ loadScripts(document, 'script');</script>
 <tbody>
 <tr class="alt-color">
 <td class="col-first"><code>static <a href="../ChildMultiMatcher.MatchType.html" title="enum in com.google.errorprone.matchers">ChildMultiMatcher.MatchType</a></code></td>
-<th class="col-second" scope="row"><span class="type-name-label">ChildMultiMatcher.MatchType.</span><code><span class="member-name-link"><a href="../ChildMultiMatcher.MatchType.html#valueOf(java.lang.String)">valueOf</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;name)</code></th>
+<th class="col-second" scope="row"><span class="type-name-label">ChildMultiMatcher.MatchType.</span><code><span class="member-name-link"><a href="../ChildMultiMatcher.MatchType.html#valueOf(java.lang.String)">valueOf</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;name)</code></th>
 <td class="col-last">
 <div class="block">Returns the enum constant of this type with the specified name.</div>
 </td>
@@ -118,43 +118,43 @@ the order they are declared.</div>
 </thead>
 <tbody>
 <tr class="alt-color">
-<td class="col-first"><code>static &lt;T extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&gt;<br><a href="../MultiMatcher.html" title="interface in com.google.errorprone.matchers">MultiMatcher</a>&lt;T,&#8203;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/AnnotationTree.html" title="class or interface in com.sun.source.tree" class="external-link">AnnotationTree</a>&gt;</code></td>
+<td class="col-first"><code>static &lt;T extends com.sun.source.tree.Tree&gt;<br><a href="../MultiMatcher.html" title="interface in com.google.errorprone.matchers">MultiMatcher</a>&lt;T,&#8203;com.sun.source.tree.AnnotationTree&gt;</code></td>
 <th class="col-second" scope="row"><span class="type-name-label">Matchers.</span><code><span class="member-name-link"><a href="../Matchers.html#annotations(com.google.errorprone.matchers.ChildMultiMatcher.MatchType,com.google.errorprone.matchers.Matcher)">annotations</a></span>&#8203;(<a href="../ChildMultiMatcher.MatchType.html" title="enum in com.google.errorprone.matchers">ChildMultiMatcher.MatchType</a>&nbsp;matchType,
-<a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/AnnotationTree.html" title="class or interface in com.sun.source.tree" class="external-link">AnnotationTree</a>&gt;&nbsp;annotationMatcher)</code></th>
+<a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.AnnotationTree&gt;&nbsp;annotationMatcher)</code></th>
 <td class="col-last">
 <div class="block">Matches if the given annotation matcher matches all of or any of the annotations on this tree
  node.</div>
 </td>
 </tr>
 <tr class="row-color">
-<td class="col-first"><code>static <a href="../MultiMatcher.html" title="interface in com.google.errorprone.matchers">MultiMatcher</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/ClassTree.html" title="class or interface in com.sun.source.tree" class="external-link">ClassTree</a>,&#8203;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/MethodTree.html" title="class or interface in com.sun.source.tree" class="external-link">MethodTree</a>&gt;</code></td>
+<td class="col-first"><code>static <a href="../MultiMatcher.html" title="interface in com.google.errorprone.matchers">MultiMatcher</a>&lt;com.sun.source.tree.ClassTree,&#8203;com.sun.source.tree.MethodTree&gt;</code></td>
 <th class="col-second" scope="row"><span class="type-name-label">Matchers.</span><code><span class="member-name-link"><a href="../Matchers.html#constructor(com.google.errorprone.matchers.ChildMultiMatcher.MatchType,com.google.errorprone.matchers.Matcher)">constructor</a></span>&#8203;(<a href="../ChildMultiMatcher.MatchType.html" title="enum in com.google.errorprone.matchers">ChildMultiMatcher.MatchType</a>&nbsp;matchType,
-<a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/MethodTree.html" title="class or interface in com.sun.source.tree" class="external-link">MethodTree</a>&gt;&nbsp;constructorMatcher)</code></th>
+<a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.MethodTree&gt;&nbsp;constructorMatcher)</code></th>
 <td class="col-last">
 <div class="block">Matches a class in which any of/all of its constructors match the given constructorMatcher.</div>
 </td>
 </tr>
 <tr class="alt-color">
-<td class="col-first"><code>static <a href="../MultiMatcher.html" title="interface in com.google.errorprone.matchers">MultiMatcher</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/MethodInvocationTree.html" title="class or interface in com.sun.source.tree" class="external-link">MethodInvocationTree</a>,&#8203;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&gt;</code></td>
+<td class="col-first"><code>static <a href="../MultiMatcher.html" title="interface in com.google.errorprone.matchers">MultiMatcher</a>&lt;com.sun.source.tree.MethodInvocationTree,&#8203;com.sun.source.tree.ExpressionTree&gt;</code></td>
 <th class="col-second" scope="row"><span class="type-name-label">Matchers.</span><code><span class="member-name-link"><a href="../Matchers.html#hasArguments(com.google.errorprone.matchers.ChildMultiMatcher.MatchType,com.google.errorprone.matchers.Matcher)">hasArguments</a></span>&#8203;(<a href="../ChildMultiMatcher.MatchType.html" title="enum in com.google.errorprone.matchers">ChildMultiMatcher.MatchType</a>&nbsp;matchType,
-<a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&gt;&nbsp;argumentMatcher)</code></th>
+<a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.ExpressionTree&gt;&nbsp;argumentMatcher)</code></th>
 <td class="col-last">
 <div class="block">Matches if the given matcher matches all of/any of the arguments to this method invocation.</div>
 </td>
 </tr>
 <tr class="row-color">
-<td class="col-first"><code>static <a href="../MultiMatcher.html" title="interface in com.google.errorprone.matchers">MultiMatcher</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/MethodTree.html" title="class or interface in com.sun.source.tree" class="external-link">MethodTree</a>,&#8203;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/VariableTree.html" title="class or interface in com.sun.source.tree" class="external-link">VariableTree</a>&gt;</code></td>
+<td class="col-first"><code>static <a href="../MultiMatcher.html" title="interface in com.google.errorprone.matchers">MultiMatcher</a>&lt;com.sun.source.tree.MethodTree,&#8203;com.sun.source.tree.VariableTree&gt;</code></td>
 <th class="col-second" scope="row"><span class="type-name-label">Matchers.</span><code><span class="member-name-link"><a href="../Matchers.html#methodHasParameters(com.google.errorprone.matchers.ChildMultiMatcher.MatchType,com.google.errorprone.matchers.Matcher)">methodHasParameters</a></span>&#8203;(<a href="../ChildMultiMatcher.MatchType.html" title="enum in com.google.errorprone.matchers">ChildMultiMatcher.MatchType</a>&nbsp;matchType,
-<a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/VariableTree.html" title="class or interface in com.sun.source.tree" class="external-link">VariableTree</a>&gt;&nbsp;parameterMatcher)</code></th>
+<a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.VariableTree&gt;&nbsp;parameterMatcher)</code></th>
 <td class="col-last">
 <div class="block">Matches if the given matcher matches all of/any of the parameters to this method.</div>
 </td>
 </tr>
 <tr class="alt-color">
-<td class="col-first"><code>static <a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&gt;</code></td>
-<th class="col-second" scope="row"><span class="type-name-label">Matchers.</span><code><span class="member-name-link"><a href="../Matchers.html#methodInvocation(com.google.errorprone.matchers.Matcher,com.google.errorprone.matchers.ChildMultiMatcher.MatchType,com.google.errorprone.matchers.Matcher)">methodInvocation</a></span>&#8203;(<a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&gt;&nbsp;methodSelectMatcher,
+<td class="col-first"><code>static <a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.ExpressionTree&gt;</code></td>
+<th class="col-second" scope="row"><span class="type-name-label">Matchers.</span><code><span class="member-name-link"><a href="../Matchers.html#methodInvocation(com.google.errorprone.matchers.Matcher,com.google.errorprone.matchers.ChildMultiMatcher.MatchType,com.google.errorprone.matchers.Matcher)">methodInvocation</a></span>&#8203;(<a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.ExpressionTree&gt;&nbsp;methodSelectMatcher,
 <a href="../ChildMultiMatcher.MatchType.html" title="enum in com.google.errorprone.matchers">ChildMultiMatcher.MatchType</a>&nbsp;matchType,
-<a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&gt;&nbsp;methodArgumentMatcher)</code></th>
+<a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.ExpressionTree&gt;&nbsp;methodArgumentMatcher)</code></th>
 <td class="col-last">
 <div class="block">Matches an AST node if it is a method invocation and the given matchers match.</div>
 </td>
@@ -174,7 +174,7 @@ the order they are declared.</div>
 <tbody>
 <tr class="alt-color">
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../AnnotationMatcher.html#%3Cinit%3E(com.google.errorprone.matchers.ChildMultiMatcher.MatchType,com.google.errorprone.matchers.Matcher)">AnnotationMatcher</a></span>&#8203;(<a href="../ChildMultiMatcher.MatchType.html" title="enum in com.google.errorprone.matchers">ChildMultiMatcher.MatchType</a>&nbsp;matchType,
-<a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/AnnotationTree.html" title="class or interface in com.sun.source.tree" class="external-link">AnnotationTree</a>&gt;&nbsp;nodeMatcher)</code></th>
+<a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.AnnotationTree&gt;&nbsp;nodeMatcher)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
 <tr class="row-color">
@@ -184,23 +184,23 @@ the order they are declared.</div>
 </tr>
 <tr class="alt-color">
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../ConstructorOfClass.html#%3Cinit%3E(com.google.errorprone.matchers.ChildMultiMatcher.MatchType,com.google.errorprone.matchers.Matcher)">ConstructorOfClass</a></span>&#8203;(<a href="../ChildMultiMatcher.MatchType.html" title="enum in com.google.errorprone.matchers">ChildMultiMatcher.MatchType</a>&nbsp;matchType,
-<a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/MethodTree.html" title="class or interface in com.sun.source.tree" class="external-link">MethodTree</a>&gt;&nbsp;nodeMatcher)</code></th>
+<a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.MethodTree&gt;&nbsp;nodeMatcher)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
 <tr class="row-color">
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../HasArguments.html#%3Cinit%3E(com.google.errorprone.matchers.ChildMultiMatcher.MatchType,com.google.errorprone.matchers.Matcher)">HasArguments</a></span>&#8203;(<a href="../ChildMultiMatcher.MatchType.html" title="enum in com.google.errorprone.matchers">ChildMultiMatcher.MatchType</a>&nbsp;matchType,
-<a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&gt;&nbsp;nodeMatcher)</code></th>
+<a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.ExpressionTree&gt;&nbsp;nodeMatcher)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
 <tr class="alt-color">
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../MethodHasParameters.html#%3Cinit%3E(com.google.errorprone.matchers.ChildMultiMatcher.MatchType,com.google.errorprone.matchers.Matcher)">MethodHasParameters</a></span>&#8203;(<a href="../ChildMultiMatcher.MatchType.html" title="enum in com.google.errorprone.matchers">ChildMultiMatcher.MatchType</a>&nbsp;matchType,
-<a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/VariableTree.html" title="class or interface in com.sun.source.tree" class="external-link">VariableTree</a>&gt;&nbsp;nodeMatcher)</code></th>
+<a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.VariableTree&gt;&nbsp;nodeMatcher)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
 <tr class="row-color">
-<th class="col-second" scope="row"><code><span class="member-name-link"><a href="../MethodInvocation.html#%3Cinit%3E(com.google.errorprone.matchers.Matcher,com.google.errorprone.matchers.ChildMultiMatcher.MatchType,com.google.errorprone.matchers.Matcher)">MethodInvocation</a></span>&#8203;(<a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&gt;&nbsp;methodSelectMatcher,
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="../MethodInvocation.html#%3Cinit%3E(com.google.errorprone.matchers.Matcher,com.google.errorprone.matchers.ChildMultiMatcher.MatchType,com.google.errorprone.matchers.Matcher)">MethodInvocation</a></span>&#8203;(<a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.ExpressionTree&gt;&nbsp;methodSelectMatcher,
 <a href="../ChildMultiMatcher.MatchType.html" title="enum in com.google.errorprone.matchers">ChildMultiMatcher.MatchType</a>&nbsp;matchType,
-<a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&gt;&nbsp;methodArgumentMatcher)</code></th>
+<a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.ExpressionTree&gt;&nbsp;methodArgumentMatcher)</code></th>
 <td class="col-last">
 <div class="block">Creates a new matcher for method invocations based on a method select and an argument matcher.</div>
 </td>

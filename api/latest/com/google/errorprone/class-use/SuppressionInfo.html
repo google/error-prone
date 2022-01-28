@@ -107,17 +107,17 @@ loadScripts(document, 'script');</script>
 <tbody>
 <tr class="alt-color">
 <td class="col-first"><code><a href="../SuppressionInfo.html" title="class in com.google.errorprone">SuppressionInfo</a></code></td>
-<th class="col-second" scope="row"><span class="type-name-label">SuppressionInfo.</span><code><span class="member-name-link"><a href="../SuppressionInfo.html#forCompilationUnit(com.sun.source.tree.CompilationUnitTree,com.google.errorprone.VisitorState)">forCompilationUnit</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/CompilationUnitTree.html" title="class or interface in com.sun.source.tree" class="external-link">CompilationUnitTree</a>&nbsp;tree,
+<th class="col-second" scope="row"><span class="type-name-label">SuppressionInfo.</span><code><span class="member-name-link"><a href="../SuppressionInfo.html#forCompilationUnit(com.sun.source.tree.CompilationUnitTree,com.google.errorprone.VisitorState)">forCompilationUnit</a></span>&#8203;(com.sun.source.tree.CompilationUnitTree&nbsp;tree,
 <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
 <td class="col-last">
-<div class="block">Generates the <a href="../SuppressionInfo.html" title="class in com.google.errorprone"><code>SuppressionInfo</code></a> for a <a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/CompilationUnitTree.html" title="class or interface in com.sun.source.tree" class="external-link"><code>CompilationUnitTree</code></a>.</div>
+<div class="block">Generates the <a href="../SuppressionInfo.html" title="class in com.google.errorprone"><code>SuppressionInfo</code></a> for a <code>CompilationUnitTree</code>.</div>
 </td>
 </tr>
 <tr class="row-color">
 <td class="col-first"><code><a href="../SuppressionInfo.html" title="class in com.google.errorprone">SuppressionInfo</a></code></td>
 <th class="col-second" scope="row"><span class="type-name-label">SuppressionInfo.</span><code><span class="member-name-link"><a href="../SuppressionInfo.html#withExtendedSuppressions(com.sun.tools.javac.code.Symbol,com.google.errorprone.VisitorState,java.util.Set)">withExtendedSuppressions</a></span>&#8203;(com.sun.tools.javac.code.Symbol&nbsp;sym,
 <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
-<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a>&lt;? extends com.sun.tools.javac.util.Name&gt;&nbsp;customSuppressionAnnosToLookFor)</code></th>
+<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a>&lt;? extends com.sun.tools.javac.util.Name&gt;&nbsp;customSuppressionAnnosToLookFor)</code></th>
 <td class="col-last">
 <div class="block">Returns an instance of <code>SuppressionInfo</code> that takes into account any suppression signals
  present on <code>sym</code> as well as those already stored in <code>this</code>.</div>

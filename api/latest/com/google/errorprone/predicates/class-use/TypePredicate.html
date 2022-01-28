@@ -178,7 +178,7 @@ loadScripts(document, 'script');</script>
 </thead>
 <tbody>
 <tr class="alt-color">
-<td class="col-first"><code>static &lt;T extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&gt;<br><a href="../../matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;T&gt;</code></td>
+<td class="col-first"><code>static &lt;T extends com.sun.source.tree.Tree&gt;<br><a href="../../matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;T&gt;</code></td>
 <th class="col-second" scope="row"><span class="type-name-label">Matchers.</span><code><span class="member-name-link"><a href="../../matchers/Matchers.html#typePredicateMatcher(com.google.errorprone.predicates.TypePredicate)">typePredicateMatcher</a></span>&#8203;(<a href="../TypePredicate.html" title="interface in com.google.errorprone.predicates">TypePredicate</a>&nbsp;pred)</code></th>
 <td class="col-last">
 <div class="block">Match a Tree based solely on the type produced by <a href="../../util/ASTHelpers.html#getType(com.sun.source.tree.Tree)"><code>ASTHelpers.getType(Tree)</code></a>.</div>
@@ -280,14 +280,14 @@ loadScripts(document, 'script');</script>
 </tr>
 <tr class="alt-color">
 <td class="col-first"><code>static <a href="../TypePredicate.html" title="interface in com.google.errorprone.predicates">TypePredicate</a></code></td>
-<th class="col-second" scope="row"><span class="type-name-label">TypePredicates.</span><code><span class="member-name-link"><a href="../TypePredicates.html#isDescendantOf(java.lang.String)">isDescendantOf</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;type)</code></th>
+<th class="col-second" scope="row"><span class="type-name-label">TypePredicates.</span><code><span class="member-name-link"><a href="../TypePredicates.html#isDescendantOf(java.lang.String)">isDescendantOf</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;type)</code></th>
 <td class="col-last">
 <div class="block">Match sub-types of the given type.</div>
 </td>
 </tr>
 <tr class="row-color">
 <td class="col-first"><code>static <a href="../TypePredicate.html" title="interface in com.google.errorprone.predicates">TypePredicate</a></code></td>
-<th class="col-second" scope="row"><span class="type-name-label">TypePredicates.</span><code><span class="member-name-link"><a href="../TypePredicates.html#isDescendantOfAny(java.lang.Iterable)">isDescendantOfAny</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Iterable.html" title="class or interface in java.lang" class="external-link">Iterable</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;types)</code></th>
+<th class="col-second" scope="row"><span class="type-name-label">TypePredicates.</span><code><span class="member-name-link"><a href="../TypePredicates.html#isDescendantOfAny(java.lang.Iterable)">isDescendantOfAny</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Iterable.html" title="class or interface in java.lang" class="external-link">Iterable</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;types)</code></th>
 <td class="col-last">
 <div class="block">Match types that are a sub-type of one of the given types.</div>
 </td>
@@ -301,14 +301,14 @@ loadScripts(document, 'script');</script>
 </tr>
 <tr class="row-color">
 <td class="col-first"><code>static <a href="../TypePredicate.html" title="interface in com.google.errorprone.predicates">TypePredicate</a></code></td>
-<th class="col-second" scope="row"><span class="type-name-label">TypePredicates.</span><code><span class="member-name-link"><a href="../TypePredicates.html#isExactType(java.lang.String)">isExactType</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;type)</code></th>
+<th class="col-second" scope="row"><span class="type-name-label">TypePredicates.</span><code><span class="member-name-link"><a href="../TypePredicates.html#isExactType(java.lang.String)">isExactType</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;type)</code></th>
 <td class="col-last">
 <div class="block">Match types that are exactly equal.</div>
 </td>
 </tr>
 <tr class="alt-color">
 <td class="col-first"><code>static <a href="../TypePredicate.html" title="interface in com.google.errorprone.predicates">TypePredicate</a></code></td>
-<th class="col-second" scope="row"><span class="type-name-label">TypePredicates.</span><code><span class="member-name-link"><a href="../TypePredicates.html#isExactTypeAny(java.lang.Iterable)">isExactTypeAny</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Iterable.html" title="class or interface in java.lang" class="external-link">Iterable</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;types)</code></th>
+<th class="col-second" scope="row"><span class="type-name-label">TypePredicates.</span><code><span class="member-name-link"><a href="../TypePredicates.html#isExactTypeAny(java.lang.Iterable)">isExactTypeAny</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Iterable.html" title="class or interface in java.lang" class="external-link">Iterable</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;types)</code></th>
 <td class="col-last">
 <div class="block">Match types that are exactly equal to any of the given types.</div>
 </td>

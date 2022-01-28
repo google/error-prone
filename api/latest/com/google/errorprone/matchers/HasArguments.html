@@ -76,19 +76,19 @@ loadScripts(document, 'script');</script>
 <div class="sub-title"><span class="package-label-in-type">Package</span>&nbsp;<a href="package-summary.html">com.google.errorprone.matchers</a></div>
 <h1 title="Class HasArguments" class="title">Class HasArguments</h1>
 </div>
-<div class="inheritance" title="Inheritance Tree"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">java.lang.Object</a>
-<div class="inheritance"><a href="ChildMultiMatcher.html" title="class in com.google.errorprone.matchers">com.google.errorprone.matchers.ChildMultiMatcher</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/MethodInvocationTree.html" title="class or interface in com.sun.source.tree" class="external-link">MethodInvocationTree</a>,&#8203;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&gt;
+<div class="inheritance" title="Inheritance Tree"><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html" title="class or interface in java.lang" class="external-link">java.lang.Object</a>
+<div class="inheritance"><a href="ChildMultiMatcher.html" title="class in com.google.errorprone.matchers">com.google.errorprone.matchers.ChildMultiMatcher</a>&lt;com.sun.source.tree.MethodInvocationTree,&#8203;com.sun.source.tree.ExpressionTree&gt;
 <div class="inheritance">com.google.errorprone.matchers.HasArguments</div>
 </div>
 </div>
 <section class="description">
 <dl class="notes">
 <dt>All Implemented Interfaces:</dt>
-<dd><code><a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/MethodInvocationTree.html" title="class or interface in com.sun.source.tree" class="external-link">MethodInvocationTree</a>&gt;</code>, <code><a href="MultiMatcher.html" title="interface in com.google.errorprone.matchers">MultiMatcher</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/MethodInvocationTree.html" title="class or interface in com.sun.source.tree" class="external-link">MethodInvocationTree</a>,&#8203;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&gt;</code>, <code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/io/Serializable.html" title="class or interface in java.io" class="external-link">Serializable</a></code></dd>
+<dd><code><a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.MethodInvocationTree&gt;</code>, <code><a href="MultiMatcher.html" title="interface in com.google.errorprone.matchers">MultiMatcher</a>&lt;com.sun.source.tree.MethodInvocationTree,&#8203;com.sun.source.tree.ExpressionTree&gt;</code>, <code><a href="https://docs.oracle.com/javase/8/docs/api/java/io/Serializable.html" title="class or interface in java.io" class="external-link">Serializable</a></code></dd>
 </dl>
 <hr>
 <pre>public class <span class="type-name-label">HasArguments</span>
-extends <a href="ChildMultiMatcher.html" title="class in com.google.errorprone.matchers">ChildMultiMatcher</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/MethodInvocationTree.html" title="class or interface in com.sun.source.tree" class="external-link">MethodInvocationTree</a>,&#8203;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&gt;</pre>
+extends <a href="ChildMultiMatcher.html" title="class in com.google.errorprone.matchers">ChildMultiMatcher</a>&lt;com.sun.source.tree.MethodInvocationTree,&#8203;com.sun.source.tree.ExpressionTree&gt;</pre>
 <div class="block">Matches if the given matcher matches all of/any of the parameters to this method.</div>
 <dl class="notes">
 <dt>Author:</dt>
@@ -108,7 +108,7 @@ extends <a href="ChildMultiMatcher.html" title="class in com.google.errorprone.m
 <code><a href="ChildMultiMatcher.MatchType.html" title="enum in com.google.errorprone.matchers">ChildMultiMatcher.MatchType</a></code></div>
 <div class="inherited-list">
 <h2 id="nested.classes.inherited.from.class.com.google.errorprone.matchers.MultiMatcher">Nested classes/interfaces inherited from interface&nbsp;com.google.errorprone.matchers.<a href="MultiMatcher.html" title="interface in com.google.errorprone.matchers">MultiMatcher</a></h2>
-<code><a href="MultiMatcher.MultiMatchResult.html" title="class in com.google.errorprone.matchers">MultiMatcher.MultiMatchResult</a>&lt;<a href="MultiMatcher.MultiMatchResult.html" title="type parameter in MultiMatcher.MultiMatchResult">N</a> extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&gt;</code></div>
+<code><a href="MultiMatcher.MultiMatchResult.html" title="class in com.google.errorprone.matchers">MultiMatcher.MultiMatchResult</a>&lt;<a href="MultiMatcher.MultiMatchResult.html" title="type parameter in MultiMatcher.MultiMatchResult">N</a> extends com.sun.source.tree.Tree&gt;</code></div>
 </section>
 </li>
 <!-- =========== FIELD SUMMARY =========== -->
@@ -136,7 +136,7 @@ extends <a href="ChildMultiMatcher.html" title="class in com.google.errorprone.m
 <tbody>
 <tr class="alt-color">
 <th class="col-constructor-name" scope="row"><code><span class="member-name-link"><a href="#%3Cinit%3E(com.google.errorprone.matchers.ChildMultiMatcher.MatchType,com.google.errorprone.matchers.Matcher)">HasArguments</a></span>&#8203;(<a href="ChildMultiMatcher.MatchType.html" title="enum in com.google.errorprone.matchers">ChildMultiMatcher.MatchType</a>&nbsp;matchType,
-<a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&gt;&nbsp;nodeMatcher)</code></th>
+<a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.ExpressionTree&gt;&nbsp;nodeMatcher)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
 </tbody>
@@ -161,8 +161,8 @@ extends <a href="ChildMultiMatcher.html" title="class in com.google.errorprone.m
 </thead>
 <tbody>
 <tr class="alt-color" id="i0">
-<td class="col-first"><code>protected <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Iterable.html" title="class or interface in java.lang" class="external-link">Iterable</a>&lt;? extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&gt;</code></td>
-<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#getChildNodes(com.sun.source.tree.MethodInvocationTree,com.google.errorprone.VisitorState)">getChildNodes</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/MethodInvocationTree.html" title="class or interface in com.sun.source.tree" class="external-link">MethodInvocationTree</a>&nbsp;methodInvocationTree,
+<td class="col-first"><code>protected <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Iterable.html" title="class or interface in java.lang" class="external-link">Iterable</a>&lt;? extends com.sun.source.tree.ExpressionTree&gt;</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#getChildNodes(com.sun.source.tree.MethodInvocationTree,com.google.errorprone.VisitorState)">getChildNodes</a></span>&#8203;(com.sun.source.tree.MethodInvocationTree&nbsp;methodInvocationTree,
 <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
 <td class="col-last">
 <div class="block">Returns the set of child nodes to match.</div>
@@ -176,8 +176,8 @@ extends <a href="ChildMultiMatcher.html" title="class in com.google.errorprone.m
 <h3 id="methods.inherited.from.class.com.google.errorprone.matchers.ChildMultiMatcher">Methods inherited from class&nbsp;com.google.errorprone.matchers.<a href="ChildMultiMatcher.html" title="class in com.google.errorprone.matchers">ChildMultiMatcher</a></h3>
 <code><a href="ChildMultiMatcher.html#matches(T,com.google.errorprone.VisitorState)">matches</a>, <a href="ChildMultiMatcher.html#multiMatchResult(T,com.google.errorprone.VisitorState)">multiMatchResult</a></code></div>
 <div class="inherited-list">
-<h3 id="methods.inherited.from.class.java.lang.Object">Methods inherited from class&nbsp;java.lang.<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></h3>
-<code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#clone()" title="class or interface in java.lang" class="external-link">clone</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#equals(java.lang.Object)" title="class or interface in java.lang" class="external-link">equals</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#finalize()" title="class or interface in java.lang" class="external-link">finalize</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#getClass()" title="class or interface in java.lang" class="external-link">getClass</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#hashCode()" title="class or interface in java.lang" class="external-link">hashCode</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#notify()" title="class or interface in java.lang" class="external-link">notify</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#notifyAll()" title="class or interface in java.lang" class="external-link">notifyAll</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#toString()" title="class or interface in java.lang" class="external-link">toString</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#wait()" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#wait(long)" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#wait(long,int)" title="class or interface in java.lang" class="external-link">wait</a></code></div>
+<h3 id="methods.inherited.from.class.java.lang.Object">Methods inherited from class&nbsp;java.lang.<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></h3>
+<code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#clone()" title="class or interface in java.lang" class="external-link">clone</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#equals(java.lang.Object)" title="class or interface in java.lang" class="external-link">equals</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#finalize()" title="class or interface in java.lang" class="external-link">finalize</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#getClass()" title="class or interface in java.lang" class="external-link">getClass</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#hashCode()" title="class or interface in java.lang" class="external-link">hashCode</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#notify()" title="class or interface in java.lang" class="external-link">notify</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#notifyAll()" title="class or interface in java.lang" class="external-link">notifyAll</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#toString()" title="class or interface in java.lang" class="external-link">toString</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#wait()" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#wait(long)" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#wait(long,int)" title="class or interface in java.lang" class="external-link">wait</a></code></div>
 </section>
 </li>
 </ul>
@@ -193,7 +193,7 @@ extends <a href="ChildMultiMatcher.html" title="class in com.google.errorprone.m
 <section class="detail" id="&lt;init&gt;(com.google.errorprone.matchers.ChildMultiMatcher.MatchType,com.google.errorprone.matchers.Matcher)">
 <h3>HasArguments</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="member-name">HasArguments</span>&#8203;(<span class="parameters"><a href="ChildMultiMatcher.MatchType.html" title="enum in com.google.errorprone.matchers">ChildMultiMatcher.MatchType</a>&nbsp;matchType,
-<a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&gt;&nbsp;nodeMatcher)</span></div>
+<a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.ExpressionTree&gt;&nbsp;nodeMatcher)</span></div>
 </section>
 </li>
 </ul>
@@ -207,7 +207,7 @@ extends <a href="ChildMultiMatcher.html" title="class in com.google.errorprone.m
 <li>
 <section class="detail" id="getChildNodes(com.sun.source.tree.MethodInvocationTree,com.google.errorprone.VisitorState)">
 <h3>getChildNodes</h3>
-<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Iterable.html" title="class or interface in java.lang" class="external-link">Iterable</a>&lt;? extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&gt;</span>&nbsp;<span class="member-name">getChildNodes</span>&#8203;(<span class="parameters"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/MethodInvocationTree.html" title="class or interface in com.sun.source.tree" class="external-link">MethodInvocationTree</a>&nbsp;methodInvocationTree,
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Iterable.html" title="class or interface in java.lang" class="external-link">Iterable</a>&lt;? extends com.sun.source.tree.ExpressionTree&gt;</span>&nbsp;<span class="member-name">getChildNodes</span>&#8203;(<span class="parameters">com.sun.source.tree.MethodInvocationTree&nbsp;methodInvocationTree,
 <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
 <div class="block"><span class="descfrm-type-label">Description copied from class:&nbsp;<code><a href="ChildMultiMatcher.html#getChildNodes(T,com.google.errorprone.VisitorState)">ChildMultiMatcher</a></code></span></div>
 <div class="block">Returns the set of child nodes to match. The nodes must be immediate children of the current
@@ -215,7 +215,7 @@ extends <a href="ChildMultiMatcher.html" title="class in com.google.errorprone.m
  should not subclass ChildMultiMatcher.</div>
 <dl class="notes">
 <dt>Specified by:</dt>
-<dd><code><a href="ChildMultiMatcher.html#getChildNodes(T,com.google.errorprone.VisitorState)">getChildNodes</a></code>&nbsp;in class&nbsp;<code><a href="ChildMultiMatcher.html" title="class in com.google.errorprone.matchers">ChildMultiMatcher</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/MethodInvocationTree.html" title="class or interface in com.sun.source.tree" class="external-link">MethodInvocationTree</a>,&#8203;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&gt;</code></dd>
+<dd><code><a href="ChildMultiMatcher.html#getChildNodes(T,com.google.errorprone.VisitorState)">getChildNodes</a></code>&nbsp;in class&nbsp;<code><a href="ChildMultiMatcher.html" title="class in com.google.errorprone.matchers">ChildMultiMatcher</a>&lt;com.sun.source.tree.MethodInvocationTree,&#8203;com.sun.source.tree.ExpressionTree&gt;</code></dd>
 </dl>
 </section>
 </li>

@@ -79,14 +79,14 @@ loadScripts(document, 'script');</script>
 <tr class="row-color" id="i1">
 <td class="col-first"><a href="com/google/errorprone/bugpatterns/collectionincompatibletype/AbstractCollectionIncompatibleTypeMatcher.html" title="class in com.google.errorprone.bugpatterns.collectionincompatibletype">AbstractCollectionIncompatibleTypeMatcher</a></td>
 <th class="col-last" scope="row">
-<div class="block">Extracts the necessary information from a <a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/MethodInvocationTree.html" title="class or interface in com.sun.source.tree" class="external-link"><code>MethodInvocationTree</code></a> to check whether calls to
+<div class="block">Extracts the necessary information from a <code>MethodInvocationTree</code> to check whether calls to
  a method are using incompatible types and to emit a helpful error message.</div>
 </th>
 </tr>
 <tr class="alt-color" id="i2">
 <td class="col-first"><a href="com/google/errorprone/bugpatterns/collectionincompatibletype/AbstractCollectionIncompatibleTypeMatcher.MatchResult.html" title="class in com.google.errorprone.bugpatterns.collectionincompatibletype">AbstractCollectionIncompatibleTypeMatcher.MatchResult</a></td>
 <th class="col-last" scope="row">
-<div class="block">Encapsulates the result of matching a <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Collection.html#contains(java.lang.Object)" title="class or interface in java.util" class="external-link"><code>Collection.contains(java.lang.Object)</code></a>-like call, including the
+<div class="block">Encapsulates the result of matching a <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Collection.html#contains(java.lang.Object)" title="class or interface in java.util" class="external-link"><code>Collection.contains(java.lang.Object)</code></a>-like call, including the
  source and target types.</div>
 </th>
 </tr>
@@ -97,7 +97,7 @@ loadScripts(document, 'script');</script>
 </th>
 </tr>
 <tr class="alt-color" id="i4">
-<td class="col-first"><a href="com/google/errorprone/bugpatterns/AbstractMockChecker.html" title="class in com.google.errorprone.bugpatterns">AbstractMockChecker</a>&lt;<a href="com/google/errorprone/bugpatterns/AbstractMockChecker.html" title="type parameter in AbstractMockChecker">T</a> extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/annotation/Annotation.html" title="class or interface in java.lang.annotation" class="external-link">Annotation</a>&gt;</td>
+<td class="col-first"><a href="com/google/errorprone/bugpatterns/AbstractMockChecker.html" title="class in com.google.errorprone.bugpatterns">AbstractMockChecker</a>&lt;<a href="com/google/errorprone/bugpatterns/AbstractMockChecker.html" title="type parameter in AbstractMockChecker">T</a> extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/Annotation.html" title="class or interface in java.lang.annotation" class="external-link">Annotation</a>&gt;</td>
 <th class="col-last" scope="row">
 <div class="block">Helper for enforcing Annotations that disallow mocking.</div>
 </th>
@@ -115,7 +115,7 @@ loadScripts(document, 'script');</script>
 </th>
 </tr>
 <tr class="row-color" id="i7">
-<td class="col-first"><a href="com/google/errorprone/bugpatterns/AbstractMockChecker.TypeExtractor.html" title="interface in com.google.errorprone.bugpatterns">AbstractMockChecker.TypeExtractor</a>&lt;<a href="com/google/errorprone/bugpatterns/AbstractMockChecker.TypeExtractor.html" title="type parameter in AbstractMockChecker.TypeExtractor">T</a> extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&gt;</td>
+<td class="col-first"><a href="com/google/errorprone/bugpatterns/AbstractMockChecker.TypeExtractor.html" title="interface in com.google.errorprone.bugpatterns">AbstractMockChecker.TypeExtractor</a>&lt;<a href="com/google/errorprone/bugpatterns/AbstractMockChecker.TypeExtractor.html" title="type parameter in AbstractMockChecker.TypeExtractor">T</a> extends com.sun.source.tree.Tree&gt;</td>
 <th class="col-last" scope="row">
 <div class="block">An extension of <a href="com/google/errorprone/matchers/Matcher.html" title="interface in com.google.errorprone.matchers"><code>Matcher</code></a> to return, not just a boolean `matches`, but also extract some
  type information about the Tree of interest.</div>
@@ -155,7 +155,7 @@ loadScripts(document, 'script');</script>
 </th>
 </tr>
 <tr class="row-color" id="i13">
-<td class="col-first"><a href="com/google/errorprone/matchers/AbstractTypeMatcher.html" title="class in com.google.errorprone.matchers">AbstractTypeMatcher</a>&lt;<a href="com/google/errorprone/matchers/AbstractTypeMatcher.html" title="type parameter in AbstractTypeMatcher">T</a> extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&gt;</td>
+<td class="col-first"><a href="com/google/errorprone/matchers/AbstractTypeMatcher.html" title="class in com.google.errorprone.matchers">AbstractTypeMatcher</a>&lt;<a href="com/google/errorprone/matchers/AbstractTypeMatcher.html" title="type parameter in AbstractTypeMatcher">T</a> extends com.sun.source.tree.Tree&gt;</td>
 <th class="col-last" scope="row">
 <div class="block">Base class for type matchers.</div>
 </th>
@@ -257,7 +257,7 @@ loadScripts(document, 'script');</script>
 <tr class="row-color" id="i29">
 <td class="col-first"><a href="com/google/errorprone/bugpatterns/AnnotateFormatMethod.html" title="class in com.google.errorprone.bugpatterns">AnnotateFormatMethod</a></td>
 <th class="col-last" scope="row">
-<div class="block">Detects occurrences of pairs of parameters being passed straight through to <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html#format(java.lang.String,java.lang.Object...)" title="class or interface in java.lang" class="external-link"><code>String.format(java.lang.String, java.lang.Object...)</code></a>
+<div class="block">Detects occurrences of pairs of parameters being passed straight through to <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html#format(java.lang.String,java.lang.Object...)" title="class or interface in java.lang" class="external-link"><code>String.format(java.lang.String, java.lang.Object...)</code></a>
  from a method not annotated with <a href="com/google/errorprone/annotations/FormatMethod.html" title="annotation in com.google.errorprone.annotations"><code>FormatMethod</code></a>.</div>
 </th>
 </tr>
@@ -280,7 +280,7 @@ loadScripts(document, 'script');</script>
 </th>
 </tr>
 <tr class="row-color" id="i33">
-<td class="col-first"><a href="com/google/errorprone/matchers/AnnotationMatcher.html" title="class in com.google.errorprone.matchers">AnnotationMatcher</a>&lt;<a href="com/google/errorprone/matchers/AnnotationMatcher.html" title="type parameter in AnnotationMatcher">T</a> extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&gt;</td>
+<td class="col-first"><a href="com/google/errorprone/matchers/AnnotationMatcher.html" title="class in com.google.errorprone.matchers">AnnotationMatcher</a>&lt;<a href="com/google/errorprone/matchers/AnnotationMatcher.html" title="type parameter in AnnotationMatcher">T</a> extends com.sun.source.tree.Tree&gt;</td>
 <th class="col-last" scope="row">
 <div class="block">Matches if the given annotation matcher matches all of or any of the annotations on the tree
  node.</div>
@@ -594,7 +594,7 @@ loadScripts(document, 'script');</script>
 <tr class="alt-color" id="i90">
 <td class="col-first"><a href="com/google/errorprone/bugpatterns/BadAnnotationImplementation.html" title="class in com.google.errorprone.bugpatterns">BadAnnotationImplementation</a></td>
 <th class="col-last" scope="row">
-<div class="block">Checker that ensures implementations of <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/annotation/Annotation.html" title="class or interface in java.lang.annotation" class="external-link"><code>Annotation</code></a> override equals and hashCode.</div>
+<div class="block">Checker that ensures implementations of <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/Annotation.html" title="class or interface in java.lang.annotation" class="external-link"><code>Annotation</code></a> override equals and hashCode.</div>
 </th>
 </tr>
 <tr class="row-color" id="i91">
@@ -618,7 +618,7 @@ loadScripts(document, 'script');</script>
 <tr class="row-color" id="i95">
 <td class="col-first"><a href="com/google/errorprone/bugpatterns/BanSerializableRead.html" title="class in com.google.errorprone.bugpatterns">BanSerializableRead</a></td>
 <th class="col-last" scope="row">
-<div class="block">A <a href="com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a> that detects use of the unsafe <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/io/Serializable.html" title="class or interface in java.io" class="external-link"><code>Serializable</code></a> API.</div>
+<div class="block">A <a href="com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a> that detects use of the unsafe <a href="https://docs.oracle.com/javase/8/docs/api/java/io/Serializable.html" title="class or interface in java.io" class="external-link"><code>Serializable</code></a> API.</div>
 </th>
 </tr>
 <tr class="alt-color" id="i96">
@@ -630,7 +630,7 @@ loadScripts(document, 'script');</script>
 <tr class="row-color" id="i97">
 <td class="col-first"><a href="com/google/errorprone/BaseErrorProneJavaCompiler.html" title="class in com.google.errorprone">BaseErrorProneJavaCompiler</a></td>
 <th class="col-last" scope="row">
-<div class="block">An Error Prone compiler that implements <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.compiler/javax/tools/JavaCompiler.html" title="class or interface in javax.tools" class="external-link"><code>JavaCompiler</code></a>.</div>
+<div class="block">An Error Prone compiler that implements <a href="https://docs.oracle.com/javase/8/docs/api/javax/tools/JavaCompiler.html" title="class or interface in javax.tools" class="external-link"><code>JavaCompiler</code></a>.</div>
 </th>
 </tr>
 <tr class="alt-color" id="i98">
@@ -1067,7 +1067,7 @@ loadScripts(document, 'script');</script>
 <tr class="row-color" id="i187">
 <td class="col-first"><a href="com/google/errorprone/bugpatterns/CatchingUnchecked.html" title="class in com.google.errorprone.bugpatterns">CatchingUnchecked</a></td>
 <th class="col-last" scope="row">
-<div class="block">Flags code which catches <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/RuntimeException.html" title="class or interface in java.lang" class="external-link"><code>RuntimeException</code></a>s under the guise of catching <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Exception.html" title="class or interface in java.lang" class="external-link"><code>Exception</code></a>.</div>
+<div class="block">Flags code which catches <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/RuntimeException.html" title="class or interface in java.lang" class="external-link"><code>RuntimeException</code></a>s under the guise of catching <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Exception.html" title="class or interface in java.lang" class="external-link"><code>Exception</code></a>.</div>
 </th>
 </tr>
 <tr class="alt-color" id="i188">
@@ -1113,7 +1113,7 @@ loadScripts(document, 'script');</script>
 <th class="col-last" scope="row">&nbsp;</th>
 </tr>
 <tr class="row-color" id="i195">
-<td class="col-first"><a href="com/google/errorprone/matchers/ChildMultiMatcher.html" title="class in com.google.errorprone.matchers">ChildMultiMatcher</a>&lt;<a href="com/google/errorprone/matchers/ChildMultiMatcher.html" title="type parameter in ChildMultiMatcher">T</a> extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>,&#8203;<a href="com/google/errorprone/matchers/ChildMultiMatcher.html" title="type parameter in ChildMultiMatcher">N</a> extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&gt;</td>
+<td class="col-first"><a href="com/google/errorprone/matchers/ChildMultiMatcher.html" title="class in com.google.errorprone.matchers">ChildMultiMatcher</a>&lt;<a href="com/google/errorprone/matchers/ChildMultiMatcher.html" title="type parameter in ChildMultiMatcher">T</a> extends com.sun.source.tree.Tree,&#8203;<a href="com/google/errorprone/matchers/ChildMultiMatcher.html" title="type parameter in ChildMultiMatcher">N</a> extends com.sun.source.tree.Tree&gt;</td>
 <th class="col-last" scope="row">
 <div class="block">A <a href="com/google/errorprone/matchers/MultiMatcher.html" title="interface in com.google.errorprone.matchers"><code>MultiMatcher</code></a> that applies a matcher across multiple children of a single ancestor node.</div>
 </th>
@@ -1182,7 +1182,7 @@ loadScripts(document, 'script');</script>
 <th class="col-last" scope="row">&nbsp;</th>
 </tr>
 <tr class="alt-color" id="i208">
-<td class="col-first"><a href="com/google/errorprone/util/Commented.html" title="class in com.google.errorprone.util">Commented</a>&lt;<a href="com/google/errorprone/util/Commented.html" title="type parameter in Commented">T</a> extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&gt;</td>
+<td class="col-first"><a href="com/google/errorprone/util/Commented.html" title="class in com.google.errorprone.util">Commented</a>&lt;<a href="com/google/errorprone/util/Commented.html" title="type parameter in Commented">T</a> extends com.sun.source.tree.Tree&gt;</td>
 <th class="col-last" scope="row">
 <div class="block">Class to hold AST nodes annotated with the comments that are associated with them</div>
 </th>
@@ -1285,7 +1285,7 @@ loadScripts(document, 'script');</script>
 <tr class="alt-color" id="i226">
 <td class="col-first"><a href="com/google/errorprone/bugpatterns/ComputeIfAbsentAmbiguousReference.html" title="class in com.google.errorprone.bugpatterns">ComputeIfAbsentAmbiguousReference</a></td>
 <th class="col-last" scope="row">
-<div class="block">Flags ambiguous creations of objects in <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Map.html#computeIfAbsent(K,java.util.function.Function)" title="class or interface in java.util" class="external-link"><code>Map.computeIfAbsent(K, java.util.function.Function&lt;? super K, ? extends V&gt;)</code></a>.</div>
+<div class="block">Flags ambiguous creations of objects in <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Map.html#computeIfAbsent(K,java.util.function.Function)" title="class or interface in java.util" class="external-link"><code>Map.computeIfAbsent(K, java.util.function.Function&lt;? super K, ? extends V&gt;)</code></a>.</div>
 </th>
 </tr>
 <tr class="row-color" id="i227">
@@ -1350,7 +1350,7 @@ loadScripts(document, 'script');</script>
 <tr class="row-color" id="i237">
 <td class="col-first"><a href="com/google/errorprone/bugpatterns/ConstantPatternCompile.html" title="class in com.google.errorprone.bugpatterns">ConstantPatternCompile</a></td>
 <th class="col-last" scope="row">
-<div class="block">Flags variables initialized with <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/regex/Pattern.html#compile(java.lang.String)" title="class or interface in java.util.regex" class="external-link"><code>Pattern.compile(String)</code></a> calls that could
+<div class="block">Flags variables initialized with <a href="https://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html#compile(java.lang.String)" title="class or interface in java.util.regex" class="external-link"><code>Pattern.compile(String)</code></a> calls that could
  be constants.</div>
 </th>
 </tr>
@@ -1375,7 +1375,7 @@ loadScripts(document, 'script');</script>
 <tr class="row-color" id="i241">
 <td class="col-first"><a href="com/google/errorprone/bugpatterns/collectionincompatibletype/ContainmentMatchers.html" title="class in com.google.errorprone.bugpatterns.collectionincompatibletype">ContainmentMatchers</a></td>
 <th class="col-last" scope="row">
-<div class="block">Matchers for methods which express containment, like <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Collection.html#contains(java.lang.Object)" title="class or interface in java.util" class="external-link"><code>Collection.contains(java.lang.Object)</code></a>.</div>
+<div class="block">Matchers for methods which express containment, like <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Collection.html#contains(java.lang.Object)" title="class or interface in java.util" class="external-link"><code>Collection.contains(java.lang.Object)</code></a>.</div>
 </th>
 </tr>
 <tr class="alt-color" id="i242">
@@ -1431,7 +1431,7 @@ loadScripts(document, 'script');</script>
 <tr class="alt-color" id="i250">
 <td class="col-first"><a href="com/google/errorprone/bugpatterns/time/DateChecker.html" title="class in com.google.errorprone.bugpatterns.time">DateChecker</a></td>
 <th class="col-last" scope="row">
-<div class="block">Warns against suspect looking calls to <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Date.html" title="class or interface in java.util" class="external-link"><code>Date</code></a> APIs.</div>
+<div class="block">Warns against suspect looking calls to <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Date.html" title="class or interface in java.util" class="external-link"><code>Date</code></a> APIs.</div>
 </th>
 </tr>
 <tr class="row-color" id="i251">
@@ -1666,7 +1666,7 @@ loadScripts(document, 'script');</script>
 <tr class="row-color" id="i289">
 <td class="col-first"><a href="com/google/errorprone/bugpatterns/time/DurationFrom.html" title="class in com.google.errorprone.bugpatterns.time">DurationFrom</a></td>
 <th class="col-last" scope="row">
-<div class="block">Bans calls to <code>Duration.from(temporalAmount)</code> where <code>temporalAmount</code> is a <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/time/Period.html" title="class or interface in java.time" class="external-link"><code>Period</code></a>.</div>
+<div class="block">Bans calls to <code>Duration.from(temporalAmount)</code> where <code>temporalAmount</code> is a <a href="https://docs.oracle.com/javase/8/docs/api/java/time/Period.html" title="class or interface in java.time" class="external-link"><code>Period</code></a>.</div>
 </th>
 </tr>
 <tr class="alt-color" id="i290">
@@ -1679,8 +1679,8 @@ loadScripts(document, 'script');</script>
 <tr class="row-color" id="i291">
 <td class="col-first"><a href="com/google/errorprone/bugpatterns/time/DurationTemporalUnit.html" title="class in com.google.errorprone.bugpatterns.time">DurationTemporalUnit</a></td>
 <th class="col-last" scope="row">
-<div class="block">Bans calls to <code>Duration</code> APIs where the <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/time/temporal/TemporalUnit.html" title="class or interface in java.time.temporal" class="external-link"><code>TemporalUnit</code></a> is not
- <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/time/temporal/ChronoUnit.html#DAYS" title="class or interface in java.time.temporal" class="external-link"><code>ChronoUnit.DAYS</code></a> or it has an estimated duration (which is guaranteed to throw an <code>
+<div class="block">Bans calls to <code>Duration</code> APIs where the <a href="https://docs.oracle.com/javase/8/docs/api/java/time/temporal/TemporalUnit.html" title="class or interface in java.time.temporal" class="external-link"><code>TemporalUnit</code></a> is not
+ <a href="https://docs.oracle.com/javase/8/docs/api/java/time/temporal/ChronoUnit.html#DAYS" title="class or interface in java.time.temporal" class="external-link"><code>ChronoUnit.DAYS</code></a> or it has an estimated duration (which is guaranteed to throw an <code>
  DateTimeException</code>).</div>
 </th>
 </tr>
@@ -1694,7 +1694,7 @@ loadScripts(document, 'script');</script>
 <tr class="row-color" id="i293">
 <td class="col-first"><a href="com/google/errorprone/bugpatterns/inject/ElementPredicates.html" title="class in com.google.errorprone.bugpatterns.inject">ElementPredicates</a></td>
 <th class="col-last" scope="row">
-<div class="block">Predicates for <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.compiler/javax/lang/model/element/Element.html" title="class or interface in javax.lang.model.element" class="external-link"><code>Element</code></a> objects related to dependency injection.</div>
+<div class="block">Predicates for <a href="https://docs.oracle.com/javase/8/docs/api/javax/lang/model/element/Element.html" title="class or interface in javax.lang.model.element" class="external-link"><code>Element</code></a> objects related to dependency injection.</div>
 </th>
 </tr>
 <tr class="alt-color" id="i294">
@@ -1733,39 +1733,39 @@ loadScripts(document, 'script');</script>
 </th>
 </tr>
 <tr class="alt-color" id="i300">
-<td class="col-first"><a href="com/google/errorprone/matchers/Enclosing.Block.html" title="class in com.google.errorprone.matchers">Enclosing.Block</a>&lt;<a href="com/google/errorprone/matchers/Enclosing.Block.html" title="type parameter in Enclosing.Block">T</a> extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&gt;</td>
+<td class="col-first"><a href="com/google/errorprone/matchers/Enclosing.Block.html" title="class in com.google.errorprone.matchers">Enclosing.Block</a>&lt;<a href="com/google/errorprone/matchers/Enclosing.Block.html" title="type parameter in Enclosing.Block">T</a> extends com.sun.source.tree.Tree&gt;</td>
 <th class="col-last" scope="row">&nbsp;</th>
 </tr>
 <tr class="row-color" id="i301">
-<td class="col-first"><a href="com/google/errorprone/matchers/Enclosing.BlockOrCase.html" title="class in com.google.errorprone.matchers">Enclosing.BlockOrCase</a>&lt;<a href="com/google/errorprone/matchers/Enclosing.BlockOrCase.html" title="type parameter in Enclosing.BlockOrCase">T</a> extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&gt;</td>
+<td class="col-first"><a href="com/google/errorprone/matchers/Enclosing.BlockOrCase.html" title="class in com.google.errorprone.matchers">Enclosing.BlockOrCase</a>&lt;<a href="com/google/errorprone/matchers/Enclosing.BlockOrCase.html" title="type parameter in Enclosing.BlockOrCase">T</a> extends com.sun.source.tree.Tree&gt;</td>
 <th class="col-last" scope="row">&nbsp;</th>
 </tr>
 <tr class="alt-color" id="i302">
-<td class="col-first"><a href="com/google/errorprone/matchers/Enclosing.Class.html" title="class in com.google.errorprone.matchers">Enclosing.Class</a>&lt;<a href="com/google/errorprone/matchers/Enclosing.Class.html" title="type parameter in Enclosing.Class">T</a> extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&gt;</td>
+<td class="col-first"><a href="com/google/errorprone/matchers/Enclosing.Class.html" title="class in com.google.errorprone.matchers">Enclosing.Class</a>&lt;<a href="com/google/errorprone/matchers/Enclosing.Class.html" title="type parameter in Enclosing.Class">T</a> extends com.sun.source.tree.Tree&gt;</td>
 <th class="col-last" scope="row">&nbsp;</th>
 </tr>
 <tr class="row-color" id="i303">
-<td class="col-first"><a href="com/google/errorprone/matchers/Enclosing.Method.html" title="class in com.google.errorprone.matchers">Enclosing.Method</a>&lt;<a href="com/google/errorprone/matchers/Enclosing.Method.html" title="type parameter in Enclosing.Method">T</a> extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&gt;</td>
+<td class="col-first"><a href="com/google/errorprone/matchers/Enclosing.Method.html" title="class in com.google.errorprone.matchers">Enclosing.Method</a>&lt;<a href="com/google/errorprone/matchers/Enclosing.Method.html" title="type parameter in Enclosing.Method">T</a> extends com.sun.source.tree.Tree&gt;</td>
 <th class="col-last" scope="row">&nbsp;</th>
 </tr>
 <tr class="alt-color" id="i304">
 <td class="col-first"><a href="com/google/errorprone/bugpatterns/nullness/EqualsBrokenForNull.html" title="class in com.google.errorprone.bugpatterns.nullness">EqualsBrokenForNull</a></td>
 <th class="col-last" scope="row">
 <div class="block"><a href="com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a> adds a null check to <code>equals()</code> method implementations which don't
- satisfy the null contract of <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#equals(java.lang.Object)" title="class or interface in java.lang" class="external-link"><code>Object.equals(java.lang.Object)</code></a> i.e.</div>
+ satisfy the null contract of <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#equals(java.lang.Object)" title="class or interface in java.lang" class="external-link"><code>Object.equals(java.lang.Object)</code></a> i.e.</div>
 </th>
 </tr>
 <tr class="row-color" id="i305">
 <td class="col-first"><a href="com/google/errorprone/bugpatterns/EqualsGetClass.html" title="class in com.google.errorprone.bugpatterns">EqualsGetClass</a></td>
 <th class="col-last" scope="row">
-<div class="block">Discourages the use of <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#getClass()" title="class or interface in java.lang" class="external-link"><code>Object.getClass()</code></a> when implementing <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#equals(java.lang.Object)" title="class or interface in java.lang" class="external-link"><code>Object.equals(Object)</code></a>
+<div class="block">Discourages the use of <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#getClass()" title="class or interface in java.lang" class="external-link"><code>Object.getClass()</code></a> when implementing <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#equals(java.lang.Object)" title="class or interface in java.lang" class="external-link"><code>Object.equals(Object)</code></a>
  for non-final classes.</div>
 </th>
 </tr>
 <tr class="alt-color" id="i306">
 <td class="col-first"><a href="com/google/errorprone/bugpatterns/EqualsHashCode.html" title="class in com.google.errorprone.bugpatterns">EqualsHashCode</a></td>
 <th class="col-last" scope="row">
-<div class="block">Classes that override <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#equals(java.lang.Object)" title="class or interface in java.lang" class="external-link"><code>Object.equals(java.lang.Object)</code></a> should also override <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#hashCode()" title="class or interface in java.lang" class="external-link"><code>Object.hashCode()</code></a>.</div>
+<div class="block">Classes that override <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#equals(java.lang.Object)" title="class or interface in java.lang" class="external-link"><code>Object.equals(java.lang.Object)</code></a> should also override <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#hashCode()" title="class or interface in java.lang" class="external-link"><code>Object.hashCode()</code></a>.</div>
 </th>
 </tr>
 <tr class="row-color" id="i307">
@@ -1813,7 +1813,7 @@ loadScripts(document, 'script');</script>
 <tr class="row-color" id="i315">
 <td class="col-first"><a href="com/google/errorprone/bugpatterns/ErroneousThreadPoolConstructorChecker.html" title="class in com.google.errorprone.bugpatterns">ErroneousThreadPoolConstructorChecker</a></td>
 <th class="col-last" scope="row">
-<div class="block">ErrorProne checker to generate warning whenever <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/concurrent/ThreadPoolExecutor.html" title="class or interface in java.util.concurrent" class="external-link"><code>ThreadPoolExecutor</code></a>
+<div class="block">ErrorProne checker to generate warning whenever <a href="https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/ThreadPoolExecutor.html" title="class or interface in java.util.concurrent" class="external-link"><code>ThreadPoolExecutor</code></a>
  is constructed with different <code>corePoolSize</code> and <code>maximumPoolSize</code> using an unbounded
  <code>workQueue</code></div>
 </th>
@@ -1821,7 +1821,7 @@ loadScripts(document, 'script');</script>
 <tr class="alt-color" id="i316">
 <td class="col-first"><a href="com/google/errorprone/ErrorProneAnalyzer.html" title="class in com.google.errorprone">ErrorProneAnalyzer</a></td>
 <th class="col-last" scope="row">
-<div class="block">A <a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/util/TaskListener.html" title="class or interface in com.sun.source.util" class="external-link"><code>TaskListener</code></a> that runs Error Prone over attributed compilation units.</div>
+<div class="block">A <code>TaskListener</code> that runs Error Prone over attributed compilation units.</div>
 </th>
 </tr>
 <tr class="row-color" id="i317">
@@ -1846,13 +1846,13 @@ loadScripts(document, 'script');</script>
 <tr class="alt-color" id="i320">
 <td class="col-first"><a href="com/google/errorprone/ErrorProneJavaCompiler.html" title="class in com.google.errorprone">ErrorProneJavaCompiler</a></td>
 <th class="col-last" scope="row">
-<div class="block">An Error Prone compiler that implements <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.compiler/javax/tools/JavaCompiler.html" title="class or interface in javax.tools" class="external-link"><code>JavaCompiler</code></a>.</div>
+<div class="block">An Error Prone compiler that implements <a href="https://docs.oracle.com/javase/8/docs/api/javax/tools/JavaCompiler.html" title="class or interface in javax.tools" class="external-link"><code>JavaCompiler</code></a>.</div>
 </th>
 </tr>
 <tr class="row-color" id="i321">
 <td class="col-first"><a href="com/google/errorprone/ErrorProneJavacPlugin.html" title="class in com.google.errorprone">ErrorProneJavacPlugin</a></td>
 <th class="col-last" scope="row">
-<div class="block">A javac <a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/util/Plugin.html" title="class or interface in com.sun.source.util" class="external-link"><code>Plugin</code></a> that runs Error Prone.</div>
+<div class="block">A javac <code>Plugin</code> that runs Error Prone.</div>
 </th>
 </tr>
 <tr class="alt-color" id="i322">
@@ -2002,7 +2002,7 @@ loadScripts(document, 'script');</script>
 <tr class="row-color" id="i347">
 <td class="col-first"><a href="com/google/errorprone/FileObjects.html" title="class in com.google.errorprone">FileObjects</a></td>
 <th class="col-last" scope="row">
-<div class="block">Factories for in-memory <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.compiler/javax/tools/JavaFileObject.html" title="class or interface in javax.tools" class="external-link"><code>JavaFileObject</code></a>s, for testing.</div>
+<div class="block">Factories for in-memory <a href="https://docs.oracle.com/javase/8/docs/api/javax/tools/JavaFileObject.html" title="class or interface in javax.tools" class="external-link"><code>JavaFileObject</code></a>s, for testing.</div>
 </th>
 </tr>
 <tr class="alt-color" id="i348">
@@ -2372,7 +2372,7 @@ loadScripts(document, 'script');</script>
 <tr class="alt-color" id="i410">
 <td class="col-first"><a href="com/google/errorprone/bugpatterns/HashCodeToString.html" title="class in com.google.errorprone.bugpatterns">HashCodeToString</a></td>
 <th class="col-last" scope="row">
-<div class="block">Classes that override <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#hashCode()" title="class or interface in java.lang" class="external-link"><code>Object.hashCode()</code></a> should consider overriding <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html#toString()" title="class or interface in java.lang" class="external-link"><code>Object.toString()</code></a>.</div>
+<div class="block">Classes that override <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#hashCode()" title="class or interface in java.lang" class="external-link"><code>Object.hashCode()</code></a> should consider overriding <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#toString()" title="class or interface in java.lang" class="external-link"><code>Object.toString()</code></a>.</div>
 </th>
 </tr>
 <tr class="row-color" id="i411">
@@ -2719,7 +2719,7 @@ loadScripts(document, 'script');</script>
 <tr class="row-color" id="i469">
 <td class="col-first"><a href="com/google/errorprone/bugpatterns/time/InstantTemporalUnit.html" title="class in com.google.errorprone.bugpatterns.time">InstantTemporalUnit</a></td>
 <th class="col-last" scope="row">
-<div class="block">Bans calls to <code>Instant</code> APIs where the <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/time/temporal/TemporalUnit.html" title="class or interface in java.time.temporal" class="external-link"><code>TemporalUnit</code></a> is not one
+<div class="block">Bans calls to <code>Instant</code> APIs where the <a href="https://docs.oracle.com/javase/8/docs/api/java/time/temporal/TemporalUnit.html" title="class or interface in java.time.temporal" class="external-link"><code>TemporalUnit</code></a> is not one
  of: <code>NANOS</code>, <code>MICROS</code>, <code>MILLIS</code>, <code>SECONDS</code>, <code>MINUTES</code>, <code>
  HOURS</code>, <code>HALF_DAYS</code>, or <code>DAYS</code>.</div>
 </th>
@@ -2733,7 +2733,7 @@ loadScripts(document, 'script');</script>
 <tr class="row-color" id="i471">
 <td class="col-first"><a href="com/google/errorprone/bugpatterns/InterruptedExceptionSwallowed.html" title="class in com.google.errorprone.bugpatterns">InterruptedExceptionSwallowed</a></td>
 <th class="col-last" scope="row">
-<div class="block">Checks for cases where an <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/InterruptedException.html" title="class or interface in java.lang" class="external-link"><code>InterruptedException</code></a> is caught as part of a catch block
+<div class="block">Checks for cases where an <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/InterruptedException.html" title="class or interface in java.lang" class="external-link"><code>InterruptedException</code></a> is caught as part of a catch block
  catching a supertype, and not specially handled.</div>
 </th>
 </tr>
@@ -2763,7 +2763,7 @@ loadScripts(document, 'script');</script>
 <td class="col-first"><a href="com/google/errorprone/bugpatterns/time/InvalidJavaTimeConstant.html" title="class in com.google.errorprone.bugpatterns.time">InvalidJavaTimeConstant</a></td>
 <th class="col-last" scope="row">
 <div class="block">This checker errors on calls to <code>java.time</code> methods using values that are guaranteed to
- throw a <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/time/DateTimeException.html" title="class or interface in java.time" class="external-link"><code>DateTimeException</code></a>.</div>
+ throw a <a href="https://docs.oracle.com/javase/8/docs/api/java/time/DateTimeException.html" title="class or interface in java.time" class="external-link"><code>DateTimeException</code></a>.</div>
 </th>
 </tr>
 <tr class="row-color" id="i477">
@@ -2829,13 +2829,13 @@ loadScripts(document, 'script');</script>
 </th>
 </tr>
 <tr class="row-color" id="i489">
-<td class="col-first"><a href="com/google/errorprone/matchers/IsSameType.html" title="class in com.google.errorprone.matchers">IsSameType</a>&lt;<a href="com/google/errorprone/matchers/IsSameType.html" title="type parameter in IsSameType">T</a> extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&gt;</td>
+<td class="col-first"><a href="com/google/errorprone/matchers/IsSameType.html" title="class in com.google.errorprone.matchers">IsSameType</a>&lt;<a href="com/google/errorprone/matchers/IsSameType.html" title="type parameter in IsSameType">T</a> extends com.sun.source.tree.Tree&gt;</td>
 <th class="col-last" scope="row">
 <div class="block">Matches an AST node if its erased type is the same as the given type, e.g.</div>
 </th>
 </tr>
 <tr class="alt-color" id="i490">
-<td class="col-first"><a href="com/google/errorprone/matchers/IsSubtypeOf.html" title="class in com.google.errorprone.matchers">IsSubtypeOf</a>&lt;<a href="com/google/errorprone/matchers/IsSubtypeOf.html" title="type parameter in IsSubtypeOf">T</a> extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&gt;</td>
+<td class="col-first"><a href="com/google/errorprone/matchers/IsSubtypeOf.html" title="class in com.google.errorprone.matchers">IsSubtypeOf</a>&lt;<a href="com/google/errorprone/matchers/IsSubtypeOf.html" title="type parameter in IsSubtypeOf">T</a> extends com.sun.source.tree.Tree&gt;</td>
 <th class="col-last" scope="row">&nbsp;</th>
 </tr>
 <tr class="row-color" id="i491">
@@ -2907,15 +2907,15 @@ loadScripts(document, 'script');</script>
 <tr class="alt-color" id="i502">
 <td class="col-first"><a href="com/google/errorprone/bugpatterns/time/JavaLocalDateTimeGetNano.html" title="class in com.google.errorprone.bugpatterns.time">JavaLocalDateTimeGetNano</a></td>
 <th class="col-last" scope="row">
-<div class="block">This checker warns about calls to <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/time/LocalDateTime.html#getNano()" title="class or interface in java.time" class="external-link"><code>LocalDateTime.getNano()</code></a> without a corresponding "nearby"
- call to <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/time/LocalDateTime.html#getSecond()" title="class or interface in java.time" class="external-link"><code>LocalDateTime.getSecond()</code></a>.</div>
+<div class="block">This checker warns about calls to <a href="https://docs.oracle.com/javase/8/docs/api/java/time/LocalDateTime.html#getNano()" title="class or interface in java.time" class="external-link"><code>LocalDateTime.getNano()</code></a> without a corresponding "nearby"
+ call to <a href="https://docs.oracle.com/javase/8/docs/api/java/time/LocalDateTime.html#getSecond()" title="class or interface in java.time" class="external-link"><code>LocalDateTime.getSecond()</code></a>.</div>
 </th>
 </tr>
 <tr class="row-color" id="i503">
 <td class="col-first"><a href="com/google/errorprone/bugpatterns/time/JavaLocalTimeGetNano.html" title="class in com.google.errorprone.bugpatterns.time">JavaLocalTimeGetNano</a></td>
 <th class="col-last" scope="row">
-<div class="block">This checker warns about calls to <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/time/LocalTime.html#getNano()" title="class or interface in java.time" class="external-link"><code>LocalTime.getNano()</code></a> without a corresponding "nearby" call
- to <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/time/LocalTime.html#getSecond()" title="class or interface in java.time" class="external-link"><code>LocalTime.getSecond()</code></a>.</div>
+<div class="block">This checker warns about calls to <a href="https://docs.oracle.com/javase/8/docs/api/java/time/LocalTime.html#getNano()" title="class or interface in java.time" class="external-link"><code>LocalTime.getNano()</code></a> without a corresponding "nearby" call
+ to <a href="https://docs.oracle.com/javase/8/docs/api/java/time/LocalTime.html#getSecond()" title="class or interface in java.time" class="external-link"><code>LocalTime.getSecond()</code></a>.</div>
 </th>
 </tr>
 <tr class="alt-color" id="i504">
@@ -3093,7 +3093,7 @@ loadScripts(document, 'script');</script>
 <td class="col-first"><a href="com/google/errorprone/annotations/concurrent/LazyInit.html" title="annotation in com.google.errorprone.annotations.concurrent">LazyInit</a></td>
 <th class="col-last" scope="row">
 <div class="block">Use this annotation on any static or field that will be initialized lazily, where races yield no
- semantic difference in the code (as, for example, is the case with <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html#hashCode()" title="class or interface in java.lang" class="external-link"><code>String.hashCode()</code></a>).</div>
+ semantic difference in the code (as, for example, is the case with <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html#hashCode()" title="class or interface in java.lang" class="external-link"><code>String.hashCode()</code></a>).</div>
 </th>
 </tr>
 <tr class="row-color" id="i535">
@@ -3122,7 +3122,7 @@ loadScripts(document, 'script');</script>
 <td class="col-first"><a href="com/google/errorprone/bugpatterns/time/LocalDateTemporalAmount.html" title="class in com.google.errorprone.bugpatterns.time">LocalDateTemporalAmount</a></td>
 <th class="col-last" scope="row">
 <div class="block">Bans calls to <code>LocalDate.plus(TemporalAmount)</code> and <code>LocalDate.minus(TemporalAmount)</code>
- where the <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/time/temporal/TemporalAmount.html" title="class or interface in java.time.temporal" class="external-link"><code>TemporalAmount</code></a> is a non-zero <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/time/Duration.html" title="class or interface in java.time" class="external-link"><code>Duration</code></a>.</div>
+ where the <a href="https://docs.oracle.com/javase/8/docs/api/java/time/temporal/TemporalAmount.html" title="class or interface in java.time.temporal" class="external-link"><code>TemporalAmount</code></a> is a non-zero <a href="https://docs.oracle.com/javase/8/docs/api/java/time/Duration.html" title="class or interface in java.time" class="external-link"><code>Duration</code></a>.</div>
 </th>
 </tr>
 <tr class="alt-color" id="i540">
@@ -3203,9 +3203,9 @@ loadScripts(document, 'script');</script>
 </th>
 </tr>
 <tr class="row-color" id="i553">
-<td class="col-first"><a href="com/google/errorprone/matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;<a href="com/google/errorprone/matchers/Matcher.html" title="type parameter in Matcher">T</a> extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&gt;</td>
+<td class="col-first"><a href="com/google/errorprone/matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;<a href="com/google/errorprone/matchers/Matcher.html" title="type parameter in Matcher">T</a> extends com.sun.source.tree.Tree&gt;</td>
 <th class="col-last" scope="row">
-<div class="block">Define a predicate on a <a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link"><code>Tree</code></a>, which also accesses the state of AST traversal.</div>
+<div class="block">Define a predicate on a <code>Tree</code>, which also accesses the state of AST traversal.</div>
 </th>
 </tr>
 <tr class="alt-color" id="i554">
@@ -3234,7 +3234,7 @@ loadScripts(document, 'script');</script>
 <tr class="alt-color" id="i558">
 <td class="col-first"><a href="com/google/errorprone/bugpatterns/MathRoundIntLong.html" title="class in com.google.errorprone.bugpatterns">MathRoundIntLong</a></td>
 <th class="col-last" scope="row">
-<div class="block">Check for calls to Math's <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Math.html#round(float)" title="class or interface in java.lang" class="external-link"><code>Math.round(float)</code></a> with an integer or long parameter.</div>
+<div class="block">Check for calls to Math's <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Math.html#round(float)" title="class or interface in java.lang" class="external-link"><code>Math.round(float)</code></a> with an integer or long parameter.</div>
 </th>
 </tr>
 <tr class="row-color" id="i559">
@@ -3599,13 +3599,13 @@ loadScripts(document, 'script');</script>
 </th>
 </tr>
 <tr class="alt-color" id="i618">
-<td class="col-first"><a href="com/google/errorprone/matchers/MultiMatcher.html" title="interface in com.google.errorprone.matchers">MultiMatcher</a>&lt;<a href="com/google/errorprone/matchers/MultiMatcher.html" title="type parameter in MultiMatcher">T</a> extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>,&#8203;<a href="com/google/errorprone/matchers/MultiMatcher.html" title="type parameter in MultiMatcher">N</a> extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&gt;</td>
+<td class="col-first"><a href="com/google/errorprone/matchers/MultiMatcher.html" title="interface in com.google.errorprone.matchers">MultiMatcher</a>&lt;<a href="com/google/errorprone/matchers/MultiMatcher.html" title="type parameter in MultiMatcher">T</a> extends com.sun.source.tree.Tree,&#8203;<a href="com/google/errorprone/matchers/MultiMatcher.html" title="type parameter in MultiMatcher">N</a> extends com.sun.source.tree.Tree&gt;</td>
 <th class="col-last" scope="row">
 <div class="block">An matcher that applies a single matcher across multiple tree nodes.</div>
 </th>
 </tr>
 <tr class="row-color" id="i619">
-<td class="col-first"><a href="com/google/errorprone/matchers/MultiMatcher.MultiMatchResult.html" title="class in com.google.errorprone.matchers">MultiMatcher.MultiMatchResult</a>&lt;<a href="com/google/errorprone/matchers/MultiMatcher.MultiMatchResult.html" title="type parameter in MultiMatcher.MultiMatchResult">N</a> extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&gt;</td>
+<td class="col-first"><a href="com/google/errorprone/matchers/MultiMatcher.MultiMatchResult.html" title="class in com.google.errorprone.matchers">MultiMatcher.MultiMatchResult</a>&lt;<a href="com/google/errorprone/matchers/MultiMatcher.MultiMatchResult.html" title="type parameter in MultiMatcher.MultiMatchResult">N</a> extends com.sun.source.tree.Tree&gt;</td>
 <th class="col-last" scope="row">
 <div class="block">A result from the call of <a href="com/google/errorprone/matchers/MultiMatcher.html#multiMatchResult(T,com.google.errorprone.VisitorState)"><code>MultiMatcher.multiMatchResult(Tree, VisitorState)</code></a>, containing
  information about whether it matched, and if so, what nodes matched.</div>
@@ -3849,7 +3849,7 @@ loadScripts(document, 'script');</script>
 <tr class="alt-color" id="i660">
 <td class="col-first"><a href="com/google/errorprone/bugpatterns/ObjectsHashCodePrimitive.html" title="class in com.google.errorprone.bugpatterns">ObjectsHashCodePrimitive</a></td>
 <th class="col-last" scope="row">
-<div class="block">Check for calls to Objects' <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Objects.html#hashCode(java.lang.Object)" title="class or interface in java.util" class="external-link"><code>Objects.hashCode(java.lang.Object)</code></a> with a primitive parameter.</div>
+<div class="block">Check for calls to Objects' <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Objects.html#hashCode(java.lang.Object)" title="class or interface in java.util" class="external-link"><code>Objects.hashCode(java.lang.Object)</code></a> with a primitive parameter.</div>
 </th>
 </tr>
 <tr class="row-color" id="i661">
@@ -3874,7 +3874,7 @@ loadScripts(document, 'script');</script>
 <tr class="alt-color" id="i664">
 <td class="col-first"><a href="com/google/errorprone/util/OperatorPrecedence.html" title="enum in com.google.errorprone.util">OperatorPrecedence</a></td>
 <th class="col-last" scope="row">
-<div class="block">The precedence for an operator kind in the <a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/package-summary.html" class="external-link"><code>com.sun.source.tree</code></a> API.</div>
+<div class="block">The precedence for an operator kind in the <code>com.sun.source.tree</code> API.</div>
 </th>
 </tr>
 <tr class="row-color" id="i665">
@@ -4009,7 +4009,7 @@ loadScripts(document, 'script');</script>
 <tr class="alt-color" id="i686">
 <td class="col-first"><a href="com/google/errorprone/bugpatterns/time/PeriodFrom.html" title="class in com.google.errorprone.bugpatterns.time">PeriodFrom</a></td>
 <th class="col-last" scope="row">
-<div class="block">Bans calls to <code>Period.from(temporalAmount)</code> where <code>temporalAmount</code> is a <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/time/Duration.html" title="class or interface in java.time" class="external-link"><code>Duration</code></a>.</div>
+<div class="block">Bans calls to <code>Period.from(temporalAmount)</code> where <code>temporalAmount</code> is a <a href="https://docs.oracle.com/javase/8/docs/api/java/time/Duration.html" title="class or interface in java.time" class="external-link"><code>Duration</code></a>.</div>
 </th>
 </tr>
 <tr class="row-color" id="i687">
@@ -4522,7 +4522,7 @@ loadScripts(document, 'script');</script>
 <tr class="alt-color" id="i776">
 <td class="col-first"><a href="com/google/errorprone/bugpatterns/StreamToIterable.html" title="class in com.google.errorprone.bugpatterns">StreamToIterable</a></td>
 <th class="col-last" scope="row">
-<div class="block">Discourage <code>stream::iterator</code> to create <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Iterable.html" title="class or interface in java.lang" class="external-link"><code>Iterable</code></a>s.</div>
+<div class="block">Discourage <code>stream::iterator</code> to create <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Iterable.html" title="class or interface in java.lang" class="external-link"><code>Iterable</code></a>s.</div>
 </th>
 </tr>
 <tr class="row-color" id="i777">
@@ -5030,7 +5030,7 @@ loadScripts(document, 'script');</script>
 <tr class="row-color" id="i863">
 <td class="col-first"><a href="com/google/errorprone/refaster/UExpression.html" title="class in com.google.errorprone.refaster">UExpression</a></td>
 <th class="col-last" scope="row">
-<div class="block"><a href="com/google/errorprone/refaster/UTree.html" title="class in com.google.errorprone.refaster"><code>UTree</code></a> version of <a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link"><code>ExpressionTree</code></a>.</div>
+<div class="block"><a href="com/google/errorprone/refaster/UTree.html" title="class in com.google.errorprone.refaster"><code>UTree</code></a> version of <code>ExpressionTree</code>.</div>
 </th>
 </tr>
 <tr class="alt-color" id="i864">
@@ -5054,19 +5054,19 @@ loadScripts(document, 'script');</script>
 <tr class="row-color" id="i867">
 <td class="col-first"><a href="com/google/errorprone/refaster/ULiteral.html" title="class in com.google.errorprone.refaster">ULiteral</a></td>
 <th class="col-last" scope="row">
-<div class="block"><a href="com/google/errorprone/refaster/UTree.html" title="class in com.google.errorprone.refaster"><code>UTree</code></a> version of <a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/LiteralTree.html" title="class or interface in com.sun.source.tree" class="external-link"><code>LiteralTree</code></a>.</div>
+<div class="block"><a href="com/google/errorprone/refaster/UTree.html" title="class in com.google.errorprone.refaster"><code>UTree</code></a> version of <code>LiteralTree</code>.</div>
 </th>
 </tr>
 <tr class="alt-color" id="i868">
 <td class="col-first"><a href="com/google/errorprone/refaster/UMemberSelect.html" title="class in com.google.errorprone.refaster">UMemberSelect</a></td>
 <th class="col-last" scope="row">
-<div class="block"><a href="com/google/errorprone/refaster/UTree.html" title="class in com.google.errorprone.refaster"><code>UTree</code></a> version of <a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/MemberSelectTree.html" title="class or interface in com.sun.source.tree" class="external-link"><code>MemberSelectTree</code></a>.</div>
+<div class="block"><a href="com/google/errorprone/refaster/UTree.html" title="class in com.google.errorprone.refaster"><code>UTree</code></a> version of <code>MemberSelectTree</code>.</div>
 </th>
 </tr>
 <tr class="row-color" id="i869">
 <td class="col-first"><a href="com/google/errorprone/refaster/UMethodInvocation.html" title="class in com.google.errorprone.refaster">UMethodInvocation</a></td>
 <th class="col-last" scope="row">
-<div class="block"><a href="com/google/errorprone/refaster/UTree.html" title="class in com.google.errorprone.refaster"><code>UTree</code></a> version of <a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/MethodInvocationTree.html" title="class or interface in com.sun.source.tree" class="external-link"><code>MethodInvocationTree</code></a>.</div>
+<div class="block"><a href="com/google/errorprone/refaster/UTree.html" title="class in com.google.errorprone.refaster"><code>UTree</code></a> version of <code>MethodInvocationTree</code>.</div>
 </th>
 </tr>
 <tr class="alt-color" id="i870">
@@ -5253,7 +5253,7 @@ loadScripts(document, 'script');</script>
 <tr class="alt-color" id="i900">
 <td class="col-first"><a href="com/google/errorprone/bugpatterns/UnsafeLocaleUsage.html" title="class in com.google.errorprone.bugpatterns">UnsafeLocaleUsage</a></td>
 <th class="col-last" scope="row">
-<div class="block">Flags unsafe usages of the <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Locale.html" title="class or interface in java.util" class="external-link"><code>Locale</code></a> constructor and class methods.</div>
+<div class="block">Flags unsafe usages of the <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Locale.html" title="class or interface in java.util" class="external-link"><code>Locale</code></a> constructor and class methods.</div>
 </th>
 </tr>
 <tr class="row-color" id="i901">
@@ -5316,7 +5316,7 @@ loadScripts(document, 'script');</script>
 <tr class="row-color" id="i911">
 <td class="col-first"><a href="com/google/errorprone/refaster/UReturn.html" title="class in com.google.errorprone.refaster">UReturn</a></td>
 <th class="col-last" scope="row">
-<div class="block"><a href="com/google/errorprone/refaster/UTree.html" title="class in com.google.errorprone.refaster"><code>UTree</code></a> representation of a <a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/ReturnTree.html" title="class or interface in com.sun.source.tree" class="external-link"><code>ReturnTree</code></a>.</div>
+<div class="block"><a href="com/google/errorprone/refaster/UTree.html" title="class in com.google.errorprone.refaster"><code>UTree</code></a> representation of a <code>ReturnTree</code>.</div>
 </th>
 </tr>
 <tr class="alt-color" id="i912">
@@ -5361,7 +5361,7 @@ loadScripts(document, 'script');</script>
 <tr class="row-color" id="i919">
 <td class="col-first"><a href="com/google/errorprone/refaster/UStatement.html" title="interface in com.google.errorprone.refaster">UStatement</a></td>
 <th class="col-last" scope="row">
-<div class="block"><a href="com/google/errorprone/refaster/UTree.html" title="class in com.google.errorprone.refaster"><code>UTree</code></a> representation of a <a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/StatementTree.html" title="class or interface in com.sun.source.tree" class="external-link"><code>StatementTree</code></a>.</div>
+<div class="block"><a href="com/google/errorprone/refaster/UTree.html" title="class in com.google.errorprone.refaster"><code>UTree</code></a> representation of a <code>StatementTree</code>.</div>
 </th>
 </tr>
 <tr class="alt-color" id="i920">
@@ -5460,7 +5460,7 @@ loadScripts(document, 'script');</script>
 <td class="col-first"><a href="com/google/errorprone/util/Visibility.html" title="enum in com.google.errorprone.util">Visibility</a></td>
 <th class="col-last" scope="row">
 <div class="block">Describes visibilities available via VisibleForTesting annotations, and provides methods to
- establish whether a given <a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link"><code>Tree</code></a> should be visible.</div>
+ establish whether a given <code>Tree</code> should be visible.</div>
 </th>
 </tr>
 <tr class="alt-color" id="i936">
@@ -5521,7 +5521,7 @@ loadScripts(document, 'script');</script>
 <tr class="alt-color" id="i946">
 <td class="col-first"><a href="com/google/errorprone/bugpatterns/time/ZoneIdOfZ.html" title="class in com.google.errorprone.bugpatterns.time">ZoneIdOfZ</a></td>
 <th class="col-last" scope="row">
-<div class="block">This checker bans calls to <code>ZoneId.of("Z")</code> in favor of <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/time/ZoneOffset.html#UTC" title="class or interface in java.time" class="external-link"><code>ZoneOffset.UTC</code></a>.</div>
+<div class="block">This checker bans calls to <code>ZoneId.of("Z")</code> in favor of <a href="https://docs.oracle.com/javase/8/docs/api/java/time/ZoneOffset.html#UTC" title="class or interface in java.time" class="external-link"><code>ZoneOffset.UTC</code></a>.</div>
 </th>
 </tr>
 </tbody>

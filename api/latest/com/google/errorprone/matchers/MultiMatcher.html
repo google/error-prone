@@ -74,7 +74,7 @@ loadScripts(document, 'script');</script>
 <!-- ======== START OF CLASS DATA ======== -->
 <div class="header">
 <div class="sub-title"><span class="package-label-in-type">Package</span>&nbsp;<a href="package-summary.html">com.google.errorprone.matchers</a></div>
-<h1 title="Interface MultiMatcher" class="title">Interface MultiMatcher&lt;T extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>,&#8203;N extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&gt;</h1>
+<h1 title="Interface MultiMatcher" class="title">Interface MultiMatcher&lt;T extends com.sun.source.tree.Tree,&#8203;N extends com.sun.source.tree.Tree&gt;</h1>
 </div>
 <section class="description">
 <dl class="notes">
@@ -84,14 +84,14 @@ loadScripts(document, 'script');</script>
 </dl>
 <dl class="notes">
 <dt>All Superinterfaces:</dt>
-<dd><code><a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;T&gt;</code>, <code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/io/Serializable.html" title="class or interface in java.io" class="external-link">Serializable</a></code></dd>
+<dd><code><a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;T&gt;</code>, <code><a href="https://docs.oracle.com/javase/8/docs/api/java/io/Serializable.html" title="class or interface in java.io" class="external-link">Serializable</a></code></dd>
 </dl>
 <dl class="notes">
 <dt>All Known Implementing Classes:</dt>
 <dd><code><a href="AnnotationMatcher.html" title="class in com.google.errorprone.matchers">AnnotationMatcher</a></code>, <code><a href="ChildMultiMatcher.html" title="class in com.google.errorprone.matchers">ChildMultiMatcher</a></code>, <code><a href="ConstructorOfClass.html" title="class in com.google.errorprone.matchers">ConstructorOfClass</a></code>, <code><a href="HasArguments.html" title="class in com.google.errorprone.matchers">HasArguments</a></code>, <code><a href="MethodHasParameters.html" title="class in com.google.errorprone.matchers">MethodHasParameters</a></code></dd>
 </dl>
 <hr>
-<pre>public interface <span class="type-name-label">MultiMatcher&lt;T extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>,&#8203;N extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&gt;</span>
+<pre>public interface <span class="type-name-label">MultiMatcher&lt;T extends com.sun.source.tree.Tree,&#8203;N extends com.sun.source.tree.Tree&gt;</span>
 extends <a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;T&gt;</pre>
 <div class="block">An matcher that applies a single matcher across multiple tree nodes.</div>
 <dl class="notes">
@@ -118,7 +118,7 @@ extends <a href="Matcher.html" title="interface in com.google.errorprone.matcher
 <tbody>
 <tr class="alt-color">
 <td class="col-first"><code>static class&nbsp;</code></td>
-<th class="col-second" scope="row"><code><span class="member-name-link"><a href="MultiMatcher.MultiMatchResult.html" title="class in com.google.errorprone.matchers">MultiMatcher.MultiMatchResult</a>&lt;<a href="MultiMatcher.MultiMatchResult.html" title="type parameter in MultiMatcher.MultiMatchResult">N</a> extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&gt;</span></code></th>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="MultiMatcher.MultiMatchResult.html" title="class in com.google.errorprone.matchers">MultiMatcher.MultiMatchResult</a>&lt;<a href="MultiMatcher.MultiMatchResult.html" title="type parameter in MultiMatcher.MultiMatchResult">N</a> extends com.sun.source.tree.Tree&gt;</span></code></th>
 <td class="col-last">
 <div class="block">A result from the call of <a href="#multiMatchResult(T,com.google.errorprone.VisitorState)"><code>multiMatchResult(Tree, VisitorState)</code></a>, containing
  information about whether it matched, and if so, what nodes matched.</div>
