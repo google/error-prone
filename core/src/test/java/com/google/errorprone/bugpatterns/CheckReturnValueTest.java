@@ -741,4 +741,25 @@ public class CheckReturnValueTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void constructor_withoutCrvAnnotation() {
+    compilationHelperLookingAtAllConstructors()
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  public Test() {}",
+            "  public static void foo() {",
+            "    // BUG: Diagnostic contains: Ignored return value of 'Test', which wasn't"
+                + " annotated with @CanIgnoreReturnValue",
+            "    new Test();",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  private CompilationTestHelper compilationHelperLookingAtAllConstructors() {
+    return compilationHelper.setArgs(
+        "-XepOpt:" + CheckReturnValue.CHECK_ALL_CONSTRUCTORS + "=true");
+  }
 }

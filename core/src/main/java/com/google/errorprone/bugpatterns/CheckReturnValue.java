@@ -31,6 +31,7 @@ import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodTree;
+import com.sun.source.tree.NewClassTree;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import java.util.stream.Stream;
@@ -58,8 +59,13 @@ public class CheckReturnValue extends AbstractReturnValueIgnored
     return Stream.empty();
   }
 
+  static final String CHECK_ALL_CONSTRUCTORS = "CheckReturnValue:CheckAllConstructors";
+
+  private final boolean checkAllConstructors;
+
   public CheckReturnValue(ErrorProneFlags flags) {
     super(flags);
+    this.checkAllConstructors = flags.getBoolean(CHECK_ALL_CONSTRUCTORS).orElse(false);
   }
 
   /**
@@ -76,7 +82,7 @@ public class CheckReturnValue extends AbstractReturnValueIgnored
       return ASTHelpers.enclosingElements(sym)
           .flatMap(CheckReturnValue::shouldCheckReturnValue)
           .findFirst()
-          .orElse(false);
+          .orElse(checkAllConstructors && sym.isConstructor());
     };
   }
 
@@ -139,5 +145,18 @@ public class CheckReturnValue extends AbstractReturnValueIgnored
   protected String getMessage(Name name) {
     return String.format(
         "Ignored return value of '%s', which is annotated with @CheckReturnValue", name);
+  }
+
+  @Override
+  protected Description describeReturnValueIgnored(NewClassTree newClassTree, VisitorState state) {
+    return checkAllConstructors
+        ? buildDescription(newClassTree)
+            .setMessage(
+                String.format(
+                    "Ignored return value of '%s', which wasn't annotated with"
+                        + " @CanIgnoreReturnValue",
+                    state.getSourceForNode(newClassTree.getIdentifier())))
+            .build()
+        : super.describeReturnValueIgnored(newClassTree, state);
   }
 }
