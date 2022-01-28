@@ -1226,7 +1226,7 @@ public class SuggestedFixesTest {
     public Description matchAnnotation(AnnotationTree tree, VisitorState state) {
       SuggestedFix.Builder fixBuilder =
           SuggestedFixes.updateAnnotationArgumentValues(
-              tree, "value", ImmutableList.of("\"Danger\""));
+              tree, state, "value", ImmutableList.of("\"Danger\""));
       return describeMatch(tree, fixBuilder.build());
     }
   }

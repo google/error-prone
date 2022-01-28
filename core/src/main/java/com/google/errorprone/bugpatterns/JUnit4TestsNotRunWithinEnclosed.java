@@ -90,6 +90,7 @@ public final class JUnit4TestsNotRunWithinEnclosed extends BugChecker
                             updateAnnotationArgumentValues(
                                 getAnnotationWithSimpleName(
                                     classTree.getModifiers().getAnnotations(), "RunWith"),
+                                state,
                                 "value",
                                 ImmutableList.of(junit4 + ".class")))
                         .build()));

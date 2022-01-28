@@ -1084,7 +1084,7 @@ public final class SuggestedFixes {
       return;
     }
     fixBuilder.merge(
-        updateAnnotationArgumentValues(suppressAnnotationTree, "value", newWarningSet));
+        updateAnnotationArgumentValues(suppressAnnotationTree, state, "value", newWarningSet));
   }
 
   private static List<? extends AnnotationTree> findAnnotationsTree(Tree tree) {
@@ -1153,20 +1153,37 @@ public final class SuggestedFixes {
   }
 
   /**
+   * @deprecated use {@link #updateAnnotationArgumentValues(AnnotationTree, VisitorState, String,
+   *     Collection)} instead
+   */
+  @Deprecated
+  public static SuggestedFix.Builder updateAnnotationArgumentValues(
+      AnnotationTree annotation, String parameterName, Collection<String> newValues) {
+    return updateAnnotationArgumentValues(annotation, null, parameterName, newValues);
+  }
+
+  /**
    * Returns a fix that updates {@code newValues} to the {@code parameterName} argument for {@code
    * annotation}, regardless of whether there is already an argument.
    *
    * <p>N.B.: {@code newValues} are source-code strings, not string literal values.
    */
   public static SuggestedFix.Builder updateAnnotationArgumentValues(
-      AnnotationTree annotation, String parameterName, Collection<String> newValues) {
+      AnnotationTree annotation,
+      VisitorState state,
+      String parameterName,
+      Collection<String> newValues) {
     if (annotation.getArguments().isEmpty()) {
       String parameterPrefix = parameterName.equals("value") ? "" : (parameterName + " = ");
       return SuggestedFix.builder()
           .replace(
               annotation,
               '@'
-                  + annotation.getAnnotationType().toString()
+                  // TODO(cushon): remove null check once deprecated overload of
+                  // updateAnnotationArgumentValues is removed
+                  + (state != null
+                      ? state.getSourceForNode(annotation.getAnnotationType())
+                      : annotation.getAnnotationType().toString())
                   + '('
                   + parameterPrefix
                   + newArgument(newValues)
