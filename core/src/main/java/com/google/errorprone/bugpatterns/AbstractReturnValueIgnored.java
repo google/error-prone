@@ -120,7 +120,6 @@ public abstract class AbstractReturnValueIgnored extends BugChecker
       Suppliers.memoize(
           () ->
               allOf(
-                  this::isValidMemberReferenceType,
                   AbstractReturnValueIgnored::isVoidReturningMethodReferenceExpression,
                   // Skip cases where the method we're referencing really does return void.
                   // We're only looking for cases where the referenced method does not return
@@ -136,25 +135,16 @@ public abstract class AbstractReturnValueIgnored extends BugChecker
       Suppliers.memoize(
           () ->
               allOf(
-                  this::isValidMemberReferenceType,
                   AbstractReturnValueIgnored::isObjectReturningMethodReferenceExpression,
                   not((t, s) -> isExemptedInterfaceType(ASTHelpers.getType(t), s)),
                   not((t, s) -> Matchers.isThrowingFunctionalInterface(ASTHelpers.getType(t), s)),
                   specializedMatcher()));
 
-  private final boolean checkConstructors;
-
   protected AbstractReturnValueIgnored() {
     this(ErrorProneFlags.empty());
   }
 
-  protected AbstractReturnValueIgnored(ErrorProneFlags flags) {
-    checkConstructors = flags.getBoolean(CRV_CONSTRUCTOR_FLAG).orElse(false);
-  }
-
-  private boolean isValidMemberReferenceType(MemberReferenceTree mrt, VisitorState state) {
-    return checkConstructors || mrt.getMode() == ReferenceMode.INVOKE;
-  }
+  protected AbstractReturnValueIgnored(ErrorProneFlags flags) {}
 
   private static boolean isVoidReturningMethod(MethodSymbol meth, VisitorState state) {
     // Constructors "return" void but produce a real non-void value.
@@ -176,7 +166,7 @@ public abstract class AbstractReturnValueIgnored extends BugChecker
 
   @Override
   public Description matchNewClass(NewClassTree newClassTree, VisitorState state) {
-    return checkConstructors && methodInvocationMatcher.get().matches(newClassTree, state)
+    return methodInvocationMatcher.get().matches(newClassTree, state)
         ? describeReturnValueIgnored(newClassTree, state)
         : NO_MATCH;
   }

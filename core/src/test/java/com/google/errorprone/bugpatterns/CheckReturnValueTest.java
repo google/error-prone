@@ -656,24 +656,8 @@ public class CheckReturnValueTest {
   }
 
   @Test
-  public void constructor_flagOff() {
-    compilationHelper
-        .addSourceLines(
-            "Test.java",
-            "class Test {",
-            "  @com.google.errorprone.annotations.CheckReturnValue",
-            "  public Test() {",
-            "  }",
-            "  public static void foo() {",
-            "    new Test();",
-            "  }",
-            "}")
-        .doTest();
-  }
-
-  @Test
   public void constructor() {
-    compilationHelperLookingAtConstructors()
+    compilationHelper
         .addSourceLines(
             "Test.java",
             "class Test {",
@@ -689,7 +673,7 @@ public class CheckReturnValueTest {
 
   @Test
   public void constructor_telescoping() {
-    compilationHelperLookingAtConstructors()
+    compilationHelper
         .addSourceLines(
             "Test.java",
             "class Test {",
@@ -705,7 +689,7 @@ public class CheckReturnValueTest {
 
   @Test
   public void constructor_superCall() {
-    compilationHelperLookingAtConstructors()
+    compilationHelper
         .addSourceLines(
             "Test.java",
             "class Test {",
@@ -721,7 +705,7 @@ public class CheckReturnValueTest {
 
   @Test
   public void constructor_throwingContexts() {
-    compilationHelperLookingAtConstructors()
+    compilationHelper
         .addSourceLines(
             "Foo.java",
             "@com.google.errorprone.annotations.CheckReturnValue",
@@ -742,7 +726,7 @@ public class CheckReturnValueTest {
 
   @Test
   public void constructor_reference() {
-    compilationHelperLookingAtConstructors()
+    compilationHelper
         .addSourceLines(
             "Foo.java",
             "@com.google.errorprone.annotations.CheckReturnValue",
@@ -756,9 +740,5 @@ public class CheckReturnValueTest {
             "  }",
             "}")
         .doTest();
-  }
-
-  private CompilationTestHelper compilationHelperLookingAtConstructors() {
-    return compilationHelper.setArgs("-XepOpt:CheckConstructorReturnValue=true");
   }
 }

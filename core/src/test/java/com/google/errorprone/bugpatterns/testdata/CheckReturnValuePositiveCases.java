@@ -88,7 +88,7 @@ public class CheckReturnValuePositiveCases {
      * on the constructed object. There, it would be nice if IteratorTester
      * could be annotated with @CheckReturnValue to mean "anyone who creates an
      * anonymous subclasses of this should still do something with that
-     * subclass." But perhaps that's an abuse of @CheckForNull.
+     * subclass." But perhaps that's an abuse of @CheckReturnValue.
      *
      * Anyway, these tests are here to ensure that subclasses don't don't crash
      * the compiler.
@@ -107,7 +107,7 @@ public class CheckReturnValuePositiveCases {
       }
     }
 
-    // TODO(cpovirk): This one probably ought to be treated as a bug:
+    // BUG: Diagnostic contains: Ignored return value
     new MyObject();
   }
 

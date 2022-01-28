@@ -429,7 +429,6 @@ public class ReturnValueIgnoredTest {
   @Test
   public void constructors() {
     compilationHelper
-        .setArgs("-XepOpt:CheckConstructorReturnValue=true")
         .addSourceLines(
             "Test.java",
             "class Test {",
