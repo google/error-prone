@@ -119,6 +119,7 @@ public abstract class AbstractReturnValueIgnored extends BugChecker
       Suppliers.memoize(
           () ->
               allOf(
+                  this::isValidMemberReferenceType,
                   AbstractReturnValueIgnored::isVoidReturningMethodReferenceExpression,
                   // Skip cases where the method we're referencing really does return void.
                   // We're only looking for cases where the referenced method does not return
@@ -134,6 +135,7 @@ public abstract class AbstractReturnValueIgnored extends BugChecker
       Suppliers.memoize(
           () ->
               allOf(
+                  this::isValidMemberReferenceType,
                   AbstractReturnValueIgnored::isObjectReturningMethodReferenceExpression,
                   not((t, s) -> isExemptedInterfaceType(ASTHelpers.getType(t), s)),
                   not((t, s) -> Matchers.isThrowingFunctionalInterface(ASTHelpers.getType(t), s)),
@@ -147,6 +149,10 @@ public abstract class AbstractReturnValueIgnored extends BugChecker
 
   protected AbstractReturnValueIgnored(ErrorProneFlags flags) {
     this.constantExpressions = ConstantExpressions.fromFlags(flags);
+  }
+
+  private boolean isValidMemberReferenceType(MemberReferenceTree mrt, VisitorState state) {
+    return mrt.getMode() == ReferenceMode.INVOKE;
   }
 
   private static boolean isVoidReturningMethod(MethodSymbol meth, VisitorState state) {
