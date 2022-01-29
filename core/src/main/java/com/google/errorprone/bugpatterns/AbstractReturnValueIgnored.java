@@ -45,6 +45,7 @@ import com.google.errorprone.bugpatterns.BugChecker.MemberReferenceTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.NewClassTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.ReturnTreeMatcher;
+import com.google.errorprone.bugpatterns.threadsafety.ConstantExpressions;
 import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
@@ -138,11 +139,15 @@ public abstract class AbstractReturnValueIgnored extends BugChecker
                   not((t, s) -> Matchers.isThrowingFunctionalInterface(ASTHelpers.getType(t), s)),
                   specializedMatcher()));
 
+  private final ConstantExpressions constantExpressions;
+
   protected AbstractReturnValueIgnored() {
     this(ErrorProneFlags.empty());
   }
 
-  protected AbstractReturnValueIgnored(ErrorProneFlags flags) {}
+  protected AbstractReturnValueIgnored(ErrorProneFlags flags) {
+    this.constantExpressions = ConstantExpressions.fromFlags(flags);
+  }
 
   private static boolean isVoidReturningMethod(MethodSymbol meth, VisitorState state) {
     // Constructors "return" void but produce a real non-void value.
@@ -265,7 +270,8 @@ public abstract class AbstractReturnValueIgnored extends BugChecker
     } else {
       // Unclear what the programmer intended.  Delete since we don't know what else to do.
       Tree parent = state.getPath().getParentPath().getLeaf();
-      if (parent instanceof ExpressionStatementTree) {
+      if (parent instanceof ExpressionStatementTree
+          && constantExpressions.constantExpression(methodInvocationTree, state).isPresent()) {
         fix = SuggestedFix.delete(parent);
       }
     }

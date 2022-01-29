@@ -18,6 +18,7 @@ package com.google.errorprone.bugpatterns.threadsafety;
 
 import static com.google.errorprone.VisitorState.memoize;
 import static com.google.errorprone.matchers.Matchers.allOf;
+import static com.google.errorprone.matchers.Matchers.anyMethod;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.instanceEqualsInvocation;
 import static com.google.errorprone.matchers.Matchers.staticEqualsInvocation;
@@ -57,6 +58,7 @@ import com.sun.source.tree.UnaryTree;
 import com.sun.source.util.SimpleTreeVisitor;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
+import com.sun.tools.javac.code.Symbol.PackageSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type;
 import java.util.List;
@@ -384,7 +386,8 @@ public final class ConstantExpressions {
     Symbol symbol = getSymbol(receiver);
     return symbol.owner.isEnum()
         || (symbol instanceof VarSymbol && isConsideredFinal(symbol))
-        || symbol instanceof ClassSymbol;
+        || symbol instanceof ClassSymbol
+        || symbol instanceof PackageSymbol;
   }
 
   /** Visitor for scanning over the components of a constant expression. */
@@ -482,6 +485,7 @@ public final class ConstantExpressions {
                   "org.joda.time.LocalDateTime",
                   "org.joda.time.Period",
                   "org.joda.time.format.DateTimeFormatter"),
+          anyMethod().onClass("java.lang.String"),
           Matchers.hasAnnotation("org.checkerframework.dataflow.qual.Pure"),
           (tree, state) -> {
             Symbol symbol = getSymbol(tree);

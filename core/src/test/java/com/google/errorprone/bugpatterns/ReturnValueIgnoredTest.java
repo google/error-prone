@@ -488,6 +488,7 @@ public class ReturnValueIgnoredTest {
             "import java.util.stream.Stream;",
             "final class Test {",
             "  public void f() {",
+            "    Optional.of(42);",
             "    Optional.of(42).orElseThrow(AssertionError::new);",
             "    Stream.of(Optional.of(42)).forEach(o -> o.orElseThrow(AssertionError::new));",
             "  }",
@@ -498,6 +499,7 @@ public class ReturnValueIgnoredTest {
             "import java.util.stream.Stream;",
             "final class Test {",
             "  public void f() {",
+            "    Optional.of(42).orElseThrow(AssertionError::new);",
             "    Stream.of(Optional.of(42)).forEach(o -> o.orElseThrow(AssertionError::new));",
             "  }",
             "}")
