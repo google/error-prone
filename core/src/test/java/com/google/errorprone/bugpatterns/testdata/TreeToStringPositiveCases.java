@@ -47,10 +47,7 @@ public class TreeToStringPositiveCases {
           @Override
           public boolean matches(ClassTree classTree, VisitorState state) {
             ExpressionTree packageName = state.getPath().getCompilationUnit().getPackageName();
-            // TODO(b/206850765): This case is not caught by TreeToStringTest, but it *is* caught
-            // when this Matcher is converted to a lambda as above. TreeToString should be
-            // consistent for an anonymous class and the equivalent functional interface lambda
-            // form.
+            // BUG: Diagnostic contains:
             packageName.toString();
             return false;
           }
