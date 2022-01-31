@@ -27,7 +27,7 @@ import com.google.errorprone.matchers.Description;
 import com.sun.source.tree.ImportTree;
 
 /**
- * Members shouldn't be statically by their non-canonical name.
+ * Members shouldn't be statically imported by their non-canonical name.
  *
  * @author cushon@google.com (Liam Miller-Cushon)
  */
