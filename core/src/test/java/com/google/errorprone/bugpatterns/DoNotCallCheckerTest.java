@@ -121,24 +121,6 @@ public class DoNotCallCheckerTest {
   }
 
   @Test
-  public void positiveWhereDeclaredTypeIsSuper_flaggedOff() {
-    testHelper
-        .addSourceLines(
-            "Test.java",
-            "import com.google.common.collect.ImmutableList;",
-            "import java.util.List;",
-            "class Test {",
-            "  void foo() {",
-            "    List<Integer> xs = ImmutableList.of();",
-            "    xs.add(1);",
-            "    xs.get(1);",
-            "  }",
-            "}")
-        .setArgs("-XepOpt:DoNotCallChecker:CheckAssignedTypes=false")
-        .doTest();
-  }
-
-  @Test
   public void positiveWhereDeclaredTypeIsSuper_butNotAssignedOnce() {
     testHelper
         .addSourceLines(

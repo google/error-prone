@@ -33,7 +33,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableListMultimap;
 import com.google.common.collect.ImmutableMap;
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.CompilationUnitTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
@@ -138,12 +137,6 @@ public class DoNotCallChecker extends BugChecker
 
   static final String DO_NOT_CALL = "com.google.errorprone.annotations.DoNotCall";
 
-  private final boolean checkAssignedTypes;
-
-  public DoNotCallChecker(ErrorProneFlags flags) {
-    this.checkAssignedTypes = flags.getBoolean("DoNotCallChecker:CheckAssignedTypes").orElse(true);
-  }
-
   @Override
   public Description matchMethod(MethodTree tree, VisitorState state) {
     MethodSymbol symbol = getSymbol(tree);
@@ -237,9 +230,6 @@ public class DoNotCallChecker extends BugChecker
           ExpressionTree tree, MethodSymbol sym, VisitorState state) {
         if (hasAnnotation(sym, DO_NOT_CALL, state)) {
           return Optional.of(sym);
-        }
-        if (!checkAssignedTypes) {
-          return Optional.empty();
         }
         ExpressionTree receiver = getReceiver(tree);
         Symbol receiverSymbol = getSymbol(receiver);
