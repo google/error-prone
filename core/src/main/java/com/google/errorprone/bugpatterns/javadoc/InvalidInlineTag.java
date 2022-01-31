@@ -27,7 +27,6 @@ import static java.util.stream.Collectors.joining;
 import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.StandardTags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
@@ -68,7 +67,6 @@ import java.util.regex.Pattern;
     name = "InvalidInlineTag",
     summary = "This tag is invalid.",
     severity = WARNING,
-    tags = StandardTags.STYLE,
     documentSuppression = false)
 public final class InvalidInlineTag extends BugChecker
     implements ClassTreeMatcher, MethodTreeMatcher, VariableTreeMatcher {
