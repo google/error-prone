@@ -42,7 +42,6 @@ import java.util.List;
 
 /** Match possibly incorrect use of Period to obtain a number of (e.g.) days between two dates. */
 @BugPattern(
-    name = "JodaNewPeriod",
     summary =
         "This may have surprising semantics, e.g. new Period(LocalDate.parse(\"1970-01-01\"), "
             + "LocalDate.parse(\"1970-02-02\")).getDays() == 1, not 32.",

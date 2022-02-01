@@ -37,7 +37,6 @@ import java.util.EnumSet;
  * {@code MONTHS}, or {@code DAYS}.
  */
 @BugPattern(
-    name = "PeriodGetTemporalUnit",
     summary = "Period.get() only works with YEARS, MONTHS, or DAYS.",
     explanation =
         "`Period.get(TemporalUnit)` only works when passed `ChronoUnit.YEARS`, `ChronoUnit.MONTHS`,"

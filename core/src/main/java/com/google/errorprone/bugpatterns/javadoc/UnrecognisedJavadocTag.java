@@ -46,7 +46,6 @@ import javax.annotation.Nullable;
 
 /** Flags tags which haven't been recognised by the Javadoc parser. */
 @BugPattern(
-    name = "UnrecognisedJavadocTag",
     summary =
         "This Javadoc tag wasn't recognised by the parser. Is it malformed somehow, perhaps with"
             + " mismatched braces?",

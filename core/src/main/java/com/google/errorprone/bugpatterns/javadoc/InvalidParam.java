@@ -55,7 +55,6 @@ import java.util.regex.Pattern;
 // TODO(ghm): Split this into the @param part and the @code part; the former is always right that
 // there's a mistake, but the latter is based on a heuristic.
 @BugPattern(
-    name = "InvalidParam",
     summary = "This @param tag doesn't refer to a parameter of the method.",
     severity = WARNING,
     documentSuppression = false)

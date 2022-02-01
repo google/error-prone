@@ -56,7 +56,6 @@ import javax.lang.model.element.ElementKind;
  * @author bhagwani@google.com (Sumit Bhagwani)
  */
 @BugPattern(
-    name = "InjectOnMemberAndConstructor",
     summary =
         "Members shouldn't be annotated with @Inject if constructor is already annotated @Inject",
     severity = ERROR)

@@ -57,7 +57,6 @@ import javax.lang.model.element.Modifier;
  * @author ghm@google.com (Graeme Morgan)
  */
 @BugPattern(
-    name = "MissingSummary",
     summary = "A summary line is required on public/protected Javadocs.",
     severity = WARNING,
     linkType = CUSTOM,

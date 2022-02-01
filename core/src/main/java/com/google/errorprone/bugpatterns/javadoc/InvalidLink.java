@@ -52,7 +52,7 @@ import java.util.regex.Pattern;
 import javax.lang.model.element.Element;
 
 /** Finds some common errors in {@literal @}link tags. */
-@BugPattern(name = "InvalidLink", summary = "This @link tag looks wrong.", severity = WARNING)
+@BugPattern(summary = "This @link tag looks wrong.", severity = WARNING)
 public final class InvalidLink extends BugChecker
     implements ClassTreeMatcher, MethodTreeMatcher, VariableTreeMatcher {
 

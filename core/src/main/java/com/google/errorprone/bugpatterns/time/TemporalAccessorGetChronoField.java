@@ -67,7 +67,6 @@ import java.util.Optional;
  * throw an {@code UnsupportedTemporalTypeException}.
  */
 @BugPattern(
-    name = "TemporalAccessorGetChronoField",
     summary = "TemporalAccessor.get() only works for certain values of ChronoField.",
     explanation =
         "TemporalAccessor.get(ChronoField) only works for certain values of ChronoField. E.g., "

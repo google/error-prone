@@ -63,11 +63,7 @@ import java.util.regex.Pattern;
  *
  * @author ghm@google.com (Graeme Morgan)
  */
-@BugPattern(
-    name = "InvalidInlineTag",
-    summary = "This tag is invalid.",
-    severity = WARNING,
-    documentSuppression = false)
+@BugPattern(summary = "This tag is invalid.", severity = WARNING, documentSuppression = false)
 public final class InvalidInlineTag extends BugChecker
     implements ClassTreeMatcher, MethodTreeMatcher, VariableTreeMatcher {
 

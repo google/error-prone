@@ -76,7 +76,6 @@ import javax.annotation.Nullable;
 
 /** Checker that detects likely time-unit mismatches by looking at identifier names. */
 @BugPattern(
-    name = "TimeUnitMismatch",
     summary =
         "An value that appears to be represented in one unit is used where another appears to be "
             + "required (e.g., seconds where nanos are needed)",

@@ -42,7 +42,6 @@ import java.util.Optional;
  * SECONDS} or {@code NANOS}.
  */
 @BugPattern(
-    name = "DurationGetTemporalUnit",
     summary = "Duration.get() only works with SECONDS or NANOS.",
     explanation =
         "`Duration.get(TemporalUnit)` only works when passed `ChronoUnit.SECONDS` or "

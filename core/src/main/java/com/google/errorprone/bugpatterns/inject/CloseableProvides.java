@@ -32,7 +32,6 @@ import com.sun.source.tree.MethodTree;
 
 /** @author bhagwani@google.com (Sumit Bhagwani) */
 @BugPattern(
-    name = "CloseableProvides",
     summary = "Providing Closeable resources makes their lifecycle unclear",
     severity = WARNING)
 public class CloseableProvides extends BugChecker implements MethodTreeMatcher {

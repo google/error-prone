@@ -34,7 +34,6 @@ import java.util.regex.Pattern;
 
 /** Flags fields which would be better expressed as time types rather than primitive integers. */
 @BugPattern(
-    name = "StronglyTypeTime",
     summary =
         "This primitive integral type is only used to construct time types. It would be clearer to"
             + " strongly type the field instead.",

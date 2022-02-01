@@ -40,7 +40,6 @@ import com.sun.source.tree.MethodTree;
 
 /** @author sgoldfeder@google.com (Steven Goldfeder) */
 @BugPattern(
-    name = "JavaxInjectOnAbstractMethod",
     summary = "Abstract and default methods are not injectable with javax.inject.Inject",
     severity = ERROR)
 public class JavaxInjectOnAbstractMethod extends BugChecker implements MethodTreeMatcher {

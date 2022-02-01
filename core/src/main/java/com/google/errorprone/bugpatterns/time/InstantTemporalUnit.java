@@ -41,7 +41,6 @@ import java.util.Arrays;
  * HOURS}, {@code HALF_DAYS}, or {@code DAYS}.
  */
 @BugPattern(
-    name = "InstantTemporalUnit",
     summary =
         "Instant APIs only work for NANOS, MICROS, MILLIS, SECONDS, MINUTES, HOURS, HALF_DAYS and"
             + " DAYS.",

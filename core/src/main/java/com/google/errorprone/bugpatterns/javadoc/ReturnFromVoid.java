@@ -38,7 +38,6 @@ import com.sun.source.util.DocTreePathScanner;
  * @author ghm@google.com (Graeme Morgan)
  */
 @BugPattern(
-    name = "ReturnFromVoid",
     summary = "Void methods should not have a @return tag.",
     severity = WARNING,
     tags = StandardTags.STYLE,

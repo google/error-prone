@@ -35,7 +35,6 @@ import com.sun.source.tree.MethodInvocationTree;
  * @author kak@google.com (Kurt Alfred Kluever)
  */
 @BugPattern(
-    name = "ProtoTimestampGetSecondsGetNano",
     summary = "getNanos() only accesses the underlying nanosecond-adjustment of the instant.",
     explanation =
         "If you call timestamp.getNanos(), you must also call timestamp.getSeconds() in 'nearby' "

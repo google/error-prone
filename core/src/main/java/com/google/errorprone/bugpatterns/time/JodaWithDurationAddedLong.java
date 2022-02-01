@@ -40,7 +40,6 @@ import com.sun.source.tree.MethodInvocationTree;
  * {Duration,Instant,DateTime}}.
  */
 @BugPattern(
-    name = "JodaWithDurationAddedLong",
     summary =
         "Use of JodaTime's type.withDurationAdded(long, int) (where <type> = "
             + "{Duration,Instant,DateTime}). Please use "

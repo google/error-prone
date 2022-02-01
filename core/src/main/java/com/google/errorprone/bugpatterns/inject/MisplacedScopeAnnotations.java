@@ -45,7 +45,6 @@ import java.util.List;
  * on the injected values.
  */
 @BugPattern(
-    name = "MisplacedScopeAnnotations",
     summary =
         "Scope annotations used as qualifier annotations don't have any effect."
             + " Move the scope annotation to the binding location or delete it.",

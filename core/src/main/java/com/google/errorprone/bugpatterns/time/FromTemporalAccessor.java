@@ -64,7 +64,6 @@ import java.util.Map;
  * @author kak@google.com (Kurt Alfred Kluever)
  */
 @BugPattern(
-    name = "FromTemporalAccessor",
     summary =
         "Certain combinations of javaTimeType.from(TemporalAccessor) will always throw a"
             + " DateTimeException or return the parameter directly.",

@@ -43,7 +43,6 @@ import java.util.regex.Pattern;
  * @author aaronhurst@google.com (Aaron Hurst)
  */
 @BugPattern(
-    name = "MalformedInlineTag",
     summary = "This Javadoc tag is malformed. The correct syntax is {@tag and not @{tag.",
     severity = WARNING,
     documentSuppression = false)

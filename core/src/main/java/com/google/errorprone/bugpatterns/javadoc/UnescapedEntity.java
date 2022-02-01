@@ -64,7 +64,6 @@ import javax.annotation.Nullable;
  * @author ghm@google.com (Graeme Morgan)
  */
 @BugPattern(
-    name = "UnescapedEntity",
     summary =
         "Javadoc is interpreted as HTML, so HTML entities such as &, <, > must be escaped. If this"
             + " finding seems wrong (e.g. is within a @code or @literal tag), check whether the tag"

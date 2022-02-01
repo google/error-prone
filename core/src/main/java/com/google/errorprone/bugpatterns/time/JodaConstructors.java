@@ -44,7 +44,6 @@ import com.sun.source.tree.NewClassTree;
  * </ul>
  */
 @BugPattern(
-    name = "JodaConstructors",
     summary = "Use of certain JodaTime constructors are not allowed.",
     explanation = "Use JodaTime's static factories instead of the ambiguous constructors.",
     severity = WARNING)

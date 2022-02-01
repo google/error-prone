@@ -33,7 +33,6 @@ import com.sun.source.tree.MethodInvocationTree;
 
 /** Check for calls to {@code instant.withMillis(long)}. */
 @BugPattern(
-    name = "JodaInstantWithMillis",
     summary =
         "Use of instant.withMillis(long) is not allowed. Please use new Instant(long) instead.",
     explanation =

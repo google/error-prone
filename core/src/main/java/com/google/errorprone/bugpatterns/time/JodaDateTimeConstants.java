@@ -35,7 +35,6 @@ import java.util.stream.Stream;
 
 /** Checks for usages of dangerous {@code DateTimeConstants} constants. */
 @BugPattern(
-    name = "JodaDateTimeConstants",
     summary =
         "Using the `_PER_` constants in `DateTimeConstants` is problematic because they encourage"
             + " manual date/time math.",

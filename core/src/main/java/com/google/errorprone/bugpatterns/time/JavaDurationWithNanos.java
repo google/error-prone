@@ -37,7 +37,6 @@ import com.sun.source.tree.MethodInvocationTree;
 
 /** Check for calls to {@code duration.withNanos(int)}. */
 @BugPattern(
-    name = "JavaDurationWithNanos",
     summary = "Use of java.time.Duration.withNanos(int) is not allowed.",
     explanation =
         "Duration's withNanos(int) method is often a source of bugs because it returns a copy of "

@@ -52,7 +52,6 @@ import javax.lang.model.element.ElementKind;
  * {@code *}.
  */
 @BugPattern(
-    name = "AlmostJavadoc",
     summary =
         "This comment contains Javadoc or HTML tags, but isn't started with a double asterisk"
             + " (/**); is it meant to be Javadoc?",

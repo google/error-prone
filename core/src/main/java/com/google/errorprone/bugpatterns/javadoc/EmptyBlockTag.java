@@ -48,7 +48,6 @@ import java.util.List;
  * @author andrewash@google.com (Andrew Ash)
  */
 @BugPattern(
-    name = "EmptyBlockTag",
     summary =
         "A block tag (@param, @return, @throws, @deprecated) has an empty description. Block tags"
             + " without descriptions don't add much value for future readers of the code; consider"

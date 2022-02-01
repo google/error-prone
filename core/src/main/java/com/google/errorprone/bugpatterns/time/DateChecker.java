@@ -55,7 +55,6 @@ import java.util.List;
  * @author kak@google.com (Kurt Alfred Kluever)
  */
 @BugPattern(
-    name = "DateChecker",
     summary = "Warns against suspect looking calls to java.util.Date APIs",
     explanation =
         "java.util.Date uses 1900-based years, 0-based months, 1-based days, and 0-based"

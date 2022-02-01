@@ -67,7 +67,6 @@ import javax.annotation.Nullable;
 
 /** This check suggests the use of {@code java.time}-based APIs, when available. */
 @BugPattern(
-    name = "PreferJavaTimeOverload",
     altNames = {"PreferDurationOverload"},
     summary =
         "Prefer using java.time-based APIs when available. Note that this checker does"

@@ -57,7 +57,6 @@ import java.util.Set;
  * @author ghm@google.com (Graeme Morgan)
  */
 @BugPattern(
-    name = "InvalidBlockTag",
     summary = "This tag is invalid.",
     severity = WARNING,
     tags = StandardTags.STYLE,

@@ -45,7 +45,6 @@ import java.util.List;
 
 /** @author Nick Glorioso (glorioso@google.com) */
 @BugPattern(
-    name = "QualifierOrScopeOnInjectMethod",
     summary =
         "Qualifiers/Scope annotations on @Inject methods don't have any effect."
             + " Move the qualifier annotation to the binding location.",

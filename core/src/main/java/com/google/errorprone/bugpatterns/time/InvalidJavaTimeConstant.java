@@ -60,7 +60,6 @@ import java.util.List;
  * @author kak@google.com (Kurt Alfred Kluever)
  */
 @BugPattern(
-    name = "InvalidJavaTimeConstant",
     summary =
         "This checker errors on calls to java.time methods using values that are guaranteed to "
             + "throw a DateTimeException.",

@@ -52,7 +52,6 @@ import java.util.concurrent.TimeUnit;
  * which accepts a {@code <long, TimeUnit>} pair.
  */
 @BugPattern(
-    name = "DurationToLongTimeUnit",
     summary = "Unit mismatch when decomposing a Duration or Instant to call a <long, TimeUnit> API",
     severity = ERROR)
 // TODO(kak): we should probably rename this as it works for Instants/Timestamps too
