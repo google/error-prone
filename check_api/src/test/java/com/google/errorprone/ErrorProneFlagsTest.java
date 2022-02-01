@@ -110,7 +110,7 @@ public final class ErrorProneFlagsTest {
             .put("a", "FIRST_A")
             .put("b", "b2")
             .put("c", "c2")
-            .build();
+            .buildOrThrow();
 
     ImmutableMap<String, String> actualCombinedMap = flags1.plus(flags2).getFlagsMap();
 
