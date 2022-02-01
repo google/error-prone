@@ -93,6 +93,8 @@ public final class UnusedMethod extends BugChecker implements CompilationUnitTre
   private static final ImmutableSet<String> EXEMPTING_METHOD_ANNOTATIONS =
       ImmutableSet.of(
           "com.fasterxml.jackson.annotation.JsonCreator",
+          "com.fasterxml.jackson.annotation.JsonProperty",
+          "com.fasterxml.jackson.annotation.JsonSetter",
           "com.google.inject.Provides",
           "com.google.inject.Inject",
           "com.google.inject.multibindings.ProvidesIntoMap",
@@ -101,6 +103,8 @@ public final class UnusedMethod extends BugChecker implements CompilationUnitTre
           "javax.annotation.PostConstruct",
           "javax.inject.Inject",
           "javax.persistence.PostLoad",
+          "javax.validation.constraints.AssertFalse",
+          "javax.validation.constraints.AssertTrue",
           "org.aspectj.lang.annotation.Pointcut",
           "org.aspectj.lang.annotation.Before",
           "org.springframework.context.annotation.Bean",
@@ -110,7 +114,12 @@ public final class UnusedMethod extends BugChecker implements CompilationUnitTre
           "org.testng.annotations.BeforeMethod",
           "org.testng.annotations.DataProvider",
           "org.junit.AfterClass",
-          "org.junit.BeforeClass");
+          "org.junit.BeforeClass",
+          "org.junit.jupiter.api.AfterAll",
+          "org.junit.jupiter.api.AfterEach",
+          "org.junit.jupiter.api.BeforeAll",
+          "org.junit.jupiter.api.BeforeEach"
+      );
 
   /** The set of types exempting a type that is extending or implementing them. */
   private static final ImmutableSet<String> EXEMPTING_SUPER_TYPES = ImmutableSet.of();
