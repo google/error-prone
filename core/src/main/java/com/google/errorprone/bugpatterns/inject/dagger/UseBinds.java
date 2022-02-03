@@ -75,7 +75,7 @@ public class UseBinds extends BugChecker implements MethodTreeMatcher {
           if (parameters.size() != 1) {
             return false;
           }
-          final VariableTree onlyParameter = Iterables.getOnlyElement(parameters);
+          VariableTree onlyParameter = Iterables.getOnlyElement(parameters);
 
           BlockTree body = t.getBody();
           if (body == null) {

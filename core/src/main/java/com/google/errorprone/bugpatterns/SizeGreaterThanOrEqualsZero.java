@@ -220,7 +220,7 @@ public class SizeGreaterThanOrEqualsZero extends BugChecker implements BinaryTre
   private Description provideReplacementForStaticMethodInvocation(
       BinaryTree tree,
       MethodInvocationTree callToSize,
-      final VisitorState state,
+      VisitorState state,
       ExpressionType expressionType) {
     ExpressionTree classToken = getReceiver(callToSize);
 

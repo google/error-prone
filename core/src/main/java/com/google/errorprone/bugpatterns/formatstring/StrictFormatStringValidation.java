@@ -167,9 +167,9 @@ public class StrictFormatStringValidation {
    */
   private static ValidationResult validateFormatStringVariable(
       ExpressionTree formatStringTree,
-      final Symbol formatStringSymbol,
-      final List<? extends ExpressionTree> args,
-      final VisitorState state) {
+      Symbol formatStringSymbol,
+      List<? extends ExpressionTree> args,
+      VisitorState state) {
     if (formatStringSymbol.getKind() != ElementKind.LOCAL_VARIABLE) {
       return ValidationResult.create(
           null,

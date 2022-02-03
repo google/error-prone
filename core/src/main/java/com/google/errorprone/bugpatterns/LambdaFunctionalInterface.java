@@ -245,7 +245,7 @@ public class LambdaFunctionalInterface extends BugChecker implements MethodTreeM
         new TreeScanner<Void, Void>() {
           @Override
           public Void visitMethodInvocation(MethodInvocationTree callTree, Void unused) {
-            final MethodSymbol methodSymbol = getSymbol(callTree);
+            MethodSymbol methodSymbol = getSymbol(callTree);
             if (methodSymbol != null && sym.equals(methodSymbol)) {
               methodMap.put(methodSymbol.toString(), callTree);
             }

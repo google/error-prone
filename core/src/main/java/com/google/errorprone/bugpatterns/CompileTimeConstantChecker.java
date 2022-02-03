@@ -125,7 +125,7 @@ public class CompileTimeConstantChecker extends BugChecker
    */
   private Description matchArguments(
       VisitorState state,
-      final Symbol.MethodSymbol calleeSymbol,
+      Symbol.MethodSymbol calleeSymbol,
       Iterator<? extends ExpressionTree> actualParams) {
     Symbol.VarSymbol lastFormalParam = null;
     for (Symbol.VarSymbol formalParam : calleeSymbol.getParameters()) {

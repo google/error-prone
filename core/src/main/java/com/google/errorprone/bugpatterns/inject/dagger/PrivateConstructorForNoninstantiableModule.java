@@ -107,7 +107,7 @@ public class PrivateConstructorForNoninstantiableModule extends BugChecker
   }
 
   private static <T extends Tree> Predicate<T> matcherAsPredicate(
-      final Matcher<? super T> matcher, final VisitorState state) {
+      Matcher<? super T> matcher, VisitorState state) {
     return new Predicate<T>() {
       @Override
       public boolean apply(T t) {

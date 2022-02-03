@@ -53,8 +53,7 @@ public class NonAtomicVolatileUpdate extends BugChecker
     implements UnaryTreeMatcher, CompoundAssignmentTreeMatcher, AssignmentTreeMatcher {
 
   /** Extracts the expression from a UnaryTree and applies a matcher to it. */
-  private static Matcher<UnaryTree> expressionFromUnaryTree(
-      final Matcher<ExpressionTree> exprMatcher) {
+  private static Matcher<UnaryTree> expressionFromUnaryTree(Matcher<ExpressionTree> exprMatcher) {
     return new Matcher<UnaryTree>() {
       @Override
       public boolean matches(UnaryTree tree, VisitorState state) {
@@ -65,7 +64,7 @@ public class NonAtomicVolatileUpdate extends BugChecker
 
   /** Extracts the variable from a CompoundAssignmentTree and applies a matcher to it. */
   private static Matcher<CompoundAssignmentTree> variableFromCompoundAssignmentTree(
-      final Matcher<ExpressionTree> exprMatcher) {
+      Matcher<ExpressionTree> exprMatcher) {
     return new Matcher<CompoundAssignmentTree>() {
       @Override
       public boolean matches(CompoundAssignmentTree tree, VisitorState state) {
@@ -76,7 +75,7 @@ public class NonAtomicVolatileUpdate extends BugChecker
 
   /** Extracts the variable from an AssignmentTree and applies a matcher to it. */
   private static Matcher<AssignmentTree> variableFromAssignmentTree(
-      final Matcher<ExpressionTree> exprMatcher) {
+      Matcher<ExpressionTree> exprMatcher) {
     return new Matcher<AssignmentTree>() {
       @Override
       public boolean matches(AssignmentTree tree, VisitorState state) {

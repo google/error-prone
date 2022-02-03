@@ -69,7 +69,7 @@ public class EqualsIncompatibleType extends BugChecker
 
   @Override
   public Description matchMethodInvocation(
-      MethodInvocationTree invocationTree, final VisitorState state) {
+      MethodInvocationTree invocationTree, VisitorState state) {
     if (!STATIC_EQUALS_MATCHER.matches(invocationTree, state)
         && !INSTANCE_EQUALS_MATCHER.matches(invocationTree, state)) {
       return NO_MATCH;

@@ -268,8 +268,7 @@ public class BugCheckerRefactoringTestHelper {
 
   @CanIgnoreReturnValue
   private JCCompilationUnit doCompile(
-      final JavaFileObject input, Iterable<JavaFileObject> files, Context context)
-      throws IOException {
+      JavaFileObject input, Iterable<JavaFileObject> files, Context context) throws IOException {
     JavacTool tool = JavacTool.create();
     DiagnosticCollector<JavaFileObject> diagnosticsCollector = new DiagnosticCollector<>();
     ErrorProneOptions errorProneOptions;
@@ -311,7 +310,7 @@ public class BugCheckerRefactoringTestHelper {
   private JavaFileObject applyDiff(
       JavaFileObject sourceFileObject, Context context, JCCompilationUnit tree) throws IOException {
     ImportOrganizer importOrganizer = ImportOrderParser.getImportOrganizer(importOrder);
-    final DescriptionBasedDiff diff = DescriptionBasedDiff.create(tree, importOrganizer);
+    DescriptionBasedDiff diff = DescriptionBasedDiff.create(tree, importOrganizer);
     ErrorProneOptions errorProneOptions = context.get(ErrorProneOptions.class);
     ErrorProneScannerTransformer.create(scannerSupplier.applyOverrides(errorProneOptions).get())
         .apply(

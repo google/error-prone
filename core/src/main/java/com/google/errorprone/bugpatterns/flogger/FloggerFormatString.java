@@ -86,8 +86,7 @@ public class FloggerFormatString extends BugChecker implements MethodInvocationT
    * suggest using {@code withCause(e)} instead of adding a format specifier.
    */
   @Nullable
-  private Fix withCauseFix(
-      ValidationResult result, MethodInvocationTree tree, final VisitorState state) {
+  private Fix withCauseFix(ValidationResult result, MethodInvocationTree tree, VisitorState state) {
     if (!result.message().startsWith("extra format arguments")) {
       return null;
     }
@@ -97,7 +96,7 @@ public class FloggerFormatString extends BugChecker implements MethodInvocationT
     }
 
     // if there's already a call to withCause, don't suggest adding another one
-    final boolean[] withCause = {false};
+    boolean[] withCause = {false};
     tree.accept(
         new TreeScanner<Void, Void>() {
           @Override

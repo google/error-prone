@@ -87,8 +87,7 @@ public class MethodReturnsNonNullStringTest extends CompilerBasedAbstractTest {
         methodInvocationMatches(/* shouldMatch= */ false, Matchers.methodReturnsNonNull()));
   }
 
-  private Scanner methodInvocationMatches(
-      final boolean shouldMatch, final Matcher<ExpressionTree> toMatch) {
+  private Scanner methodInvocationMatches(boolean shouldMatch, Matcher<ExpressionTree> toMatch) {
     return new Scanner() {
       @Override
       public Void visitMethodInvocation(MethodInvocationTree node, VisitorState visitorState) {

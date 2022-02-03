@@ -901,14 +901,14 @@ public class SuggestedFixesTest {
   @BugPattern(summary = "all javadoc links should be qualified", severity = ERROR)
   public static class JavadocQualifier extends BugChecker implements BugChecker.ClassTreeMatcher {
     @Override
-    public Description matchClass(ClassTree tree, final VisitorState state) {
-      final DCTree.DCDocComment comment =
+    public Description matchClass(ClassTree tree, VisitorState state) {
+      DCTree.DCDocComment comment =
           ((JCTree.JCCompilationUnit) state.getPath().getCompilationUnit())
               .docComments.getCommentTree((JCTree) tree);
       if (comment == null) {
         return Description.NO_MATCH;
       }
-      final SuggestedFix.Builder fix = SuggestedFix.builder();
+      SuggestedFix.Builder fix = SuggestedFix.builder();
       new DocTreePathScanner<Void, Void>() {
         @Override
         public Void visitLink(LinkTree node, Void unused) {

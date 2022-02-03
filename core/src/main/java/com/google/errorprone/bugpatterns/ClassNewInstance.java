@@ -85,7 +85,7 @@ public class ClassNewInstance extends BugChecker implements MethodInvocationTree
 
   // if the match occurrs inside the body of a try statement with existing catch clauses
   // update or add a catch block to handle the new exceptions
-  private static boolean fixExceptions(final VisitorState state, SuggestedFix.Builder fix) {
+  private static boolean fixExceptions(VisitorState state, SuggestedFix.Builder fix) {
     TryTree tryTree = null;
     OUTER:
     for (TreePath path = state.getPath(); path != null; path = path.getParentPath()) {
@@ -156,7 +156,7 @@ public class ClassNewInstance extends BugChecker implements MethodInvocationTree
     }
     // if the catch blocks contain calls to newInstance, don't delete any of them to avoid
     // overlapping fixes
-    final AtomicBoolean newInstanceInCatch = new AtomicBoolean(false);
+    AtomicBoolean newInstanceInCatch = new AtomicBoolean(false);
     ((JCTree) result.handles.values().iterator().next())
         .accept(
             new TreeScanner() {

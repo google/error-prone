@@ -113,8 +113,7 @@ public class NonNullLiteralTest extends CompilerBasedAbstractTest {
     assertCompiles(nonNullLiteralMatches(/* shouldMatch= */ false, Matchers.nonNullLiteral()));
   }
 
-  private Scanner nonNullLiteralMatches(
-      final boolean shouldMatch, final Matcher<ExpressionTree> toMatch) {
+  private Scanner nonNullLiteralMatches(boolean shouldMatch, Matcher<ExpressionTree> toMatch) {
     return new Scanner() {
       @Override
       public Void visitLiteral(LiteralTree node, VisitorState visitorState) {

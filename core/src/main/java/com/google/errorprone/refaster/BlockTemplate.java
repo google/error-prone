@@ -106,14 +106,14 @@ public abstract class BlockTemplate extends Template<BlockTemplateMatch> {
   }
 
   private Choice<List<BlockTemplateMatch>> matchesStartingAtBeginning(
-      final JCBlock block,
-      final int offset,
-      final ImmutableList<? extends StatementTree> statements,
-      final Context context) {
+      JCBlock block,
+      int offset,
+      ImmutableList<? extends StatementTree> statements,
+      Context context) {
     if (statements.isEmpty()) {
       return Choice.none();
     }
-    final JCStatement firstStatement = (JCStatement) statements.get(0);
+    JCStatement firstStatement = (JCStatement) statements.get(0);
     Choice<UnifierWithUnconsumedStatements> choice =
         Choice.of(UnifierWithUnconsumedStatements.create(new Unifier(context), statements));
     for (UStatement templateStatement : templateStatements()) {
@@ -160,8 +160,8 @@ public abstract class BlockTemplate extends Template<BlockTemplateMatch> {
   private Choice<List<BlockTemplateMatch>> matchesStartingAnywhere(
       JCBlock block,
       int offset,
-      final ImmutableList<? extends StatementTree> statements,
-      final Context context) {
+      ImmutableList<? extends StatementTree> statements,
+      Context context) {
     Choice<List<BlockTemplateMatch>> choice = Choice.none();
     for (int i = 0; i < statements.size(); i++) {
       choice =

@@ -59,7 +59,7 @@ public class ProtectedMembersInFinalClass extends BugChecker implements ClassTre
   }
 
   @Override
-  public Description matchClass(final ClassTree tree, final VisitorState state) {
+  public Description matchClass(ClassTree tree, VisitorState state) {
     if (!HAS_FINAL.matches(tree, state)) {
       return NO_MATCH;
     }

@@ -143,7 +143,7 @@ public class UTemplater extends SimpleTreeVisitor<Tree, Void> {
     ImmutableClassToInstanceMap<Annotation> annotations = UTemplater.annotationMap(declSym);
     ImmutableMap<String, VarSymbol> freeExpressionVars = freeExpressionVariables(decl);
     Context subContext = new SubContext(context);
-    final UTemplater templater = new UTemplater(freeExpressionVars, subContext);
+    UTemplater templater = new UTemplater(freeExpressionVars, subContext);
     ImmutableMap<String, UType> expressionVarTypes =
         ImmutableMap.copyOf(
             Maps.transformValues(

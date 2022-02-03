@@ -49,7 +49,7 @@ abstract class AbstractAsyncTypeReturnsNull extends AbstractMethodReturnsNull {
             .build());
   }
 
-  private static Matcher<MethodTree> overridesMethodOfClass(final Class<?> clazz) {
+  private static Matcher<MethodTree> overridesMethodOfClass(Class<?> clazz) {
     checkNotNull(clazz);
     return new Matcher<MethodTree>() {
       @Override

@@ -228,7 +228,7 @@ public class UnnecessaryCheckNotNull extends BugChecker implements MethodInvocat
    * ==> {} x.y.z(s.t) ==> {x,s}
    */
   static List<IdentifierTree> getVariableUses(ExpressionTree tree) {
-    final List<IdentifierTree> freeVars = new ArrayList<>();
+    List<IdentifierTree> freeVars = new ArrayList<>();
 
     new TreeScanner<Void, Void>() {
       @Override

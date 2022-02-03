@@ -57,7 +57,7 @@ public class CompilerBasedAbstractTest {
     compilationHelper.doTest();
   }
 
-  protected void assertCompiles(final Scanner scanner) {
+  protected void assertCompiles(Scanner scanner) {
     assertCompiles(ScannerSupplier.fromScanner(scanner));
   }
 }

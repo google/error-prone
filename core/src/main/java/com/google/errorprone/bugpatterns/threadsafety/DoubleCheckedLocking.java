@@ -272,7 +272,7 @@ public class DoubleCheckedLocking extends BugChecker implements IfTreeMatcher {
    * Visits (possibly nested) block statements and returns the first child statement with the given
    * class.
    */
-  private static <T> T getChild(StatementTree tree, final Class<T> clazz) {
+  private static <T> T getChild(StatementTree tree, Class<T> clazz) {
     return tree.accept(
         new SimpleTreeVisitor<T, Void>() {
           @Override

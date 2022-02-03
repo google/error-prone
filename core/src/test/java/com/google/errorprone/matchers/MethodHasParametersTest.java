@@ -118,7 +118,7 @@ public class MethodHasParametersTest extends CompilerBasedAbstractTest {
     public abstract void assertDone();
   }
 
-  private Scanner methodMatches(final boolean shouldMatch, final MethodHasParameters toMatch) {
+  private Scanner methodMatches(boolean shouldMatch, MethodHasParameters toMatch) {
     ScannerTest test =
         new ScannerTest() {
           private boolean matched = false;

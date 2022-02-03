@@ -162,7 +162,7 @@ public abstract class ExpressionTemplate extends Template<ExpressionTemplateMatc
       };
 
   @Override
-  public Choice<Unifier> unify(final JCExpression target, Unifier unifier) {
+  public Choice<Unifier> unify(JCExpression target, Unifier unifier) {
     return expression()
         .unify(target, unifier)
         .condition(u -> trueOrNull(PLACEHOLDER_VERIFIER.scan(expression(), u)))

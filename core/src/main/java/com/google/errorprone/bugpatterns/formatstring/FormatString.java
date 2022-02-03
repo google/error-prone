@@ -39,7 +39,7 @@ public class FormatString extends BugChecker implements MethodInvocationTreeMatc
       instanceMethod().onExactClass("java.lang.String").named("formatted");
 
   @Override
-  public Description matchMethodInvocation(MethodInvocationTree tree, final VisitorState state) {
+  public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
     ImmutableList<ExpressionTree> args;
     MethodSymbol sym = ASTHelpers.getSymbol(tree);
     if (sym == null) {

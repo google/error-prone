@@ -412,7 +412,7 @@ public class MethodInvocationMatcher {
    * see the factories in {@link com.google.errorprone.matchers.Matchers} returning subtypes of
    * {@link com.google.errorprone.matchers.method.MethodMatchers.MethodMatcher}.
    */
-  public static Matcher<ExpressionTree> compile(final Iterable<Rule> rules) {
+  public static Matcher<ExpressionTree> compile(Iterable<Rule> rules) {
 
     // A set of Rule objects represents a predicate stated in disjunctive normal form, where the
     // atoms are equality tests on parts of a MethodSymbol allowed by TokenType and Token classes.

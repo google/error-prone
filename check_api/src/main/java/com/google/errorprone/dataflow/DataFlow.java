@@ -78,11 +78,11 @@ public final class DataFlow {
               new CacheLoader<AnalysisParams, Analysis<?, ?, ?>>() {
                 @Override
                 public Analysis<?, ?, ?> load(AnalysisParams key) {
-                  final ControlFlowGraph cfg = key.cfg();
-                  final ForwardTransferFunction<?, ?> transfer = key.transferFunction();
+                  ControlFlowGraph cfg = key.cfg();
+                  ForwardTransferFunction<?, ?> transfer = key.transferFunction();
 
                   @SuppressWarnings({"unchecked", "rawtypes"})
-                  final Analysis<?, ?, ?> analysis = new ForwardAnalysisImpl(transfer);
+                  Analysis<?, ?, ?> analysis = new ForwardAnalysisImpl(transfer);
                   analysis.performAnalysis(cfg);
                   return analysis;
                 }
@@ -95,8 +95,8 @@ public final class DataFlow {
               new CacheLoader<CfgParams, ControlFlowGraph>() {
                 @Override
                 public ControlFlowGraph load(CfgParams key) {
-                  final TreePath methodPath = key.methodPath();
-                  final UnderlyingAST ast;
+                  TreePath methodPath = key.methodPath();
+                  UnderlyingAST ast;
                   ClassTree classTree = null;
                   MethodTree methodTree = null;
                   for (Tree parent : methodPath) {
@@ -119,7 +119,7 @@ public final class DataFlow {
                     // must be an initializer per findEnclosingMethodOrLambdaOrInitializer
                     ast = new UnderlyingAST.CFGStatement(methodPath.getLeaf(), classTree);
                   }
-                  final ProcessingEnvironment env = key.environment();
+                  ProcessingEnvironment env = key.environment();
 
                   analysisCache.invalidateAll();
                   CompilationUnitTree root = methodPath.getCompilationUnit();
@@ -169,17 +169,17 @@ public final class DataFlow {
   private static <
           A extends AbstractValue<A>, S extends Store<S>, T extends ForwardTransferFunction<A, S>>
       Result<A, S, T> methodDataflow(TreePath methodPath, Context context, T transfer) {
-    final ProcessingEnvironment env = JavacProcessingEnvironment.instance(context);
+    ProcessingEnvironment env = JavacProcessingEnvironment.instance(context);
 
-    final ControlFlowGraph cfg;
+    ControlFlowGraph cfg;
     try {
       cfg = cfgCache.getUnchecked(CfgParams.create(methodPath, env));
     } catch (UncheckedExecutionException e) {
       throw e.getCause() instanceof CompletionFailure ? (CompletionFailure) e.getCause() : e;
     }
-    final AnalysisParams aparams = AnalysisParams.create(transfer, cfg, env);
+    AnalysisParams aparams = AnalysisParams.create(transfer, cfg, env);
     @SuppressWarnings("unchecked")
-    final Analysis<A, S, T> analysis = (Analysis<A, S, T>) analysisCache.getUnchecked(aparams);
+    Analysis<A, S, T> analysis = (Analysis<A, S, T>) analysisCache.getUnchecked(aparams);
 
     return new Result<A, S, T>() {
       @Override
@@ -212,20 +212,20 @@ public final class DataFlow {
   public static <
           A extends AbstractValue<A>, S extends Store<S>, T extends ForwardTransferFunction<A, S>>
       A expressionDataflow(TreePath exprPath, Context context, T transfer) {
-    final Tree leaf = exprPath.getLeaf();
+    Tree leaf = exprPath.getLeaf();
     Preconditions.checkArgument(
         leaf instanceof ExpressionTree,
         "Leaf of exprPath must be of type ExpressionTree, but was %s",
         leaf.getClass().getName());
 
-    final ExpressionTree expr = (ExpressionTree) leaf;
-    final TreePath enclosingMethodPath = findEnclosingMethodOrLambdaOrInitializer(exprPath);
+    ExpressionTree expr = (ExpressionTree) leaf;
+    TreePath enclosingMethodPath = findEnclosingMethodOrLambdaOrInitializer(exprPath);
     if (enclosingMethodPath == null) {
       // expression is not part of a method, lambda, or initializer
       return null;
     }
 
-    final Tree method = enclosingMethodPath.getLeaf();
+    Tree method = enclosingMethodPath.getLeaf();
     if (method instanceof MethodTree && ((MethodTree) method).getBody() == null) {
       // expressions can occur in abstract methods, for example {@code Map.Entry} in:
       //

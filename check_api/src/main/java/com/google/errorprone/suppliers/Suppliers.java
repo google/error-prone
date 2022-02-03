@@ -42,8 +42,7 @@ public final class Suppliers {
    * @param expressionSupplier a supplier of the expression which has a generic type
    * @param n the position of the generic argument
    */
-  public static Supplier<Type> genericTypeOf(
-      final Supplier<ExpressionTree> expressionSupplier, final int n) {
+  public static Supplier<Type> genericTypeOf(Supplier<ExpressionTree> expressionSupplier, int n) {
     return new Supplier<Type>() {
       @Override
       public Type get(VisitorState state) {
@@ -64,7 +63,7 @@ public final class Suppliers {
    * @param typeSupplier a supplier of the expression which has a generic type
    * @param n the position of the generic argument
    */
-  public static Supplier<Type> genericTypeOfType(final Supplier<Type> typeSupplier, final int n) {
+  public static Supplier<Type> genericTypeOfType(Supplier<Type> typeSupplier, int n) {
     return new Supplier<Type>() {
       @Override
       public Type get(VisitorState state) {
@@ -112,7 +111,7 @@ public final class Suppliers {
    *
    * @param typeString a string representation of a type, e.g., "java.util.List"
    */
-  public static Supplier<Type> typeFromString(final String typeString) {
+  public static Supplier<Type> typeFromString(String typeString) {
     requireNonNull(typeString);
     return VisitorState.memoize(state -> state.getTypeFromString(typeString));
   }
@@ -249,7 +248,7 @@ public final class Suppliers {
    *
    * @param toSupply the item to supply
    */
-  public static <T> Supplier<T> identitySupplier(final T toSupply) {
+  public static <T> Supplier<T> identitySupplier(T toSupply) {
     return new Supplier<T>() {
       @Override
       public T get(VisitorState state) {
@@ -266,7 +265,7 @@ public final class Suppliers {
         }
       };
 
-  public static Supplier<Type> arrayOf(final Supplier<Type> elementType) {
+  public static Supplier<Type> arrayOf(Supplier<Type> elementType) {
     return new Supplier<Type>() {
       @Override
       public Type get(VisitorState state) {

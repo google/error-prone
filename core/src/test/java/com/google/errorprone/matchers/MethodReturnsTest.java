@@ -64,7 +64,7 @@ public class MethodReturnsTest extends CompilerBasedAbstractTest {
     abstract void assertDone();
   }
 
-  private Scanner fooReturnsType(final boolean shouldMatch, final String typeString) {
+  private Scanner fooReturnsType(boolean shouldMatch, String typeString) {
     ScannerTest test =
         new ScannerTest() {
           private boolean matched = false;

@@ -384,7 +384,7 @@ public final class FindIdentifiers {
     };
   }
 
-  private static boolean isVisible(VarSymbol var, final TreePath path) {
+  private static boolean isVisible(VarSymbol var, TreePath path) {
     switch (var.getKind()) {
       case ENUM_CONSTANT:
       case FIELD:

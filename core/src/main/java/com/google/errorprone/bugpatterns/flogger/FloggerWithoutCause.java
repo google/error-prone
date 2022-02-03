@@ -51,7 +51,7 @@ public class FloggerWithoutCause extends BugChecker
       instanceMethod().onDescendantOf("com.google.common.flogger.LoggingApi").named("withCause");
 
   @Override
-  public Description matchMethodInvocation(MethodInvocationTree tree, final VisitorState state) {
+  public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
     if (!LOG_METHOD.matches(tree, state)) {
       return Description.NO_MATCH;
     }
@@ -61,7 +61,7 @@ public class FloggerWithoutCause extends BugChecker
       return Description.NO_MATCH;
     }
 
-    final AtomicBoolean withCause = new AtomicBoolean(false);
+    AtomicBoolean withCause = new AtomicBoolean(false);
     tree.accept(
         new TreeScanner<Void, Void>() {
           @Override

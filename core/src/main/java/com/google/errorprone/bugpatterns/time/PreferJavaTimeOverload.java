@@ -398,7 +398,7 @@ public final class PreferJavaTimeOverload extends BugChecker
 
   // Adapted from ASTHelpers.findMatchingMethods(); but this short-circuits
   private static boolean hasMatchingMethods(
-      Name name, final Predicate<MethodSymbol> predicate, Type startClass, Types types) {
+      Name name, Predicate<MethodSymbol> predicate, Type startClass, Types types) {
     Predicate<Symbol> matchesMethodPredicate =
         sym -> sym instanceof MethodSymbol && predicate.apply((MethodSymbol) sym);
 

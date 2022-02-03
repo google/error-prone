@@ -249,10 +249,10 @@ public abstract class Template<M extends TemplateMatch> implements Serializable 
     return true;
   }
 
-  protected static Pretty pretty(Context context, final Writer writer) {
-    final JCCompilationUnit unit = context.get(JCCompilationUnit.class);
+  protected static Pretty pretty(Context context, Writer writer) {
+    JCCompilationUnit unit = context.get(JCCompilationUnit.class);
     try {
-      final String unitContents = unit.getSourceFile().getCharContent(false).toString();
+      String unitContents = unit.getSourceFile().getCharContent(false).toString();
       return new Pretty(writer, true) {
         {
           // Work-around for b/22196513
@@ -529,7 +529,7 @@ public abstract class Template<M extends TemplateMatch> implements Serializable 
               methodSymbol,
               resultInfo,
               actualArgTypes,
-              /*freeTypeVariables=*/ List.<Type>nil(),
+              /* freeTypeVariables */ List.<Type>nil(),
               warner);
     } catch (InvocationTargetException e) {
       if (e.getCause() instanceof Resolve.InapplicableMethodException) {

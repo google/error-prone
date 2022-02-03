@@ -58,7 +58,7 @@ public class InvalidTimeZoneID extends BugChecker implements MethodInvocationTre
       Pattern.compile("GMT[+\\-]" + HOURS_PATTERN + ":?" + MINUTES_PATTERN);
 
   @Override
-  public Description matchMethodInvocation(MethodInvocationTree tree, final VisitorState state) {
+  public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
     if (!METHOD_MATCHER.matches(tree, state)) {
       return Description.NO_MATCH;
     }

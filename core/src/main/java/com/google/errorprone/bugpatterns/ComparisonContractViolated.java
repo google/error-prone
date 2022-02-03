@@ -144,9 +144,9 @@ public class ComparisonContractViolated extends BugChecker implements MethodTree
       return Description.NO_MATCH;
     }
 
-    final Set<ComparisonResult> seenResults = EnumSet.noneOf(ComparisonResult.class);
+    Set<ComparisonResult> seenResults = EnumSet.noneOf(ComparisonResult.class);
 
-    final TreeVisitor<Void, VisitorState> visitReturnExpression =
+    TreeVisitor<Void, VisitorState> visitReturnExpression =
         new SimpleTreeVisitor<Void, VisitorState>() {
 
           @Override

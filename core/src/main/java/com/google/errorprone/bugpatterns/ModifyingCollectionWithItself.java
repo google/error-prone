@@ -140,7 +140,7 @@ public class ModifyingCollectionWithItself extends BugChecker
     return fixes;
   }
 
-  private static Predicate<JCVariableDecl> isCollectionVariable(final VisitorState state) {
+  private static Predicate<JCVariableDecl> isCollectionVariable(VisitorState state) {
     return var -> variableType(isSubtypeOf("java.util.Collection")).matches(var, state);
   }
 

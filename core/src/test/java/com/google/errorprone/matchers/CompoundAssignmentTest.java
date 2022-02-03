@@ -153,8 +153,7 @@ public class CompoundAssignmentTest extends CompilerBasedAbstractTest {
                 Matchers.<ExpressionTree>isArrayType())));
   }
 
-  private Scanner compoundAssignmentMatches(
-      final boolean shouldMatch, final CompoundAssignment toMatch) {
+  private Scanner compoundAssignmentMatches(boolean shouldMatch, CompoundAssignment toMatch) {
     return new Scanner() {
       @Override
       public Void visitCompoundAssignment(CompoundAssignmentTree node, VisitorState visitorState) {

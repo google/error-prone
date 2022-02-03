@@ -54,7 +54,7 @@ public class ArrayFillIncompatibleType extends BugChecker implements MethodInvoc
 
   @Override
   public Description matchMethodInvocation(
-      MethodInvocationTree invocationTree, final VisitorState state) {
+      MethodInvocationTree invocationTree, VisitorState state) {
     if (!ARRAY_FILL_MATCHER.matches(invocationTree, state)) {
       return Description.NO_MATCH;
     }

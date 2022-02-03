@@ -81,7 +81,7 @@ public class DateFormatConstant extends BugChecker implements VariableTreeMatche
   }
 
   private static Fix threadLocalFix(
-      VariableTree tree, VisitorState state, final VarSymbol sym, SuggestedFix rename) {
+      VariableTree tree, VisitorState state, VarSymbol sym, SuggestedFix rename) {
     SuggestedFix.Builder fix =
         SuggestedFix.builder()
             .merge(rename)

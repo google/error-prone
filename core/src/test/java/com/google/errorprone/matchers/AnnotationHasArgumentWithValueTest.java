@@ -76,8 +76,7 @@ public class AnnotationHasArgumentWithValueTest extends CompilerBasedAbstractTes
             new AnnotationHasArgumentWithValue("value", stringLiteral("unchecked"))));
   }
 
-  private Scanner annotationMatches(
-      final boolean shouldMatch, final AnnotationHasArgumentWithValue toMatch) {
+  private Scanner annotationMatches(boolean shouldMatch, AnnotationHasArgumentWithValue toMatch) {
     return new Scanner() {
       @Override
       public Void visitAnnotation(AnnotationTree node, VisitorState visitorState) {

@@ -81,7 +81,7 @@ abstract class UUnary extends UExpression implements UnaryTree {
   @Override
   public JCExpression inline(Inliner inliner) throws CouldNotResolveImportException {
     JCExpression expr = getExpression().inline(inliner);
-    final TreeMaker maker = inliner.maker();
+    TreeMaker maker = inliner.maker();
     if (getKind() == Kind.LOGICAL_COMPLEMENT) {
       return new TreeCopier<Void>(maker) {
         @SuppressWarnings("unchecked")

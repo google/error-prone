@@ -360,8 +360,7 @@ public class AnnotationMatcherTest extends CompilerBasedAbstractTest {
     public abstract void assertDone();
   }
 
-  private Scanner nodeWithAnnotationMatches(
-      final boolean shouldMatch, final AnnotationMatcher<Tree> toMatch) {
+  private Scanner nodeWithAnnotationMatches(boolean shouldMatch, AnnotationMatcher<Tree> toMatch) {
     ScannerTest test =
         new ScannerTest() {
           private boolean matched = false;

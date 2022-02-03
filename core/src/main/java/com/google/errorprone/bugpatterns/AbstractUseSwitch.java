@@ -88,12 +88,12 @@ public abstract class AbstractUseSwitch extends BugChecker implements IfTreeMatc
 
   /** Returns the source code from a JCBlock {...} without the curly brackets. */
   private static CharSequence getBlockContents(BlockTree block, VisitorState state) {
-    final List<? extends StatementTree> statements = block.getStatements();
+    List<? extends StatementTree> statements = block.getStatements();
     if (statements.isEmpty()) {
       return "";
     }
-    final int start = ((JCTree) statements.get(0)).getStartPosition();
-    final int end = state.getEndPosition(getLast(statements));
+    int start = ((JCTree) statements.get(0)).getStartPosition();
+    int end = state.getEndPosition(getLast(statements));
     return state.getSourceCode().subSequence(start, end);
   }
 

@@ -82,8 +82,7 @@ abstract class UBlank implements UStatement {
   }
 
   @Override
-  public Choice<UnifierWithUnconsumedStatements> apply(
-      final UnifierWithUnconsumedStatements state) {
+  public Choice<UnifierWithUnconsumedStatements> apply(UnifierWithUnconsumedStatements state) {
     int goodIndex = 0;
     while (goodIndex < state.unconsumedStatements().size()) {
       StatementTree stmt = state.unconsumedStatements().get(goodIndex);

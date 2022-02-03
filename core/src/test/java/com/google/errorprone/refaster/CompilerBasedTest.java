@@ -78,9 +78,8 @@ public class CompilerBasedTest {
   }
 
   protected void compile(JavaFileObject fileObject) {
-    final ImmutableMap.Builder<String, JCMethodDecl> methodsBuilder = ImmutableMap.builder();
-    final ImmutableList.Builder<JCCompilationUnit> compilationUnitsBuilder =
-        ImmutableList.builder();
+    ImmutableMap.Builder<String, JCMethodDecl> methodsBuilder = ImmutableMap.builder();
+    ImmutableList.Builder<JCCompilationUnit> compilationUnitsBuilder = ImmutableList.builder();
     compile(
         new TreeScanner() {
           @Override

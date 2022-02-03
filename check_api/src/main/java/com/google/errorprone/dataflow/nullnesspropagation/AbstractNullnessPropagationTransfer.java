@@ -1046,8 +1046,7 @@ abstract class AbstractNullnessPropagationTransfer
     return new ResultingStore(newStore, !newStore.equals(oldStore));
   }
 
-  private static SubNodeValues values(
-      final TransferInput<Nullness, AccessPathStore<Nullness>> input) {
+  private static SubNodeValues values(TransferInput<Nullness, AccessPathStore<Nullness>> input) {
     return input::getValueOfSubNode;
   }
 

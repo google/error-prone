@@ -131,7 +131,7 @@ public class Matchers {
    * given matchers do.
    */
   @SafeVarargs
-  public static <T extends Tree> Matcher<T> allOf(final Matcher<? super T>... matchers) {
+  public static <T extends Tree> Matcher<T> allOf(Matcher<? super T>... matchers) {
     return (t, state) -> {
       for (Matcher<? super T> matcher : matchers) {
         if (!matcher.matches(t, state)) {
@@ -146,8 +146,7 @@ public class Matchers {
    * Compose several matchers together, such that the composite matches an AST node iff all the
    * given matchers do.
    */
-  public static <T extends Tree> Matcher<T> allOf(
-      final Iterable<? extends Matcher<? super T>> matchers) {
+  public static <T extends Tree> Matcher<T> allOf(Iterable<? extends Matcher<? super T>> matchers) {
     return (t, state) -> {
       for (Matcher<? super T> matcher : matchers) {
         if (!matcher.matches(t, state)) {
@@ -162,8 +161,7 @@ public class Matchers {
    * Compose several matchers together, such that the composite matches an AST node if any of the
    * given matchers do.
    */
-  public static <T extends Tree> Matcher<T> anyOf(
-      final Iterable<? extends Matcher<? super T>> matchers) {
+  public static <T extends Tree> Matcher<T> anyOf(Iterable<? extends Matcher<? super T>> matchers) {
     return (t, state) -> {
       for (Matcher<? super T> matcher : matchers) {
         if (matcher.matches(t, state)) {
@@ -286,7 +284,7 @@ public class Matchers {
    *
    * @param argNum The number of the argument to compare against (zero-based.
    */
-  public static Matcher<? super MethodInvocationTree> receiverSameAsArgument(final int argNum) {
+  public static Matcher<? super MethodInvocationTree> receiverSameAsArgument(int argNum) {
     return (t, state) -> {
       List<? extends ExpressionTree> args = t.getArguments();
       if (args.size() <= argNum) {
@@ -308,7 +306,7 @@ public class Matchers {
   }
 
   public static Matcher<MethodInvocationTree> receiverOfInvocation(
-      final Matcher<ExpressionTree> expressionTreeMatcher) {
+      Matcher<ExpressionTree> expressionTreeMatcher) {
     return (methodInvocationTree, state) -> {
       ExpressionTree receiver = ASTHelpers.getReceiver(methodInvocationTree);
       return receiver != null && expressionTreeMatcher.matches(receiver, state);
@@ -335,7 +333,7 @@ public class Matchers {
   }
 
   public static Matcher<MethodInvocationTree> argument(
-      final int position, final Matcher<ExpressionTree> argumentMatcher) {
+      int position, Matcher<ExpressionTree> argumentMatcher) {
     return new MethodInvocationArgument(position, argumentMatcher);
   }
 
@@ -364,7 +362,7 @@ public class Matchers {
    * methodSelectMatcher}. Ignores any arguments.
    */
   public static Matcher<ExpressionTree> methodInvocation(
-      final Matcher<ExpressionTree> methodSelectMatcher) {
+      Matcher<ExpressionTree> methodSelectMatcher) {
     return (expressionTree, state) -> {
       if (!(expressionTree instanceof MethodInvocationTree)) {
         return false;
@@ -374,7 +372,7 @@ public class Matchers {
     };
   }
 
-  public static Matcher<MethodInvocationTree> argumentCount(final int argumentCount) {
+  public static Matcher<MethodInvocationTree> argumentCount(int argumentCount) {
     return (t, state) -> t.getArguments().size() == argumentCount;
   }
 
@@ -662,8 +660,7 @@ public class Matchers {
     };
   }
 
-  public static Matcher<ExpressionTree> classLiteral(
-      final Matcher<? super ExpressionTree> classMatcher) {
+  public static Matcher<ExpressionTree> classLiteral(Matcher<? super ExpressionTree> classMatcher) {
     return (tree, state) -> {
       if (tree.getKind() == Kind.MEMBER_SELECT) {
         MemberSelectTree select = (MemberSelectTree) tree;
@@ -886,8 +883,7 @@ public class Matchers {
    * @param variableMatcher an array of matchers to apply to the parameters of the method
    */
   @SafeVarargs
-  public static Matcher<MethodTree> methodHasParameters(
-      final Matcher<VariableTree>... variableMatcher) {
+  public static Matcher<MethodTree> methodHasParameters(Matcher<VariableTree>... variableMatcher) {
     return methodHasParameters(ImmutableList.copyOf(variableMatcher));
   }
 
@@ -902,7 +898,7 @@ public class Matchers {
    * @param variableMatcher a list of matchers to apply to the parameters of the method
    */
   public static Matcher<MethodTree> methodHasParameters(
-      final List<Matcher<VariableTree>> variableMatcher) {
+      List<Matcher<VariableTree>> variableMatcher) {
     return (methodTree, state) -> {
       if (methodTree.getParameters().size() != variableMatcher.size()) {
         return false;
@@ -1257,7 +1253,7 @@ public class Matchers {
    */
   public static <T extends Tree, V extends Tree> Matcher<T> contains(
       Class<? extends V> clazz, Matcher<? super V> treeMatcher) {
-    final Matcher<Tree> contains = new Contains(toType(clazz, treeMatcher));
+    Matcher<Tree> contains = new Contains(toType(clazz, treeMatcher));
     return contains::matches;
   }
 

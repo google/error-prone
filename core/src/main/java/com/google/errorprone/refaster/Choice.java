@@ -97,7 +97,7 @@ public abstract class Choice<T> {
   }
 
   /** Returns a {@code Choice} with only one option, {@code t}. */
-  public static <T> Choice<T> of(final T t) {
+  public static <T> Choice<T> of(T t) {
     checkNotNull(t);
     return new Choice<T>() {
       @Override
@@ -152,7 +152,7 @@ public abstract class Choice<T> {
     return optional.isPresent() ? of(optional.get()) : Choice.<T>none();
   }
 
-  public static <T> Choice<T> from(final Collection<T> choices) {
+  public static <T> Choice<T> from(Collection<T> choices) {
     switch (choices.size()) {
       case 0:
         return none();
@@ -174,7 +174,7 @@ public abstract class Choice<T> {
   }
 
   /** Returns a choice between any of the options from any of the specified choices. */
-  public static <T> Choice<T> any(final Collection<Choice<T>> choices) {
+  public static <T> Choice<T> any(Collection<Choice<T>> choices) {
     return from(choices).thenChoose(Functions.<Choice<T>>identity());
   }
 
@@ -208,12 +208,12 @@ public abstract class Choice<T> {
    *
    * <p>This is the monadic bind for {@code Choice}.
    */
-  public <R> Choice<R> thenChoose(final Function<? super T, Choice<R>> function) {
+  public <R> Choice<R> thenChoose(Function<? super T, Choice<R>> function) {
     checkNotNull(function);
     if (Thread.interrupted()) {
       throw new RuntimeException(new InterruptedException());
     }
-    final Choice<T> thisChoice = this;
+    Choice<T> thisChoice = this;
     return new Choice<R>() {
       @Override
       protected Iterator<R> iterator() {
@@ -232,9 +232,9 @@ public abstract class Choice<T> {
    *
    * <p>The function may be applied lazily or immediately, at the discretion of the implementation.
    */
-  public <R> Choice<R> thenOption(final Function<? super T, Optional<R>> function) {
+  public <R> Choice<R> thenOption(Function<? super T, Optional<R>> function) {
     checkNotNull(function);
-    final Choice<T> thisChoice = this;
+    Choice<T> thisChoice = this;
     return new Choice<R>() {
       @Override
       protected Iterator<R> iterator() {
@@ -245,9 +245,9 @@ public abstract class Choice<T> {
   }
 
   /** Maps the choices with the specified function. */
-  public <R> Choice<R> transform(final Function<? super T, R> function) {
+  public <R> Choice<R> transform(Function<? super T, R> function) {
     checkNotNull(function);
-    final Choice<T> thisChoice = this;
+    Choice<T> thisChoice = this;
     return new Choice<R>() {
       @Override
       protected Iterator<R> iterator() {
@@ -257,12 +257,12 @@ public abstract class Choice<T> {
   }
 
   /** Returns a choice of the options from this {@code Choice} or from {@code other}. */
-  public Choice<T> or(final Choice<T> other) {
+  public Choice<T> or(Choice<T> other) {
     checkNotNull(other);
     if (other == none()) {
       return this;
     } else {
-      final Choice<T> thisChoice = this;
+      Choice<T> thisChoice = this;
       return new Choice<T>() {
         @Override
         protected Iterator<T> iterator() {
@@ -283,9 +283,9 @@ public abstract class Choice<T> {
   }
 
   /** Filters the choices to those that satisfy the provided {@code Predicate}. */
-  public Choice<T> condition(final Predicate<? super T> predicate) {
+  public Choice<T> condition(Predicate<? super T> predicate) {
     checkNotNull(predicate);
-    final Choice<T> thisChoice = this;
+    Choice<T> thisChoice = this;
     return new Choice<T>() {
       @Override
       protected Iterator<T> iterator() {
