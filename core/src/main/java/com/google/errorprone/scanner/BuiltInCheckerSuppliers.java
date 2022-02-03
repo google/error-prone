@@ -157,6 +157,7 @@ import com.google.errorprone.bugpatterns.Incomparable;
 import com.google.errorprone.bugpatterns.IncompatibleModifiersChecker;
 import com.google.errorprone.bugpatterns.InconsistentCapitalization;
 import com.google.errorprone.bugpatterns.InconsistentHashCode;
+import com.google.errorprone.bugpatterns.IncorrectMainMethod;
 import com.google.errorprone.bugpatterns.IncrementInForLoopAndHeader;
 import com.google.errorprone.bugpatterns.IndexOfChar;
 import com.google.errorprone.bugpatterns.InexactVarargsConditional;
@@ -835,6 +836,7 @@ public class BuiltInCheckerSuppliers {
           ImmutableEnumChecker.class,
           InconsistentCapitalization.class,
           InconsistentHashCode.class,
+          IncorrectMainMethod.class,
           IncrementInForLoopAndHeader.class,
           InheritDoc.class,
           InjectOnConstructorOfAbstractClass.class,
