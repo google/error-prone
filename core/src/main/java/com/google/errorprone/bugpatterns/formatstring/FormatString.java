@@ -32,7 +32,7 @@ import com.sun.source.tree.MethodInvocationTree;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
-@BugPattern(name = "FormatString", summary = "Invalid printf-style format string", severity = ERROR)
+@BugPattern(summary = "Invalid printf-style format string", severity = ERROR)
 public class FormatString extends BugChecker implements MethodInvocationTreeMatcher {
 
   private static final Matcher<ExpressionTree> FORMATTED_METHOD =

@@ -355,7 +355,6 @@ public class ErrorProneJavaCompilerTest {
   }
 
   @BugPattern(
-      name = "DeleteMethod",
       summary =
           "You appear to be using methods; prefer to implement all program logic inside the main"
               + " function by flipping bits in a single long[].",

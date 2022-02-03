@@ -58,10 +58,7 @@ import com.sun.tools.javac.code.Type.ArrayType;
 import java.util.stream.Stream;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
-@BugPattern(
-    name = "TruthIncompatibleType",
-    summary = "Argument is not compatible with the subject's type.",
-    severity = WARNING)
+@BugPattern(summary = "Argument is not compatible with the subject's type.", severity = WARNING)
 public class TruthIncompatibleType extends BugChecker implements MethodInvocationTreeMatcher {
 
   private static final Matcher<ExpressionTree> START_OF_ASSERTION =

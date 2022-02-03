@@ -43,7 +43,6 @@ import com.sun.tools.javac.code.Types;
 
 /** @author epmjohnston@google.com (Emily P.M. Johnston) */
 @BugPattern(
-    name = "BundleDeserializationCast",
     summary = "Object serialized in Bundle may have been flattened to base type.",
     severity = ERROR)
 public class BundleDeserializationCast extends BugChecker implements TypeCastTreeMatcher {

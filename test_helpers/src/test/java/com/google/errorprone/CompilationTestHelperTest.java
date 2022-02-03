@@ -370,7 +370,6 @@ public class CompilationTestHelperTest {
   }
 
   @BugPattern(
-      name = "ReturnTreeChecker",
       summary = "Method may return normally.",
       explanation = "Consider mutating some global state instead.",
       severity = ERROR)
@@ -394,7 +393,6 @@ public class CompilationTestHelperTest {
   }
 
   @BugPattern(
-      name = "PackageTreeChecker",
       summary = "Package declaration found",
       explanation = "Prefer to use the default package for everything.",
       severity = ERROR)
@@ -409,7 +407,6 @@ public class CompilationTestHelperTest {
   }
 
   @BugPattern(
-      name = "PrivateConstructorChecker",
       summary = "A checker that Error Prone can't instantiate because its constructor is private.",
       severity = ERROR)
   public static class PrivateConstructorChecker extends BugChecker
@@ -442,7 +439,6 @@ public class CompilationTestHelperTest {
   }
 
   @BugPattern(
-      name = "PrivateChecker",
       summary =
           "A checker that Error Prone can't instantiate because it is private and has a default"
               + " constructor.",
@@ -479,7 +475,6 @@ public class CompilationTestHelperTest {
   }
 
   @BugPattern(
-      name = "PrivateCheckerWithPublicConstructor",
       summary =
           "A checker that Error Prone can't instantiate because the class is private even though"
               + " the constructor is public.",

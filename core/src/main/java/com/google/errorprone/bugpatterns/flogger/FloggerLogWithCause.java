@@ -45,7 +45,6 @@ import java.util.List;
  * message.
  */
 @BugPattern(
-    name = "FloggerLogWithCause",
     summary =
         "Setting the caught exception as the cause of the log message may provide more context for"
             + " anyone debugging errors.",

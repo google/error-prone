@@ -103,7 +103,6 @@ public class DescriptionTest {
   }
 
   @BugPattern(
-      name = "CustomLinkChecker",
       summary = "Exception created but not thrown",
       explanation = "",
       severity = ERROR,

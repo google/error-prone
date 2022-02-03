@@ -830,7 +830,6 @@ public class NullnessPropagationTest {
 
   /** BugPattern to test dataflow analysis using nullness propagation */
   @BugPattern(
-      name = "NullnessPropagationChecker",
       summary = "Test checker for NullnessPropagationTest",
       explanation =
           "Outputs an error for each call to triggerNullnessChecker, describing its "

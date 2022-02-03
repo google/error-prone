@@ -52,7 +52,6 @@ import java.util.function.Function;
  * @author andrewrice@google.com (Andrew Rice)
  */
 @BugPattern(
-    name = "ArgumentSelectionDefectChecker",
     summary = "Arguments are in the wrong order or could be commented for clarity.",
     severity = WARNING)
 public class ArgumentSelectionDefectChecker extends BugChecker

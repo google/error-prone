@@ -59,7 +59,6 @@ public class DiagnosticKindTest {
   }
 
   @BugPattern(
-      name = "ErrorChecker",
       summary = "This is an error!",
       explanation = "Don't do this!",
       severity = SeverityLevel.ERROR)
@@ -83,7 +82,6 @@ public class DiagnosticKindTest {
   }
 
   @BugPattern(
-      name = "WarningChecker",
       summary = "This is a warning!",
       explanation = "Please don't do this!",
       severity = SeverityLevel.WARNING)
@@ -108,7 +106,6 @@ public class DiagnosticKindTest {
   }
 
   @BugPattern(
-      name = "SuggestionChecker",
       summary = "This is a suggestion!",
       explanation = "Don't do this. Or do it. I'm a suggestion, not a cop.",
       severity = SeverityLevel.SUGGESTION)

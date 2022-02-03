@@ -50,7 +50,6 @@ import javax.lang.model.element.Modifier;
  * @author Sumit Bhagwani (bhagwani@google.com)
  */
 @BugPattern(
-    name = "ParcelableCreator",
     summary = "Detects classes which implement Parcelable but don't have CREATOR",
     severity = SeverityLevel.ERROR)
 public class ParcelableCreator extends BugChecker implements ClassTreeMatcher {

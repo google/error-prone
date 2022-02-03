@@ -64,7 +64,6 @@ import java.time.ZonedDateTime;
 
 /** @author glorioso@google.com (Nick Glorioso) */
 @BugPattern(
-    name = "BindingToUnqualifiedCommonType",
     summary =
         "This code declares a binding for a common value type without a Qualifier annotation.",
     severity = WARNING)

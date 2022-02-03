@@ -42,7 +42,6 @@ import javax.annotation.Nullable;
 
 /** @author cushon@google.com (Liam Miller-Cushon) */
 @BugPattern(
-    name = "FloggerFormatString",
     altNames = "FormatString",
     summary = "Invalid printf-style format string",
     severity = ERROR)

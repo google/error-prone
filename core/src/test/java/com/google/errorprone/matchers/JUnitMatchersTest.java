@@ -185,7 +185,6 @@ public final class JUnitMatchersTest {
 
   /** Helper class to surface which version of JUnit a class looks like to Error Prone. */
   @BugPattern(
-      name = "JUnitVersionMatcher",
       summary = "Matches on JUnit test classes, emits description with its JUnit version.",
       severity = SeverityLevel.WARNING)
   public static class JUnitVersionMatcher extends BugChecker implements ClassTreeMatcher {

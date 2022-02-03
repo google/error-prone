@@ -37,7 +37,6 @@ public class CustomSuppressionTest {
   public @interface SuppressBothCheckers {}
 
   @BugPattern(
-      name = "MyChecker",
       summary = "Test checker that uses a custom suppression annotation",
       explanation = "Test checker that uses a custom suppression annotation",
       suppressionAnnotations = SuppressBothCheckers.class,
@@ -53,7 +52,6 @@ public class CustomSuppressionTest {
   public @interface SuppressMyChecker2 {}
 
   @BugPattern(
-      name = "MyChecker2",
       summary = "Test checker that accepts both custom suppression annotations",
       explanation = "Test checker that accepts both custom suppression annotations",
       suppressionAnnotations = {SuppressBothCheckers.class, SuppressMyChecker2.class},

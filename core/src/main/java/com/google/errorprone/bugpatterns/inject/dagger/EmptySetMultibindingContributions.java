@@ -59,7 +59,6 @@ import java.util.TreeSet;
 
 /** @author gak@google.com (Gregory Kick) */
 @BugPattern(
-    name = "EmptySetMultibindingContributions",
     summary =
         "@Multibinds is a more efficient and declarative mechanism for ensuring that a set"
             + " multibinding is present in the graph.",

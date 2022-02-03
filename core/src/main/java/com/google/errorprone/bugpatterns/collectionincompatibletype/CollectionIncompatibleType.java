@@ -58,7 +58,6 @@ import java.util.Map;
  * </ul>
  */
 @BugPattern(
-    name = "CollectionIncompatibleType",
     summary = "Incompatible type as argument to Object-accepting Java collections method",
     severity = ERROR)
 public class CollectionIncompatibleType extends BugChecker

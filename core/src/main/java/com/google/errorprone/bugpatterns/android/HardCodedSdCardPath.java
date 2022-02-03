@@ -32,7 +32,6 @@ import java.util.Map;
 
 /** @author avenet@google.com (Arnaud J. Venet) */
 @BugPattern(
-    name = "HardCodedSdCardPath",
     altNames = {"SdCardPath"},
     summary = "Hardcoded reference to /sdcard",
     severity = WARNING)

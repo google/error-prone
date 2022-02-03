@@ -58,7 +58,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
-    name = "InlineFormatString",
     summary =
         "Prefer to create format strings inline, instead of extracting them to a single-use"
             + " constant",

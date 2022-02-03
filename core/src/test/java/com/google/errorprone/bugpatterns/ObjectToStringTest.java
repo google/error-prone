@@ -66,7 +66,7 @@ public class ObjectToStringTest {
   // A bugchecker that eagerly completes the missing symbol for testIncompleteClasspath below,
   // to avoid the CompletionFailure being reported later.
   /** A checker for {@link #testIncompleteClasspath}. */
-  @BugPattern(name = "CompletionChecker", summary = "", severity = ERROR)
+  @BugPattern(summary = "", severity = ERROR)
   public static class CompletionChecker extends BugChecker implements ClassTreeMatcher {
     @Override
     public Description matchClass(ClassTree tree, VisitorState state) {

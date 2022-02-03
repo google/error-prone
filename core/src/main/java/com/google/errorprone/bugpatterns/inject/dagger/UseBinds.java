@@ -64,7 +64,6 @@ import java.util.Set;
 import javax.lang.model.element.Modifier;
 
 @BugPattern(
-    name = "UseBinds",
     summary = "@Binds is a more efficient and declarative mechanism for delegating a binding.",
     severity = WARNING)
 public class UseBinds extends BugChecker implements MethodTreeMatcher {

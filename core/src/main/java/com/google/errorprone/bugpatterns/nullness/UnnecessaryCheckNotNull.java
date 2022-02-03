@@ -58,7 +58,6 @@ import java.util.Set;
  * @author bhagwani@google.com (Sumit Bhagwani)
  */
 @BugPattern(
-    name = "UnnecessaryCheckNotNull",
     summary = "This null check is unnecessary; the expression can never be null",
     severity = ERROR,
     altNames = {"PreconditionsCheckNotNull", "PreconditionsCheckNotNullPrimitive"})

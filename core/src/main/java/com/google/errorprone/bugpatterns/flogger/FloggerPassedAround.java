@@ -35,7 +35,6 @@ import com.sun.tools.javac.code.Type;
 
 /** Flags flogger instances being passed around. */
 @BugPattern(
-    name = "FloggerPassedAround",
     summary =
         "There is no advantage to passing around a logger rather than declaring one in the class"
             + " that needs it.",

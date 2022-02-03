@@ -54,7 +54,6 @@ import javax.lang.model.type.TypeKind;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
-    name = "FloggerArgumentToString",
     summary =
         "Use Flogger's printf-style formatting instead of explicitly converting arguments to"
             + " strings",

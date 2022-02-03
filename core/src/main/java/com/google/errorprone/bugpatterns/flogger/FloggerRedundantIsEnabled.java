@@ -50,7 +50,6 @@ import java.util.Optional;
 
 /** @author mariasam@google.com (Maria Sam) */
 @BugPattern(
-    name = "FloggerRedundantIsEnabled",
     summary =
         "Logger level check is already implied in the log() call. "
             + "An explicit at[Level]().isEnabled() check is redundant.",

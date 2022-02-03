@@ -59,7 +59,6 @@ import javax.annotation.Nullable;
  * @author bhagwani@google.com (Sumit Bhagwani)
  */
 @BugPattern(
-    name = "EqualsBrokenForNull",
     summary = "equals() implementation may throw NullPointerException when given null",
     severity = SeverityLevel.WARNING)
 public class EqualsBrokenForNull extends BugChecker implements MethodTreeMatcher {

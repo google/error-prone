@@ -72,7 +72,6 @@ import javax.lang.model.element.Name;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
-    name = "ReturnMissingNullable",
     summary = "Method returns a definitely null value but is not annotated @Nullable",
     severity = SUGGESTION)
 public class ReturnMissingNullable extends BugChecker implements CompilationUnitTreeMatcher {

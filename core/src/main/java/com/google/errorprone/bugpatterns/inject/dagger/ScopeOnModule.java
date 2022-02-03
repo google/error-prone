@@ -34,7 +34,6 @@ import java.util.List;
 
 /** Migrate users who use JSR 330 scopes on Dagger modules. */
 @BugPattern(
-    name = "ScopeOnModule",
     summary = "Scopes on modules have no function and will soon be an error.",
     severity = SUGGESTION)
 public final class ScopeOnModule extends BugChecker implements ClassTreeMatcher {

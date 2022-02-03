@@ -44,7 +44,6 @@ import java.util.stream.Collectors;
 
 /** @author avenet@google.com (Arnaud J. Venet) */
 @BugPattern(
-    name = "FragmentNotInstantiable",
     altNames = {"ValidFragment"},
     summary =
         "Subclasses of Fragment must be instantiable via Class#newInstance():"

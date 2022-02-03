@@ -43,7 +43,6 @@ public class ArgumentSelectionDefectCheckerTest {
    * equality for edit distance
    */
   @BugPattern(
-      name = "ArgumentSelectionDefectWithStringEquality",
       severity = SeverityLevel.ERROR,
       summary =
           "Run the ArgumentSelectionDefectChecker checker using string equality for edit distance")
@@ -139,7 +138,6 @@ public class ArgumentSelectionDefectCheckerTest {
    * equality for edit distance and ignores formal parameters called 'ignore'.
    */
   @BugPattern(
-      name = "ArgumentSelectionDefectWithIgnoredFormalsHeuristic",
       severity = SeverityLevel.ERROR,
       summary =
           "Run the ArgumentSelectionDefectChecker checker with a heuristic that ignores formal "
@@ -204,7 +202,6 @@ public class ArgumentSelectionDefectCheckerTest {
    * equality for edit distance and a penaltyThreshold of 0.9
    */
   @BugPattern(
-      name = "ArgumentSelectionDefectWithPenaltyThreshold",
       severity = SeverityLevel.ERROR,
       summary =
           "Run the ArgumentSelectionDefectChecker checker with the penalty threshold heuristic")
@@ -255,7 +252,6 @@ public class ArgumentSelectionDefectCheckerTest {
    * equality for edit distance and name in comments heuristic
    */
   @BugPattern(
-      name = "ArgumentSelectionDefectWithNameInCommentsHeuristic",
       severity = SeverityLevel.ERROR,
       summary =
           "Run the ArgumentSelectionDefectChecker checker using string equality for edit distance")
@@ -297,7 +293,6 @@ public class ArgumentSelectionDefectCheckerTest {
 
   /** A {@link BugChecker} which returns true if parameter names are available */
   @BugPattern(
-      name = "ParameterNamesAvailableChecker",
       severity = SeverityLevel.ERROR,
       summary = "Returns true if parameter names are available on a method call")
   public static class ParameterNamesAvailableChecker extends BugChecker

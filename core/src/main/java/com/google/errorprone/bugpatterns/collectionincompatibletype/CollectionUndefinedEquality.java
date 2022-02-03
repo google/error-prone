@@ -40,7 +40,6 @@ import java.util.Arrays;
  * well-defined equals.
  */
 @BugPattern(
-    name = "CollectionUndefinedEquality",
     summary = "This type does not have well-defined equals behavior.",
     tags = StandardTags.FRAGILE_CODE,
     severity = WARNING)

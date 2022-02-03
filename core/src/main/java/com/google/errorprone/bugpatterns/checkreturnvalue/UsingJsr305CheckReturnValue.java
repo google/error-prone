@@ -35,7 +35,6 @@ import com.sun.tools.javac.code.Type;
  * in JSR305 (which is defunct).
  */
 @BugPattern(
-    name = "UsingJsr305CheckReturnValue",
     summary = "Prefer ErrorProne's @CheckReturnValue over JSR305's version.",
     severity = WARNING)
 public final class UsingJsr305CheckReturnValue extends BugChecker implements ImportTreeMatcher {

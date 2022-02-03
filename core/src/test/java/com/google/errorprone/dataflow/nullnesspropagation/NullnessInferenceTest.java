@@ -577,7 +577,6 @@ public class NullnessInferenceTest {
 
   /** BugPattern to test inference of nullness qualifiers */
   @BugPattern(
-      name = "NullnessInferenceChecker",
       summary = "Test checker for NullnessInferenceTest",
       explanation =
           "Outputs an error for each call to inspectInferredExpression and inspectInferredGenerics,"

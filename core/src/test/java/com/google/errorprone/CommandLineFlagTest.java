@@ -48,7 +48,6 @@ import org.junit.runners.JUnit4;
 public class CommandLineFlagTest {
 
   @BugPattern(
-      name = "DisableableChecker",
       altNames = "foo",
       summary = "Disableable checker that flags all return statements as errors",
       explanation = "Disableable checker that flags all return statements as errors",
@@ -61,7 +60,6 @@ public class CommandLineFlagTest {
   }
 
   @BugPattern(
-      name = "NondisableableChecker",
       summary = "NondisableableChecker checker that flags all return statements as errors",
       explanation = "NondisableableChecker checker that flags all return statements as errors",
       disableable = false,
@@ -74,7 +72,6 @@ public class CommandLineFlagTest {
   }
 
   @BugPattern(
-      name = "WarningChecker",
       summary = "Checker that flags all return statements as warnings",
       explanation = "Checker that flags all return statements as warnings",
       severity = WARNING)
@@ -86,7 +83,6 @@ public class CommandLineFlagTest {
   }
 
   @BugPattern(
-      name = "ErrorChecker",
       summary = "Checker that flags all return statements as errors",
       explanation = "Checker that flags all return statements as errors",
       severity = ERROR)

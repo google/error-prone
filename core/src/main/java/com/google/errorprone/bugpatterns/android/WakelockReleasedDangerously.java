@@ -56,7 +56,6 @@ import com.sun.tools.javac.code.Types;
 
 /** @author epmjohnston@google.com */
 @BugPattern(
-    name = "WakelockReleasedDangerously",
     tags = StandardTags.FRAGILE_CODE,
     summary =
         "A wakelock acquired with a timeout may be released by the system before calling"

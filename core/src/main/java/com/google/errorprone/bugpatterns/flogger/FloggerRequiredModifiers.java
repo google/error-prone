@@ -76,7 +76,6 @@ import javax.lang.model.element.NestingKind;
 
 /** Ensures that class-level FluentLogger objects are private static final. */
 @BugPattern(
-    name = "FloggerRequiredModifiers",
     summary =
         "FluentLogger.forEnclosingClass should always be saved to a private static final field.",
     link = "https://google.github.io/flogger/best_practice#modifiers",

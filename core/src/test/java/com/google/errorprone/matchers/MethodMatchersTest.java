@@ -44,7 +44,7 @@ import org.junit.runners.JUnit4;
 public class MethodMatchersTest {
 
   /** A bugchecker to test constructor matching. */
-  @BugPattern(name = "ConstructorDeleter", summary = "Deletes constructors", severity = ERROR)
+  @BugPattern(summary = "Deletes constructors", severity = ERROR)
   public static class ConstructorDeleter extends BugChecker
       implements BugChecker.MethodInvocationTreeMatcher,
           BugChecker.NewClassTreeMatcher,

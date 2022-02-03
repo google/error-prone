@@ -29,7 +29,6 @@ import com.sun.source.tree.MethodInvocationTree;
 
 /** @author avenet@google.com (Arnaud J. Venet) */
 @BugPattern(
-    name = "RectIntersectReturnValueIgnored",
     summary = "Return value of android.graphics.Rect.intersect() must be checked",
     severity = ERROR)
 public final class RectIntersectReturnValueIgnored extends AbstractReturnValueIgnored {

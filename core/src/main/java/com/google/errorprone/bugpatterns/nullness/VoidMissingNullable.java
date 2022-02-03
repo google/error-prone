@@ -52,10 +52,7 @@ import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
-@BugPattern(
-    name = "VoidMissingNullable",
-    summary = "The type Void is not annotated @Nullable",
-    severity = SUGGESTION)
+@BugPattern(summary = "The type Void is not annotated @Nullable", severity = SUGGESTION)
 public class VoidMissingNullable extends BugChecker
     implements ParameterizedTypeTreeMatcher, MethodTreeMatcher, VariableTreeMatcher {
   /*

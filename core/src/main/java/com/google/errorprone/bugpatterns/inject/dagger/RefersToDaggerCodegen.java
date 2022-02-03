@@ -37,7 +37,6 @@ import com.sun.tools.javac.code.Type;
  * Checks that the only code that refers to Dagger generated code is other Dagger generated code.
  */
 @BugPattern(
-    name = "RefersToDaggerCodegen",
     summary = "Don't refer to Dagger's internal or generated code",
     severity = SeverityLevel.ERROR)
 public final class RefersToDaggerCodegen extends BugChecker implements MethodInvocationTreeMatcher {

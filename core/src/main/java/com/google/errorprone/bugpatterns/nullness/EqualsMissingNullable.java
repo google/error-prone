@@ -37,7 +37,6 @@ import com.sun.tools.javac.code.Symbol.VarSymbol;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
-    name = "EqualsMissingNullable",
     summary = "Method overrides Object.equals but does not have @Nullable on its parameter",
     severity = SUGGESTION)
 public class EqualsMissingNullable extends BugChecker implements MethodTreeMatcher {

@@ -39,7 +39,6 @@ import javax.lang.model.type.TypeKind;
  * Detects Flogger log statements that pass Exceptions to the log method instead of using withCause.
  */
 @BugPattern(
-    name = "FloggerWithoutCause",
     summary = "Use withCause to associate Exceptions with log statements",
     severity = BugPattern.SeverityLevel.WARNING)
 public class FloggerWithoutCause extends BugChecker

@@ -44,7 +44,6 @@ public class CreatesDuplicateCallHeuristicTest {
 
   /** A {@link BugChecker} which runs the CreatesDuplicateCallHeuristic and prints the result */
   @BugPattern(
-      name = "CreatesDuplicateCallHeuristicChecker",
       severity = SeverityLevel.ERROR,
       summary = "Runs CreateDuplicateCallHeuristic and prints the result")
   public static class CreatesDuplicateCallHeuristicChecker extends BugChecker

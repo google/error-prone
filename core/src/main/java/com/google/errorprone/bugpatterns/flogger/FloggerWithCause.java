@@ -48,7 +48,6 @@ import java.util.Optional;
 
 /** Flogger's withCause(Throwable) method checks */
 @BugPattern(
-    name = "FloggerWithCause",
     summary =
         "Calling withCause(Throwable) with an inline allocated Throwable is discouraged."
             + " Consider using withStackTrace(StackSize) instead, and specifying a reduced"

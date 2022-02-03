@@ -34,7 +34,6 @@ import com.sun.source.tree.TryTree;
 
 /** @author pvisontay@google.com */
 @BugPattern(
-    name = "BinderIdentityRestoredDangerously",
     tags = StandardTags.FRAGILE_CODE,
     summary =
         "A call to Binder.clearCallingIdentity() should be followed by "
