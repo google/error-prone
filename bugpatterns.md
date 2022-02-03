@@ -745,6 +745,9 @@ It is confusing to have a field and a parameter under the same scope that differ
 __[InconsistentHashCode](bugpattern/InconsistentHashCode)__<br>
 Including fields in hashCode which are not compared in equals violates the contract of hashCode.
 
+__[IncorrectMainMethod](bugpattern/IncorrectMainMethod)__<br>
+&#39;main&#39; methods must be public, static, and void
+
 __[IncrementInForLoopAndHeader](bugpattern/IncrementInForLoopAndHeader)__<br>
 This for loop increments the same variable in the header and in the body
 
