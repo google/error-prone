@@ -246,6 +246,7 @@ public final class PreferredInterfaceType extends BugChecker implements Compilat
           .reduce(types::lub)
           .flatMap(type -> toGoodReplacement(type, state))
           .filter(replacement -> !isSubtype(getType(tree), replacement, state))
+          .filter(replacement -> isSubtype(replacement, getType(tree), state))
           .ifPresent(
               type -> {
                 SuggestedFix.Builder builder = SuggestedFix.builder();
