@@ -16,6 +16,7 @@
 
 package com.google.errorprone.bugpatterns;
 
+import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,6 +27,9 @@ import org.junit.runners.JUnit4;
 public class IncorrectMainMethodTest {
   private final CompilationTestHelper testHelper =
       CompilationTestHelper.newInstance(IncorrectMainMethod.class, getClass());
+
+  private final BugCheckerRefactoringTestHelper refactoringHelper =
+      BugCheckerRefactoringTestHelper.newInstance(IncorrectMainMethod.class, getClass());
 
   @Test
   public void negative() {
@@ -140,6 +144,38 @@ public class IncorrectMainMethodTest {
             "Test.java",
             "class Test {", //
             "  static void main(Object[] args) {}",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void removePrivate() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            "class Test {", //
+            "  private static void main(String[] args) {}",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "class Test {", //
+            "  public static void main(String[] args) {}",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void removeProtected() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            "class Test {", //
+            "  protected static void main(String[] args) {}",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "class Test {", //
+            "  public static void main(String[] args) {}",
             "}")
         .doTest();
   }

@@ -64,6 +64,8 @@ public final class IncorrectMainMethod extends BugChecker implements MethodTreeM
       return NO_MATCH;
     }
     SuggestedFix.Builder fix = SuggestedFix.builder().replace(tree.getReturnType(), "void");
+    SuggestedFixes.removeModifiers(tree, state, Modifier.PROTECTED, Modifier.PRIVATE)
+        .ifPresent(fix::merge);
     SuggestedFixes.addModifiers(tree, tree.getModifiers(), state, REQUIRED_MODIFIERS)
         .ifPresent(fix::merge);
     return describeMatch(tree, fix.build());
