@@ -19,3 +19,8 @@ error: 'main' method is not declared 'public static'
 ```
 
 [JLS §12.1.4]: https://docs.oracle.com/javase/specs/jls/se11/html/jls-12.html#jls-12.1.4
+
+TIP: If you're declaring a method that isn't intended to be used as the main
+method of your program, prefer to use a name other than `main`. It's confusing
+to humans and static analysis to see methods like `private int main(String[]
+args)`.
