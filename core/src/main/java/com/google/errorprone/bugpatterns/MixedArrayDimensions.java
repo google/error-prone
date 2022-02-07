@@ -74,9 +74,11 @@ public class MixedArrayDimensions extends BugChecker
         int idx = dim.indexOf("[]", nonWhitespace);
         if (idx > nonWhitespace) {
           String replacement = dim.substring(idx) + dim.substring(0, idx);
-          // SimpleCharStream generates violations in other packages, and is challenging to fix.
+          // javacc generates classes in arbitrary packages with violations that are hard to fix.
           var enclosingClass = enclosingClass(getSymbol(tree));
-          if (enclosingClass != null && enclosingClass.name.contentEquals("SimpleCharStream")) {
+          if (enclosingClass != null
+              && (enclosingClass.name.contentEquals("SimpleCharStream")
+                  || enclosingClass.name.contentEquals("SimpleNode"))) {
             return NO_MATCH;
           }
           return describeMatch(tree, SuggestedFix.replace(start, end, replacement));
