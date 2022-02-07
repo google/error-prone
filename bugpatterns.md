@@ -1135,6 +1135,9 @@ Fields annotated with @Inject/@Mock should not be manually assigned to, as they 
 __[UnnecessaryLambda](bugpattern/UnnecessaryLambda)__<br>
 Returning a lambda from a helper method or saving it in a constant is unnecessary; prefer to implement the functional interface method directly and use a method reference instead.
 
+__[UnnecessaryLongToIntConversion](bugpattern/UnnecessaryLongToIntConversion)__<br>
+Converting a long or Long to an int to pass as a long parameter is usually not necessary. If this conversion is intentional, consider &#96;Longs.constrainToRange()&#96; instead.
+
 __[UnnecessaryMethodInvocationMatcher](bugpattern/UnnecessaryMethodInvocationMatcher)__<br>
 It is not necessary to wrap a MethodMatcher with methodInvocation().
 
