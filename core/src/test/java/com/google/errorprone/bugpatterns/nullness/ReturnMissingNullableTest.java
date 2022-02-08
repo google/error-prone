@@ -512,6 +512,21 @@ public class ReturnMissingNullableTest {
   }
 
   @Test
+  public void testOnlyStatementIsNullReturnButCannotBeOverridden() {
+    createCompilationTestHelper()
+        .addSourceLines(
+            "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
+            "package com.google.errorprone.bugpatterns.nullness;",
+            "public final class LiteralNullReturnTest {",
+            "  public String getMessage() {",
+            "    // BUG: Diagnostic contains: @Nullable",
+            "    return null;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void testArrayDeclaration() {
     createRefactoringTestHelper()
         .addInputLines(
