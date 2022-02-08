@@ -16,6 +16,11 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.errorprone.BugCheckerRefactoringTestHelper.FixChoosers.FIRST;
+import static com.google.errorprone.BugCheckerRefactoringTestHelper.FixChoosers.SECOND;
+import static com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH;
+
+import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -28,6 +33,9 @@ public class UnnecessaryLongToIntConversionTest {
   private final CompilationTestHelper compilationHelper =
       CompilationTestHelper.newInstance(UnnecessaryLongToIntConversion.class, getClass());
 
+  private final BugCheckerRefactoringTestHelper refactoringHelper =
+      BugCheckerRefactoringTestHelper.newInstance(UnnecessaryLongToIntConversion.class, getClass());
+
   @Test
   public void longParameterLongToIntPositiveCases() {
     compilationHelper.addSourceFile("UnnecessaryLongToIntConversionPositiveCases.java").doTest();
@@ -36,5 +44,242 @@ public class UnnecessaryLongToIntConversionTest {
   @Test
   public void longParameterLongToIntNegativeCases() {
     compilationHelper.addSourceFile("UnnecessaryLongToIntConversionNegativeCases.java").doTest();
+  }
+
+  // Test the suggested fixes, first removing the conversion and second replacing it with a call to
+  // {@code Longs.constrainToRange()} instead.
+  @Test
+  public void suggestRemovingTypeCast() {
+    refactoringHelper
+        .addInputLines(
+            "in/A.java",
+            "public class A {",
+            "  void acceptsLong(long value) {}",
+            "  void foo() {",
+            "    long x = 1L;",
+            "    acceptsLong((int) x);",
+            "  }",
+            "}")
+        .addOutputLines(
+            "out/A.java",
+            "public class A {",
+            "  void acceptsLong(long value) {}",
+            "  void foo() {",
+            "    long x = 1L;",
+            "    acceptsLong(x);",
+            "  }",
+            "}")
+        .setFixChooser(FIRST)
+        .doTest(TEXT_MATCH);
+  }
+
+  @Test
+  public void suggestRemovingTypeCastWithoutSpacing() {
+    refactoringHelper
+        .addInputLines(
+            "in/A.java",
+            "public class A {",
+            "  void acceptsLong(long value) {}",
+            "  void foo() {",
+            "    long x = 1L;",
+            "    acceptsLong((int)x);",
+            "  }",
+            "}")
+        .addOutputLines(
+            "out/A.java",
+            "public class A {",
+            "  void acceptsLong(long value) {}",
+            "  void foo() {",
+            "    long x = 1L;",
+            "    acceptsLong(x);",
+            "  }",
+            "}")
+        .setFixChooser(FIRST)
+        .doTest(TEXT_MATCH);
+  }
+
+  @Test
+  public void suggestReplacingTypeCastWithConstrainToRange() {
+    refactoringHelper
+        .addInputLines(
+            "in/A.java",
+            "public class A {",
+            "  void acceptsLong(long value) {}",
+            "  void foo() {",
+            "    long x = 1L;",
+            "    acceptsLong((int) x);",
+            "  }",
+            "}")
+        .addOutputLines(
+            "out/A.java",
+            "import com.google.common.primitives.Longs;",
+            "public class A {",
+            "  void acceptsLong(long value) {}",
+            "  void foo() {",
+            "    long x = 1L;",
+            "    acceptsLong(Longs.constrainToRange(x, Integer.MIN_VALUE, Integer.MAX_VALUE));",
+            "  }",
+            "}")
+        .setFixChooser(SECOND)
+        .doTest(TEXT_MATCH);
+  }
+
+  @Test
+  public void suggestReplacingTypeCastWithoutSpacingWithConstrainToRange() {
+    refactoringHelper
+        .addInputLines(
+            "in/A.java",
+            "public class A {",
+            "  void acceptsLong(long value) {}",
+            "  void foo() {",
+            "    long x = 1L;",
+            "    acceptsLong((int)x);",
+            "  }",
+            "}")
+        .addOutputLines(
+            "out/A.java",
+            "import com.google.common.primitives.Longs;",
+            "public class A {",
+            "  void acceptsLong(long value) {}",
+            "  void foo() {",
+            "    long x = 1L;",
+            "    acceptsLong(Longs.constrainToRange(x, Integer.MIN_VALUE, Integer.MAX_VALUE));",
+            "  }",
+            "}")
+        .setFixChooser(SECOND)
+        .doTest(TEXT_MATCH);
+  }
+
+  @Test
+  public void suggestRemovingStaticMethod() {
+    refactoringHelper
+        .addInputLines(
+            "in/A.java",
+            "import com.google.common.primitives.Ints;",
+            "public class A {",
+            "  void acceptsLong(long value) {}",
+            "  void foo() {",
+            "    long x = 1L;",
+            "    acceptsLong(Ints.checkedCast(x));",
+            "  }",
+            "}")
+        .addOutputLines(
+            "out/A.java",
+            "import com.google.common.primitives.Ints;",
+            "public class A {",
+            "  void acceptsLong(long value) {}",
+            "  void foo() {",
+            "    long x = 1L;",
+            "    acceptsLong(x);",
+            "  }",
+            "}")
+        .setFixChooser(FIRST)
+        .doTest(TEXT_MATCH);
+  }
+
+  @Test
+  public void suggestRemovingStaticMethodWithBoxedLongArgument() {
+    refactoringHelper
+        .addInputLines(
+            "in/A.java",
+            "import com.google.common.primitives.Ints;",
+            "public class A {",
+            "  void acceptsLong(long value) {}",
+            "  void foo() {",
+            "    Long x = Long.valueOf(1);",
+            "    acceptsLong(Ints.checkedCast(x));",
+            "  }",
+            "}")
+        .addOutputLines(
+            "out/A.java",
+            "import com.google.common.primitives.Ints;",
+            "public class A {",
+            "  void acceptsLong(long value) {}",
+            "  void foo() {",
+            "    Long x = Long.valueOf(1);",
+            "    acceptsLong(x);",
+            "  }",
+            "}")
+        .setFixChooser(FIRST)
+        .doTest(TEXT_MATCH);
+  }
+
+  @Test
+  public void suggestReplacingStaticMethodWithConstrainToRange() {
+    refactoringHelper
+        .addInputLines(
+            "in/A.java",
+            "import java.lang.Math;",
+            "public class A {",
+            "  void acceptsLong(long value) {}",
+            "  void foo() {",
+            "    long x = 1L;",
+            "    acceptsLong(Math.toIntExact(x));",
+            "  }",
+            "}")
+        .addOutputLines(
+            "out/A.java",
+            "import com.google.common.primitives.Longs;",
+            "import java.lang.Math;",
+            "public class A {",
+            "  void acceptsLong(long value) {}",
+            "  void foo() {",
+            "    long x = 1L;",
+            "    acceptsLong(Longs.constrainToRange(x, Integer.MIN_VALUE, Integer.MAX_VALUE));",
+            "  }",
+            "}")
+        .setFixChooser(SECOND)
+        .doTest(TEXT_MATCH);
+  }
+
+  @Test
+  public void suggestRemovingInstanceMethod() {
+    refactoringHelper
+        .addInputLines(
+            "in/A.java",
+            "public class A {",
+            "  void acceptsLong(long value) {}",
+            "  void foo() {",
+            "    Long x = Long.valueOf(1);",
+            "    acceptsLong(x.intValue());",
+            "  }",
+            "}")
+        .addOutputLines(
+            "out/A.java",
+            "public class A {",
+            "  void acceptsLong(long value) {}",
+            "  void foo() {",
+            "    Long x = Long.valueOf(1);",
+            "    acceptsLong(x);",
+            "  }",
+            "}")
+        .setFixChooser(FIRST)
+        .doTest(TEXT_MATCH);
+  }
+
+  @Test
+  public void suggestReplacingInstanceMethodWithConstrainToRange() {
+    refactoringHelper
+        .addInputLines(
+            "in/A.java",
+            "public class A {",
+            "  void acceptsLong(long value) {}",
+            "  void foo() {",
+            "    Long x = Long.valueOf(1);",
+            "    acceptsLong(x.intValue());",
+            "  }",
+            "}")
+        .addOutputLines(
+            "out/A.java",
+            "import com.google.common.primitives.Longs;",
+            "public class A {",
+            "  void acceptsLong(long value) {}",
+            "  void foo() {",
+            "    Long x = Long.valueOf(1);",
+            "    acceptsLong(Longs.constrainToRange(x, Integer.MIN_VALUE, Integer.MAX_VALUE));",
+            "  }",
+            "}")
+        .setFixChooser(SECOND)
+        .doTest(TEXT_MATCH);
   }
 }

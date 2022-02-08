@@ -32,6 +32,7 @@ import static com.google.errorprone.util.ASTHelpers.targetType;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
+import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.ChildMultiMatcher.MatchType;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
@@ -51,22 +52,35 @@ import javax.lang.model.type.TypeKind;
 public class UnnecessaryLongToIntConversion extends BugChecker
     implements MethodInvocationTreeMatcher {
 
-  private static final Matcher<ExpressionTree> LONG_TO_INT_METHODS =
+  // Match static and instance methods differently because we build the suggested fix differently
+  // for each case.
+  private static final Matcher<ExpressionTree> LONG_TO_INT_STATIC_METHODS =
       anyOf(
           staticMethod().onClass("com.google.common.primitives.Ints").named("checkedCast"),
-          staticMethod().onClass("java.lang.Math").named("toIntExact"),
-          instanceMethod().onExactClass(JAVA_LANG_LONG_TYPE).named("intValue"));
+          staticMethod().onClass("java.lang.Math").named("toIntExact"));
+
+  private static final Matcher<ExpressionTree> LONG_TO_INT_INSTANCE_METHODS =
+      anyOf(instanceMethod().onExactClass(JAVA_LANG_LONG_TYPE).named("intValue"));
 
   private static final Matcher<ExpressionTree> IS_LONG_TYPE =
       anyOf(isSameType(LONG_TYPE), isSameType(JAVA_LANG_LONG_TYPE));
 
   // Matches calls to (long -> int) converter methods with arguments that are type long or Long.
-  private static final Matcher<ExpressionTree> LONG_TO_INT_METHOD_ON_LONG_VALUE_MATCHER =
-      methodInvocation(LONG_TO_INT_METHODS, MatchType.ALL, IS_LONG_TYPE);
+  private static final Matcher<ExpressionTree> LONG_TO_INT_STATIC_METHOD_ON_LONG_VALUE_MATCHER =
+      methodInvocation(LONG_TO_INT_STATIC_METHODS, MatchType.ALL, IS_LONG_TYPE);
+
+  private static final Matcher<ExpressionTree> LONG_TO_INT_INSTANCE_METHOD_ON_LONG_VALUE_MATCHER =
+      methodInvocation(LONG_TO_INT_INSTANCE_METHODS, MatchType.ALL, IS_LONG_TYPE);
 
   // To match casts, create a Matcher of type {@code Matcher<TypeCastTree>}.
   private static final Matcher<TypeCastTree> LONG_TO_INT_CAST =
       typeCast(isSameType(INT_TYPE), isSameType(LONG_TYPE));
+
+  private static final String LONGS_CONSTRAIN_TO_RANGE_PREFIX = "Longs.constrainToRange(";
+  private static final String LONGS_CONSTRAIN_TO_RANGE_SUFFIX =
+      ", Integer.MIN_VALUE, Integer.MAX_VALUE)";
+  private static final String LONGS_CONSTRAIN_TO_RANGE_IMPORT =
+      "com.google.common.primitives.Longs";
 
   /**
    * Matches if a long or Long is converted to an int for a long parameter in a method invocation.
@@ -96,12 +110,63 @@ public class UnnecessaryLongToIntConversion extends BugChecker
 
       // Match if the arg is a type cast from a long to an int.
       if (arg instanceof TypeCastTree && LONG_TO_INT_CAST.matches((TypeCastTree) arg, state)) {
-        return describeMatch(tree);
+        ExpressionTree castedExpression = ((TypeCastTree) arg).getExpression();
+        return buildDescription(tree)
+            // Remove the type cast.
+            .addFix(SuggestedFix.replace(arg, state.getSourceForNode(castedExpression)))
+            // Remove the type cast and use Longs.constrainToRange() instead.
+            .addFix(
+                SuggestedFix.builder()
+                    .replace(
+                        arg,
+                        LONGS_CONSTRAIN_TO_RANGE_PREFIX
+                            + state.getSourceForNode(castedExpression)
+                            + LONGS_CONSTRAIN_TO_RANGE_SUFFIX)
+                    .addImport(LONGS_CONSTRAIN_TO_RANGE_IMPORT)
+                    .build())
+            .build();
       }
 
-      // Match if the arg is a method call that converts a long or Long to an int.
-      if (LONG_TO_INT_METHOD_ON_LONG_VALUE_MATCHER.matches(arg, state)) {
-        return describeMatch(tree);
+      // Match if the arg is a static method call that converts a long or Long to an int.
+      // This is separate from instance methods because we build the suggested fixes differently.
+      if (LONG_TO_INT_STATIC_METHOD_ON_LONG_VALUE_MATCHER.matches(arg, state)) {
+        // Get the first argument to the method. This works because the methods we are matching have
+        // only one parameter, which is the long or Long parameter we care about.
+        ExpressionTree methodArgExpression = ((MethodInvocationTree) arg).getArguments().get(0);
+        String methodArg = state.getSourceForNode(methodArgExpression);
+        return buildDescription(tree)
+            // Remove the static method and just keep the arguments (i.e. the long values).
+            .addFix(SuggestedFix.replace(arg, methodArg))
+            // Remove the static method and suggest Longs.constrainToRange() instead.
+            .addFix(
+                SuggestedFix.builder()
+                    .replace(
+                        arg,
+                        LONGS_CONSTRAIN_TO_RANGE_PREFIX
+                            + methodArg
+                            + LONGS_CONSTRAIN_TO_RANGE_SUFFIX)
+                    .addImport(LONGS_CONSTRAIN_TO_RANGE_IMPORT)
+                    .build())
+            .build();
+      }
+
+      // Match if the arg is an instance method call that converts a long or Long to an int.
+      if (LONG_TO_INT_INSTANCE_METHOD_ON_LONG_VALUE_MATCHER.matches(arg, state)) {
+        String receiver = state.getSourceForNode(ASTHelpers.getReceiver(arg));
+        return buildDescription(tree)
+            // Remove the instance method and just keep the receiver (the instance of the object).
+            .addFix(SuggestedFix.replace(arg, receiver))
+            // Remove the instance method and wrap in Longs.ConstrainToRange().
+            .addFix(
+                SuggestedFix.builder()
+                    .replace(
+                        arg,
+                        LONGS_CONSTRAIN_TO_RANGE_PREFIX
+                            + receiver
+                            + LONGS_CONSTRAIN_TO_RANGE_SUFFIX)
+                    .addImport(LONGS_CONSTRAIN_TO_RANGE_IMPORT)
+                    .build())
+            .build();
       }
     }
     return NO_MATCH;
