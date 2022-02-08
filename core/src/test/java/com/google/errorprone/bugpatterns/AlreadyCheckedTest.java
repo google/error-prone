@@ -43,6 +43,21 @@ public final class AlreadyCheckedTest {
   }
 
   @Test
+  public void thisAndThat() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  public void test(boolean a, boolean b) {",
+            "    if (a && b) {",
+            "    } else if (a) {",
+            "    } else if (b) {}",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void guardBlock() {
     helper
         .addSourceLines(
