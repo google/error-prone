@@ -96,6 +96,7 @@ import org.checkerframework.errorprone.dataflow.cfg.node.StringConcatenateNode;
 import org.checkerframework.errorprone.dataflow.cfg.node.StringConversionNode;
 import org.checkerframework.errorprone.dataflow.cfg.node.StringLiteralNode;
 import org.checkerframework.errorprone.dataflow.cfg.node.SuperNode;
+import org.checkerframework.errorprone.dataflow.cfg.node.SwitchExpressionNode;
 import org.checkerframework.errorprone.dataflow.cfg.node.SynchronizedNode;
 import org.checkerframework.errorprone.dataflow.cfg.node.TernaryExpressionNode;
 import org.checkerframework.errorprone.dataflow.cfg.node.ThrowNode;
@@ -852,6 +853,19 @@ abstract class AbstractNullnessPropagationTransfer
 
   Nullness visitInstanceOf(
       InstanceOfNode node, SubNodeValues inputs, Updates thenUpdates, Updates elseUpdates) {
+    return NULLABLE;
+  }
+
+  @Override
+  public final TransferResult<Nullness, AccessPathStore<Nullness>> visitSwitchExpressionNode(
+      SwitchExpressionNode node, TransferInput<Nullness, AccessPathStore<Nullness>> input) {
+    ReadableUpdates updates = new ReadableUpdates();
+    Nullness result = visitSwitchExpression(node, values(input), updates);
+    return updateRegularStore(result, input, updates);
+  }
+
+  Nullness visitSwitchExpression(SwitchExpressionNode node, SubNodeValues inputs, Updates updates) {
+    // TODO(b/217592536): Implement switch expressions
     return NULLABLE;
   }
 
