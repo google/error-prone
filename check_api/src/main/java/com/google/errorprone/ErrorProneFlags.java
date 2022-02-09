@@ -18,7 +18,9 @@ package com.google.errorprone;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
+import static java.util.Arrays.stream;
 
+import com.google.common.base.Ascii;
 import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -111,15 +113,15 @@ public final class ErrorProneFlags implements Serializable {
   }
 
   private static <T extends Enum<T>> T asEnumValue(String key, String value, Class<T> clazz) {
-    try {
-      return Enum.valueOf(clazz, value);
-    } catch (IllegalArgumentException e) {
-      throw new IllegalArgumentException(
-          String.format(
-              "Error Prone flag %s=%s could not be parsed as an enum constant of %s",
-              key, value, clazz),
-          e);
-    }
+    return stream(clazz.getEnumConstants())
+        .filter(c -> Ascii.equalsIgnoreCase(c.name(), value))
+        .findFirst()
+        .orElseThrow(
+            () ->
+                new IllegalArgumentException(
+                    String.format(
+                        "Error Prone flag %s=%s could not be parsed as an enum constant of %s",
+                        key, value, clazz)));
   }
 
   private static boolean parseBoolean(String value) {

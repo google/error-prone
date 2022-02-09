@@ -107,8 +107,19 @@ class NullnessUtils {
   private static SuggestedFix fixByAddingNullableAnnotationToElementOrType(
       VisitorState state, Tree elementTree, Tree typeTree, @Nullable String suppressionToRemove) {
     NullableAnnotationToUse nullableAnnotationToUse = pickNullableAnnotation(state);
-    if (!nullableAnnotationToUse.isAlreadyInScope() && applyOnlyIfAlreadyInScope(state)) {
-      return emptyFix();
+    switch (applyOnlyIfAlreadyInScope(state)) {
+      case TRUE:
+        if (!nullableAnnotationToUse.isAlreadyInScope()) {
+          return emptyFix();
+        }
+        break;
+      case IF_NOT:
+        if (nullableAnnotationToUse.isAlreadyInScope()) {
+          return emptyFix();
+        }
+        break;
+      default:
+        break;
     }
 
     if (!nullableAnnotationToUse.isTypeUse()) {
@@ -524,12 +535,18 @@ class NullnessUtils {
     return null;
   }
 
-  private static boolean applyOnlyIfAlreadyInScope(VisitorState state) {
+  private enum OnlyIfInScope {
+    IF_NOT,
+    FALSE,
+    TRUE
+  }
+
+  private static OnlyIfInScope applyOnlyIfAlreadyInScope(VisitorState state) {
     return state
         .errorProneOptions()
         .getFlags()
-        .getBoolean("Nullness:OnlyIfAnnotationAlreadyInScope")
-        .orElse(false);
+        .getEnum("Nullness:OnlyIfAnnotationAlreadyInScope", OnlyIfInScope.class)
+        .orElse(OnlyIfInScope.FALSE);
   }
 
   private static boolean applyRemoveSuppressWarnings(VisitorState state) {
