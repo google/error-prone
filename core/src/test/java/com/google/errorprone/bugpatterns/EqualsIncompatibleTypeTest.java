@@ -176,12 +176,26 @@ public class EqualsIncompatibleTypeTest {
             "",
             "public class Test {",
             "  public void test() {",
-            "    // BUG: Diagnostic contains: implement equals",
+            "    // BUG: Diagnostic contains: . Though",
             "    TestProtoMessage.newBuilder().equals(TestProtoMessage.newBuilder());",
             "    // BUG: Diagnostic contains:",
             "    TestProtoMessage.newBuilder().equals(TestOneOfMessage.newBuilder());",
             "    // BUG: Diagnostic contains:",
             "    TestProtoMessage.newBuilder().equals(TestOneOfMessage.getDefaultInstance());",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void enumsNamedBuilderCanBeEqual() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "public class Test {",
+            "  enum FooBuilder { A }",
+            "  public boolean test(FooBuilder a, FooBuilder b) {",
+            "    return a.equals(b);",
             "  }",
             "}")
         .doTest();
