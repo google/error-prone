@@ -303,12 +303,8 @@ loadScripts(document, 'script');</script>
 <pre><a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;<a href="com/google/errorprone/matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.MemberReferenceTree&gt;&gt; lostReferenceTreeMatcher</pre>
 </li>
 <li class="block-list">
-<h5>memberReferenceTreeMatcher</h5>
-<pre><a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;<a href="com/google/errorprone/matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.MemberReferenceTree&gt;&gt; memberReferenceTreeMatcher</pre>
-</li>
-<li class="block-list">
-<h5>methodInvocationMatcher</h5>
-<pre><a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;<a href="com/google/errorprone/matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.ExpressionTree&gt;&gt; methodInvocationMatcher</pre>
+<h5>matcher</h5>
+<pre><a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;<a href="com/google/errorprone/matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.ExpressionTree&gt;&gt; matcher</pre>
 </li>
 </ul>
 </section>
@@ -4294,6 +4290,32 @@ loadScripts(document, 'script');</script>
 <li class="block-list">
 <h5>thrownMatcher</h5>
 <pre><a href="com/google/errorprone/matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;? super com.sun.source.tree.ExpressionTree&gt; thrownMatcher</pre>
+</li>
+</ul>
+</section>
+</li>
+</ul>
+</section>
+</li>
+<li>
+<section class="serialized-class-details" id="com.google.errorprone.matchers.UnusedReturnValueMatcher">
+<h3>Class <a href="com/google/errorprone/matchers/UnusedReturnValueMatcher.html" title="class in com.google.errorprone.matchers">com.google.errorprone.matchers.UnusedReturnValueMatcher</a> extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a> implements Serializable</h3>
+<ul class="block-list">
+<li>
+<section class="detail">
+<h4>Serialized Fields</h4>
+<ul class="block-list">
+<li class="block-list">
+<h5>allowInExceptionThrowers</h5>
+<pre>boolean allowInExceptionThrowers</pre>
+</li>
+<li class="block-list">
+<h5>memberReferenceTreeMatcher</h5>
+<pre><a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;<a href="com/google/errorprone/matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.MemberReferenceTree&gt;&gt; memberReferenceTreeMatcher</pre>
+</li>
+<li class="block-list">
+<h5>methodInvocationMatcher</h5>
+<pre><a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;<a href="com/google/errorprone/matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.ExpressionTree&gt;&gt; methodInvocationMatcher</pre>
 </li>
 </ul>
 </section>

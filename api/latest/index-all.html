@@ -3386,6 +3386,10 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/ExpectedExceptionChecker.html#%3Cinit%3E()">ExpectedExceptionChecker()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/ExpectedExceptionChecker.html" title="class in com.google.errorprone.bugpatterns">ExpectedExceptionChecker</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/google/errorprone/matchers/UnusedReturnValueMatcher.html#expectedExceptionTest(com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)">expectedExceptionTest(ExpressionTree, VisitorState)</a></span> - Static method in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/UnusedReturnValueMatcher.html" title="class in com.google.errorprone.matchers">UnusedReturnValueMatcher</a></dt>
+<dd>
+<div class="block">Allow return values to be ignored in tests that expect an exception to be thrown.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/refaster/Template.html#expectedTypes(com.google.errorprone.refaster.Inliner)">expectedTypes(Inliner)</a></span> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/Template.html" title="class in com.google.errorprone.refaster">Template</a></dt>
 <dd>
 <div class="block">Returns a list of the expected types to be matched.</div>
@@ -4059,6 +4063,10 @@ loadScripts(document, 'script');</script>
 <dt><span class="member-name-link"><a href="com/google/errorprone/suppliers/Suppliers.html#genericTypeOfType(com.google.errorprone.suppliers.Supplier,int)">genericTypeOfType(Supplier&lt;Type&gt;, int)</a></span> - Static method in class com.google.errorprone.suppliers.<a href="com/google/errorprone/suppliers/Suppliers.html" title="class in com.google.errorprone.suppliers">Suppliers</a></dt>
 <dd>
 <div class="block">Supplies the n'th generic type of the given expression.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/google/errorprone/matchers/UnusedReturnValueMatcher.html#get(boolean)">get(boolean)</a></span> - Static method in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/UnusedReturnValueMatcher.html" title="class in com.google.errorprone.matchers">UnusedReturnValueMatcher</a></dt>
+<dd>
+<div class="block">Gets an instance of this matcher.</div>
 </dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/suppliers/Supplier.html#get(com.google.errorprone.VisitorState)">get(VisitorState)</a></span> - Method in interface com.google.errorprone.suppliers.<a href="com/google/errorprone/suppliers/Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a></dt>
 <dd>&nbsp;</dd>
@@ -7612,6 +7620,8 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/matchers/StringLiteral.html#matches(com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)">matches(ExpressionTree, VisitorState)</a></span> - Method in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/StringLiteral.html" title="class in com.google.errorprone.matchers">StringLiteral</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/google/errorprone/matchers/UnusedReturnValueMatcher.html#matches(com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)">matches(ExpressionTree, VisitorState)</a></span> - Method in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/UnusedReturnValueMatcher.html" title="class in com.google.errorprone.matchers">UnusedReturnValueMatcher</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/matchers/MethodInvocationArgument.html#matches(com.sun.source.tree.MethodInvocationTree,com.google.errorprone.VisitorState)">matches(MethodInvocationTree, VisitorState)</a></span> - Method in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/MethodInvocationArgument.html" title="class in com.google.errorprone.matchers">MethodInvocationArgument</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/matchers/MethodVisibility.html#matches(com.sun.source.tree.MethodTree,com.google.errorprone.VisitorState)">matches(MethodTree, VisitorState)</a></span> - Method in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/MethodVisibility.html" title="class in com.google.errorprone.matchers">MethodVisibility</a></dt>
@@ -9200,6 +9210,11 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">A TypeExtractor for method invocations that create a mock using Mockito.mock, Mockito.spy, or
  EasyMock.create[...]Mock, extracting the type being mocked.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/google/errorprone/matchers/UnusedReturnValueMatcher.html#mockitoInvocation(com.sun.source.tree.Tree,com.google.errorprone.VisitorState)">mockitoInvocation(Tree, VisitorState)</a></span> - Static method in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/UnusedReturnValueMatcher.html" title="class in com.google.errorprone.matchers">UnusedReturnValueMatcher</a></dt>
+<dd>
+<div class="block">Don't match the method that is invoked through <code>Mockito.verify(t)</code> or <code>
+ doReturn(val).when(t)</code>.</div>
 </dd>
 <dt><a href="com/google/errorprone/bugpatterns/MockitoUsage.html" title="class in com.google.errorprone.bugpatterns"><span class="type-name-link">MockitoUsage</span></a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
 <dd>
@@ -12703,6 +12718,11 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/UnusedNestedClass.html#%3Cinit%3E()">UnusedNestedClass()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/UnusedNestedClass.html" title="class in com.google.errorprone.bugpatterns">UnusedNestedClass</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/matchers/UnusedReturnValueMatcher.html" title="class in com.google.errorprone.matchers"><span class="type-name-link">UnusedReturnValueMatcher</span></a> - Class in <a href="com/google/errorprone/matchers/package-summary.html">com.google.errorprone.matchers</a></dt>
+<dd>
+<div class="block">Matches expressions that invoke or reference a non-void method or constructor and which do not
+ use their return value and are not in a context where non-use of the return value is allowed.</div>
+</dd>
 <dt><a href="com/google/errorprone/bugpatterns/UnusedVariable.html" title="class in com.google.errorprone.bugpatterns"><span class="type-name-link">UnusedVariable</span></a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
 <dd>
 <div class="block">Bugpattern to detect unused declarations.</div>

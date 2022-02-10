@@ -6090,12 +6090,20 @@ com.sun.source.util.TreePath&nbsp;where,
 </thead>
 <tbody>
 <tr class="alt-color">
+<td class="col-first"><code>static boolean</code></td>
+<th class="col-second" scope="row"><span class="type-name-label">UnusedReturnValueMatcher.</span><code><span class="member-name-link"><a href="../matchers/UnusedReturnValueMatcher.html#expectedExceptionTest(com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)">expectedExceptionTest</a></span>&#8203;(com.sun.source.tree.ExpressionTree&nbsp;tree,
+<a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
+<td class="col-last">
+<div class="block">Allow return values to be ignored in tests that expect an exception to be thrown.</div>
+</td>
+</tr>
+<tr class="row-color">
 <td class="col-first"><code>protected <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Iterable.html" title="class or interface in java.lang" class="external-link">Iterable</a>&lt;? extends com.sun.source.tree.AnnotationTree&gt;</code></td>
 <th class="col-second" scope="row"><span class="type-name-label">AnnotationMatcher.</span><code><span class="member-name-link"><a href="../matchers/AnnotationMatcher.html#getChildNodes(T,com.google.errorprone.VisitorState)">getChildNodes</a></span>&#8203;(<a href="../matchers/AnnotationMatcher.html" title="type parameter in AnnotationMatcher">T</a>&nbsp;tree,
 <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>protected abstract <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Iterable.html" title="class or interface in java.lang" class="external-link">Iterable</a>&lt;? extends <a href="../matchers/ChildMultiMatcher.html" title="type parameter in ChildMultiMatcher">N</a>&gt;</code></td>
 <th class="col-second" scope="row"><span class="type-name-label">ChildMultiMatcher.</span><code><span class="member-name-link"><a href="../matchers/ChildMultiMatcher.html#getChildNodes(T,com.google.errorprone.VisitorState)">getChildNodes</a></span>&#8203;(<a href="../matchers/ChildMultiMatcher.html" title="type parameter in ChildMultiMatcher">T</a>&nbsp;tree,
 <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
@@ -6103,31 +6111,31 @@ com.sun.source.util.TreePath&nbsp;where,
 <div class="block">Returns the set of child nodes to match.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>protected <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Iterable.html" title="class or interface in java.lang" class="external-link">Iterable</a>&lt;? extends com.sun.source.tree.MethodTree&gt;</code></td>
 <th class="col-second" scope="row"><span class="type-name-label">ConstructorOfClass.</span><code><span class="member-name-link"><a href="../matchers/ConstructorOfClass.html#getChildNodes(com.sun.source.tree.ClassTree,com.google.errorprone.VisitorState)">getChildNodes</a></span>&#8203;(com.sun.source.tree.ClassTree&nbsp;classTree,
 <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>protected <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Iterable.html" title="class or interface in java.lang" class="external-link">Iterable</a>&lt;? extends com.sun.source.tree.ExpressionTree&gt;</code></td>
 <th class="col-second" scope="row"><span class="type-name-label">HasArguments.</span><code><span class="member-name-link"><a href="../matchers/HasArguments.html#getChildNodes(com.sun.source.tree.MethodInvocationTree,com.google.errorprone.VisitorState)">getChildNodes</a></span>&#8203;(com.sun.source.tree.MethodInvocationTree&nbsp;methodInvocationTree,
 <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>protected <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Iterable.html" title="class or interface in java.lang" class="external-link">Iterable</a>&lt;? extends com.sun.source.tree.VariableTree&gt;</code></td>
 <th class="col-second" scope="row"><span class="type-name-label">MethodHasParameters.</span><code><span class="member-name-link"><a href="../matchers/MethodHasParameters.html#getChildNodes(com.sun.source.tree.MethodTree,com.google.errorprone.VisitorState)">getChildNodes</a></span>&#8203;(com.sun.source.tree.MethodTree&nbsp;methodTree,
 <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>static boolean</code></td>
 <th class="col-second" scope="row"><span class="type-name-label">CompileTimeConstantExpressionMatcher.</span><code><span class="member-name-link"><a href="../matchers/CompileTimeConstantExpressionMatcher.html#hasCompileTimeConstantAnnotation(com.google.errorprone.VisitorState,com.sun.tools.javac.code.Symbol)">hasCompileTimeConstantAnnotation</a></span>&#8203;(<a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
 com.sun.tools.javac.code.Symbol&nbsp;symbol)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>static boolean</code></td>
 <th class="col-second" scope="row"><span class="type-name-label">JUnitMatchers.</span><code><span class="member-name-link"><a href="../matchers/JUnitMatchers.html#hasJUnitAnnotation(com.sun.source.tree.MethodTree,com.google.errorprone.VisitorState)">hasJUnitAnnotation</a></span>&#8203;(com.sun.source.tree.MethodTree&nbsp;tree,
 <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
@@ -6136,7 +6144,7 @@ com.sun.tools.javac.code.Symbol&nbsp;symbol)</code></th>
  org.junit package.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>static boolean</code></td>
 <th class="col-second" scope="row"><span class="type-name-label">TestNgMatchers.</span><code><span class="member-name-link"><a href="../matchers/TestNgMatchers.html#hasTestNgAnnotation(com.sun.source.tree.MethodTree,com.google.errorprone.VisitorState)">hasTestNgAnnotation</a></span>&#8203;(com.sun.source.tree.MethodTree&nbsp;tree,
 <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
@@ -6145,141 +6153,147 @@ com.sun.tools.javac.code.Symbol&nbsp;symbol)</code></th>
  org.testng package.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>static boolean</code></td>
 <th class="col-second" scope="row"><span class="type-name-label">Matchers.</span><code><span class="member-name-link"><a href="../matchers/Matchers.html#isThrowingFunctionalInterface(com.sun.tools.javac.code.Type,com.google.errorprone.VisitorState)">isThrowingFunctionalInterface</a></span>&#8203;(com.sun.tools.javac.code.Type&nbsp;clazzType,
 <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>abstract boolean</code></td>
 <th class="col-second" scope="row"><span class="type-name-label">AbstractTypeMatcher.</span><code><span class="member-name-link"><a href="../matchers/AbstractTypeMatcher.html#matches(T,com.google.errorprone.VisitorState)">matches</a></span>&#8203;(<a href="../matchers/AbstractTypeMatcher.html" title="type parameter in AbstractTypeMatcher">T</a>&nbsp;tree,
 <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>boolean</code></td>
 <th class="col-second" scope="row"><span class="type-name-label">AnnotationDoesNotHaveArgument.</span><code><span class="member-name-link"><a href="../matchers/AnnotationDoesNotHaveArgument.html#matches(com.sun.source.tree.AnnotationTree,com.google.errorprone.VisitorState)">matches</a></span>&#8203;(com.sun.source.tree.AnnotationTree&nbsp;annotationTree,
 <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>boolean</code></td>
 <th class="col-second" scope="row"><span class="type-name-label">AnnotationHasArgumentWithValue.</span><code><span class="member-name-link"><a href="../matchers/AnnotationHasArgumentWithValue.html#matches(com.sun.source.tree.AnnotationTree,com.google.errorprone.VisitorState)">matches</a></span>&#8203;(com.sun.source.tree.AnnotationTree&nbsp;annotationTree,
 <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>boolean</code></td>
 <th class="col-second" scope="row"><span class="type-name-label">AnnotationType.</span><code><span class="member-name-link"><a href="../matchers/AnnotationType.html#matches(com.sun.source.tree.AnnotationTree,com.google.errorprone.VisitorState)">matches</a></span>&#8203;(com.sun.source.tree.AnnotationTree&nbsp;annotationTree,
 <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>boolean</code></td>
 <th class="col-second" scope="row"><span class="type-name-label">Asserts.</span><code><span class="member-name-link"><a href="../matchers/Asserts.html#matches(com.sun.source.tree.StatementTree,com.google.errorprone.VisitorState)">matches</a></span>&#8203;(com.sun.source.tree.StatementTree&nbsp;statementTree,
 <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>boolean</code></td>
 <th class="col-second" scope="row"><span class="type-name-label">ChildMultiMatcher.</span><code><span class="member-name-link"><a href="../matchers/ChildMultiMatcher.html#matches(T,com.google.errorprone.VisitorState)">matches</a></span>&#8203;(<a href="../matchers/ChildMultiMatcher.html" title="type parameter in ChildMultiMatcher">T</a>&nbsp;tree,
 <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>boolean</code></td>
 <th class="col-second" scope="row"><span class="type-name-label">CompileTimeConstantExpressionMatcher.</span><code><span class="member-name-link"><a href="../matchers/CompileTimeConstantExpressionMatcher.html#matches(com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)">matches</a></span>&#8203;(com.sun.source.tree.ExpressionTree&nbsp;t,
 <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>boolean</code></td>
 <th class="col-second" scope="row"><span class="type-name-label">CompoundAssignment.</span><code><span class="member-name-link"><a href="../matchers/CompoundAssignment.html#matches(com.sun.source.tree.CompoundAssignmentTree,com.google.errorprone.VisitorState)">matches</a></span>&#8203;(com.sun.source.tree.CompoundAssignmentTree&nbsp;compoundAssignmentTree,
 <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>boolean</code></td>
 <th class="col-second" scope="row"><span class="type-name-label">Contains.</span><code><span class="member-name-link"><a href="../matchers/Contains.html#matches(com.sun.source.tree.Tree,com.google.errorprone.VisitorState)">matches</a></span>&#8203;(com.sun.source.tree.Tree&nbsp;tree,
 <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>boolean</code></td>
 <th class="col-second" scope="row"><span class="type-name-label">Enclosing.BlockOrCase.</span><code><span class="member-name-link"><a href="../matchers/Enclosing.BlockOrCase.html#matches(T,com.google.errorprone.VisitorState)">matches</a></span>&#8203;(<a href="../matchers/Enclosing.BlockOrCase.html" title="type parameter in Enclosing.BlockOrCase">T</a>&nbsp;unused,
 <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>boolean</code></td>
 <th class="col-second" scope="row"><span class="type-name-label">HasIdentifier.</span><code><span class="member-name-link"><a href="../matchers/HasIdentifier.html#matches(com.sun.source.tree.Tree,com.google.errorprone.VisitorState)">matches</a></span>&#8203;(com.sun.source.tree.Tree&nbsp;tree,
 <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>boolean</code></td>
 <th class="col-second" scope="row"><span class="type-name-label">IsNonNullMatcher.</span><code><span class="member-name-link"><a href="../matchers/IsNonNullMatcher.html#matches(com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)">matches</a></span>&#8203;(com.sun.source.tree.ExpressionTree&nbsp;tree,
 <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>boolean</code></td>
 <th class="col-second" scope="row"><span class="type-name-label">IsSameType.</span><code><span class="member-name-link"><a href="../matchers/IsSameType.html#matches(T,com.google.errorprone.VisitorState)">matches</a></span>&#8203;(<a href="../matchers/IsSameType.html" title="type parameter in IsSameType">T</a>&nbsp;tree,
 <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>boolean</code></td>
 <th class="col-second" scope="row"><span class="type-name-label">IsSubtypeOf.</span><code><span class="member-name-link"><a href="../matchers/IsSubtypeOf.html#matches(T,com.google.errorprone.VisitorState)">matches</a></span>&#8203;(<a href="../matchers/IsSubtypeOf.html" title="type parameter in IsSubtypeOf">T</a>&nbsp;tree,
 <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>boolean</code></td>
 <th class="col-second" scope="row"><span class="type-name-label">Matcher.</span><code><span class="member-name-link"><a href="../matchers/Matcher.html#matches(T,com.google.errorprone.VisitorState)">matches</a></span>&#8203;(<a href="../matchers/Matcher.html" title="type parameter in Matcher">T</a>&nbsp;t,
 <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>boolean</code></td>
 <th class="col-second" scope="row"><span class="type-name-label">MethodInvocation.</span><code><span class="member-name-link"><a href="../matchers/MethodInvocation.html#matches(com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)">matches</a></span>&#8203;(com.sun.source.tree.ExpressionTree&nbsp;expressionTree,
 <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>boolean</code></td>
 <th class="col-second" scope="row"><span class="type-name-label">MethodInvocationArgument.</span><code><span class="member-name-link"><a href="../matchers/MethodInvocationArgument.html#matches(com.sun.source.tree.MethodInvocationTree,com.google.errorprone.VisitorState)">matches</a></span>&#8203;(com.sun.source.tree.MethodInvocationTree&nbsp;methodInvocationTree,
 <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>boolean</code></td>
 <th class="col-second" scope="row"><span class="type-name-label">MethodVisibility.</span><code><span class="member-name-link"><a href="../matchers/MethodVisibility.html#matches(com.sun.source.tree.MethodTree,com.google.errorprone.VisitorState)">matches</a></span>&#8203;(com.sun.source.tree.MethodTree&nbsp;t,
 <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>boolean</code></td>
 <th class="col-second" scope="row"><span class="type-name-label">NullnessMatcher.</span><code><span class="member-name-link"><a href="../matchers/NullnessMatcher.html#matches(com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)">matches</a></span>&#8203;(com.sun.source.tree.ExpressionTree&nbsp;expr,
 <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>boolean</code></td>
 <th class="col-second" scope="row"><span class="type-name-label">Returns.</span><code><span class="member-name-link"><a href="../matchers/Returns.html#matches(com.sun.source.tree.StatementTree,com.google.errorprone.VisitorState)">matches</a></span>&#8203;(com.sun.source.tree.StatementTree&nbsp;expressionTree,
 <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>boolean</code></td>
 <th class="col-second" scope="row"><span class="type-name-label">StringLiteral.</span><code><span class="member-name-link"><a href="../matchers/StringLiteral.html#matches(com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)">matches</a></span>&#8203;(com.sun.source.tree.ExpressionTree&nbsp;expressionTree,
 <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>boolean</code></td>
 <th class="col-second" scope="row"><span class="type-name-label">Throws.</span><code><span class="member-name-link"><a href="../matchers/Throws.html#matches(com.sun.source.tree.StatementTree,com.google.errorprone.VisitorState)">matches</a></span>&#8203;(com.sun.source.tree.StatementTree&nbsp;expressionTree,
+<a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
+<td class="col-last">&nbsp;</td>
+</tr>
+<tr class="alt-color">
+<td class="col-first"><code>boolean</code></td>
+<th class="col-second" scope="row"><span class="type-name-label">UnusedReturnValueMatcher.</span><code><span class="member-name-link"><a href="../matchers/UnusedReturnValueMatcher.html#matches(com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)">matches</a></span>&#8203;(com.sun.source.tree.ExpressionTree&nbsp;tree,
 <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
@@ -6289,12 +6303,21 @@ com.sun.tools.javac.code.Symbol&nbsp;symbol)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
 <tr class="alt-color">
+<td class="col-first"><code>static boolean</code></td>
+<th class="col-second" scope="row"><span class="type-name-label">UnusedReturnValueMatcher.</span><code><span class="member-name-link"><a href="../matchers/UnusedReturnValueMatcher.html#mockitoInvocation(com.sun.source.tree.Tree,com.google.errorprone.VisitorState)">mockitoInvocation</a></span>&#8203;(com.sun.source.tree.Tree&nbsp;tree,
+<a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
+<td class="col-last">
+<div class="block">Don't match the method that is invoked through <code>Mockito.verify(t)</code> or <code>
+ doReturn(val).when(t)</code>.</div>
+</td>
+</tr>
+<tr class="row-color">
 <td class="col-first"><code><a href="../matchers/MultiMatcher.MultiMatchResult.html" title="class in com.google.errorprone.matchers">MultiMatcher.MultiMatchResult</a>&lt;<a href="../matchers/ChildMultiMatcher.html" title="type parameter in ChildMultiMatcher">N</a>&gt;</code></td>
 <th class="col-second" scope="row"><span class="type-name-label">ChildMultiMatcher.</span><code><span class="member-name-link"><a href="../matchers/ChildMultiMatcher.html#multiMatchResult(T,com.google.errorprone.VisitorState)">multiMatchResult</a></span>&#8203;(<a href="../matchers/ChildMultiMatcher.html" title="type parameter in ChildMultiMatcher">T</a>&nbsp;tree,
 <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code><a href="../matchers/MultiMatcher.MultiMatchResult.html" title="class in com.google.errorprone.matchers">MultiMatcher.MultiMatchResult</a>&lt;<a href="../matchers/MultiMatcher.html" title="type parameter in MultiMatcher">N</a>&gt;</code></td>
 <th class="col-second" scope="row"><span class="type-name-label">MultiMatcher.</span><code><span class="member-name-link"><a href="../matchers/MultiMatcher.html#multiMatchResult(T,com.google.errorprone.VisitorState)">multiMatchResult</a></span>&#8203;(<a href="../matchers/MultiMatcher.html" title="type parameter in MultiMatcher">T</a>&nbsp;tree,
 <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;vs)</code></th>
@@ -6302,7 +6325,7 @@ com.sun.tools.javac.code.Symbol&nbsp;symbol)</code></th>
 <div class="block">Attempt to match the given node, and return the associated subnodes that matched.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>boolean</code></td>
 <th class="col-second" scope="row"><span class="type-name-label">Suppressible.</span><code><span class="member-name-link"><a href="../matchers/Suppressible.html#suppressedByAnyOf(java.util.Set,com.google.errorprone.VisitorState)">suppressedByAnyOf</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a>&lt;com.sun.tools.javac.util.Name&gt;&nbsp;annotations,
 <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;s)</code></th>
