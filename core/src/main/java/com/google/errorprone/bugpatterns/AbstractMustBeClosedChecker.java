@@ -43,6 +43,7 @@ import com.google.errorprone.annotations.MustBeClosed;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
+import com.google.errorprone.matchers.UnusedReturnValueMatcher;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.ConditionalExpressionTree;
@@ -132,8 +133,8 @@ public abstract class AbstractMustBeClosedChecker extends BugChecker {
     if (description == NO_MATCH) {
       return NO_MATCH;
     }
-    if (AbstractReturnValueIgnored.expectedExceptionTest(tree, state)
-        || AbstractReturnValueIgnored.mockitoInvocation(tree, state)
+    if (UnusedReturnValueMatcher.expectedExceptionTest(tree, state)
+        || UnusedReturnValueMatcher.mockitoInvocation(tree, state)
         || MOCKITO_MATCHER.matches(state.getPath().getParentPath().getLeaf(), state)) {
       return NO_MATCH;
     }
