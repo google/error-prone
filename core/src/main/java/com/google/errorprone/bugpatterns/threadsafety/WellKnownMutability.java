@@ -361,6 +361,7 @@ public final class WellKnownMutability implements ThreadSafety.KnownTypes {
         .add(java.util.EnumMap.class.getName())
         .add(java.util.EnumSet.class.getName())
         .add(java.util.List.class.getName())
+        .add(java.util.logging.Logger.class.getName())
         .add(java.util.Map.class.getName())
         .add(java.util.HashMap.class.getName())
         .add(java.util.HashSet.class.getName())
