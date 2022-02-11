@@ -133,7 +133,7 @@ public abstract class AbstractMustBeClosedChecker extends BugChecker {
     if (description == NO_MATCH) {
       return NO_MATCH;
     }
-    if (UnusedReturnValueMatcher.expectedExceptionTest(tree, state)
+    if (UnusedReturnValueMatcher.expectedExceptionTest(state)
         || UnusedReturnValueMatcher.mockitoInvocation(tree, state)
         || MOCKITO_MATCHER.matches(state.getPath().getParentPath().getLeaf(), state)) {
       return NO_MATCH;

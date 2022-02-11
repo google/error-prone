@@ -26,31 +26,34 @@ import static com.google.errorprone.matchers.Matchers.isThrowingFunctionalInterf
 import static com.google.errorprone.matchers.Matchers.kindIs;
 import static com.google.errorprone.matchers.Matchers.methodCallInDeclarationOfThrowingRunnable;
 import static com.google.errorprone.matchers.Matchers.nextStatement;
-import static com.google.errorprone.matchers.Matchers.not;
 import static com.google.errorprone.matchers.Matchers.parentNode;
 import static com.google.errorprone.matchers.Matchers.previousStatement;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
 import static com.google.errorprone.util.ASTHelpers.findEnclosingNode;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
+import static com.google.errorprone.util.ASTHelpers.getResultType;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.isVoidType;
 
-import com.google.common.base.Suppliers;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Sets;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.annotations.CheckReturnValue;
-import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.LambdaExpressionTree;
 import com.sun.source.tree.MemberReferenceTree;
+import com.sun.source.tree.MemberReferenceTree.ReferenceMode;
 import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
+import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Type;
+import com.sun.tools.javac.code.Type.MethodType;
 import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
 import com.sun.tools.javac.tree.JCTree.JCMethodInvocation;
-import java.util.function.Supplier;
 import javax.lang.model.type.TypeKind;
 
 /**
@@ -60,78 +63,103 @@ import javax.lang.model.type.TypeKind;
 @CheckReturnValue
 public final class UnusedReturnValueMatcher implements Matcher<ExpressionTree> {
 
+  private static final ImmutableMap<AllowReason, Matcher<ExpressionTree>> ALLOW_MATCHERS =
+      ImmutableMap.of(
+          AllowReason.MOCKING_CALL, UnusedReturnValueMatcher::mockitoInvocation,
+          AllowReason.EXCEPTION_TESTING, UnusedReturnValueMatcher::exceptionTesting,
+          AllowReason.RETURNS_JAVA_LANG_VOID, UnusedReturnValueMatcher::returnsJavaLangVoid);
+
+  private static final ImmutableSet<AllowReason> DISALLOW_EXCEPTION_TESTING =
+      Sets.immutableEnumSet(
+          Sets.filter(ALLOW_MATCHERS.keySet(), k -> !k.equals(AllowReason.EXCEPTION_TESTING)));
+
   /** Gets an instance of this matcher. */
   public static UnusedReturnValueMatcher get(boolean allowInExceptionThrowers) {
-    return new UnusedReturnValueMatcher(allowInExceptionThrowers);
+    return new UnusedReturnValueMatcher(
+        allowInExceptionThrowers ? ALLOW_MATCHERS.keySet() : DISALLOW_EXCEPTION_TESTING);
   }
 
-  private final Supplier<Matcher<ExpressionTree>> methodInvocationMatcher =
-      Suppliers.memoize(
-          () ->
-              allOf(
-                  parentNode(
-                      anyOf(
-                          UnusedReturnValueMatcher::isVoidReturningLambdaExpression,
-                          kindIs(Kind.EXPRESSION_STATEMENT))),
-                  not((t, s) -> isVoidType(getType(t), s)),
-                  not(UnusedReturnValueMatcher::mockitoInvocation),
-                  not((t, s) -> allowInExceptionThrowers() && expectedExceptionTest(t, s))));
+  private final ImmutableSet<AllowReason> validAllowReasons;
 
-  private final Supplier<Matcher<MemberReferenceTree>> memberReferenceTreeMatcher =
-      Suppliers.memoize(
-          () ->
-              allOf(
-                  UnusedReturnValueMatcher::isVoidReturningMethodReferenceExpression,
-                  // Skip cases where the method we're referencing really does return void.
-                  // We're only looking for cases where the referenced method does not return
-                  // void, but it's being used on a void-returning functional interface.
-                  not((t, s) -> isVoidReturningMethod(getSymbol(t), s)),
-                  not(
-                      (t, s) ->
-                          allowInExceptionThrowers()
-                              && isThrowingFunctionalInterface(ASTHelpers.getType(t), s))));
-
-  private static boolean isVoidReturningMethod(MethodSymbol meth, VisitorState state) {
-    // Constructors "return" void but produce a real non-void value.
-    return !meth.isConstructor() && isVoidType(meth.getReturnType(), state);
-  }
-
-  private static boolean isVoidReturningMethodReferenceExpression(
-      MemberReferenceTree tree, VisitorState state) {
-    return functionalInterfaceReturnsExactlyVoid(ASTHelpers.getType(tree), state);
-  }
-
-  private static boolean isVoidReturningLambdaExpression(Tree tree, VisitorState state) {
-    return tree instanceof LambdaExpressionTree
-        && functionalInterfaceReturnsExactlyVoid(getType(tree), state);
-  }
-
-  /**
-   * Checks that the return value of a functional interface is void. Note, we do not use
-   * ASTHelpers.isVoidType here, return values of Void are actually type-checked. Only
-   * void-returning functions silently ignore return values of any type.
-   */
-  private static boolean functionalInterfaceReturnsExactlyVoid(
-      Type interfaceType, VisitorState state) {
-    return state.getTypes().findDescriptorType(interfaceType).getReturnType().getKind()
-        == TypeKind.VOID;
-  }
-
-  private final boolean allowInExceptionThrowers;
-
-  private UnusedReturnValueMatcher(boolean allowInExceptionThrowers) {
-    this.allowInExceptionThrowers = allowInExceptionThrowers;
-  }
-
-  private boolean allowInExceptionThrowers() {
-    return allowInExceptionThrowers;
+  private UnusedReturnValueMatcher(ImmutableSet<AllowReason> validAllowReasons) {
+    this.validAllowReasons = validAllowReasons;
   }
 
   @Override
   public boolean matches(ExpressionTree tree, VisitorState state) {
+    return isReturnValueUnused(tree, state) && !isAllowed(tree, state);
+  }
+
+  private static boolean isVoidMethod(MethodSymbol symbol) {
+    return !symbol.isConstructor() && isVoid(symbol.getReturnType());
+  }
+
+  private static boolean isVoid(Type type) {
+    return type.getKind() == TypeKind.VOID;
+  }
+
+  private static boolean implementsVoidMethod(ExpressionTree tree, VisitorState state) {
+    return isVoid(state.getTypes().findDescriptorType(getType(tree)).getReturnType());
+  }
+
+  /**
+   * Returns {@code true} if and only if the given {@code tree} is an invocation of or reference to
+   * a constructor or non-{@code void} method for which the return value is considered unused.
+   */
+  public static boolean isReturnValueUnused(ExpressionTree tree, VisitorState state) {
+    Symbol sym = getSymbol(tree);
+    if (!(sym instanceof MethodSymbol) || isVoidMethod((MethodSymbol) sym)) {
+      return false;
+    }
+    if (tree instanceof MemberReferenceTree) {
+      // Runnable r = foo::getBar;
+      return implementsVoidMethod(tree, state);
+    }
+    Tree parent = state.getPath().getParentPath().getLeaf();
+    return parent instanceof LambdaExpressionTree
+        // Runnable r = () -> foo.getBar();
+        ? implementsVoidMethod((LambdaExpressionTree) parent, state)
+        // foo.getBar();
+        : parent.getKind() == Kind.EXPRESSION_STATEMENT;
+  }
+
+  /**
+   * Returns {@code true} if the given expression is allowed to have an unused return value based on
+   * its context.
+   */
+  public boolean isAllowed(ExpressionTree tree, VisitorState state) {
+    return validAllowReasons.stream()
+        .anyMatch(reason -> ALLOW_MATCHERS.get(reason).matches(tree, state));
+  }
+
+  private static boolean returnsJavaLangVoid(ExpressionTree tree, VisitorState state) {
     return tree instanceof MemberReferenceTree
-        ? memberReferenceTreeMatcher.get().matches((MemberReferenceTree) tree, state)
-        : methodInvocationMatcher.get().matches(tree, state);
+        ? returnsJavaLangVoid((MemberReferenceTree) tree, state)
+        : isVoidType(getResultType(tree), state);
+  }
+
+  private static boolean returnsJavaLangVoid(MemberReferenceTree tree, VisitorState state) {
+    if (tree.getMode() == ReferenceMode.NEW) {
+      // constructors can't return java.lang.Void
+      return false;
+    }
+
+    // We need to do this to get the correct return type for things like future::get when future
+    // is a Future<Void>.
+    // - The Type of the method reference is the functional interface type it's implementing.
+    // - The Symbol is the declared method symbol, i.e. V get().
+    // So we resolve the symbol (V get()) as a member of the qualifier type (Future<Void>) to get
+    // the method type (Void get()) and then look at the return type of that.
+    MethodType methodType =
+        (MethodType)
+            state.getTypes().memberType(getType(tree.getQualifierExpression()), getSymbol(tree));
+    return isVoidType(methodType.getReturnType(), state);
+  }
+
+  private static boolean exceptionTesting(ExpressionTree tree, VisitorState state) {
+    return tree instanceof MemberReferenceTree
+        ? isThrowingFunctionalInterface(getType(tree), state)
+        : expectedExceptionTest(state);
   }
 
   private static final Matcher<ExpressionTree> FAIL_METHOD =
@@ -161,7 +189,7 @@ public final class UnusedReturnValueMatcher implements Matcher<ExpressionTree> {
               (t, s) -> methodCallInDeclarationOfThrowingRunnable(s)));
 
   /** Allow return values to be ignored in tests that expect an exception to be thrown. */
-  public static boolean expectedExceptionTest(ExpressionTree tree, VisitorState state) {
+  public static boolean expectedExceptionTest(VisitorState state) {
     // Allow unused return values in tests that check for thrown exceptions, e.g.:
     //
     // try {
@@ -194,5 +222,22 @@ public final class UnusedReturnValueMatcher implements Matcher<ExpressionTree> {
     }
     ExpressionTree receiver = getReceiver(invocation);
     return MOCKITO_MATCHER.matches(receiver, state);
+  }
+
+  /**
+   * Enumeration of known reasons that an unused return value may be allowed because of the context
+   * in which the method is used. Suppression is not considered here; these are reasons that don't
+   * have anything to do with specific checkers.
+   */
+  public enum AllowReason {
+    /**
+     * The context is one in which the method is probably being called to test for an exception it
+     * throws.
+     */
+    EXCEPTION_TESTING,
+    /** The context is a mocking call such as in {@code verify(foo).getBar();}. */
+    MOCKING_CALL,
+    /** The method returns {@code java.lang.Void} at this use-site. */
+    RETURNS_JAVA_LANG_VOID
   }
 }

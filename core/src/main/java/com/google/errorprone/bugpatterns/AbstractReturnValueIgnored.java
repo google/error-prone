@@ -89,11 +89,11 @@ public abstract class AbstractReturnValueIgnored extends BugChecker
         ReturnTreeMatcher,
         NewClassTreeMatcher {
 
+  private final Supplier<UnusedReturnValueMatcher> unusedReturnValueMatcher =
+      Suppliers.memoize(() -> UnusedReturnValueMatcher.get(allowInExceptionThrowers()));
+
   private final Supplier<Matcher<ExpressionTree>> matcher =
-      Suppliers.memoize(
-          () ->
-              allOf(
-                  UnusedReturnValueMatcher.get(allowInExceptionThrowers()), specializedMatcher()));
+      Suppliers.memoize(() -> allOf(unusedReturnValueMatcher.get(), specializedMatcher()));
 
   private final Supplier<Matcher<MemberReferenceTree>> lostReferenceTreeMatcher =
       Suppliers.memoize(
@@ -337,8 +337,7 @@ public abstract class AbstractReturnValueIgnored extends BugChecker
     if (allOf(
             allOf(
                 parentNode(AbstractReturnValueIgnored::isObjectReturningLambdaExpression),
-                not(UnusedReturnValueMatcher::mockitoInvocation),
-                not(UnusedReturnValueMatcher::expectedExceptionTest)),
+                not(unusedReturnValueMatcher.get()::isAllowed)),
             specializedMatcher(),
             not((t, s) -> ASTHelpers.isVoidType(ASTHelpers.getType(t), s)))
         .matches(tree, state)) {
