@@ -6091,8 +6091,7 @@ com.sun.source.util.TreePath&nbsp;where,
 <tbody>
 <tr class="alt-color">
 <td class="col-first"><code>static boolean</code></td>
-<th class="col-second" scope="row"><span class="type-name-label">UnusedReturnValueMatcher.</span><code><span class="member-name-link"><a href="../matchers/UnusedReturnValueMatcher.html#expectedExceptionTest(com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)">expectedExceptionTest</a></span>&#8203;(com.sun.source.tree.ExpressionTree&nbsp;tree,
-<a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
+<th class="col-second" scope="row"><span class="type-name-label">UnusedReturnValueMatcher.</span><code><span class="member-name-link"><a href="../matchers/UnusedReturnValueMatcher.html#expectedExceptionTest(com.google.errorprone.VisitorState)">expectedExceptionTest</a></span>&#8203;(<a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
 <td class="col-last">
 <div class="block">Allow return values to be ignored in tests that expect an exception to be thrown.</div>
 </td>
@@ -6151,6 +6150,24 @@ com.sun.tools.javac.code.Symbol&nbsp;symbol)</code></th>
 <td class="col-last">
 <div class="block">Checks if a method, or any overridden method, is annotated with any annotation from the
  org.testng package.</div>
+</td>
+</tr>
+<tr class="row-color">
+<td class="col-first"><code>boolean</code></td>
+<th class="col-second" scope="row"><span class="type-name-label">UnusedReturnValueMatcher.</span><code><span class="member-name-link"><a href="../matchers/UnusedReturnValueMatcher.html#isAllowed(com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)">isAllowed</a></span>&#8203;(com.sun.source.tree.ExpressionTree&nbsp;tree,
+<a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
+<td class="col-last">
+<div class="block">Returns <code>true</code> if the given expression is allowed to have an unused return value based on
+ its context.</div>
+</td>
+</tr>
+<tr class="alt-color">
+<td class="col-first"><code>static boolean</code></td>
+<th class="col-second" scope="row"><span class="type-name-label">UnusedReturnValueMatcher.</span><code><span class="member-name-link"><a href="../matchers/UnusedReturnValueMatcher.html#isReturnValueUnused(com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)">isReturnValueUnused</a></span>&#8203;(com.sun.source.tree.ExpressionTree&nbsp;tree,
+<a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
+<td class="col-last">
+<div class="block">Returns <code>true</code> if and only if the given <code>tree</code> is an invocation of or reference to
+ a constructor or non-<code>void</code> method for which the return value is considered unused.</div>
 </td>
 </tr>
 <tr class="row-color">

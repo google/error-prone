@@ -306,6 +306,10 @@ loadScripts(document, 'script');</script>
 <h5>matcher</h5>
 <pre><a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;<a href="com/google/errorprone/matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.ExpressionTree&gt;&gt; matcher</pre>
 </li>
+<li class="block-list">
+<h5>unusedReturnValueMatcher</h5>
+<pre><a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;<a href="com/google/errorprone/matchers/UnusedReturnValueMatcher.html" title="class in com.google.errorprone.matchers">UnusedReturnValueMatcher</a>&gt; unusedReturnValueMatcher</pre>
+</li>
 </ul>
 </section>
 </li>
@@ -4306,16 +4310,8 @@ loadScripts(document, 'script');</script>
 <h4>Serialized Fields</h4>
 <ul class="block-list">
 <li class="block-list">
-<h5>allowInExceptionThrowers</h5>
-<pre>boolean allowInExceptionThrowers</pre>
-</li>
-<li class="block-list">
-<h5>memberReferenceTreeMatcher</h5>
-<pre><a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;<a href="com/google/errorprone/matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.MemberReferenceTree&gt;&gt; memberReferenceTreeMatcher</pre>
-</li>
-<li class="block-list">
-<h5>methodInvocationMatcher</h5>
-<pre><a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;<a href="com/google/errorprone/matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.ExpressionTree&gt;&gt; methodInvocationMatcher</pre>
+<h5>validAllowReasons</h5>
+<pre>com.google.common.collect.ImmutableSet&lt;<a href="com/google/errorprone/matchers/UnusedReturnValueMatcher.AllowReason.html" title="enum in com.google.errorprone.matchers">UnusedReturnValueMatcher.AllowReason</a>&gt; validAllowReasons</pre>
 </li>
 </ul>
 </section>

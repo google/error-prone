@@ -15,7 +15,7 @@
 <script type="text/javascript" src="../../../../script-dir/jquery-ui.min.js"></script>
 </head>
 <body class="class-declaration-page">
-<script type="text/javascript">var data = {"i0":9,"i1":9,"i2":10,"i3":9};
+<script type="text/javascript">var data = {"i0":9,"i1":9,"i2":10,"i3":9,"i4":10,"i5":9};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "alt-color";
 var rowColor = "row-color";
@@ -47,7 +47,7 @@ loadScripts(document, 'script');</script>
 <div>
 <ul class="sub-nav-list">
 <li>Summary:&nbsp;</li>
-<li>Nested&nbsp;|&nbsp;</li>
+<li><a href="#nested.class.summary">Nested</a>&nbsp;|&nbsp;</li>
 <li>Field&nbsp;|&nbsp;</li>
 <li>Constr&nbsp;|&nbsp;</li>
 <li><a href="#method.summary">Method</a></li>
@@ -98,6 +98,34 @@ implements <a href="Matcher.html" title="interface in com.google.errorprone.matc
 </section>
 <section class="summary">
 <ul class="summary-list">
+<!-- ======== NESTED CLASS SUMMARY ======== -->
+<li>
+<section class="nested-class-summary" id="nested.class.summary">
+<h2>Nested Class Summary</h2>
+<div class="member-summary">
+<table class="summary-table">
+<caption><span>Nested Classes</span></caption>
+<thead>
+<tr>
+<th class="col-first" scope="col">Modifier and Type</th>
+<th class="col-second" scope="col">Class</th>
+<th class="col-last" scope="col">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="alt-color">
+<td class="col-first"><code>static class&nbsp;</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="UnusedReturnValueMatcher.AllowReason.html" title="enum in com.google.errorprone.matchers">UnusedReturnValueMatcher.AllowReason</a></span></code></th>
+<td class="col-last">
+<div class="block">Enumeration of known reasons that an unused return value may be allowed because of the context
+ in which the method is used.</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+</li>
 <!-- ========== METHOD SUMMARY =========== -->
 <li>
 <section class="method-summary" id="method.summary">
@@ -116,8 +144,7 @@ implements <a href="Matcher.html" title="interface in com.google.errorprone.matc
 <tbody>
 <tr class="alt-color" id="i0">
 <td class="col-first"><code>static boolean</code></td>
-<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#expectedExceptionTest(com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)">expectedExceptionTest</a></span>&#8203;(com.sun.source.tree.ExpressionTree&nbsp;tree,
-<a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#expectedExceptionTest(com.google.errorprone.VisitorState)">expectedExceptionTest</a></span>&#8203;(<a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
 <td class="col-last">
 <div class="block">Allow return values to be ignored in tests that expect an exception to be thrown.</div>
 </td>
@@ -131,11 +158,29 @@ implements <a href="Matcher.html" title="interface in com.google.errorprone.matc
 </tr>
 <tr class="alt-color" id="i2">
 <td class="col-first"><code>boolean</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#isAllowed(com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)">isAllowed</a></span>&#8203;(com.sun.source.tree.ExpressionTree&nbsp;tree,
+<a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
+<td class="col-last">
+<div class="block">Returns <code>true</code> if the given expression is allowed to have an unused return value based on
+ its context.</div>
+</td>
+</tr>
+<tr class="row-color" id="i3">
+<td class="col-first"><code>static boolean</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#isReturnValueUnused(com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)">isReturnValueUnused</a></span>&#8203;(com.sun.source.tree.ExpressionTree&nbsp;tree,
+<a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
+<td class="col-last">
+<div class="block">Returns <code>true</code> if and only if the given <code>tree</code> is an invocation of or reference to
+ a constructor or non-<code>void</code> method for which the return value is considered unused.</div>
+</td>
+</tr>
+<tr class="alt-color" id="i4">
+<td class="col-first"><code>boolean</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#matches(com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)">matches</a></span>&#8203;(com.sun.source.tree.ExpressionTree&nbsp;tree,
 <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color" id="i3">
+<tr class="row-color" id="i5">
 <td class="col-first"><code>static boolean</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#mockitoInvocation(com.sun.source.tree.Tree,com.google.errorprone.VisitorState)">mockitoInvocation</a></span>&#8203;(com.sun.source.tree.Tree&nbsp;tree,
 <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
@@ -181,10 +226,27 @@ implements <a href="Matcher.html" title="interface in com.google.errorprone.matc
 </section>
 </li>
 <li>
-<section class="detail" id="expectedExceptionTest(com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)">
-<h3>expectedExceptionTest</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="member-name">expectedExceptionTest</span>&#8203;(<span class="parameters">com.sun.source.tree.ExpressionTree&nbsp;tree,
+<section class="detail" id="isReturnValueUnused(com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)">
+<h3>isReturnValueUnused</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="member-name">isReturnValueUnused</span>&#8203;(<span class="parameters">com.sun.source.tree.ExpressionTree&nbsp;tree,
 <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
+<div class="block">Returns <code>true</code> if and only if the given <code>tree</code> is an invocation of or reference to
+ a constructor or non-<code>void</code> method for which the return value is considered unused.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="isAllowed(com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)">
+<h3>isAllowed</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="member-name">isAllowed</span>&#8203;(<span class="parameters">com.sun.source.tree.ExpressionTree&nbsp;tree,
+<a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
+<div class="block">Returns <code>true</code> if the given expression is allowed to have an unused return value based on
+ its context.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="expectedExceptionTest(com.google.errorprone.VisitorState)">
+<h3>expectedExceptionTest</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="member-name">expectedExceptionTest</span>&#8203;(<span class="parameters"><a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
 <div class="block">Allow return values to be ignored in tests that expect an exception to be thrown.</div>
 </section>
 </li>
@@ -224,7 +286,7 @@ implements <a href="Matcher.html" title="interface in com.google.errorprone.matc
 <div>
 <ul class="sub-nav-list">
 <li>Summary:&nbsp;</li>
-<li>Nested&nbsp;|&nbsp;</li>
+<li><a href="#nested.class.summary">Nested</a>&nbsp;|&nbsp;</li>
 <li>Field&nbsp;|&nbsp;</li>
 <li>Constr&nbsp;|&nbsp;</li>
 <li><a href="#method.summary">Method</a></li>
