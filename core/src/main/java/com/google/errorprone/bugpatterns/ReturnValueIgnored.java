@@ -22,13 +22,14 @@ import static com.google.errorprone.matchers.Matchers.anyMethod;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.kindIs;
 import static com.google.errorprone.matchers.Matchers.not;
-import static com.google.errorprone.matchers.Matchers.nothing;
 import static com.google.errorprone.matchers.Matchers.packageStartsWith;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
 import static com.google.errorprone.predicates.TypePredicates.isExactTypeAny;
 import static com.google.errorprone.util.ASTHelpers.isSameType;
 
+import com.google.common.collect.ImmutableBiMap;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.ErrorProneFlags;
@@ -386,26 +387,49 @@ public class ReturnValueIgnored extends AbstractReturnValueIgnored {
           // keep-sorted end
           );
 
-  private final Matcher<? super ExpressionTree> matcher;
+  private static final ImmutableSet<Matcher<? super ExpressionTree>> ALL_MATCHERS =
+      ImmutableSet.of(SPECIALIZED_MATCHER, MORE_OPTIONAL_METHODS, CLASS_METHODS, OBJECT_METHODS);
+
+  private static final ImmutableBiMap<String, Matcher<ExpressionTree>> FLAG_MATCHERS =
+      ImmutableBiMap.of(
+          "ReturnValueIgnored:MoreOptional", MORE_OPTIONAL_METHODS,
+          "ReturnValueIgnored:ClassMethods", CLASS_METHODS,
+          "ReturnValueIgnored:ObjectMethods", OBJECT_METHODS);
+
+  private final Matcher<ExpressionTree> matcher;
+
+  public ReturnValueIgnored() {
+    this.matcher = anyOf(ALL_MATCHERS);
+  }
 
   public ReturnValueIgnored(ErrorProneFlags flags) {
     super(flags);
-    this.matcher =
-        anyOf(
-            SPECIALIZED_MATCHER,
-            getMatcher(flags, "ReturnValueIgnored:MoreOptional", MORE_OPTIONAL_METHODS),
-            getMatcher(flags, "ReturnValueIgnored:ClassMethods", CLASS_METHODS),
-            getMatcher(flags, "ReturnValueIgnored:ObjectMethods", OBJECT_METHODS));
+    this.matcher = createMatcher(flags);
   }
 
-  private static Matcher<? super ExpressionTree> getMatcher(
-      ErrorProneFlags flags, String flagName, Matcher<ExpressionTree> matcher) {
-    return flags.getBoolean(flagName).orElse(true) ? matcher : nothing();
+  private static Matcher<ExpressionTree> createMatcher(ErrorProneFlags flags) {
+    ImmutableSet.Builder<Matcher<? super ExpressionTree>> builder = ImmutableSet.builder();
+    builder.add(SPECIALIZED_MATCHER);
+    FLAG_MATCHERS.keySet().stream()
+        .filter(flagName -> flags.getBoolean(flagName).orElse(true))
+        .map(FLAG_MATCHERS::get)
+        .forEach(builder::add);
+    return anyOf(builder.build());
   }
 
   @Override
   public Matcher<? super ExpressionTree> specializedMatcher() {
     return matcher;
+  }
+
+  @Override
+  public ImmutableMap<String, ?> getMatchMetadata(ExpressionTree tree, VisitorState state) {
+    return FLAG_MATCHERS.values().stream()
+        .filter(matcher -> matcher.matches(tree, state))
+        .findFirst()
+        .map(FLAG_MATCHERS.inverse()::get)
+        .map(flag -> ImmutableMap.of("flag", flag))
+        .orElse(ImmutableMap.of());
   }
 
   @Override

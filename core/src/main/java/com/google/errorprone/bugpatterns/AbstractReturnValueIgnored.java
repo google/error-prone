@@ -25,6 +25,7 @@ import static com.google.errorprone.util.ASTHelpers.getSymbol;
 
 import com.google.common.base.Suppliers;
 import com.google.common.collect.ImmutableListMultimap;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ListMultimap;
 import com.google.common.collect.MultimapBuilder;
@@ -93,7 +94,7 @@ public abstract class AbstractReturnValueIgnored extends BugChecker
       Suppliers.memoize(() -> UnusedReturnValueMatcher.get(allowInExceptionThrowers()));
 
   private final Supplier<Matcher<ExpressionTree>> matcher =
-      Suppliers.memoize(() -> allOf(unusedReturnValueMatcher.get(), specializedMatcher()));
+      Suppliers.memoize(() -> allOf(unusedReturnValueMatcher.get(), this::isCheckReturnValue));
 
   private final Supplier<Matcher<MemberReferenceTree>> lostReferenceTreeMatcher =
       Suppliers.memoize(
@@ -145,6 +146,29 @@ public abstract class AbstractReturnValueIgnored extends BugChecker
       return describeMatch(tree);
     }
     return description;
+  }
+
+  /**
+   * Returns whether this checker makes any determination about whether the given tree's return
+   * value should be used or not. Most checkers either determine that an expression is CRV or make
+   * no determination.
+   */
+  public boolean isCovered(ExpressionTree tree, VisitorState state) {
+    return isCheckReturnValue(tree, state);
+  }
+
+  /**
+   * Returns whether the given tree's return value should be used according to this checker,
+   * regardless of whether or not the return value is actually used.
+   */
+  public final boolean isCheckReturnValue(ExpressionTree tree, VisitorState state) {
+    // TODO(cgdecker): Just replace specializedMatcher with this?
+    return specializedMatcher().matches(tree, state);
+  }
+
+  /** Returns a map of optional metadata about why this check matched the given tree. */
+  public ImmutableMap<String, ?> getMatchMetadata(ExpressionTree tree, VisitorState state) {
+    return ImmutableMap.of();
   }
 
   /**

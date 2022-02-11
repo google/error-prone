@@ -19,6 +19,9 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.util.ASTHelpers.hasDirectAnnotationWithSimpleName;
 
+import com.google.auto.value.AutoValue;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
@@ -33,7 +36,9 @@ import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.NewClassTree;
 import com.sun.tools.javac.code.Symbol;
+import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
+import java.util.Optional;
 import java.util.stream.Stream;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Name;
@@ -49,14 +54,28 @@ public class CheckReturnValue extends AbstractReturnValueIgnored
   private static final String CHECK_RETURN_VALUE = "CheckReturnValue";
   private static final String CAN_IGNORE_RETURN_VALUE = "CanIgnoreReturnValue";
 
-  private static Stream<Boolean> shouldCheckReturnValue(Symbol sym) {
-    if (hasDirectAnnotationWithSimpleName(sym, CAN_IGNORE_RETURN_VALUE)) {
-      return Stream.of(false);
+  private static final ImmutableSet<String> ANNOTATIONS =
+      ImmutableSet.of(CHECK_RETURN_VALUE, CAN_IGNORE_RETURN_VALUE);
+
+  private static Stream<FoundAnnotation> findAnnotation(Symbol sym) {
+    return ANNOTATIONS.stream()
+        .filter(annotation -> hasDirectAnnotationWithSimpleName(sym, annotation))
+        .limit(1)
+        .map(annotation -> FoundAnnotation.create(annotation, scope(sym)));
+  }
+
+  private static Optional<FoundAnnotation> firstAnnotation(MethodSymbol sym) {
+    return ASTHelpers.enclosingElements(sym).flatMap(CheckReturnValue::findAnnotation).findFirst();
+  }
+
+  private static AnnotationScope scope(Symbol sym) {
+    if (sym instanceof MethodSymbol) {
+      return AnnotationScope.METHOD;
+    } else if (sym instanceof ClassSymbol) {
+      return AnnotationScope.CLASS;
+    } else {
+      return AnnotationScope.PACKAGE;
     }
-    if (hasDirectAnnotationWithSimpleName(sym, CHECK_RETURN_VALUE)) {
-      return Stream.of(true);
-    }
-    return Stream.empty();
   }
 
   static final String CHECK_ALL_CONSTRUCTORS = "CheckReturnValue:CheckAllConstructors";
@@ -75,15 +94,29 @@ public class CheckReturnValue extends AbstractReturnValueIgnored
   @Override
   public Matcher<ExpressionTree> specializedMatcher() {
     return (tree, state) -> {
-      Symbol sym = ASTHelpers.getSymbol(tree);
-      if (!(sym instanceof MethodSymbol)) {
-        return false;
-      }
-      return ASTHelpers.enclosingElements(sym)
-          .flatMap(CheckReturnValue::shouldCheckReturnValue)
-          .findFirst()
-          .orElse(checkAllConstructors && sym.isConstructor());
+      Optional<MethodSymbol> sym = methodSymbol(tree);
+      return sym.flatMap(CheckReturnValue::firstAnnotation)
+          .map(found -> found.annotation().equals(CHECK_RETURN_VALUE))
+          .orElse(checkAllConstructors && sym.map(MethodSymbol::isConstructor).orElse(false));
     };
+  }
+
+  private static Optional<MethodSymbol> methodSymbol(ExpressionTree tree) {
+    Symbol sym = ASTHelpers.getSymbol(tree);
+    return sym instanceof MethodSymbol ? Optional.of((MethodSymbol) sym) : Optional.empty();
+  }
+
+  @Override
+  public boolean isCovered(ExpressionTree tree, VisitorState state) {
+    return methodSymbol(tree).flatMap(CheckReturnValue::firstAnnotation).isPresent();
+  }
+
+  @Override
+  public ImmutableMap<String, ?> getMatchMetadata(ExpressionTree tree, VisitorState state) {
+    return methodSymbol(tree)
+        .flatMap(CheckReturnValue::firstAnnotation)
+        .map(found -> ImmutableMap.of("annotation_scope", found.scope()))
+        .orElse(ImmutableMap.of());
   }
 
   private static final String BOTH_ERROR =
@@ -158,5 +191,22 @@ public class CheckReturnValue extends AbstractReturnValueIgnored
                     state.getSourceForNode(newClassTree.getIdentifier())))
             .build()
         : super.describeReturnValueIgnored(newClassTree, state);
+  }
+
+  @AutoValue
+  abstract static class FoundAnnotation {
+    static FoundAnnotation create(String annotation, AnnotationScope scope) {
+      return new AutoValue_CheckReturnValue_FoundAnnotation(annotation, scope);
+    }
+
+    abstract String annotation();
+
+    abstract AnnotationScope scope();
+  }
+
+  enum AnnotationScope {
+    METHOD,
+    CLASS,
+    PACKAGE
   }
 }

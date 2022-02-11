@@ -23,6 +23,7 @@ import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
 import static javax.lang.model.element.Modifier.ABSTRACT;
 
+import com.google.common.collect.ImmutableMap;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.SuggestedFix;
@@ -34,6 +35,7 @@ import com.sun.source.tree.MethodInvocationTree;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Type;
+import java.util.Optional;
 
 /** Flags ignored return values from pure getters. */
 @BugPattern(
@@ -43,13 +45,24 @@ import com.sun.tools.javac.code.Type;
             + " calling them if the return value is ignored. While there are no side effects from"
             + " the getter, the receiver may have side effects.")
 public final class IgnoredPureGetter extends AbstractReturnValueIgnored {
-  private static final String MESSAGE_LITE = "com.google.protobuf.MessageLite";
 
-  private static final String MUTABLE_MESSAGE_LITE = "com.google.protobuf.MutableMessageLite";
+  private static final Supplier<Type> MESSAGE_LITE =
+      VisitorState.memoize(state -> state.getTypeFromString("com.google.protobuf.MessageLite"));
+
+  private static final Supplier<Type> MUTABLE_MESSAGE_LITE =
+      VisitorState.memoize(
+          state -> state.getTypeFromString("com.google.protobuf.MutableMessageLite"));
 
   @Override
   protected Matcher<? super ExpressionTree> specializedMatcher() {
     return IgnoredPureGetter::isPureGetter;
+  }
+
+  @Override
+  public ImmutableMap<String, ?> getMatchMetadata(ExpressionTree tree, VisitorState state) {
+    return pureGetterKind(tree, state)
+        .map(kind -> ImmutableMap.of("pure_getter_kind", kind))
+        .orElse(ImmutableMap.of());
   }
 
   @Override
@@ -74,27 +87,37 @@ public final class IgnoredPureGetter extends AbstractReturnValueIgnored {
   }
 
   private static boolean isPureGetter(ExpressionTree tree, VisitorState state) {
+    return pureGetterKind(tree, state).isPresent();
+  }
+
+  private static Optional<PureGetterKind> pureGetterKind(ExpressionTree tree, VisitorState state) {
     Symbol symbol = getSymbol(tree);
     if (!(symbol instanceof MethodSymbol)) {
-      return false;
+      return Optional.empty();
     }
     if (hasAnnotation(symbol.owner, "com.google.auto.value.AutoValue", state)
         && symbol.getModifiers().contains(ABSTRACT)) {
-      return true;
+      return Optional.of(PureGetterKind.AUTO_VALUE);
     }
-    if (isSubtype(symbol.owner.type, COM_GOOGLE_PROTOBUF_MESSAGELITE.get(state), state)
-        && !isSubtype(
-            symbol.owner.type, COM_GOOGLE_PROTOBUF_MUTABLEMESSAGELITE.get(state), state)) {
-      String name = symbol.getSimpleName().toString();
-      return (name.startsWith("get") || name.startsWith("has"))
-          && ((MethodSymbol) symbol).getParameters().isEmpty();
+
+    try {
+      if (isSubtype(symbol.owner.type, MESSAGE_LITE.get(state), state)
+          && !isSubtype(symbol.owner.type, MUTABLE_MESSAGE_LITE.get(state), state)) {
+        String name = symbol.getSimpleName().toString();
+        if ((name.startsWith("get") || name.startsWith("has"))
+            && ((MethodSymbol) symbol).getParameters().isEmpty()) {
+          return Optional.of(PureGetterKind.PROTO);
+        }
+      }
+    } catch (Symbol.CompletionFailure ignore) {
+      // isSubtype may throw this if some supertype's class file isn't found
+      // Nothing we can do about it as far as I know
     }
-    return false;
+    return Optional.empty();
   }
 
-  private static final Supplier<Type> COM_GOOGLE_PROTOBUF_MESSAGELITE =
-      VisitorState.memoize(state -> state.getTypeFromString(MESSAGE_LITE));
-
-  private static final Supplier<Type> COM_GOOGLE_PROTOBUF_MUTABLEMESSAGELITE =
-      VisitorState.memoize(state -> state.getTypeFromString(MUTABLE_MESSAGE_LITE));
+  private enum PureGetterKind {
+    AUTO_VALUE,
+    PROTO
+  }
 }

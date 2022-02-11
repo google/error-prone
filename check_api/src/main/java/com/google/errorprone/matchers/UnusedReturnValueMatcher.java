@@ -54,6 +54,7 @@ import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Type.MethodType;
 import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
 import com.sun.tools.javac.tree.JCTree.JCMethodInvocation;
+import java.util.stream.Stream;
 import javax.lang.model.type.TypeKind;
 
 /**
@@ -128,8 +129,16 @@ public final class UnusedReturnValueMatcher implements Matcher<ExpressionTree> {
    * its context.
    */
   public boolean isAllowed(ExpressionTree tree, VisitorState state) {
+    return getAllowReasons(tree, state).findAny().isPresent();
+  }
+
+  /**
+   * Returns a stream of reasons the given expression is allowed to have an unused return value
+   * based on its context.
+   */
+  public Stream<AllowReason> getAllowReasons(ExpressionTree tree, VisitorState state) {
     return validAllowReasons.stream()
-        .anyMatch(reason -> ALLOW_MATCHERS.get(reason).matches(tree, state));
+        .filter(reason -> ALLOW_MATCHERS.get(reason).matches(tree, state));
   }
 
   private static boolean returnsJavaLangVoid(ExpressionTree tree, VisitorState state) {
