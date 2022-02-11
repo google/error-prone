@@ -23,7 +23,6 @@ import static com.google.common.collect.Iterables.concat;
 import static com.google.common.collect.Streams.stream;
 import static com.google.errorprone.BugPattern.LinkType.CUSTOM;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
-import static com.google.errorprone.BugPattern.StandardTags.STYLE;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.getAnnotationType;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
@@ -74,7 +73,7 @@ import javax.lang.model.element.Name;
 @BugPattern(
     summary = "Annotations should be positioned after Javadocs, but before modifiers.",
     severity = WARNING,
-    tags = STYLE,
+    // TODO(b/218854220): Put a tag back once patcher is fixed.
     linkType = CUSTOM,
     link = "https://google.github.io/styleguide/javaguide.html#s4.8.5-annotations")
 public final class AnnotationPosition extends BugChecker
