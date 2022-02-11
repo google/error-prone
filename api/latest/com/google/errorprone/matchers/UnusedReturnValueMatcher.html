@@ -15,7 +15,7 @@
 <script type="text/javascript" src="../../../../script-dir/jquery-ui.min.js"></script>
 </head>
 <body class="class-declaration-page">
-<script type="text/javascript">var data = {"i0":9,"i1":9,"i2":10,"i3":9,"i4":10,"i5":9};
+<script type="text/javascript">var data = {"i0":9,"i1":9,"i2":10,"i3":10,"i4":9,"i5":10,"i6":9};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "alt-color";
 var rowColor = "row-color";
@@ -157,6 +157,15 @@ implements <a href="Matcher.html" title="interface in com.google.errorprone.matc
 </td>
 </tr>
 <tr class="alt-color" id="i2">
+<td class="col-first"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/stream/Stream.html" title="class or interface in java.util.stream" class="external-link">Stream</a>&lt;<a href="UnusedReturnValueMatcher.AllowReason.html" title="enum in com.google.errorprone.matchers">UnusedReturnValueMatcher.AllowReason</a>&gt;</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#getAllowReasons(com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)">getAllowReasons</a></span>&#8203;(com.sun.source.tree.ExpressionTree&nbsp;tree,
+<a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
+<td class="col-last">
+<div class="block">Returns a stream of reasons the given expression is allowed to have an unused return value
+ based on its context.</div>
+</td>
+</tr>
+<tr class="row-color" id="i3">
 <td class="col-first"><code>boolean</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#isAllowed(com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)">isAllowed</a></span>&#8203;(com.sun.source.tree.ExpressionTree&nbsp;tree,
 <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
@@ -165,7 +174,7 @@ implements <a href="Matcher.html" title="interface in com.google.errorprone.matc
  its context.</div>
 </td>
 </tr>
-<tr class="row-color" id="i3">
+<tr class="alt-color" id="i4">
 <td class="col-first"><code>static boolean</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#isReturnValueUnused(com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)">isReturnValueUnused</a></span>&#8203;(com.sun.source.tree.ExpressionTree&nbsp;tree,
 <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
@@ -174,13 +183,13 @@ implements <a href="Matcher.html" title="interface in com.google.errorprone.matc
  a constructor or non-<code>void</code> method for which the return value is considered unused.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i4">
+<tr class="row-color" id="i5">
 <td class="col-first"><code>boolean</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#matches(com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)">matches</a></span>&#8203;(com.sun.source.tree.ExpressionTree&nbsp;tree,
 <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color" id="i5">
+<tr class="alt-color" id="i6">
 <td class="col-first"><code>static boolean</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#mockitoInvocation(com.sun.source.tree.Tree,com.google.errorprone.VisitorState)">mockitoInvocation</a></span>&#8203;(com.sun.source.tree.Tree&nbsp;tree,
 <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
@@ -241,6 +250,15 @@ implements <a href="Matcher.html" title="interface in com.google.errorprone.matc
 <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
 <div class="block">Returns <code>true</code> if the given expression is allowed to have an unused return value based on
  its context.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="getAllowReasons(com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)">
+<h3>getAllowReasons</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/javase/8/docs/api/java/util/stream/Stream.html" title="class or interface in java.util.stream" class="external-link">Stream</a>&lt;<a href="UnusedReturnValueMatcher.AllowReason.html" title="enum in com.google.errorprone.matchers">UnusedReturnValueMatcher.AllowReason</a>&gt;</span>&nbsp;<span class="member-name">getAllowReasons</span>&#8203;(<span class="parameters">com.sun.source.tree.ExpressionTree&nbsp;tree,
+<a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
+<div class="block">Returns a stream of reasons the given expression is allowed to have an unused return value
+ based on its context.</div>
 </section>
 </li>
 <li>

@@ -4097,6 +4097,11 @@ loadScripts(document, 'script');</script>
 <div class="block">Returns a map of check name to <a href="com/google/errorprone/BugCheckerInfo.html" title="class in com.google.errorprone"><code>BugCheckerInfo</code></a> for all <a href="com/google/errorprone/BugCheckerInfo.html" title="class in com.google.errorprone"><code>BugCheckerInfo</code></a>s in this
  <a href="com/google/errorprone/scanner/ScannerSupplier.html" title="class in com.google.errorprone.scanner"><code>ScannerSupplier</code></a>, including disabled ones.</div>
 </dd>
+<dt><span class="member-name-link"><a href="com/google/errorprone/matchers/UnusedReturnValueMatcher.html#getAllowReasons(com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)">getAllowReasons(ExpressionTree, VisitorState)</a></span> - Method in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/UnusedReturnValueMatcher.html" title="class in com.google.errorprone.matchers">UnusedReturnValueMatcher</a></dt>
+<dd>
+<div class="block">Returns a stream of reasons the given expression is allowed to have an unused return value
+ based on its context.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/dataflow/DataFlow.Result.html#getAnalysis()">getAnalysis()</a></span> - Method in interface com.google.errorprone.dataflow.<a href="com/google/errorprone/dataflow/DataFlow.Result.html" title="interface in com.google.errorprone.dataflow">DataFlow.Result</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/util/ASTHelpers.html#getAnnotation(com.sun.source.tree.Tree,java.lang.Class)">getAnnotation(Tree, Class&lt;T&gt;)</a></span> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/ASTHelpers.html" title="class in com.google.errorprone.util">ASTHelpers</a></dt>
@@ -4692,6 +4697,16 @@ loadScripts(document, 'script');</script>
 <div class="block">Gets the <code>Symbol</code>'s annotation info, either from a marker annotation on the symbol, from
  an accepted annotation on the symbol, or from the list of well-known types.</div>
 </dd>
+<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/AbstractReturnValueIgnored.html#getMatchMetadata(com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)">getMatchMetadata(ExpressionTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/AbstractReturnValueIgnored.html" title="class in com.google.errorprone.bugpatterns">AbstractReturnValueIgnored</a></dt>
+<dd>
+<div class="block">Returns a map of optional metadata about why this check matched the given tree.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/CheckReturnValue.html#getMatchMetadata(com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)">getMatchMetadata(ExpressionTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/CheckReturnValue.html" title="class in com.google.errorprone.bugpatterns">CheckReturnValue</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/IgnoredPureGetter.html#getMatchMetadata(com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)">getMatchMetadata(ExpressionTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/IgnoredPureGetter.html" title="class in com.google.errorprone.bugpatterns">IgnoredPureGetter</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/ReturnValueIgnored.html#getMatchMetadata(com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)">getMatchMetadata(ExpressionTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/ReturnValueIgnored.html" title="class in com.google.errorprone.bugpatterns">ReturnValueIgnored</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/apidiff/ApiDiffProto.MemberDiff.Builder.html#getMember(int)">getMember(int)</a></span> - Method in class com.google.errorprone.bugpatterns.apidiff.<a href="com/google/errorprone/bugpatterns/apidiff/ApiDiffProto.MemberDiff.Builder.html" title="class in com.google.errorprone.bugpatterns.apidiff">ApiDiffProto.MemberDiff.Builder</a></dt>
 <dd>
 <div class="block"><code>repeated .devtools.staticanalysis.errorprone.apidiff.ClassMember member = 2;</code></div>
@@ -6248,6 +6263,11 @@ loadScripts(document, 'script');</script>
 <div class="block">Returns true if <code>t</code> is a subtype of Throwable but not a subtype of RuntimeException or
  Error.</div>
 </dd>
+<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/AbstractReturnValueIgnored.html#isCheckReturnValue(com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)">isCheckReturnValue(ExpressionTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/AbstractReturnValueIgnored.html" title="class in com.google.errorprone.bugpatterns">AbstractReturnValueIgnored</a></dt>
+<dd>
+<div class="block">Returns whether the given tree's return value should be used according to this checker,
+ regardless of whether or not the return value is actually used.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/TypeCompatibilityUtils.TypeCompatibilityReport.html#isCompatible()">isCompatible()</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/TypeCompatibilityUtils.TypeCompatibilityReport.html" title="class in com.google.errorprone.bugpatterns">TypeCompatibilityUtils.TypeCompatibilityReport</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/matchers/JUnitMatchers.html#isConcreteClassWithoutRunWith">isConcreteClassWithoutRunWith</a></span> - Static variable in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/JUnitMatchers.html" title="class in com.google.errorprone.matchers">JUnitMatchers</a></dt>
@@ -6258,6 +6278,13 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Returns whether <code>symbol</code> is final or effectively final.</div>
 </dd>
+<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/AbstractReturnValueIgnored.html#isCovered(com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)">isCovered(ExpressionTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/AbstractReturnValueIgnored.html" title="class in com.google.errorprone.bugpatterns">AbstractReturnValueIgnored</a></dt>
+<dd>
+<div class="block">Returns whether this checker makes any determination about whether the given tree's return
+ value should be used or not.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/CheckReturnValue.html#isCovered(com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)">isCovered(ExpressionTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/CheckReturnValue.html" title="class in com.google.errorprone.bugpatterns">CheckReturnValue</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/predicates/TypePredicates.html#isDescendantOf(com.google.errorprone.suppliers.Supplier)">isDescendantOf(Supplier&lt;Type&gt;)</a></span> - Static method in class com.google.errorprone.predicates.<a href="com/google/errorprone/predicates/TypePredicates.html" title="class in com.google.errorprone.predicates">TypePredicates</a></dt>
 <dd>
 <div class="block">Match sub-types of the given type.</div>
@@ -10996,6 +11023,8 @@ loadScripts(document, 'script');</script>
  <code>returnedMatcher</code>.</div>
 </dd>
 <dt><a href="com/google/errorprone/bugpatterns/ReturnValueIgnored.html" title="class in com.google.errorprone.bugpatterns"><span class="type-name-link">ReturnValueIgnored</span></a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/ReturnValueIgnored.html#%3Cinit%3E()">ReturnValueIgnored()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/ReturnValueIgnored.html" title="class in com.google.errorprone.bugpatterns">ReturnValueIgnored</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/ReturnValueIgnored.html#%3Cinit%3E(com.google.errorprone.ErrorProneFlags)">ReturnValueIgnored(ErrorProneFlags)</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/ReturnValueIgnored.html" title="class in com.google.errorprone.bugpatterns">ReturnValueIgnored</a></dt>
 <dd>&nbsp;</dd>
