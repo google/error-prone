@@ -192,6 +192,7 @@ public final class UnusedReturnValueMatcherTest {
             "import static org.mockito.Mockito.mock;",
             "import static org.mockito.Mockito.verify;",
             "import java.util.function.Consumer;",
+            "import java.util.stream.Stream;",
             "import org.junit.rules.ExpectedException;",
             "public class Test {",
             "  interface Foo<T> {",
@@ -260,6 +261,16 @@ public final class UnusedReturnValueMatcherTest {
             "    Foo<?> foo = mock(Foo.class);",
             "    // BUG: Diagnostic contains: allowed",
             "    verify(foo).bar();",
+            "  }",
+            "",
+            "  static <T> T genericMethod(T input) {",
+            "    return input;",
+            "  }",
+            "",
+            "  void b219073237(Stream<Void> stream) {",
+            // TODO(cgdecker): This should be allowed
+            "    // BUG: Diagnostic contains: bad",
+            "    stream.peek(Test::genericMethod).forEach(v -> {});",
             "  }",
             "}")
         .doTest();

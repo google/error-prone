@@ -150,10 +150,10 @@ public final class UnusedReturnValueMatcher implements Matcher<ExpressionTree> {
     // - The Symbol is the declared method symbol, i.e. V get().
     // So we resolve the symbol (V get()) as a member of the qualifier type (Future<Void>) to get
     // the method type (Void get()) and then look at the return type of that.
-    MethodType methodType =
-        (MethodType)
-            state.getTypes().memberType(getType(tree.getQualifierExpression()), getSymbol(tree));
-    return isVoidType(methodType.getReturnType(), state);
+    Type type =
+        state.getTypes().memberType(getType(tree.getQualifierExpression()), getSymbol(tree));
+    // TODO(cgdecker): There are probably other types than MethodType that we could resolve here
+    return type instanceof MethodType && isVoidType(((MethodType) type).getReturnType(), state);
   }
 
   private static boolean exceptionTesting(ExpressionTree tree, VisitorState state) {
