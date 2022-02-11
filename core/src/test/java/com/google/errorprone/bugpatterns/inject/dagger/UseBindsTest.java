@@ -83,6 +83,32 @@ public class UseBindsTest {
   }
 
   @Test
+  public void staticProvidesMethod_inInterface() {
+    testHelper
+        .addInputLines(
+            "in/Test.java",
+            "import java.security.SecureRandom;",
+            "import java.util.Random;",
+            "@" + moduleAnnotation,
+            "interface Test {",
+            "  @" + bindingMethodAnnotation,
+            "  static Random provideRandom(SecureRandom impl) {",
+            "    return impl;",
+            "  }",
+            "}")
+        .addOutputLines(
+            "out/Test.java",
+            "import dagger.Binds;",
+            "import java.security.SecureRandom;",
+            "import java.util.Random;",
+            "@" + moduleAnnotation,
+            "interface Test {",
+            "  @Binds Random provideRandom(SecureRandom impl);",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void intoSetMethod() {
     testHelper
         .addInputLines(
