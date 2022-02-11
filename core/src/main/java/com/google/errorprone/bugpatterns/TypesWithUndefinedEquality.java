@@ -36,6 +36,7 @@ public enum TypesWithUndefinedEquality {
       "androidx.collection.SparseArrayCompat",
       "androidx.collection.SparseArrayCompat"),
   MULTIMAP("Multimap", "com.google.common.collect.Multimap"),
+  IMMUTABLE_MULTIMAP("ImmutableMultimap", "com.google.common.collect.ImmutableMultimap"),
   CHAR_SEQUENCE("CharSequence", "java.lang.CharSequence"),
   ITERABLE("Iterable", "java.lang.Iterable", "com.google.common.collect.FluentIterable"),
   COLLECTION("Collection", "java.util.Collection"),
