@@ -17,7 +17,7 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.common.collect.ImmutableList.toImmutableList;
-import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
+import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.expressionStatement;
 import static com.google.errorprone.matchers.method.MethodMatchers.constructor;
@@ -66,7 +66,7 @@ import javax.lang.model.element.Modifier;
     summary =
         "Prefer collection factory methods or builders to the double-brace initialization"
             + " pattern.",
-    severity = WARNING)
+    severity = ERROR)
 public class DoubleBraceInitialization extends BugChecker implements NewClassTreeMatcher {
 
   @SuppressWarnings("ImmutableEnumChecker") // Matcher is immutable in practice
