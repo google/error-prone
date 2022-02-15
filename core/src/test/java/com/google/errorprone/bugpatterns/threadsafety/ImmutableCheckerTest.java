@@ -18,6 +18,7 @@ package com.google.errorprone.bugpatterns.threadsafety;
 
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.CompilationTestHelper;
+import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import com.google.errorprone.annotations.Immutable;
 import com.google.errorprone.annotations.concurrent.LazyInit;
 import java.util.Arrays;
@@ -1480,12 +1481,132 @@ public class ImmutableCheckerTest {
   }
 
   @Test
-  public void immutableTypeParameterInstantiation() {
+  public void immutableTypeParameterInstantiation_immutableGenericFromContext_noViolation() {
     compilationHelper
         .addSourceLines(
-            "MyImmutableType.java",
+            "A.java",
+            "import com.google.errorprone.annotations.ImmutableTypeParameter;",
             "import com.google.errorprone.annotations.Immutable;",
-            "@Immutable class MyImmutableType {}")
+            "import com.google.common.collect.ImmutableList;",
+            "@Immutable class A<@ImmutableTypeParameter T> {}")
+        .addSourceLines(
+            "Test.java",
+            "import com.google.errorprone.annotations.ImmutableTypeParameter;",
+            "class Test<@ImmutableTypeParameter T> {",
+            "  A<T> n() {",
+            "    return new A<>();",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void immutableTypeParameterInstantiation_mutableGenericFromContext_violation() {
+    compilationHelper
+        .addSourceLines(
+            "A.java",
+            "import com.google.errorprone.annotations.ImmutableTypeParameter;",
+            "import com.google.errorprone.annotations.Immutable;",
+            "import com.google.common.collect.ImmutableList;",
+            "@Immutable class A<@ImmutableTypeParameter T> {}")
+        .addSourceLines(
+            "Test.java",
+            "class Test<T> {",
+            "  A<T> n() {",
+            "    // BUG: Diagnostic contains: instantiation of 'T' is mutable, 'T' is a mutable"
+                + " type variable",
+            "    return new A<>();",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void
+      immutableTypeParameterInstantiation_staticMethod_genericParamNotAnnotated_violation() {
+    compilationHelper
+        .addSourceLines(
+            "A.java",
+            "import com.google.errorprone.annotations.ImmutableTypeParameter;",
+            "import com.google.errorprone.annotations.Immutable;",
+            "import com.google.common.collect.ImmutableList;",
+            "@Immutable class A<@ImmutableTypeParameter T> {}")
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  static <T> A<T> m() {",
+            "    // BUG: Diagnostic contains: instantiation of 'T' is mutable, 'T' is a mutable"
+                + " type variable",
+            "    return new A<>();",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void immutableTypeParameterInstantiation_staticMethod_genericParamAnnotated_noViolation() {
+    compilationHelper
+        .addSourceLines(
+            "A.java",
+            "import com.google.errorprone.annotations.ImmutableTypeParameter;",
+            "import com.google.errorprone.annotations.Immutable;",
+            "import com.google.common.collect.ImmutableList;",
+            "@Immutable class A<@ImmutableTypeParameter T> {}")
+        .addSourceLines(
+            "Test.java",
+            "import com.google.errorprone.annotations.ImmutableTypeParameter;",
+            "class Test {",
+            "  static <@ImmutableTypeParameter T> A<T> l() {",
+            "    return new A<>();",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void immutableTypeParameterInstantiation_genericParamNotAnnotated_violation() {
+    compilationHelper
+        .addSourceLines(
+            "A.java",
+            "import com.google.errorprone.annotations.ImmutableTypeParameter;",
+            "import com.google.errorprone.annotations.Immutable;",
+            "import com.google.common.collect.ImmutableList;",
+            "@Immutable class A<@ImmutableTypeParameter T> {}")
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  <T> A<T> k() {",
+            "    // BUG: Diagnostic contains: instantiation of 'T' is mutable, 'T' is a mutable"
+                + " type variable",
+            "    return new A<>();",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void immutableTypeParameterInstantiation_genericParamAnnotated_noViolation() {
+    compilationHelper
+        .addSourceLines(
+            "A.java",
+            "import com.google.errorprone.annotations.ImmutableTypeParameter;",
+            "import com.google.errorprone.annotations.Immutable;",
+            "import com.google.common.collect.ImmutableList;",
+            "@Immutable class A<@ImmutableTypeParameter T> {}")
+        .addSourceLines(
+            "Test.java",
+            "import com.google.errorprone.annotations.ImmutableTypeParameter;",
+            "class Test {",
+            "  <@ImmutableTypeParameter T> A<T> k() {",
+            "    return new A<>();",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void immutableTypeParameterInstantiation_genericParamExtendsMutable_violation() {
+    compilationHelper
         .addSourceLines(
             "MyMutableType.java",
             "import com.google.errorprone.annotations.Immutable;",
@@ -1499,22 +1620,69 @@ public class ImmutableCheckerTest {
         .addSourceLines(
             "Test.java",
             "class Test {",
-            "  A<String> f() {",
+            "  <T extends MyMutableType> A<T> i() {",
+            "    // BUG: Diagnostic contains: instantiation of 'T' is mutable, 'T' is a mutable"
+                + " type variable",
             "    return new A<>();",
             "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void immutableTypeParameterInstantiation_genericParamExtendsImmutable_noViolation() {
+    compilationHelper
+        .addSourceLines(
+            "MyImmutableType.java",
+            "import com.google.errorprone.annotations.Immutable;",
+            "@Immutable class MyImmutableType {}")
+        .addSourceLines(
+            "A.java",
+            "import com.google.errorprone.annotations.ImmutableTypeParameter;",
+            "import com.google.errorprone.annotations.Immutable;",
+            "import com.google.common.collect.ImmutableList;",
+            "@Immutable class A<@ImmutableTypeParameter T> {}")
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  <T extends MyImmutableType> A<T> h() {",
+            "    return new A<>();",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void immutableTypeParameterInstantiation_violation() {
+    compilationHelper
+        .addSourceLines(
+            "A.java",
+            "import com.google.errorprone.annotations.ImmutableTypeParameter;",
+            "import com.google.errorprone.annotations.Immutable;",
+            "import com.google.common.collect.ImmutableList;",
+            "@Immutable class A<@ImmutableTypeParameter T> {}")
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
             "  A<Object> g() {",
             "    // BUG: Diagnostic contains: instantiation of 'T' is mutable, 'Object' is mutable",
             "    return new A<>();",
             "  }",
-            "  <T extends MyImmutableType> A<T> h() {",
-            "    return new A<>();",
-            "  }",
-            "  <T extends MyMutableType> A<T> i() {",
-            "    // BUG: Diagnostic contains: "
-                + "instantiation of 'T' is mutable, 'T' is a mutable type variable",
-            "    return new A<>();",
-            "  }",
             "}")
+        .doTest();
+  }
+
+  @Test
+  public void immutableTypeParameterInstantiation_noViolation() {
+    compilationHelper
+        .addSourceLines(
+            "A.java",
+            "import com.google.errorprone.annotations.ImmutableTypeParameter;",
+            "import com.google.errorprone.annotations.Immutable;",
+            "import com.google.common.collect.ImmutableList;",
+            "@Immutable class A<@ImmutableTypeParameter T> {}")
+        .addSourceLines(
+            "Test.java", "class Test {", "  A<String> f() {", "    return new A<>();", "  }", "}")
         .doTest();
   }
 
@@ -1546,9 +1714,8 @@ public class ImmutableCheckerTest {
   public void immutableTypeParameterMutableClass() {
     compilationHelper
         .addSourceLines(
-            "Test.java", //
+            "Test.java",
             "import com.google.errorprone.annotations.ImmutableTypeParameter;",
-            " // BUG: Diagnostic contains: only supported on immutable classes",
             "class A<@ImmutableTypeParameter T> {}")
         .doTest();
   }
@@ -1864,5 +2031,459 @@ public class ImmutableCheckerTest {
                 + " but was raw",
             "@Immutable class T<@ImmutableTypeParameter X> extends S {}")
         .doTest();
+  }
+
+  @Test
+  public void mutable_noViolation() {
+    withImmutableTypeParameterGeneric()
+        .addSourceLines("MutableClass.java", "class MutableClass { }")
+        .addSourceLines(
+            "Test.class",
+            "class Test {",
+            "  private GenericWithImmutableParam<MutableClass> field;",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void containerOf_noViolation() {
+    withImmutableTypeParameterGeneric()
+        .addSourceLines(
+            "ImmutableContainer.java",
+            "import com.google.errorprone.annotations.Immutable;",
+            "@Immutable(containerOf = \"T\") class ImmutableContainer<T> { }")
+        .addSourceLines(
+            "Test.class",
+            "class Test {",
+            "  private GenericWithImmutableParam<ImmutableContainer<Object>> field;",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void nestedImmutableTypeParameter_noViolation() {
+    withImmutableTypeParameterGeneric()
+        .addSourceLines(
+            "Test.class", "class Test<T> {", "  private GenericWithImmutableParam<T> field;", "}")
+        .doTest();
+  }
+
+  @Test
+  public void localVariable_noViolation() {
+    withImmutableTypeParameterGeneric()
+        .addSourceLines("MutableClass.java", "class MutableClass { }")
+        .addSourceLines(
+            "Test.class",
+            "class Test {",
+            "  public void method() {",
+            "    GenericWithImmutableParam<MutableClass> value = null;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void parameter_noViolation() {
+    withImmutableTypeParameterGeneric()
+        .addSourceLines("MutableClass.java", "class MutableClass { }")
+        .addSourceLines(
+            "Test.class",
+            "class Test {",
+            "  public void method(GenericWithImmutableParam<MutableClass> value) {}",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void returnValue_noViolation() {
+    withImmutableTypeParameterGeneric()
+        .addSourceLines("MutableClass.java", "class MutableClass { }")
+        .addSourceLines(
+            "Test.class",
+            "class Test {",
+            "  public GenericWithImmutableParam<MutableClass> method() { return null; }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void genericStaticMethodParam_noViolation() {
+    withImmutableTypeParameterGeneric()
+        .addSourceLines(
+            "Test.class",
+            "class Test {",
+            "  public static <T> void method(GenericWithImmutableParam<T> value) { }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void genericStaticMethodReturnValue_noViolation() {
+    withImmutableTypeParameterGeneric()
+        .addSourceLines(
+            "Test.class",
+            "class Test {",
+            "  public static <T> GenericWithImmutableParam<T> method() { return null; }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void methodParameter_noViolation() {
+    withImmutableTypeParameterGeneric()
+        .addSourceLines(
+            "Test.class",
+            "class Test<T> {",
+            "  public void method(GenericWithImmutableParam<T> value) {}",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void methodReturnValue_noViolation() {
+    withImmutableTypeParameterGeneric()
+        .addSourceLines(
+            "Test.class",
+            "import com.google.errorprone.annotations.ImmutableTypeParameter;",
+            "class Test<T> {",
+            "  public GenericWithImmutableParam<T> method() { return null; }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void constructorParam_noViolation() {
+    withImmutableTypeParameterGeneric()
+        .addSourceLines(
+            "Test.class",
+            "import com.google.errorprone.annotations.ImmutableTypeParameter;",
+            "class Test<T> {",
+            "  public Test(GenericWithImmutableParam<T> param) { }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void typecast_noViolation() {
+    withImmutableTypeParameterGeneric()
+        .addSourceLines("MutableClass.java", "class MutableClass { }")
+        .addSourceLines(
+            "Test.class",
+            "class Test {",
+            "  public void method() {",
+            "    Object obj = (GenericWithImmutableParam<MutableClass>) null;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void new_violation() {
+    withImmutableTypeParameterGeneric()
+        .addSourceLines("MutableClass.java", "class MutableClass { }")
+        .addSourceLines(
+            "Test.class",
+            "class Test {",
+            "  public Object method() {",
+            "    // BUG: Diagnostic contains: instantiation of 'T' is mutable, the declaration of"
+                + " type 'MutableClass' is not annotated with"
+                + " @com.google.errorprone.annotations.Immutable",
+            "    return new GenericWithImmutableParam<MutableClass>();",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void typeParameterExtendsMutable_noViolation() {
+    withImmutableTypeParameterGeneric()
+        .addSourceLines("MutableClass.java", "class MutableClass { }")
+        .addSourceLines(
+            "Test.class",
+            "class Test {",
+            "  public void method() {",
+            "    GenericWithImmutableParam<? extends MutableClass> value = null;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void typeParameterExtendsImmutable_noViolation() {
+    withImmutableTypeParameterGeneric()
+        .addSourceLines(
+            "ImmutableClass.java",
+            "import com.google.errorprone.annotations.Immutable;",
+            "@Immutable class ImmutableClass { }")
+        .addSourceLines(
+            "Test.class",
+            "class Test {",
+            "  public void method() {",
+            "    GenericWithImmutableParam<? extends ImmutableClass> value = null;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void typeParameterSuper_noViolation() {
+    withImmutableTypeParameterGeneric()
+        .addSourceLines(
+            "ImmutableClass.java",
+            "import com.google.errorprone.annotations.Immutable;",
+            "@Immutable class ImmutableClass { }")
+        .addSourceLines(
+            "Test.class",
+            "class Test {",
+            "  public void method() {",
+            "    GenericWithImmutableParam<? super ImmutableClass> value = null;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void extendsImmutable_noViolation() {
+    withImmutableTypeParameterGeneric()
+        .addSourceLines(
+            "ImmutableClass.java",
+            "import com.google.errorprone.annotations.Immutable;",
+            "@Immutable class ImmutableClass { }")
+        .addSourceLines(
+            "ChildGenericWithImmutableParam.java",
+            "class ChildGenericWithImmutableParam<T extends ImmutableClass> extends"
+                + " GenericWithImmutableParam<T> { }")
+        .doTest();
+  }
+
+  @Test
+  public void methodInvocation_violation() {
+    compilationHelper
+        .addSourceLines("MutableClass.java", "class MutableClass { }")
+        .addSourceLines(
+            "Clazz.java",
+            "import com.google.errorprone.annotations.ImmutableTypeParameter;",
+            "class Clazz {",
+            "  public <@ImmutableTypeParameter T> void method(int m, T v) { }",
+            "}")
+        .addSourceLines(
+            "Invoker.java",
+            "class Invoker {",
+            "  public void method() {",
+            "    // BUG: Diagnostic contains: instantiation of 'T' is mutable, the declaration of"
+                + " type 'MutableClass' is not annotated with"
+                + " @com.google.errorprone.annotations.Immutable",
+            "    new Clazz().method(78, new MutableClass());",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void containerOfAsImmutableTypeParameter_noViolation() {
+    withImmutableTypeParameterGeneric()
+        .addSourceLines(
+            "Container.java",
+            "import com.google.errorprone.annotations.Immutable;",
+            "@Immutable(containerOf = {\"T\"}) class Container<T> {}")
+        .addSourceLines(
+            "Clazz.java",
+            "class Clazz<T> { private GenericWithImmutableParam<Container<T>> container; }")
+        .doTest();
+  }
+
+  @Test
+  public void containerOfAsImmutableTypeParameterInSameClass_noViolation() {
+    withImmutableTypeParameterGeneric()
+        .addSourceLines(
+            "Container.java",
+            "import com.google.errorprone.annotations.Immutable;",
+            "@Immutable(containerOf = {\"T\"}) class Container<T> { ",
+            "   GenericWithImmutableParam<T> method() { return null; }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void immutableTypeParameter_recursiveUpperBound() {
+    compilationHelper
+        .addSourceLines(
+            "B.java",
+            "import com.google.errorprone.annotations.Immutable;",
+            "@Immutable",
+            "abstract class B<T extends B<T>> {}")
+        .doTest();
+  }
+
+  @Test
+  public void immutableTypeParameter_recursiveUpperBoundUsage() {
+    compilationHelper
+        .addSourceLines(
+            "B.java",
+            "import com.google.errorprone.annotations.Immutable;",
+            "@Immutable",
+            "interface B<T extends B<T>> {}")
+        .addSourceLines(
+            "A.java",
+            "import com.google.errorprone.annotations.Immutable;",
+            "@Immutable class A implements B<A> { final B<A> value = null; }")
+        .doTest();
+  }
+
+  @Test
+  public void wildcard_noViolation() {
+    withImmutableTypeParameterGeneric()
+        .addSourceLines(
+            "Test.class",
+            "class Test {",
+            "  private final GenericWithImmutableParam<?> value = null;",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void immutableTypeParameter_anonymousInstantiation_noViolation() {
+    withImmutableTypeParameterGeneric()
+        .addSourceLines(
+            "Clazz.java",
+            "import com.google.errorprone.annotations.ImmutableTypeParameter;",
+            "class Clazz {",
+            "  private static final GenericWithImmutableParam<String> value = new"
+                + " GenericWithImmutableParam<String>() {};",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void immutableTypeParameter_anonymousInstantiation_violation() {
+    withImmutableTypeParameterGeneric()
+        .addSourceLines(
+            "Clazz.java",
+            "import com.google.errorprone.annotations.ImmutableTypeParameter;",
+            "class Clazz {",
+            "  // BUG: Diagnostic contains: instantiation of 'T' is mutable, the declaration of"
+                + " type 'Clazz.MutableClass' is not annotated with"
+                + " @com.google.errorprone.annotations.Immutable",
+            "  private static final GenericWithImmutableParam<MutableClass> value = new"
+                + " GenericWithImmutableParam<MutableClass>() {};",
+            "  private static class MutableClass {}",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void nonGeneric_inheritanceClass_noViolation() {
+    withImmutableTypeParameterGeneric()
+        .addSourceLines(
+            "ChildGenericWithImmutableParam.java",
+            "class ChildGenericWithImmutableParam extends GenericWithImmutableParam<String> { }")
+        .doTest();
+  }
+
+  @Test
+  public void nonGeneric_inheritanceClass_violation() {
+    withImmutableTypeParameterGeneric()
+        .addSourceLines("MutableClass.java", "class MutableClass {}")
+        .addSourceLines(
+            "ChildGenericWithImmutableParam.java",
+            "// BUG: Diagnostic contains: instantiation of 'T' is mutable, the declaration of type"
+                + " 'MutableClass' is not annotated with"
+                + " @com.google.errorprone.annotations.Immutable",
+            "class ChildGenericWithImmutableParam extends GenericWithImmutableParam<MutableClass> {"
+                + " }")
+        .doTest();
+  }
+
+  @Test
+  public void nonGeneric_inheritanceInterface_noViolation() {
+    compilationHelper
+        .addSourceLines(
+            "GenericWithImmutableParamIface.java",
+            "import com.google.errorprone.annotations.ImmutableTypeParameter;",
+            "interface GenericWithImmutableParamIface<@ImmutableTypeParameter T> {}")
+        .addSourceLines(
+            "ChildGenericWithImmutableParam.java",
+            "class ChildGenericWithImmutableParam implements GenericWithImmutableParamIface<String>"
+                + " { }")
+        .doTest();
+  }
+
+  @Test
+  public void nonGeneric_inheritanceInterface_violation() {
+    compilationHelper
+        .addSourceLines(
+            "GenericWithImmutableParamIface.java",
+            "import com.google.errorprone.annotations.ImmutableTypeParameter;",
+            "interface GenericWithImmutableParamIface<@ImmutableTypeParameter T> {}")
+        .addSourceLines("MutableClass.java", "class MutableClass {}")
+        .addSourceLines(
+            "ChildGenericWithImmutableParam.java",
+            "// BUG: Diagnostic contains: instantiation of 'T' is mutable, the declaration of type"
+                + " 'MutableClass' is not annotated with"
+                + " @com.google.errorprone.annotations.Immutable",
+            "class ChildGenericWithImmutableParam implements"
+                + " GenericWithImmutableParamIface<MutableClass> { }")
+        .doTest();
+  }
+
+  @Test
+  public void inheritanceClass_violation() {
+    withImmutableTypeParameterGeneric()
+        .addSourceLines(
+            "ChildGenericWithImmutableParam.java",
+            "// BUG: Diagnostic contains: instantiation of 'T' is mutable, 'T' is a mutable type"
+                + " variable",
+            "class ChildGenericWithImmutableParam<T> extends GenericWithImmutableParam<T> { }")
+        .doTest();
+  }
+
+  @Test
+  public void inheritanceClass_noViolation() {
+    withImmutableTypeParameterGeneric()
+        .addSourceLines(
+            "ChildGenericWithImmutableParam.java",
+            "import com.google.errorprone.annotations.ImmutableTypeParameter;",
+            "class ChildGenericWithImmutableParam<@ImmutableTypeParameter T> extends"
+                + " GenericWithImmutableParam<T> { }")
+        .doTest();
+  }
+
+  @Test
+  public void inheritanceInterface_violation() {
+    compilationHelper
+        .addSourceLines(
+            "GenericWithImmutableParamIface.java",
+            "import com.google.errorprone.annotations.ImmutableTypeParameter;",
+            "interface GenericWithImmutableParamIface<@ImmutableTypeParameter T> {}")
+        .addSourceLines(
+            "ChildGenericWithImmutableParam.java",
+            "// BUG: Diagnostic contains: instantiation of 'T' is mutable, 'T' is a mutable type"
+                + " variable",
+            "class ChildGenericWithImmutableParam<T> implements GenericWithImmutableParamIface<T> {"
+                + " }")
+        .doTest();
+  }
+
+  @Test
+  public void inheritanceInterface_noViolation() {
+    compilationHelper
+        .addSourceLines(
+            "GenericWithImmutableParamIface.java",
+            "import com.google.errorprone.annotations.ImmutableTypeParameter;",
+            "interface GenericWithImmutableParamIface<@ImmutableTypeParameter T> {}")
+        .addSourceLines(
+            "ChildGenericWithImmutableParam.java",
+            "import com.google.errorprone.annotations.ImmutableTypeParameter;",
+            "class ChildGenericWithImmutableParam<@ImmutableTypeParameter T> implements"
+                + " GenericWithImmutableParamIface<T> { }")
+        .doTest();
+  }
+
+  @CanIgnoreReturnValue
+  private CompilationTestHelper withImmutableTypeParameterGeneric() {
+    return compilationHelper.addSourceLines(
+        "GenericWithImmutableParam.java",
+        "import com.google.errorprone.annotations.ImmutableTypeParameter;",
+        "class GenericWithImmutableParam<@ImmutableTypeParameter T> {}");
   }
 }
