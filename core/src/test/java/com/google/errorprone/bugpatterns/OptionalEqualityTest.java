@@ -81,8 +81,26 @@ public class OptionalEqualityTest {
             "class Test {",
             "  boolean f(Optional<Integer> a) {",
             "    Optional<Integer> b = Optional.of(42);",
-            "    // BUG: Diagnostic contains:",
-            "    // Did you mean 'return Objects.equals(a, b);' or 'return a.equals(b);'?",
+            "    // BUG: Diagnostic contains: Did you mean 'return Objects.equals(a, b);' or"
+                + " 'return a.equals(b);'?",
+            "    return a == b;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void maybeNull_prefersAlreadyImportedHelper() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.common.base.Objects;",
+            "import com.google.common.base.Optional;",
+            "class Test {",
+            "  boolean f(Optional<Integer> a) {",
+            "    Optional<Integer> b = Optional.of(42);",
+            "    // BUG: Diagnostic contains: Did you mean 'return Objects.equal(a, b);' or 'return"
+                + " a.equals(b);'?",
             "    return a == b;",
             "  }",
             "}")

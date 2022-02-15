@@ -240,7 +240,9 @@ public class ProtoFieldNullComparison extends BugChecker implements CompilationU
         return super.visitMethodInvocation(node, null);
       }
       getFixer(argument, subState)
-          .map(f -> describeMatch(node, problemType.fix(f, node, subState)))
+          .map(f -> problemType.fix(f, node, subState))
+          .filter(f -> !f.isEmpty())
+          .map(f -> describeMatch(node, f))
           .ifPresent(state::reportMatch);
 
       return super.visitMethodInvocation(node, null);
