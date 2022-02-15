@@ -119,6 +119,9 @@ This method should not be called.
 __[DoNotMock](bugpattern/DoNotMock)__<br>
 Identifies undesirable mocks.
 
+__[DoubleBraceInitialization](bugpattern/DoubleBraceInitialization)__<br>
+Prefer collection factory methods or builders to the double-brace initialization pattern.
+
 __[DuplicateMapKeys](bugpattern/DuplicateMapKeys)__<br>
 Map#ofEntries will throw an IllegalArgumentException if there are any duplicate keys
 
@@ -654,9 +657,6 @@ Don&#39;t &#39;claim&#39; annotations in annotation processors; Processor#proces
 
 __[DoNotMockAutoValue](bugpattern/DoNotMockAutoValue)__<br>
 AutoValue classes represent pure data classes, so mocking them should not be necessary. Construct a real instance of the class instead.
-
-__[DoubleBraceInitialization](bugpattern/DoubleBraceInitialization)__<br>
-Prefer collection factory methods or builders to the double-brace initialization pattern.
 
 __[DoubleCheckedLocking](bugpattern/DoubleCheckedLocking)__<br>
 Double-checked locking on non-volatile fields is unsafe
