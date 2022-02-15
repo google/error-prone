@@ -108,6 +108,15 @@ Error Prone will allow you to instantiate a `ImmutableContainer<String>` and use
 it as a field in another `@Immutable` class. However, it is a compiler error to
 instantiate an `ImmutableContainer<Object>`.
 
+`@ImmutableTypeParameter` can restrict generic parameters to immutable types
+only but the generic itself may not be immutable.
+
+```java
+class MutableContainer<@ImmutableTypeParameter T> {
+  ...
+}
+```
+
 You can also use `@ImmutableTypeParameter` to annotate a method's type
 parameters:
 
