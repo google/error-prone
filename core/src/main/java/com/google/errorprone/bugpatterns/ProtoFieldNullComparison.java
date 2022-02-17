@@ -87,10 +87,10 @@ public class ProtoFieldNullComparison extends BugChecker implements CompilationU
 
   private static final Matcher<MethodInvocationTree> TRUTH_NOT_NULL =
       allOf(
-          instanceMethod().onDescendantOf("com.google.common.truth.Subject").named("isNotNull"),
+          instanceMethod().anyClass().named("isNotNull"),
           receiverOfInvocation(
               anyOf(
-                  staticMethod().onClass("com.google.common.truth.Truth").namedAnyOf("assertThat"),
+                  staticMethod().anyClass().namedAnyOf("assertThat"),
                   instanceMethod()
                       .onDescendantOf("com.google.common.truth.StandardSubjectBuilder")
                       .named("that"))));
