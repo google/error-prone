@@ -275,19 +275,10 @@ public class ReturnValueIgnored extends AbstractReturnValueIgnored {
       allOf(not(PRIMITIVE_PARSING_METHODS), PRIMITIVE_NON_PARSING_METHODS);
 
   /**
-   * The return values of {@link java.util.Optional} static methods and some instance methods should
-   * always be checked.
-   */
-  private static final Matcher<ExpressionTree> OPTIONAL_METHODS =
-      anyOf(
-          staticMethod().onClass("java.util.Optional"),
-          instanceMethod().onExactClass("java.util.Optional").namedAnyOf("isEmpty", "isPresent"));
-
-  /**
    * The return values of {@link java.util.Optional} methods should always be checked (except for
    * void-returning ones, which won't be checked by AbstractReturnValueIgnored).
    */
-  private static final Matcher<ExpressionTree> MORE_OPTIONAL_METHODS =
+  private static final Matcher<ExpressionTree> OPTIONAL_METHODS =
       anyMethod().onClass("java.util.Optional");
 
   /**
@@ -400,11 +391,10 @@ public class ReturnValueIgnored extends AbstractReturnValueIgnored {
           );
 
   private static final ImmutableSet<Matcher<? super ExpressionTree>> ALL_MATCHERS =
-      ImmutableSet.of(SPECIALIZED_MATCHER, MORE_OPTIONAL_METHODS, CLASS_METHODS, OBJECT_METHODS);
+      ImmutableSet.of(SPECIALIZED_MATCHER, CLASS_METHODS, OBJECT_METHODS);
 
   private static final ImmutableBiMap<String, Matcher<ExpressionTree>> FLAG_MATCHERS =
       ImmutableBiMap.of(
-          "ReturnValueIgnored:MoreOptional", MORE_OPTIONAL_METHODS,
           "ReturnValueIgnored:ClassMethods", CLASS_METHODS,
           "ReturnValueIgnored:ObjectMethods", OBJECT_METHODS);
 
