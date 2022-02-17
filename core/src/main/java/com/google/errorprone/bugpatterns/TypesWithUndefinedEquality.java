@@ -29,13 +29,13 @@ public enum TypesWithUndefinedEquality {
   DATE("Date", "java.util.Date"),
   IMMUTABLE_COLLECTION("ImmutableCollection", "com.google.common.collect.ImmutableCollection"),
   IMMUTABLE_MULTIMAP("ImmutableMultimap", "com.google.common.collect.ImmutableMultimap"),
-  ITERABLE("Iterable", "java.lang.Iterable", "com.google.common.collect.FluentIterable"),
+  ITERABLE("Iterable", "com.google.common.collect.FluentIterable", "java.lang.Iterable"),
   LONG_SPARSE_ARRAY(
       "LongSparseArray",
-      "android.util.LongSparseArray",
       "android.support.v4.util.LongSparseArrayCompat",
-      "androidx.core.util.LongSparseArrayCompat",
-      "androidx.collection.LongSparseArrayCompat"),
+      "android.util.LongSparseArray",
+      "androidx.collection.LongSparseArrayCompat",
+      "androidx.core.util.LongSparseArrayCompat"),
   MULTIMAP("Multimap", "com.google.common.collect.Multimap"),
   QUEUE("Queue", "java.util.Queue"),
   SPARSE_ARRAY("SparseArray", "android.util.SparseArray", "androidx.collection.SparseArrayCompat");
