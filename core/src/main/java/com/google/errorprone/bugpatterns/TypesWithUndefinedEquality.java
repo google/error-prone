@@ -38,11 +38,7 @@ public enum TypesWithUndefinedEquality {
       "androidx.collection.LongSparseArrayCompat"),
   MULTIMAP("Multimap", "com.google.common.collect.Multimap"),
   QUEUE("Queue", "java.util.Queue"),
-  SPARSE_ARRAY(
-      "SparseArray",
-      "android.util.SparseArray",
-      "androidx.collection.SparseArrayCompat",
-      "androidx.collection.SparseArrayCompat");
+  SPARSE_ARRAY("SparseArray", "android.util.SparseArray", "androidx.collection.SparseArrayCompat");
 
   private final String shortName;
   private final ImmutableSet<String> typeNames;
