@@ -79,7 +79,9 @@ import java.util.Set;
 import java.util.regex.Pattern;
 import javax.lang.model.element.Name;
 
-/** @author schmitt@google.com (Peter Schmitt) */
+/**
+ * @author schmitt@google.com (Peter Schmitt)
+ */
 @BugPattern(
     altNames = "missing-fail",
     summary = "Not calling fail() when expecting an exception masks bugs",

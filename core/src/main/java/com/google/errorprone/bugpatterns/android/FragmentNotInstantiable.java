@@ -42,7 +42,9 @@ import com.sun.source.tree.Tree;
 import java.util.List;
 import java.util.stream.Collectors;
 
-/** @author avenet@google.com (Arnaud J. Venet) */
+/**
+ * @author avenet@google.com (Arnaud J. Venet)
+ */
 @BugPattern(
     altNames = {"ValidFragment"},
     summary =

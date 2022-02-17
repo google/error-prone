@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.matchers.Description.NO_MATCH;
-import static com.google.errorprone.util.ASTHelpers.canBeRemoved;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.isConsideredFinal;
@@ -54,6 +53,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
 import javax.lang.model.element.ElementKind;
+import javax.lang.model.element.Modifier;
 
 /**
  * Helper for strongly typing fields. Fields that are declared as a weaker type but only used when
@@ -223,7 +223,7 @@ public abstract class StronglyType {
         VarSymbol symbol = getSymbol(variableTree);
         Type type = state.getTypes().unboxedTypeOrType(symbol.type);
         if (symbol.getKind() == ElementKind.FIELD
-            && canBeRemoved(symbol)
+            && symbol.getModifiers().contains(Modifier.PRIVATE)
             && isConsideredFinal(symbol)
             && variableTree.getInitializer() != null
             && potentialTypes.stream()

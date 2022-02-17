@@ -46,7 +46,9 @@ import com.sun.tools.javac.code.Types;
 import java.util.Collections;
 import javax.lang.model.element.Modifier;
 
-/** @author Louis Wasserman */
+/**
+ * @author Louis Wasserman
+ */
 @BugPattern(
     summary =
         "Casting a lambda to this @FunctionalInterface can cause a behavior change from casting to"

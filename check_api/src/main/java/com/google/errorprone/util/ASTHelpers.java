@@ -331,37 +331,7 @@ public class ASTHelpers {
     return (MethodSymbol) sym;
   }
 
-  /**
-   * Returns whether this symbol is safe to remove. That is, if it cannot be accessed from outside
-   * its own compilation unit.
-   *
-   * <p>For variables this just means that one of the enclosing elements is private; for methods, it
-   * also means that this symbol is not an override.
-   */
-  public static boolean canBeRemoved(Symbol symbol, VisitorState state) {
-    if (symbol instanceof MethodSymbol
-        && !findSuperMethods((MethodSymbol) symbol, state.getTypes()).isEmpty()) {
-      return false;
-    }
-    return isEffectivelyPrivate(symbol);
-  }
-
-  /** See {@link #canBeRemoved(Symbol, VisitorState)}. */
-  public static boolean canBeRemoved(VarSymbol symbol) {
-    return isEffectivelyPrivate(symbol);
-  }
-
-  /** See {@link #canBeRemoved(Symbol, VisitorState)}. */
-  public static boolean canBeRemoved(ClassSymbol symbol) {
-    return isEffectivelyPrivate(symbol);
-  }
-
-  /** Returns whether this symbol or any of its owners are private. */
-  private static boolean isEffectivelyPrivate(Symbol symbol) {
-    return enclosingElements(symbol).anyMatch(Symbol::isPrivate);
-  }
-
-  /** Checks whether an expression requires parentheses. */
+  /* Checks whether an expression requires parentheses. */
   public static boolean requiresParentheses(ExpressionTree expression, VisitorState state) {
     switch (expression.getKind()) {
       case IDENTIFIER:
@@ -980,7 +950,9 @@ public class ASTHelpers {
     return hasDirectAnnotationWithSimpleName(getDeclaredSymbol(tree), simpleName);
   }
 
-  /** @deprecated use {@link #shouldKeep} instead */
+  /**
+   * @deprecated use {@link #shouldKeep} instead
+   */
   @Deprecated
   @InlineMe(
       replacement = "ASTHelpers.shouldKeep(tree)",
@@ -1054,7 +1026,9 @@ public class ASTHelpers {
     return sym == null ? null : sym.getAnnotation(annotationClass);
   }
 
-  /** @return all values of the given enum type, in declaration order. */
+  /**
+   * @return all values of the given enum type, in declaration order.
+   */
   public static LinkedHashSet<String> enumValues(TypeSymbol enumType) {
     if (enumType.getKind() != ElementKind.ENUM) {
       throw new IllegalStateException();

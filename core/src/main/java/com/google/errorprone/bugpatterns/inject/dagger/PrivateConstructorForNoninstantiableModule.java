@@ -40,7 +40,9 @@ import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
 
-/** @author gak@google.com (Gregory Kick) */
+/**
+ * @author gak@google.com (Gregory Kick)
+ */
 @BugPattern(
     summary = "Add a private constructor to modules that will not be instantiated by Dagger.",
     severity = SUGGESTION)

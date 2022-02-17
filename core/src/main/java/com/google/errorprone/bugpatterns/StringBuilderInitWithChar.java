@@ -31,7 +31,9 @@ import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.util.Convert;
 import javax.lang.model.type.TypeKind;
 
-/** @author lowasser@google.com (Louis Wasserman) */
+/**
+ * @author lowasser@google.com (Louis Wasserman)
+ */
 @BugPattern(
     severity = ERROR,
     summary = "StringBuilder does not have a char constructor; this invokes the int constructor.")

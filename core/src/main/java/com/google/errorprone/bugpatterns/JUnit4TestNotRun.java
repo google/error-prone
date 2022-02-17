@@ -56,7 +56,9 @@ import java.util.Map;
 import java.util.Optional;
 import javax.lang.model.element.Modifier;
 
-/** @author eaftan@google.com (Eddie Aftandilian) */
+/**
+ * @author eaftan@google.com (Eddie Aftandilian)
+ */
 @BugPattern(
     summary =
         "This looks like a test method but is not run; please add @Test and @Ignore, or, if this"

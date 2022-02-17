@@ -35,7 +35,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-/** @author cushon@google.com (Liam Miller-Cushon) */
+/**
+ * @author cushon@google.com (Liam Miller-Cushon)
+ */
 public final class GuardedByUtils {
   public static ImmutableSet<String> getGuardValues(Symbol sym) {
     return getAnnotationValueAsStrings(sym);

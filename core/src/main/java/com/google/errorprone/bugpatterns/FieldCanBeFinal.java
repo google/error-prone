@@ -16,7 +16,6 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
-import static com.google.errorprone.util.ASTHelpers.canBeRemoved;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.shouldKeep;
 
@@ -56,7 +55,9 @@ import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 
-/** @author Liam Miller-Cushon (cushon@google.com) */
+/**
+ * @author Liam Miller-Cushon (cushon@google.com)
+ */
 @BugPattern(
     summary = "This field is only assigned during initialization; consider making it final",
     severity = SUGGESTION)
@@ -209,7 +210,7 @@ public class FieldCanBeFinal extends BugChecker implements CompilationUnitTreeMa
       if (!var.isEffectivelyFinal()) {
         continue;
       }
-      if (!canBeRemoved(var.sym)) {
+      if (!var.sym.isPrivate()) {
         continue;
       }
       if (shouldKeep(var.declaration)) {

@@ -32,7 +32,9 @@ import com.sun.source.tree.Tree;
 import java.util.Iterator;
 import java.util.List;
 
-/** @author jsjeon@google.com (Jinseong Jeon) */
+/**
+ * @author jsjeon@google.com (Jinseong Jeon)
+ */
 @BugPattern(
     summary = "Class should not implement both `Iterable` and `Iterator`",
     severity = WARNING,

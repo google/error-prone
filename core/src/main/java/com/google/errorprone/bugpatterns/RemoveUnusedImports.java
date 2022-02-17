@@ -48,7 +48,9 @@ import com.sun.tools.javac.tree.DCTree.DCReference;
 import java.util.LinkedHashSet;
 import javax.annotation.Nullable;
 
-/** @author gak@google.com (Gregory Kick) */
+/**
+ * @author gak@google.com (Gregory Kick)
+ */
 @BugPattern(
     summary = "Unused imports",
     severity = SUGGESTION,

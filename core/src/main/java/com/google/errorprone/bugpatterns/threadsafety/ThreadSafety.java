@@ -317,12 +317,16 @@ public final class ThreadSafety {
       return new AutoValue_ThreadSafety_Violation(path);
     }
 
-    /** @return true if a violation was found */
+    /**
+     * @return true if a violation was found
+     */
     public boolean isPresent() {
       return !path().isEmpty();
     }
 
-    /** @return the explanation */
+    /**
+     * @return the explanation
+     */
     public String message() {
       return Joiner.on(", ").join(path());
     }
@@ -457,7 +461,9 @@ public final class ThreadSafety {
     return true;
   }
 
-  /** @deprecated use {@link #isThreadSafeType(boolean, Set, Type)} instead. */
+  /**
+   * @deprecated use {@link #isThreadSafeType(boolean, Set, Type)} instead.
+   */
   // TODO(ghm): Delete after a JB release.
   @Deprecated
   public Violation isThreadSafeType(Set<String> containerTypeParameters, Type type) {

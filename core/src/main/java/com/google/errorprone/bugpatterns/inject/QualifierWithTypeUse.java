@@ -49,7 +49,9 @@ import java.util.Collections;
 import java.util.EnumSet;
 import java.util.Set;
 
-/** @author glorioso@google.com (Nick Glorioso) */
+/**
+ * @author glorioso@google.com (Nick Glorioso)
+ */
 @BugPattern(
     summary =
         "Injection frameworks currently don't understand Qualifiers in TYPE_PARAMETER or"

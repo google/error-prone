@@ -22,7 +22,9 @@ import java.util.List;
 import java.util.stream.Stream;
 import javax.annotation.Nullable;
 
-/** @author awturner@google.com (Andy Turner) */
+/**
+ * @author awturner@google.com (Andy Turner)
+ */
 class UnnecessaryBoxedVariableCases {
   void positive_local() {
     Integer i = 0;

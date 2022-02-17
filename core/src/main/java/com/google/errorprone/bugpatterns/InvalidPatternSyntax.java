@@ -25,7 +25,9 @@ import com.sun.source.tree.MethodInvocationTree;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
-/** @author mdempsky@google.com (Matthew Dempsky) */
+/**
+ * @author mdempsky@google.com (Matthew Dempsky)
+ */
 @BugPattern(summary = "Invalid syntax used for a regular expression", severity = ERROR)
 public class InvalidPatternSyntax extends AbstractPatternSyntaxChecker {
 

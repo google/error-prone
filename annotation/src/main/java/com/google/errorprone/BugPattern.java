@@ -180,7 +180,9 @@ public @interface BugPattern {
    */
   boolean documentSuppression() default true;
 
-  /** @deprecated this is a no-op that will be removed in the future */
+  /**
+   * @deprecated this is a no-op that will be removed in the future
+   */
   @Deprecated
   boolean generateExamplesFromTestCases() default true;
 }

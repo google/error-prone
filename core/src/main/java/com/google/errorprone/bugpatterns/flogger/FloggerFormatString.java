@@ -40,7 +40,9 @@ import com.sun.tools.javac.tree.JCTree;
 import java.util.List;
 import javax.annotation.Nullable;
 
-/** @author cushon@google.com (Liam Miller-Cushon) */
+/**
+ * @author cushon@google.com (Liam Miller-Cushon)
+ */
 @BugPattern(
     altNames = "FormatString",
     summary = "Invalid printf-style format string",

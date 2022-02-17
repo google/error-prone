@@ -30,7 +30,9 @@ import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
 import com.sun.source.tree.MethodTree;
 
-/** @author bhagwani@google.com (Sumit Bhagwani) */
+/**
+ * @author bhagwani@google.com (Sumit Bhagwani)
+ */
 @BugPattern(
     summary = "Providing Closeable resources makes their lifecycle unclear",
     severity = WARNING)

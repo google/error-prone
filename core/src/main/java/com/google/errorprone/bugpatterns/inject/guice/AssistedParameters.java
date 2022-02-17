@@ -57,7 +57,9 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-/** @author sgoldfeder@google.com (Steven Goldfeder) */
+/**
+ * @author sgoldfeder@google.com (Steven Goldfeder)
+ */
 @BugPattern(
     name = "GuiceAssistedParameters",
     summary =

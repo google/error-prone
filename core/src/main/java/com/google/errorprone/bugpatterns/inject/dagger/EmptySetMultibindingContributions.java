@@ -57,7 +57,9 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
-/** @author gak@google.com (Gregory Kick) */
+/**
+ * @author gak@google.com (Gregory Kick)
+ */
 @BugPattern(
     summary =
         "@Multibinds is a more efficient and declarative mechanism for ensuring that a set"

@@ -54,7 +54,9 @@ import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Type.UnionClassType;
 import com.sun.tools.javac.code.Types;
 
-/** @author epmjohnston@google.com */
+/**
+ * @author epmjohnston@google.com
+ */
 @BugPattern(
     tags = StandardTags.FRAGILE_CODE,
     summary =

@@ -24,7 +24,6 @@ import static com.google.common.collect.Iterables.getLast;
 import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Matchers.SERIALIZATION_METHODS;
-import static com.google.errorprone.util.ASTHelpers.canBeRemoved;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
@@ -54,7 +53,6 @@ import com.google.errorprone.bugpatterns.BugChecker.CompilationUnitTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
-import com.google.errorprone.suppliers.Supplier;
 import com.google.errorprone.suppliers.Suppliers;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.AnnotationTree;
@@ -575,11 +573,6 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
         return null;
       }
       if (symbol.getKind() == ElementKind.FIELD
-          && symbol.getSimpleName().contentEquals("CREATOR")
-          && isSubtype(symbol.type, PARCELABLE_CREATOR.get(state), state)) {
-        return null;
-      }
-      if (symbol.getKind() == ElementKind.FIELD
           && exemptedFieldBySuperType(getType(variableTree), state)) {
         return null;
       }
@@ -631,7 +624,8 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
       if ((symbol.flags() & RECORD_FLAG) == RECORD_FLAG) {
         return false;
       }
-      return canBeRemoved(symbol) && !SPECIAL_FIELDS.contains(symbol.getSimpleName().toString());
+      return variableTree.getModifiers().getFlags().contains(Modifier.PRIVATE)
+          && !SPECIAL_FIELDS.contains(symbol.getSimpleName().toString());
     }
 
     private static final long RECORD_FLAG = 1L << 61;
@@ -987,7 +981,4 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
           Optional.ofNullable(assignmentTree));
     }
   }
-
-  private static final Supplier<Type> PARCELABLE_CREATOR =
-      VisitorState.memoize(state -> state.getTypeFromString("android.os.Parcelable.Creator"));
 }

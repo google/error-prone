@@ -21,7 +21,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** @author flx@google.com (Felix Berger) */
+/**
+ * @author flx@google.com (Felix Berger)
+ */
 @RunWith(JUnit4.class)
 @Ignore("b/130670448")
 public final class ProtoFieldNullComparisonTest {

@@ -43,7 +43,9 @@ import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.SimpleTreeVisitor;
 
-/** @author Ron Shapiro */
+/**
+ * @author Ron Shapiro
+ */
 @BugPattern(
     summary =
         "AndroidInjection.inject() should always be invoked before calling super.lifecycleMethod()",

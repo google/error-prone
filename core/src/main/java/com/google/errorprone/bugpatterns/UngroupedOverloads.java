@@ -45,7 +45,9 @@ import java.util.Map;
 import java.util.stream.Stream;
 import javax.lang.model.element.Name;
 
-/** @author hanuszczak@google.com (Łukasz Hanuszczak) */
+/**
+ * @author hanuszczak@google.com (Łukasz Hanuszczak)
+ */
 @BugPattern(
     summary =
         "Constructors and methods with the same name should appear sequentially with no other code"

@@ -25,7 +25,9 @@ import com.sun.tools.javac.code.Flags;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Type;
 
-/** @author scottjohnson@google.com (Scott Johnson) */
+/**
+ * @author scottjohnson@google.com (Scott Johnson)
+ */
 @BugPattern(
     summary = "Numeric comparison using reference equality instead of value equality",
     severity = ERROR)

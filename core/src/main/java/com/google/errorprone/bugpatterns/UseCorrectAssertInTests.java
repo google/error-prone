@@ -42,7 +42,9 @@ import com.sun.tools.javac.tree.JCTree.JCMethodInvocation;
 import com.sun.tools.javac.tree.JCTree.JCUnary;
 import com.sun.tools.javac.tree.TreeInfo;
 
-/** @author galitch@google.com (Anton Galitch) */
+/**
+ * @author galitch@google.com (Anton Galitch)
+ */
 @BugPattern(
     summary = "Java assert is used in test. For testing purposes Assert.* matchers should be used.",
     severity = SeverityLevel.WARNING)

@@ -20,7 +20,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** @author sulku@google.com (Marsela Sulku) */
+/**
+ * @author sulku@google.com (Marsela Sulku)
+ */
 @RunWith(JUnit4.class)
 public class MultipleUnaryOperatorsInMethodCallTest {
   private final CompilationTestHelper compilationHelper =

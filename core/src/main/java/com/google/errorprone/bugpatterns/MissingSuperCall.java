@@ -43,7 +43,9 @@ import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import java.util.Arrays;
 import javax.lang.model.element.Modifier;
 
-/** @author eaftan@google.com (Eddie Aftandilian) */
+/**
+ * @author eaftan@google.com (Eddie Aftandilian)
+ */
 @BugPattern(
     summary = "Overriding method is missing a call to overridden super method",
     severity = ERROR)

@@ -32,7 +32,9 @@ import com.sun.source.tree.MethodInvocationTree;
 import java.util.TimeZone;
 import java.util.regex.Pattern;
 
-/** @author awturner@google.com (Andy Turner) */
+/**
+ * @author awturner@google.com (Andy Turner)
+ */
 @BugPattern(
     summary =
         "Invalid time zone identifier. TimeZone.getTimeZone(String) will silently return GMT"

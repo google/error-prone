@@ -51,7 +51,9 @@ public class ErrorProneError extends Error {
     this.source = source;
   }
 
-  /** @deprecated prefer {@link #logFatalError(Log, Context)} */
+  /**
+   * @deprecated prefer {@link #logFatalError(Log, Context)}
+   */
   @Deprecated
   public void logFatalError(Log log) {
     String version = ErrorProneVersion.loadVersionFromPom().or("unknown version");

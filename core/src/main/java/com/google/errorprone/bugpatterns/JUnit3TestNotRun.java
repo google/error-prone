@@ -46,7 +46,9 @@ import java.util.List;
 import java.util.regex.Pattern;
 import javax.lang.model.element.Modifier;
 
-/** @author rburny@google.com (Radoslaw Burny) */
+/**
+ * @author rburny@google.com (Radoslaw Burny)
+ */
 @BugPattern(
     summary =
         "Test method will not be run; please correct method signature "

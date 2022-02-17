@@ -23,7 +23,9 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
 
-/** @author ptoomey@google.com (Patrick Toomey) */
+/**
+ * @author ptoomey@google.com (Patrick Toomey)
+ */
 @BugPattern(
     summary = "String comparison using reference equality instead of value equality",
     severity = WARNING)

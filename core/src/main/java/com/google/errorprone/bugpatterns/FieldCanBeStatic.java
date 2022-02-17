@@ -23,7 +23,6 @@ import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
 import static com.google.errorprone.fixes.SuggestedFixes.addModifiers;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.annotationsAmong;
-import static com.google.errorprone.util.ASTHelpers.canBeRemoved;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static javax.lang.model.element.ElementKind.FIELD;
@@ -89,7 +88,7 @@ public final class FieldCanBeStatic extends BugChecker implements VariableTreeMa
   public Description matchVariable(VariableTree tree, VisitorState state) {
     VarSymbol symbol = getSymbol(tree);
     if (symbol == null
-        || !canBeRemoved(symbol)
+        || !symbol.isPrivate()
         || !tree.getModifiers().getFlags().contains(FINAL)
         || symbol.isStatic()
         || !symbol.getKind().equals(FIELD)

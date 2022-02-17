@@ -35,7 +35,9 @@ import com.sun.source.tree.MethodInvocationTree;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.tree.JCTree.JCIf;
 
-/** @author eaftan@google.com (Eddie Aftandilian) */
+/**
+ * @author eaftan@google.com (Eddie Aftandilian)
+ */
 // TODO(eaftan): Doesn't handle the case that the enclosing method is always called in a loop.
 @BugPattern(
     summary =

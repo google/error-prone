@@ -31,7 +31,9 @@ import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCExpression;
 import javax.annotation.Nullable;
 
-/** @author lowasser@google.com (Louis Wasserman) */
+/**
+ * @author lowasser@google.com (Louis Wasserman)
+ */
 @BugPattern(
     summary = "== NaN always returns false; use the isNaN methods instead",
     severity = ERROR)

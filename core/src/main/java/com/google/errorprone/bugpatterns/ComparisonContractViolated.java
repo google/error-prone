@@ -56,7 +56,9 @@ import com.sun.tools.javac.code.Types;
 import java.util.EnumSet;
 import java.util.Set;
 
-/** @author Louis Wasserman */
+/**
+ * @author Louis Wasserman
+ */
 @BugPattern(
     summary = "This comparison method violates the contract",
     severity = SeverityLevel.ERROR)

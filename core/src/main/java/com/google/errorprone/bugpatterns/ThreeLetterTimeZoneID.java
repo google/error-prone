@@ -35,7 +35,9 @@ import java.time.Duration;
 import java.time.ZoneId;
 import java.util.TimeZone;
 
-/** @author awturner@google.com (Andy Turner) */
+/**
+ * @author awturner@google.com (Andy Turner)
+ */
 @BugPattern(
     summary =
         "Three-letter time zone identifiers are deprecated, may be ambiguous, and might not do "

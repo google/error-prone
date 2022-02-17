@@ -34,7 +34,9 @@ import java.util.List;
 import java.util.Set;
 import javax.annotation.Nullable;
 
-/** @author alexeagle@google.com (Alex Eagle) */
+/**
+ * @author alexeagle@google.com (Alex Eagle)
+ */
 public class SuggestedFix implements Fix {
 
   private final String shortDescription;

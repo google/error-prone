@@ -32,7 +32,9 @@ import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
 import javax.lang.model.element.Modifier;
 
-/** @author sulku@google.com (Marsela Sulku) */
+/**
+ * @author sulku@google.com (Marsela Sulku)
+ */
 @BugPattern(summary = "Collector.of() should not use state", severity = WARNING)
 public class CollectorShouldNotUseState extends BugChecker implements MethodInvocationTreeMatcher {
 

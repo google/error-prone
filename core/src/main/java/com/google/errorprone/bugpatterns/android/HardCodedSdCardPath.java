@@ -30,7 +30,9 @@ import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.LiteralTree;
 import java.util.Map;
 
-/** @author avenet@google.com (Arnaud J. Venet) */
+/**
+ * @author avenet@google.com (Arnaud J. Venet)
+ */
 @BugPattern(
     altNames = {"SdCardPath"},
     summary = "Hardcoded reference to /sdcard",

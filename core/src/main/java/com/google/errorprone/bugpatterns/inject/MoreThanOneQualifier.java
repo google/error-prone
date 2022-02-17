@@ -33,7 +33,9 @@ import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.ModifiersTree;
 import java.util.List;
 
-/** @author sgoldfeder@google.com (Steven Goldfeder) */
+/**
+ * @author sgoldfeder@google.com (Steven Goldfeder)
+ */
 @BugPattern(
     name = "InjectMoreThanOneQualifier",
     summary = "Using more than one qualifier annotation on the same element is not allowed.",

@@ -28,7 +28,9 @@ import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.sun.source.tree.AssertTree;
 
-/** @author sebastian.h.monte@gmail.com (Sebastian Monte) */
+/**
+ * @author sebastian.h.monte@gmail.com (Sebastian Monte)
+ */
 @BugPattern(
     summary =
         "Assertions may be disabled at runtime and do not guarantee that execution will "

@@ -43,8 +43,11 @@ import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Type;
 import java.util.Optional;
+import javax.lang.model.element.Modifier;
 
-/** @author amesbah@google.com (Ali Mesbah) */
+/**
+ * @author amesbah@google.com (Ali Mesbah)
+ */
 @BugPattern(
     summary =
         "Use Java's utility functional interfaces instead of Function<A, B> for primitive types.",
@@ -144,7 +147,7 @@ public class LambdaFunctionalInterface extends BugChecker implements MethodTreeM
     MethodSymbol methodSym = ASTHelpers.getSymbol(tree);
 
     // precondition (1)
-    if (!ASTHelpers.canBeRemoved(methodSym, state)) {
+    if (!methodSym.getModifiers().contains(Modifier.PRIVATE)) {
       return Description.NO_MATCH;
     }
 

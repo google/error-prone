@@ -43,7 +43,9 @@ import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import java.util.stream.Stream;
 
-/** @author mariasam@google.com (Maria Sam) */
+/**
+ * @author mariasam@google.com (Maria Sam)
+ */
 @BugPattern(
     summary =
         "This Optional has been confirmed to be empty at this point, so the call to `get` will"

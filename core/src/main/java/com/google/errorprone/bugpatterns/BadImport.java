@@ -49,7 +49,9 @@ import java.util.List;
 import java.util.Set;
 import javax.lang.model.element.Name;
 
-/** @author awturner@google.com (Andy Turner) */
+/**
+ * @author awturner@google.com (Andy Turner)
+ */
 @BugPattern(
     summary =
         "Importing nested classes/static methods/static fields with commonly-used names can make "

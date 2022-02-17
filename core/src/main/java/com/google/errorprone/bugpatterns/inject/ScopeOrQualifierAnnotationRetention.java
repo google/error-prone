@@ -48,7 +48,9 @@ import java.lang.annotation.Retention;
 import javax.annotation.Nullable;
 
 // TODO(b/180081278): Rename this check to MissingRuntimeRetention
-/** @author sgoldfeder@google.com (Steven Goldfeder) */
+/**
+ * @author sgoldfeder@google.com (Steven Goldfeder)
+ */
 @BugPattern(
     name = "InjectScopeOrQualifierAnnotationRetention",
     summary = "Scoping and qualifier annotations must have runtime retention.",

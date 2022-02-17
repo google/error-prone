@@ -283,7 +283,9 @@ public class ProtoFieldNullComparison extends BugChecker implements CompilationU
   /** Generates a replacement hazzer, if available. */
   @FunctionalInterface
   private interface Fixer {
-    /** @param negated whether the hazzer should be negated. */
+    /**
+     * @param negated whether the hazzer should be negated.
+     */
     Optional<String> getHazzer(boolean negated, VisitorState state);
   }
 

@@ -35,7 +35,9 @@ import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Types;
 import java.util.List;
 
-/** @author mariasam@google.com (Maria Sam) on 6/27/17. */
+/**
+ * @author mariasam@google.com (Maria Sam) on 6/27/17.
+ */
 @BugPattern(
     summary =
         "The type of the array parameter of Collection.toArray "

@@ -45,7 +45,9 @@ import java.util.regex.Pattern;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.Name;
 
-/** @author alexeagle@google.com (Alex Eagle) */
+/**
+ * @author alexeagle@google.com (Alex Eagle)
+ */
 @BugPattern(
     altNames = {"ResultOfMethodCallIgnored", "CheckReturnValue"},
     summary = "Return value of this method must be used",

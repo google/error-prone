@@ -1132,7 +1132,9 @@ public class Matchers {
     return new NullnessMatcher(Nullness.NONNULL);
   }
 
-  /** @deprecated use {@link #isNonNullUsingDataflow} instead. */
+  /**
+   * @deprecated use {@link #isNonNullUsingDataflow} instead.
+   */
   @Deprecated
   public static Matcher<ExpressionTree> isNonNull() {
     return isNonNullUsingDataflow();
@@ -1150,7 +1152,9 @@ public class Matchers {
     return new NullnessMatcher(Nullness.NULL);
   }
 
-  /** @deprecated use {@link #isNullUsingDataflow} instead. */
+  /**
+   * @deprecated use {@link #isNullUsingDataflow} instead.
+   */
   @Deprecated
   public static Matcher<ExpressionTree> isNull() {
     return isNullUsingDataflow();

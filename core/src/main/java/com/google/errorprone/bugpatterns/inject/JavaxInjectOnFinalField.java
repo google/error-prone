@@ -29,7 +29,9 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.sun.source.tree.AnnotationTree;
 
-/** @author sgoldfeder@google.com (Steven Goldfeder) */
+/**
+ * @author sgoldfeder@google.com (Steven Goldfeder)
+ */
 @BugPattern(summary = "@javax.inject.Inject cannot be put on a final field.", severity = WARNING)
 public class JavaxInjectOnFinalField extends BugChecker implements AnnotationTreeMatcher {
 

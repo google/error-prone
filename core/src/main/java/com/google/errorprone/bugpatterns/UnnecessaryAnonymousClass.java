@@ -22,7 +22,6 @@ import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
-import static com.google.errorprone.util.ASTHelpers.canBeRemoved;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
@@ -48,7 +47,6 @@ import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePathScanner;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
-import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
@@ -89,10 +87,10 @@ public class UnnecessaryAnonymousClass extends BugChecker implements VariableTre
     if (!(member instanceof MethodTree)) {
       return NO_MATCH;
     }
-    VarSymbol varSym = getSymbol(tree);
+    Symbol varSym = getSymbol(tree);
     if (varSym == null
         || varSym.getKind() != ElementKind.FIELD
-        || !canBeRemoved(varSym)
+        || !varSym.isPrivate()
         || !varSym.getModifiers().contains(Modifier.FINAL)) {
       return NO_MATCH;
     }

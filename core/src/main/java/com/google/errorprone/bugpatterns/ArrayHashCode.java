@@ -40,7 +40,9 @@ import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Types;
 import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
 
-/** @author eaftan@google.com (Eddie Aftandilian) */
+/**
+ * @author eaftan@google.com (Eddie Aftandilian)
+ */
 @BugPattern(summary = "hashcode method on array does not hash array contents", severity = ERROR)
 public class ArrayHashCode extends BugChecker implements MethodInvocationTreeMatcher {
 

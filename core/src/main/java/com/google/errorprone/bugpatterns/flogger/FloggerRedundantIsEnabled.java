@@ -48,7 +48,9 @@ import com.sun.tools.javac.code.Symbol;
 import java.util.List;
 import java.util.Optional;
 
-/** @author mariasam@google.com (Maria Sam) */
+/**
+ * @author mariasam@google.com (Maria Sam)
+ */
 @BugPattern(
     summary =
         "Logger level check is already implied in the log() call. "

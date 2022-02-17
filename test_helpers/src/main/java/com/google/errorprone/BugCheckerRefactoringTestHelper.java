@@ -163,7 +163,9 @@ public class BugCheckerRefactoringTestHelper {
     this.scannerSupplier = scannerSupplier;
   }
 
-  /** @deprecated prefer {@link #newInstance(Class, Class)} */
+  /**
+   * @deprecated prefer {@link #newInstance(Class, Class)}
+   */
   @Deprecated
   public static BugCheckerRefactoringTestHelper newInstance(
       BugChecker refactoringBugChecker, Class<?> clazz) {
