@@ -56,6 +56,7 @@ import com.sun.source.tree.VariableTree;
 import com.sun.source.util.SimpleTreeVisitor;
 import com.sun.source.util.TreePathScanner;
 import com.sun.tools.javac.code.Symbol;
+import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.TypeTag;
 import com.sun.tools.javac.code.Types.FunctionDescriptorLookupError;
@@ -83,8 +84,8 @@ public class UnnecessaryLambda extends BugChecker
     if (lambda == null) {
       return NO_MATCH;
     }
-    Symbol sym = getSymbol(tree);
-    if (sym == null || !sym.isPrivate()) {
+    MethodSymbol sym = getSymbol(tree);
+    if (sym == null || !ASTHelpers.canBeRemoved(sym, state)) {
       return NO_MATCH;
     }
     SuggestedFix.Builder fix = SuggestedFix.builder();

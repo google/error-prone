@@ -43,7 +43,6 @@ import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Type;
 import java.util.Optional;
-import javax.lang.model.element.Modifier;
 
 /** @author amesbah@google.com (Ali Mesbah) */
 @BugPattern(
@@ -145,7 +144,7 @@ public class LambdaFunctionalInterface extends BugChecker implements MethodTreeM
     MethodSymbol methodSym = ASTHelpers.getSymbol(tree);
 
     // precondition (1)
-    if (!methodSym.getModifiers().contains(Modifier.PRIVATE)) {
+    if (!ASTHelpers.canBeRemoved(methodSym, state)) {
       return Description.NO_MATCH;
     }
 

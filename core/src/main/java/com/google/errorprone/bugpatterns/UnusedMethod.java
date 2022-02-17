@@ -48,6 +48,7 @@ import com.google.errorprone.bugpatterns.BugChecker.CompilationUnitTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.suppliers.Supplier;
+import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
@@ -214,7 +215,7 @@ public final class UnusedMethod extends BugChecker implements CompilationUnitTre
           }
         }
 
-        return tree.getModifiers().getFlags().contains(Modifier.PRIVATE);
+        return !!ASTHelpers.canBeRemoved(methodSymbol, state);
       }
 
       private boolean isExemptedConstructor(MethodSymbol methodSymbol, VisitorState state) {

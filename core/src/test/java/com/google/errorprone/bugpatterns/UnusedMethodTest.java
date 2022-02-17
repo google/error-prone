@@ -306,6 +306,33 @@ public final class UnusedMethodTest {
   }
 
   @Test
+  public void overriddenMethodNotCalledWithinClass() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  private class Inner {",
+            "    @Override public String toString() { return null; }",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void methodWithinPrivateInnerClass_isEligible() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  private class Inner {",
+            "    // BUG: Diagnostic contains:",
+            "    public void foo() {}",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void unusedConstructor() {
     helper
         .addSourceLines(

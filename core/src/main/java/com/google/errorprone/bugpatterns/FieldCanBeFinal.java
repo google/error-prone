@@ -16,6 +16,7 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
+import static com.google.errorprone.util.ASTHelpers.canBeRemoved;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.shouldKeep;
 
@@ -208,7 +209,7 @@ public class FieldCanBeFinal extends BugChecker implements CompilationUnitTreeMa
       if (!var.isEffectivelyFinal()) {
         continue;
       }
-      if (!var.sym.isPrivate()) {
+      if (!canBeRemoved(var.sym)) {
         continue;
       }
       if (shouldKeep(var.declaration)) {
