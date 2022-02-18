@@ -55,6 +55,90 @@ public class UnusedNestedClassTest {
   }
 
   @Test
+  public void anonymousClass_noFinding() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java", //
+            "import java.util.function.Function;",
+            "import java.util.stream.Stream;",
+            "class A {",
+            "  private Stream<String> map(Stream<Object> xs) {",
+            "    return xs.map(new Function<Object, String>() {",
+            "      @Override",
+            "      public String apply(Object o) {",
+            "        return o.toString();",
+            "      }",
+            "    });",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void anonymousClass_asAStatement_unused() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java", //
+            "import java.util.function.Function;",
+            "import java.util.stream.Stream;",
+            "class A {",
+            "  void test() {",
+            // TODO(ghm): This should probably report an error, but maybe it's not within scope
+            // of this check?
+            "    new Function<Object, String>() {",
+            "      @Override",
+            "      public String apply(Object o) {",
+            "        return o.toString();",
+            "      }",
+            "    };",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void localClass_used_noFinding() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java", //
+            "import java.util.function.Function;",
+            "import java.util.stream.Stream;",
+            "class A {",
+            "  private Stream<String> map(Stream<Object> xs) {",
+            "    class Mapper implements Function<Object, String> {",
+            "      @Override",
+            "      public String apply(Object o) {",
+            "        return o.toString();",
+            "      }",
+            "    }",
+            "    return xs.map(new Mapper());",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void localClass_unused_finding() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java", //
+            "import java.util.function.Function;",
+            "import java.util.stream.Stream;",
+            "class A {",
+            "  void test() {",
+            "    // BUG: Diagnostic contains:",
+            "    class Mapper implements Function<Object, String> {",
+            "      @Override",
+            "      public String apply(Object o) {",
+            "        return o.toString();",
+            "      }",
+            "    }",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void usedWithinSelf_warning() {
     compilationHelper
         .addSourceLines(

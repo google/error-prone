@@ -36,6 +36,7 @@ import com.sun.source.util.TreePath;
 import com.sun.source.util.TreePathScanner;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
+import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -77,7 +78,11 @@ public final class UnusedNestedClass extends BugChecker implements CompilationUn
         return null;
       }
       ClassSymbol symbol = getSymbol(classTree);
-      if (symbol != null && symbol.isPrivate()) {
+      if (symbol == null) {
+        return super.visitClass(classTree, null);
+      }
+      boolean isAnonymous = classTree.getSimpleName().length() == 0;
+      if (symbol.isPrivate() || (symbol.owner instanceof MethodSymbol && !isAnonymous)) {
         classes.put(symbol, getCurrentPath());
       }
       return super.visitClass(classTree, null);
