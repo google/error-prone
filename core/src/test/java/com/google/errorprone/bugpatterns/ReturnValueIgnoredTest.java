@@ -733,4 +733,38 @@ public class ReturnValueIgnoredTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void constructorOfAbstractModule() {
+    CompilationTestHelper.newInstance(ReturnValueIgnored.class, getClass())
+        .addSourceLines(
+            "Test.java",
+            "import com.google.inject.AbstractModule;",
+            "class Test extends AbstractModule {",
+            "  public Test() {}",
+            "  public static void foo() {",
+            "    // BUG: Diagnostic contains: Ignored return value of 'Test'",
+            "    new Test();",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void constructorOfModule() {
+    CompilationTestHelper.newInstance(ReturnValueIgnored.class, getClass())
+        .addSourceLines(
+            "Test.java",
+            "import com.google.inject.Binder;",
+            "import com.google.inject.Module;",
+            "class Test implements Module {",
+            "  public Test() {}",
+            "  @Override public void configure(Binder binder) {}",
+            "  public static void foo() {",
+            "    // BUG: Diagnostic contains: Ignored return value of 'Test'",
+            "    new Test();",
+            "  }",
+            "}")
+        .doTest();
+  }
 }

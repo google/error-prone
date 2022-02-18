@@ -20,12 +20,17 @@ import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.anyMethod;
 import static com.google.errorprone.matchers.Matchers.anyOf;
+import static com.google.errorprone.matchers.Matchers.constructor;
 import static com.google.errorprone.matchers.Matchers.kindIs;
 import static com.google.errorprone.matchers.Matchers.not;
 import static com.google.errorprone.matchers.Matchers.packageStartsWith;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
+import static com.google.errorprone.predicates.TypePredicates.isDescendantOf;
 import static com.google.errorprone.predicates.TypePredicates.isExactTypeAny;
+import static com.google.errorprone.util.ASTHelpers.getReceiverType;
+import static com.google.errorprone.util.ASTHelpers.getReturnType;
+import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.isSameType;
 
 import com.google.common.collect.ImmutableBiMap;
@@ -35,7 +40,6 @@ import com.google.errorprone.BugPattern;
 import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.matchers.Matcher;
-import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.tools.javac.code.Symbol;
@@ -45,9 +49,7 @@ import java.util.regex.Pattern;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.Name;
 
-/**
- * @author alexeagle@google.com (Alex Eagle)
- */
+/** A checker which produces an error when a return value is accidentally discarded. */
 @BugPattern(
     altNames = {"ResultOfMethodCallIgnored", "CheckReturnValue"},
     summary = "Return value of this method must be used",
@@ -72,9 +74,9 @@ public class ReturnValueIgnored extends AbstractReturnValueIgnored {
       allOf(
           not(kindIs(Kind.NEW_CLASS)), // Constructor calls don't have a "receiver"
           (tree, state) -> {
-            Type receiverType = ASTHelpers.getReceiverType(tree);
+            Type receiverType = getReceiverType(tree);
             return TYPES_TO_CHECK.contains(receiverType.toString())
-                && isSameType(receiverType, ASTHelpers.getReturnType(tree), state);
+                && isSameType(receiverType, getReturnType(tree), state);
           });
 
   /**
@@ -115,7 +117,7 @@ public class ReturnValueIgnored extends AbstractReturnValueIgnored {
     if (packageStartsWith("java.time").matches(tree, state)) {
       return false;
     }
-    Symbol symbol = ASTHelpers.getSymbol(tree);
+    Symbol symbol = getSymbol(tree);
     return symbol instanceof MethodSymbol
         && symbol.owner.packge().getQualifiedName().toString().startsWith("java.time")
         && symbol.getModifiers().contains(Modifier.PUBLIC)
@@ -127,7 +129,7 @@ public class ReturnValueIgnored extends AbstractReturnValueIgnored {
    * discarded.
    */
   private static boolean functionalMethod(ExpressionTree tree, VisitorState state) {
-    Symbol symbol = ASTHelpers.getSymbol(tree);
+    Symbol symbol = getSymbol(tree);
     return symbol instanceof MethodSymbol
         && symbol.owner.packge().getQualifiedName().contentEquals("java.util.function");
   }
@@ -362,6 +364,13 @@ public class ReturnValueIgnored extends AbstractReturnValueIgnored {
                       "requireNonNullElse",
                       "requireNonNullElseGet")));
 
+  /**
+   * Constructors of Guice modules must always be used (likely a sign they were not properly
+   * installed).
+   */
+  private static final Matcher<ExpressionTree> MODULE_CONSTRUCTORS =
+      constructor().forClass(isDescendantOf("com.google.inject.Module"));
+
   private static final Matcher<? super ExpressionTree> SPECIALIZED_MATCHER =
       anyOf(
           // keep-sorted start
@@ -396,7 +405,8 @@ public class ReturnValueIgnored extends AbstractReturnValueIgnored {
       ImmutableBiMap.of(
           "ReturnValueIgnored:MoreOptional", MORE_OPTIONAL_METHODS,
           "ReturnValueIgnored:ClassMethods", CLASS_METHODS,
-          "ReturnValueIgnored:ObjectMethods", OBJECT_METHODS);
+          "ReturnValueIgnored:ObjectMethods", OBJECT_METHODS,
+          "ReturnValueIgnored:ModuleConstructors", MODULE_CONSTRUCTORS);
 
   private final Matcher<ExpressionTree> matcher;
 
