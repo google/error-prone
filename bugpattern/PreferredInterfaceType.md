@@ -14,15 +14,21 @@ To make changes, edit the @BugPattern annotation or the explanation in docs/bugp
 _Alternate names: MutableConstantField, MutableMethodReturnType_
 
 ## The problem
-Prefer referring to types by the immutable type (such as `ImmutableList`)
-instead of the general collection interface type (such as `List`). This
-communicates important [semantic guarantees][javadoc].
+Where possible, prefer referring to some types by a subtype which conveys more
+information. For example: `ImmutableList` conveys more information (the
+[immutability][javadoc] of the type). than `List`, `List` conveys more
+information than `Collection`, and `ListMultimap` conveys more information than
+`Multimap`.
 
 This is consistent with [Effective Java 3rd Edition §64][ej3e-64], which says to
-refer to objects by their interfaces. Guava's immutable collection classes offer
-meaningful behavioral guarantees -- they are not merely a specific
-implementation as in the case of, say, `ArrayList`. They should be treated as
-interfaces in every important sense of the word.
+refer to objects by their interfaces.
+
+*   Guava's immutable collection classes offer meaningful behavioral
+    guarantees -- they are not merely a specific implementation as in the case
+    of, say, `ArrayList`. They should be treated as interfaces in every
+    important sense of the word.
+*   Similarly, `Multimap` was designed as a superinterface for `ListMultimap`
+    and `SetMultimap` which should [rarely be referred to directly][multimap].
 
 That is, prefer this:
 
@@ -45,6 +51,7 @@ prevent accidental attempts to modify the collection at compile-time (see
 [`DoNotCall`]).
 
 [`DoNotCall`]: https:errorprone.info/bugpattern/DoNotCall
+[multimap]: https://github.com/google/guava/wiki/NewCollectionTypesExplained#multimap
 
 [ej3e-64]: https://books.google.com/books?id=BIpDDwAAQBAJ
 [javadoc]: https://guava.dev/releases/21.0/api/docs/com/google/common/collect/ImmutableCollection.html
