@@ -94,7 +94,7 @@ public class FloggerWithoutCause extends BugChecker
             && ASTHelpers.isSubtype(argType, state.getSymtab().throwableType, state)) {
           return arg;
         }
-      } catch (Throwable t) {
+      } catch (RuntimeException t) {
         // ignore completion failures
       }
     }

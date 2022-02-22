@@ -380,10 +380,11 @@ public class ErrorProneJavaCompilerTest {
             Collections.<String>emptyList(),
             ImmutableList.<Class<? extends BugChecker>>of(DeleteMethod.class));
     assertThat(result.succeeded).isFalse();
+    assertThat(result.output).isEmpty();
     assertThat(result.diagnosticHelper.getDiagnostics()).hasSize(1);
     assertThat(
             Iterables.getOnlyElement(result.diagnosticHelper.getDiagnostics()).getMessage(ENGLISH))
-        .contains("AssertionError: Cannot edit synthetic AST nodes");
+        .contains("IllegalArgumentException: Cannot edit synthetic AST nodes");
   }
 
   @Test

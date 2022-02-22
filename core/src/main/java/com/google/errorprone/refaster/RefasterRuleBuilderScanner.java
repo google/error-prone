@@ -144,7 +144,7 @@ public final class RefasterRuleBuilderScanner extends SimpleTreeVisitor<Void, Vo
             "Placeholder methods must have @Placeholder, but abstract method does not: " + tree);
       }
       return null;
-    } catch (Throwable t) {
+    } catch (RuntimeException t) {
       throw new RuntimeException("Error analysing: " + tree.getName(), t);
     }
   }

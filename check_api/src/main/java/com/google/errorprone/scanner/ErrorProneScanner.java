@@ -448,7 +448,7 @@ public class ErrorProneScanner extends Scanner {
           reportMatch(
               processingFunction.process(matcher, tree, stateWithSuppressionInformation),
               stateWithSuppressionInformation);
-        } catch (Throwable t) {
+        } catch (Exception t) {
           handleError(matcher, t);
         }
       }

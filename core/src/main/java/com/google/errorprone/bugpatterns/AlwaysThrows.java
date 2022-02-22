@@ -25,6 +25,7 @@ import static com.google.errorprone.util.ASTHelpers.constValue;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static java.util.Arrays.stream;
 
+import com.google.common.base.Throwables;
 import com.google.common.collect.HashMultiset;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
@@ -105,13 +106,13 @@ public class AlwaysThrows extends BugChecker implements MethodInvocationTreeMatc
             .named("fromHex")
             .withParameters("java.lang.String")) {
       @Override
-      void validate(MethodInvocationTree tree, String argument) throws Throwable {
+      void validate(MethodInvocationTree tree, String argument) {
         try {
           ByteString.class.getMethod("fromHex", String.class).invoke(null, argument);
         } catch (NoSuchMethodException | IllegalAccessException e) {
           return;
         } catch (InvocationTargetException e) {
-          throw e.getCause();
+          throw Throwables.getCauseAs(e.getCause(), NumberFormatException.class);
         }
       }
     };
@@ -123,7 +124,7 @@ public class AlwaysThrows extends BugChecker implements MethodInvocationTreeMatc
     @SuppressWarnings("ImmutableEnumChecker") // is immutable
     private final Matcher<ExpressionTree> matcher;
 
-    abstract void validate(MethodInvocationTree tree, String argument) throws Throwable;
+    abstract void validate(MethodInvocationTree tree, String argument) throws Exception;
   }
 
   private final ConstantExpressions constantExpressions;
@@ -171,7 +172,7 @@ public class AlwaysThrows extends BugChecker implements MethodInvocationTreeMatc
     }
     try {
       api.validate(tree, argument);
-    } catch (Throwable t) {
+    } catch (Exception t) {
       return buildDescription(tree)
           .setMessage(
               String.format(
