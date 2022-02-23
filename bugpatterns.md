@@ -889,6 +889,9 @@ It is dangerous to use a boxed primitive as a lock as it can unintentionally lea
 __[LogicalAssignment](bugpattern/LogicalAssignment)__<br>
 Assignment where a boolean expression was expected; use &#61;&#61; if this assignment wasn&#39;t expected or add parentheses for clarity.
 
+__[LongDoubleConversion](bugpattern/LongDoubleConversion)__<br>
+Conversion from long to double may lose precision; use an explicit cast to double if this was intentional
+
 __[LongFloatConversion](bugpattern/LongFloatConversion)__<br>
 Conversion from long to float may lose precision; use an explicit cast to float if this was intentional
 
