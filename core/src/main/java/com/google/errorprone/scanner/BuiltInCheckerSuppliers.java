@@ -198,6 +198,7 @@ import com.google.errorprone.bugpatterns.LiteProtoToString;
 import com.google.errorprone.bugpatterns.LockNotBeforeTry;
 import com.google.errorprone.bugpatterns.LockOnBoxedPrimitive;
 import com.google.errorprone.bugpatterns.LogicalAssignment;
+import com.google.errorprone.bugpatterns.LongDoubleConversion;
 import com.google.errorprone.bugpatterns.LongFloatConversion;
 import com.google.errorprone.bugpatterns.LongLiteralLowerCaseSuffix;
 import com.google.errorprone.bugpatterns.LoopConditionChecker;
@@ -883,6 +884,7 @@ public class BuiltInCheckerSuppliers {
           LockNotBeforeTry.class,
           LockOnBoxedPrimitive.class,
           LogicalAssignment.class,
+          LongDoubleConversion.class,
           LongFloatConversion.class,
           LoopOverCharArray.class,
           MalformedInlineTag.class,
