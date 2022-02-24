@@ -43,6 +43,21 @@ public class AlwaysThrowsTest {
   }
 
   @Test
+  public void positiveUUID() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.util.UUID;",
+            "class T { ",
+            "  void f() {",
+            "    // BUG: Diagnostic contains: will fail at runtime with a IllegalArgumentException",
+            "    UUID.fromString(\"677927337fc742eab14f7ee44c924739\");",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void immutableMapThrows() {
     testHelper
         .addSourceLines(
