@@ -22,9 +22,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/**
- * @author alexeagle@google.com (Alex Eagle)
- */
+/** Tests for {@link ReturnValueIgnored}. */
 @RunWith(JUnit4.class)
 public class ReturnValueIgnoredTest {
 
@@ -736,15 +734,15 @@ public class ReturnValueIgnoredTest {
 
   @Test
   public void constructorOfAbstractModule() {
-    CompilationTestHelper.newInstance(ReturnValueIgnored.class, getClass())
+    compilationHelper
         .addSourceLines(
-            "Test.java",
+            "TestModule.java",
             "import com.google.inject.AbstractModule;",
-            "class Test extends AbstractModule {",
-            "  public Test() {}",
+            "class TestModule extends AbstractModule {",
+            "  public TestModule() {}",
             "  public static void foo() {",
-            "    // BUG: Diagnostic contains: Ignored return value of 'Test'",
-            "    new Test();",
+            "    // BUG: Diagnostic contains: Ignored return value of 'TestModule'",
+            "    new TestModule();",
             "  }",
             "}")
         .doTest();
@@ -752,17 +750,17 @@ public class ReturnValueIgnoredTest {
 
   @Test
   public void constructorOfModule() {
-    CompilationTestHelper.newInstance(ReturnValueIgnored.class, getClass())
+    compilationHelper
         .addSourceLines(
-            "Test.java",
+            "TestModule.java",
             "import com.google.inject.Binder;",
             "import com.google.inject.Module;",
-            "class Test implements Module {",
-            "  public Test() {}",
+            "class TestModule implements Module {",
+            "  public TestModule() {}",
             "  @Override public void configure(Binder binder) {}",
             "  public static void foo() {",
-            "    // BUG: Diagnostic contains: Ignored return value of 'Test'",
-            "    new Test();",
+            "    // BUG: Diagnostic contains: Ignored return value of 'TestModule'",
+            "    new TestModule();",
             "  }",
             "}")
         .doTest();

@@ -384,6 +384,7 @@ public class ReturnValueIgnored extends AbstractReturnValueIgnored {
           JODA_TIME_METHODS,
           MAP_ENTRY_METHODS,
           MAP_METHODS,
+          MODULE_CONSTRUCTORS,
           OBJECTS_METHODS,
           OPTIONAL_METHODS,
           PRIMITIVE_METHODS,
@@ -405,8 +406,7 @@ public class ReturnValueIgnored extends AbstractReturnValueIgnored {
       ImmutableBiMap.of(
           "ReturnValueIgnored:MoreOptional", MORE_OPTIONAL_METHODS,
           "ReturnValueIgnored:ClassMethods", CLASS_METHODS,
-          "ReturnValueIgnored:ObjectMethods", OBJECT_METHODS,
-          "ReturnValueIgnored:ModuleConstructors", MODULE_CONSTRUCTORS);
+          "ReturnValueIgnored:ObjectMethods", OBJECT_METHODS);
 
   private final Matcher<ExpressionTree> matcher;
 
