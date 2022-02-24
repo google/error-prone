@@ -134,7 +134,7 @@ public final class FormatStringValidation {
                 (ExpressionTree input) -> {
                   try {
                     return getInstance(input, state);
-                  } catch (Throwable t) {
+                  } catch (RuntimeException t) {
                     // ignore symbol completion failures
                     return null;
                   }

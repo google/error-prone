@@ -77,7 +77,7 @@ public final class GuardedByUtils {
     JCTree.JCExpression exp;
     try {
       exp = parser.parseExpression();
-    } catch (Throwable e) {
+    } catch (RuntimeException e) {
       throw new IllegalGuardedBy(e.getMessage());
     }
     int len = (parser.getEndPos(exp) - exp.getStartPosition());
