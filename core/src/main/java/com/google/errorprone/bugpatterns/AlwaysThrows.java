@@ -46,6 +46,7 @@ import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import java.lang.reflect.InvocationTargetException;
+import java.util.UUID;
 import java.util.function.Consumer;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
@@ -113,6 +114,16 @@ public class AlwaysThrows extends BugChecker implements MethodInvocationTreeMatc
         } catch (InvocationTargetException e) {
           throw e.getCause();
         }
+      }
+    },
+    UUID_FROM_STRING(
+        MethodMatchers.staticMethod()
+            .onClass("java.util.UUID")
+            .named("fromString")
+            .withParameters("java.lang.String")) {
+      @Override
+      void validate(MethodInvocationTree tree, String argument) {
+        UUID.fromString(argument);
       }
     };
 
