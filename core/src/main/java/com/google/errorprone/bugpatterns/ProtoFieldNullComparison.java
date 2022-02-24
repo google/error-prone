@@ -137,12 +137,10 @@ public class ProtoFieldNullComparison extends BugChecker implements CompilationU
               "com.google.protobuf.GeneratedMessageLite", "com.google.protobuf.GeneratedMessage");
 
   private final boolean matchTestAssertions;
-  private final boolean matchOptionals;
 
   public ProtoFieldNullComparison(ErrorProneFlags flags) {
     this.matchTestAssertions =
         flags.getBoolean("ProtoFieldNullComparison:MatchTestAssertions").orElse(false);
-    this.matchOptionals = flags.getBoolean("ProtoFieldNullComparison:MatchOptionals").orElse(true);
   }
 
   @Override
@@ -230,7 +228,7 @@ public class ProtoFieldNullComparison extends BugChecker implements CompilationU
       } else if (matchTestAssertions && ASSERT_NOT_NULL.matches(node, subState)) {
         argument = getLast(node.getArguments());
         problemType = ProblemUsage.JUNIT;
-      } else if (matchOptionals && OF_NULLABLE.matches(node, subState)) {
+      } else if (OF_NULLABLE.matches(node, subState)) {
         argument = getOnlyElement(node.getArguments());
         problemType = ProblemUsage.OPTIONAL;
       } else if (matchTestAssertions && TRUTH_NOT_NULL.matches(node, subState)) {
