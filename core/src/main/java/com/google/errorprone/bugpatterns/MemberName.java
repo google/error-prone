@@ -25,7 +25,7 @@ import static com.google.errorprone.fixes.SuggestedFixes.renameVariable;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.JUnitMatchers.TEST_CASE;
 import static com.google.errorprone.util.ASTHelpers.annotationsAmong;
-import static com.google.errorprone.util.ASTHelpers.findSuperMethod;
+import static com.google.errorprone.util.ASTHelpers.canBeRemoved;
 import static com.google.errorprone.util.ASTHelpers.findSuperMethods;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
@@ -87,16 +87,14 @@ public final class MemberName extends BugChecker implements MethodTreeMatcher, V
     if (!annotationsAmong(symbol, EXEMPTED_METHOD_ANNOTATIONS.get(state), state).isEmpty()) {
       return NO_MATCH;
     }
-    if (hasTestAnnotation(symbol)
-        || findSuperMethods(symbol, state.getTypes()).stream()
-            .anyMatch(s -> hasTestAnnotation(s))) {
+    if (hasTestAnnotation(symbol)) {
       return NO_MATCH;
     }
     // It is a surprisingly common error to replace @Test with @Ignore to ignore a test.
     if (hasAnnotation(symbol, "org.junit.Ignore", state)) {
       return NO_MATCH;
     }
-    if (findSuperMethod(getSymbol(tree), state.getTypes()).isPresent()) {
+    if (!findSuperMethods(symbol, state.getTypes()).isEmpty()) {
       return NO_MATCH;
     }
     if (tree.getModifiers().getFlags().contains(Modifier.NATIVE)) {
@@ -115,7 +113,7 @@ public final class MemberName extends BugChecker implements MethodTreeMatcher, V
       return NO_MATCH;
     }
     String suggested = suggestedRename(name);
-    return suggested.equals(name) || !symbol.isPrivate()
+    return suggested.equals(name) || !canBeRemoved(symbol, state)
         ? buildDescription(tree)
             .setMessage(
                 String.format(

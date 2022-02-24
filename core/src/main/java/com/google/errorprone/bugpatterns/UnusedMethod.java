@@ -27,6 +27,7 @@ import static com.google.errorprone.fixes.SuggestedFix.emptyFix;
 import static com.google.errorprone.fixes.SuggestedFixes.replaceIncludingComments;
 import static com.google.errorprone.matchers.Matchers.SERIALIZATION_METHODS;
 import static com.google.errorprone.suppliers.Suppliers.typeFromString;
+import static com.google.errorprone.util.ASTHelpers.canBeRemoved;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
@@ -214,7 +215,7 @@ public final class UnusedMethod extends BugChecker implements CompilationUnitTre
           }
         }
 
-        return tree.getModifiers().getFlags().contains(Modifier.PRIVATE);
+        return canBeRemoved(methodSymbol, state);
       }
 
       private boolean isExemptedConstructor(MethodSymbol methodSymbol, VisitorState state) {
@@ -337,7 +338,8 @@ public final class UnusedMethod extends BugChecker implements CompilationUnitTre
     for (TreePath unusedPath : unusedPaths) {
       Tree unusedTree = unusedPath.getLeaf();
       MethodSymbol symbol = getSymbol((MethodTree) unusedTree);
-      String message = String.format("Private method '%s' is never used.", symbol.getSimpleName());
+
+      String message = String.format("Method '%s' is never used.", symbol.getSimpleName());
       state.reportMatch(
           buildDescription(unusedTree)
               .addFix(replaceIncludingComments(unusedPath, "", state))
@@ -368,8 +370,7 @@ public final class UnusedMethod extends BugChecker implements CompilationUnitTre
         fixable = true;
       }
 
-      String message =
-          String.format("Private constructor '%s' is never used.", symbol.getSimpleName());
+      String message = String.format("Constructor '%s' is never used.", symbol.getSimpleName());
       trees.forEach(t -> fix.merge(replaceIncludingComments(t, "", state)));
       state.reportMatch(
           buildDescription(trees.get(0).getLeaf())
@@ -379,7 +380,7 @@ public final class UnusedMethod extends BugChecker implements CompilationUnitTre
     }
   }
 
-  static boolean hasNativeMethods(CompilationUnitTree tree) {
+  private static boolean hasNativeMethods(CompilationUnitTree tree) {
     AtomicBoolean hasAnyNativeMethods = new AtomicBoolean(false);
     new TreeScanner<Void, Void>() {
       @Override
