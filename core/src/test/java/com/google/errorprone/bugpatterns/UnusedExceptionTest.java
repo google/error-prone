@@ -289,4 +289,23 @@ public final class UnusedExceptionTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void interruptedIOException_noFinding() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.io.InterruptedIOException;",
+            "abstract class Test {",
+            "  abstract void foo() throws InterruptedIOException;",
+            "  void test() throws InterruptedIOException {",
+            "    try {",
+            "      foo();",
+            "    } catch (InterruptedIOException e) {",
+            "      throw new InterruptedIOException();",
+            "    }",
+            "  }",
+            "}")
+        .doTest();
+  }
 }
