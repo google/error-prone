@@ -110,7 +110,8 @@ public class CollectionIncompatibleType extends BugChecker
     }
 
     Description.Builder description =
-        buildDescription(tree).setMessage(result.message(sourceType, targetType));
+        buildDescription(tree)
+            .setMessage(result.message(sourceType, targetType) + compatibilityReport.extraReason());
 
     switch (fixType) {
       case PRINT_TYPES_AS_COMMENT:

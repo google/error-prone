@@ -433,8 +433,11 @@ public class TruthIncompatibleType extends BugChecker implements MethodInvocatio
             .setMessage(
                 String.format(
                     "Argument '%s' should not be passed to this method: its type `%s` is"
-                        + " not compatible with `%s`",
-                    state.getSourceForNode(tree), sourceTypeName, targetTypeName))
+                        + " not compatible with `%s`"
+                        + compatibilityReport.extraReason(),
+                    state.getSourceForNode(tree),
+                    sourceTypeName,
+                    targetTypeName))
             .build());
   }
 
