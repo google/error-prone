@@ -310,6 +310,7 @@ import com.google.errorprone.bugpatterns.ShortCircuitBoolean;
 import com.google.errorprone.bugpatterns.ShouldHaveEvenArgs;
 import com.google.errorprone.bugpatterns.SizeGreaterThanOrEqualsZero;
 import com.google.errorprone.bugpatterns.StaticAssignmentInConstructor;
+import com.google.errorprone.bugpatterns.StaticAssignmentOfThrowable;
 import com.google.errorprone.bugpatterns.StaticMockMember;
 import com.google.errorprone.bugpatterns.StaticQualifiedUsingExpression;
 import com.google.errorprone.bugpatterns.StreamResourceLeak;
@@ -943,6 +944,7 @@ public class BuiltInCheckerSuppliers {
           ScopeAnnotationOnInterfaceOrAbstractClass.class,
           ShortCircuitBoolean.class,
           StaticAssignmentInConstructor.class,
+          StaticAssignmentOfThrowable.class,
           StaticGuardedByInstance.class,
           StaticMockMember.class,
           StreamResourceLeak.class,
