@@ -299,6 +299,9 @@ This pattern will silently corrupt certain byte sequences from the serialized pr
 __[LocalDateTemporalAmount](bugpattern/LocalDateTemporalAmount)__<br>
 LocalDate.plus() and minus() does not work with Durations. LocalDate represents civil time (years/months/days), so java.time.Period is the appropriate thing to add or subtract instead.
 
+__[LockOnBoxedPrimitive](bugpattern/LockOnBoxedPrimitive)__<br>
+It is dangerous to use a boxed primitive as a lock as it can unintentionally lead to sharing a lock with another piece of code.
+
 __[LoopConditionChecker](bugpattern/LoopConditionChecker)__<br>
 Loop condition is never modified in loop body.
 
@@ -882,9 +885,6 @@ toString() on lite protos will not generate a useful representation of the proto
 
 __[LockNotBeforeTry](bugpattern/LockNotBeforeTry)__<br>
 Calls to Lock#lock should be immediately followed by a try block which releases the lock.
-
-__[LockOnBoxedPrimitive](bugpattern/LockOnBoxedPrimitive)__<br>
-It is dangerous to use a boxed primitive as a lock as it can unintentionally lead to sharing a lock with another piece of code.
 
 __[LogicalAssignment](bugpattern/LogicalAssignment)__<br>
 Assignment where a boolean expression was expected; use &#61;&#61; if this assignment wasn&#39;t expected or add parentheses for clarity.

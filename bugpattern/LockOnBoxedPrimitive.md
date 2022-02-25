@@ -4,7 +4,7 @@ summary: It is dangerous to use a boxed primitive as a lock as it can unintentio
   lead to sharing a lock with another piece of code.
 layout: bugpattern
 tags: ''
-severity: WARNING
+severity: ERROR
 ---
 
 <!--
