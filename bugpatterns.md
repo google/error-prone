@@ -1045,6 +1045,9 @@ Prefer LinkageError for rethrowing ReflectiveOperationException as unchecked
 __[ReturnFromVoid](bugpattern/ReturnFromVoid)__<br>
 Void methods should not have a @return tag.
 
+__[RobolectricShadowDirectlyOn](bugpattern/RobolectricShadowDirectlyOn)__<br>
+Migrate off a deprecated overload of org.robolectric.shadow.api.Shadow#directlyOn
+
 __[RxReturnValueIgnored](bugpattern/RxReturnValueIgnored)__<br>
 Returned Rx objects must be checked. Ignoring a returned Rx value means it is never scheduled for execution
 
