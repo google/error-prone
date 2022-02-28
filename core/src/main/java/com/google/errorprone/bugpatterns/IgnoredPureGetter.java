@@ -18,8 +18,10 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
+import static com.google.errorprone.util.ASTHelpers.getReturnType;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
+import static com.google.errorprone.util.ASTHelpers.isSameType;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
 import static javax.lang.model.element.Modifier.ABSTRACT;
 
@@ -99,9 +101,17 @@ public final class IgnoredPureGetter extends AbstractReturnValueIgnored {
     if (!(symbol instanceof MethodSymbol)) {
       return Optional.empty();
     }
-    if (hasAnnotation(symbol.owner, "com.google.auto.value.AutoValue", state)
-        && symbol.getModifiers().contains(ABSTRACT)) {
-      return Optional.of(PureGetterKind.AUTO_VALUE);
+    if (symbol.getModifiers().contains(ABSTRACT)) {
+      // The return value of any abstract method on an @AutoValue needs to be used.
+      if (hasAnnotation(symbol.owner, "com.google.auto.value.AutoValue", state)) {
+        return Optional.of(PureGetterKind.AUTO_VALUE);
+      }
+      // The return value of an abstract method on an @AutoValue.Builder (which doesn't return the
+      // Builder itself) needs to be used.
+      if (hasAnnotation(symbol.owner, "com.google.auto.value.AutoValue.Builder", state)
+          && !isSameType(getReturnType(tree), symbol.owner.asType(), state)) {
+        return Optional.of(PureGetterKind.AUTO_VALUE_BUILDER);
+      }
     }
 
     try {
@@ -122,6 +132,7 @@ public final class IgnoredPureGetter extends AbstractReturnValueIgnored {
 
   private enum PureGetterKind {
     AUTO_VALUE,
+    AUTO_VALUE_BUILDER,
     PROTO
   }
 }
