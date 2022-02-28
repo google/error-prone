@@ -1340,6 +1340,7 @@ public class Matchers {
                       "org.junit.jupiter.api.function.Executable",
                       "org.assertj.core.api.ThrowableAssert$ThrowingCallable",
                       "com.google.devtools.build.lib.testutil.MoreAsserts$ThrowingRunnable",
+                      "com.google.gerrit.testing.GerritJUnit$ThrowingRunnable",
                       "com.google.truth.ExpectFailure.AssertionCallback",
                       "com.google.truth.ExpectFailure.DelegatedAssertionCallback",
                       "com.google.truth.ExpectFailure.StandardSubjectBuilderCallback",
