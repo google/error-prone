@@ -30,8 +30,10 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.suppliers.Supplier;
+import com.sun.source.tree.ExpressionStatementTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
+import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Type;
@@ -68,12 +70,14 @@ public final class IgnoredPureGetter extends AbstractReturnValueIgnored {
   @Override
   protected Description describeReturnValueIgnored(
       MethodInvocationTree methodInvocationTree, VisitorState state) {
+    Tree parent = state.getPath().getParentPath().getLeaf();
     Description.Builder builder =
         buildDescription(methodInvocationTree)
             .addFix(
                 SuggestedFix.builder()
                     .setShortDescription("Remove with any side effects from the receiver")
-                    .delete(methodInvocationTree)
+                    .delete(
+                        parent instanceof ExpressionStatementTree ? parent : methodInvocationTree)
                     .build());
     ExpressionTree receiver = getReceiver(methodInvocationTree);
     if (receiver instanceof MethodInvocationTree) {

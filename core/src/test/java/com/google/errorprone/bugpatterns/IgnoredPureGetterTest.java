@@ -85,17 +85,22 @@ public final class IgnoredPureGetterTest {
   }
 
   @Test
-  public void protoCases() {
-    helper
-        .addSourceLines(
+  public void refactoringHelper() {
+    refactoringHelper
+        .addInputLines(
             "Test.java",
             "import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;",
             "class Test {",
             "  void test(TestProtoMessage message) {",
-            "    // BUG: Diagnostic contains:",
             "    message.getMessage();",
-            "    // BUG: Diagnostic contains:",
             "    message.hasMessage();",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;",
+            "class Test {",
+            "  void test(TestProtoMessage message) {",
             "  }",
             "}")
         .doTest();
