@@ -22,11 +22,14 @@ import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
 
+import com.google.common.base.Stopwatch;
+import com.google.common.time.Durations;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.VariableTreeMatcher;
 import com.google.errorprone.matchers.Description;
+import com.google.pipeline.flume.fj.FJ;
 import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ExpressionTree;
@@ -50,6 +53,20 @@ public final class StaticAssignmentOfThrowable extends BugChecker
   @Override
   public Description matchVariable(VariableTree variableTree, VisitorState state) {
 
+    Stopwatch latencyStopwatch = Stopwatch.createStarted();
+
+    try {
+
+      return matchVariableInner(variableTree, state);
+    } finally {
+      FJ.incrementCounter(
+          "matchVariableMicroseconds", Durations.toMicros(latencyStopwatch.elapsed()));
+    }
+  }
+
+  public Description matchVariableInner(VariableTree variableTree, VisitorState state) {
+
+    FJ.incrementCounter("matchVariableMatchInvocation");
     if (state.errorProneOptions().isTestOnlyTarget()
         || !variableTree.getModifiers().getFlags().contains(Modifier.STATIC)) {
       return NO_MATCH;
@@ -66,23 +83,41 @@ public final class StaticAssignmentOfThrowable extends BugChecker
       return NO_MATCH;
     }
 
+    FJ.incrementCounter("matchVariableMatch");
     return describeMatch(variableTree);
   }
 
   @Override
   public Description matchMethod(MethodTree tree, VisitorState state) {
 
+    Stopwatch latencyStopwatch = Stopwatch.createStarted();
+
+    try {
+      return matchMethodInner(tree, state);
+    } finally {
+      FJ.incrementCounter(
+          "matchMethodMicroseconds", Durations.toMicros(latencyStopwatch.elapsed()));
+    }
+  }
+
+  public Description matchMethodInner(MethodTree tree, VisitorState state) {
+
+    FJ.incrementCounter("matchMethodInvocation");
     if (state.errorProneOptions().isTestOnlyTarget()) {
       return NO_MATCH;
     }
 
     MethodSymbol methodSymbol = getSymbol(tree);
+    if (methodSymbol == null) {
+      return NO_MATCH;
+    }
     if (methodSymbol.isConstructor()) {
       // To avoid duplicate/conflicting findings, this scenario delegated to
       // StaticAssignmentInConstructor
       return NO_MATCH;
     }
 
+    FJ.incrementCounter("matchTreeScannerInvocation");
     buildTreeScanner(state).scan(tree.getBody(), null);
     return NO_MATCH;
   }
@@ -111,6 +146,7 @@ public final class StaticAssignmentOfThrowable extends BugChecker
         if (variableSymbol != null
             && variableSymbol.isStatic()
             && isSubtype(variableType, throwableType, state)) {
+          FJ.incrementCounter("matchMethodMatch");
           state.reportMatch(describeMatch(assignmentTree));
         }
         return super.visitAssignment(assignmentTree, null);
