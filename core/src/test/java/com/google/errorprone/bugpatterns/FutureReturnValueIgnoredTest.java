@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import com.google.errorprone.CompilationTestHelper;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -51,7 +50,13 @@ public class FutureReturnValueIgnoredTest {
             "  @com.google.errorprone.annotations.CanIgnoreReturnValue",
             "  public static java.util.concurrent.Future<?> f() { return null; }",
             "}")
-        .addSourceLines("Test.java", "class Test {", "  void m() {", "    lib.Lib.f();", "  }", "}")
+        .addSourceLines(
+            "Test.java", //
+            "class Test {",
+            "  void m() {",
+            "    lib.Lib.f();",
+            "  }",
+            "}")
         .doTest();
   }
 
@@ -69,7 +74,6 @@ public class FutureReturnValueIgnoredTest {
         .doTest();
   }
 
-  @Ignore("requires JDK 9")
   @Test
   public void testCompletableFutureReturnValueJdk9() {
     compilationHelper
