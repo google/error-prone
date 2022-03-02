@@ -220,4 +220,28 @@ public class EqualsIncompatibleTypeTest {
         .setArgs("-XepOpt:TypeCompatibility:TreatBuildersAsIncomparable=false")
         .doTest();
   }
+
+  @Test
+  public void protoBuilderComparedWithinAutoValue() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.auto.value.AutoValue;",
+            "import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;",
+            "@AutoValue",
+            "abstract class Test {",
+            "  abstract TestProtoMessage.Builder b();",
+            "}")
+        .addSourceLines(
+            "AutoValue_Test.java",
+            "import javax.annotation.processing.Generated;",
+            "@Generated(\"com.google.auto.value.processor.AutoValueProcessor\")",
+            "abstract class AutoValue_Test extends Test {",
+            "  @Override",
+            "  public boolean equals(Object o) {",
+            "    return ((Test) o).b().equals(b());",
+            "  }",
+            "}")
+        .doTest();
+  }
 }

@@ -24,6 +24,7 @@ import static com.google.errorprone.matchers.Matchers.instanceMethod;
 import static com.google.errorprone.matchers.Matchers.staticEqualsInvocation;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
 import static com.google.errorprone.matchers.Matchers.toType;
+import static com.google.errorprone.util.ASTHelpers.getGeneratedBy;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.getReceiverType;
 import static com.google.errorprone.util.ASTHelpers.getType;
@@ -129,6 +130,10 @@ public class EqualsIncompatibleType extends BugChecker
     // Ignore callsites wrapped inside assertFalse:
     // assertFalse(objOfReceiverType.equals(objOfArgumentType))
     if (ASSERT_FALSE_MATCHER.matches(state.getPath().getParentPath().getLeaf(), state)) {
+      return NO_MATCH;
+    }
+
+    if (getGeneratedBy(state).contains("com.google.auto.value.processor.AutoValueProcessor")) {
       return NO_MATCH;
     }
 
