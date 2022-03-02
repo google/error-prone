@@ -2,7 +2,7 @@
 title: InvalidBlockTag
 summary: This tag is invalid.
 layout: bugpattern
-tags: Style
+tags: ''
 severity: WARNING
 ---
 
