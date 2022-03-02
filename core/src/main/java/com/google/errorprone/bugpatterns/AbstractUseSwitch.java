@@ -21,6 +21,8 @@ import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.instanceMethod;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
+import static com.google.errorprone.util.ASTHelpers.getType;
+import static com.google.errorprone.util.ASTHelpers.isSubtype;
 
 import com.google.common.base.Optional;
 import com.google.errorprone.VisitorState;
@@ -131,6 +133,9 @@ public abstract class AbstractUseSwitch extends BugChecker implements IfTreeMatc
         // This is the first if block, and identifierTree is the string variable
       } else if (!(identifierTree.getName().equals(var.getName())
           && isValidCaseBlock(ifTree.getThenStatement()))) {
+        return NO_MATCH;
+      }
+      if (!isSubtype(getType(lhs), getType(rhs), state)) {
         return NO_MATCH;
       }
       String expressionForCase = getExpressionForCase(state, rhs);

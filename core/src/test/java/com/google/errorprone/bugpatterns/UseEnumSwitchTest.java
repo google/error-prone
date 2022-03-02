@@ -25,10 +25,12 @@ import org.junit.runners.JUnit4;
 /** {@link UseEnumSwitch}Test */
 @RunWith(JUnit4.class)
 public class UseEnumSwitchTest {
+  private final BugCheckerRefactoringTestHelper refactoringHelper =
+      BugCheckerRefactoringTestHelper.newInstance(UseEnumSwitch.class, getClass());
 
   @Test
   public void refactoring() {
-    BugCheckerRefactoringTestHelper.newInstance(UseEnumSwitch.class, getClass())
+    refactoringHelper
         .addInputLines(
             "Test.java",
             "class Test {",
@@ -63,7 +65,7 @@ public class UseEnumSwitchTest {
 
   @Test
   public void nonConstantEnum() {
-    BugCheckerRefactoringTestHelper.newInstance(UseEnumSwitch.class, getClass())
+    refactoringHelper
         .addInputLines(
             "Test.java",
             "class Test {",
@@ -77,6 +79,28 @@ public class UseEnumSwitchTest {
             "    if (e == e.one()) {",
             "      return 1;",
             "    } else if (e == E.TWO) {",
+            "      return 2;",
+            "    } else {",
+            "      return 3;",
+            "    }",
+            "  }",
+            "}")
+        .expectUnchanged()
+        .doTest(TestMode.TEXT_MATCH);
+  }
+
+  @Test
+  public void notActuallyEnum_noFinding() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            "class Test {",
+            "  interface A {}",
+            "  enum E implements A { ONE, TWO, THREE }",
+            "  int f(A e) {",
+            "    if (e.equals(E.ONE)) {",
+            "      return 1;",
+            "    } else if (e.equals(E.TWO)) {",
             "      return 2;",
             "    } else {",
             "      return 3;",
