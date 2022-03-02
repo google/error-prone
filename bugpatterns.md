@@ -1060,6 +1060,9 @@ Prefer the short-circuiting boolean operators &amp;&amp; and || to &amp; and |.
 __[StaticAssignmentInConstructor](bugpattern/StaticAssignmentInConstructor)__<br>
 This assignment is to a static field. Mutating static state from a constructor is highly error-prone.
 
+__[StaticAssignmentOfThrowable](bugpattern/StaticAssignmentOfThrowable)__<br>
+Saving instances of Throwable in static fields is discouraged, prefer to create them on-demand when an exception is thrown
+
 __[StaticGuardedByInstance](bugpattern/StaticGuardedByInstance)__<br>
 Writes to static fields should not be guarded by instance locks
 
