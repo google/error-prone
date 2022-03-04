@@ -252,7 +252,6 @@ import com.google.errorprone.bugpatterns.NullableConstructor;
 import com.google.errorprone.bugpatterns.NullablePrimitive;
 import com.google.errorprone.bugpatterns.NullablePrimitiveArray;
 import com.google.errorprone.bugpatterns.NullableVoid;
-import com.google.errorprone.bugpatterns.NumericEquality;
 import com.google.errorprone.bugpatterns.ObjectEqualsForPrimitives;
 import com.google.errorprone.bugpatterns.ObjectToString;
 import com.google.errorprone.bugpatterns.ObjectsHashCodePrimitive;
@@ -606,6 +605,7 @@ public class BuiltInCheckerSuppliers {
           AutoValueConstructorOrderChecker.class,
           BadAnnotationImplementation.class,
           BadShiftAmount.class,
+          BoxedPrimitiveEquality.class,
           BundleDeserializationCast.class,
           ChainingConstructorIgnoresParameter.class,
           CheckNotNullMultipleTimes.class,
@@ -785,7 +785,6 @@ public class BuiltInCheckerSuppliers {
           BigDecimalEquals.class,
           BigDecimalLiteralDouble.class,
           BoxedPrimitiveConstructor.class,
-          BoxedPrimitiveEquality.class,
           BugPatternNaming.class,
           ByteBufferBackingArray.class,
           CacheLoaderNull.class,
@@ -1068,7 +1067,6 @@ public class BuiltInCheckerSuppliers {
           NoAllocationChecker.class,
           NoFunctionalReturnType.class,
           NonCanonicalStaticMemberImport.class,
-          NumericEquality.class,
           PackageLocation.class,
           ParameterComment.class,
           ParameterMissingNullable.class,
