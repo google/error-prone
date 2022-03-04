@@ -25,12 +25,5 @@ public class ThisEscapesConstructorTest {
   public void testNegativeCases() {
     compilationTestHelper.addSourceFile("ThisEscapesConstructorNegativeCases.java").doTest();
   }
-  
- 
-
-//   @Test
-//   public void testNegativeCases() {
-//     compilationTestHelper.addSourceFile("ThisEscapesConstructorNegativeCases.java").doTest();
-//   }
 
 }

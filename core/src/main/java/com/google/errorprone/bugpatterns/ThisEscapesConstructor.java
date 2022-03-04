@@ -21,7 +21,6 @@ import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.StatementTree;
 import com.sun.source.util.TreeScanner;
-import com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition;
 
 import java.util.List;
 
@@ -47,20 +46,14 @@ public class ThisEscapesConstructor extends BugChecker implements MethodTreeMatc
         new TreeScanner<Void, Void>() {
                 @Override
                 public Void visitAssignment(AssignmentTree assignment, Void unused) {
-                    //look at right hand side only
-                    Description description = scanExpression(body, assignment.getExpression(), state);
-                    if (description != NO_MATCH) {
-                        state.reportMatch(description);
-                    }
+                    // Look at right hand side only
+                    scanExpression(body, assignment.getExpression(), state);
                     return super.visitAssignment(assignment, unused);
                 }
                 
                 @Override
                 public Void visitMethodInvocation(MethodInvocationTree invocation, Void unused) {
-                    Description description = scanMethodInvocation(body, invocation, state);
-                    if (description != NO_MATCH) {
-                        state.reportMatch(description);
-                    }
+                    scanMethodInvocation(body, invocation, state);
                     return super.visitMethodInvocation(invocation, unused);
                 }
             }.scan(body, null);
@@ -68,24 +61,20 @@ public class ThisEscapesConstructor extends BugChecker implements MethodTreeMatc
         return NO_MATCH;
     }
 
-    Description scanMethodInvocation(BlockTree block, MethodInvocationTree invocation, VisitorState state) {
-        // TODO: add looking at if any arguments equal "this"
+    void scanMethodInvocation(BlockTree block, MethodInvocationTree invocation, VisitorState state) {
         List<? extends ExpressionTree> args = invocation.getArguments();
         for (ExpressionTree arg : args) {
             scanExpression(block, arg, state);
         }
-        return NO_MATCH;
     }
 
-    Description scanExpression(BlockTree block, ExpressionTree rhs, VisitorState state) {
-        if (!(rhs instanceof IdentifierTree)) {
-          return NO_MATCH;
+    void scanExpression(BlockTree block, ExpressionTree exp, VisitorState state) {
+        if (!(exp instanceof IdentifierTree)) {
+          return;
         }
-        IdentifierTree identifierTree = ((IdentifierTree) rhs);
+        IdentifierTree identifierTree = ((IdentifierTree) exp);
         if (identifierTree.getName().contentEquals("this")) {
             state.reportMatch(describeMatch(identifierTree));
-        }
-        return NO_MATCH;
-        
+        }       
     }
 }
