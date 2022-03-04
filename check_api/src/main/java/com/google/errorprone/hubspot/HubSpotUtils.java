@@ -71,6 +71,7 @@ public class HubSpotUtils {
   private static final String INIT_ERROR = "errorProneInitErrors";
   private static final String LISTENER_INIT_ERRORS = "errorProneListenerInitErrors";
   private static final String LISTENER_ON_DESCRIBE_ERROR = "errorProneListenerDescribeErrors";
+  private static final String UNHANDLED_ERRORS = "errorProneUnhandledErrors";
   private static final String ERROR_REPORTING_FLAG = "hubspot:error-reporting";
   private static final String GENERATED_SOURCES_FLAG = "hubspot:generated-sources-pattern";
   private static final Map<String, Set<String>> DATA = loadExistingData();
@@ -159,6 +160,9 @@ public class HubSpotUtils {
   }
 
   public static void recordUncaughtException(Throwable throwable) {
+    DATA.computeIfAbsent(UNHANDLED_ERRORS, ignored -> ConcurrentHashMap.newKeySet())
+        .add(toErrorMessage(throwable));
+
     FileManager.getUncaughtExceptionPath().ifPresent(p -> {
       // this should only ever be called once so overwriting is fine
       try {
