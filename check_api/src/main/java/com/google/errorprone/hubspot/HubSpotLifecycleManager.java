@@ -118,7 +118,13 @@ public class HubSpotLifecycleManager {
     try {
       runnable.run();
     } catch (Throwable t) {
-      HubSpotUtils.recordUncaughtException(new RuntimeException(String.format("Failed to execute %s listener", type), t));
+      HubSpotUtils.recordUncaughtException(
+          new RuntimeException(
+              String.format(
+                  "Failed to execute %s listener: %s",
+                  type,
+                  t.getMessage()),
+              t));
     }
   }
 }
