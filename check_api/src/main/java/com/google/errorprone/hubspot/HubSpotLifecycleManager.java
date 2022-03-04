@@ -61,7 +61,7 @@ public class HubSpotLifecycleManager {
     if (started.compareAndSet(false, true)) {
       // order is important here
       writeCanary();
-      startupListener.forEach(Runnable::run);
+      startupListener.forEach(r -> runListener("startup", r));
     } else {
       throw new RuntimeException("Startup called more than once!");
     }
@@ -72,7 +72,7 @@ public class HubSpotLifecycleManager {
       throw new RuntimeException("Shutdown called without startup!");
     } else if (stopped.compareAndSet(false, true)) {
       // order is important here
-      shutdownListener.forEach(Runnable::run);
+      shutdownListener.forEach(r -> runListener("shutdown", r));
       deleteCanary();
     } else {
       throw new RuntimeException("Stopped called more than once!");
@@ -112,5 +112,13 @@ public class HubSpotLifecycleManager {
 
   private Optional<Path> getCanaryPath() {
     return FileManager.getLifeCycleCanaryPath(String.valueOf(Objects.hash(this)));
+  }
+
+  private void runListener(String type, Runnable runnable) {
+    try {
+      runnable.run();
+    } catch (Throwable t) {
+      HubSpotUtils.recordUncaughtException(new RuntimeException(String.format("Failed to execute %s listener", type), t));
+    }
   }
 }
