@@ -49,18 +49,12 @@ public class ThisEscapesConstructor extends BugChecker implements MethodTreeMatc
                 public Void visitAssignment(AssignmentTree assignment, Void unused) {
                     //look at right hand side only
                     Description description = scanExpression(body, assignment.getExpression(), state);
-                    if (description != NO_MATCH) {
-                        state.reportMatch(description);
-                    }
                     return super.visitAssignment(assignment, unused);
                 }
                 
                 @Override
                 public Void visitMethodInvocation(MethodInvocationTree invocation, Void unused) {
                     Description description = scanMethodInvocation(body, invocation, state);
-                    if (description != NO_MATCH) {
-                        state.reportMatch(description);
-                    }
                     return super.visitMethodInvocation(invocation, unused);
                 }
             }.scan(body, null);
@@ -71,6 +65,7 @@ public class ThisEscapesConstructor extends BugChecker implements MethodTreeMatc
     Description scanMethodInvocation(BlockTree block, MethodInvocationTree invocation, VisitorState state) {
         // TODO: add looking at if any arguments equal "this"
         List<? extends ExpressionTree> args = invocation.getArguments();
+        Description d;
         for (ExpressionTree arg : args) {
             scanExpression(block, arg, state);
         }

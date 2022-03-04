@@ -5,14 +5,14 @@ public class ThisEscapesConstructorPositiveCases {
     static class AssignsThis {
         public AssignsThis at;
         AssignsThis() {
-            // BUG: Diagnostic contains: This escapes constructor
-            at = this;
+            // BUG: Diagnostic contains:
+            this.at = this;
         }
     }
 
     static class PassesThis {
         PassesThis() {
-            // BUG: Diagnostic contains: This escapes constructor
+            // BUG: Diagnostic contains:
             receivesThis(this);
         }
 
