@@ -56,6 +56,9 @@ Classes that implement Annotation must override equals and hashCode. Consider us
 __[BadShiftAmount](bugpattern/BadShiftAmount)__<br>
 Shift by an amount that is out of range
 
+__[BoxedPrimitiveEquality](bugpattern/BoxedPrimitiveEquality)__<br>
+Comparison using reference equality instead of value equality. Reference equality of boxed primitive types is usually not useful, as they are value objects, and it is bug-prone, as instances are cached for some values but not others.
+
 __[BundleDeserializationCast](bugpattern/BundleDeserializationCast)__<br>
 Object serialized in Bundle may have been flattened to base type.
 
@@ -579,9 +582,6 @@ new BigDecimal(double) loses precision in this case.
 
 __[BoxedPrimitiveConstructor](bugpattern/BoxedPrimitiveConstructor)__<br>
 valueOf or autoboxing provides better time and space performance
-
-__[BoxedPrimitiveEquality](bugpattern/BoxedPrimitiveEquality)__<br>
-Comparison using reference equality instead of value equality. Reference equality of boxed primitive types is usually not useful, as they are value objects, and it is bug-prone, as instances are cached for some values but not others.
 
 __[BugPatternNaming](bugpattern/BugPatternNaming)__<br>
 Giving BugPatterns a name different to the enclosing class can be confusing
@@ -1259,9 +1259,6 @@ Prefer &#39;L&#39; to &#39;l&#39; for the suffix to long literals
 
 __[NoAllocation](bugpattern/NoAllocation)__<br>
 @NoAllocation was specified on this method, but something was found that would trigger an allocation
-
-__[NumericEquality](bugpattern/NumericEquality)__<br>
-Numeric comparison using reference equality instead of value equality
 
 __[RefersToDaggerCodegen](bugpattern/RefersToDaggerCodegen)__<br>
 Don&#39;t refer to Dagger&#39;s internal or generated code

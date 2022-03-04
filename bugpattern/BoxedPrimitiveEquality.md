@@ -5,7 +5,7 @@ summary: Comparison using reference equality instead of value equality. Referenc
   and it is bug-prone, as instances are cached for some values but not others.
 layout: bugpattern
 tags: ''
-severity: WARNING
+severity: ERROR
 ---
 
 <!--
@@ -13,6 +13,7 @@ severity: WARNING
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+_Alternate names: NumericEquality_
 
 ## The problem
 Comparison using reference equality instead of value equality. The inputs to
