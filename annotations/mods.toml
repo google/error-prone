@@ -1,0 +1,19 @@
+
+modLoader="javafml"
+loaderVersion="[36,)"
+license="Apache 2.0"
+issueTrackerURL="github.com/google/error-prone/issues"
+showAsResourcePack=false
+
+[[mods]]
+  modId="error_prone_annotations"
+  version="2.1.3.0"
+  displayName="error-prone annotations"
+  updateJSONURL="api.github.com/repos/google/error-prone/releases"
+  displayURL="errorprone.info"
+  logoFile="logo.png"
+  credits="Google"
+  authors="Google"
+  description='''
+  Error Message Annotations for Java Developers to Prevent simple build issues.
+  '''
