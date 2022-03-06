@@ -16,6 +16,8 @@
 
 package com.google.errorprone.bugpatterns.testdata;
 
+import java.util.List;
+
 // Exception extends Throwable but should be accepted.
 public class ClassExtendsThrowableNegativeCases extends Exception{
 
@@ -29,4 +31,12 @@ public class ClassExtendsThrowableNegativeCases extends Exception{
 
     // Error extends Throwable but should be accepted.
     private class ExtendException extends Error {}
+
+    // Class for testing extending other classes.
+    public class ClassToExtend  {}
+
+    // Extending an arbitrary class, should be accepted.
+    public class ExtendArbitraryClass extends ClassToExtend {}
 }
+
+
