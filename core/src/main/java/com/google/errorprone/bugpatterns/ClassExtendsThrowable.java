@@ -29,7 +29,7 @@ import com.sun.source.tree.Tree;
  */
 @BugPattern(
         name = "ClassExtendsThrowable",
-        summary = "Class should not extend throwable. Extend Exception or RuntimeException instead.",
+        summary = "Bad practise to extend throwable, extend Exception, Error, or RuntimeException instead.",
         severity = SeverityLevel.WARNING)
 public class ClassExtendsThrowable extends BugChecker implements ClassTreeMatcher {
 

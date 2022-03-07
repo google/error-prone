@@ -16,7 +16,7 @@
 
 package com.google.errorprone.bugpatterns.testdata;
 
-// BUG: Diagnostic contains: Class should not extend throwable. Extend Exception or RuntimeException instead.
+// BUG: Diagnostic contains: Bad practise to extend throwable, extend Exception, Error, or RuntimeException instead.
 public class ClassExtendsThrowablePositiveCases extends Throwable{
 
     public int ClassExtendsThrowablePositiveCases()    {
@@ -27,7 +27,7 @@ public class ClassExtendsThrowablePositiveCases extends Throwable{
         return ignore;
     }
 
-    // BUG: Diagnostic contains: Class should not extend throwable. Extend Exception or RuntimeException instead.
+    // BUG: Diagnostic contains: Bad practise to extend throwable, extend Exception, Error, or RuntimeException instead.
     private class extendThrowable extends Throwable {
         private int ignore;
     }
