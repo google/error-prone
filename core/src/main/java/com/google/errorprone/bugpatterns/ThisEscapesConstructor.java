@@ -18,8 +18,8 @@ import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
-import com.sun.source.tree.Tree;
 import com.sun.source.tree.StatementTree;
+import com.sun.source.tree.Tree;
 import com.sun.source.util.TreeScanner;
 
 import java.util.List;
@@ -29,9 +29,8 @@ import java.util.List;
  */
 @BugPattern(name = "ThisEscapesConstructor", summary = "Do not let 'this' escape the constructor.", severity = SUGGESTION)
 public class ThisEscapesConstructor extends BugChecker implements MethodTreeMatcher {
-    // your code here
+
     private static final Matcher<MethodTree> IS_CONSTRUCTOR = methodIsConstructor();
-    // private static final Matcher<MethodTree> THIS_IN_EXPRESSION = IdentifierTreeMatcher;
 
     @Override
     public Description matchMethod(MethodTree constructor, VisitorState state) {
@@ -75,6 +74,6 @@ public class ThisEscapesConstructor extends BugChecker implements MethodTreeMatc
         IdentifierTree identifierTree = ((IdentifierTree) exp);
         if (identifierTree.getName().contentEquals("this")) {
             state.reportMatch(describeMatch(identifierTree));
-        }       
+        }
     }
 }
