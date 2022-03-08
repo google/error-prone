@@ -96,9 +96,6 @@ public class InlineFormatString extends BugChecker implements CompilationUnitTre
   private static @Nullable ExpressionTree formatMethodAnnotationArguments(
       MethodInvocationTree tree, VisitorState state) {
     MethodSymbol sym = getSymbol(tree);
-    if (sym == null) {
-      return null;
-    }
     if (!ASTHelpers.hasAnnotation(sym, FormatMethod.class, state)) {
       return null;
     }

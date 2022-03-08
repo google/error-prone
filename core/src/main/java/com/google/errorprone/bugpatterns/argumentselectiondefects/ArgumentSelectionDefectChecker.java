@@ -79,9 +79,6 @@ public class ArgumentSelectionDefectChecker extends BugChecker
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
     MethodSymbol symbol = ASTHelpers.getSymbol(tree);
-    if (symbol == null) {
-      return Description.NO_MATCH;
-    }
 
     // Don't return a match if the AssertEqualsArgumentOrderChecker would match it too
     if (Matchers.ASSERT_METHOD.matches(tree, state)) {
@@ -95,9 +92,6 @@ public class ArgumentSelectionDefectChecker extends BugChecker
   @Override
   public Description matchNewClass(NewClassTree tree, VisitorState state) {
     MethodSymbol symbol = ASTHelpers.getSymbol(tree);
-    if (symbol == null) {
-      return Description.NO_MATCH;
-    }
 
     // Don't return a match if the AutoValueConstructorOrderChecker would match it too
     if (Matchers.AUTOVALUE_CONSTRUCTOR.matches(tree, state)) {

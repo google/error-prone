@@ -61,9 +61,6 @@ public class AssertEqualsArgumentOrderChecker extends BugChecker
     }
 
     MethodSymbol symbol = ASTHelpers.getSymbol(tree);
-    if (symbol == null) {
-      return Description.NO_MATCH;
-    }
 
     InvocationInfo invocationInfo = InvocationInfo.createFromMethodInvocation(tree, symbol, state);
 

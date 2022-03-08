@@ -69,9 +69,6 @@ public class ForOverrideChecker extends BugChecker
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
     MethodSymbol method = ASTHelpers.getSymbol(tree);
-    if (method == null) {
-      return Description.NO_MATCH;
-    }
     Type currentClass = getOutermostClass(state);
 
     if (method.isStatic() || method.isConstructor() || currentClass == null) {

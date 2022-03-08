@@ -57,10 +57,8 @@ public class WaitNotInLoop extends BugChecker implements MethodInvocationTreeMat
 
     Description.Builder description = buildDescription(tree);
     MethodSymbol sym = ASTHelpers.getSymbol(tree);
-    if (sym != null) {
-      description.setMessage(
-          String.format("Because of spurious wakeups, %s must always be called in a loop", sym));
-    }
+    description.setMessage(
+        String.format("Because of spurious wakeups, %s must always be called in a loop", sym));
 
     // If this looks like the "Wait until a condition becomes true" case from the wiki content,
     // rewrite the enclosing if to a while.  Other fixes are too complicated to construct

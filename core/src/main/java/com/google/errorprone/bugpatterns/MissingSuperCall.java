@@ -193,15 +193,12 @@ public class MissingSuperCall extends BugChecker
     @Override
     public Boolean visitMethodInvocation(MethodInvocationTree tree, Void unused) {
       boolean result = false;
-      MethodSymbol methodSym = ASTHelpers.getSymbol(tree);
-      if (methodSym != null) {
-        ExpressionTree methodSelect = tree.getMethodSelect();
-        if (methodSelect.getKind() == Kind.MEMBER_SELECT) {
-          MemberSelectTree memberSelect = (MemberSelectTree) methodSelect;
-          result =
-              ASTHelpers.isSuper(memberSelect.getExpression())
-                  && memberSelect.getIdentifier().contentEquals(overridingMethodName);
-        }
+      ExpressionTree methodSelect = tree.getMethodSelect();
+      if (methodSelect.getKind() == Kind.MEMBER_SELECT) {
+        MemberSelectTree memberSelect = (MemberSelectTree) methodSelect;
+        result =
+            ASTHelpers.isSuper(memberSelect.getExpression())
+                && memberSelect.getIdentifier().contentEquals(overridingMethodName);
       }
       return result || super.visitMethodInvocation(tree, unused);
     }

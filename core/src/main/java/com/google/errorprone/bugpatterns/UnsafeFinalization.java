@@ -59,9 +59,7 @@ public class UnsafeFinalization extends BugChecker implements MethodInvocationTr
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
     MethodSymbol sym = ASTHelpers.getSymbol(tree);
     // Match invocations of static native methods.
-    if (sym == null
-        || !sym.isStatic()
-        || !ASTHelpers.asFlagSet(sym.flags()).contains(Flag.NATIVE)) {
+    if (!sym.isStatic() || !ASTHelpers.asFlagSet(sym.flags()).contains(Flag.NATIVE)) {
       return NO_MATCH;
     }
     // Find the enclosing method declaration where the invocation occurs.

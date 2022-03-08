@@ -204,9 +204,7 @@ public class WakelockReleasedDangerously extends BugChecker implements MethodInv
           public Void visitMethodInvocation(MethodInvocationTree callTree, Void unused) {
             if (sym.equals(getSymbol(getReceiver(callTree)))) {
               MethodSymbol methodSymbol = getSymbol(callTree);
-              if (methodSymbol != null) {
-                methodMap.put(methodSymbol.getSimpleName().toString(), callTree);
-              }
+              methodMap.put(methodSymbol.getSimpleName().toString(), callTree);
             }
             return super.visitMethodInvocation(callTree, unused);
           }

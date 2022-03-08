@@ -123,11 +123,8 @@ public class CatchFail extends BugChecker implements TryTreeMatcher {
           StatementTree statementTree = getOnlyElement(c.getBlock().getStatements());
           MethodInvocationTree methodInvocationTree =
               (MethodInvocationTree) ((ExpressionStatementTree) statementTree).getExpression();
-          String message = null;
-          if (message == null && !methodInvocationTree.getArguments().isEmpty()) {
-            message = getMessageOrFormat(methodInvocationTree, state);
-          }
-          if (message != null) {
+          if (!methodInvocationTree.getArguments().isEmpty()) {
+            String message = getMessageOrFormat(methodInvocationTree, state);
             // only catch and rethrow to add additional context, not for raw `fail()` calls
             fix.replace(
                 statementTree,

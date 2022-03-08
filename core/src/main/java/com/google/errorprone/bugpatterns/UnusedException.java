@@ -139,9 +139,6 @@ public final class UnusedException extends BugChecker implements CatchTreeMatche
     }
     ImmutableList<MethodSymbol> constructors = ASTHelpers.getConstructors((ClassSymbol) symbol);
     MethodSymbol constructorSymbol = ASTHelpers.getSymbol(constructor);
-    if (constructorSymbol == null) {
-      return Optional.empty();
-    }
     List<Type> types = getParameterTypes(constructorSymbol);
     for (MethodSymbol proposedConstructor : constructors) {
       List<Type> proposedTypes = getParameterTypes(proposedConstructor);

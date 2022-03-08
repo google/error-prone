@@ -201,9 +201,6 @@ public final class ChainedAssertionLosesContext extends BugChecker
   private static FactoryMethodName tryFindFactory(
       MethodInvocationTree assertThatCall, VisitorState state) {
     MethodSymbol assertThatSymbol = getSymbol(assertThatCall);
-    if (assertThatSymbol == null) {
-      return null;
-    }
     /*
      * First, a special case for ProtoTruth.protos(). Usually the main case below finds it OK, but
      * sometimes it misses it, I believe because it can't decide between that and

@@ -56,9 +56,6 @@ public class PrimitiveArrayPassedToVarargsMethod extends BugChecker
    */
   private static boolean isVarargs(MethodInvocationTree tree, VisitorState state) {
     MethodSymbol symbol = ASTHelpers.getSymbol(tree);
-    if (symbol == null) {
-      return false;
-    }
 
     // Bail out quickly if the method is not varargs
     if (!symbol.isVarArgs()) {

@@ -355,9 +355,6 @@ public final class PreferJavaTimeOverload extends BugChecker
   private static boolean hasJavaTimeOverload(
       MethodInvocationTree tree, VisitorState state, String typeName) {
     MethodSymbol calledMethod = getSymbol(tree);
-    if (calledMethod == null) {
-      return false;
-    }
     return hasJavaTimeOverload(state, typeName, calledMethod, calledMethod.name);
   }
 
@@ -388,9 +385,6 @@ public final class PreferJavaTimeOverload extends BugChecker
 
   private static boolean hasTimeSourceMethod(MethodInvocationTree tree, VisitorState state) {
     MethodSymbol calledMethod = getSymbol(tree);
-    if (calledMethod == null) {
-      return false;
-    }
     String timeSourceBasedName = calledMethod.name.toString().replace("Clock", "TimeSource");
     return hasJavaTimeOverload(
         state, TIME_SOURCE, calledMethod, state.getName(timeSourceBasedName));

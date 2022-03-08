@@ -99,7 +99,7 @@ public class NullablePrimitiveArray extends BugChecker
     SuggestedFix.Builder fix = SuggestedFix.builder().delete(annotation);
     if (!(dims instanceof AnnotatedTypeTree)
         || getAnnotationsWithSimpleName(((AnnotatedTypeTree) dims).getAnnotations(), "Nullable")
-            == null) {
+            .isEmpty()) {
       fix.postfixWith(dims, " " + state.getSourceForNode(annotation) + " ");
     }
     return describeMatch(annotation, fix.build());

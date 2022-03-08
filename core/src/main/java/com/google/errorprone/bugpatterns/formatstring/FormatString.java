@@ -42,9 +42,6 @@ public class FormatString extends BugChecker implements MethodInvocationTreeMatc
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
     ImmutableList<ExpressionTree> args;
     MethodSymbol sym = ASTHelpers.getSymbol(tree);
-    if (sym == null) {
-      return Description.NO_MATCH;
-    }
 
     if (FORMATTED_METHOD.matches(tree, state)) {
       /*

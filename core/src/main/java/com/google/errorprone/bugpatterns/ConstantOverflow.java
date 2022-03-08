@@ -130,7 +130,7 @@ public class ConstantOverflow extends BugChecker implements BinaryTreeMatcher {
         public Number visitUnary(UnaryTree node, Void p) {
           Number value = node.getExpression().accept(this, null);
           if (value == null) {
-            return value;
+            return null;
           }
           if (value instanceof Long) {
             return unop(node.getKind(), value.longValue());

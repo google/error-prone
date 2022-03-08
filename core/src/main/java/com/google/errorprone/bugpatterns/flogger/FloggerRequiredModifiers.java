@@ -226,9 +226,6 @@ public final class FloggerRequiredModifiers extends BugChecker
       Type loggerType = LOGGER_TYPE.get(state);
       MethodInvocationTree method = (MethodInvocationTree) initializer;
       MethodSymbol methodSym = ASTHelpers.getSymbol(method);
-      if (methodSym == null) {
-        return false; // Something is broken, just give up
-      }
       if (methodSym.isStatic()
           && methodSym.owner.equals(owner)
           && ASTHelpers.isSameType(loggerType, methodSym.getReturnType(), state)) {

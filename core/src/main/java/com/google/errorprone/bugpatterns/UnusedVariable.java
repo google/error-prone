@@ -878,9 +878,7 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
     public Void visitMemberReference(MemberReferenceTree tree, Void unused) {
       super.visitMemberReference(tree, null);
       MethodSymbol symbol = getSymbol(tree);
-      if (symbol != null) {
-        symbol.getParameters().forEach(unusedElements::remove);
-      }
+      symbol.getParameters().forEach(unusedElements::remove);
       return null;
     }
 

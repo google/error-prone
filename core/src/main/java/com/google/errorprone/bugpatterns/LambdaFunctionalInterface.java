@@ -20,7 +20,6 @@ import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
-import static java.util.Optional.empty;
 import static java.util.Optional.ofNullable;
 
 import com.google.common.collect.ImmutableList;
@@ -247,7 +246,7 @@ public class LambdaFunctionalInterface extends BugChecker implements MethodTreeM
           @Override
           public Void visitMethodInvocation(MethodInvocationTree callTree, Void unused) {
             MethodSymbol methodSymbol = getSymbol(callTree);
-            if (methodSymbol != null && sym.equals(methodSymbol)) {
+            if (sym.equals(methodSymbol)) {
               methodMap.put(methodSymbol.toString(), callTree);
             }
             return super.visitMethodInvocation(callTree, unused);
@@ -270,8 +269,7 @@ public class LambdaFunctionalInterface extends BugChecker implements MethodTreeM
   }
 
   private static Optional<String> getMappingForFunctionFromTree(Tree param) {
-    Optional<Type> type = ofNullable(ASTHelpers.getType(param));
-    return (type == null) ? empty() : getMappingForFunction(type.get().toString());
+    return ofNullable(ASTHelpers.getType(param)).flatMap(t -> getMappingForFunction(t.toString()));
   }
 
   private static Optional<String> getMappingForFunction(String function) {

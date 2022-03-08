@@ -245,9 +245,7 @@ public final class UnusedMethod extends BugChecker implements CompilationUnitTre
         super.visitMemberReference(tree, null);
         MethodSymbol symbol = getSymbol(tree);
         unusedMethods.remove(symbol);
-        if (symbol != null) {
-          symbol.getParameters().forEach(unusedMethods::remove);
-        }
+        symbol.getParameters().forEach(unusedMethods::remove);
         return null;
       }
 

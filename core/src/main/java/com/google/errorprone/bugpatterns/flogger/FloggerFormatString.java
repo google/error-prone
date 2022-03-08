@@ -67,9 +67,6 @@ public class FloggerFormatString extends BugChecker implements MethodInvocationT
       return NO_MATCH;
     }
     MethodSymbol sym = ASTHelpers.getSymbol(tree);
-    if (sym == null) {
-      return Description.NO_MATCH;
-    }
     FormatStringValidation.ValidationResult result =
         FormatStringValidation.validate(sym, tree.getArguments(), state);
     if (result == null) {

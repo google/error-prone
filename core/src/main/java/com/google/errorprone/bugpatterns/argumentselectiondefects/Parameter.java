@@ -182,30 +182,26 @@ abstract class Parameter {
       case METHOD_INVOCATION:
         MethodInvocationTree methodInvocationTree = (MethodInvocationTree) expressionTree;
         MethodSymbol methodSym = ASTHelpers.getSymbol(methodInvocationTree);
-        if (methodSym != null) {
-          String name = methodSym.getSimpleName().toString();
-          ImmutableList<String> terms = NamingConventions.splitToLowercaseTerms(name);
-          String firstTerm = Iterables.getFirst(terms, null);
-          if (METHODNAME_PREFIXES_TO_REMOVE.contains(firstTerm)) {
-            if (terms.size() == 1) {
-              ExpressionTree receiver = ASTHelpers.getReceiver(methodInvocationTree);
-              if (receiver == null) {
-                return getClassName(ASTHelpers.enclosingClass(methodSym));
-              }
-              // recursively try to get a name from the receiver
-              return getArgumentName(receiver);
-            } else {
-              return name.substring(firstTerm.length());
+        String name = methodSym.getSimpleName().toString();
+        ImmutableList<String> terms = NamingConventions.splitToLowercaseTerms(name);
+        String firstTerm = Iterables.getFirst(terms, null);
+        if (METHODNAME_PREFIXES_TO_REMOVE.contains(firstTerm)) {
+          if (terms.size() == 1) {
+            ExpressionTree receiver = ASTHelpers.getReceiver(methodInvocationTree);
+            if (receiver == null) {
+              return getClassName(ASTHelpers.enclosingClass(methodSym));
             }
+            // recursively try to get a name from the receiver
+            return getArgumentName(receiver);
           } else {
-            return name;
+            return name.substring(firstTerm.length());
           }
         } else {
-          return NAME_NOT_PRESENT;
+          return name;
         }
       case NEW_CLASS:
         MethodSymbol constructorSym = ASTHelpers.getSymbol((NewClassTree) expressionTree);
-        return constructorSym != null && constructorSym.owner != null
+        return constructorSym.owner != null
             ? getClassName((ClassSymbol) constructorSym.owner)
             : NAME_NOT_PRESENT;
       default:

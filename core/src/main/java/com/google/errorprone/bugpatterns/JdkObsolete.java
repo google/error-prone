@@ -160,9 +160,6 @@ public class JdkObsolete extends BugChecker
   @Override
   public Description matchNewClass(NewClassTree tree, VisitorState state) {
     MethodSymbol constructor = ASTHelpers.getSymbol(tree);
-    if (constructor == null) {
-      return NO_MATCH;
-    }
     Symbol owner = constructor.owner;
     Description description =
         describeIfObsolete(

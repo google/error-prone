@@ -189,18 +189,12 @@ public class CompileTimeConstantChecker extends BugChecker
   @Override
   public Description matchNewClass(NewClassTree tree, VisitorState state) {
     Symbol.MethodSymbol sym = ASTHelpers.getSymbol(tree);
-    if (sym == null) {
-      return Description.NO_MATCH;
-    }
     return matchArguments(state, sym, tree.getArguments().iterator());
   }
 
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
     Symbol.MethodSymbol sym = ASTHelpers.getSymbol(tree);
-    if (sym == null) {
-      return Description.NO_MATCH;
-    }
     return matchArguments(state, sym, tree.getArguments().iterator());
   }
 
@@ -225,9 +219,6 @@ public class CompileTimeConstantChecker extends BugChecker
   @Override
   public Description matchMemberReference(MemberReferenceTree node, VisitorState state) {
     Symbol.MethodSymbol sym = ASTHelpers.getSymbol(node);
-    if (sym == null) {
-      return Description.NO_MATCH;
-    }
     List<Integer> compileTimeConstantAnnotationIndexes =
         getAnnotatedParams(sym.getParameters(), state);
     if (compileTimeConstantAnnotationIndexes.isEmpty()) {
