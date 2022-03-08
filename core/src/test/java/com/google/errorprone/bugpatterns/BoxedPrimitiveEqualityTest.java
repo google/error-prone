@@ -59,6 +59,20 @@ public class BoxedPrimitiveEqualityTest {
   }
 
   @Test
+  public void number_flagOff_noFinding() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  boolean f(Number a, Number b) {",
+            "    return a == b;",
+            "  }",
+            "}")
+        .setArgs("-XepOpt:BoxedPrimitiveEquality:HandleNumber=false")
+        .doTest();
+  }
+
+  @Test
   public void negative() {
     compilationHelper
         .addSourceLines(

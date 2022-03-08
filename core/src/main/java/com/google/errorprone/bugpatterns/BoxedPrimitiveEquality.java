@@ -22,6 +22,7 @@ import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
 
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.suppliers.Supplier;
 import com.sun.source.tree.ExpressionTree;
@@ -39,6 +40,11 @@ import com.sun.tools.javac.code.Type;
     altNames = {"NumericEquality"},
     severity = ERROR)
 public final class BoxedPrimitiveEquality extends AbstractReferenceEquality {
+  private final boolean handleNumber;
+
+  public BoxedPrimitiveEquality(ErrorProneFlags flags) {
+    this.handleNumber = flags.getBoolean("BoxedPrimitiveEquality:HandleNumber").orElse(true);
+  }
 
   @Override
   protected boolean matchArgument(ExpressionTree tree, VisitorState state) {
@@ -52,8 +58,8 @@ public final class BoxedPrimitiveEquality extends AbstractReferenceEquality {
     return !isStaticConstant(getSymbol(tree));
   }
 
-  private static boolean isRelevantType(Type type, VisitorState state) {
-    if (isSubtype(type, JAVA_LANG_NUMBER.get(state), state)) {
+  private boolean isRelevantType(Type type, VisitorState state) {
+    if (handleNumber && isSubtype(type, JAVA_LANG_NUMBER.get(state), state)) {
       return true;
     }
     switch (state.getTypes().unboxedType(type).getTag()) {
