@@ -66,7 +66,7 @@ public final class ThrowSpecificExceptions extends BugChecker implements NewClas
         SuggestedFix.Builder fix = SuggestedFix.builder();
         String className =
             SuggestedFixes.qualifyType(state, fix, abstractLikeException.replacement());
-        return describeMatch(tree, SuggestedFix.replace(tree.getIdentifier(), className));
+        return describeMatch(tree, fix.replace(tree.getIdentifier(), className).build());
       }
     }
     return Description.NO_MATCH;
