@@ -80,7 +80,7 @@ public class ReturnValueIgnored extends AbstractReturnValueIgnored {
           });
 
   /**
-   * This matcher allows the following methods in {@code java.time}:
+   * This matcher allows the following methods in {@code java.time} (and {@code org.threeten.bp}):
    *
    * <ul>
    *   <li>any methods named {@code parse}
@@ -99,29 +99,44 @@ public class ReturnValueIgnored extends AbstractReturnValueIgnored {
           instanceMethod().anyClass().named("parse"),
           staticMethod().anyClass().named("of"),
           staticMethod().anyClass().named("from"),
-          staticMethod().onClass("java.time.ZoneId").named("ofOffset"),
+          staticMethod().onClassAny("java.time.ZoneId", "org.threeten.bp.ZoneId").named("ofOffset"),
           instanceMethod()
-              .onExactClass("java.time.format.DateTimeFormatterBuilder")
+              .onExactClassAny(
+                  "java.time.format.DateTimeFormatterBuilder",
+                  "org.threeten.bp.format.DateTimeFormatterBuilder")
               .withNameMatching(Pattern.compile("^(append|parse|pad|optional).*")),
           instanceMethod()
-              .onExactClass("java.time.temporal.ChronoField")
+              .onExactClassAny(
+                  "java.time.temporal.ChronoField", "org.threeten.bp.temporal.ChronoField")
               .named("checkValidIntValue"),
-          instanceMethod().onExactClass("java.time.temporal.ChronoField").named("checkValidValue"),
-          instanceMethod().onExactClass("java.time.temporal.ValueRange").named("checkValidValue"));
+          instanceMethod()
+              .onExactClassAny(
+                  "java.time.temporal.ChronoField", "org.threeten.bp.temporal.ChronoField")
+              .named("checkValidValue"),
+          instanceMethod()
+              .onExactClassAny(
+                  "java.time.temporal.ValueRange", "org.threeten.bp.temporal.ValueRange")
+              .named("checkValidValue"));
 
   /**
-   * {@link java.time} types are immutable. The only methods we allow ignoring the return value on
-   * are the {@code parse}-style APIs since folks often use it for validation.
+   * {@link java.time} (and by extension {@code org.threeten.bp}) types are immutable. The only
+   * methods we allow ignoring the return value on are the {@code parse}-style APIs since folks
+   * often use it for validation.
    */
   private static boolean javaTimeTypes(ExpressionTree tree, VisitorState state) {
-    if (packageStartsWith("java.time").matches(tree, state)) {
+    // don't analyze the library or its tests as they do weird things
+    if (packageStartsWith("java.time").matches(tree, state)
+        || packageStartsWith("org.threeten.bp").matches(tree, state)) {
       return false;
     }
     Symbol symbol = getSymbol(tree);
-    return symbol instanceof MethodSymbol
-        && symbol.owner.packge().getQualifiedName().toString().startsWith("java.time")
-        && symbol.getModifiers().contains(Modifier.PUBLIC)
-        && !ALLOWED_JAVA_TIME_METHODS.matches(tree, state);
+    if (symbol instanceof MethodSymbol) {
+      String qualifiedName = symbol.owner.packge().getQualifiedName().toString();
+      return (qualifiedName.startsWith("java.time") || qualifiedName.startsWith("org.threeten.bp"))
+          && symbol.getModifiers().contains(Modifier.PUBLIC)
+          && !ALLOWED_JAVA_TIME_METHODS.matches(tree, state);
+    }
+    return false;
   }
 
   /**
