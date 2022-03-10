@@ -16,11 +16,16 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.common.collect.Sets.immutableEnumSet;
 import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
 import static com.google.errorprone.fixes.SuggestedFixes.addModifiers;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.SERIALIZATION_METHODS;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
+import static java.util.Collections.disjoint;
+import static javax.lang.model.element.Modifier.ABSTRACT;
+import static javax.lang.model.element.Modifier.NATIVE;
+import static javax.lang.model.element.Modifier.SYNCHRONIZED;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
@@ -226,9 +231,7 @@ public class MethodCanBeStatic extends BugChecker implements CompilationUnitTree
     if (sym == null) {
       return true;
     }
-    if (sym.isConstructor()
-        || sym.getModifiers().contains(Modifier.NATIVE)
-        || sym.getModifiers().contains(Modifier.SYNCHRONIZED)) {
+    if (sym.isConstructor() || !disjoint(EXCLUDED_MODIFIERS, sym.getModifiers())) {
       return true;
     }
     if (!ASTHelpers.canBeRemoved(sym, state)) {
@@ -250,6 +253,9 @@ public class MethodCanBeStatic extends BugChecker implements CompilationUnitTree
     }
     return SERIALIZATION_METHODS.matches(tree, state);
   }
+
+  private static final ImmutableSet<Modifier> EXCLUDED_MODIFIERS =
+      immutableEnumSet(NATIVE, SYNCHRONIZED, ABSTRACT);
 
   /** Information about a {@link MethodSymbol} and whether it can be made static. */
   private static final class MethodDetails {

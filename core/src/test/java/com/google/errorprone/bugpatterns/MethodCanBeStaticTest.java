@@ -135,7 +135,12 @@ public class MethodCanBeStaticTest {
   public void positiveRecursive() {
     refactoringHelper
         .addInputLines(
-            "Test.java", "class Test {", "  private int a(int x) {", "    return a(x);", "  }", "}")
+            "Test.java", //
+            "class Test {",
+            "  private int a(int x) {",
+            "    return a(x);",
+            "  }",
+            "}")
         .addOutputLines(
             "Test.java",
             "class Test {",
@@ -370,9 +375,18 @@ public class MethodCanBeStaticTest {
   @Test
   public void negative_baseClass() {
     testHelper
-        .addSourceLines("A.java", "class A {", "  void foo() {}", "}")
         .addSourceLines(
-            "B.java", "class B extends A {", "  private void bar() {", "    foo();", "  }", "}")
+            "A.java", //
+            "class A {",
+            "  void foo() {}",
+            "}")
+        .addSourceLines(
+            "B.java", //
+            "class B extends A {",
+            "  private void bar() {",
+            "    foo();",
+            "  }",
+            "}")
         .doTest();
   }
 
@@ -440,6 +454,19 @@ public class MethodCanBeStaticTest {
             "  }",
             "}")
         .setArgs(ImmutableList.of("-XepOpt:MethodCanBeStatic:FindingPerSite"))
+        .doTest();
+  }
+
+  @Test
+  public void abstractMethod_notFlagged() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  private static abstract class Foo {",
+            "    abstract void frobnicate();",
+            "  }",
+            "}")
         .doTest();
   }
 }
