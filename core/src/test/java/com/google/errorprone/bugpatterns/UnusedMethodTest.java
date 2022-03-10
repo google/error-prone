@@ -436,4 +436,32 @@ public final class UnusedMethodTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void annotationProperty_assignedByname() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  private @interface Anno {",
+            "    int value() default 1;",
+            "  }",
+            "  @Anno(value = 1) int b;",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void annotationProperty_assignedAsDefault() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  private @interface Anno {",
+            "    int value();",
+            "  }",
+            "  @Anno(1) int a;",
+            "}")
+        .doTest();
+  }
 }

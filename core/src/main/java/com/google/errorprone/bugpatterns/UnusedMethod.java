@@ -50,9 +50,9 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.suppliers.Supplier;
 import com.sun.source.tree.AnnotationTree;
+import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
-import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.MemberReferenceTree;
 import com.sun.source.tree.MemberSelectTree;
@@ -251,20 +251,25 @@ public final class UnusedMethod extends BugChecker implements CompilationUnitTre
 
       @Override
       public Void visitMethodInvocation(MethodInvocationTree tree, Void unused) {
-        handle(tree);
+        handle(getSymbol(tree));
         return super.visitMethodInvocation(tree, null);
       }
 
       @Override
       public Void visitNewClass(NewClassTree tree, Void unused) {
-        handle(tree);
+        handle(getSymbol(tree));
         return super.visitNewClass(tree, null);
       }
 
-      private void handle(ExpressionTree tree) {
-        Symbol methodSymbol = getSymbol(tree);
-        if (methodSymbol != null) {
-          unusedMethods.remove(methodSymbol);
+      @Override
+      public Void visitAssignment(AssignmentTree tree, Void unused) {
+        handle(getSymbol(tree.getVariable()));
+        return super.visitAssignment(tree, unused);
+      }
+
+      private void handle(Symbol symbol) {
+        if (symbol instanceof MethodSymbol) {
+          unusedMethods.remove(symbol);
         }
       }
 
