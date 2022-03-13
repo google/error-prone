@@ -46,7 +46,7 @@ Edit your `pom.xml` file to add settings to the maven-compiler-plugin:
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.8.0</version>
+        <version>3.10.1</version>
         <configuration>
           <source>8</source>
           <target>8</target>
@@ -73,10 +73,26 @@ Edit your `pom.xml` file to add settings to the maven-compiler-plugin:
   </build>
 ```
 
-Add the following `--add-exports` and `add-opens` flags to
-[.mvn/jvm.config](https://maven.apache.org/configure.html#mvn-jvm-config-file)
-file which are required on JDK 16 and newer due to
-[JEP 396: Strongly Encapsulate JDK Internals by Default](https://openjdk.java.net/jeps/396):
+On JDK 16 and newer, additional flags are required due to
+[JEP 396: Strongly Encapsulate JDK Internals by Default](https://openjdk.java.net/jeps/396).
+
+If your `maven-compiler-plugin` uses an external executable, e.g. because `<fork>` is `true` or because the `maven-toolchains-plugin` is enabled,
+add the following under `compilerArgs` in the configuration above:
+
+```xml
+            <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED</arg>
+            <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.file=ALL-UNNAMED</arg>
+            <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.main=ALL-UNNAMED</arg>
+            <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.model=ALL-UNNAMED</arg>
+            <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.parser=ALL-UNNAMED</arg>
+            <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.processing=ALL-UNNAMED</arg>
+            <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.tree=ALL-UNNAMED</arg>
+            <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED</arg>
+            <arg>-J--add-opens=jdk.compiler/com.sun.tools.javac.code=ALL-UNNAMED</arg>
+            <arg>-J--add-opens=jdk.compiler/com.sun.tools.javac.comp=ALL-UNNAMED</arg>
+```
+
+Otherwise, add the following to the [.mvn/jvm.config](https://maven.apache.org/configure.html#mvn-jvm-config-file) file:
 
 ```
 --add-exports jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED
