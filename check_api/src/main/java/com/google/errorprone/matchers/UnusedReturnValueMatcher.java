@@ -162,7 +162,7 @@ public final class UnusedReturnValueMatcher implements Matcher<ExpressionTree> {
     Type type =
         state.getTypes().memberType(getType(tree.getQualifierExpression()), getSymbol(tree));
     // TODO(cgdecker): There are probably other types than MethodType that we could resolve here
-    return type instanceof MethodType && isVoidType(((MethodType) type).getReturnType(), state);
+    return type instanceof MethodType && isVoidType(type.getReturnType(), state);
   }
 
   private static boolean exceptionTesting(ExpressionTree tree, VisitorState state) {

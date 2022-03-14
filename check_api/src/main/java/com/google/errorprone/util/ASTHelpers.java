@@ -169,7 +169,6 @@ import java.util.function.Predicate;
 import java.util.stream.Stream;
 import javax.annotation.Nullable;
 import javax.lang.model.element.AnnotationMirror;
-import javax.lang.model.element.AnnotationValue;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.type.TypeKind;
@@ -1557,7 +1556,7 @@ public class ASTHelpers {
     return attribute.getElementValues().entrySet().stream()
         .filter(e -> e.getKey().getSimpleName().contentEquals("value"))
         .findFirst()
-        .map(e -> MoreAnnotations.asStrings((AnnotationValue) e.getValue()))
+        .map(e -> MoreAnnotations.asStrings(e.getValue()))
         .orElseGet(() -> Stream.of(attribute.type.tsym.getQualifiedName().toString()));
   }
 
@@ -1963,7 +1962,7 @@ public class ASTHelpers {
     @Override
     public Type visitNewClass(NewClassTree tree, Void unused) {
       if (Objects.equals(current, tree.getEnclosingExpression())) {
-        return ((ClassSymbol) ASTHelpers.getSymbol(tree.getIdentifier())).owner.type;
+        return ASTHelpers.getSymbol(tree.getIdentifier()).owner.type;
       }
       return visitMethodInvocationOrNewClass(
           tree.getArguments(), ASTHelpers.getSymbol(tree), ((JCNewClass) tree).constructorType);

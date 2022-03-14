@@ -180,9 +180,9 @@ abstract class UPlaceholderStatement implements UStatement {
                   (JCExpression expr) -> {
                     switch (implementationFlow()) {
                       case NEVER_EXITS:
-                        return List.of((JCStatement) inliner.maker().Exec(expr));
+                        return List.of(inliner.maker().Exec(expr));
                       case ALWAYS_RETURNS:
-                        return List.of((JCStatement) inliner.maker().Return(expr));
+                        return List.of(inliner.maker().Return(expr));
                       default:
                         throw new AssertionError();
                     }

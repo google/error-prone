@@ -84,7 +84,7 @@ public class OptionalOfRedundantMethod extends BugChecker implements MethodInvoc
     if (!(childMethodInvocationTree instanceof MethodInvocationTree)) {
       return NO_MATCH;
     }
-    if (!OPTIONAL_OF_MATCHER.matches((MethodInvocationTree) childMethodInvocationTree, state)
+    if (!OPTIONAL_OF_MATCHER.matches(childMethodInvocationTree, state)
         || !REDUNDANT_METHOD_MATCHER.matches(tree, state)) {
       return NO_MATCH;
     }

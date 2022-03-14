@@ -43,7 +43,6 @@ import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.code.Symbol;
-import com.sun.tools.javac.tree.JCTree;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -98,7 +97,7 @@ public class InjectOnMemberAndConstructor extends BugChecker implements ClassTre
         }
         return super.visitAssignment(tree, null);
       }
-    }.scan((JCTree) getOnlyElement(ctorsWithInject), null);
+    }.scan(getOnlyElement(ctorsWithInject), null);
 
     SuggestedFix.Builder fix = SuggestedFix.builder();
     VariableTree variableTreeFirstMatch = null;

@@ -134,15 +134,14 @@ public class IsInstanceOfClass extends BugChecker implements MethodInvocationTre
         }
         return Operand.create(
             Kind.GET_CLASS,
-            state.getSourceForNode((JCTree) ASTHelpers.getReceiver(receiverInvocation)),
+            state.getSourceForNode(ASTHelpers.getReceiver(receiverInvocation)),
             source);
       }
     } else if (tree instanceof MemberSelectTree) {
       // Foo.class -> "Foo"
       MemberSelectTree select = (MemberSelectTree) tree;
       if (select.getIdentifier().contentEquals("class")) {
-        return Operand.create(
-            Kind.LITERAL, state.getSourceForNode((JCTree) select.getExpression()), source);
+        return Operand.create(Kind.LITERAL, state.getSourceForNode(select.getExpression()), source);
       }
     }
     return Operand.create(Kind.EXPR, source, source);

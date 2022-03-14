@@ -37,7 +37,6 @@ import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.TypeParameterTree;
 import com.sun.tools.javac.code.Symbol;
-import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.PackageSymbol;
 import com.sun.tools.javac.code.Symbol.TypeSymbol;
 import com.sun.tools.javac.code.Symbol.TypeVariableSymbol;
@@ -91,7 +90,7 @@ public class TypeNameShadowing extends BugChecker implements MethodTreeMatcher, 
             .map(
                 ctx ->
                     ctx.tree.getTag() == Tag.CLASSDEF
-                        ? ((ClassSymbol) ASTHelpers.getSymbol(ctx.tree)).members().getSymbols()
+                        ? ASTHelpers.getSymbol(ctx.tree).members().getSymbols()
                         : ctx.info.getLocalElements())
             .flatMap(
                 symbols ->

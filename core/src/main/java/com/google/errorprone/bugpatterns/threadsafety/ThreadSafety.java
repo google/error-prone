@@ -60,7 +60,6 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.annotation.Nullable;
-import javax.lang.model.element.AnnotationValue;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.type.TypeKind;
 import org.pcollections.ConsPStack;
@@ -795,7 +794,7 @@ public final class ThreadSafety {
     if (m == null) {
       return ImmutableList.of();
     }
-    return MoreAnnotations.asStrings((AnnotationValue) m).collect(toImmutableList());
+    return MoreAnnotations.asStrings(m).collect(toImmutableList());
   }
 
   /** Gets a human-friendly name for the given {@link Symbol} to use in diagnostics. */

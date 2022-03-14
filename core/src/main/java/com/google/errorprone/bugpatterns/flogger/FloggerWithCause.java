@@ -39,7 +39,6 @@ import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
-import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCNewClass;
 import java.util.Arrays;
 import java.util.Collections;
@@ -163,10 +162,10 @@ public class FloggerWithCause extends BugChecker implements MethodInvocationTree
   }
 
   private static int getMethodStart(MethodInvocationTree tree, VisitorState state) {
-    return state.getEndPosition((JCTree) ASTHelpers.getReceiver(tree));
+    return state.getEndPosition(ASTHelpers.getReceiver(tree));
   }
 
   private static int getMethodEnd(MethodInvocationTree tree, VisitorState state) {
-    return state.getEndPosition((JCTree) tree);
+    return state.getEndPosition(tree);
   }
 }

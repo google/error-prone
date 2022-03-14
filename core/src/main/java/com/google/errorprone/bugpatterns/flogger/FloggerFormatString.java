@@ -36,7 +36,6 @@ import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
-import com.sun.tools.javac.tree.JCTree;
 import java.util.List;
 import javax.annotation.Nullable;
 
@@ -113,8 +112,8 @@ public class FloggerFormatString extends BugChecker implements MethodInvocationT
 
     return SuggestedFix.builder()
         .replace(
-            state.getEndPosition((JCTree) tree.getArguments().get(tree.getArguments().size() - 2)),
-            state.getEndPosition((JCTree) last),
+            state.getEndPosition(tree.getArguments().get(tree.getArguments().size() - 2)),
+            state.getEndPosition(last),
             "")
         .postfixWith(
             ASTHelpers.getReceiver(tree),
