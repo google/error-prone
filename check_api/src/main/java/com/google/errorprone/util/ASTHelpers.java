@@ -283,17 +283,17 @@ public class ASTHelpers {
 
   /** Gets the symbol for a class. */
   public static ClassSymbol getSymbol(ClassTree tree) {
-    return ((JCClassDecl) tree).sym;
+    return checkNotNull(((JCClassDecl) tree).sym, "%s had a null ClassSymbol", tree);
   }
 
   /** Gets the symbol for a package. */
   public static PackageSymbol getSymbol(PackageTree tree) {
-    return ((JCPackageDecl) tree).packge;
+    return checkNotNull(((JCPackageDecl) tree).packge, "%s had a null PackageSymbol", tree);
   }
 
   /** Gets the symbol for a method. */
   public static MethodSymbol getSymbol(MethodTree tree) {
-    return ((JCMethodDecl) tree).sym;
+    return checkNotNull(((JCMethodDecl) tree).sym, "%s had a null MethodSymbol", tree);
   }
 
   /** Gets the method symbol for a new class. */
@@ -308,7 +308,7 @@ public class ASTHelpers {
 
   /** Gets the symbol for a variable. */
   public static VarSymbol getSymbol(VariableTree tree) {
-    return ((JCVariableDecl) tree).sym;
+    return checkNotNull(((JCVariableDecl) tree).sym, "%s had a null VariableTree", tree);
   }
 
   /** Gets the symbol for a method invocation. */
