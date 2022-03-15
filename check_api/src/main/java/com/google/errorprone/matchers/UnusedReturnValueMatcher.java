@@ -18,6 +18,7 @@ package com.google.errorprone.matchers;
 
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.anyOf;
+import static com.google.errorprone.matchers.Matchers.enclosingMethod;
 import static com.google.errorprone.matchers.Matchers.enclosingNode;
 import static com.google.errorprone.matchers.Matchers.expressionStatement;
 import static com.google.errorprone.matchers.Matchers.instanceMethod;
@@ -41,10 +42,14 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.annotations.CheckReturnValue;
+import com.google.errorprone.util.ASTHelpers;
+import com.google.errorprone.util.MoreAnnotations;
+import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.LambdaExpressionTree;
 import com.sun.source.tree.MemberReferenceTree;
 import com.sun.source.tree.MemberReferenceTree.ReferenceMode;
+import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
@@ -195,7 +200,32 @@ public final class UnusedReturnValueMatcher implements Matcher<ExpressionTree> {
           allOf(
               anyOf(isLastStatementInBlock(), parentNode(kindIs(Kind.LAMBDA_EXPRESSION))),
               // Within the context of a ThrowingRunnable/Executable:
-              (t, s) -> methodCallInDeclarationOfThrowingRunnable(s)));
+              (t, s) -> methodCallInDeclarationOfThrowingRunnable(s)),
+          // @Test(expected = FooException.class) void bah() { me(); }
+          allOf(
+              UnusedReturnValueMatcher::isOnlyStatementInBlock,
+              enclosingMethod(UnusedReturnValueMatcher::isTestExpectedExceptionMethod)));
+
+  private static boolean isTestExpectedExceptionMethod(MethodTree tree, VisitorState state) {
+    if (!JUnitMatchers.wouldRunInJUnit4.matches(tree, state)) {
+      return false;
+    }
+
+    return getSymbol(tree).getAnnotationMirrors().stream()
+        .filter(am -> am.type.tsym.getQualifiedName().contentEquals("org.junit.Test"))
+        .findFirst()
+        .flatMap(testAm -> MoreAnnotations.getAnnotationValue(testAm, "expected"))
+        .flatMap(MoreAnnotations::asTypeValue)
+        .filter(tv -> !tv.toString().equals("org.junit.Test.None"))
+        .isPresent();
+  }
+
+  private static boolean isOnlyStatementInBlock(StatementTree t, VisitorState s) {
+    BlockTree parentBlock = ASTHelpers.findEnclosingNode(s.getPath(), BlockTree.class);
+    return parentBlock != null
+        && parentBlock.getStatements().size() == 1
+        && parentBlock.getStatements().get(0) == t;
+  }
 
   /** Allow return values to be ignored in tests that expect an exception to be thrown. */
   public static boolean expectedExceptionTest(VisitorState state) {

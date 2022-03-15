@@ -760,6 +760,35 @@ public class CheckReturnValueTest {
         .doTest();
   }
 
+  @Test
+  public void usingElementInTestExpected() {
+    compilationHelperLookingAtAllConstructors()
+        .addSourceLines(
+            "Foo.java",
+            "import org.junit.runner.RunWith;",
+            "import org.junit.runners.JUnit4;",
+            "import org.junit.Test;",
+            "@RunWith(JUnit4.class)",
+            "class Foo {",
+            "  @Test(expected = IllegalArgumentException.class) ",
+            "  public void foo() {",
+            "    new Foo();", // OK when it's the only statement
+            "  }",
+            "  @Test(expected = IllegalArgumentException.class) ",
+            "  public void fooWith2Statements() {",
+            "    Foo f = new Foo();",
+            "    // BUG: Diagnostic contains: Ignored return value of 'Foo'",
+            "    new Foo();", // Not OK if there is more than one statement in the block.
+            "  }",
+            "  @Test(expected = Test.None.class) ", // This is a weird way to spell the default
+            "  public void fooWithNone() {",
+            "    // BUG: Diagnostic contains: Ignored return value of 'Foo'",
+            "    new Foo();",
+            "  }",
+            "}")
+        .doTest();
+  }
+
   private CompilationTestHelper compilationHelperLookingAtAllConstructors() {
     return compilationHelper.setArgs(
         "-XepOpt:" + CheckReturnValue.CHECK_ALL_CONSTRUCTORS + "=true");
