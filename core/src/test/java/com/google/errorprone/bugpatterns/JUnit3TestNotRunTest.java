@@ -110,7 +110,7 @@ public class JUnit3TestNotRunTest {
             "Test.java",
             "import junit.framework.TestCase;",
             "public class Test extends TestCase {",
-            "  // BUG: Diagnostic contains: JUnit3TestNotRun",
+            "  // BUG: Diagnostic contains:",
             "  private void testDoesStuff() {}",
             "}")
         .doTest();
@@ -123,7 +123,7 @@ public class JUnit3TestNotRunTest {
             "Test.java",
             "import junit.framework.TestCase;",
             "public class Test extends TestCase {",
-            "  // BUG: Diagnostic contains: JUnit3TestNotRun",
+            "  // BUG: Diagnostic contains:",
             "  private void tsetDoesStuff() {}",
             "}")
         .doTest();
