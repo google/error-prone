@@ -87,12 +87,11 @@ loadScripts(document, 'script');</script>
 <dd><code><a href="BugChecker.MethodTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.MethodTreeMatcher</a></code>, <code><a href="../matchers/Suppressible.html" title="interface in com.google.errorprone.matchers">Suppressible</a></code>, <code><a href="https://docs.oracle.com/javase/8/docs/api/java/io/Serializable.html" title="class or interface in java.io" class="external-link">Serializable</a></code></dd>
 </dl>
 <hr>
-<pre>public class <span class="type-name-label">JUnit3TestNotRun</span>
+<pre>public final class <span class="type-name-label">JUnit3TestNotRun</span>
 extends <a href="BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a>
 implements <a href="BugChecker.MethodTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.MethodTreeMatcher</a></pre>
+<div class="block">A bugpattern; see the associated summary.</div>
 <dl class="notes">
-<dt>Author:</dt>
-<dd>rburny@google.com (Radoslaw Burny)</dd>
 <dt>See Also:</dt>
 <dd><a href="../../../../serialized-form.html#com.google.errorprone.bugpatterns.JUnit3TestNotRun">Serialized Form</a></dd>
 </dl>
@@ -152,7 +151,10 @@ implements <a href="BugChecker.MethodTreeMatcher.html" title="interface in com.g
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#matchMethod(com.sun.source.tree.MethodTree,com.google.errorprone.VisitorState)">matchMethod</a></span>&#8203;(com.sun.source.tree.MethodTree&nbsp;methodTree,
 <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
 <td class="col-last">
-<div class="block">Matches if: 1) Method's name begins with misspelled variation of "test".</div>
+<div class="block">Matches iff:
+
+ 
+   Method's name begins with misspelled variation of "test".</div>
 </td>
 </tr>
 </tbody>
@@ -198,9 +200,14 @@ implements <a href="BugChecker.MethodTreeMatcher.html" title="interface in com.g
 <h3>matchMethod</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></span>&nbsp;<span class="member-name">matchMethod</span>&#8203;(<span class="parameters">com.sun.source.tree.MethodTree&nbsp;methodTree,
 <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
-<div class="block">Matches if: 1) Method's name begins with misspelled variation of "test". 2) Method is public,
- returns void, and has no parameters. 3) Enclosing class is JUnit3 test (extends TestCase, has
- no <code>@RunWith</code> annotation, no <code>@Test</code>-annotated methods, and is not abstract).</div>
+<div class="block">Matches iff:
+
+ <ul>
+   <li>Method's name begins with misspelled variation of "test".
+   <li>Method is public, returns void, and has no parameters.
+   <li>Enclosing class is JUnit3 test (extends TestCase, has no <code>@RunWith</code> annotation, no
+       <code>@Test</code>-annotated methods, and is not abstract).
+ </ul></div>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code><a href="BugChecker.MethodTreeMatcher.html#matchMethod(com.sun.source.tree.MethodTree,com.google.errorprone.VisitorState)">matchMethod</a></code>&nbsp;in interface&nbsp;<code><a href="BugChecker.MethodTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.MethodTreeMatcher</a></code></dd>
