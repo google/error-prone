@@ -392,6 +392,7 @@ public class ReturnValueIgnored extends AbstractReturnValueIgnored {
           MAP_METHODS,
           MODULE_CONSTRUCTORS,
           OBJECTS_METHODS,
+          OBJECT_METHODS,
           OPTIONAL_METHODS,
           PRIMITIVE_METHODS,
           PROTO_METHODS,
@@ -406,12 +407,10 @@ public class ReturnValueIgnored extends AbstractReturnValueIgnored {
           );
 
   private static final ImmutableSet<Matcher<? super ExpressionTree>> ALL_MATCHERS =
-      ImmutableSet.of(SPECIALIZED_MATCHER, CLASS_METHODS, OBJECT_METHODS);
+      ImmutableSet.of(SPECIALIZED_MATCHER, CLASS_METHODS);
 
   private static final ImmutableBiMap<String, Matcher<ExpressionTree>> FLAG_MATCHERS =
-      ImmutableBiMap.of(
-          "ReturnValueIgnored:ClassMethods", CLASS_METHODS,
-          "ReturnValueIgnored:ObjectMethods", OBJECT_METHODS);
+      ImmutableBiMap.of("ReturnValueIgnored:ClassMethods", CLASS_METHODS);
 
   private final Matcher<ExpressionTree> matcher;
 
