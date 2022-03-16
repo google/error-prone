@@ -42,7 +42,6 @@ public class TestExceptionCheckerTest {
             "    Path p = Paths.get(\"NOSUCH\");",
             "    Files.readAllBytes(p);",
             "    Files.readAllBytes(p);",
-            "    assertThat(Files.exists(p)).isFalse();",
             "  }",
             "}")
         .addOutputLines(
@@ -55,12 +54,9 @@ public class TestExceptionCheckerTest {
             "class ExceptionTest {",
             "  @Test(timeout = 0L)",
             "  public void test() throws Exception {",
-            "    assertThrows(IOException.class, () -> {",
-            "      Path p = Paths.get(\"NOSUCH\");",
-            "      Files.readAllBytes(p);",
-            "      Files.readAllBytes(p);",
-            "      assertThat(Files.exists(p)).isFalse();",
-            "    });",
+            "    Path p = Paths.get(\"NOSUCH\");",
+            "    Files.readAllBytes(p);",
+            "    assertThrows(IOException.class, () -> Files.readAllBytes(p));",
             "  }",
             "}")
         .doTest();
@@ -80,7 +76,6 @@ public class TestExceptionCheckerTest {
             "  public void test() throws Exception {",
             "    Path p = Paths.get(\"NOSUCH\");",
             "    Files.readAllBytes(p);",
-            "    assertThat(Files.exists(p)).isFalse();",
             "  }",
             "}")
         .addOutputLines(
@@ -93,11 +88,8 @@ public class TestExceptionCheckerTest {
             "class ExceptionTest {",
             "  @Test",
             "  public void test() throws Exception {",
-            "    assertThrows(IOException.class, () -> {",
-            "      Path p = Paths.get(\"NOSUCH\");",
-            "      Files.readAllBytes(p);",
-            "      assertThat(Files.exists(p)).isFalse();",
-            "    });",
+            "    Path p = Paths.get(\"NOSUCH\");",
+            "    assertThrows(IOException.class, () -> Files.readAllBytes(p));",
             "  }",
             "}")
         .doTest();

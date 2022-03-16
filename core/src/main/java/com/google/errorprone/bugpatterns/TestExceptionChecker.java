@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.common.collect.Iterables.getLast;
-import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
@@ -101,15 +100,15 @@ public class TestExceptionChecker extends BugChecker implements MethodTreeMatche
     StringBuilder prefix = new StringBuilder();
     prefix.append(
         String.format("assertThrows(%s, () -> ", state.getSourceForNode(expectedException)));
-    if (statements.size() == 1 && getOnlyElement(statements) instanceof ExpressionStatementTree) {
-      ExpressionTree expression =
-          ((ExpressionStatementTree) getOnlyElement(statements)).getExpression();
+    StatementTree last = getLast(statements);
+    if (last instanceof ExpressionStatementTree) {
+      ExpressionTree expression = ((ExpressionStatementTree) last).getExpression();
       fix.prefixWith(expression, prefix.toString());
       fix.postfixWith(expression, ")");
     } else {
       prefix.append(" {");
-      fix.prefixWith(statements.iterator().next(), prefix.toString());
-      fix.postfixWith(getLast(statements), "});");
+      fix.prefixWith(last, prefix.toString());
+      fix.postfixWith(last, "});");
     }
     return fix.build();
   }
