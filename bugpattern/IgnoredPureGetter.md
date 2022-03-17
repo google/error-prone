@@ -5,7 +5,7 @@ summary: Getters on AutoValue classes and protos are side-effect free, so there 
   effects from the getter, the receiver may have side effects.
 layout: bugpattern
 tags: ''
-severity: WARNING
+severity: ERROR
 ---
 
 <!--
