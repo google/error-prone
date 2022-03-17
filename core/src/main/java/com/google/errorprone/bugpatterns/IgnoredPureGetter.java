@@ -16,7 +16,7 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
+import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.getReturnType;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
@@ -43,7 +43,7 @@ import java.util.Optional;
 
 /** Flags ignored return values from pure getters. */
 @BugPattern(
-    severity = WARNING,
+    severity = ERROR,
     summary =
         "Getters on AutoValue classes and protos are side-effect free, so there is no point in"
             + " calling them if the return value is ignored. While there are no side effects from"
