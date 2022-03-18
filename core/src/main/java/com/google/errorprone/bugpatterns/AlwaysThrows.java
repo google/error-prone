@@ -38,7 +38,6 @@ import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.bugpatterns.threadsafety.ConstantExpressions;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
-import com.google.errorprone.matchers.method.MethodMatchers;
 import com.google.errorprone.util.ASTHelpers;
 import com.google.protobuf.ByteString;
 import com.sun.source.tree.ExpressionTree;
@@ -47,6 +46,7 @@ import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import java.lang.reflect.InvocationTargetException;
+import java.util.UUID;
 import java.util.function.Consumer;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
@@ -88,9 +88,9 @@ public class AlwaysThrows extends BugChecker implements MethodInvocationTreeMatc
           .namedAnyOf("put")
           .withParameters("java.lang.Object", "java.lang.Object");
 
-  enum Apis {
+  enum Api {
     PARSE_TIME(
-        MethodMatchers.staticMethod()
+        staticMethod()
             .onClassAny(VALIDATORS.keySet())
             .named("parse")
             .withParameters("java.lang.CharSequence")) {
@@ -101,7 +101,7 @@ public class AlwaysThrows extends BugChecker implements MethodInvocationTreeMatc
       }
     },
     BYTE_STRING(
-        MethodMatchers.staticMethod()
+        staticMethod()
             .onClass("com.google.protobuf.ByteString")
             .named("fromHex")
             .withParameters("java.lang.String")) {
@@ -115,9 +115,15 @@ public class AlwaysThrows extends BugChecker implements MethodInvocationTreeMatc
           throw Throwables.getCauseAs(e.getCause(), NumberFormatException.class);
         }
       }
+    },
+    UUID_PARSE(staticMethod().onClass("java.util.UUID").named("fromString")) {
+      @Override
+      void validate(MethodInvocationTree tree, String argument) {
+        var unused = UUID.fromString(argument);
+      }
     };
 
-    Apis(Matcher<ExpressionTree> matcher) {
+    Api(Matcher<ExpressionTree> matcher) {
       this.matcher = matcher;
     }
 
@@ -128,9 +134,11 @@ public class AlwaysThrows extends BugChecker implements MethodInvocationTreeMatc
   }
 
   private final ConstantExpressions constantExpressions;
+  private final boolean matchUuidParse;
 
   public AlwaysThrows(ErrorProneFlags flags) {
     this.constantExpressions = ConstantExpressions.fromFlags(flags);
+    this.matchUuidParse = flags.getBoolean("AlwaysThrows:MatchUuidParse").orElse(true);
   }
 
   @Override
@@ -161,8 +169,12 @@ public class AlwaysThrows extends BugChecker implements MethodInvocationTreeMatc
         return checkImmutableMapOf(tree, /* index= */ 1, state);
       }
     }
-    Apis api =
-        stream(Apis.values()).filter(m -> m.matcher.matches(tree, state)).findAny().orElse(null);
+    Api api =
+        stream(Api.values())
+            .filter(a -> matchUuidParse || !a.equals(Api.UUID_PARSE))
+            .filter(m -> m.matcher.matches(tree, state))
+            .findAny()
+            .orElse(null);
     if (api == null) {
       return NO_MATCH;
     }
