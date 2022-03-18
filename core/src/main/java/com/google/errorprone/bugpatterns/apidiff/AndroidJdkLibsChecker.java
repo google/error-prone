@@ -22,13 +22,20 @@ import static com.google.errorprone.matchers.method.MethodMatchers.instanceMetho
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ImmutableSetMultimap;
+import com.google.common.io.Resources;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.apidiff.ApiDiff.ClassMemberKey;
+import com.google.errorprone.bugpatterns.apidiff.DesugarJdkLibsProto.DesugarJdkLibsMembers;
+import com.google.errorprone.bugpatterns.apidiff.DesugarJdkLibsProto.MemberTracker;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
+import com.google.protobuf.ExtensionRegistryLite;
 import com.sun.source.tree.ExpressionTree;
+import java.io.IOException;
+import java.io.UncheckedIOException;
+import java.net.URL;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -216,10 +223,12 @@ public class AndroidJdkLibsChecker extends ApiDiffChecker {
             .put("java/util/zip/Checksum", ClassMemberKey.create("update", ""))
             .build();
     // Descriptor is empty string to match on any member with same simple name.
-    // TODO(b/185137972): Automate the generation of desugar-supported method-level APIs.
+    // TODO(b/185137972): Cleanup the explicitly specified APIs that overlaps those obtained from
+    //  #getDesugarJdkLibsSupportedMembers()
     private static final ImmutableSetMultimap<String, ClassMemberKey> DESUGAR_ALLOWED_MEMBERS =
         ImmutableSetMultimap.<String, ClassMemberKey>builder()
             .putAll(BASE_ALLOWED_MEMBERS)
+            .putAll(getDesugarJdkLibsSupportedMembers())
             .put("java/util/Arrays", ClassMemberKey.create("stream", ""))
             .put("java/util/Date", ClassMemberKey.create("from", ""))
             .put("java/util/Date", ClassMemberKey.create("toInstant", ""))
@@ -256,5 +265,27 @@ public class AndroidJdkLibsChecker extends ApiDiffChecker {
             .put("java/util/Collection", ClassMemberKey.create("parallelStream", ""))
             .put("java/util/stream/BaseStream", ClassMemberKey.create("parallel", ""))
             .build();
+
+    private static ImmutableSetMultimap<String, ClassMemberKey>
+        getDesugarJdkLibsSupportedMembers() {
+      ImmutableSetMultimap.Builder<String, ClassMemberKey> supportedClassMembers =
+          ImmutableSetMultimap.builder();
+      URL resource =
+          Resources.getResource(AndroidJdkLibsChecker.class, "desugar_jdk_libs_apis.binarypb");
+      try {
+        byte[] bytes = Resources.toByteArray(resource);
+        DesugarJdkLibsMembers desugarJdkLibsMembers =
+            DesugarJdkLibsMembers.parseFrom(bytes, ExtensionRegistryLite.getEmptyRegistry());
+        for (MemberTracker memberTracker : desugarJdkLibsMembers.getMembersList()) {
+          supportedClassMembers.put(
+              memberTracker.getOriginalOwner(),
+              ClassMemberKey.create(
+                  memberTracker.getOriginalName(), memberTracker.getOriginalName()));
+        }
+        return supportedClassMembers.build();
+      } catch (IOException e) {
+        throw new UncheckedIOException(e);
+      }
+    }
   }
 }
