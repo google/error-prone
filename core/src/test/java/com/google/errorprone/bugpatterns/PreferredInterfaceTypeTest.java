@@ -594,7 +594,7 @@ public final class PreferredInterfaceTypeTest {
             "    final Provider<List<String>> fooProvider = ",
             "      new Provider<List<String>>() {",
             "        @Override",
-            "        // BUG: Diagnostic contains: narrow the return type",
+            "        // BUG: Diagnostic contains: even when overriding a method",
             "        public List<String> get() {",
             "          return ImmutableList.of(\"foo\", \"bar\");",
             "        }",

@@ -296,9 +296,7 @@ public final class PreferredInterfaceType extends BugChecker implements Compilat
       " type can use a more specific type to convey more information to callers.";
 
   private static final String OVERRIDE_NOTE =
-      " Note that it is legal to narrow the return type when overriding a parent method. And"
-          + " because this method cannot be overridden, doing so cannot cause problems for any"
-          + " subclasses.";
+      " Note that it is possible to return a more specific type even when overriding a method.";
 
   private static Optional<Type> toGoodReplacement(Type type, VisitorState state) {
     return BETTER_TYPES.stream()
