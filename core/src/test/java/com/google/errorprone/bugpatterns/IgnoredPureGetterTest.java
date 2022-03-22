@@ -165,14 +165,29 @@ public final class IgnoredPureGetterTest {
   }
 
   @Test
-  public void repeatedFieldNotFlagged() {
+  public void protoInstanceMethodsFlagged() {
     helper
         .addSourceLines(
             "Test.java",
             "import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;",
             "class Test {",
             "  void test(TestProtoMessage message) {",
+            "    // BUG: Diagnostic contains: IgnoredPureGetter",
             "    message.getMultiField(1);",
+            "    // BUG: Diagnostic contains: IgnoredPureGetter",
+            "    message.getWeightMap();",
+            "    // BUG: Diagnostic contains: IgnoredPureGetter",
+            "    message.getWeightOrDefault(1, 42);",
+            "    // BUG: Diagnostic contains: IgnoredPureGetter",
+            "    message.getWeightOrThrow(1);",
+            "    // BUG: Diagnostic contains: IgnoredPureGetter",
+            "    message.containsWeight(1);",
+            "    // BUG: Diagnostic contains: IgnoredPureGetter",
+            "    message.getWeightCount();",
+            "    // BUG: Diagnostic contains: IgnoredPureGetter",
+            "    message.getMessage();",
+            "    // BUG: Diagnostic contains: IgnoredPureGetter",
+            "    message.hasMessage();",
             "  }",
             "}")
         .doTest();

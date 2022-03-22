@@ -27,6 +27,7 @@ import static javax.lang.model.element.Modifier.ABSTRACT;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
@@ -57,9 +58,20 @@ public final class IgnoredPureGetter extends AbstractReturnValueIgnored {
       VisitorState.memoize(
           state -> state.getTypeFromString("com.google.protobuf.MutableMessageLite"));
 
+  private final boolean checkAllProtos;
+
+  public IgnoredPureGetter() {
+    this(ErrorProneFlags.empty());
+  }
+
+  public IgnoredPureGetter(ErrorProneFlags flags) {
+    super(flags);
+    this.checkAllProtos = flags.getBoolean("IgnoredPureGetter:CheckAllProtos").orElse(true);
+  }
+
   @Override
   protected Matcher<? super ExpressionTree> specializedMatcher() {
-    return IgnoredPureGetter::isPureGetter;
+    return this::isPureGetter;
   }
 
   @Override
@@ -92,11 +104,13 @@ public final class IgnoredPureGetter extends AbstractReturnValueIgnored {
     return builder.build();
   }
 
-  private static boolean isPureGetter(ExpressionTree tree, VisitorState state) {
+  // TODO(b/222475003): make this static again once the flag is gone
+  private boolean isPureGetter(ExpressionTree tree, VisitorState state) {
     return pureGetterKind(tree, state).isPresent();
   }
 
-  private static Optional<PureGetterKind> pureGetterKind(ExpressionTree tree, VisitorState state) {
+  // TODO(b/222475003): make this static again once the flag is gone
+  private Optional<PureGetterKind> pureGetterKind(ExpressionTree tree, VisitorState state) {
     Symbol symbol = getSymbol(tree);
     if (!(symbol instanceof MethodSymbol)) {
       return Optional.empty();
@@ -120,6 +134,9 @@ public final class IgnoredPureGetter extends AbstractReturnValueIgnored {
         String name = symbol.getSimpleName().toString();
         if ((name.startsWith("get") || name.startsWith("has"))
             && ((MethodSymbol) symbol).getParameters().isEmpty()) {
+          return Optional.of(PureGetterKind.PROTO);
+        }
+        if (checkAllProtos) {
           return Optional.of(PureGetterKind.PROTO);
         }
       }
