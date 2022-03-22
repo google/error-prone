@@ -14,6 +14,12 @@ To make changes, edit the @BugPattern annotation or the explanation in docs/bugp
 -->
 
 
+## The problem
+The `@Mock` annotation is used to automatically initialize mocks using
+`MockitoAnnotations.initMocks`, or `MockitoJUnitRunner`.
+
+Variables annotated this way should not be explicitly initialized, as this will
+be overwritten by automatic initialization.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("UnnecessaryAssignment")` to the enclosing element.
