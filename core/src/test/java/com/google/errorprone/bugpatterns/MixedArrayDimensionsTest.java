@@ -89,6 +89,17 @@ public class MixedArrayDimensionsTest {
   }
 
   @Test
+  public void negativeInSimpleCharStream() {
+    CompilationTestHelper.newInstance(MixedArrayDimensions.class, getClass())
+        .addSourceLines(
+            "SimpleCharStream.java", //
+            "final class SimpleCharStream {",
+            "  int a[];",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void comment() {
     CompilationTestHelper.newInstance(MixedArrayDimensions.class, getClass())
         .addSourceLines(
