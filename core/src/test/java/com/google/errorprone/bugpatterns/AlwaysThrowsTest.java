@@ -169,4 +169,17 @@ public class AlwaysThrowsTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void uuidFromString() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.util.UUID;",
+            "class Test {",
+            "    // BUG: Diagnostic contains:",
+            "  private final UUID uuid = UUID.fromString(\"foo\");",
+            "}")
+        .doTest();
+  }
 }
