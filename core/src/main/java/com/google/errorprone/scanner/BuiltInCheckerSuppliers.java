@@ -393,6 +393,7 @@ import com.google.errorprone.bugpatterns.UseEnumSwitch;
 import com.google.errorprone.bugpatterns.VarChecker;
 import com.google.errorprone.bugpatterns.VarTypeName;
 import com.google.errorprone.bugpatterns.VariableNameSameAsType;
+import com.google.errorprone.bugpatterns.Varifier;
 import com.google.errorprone.bugpatterns.WaitNotInLoop;
 import com.google.errorprone.bugpatterns.WildcardImport;
 import com.google.errorprone.bugpatterns.WithSignatureDiscouraged;
@@ -1125,6 +1126,7 @@ public class BuiltInCheckerSuppliers {
           UseEnumSwitch.class,
           UsingJsr305CheckReturnValue.class,
           VarChecker.class,
+          Varifier.class,
           VoidMissingNullable.class,
           WildcardImport.class
           // keep-sorted end
