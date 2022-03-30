@@ -1451,6 +1451,9 @@ Prefer ErrorProne&#39;s @CheckReturnValue over JSR305&#39;s version.
 __[Var](bugpattern/Var)__<br>
 Non-constant variable missing @Var annotation
 
+__[Varifier](bugpattern/Varifier)__<br>
+Consider using &#96;var&#96; here to avoid boilerplate.
+
 ## Experimental : SUGGESTION
 
 __[AnnotationMirrorToString](bugpattern/AnnotationMirrorToString)__<br>
