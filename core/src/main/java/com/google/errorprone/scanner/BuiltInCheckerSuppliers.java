@@ -316,7 +316,6 @@ import com.google.errorprone.bugpatterns.StreamResourceLeak;
 import com.google.errorprone.bugpatterns.StreamToIterable;
 import com.google.errorprone.bugpatterns.StreamToString;
 import com.google.errorprone.bugpatterns.StringBuilderInitWithChar;
-import com.google.errorprone.bugpatterns.StringEquality;
 import com.google.errorprone.bugpatterns.StringSplitter;
 import com.google.errorprone.bugpatterns.StronglyTypeByteString;
 import com.google.errorprone.bugpatterns.SubstringOfZero;
@@ -1090,7 +1089,6 @@ public class BuiltInCheckerSuppliers {
           ScopeOrQualifierAnnotationRetention.class,
           StaticOrDefaultInterfaceMethod.class,
           StaticQualifiedUsingExpression.class,
-          StringEquality.class,
           StronglyTypeByteString.class,
           StronglyTypeTime.class,
           SuppressWarningsWithoutExplanation.class,
