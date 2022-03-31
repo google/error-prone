@@ -234,9 +234,7 @@ public class MethodCanBeStatic extends BugChecker implements CompilationUnitTree
     if (sym.isConstructor() || !disjoint(EXCLUDED_MODIFIERS, sym.getModifiers())) {
       return true;
     }
-    if (!ASTHelpers.canBeRemoved(sym, state)) {
-      // Methods that override other methods, or that are overridden, can't be static.
-      // We conservatively warn only for private methods.
+    if (!ASTHelpers.canBeRemoved(sym, state) || ASTHelpers.shouldKeep(tree)) {
       return true;
     }
     switch (sym.owner.enclClass().getNestingKind()) {

@@ -180,6 +180,21 @@ public class MethodCanBeStaticTest {
   }
 
   @Test
+  public void negativeSuppressedByKeep() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.errorprone.annotations.Keep;",
+            "class Test {",
+            "  @Keep",
+            "  private int add(int x, int y) {",
+            "    return x + y;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void negativeTypeParameter() {
     testHelper
         .addSourceLines(
