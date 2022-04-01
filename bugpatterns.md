@@ -1355,9 +1355,6 @@ Methods and non-static variables should be named in lowerCamelCase.
 __[MissingDefault](bugpattern/MissingDefault)__<br>
 The Google Java Style Guide requires that each switch statement includes a default statement group, even if it contains no code. (This requirement is lifted for any switch statement that covers all values of an enum.)
 
-__[NoFunctionalReturnType](bugpattern/NoFunctionalReturnType)__<br>
-Instead of returning a functional type, return the actual type that the returned function would return and use lambdas at use site.
-
 __[NonCanonicalStaticMemberImport](bugpattern/NonCanonicalStaticMemberImport)__<br>
 Static import of member uses non-canonical name
 
