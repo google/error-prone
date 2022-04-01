@@ -887,6 +887,11 @@ public class Matchers {
     return methodHasParameters(ImmutableList.copyOf(variableMatcher));
   }
 
+  /** Matches an AST node that represents a method declaration with no parameters. */
+  public static Matcher<MethodTree> methodHasNoParameters() {
+    return methodHasParameters(ImmutableList.of());
+  }
+
   /**
    * Matches an AST node that represents a method declaration, based on the list of
    * variableMatchers. Applies the variableMatcher at index n to the parameter at index n and
@@ -1482,7 +1487,7 @@ public class Matchers {
       allOf(
           methodIsNamed("toString"),
           methodHasVisibility(Visibility.PUBLIC),
-          methodHasParameters(),
+          methodHasNoParameters(),
           methodReturns(STRING_TYPE));
 
   /** Matches {@link Object#toString} method declaration. */
@@ -1494,7 +1499,7 @@ public class Matchers {
       allOf(
           methodIsNamed("hashCode"),
           methodHasVisibility(Visibility.PUBLIC),
-          methodHasParameters(),
+          methodHasNoParameters(),
           methodReturns(INT_TYPE));
 
   /** Matches {@code hashCode} method declaration. */

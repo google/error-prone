@@ -27,7 +27,7 @@ import static com.google.errorprone.matchers.JUnitMatchers.isJunit3TestCase;
 import static com.google.errorprone.matchers.JUnitMatchers.wouldRunInJUnit4;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.enclosingClass;
-import static com.google.errorprone.matchers.Matchers.methodHasParameters;
+import static com.google.errorprone.matchers.Matchers.methodHasNoParameters;
 import static com.google.errorprone.matchers.Matchers.methodReturns;
 import static com.google.errorprone.matchers.Matchers.not;
 import static com.google.errorprone.suppliers.Suppliers.VOID_TYPE;
@@ -77,7 +77,7 @@ public final class JUnit3TestNotRun extends BugChecker implements MethodTreeMatc
           enclosingClass(isJUnit3TestClass),
           not(isJunit3TestCase),
           methodReturns(VOID_TYPE),
-          methodHasParameters());
+          methodHasNoParameters());
 
   /**
    * Matches iff:
