@@ -176,7 +176,6 @@ import com.google.errorprone.bugpatterns.IsInstanceIncompatibleType;
 import com.google.errorprone.bugpatterns.IsInstanceOfClass;
 import com.google.errorprone.bugpatterns.IterableAndIterator;
 import com.google.errorprone.bugpatterns.IterablePathParameter;
-import com.google.errorprone.bugpatterns.JMockTestWithoutRunWithOrRuleAnnotation;
 import com.google.errorprone.bugpatterns.JUnit3FloatingPointComparisonWithoutDelta;
 import com.google.errorprone.bugpatterns.JUnit3TestNotRun;
 import com.google.errorprone.bugpatterns.JUnit4ClassAnnotationNonStatic;
@@ -1049,7 +1048,6 @@ public class BuiltInCheckerSuppliers {
           InterfaceWithOnlyStatics.class,
           InterruptedExceptionSwallowed.class,
           IterablePathParameter.class,
-          JMockTestWithoutRunWithOrRuleAnnotation.class,
           Java7ApiChecker.class,
           Java8ApiChecker.class,
           LambdaFunctionalInterface.class,
