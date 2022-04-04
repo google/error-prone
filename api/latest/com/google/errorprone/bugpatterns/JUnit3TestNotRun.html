@@ -15,7 +15,7 @@
 <script type="text/javascript" src="../../../../script-dir/jquery-ui.min.js"></script>
 </head>
 <body class="class-declaration-page">
-<script type="text/javascript">var data = {"i0":10};
+<script type="text/javascript">var data = {"i0":10,"i1":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "alt-color";
 var rowColor = "row-color";
@@ -84,12 +84,12 @@ loadScripts(document, 'script');</script>
 <section class="description">
 <dl class="notes">
 <dt>All Implemented Interfaces:</dt>
-<dd><code><a href="BugChecker.MethodTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.MethodTreeMatcher</a></code>, <code><a href="../matchers/Suppressible.html" title="interface in com.google.errorprone.matchers">Suppressible</a></code>, <code><a href="https://docs.oracle.com/javase/8/docs/api/java/io/Serializable.html" title="class or interface in java.io" class="external-link">Serializable</a></code></dd>
+<dd><code><a href="BugChecker.CompilationUnitTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.CompilationUnitTreeMatcher</a></code>, <code><a href="../matchers/Suppressible.html" title="interface in com.google.errorprone.matchers">Suppressible</a></code>, <code><a href="https://docs.oracle.com/javase/8/docs/api/java/io/Serializable.html" title="class or interface in java.io" class="external-link">Serializable</a></code></dd>
 </dl>
 <hr>
 <pre>public final class <span class="type-name-label">JUnit3TestNotRun</span>
 extends <a href="BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a>
-implements <a href="BugChecker.MethodTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.MethodTreeMatcher</a></pre>
+implements <a href="BugChecker.CompilationUnitTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.CompilationUnitTreeMatcher</a></pre>
 <div class="block">A bugpattern; see the associated summary.</div>
 <dl class="notes">
 <dt>See Also:</dt>
@@ -147,8 +147,9 @@ implements <a href="BugChecker.MethodTreeMatcher.html" title="interface in com.g
 </thead>
 <tbody>
 <tr class="alt-color" id="i0">
-<td class="col-first"><code><a href="../matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
-<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#matchMethod(com.sun.source.tree.MethodTree,com.google.errorprone.VisitorState)">matchMethod</a></span>&#8203;(com.sun.source.tree.MethodTree&nbsp;methodTree,
+<td class="col-first"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="../matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a>&gt;</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#checkMethod(com.sun.source.tree.MethodTree,com.google.common.collect.ImmutableSet,com.google.errorprone.VisitorState)">checkMethod</a></span>&#8203;(com.sun.source.tree.MethodTree&nbsp;methodTree,
+com.google.common.collect.ImmutableSet&lt;com.sun.tools.javac.code.Symbol.MethodSymbol&gt;&nbsp;calledMethods,
 <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
 <td class="col-last">
 <div class="block">Matches iff:
@@ -156,6 +157,12 @@ implements <a href="BugChecker.MethodTreeMatcher.html" title="interface in com.g
  
    Method's name begins with misspelled variation of "test".</div>
 </td>
+</tr>
+<tr class="row-color" id="i1">
+<td class="col-first"><code><a href="../matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#matchCompilationUnit(com.sun.source.tree.CompilationUnitTree,com.google.errorprone.VisitorState)">matchCompilationUnit</a></span>&#8203;(com.sun.source.tree.CompilationUnitTree&nbsp;unused,
+<a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
+<td class="col-last">&nbsp;</td>
 </tr>
 </tbody>
 </table>
@@ -196,9 +203,21 @@ implements <a href="BugChecker.MethodTreeMatcher.html" title="interface in com.g
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="matchMethod(com.sun.source.tree.MethodTree,com.google.errorprone.VisitorState)">
-<h3>matchMethod</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></span>&nbsp;<span class="member-name">matchMethod</span>&#8203;(<span class="parameters">com.sun.source.tree.MethodTree&nbsp;methodTree,
+<section class="detail" id="matchCompilationUnit(com.sun.source.tree.CompilationUnitTree,com.google.errorprone.VisitorState)">
+<h3>matchCompilationUnit</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></span>&nbsp;<span class="member-name">matchCompilationUnit</span>&#8203;(<span class="parameters">com.sun.source.tree.CompilationUnitTree&nbsp;unused,
+<a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
+<dl class="notes">
+<dt>Specified by:</dt>
+<dd><code><a href="BugChecker.CompilationUnitTreeMatcher.html#matchCompilationUnit(com.sun.source.tree.CompilationUnitTree,com.google.errorprone.VisitorState)">matchCompilationUnit</a></code>&nbsp;in interface&nbsp;<code><a href="BugChecker.CompilationUnitTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.CompilationUnitTreeMatcher</a></code></dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="checkMethod(com.sun.source.tree.MethodTree,com.google.common.collect.ImmutableSet,com.google.errorprone.VisitorState)">
+<h3>checkMethod</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="../matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a>&gt;</span>&nbsp;<span class="member-name">checkMethod</span>&#8203;(<span class="parameters">com.sun.source.tree.MethodTree&nbsp;methodTree,
+com.google.common.collect.ImmutableSet&lt;com.sun.tools.javac.code.Symbol.MethodSymbol&gt;&nbsp;calledMethods,
 <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
 <div class="block">Matches iff:
 
@@ -208,10 +227,6 @@ implements <a href="BugChecker.MethodTreeMatcher.html" title="interface in com.g
    <li>Enclosing class is JUnit3 test (extends TestCase, has no <code>@RunWith</code> annotation, no
        <code>@Test</code>-annotated methods, and is not abstract).
  </ul></div>
-<dl class="notes">
-<dt>Specified by:</dt>
-<dd><code><a href="BugChecker.MethodTreeMatcher.html#matchMethod(com.sun.source.tree.MethodTree,com.google.errorprone.VisitorState)">matchMethod</a></code>&nbsp;in interface&nbsp;<code><a href="BugChecker.MethodTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.MethodTreeMatcher</a></code></dd>
-</dl>
 </section>
 </li>
 </ul>
