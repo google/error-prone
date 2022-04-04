@@ -1242,9 +1242,6 @@ A standard cryptographic operation is used in a mode that is prone to vulnerabil
 __[IterablePathParameter](bugpattern/IterablePathParameter)__<br>
 Path implements Iterable&lt;Path&gt;; prefer Collection&lt;Path&gt; for clarity
 
-__[JMockTestWithoutRunWithOrRuleAnnotation](bugpattern/JMockTestWithoutRunWithOrRuleAnnotation)__<br>
-jMock tests must have a @RunWith(JMock.class) annotation, or the Mockery field must have a @Rule JUnit annotation
-
 __[Java7ApiChecker](bugpattern/Java7ApiChecker)__<br>
 Use of class, field, or method that is not compatible with JDK 7
 
