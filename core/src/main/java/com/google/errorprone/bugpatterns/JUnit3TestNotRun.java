@@ -26,19 +26,29 @@ import static com.google.errorprone.matchers.JUnitMatchers.isJUnit3TestClass;
 import static com.google.errorprone.matchers.JUnitMatchers.isJunit3TestCase;
 import static com.google.errorprone.matchers.JUnitMatchers.wouldRunInJUnit4;
 import static com.google.errorprone.matchers.Matchers.allOf;
+import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.enclosingClass;
+import static com.google.errorprone.matchers.Matchers.hasModifier;
 import static com.google.errorprone.matchers.Matchers.methodHasNoParameters;
 import static com.google.errorprone.matchers.Matchers.methodReturns;
 import static com.google.errorprone.matchers.Matchers.not;
 import static com.google.errorprone.suppliers.Suppliers.VOID_TYPE;
+import static com.google.errorprone.util.ASTHelpers.findSuperMethods;
+import static com.google.errorprone.util.ASTHelpers.getSymbol;
 
+import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
-import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
+import com.google.errorprone.bugpatterns.BugChecker.CompilationUnitTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
+import com.sun.source.tree.CompilationUnitTree;
+import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
+import com.sun.source.util.TreeScanner;
+import com.sun.tools.javac.code.Symbol.MethodSymbol;
+import java.util.Optional;
 import java.util.regex.Pattern;
 import javax.lang.model.element.Modifier;
 
@@ -48,7 +58,7 @@ import javax.lang.model.element.Modifier;
         "Test method will not be run; please correct method signature "
             + "(Should be public, non-static, and method name should begin with \"test\").",
     severity = ERROR)
-public final class JUnit3TestNotRun extends BugChecker implements MethodTreeMatcher {
+public final class JUnit3TestNotRun extends BugChecker implements CompilationUnitTreeMatcher {
 
   /**
    * Regular expression for test method name that is misspelled and should be replaced with "test".
@@ -76,8 +86,35 @@ public final class JUnit3TestNotRun extends BugChecker implements MethodTreeMatc
       allOf(
           enclosingClass(isJUnit3TestClass),
           not(isJunit3TestCase),
-          methodReturns(VOID_TYPE),
-          methodHasNoParameters());
+          anyOf(methodHasNoParameters(), hasModifier(Modifier.PUBLIC)),
+          enclosingClass((t, s) -> !getSymbol(t).getSimpleName().toString().endsWith("Base")),
+          methodReturns(VOID_TYPE));
+
+  @Override
+  public Description matchCompilationUnit(CompilationUnitTree unused, VisitorState state) {
+    ImmutableSet<MethodSymbol> calledMethods = calledMethods(state);
+    new SuppressibleTreePathScanner<Void, Void>() {
+      @Override
+      public Void visitMethod(MethodTree tree, Void unused) {
+        checkMethod(tree, calledMethods, state.withPath(getCurrentPath()))
+            .ifPresent(state::reportMatch);
+        return super.visitMethod(tree, null);
+      }
+    }.scan(state.getPath(), null);
+    return NO_MATCH;
+  }
+
+  private static ImmutableSet<MethodSymbol> calledMethods(VisitorState state) {
+    ImmutableSet.Builder<MethodSymbol> calledMethods = ImmutableSet.builder();
+    new TreeScanner<Void, Void>() {
+      @Override
+      public Void visitMethodInvocation(MethodInvocationTree tree, Void unused) {
+        calledMethods.add(getSymbol(tree));
+        return super.visitMethodInvocation(tree, null);
+      }
+    }.scan(state.getPath().getCompilationUnit(), null);
+    return calledMethods.build();
+  }
 
   /**
    * Matches iff:
@@ -89,10 +126,16 @@ public final class JUnit3TestNotRun extends BugChecker implements MethodTreeMatc
    *       {@code @Test}-annotated methods, and is not abstract).
    * </ul>
    */
-  @Override
-  public Description matchMethod(MethodTree methodTree, VisitorState state) {
+  public Optional<Description> checkMethod(
+      MethodTree methodTree, ImmutableSet<MethodSymbol> calledMethods, VisitorState state) {
+    if (calledMethods.contains(getSymbol(methodTree))) {
+      return Optional.empty();
+    }
     if (!LOOKS_LIKE_TEST_CASE.matches(methodTree, state)) {
-      return NO_MATCH;
+      return Optional.empty();
+    }
+    if (!findSuperMethods(getSymbol(methodTree), state.getTypes()).isEmpty()) {
+      return Optional.empty();
     }
 
     SuggestedFix.Builder fix = SuggestedFix.builder();
@@ -106,7 +149,7 @@ public final class JUnit3TestNotRun extends BugChecker implements MethodTreeMatc
       } else if (wouldRunInJUnit4.matches(methodTree, state)) {
         fixedName = "test" + toUpperCase(methodName.substring(0, 1)) + methodName.substring(1);
       } else {
-        return NO_MATCH;
+        return Optional.empty();
       }
       fix.merge(renameMethod(methodTree, fixedName, state));
     }
@@ -116,6 +159,6 @@ public final class JUnit3TestNotRun extends BugChecker implements MethodTreeMatc
     // N.B. must occur in separate step because removeModifiers only removes one modifier at a time.
     removeModifiers(methodTree, state, Modifier.STATIC).ifPresent(fix::merge);
 
-    return describeMatch(methodTree, fix.build());
+    return Optional.of(describeMatch(methodTree, fix.build()));
   }
 }
