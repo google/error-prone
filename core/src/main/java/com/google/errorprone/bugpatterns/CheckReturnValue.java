@@ -110,7 +110,9 @@ public class CheckReturnValue extends AbstractReturnValueIgnored
 
   @Override
   public boolean isCovered(ExpressionTree tree, VisitorState state) {
-    return methodSymbol(tree).flatMap(CheckReturnValue::firstAnnotation).isPresent();
+    return methodSymbol(tree)
+        .map(m -> (checkAllConstructors && m.isConstructor()) || firstAnnotation(m).isPresent())
+        .orElse(false);
   }
 
   @Override
