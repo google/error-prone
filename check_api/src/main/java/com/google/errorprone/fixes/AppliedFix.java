@@ -20,14 +20,13 @@ import static com.google.common.base.Preconditions.checkArgument;
 
 import com.google.common.base.Supplier;
 import com.google.common.base.Suppliers;
+import com.google.common.collect.ImmutableSortedMap;
 import com.sun.tools.javac.tree.EndPosTable;
 import java.io.IOException;
 import java.io.LineNumberReader;
 import java.io.StringReader;
 import java.util.HashSet;
-import java.util.NavigableMap;
 import java.util.Set;
-import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.annotation.Nullable;
@@ -58,7 +57,7 @@ public class AppliedFix {
   public static class Applier {
     private final CharSequence source;
     private final EndPosTable endPositions;
-    private final Supplier<NavigableMap<Integer, Integer>> lineOffsets;
+    private final Supplier<ImmutableSortedMap<Integer, Integer>> lineOffsets;
 
     public Applier(CharSequence source, EndPosTable endPositions) {
       this.source = source;
@@ -142,8 +141,8 @@ public class AppliedFix {
   private static final Pattern NEWLINE = Pattern.compile("\\R");
 
   /** Returns the start offsets of the lines in the input. */
-  private static NavigableMap<Integer, Integer> lineOffsets(String input) {
-    NavigableMap<Integer, Integer> lines = new TreeMap<>();
+  private static ImmutableSortedMap<Integer, Integer> lineOffsets(String input) {
+    ImmutableSortedMap.Builder<Integer, Integer> lines = ImmutableSortedMap.naturalOrder();
     int line = 0;
     int idx = 0;
     lines.put(idx, line++);
@@ -152,6 +151,6 @@ public class AppliedFix {
       idx = matcher.end();
       lines.put(idx, line++);
     }
-    return lines;
+    return lines.buildOrThrow();
   }
 }
