@@ -18,12 +18,18 @@ package com.google.errorprone.fixes;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
+import com.google.common.base.Supplier;
+import com.google.common.base.Suppliers;
 import com.sun.tools.javac.tree.EndPosTable;
 import java.io.IOException;
 import java.io.LineNumberReader;
 import java.io.StringReader;
 import java.util.HashSet;
+import java.util.NavigableMap;
 import java.util.Set;
+import java.util.TreeMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.annotation.Nullable;
 
 /**
@@ -52,10 +58,12 @@ public class AppliedFix {
   public static class Applier {
     private final CharSequence source;
     private final EndPosTable endPositions;
+    private final Supplier<NavigableMap<Integer, Integer>> lineOffsets;
 
     public Applier(CharSequence source, EndPosTable endPositions) {
       this.source = source;
       this.endPositions = endPositions;
+      this.lineOffsets = Suppliers.memoize(() -> lineOffsets(source.toString()));
     }
 
     /**
@@ -80,15 +88,7 @@ public class AppliedFix {
         replaced.replace(repl.startPosition(), repl.endPosition(), repl.replaceWith());
 
         // Find the line number(s) being modified
-        // TODO: this could be more efficient
-        try {
-          LineNumberReader lineNumberReader =
-              new LineNumberReader(new StringReader(source.toString()));
-          lineNumberReader.skip(repl.startPosition());
-          modifiedLines.add(lineNumberReader.getLineNumber());
-        } catch (IOException e) {
-          // impossible since source is in-memory
-        }
+        modifiedLines.add(lineOffsets.get().floorEntry(repl.startPosition()).getValue());
       }
 
       // Not sure this is really the right behavior, but otherwise we can end up with an infinite
@@ -137,5 +137,21 @@ public class AppliedFix {
 
   public static Applier fromSource(CharSequence source, EndPosTable endPositions) {
     return new Applier(source, endPositions);
+  }
+
+  private static final Pattern NEWLINE = Pattern.compile("\\R");
+
+  /** Returns the start offsets of the lines in the input. */
+  private static NavigableMap<Integer, Integer> lineOffsets(String input) {
+    NavigableMap<Integer, Integer> lines = new TreeMap<>();
+    int line = 0;
+    int idx = 0;
+    lines.put(idx, line++);
+    Matcher matcher = NEWLINE.matcher(input);
+    while (matcher.find(idx)) {
+      idx = matcher.end();
+      lines.put(idx, line++);
+    }
+    return lines;
   }
 }
