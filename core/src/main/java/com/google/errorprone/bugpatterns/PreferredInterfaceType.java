@@ -213,7 +213,6 @@ public final class PreferredInterfaceType extends BugChecker implements Compilat
       public Void visitMethod(MethodTree node, Void unused) {
         MethodSymbol methodSymbol = getSymbol(node);
         if (methodReturns(INTERESTING_TYPE).matches(node, state)
-            && methodSymbol != null
             && !methodCanBeOverridden(methodSymbol)
             && !SHOULD_IGNORE.matches(node, state)) {
           fixableTypes.put(methodSymbol, node.getReturnType());

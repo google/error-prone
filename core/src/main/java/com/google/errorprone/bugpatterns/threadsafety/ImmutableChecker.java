@@ -290,9 +290,6 @@ public class ImmutableChecker extends BugChecker
   private Description handleAnonymousClass(
       ClassTree tree, VisitorState state, ImmutableAnalysis analysis) {
     ClassSymbol sym = ASTHelpers.getSymbol(tree);
-    if (sym == null) {
-      return NO_MATCH;
-    }
     Type superType = immutableSupertype(sym, state);
     if (superType == null) {
       return NO_MATCH;
@@ -338,9 +335,6 @@ public class ImmutableChecker extends BugChecker
   /** Check for classes without {@code @Immutable} that have immutable supertypes. */
   private Description checkSubtype(ClassTree tree, VisitorState state) {
     ClassSymbol sym = ASTHelpers.getSymbol(tree);
-    if (sym == null) {
-      return NO_MATCH;
-    }
     Type superType = immutableSupertype(sym, state);
     if (superType == null) {
       return NO_MATCH;

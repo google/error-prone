@@ -83,8 +83,7 @@ public final class FieldCanBeLocal extends BugChecker implements CompilationUnit
       @Override
       public Void visitVariable(VariableTree variableTree, Void unused) {
         VarSymbol symbol = getSymbol(variableTree);
-        if (symbol != null
-            && symbol.getKind() == ElementKind.FIELD
+        if (symbol.getKind() == ElementKind.FIELD
             && symbol.isPrivate()
             && canBeLocal(variableTree)
             && !shouldKeep(variableTree)) {

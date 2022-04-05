@@ -140,9 +140,6 @@ public class DoNotCallChecker extends BugChecker
   @Override
   public Description matchMethod(MethodTree tree, VisitorState state) {
     MethodSymbol symbol = getSymbol(tree);
-    if (symbol == null) {
-      return NO_MATCH;
-    }
     if (hasAnnotation(tree, DO_NOT_CALL, state)) {
       if (symbol.getModifiers().contains(Modifier.PRIVATE)) {
         return buildDescription(tree)

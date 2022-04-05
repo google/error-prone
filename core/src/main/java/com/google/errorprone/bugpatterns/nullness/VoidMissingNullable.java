@@ -85,9 +85,6 @@ public class VoidMissingNullable extends BugChecker
   @Override
   public Description matchMethod(MethodTree tree, VisitorState state) {
     MethodSymbol sym = getSymbol(tree);
-    if (sym == null) {
-      return NO_MATCH;
-    }
     if (!typeMatches(sym.getReturnType(), sym, state)) {
       return NO_MATCH;
     }
@@ -106,9 +103,6 @@ public class VoidMissingNullable extends BugChecker
       return NO_MATCH;
     }
     VarSymbol sym = getSymbol(tree);
-    if (sym == null) {
-      return NO_MATCH;
-    }
     if (sym.getKind() == LOCAL_VARIABLE) {
       return NO_MATCH; // Local variables are discussed in the comment about `var`, etc. above.
     }

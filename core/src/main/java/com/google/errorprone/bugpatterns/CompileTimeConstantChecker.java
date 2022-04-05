@@ -201,9 +201,6 @@ public class CompileTimeConstantChecker extends BugChecker
   @Override
   public Description matchMethod(MethodTree node, VisitorState state) {
     Symbol.MethodSymbol method = ASTHelpers.getSymbol(node);
-    if (method == null) {
-      return Description.NO_MATCH;
-    }
     List<Integer> compileTimeConstantAnnotationIndexes =
         getAnnotatedParams(method.getParameters(), state);
     if (compileTimeConstantAnnotationIndexes.isEmpty()) {

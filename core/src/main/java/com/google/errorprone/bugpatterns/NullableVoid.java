@@ -43,9 +43,6 @@ public class NullableVoid extends BugChecker implements MethodTreeMatcher {
   @Override
   public Description matchMethod(MethodTree tree, VisitorState state) {
     MethodSymbol sym = ASTHelpers.getSymbol(tree);
-    if (sym == null) {
-      return NO_MATCH;
-    }
     if (sym.getReturnType().getKind() != TypeKind.VOID) {
       return NO_MATCH;
     }

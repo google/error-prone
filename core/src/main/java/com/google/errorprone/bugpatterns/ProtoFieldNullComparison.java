@@ -171,7 +171,7 @@ public class ProtoFieldNullComparison extends BugChecker implements CompilationU
     @Override
     public Void visitVariable(VariableTree variable, Void unused) {
       Symbol symbol = ASTHelpers.getSymbol(variable);
-      if (variable.getInitializer() != null && symbol != null && isConsideredFinal(symbol)) {
+      if (variable.getInitializer() != null && isConsideredFinal(symbol)) {
         getInitializer(variable.getInitializer())
             .ifPresent(e -> effectivelyFinalValues.put(symbol, e));
       }

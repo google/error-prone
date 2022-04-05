@@ -103,9 +103,6 @@ public class MissingSuperCall extends BugChecker
     }
 
     MethodSymbol methodSym = ASTHelpers.getSymbol(methodTree);
-    if (methodSym == null) {
-      return Description.NO_MATCH;
-    }
 
     if (!methodSym.getModifiers().contains(Modifier.ABSTRACT)) {
       return Description.NO_MATCH;
@@ -131,9 +128,6 @@ public class MissingSuperCall extends BugChecker
   @Override
   public Description matchMethod(MethodTree tree, VisitorState state) {
     MethodSymbol methodSym = ASTHelpers.getSymbol(tree);
-    if (methodSym == null) {
-      return Description.NO_MATCH;
-    }
 
     // Allow abstract methods.
     if (methodSym.getModifiers().contains(Modifier.ABSTRACT)) {

@@ -16,6 +16,7 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
+import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static java.util.stream.Collectors.toCollection;
 
 import com.google.common.collect.ImmutableSet;
@@ -23,7 +24,6 @@ import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
 import com.google.errorprone.matchers.Description;
-import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.tools.javac.code.Symbol;
@@ -58,14 +58,10 @@ public class HidingField extends BugChecker implements ClassTreeMatcher {
         classTree.getMembers().stream()
             .filter(mem -> mem instanceof VariableTree)
             .map(mem -> (VariableTree) mem)
-            .filter(
-                mem ->
-                    !isSuppressed(ASTHelpers.getSymbol(mem))
-                        && !isIgnoredType(mem)
-                        && !isStatic(mem))
+            .filter(mem -> !isSuppressed(getSymbol(mem)) && !isIgnoredType(mem) && !isStatic(mem))
             .collect(toCollection(ArrayList::new));
 
-    ClassSymbol classSymbol = ASTHelpers.getSymbol(classTree);
+    ClassSymbol classSymbol = getSymbol(classTree);
 
     while (!classSymbol.getSuperclass().getKind().equals(TypeKind.NONE)) {
       TypeSymbol parentSymbol = classSymbol.getSuperclass().asElement();
@@ -123,13 +119,7 @@ public class HidingField extends BugChecker implements ClassTreeMatcher {
   }
 
   private static boolean isIgnoredType(VariableTree variableTree) {
-    VarSymbol varSymbol = ASTHelpers.getSymbol(variableTree);
-
-    if (varSymbol != null) { // varSymbol is null when variable is primitive type
-      return IGNORED_CLASSES.contains(varSymbol.getQualifiedName().toString());
-    }
-
-    return false;
+    return IGNORED_CLASSES.contains(getSymbol(variableTree).getQualifiedName().toString());
   }
 
   private static boolean isStatic(VariableTree varTree) {
@@ -142,7 +132,7 @@ public class HidingField extends BugChecker implements ClassTreeMatcher {
         && !parentVariable.getModifiers().contains(Modifier.PROTECTED)
         && !parentVariable.getModifiers().contains(Modifier.PUBLIC)) { // package-private variable
 
-      if (!parentVariable.packge().equals(ASTHelpers.getSymbol(currClass).packge())) {
+      if (!parentVariable.packge().equals(getSymbol(currClass).packge())) {
         return true;
       }
     }

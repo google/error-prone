@@ -271,12 +271,10 @@ public final class FloggerRequiredModifiers extends BugChecker
     MethodTree owningMethod = state.findEnclosing(MethodTree.class);
     if (owningMethod != null) {
       MethodSymbol methodSym = ASTHelpers.getSymbol(owningMethod);
-      if (methodSym != null) {
-        Type returnType = methodSym.getReturnType();
-        // Could be null for initializer blocks
-        if (ASTHelpers.isSameType(loggerType, returnType, state)) {
-          return NO_MATCH;
-        }
+      Type returnType = methodSym.getReturnType();
+      // Could be null for initializer blocks
+      if (ASTHelpers.isSameType(loggerType, returnType, state)) {
+        return NO_MATCH;
       }
     }
 

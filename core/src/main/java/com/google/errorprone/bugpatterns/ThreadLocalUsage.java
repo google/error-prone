@@ -65,7 +65,7 @@ public class ThreadLocalUsage extends BugChecker implements NewClassTreeMatcher 
       return NO_MATCH;
     }
     VarSymbol sym = getSymbol((VariableTree) parent);
-    if (sym != null && sym.isStatic()) {
+    if (sym.isStatic()) {
       return NO_MATCH;
     }
     if (Streams.stream(state.getPath())

@@ -55,9 +55,6 @@ abstract class AbstractAsyncTypeReturnsNull extends AbstractMethodReturnsNull {
       @Override
       public boolean matches(MethodTree tree, VisitorState state) {
         MethodSymbol symbol = getSymbol(tree);
-        if (symbol == null) {
-          return false;
-        }
         for (MethodSymbol superMethod : findSuperMethods(symbol, state.getTypes())) {
           if (superMethod.owner != null
               && superMethod.owner.getQualifiedName().contentEquals(clazz.getName())) {

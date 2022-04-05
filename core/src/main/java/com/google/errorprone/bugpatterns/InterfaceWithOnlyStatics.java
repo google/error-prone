@@ -61,7 +61,7 @@ public final class InterfaceWithOnlyStatics extends BugChecker implements ClassT
     }
     List<? extends Tree> members = tree.getMembers();
     ClassSymbol symbol = getSymbol(tree);
-    if (symbol == null || !symbol.isInterface() || symbol.isAnnotationType()) {
+    if (!symbol.isInterface() || symbol.isAnnotationType()) {
       return Description.NO_MATCH;
     }
     int staticMembers = 0;

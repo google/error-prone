@@ -257,7 +257,7 @@ public class FieldCanBeFinal extends BugChecker implements CompilationUnitTreeMa
     @Override
     public Void visitVariable(VariableTree node, InitializationContext init) {
       VarSymbol sym = ASTHelpers.getSymbol(node);
-      if (sym != null && sym.getKind() == ElementKind.FIELD && !isSuppressed(node)) {
+      if (sym.getKind() == ElementKind.FIELD && !isSuppressed(node)) {
         writes.recordDeclaration(sym, node);
       }
       return super.visitVariable(node, InitializationContext.NONE);
@@ -281,7 +281,7 @@ public class FieldCanBeFinal extends BugChecker implements CompilationUnitTreeMa
     @Override
     public Void visitMethod(MethodTree node, InitializationContext init) {
       MethodSymbol sym = ASTHelpers.getSymbol(node);
-      if (sym != null && sym.isConstructor()) {
+      if (sym.isConstructor()) {
         init = InitializationContext.INSTANCE;
       }
       return super.visitMethod(node, init);

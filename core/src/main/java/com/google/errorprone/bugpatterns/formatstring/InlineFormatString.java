@@ -176,7 +176,7 @@ public class InlineFormatString extends BugChecker implements CompilationUnitTre
       @Override
       public Void visitVariable(VariableTree tree, Void unused) {
         VarSymbol sym = getSymbol(tree);
-        if (sym != null && uses.containsKey(sym)) {
+        if (uses.containsKey(sym)) {
           declarations.put(sym, tree);
         }
         return super.visitVariable(tree, null);

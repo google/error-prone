@@ -77,9 +77,6 @@ public final class StaticAssignmentOfThrowable extends BugChecker
     }
 
     MethodSymbol methodSymbol = getSymbol(tree);
-    if (methodSymbol == null) {
-      return NO_MATCH;
-    }
     if (methodSymbol.isConstructor()) {
       // To avoid duplicate/conflicting findings, this scenario delegated to
       // StaticAssignmentInConstructor

@@ -84,9 +84,6 @@ public final class MemberName extends BugChecker implements MethodTreeMatcher, V
   @Override
   public Description matchMethod(MethodTree tree, VisitorState state) {
     MethodSymbol symbol = getSymbol(tree);
-    if (symbol == null) {
-      return NO_MATCH;
-    }
     if (!annotationsAmong(symbol.owner, EXEMPTED_CLASS_ANNOTATIONS.get(state), state).isEmpty()) {
       return NO_MATCH;
     }
@@ -138,9 +135,6 @@ public final class MemberName extends BugChecker implements MethodTreeMatcher, V
   @Override
   public Description matchVariable(VariableTree tree, VisitorState state) {
     VarSymbol symbol = getSymbol(tree);
-    if (symbol == null) {
-      return NO_MATCH;
-    }
     String name = tree.getName().toString();
     // Try to avoid dual-matching with ConstantCaseForConstants.
     if (UPPER_UNDERSCORE_PATTERN.matcher(name).matches() && !symbol.isStatic()) {

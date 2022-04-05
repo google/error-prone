@@ -90,8 +90,7 @@ public class UnnecessaryAnonymousClass extends BugChecker implements VariableTre
       return NO_MATCH;
     }
     VarSymbol varSym = getSymbol(tree);
-    if (varSym == null
-        || varSym.getKind() != ElementKind.FIELD
+    if (varSym.getKind() != ElementKind.FIELD
         || !canBeRemoved(varSym)
         || !varSym.getModifiers().contains(Modifier.FINAL)) {
       return NO_MATCH;
@@ -102,9 +101,6 @@ public class UnnecessaryAnonymousClass extends BugChecker implements VariableTre
       return NO_MATCH;
     }
     MethodSymbol methodSymbol = getSymbol(implementation);
-    if (methodSymbol == null) {
-      return NO_MATCH;
-    }
     Symbol descriptorSymbol = state.getTypes().findDescriptorSymbol(type.tsym);
     if (!methodSymbol.getSimpleName().contentEquals(descriptorSymbol.getSimpleName())) {
       return NO_MATCH;

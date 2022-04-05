@@ -49,7 +49,7 @@ public class ClassCanBeStatic extends BugChecker implements ClassTreeMatcher {
   @Override
   public Description matchClass(ClassTree tree, VisitorState state) {
     ClassSymbol currentClass = ASTHelpers.getSymbol(tree);
-    if (currentClass == null || !currentClass.hasOuterInstance()) {
+    if (!currentClass.hasOuterInstance()) {
       return NO_MATCH;
     }
     if (currentClass.getNestingKind() != NestingKind.MEMBER) {

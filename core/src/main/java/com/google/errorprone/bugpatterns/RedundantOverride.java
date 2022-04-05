@@ -57,9 +57,6 @@ public final class RedundantOverride extends BugChecker implements MethodTreeMat
   @Override
   public Description matchMethod(MethodTree tree, VisitorState state) {
     MethodSymbol methodSymbol = getSymbol(tree);
-    if (methodSymbol == null) {
-      return NO_MATCH;
-    }
     Optional<MethodSymbol> maybeSuperMethod = findSuperMethod(methodSymbol, state.getTypes());
     if (!maybeSuperMethod.isPresent()) {
       return NO_MATCH;

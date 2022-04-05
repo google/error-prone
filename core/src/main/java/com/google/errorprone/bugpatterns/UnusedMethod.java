@@ -201,8 +201,7 @@ public final class UnusedMethod extends BugChecker implements CompilationUnitTre
           return false;
         }
         MethodSymbol methodSymbol = getSymbol(tree);
-        if (methodSymbol == null
-            || isExemptedConstructor(methodSymbol, state)
+        if (isExemptedConstructor(methodSymbol, state)
             || SERIALIZATION_METHODS.matches(tree, state)) {
           return false;
         }
@@ -286,9 +285,6 @@ public final class UnusedMethod extends BugChecker implements CompilationUnitTre
        */
       private void handleMethodSource(MethodTree tree) {
         MethodSymbol sym = getSymbol(tree);
-        if (sym == null) {
-          return;
-        }
         Name name = ORG_JUNIT_JUPITER_PARAMS_PROVIDER_METHODSOURCE.get(state);
         sym.getRawAttributes().stream()
             .filter(a -> a.type.tsym.getQualifiedName().equals(name))

@@ -88,10 +88,7 @@ public final class ConstantPatternCompile extends BugChecker implements Variable
     if (outerMethodTree == null) {
       return NO_MATCH;
     }
-    Symbol sym = getSymbol(tree);
-    if (sym == null) {
-      return NO_MATCH;
-    }
+    VarSymbol sym = getSymbol(tree);
     switch (sym.getKind()) {
       case RESOURCE_VARIABLE:
         return describeMatch(tree);
@@ -115,8 +112,7 @@ public final class ConstantPatternCompile extends BugChecker implements Variable
     }
     MethodSymbol methodSymbol = getSymbol(outerMethodTree);
     boolean canUseStatic =
-        (methodSymbol != null
-                && methodSymbol.owner.enclClass().getNestingKind() == NestingKind.TOP_LEVEL)
+        methodSymbol.owner.enclClass().getNestingKind() == NestingKind.TOP_LEVEL
             || outerMethodTree.getModifiers().getFlags().contains(Modifier.STATIC);
     String replacement =
         String.format(

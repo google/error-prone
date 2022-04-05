@@ -79,9 +79,6 @@ public final class UnusedNestedClass extends BugChecker implements CompilationUn
         return null;
       }
       ClassSymbol symbol = getSymbol(classTree);
-      if (symbol == null) {
-        return super.visitClass(classTree, null);
-      }
       boolean isAnonymous = classTree.getSimpleName().length() == 0;
       if (!isAnonymous && (canBeRemoved(symbol) || symbol.owner instanceof MethodSymbol)) {
         classes.put(symbol, getCurrentPath());
@@ -101,9 +98,6 @@ public final class UnusedNestedClass extends BugChecker implements CompilationUn
     @Override
     public Void visitClass(ClassTree classTree, Void unused) {
       ClassSymbol symbol = getSymbol(classTree);
-      if (symbol == null) {
-        return super.visitClass(classTree, null);
-      }
       withinClasses.add(symbol);
       super.visitClass(classTree, null);
       withinClasses.remove(symbol);

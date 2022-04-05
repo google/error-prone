@@ -71,7 +71,7 @@ public class UnsafeFinalization extends BugChecker implements MethodInvocationTr
     // static methods don't have an instance to finalize, and we shouldn't need to worry about
     // finalization during construction.
     MethodSymbol enclosing = ASTHelpers.getSymbol(method);
-    if (enclosing == null || enclosing.isStatic() || enclosing.isConstructor()) {
+    if (enclosing.isStatic() || enclosing.isConstructor()) {
       return NO_MATCH;
     }
     // Check if any arguments of the static native method are members (e.g. fields) of the enclosing

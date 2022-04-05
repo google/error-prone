@@ -228,9 +228,6 @@ public class MethodCanBeStatic extends BugChecker implements CompilationUnitTree
 
   private static boolean isExcluded(MethodTree tree, VisitorState state) {
     MethodSymbol sym = ASTHelpers.getSymbol(tree);
-    if (sym == null) {
-      return true;
-    }
     if (sym.isConstructor() || !disjoint(EXCLUDED_MODIFIERS, sym.getModifiers())) {
       return true;
     }

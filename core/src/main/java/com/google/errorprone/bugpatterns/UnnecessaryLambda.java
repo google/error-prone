@@ -85,7 +85,7 @@ public class UnnecessaryLambda extends BugChecker
       return NO_MATCH;
     }
     MethodSymbol sym = getSymbol(tree);
-    if (sym == null || !ASTHelpers.canBeRemoved(sym, state)) {
+    if (!ASTHelpers.canBeRemoved(sym, state)) {
       return NO_MATCH;
     }
     SuggestedFix.Builder fix = SuggestedFix.builder();
@@ -120,8 +120,7 @@ public class UnnecessaryLambda extends BugChecker
       return NO_MATCH;
     }
     Symbol sym = getSymbol(tree);
-    if (sym == null
-        || sym.getKind() != ElementKind.FIELD
+    if (sym.getKind() != ElementKind.FIELD
         || !sym.isPrivate()
         || !sym.getModifiers().contains(Modifier.FINAL)) {
       return NO_MATCH;

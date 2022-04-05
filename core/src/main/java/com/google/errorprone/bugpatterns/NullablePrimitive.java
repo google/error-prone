@@ -32,7 +32,6 @@ import com.sun.source.tree.AnnotatedTypeTree;
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.VariableTree;
-import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Type;
 import java.util.List;
@@ -56,19 +55,12 @@ public class NullablePrimitive extends BugChecker
   @Override
   public Description matchMethod(MethodTree tree, VisitorState state) {
     MethodSymbol sym = ASTHelpers.getSymbol(tree);
-    if (sym == null) {
-      return NO_MATCH;
-    }
     return check(sym.getReturnType(), tree.getModifiers().getAnnotations());
   }
 
   @Override
   public Description matchVariable(VariableTree tree, VisitorState state) {
-    Symbol.VarSymbol sym = ASTHelpers.getSymbol(tree);
-    if (sym == null) {
-      return NO_MATCH;
-    }
-    return check(sym.type, tree.getModifiers().getAnnotations());
+    return check(ASTHelpers.getSymbol(tree).type, tree.getModifiers().getAnnotations());
   }
 
   private Description check(Type type, List<? extends AnnotationTree> annotations) {

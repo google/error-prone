@@ -571,9 +571,6 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
         return null;
       }
       VarSymbol symbol = getSymbol(variableTree);
-      if (symbol == null) {
-        return null;
-      }
       if (symbol.getKind() == ElementKind.FIELD
           && symbol.getSimpleName().contentEquals("CREATOR")
           && isSubtype(symbol.type, PARCELABLE_CREATOR.get(state), state)) {

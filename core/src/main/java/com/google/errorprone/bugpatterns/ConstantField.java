@@ -44,7 +44,7 @@ public class ConstantField extends BugChecker implements VariableTreeMatcher {
   @Override
   public Description matchVariable(VariableTree tree, VisitorState state) {
     Symbol.VarSymbol sym = ASTHelpers.getSymbol(tree);
-    if (sym == null || sym.getKind() != ElementKind.FIELD) {
+    if (sym.getKind() != ElementKind.FIELD) {
       return Description.NO_MATCH;
     }
     String name = sym.getSimpleName().toString();

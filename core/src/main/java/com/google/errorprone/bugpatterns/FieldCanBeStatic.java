@@ -88,8 +88,7 @@ public final class FieldCanBeStatic extends BugChecker implements VariableTreeMa
   @Override
   public Description matchVariable(VariableTree tree, VisitorState state) {
     VarSymbol symbol = getSymbol(tree);
-    if (symbol == null
-        || !canBeRemoved(symbol)
+    if (!canBeRemoved(symbol)
         || !tree.getModifiers().getFlags().contains(FINAL)
         || symbol.isStatic()
         || !symbol.getKind().equals(FIELD)

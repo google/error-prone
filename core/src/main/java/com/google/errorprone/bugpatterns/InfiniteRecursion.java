@@ -84,7 +84,7 @@ public class InfiniteRecursion extends BugChecker implements BugChecker.MethodTr
     }
     ExpressionTree select = invocation.getMethodSelect();
     MethodSymbol sym = ASTHelpers.getSymbol(tree);
-    if (sym == null || !sym.equals(ASTHelpers.getSymbol(invocation))) {
+    if (!sym.equals(ASTHelpers.getSymbol(invocation))) {
       return NO_MATCH;
     }
     if (!sym.isStatic()) {

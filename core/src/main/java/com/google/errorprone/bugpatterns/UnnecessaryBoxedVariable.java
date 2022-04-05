@@ -82,9 +82,6 @@ public class UnnecessaryBoxedVariable extends BugChecker implements VariableTree
     }
 
     VarSymbol varSymbol = ASTHelpers.getSymbol(tree);
-    if (varSymbol == null) {
-      return Description.NO_MATCH;
-    }
     switch (varSymbol.getKind()) {
       case PARAMETER:
         if (!canChangeMethodSignature(state, (MethodSymbol) varSymbol.getEnclosingElement())) {
