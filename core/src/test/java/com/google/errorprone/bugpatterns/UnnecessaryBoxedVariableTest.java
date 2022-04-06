@@ -36,4 +36,19 @@ public class UnnecessaryBoxedVariableTest {
         .addOutput("testdata/UnnecessaryBoxedVariableCases_expected.java")
         .doTest();
   }
+
+  @Test
+  public void suppression() {
+    helper
+        .addInputLines(
+            "Test.java",
+            "class Test {",
+            "  @SuppressWarnings(\"UnnecessaryBoxedVariable\")",
+            "  private int a(Integer o) {",
+            "    return o;",
+            "  }",
+            "}")
+        .expectUnchanged()
+        .doTest();
+  }
 }
