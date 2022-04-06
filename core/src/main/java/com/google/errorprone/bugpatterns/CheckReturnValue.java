@@ -17,6 +17,7 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.hasDirectAnnotationWithSimpleName;
 
 import com.google.auto.value.AutoValue;
@@ -32,7 +33,9 @@ import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ClassTree;
+import com.sun.source.tree.ExpressionStatementTree;
 import com.sun.source.tree.ExpressionTree;
+import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.NewClassTree;
 import com.sun.tools.javac.code.Symbol;
@@ -96,11 +99,40 @@ public class CheckReturnValue extends AbstractReturnValueIgnored
   @Override
   public Matcher<ExpressionTree> specializedMatcher() {
     return (tree, state) -> {
-      Optional<MethodSymbol> sym = methodSymbol(tree);
+      Optional<MethodSymbol> sym = methodToInspect(tree);
       return sym.flatMap(CheckReturnValue::firstAnnotation)
           .map(found -> found.annotation().equals(CHECK_RETURN_VALUE))
           .orElse(checkAllConstructors && sym.map(MethodSymbol::isConstructor).orElse(false));
     };
+  }
+
+  private static Optional<MethodSymbol> methodToInspect(ExpressionTree tree) {
+    // If we're in the middle of calling an anonymous class, we want to actually look at the
+    // corresponding constructor of the supertype (e.g.: if I extend a class with a @CIRV
+    // constructor that I delegate to, then my anonymous class's constructor should *also* be
+    // considered @CIRV).
+    if (tree instanceof NewClassTree) {
+      ClassTree anonymousClazz = ((NewClassTree) tree).getClassBody();
+      if (anonymousClazz != null) {
+        // There should be a single defined constructor in the anonymous class body
+        var constructor =
+            anonymousClazz.getMembers().stream()
+                .filter(MethodTree.class::isInstance)
+                .map(MethodTree.class::cast)
+                .filter(mt -> getSymbol(mt).isConstructor())
+                .findFirst();
+
+        // and its first statement should be a super() call to the method in question.
+        return constructor
+            .map(MethodTree::getBody)
+            .map(block -> block.getStatements().get(0))
+            .map(ExpressionStatementTree.class::cast)
+            .map(ExpressionStatementTree::getExpression)
+            .map(MethodInvocationTree.class::cast)
+            .map(ASTHelpers::getSymbol);
+      }
+    }
+    return methodSymbol(tree);
   }
 
   private static Optional<MethodSymbol> methodSymbol(ExpressionTree tree) {

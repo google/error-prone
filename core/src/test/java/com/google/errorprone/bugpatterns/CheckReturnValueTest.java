@@ -706,6 +706,89 @@ public class CheckReturnValueTest {
   }
 
   @Test
+  public void constructor_anonymousClassInheritsCIRV() {
+    compilationHelperLookingAtAllConstructors()
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  @com.google.errorprone.annotations.CanIgnoreReturnValue",
+            "  public Test() {}",
+            "  public static void foo() {",
+            "    new Test() {};",
+            "    new Test() {{ System.out.println(\"Lookie, instance initializer\"); }};",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void constructor_anonymousClassInheritsCRV() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  @com.google.errorprone.annotations.CheckReturnValue",
+            "  public Test() {}",
+            "  public static void foo() {",
+            "    // BUG: Diagnostic contains: ",
+            "    new Test() {};",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void constructor_hasOuterInstance() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  class Inner {",
+            "    @com.google.errorprone.annotations.CheckReturnValue",
+            "    public Inner() {}",
+            "  }",
+            "  public static void foo() {",
+            "    // BUG: Diagnostic contains: ",
+            "    new Test().new Inner() {};",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void constructor_anonymousClassInheritsCRV_syntheticConstructor() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  @com.google.errorprone.annotations.CheckReturnValue",
+            "  static class Nested {}",
+            "  public static void foo() {",
+            "    // BUG: Diagnostic contains: ",
+            "    new Nested() {};", // The "called" constructor is synthetic, but within @CRV Nested
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void constructor_inheritsFromCrvInterface() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  @com.google.errorprone.annotations.CheckReturnValue",
+            "  static interface IFace {}",
+            "  public static void foo() {",
+            //  TODO(b/226203690): It's arguable that this might need to be @CRV?
+            //   The superclass of the anonymous class is Object, not IFace, but /shrug
+            "    new IFace() {};",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void constructor_throwingContexts() {
     compilationHelper
         .addSourceLines(
