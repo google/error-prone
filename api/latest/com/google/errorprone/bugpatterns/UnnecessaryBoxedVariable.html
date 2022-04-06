@@ -84,12 +84,12 @@ loadScripts(document, 'script');</script>
 <section class="description">
 <dl class="notes">
 <dt>All Implemented Interfaces:</dt>
-<dd><code><a href="BugChecker.VariableTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.VariableTreeMatcher</a></code>, <code><a href="../matchers/Suppressible.html" title="interface in com.google.errorprone.matchers">Suppressible</a></code>, <code><a href="https://docs.oracle.com/javase/8/docs/api/java/io/Serializable.html" title="class or interface in java.io" class="external-link">Serializable</a></code></dd>
+<dd><code><a href="BugChecker.CompilationUnitTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.CompilationUnitTreeMatcher</a></code>, <code><a href="../matchers/Suppressible.html" title="interface in com.google.errorprone.matchers">Suppressible</a></code>, <code><a href="https://docs.oracle.com/javase/8/docs/api/java/io/Serializable.html" title="class or interface in java.io" class="external-link">Serializable</a></code></dd>
 </dl>
 <hr>
 <pre>public class <span class="type-name-label">UnnecessaryBoxedVariable</span>
 extends <a href="BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a>
-implements <a href="BugChecker.VariableTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.VariableTreeMatcher</a></pre>
+implements <a href="BugChecker.CompilationUnitTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.CompilationUnitTreeMatcher</a></pre>
 <div class="block">Finds and fixes unnecessarily boxed variables.</div>
 <dl class="notes">
 <dt>Author:</dt>
@@ -150,7 +150,7 @@ implements <a href="BugChecker.VariableTreeMatcher.html" title="interface in com
 <tbody>
 <tr class="alt-color" id="i0">
 <td class="col-first"><code><a href="../matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
-<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#matchVariable(com.sun.source.tree.VariableTree,com.google.errorprone.VisitorState)">matchVariable</a></span>&#8203;(com.sun.source.tree.VariableTree&nbsp;tree,
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#matchCompilationUnit(com.sun.source.tree.CompilationUnitTree,com.google.errorprone.VisitorState)">matchCompilationUnit</a></span>&#8203;(com.sun.source.tree.CompilationUnitTree&nbsp;tree,
 <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
@@ -193,13 +193,13 @@ implements <a href="BugChecker.VariableTreeMatcher.html" title="interface in com
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="matchVariable(com.sun.source.tree.VariableTree,com.google.errorprone.VisitorState)">
-<h3>matchVariable</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></span>&nbsp;<span class="member-name">matchVariable</span>&#8203;(<span class="parameters">com.sun.source.tree.VariableTree&nbsp;tree,
+<section class="detail" id="matchCompilationUnit(com.sun.source.tree.CompilationUnitTree,com.google.errorprone.VisitorState)">
+<h3>matchCompilationUnit</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></span>&nbsp;<span class="member-name">matchCompilationUnit</span>&#8203;(<span class="parameters">com.sun.source.tree.CompilationUnitTree&nbsp;tree,
 <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
 <dl class="notes">
 <dt>Specified by:</dt>
-<dd><code><a href="BugChecker.VariableTreeMatcher.html#matchVariable(com.sun.source.tree.VariableTree,com.google.errorprone.VisitorState)">matchVariable</a></code>&nbsp;in interface&nbsp;<code><a href="BugChecker.VariableTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.VariableTreeMatcher</a></code></dd>
+<dd><code><a href="BugChecker.CompilationUnitTreeMatcher.html#matchCompilationUnit(com.sun.source.tree.CompilationUnitTree,com.google.errorprone.VisitorState)">matchCompilationUnit</a></code>&nbsp;in interface&nbsp;<code><a href="BugChecker.CompilationUnitTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.CompilationUnitTreeMatcher</a></code></dd>
 </dl>
 </section>
 </li>
