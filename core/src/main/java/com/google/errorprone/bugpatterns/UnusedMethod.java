@@ -102,6 +102,7 @@ public final class UnusedMethod extends BugChecker implements CompilationUnitTre
           "javax.annotation.PostConstruct",
           "javax.inject.Inject",
           "javax.persistence.PostLoad",
+          "org.apache.beam.sdk.transforms.DoFn.ProcessElement",
           "org.aspectj.lang.annotation.Pointcut",
           "org.aspectj.lang.annotation.Before",
           "org.springframework.context.annotation.Bean",
