@@ -61,6 +61,42 @@ public class UnnecessaryLambdaTest {
   }
 
   @Test
+  public void method_effectivelyPrivate() {
+    testHelper
+        .addInputLines(
+            "Test.java",
+            "import java.util.function.Function;",
+            "class Test {",
+            "  private class Inner {",
+            "    Function<String, String> f() {",
+            "      return x -> {",
+            "        return \"hello \" + x;",
+            "      };",
+            "    }",
+            "    void g() {",
+            "      Function<String, String> f = f();",
+            "      System.err.println(f().apply(\"world\"));",
+            "    }",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "import java.util.function.Function;",
+            "class Test {",
+            "  private class Inner {",
+            "    String f(String x) {",
+            "      return \"hello \" + x;",
+            "    }",
+            "    void g() {",
+            "      Function<String, String> f = this::f;",
+            "      System.err.println(f(\"world\"));",
+            "    }",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void method_static() {
     testHelper
         .addInputLines(
