@@ -549,4 +549,26 @@ public class CompilationTestHelperTest {
         assertThrows(IllegalStateException.class, () -> compilationHelper.doTest());
     assertThat(expected).hasMessageThat().contains("doTest");
   }
+
+  @Test
+  public void assertionErrors_causeTestFailures() {
+    var compilationTestHelper =
+        CompilationTestHelper.newInstance(AssertionFailingChecker.class, getClass())
+            .addSourceLines("test/Test.java", "package test;", "public class Test {}");
+    AssertionError expected =
+        assertThrows(AssertionError.class, () -> compilationTestHelper.doTest());
+    assertThat(expected)
+        .hasMessageThat()
+        .contains("An unhandled exception was thrown by the Error Prone static analysis plugin");
+  }
+
+  /** A BugPattern that always throws. */
+  @BugPattern(summary = "A really broken checker.", severity = ERROR)
+  public static class AssertionFailingChecker extends BugChecker
+      implements CompilationUnitTreeMatcher {
+    @Override
+    public Description matchCompilationUnit(CompilationUnitTree tree, VisitorState state) {
+      throw new AssertionError();
+    }
+  }
 }
