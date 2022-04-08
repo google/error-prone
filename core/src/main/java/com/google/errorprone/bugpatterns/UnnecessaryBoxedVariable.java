@@ -41,6 +41,7 @@ import com.sun.source.tree.CompoundAssignmentTree;
 import com.sun.source.tree.EnhancedForLoopTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
+import com.sun.source.tree.LambdaExpressionTree;
 import com.sun.source.tree.MemberReferenceTree;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
@@ -102,7 +103,8 @@ public class UnnecessaryBoxedVariable extends BugChecker implements CompilationU
     VarSymbol varSymbol = getSymbol(tree);
     switch (varSymbol.getKind()) {
       case PARAMETER:
-        if (!canChangeMethodSignature(state, (MethodSymbol) varSymbol.getEnclosingElement())) {
+        if (!canChangeMethodSignature(state, (MethodSymbol) varSymbol.getEnclosingElement())
+            || state.getPath().getParentPath().getLeaf() instanceof LambdaExpressionTree) {
           return Optional.empty();
         }
         // Fall through.

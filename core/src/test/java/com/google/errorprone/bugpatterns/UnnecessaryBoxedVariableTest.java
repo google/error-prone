@@ -17,6 +17,7 @@
 package com.google.errorprone.bugpatterns;
 
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
+import com.google.errorprone.CompilationTestHelper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -28,6 +29,8 @@ import org.junit.runners.JUnit4;
 public class UnnecessaryBoxedVariableTest {
   private final BugCheckerRefactoringTestHelper helper =
       BugCheckerRefactoringTestHelper.newInstance(UnnecessaryBoxedVariable.class, getClass());
+  private final CompilationTestHelper compilationTestHelper =
+      CompilationTestHelper.newInstance(UnnecessaryBoxedVariable.class, getClass());
 
   @Test
   public void testCases() {
@@ -49,6 +52,21 @@ public class UnnecessaryBoxedVariableTest {
             "  }",
             "}")
         .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
+  public void lambdas() {
+    compilationTestHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  interface Boxed<O> { void a(O b); }",
+            "  void boxed(Boxed<?> b) {}",
+            "  private void test() {",
+            "    boxed((Double a) -> { double b = a + 1; });",
+            "  }",
+            "}")
         .doTest();
   }
 }
