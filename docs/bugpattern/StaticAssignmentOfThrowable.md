@@ -6,7 +6,7 @@ necessary: it often isn't. Could a Throwable simply be instantiated when needed?
 
 ``` {.bad}
 // this always has the same stack trace
-static final MY_EXCEPTION = new MyException("something terrible has happened!");
+static final MyException MY_EXCEPTION = new MyException("something terrible has happened!");
 ```
 
 ``` {.good}
