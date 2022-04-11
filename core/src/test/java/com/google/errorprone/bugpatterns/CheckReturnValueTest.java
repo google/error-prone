@@ -872,6 +872,52 @@ public class CheckReturnValueTest {
         .doTest();
   }
 
+  @Test
+  public void testAutoValueBuilderSetterMethods() {
+    compilationHelper
+        .addSourceLines(
+            "Animal.java",
+            "package com.google.frobber;",
+            "import com.google.auto.value.AutoValue;",
+            "import com.google.errorprone.annotations.CheckReturnValue;",
+            "@AutoValue",
+            "@CheckReturnValue",
+            "abstract class Animal {",
+            "  abstract String name();",
+            "  abstract int numberOfLegs();",
+            "  static Builder builder() {",
+            "    return new BuilderImpl();",
+            "  }",
+            "  @AutoValue.Builder",
+            "  abstract static class Builder {",
+            "    abstract Builder setName(String value);",
+            "    abstract Builder setNumberOfLegs(int value);",
+            "    abstract Animal build();",
+            "  }",
+            // we have to "fake out" the AutoValue impl since the AV annotation processor doesn't
+            // run inside our unit tests
+            "  private static final class BuilderImpl extends Builder {",
+            "    Builder setName(String value) { return this; }",
+            "    Builder setNumberOfLegs(int value) { return this; }",
+            "    Animal build() { return null; }",
+            "  }",
+            "}")
+        .addSourceLines(
+            "AnimalCaller.java",
+            "package com.google.frobber;",
+            "public final class AnimalCaller {",
+            "  static void testAnimal() {",
+            "    Animal.Builder builder = Animal.builder();",
+            // TODO(b/26956157): AutoValue Builder setter methods should be implicitly @CIRV
+            "    // BUG: Diagnostic contains: Ignored return value of 'setNumberOfLegs'", // bug!
+            "    builder.setNumberOfLegs(4);",
+            "    // BUG: Diagnostic contains: Ignored return value of 'build'", // expected
+            "    builder.build();",
+            "  }",
+            "}")
+        .doTest();
+  }
+
   private CompilationTestHelper compilationHelperLookingAtAllConstructors() {
     return compilationHelper.setArgs(
         "-XepOpt:" + CheckReturnValue.CHECK_ALL_CONSTRUCTORS + "=true");
