@@ -943,6 +943,9 @@ Avoid having multiple unary operators acting on the same variable in a method ca
 __[MutablePublicArray](bugpattern/MutablePublicArray)__<br>
 Non-empty arrays are mutable, so this &#96;public static final&#96; array is not a constant and can be modified by clients of this class.  Prefer an ImmutableList, or provide an accessor method that returns a defensive copy.
 
+__[NarrowCalculation](bugpattern/NarrowCalculation)__<br>
+This calculation may lose precision compared to its target type.
+
 __[NarrowingCompoundAssignment](bugpattern/NarrowingCompoundAssignment)__<br>
 Compound assignments may hide dangerous casts
 
