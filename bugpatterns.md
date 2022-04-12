@@ -1483,9 +1483,6 @@ Field is assigned (or compared against) a definitely null value but is not annot
 __[ForEachIterable](bugpattern/ForEachIterable)__<br>
 This loop can be replaced with an enhanced for loop.
 
-__[HashCodeToString](bugpattern/HashCodeToString)__<br>
-Classes that override hashCode should also consider overriding toString.
-
 __[ImmutableMemberCollection](bugpattern/ImmutableMemberCollection)__<br>
 If you don&#39;t intend to mutate a member collection prefer using Immutable types.
 
