@@ -213,7 +213,7 @@ __[IdentityHashMapBoxing](bugpattern/IdentityHashMapBoxing)__<br>
 Using IdentityHashMap with a boxed type as the key is risky since boxing may produce distinct instances
 
 __[IgnoredPureGetter](bugpattern/IgnoredPureGetter)__<br>
-Getters on AutoValue classes and protos are side-effect free, so there is no point in calling them if the return value is ignored. While there are no side effects from the getter, the receiver may have side effects.
+Getters on AutoValues, AutoBuilders, and Protobuf Messages are side-effect free, so there is no point in calling them if the return value is ignored. While there are no side effects from the getter, the receiver may have side effects.
 
 __[Immutable](bugpattern/Immutable)__<br>
 Type declaration annotated with @Immutable is not immutable
