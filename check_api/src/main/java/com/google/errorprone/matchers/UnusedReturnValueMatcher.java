@@ -35,7 +35,10 @@ import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.getResultType;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
+import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
+import static com.google.errorprone.util.ASTHelpers.isSameType;
 import static com.google.errorprone.util.ASTHelpers.isVoidType;
+import static javax.lang.model.element.Modifier.ABSTRACT;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
@@ -54,6 +57,7 @@ import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.tools.javac.code.Symbol;
+import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Type.MethodType;
@@ -71,9 +75,14 @@ public final class UnusedReturnValueMatcher implements Matcher<ExpressionTree> {
 
   private static final ImmutableMap<AllowReason, Matcher<ExpressionTree>> ALLOW_MATCHERS =
       ImmutableMap.of(
-          AllowReason.MOCKING_CALL, UnusedReturnValueMatcher::mockitoInvocation,
-          AllowReason.EXCEPTION_TESTING, UnusedReturnValueMatcher::exceptionTesting,
-          AllowReason.RETURNS_JAVA_LANG_VOID, UnusedReturnValueMatcher::returnsJavaLangVoid);
+          AllowReason.MOCKING_CALL,
+          UnusedReturnValueMatcher::mockitoInvocation,
+          AllowReason.EXCEPTION_TESTING,
+          UnusedReturnValueMatcher::exceptionTesting,
+          AllowReason.RETURNS_JAVA_LANG_VOID,
+          UnusedReturnValueMatcher::returnsJavaLangVoid,
+          AllowReason.AUTO_VALUE_BUILDER_SETTER,
+          UnusedReturnValueMatcher::isAutoValueBuilderSetter);
 
   private static final ImmutableSet<AllowReason> DISALLOW_EXCEPTION_TESTING =
       Sets.immutableEnumSet(
@@ -144,6 +153,40 @@ public final class UnusedReturnValueMatcher implements Matcher<ExpressionTree> {
   public Stream<AllowReason> getAllowReasons(ExpressionTree tree, VisitorState state) {
     return validAllowReasons.stream()
         .filter(reason -> ALLOW_MATCHERS.get(reason).matches(tree, state));
+  }
+
+  private static final String AUTO_VALUE_BUILDER = "com.google.auto.value.AutoValue.Builder";
+
+  /**
+   * Returns {@code true} if the given tree is a method call to an abstract AutoValue Builder setter
+   * method.
+   */
+  private static boolean isAutoValueBuilderSetter(ExpressionTree tree, VisitorState state) {
+    Symbol symbol = getSymbol(tree);
+    if (!(symbol instanceof MethodSymbol)) {
+      return false;
+    }
+
+    // Avoid matching static Builder factory methods, like `static Builder newBuilder()`
+    if (!symbol.getModifiers().contains(ABSTRACT)) {
+      return false;
+    }
+
+    MethodSymbol method = (MethodSymbol) symbol;
+    ClassSymbol enclosingClass = method.enclClass();
+
+    // If the enclosing class is not an @AutoValue.Builder, return false.
+    if (!hasAnnotation(enclosingClass, AUTO_VALUE_BUILDER, state)) {
+      return false;
+    }
+
+    // If the method return type is not the same as the enclosing type (the AutoValue Builder),
+    // e.g., the abstract `build()` method on the Builder, return false.
+    if (!isSameType(method.getReturnType(), enclosingClass.asType(), state)) {
+      return false;
+    }
+
+    return true;
   }
 
   private static boolean returnsJavaLangVoid(ExpressionTree tree, VisitorState state) {
@@ -277,6 +320,8 @@ public final class UnusedReturnValueMatcher implements Matcher<ExpressionTree> {
     /** The context is a mocking call such as in {@code verify(foo).getBar();}. */
     MOCKING_CALL,
     /** The method returns {@code java.lang.Void} at this use-site. */
-    RETURNS_JAVA_LANG_VOID
+    RETURNS_JAVA_LANG_VOID,
+    /** The method is an AutoValue Builder setter method. */
+    AUTO_VALUE_BUILDER_SETTER
   }
 }

@@ -16,6 +16,8 @@
 
 package com.google.errorprone.bugpatterns;
 
+import com.google.auto.value.processor.AutoValueProcessor;
+import com.google.common.collect.ImmutableList;
 import com.google.errorprone.CompilationTestHelper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -886,20 +888,13 @@ public class CheckReturnValueTest {
             "  abstract String name();",
             "  abstract int numberOfLegs();",
             "  static Builder builder() {",
-            "    return new BuilderImpl();",
+            "    return new AutoValue_Animal.Builder();",
             "  }",
             "  @AutoValue.Builder",
             "  abstract static class Builder {",
             "    abstract Builder setName(String value);",
             "    abstract Builder setNumberOfLegs(int value);",
             "    abstract Animal build();",
-            "  }",
-            // we have to "fake out" the AutoValue impl since the AV annotation processor doesn't
-            // run inside our unit tests
-            "  private static final class BuilderImpl extends Builder {",
-            "    Builder setName(String value) { return this; }",
-            "    Builder setNumberOfLegs(int value) { return this; }",
-            "    Animal build() { return null; }",
             "  }",
             "}")
         .addSourceLines(
@@ -908,13 +903,12 @@ public class CheckReturnValueTest {
             "public final class AnimalCaller {",
             "  static void testAnimal() {",
             "    Animal.Builder builder = Animal.builder();",
-            // TODO(b/26956157): AutoValue Builder setter methods should be implicitly @CIRV
-            "    // BUG: Diagnostic contains: Ignored return value of 'setNumberOfLegs'", // bug!
-            "    builder.setNumberOfLegs(4);",
-            "    // BUG: Diagnostic contains: Ignored return value of 'build'", // expected
+            "    builder.setNumberOfLegs(4);", // AutoValue.Builder setters are implicitly @CIRV
+            "    // BUG: Diagnostic contains: Ignored return value of 'build'",
             "    builder.build();",
             "  }",
             "}")
+        .setArgs(ImmutableList.of("-processor", AutoValueProcessor.class.getName()))
         .doTest();
   }
 
