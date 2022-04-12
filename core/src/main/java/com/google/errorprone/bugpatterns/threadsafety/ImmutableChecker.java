@@ -19,10 +19,17 @@ package com.google.errorprone.bugpatterns.threadsafety;
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
+import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
+import static com.google.errorprone.util.ASTHelpers.getType;
+import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
+import static java.lang.String.format;
+import static java.util.stream.Collectors.joining;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.LinkedHashMultimap;
+import com.google.common.collect.SetMultimap;
 import com.google.common.collect.Sets;
 import com.google.common.collect.Sets.SetView;
 import com.google.errorprone.BugPattern;
@@ -31,6 +38,7 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.annotations.Immutable;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
+import com.google.errorprone.bugpatterns.BugChecker.LambdaExpressionTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.MemberReferenceTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
@@ -42,23 +50,34 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ClassTree;
+import com.sun.source.tree.IdentifierTree;
+import com.sun.source.tree.LambdaExpressionTree;
 import com.sun.source.tree.MemberReferenceTree;
+import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.TypeParameterTree;
+import com.sun.source.tree.VariableTree;
+import com.sun.source.util.TreePathScanner;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
+import com.sun.tools.javac.code.Symbol.TypeSymbol;
 import com.sun.tools.javac.code.Symbol.TypeVariableSymbol;
+import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type;
+import com.sun.tools.javac.code.Type.ClassType;
 import com.sun.tools.javac.tree.JCTree.JCMemberReference;
 import com.sun.tools.javac.tree.JCTree.JCNewClass;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
+import javax.lang.model.element.ElementKind;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
@@ -68,6 +87,7 @@ import java.util.Optional;
     documentSuppression = false)
 public class ImmutableChecker extends BugChecker
     implements ClassTreeMatcher,
+        LambdaExpressionTreeMatcher,
         NewClassTreeMatcher,
         MethodInvocationTreeMatcher,
         MethodTreeMatcher,
@@ -75,6 +95,7 @@ public class ImmutableChecker extends BugChecker
 
   private final WellKnownMutability wellKnownMutability;
   private final ImmutableSet<String> immutableAnnotations;
+  private final boolean matchLambdas;
 
   ImmutableChecker(ImmutableSet<String> immutableAnnotations) {
     this(ErrorProneFlags.empty(), immutableAnnotations);
@@ -87,6 +108,125 @@ public class ImmutableChecker extends BugChecker
   private ImmutableChecker(ErrorProneFlags flags, ImmutableSet<String> immutableAnnotations) {
     this.wellKnownMutability = WellKnownMutability.fromFlags(flags);
     this.immutableAnnotations = immutableAnnotations;
+    this.matchLambdas = flags.getBoolean("ImmutableChecker:MatchLambdas").orElse(true);
+  }
+
+  @Override
+  public Description matchLambdaExpression(LambdaExpressionTree tree, VisitorState state) {
+    if (!matchLambdas) {
+      return NO_MATCH;
+    }
+    TypeSymbol lambdaType = getType(tree).tsym;
+    if (!hasImmutableAnnotation(lambdaType, state)) {
+      return NO_MATCH;
+    }
+    Set<VarSymbol> variablesClosed = new HashSet<>();
+    SetMultimap<ClassSymbol, MethodSymbol> typesClosed = LinkedHashMultimap.create();
+    Set<VarSymbol> variablesOwnedByLambda = new HashSet<>();
+
+    new TreePathScanner<Void, Void>() {
+      @Override
+      public Void visitVariable(VariableTree tree, Void unused) {
+        var symbol = getSymbol(tree);
+        variablesOwnedByLambda.add(symbol);
+        return super.visitVariable(tree, null);
+      }
+
+      @Override
+      public Void visitMethodInvocation(MethodInvocationTree tree, Void unused) {
+        if (getReceiver(tree) == null) {
+          var symbol = getSymbol(tree);
+          if (!symbol.isStatic()) {
+            // TODO(b/77333859): This isn't precise. What we really want is the type of `this`, if
+            // the method call were qualified with it.
+            typesClosed.put((ClassSymbol) symbol.owner, symbol);
+          }
+        }
+        return super.visitMethodInvocation(tree, null);
+      }
+
+      @Override
+      public Void visitMemberSelect(MemberSelectTree tree, Void unused) {
+        // Special case the access of fields to allow accessing fields which would pass an immutable
+        // check.
+        if (tree.getExpression() instanceof IdentifierTree
+            && getSymbol(tree) instanceof VarSymbol) {
+          handleIdentifier(getSymbol(tree));
+          // If we're only seeing a field access, don't complain about the fact we closed around
+          // `this`.
+          if (tree.getExpression() instanceof IdentifierTree
+              && ((IdentifierTree) tree.getExpression()).getName().contentEquals("this")) {
+            return null;
+          }
+        }
+        return super.visitMemberSelect(tree, null);
+      }
+
+      @Override
+      public Void visitIdentifier(IdentifierTree tree, Void unused) {
+        handleIdentifier(getSymbol(tree));
+        return super.visitIdentifier(tree, null);
+      }
+
+      private void handleIdentifier(Symbol symbol) {
+        if (symbol instanceof VarSymbol && !variablesOwnedByLambda.contains(symbol)) {
+          variablesClosed.add((VarSymbol) symbol);
+        }
+      }
+    }.scan(state.getPath(), null);
+
+    ImmutableAnalysis analysis = createImmutableAnalysis(state);
+    ImmutableSet<String> typarams =
+        immutableTypeParametersInScope(getSymbol(tree), state, analysis);
+    variablesClosed.stream()
+        .map(closedVariable -> checkClosedLambdaVariable(closedVariable, tree, typarams, analysis))
+        .filter(Violation::isPresent)
+        .forEachOrdered(
+            v -> {
+              String message = formLambdaReason(lambdaType) + ", but " + v.message();
+              state.reportMatch(buildDescription(tree).setMessage(message).build());
+            });
+    for (var entry : typesClosed.asMap().entrySet()) {
+      var classSymbol = entry.getKey();
+      var methods = entry.getValue();
+      if (!hasImmutableAnnotation(classSymbol.type.tsym, state)) {
+        String message =
+            format(
+                "%s, but accesses instance method(s) '%s' on '%s' which is not @Immutable.",
+                formLambdaReason(lambdaType),
+                methods.stream().map(Symbol::getSimpleName).collect(joining(", ")),
+                classSymbol.getSimpleName());
+        state.reportMatch(buildDescription(tree).setMessage(message).build());
+      }
+    }
+
+    return NO_MATCH;
+  }
+
+  private Violation checkClosedLambdaVariable(
+      VarSymbol closedVariable,
+      LambdaExpressionTree tree,
+      ImmutableSet<String> typarams,
+      ImmutableAnalysis analysis) {
+    if (!closedVariable.getKind().equals(ElementKind.FIELD)) {
+      return analysis.isThreadSafeType(false, typarams, closedVariable.type);
+    }
+    return analysis.isFieldImmutable(
+        Optional.empty(),
+        typarams,
+        (ClassSymbol) closedVariable.owner,
+        (ClassType) closedVariable.owner.type,
+        closedVariable,
+        (t, v) -> buildDescription(tree));
+  }
+
+  private static String formLambdaReason(TypeSymbol typeSymbol) {
+    return "This lambda implements @Immutable interface '" + typeSymbol.getSimpleName() + "'";
+  }
+
+  private boolean hasImmutableAnnotation(TypeSymbol tsym, VisitorState state) {
+    return immutableAnnotations.stream()
+        .anyMatch(annotation -> hasAnnotation(tsym, annotation, state));
   }
 
   // check instantiations of `@ImmutableTypeParameter`s in method references
@@ -203,7 +343,7 @@ public class ImmutableChecker extends BugChecker
     if (!difference.isEmpty()) {
       return buildDescription(tree)
           .setMessage(
-              String.format(
+              format(
                   "could not find type(s) referenced by containerOf: %s",
                   Joiner.on("', '").join(difference)))
           .build();
@@ -219,7 +359,7 @@ public class ImmutableChecker extends BugChecker
     if (!immutableAndContainer.isEmpty()) {
       return buildDescription(tree)
           .setMessage(
-              String.format(
+              format(
                   "using both @ImmutableTypeParameter and containerOf is redundant: %s",
                   Joiner.on("', '").join(immutableAndContainer)))
           .build();
@@ -276,7 +416,7 @@ public class ImmutableChecker extends BugChecker
       message = "type annotated with @Immutable could not be proven immutable: " + info.message();
     } else {
       message =
-          String.format(
+          format(
               "Class extends @Immutable type %s, but is not immutable: %s",
               annotation.typeName(), info.message());
     }
@@ -323,7 +463,7 @@ public class ImmutableChecker extends BugChecker
 
   private Description.Builder describeAnonymous(Tree tree, Type superType, Violation info) {
     String message =
-        String.format(
+        format(
             "Class extends @Immutable type %s, but is not immutable: %s",
             superType, info.message());
     return buildDescription(tree).setMessage(message);
@@ -339,8 +479,7 @@ public class ImmutableChecker extends BugChecker
       return NO_MATCH;
     }
     String message =
-        String.format(
-            "Class extends @Immutable type %s, but is not annotated as immutable", superType);
+        format("Class extends @Immutable type %s, but is not annotated as immutable", superType);
     Fix fix =
         SuggestedFix.builder()
             .prefixWith(tree, "@Immutable ")
@@ -360,8 +499,7 @@ public class ImmutableChecker extends BugChecker
       }
       // Don't use getImmutableAnnotation here: subtypes of trusted types are
       // also trusted, only check for explicitly annotated supertypes.
-      if (immutableAnnotations.stream()
-          .anyMatch(annotation -> ASTHelpers.hasAnnotation(superType.tsym, annotation, state))) {
+      if (hasImmutableAnnotation(superType.tsym, state)) {
         return superType;
       }
       // We currently trust that @interface annotations are immutable, but don't enforce that

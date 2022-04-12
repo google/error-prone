@@ -257,7 +257,7 @@ public class ImmutableAnalysis {
   }
 
   /** Check a single field for immutability. */
-  private Violation isFieldImmutable(
+  Violation isFieldImmutable(
       Optional<Tree> tree,
       ImmutableSet<String> immutableTyParams,
       ClassSymbol classSym,
