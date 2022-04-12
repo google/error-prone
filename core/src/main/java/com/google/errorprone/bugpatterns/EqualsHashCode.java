@@ -58,9 +58,7 @@ public class EqualsHashCode extends BugChecker implements ClassTreeMatcher {
 
   @Override
   public Description matchClass(ClassTree classTree, VisitorState state) {
-    MethodTree methodTree =
-        checkMethodPresence(
-            classTree, state, NON_TRIVIAL_EQUALS, /* expectedNoArgMethod= */ "hashCode");
+    MethodTree methodTree = checkMethodPresence(classTree, state/* expectedNoArgMethod= */ );
     if (methodTree == null || isSuppressed(methodTree)) {
       return NO_MATCH;
     }
@@ -76,11 +74,7 @@ public class EqualsHashCode extends BugChecker implements ClassTreeMatcher {
    * </ol>
    */
   @Nullable
-  static MethodTree checkMethodPresence(
-      ClassTree classTree,
-      VisitorState state,
-      Matcher<MethodTree> requiredMethodPresenceMatcher,
-      String expectedNoArgMethod) {
+  private static MethodTree checkMethodPresence(ClassTree classTree, VisitorState state) {
     TypeSymbol symbol = ASTHelpers.getSymbol(classTree);
     if (symbol.getKind() != ElementKind.CLASS) {
       return null;
@@ -95,7 +89,7 @@ public class EqualsHashCode extends BugChecker implements ClassTreeMatcher {
         continue;
       }
       MethodTree methodTree = (MethodTree) member;
-      if (requiredMethodPresenceMatcher.matches(methodTree, state)) {
+      if (EqualsHashCode.NON_TRIVIAL_EQUALS.matches(methodTree, state)) {
         requiredMethod = methodTree;
       }
     }
@@ -106,7 +100,7 @@ public class EqualsHashCode extends BugChecker implements ClassTreeMatcher {
         ASTHelpers.resolveExistingMethod(
             state,
             symbol,
-            state.getName(expectedNoArgMethod),
+            state.getName("hashCode"),
             ImmutableList.<Type>of(),
             ImmutableList.<Type>of());
 
