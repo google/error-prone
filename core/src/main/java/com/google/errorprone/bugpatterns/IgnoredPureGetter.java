@@ -18,7 +18,6 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
-import static com.google.errorprone.util.ASTHelpers.getReturnType;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
 import static com.google.errorprone.util.ASTHelpers.isSameType;
@@ -46,9 +45,9 @@ import java.util.Optional;
 @BugPattern(
     severity = ERROR,
     summary =
-        "Getters on AutoValue classes and protos are side-effect free, so there is no point in"
-            + " calling them if the return value is ignored. While there are no side effects from"
-            + " the getter, the receiver may have side effects.")
+        "Getters on AutoValues, AutoBuilders, and Protobuf Messages are side-effect free, so there"
+            + " is no point in calling them if the return value is ignored. While there are no"
+            + " side effects from the getter, the receiver may have side effects.")
 public final class IgnoredPureGetter extends AbstractReturnValueIgnored {
 
   private static final Supplier<Type> MESSAGE_LITE =
@@ -59,6 +58,7 @@ public final class IgnoredPureGetter extends AbstractReturnValueIgnored {
           state -> state.getTypeFromString("com.google.protobuf.MutableMessageLite"));
 
   private final boolean checkAllProtos;
+  private final boolean checkAutoBuilders;
 
   public IgnoredPureGetter() {
     this(ErrorProneFlags.empty());
@@ -67,6 +67,7 @@ public final class IgnoredPureGetter extends AbstractReturnValueIgnored {
   public IgnoredPureGetter(ErrorProneFlags flags) {
     super(flags);
     this.checkAllProtos = flags.getBoolean("IgnoredPureGetter:CheckAllProtos").orElse(true);
+    this.checkAutoBuilders = flags.getBoolean("IgnoredPureGetter:CheckAutoBuilders").orElse(true);
   }
 
   @Override
@@ -111,29 +112,39 @@ public final class IgnoredPureGetter extends AbstractReturnValueIgnored {
 
   // TODO(b/222475003): make this static again once the flag is gone
   private Optional<PureGetterKind> pureGetterKind(ExpressionTree tree, VisitorState state) {
-    Symbol symbol = getSymbol(tree);
-    if (!(symbol instanceof MethodSymbol)) {
+    Symbol rawSymbol = getSymbol(tree);
+    if (!(rawSymbol instanceof MethodSymbol)) {
       return Optional.empty();
     }
-    if (symbol.getModifiers().contains(ABSTRACT)) {
+    MethodSymbol symbol = (MethodSymbol) rawSymbol;
+    Symbol owner = symbol.owner;
+
+    if (symbol.getModifiers().contains(ABSTRACT) && symbol.getParameters().isEmpty()) {
       // The return value of any abstract method on an @AutoValue needs to be used.
-      if (hasAnnotation(symbol.owner, "com.google.auto.value.AutoValue", state)) {
+      if (hasAnnotation(owner, "com.google.auto.value.AutoValue", state)) {
         return Optional.of(PureGetterKind.AUTO_VALUE);
       }
-      // The return value of an abstract method on an @AutoValue.Builder (which doesn't return the
+      // The return value of any abstract method on an @AutoBuilder (which doesn't return the
       // Builder itself) needs to be used.
-      if (hasAnnotation(symbol.owner, "com.google.auto.value.AutoValue.Builder", state)
-          && !isSameType(getReturnType(tree), symbol.owner.asType(), state)) {
+      if (checkAutoBuilders
+          && hasAnnotation(owner, "com.google.auto.value.AutoBuilder", state)
+          && !isSameType(symbol.getReturnType(), owner.type, state)) {
+        return Optional.of(PureGetterKind.AUTO_BUILDER);
+      }
+      // The return value of any abstract method on an @AutoValue.Builder (which doesn't return the
+      // Builder itself) needs to be used.
+      if (hasAnnotation(owner, "com.google.auto.value.AutoValue.Builder", state)
+          && !isSameType(symbol.getReturnType(), owner.type, state)) {
         return Optional.of(PureGetterKind.AUTO_VALUE_BUILDER);
       }
     }
 
     try {
-      if (isSubtype(symbol.owner.type, MESSAGE_LITE.get(state), state)
-          && !isSubtype(symbol.owner.type, MUTABLE_MESSAGE_LITE.get(state), state)) {
+      if (isSubtype(owner.type, MESSAGE_LITE.get(state), state)
+          && !isSubtype(owner.type, MUTABLE_MESSAGE_LITE.get(state), state)) {
         String name = symbol.getSimpleName().toString();
         if ((name.startsWith("get") || name.startsWith("has"))
-            && ((MethodSymbol) symbol).getParameters().isEmpty()) {
+            && symbol.getParameters().isEmpty()) {
           return Optional.of(PureGetterKind.PROTO);
         }
         if (checkAllProtos) {
@@ -150,6 +161,7 @@ public final class IgnoredPureGetter extends AbstractReturnValueIgnored {
   private enum PureGetterKind {
     AUTO_VALUE,
     AUTO_VALUE_BUILDER,
+    AUTO_BUILDER,
     PROTO
   }
 }
