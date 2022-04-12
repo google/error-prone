@@ -285,7 +285,6 @@ import com.google.errorprone.bugpatterns.ProtoTruthMixedDescriptors;
 import com.google.errorprone.bugpatterns.ProtocolBufferOrdinal;
 import com.google.errorprone.bugpatterns.ProtosAsKeyOfSetOrMap;
 import com.google.errorprone.bugpatterns.PublicApiNamedStreamShouldReturnStream;
-import com.google.errorprone.bugpatterns.PublicConstructorForAbstractClass;
 import com.google.errorprone.bugpatterns.RandomCast;
 import com.google.errorprone.bugpatterns.RandomModInteger;
 import com.google.errorprone.bugpatterns.ReachabilityFenceUsage;
@@ -1075,7 +1074,6 @@ public class BuiltInCheckerSuppliers {
           PrivateConstructorForUtilityClass.class,
           ProtosAsKeyOfSetOrMap.class,
           PublicApiNamedStreamShouldReturnStream.class,
-          PublicConstructorForAbstractClass.class,
           QualifierWithTypeUse.class,
           RedundantOverride.class,
           RedundantThrows.class,
