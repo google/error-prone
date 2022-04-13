@@ -101,7 +101,6 @@ import com.google.errorprone.bugpatterns.DeprecatedVariable;
 import com.google.errorprone.bugpatterns.DifferentNameButSame;
 import com.google.errorprone.bugpatterns.DiscardedPostfixExpression;
 import com.google.errorprone.bugpatterns.DistinctVarargsChecker;
-import com.google.errorprone.bugpatterns.DivZero;
 import com.google.errorprone.bugpatterns.DoNotCallChecker;
 import com.google.errorprone.bugpatterns.DoNotCallSuggester;
 import com.google.errorprone.bugpatterns.DoNotClaimAnnotations;
@@ -1016,7 +1015,6 @@ public class BuiltInCheckerSuppliers {
           DeduplicateConstants.class,
           DepAnn.class,
           DifferentNameButSame.class,
-          DivZero.class,
           EmptyIfStatement.class,
           EmptyTopLevelDeclaration.class,
           EqualsBrokenForNull.class,

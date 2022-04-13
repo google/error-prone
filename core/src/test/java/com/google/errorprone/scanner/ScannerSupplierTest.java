@@ -44,9 +44,9 @@ import com.google.errorprone.bugpatterns.BadShiftAmount;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.ChainingConstructorIgnoresParameter;
 import com.google.errorprone.bugpatterns.DepAnn;
-import com.google.errorprone.bugpatterns.DivZero;
 import com.google.errorprone.bugpatterns.EqualsIncompatibleType;
 import com.google.errorprone.bugpatterns.LongLiteralLowerCaseSuffix;
+import com.google.errorprone.bugpatterns.MethodCanBeStatic;
 import com.google.errorprone.bugpatterns.PackageLocation;
 import com.google.errorprone.bugpatterns.ReferenceEquality;
 import com.google.errorprone.bugpatterns.StaticQualifiedUsingExpression;
@@ -325,7 +325,9 @@ public class ScannerSupplierTest {
     // The 'AllDisabledChecksAsWarnings' flag doesn't populate through to additional plugins
     assertScanner(
             ss.applyOverrides(epOptions)
-                .plus(ScannerSupplier.fromBugCheckerClasses(DivZero.class).filter(t -> false)))
+                .plus(
+                    ScannerSupplier.fromBugCheckerClasses(MethodCanBeStatic.class)
+                        .filter(t -> false)))
         .hasEnabledChecks(BadShiftAmount.class, StaticQualifiedUsingExpression.class);
   }
 
