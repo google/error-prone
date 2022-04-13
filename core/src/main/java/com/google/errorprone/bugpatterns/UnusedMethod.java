@@ -30,6 +30,7 @@ import static com.google.errorprone.suppliers.Suppliers.typeFromString;
 import static com.google.errorprone.util.ASTHelpers.canBeRemoved;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
+import static com.google.errorprone.util.ASTHelpers.isGeneratedConstructor;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
 import static com.google.errorprone.util.ASTHelpers.scope;
 import static com.google.errorprone.util.ASTHelpers.shouldKeep;
@@ -203,6 +204,7 @@ public final class UnusedMethod extends BugChecker implements CompilationUnitTre
         }
         MethodSymbol methodSymbol = getSymbol(tree);
         if (isExemptedConstructor(methodSymbol, state)
+            || isGeneratedConstructor(tree)
             || SERIALIZATION_METHODS.matches(tree, state)) {
           return false;
         }
