@@ -178,6 +178,18 @@ loadScripts(document, 'script');</script>
 <td class="col-last"></td>
 </tr>
 <tr class="row-color">
+<th class="col-deprecated-item-name" scope="row"><a href="com/google/errorprone/bugpatterns/BugChecker.html#isSuppressed(com.sun.source.tree.Tree)">com.google.errorprone.bugpatterns.BugChecker.isSuppressed&#8203;(Tree)</a></th>
+<td class="col-last">
+<div class="deprecation-comment">use <a href="com/google/errorprone/bugpatterns/BugChecker.html#isSuppressed(com.sun.source.tree.Tree,com.google.errorprone.VisitorState)"><code>BugChecker.isSuppressed(Tree, VisitorState)</code></a> instead</div>
+</td>
+</tr>
+<tr class="alt-color">
+<th class="col-deprecated-item-name" scope="row"><a href="com/google/errorprone/bugpatterns/BugChecker.html#isSuppressed(com.sun.tools.javac.code.Symbol)">com.google.errorprone.bugpatterns.BugChecker.isSuppressed&#8203;(Symbol)</a></th>
+<td class="col-last">
+<div class="deprecation-comment">use <a href="com/google/errorprone/bugpatterns/BugChecker.html#isSuppressed(com.sun.tools.javac.code.Symbol,com.google.errorprone.VisitorState)"><code>BugChecker.isSuppressed(Symbol, VisitorState)</code></a> instead</div>
+</td>
+</tr>
+<tr class="row-color">
 <th class="col-deprecated-item-name" scope="row"><a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.html#isThreadSafeType(java.util.Set,com.sun.tools.javac.code.Type)">com.google.errorprone.bugpatterns.threadsafety.ThreadSafety.isThreadSafeType&#8203;(Set&lt;String&gt;, Type)</a></th>
 <td class="col-last">
 <div class="deprecation-comment">use <a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.html#isThreadSafeType(boolean,java.util.Set,com.sun.tools.javac.code.Type)"><code>ThreadSafety.isThreadSafeType(boolean, Set, Type)</code></a> instead.</div>
@@ -270,27 +282,33 @@ loadScripts(document, 'script');</script>
 </thead>
 <tbody>
 <tr class="alt-color">
+<th class="col-deprecated-item-name" scope="row"><a href="com/google/errorprone/bugpatterns/BugChecker.SuppressibleTreePathScanner.html#%3Cinit%3E()">com.google.errorprone.bugpatterns.BugChecker.SuppressibleTreePathScanner()</a></th>
+<td class="col-last">
+<div class="deprecation-comment">use <a href="com/google/errorprone/bugpatterns/BugChecker.SuppressibleTreePathScanner.html#%3Cinit%3E(com.google.errorprone.VisitorState)"><code>SuppressibleTreePathScanner(VisitorState)</code></a> instead</div>
+</td>
+</tr>
+<tr class="row-color">
 <th class="col-deprecated-item-name" scope="row"><a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.html#%3Cinit%3E(com.google.errorprone.VisitorState,com.google.errorprone.bugpatterns.threadsafety.ThreadSafety.KnownTypes,java.util.Set,java.util.Set,java.lang.Class,java.lang.Class)">com.google.errorprone.bugpatterns.threadsafety.ThreadSafety&#8203;(VisitorState, ThreadSafety.KnownTypes, Set&lt;String&gt;, Set&lt;String&gt;, Class&lt;? extends Annotation&gt;, Class&lt;? extends Annotation&gt;)</a></th>
 <td class="col-last"></td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <th class="col-deprecated-item-name" scope="row"><a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.html#%3Cinit%3E(com.google.errorprone.VisitorState,com.google.errorprone.bugpatterns.threadsafety.ThreadSafety.KnownTypes,java.util.Set,java.util.Set,java.lang.Class,java.lang.Class,java.lang.Class)">com.google.errorprone.bugpatterns.threadsafety.ThreadSafety&#8203;(VisitorState, ThreadSafety.KnownTypes, Set&lt;String&gt;, Set&lt;String&gt;, Class&lt;? extends Annotation&gt;, Class&lt;? extends Annotation&gt;, Class&lt;? extends Annotation&gt;)</a></th>
 <td class="col-last"></td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <th class="col-deprecated-item-name" scope="row"><a href="com/google/errorprone/VisitorState.html#%3Cinit%3E(com.sun.tools.javac.util.Context)">com.google.errorprone.VisitorState&#8203;(Context)</a></th>
 <td class="col-last">
 <div class="deprecation-comment">If VisitorState is needed, use <a href="com/google/errorprone/VisitorState.html#createForUtilityPurposes(com.sun.tools.javac.util.Context)"><code>VisitorState.createForUtilityPurposes(com.sun.tools.javac.util.Context)</code></a>, otherwise just
      use utility methods in ASTHelpers that don't need VisitorSate.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <th class="col-deprecated-item-name" scope="row"><a href="com/google/errorprone/VisitorState.html#%3Cinit%3E(com.sun.tools.javac.util.Context,com.google.errorprone.DescriptionListener)">com.google.errorprone.VisitorState&#8203;(Context, DescriptionListener)</a></th>
 <td class="col-last">
 <div class="deprecation-comment">Use the equivalent factory method <a href="com/google/errorprone/VisitorState.html#createForCustomFindingCollection(com.sun.tools.javac.util.Context,com.google.errorprone.DescriptionListener)"><code>VisitorState.createForCustomFindingCollection(com.sun.tools.javac.util.Context, com.google.errorprone.DescriptionListener)</code></a>.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <th class="col-deprecated-item-name" scope="row"><a href="com/google/errorprone/VisitorState.html#%3Cinit%3E(com.sun.tools.javac.util.Context,com.google.errorprone.DescriptionListener,java.util.Map,com.google.errorprone.ErrorProneOptions)">com.google.errorprone.VisitorState&#8203;(Context, DescriptionListener, Map&lt;String, BugPattern.SeverityLevel&gt;, ErrorProneOptions)</a></th>
 <td class="col-last">
 <div class="deprecation-comment">Use the equivalent factory method <a href="com/google/errorprone/VisitorState.html#createConfiguredForCompilation(com.sun.tools.javac.util.Context,com.google.errorprone.DescriptionListener,java.util.Map,com.google.errorprone.ErrorProneOptions)"><code>VisitorState.createConfiguredForCompilation(com.sun.tools.javac.util.Context, com.google.errorprone.DescriptionListener, java.util.Map&lt;java.lang.String, com.google.errorprone.BugPattern.SeverityLevel&gt;, com.google.errorprone.ErrorProneOptions)</code></a>.</div>

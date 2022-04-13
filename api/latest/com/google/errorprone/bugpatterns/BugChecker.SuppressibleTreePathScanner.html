@@ -108,15 +108,21 @@ extends com.sun.source.util.TreePathScanner&lt;A,&#8203;B&gt;</pre>
 <caption><span>Constructors</span></caption>
 <thead>
 <tr>
-<th class="col-first" scope="col">Modifier</th>
-<th class="col-second" scope="col">Constructor</th>
+<th class="col-first" scope="col">Constructor</th>
 <th class="col-last" scope="col">Description</th>
 </tr>
 </thead>
 <tbody>
 <tr class="alt-color">
-<td class="col-first"><code>protected </code></td>
 <th class="col-constructor-name" scope="row"><code><span class="member-name-link"><a href="#%3Cinit%3E()">SuppressibleTreePathScanner</a></span>()</code></th>
+<td class="col-last">
+<div class="block"><span class="deprecated-label">Deprecated.</span>
+<div class="deprecation-comment">use <a href="#%3Cinit%3E(com.google.errorprone.VisitorState)"><code>SuppressibleTreePathScanner(VisitorState)</code></a> instead</div>
+</div>
+</td>
+</tr>
+<tr class="row-color">
+<th class="col-constructor-name" scope="row"><code><span class="member-name-link"><a href="#%3Cinit%3E(com.google.errorprone.VisitorState)">SuppressibleTreePathScanner</a></span>&#8203;(<a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
 </tbody>
@@ -171,9 +177,19 @@ extends com.sun.source.util.TreePathScanner&lt;A,&#8203;B&gt;</pre>
 <h2>Constructor Details</h2>
 <ul class="member-list">
 <li>
+<section class="detail" id="&lt;init&gt;(com.google.errorprone.VisitorState)">
+<h3>SuppressibleTreePathScanner</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="member-name">SuppressibleTreePathScanner</span>&#8203;(<span class="parameters"><a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
+</section>
+</li>
+<li>
 <section class="detail" id="&lt;init&gt;()">
 <h3>SuppressibleTreePathScanner</h3>
-<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="member-name">SuppressibleTreePathScanner</span>()</div>
+<div class="member-signature"><span class="annotations"><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Deprecated.html" title="class or interface in java.lang" class="external-link">@Deprecated</a>
+</span><span class="modifiers">public</span>&nbsp;<span class="member-name">SuppressibleTreePathScanner</span>()</div>
+<div class="deprecation-block"><span class="deprecated-label">Deprecated.</span>
+<div class="deprecation-comment">use <a href="#%3Cinit%3E(com.google.errorprone.VisitorState)"><code>SuppressibleTreePathScanner(VisitorState)</code></a> instead</div>
+</div>
 </section>
 </li>
 </ul>
