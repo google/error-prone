@@ -379,6 +379,27 @@ public final class AlreadyCheckedTest {
   }
 
   @Test
+  public void durationsComparedUsingFactoryMethods_withDifferentImport() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            "import static java.time.Duration.ofSeconds;",
+            "import java.time.Duration;",
+            "class Test {",
+            "  public void test(Duration a, Duration b) {",
+            "    if (a.equals(Duration.ofSeconds(1))) {",
+            "      if (a.equals(Duration.ofSeconds(2))) {}",
+            "      // BUG: Diagnostic contains:",
+            "      if (a.equals(ofSeconds(1))) {}",
+            "      // BUG: Diagnostic contains:",
+            "      if (a.equals(java.time.Duration.ofSeconds(1))) {}",
+            "    }",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void autoValues() {
     helper
         .addSourceLines(
