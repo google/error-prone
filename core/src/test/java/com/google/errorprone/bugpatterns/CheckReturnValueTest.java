@@ -16,6 +16,7 @@
 
 package com.google.errorprone.bugpatterns;
 
+import com.google.auto.value.processor.AutoBuilderProcessor;
 import com.google.auto.value.processor.AutoValueProcessor;
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.CompilationTestHelper;
@@ -909,6 +910,92 @@ public class CheckReturnValueTest {
             "  }",
             "}")
         .setArgs(ImmutableList.of("-processor", AutoValueProcessor.class.getName()))
+        .doTest();
+  }
+
+  @Test
+  public void testAutoBuilderSetterMethods() {
+    compilationHelper
+        .addSourceLines(
+            "Person.java",
+            "package com.google.frobber;",
+            "public final class Person {",
+            "  public Person(String name, int id) {}",
+            "}")
+        .addSourceLines(
+            "PersonBuilder.java",
+            "package com.google.frobber;",
+            "import com.google.auto.value.AutoBuilder;",
+            "import com.google.errorprone.annotations.CheckReturnValue;",
+            "@CheckReturnValue",
+            "@AutoBuilder(ofClass = Person.class)",
+            "abstract class PersonBuilder {",
+            "  static PersonBuilder personBuilder() {",
+            "    return new AutoBuilder_PersonBuilder();",
+            "  }",
+            "  abstract PersonBuilder setName(String name);",
+            "  abstract PersonBuilder setId(int id);",
+            "  abstract Person build();",
+            "}")
+        .addSourceLines(
+            "PersonCaller.java",
+            "package com.google.frobber;",
+            "public final class PersonCaller {",
+            "  static void testPersonBuilder() {",
+            "    // BUG: Diagnostic contains: Ignored return value of 'personBuilder'",
+            "    PersonBuilder.personBuilder();",
+            "    PersonBuilder builder = PersonBuilder.personBuilder();",
+            "    builder.setName(\"kurt\");", // AutoBuilder setters are implicitly @CIRV
+            "    builder.setId(42);", // AutoBuilder setters are implicitly @CIRV
+            "    // BUG: Diagnostic contains: Ignored return value of 'build'",
+            "    builder.build();",
+            "  }",
+            "}")
+        .setArgs(ImmutableList.of("-processor", AutoBuilderProcessor.class.getName()))
+        .doTest();
+  }
+
+  @Test
+  public void testAutoBuilderSetterMethods_withInterface() {
+    compilationHelper
+        .addSourceLines(
+            "LogUtil.java",
+            "package com.google.frobber;",
+            "import java.util.logging.Level;",
+            "public class LogUtil {",
+            "  public static void log(Level severity, String message) {}",
+            "}")
+        .addSourceLines(
+            "Caller.java",
+            "package com.google.frobber;",
+            "import com.google.auto.value.AutoBuilder;",
+            "import java.util.logging.Level;",
+            "import com.google.errorprone.annotations.CheckReturnValue;",
+            "@CheckReturnValue",
+            "@AutoBuilder(callMethod = \"log\", ofClass = LogUtil.class)",
+            "public interface Caller {",
+            "  static Caller logCaller() {",
+            "    return new AutoBuilder_Caller();",
+            "  }",
+            "  Caller setSeverity(Level level);",
+            "  Caller setMessage(String message);",
+            "  void call(); // calls: LogUtil.log(severity, message)",
+            "}")
+        .addSourceLines(
+            "LogCaller.java",
+            "package com.google.frobber;",
+            "import java.util.logging.Level;",
+            "public final class LogCaller {",
+            "  static void testLogCaller() {",
+            "    // BUG: Diagnostic contains: Ignored return value of 'logCaller'",
+            "    Caller.logCaller();",
+            "    Caller caller = Caller.logCaller();",
+            "    caller.setMessage(\"hi\");", // AutoBuilder setters are implicitly @CIRV
+            "    caller.setSeverity(Level.FINE);", // AutoBuilder setters are implicitly @CIRV
+            "    caller.call();",
+            "  }",
+            "}")
+        .setArgs(ImmutableList.of("-processor", AutoBuilderProcessor.class.getName()))
         .doTest();
   }
 

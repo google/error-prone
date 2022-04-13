@@ -81,8 +81,11 @@ public final class UnusedReturnValueMatcher implements Matcher<ExpressionTree> {
           UnusedReturnValueMatcher::exceptionTesting,
           AllowReason.RETURNS_JAVA_LANG_VOID,
           UnusedReturnValueMatcher::returnsJavaLangVoid,
-          AllowReason.AUTO_VALUE_BUILDER_SETTER,
-          UnusedReturnValueMatcher::isAutoValueBuilderSetter);
+          // TODO(kak): this exclusion really doesn't belong here, since the context of the calling
+          // code doesn't matter; known builder setters are _always_ treated as CIRV, and the
+          // surrounding context doesn't matter.
+          AllowReason.KNOWN_BUILDER_SETTER,
+          UnusedReturnValueMatcher::isKnownBuilderSetter);
 
   private static final ImmutableSet<AllowReason> DISALLOW_EXCEPTION_TESTING =
       Sets.immutableEnumSet(
@@ -155,13 +158,11 @@ public final class UnusedReturnValueMatcher implements Matcher<ExpressionTree> {
         .filter(reason -> ALLOW_MATCHERS.get(reason).matches(tree, state));
   }
 
-  private static final String AUTO_VALUE_BUILDER = "com.google.auto.value.AutoValue.Builder";
-
   /**
-   * Returns {@code true} if the given tree is a method call to an abstract AutoValue Builder setter
-   * method.
+   * Returns {@code true} if the given tree is a method call to an abstract setter method inside of
+   * a known builder class.
    */
-  private static boolean isAutoValueBuilderSetter(ExpressionTree tree, VisitorState state) {
+  private static boolean isKnownBuilderSetter(ExpressionTree tree, VisitorState state) {
     Symbol symbol = getSymbol(tree);
     if (!(symbol instanceof MethodSymbol)) {
       return false;
@@ -175,12 +176,18 @@ public final class UnusedReturnValueMatcher implements Matcher<ExpressionTree> {
     MethodSymbol method = (MethodSymbol) symbol;
     ClassSymbol enclosingClass = method.enclClass();
 
-    // If the enclosing class is not an @AutoValue.Builder, return false.
-    if (!hasAnnotation(enclosingClass, AUTO_VALUE_BUILDER, state)) {
+    // Setters always have exactly 1 param
+    if (method.getParameters().size() != 1) {
       return false;
     }
 
-    // If the method return type is not the same as the enclosing type (the AutoValue Builder),
+    // If the enclosing class is not a known builder type, return false.
+    if (!hasAnnotation(enclosingClass, "com.google.auto.value.AutoValue.Builder", state)
+        && !hasAnnotation(enclosingClass, "com.google.auto.value.AutoBuilder", state)) {
+      return false;
+    }
+
+    // If the method return type is not the same as the enclosing type (the builder itself),
     // e.g., the abstract `build()` method on the Builder, return false.
     if (!isSameType(method.getReturnType(), enclosingClass.asType(), state)) {
       return false;
@@ -321,7 +328,7 @@ public final class UnusedReturnValueMatcher implements Matcher<ExpressionTree> {
     MOCKING_CALL,
     /** The method returns {@code java.lang.Void} at this use-site. */
     RETURNS_JAVA_LANG_VOID,
-    /** The method is an AutoValue Builder setter method. */
-    AUTO_VALUE_BUILDER_SETTER
+    /** The method is a known Builder setter method (that always returns "this"). */
+    KNOWN_BUILDER_SETTER,
   }
 }
