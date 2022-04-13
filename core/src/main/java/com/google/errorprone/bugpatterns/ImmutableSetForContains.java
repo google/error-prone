@@ -119,7 +119,7 @@ public final class ImmutableSetForContains extends BugChecker implements ClassTr
     SuggestedFix.Builder fix = SuggestedFix.builder();
     Optional<VariableTree> firstReplacement = Optional.empty();
     for (VariableTree var : immutableListVar) {
-      if (isSuppressed(var)) {
+      if (isSuppressed(var, state)) {
         continue;
       }
       if (!usageScanner.disallowedVarUsages.get(getSymbol(var))) {

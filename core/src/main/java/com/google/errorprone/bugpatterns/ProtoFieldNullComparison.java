@@ -160,12 +160,12 @@ public class ProtoFieldNullComparison extends BugChecker implements CompilationU
 
     @Override
     public Void visitMethod(MethodTree method, Void unused) {
-      return isSuppressed(method) ? null : super.visitMethod(method, unused);
+      return isSuppressed(method, state) ? null : super.visitMethod(method, unused);
     }
 
     @Override
     public Void visitClass(ClassTree clazz, Void unused) {
-      return isSuppressed(clazz) ? null : super.visitClass(clazz, unused);
+      return isSuppressed(clazz, state) ? null : super.visitClass(clazz, unused);
     }
 
     @Override
@@ -175,7 +175,7 @@ public class ProtoFieldNullComparison extends BugChecker implements CompilationU
         getInitializer(variable.getInitializer())
             .ifPresent(e -> effectivelyFinalValues.put(symbol, e));
       }
-      return isSuppressed(variable) ? null : super.visitVariable(variable, null);
+      return isSuppressed(variable, state) ? null : super.visitVariable(variable, null);
     }
 
     private Optional<ExpressionTree> getInitializer(ExpressionTree tree) {

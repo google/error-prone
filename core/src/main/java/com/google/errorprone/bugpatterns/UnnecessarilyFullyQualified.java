@@ -80,7 +80,7 @@ public final class UnnecessarilyFullyQualified extends BugChecker
     }
     Table<Name, TypeSymbol, List<TreePath>> table = HashBasedTable.create();
     SetMultimap<Name, TypeSymbol> identifiersSeen = HashMultimap.create();
-    new SuppressibleTreePathScanner<Void, Void>() {
+    new SuppressibleTreePathScanner<Void, Void>(state) {
       @Override
       public Void visitImport(ImportTree importTree, Void unused) {
         return null;

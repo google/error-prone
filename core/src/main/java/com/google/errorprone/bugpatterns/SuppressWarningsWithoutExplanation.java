@@ -82,7 +82,7 @@ public final class SuppressWarningsWithoutExplanation extends BugChecker
       return NO_MATCH;
     }
     ImmutableRangeSet<Long> linesWithComments = linesWithComments(state);
-    new SuppressibleTreePathScanner<Void, Void>() {
+    new SuppressibleTreePathScanner<Void, Void>(state) {
       @Override
       public Void visitAnnotation(AnnotationTree annotationTree, Void unused) {
         if (!SUPPRESS_WARNINGS.matches(annotationTree, state)) {

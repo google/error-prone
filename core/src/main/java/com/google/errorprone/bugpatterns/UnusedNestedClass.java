@@ -53,7 +53,7 @@ public final class UnusedNestedClass extends BugChecker implements CompilationUn
 
   @Override
   public Description matchCompilationUnit(CompilationUnitTree tree, VisitorState state) {
-    PrivateNestedClassScanner privateNestedClassScanner = new PrivateNestedClassScanner();
+    PrivateNestedClassScanner privateNestedClassScanner = new PrivateNestedClassScanner(state);
     privateNestedClassScanner.scan(state.getPath(), null);
 
     Map<ClassSymbol, TreePath> privateNestedClasses = privateNestedClassScanner.classes;
@@ -71,11 +71,15 @@ public final class UnusedNestedClass extends BugChecker implements CompilationUn
   private final class PrivateNestedClassScanner extends TreePathScanner<Void, Void> {
     private final Map<ClassSymbol, TreePath> classes = new HashMap<>();
 
-    private PrivateNestedClassScanner() {}
+    private final VisitorState state;
+
+    private PrivateNestedClassScanner(VisitorState state) {
+      this.state = state;
+    }
 
     @Override
     public Void visitClass(ClassTree classTree, Void unused) {
-      if (ignoreUnusedClass(classTree)) {
+      if (ignoreUnusedClass(classTree, state)) {
         return null;
       }
       ClassSymbol symbol = getSymbol(classTree);
@@ -86,8 +90,8 @@ public final class UnusedNestedClass extends BugChecker implements CompilationUn
       return super.visitClass(classTree, null);
     }
 
-    private boolean ignoreUnusedClass(ClassTree classTree) {
-      return isSuppressed(classTree) || shouldKeep(classTree);
+    private boolean ignoreUnusedClass(ClassTree classTree, VisitorState state) {
+      return isSuppressed(classTree, state) || shouldKeep(classTree);
     }
   }
 

@@ -68,7 +68,7 @@ public final class InconsistentOverloads extends BugChecker implements ClassTree
 
   @Override
   public Description matchClass(ClassTree classTree, VisitorState state) {
-    processClassMethods(getClassTreeMethods(classTree), state);
+    processClassMethods(getClassTreeMethods(classTree, state), state);
 
     /*
      * We want to report inconsistencies per method group. There is no "method group" unit in the
@@ -142,12 +142,12 @@ public final class InconsistentOverloads extends BugChecker implements ClassTree
    * <p>Only method trees that belong to the {@code classTree} are returned, so methods declared in
    * nested classes are not going to be considered.
    */
-  private ImmutableList<MethodTree> getClassTreeMethods(ClassTree classTree) {
+  private ImmutableList<MethodTree> getClassTreeMethods(ClassTree classTree, VisitorState state) {
     List<? extends Tree> members = classTree.getMembers();
     return members.stream()
         .filter(MethodTree.class::isInstance)
         .map(MethodTree.class::cast)
-        .filter(m -> !isSuppressed(m))
+        .filter(m -> !isSuppressed(m, state))
         .collect(toImmutableList());
   }
 

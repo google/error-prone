@@ -85,7 +85,7 @@ public class UnnecessaryBoxedVariable extends BugChecker implements CompilationU
     FindBoxedUsagesScanner usages = new FindBoxedUsagesScanner(state);
     usages.scan(tree, null);
 
-    new SuppressibleTreePathScanner<Void, Void>() {
+    new SuppressibleTreePathScanner<Void, Void>(state) {
       @Override
       public Void visitVariable(VariableTree tree, Void unused) {
         VisitorState innerState = state.withPath(getCurrentPath());

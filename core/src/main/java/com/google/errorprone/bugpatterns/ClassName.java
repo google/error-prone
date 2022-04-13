@@ -52,7 +52,7 @@ public class ClassName extends BugChecker implements CompilationUnitTreeMatcher 
     for (Tree member : tree.getTypeDecls()) {
       if (member instanceof ClassTree) {
         ClassTree classMember = (ClassTree) member;
-        if (isSuppressed(classMember)) {
+        if (isSuppressed(classMember, state)) {
           // If any top-level classes have @SuppressWarnings("ClassName"), ignore
           // this compilation unit. We can't rely on the normal suppression
           // mechanism because the only enclosing element is the package declaration,

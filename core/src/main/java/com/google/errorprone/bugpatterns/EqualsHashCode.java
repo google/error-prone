@@ -59,7 +59,7 @@ public class EqualsHashCode extends BugChecker implements ClassTreeMatcher {
   @Override
   public Description matchClass(ClassTree classTree, VisitorState state) {
     MethodTree methodTree = checkMethodPresence(classTree, state/* expectedNoArgMethod= */ );
-    if (methodTree == null || isSuppressed(methodTree)) {
+    if (methodTree == null || isSuppressed(methodTree, state)) {
       return NO_MATCH;
     }
     return describeMatch(methodTree);

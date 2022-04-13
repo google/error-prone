@@ -39,7 +39,7 @@ public final class DefaultPackage extends BugChecker implements CompilationUnitT
     if (state.errorProneOptions().isTestOnlyTarget()) {
       return Description.NO_MATCH;
     }
-    if (tree.getTypeDecls().stream().anyMatch(s -> isSuppressed(s))) {
+    if (tree.getTypeDecls().stream().anyMatch(s -> isSuppressed(s, state))) {
       return Description.NO_MATCH;
     }
     if (tree.getTypeDecls().stream()

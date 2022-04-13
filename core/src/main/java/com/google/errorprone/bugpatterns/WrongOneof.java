@@ -159,7 +159,7 @@ public final class WrongOneof extends BugChecker implements SwitchTreeMatcher {
       CaseTree caseTree,
       ImmutableList<Symbol> receiverSymbolChain,
       VisitorState state) {
-    new SuppressibleTreePathScanner<Void, Void>() {
+    new SuppressibleTreePathScanner<Void, Void>(state) {
       @Override
       public Void visitMethodInvocation(MethodInvocationTree methodInvocationTree, Void unused) {
         ExpressionTree receiver = getReceiver(methodInvocationTree);

@@ -137,7 +137,7 @@ public class UngroupedOverloads extends BugChecker implements ClassTreeMatcher {
     if (group == 0) {
       return Stream.empty();
     }
-    if (overloads.stream().anyMatch(m -> isSuppressed(m.tree()))) {
+    if (overloads.stream().anyMatch(m -> isSuppressed(m.tree(), state))) {
       return Stream.empty();
     }
     // build a fix that replaces the first overload with all the overloads grouped together

@@ -185,7 +185,7 @@ public class DoNotCallChecker extends BugChecker
   public Description matchCompilationUnit(CompilationUnitTree tree, VisitorState state) {
     ImmutableListMultimap<VarSymbol, Type> assignedTypes = getAssignedTypes(state);
 
-    new SuppressibleTreePathScanner<Void, Void>() {
+    new SuppressibleTreePathScanner<Void, Void>(state) {
       @Override
       public Void visitMethodInvocation(MethodInvocationTree tree, Void unused) {
         handleTree(tree, getSymbol(tree));

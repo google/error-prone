@@ -567,7 +567,7 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
       if (exemptedByName(variableTree.getName())) {
         return null;
       }
-      if (isSuppressed(variableTree)) {
+      if (isSuppressed(variableTree, state)) {
         return null;
       }
       VarSymbol symbol = getSymbol(variableTree);
@@ -658,7 +658,7 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
 
     @Override
     public Void visitClass(ClassTree tree, Void unused) {
-      if (isSuppressed(tree)) {
+      if (isSuppressed(tree, state)) {
         return null;
       }
       if (EXEMPTING_SUPER_TYPES.stream()
@@ -679,7 +679,7 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
       if (SERIALIZATION_METHODS.matches(tree, state)) {
         return scan(tree.getBody(), null);
       }
-      return isSuppressed(tree) ? null : super.visitMethod(tree, unused);
+      return isSuppressed(tree, state) ? null : super.visitMethod(tree, unused);
     }
   }
 

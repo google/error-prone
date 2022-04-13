@@ -60,7 +60,7 @@ public class MultipleTopLevelClasses extends BugChecker implements CompilationUn
           case INTERFACE:
           case ANNOTATION_TYPE:
           case ENUM:
-            if (isSuppressed(classMember)) {
+            if (isSuppressed(classMember, state)) {
               // If any top-level classes have @SuppressWarnings("TopLevel"), ignore
               // this compilation unit. We can't rely on the normal suppression
               // mechanism because the only enclosing element is the package declaration,

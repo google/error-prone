@@ -217,7 +217,7 @@ public abstract class StronglyType {
   private ImmutableMap<VarSymbol, TreePath> findPathToPotentialFields(
       VisitorState state, Set<Type> potentialTypes) {
     ImmutableMap.Builder<VarSymbol, TreePath> fields = ImmutableMap.builder();
-    bugChecker().new SuppressibleTreePathScanner<Void, Void>() {
+    bugChecker().new SuppressibleTreePathScanner<Void, Void>(state) {
       @Override
       public Void visitVariable(VariableTree variableTree, Void unused) {
         VarSymbol symbol = getSymbol(variableTree);
@@ -228,7 +228,7 @@ public abstract class StronglyType {
             && variableTree.getInitializer() != null
             && potentialTypes.stream()
                 .anyMatch(potentialType -> isSameType(type, potentialType, state))
-            && !bugChecker().isSuppressed(variableTree)) {
+            && !bugChecker().isSuppressed(variableTree, state)) {
           fields.put(symbol, getCurrentPath());
         }
         return super.visitVariable(variableTree, null);

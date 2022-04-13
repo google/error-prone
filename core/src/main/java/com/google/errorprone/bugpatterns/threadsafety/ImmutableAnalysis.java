@@ -264,7 +264,7 @@ public class ImmutableAnalysis {
       ClassType classType,
       VarSymbol var,
       ViolationReporter reporter) {
-    if (bugChecker.isSuppressed(var)) {
+    if (bugChecker.isSuppressed(var, state)) {
       return Violation.absent();
     }
     if (!var.getModifiers().contains(Modifier.FINAL)

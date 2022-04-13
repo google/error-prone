@@ -93,7 +93,7 @@ public final class JUnit3TestNotRun extends BugChecker implements CompilationUni
   @Override
   public Description matchCompilationUnit(CompilationUnitTree unused, VisitorState state) {
     ImmutableSet<MethodSymbol> calledMethods = calledMethods(state);
-    new SuppressibleTreePathScanner<Void, Void>() {
+    new SuppressibleTreePathScanner<Void, Void>(state) {
       @Override
       public Void visitMethod(MethodTree tree, Void unused) {
         checkMethod(tree, calledMethods, state.withPath(getCurrentPath()))

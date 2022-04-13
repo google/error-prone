@@ -172,7 +172,7 @@ public class InlineFormatString extends BugChecker implements CompilationUnitTre
         },
         null);
     // find the field declarations
-    new SuppressibleTreePathScanner<Void, Void>() {
+    new SuppressibleTreePathScanner<Void, Void>(state) {
       @Override
       public Void visitVariable(VariableTree tree, Void unused) {
         VarSymbol sym = getSymbol(tree);

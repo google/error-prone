@@ -132,6 +132,10 @@ public final class UnusedMethod extends BugChecker implements CompilationUnitTre
     AtomicBoolean ignoreUnusedMethods = new AtomicBoolean(false);
 
     class MethodFinder extends SuppressibleTreePathScanner<Void, Void> {
+      MethodFinder(VisitorState state) {
+        super(state);
+      }
+
       @Override
       public Void visitClass(ClassTree tree, Void unused) {
         if (exemptedBySuperType(getType(tree), state)) {
@@ -232,7 +236,7 @@ public final class UnusedMethod extends BugChecker implements CompilationUnitTre
         return false;
       }
     }
-    new MethodFinder().scan(state.getPath(), null);
+    new MethodFinder(state).scan(state.getPath(), null);
 
     class FilterUsedMethods extends TreePathScanner<Void, Void> {
       @Override

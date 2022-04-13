@@ -77,7 +77,7 @@ public class MethodCanBeStatic extends BugChecker implements CompilationUnitTree
 
       @Override
       public Void visitClass(ClassTree classTree, Void unused) {
-        if (isSuppressed(classTree)) {
+        if (isSuppressed(classTree, state)) {
           suppressions++;
           super.visitClass(classTree, null);
           suppressions--;
@@ -89,7 +89,7 @@ public class MethodCanBeStatic extends BugChecker implements CompilationUnitTree
 
       @Override
       public Void visitMethod(MethodTree tree, Void unused) {
-        if (isSuppressed(tree)) {
+        if (isSuppressed(tree, state)) {
           suppressions++;
           matchMethod(tree);
           super.visitMethod(tree, null);
@@ -103,7 +103,7 @@ public class MethodCanBeStatic extends BugChecker implements CompilationUnitTree
 
       @Override
       public Void visitVariable(VariableTree variableTree, Void unused) {
-        if (isSuppressed(variableTree)) {
+        if (isSuppressed(variableTree, state)) {
           suppressions++;
           super.visitVariable(variableTree, null);
           suppressions--;

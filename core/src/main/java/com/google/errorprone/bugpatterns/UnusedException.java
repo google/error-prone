@@ -74,7 +74,7 @@ public final class UnusedException extends BugChecker implements CatchTreeMatche
 
   @Override
   public Description matchCatch(CatchTree tree, VisitorState state) {
-    if (isSuppressed(tree.getParameter()) || isSuppressedViaName(tree.getParameter())) {
+    if (isSuppressed(tree.getParameter(), state) || isSuppressedViaName(tree.getParameter())) {
       return Description.NO_MATCH;
     }
     VarSymbol exceptionSymbol = ASTHelpers.getSymbol(tree.getParameter());

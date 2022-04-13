@@ -372,7 +372,7 @@ public class ReturnMissingNullable extends BugChecker implements CompilationUnit
 
       @Override
       public Void scan(Tree tree, Void unused) {
-        if (isSuppressed(tree)) {
+        if (isSuppressed(tree, stateForCompilationUnit)) {
           return null;
         }
         return super.scan(tree, unused);

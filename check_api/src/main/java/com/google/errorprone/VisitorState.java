@@ -262,6 +262,10 @@ public class VisitorState {
     return sharedState.errorProneOptions;
   }
 
+  public Map<String, SeverityLevel> severityMap() {
+    return sharedState.severityMap;
+  }
+
   public void reportMatch(Description description) {
     checkNotNull(description, "Use Description.NO_MATCH to denote an absent finding.");
     if (description == Description.NO_MATCH) {

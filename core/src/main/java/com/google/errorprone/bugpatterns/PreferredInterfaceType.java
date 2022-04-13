@@ -181,7 +181,7 @@ public final class PreferredInterfaceType extends BugChecker implements Compilat
 
   private ImmutableMap<Symbol, Tree> getFixableTypes(VisitorState state) {
     ImmutableMap.Builder<Symbol, Tree> fixableTypes = ImmutableMap.builder();
-    new SuppressibleTreePathScanner<Void, Void>() {
+    new SuppressibleTreePathScanner<Void, Void>(state) {
       @Override
       public Void visitVariable(VariableTree tree, Void unused) {
         VarSymbol symbol = getSymbol(tree);
