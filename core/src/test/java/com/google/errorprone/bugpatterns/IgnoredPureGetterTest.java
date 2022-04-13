@@ -187,6 +187,50 @@ public final class IgnoredPureGetterTest {
   }
 
   @Test
+  public void autoBuilder_buildIsntCrv() {
+    helper
+        .addSourceLines(
+            "Named.java",
+            "import com.google.auto.value.AutoBuilder;",
+            "import java.time.LocalTime;",
+            "@AutoBuilder(callMethod = \"of\", ofClass = LocalTime.class)",
+            "interface LocalTimeBuilder {",
+            "  LocalTimeBuilder setHour(int hour);",
+            "  LocalTimeBuilder setMinute(int minute);",
+            "  LocalTimeBuilder setSecond(int second);",
+            "  LocalTimeBuilder setNanoOfSecond(int nanoOfSecond);",
+            "  int getHour();",
+            "  int getMinute();",
+            "  int getSecond();",
+            "  int getNanoOfSecond();",
+            "  LocalTime build();", // calls: LocalTime.of(...)
+            "}")
+        .addSourceLines(
+            "B.java",
+            "class B {",
+            "  void test(LocalTimeBuilder builder) {",
+            // the setters are treated as CIRV:
+            "    builder.setHour(12);",
+            "    builder.setMinute(12);",
+            "    builder.setSecond(12);",
+            // the getters are treated as CRV:
+            "    // BUG: Diagnostic contains: IgnoredPureGetter",
+            "    builder.getHour();",
+            "    // BUG: Diagnostic contains: IgnoredPureGetter",
+            "    builder.getMinute();",
+            "    // BUG: Diagnostic contains: IgnoredPureGetter",
+            "    builder.getSecond();",
+            "    // BUG: Diagnostic contains: IgnoredPureGetter",
+            "    builder.getNanoOfSecond();",
+            // TODO(b/229107551): this shouldn't be treated as CRV
+            "    // BUG: Diagnostic contains: IgnoredPureGetter",
+            "    builder.build();",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void refactoringHelper() {
     refactoringHelper
         .addInputLines(
