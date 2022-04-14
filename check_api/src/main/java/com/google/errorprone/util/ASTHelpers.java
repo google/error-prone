@@ -1163,10 +1163,11 @@ public class ASTHelpers {
   @Nullable
   public static PackageSymbol enclosingPackage(Symbol sym) {
     Symbol curr = sym;
-    for (; curr != null && curr.owner != null; curr = curr.owner) {
+    while (curr != null) {
       if (curr.getKind().equals(ElementKind.PACKAGE)) {
         return (PackageSymbol) curr;
       }
+      curr = curr.owner;
     }
     return null;
   }
