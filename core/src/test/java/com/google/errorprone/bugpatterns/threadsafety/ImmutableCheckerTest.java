@@ -2486,4 +2486,159 @@ public class ImmutableCheckerTest {
         "import com.google.errorprone.annotations.ImmutableTypeParameter;",
         "class GenericWithImmutableParam<@ImmutableTypeParameter T> {}");
   }
+
+  @Test
+  public void lambda_cannotCloseAroundMutableField() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.errorprone.annotations.Immutable;",
+            "import java.util.ArrayList;",
+            "import java.util.List;",
+            "class Test {",
+            "  @Immutable interface ImmutableFunction<A, B> { A apply(B b); }",
+            "  private int a = 0;",
+            "  void test(ImmutableFunction<Integer, Integer> f) {",
+            "    // BUG: Diagnostic contains:",
+            "    test(x -> ++a);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void lambda_canCloseAroundImmutableField() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.errorprone.annotations.Immutable;",
+            "import java.util.ArrayList;",
+            "import java.util.List;",
+            "class Test {",
+            "  @Immutable interface ImmutableFunction<A, B> { A apply(B b); }",
+            "  private final int b = 1;",
+            "  void test(ImmutableFunction<Integer, Integer> f) {",
+            "    test(x -> b);",
+            "    test(x -> this.b);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void lambda_cannotCloseAroundMutableLocal() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.errorprone.annotations.Immutable;",
+            "import java.util.List;",
+            "import java.util.ArrayList;",
+            "class Test {",
+            "  @Immutable interface ImmutableFunction<A, B> { A apply(B b); }",
+            "  void test(ImmutableFunction<Integer, Integer> f) {",
+            "    List<Integer> xs = new ArrayList<>();",
+            "    // BUG: Diagnostic contains:",
+            "    test(x -> xs.get(x));",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void notImmutableAnnotatedLambda_noFinding() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.util.ArrayList;",
+            "import java.util.List;",
+            "import java.util.function.Function;",
+            "class Test {",
+            "  void test(Function<Integer, Integer> f) {",
+            "    List<Integer> xs = new ArrayList<>();",
+            "    test(x -> xs.get(x));",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void lambda_canHaveMutableVariablesWithin() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.errorprone.annotations.Immutable;",
+            "import java.util.ArrayList;",
+            "import java.util.List;",
+            "class Test {",
+            "  @Immutable interface ImmutableFunction<A, B> { A apply(B b); }",
+            "  void test(ImmutableFunction<Integer, Integer> f) {",
+            "    test(x -> { List<Integer> xs = new ArrayList<>(); return xs.get(x); });",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void lambda_cannotCallMethodOnMutableClass() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.errorprone.annotations.Immutable;",
+            "abstract class Test {",
+            "  @Immutable interface ImmutableFunction<A, B> { A apply(B b); }",
+            "  abstract int mutable(int a);",
+            "  void test(ImmutableFunction<Integer, Integer> f) {",
+            "    // BUG: Diagnostic contains: This lambda implements @Immutable interface"
+                + " 'ImmutableFunction', but accesses instance method(s) 'mutable' on 'Test' which"
+                + " is not @Immutable",
+            "    test(x -> mutable(x));",
+            "    // BUG: Diagnostic contains: This lambda implements @Immutable interface"
+                + " 'ImmutableFunction', but 'Test' has field 'this' of type 'Test', the"
+                + " declaration of type 'Test' is not annotated with"
+                + " @com.google.errorprone.annotations.Immutable",
+            "    test(x -> this.mutable(x));",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void lambda_canCallMethodOnImmutableClass() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.errorprone.annotations.Immutable;",
+            "@Immutable",
+            "abstract class Test {",
+            "  @Immutable interface ImmutableFunction<A, B> { A apply(B b); }",
+            "  abstract int mutable(int a);",
+            "  void test(ImmutableFunction<Integer, Integer> f) {",
+            "    test(x -> mutable(x));",
+            "    test(x -> this.mutable(x));",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void subclassesOfMutableType() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.errorprone.annotations.Immutable;",
+            "import java.util.function.Function;",
+            "@Immutable",
+            "abstract class Test {",
+            "  @Immutable interface ImmutableFunction<A, B> extends Function<A, B> {",
+            "    default <C> ImmutableFunction<A, C> andThen(ImmutableFunction<B, C> fn) {",
+            // TODO(ghm): this one is sad, we're really accessing an immutable class's method here,
+            // but the owner of the method is not @Immutable. Look for a better heuristic to find
+            // the receiver type.
+            "      // BUG: Diagnostic contains:",
+            "      return x -> fn.apply(apply(x));",
+            "    }",
+            "  }",
+            "}")
+        .doTest();
+  }
 }
