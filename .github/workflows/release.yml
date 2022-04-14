@@ -1,0 +1,66 @@
+name: Release Error Prone
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "version number for this release."
+        required: true
+
+jobs:
+  build-maven-jars:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Setup Signing Key
+        run: |
+          gpg-agent --daemon --default-cache-ttl 7200
+          echo -e "${{ secrets.GPG_SIGNING_KEY }}" | gpg --batch --import --no-tty
+          echo "hello world" > temp.txt
+          gpg --detach-sig --yes -v --output=/dev/null --pinentry-mode loopback --passphrase "${{ secrets.GPG_PASSPHRASE }}" temp.txt
+          rm temp.txt
+          gpg --list-secret-keys --keyid-format LONG
+          
+      - name: Checkout
+        uses: actions/checkout@v2.4.0
+
+      - name: Set up JDK
+        uses: actions/setup-java@v2.5.0
+        with:
+          java-version: 11
+          distribution: 'zulu'
+          cache: 'maven'
+          server-id: sonatype-nexus-staging
+          server-username: CI_DEPLOY_USERNAME
+          server-password: CI_DEPLOY_PASSWORD
+     
+      - name: Bump Version Number
+        run: |
+          mvn --no-transfer-progress versions:set versions:commit -DnewVersion="${{ github.event.inputs.version }}"
+          git ls-files | grep 'pom.xml$' | xargs git add
+          git config --global user.email "${{ github.actor }}@users.noreply.github.com"
+          git config --global user.name "${{ github.actor }}"
+          git commit -m "Release Error Prone ${{ github.event.inputs.version }}"
+          git tag "v${{ github.event.inputs.version }}"
+          echo "TARGET_COMMITISH=$(git rev-parse HEAD)" >> $GITHUB_ENV
+          git remote set-url origin https://${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}@github.com/google/error-prone.git
+          
+      - name: Deploy to Sonatype staging
+        env:
+          CI_DEPLOY_USERNAME: ${{ secrets.CI_DEPLOY_USERNAME }}
+          CI_DEPLOY_PASSWORD: ${{ secrets.CI_DEPLOY_PASSWORD }}
+        run:
+          mvn --no-transfer-progress -P release clean deploy -Dgpg.passphrase="${{ secrets.GPG_PASSPHRASE }}"
+
+      - name: Push tag
+        run: |
+          git push origin "v${{ github.event.inputs.version }}"
+          
+      - name: Draft Release Entry
+        uses: softprops/action-gh-release@v0.1.14
+        with:
+          draft: true
+          name: ${{ github.event.input.version }} 
+          tag_name: "v${{ github.event.inputs.version }}"
+          target_commitish: ${{ env.TARGET_COMMITISH }}
