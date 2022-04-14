@@ -19,6 +19,7 @@ package com.google.errorprone.bugpatterns.threadsafety;
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
+import static com.google.errorprone.util.ASTHelpers.getSymbol;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableSet;
@@ -49,6 +50,7 @@ import com.sun.source.tree.Tree;
 import com.sun.source.tree.TypeParameterTree;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
+import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.TypeVariableSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.tree.JCTree.JCMemberReference;
@@ -90,29 +92,26 @@ public class ImmutableChecker extends BugChecker
   // check instantiations of `@ImmutableTypeParameter`s in method references
   @Override
   public Description matchMemberReference(MemberReferenceTree tree, VisitorState state) {
-    checkInvocation(
-        tree, ((JCMemberReference) tree).referentType, state, ASTHelpers.getSymbol(tree));
+    checkInvocation(tree, getSymbol(tree), ((JCMemberReference) tree).referentType, state);
     return NO_MATCH;
   }
 
   // check instantiations of `@ImmutableTypeParameter`s in method invocations
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
-    checkInvocation(
-        tree, ASTHelpers.getType(tree.getMethodSelect()), state, ASTHelpers.getSymbol(tree));
+    checkInvocation(tree, getSymbol(tree), ASTHelpers.getType(tree.getMethodSelect()), state);
     return NO_MATCH;
   }
 
   @Override
   public Description matchNewClass(NewClassTree tree, VisitorState state) {
     // check instantiations of `@ImmutableTypeParameter`s in generic constructor invocations
-    checkInvocation(
-        tree, ((JCNewClass) tree).constructorType, state, ((JCNewClass) tree).constructor);
+    checkInvocation(tree, getSymbol(tree), ((JCNewClass) tree).constructorType, state);
     // check instantiations of `@ImmutableTypeParameter`s in class constructor invocations
     checkInstantiation(
         tree,
         state,
-        ASTHelpers.getSymbol(tree.getIdentifier()).getTypeParameters(),
+        getSymbol(tree.getIdentifier()).getTypeParameters(),
         ASTHelpers.getType(tree).getTypeArguments());
 
     ClassTree classBody = tree.getClassBody();
@@ -132,7 +131,7 @@ public class ImmutableChecker extends BugChecker
     checkInstantiation(
         tree,
         state,
-        ASTHelpers.getSymbol(tree).getTypeParameters(),
+        getSymbol(tree).getTypeParameters(),
         ASTHelpers.getType(tree).getTypeArguments());
     return NO_MATCH;
   }
@@ -141,7 +140,8 @@ public class ImmutableChecker extends BugChecker
     return new ImmutableAnalysis(this, state, wellKnownMutability, immutableAnnotations);
   }
 
-  private void checkInvocation(Tree tree, Type methodType, VisitorState state, Symbol symbol) {
+  private void checkInvocation(
+      Tree tree, MethodSymbol symbol, Type methodType, VisitorState state) {
     ImmutableAnalysis analysis = createImmutableAnalysis(state);
     Violation info = analysis.checkInvocation(methodType, symbol);
     if (info.isPresent()) {
@@ -197,8 +197,7 @@ public class ImmutableChecker extends BugChecker
     // Check that the types in containerOf actually exist
     Map<String, TypeVariableSymbol> typarams = new HashMap<>();
     for (TypeParameterTree typaram : tree.getTypeParameters()) {
-      typarams.put(
-          typaram.getName().toString(), (TypeVariableSymbol) ASTHelpers.getSymbol(typaram));
+      typarams.put(typaram.getName().toString(), (TypeVariableSymbol) getSymbol(typaram));
     }
     SetView<String> difference = Sets.difference(annotation.containerOf(), typarams.keySet());
     if (!difference.isEmpty()) {
@@ -231,12 +230,12 @@ public class ImmutableChecker extends BugChecker
     // Check that the fields (including inherited fields) are immutable, and
     // validate the type hierarchy superclass.
 
-    ClassSymbol sym = ASTHelpers.getSymbol(tree);
+    ClassSymbol sym = getSymbol(tree);
 
     Violation info =
         analysis.checkForImmutability(
             Optional.of(tree),
-            immutableTypeParametersInScope(ASTHelpers.getSymbol(tree), state, analysis),
+            immutableTypeParametersInScope(getSymbol(tree), state, analysis),
             ASTHelpers.getType(tree),
             (Tree matched, Violation violation) ->
                 describeClass(matched, sym, annotation, violation));
@@ -255,7 +254,7 @@ public class ImmutableChecker extends BugChecker
           tree,
           state,
           analysis,
-          ASTHelpers.getSymbol(implementTree).getTypeParameters(),
+          getSymbol(implementTree).getTypeParameters(),
           ASTHelpers.getType(implementTree).getTypeArguments());
     }
 
@@ -265,7 +264,7 @@ public class ImmutableChecker extends BugChecker
           tree,
           state,
           analysis,
-          ASTHelpers.getSymbol(extendsClause).getTypeParameters(),
+          getSymbol(extendsClause).getTypeParameters(),
           ASTHelpers.getType(extendsClause).getTypeArguments());
     }
   }
@@ -289,7 +288,7 @@ public class ImmutableChecker extends BugChecker
   /** Check anonymous implementations of {@code @Immutable} types. */
   private Description handleAnonymousClass(
       ClassTree tree, VisitorState state, ImmutableAnalysis analysis) {
-    ClassSymbol sym = ASTHelpers.getSymbol(tree);
+    ClassSymbol sym = getSymbol(tree);
     Type superType = immutableSupertype(sym, state);
     if (superType == null) {
       return NO_MATCH;
@@ -334,7 +333,7 @@ public class ImmutableChecker extends BugChecker
 
   /** Check for classes without {@code @Immutable} that have immutable supertypes. */
   private Description checkSubtype(ClassTree tree, VisitorState state) {
-    ClassSymbol sym = ASTHelpers.getSymbol(tree);
+    ClassSymbol sym = getSymbol(tree);
     Type superType = immutableSupertype(sym, state);
     if (superType == null) {
       return NO_MATCH;
