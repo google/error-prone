@@ -134,11 +134,9 @@ public class AlwaysThrows extends BugChecker implements MethodInvocationTreeMatc
   }
 
   private final ConstantExpressions constantExpressions;
-  private final boolean matchUuidParse;
 
   public AlwaysThrows(ErrorProneFlags flags) {
     this.constantExpressions = ConstantExpressions.fromFlags(flags);
-    this.matchUuidParse = flags.getBoolean("AlwaysThrows:MatchUuidParse").orElse(true);
   }
 
   @Override
@@ -170,11 +168,7 @@ public class AlwaysThrows extends BugChecker implements MethodInvocationTreeMatc
       }
     }
     Api api =
-        stream(Api.values())
-            .filter(a -> matchUuidParse || !a.equals(Api.UUID_PARSE))
-            .filter(m -> m.matcher.matches(tree, state))
-            .findAny()
-            .orElse(null);
+        stream(Api.values()).filter(m -> m.matcher.matches(tree, state)).findAny().orElse(null);
     if (api == null) {
       return NO_MATCH;
     }
