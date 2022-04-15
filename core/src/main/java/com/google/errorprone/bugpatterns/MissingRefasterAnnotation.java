@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 The Error Prone Authors.
+ * Copyright 2022 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,15 +16,14 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
+import static com.google.errorprone.BugPattern.StandardTags.LIKELY_ERROR;
 import static com.google.errorprone.matchers.ChildMultiMatcher.MatchType.AT_LEAST_ONE;
 import static com.google.errorprone.matchers.Matchers.annotations;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.isType;
 
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.LinkType;
-import com.google.errorprone.BugPattern.SeverityLevel;
-import com.google.errorprone.BugPattern.StandardTags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
 import com.google.errorprone.matchers.Description;
@@ -37,11 +36,9 @@ import com.sun.source.tree.Tree;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
-    name = "MissingRefasterAnnotation",
     summary = "The Refaster template contains a method without any Refaster annotations",
-    linkType = LinkType.NONE,
-    severity = SeverityLevel.WARNING,
-    tags = StandardTags.LIKELY_ERROR)
+    severity = WARNING,
+    tags = LIKELY_ERROR)
 public final class MissingRefasterAnnotation extends BugChecker implements ClassTreeMatcher {
   private static final MultiMatcher<Tree, AnnotationTree> HAS_REFASTER_ANNOTATION =
       annotations(
