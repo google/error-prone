@@ -69,4 +69,22 @@ public class UnnecessaryBoxedVariableTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void lambdaReturn() {
+    compilationTestHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  interface F {",
+            "    int f(Integer i);",
+            "  }",
+            "  Test() {",
+            "    F f = (Integer i) -> {",
+            "      return i;",
+            "    };",
+            "  }",
+            "}")
+        .doTest();
+  }
 }

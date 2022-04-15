@@ -21,6 +21,7 @@ import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
+import static com.google.errorprone.util.ASTHelpers.findEnclosingMethod;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 
 import com.google.common.collect.ArrayListMultimap;
@@ -429,11 +430,12 @@ public class UnnecessaryBoxedVariable extends BugChecker implements CompilationU
       // Don't count a return value as a boxed usage, except if we are returning a parameter, and
       // the method's return type is boxed.
       if (nodeSymbol.getKind() == ElementKind.PARAMETER) {
-        MethodTree enclosingMethod =
-            ASTHelpers.findEnclosingNode(getCurrentPath(), MethodTree.class);
-        Type returnType = ASTHelpers.getType(enclosingMethod.getReturnType());
-        if (!returnType.isPrimitive()) {
-          boxedUsageFound.add((VarSymbol) nodeSymbol);
+        MethodTree enclosingMethod = findEnclosingMethod(state.withPath(getCurrentPath()));
+        if (enclosingMethod != null) {
+          Type returnType = ASTHelpers.getType(enclosingMethod.getReturnType());
+          if (!returnType.isPrimitive()) {
+            boxedUsageFound.add((VarSymbol) nodeSymbol);
+          }
         }
       }
       return null;
