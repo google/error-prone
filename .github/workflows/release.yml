@@ -61,6 +61,7 @@ jobs:
         uses: softprops/action-gh-release@v0.1.14
         with:
           draft: true
-          name: ${{ github.event.input.version }} 
+          name: Error Prone ${{ github.event.input.version }} 
+          generate_release_notes: true
           tag_name: "v${{ github.event.inputs.version }}"
           target_commitish: ${{ env.TARGET_COMMITISH }}
