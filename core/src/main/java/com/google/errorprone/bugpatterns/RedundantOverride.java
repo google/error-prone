@@ -19,6 +19,7 @@ package com.google.errorprone.bugpatterns;
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
+import static com.google.errorprone.util.ASTHelpers.enclosingPackage;
 import static com.google.errorprone.util.ASTHelpers.findSuperMethod;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
@@ -93,7 +94,7 @@ public final class RedundantOverride extends BugChecker implements MethodTreeMat
     }
     // Overriding a protected member in another package broadens the visibility to the new package.
     if (methodSymbol.getModifiers().contains(Modifier.PROTECTED)
-        && !Objects.equals(superMethod.packge(), methodSymbol.packge())) {
+        && !Objects.equals(enclosingPackage(superMethod), enclosingPackage(methodSymbol))) {
       return NO_MATCH;
     }
     // Exempt any change in annotations (aside from @Override).

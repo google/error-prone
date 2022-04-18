@@ -28,6 +28,7 @@ import static com.google.errorprone.matchers.method.MethodMatchers.instanceMetho
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
 import static com.google.errorprone.predicates.TypePredicates.isDescendantOf;
 import static com.google.errorprone.predicates.TypePredicates.isExactTypeAny;
+import static com.google.errorprone.util.ASTHelpers.enclosingPackage;
 import static com.google.errorprone.util.ASTHelpers.getReceiverType;
 import static com.google.errorprone.util.ASTHelpers.getReturnType;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
@@ -131,7 +132,7 @@ public class ReturnValueIgnored extends AbstractReturnValueIgnored {
     }
     Symbol symbol = getSymbol(tree);
     if (symbol instanceof MethodSymbol) {
-      String qualifiedName = symbol.owner.packge().getQualifiedName().toString();
+      String qualifiedName = enclosingPackage(symbol.owner).getQualifiedName().toString();
       return (qualifiedName.startsWith("java.time") || qualifiedName.startsWith("org.threeten.bp"))
           && symbol.getModifiers().contains(Modifier.PUBLIC)
           && !ALLOWED_JAVA_TIME_METHODS.matches(tree, state);
@@ -146,7 +147,7 @@ public class ReturnValueIgnored extends AbstractReturnValueIgnored {
   private static boolean functionalMethod(ExpressionTree tree, VisitorState state) {
     Symbol symbol = getSymbol(tree);
     return symbol instanceof MethodSymbol
-        && symbol.owner.packge().getQualifiedName().contentEquals("java.util.function");
+        && enclosingPackage(symbol.owner).getQualifiedName().contentEquals("java.util.function");
   }
 
   /**

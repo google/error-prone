@@ -1159,7 +1159,12 @@ public class ASTHelpers {
     return sym.owner == null ? null : sym.owner.enclClass();
   }
 
-  /** Return the enclosing {@code PackageSymbol} of the given symbol, or {@code null}. */
+  /**
+   * Return the enclosing {@code PackageSymbol} of the given symbol, or {@code null}.
+   *
+   * <p>Prefer this to {@link Symbol#packge}, which throws a {@link NullPointerException} for
+   * symbols that are not contained by a package: https://bugs.openjdk.java.net/browse/JDK-8231911
+   */
   @Nullable
   public static PackageSymbol enclosingPackage(Symbol sym) {
     Symbol curr = sym;

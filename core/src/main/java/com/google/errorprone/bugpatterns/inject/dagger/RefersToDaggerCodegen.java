@@ -16,6 +16,7 @@
 
 package com.google.errorprone.bugpatterns.inject.dagger;
 
+import static com.google.errorprone.util.ASTHelpers.enclosingPackage;
 import static com.google.errorprone.util.ASTHelpers.getGeneratedBy;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 
@@ -97,7 +98,8 @@ public final class RefersToDaggerCodegen extends BugChecker implements MethodInv
   }
 
   private static boolean isDaggerInternalClass(ClassSymbol symbol) {
-    return DAGGER_INTERNAL_PACKAGES.contains(symbol.packge().getQualifiedName().toString());
+    return DAGGER_INTERNAL_PACKAGES.contains(
+        enclosingPackage(symbol).getQualifiedName().toString());
   }
 
   private static boolean isAllowedToReferenceDaggerInternals(VisitorState state) {

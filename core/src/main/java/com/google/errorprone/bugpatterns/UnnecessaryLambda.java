@@ -22,6 +22,7 @@ import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.fixes.SuggestedFixes.prettyType;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
+import static com.google.errorprone.util.ASTHelpers.enclosingPackage;
 import static com.google.errorprone.util.ASTHelpers.getModifiers;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
@@ -183,7 +184,7 @@ public class UnnecessaryLambda extends BugChecker
     } catch (FunctionDescriptorLookupError e) {
       return false;
     }
-    if (!PACKAGES_TO_FIX.contains(descriptor.packge().getQualifiedName().toString())) {
+    if (!PACKAGES_TO_FIX.contains(enclosingPackage(descriptor).getQualifiedName().toString())) {
       return false;
     }
     class Scanner extends TreePathScanner<Void, Void> {
