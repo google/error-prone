@@ -1516,7 +1516,10 @@ com.sun.source.tree.ClassTree&nbsp;tree)</span></div>
 <h3>enclosingPackage</h3>
 <div class="member-signature"><span class="annotations"><a href="https://docs.oracle.com/javase/8/docs/api/javax/annotation/Nullable.html" title="class or interface in javax.annotation" class="external-link">@Nullable</a>
 </span><span class="modifiers">public static</span>&nbsp;<span class="return-type">com.sun.tools.javac.code.Symbol.PackageSymbol</span>&nbsp;<span class="member-name">enclosingPackage</span>&#8203;(<span class="parameters">com.sun.tools.javac.code.Symbol&nbsp;sym)</span></div>
-<div class="block">Return the enclosing <code>PackageSymbol</code> of the given symbol, or <code>null</code>.</div>
+<div class="block">Return the enclosing <code>PackageSymbol</code> of the given symbol, or <code>null</code>.
+
+ <p>Prefer this to <code>Symbol.packge()</code>, which throws a <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/NullPointerException.html" title="class or interface in java.lang" class="external-link"><code>NullPointerException</code></a> for
+ symbols that are not contained by a package: https://bugs.openjdk.java.net/browse/JDK-8231911</div>
 </section>
 </li>
 <li>
