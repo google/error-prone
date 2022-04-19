@@ -2621,7 +2621,7 @@ public class ImmutableCheckerTest {
   }
 
   @Test
-  public void subclassesOfMutableType() {
+  public void checksEffectiveTypeOfReceiver() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -2631,12 +2631,62 @@ public class ImmutableCheckerTest {
             "abstract class Test {",
             "  @Immutable interface ImmutableFunction<A, B> extends Function<A, B> {",
             "    default <C> ImmutableFunction<A, C> andThen(ImmutableFunction<B, C> fn) {",
-            // TODO(ghm): this one is sad, we're really accessing an immutable class's method here,
-            // but the owner of the method is not @Immutable. Look for a better heuristic to find
-            // the receiver type.
-            "      // BUG: Diagnostic contains:",
             "      return x -> fn.apply(apply(x));",
             "    }",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void checksEffectiveTypeOfReceiver_whenNotDirectOuterClass() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.errorprone.annotations.Immutable;",
+            "import java.util.function.Function;",
+            "@Immutable",
+            "abstract class Test implements Function<String, String> {",
+            "  @Immutable interface ImmutableFunction { String apply(String a); }",
+            "  class A {",
+            "    ImmutableFunction asImmutable() {",
+            "      return x -> apply(x);",
+            "    }",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void methodReference_onImmutableType() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.common.collect.ImmutableMap;",
+            "import com.google.errorprone.annotations.Immutable;",
+            "abstract class Test {",
+            "  @Immutable interface ImmutableFunction { String apply(String b); }",
+            "  void test(ImmutableFunction f) {",
+            "    ImmutableMap<String, String> map = ImmutableMap.of();",
+            "    test(map::get);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void methodReference_onMutableType() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.errorprone.annotations.Immutable;",
+            "import java.util.HashMap;",
+            "import java.util.Map;",
+            "abstract class Test {",
+            "  @Immutable interface ImmutableFunction { String apply(String b); }",
+            "  void test(ImmutableFunction f) {",
+            "    Map<String, String> map = new HashMap<>();",
+            "    test(map::get);",
             "  }",
             "}")
         .doTest();

@@ -17,12 +17,14 @@
 package com.google.errorprone.bugpatterns.threadsafety;
 
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
+import static com.google.common.collect.Streams.stream;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
+import static com.google.errorprone.util.ASTHelpers.isSubtype;
 import static java.lang.String.format;
 import static java.util.stream.Collectors.joining;
 
@@ -60,6 +62,7 @@ import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.TypeParameterTree;
 import com.sun.source.tree.VariableTree;
+import com.sun.source.util.TreePath;
 import com.sun.source.util.TreePathScanner;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
@@ -137,9 +140,8 @@ public class ImmutableChecker extends BugChecker
         if (getReceiver(tree) == null) {
           var symbol = getSymbol(tree);
           if (!symbol.isStatic()) {
-            // TODO(b/77333859): This isn't precise. What we really want is the type of `this`, if
-            // the method call were qualified with it.
-            typesClosed.put((ClassSymbol) symbol.owner, symbol);
+            effectiveTypeOfThis(symbol, getCurrentPath(), state)
+                .ifPresent(t -> typesClosed.put(t, symbol));
           }
         }
         return super.visitMethodInvocation(tree, null);
@@ -203,6 +205,19 @@ public class ImmutableChecker extends BugChecker
     return NO_MATCH;
   }
 
+  /**
+   * Gets the effective type of `this`, had the bare invocation of {@code symbol} been qualified
+   * with it.
+   */
+  private static Optional<ClassSymbol> effectiveTypeOfThis(
+      MethodSymbol symbol, TreePath currentPath, VisitorState state) {
+    return stream(currentPath.iterator())
+        .filter(ClassTree.class::isInstance)
+        .map(t -> ASTHelpers.getSymbol((ClassTree) t))
+        .filter(c -> isSubtype(c.type, symbol.owner.type, state))
+        .findFirst();
+  }
+
   private Violation checkClosedLambdaVariable(
       VarSymbol closedVariable,
       LambdaExpressionTree tree,
@@ -233,6 +248,13 @@ public class ImmutableChecker extends BugChecker
   @Override
   public Description matchMemberReference(MemberReferenceTree tree, VisitorState state) {
     checkInvocation(tree, getSymbol(tree), ((JCMemberReference) tree).referentType, state);
+    if (!matchLambdas) {
+      return NO_MATCH;
+    }
+    TypeSymbol lambdaType = getType(tree).tsym;
+    if (!hasImmutableAnnotation(lambdaType, state)) {
+      return NO_MATCH;
+    }
     return NO_MATCH;
   }
 
