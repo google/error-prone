@@ -2686,7 +2686,73 @@ public class ImmutableCheckerTest {
             "  @Immutable interface ImmutableFunction { String apply(String b); }",
             "  void test(ImmutableFunction f) {",
             "    Map<String, String> map = new HashMap<>();",
+            "    // BUG: Diagnostic contains:",
             "    test(map::get);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void methodReference_onExpressionWithMutableType() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.common.collect.Maps;",
+            "import com.google.errorprone.annotations.Immutable;",
+            "abstract class Test {",
+            "  @Immutable interface ImmutableFunction { String apply(String b); }",
+            "  void test(ImmutableFunction f) {",
+            "    // BUG: Diagnostic contains:",
+            "    test(Maps.<String, String>newHashMap()::get);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void methodReference_toStaticMethod() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.common.collect.Lists;",
+            "import com.google.errorprone.annotations.Immutable;",
+            "abstract class Test {",
+            "  @Immutable interface ImmutableProvider { Object get(); }",
+            "  void test(ImmutableProvider f) {",
+            "    test(Lists::newArrayList);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void methodReference_toUnboundMethodReference() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.errorprone.annotations.Immutable;",
+            "import java.util.Set;",
+            "abstract class Test {",
+            "  @Immutable interface ImmutableBiConsumer { void accept(Set<String> xs, String x); }",
+            "  void test(ImmutableBiConsumer c) {",
+            "    test(Set::add);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void methodReference_toConstructor() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.errorprone.annotations.Immutable;",
+            "import java.util.ArrayList;",
+            "abstract class Test {",
+            "  @Immutable interface ImmutableProvider { Object get(); }",
+            "  void test(ImmutableProvider f) {",
+            "    test(ArrayList::new);",
             "  }",
             "}")
         .doTest();

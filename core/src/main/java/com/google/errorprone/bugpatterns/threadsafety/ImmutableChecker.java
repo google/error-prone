@@ -21,10 +21,12 @@ import static com.google.common.collect.Streams.stream;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
+import static com.google.errorprone.util.ASTHelpers.getReceiverType;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
+import static com.google.errorprone.util.ASTHelpers.targetType;
 import static java.lang.String.format;
 import static java.util.stream.Collectors.joining;
 
@@ -244,16 +246,34 @@ public class ImmutableChecker extends BugChecker
         .anyMatch(annotation -> hasAnnotation(tsym, annotation, state));
   }
 
-  // check instantiations of `@ImmutableTypeParameter`s in method references
   @Override
   public Description matchMemberReference(MemberReferenceTree tree, VisitorState state) {
+    // check instantiations of `@ImmutableTypeParameter`s in method references
     checkInvocation(tree, getSymbol(tree), ((JCMemberReference) tree).referentType, state);
     if (!matchLambdas) {
       return NO_MATCH;
     }
-    TypeSymbol lambdaType = getType(tree).tsym;
+    TypeSymbol lambdaType = targetType(state).type().tsym;
     if (!hasImmutableAnnotation(lambdaType, state)) {
       return NO_MATCH;
+    }
+    if (getSymbol(getReceiver(tree)) instanceof ClassSymbol) {
+      return NO_MATCH;
+    }
+    var receiverType = getReceiverType(tree);
+    ImmutableAnalysis analysis = createImmutableAnalysis(state);
+    ImmutableSet<String> typarams =
+        immutableTypeParametersInScope(getSymbol(tree), state, analysis);
+    var violation =
+        analysis.isThreadSafeType(/* allowContainerTypeParameters= */ true, typarams, receiverType);
+    if (violation.isPresent()) {
+      return buildDescription(tree)
+          .setMessage(
+              "This method reference implements @Immutable interface "
+                  + lambdaType.getSimpleName()
+                  + ", but "
+                  + violation.message())
+          .build();
     }
     return NO_MATCH;
   }
