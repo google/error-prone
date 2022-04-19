@@ -185,6 +185,9 @@ Casting a lambda to this @FunctionalInterface can cause a behavior change from c
 __[FuturesGetCheckedIllegalExceptionType](bugpattern/FuturesGetCheckedIllegalExceptionType)__<br>
 Futures.getChecked requires a checked exception type with a standard constructor.
 
+__[FuzzyEqualsShouldNotBeUsedInEqualsMethod](bugpattern/FuzzyEqualsShouldNotBeUsedInEqualsMethod)__<br>
+DoubleMath.fuzzyEquals should never be used in an Object.equals() method
+
 __[GetClassOnAnnotation](bugpattern/GetClassOnAnnotation)__<br>
 Calling getClass() on an annotation may return a proxy class
 
@@ -1229,9 +1232,6 @@ Empty statement after if
 
 __[ExtendsAutoValue](bugpattern/ExtendsAutoValue)__<br>
 Do not extend an @AutoValue/@AutoOneOf class in non-generated code.
-
-__[FuzzyEqualsShouldNotBeUsedInEqualsMethod](bugpattern/FuzzyEqualsShouldNotBeUsedInEqualsMethod)__<br>
-DoubleMath.fuzzyEquals should never be used in an Object.equals() method
 
 __[InjectMoreThanOneQualifier](bugpattern/InjectMoreThanOneQualifier)__<br>
 Using more than one qualifier annotation on the same element is not allowed.
