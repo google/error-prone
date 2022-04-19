@@ -847,6 +847,22 @@ public class CheckReturnValueTest {
   }
 
   @Test
+  public void allMethods_withoutCIRVAnnotation() {
+    compilationHelperLookingAtAllMethods()
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  public int bar() { return 42; }",
+            "  public static void foo() {",
+            "    // BUG: Diagnostic contains: Ignored return value of 'bar', which wasn't"
+                + " annotated with @CanIgnoreReturnValue",
+            "    new Test().bar();",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void usingElementInTestExpected() {
     compilationHelperLookingAtAllConstructors()
         .addSourceLines(
@@ -1002,5 +1018,9 @@ public class CheckReturnValueTest {
   private CompilationTestHelper compilationHelperLookingAtAllConstructors() {
     return compilationHelper.setArgs(
         "-XepOpt:" + CheckReturnValue.CHECK_ALL_CONSTRUCTORS + "=true");
+  }
+
+  private CompilationTestHelper compilationHelperLookingAtAllMethods() {
+    return compilationHelper.setArgs("-XepOpt:" + CheckReturnValue.CHECK_ALL_METHODS + "=true");
   }
 }
