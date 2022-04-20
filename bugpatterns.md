@@ -1364,9 +1364,6 @@ This type can be more specific.
 __[PrimitiveArrayPassedToVarargsMethod](bugpattern/PrimitiveArrayPassedToVarargsMethod)__<br>
 Passing a primitive array to a varargs method is usually wrong
 
-__[ProtosAsKeyOfSetOrMap](bugpattern/ProtosAsKeyOfSetOrMap)__<br>
-Protos should not be used as a key to a map, in a set, or in a contains method on a descendant of a collection. Protos have non deterministic ordering and proto equality is deep, which is a performance issue.
-
 __[QualifierWithTypeUse](bugpattern/QualifierWithTypeUse)__<br>
 Injection frameworks currently don&#39;t understand Qualifiers in TYPE_PARAMETER or TYPE_USE contexts.
 
