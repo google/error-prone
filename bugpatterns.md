@@ -1224,9 +1224,6 @@ This expression was previously declared as a constant; consider replacing this o
 __[DepAnn](bugpattern/DepAnn)__<br>
 Item documented with a @deprecated javadoc note is not annotated with @Deprecated
 
-__[DivZero](bugpattern/DivZero)__<br>
-Division by integer literal zero
-
 __[EmptyIf](bugpattern/EmptyIf)__<br>
 Empty statement after if
 
