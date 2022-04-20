@@ -18,7 +18,7 @@ annotation (`com.google.errorprone.annotations.Immutable`) are deeply immutable.
 It also checks that any class extending an `@Immutable`-annotated class or
 implementing an `@Immutable`-annotated interface are also immutable.
 
-Other versions of the annotation, such as
+NOTE: Other versions of the annotation, such as
 `javax.annotation.concurrent.Immutable`, are currently *not* enforced.
 
 An object is immutable if its state cannot be observed to change after
