@@ -122,6 +122,14 @@ public class ImmutableChecker extends BugChecker
       return NO_MATCH;
     }
     TypeSymbol lambdaType = getType(tree).tsym;
+    ImmutableAnalysis analysis = createImmutableAnalysis(state);
+    Violation info =
+        analysis.checkInstantiation(
+            lambdaType.getTypeParameters(), getType(tree).getTypeArguments());
+
+    if (info.isPresent()) {
+      state.reportMatch(buildDescription(tree).setMessage(info.message()).build());
+    }
     if (!hasImmutableAnnotation(lambdaType, state)) {
       return NO_MATCH;
     }
@@ -179,7 +187,6 @@ public class ImmutableChecker extends BugChecker
       }
     }.scan(state.getPath(), null);
 
-    ImmutableAnalysis analysis = createImmutableAnalysis(state);
     ImmutableSet<String> typarams =
         immutableTypeParametersInScope(getSymbol(tree), state, analysis);
     variablesClosed.stream()
@@ -253,15 +260,22 @@ public class ImmutableChecker extends BugChecker
     if (!matchLambdas) {
       return NO_MATCH;
     }
-    TypeSymbol lambdaType = targetType(state).type().tsym;
-    if (!hasImmutableAnnotation(lambdaType, state)) {
+    ImmutableAnalysis analysis = createImmutableAnalysis(state);
+    TypeSymbol memberReferenceType = targetType(state).type().tsym;
+    Violation info =
+        analysis.checkInstantiation(
+            memberReferenceType.getTypeParameters(), getType(tree).getTypeArguments());
+
+    if (info.isPresent()) {
+      state.reportMatch(buildDescription(tree).setMessage(info.message()).build());
+    }
+    if (!hasImmutableAnnotation(memberReferenceType, state)) {
       return NO_MATCH;
     }
     if (getSymbol(getReceiver(tree)) instanceof ClassSymbol) {
       return NO_MATCH;
     }
     var receiverType = getReceiverType(tree);
-    ImmutableAnalysis analysis = createImmutableAnalysis(state);
     ImmutableSet<String> typarams =
         immutableTypeParametersInScope(getSymbol(tree), state, analysis);
     var violation =
@@ -270,7 +284,7 @@ public class ImmutableChecker extends BugChecker
       return buildDescription(tree)
           .setMessage(
               "This method reference implements @Immutable interface "
-                  + lambdaType.getSimpleName()
+                  + memberReferenceType.getSimpleName()
                   + ", but "
                   + violation.message())
           .build();

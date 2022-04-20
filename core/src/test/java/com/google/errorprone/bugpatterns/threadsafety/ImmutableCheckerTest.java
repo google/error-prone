@@ -2757,4 +2757,38 @@ public class ImmutableCheckerTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void methodReference_immutableTypeParam() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.errorprone.annotations.ImmutableTypeParameter;",
+            "import java.util.ArrayList;",
+            "abstract class Test {",
+            "  interface ImmutableProvider<@ImmutableTypeParameter T> { T get(); }",
+            "  void test(ImmutableProvider<?> f) {",
+            "    // BUG: Diagnostic contains:",
+            "    test(ArrayList::new);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void lambda_immutableTypeParam() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.errorprone.annotations.ImmutableTypeParameter;",
+            "import java.util.ArrayList;",
+            "abstract class Test {",
+            "  interface ImmutableProvider<@ImmutableTypeParameter T> { T get(); }",
+            "  void test(ImmutableProvider<?> f) {",
+            "    // BUG: Diagnostic contains:",
+            "    test(() -> new ArrayList<>());",
+            "  }",
+            "}")
+        .doTest();
+  }
 }
