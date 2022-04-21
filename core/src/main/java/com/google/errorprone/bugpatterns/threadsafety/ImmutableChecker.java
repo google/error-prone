@@ -181,7 +181,9 @@ public class ImmutableChecker extends BugChecker
       }
 
       private void handleIdentifier(Symbol symbol) {
-        if (symbol instanceof VarSymbol && !variablesOwnedByLambda.contains(symbol)) {
+        if (symbol instanceof VarSymbol
+            && !variablesOwnedByLambda.contains(symbol)
+            && !symbol.isStatic()) {
           variablesClosed.add((VarSymbol) symbol);
         }
       }

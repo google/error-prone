@@ -2579,6 +2579,24 @@ public class ImmutableCheckerTest {
   }
 
   @Test
+  public void lambda_canAccessStaticField() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.errorprone.annotations.Immutable;",
+            "class Test {",
+            "  @Immutable interface ImmutableFunction<A, B> { A apply(B b); }",
+            "  static class A {",
+            "    public static int FOO = 1;",
+            "  }",
+            "  void test(ImmutableFunction<Integer, Integer> f) {",
+            "    test(x -> A.FOO);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void lambda_cannotCallMethodOnMutableClass() {
     compilationHelper
         .addSourceLines(
