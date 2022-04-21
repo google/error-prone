@@ -120,6 +120,7 @@ import com.google.errorprone.bugpatterns.EqualsReference;
 import com.google.errorprone.bugpatterns.EqualsUnsafeCast;
 import com.google.errorprone.bugpatterns.EqualsUsingHashCode;
 import com.google.errorprone.bugpatterns.EqualsWrongThing;
+import com.google.errorprone.bugpatterns.ErroneousBitwiseExpression;
 import com.google.errorprone.bugpatterns.ErroneousThreadPoolConstructorChecker;
 import com.google.errorprone.bugpatterns.ExpectedExceptionChecker;
 import com.google.errorprone.bugpatterns.ExtendingJUnitAssert;
@@ -816,6 +817,7 @@ public class BuiltInCheckerSuppliers {
           EqualsIncompatibleType.class,
           EqualsUnsafeCast.class,
           EqualsUsingHashCode.class,
+          ErroneousBitwiseExpression.class,
           ErroneousThreadPoolConstructorChecker.class,
           EscapedEntity.class,
           ExtendingJUnitAssert.class,
