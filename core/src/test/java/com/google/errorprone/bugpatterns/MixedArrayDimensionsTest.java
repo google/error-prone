@@ -94,7 +94,9 @@ public class MixedArrayDimensionsTest {
         .addSourceLines(
             "SimpleCharStream.java", //
             "final class SimpleCharStream {",
-            "  int a[];",
+            "  void test() {",
+            "    int a[];",
+            "  }",
             "}")
         .doTest();
   }
