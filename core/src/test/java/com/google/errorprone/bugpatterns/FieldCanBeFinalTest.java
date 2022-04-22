@@ -74,6 +74,21 @@ public class FieldCanBeFinalTest {
   }
 
   @Test
+  public void injectAnnotatedFields_ignored() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import javax.inject.Inject;",
+            "class Test {",
+            "  @Inject private int x;",
+            "  Test() {",
+            "    x = 42;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void initializerBlocks() {
     compilationHelper
         .addSourceLines(
