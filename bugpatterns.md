@@ -140,6 +140,9 @@ Duration APIs only work for DAYS or exact durations.
 __[DurationToLongTimeUnit](bugpattern/DurationToLongTimeUnit)__<br>
 Unit mismatch when decomposing a Duration or Instant to call a &lt;long, TimeUnit&gt; API
 
+__[EmptyTopLevelDeclaration](bugpattern/EmptyTopLevelDeclaration)__<br>
+Empty top-level type declarations should be omitted
+
 __[EqualsHashCode](bugpattern/EqualsHashCode)__<br>
 Classes that override equals should also override hashCode.
 
@@ -1300,9 +1303,6 @@ Variables initialized with Pattern#compile calls on constants can be constants
 
 __[DifferentNameButSame](bugpattern/DifferentNameButSame)__<br>
 This type is referred to in different ways within this file, which may be confusing.
-
-__[EmptyTopLevelDeclaration](bugpattern/EmptyTopLevelDeclaration)__<br>
-Empty top-level type declaration
 
 __[EqualsBrokenForNull](bugpattern/EqualsBrokenForNull)__<br>
 equals() implementation may throw NullPointerException when given null
