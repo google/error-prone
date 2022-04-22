@@ -25,16 +25,17 @@ For example, prefer this:
 ```java
 public static void main(String[] args) {
   try {
-    doSomething(args);
+    doSomething(args[0]);
   } catch (MyUncheckedException e) {
     System.err.println(e.getMessage());
     System.exit(1);
   }
 }
 
-private static void doSomething(args) {
+// In library code
+public static void doSomething(String s) {
   try {
-    doSomethingElse(...);
+    doSomethingElse(s);
   } catch (MyCheckedException e) {
     throw new MyUncheckedException(e);
   }
@@ -45,8 +46,13 @@ to this:
 
 ```java
 public static void main(String[] args) {
+  doSomething(args[0]);
+}
+
+// In library code
+public static void doSomething(String s) {
   try {
-    doSomething(...);
+    doSomethingElse(s)
   } catch (MyCheckedException e) {
     System.err.println(e.getMessage());
     System.exit(1);

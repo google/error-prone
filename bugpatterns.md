@@ -56,6 +56,9 @@ Classes that implement Annotation must override equals and hashCode. Consider us
 __[BadShiftAmount](bugpattern/BadShiftAmount)__<br>
 Shift by an amount that is out of range
 
+__[BanJNDI](bugpattern/BanJNDI)__<br>
+Using JNDI may deserialize user input via the &#96;Serializable&#96; API which is extremely dangerous
+
 __[BoxedPrimitiveEquality](bugpattern/BoxedPrimitiveEquality)__<br>
 Comparison using reference equality instead of value equality. Reference equality of boxed primitive types is usually not useful, as they are value objects, and it is bug-prone, as instances are cached for some values but not others.
 
