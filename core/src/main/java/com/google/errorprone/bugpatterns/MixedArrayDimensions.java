@@ -18,6 +18,7 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
+import static com.google.errorprone.util.ASTHelpers.enclosingClass;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 
 import com.google.common.base.CharMatcher;
@@ -74,7 +75,8 @@ public class MixedArrayDimensions extends BugChecker
         if (idx > nonWhitespace) {
           String replacement = dim.substring(idx) + dim.substring(0, idx);
           // SimpleCharStream generates violations in other packages, and is challenging to fix.
-          if (getSymbol(tree).owner.name.contentEquals("SimpleCharStream")) {
+          var enclosingClass = enclosingClass(getSymbol(tree));
+          if (enclosingClass != null && enclosingClass.name.contentEquals("SimpleCharStream")) {
             return NO_MATCH;
           }
           return describeMatch(tree, SuggestedFix.replace(start, end, replacement));
