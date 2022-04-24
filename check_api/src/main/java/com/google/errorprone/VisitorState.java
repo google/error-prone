@@ -595,6 +595,13 @@ public class VisitorState {
         getSourceCode().subSequence(start, end).toString(), start, context);
   }
 
+  /** Returns the start position of the node. */
+  public int getStartPosition(Tree node) {
+    JCCompilationUnit compilationUnit = (JCCompilationUnit) getPath().getCompilationUnit();
+    return ((JCTree) node).getStartPosition();
+  }
+
+
   /** Returns the end position of the node, or -1 if it is not available. */
   public int getEndPosition(Tree node) {
     JCCompilationUnit compilationUnit = (JCCompilationUnit) getPath().getCompilationUnit();

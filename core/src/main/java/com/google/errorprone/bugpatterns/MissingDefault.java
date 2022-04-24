@@ -80,6 +80,13 @@ public class MissingDefault extends BugChecker implements SwitchTreeMatcher {
     if (statements != null && !statements.isEmpty()) {
       return NO_MATCH;
     }
+
+    if (defaultCase.getCaseKind() == CaseTree.CaseKind.RULE && defaultCase.getBody() != null ){
+      if (!defaultCase.getBody().toString().equals("{\r\n}")){
+        return NO_MATCH;
+      }
+    }
+
     // If `default` case is empty, and last in switch, add `// fall out` comment
     // TODO(epmjohnston): Maybe move comment logic to https://errorprone.info/bugpattern/FallThrough
     int idx = tree.getCases().indexOf(defaultCase);
@@ -87,7 +94,7 @@ public class MissingDefault extends BugChecker implements SwitchTreeMatcher {
       return NO_MATCH;
     }
     if (state
-        .getOffsetTokens(state.getEndPosition(defaultCase), state.getEndPosition(tree))
+        .getOffsetTokens(state.getStartPosition(defaultCase), state.getEndPosition(tree))
         .stream()
         .anyMatch(t -> !t.comments().isEmpty())) {
       return NO_MATCH;

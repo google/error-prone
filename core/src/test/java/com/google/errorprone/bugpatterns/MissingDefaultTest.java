@@ -263,4 +263,144 @@ public class MissingDefaultTest {
             "}")
         .doTest();
   }
+
+
+  @Test
+  public void arrowSwitchWithoutComment(){
+    assumeTrue(RuntimeVersion.isAtLeast14());
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "public class Test {",
+            "  public static void nothing1(){ }",
+            "  public static void nothing2(){ }",
+            "  public static void nothing3(){ }",
+            "  public static void foo(int i) {",
+            "    switch (i) {",
+            "      case 1 -> nothing1();",
+            "      case 2 -> nothing2();",
+            "      default -> nothing3();",
+            "    }",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+
+  @Test
+  public void arrowSwitchCommentAboveBraces(){
+    assumeTrue(RuntimeVersion.isAtLeast14());
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "public class Test {",
+            "  public static void nothing1(){ }",
+            "  public static void nothing2(){ }",
+            "  public static void nothing3(){ }",
+            "  public static void foo(int i) {",
+            "    switch (i) {",
+            "      case 1 -> nothing1();",
+            "      case 2 -> nothing2();",
+            "      //Here is a comment",
+            "      default -> {",
+            "          nothing3();",
+            "      }",
+            "    }",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void arrowSwitchCommentInMiddle(){
+    assumeTrue(RuntimeVersion.isAtLeast14());
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "public class Test {",
+            "  public static void nothing1(){ }",
+            "  public static void nothing2(){ }",
+            "  public static void nothing3(){ }",
+            "  public static void foo(int i) {",
+            "    switch (i) {",
+            "      case 1 -> nothing1();",
+            "      case 2 -> nothing2();",
+            "      default ->",
+            "          //Here is a comment",
+            "          nothing3();",
+            "    }",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void arrowSwitchCommentAfterArrow(){
+    assumeTrue(RuntimeVersion.isAtLeast14());
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "public class Test {",
+            "  public static void nothing1(){ }",
+            "  public static void nothing2(){ }",
+            "  public static void nothing3(){ }",
+            "  public static void foo(int i) {",
+            "    switch (i) {",
+            "      case 1 -> nothing1();",
+            "      case 2 -> nothing2();",
+            "      default -> //Here is a comment",
+            "          nothing3();",
+            "    }",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void arrowSwitchCommentInsideBraces(){
+    assumeTrue(RuntimeVersion.isAtLeast14());
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "public class Test {",
+            "  public static void nothing1(){ }",
+            "  public static void nothing2(){ }",
+            "  public static void nothing3(){ }",
+            "  public static void foo(int i) {",
+            "    switch (i) {",
+            "      case 1 -> nothing1();",
+            "      case 2 -> nothing2();",
+            "      default -> {",
+            "          //Here is a comment",
+            "          nothing3();",
+            "      }",
+            "    }",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+
+  @Test
+  public void arrowSwitchWithComment(){
+    assumeTrue(RuntimeVersion.isAtLeast14());
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "public class Test {",
+            "  public static void nothing1(){ }",
+            "  public static void nothing2(){ }",
+            "  public static void nothing3(){ }",
+            "  public static void foo(int i) {",
+            "    switch (i) {",
+            "      case 1 -> nothing1();",
+            "      case 2 -> nothing2();",
+            "      default -> nothing3();//Here is a comment",
+            "    }",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+
 }
