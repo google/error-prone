@@ -44,7 +44,7 @@
     <maven-source-plugin.version>3.2.1</maven-source-plugin.version>
     <nexus-staging-maven-plugin.version>1.6.8</nexus-staging-maven-plugin.version>
     <protobuf.version>3.19.2</protobuf.version>
-    <grpc.version>1.43.2</grpc.version>
+    <grpc.version>1.29.0</grpc.version>
   </properties>
 
   <organization>
