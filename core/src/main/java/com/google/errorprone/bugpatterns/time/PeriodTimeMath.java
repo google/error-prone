@@ -34,7 +34,6 @@ import com.sun.source.tree.MethodInvocationTree;
 
 /** Bans calls to {@code Period#plus/minus(TemporalAmount)} where the argument is a Duration. */
 @BugPattern(
-    name = "PeriodTimeMath",
     summary = "When adding or subtracting from a Period, Duration is incompatible.",
     explanation =
         "Period.(plus|minus)(TemporalAmount) will always throw a DateTimeException when passed a "

@@ -22,7 +22,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** @author epmjohnston@google.com (Emily P.M. Johnston) */
+/**
+ * @author epmjohnston@google.com (Emily P.M. Johnston)
+ */
 @RunWith(JUnit4.class)
 public final class FragmentInjectionTest {
 
@@ -162,7 +164,7 @@ public final class FragmentInjectionTest {
   }
 
   @Test
-  public void isValidFragmentImpelementedOnSuperClass() {
+  public void isValidFragmentImplementedOnSuperClass() {
     compilationHelper
         .addSourceLines(
             "MySuperPrefActivity.java",
@@ -183,7 +185,7 @@ public final class FragmentInjectionTest {
   }
 
   @Test
-  public void isValidFragmentImpelementedOnAbstractSuperClass() {
+  public void isValidFragmentImplementedOnAbstractSuperClass() {
     compilationHelper
         .addSourceLines(
             "MySuperPrefActivity.java",

@@ -39,7 +39,6 @@ import javax.lang.model.element.ElementKind;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
-    name = "MissingDefault",
     summary =
         "The Google Java Style Guide requires that each switch statement includes a default"
             + " statement group, even if it contains no code. (This requirement is lifted for any"

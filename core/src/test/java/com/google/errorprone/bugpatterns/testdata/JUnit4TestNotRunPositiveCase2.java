@@ -17,7 +17,7 @@
 package com.google.errorprone.bugpatterns.testdata;
 
 import org.junit.runner.RunWith;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 /**
  * Mockito test runner that uses JUnit 4.

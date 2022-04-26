@@ -16,7 +16,7 @@
 
 package com.google.errorprone.dataflow.nullnesspropagation;
 
-import org.checkerframework.shaded.dataflow.analysis.AbstractValue;
+import org.checkerframework.errorprone.dataflow.analysis.AbstractValue;
 
 /**
  * Represents one of the possible nullness values in our nullness analysis.

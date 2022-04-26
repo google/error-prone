@@ -78,26 +78,29 @@ public class BugCheckerRefactoringTestHelperTest {
         .doTest();
   }
 
-  @Test(expected = AssertionError.class)
+  @Test
   public void testReplaceFail() {
-    helper
-        .addInputLines(
-            "in/Test.java",
-            "public class Test {",
-            "  public Object foo() {",
-            "    Integer i = 1 + 2;",
-            "    return i;",
-            "  }",
-            "}")
-        .addOutputLines(
-            "out/Test.java",
-            "public class Test {",
-            "  public Object foo() {",
-            "    Integer i = 1 + 2;",
-            "    return i;",
-            "  }",
-            "}")
-        .doTest();
+    assertThrows(
+        AssertionError.class,
+        () ->
+            helper
+                .addInputLines(
+                    "in/Test.java",
+                    "public class Test {",
+                    "  public Object foo() {",
+                    "    Integer i = 1 + 2;",
+                    "    return i;",
+                    "  }",
+                    "}")
+                .addOutputLines(
+                    "out/Test.java",
+                    "public class Test {",
+                    "  public Object foo() {",
+                    "    Integer i = 1 + 2;",
+                    "    return i;",
+                    "  }",
+                    "}")
+                .doTest());
   }
 
   @Test
@@ -141,26 +144,29 @@ public class BugCheckerRefactoringTestHelperTest {
         .doTest(TestMode.TEXT_MATCH);
   }
 
-  @Test(expected = AssertionError.class)
+  @Test
   public void testReplaceTextMatchFail() {
-    helper
-        .addInputLines(
-            "in/Test.java",
-            "public class Test {",
-            "  public Object foo() {",
-            "    Integer i = 1 + 2;",
-            "    return i;",
-            "  }",
-            "}")
-        .addOutputLines(
-            "out/Test.java",
-            "public class Test {",
-            "  public Object foo() {",
-            "    Integer i = 2 + 1;",
-            "  return null;",
-            "  }",
-            "}")
-        .doTest(TestMode.TEXT_MATCH);
+    assertThrows(
+        AssertionError.class,
+        () ->
+            helper
+                .addInputLines(
+                    "in/Test.java",
+                    "public class Test {",
+                    "  public Object foo() {",
+                    "    Integer i = 1 + 2;",
+                    "    return i;",
+                    "  }",
+                    "}")
+                .addOutputLines(
+                    "out/Test.java",
+                    "public class Test {",
+                    "  public Object foo() {",
+                    "    Integer i = 2 + 1;",
+                    "  return null;",
+                    "  }",
+                    "}")
+                .doTest(TestMode.TEXT_MATCH));
   }
 
   @Test
@@ -188,7 +194,6 @@ public class BugCheckerRefactoringTestHelperTest {
   }
   /** Mock {@link BugChecker} for testing only. */
   @BugPattern(
-      name = "ReturnNullRefactoring",
       summary = "Mock refactoring that replaces all returns with 'return null;' statement.",
       explanation = "For test purposes only.",
       severity = SUGGESTION)
@@ -200,7 +205,6 @@ public class BugCheckerRefactoringTestHelperTest {
   }
   /** Mock {@link BugChecker} for testing only. */
   @BugPattern(
-      name = "RemoveAnnotationRefactoring",
       summary = "Mock refactoring that removes all annotations declared in package bar ",
       explanation = "For test purposes only.",
       severity = SUGGESTION)
@@ -247,7 +251,6 @@ public class BugCheckerRefactoringTestHelperTest {
 
   /** Mock {@link BugChecker} for testing only. */
   @BugPattern(
-      name = "ImportArrayList",
       summary = "Mock refactoring that imports an ArrayList",
       explanation = "For test purposes only.",
       severity = SUGGESTION)

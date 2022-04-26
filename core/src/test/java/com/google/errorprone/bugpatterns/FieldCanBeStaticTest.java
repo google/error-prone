@@ -20,7 +20,6 @@ import static org.junit.Assume.assumeTrue;
 
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
-import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.util.RuntimeVersion;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -30,8 +29,7 @@ import org.junit.runners.JUnit4;
 @RunWith(JUnit4.class)
 public class FieldCanBeStaticTest {
   private final BugCheckerRefactoringTestHelper helper =
-      BugCheckerRefactoringTestHelper.newInstance(
-          new FieldCanBeStatic(ErrorProneFlags.empty()), getClass());
+      BugCheckerRefactoringTestHelper.newInstance(FieldCanBeStatic.class, getClass());
 
   private final CompilationTestHelper compilationHelper =
       CompilationTestHelper.newInstance(FieldCanBeStatic.class, getClass());
@@ -305,6 +303,20 @@ public class FieldCanBeStaticTest {
             "    }",
             "  }",
             "  private ExampleClass() {",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void instanceFieldsCannotBeStatic() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  private final int foo;",
+            "  Test(int foo) {",
+            "    this.foo = foo;",
             "  }",
             "}")
         .doTest();

@@ -59,7 +59,6 @@ import javax.annotation.Nullable;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
-    name = "AssertionFailureIgnored",
     summary =
         "This assertion throws an AssertionError if it fails, which will be caught by an enclosing"
             + " try block.",

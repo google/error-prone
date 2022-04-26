@@ -36,11 +36,10 @@ import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.util.TreePath;
 import com.sun.tools.javac.code.Type;
-import com.sun.tools.javac.util.List;
+import java.util.List;
 
 /** Matches {@code Optional#map} mapping to another {@code Optional}. */
 @BugPattern(
-    name = "OptionalMapToOptional",
     summary = "Mapping to another Optional will yield a nested Optional. Did you mean flatMap?",
     severity = WARNING)
 public final class OptionalMapToOptional extends BugChecker implements MethodInvocationTreeMatcher {

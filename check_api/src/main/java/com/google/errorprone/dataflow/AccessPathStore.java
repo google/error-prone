@@ -24,10 +24,10 @@ import com.google.common.collect.ImmutableMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import javax.annotation.Nullable;
-import org.checkerframework.shaded.dataflow.analysis.AbstractValue;
-import org.checkerframework.shaded.dataflow.analysis.Store;
-import org.checkerframework.shaded.dataflow.cfg.visualize.CFGVisualizer;
-import org.checkerframework.shaded.dataflow.expression.JavaExpression;
+import org.checkerframework.errorprone.dataflow.analysis.AbstractValue;
+import org.checkerframework.errorprone.dataflow.analysis.Store;
+import org.checkerframework.errorprone.dataflow.cfg.visualize.CFGVisualizer;
+import org.checkerframework.errorprone.dataflow.expression.JavaExpression;
 
 /**
  * Immutable map from local variables or heap access paths to their {@link AbstractValue}
@@ -84,7 +84,7 @@ public abstract class AccessPathStore<V extends AbstractValue<V>>
     for (AccessPath aPath : intersection(heap().keySet(), other.heap().keySet())) {
       resultHeap.put(aPath, heap().get(aPath).leastUpperBound(other.heap().get(aPath)));
     }
-    return AccessPathStore.create(resultHeap.build());
+    return AccessPathStore.create(resultHeap.buildOrThrow());
   }
 
   @Override

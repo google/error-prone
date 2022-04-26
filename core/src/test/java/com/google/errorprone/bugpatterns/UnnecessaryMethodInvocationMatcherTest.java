@@ -21,7 +21,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** @author amalloy@google.com (Alan Malloy) */
+/**
+ * @author amalloy@google.com (Alan Malloy)
+ */
 @RunWith(JUnit4.class)
 public class UnnecessaryMethodInvocationMatcherTest {
   private final BugCheckerRefactoringTestHelper refactoringTestHelper =

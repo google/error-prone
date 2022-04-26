@@ -17,20 +17,19 @@
 package com.google.errorprone.matchers;
 
 import static com.google.common.truth.Truth.assertThat;
-import static com.google.common.truth.Truth.assertWithMessage;
+import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
+import static com.google.errorprone.util.ASTHelpers.getSymbol;
 
+import com.google.errorprone.BugPattern;
 import com.google.errorprone.CompilationTestHelper;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.annotations.CompileTimeConstant;
-import com.google.errorprone.scanner.Scanner;
-import com.google.errorprone.scanner.ScannerSupplier;
-import com.sun.source.tree.AssignmentTree;
-import com.sun.source.tree.ExpressionTree;
-import com.sun.tools.javac.main.Main.Result;
+import com.google.errorprone.bugpatterns.BugChecker;
+import com.google.errorprone.bugpatterns.BugChecker.VariableTreeMatcher;
+import com.sun.source.tree.VariableTree;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Target;
-import java.util.HashMap;
-import java.util.Map;
+import javax.lang.model.element.ElementKind;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -38,137 +37,137 @@ import org.junit.runners.JUnit4;
 /** {@link CompileTimeConstantExpressionMatcher}Test */
 @RunWith(JUnit4.class)
 public class CompileTimeConstantExpressionMatcherTest {
+  private final CompilationTestHelper testHelper =
+      CompilationTestHelper.newInstance(
+          CompileTimeConstantExpressionMatcherTester.class, getClass());
 
   @Test
-  public void testMatches_matchesLiteralsAndStaticFinals() {
-    String[] lines = {
-      "package test;",
-      "public class CompileTimeConstantExpressionMatcherTestCase {",
-      "  private final String final_string = \"bap\";",
-      "  private final int final_int = 29;",
-      "  private static final int static_final_int = 29;",
-      "  public void m() { ",
-      "    String s1; s1 = \"boop\"; s1 = \"boop\" + final_string;",
-      "    int int2; int2 = 42;",
-      "    Integer int3; int3 = 42 * final_int; int3 = 12 - static_final_int;",
-      "    boolean bool4; bool4 = false;",
-      "  }",
-      "}"
-    };
-
-    Map<String, Boolean> expectedMatches = new HashMap<>();
-    expectedMatches.put("s1", true);
-    expectedMatches.put("int2", true);
-    expectedMatches.put("int3", true);
-    expectedMatches.put("bool4", true);
-    assertCompilerMatchesOnAssignment(expectedMatches, lines);
+  public void matchesLiteralsAndStaticFinals() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "public class Test {",
+            "  private final String final_string = \"bap\";",
+            "  private final int final_int = 29;",
+            "  private static final int static_final_int = 29;",
+            "  public void m() { ",
+            "    // BUG: Diagnostic contains: true",
+            "    String s1 = \"boop\";",
+            "    // BUG: Diagnostic contains: true",
+            "    String s2 = \"boop\" + final_string;",
+            "    // BUG: Diagnostic contains: true",
+            "    int int2 = 42;",
+            "    // BUG: Diagnostic contains: true",
+            "    Integer int3 = 42 * final_int;",
+            "    // BUG: Diagnostic contains: true",
+            "    Integer int4 = 12 - static_final_int;",
+            "    // BUG: Diagnostic contains: true",
+            "    boolean bool4 = false;",
+            "  }",
+            "}")
+        .doTest();
   }
 
   @Test
-  public void testMatches_nullLiteral() {
-    String[] lines = {
-      "package test;",
-      "public class CompileTimeConstantExpressionMatcherTestCase {",
-      "  private static final String static_final_string = null;",
-      "  public void m() { ",
-      "    String s1; s1 = null;",
-      "    String s2; s2 = static_final_string;",
-      "  }",
-      "}"
-    };
-    Map<String, Boolean> expectedMatches = new HashMap<>();
-    expectedMatches.put("s1", true);
-    // Even though s2 has the compile-time constant value "null", it's not
-    // a literal.  I don't know how to distinguish this, but I doubt this is
-    // an important use case.
-    expectedMatches.put("s2", false);
-    assertCompilerMatchesOnAssignment(expectedMatches, lines);
+  public void nullLiteral() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "public class Test {",
+            "  private static final String static_final_string = null;",
+            "  public void m() { ",
+            "    // BUG: Diagnostic contains: true",
+            "    String s1 = null;",
+            "    // BUG: Diagnostic contains: false",
+            "    String s2 = static_final_string;",
+            "    // BUG: Diagnostic contains: true",
+            "    String s3 = (String) null;",
+            "  }",
+            "}")
+        .doTest();
   }
 
   @Test
-  public void testMatches_doesNotMatchNonLiterals() {
-    String[] lines = {
-      "package test;",
-      "public class CompileTimeConstantExpressionMatcherTestCase {",
-      "  private final int nonfinal_int;",
-      "  public CompileTimeConstantExpressionMatcherTestCase(int i) { ",
-      "    nonfinal_int = i;",
-      "  }",
-      "  public void m(String s) { ",
-      "    String s1; s1 = s;",
-      "    int int2; int2 = s.length();",
-      "    Integer int3; int3 = nonfinal_int; int3 = 14 * nonfinal_int;",
-      "    boolean bool4; bool4 = false;",
-      "  }",
-      "}"
-    };
-    Map<String, Boolean> expectedMatches = new HashMap<>();
-    expectedMatches.put("s1", false);
-    expectedMatches.put("int2", false);
-    expectedMatches.put("int3", false);
-    assertCompilerMatchesOnAssignment(expectedMatches, lines);
+  public void doesNotMatchNonLiterals() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "package test;",
+            "public class Test {",
+            "  private final int nonfinal_int;",
+            "  public Test(int i) { ",
+            "    nonfinal_int = i;",
+            "  }",
+            "  public void m(String s) { ",
+            "    // BUG: Diagnostic contains: false",
+            "    String s1 = s;",
+            "    // BUG: Diagnostic contains: false",
+            "    int int2 = s.length();",
+            "    // BUG: Diagnostic contains: false",
+            "    Integer int3 = nonfinal_int;",
+            "    // BUG: Diagnostic contains: false",
+            "    Integer int4 = 14 * nonfinal_int;",
+            "    // BUG: Diagnostic contains: true",
+            "    boolean bool4 = false;",
+            "  }",
+            "}")
+        .doTest();
   }
 
   @Test
-  public void testMatches_finalCompileTimeConstantMethodParameters() {
-    String[] lines = {
-      "package test;",
-      "import com.google.errorprone.annotations.CompileTimeConstant;",
-      "public class CompileTimeConstantExpressionMatcherTestCase {",
-      "  public void m1(final @CompileTimeConstant String s) { ",
-      "    String s1; s1 = s;",
-      "  }",
-      "  public void m2(@CompileTimeConstant String s) { ",
-      "    s = null;",
-      "    String s2; s2 = s;",
-      "  }",
-      "  public void m3(final String s) { ",
-      "    String s3; s3 = s;",
-      "  }",
-      "  public void m4(@CompileTimeConstant String s) { ",
-      "    String s4; s4 = s;",
-      "  }",
-      "}"
-    };
-    Map<String, Boolean> expectedMatches = new HashMap<>();
-    expectedMatches.put("s1", true);
-    expectedMatches.put("s2", false);
-    expectedMatches.put("s3", false);
-    expectedMatches.put("s4", true);
-    assertCompilerMatchesOnAssignment(expectedMatches, lines);
+  public void finalCompileTimeConstantMethodParameters() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.errorprone.annotations.CompileTimeConstant;",
+            "public class Test {",
+            "  public void m1(final @CompileTimeConstant String s) {",
+            "    // BUG: Diagnostic contains: true",
+            "    String s1 = s;",
+            "  }",
+            "  public void m2(@CompileTimeConstant String s) {",
+            "    s = null;",
+            "    // BUG: Diagnostic contains: false",
+            "    String s2 = s;",
+            "  }",
+            "  public void m3(final String s) {",
+            "    // BUG: Diagnostic contains: false",
+            "    String s3 = s;",
+            "  }",
+            "  public void m4(@CompileTimeConstant String s) {",
+            "    // BUG: Diagnostic contains: true",
+            "    String s4 = s;",
+            "  }",
+            "}")
+        .doTest();
   }
 
   @Test
-  public void testMatches_finalCompileTimeConstantConstructorParameters() {
-    String[] lines = {
-      "package test;",
-      "import com.google.errorprone.annotations.CompileTimeConstant;",
-      "public class CompileTimeConstantExpressionMatcherTestCase {",
-      "  public CompileTimeConstantExpressionMatcherTestCase(",
-      "      final @CompileTimeConstant String s) { ",
-      "    String s1; s1 = s;",
-      "  }",
-      "  public CompileTimeConstantExpressionMatcherTestCase(",
-      "      @CompileTimeConstant String s, int foo) { ",
-      "    s = null;",
-      "    String s2; s2 = s;",
-      "  }",
-      "  public CompileTimeConstantExpressionMatcherTestCase(",
-      "      final String s, boolean foo) { ",
-      "    String s3; s3 = s;",
-      "  }",
-      "  public CompileTimeConstantExpressionMatcherTestCase(",
-      "      @CompileTimeConstant String s, long foo) { ",
-      "    String s4; s4 = s;",
-      "  }",
-      "}"
-    };
-    Map<String, Boolean> expectedMatches = new HashMap<>();
-    expectedMatches.put("s1", true);
-    expectedMatches.put("s2", false);
-    expectedMatches.put("s3", false);
-    expectedMatches.put("s4", true);
-    assertCompilerMatchesOnAssignment(expectedMatches, lines);
+  public void finalCompileTimeConstantConstructorParameters() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.errorprone.annotations.CompileTimeConstant;",
+            "public class Test {",
+            "  public Test(final @CompileTimeConstant String s) {",
+            "    // BUG: Diagnostic contains: true",
+            "    String s1 = s;",
+            "  }",
+            "  public Test(@CompileTimeConstant String s, int foo) {",
+            "    s = null;",
+            "    // BUG: Diagnostic contains: false",
+            "    String s2 = s;",
+            "  }",
+            "  public Test(final String s, boolean foo) {",
+            "    // BUG: Diagnostic contains: false",
+            "    String s3 = s;",
+            "  }",
+            "  public Test(@CompileTimeConstant String s, long foo) {",
+            "    // BUG: Diagnostic contains: true",
+            "    String s4 = s;",
+            "  }",
+            "}")
+        .doTest();
   }
 
   // TODO(xtof): We'd like to eventually support other cases, but I first need
@@ -183,56 +182,60 @@ public class CompileTimeConstantExpressionMatcherTest {
 
   @Test
   public void conditionalExpression() {
-    String[] lines = {
-      "package test;",
-      "abstract class CompileTimeConstantExpressionMatcherTestCase {",
-      "  abstract boolean g();",
-      "  public void m(boolean flag) { ",
-      "    boolean bool1; bool1 = flag ? true : g();",
-      "    boolean bool2; bool2 = flag ? g() : false;",
-      "    boolean bool3; bool3 = flag ? true : false;",
-      "  }",
-      "}"
-    };
-
-    Map<String, Boolean> expectedMatches = new HashMap<>();
-    expectedMatches.put("bool1", false);
-    expectedMatches.put("bool2", false);
-    expectedMatches.put("bool3", true);
-    assertCompilerMatchesOnAssignment(expectedMatches, lines);
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "abstract class Test {",
+            "  abstract boolean g();",
+            "  public void m(boolean flag) {",
+            "    // BUG: Diagnostic contains: false",
+            "    boolean bool1 = flag ? true : g();",
+            "    // BUG: Diagnostic contains: false",
+            "    boolean bool2 = flag ? g() : false;",
+            "    // BUG: Diagnostic contains: true",
+            "    boolean bool3 = flag ? true : false;",
+            "  }",
+            "}")
+        .doTest();
   }
 
-  // Helper methods.
-  private void assertCompilerMatchesOnAssignment(
-      final Map<String, Boolean> expectedMatches, String... lines) {
-    Map<String, Boolean> unmatched = new HashMap<>(expectedMatches);
-    final Matcher<ExpressionTree> matcher = new CompileTimeConstantExpressionMatcher();
-    final Scanner scanner =
-        new Scanner() {
-          @Override
-          public Void visitAssignment(AssignmentTree t, VisitorState state) {
-            String lhs = t.getVariable().toString();
-            if (expectedMatches.containsKey(lhs)) {
-              unmatched.remove(lhs);
-              boolean matches = matcher.matches(t.getExpression(), state);
-              if (expectedMatches.get(lhs)) {
-                assertWithMessage("Matcher should match expression" + t.getExpression())
-                    .that(matches)
-                    .isTrue();
-              } else {
-                assertWithMessage("Matcher should not match expression" + t.getExpression())
-                    .that(matches)
-                    .isFalse();
-              }
-            }
-            return super.visitAssignment(t, state);
-          }
-        };
-
-    CompilationTestHelper.newInstance(ScannerSupplier.fromScanner(scanner), getClass())
-        .expectResult(Result.OK)
-        .addSourceLines("test/CompileTimeConstantExpressionMatcherTestCase.java", lines)
+  @Test
+  public void concatenatedStrings() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "package test;",
+            "import com.google.errorprone.annotations.CompileTimeConstant;",
+            "abstract class Test {",
+            "  public void m(@CompileTimeConstant String ctc, String nonCtc) {",
+            "    // BUG: Diagnostic contains: true",
+            "    String a = \"foo\" + ctc;",
+            "    // BUG: Diagnostic contains: true",
+            "    String b = ctc + \"foo\";",
+            "    // BUG: Diagnostic contains: false",
+            "    String c = nonCtc + \"foo\";",
+            "    // BUG: Diagnostic contains: false",
+            "    String d = nonCtc + ctc;",
+            "  }",
+            "}")
         .doTest();
-    assertWithMessage("Not all matches were found").that(unmatched).isEmpty();
+  }
+
+  /** A test-only bugpattern for testing {@link CompileTimeConstantExpressionMatcher}. */
+  @BugPattern(severity = WARNING, summary = "")
+  public static final class CompileTimeConstantExpressionMatcherTester extends BugChecker
+      implements VariableTreeMatcher {
+    @Override
+    public Description matchVariable(VariableTree tree, VisitorState state) {
+      if (!getSymbol(tree).getKind().equals(ElementKind.LOCAL_VARIABLE)) {
+        return Description.NO_MATCH;
+      }
+      return buildDescription(tree)
+          .setMessage(
+              CompileTimeConstantExpressionMatcher.instance().matches(tree.getInitializer(), state)
+                  ? "true"
+                  : "false")
+          .build();
+    }
   }
 }

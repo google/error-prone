@@ -18,11 +18,9 @@ package com.google.errorprone.refaster;
 
 import static com.google.common.truth.Truth.assertThat;
 import static com.google.common.truth.Truth.assert_;
-import static com.google.errorprone.util.RuntimeVersion.isAtLeast9;
 import static com.google.testing.compile.JavaFileObjects.forResource;
 import static com.google.testing.compile.JavaSourceSubjectFactory.javaSource;
 import static org.junit.Assert.assertThrows;
-import static org.junit.Assume.assumeFalse;
 
 import com.google.common.base.CharMatcher;
 import com.google.common.base.Function;
@@ -33,7 +31,9 @@ import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.Tree;
 import java.io.IOException;
+import java.util.List;
 import javax.tools.JavaFileObject;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -53,7 +53,7 @@ public class TemplateIntegrationTest extends CompilerBasedTest {
                 .transformAndConcat(
                     new Function<CompilationUnitTree, Iterable<? extends Tree>>() {
                       @Override
-                      public Iterable<? extends Tree> apply(CompilationUnitTree input) {
+                      public List<? extends Tree> apply(CompilationUnitTree input) {
                         return input.getTypeDecls();
                       }
                     })
@@ -216,8 +216,6 @@ public class TemplateIntegrationTest extends CompilerBasedTest {
 
   @Test
   public void freeIdentWildcardCapture() throws IOException {
-    // TODO(b/67786978): investigate JDK 9 test failures
-    assumeFalse(isAtLeast9());
     runTest("WildcardUnificationTemplate");
   }
 
@@ -283,8 +281,6 @@ public class TemplateIntegrationTest extends CompilerBasedTest {
 
   @Test
   public void returnPlaceholder() throws IOException {
-    // TODO(b/67786978): investigate JDK 9 test failures
-    assumeFalse(isAtLeast9());
     runTest("ReturnPlaceholderTemplate");
   }
 
@@ -304,16 +300,13 @@ public class TemplateIntegrationTest extends CompilerBasedTest {
   }
 
   @Test
+  @Ignore("TODO(b/67786978): investigate JDK 9 test failures")
   public void samePackageImports() throws IOException {
-    // TODO(b/67786978): investigate JDK 9 test failures
-    assumeFalse(isAtLeast9());
     runTest("SamePackageImportsTemplate");
   }
 
   @Test
   public void ifFallthrough() throws IOException {
-    // TODO(b/67786978): investigate JDK 9 test failures
-    assumeFalse(isAtLeast9());
     runTest("IfFallthroughTemplate");
   }
 

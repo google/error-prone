@@ -232,7 +232,7 @@ public class UnnecessaryCheckNotNullTest extends CompilerBasedAbstractTest {
       }
 
       public TestScanner build() {
-        return new TestScanner(builder.build());
+        return new TestScanner(builder.buildOrThrow());
       }
     }
 

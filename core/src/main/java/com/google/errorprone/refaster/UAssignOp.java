@@ -46,7 +46,7 @@ abstract class UAssignOp extends UExpression implements CompoundAssignmentTree {
           .put(Kind.OR_ASSIGNMENT, JCTree.Tag.BITOR_ASG)
           .put(Kind.AND_ASSIGNMENT, JCTree.Tag.BITAND_ASG)
           .put(Kind.XOR_ASSIGNMENT, JCTree.Tag.BITXOR_ASG)
-          .build();
+          .buildOrThrow();
 
   public static UAssignOp create(UExpression variable, Kind operator, UExpression expression) {
     checkArgument(

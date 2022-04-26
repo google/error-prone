@@ -29,6 +29,7 @@ import java.util.stream.Stream;
 import javax.annotation.Nullable;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
+import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Parameterizable;
 import javax.lang.model.element.TypeParameterElement;
 import javax.lang.model.type.IntersectionType;
@@ -40,11 +41,15 @@ public class NullnessAnnotations {
   // TODO(kmb): Correctly handle JSR 305 @Nonnull(NEVER) etc.
   private static final Predicate<String> ANNOTATION_RELEVANT_TO_NULLNESS =
       Pattern.compile(
-              ".*\\.((Recently)?Nullable(Decl)?|(Recently)?NotNull(Decl)?|NonNull(Decl)?|Nonnull|"
-                  + "CheckForNull)$")
+              ".*\\b((Recently)?Nullable(Decl|Type)?|(Recently)?NotNull|NonNull(Decl|Type)?|"
+                  + "Nonnull|CheckForNull|PolyNull|MonotonicNonNull(Decl)?)$")
           .asPredicate();
   private static final Predicate<String> NULLABLE_ANNOTATION =
-      Pattern.compile(".*\\.((Recently)?Nullable(Decl)?|CheckForNull)$").asPredicate();
+      Pattern.compile(
+              ".*\\b("
+                  + "(Recently)?Nullable(Decl|Type)?|CheckForNull|PolyNull|MonotonicNonNull(Decl)?"
+                  + ")$")
+          .asPredicate();
 
   private NullnessAnnotations() {} // static methods only
 
@@ -53,11 +58,41 @@ public class NullnessAnnotations {
   }
 
   public static Optional<Nullness> fromAnnotationsOn(@Nullable Symbol sym) {
-    if (sym != null) {
-      return fromAnnotationStream(
-          MoreAnnotations.getDeclarationAndTypeAttributes(sym).map(Object::toString));
+    if (sym == null) {
+      return Optional.empty();
     }
-    return Optional.empty();
+
+    /*
+     * We try to read annotations in two ways:
+     *
+     * 1. from the TypeMirror: This is how we "should" always read *type-use* annotations, but
+     * JDK-8225377 prevents it from working across compilation boundaries.
+     *
+     * 2. from getRawAttributes(): This works around the problem across compilation boundaries, and
+     * it handles declaration annotations (though there are other ways we could handle declaration
+     * annotations). But it has a bug of its own with type-use annotations on inner classes
+     * (b/203207989). To reduce the chance that we hit the inner-class bug, we apply it only if the
+     * first approach fails.
+     */
+    TypeMirror elementType;
+    switch (sym.getKind()) {
+      case METHOD:
+        elementType = ((ExecutableElement) sym).getReturnType();
+        break;
+      case FIELD:
+      case PARAMETER:
+        elementType = sym.asType();
+        break;
+      default:
+        elementType = null;
+    }
+    Optional<Nullness> fromElement = fromAnnotationsOn(elementType);
+    if (fromElement.isPresent()) {
+      return fromElement;
+    }
+
+    return fromAnnotationStream(
+        MoreAnnotations.getDeclarationAndTypeAttributes(sym).map(Object::toString));
   }
 
   public static Optional<Nullness> fromAnnotationsOn(@Nullable TypeMirror type) {

@@ -37,10 +37,7 @@ import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Type;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
-@BugPattern(
-    name = "CacheLoaderNull",
-    summary = "The result of CacheLoader#load must be non-null.",
-    severity = WARNING)
+@BugPattern(summary = "The result of CacheLoader#load must be non-null.", severity = WARNING)
 public class CacheLoaderNull extends BugChecker implements MethodTreeMatcher {
 
   private static final Supplier<Type> CACHE_LOADER_TYPE =
@@ -52,9 +49,6 @@ public class CacheLoaderNull extends BugChecker implements MethodTreeMatcher {
       return NO_MATCH;
     }
     MethodSymbol sym = ASTHelpers.getSymbol(tree);
-    if (sym == null) {
-      return NO_MATCH;
-    }
     if (!ASTHelpers.isSubtype(sym.owner.asType(), CACHE_LOADER_TYPE.get(state), state)) {
       return NO_MATCH;
     }

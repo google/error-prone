@@ -90,7 +90,6 @@ import java.util.List;
  * @author adamwos@google.com (Adam Wos)
  */
 @BugPattern(
-    name = "TryFailThrowable",
     summary = "Catching Throwable/Error masks failures from fail() or assert*() in the try block",
     severity = ERROR)
 public class TryFailThrowable extends BugChecker implements TryTreeMatcher {

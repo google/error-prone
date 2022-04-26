@@ -48,7 +48,6 @@ import javax.annotation.Nullable;
  * @author cushon@google.com (Liam Miller-Cushon)
  */
 @BugPattern(
-    name = "DeduplicateConstants",
     summary =
         "This expression was previously declared as a constant;"
             + " consider replacing this occurrence.",
@@ -159,9 +158,6 @@ public class DeduplicateConstants extends BugChecker implements CompilationUnitT
 
       private void saveConstValue(VariableTree tree, Scope scope) {
         VarSymbol sym = ASTHelpers.getSymbol(tree);
-        if (sym == null) {
-          return;
-        }
         if (!isConsideredFinal(sym)) {
           return;
         }

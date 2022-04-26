@@ -23,13 +23,14 @@ import static com.google.common.collect.ImmutableList.toImmutableList;
 import com.google.auto.value.AutoValue;
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMultimap;
+import com.google.common.collect.ImmutableListMultimap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
 import com.google.common.collect.Streams;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.CanBeStaticAnalyzer;
+import com.google.errorprone.suppliers.Supplier;
 import com.google.errorprone.util.ASTHelpers;
 import com.google.errorprone.util.MoreAnnotations;
 import com.sun.source.tree.ClassTree;
@@ -46,11 +47,10 @@ import com.sun.tools.javac.code.Type.TypeVar;
 import com.sun.tools.javac.code.Type.WildcardType;
 import com.sun.tools.javac.code.TypeTag;
 import com.sun.tools.javac.code.Types;
+import com.sun.tools.javac.util.Name;
 import java.lang.annotation.Annotation;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Target;
-import java.lang.reflect.Field;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
@@ -60,7 +60,6 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.annotation.Nullable;
-import javax.lang.model.element.AnnotationValue;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.type.TypeKind;
 import org.pcollections.ConsPStack;
@@ -92,14 +91,8 @@ public final class ThreadSafety {
    * checkers is using this utility, different messages become appropriate.
    */
   public enum Purpose {
-
     /** This is being used by the immutability bug checker */
     FOR_IMMUTABLE_CHECKER {
-      @Override
-      String immutableOrThreadSafe() {
-        return "immutable";
-      }
-
       @Override
       String mutableOrNonThreadSafe() {
         return "mutable";
@@ -114,11 +107,6 @@ public final class ThreadSafety {
     /** This is being used by the thread-safety bug checker */
     FOR_THREAD_SAFE_CHECKER {
       @Override
-      String immutableOrThreadSafe() {
-        return "thread-safe";
-      }
-
-      @Override
       String mutableOrNonThreadSafe() {
         return "non-thread-safe";
       }
@@ -129,12 +117,6 @@ public final class ThreadSafety {
       }
     },
     ;
-
-    /**
-     * Returns either the string {@code "immutable"} or {@code "thread-safe"} depending on the
-     * purpose.
-     */
-    abstract String immutableOrThreadSafe();
 
     /**
      * Returns either the string {@code "mutable"} or {@code "non-thread-safe"} depending on the
@@ -251,6 +233,7 @@ public final class ThreadSafety {
   }
 
   /** Use {@link #builder()} instead. */
+  // TODO(ghm): Delete after a JB release.
   @Deprecated
   public ThreadSafety(
       VisitorState state,
@@ -333,12 +316,16 @@ public final class ThreadSafety {
       return new AutoValue_ThreadSafety_Violation(path);
     }
 
-    /** @return true if a violation was found */
+    /**
+     * @return true if a violation was found
+     */
     public boolean isPresent() {
       return !path().isEmpty();
     }
 
-    /** @return the explanation */
+    /**
+     * @return the explanation
+     */
     public String message() {
       return Joiner.on(", ").join(path());
     }
@@ -473,7 +460,10 @@ public final class ThreadSafety {
     return true;
   }
 
-  /** @deprecated use {@link #isThreadSafeType(boolean, Set, Type)} instead. */
+  /**
+   * @deprecated use {@link #isThreadSafeType(boolean, Set, Type)} instead.
+   */
+  // TODO(ghm): Delete after a JB release.
   @Deprecated
   public Violation isThreadSafeType(Set<String> containerTypeParameters, Type type) {
     return isThreadSafeType(
@@ -800,11 +790,11 @@ public final class ThreadSafety {
   }
 
   private static ImmutableList<String> containerOf(VisitorState state, Compound attr) {
-    Attribute m = attr.member(state.getName("containerOf"));
+    Attribute m = attr.member(CONTAINEROF.get(state));
     if (m == null) {
       return ImmutableList.of();
     }
-    return MoreAnnotations.asStrings((AnnotationValue) m).collect(toImmutableList());
+    return MoreAnnotations.asStrings(m).collect(toImmutableList());
   }
 
   /** Gets a human-friendly name for the given {@link Symbol} to use in diagnostics. */
@@ -868,7 +858,8 @@ public final class ThreadSafety {
       // fast path
       return Violation.absent();
     }
-    ImmutableMultimap<TypeVariableSymbol, Type> instantiation = getInstantiation(methodType);
+    ImmutableListMultimap<TypeVariableSymbol, Type> instantiation =
+        ASTHelpers.getTypeSubstitution(methodType, symbol);
 
     for (TypeVariableSymbol typeParameter : typeParameters) {
       Violation violation = checkInstantiation(typeParameter, instantiation.get(typeParameter));
@@ -879,45 +870,6 @@ public final class ThreadSafety {
     return Violation.absent();
   }
 
-  private static ImmutableMultimap<TypeVariableSymbol, Type> getInstantiation(Type methodType) {
-    List<Type> to = new ArrayList<>();
-    ArrayList<Type> from = new ArrayList<>();
-    getSubst(getMapping(methodType), from, to);
-    ImmutableMultimap.Builder<TypeVariableSymbol, Type> mapping = ImmutableMultimap.builder();
-    Streams.forEachPair(
-        from.stream(), to.stream(), (f, t) -> mapping.put((TypeVariableSymbol) f.asElement(), t));
-    return mapping.build();
-  }
-
-  private static Type getMapping(Type type) {
-    if (type == null) {
-      return null;
-    }
-    try {
-      // Reflectively extract the mapping from Type.createMethodTypeWithReturn
-      Field valField = type.getClass().getDeclaredField("val$t");
-      valField.setAccessible(true);
-      return (Type) valField.get(type);
-    } catch (ReflectiveOperationException e) {
-      return type;
-    }
-  }
-
-  @SuppressWarnings("unchecked")
-  private static void getSubst(Type m, List<Type> from, List<Type> to) {
-    try {
-      // Reflectively extract the mapping from an enclosing instance of Types.Subst
-      Field substField = m.getClass().getDeclaredField("this$0");
-      substField.setAccessible(true);
-      Object subst = substField.get(m);
-      Field fromField = subst.getClass().getDeclaredField("from");
-      Field toField = subst.getClass().getDeclaredField("to");
-      fromField.setAccessible(true);
-      toField.setAccessible(true);
-      from.addAll((Collection<Type>) fromField.get(subst));
-      to.addAll((Collection<Type>) toField.get(subst));
-    } catch (ReflectiveOperationException e) {
-      return;
-    }
-  }
+  private static final Supplier<Name> CONTAINEROF =
+      VisitorState.memoize(state -> state.getName("containerOf"));
 }

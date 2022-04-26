@@ -35,6 +35,7 @@ import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
+import com.google.errorprone.suppliers.Supplier;
 import com.google.errorprone.util.ASTHelpers;
 import com.google.errorprone.util.SourceCodeEscapers;
 import com.sun.source.tree.ArrayAccessTree;
@@ -57,10 +58,7 @@ import java.util.Optional;
 import javax.annotation.Nullable;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
-@BugPattern(
-    name = "StringSplitter",
-    summary = "String.split(String) has surprising behavior",
-    severity = WARNING)
+@BugPattern(summary = "String.split(String) has surprising behavior", severity = WARNING)
 public class StringSplitter extends BugChecker implements MethodInvocationTreeMatcher {
 
   private static final Matcher<ExpressionTree> MATCHER =
@@ -282,7 +280,7 @@ public class StringSplitter extends BugChecker implements MethodInvocationTreeMa
               state.getEndPosition(tree),
               (mutableList ? ")" : "") + ")");
     }
-    if (isSubtype(receiverType, state.getTypeFromString("java.util.regex.Pattern"), state)) {
+    if (isSubtype(receiverType, JAVA_UTIL_REGEX_PATTERN.get(state), state)) {
       return fix.prefixWith(
               receiver, String.format("%sSplitter.on(", (mutableList ? "new ArrayList<>(" : "")))
           .postfixWith(receiver, ")")
@@ -312,4 +310,7 @@ public class StringSplitter extends BugChecker implements MethodInvocationTreeMa
     }
     return null;
   }
+
+  private static final Supplier<Type> JAVA_UTIL_REGEX_PATTERN =
+      VisitorState.memoize(state -> state.getTypeFromString("java.util.regex.Pattern"));
 }

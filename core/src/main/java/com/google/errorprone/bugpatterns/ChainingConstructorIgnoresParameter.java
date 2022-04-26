@@ -27,7 +27,7 @@ import static com.sun.source.tree.Tree.Kind.IDENTIFIER;
 import static java.util.Collections.unmodifiableList;
 
 import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.Multimap;
+import com.google.common.collect.ListMultimap;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.CompilationUnitTreeMatcher;
@@ -65,7 +65,6 @@ import java.util.Map;
  * @author cpovirk@google.com (Chris Povirk)
  */
 @BugPattern(
-    name = "ChainingConstructorIgnoresParameter",
     severity = ERROR,
     summary =
         "The called constructor accepts a parameter with the same name and type as one of "
@@ -74,7 +73,7 @@ import java.util.Map;
 public final class ChainingConstructorIgnoresParameter extends BugChecker
     implements CompilationUnitTreeMatcher, MethodInvocationTreeMatcher, MethodTreeMatcher {
   private final Map<MethodSymbol, List<VariableTree>> paramTypesForMethod = newHashMap();
-  private final Multimap<MethodSymbol, Caller> callersToEvaluate = ArrayListMultimap.create();
+  private final ListMultimap<MethodSymbol, Caller> callersToEvaluate = ArrayListMultimap.create();
 
   @Override
   public Description matchCompilationUnit(CompilationUnitTree tree, VisitorState state) {
@@ -170,7 +169,7 @@ public final class ChainingConstructorIgnoresParameter extends BugChecker
         }
         /*
          * If formal parameter is of an incompatible type, the caller might in theory still intend
-         * to pass a dervied expression. For example, "Foo(String file)" might intend to call
+         * to pass a derived expression. For example, "Foo(String file)" might intend to call
          * "Foo(File file)" by passing "new File(file)." If this comes up in practice, we could
          * provide the dummy suggested fix "someExpression(formalParamName)." However, my research
          * suggests that this will rarely if ever be what the user wants.
@@ -196,7 +195,7 @@ public final class ChainingConstructorIgnoresParameter extends BugChecker
   }
 
   private static boolean referencesIdentifierWithName(
-      final String name, ExpressionTree tree, VisitorState state) {
+      String name, ExpressionTree tree, VisitorState state) {
     Matcher<IdentifierTree> identifierMatcher =
         new Matcher<IdentifierTree>() {
           @Override

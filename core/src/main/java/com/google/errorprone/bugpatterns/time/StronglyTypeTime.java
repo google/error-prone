@@ -17,49 +17,23 @@
 package com.google.errorprone.bugpatterns.time;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
-import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.constructor;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
-import static com.google.errorprone.util.ASTHelpers.getSymbol;
-import static com.google.errorprone.util.ASTHelpers.getType;
-import static com.google.errorprone.util.ASTHelpers.isConsideredFinal;
-import static com.google.errorprone.util.ASTHelpers.isSameType;
 
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.SetMultimap;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.CompilationUnitTreeMatcher;
-import com.google.errorprone.fixes.SuggestedFix;
-import com.google.errorprone.fixes.SuggestedFixes;
+import com.google.errorprone.bugpatterns.StronglyType;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
-import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.ExpressionTree;
-import com.sun.source.tree.IdentifierTree;
-import com.sun.source.tree.MemberSelectTree;
-import com.sun.source.tree.MethodInvocationTree;
-import com.sun.source.tree.NewClassTree;
-import com.sun.source.tree.Tree;
-import com.sun.source.tree.VariableTree;
-import com.sun.source.util.TreePath;
-import com.sun.source.util.TreePathScanner;
-import com.sun.tools.javac.code.Symbol;
-import com.sun.tools.javac.code.Symbol.VarSymbol;
-import com.sun.tools.javac.code.Type;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
 import java.util.regex.Pattern;
-import javax.lang.model.element.ElementKind;
-import javax.lang.model.element.Modifier;
 
 /** Flags fields which would be better expressed as time types rather than primitive integers. */
 @BugPattern(
-    name = "StronglyTypeTime",
     summary =
         "This primitive integral type is only used to construct time types. It would be clearer to"
             + " strongly type the field instead.",
@@ -99,128 +73,28 @@ public final class StronglyTypeTime extends BugChecker implements CompilationUni
           constructor().forClass("org.joda.time.Instant").withParameters("long"),
           constructor().forClass("org.joda.time.DateTime").withParameters("long"));
 
-  @Override
-  public Description matchCompilationUnit(CompilationUnitTree tree, VisitorState state) {
-    Map<VarSymbol, TreePath> fields = findPathToPotentialFields(state);
-    SetMultimap<VarSymbol, ExpressionTree> usages = HashMultimap.create();
-
-    new TreePathScanner<Void, Void>() {
-      @Override
-      public Void visitMemberSelect(MemberSelectTree memberSelectTree, Void unused) {
-        handle(memberSelectTree);
-        return super.visitMemberSelect(memberSelectTree, null);
-      }
-
-      @Override
-      public Void visitIdentifier(IdentifierTree identifierTree, Void unused) {
-        handle(identifierTree);
-        return null;
-      }
-
-      private void handle(Tree tree) {
-        Symbol symbol = getSymbol(tree);
-        if (!fields.containsKey(symbol)) {
-          return;
-        }
-        Tree parent = getCurrentPath().getParentPath().getLeaf();
-        if (!(parent instanceof ExpressionTree)
-            || !TIME_FACTORY.matches((ExpressionTree) parent, state)) {
-          fields.remove(symbol);
-          return;
-        }
-        usages.put((VarSymbol) symbol, (ExpressionTree) parent);
-      }
-    }.scan(tree, null);
-
-    for (Map.Entry<VarSymbol, TreePath> entry : fields.entrySet()) {
-      state.reportMatch(describeMatch(entry.getValue(), usages.get(entry.getKey()), state));
-    }
-    return NO_MATCH;
-  }
-
-  private Description describeMatch(
-      TreePath variableTreePath, Set<ExpressionTree> invocationTrees, VisitorState state) {
-    if (invocationTrees.stream().map(ASTHelpers::getSymbol).distinct().count() != 1) {
-      return NO_MATCH;
-    }
-    VariableTree variableTree = (VariableTree) variableTreePath.getLeaf();
-    ExpressionTree factory = invocationTrees.iterator().next();
-    String newName = createNewName(variableTree.getName().toString());
-    SuggestedFix.Builder fix = SuggestedFix.builder();
-    Type targetType = getType(factory);
-    String typeName = SuggestedFixes.qualifyType(state.withPath(variableTreePath), fix, targetType);
-    fix.replace(
-        variableTree,
-        String.format(
-            "%s %s %s = %s(%s);",
-            state.getSourceForNode(variableTree.getModifiers()),
-            typeName,
-            newName,
-            getMethodSelectOrNewClass(factory, state),
-            state.getSourceForNode(variableTree.getInitializer())));
-
-    for (ExpressionTree expressionTree : invocationTrees) {
-      fix.replace(expressionTree, newName);
-    }
-    return buildDescription(variableTree)
-        .setMessage(
-            String.format(
-                "This primitive integral type is only used to construct %s instances. It would be"
-                    + " clearer to strongly type the field instead.",
-                targetType.tsym.getSimpleName()))
-        .addFix(fix.build())
-        .build();
-  }
-
-  private static String getMethodSelectOrNewClass(ExpressionTree tree, VisitorState state) {
-    switch (tree.getKind()) {
-      case METHOD_INVOCATION:
-        return state.getSourceForNode(((MethodInvocationTree) tree).getMethodSelect());
-      case NEW_CLASS:
-        return "new " + state.getSourceForNode(((NewClassTree) tree).getIdentifier());
-      default:
-        throw new AssertionError();
-    }
-  }
-
   private static final Pattern TIME_UNIT_REMOVER =
       Pattern.compile(
           "((_?IN)?_?(NANO|NANOSECOND|NSEC|_NS|MICRO|MSEC|USEC|MICROSECOND|MILLI|MILLISECOND|_MS|SEC|SECOND|MINUTE|MIN|HOUR|DAY)S?)?$",
           Pattern.CASE_INSENSITIVE);
 
+  @Override
+  public Description matchCompilationUnit(CompilationUnitTree tree, VisitorState state) {
+    return StronglyType.forCheck(this)
+        .addType(state.getSymtab().intType)
+        .addType(state.getSymtab().longType)
+        .addType(state.getSymtab().floatType)
+        .addType(state.getSymtab().doubleType)
+        .setFactoryMatcher(TIME_FACTORY)
+        .setRenameFunction(StronglyTypeTime::createNewName)
+        .build()
+        .match(tree, state);
+  }
+
   /** Tries to strip any time-related suffix off the field name. */
-  private static String createNewName(String fieldName) {
+  private static final String createNewName(String fieldName) {
     String newName = TIME_UNIT_REMOVER.matcher(fieldName).replaceAll("");
     // Guard against field names that *just* contain the unit. Not much we can do here.
     return newName.isEmpty() ? fieldName : newName;
-  }
-
-  /**
-   * Finds the path to potential fields that we might want to turn into Durations: (effectively)
-   * final integral private fields.
-   */
-  // TODO(b/147006492): Consider extracting a helper to find all fields that match a Matcher.
-  private Map<VarSymbol, TreePath> findPathToPotentialFields(VisitorState state) {
-    Map<VarSymbol, TreePath> fields = new HashMap<>();
-    new SuppressibleTreePathScanner<Void, Void>() {
-      @Override
-      public Void visitVariable(VariableTree variableTree, Void unused) {
-        VarSymbol symbol = getSymbol(variableTree);
-        Type type = state.getTypes().unboxedTypeOrType(symbol.type);
-        if (symbol.getKind() == ElementKind.FIELD
-            && symbol.getModifiers().contains(Modifier.PRIVATE)
-            && isConsideredFinal(symbol)
-            && variableTree.getInitializer() != null
-            && (isSameType(type, state.getSymtab().intType, state)
-                || isSameType(type, state.getSymtab().longType, state)
-                || isSameType(type, state.getSymtab().floatType, state)
-                || isSameType(type, state.getSymtab().doubleType, state))
-            && !isSuppressed(variableTree)) {
-          fields.put(symbol, getCurrentPath());
-        }
-        return super.visitVariable(variableTree, null);
-      }
-    }.scan(state.getPath().getCompilationUnit(), null);
-    return fields;
   }
 }

@@ -60,7 +60,7 @@ public abstract class AbstractLockMethodChecker extends BugChecker
   protected abstract String buildMessage(String unhandled);
 
   @Override
-  public Description matchMethod(MethodTree tree, final VisitorState state) {
+  public Description matchMethod(MethodTree tree, VisitorState state) {
 
     ImmutableList<String> lockExpressions = getLockExpressions(tree);
     if (lockExpressions.isEmpty()) {

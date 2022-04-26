@@ -24,7 +24,9 @@ import java.util.ArrayList;
 import java.util.List;
 import org.junit.After;
 
-/** @author alexeagle@google.com (Alex Eagle) */
+/**
+ * @author alexeagle@google.com (Alex Eagle)
+ */
 public class CompilerBasedAbstractTest {
 
   private static class FileToCompile {
@@ -57,7 +59,7 @@ public class CompilerBasedAbstractTest {
     compilationHelper.doTest();
   }
 
-  protected void assertCompiles(final Scanner scanner) {
+  protected void assertCompiles(Scanner scanner) {
     assertCompiles(ScannerSupplier.fromScanner(scanner));
   }
 }

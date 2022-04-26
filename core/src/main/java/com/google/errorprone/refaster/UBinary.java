@@ -54,7 +54,7 @@ abstract class UBinary extends UExpression implements BinaryTree {
           .put(Kind.GREATER_THAN_EQUAL, JCTree.Tag.GE)
           .put(Kind.EQUAL_TO, JCTree.Tag.EQ)
           .put(Kind.NOT_EQUAL_TO, JCTree.Tag.NE)
-          .build();
+          .buildOrThrow();
 
   static final ImmutableBiMap<Kind, Kind> NEGATION =
       new ImmutableBiMap.Builder<Kind, Kind>()
@@ -64,7 +64,7 @@ abstract class UBinary extends UExpression implements BinaryTree {
           .put(Kind.GREATER_THAN_EQUAL, Kind.LESS_THAN)
           .put(Kind.EQUAL_TO, Kind.NOT_EQUAL_TO)
           .put(Kind.NOT_EQUAL_TO, Kind.EQUAL_TO)
-          .build();
+          .buildOrThrow();
 
   static final ImmutableBiMap<Kind, Kind> DEMORGAN =
       new ImmutableBiMap.Builder<Kind, Kind>()
@@ -72,7 +72,7 @@ abstract class UBinary extends UExpression implements BinaryTree {
           .put(Kind.CONDITIONAL_OR, Kind.CONDITIONAL_AND)
           .put(Kind.AND, Kind.OR)
           .put(Kind.OR, Kind.AND)
-          .build();
+          .buildOrThrow();
 
   public static UBinary create(Kind binaryOp, UExpression lhs, UExpression rhs) {
     checkArgument(

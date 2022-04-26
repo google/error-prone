@@ -50,7 +50,6 @@ import javax.annotation.Nullable;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
-    name = "BoxedPrimitiveConstructor",
     summary = "valueOf or autoboxing provides better time and space performance",
     severity = SeverityLevel.WARNING,
     tags = StandardTags.PERFORMANCE)
@@ -247,9 +246,9 @@ public class BoxedPrimitiveConstructor extends BugChecker implements NewClassTre
   }
 
   private static DoubleAndFloatStatus doubleAndFloatStatus(
-      VisitorState state, Type recieverType, Type argType) {
+      VisitorState state, Type receiverType, Type argType) {
     Types types = state.getTypes();
-    if (!types.isSameType(recieverType, state.getSymtab().floatType)) {
+    if (!types.isSameType(receiverType, state.getSymtab().floatType)) {
       return DoubleAndFloatStatus.NONE;
     }
     if (types.isSameType(argType, types.boxedClass(state.getSymtab().doubleType).type)) {

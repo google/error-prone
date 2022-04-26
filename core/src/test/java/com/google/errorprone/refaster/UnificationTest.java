@@ -40,8 +40,8 @@ import org.junit.runners.JUnit4;
 @RunWith(JUnit4.class)
 public class UnificationTest extends CompilerBasedTest {
 
-  public void expectMatches(final Template<?> template, Match... expected) {
-    final Set<Match> expectedMatches = Sets.newHashSet(expected);
+  public void expectMatches(Template<?> template, Match... expected) {
+    Set<Match> expectedMatches = Sets.newHashSet(expected);
     TreeScanner matchScanner =
         new TreeScanner() {
           @Override

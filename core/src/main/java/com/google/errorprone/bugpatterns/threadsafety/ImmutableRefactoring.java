@@ -30,7 +30,6 @@ import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.ImportTree;
-import com.sun.source.tree.NewClassTree;
 import com.sun.source.util.TreePathScanner;
 import com.sun.tools.javac.code.Symbol;
 import java.util.Optional;
@@ -71,15 +70,6 @@ public class ImmutableRefactoring extends BugChecker implements CompilationUnitT
           ok[0] = false;
         }
         return super.visitClass(node, null);
-      }
-
-      @Override
-      public Void visitNewClass(NewClassTree node, Void unused) {
-        if (immutableChecker.matchNewClass(node, createVisitorState().withPath(getCurrentPath()))
-            != Description.NO_MATCH) {
-          ok[0] = false;
-        }
-        return super.visitNewClass(node, null);
       }
 
       private VisitorState createVisitorState() {

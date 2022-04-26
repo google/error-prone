@@ -28,9 +28,10 @@ import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
-import com.sun.tools.javac.tree.JCTree;
 
-/** @author avenet@google.com (Arnaud J. Venet) */
+/**
+ * @author avenet@google.com (Arnaud J. Venet)
+ */
 @BugPattern(
     name = "InsecureCryptoUsage",
     altNames = {"InsecureCipherMode"},
@@ -58,7 +59,7 @@ public class InsecureCipherMode extends BugChecker implements MethodInvocationTr
 
   private Description identifyEcbVulnerability(MethodInvocationTree tree) {
     // We analyze the first argument of all the overloads of Cipher.getInstance().
-    Object argument = ASTHelpers.constValue((JCTree) tree.getArguments().get(0));
+    Object argument = ASTHelpers.constValue(tree.getArguments().get(0));
     if (argument == null) {
       // We flag call sites where the transformation string is dynamically computed.
       return buildErrorMessage(
@@ -104,7 +105,7 @@ public class InsecureCipherMode extends BugChecker implements MethodInvocationTr
   private Description identifyDiffieHellmanAndDsaVulnerabilities(MethodInvocationTree tree) {
     // The first argument holds a string specifying the algorithm used for the operation
     // considered.
-    Object argument = ASTHelpers.constValue((JCTree) tree.getArguments().get(0));
+    Object argument = ASTHelpers.constValue(tree.getArguments().get(0));
     if (argument == null) {
       // We flag call sites where the algorithm specification string is dynamically computed.
       return buildErrorMessage(

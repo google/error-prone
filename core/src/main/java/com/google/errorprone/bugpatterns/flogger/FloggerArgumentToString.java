@@ -54,7 +54,6 @@ import javax.lang.model.type.TypeKind;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
-    name = "FloggerArgumentToString",
     summary =
         "Use Flogger's printf-style formatting instead of explicitly converting arguments to"
             + " strings",
@@ -69,6 +68,10 @@ public class FloggerArgumentToString extends BugChecker implements MethodInvocat
    * used incredibly rarely and not worth automating.
    */
   private static final Pattern PRINTF_TERM_CAPTURE_PATTERN =
+      // TODO(amalloy): I think this can be done without possessive quantifiers:
+      // (?:^|[^%])(?:%%)*(%[^%a-zA-Z]*[a-zA-Z])
+      // I think this also means we no longer need the special-case "at current position" check,
+      // since skipping % characters can't cause it to match.
       Pattern.compile(
           // Skip escaped pairs of '%' before the next term.
           "[^%]*+(?:%%[^%]*+)*+"
@@ -168,7 +171,7 @@ public class FloggerArgumentToString extends BugChecker implements MethodInvocat
                 .put(Long.class, "toString(long)")
                 .put(Float.class, "toString(float)")
                 .put(Double.class, "toString(double)")
-                .build()
+                .buildOrThrow()
                 .entrySet()
                 .stream()
                 .map(e -> staticMethod().onClass(e.getKey().getName()).withSignature(e.getValue()))
@@ -192,7 +195,7 @@ public class FloggerArgumentToString extends BugChecker implements MethodInvocat
                 .put(Long.class, "valueOf(long)")
                 .put(Float.class, "valueOf(float)")
                 .put(Double.class, "valueOf(double)")
-                .build()
+                .buildOrThrow()
                 .entrySet()
                 .stream()
                 .map(e -> staticMethod().onClass(e.getKey().getName()).withSignature(e.getValue()))
@@ -234,7 +237,7 @@ public class FloggerArgumentToString extends BugChecker implements MethodInvocat
             ImmutableMap.<Class<?>, String>builder()
                 .put(Integer.class, "toHexString(int)")
                 .put(Long.class, "toHexString(long)")
-                .build()
+                .buildOrThrow()
                 .entrySet()
                 .stream()
                 .map(e -> staticMethod().onClass(e.getKey().getName()).withSignature(e.getValue()))

@@ -49,7 +49,6 @@ import java.util.Map;
 
 /** Checks for the same variable being checked against null twice in a method. */
 @BugPattern(
-    name = "CheckNotNullMultipleTimes",
     severity = ERROR,
     summary = "A variable was checkNotNulled multiple times. Did you mean to check something else?")
 public final class CheckNotNullMultipleTimes extends BugChecker implements MethodTreeMatcher {

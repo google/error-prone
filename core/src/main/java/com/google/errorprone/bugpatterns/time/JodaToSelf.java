@@ -37,7 +37,6 @@ import com.sun.source.tree.NewClassTree;
 
 /** Check for calls to Joda-Time's {@code foo.toFoo()} and {@code new Foo(foo)}. */
 @BugPattern(
-    name = "JodaToSelf",
     summary =
         "Use of Joda-Time's DateTime.toDateTime(), Duration.toDuration(), Instant.toInstant(), "
             + "Interval.toInterval(), and Period.toPeriod() are not allowed.",

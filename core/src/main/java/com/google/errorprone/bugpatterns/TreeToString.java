@@ -23,6 +23,7 @@ import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
 
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.SuggestedFix;
@@ -30,7 +31,7 @@ import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
 import com.google.errorprone.predicates.TypePredicate;
 import com.google.errorprone.predicates.TypePredicates;
-import com.google.errorprone.util.ASTHelpers;
+import com.google.errorprone.suppliers.Supplier;
 import com.google.errorprone.util.FindIdentifiers;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ExpressionTree;
@@ -46,7 +47,6 @@ import java.util.Optional;
  * @author bhagwani@google.com (Sumit Bhagwani)
  */
 @BugPattern(
-    name = "TreeToString",
     summary =
         "Tree#toString shouldn't be used for Trees deriving from the code being compiled, as it"
             + " discards whitespace and comments.",
@@ -65,17 +65,34 @@ public class TreeToString extends AbstractToString {
           .named("Literal")
           .withParameters("java.lang.Object");
 
-  private static boolean treeToStringInBugChecker(Type type, VisitorState state) {
-    ClassTree enclosingClass = ASTHelpers.findEnclosingNode(state.getPath(), ClassTree.class);
-    if (enclosingClass == null || !IS_BUGCHECKER.matches(enclosingClass, state)) {
-      return false;
+  private final boolean transitiveEnclosingBugchecker;
+
+  public TreeToString(ErrorProneFlags errorProneFlags) {
+    this.transitiveEnclosingBugchecker =
+        errorProneFlags.getBoolean("TreeToString:transitiveEnclosingBugchecker").orElse(true);
+  }
+
+  private boolean treeToStringInBugChecker(Type type, VisitorState state) {
+    return enclosingBugChecker(state) && IS_TREE.apply(type, state);
+  }
+
+  private boolean enclosingBugChecker(VisitorState state) {
+    for (Tree tree : state.getPath()) {
+      if (tree instanceof ClassTree) {
+        if (IS_BUGCHECKER.matches((ClassTree) tree, state)) {
+          return true;
+        }
+        if (!transitiveEnclosingBugchecker) {
+          break;
+        }
+      }
     }
-    return IS_TREE.apply(type, state);
+    return false;
   }
 
   @Override
   protected TypePredicate typePredicate() {
-    return TreeToString::treeToStringInBugChecker;
+    return this::treeToStringInBugChecker;
   }
 
   @Override
@@ -102,10 +119,7 @@ public class TreeToString extends AbstractToString {
 
   private static Optional<Fix> fix(Tree target, Tree replace, VisitorState state) {
     return FindIdentifiers.findAllIdents(state).stream()
-        .filter(
-            s ->
-                isSubtype(
-                    s.type, state.getTypeFromString("com.google.errorprone.VisitorState"), state))
+        .filter(s -> isSubtype(s.type, COM_GOOGLE_ERRORPRONE_VISITORSTATE.get(state), state))
         .findFirst()
         .map(s -> SuggestedFix.replace(replace, createStringReplacement(state, s, target)));
   }
@@ -125,4 +139,7 @@ public class TreeToString extends AbstractToString {
     return String.format(
         "%s.getSourceForNode(%s)", visitorStateVariable, state.getSourceForNode(target));
   }
+
+  private static final Supplier<Type> COM_GOOGLE_ERRORPRONE_VISITORSTATE =
+      VisitorState.memoize(state -> state.getTypeFromString("com.google.errorprone.VisitorState"));
 }

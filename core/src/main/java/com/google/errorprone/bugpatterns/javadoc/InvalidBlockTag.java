@@ -25,7 +25,6 @@ import static com.google.errorprone.bugpatterns.javadoc.Utils.replace;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.StandardTags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
@@ -56,18 +55,9 @@ import java.util.Set;
  *
  * @author ghm@google.com (Graeme Morgan)
  */
-@BugPattern(
-    name = "InvalidBlockTag",
-    summary = "This tag is invalid.",
-    severity = WARNING,
-    tags = StandardTags.STYLE,
-    documentSuppression = false)
+@BugPattern(summary = "This tag is invalid.", severity = WARNING, documentSuppression = false)
 public final class InvalidBlockTag extends BugChecker
     implements ClassTreeMatcher, MethodTreeMatcher, VariableTreeMatcher {
-
-  private static final String INVALID_TAG_IS_PARAMETER_NAME =
-      "@%1$s is not a valid tag, but is a parameter name. "
-          + "Use {@code %1%s} to refer to parameter names inline.";
 
   /**
    * HTML tags which imply we're showing code, and should therefore probably escape unknown block
@@ -174,11 +164,7 @@ public final class InvalidBlockTag extends BugChecker
         // If we're in a <code> tag, this is probably meant to be an annotation.
         if (parentIsErroneousCodeTag()) {
           String message =
-              String.format(
-                  "@%s is interpreted as a block tag here, not as a literal. Escaping "
-                      + "annotations within {@code } tags is problematic; you may have to avoid "
-                      + "using {@code } and escape any HTML entities manually instead.",
-                  tagName);
+              String.format("@%s is interpreted as a block tag here, not as a literal.", tagName);
           state.reportMatch(
               buildDescription(diagnosticPosition(getCurrentPath(), state))
                   .setMessage(message)
@@ -189,9 +175,9 @@ public final class InvalidBlockTag extends BugChecker
         int startPos = Utils.getStartPosition(unknownBlockTagTree, state);
         String message =
             String.format(
-                "@%s is not a valid block tag. Did you mean to escape it? Annotations must be "
-                    + "escaped even within <pre> and <code>, otherwise they will be "
-                    + "interpreted as block tags.",
+                "@%s is not a valid block tag. Did you mean to escape it? Annotations must be"
+                    + " escaped even within <pre> and <code>, but will be rendered correctly inside"
+                    + " {@code blocks.",
                 tagName);
         state.reportMatch(
             buildDescription(diagnosticPosition(getCurrentPath(), state))
@@ -203,7 +189,11 @@ public final class InvalidBlockTag extends BugChecker
       }
       if (parameters.contains(tagName)) {
         int startPos = Utils.getStartPosition(unknownBlockTagTree, state);
-        String message = String.format(INVALID_TAG_IS_PARAMETER_NAME, tagName);
+        String message =
+            String.format(
+                "@%1$s is not a valid tag, but is a parameter name. "
+                    + "Use {@code %1%s} to refer to parameter names inline.",
+                tagName);
         state.reportMatch(
             buildDescription(diagnosticPosition(getCurrentPath(), state))
                 .setMessage(message)

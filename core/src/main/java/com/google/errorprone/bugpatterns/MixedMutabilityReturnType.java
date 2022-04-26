@@ -17,8 +17,10 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.fixes.SuggestedFixes.qualifyType;
+import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.isSubtypeOf;
+import static com.google.errorprone.matchers.Matchers.not;
 import static com.google.errorprone.matchers.Matchers.nothing;
 import static com.google.errorprone.matchers.method.MethodMatchers.constructor;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
@@ -75,7 +77,6 @@ import javax.lang.model.type.TypeKind;
  * others.
  */
 @BugPattern(
-    name = "MixedMutabilityReturnType",
     summary =
         "This method returns both mutable and immutable collections or maps from different "
             + "paths. This may be confusing for users of the method.",
@@ -129,7 +130,7 @@ public final class MixedMutabilityReturnType extends BugChecker
                       .onDescendantOf(BiMap.class.getName())
                       .namedAnyOf("put", "putAll"),
                   nothing()),
-          isSubtypeOf(Map.class),
+          allOf(isSubtypeOf(Map.class), not(isSubtypeOf(BiMap.class))),
               TypeDetails.of(
                   "com.google.common.collect.ImmutableMap",
                   instanceMethod().onDescendantOf(Map.class.getName()).namedAnyOf("put", "putAll"),
@@ -192,6 +193,7 @@ public final class MixedMutabilityReturnType extends BugChecker
 
     private ReturnTypesScanner(
         VisitorState state, Set<VarSymbol> immutable, Set<VarSymbol> mutable) {
+      super(state);
       this.state = state;
       this.immutable = immutable;
       this.mutable = mutable;
@@ -317,7 +319,7 @@ public final class MixedMutabilityReturnType extends BugChecker
           anyBuilderFixes |= !returnTypeFixer.failed;
           simpleFix.merge(simple);
           fixWithBuilders.merge(returnTypeFixer.failed ? simple : returnTypeFixer.fix.build());
-          continue;
+          break;
         }
         if (IMMUTABLE_FACTORY.matches(expression, state)) {
           SuggestedFix.Builder fix = SuggestedFix.builder();
@@ -326,12 +328,13 @@ public final class MixedMutabilityReturnType extends BugChecker
               qualifyType(state, fix, typeDetails.immutableType()) + ".of");
           simpleFix.merge(fix);
           fixWithBuilders.merge(fix);
-          continue;
+          break;
         }
 
         SuggestedFix simple = applySimpleFix(typeDetails.immutableType(), expression, state);
         simpleFix.merge(simple);
         fixWithBuilders.merge(simple);
+        break;
       }
     }
     if (!anyBuilderFixes) {

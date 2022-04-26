@@ -24,6 +24,7 @@ import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.StandardTags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
+import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
@@ -37,7 +38,6 @@ import javax.lang.model.element.NestingKind;
  * @author cushon@google.com (Liam Miller-Cushon)
  */
 @BugPattern(
-    name = "ClassCanBeStatic",
     summary = "Inner class is non-static but does not reference enclosing class",
     severity = WARNING,
     tags = {StandardTags.STYLE, StandardTags.PERFORMANCE})
@@ -47,9 +47,9 @@ public class ClassCanBeStatic extends BugChecker implements ClassTreeMatcher {
       "com.google.errorprone.refaster.annotation.BeforeTemplate";
 
   @Override
-  public Description matchClass(final ClassTree tree, final VisitorState state) {
-    final ClassSymbol currentClass = ASTHelpers.getSymbol(tree);
-    if (currentClass == null || !currentClass.hasOuterInstance()) {
+  public Description matchClass(ClassTree tree, VisitorState state) {
+    ClassSymbol currentClass = ASTHelpers.getSymbol(tree);
+    if (!currentClass.hasOuterInstance()) {
       return NO_MATCH;
     }
     if (currentClass.getNestingKind() != NestingKind.MEMBER) {
@@ -80,6 +80,8 @@ public class ClassCanBeStatic extends BugChecker implements ClassTreeMatcher {
     if (tree.getMembers().stream().anyMatch(m -> hasAnnotation(m, REFASTER_ANNOTATION, state))) {
       return NO_MATCH;
     }
-    return describeMatch(tree, SuggestedFixes.addModifiers(tree, state, Modifier.STATIC));
+    return describeMatch(
+        tree,
+        SuggestedFixes.addModifiers(tree, state, Modifier.STATIC).orElse(SuggestedFix.emptyFix()));
   }
 }

@@ -53,16 +53,16 @@ abstract class PlaceholderMethod implements Serializable {
       UType returnType,
       ImmutableMap<UVariableDecl, ImmutableClassToInstanceMap<Annotation>> parameters,
       ClassToInstanceMap<Annotation> annotations) {
-    final boolean allowsIdentity = annotations.getInstance(Placeholder.class).allowsIdentity();
-    final Class<? extends Matcher<? super ExpressionTree>> matchesClass =
+    boolean allowsIdentity = annotations.getInstance(Placeholder.class).allowsIdentity();
+    Class<? extends Matcher<? super ExpressionTree>> matchesClass =
         annotations.containsKey(Matches.class)
             ? UTemplater.getValue(annotations.getInstance(Matches.class))
             : null;
-    final Class<? extends Matcher<? super ExpressionTree>> notMatchesClass =
+    Class<? extends Matcher<? super ExpressionTree>> notMatchesClass =
         annotations.containsKey(NotMatches.class)
             ? UTemplater.getValue(annotations.getInstance(NotMatches.class))
             : null;
-    final Predicate<Tree.Kind> allowedKinds =
+    Predicate<Tree.Kind> allowedKinds =
         annotations.containsKey(OfKind.class)
             ? Predicates.<Tree.Kind>in(Arrays.asList(annotations.getInstance(OfKind.class).value()))
             : Predicates.<Tree.Kind>alwaysTrue();

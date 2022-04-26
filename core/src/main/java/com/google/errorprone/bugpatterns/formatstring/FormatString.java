@@ -17,6 +17,7 @@
 package com.google.errorprone.bugpatterns.formatstring;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.BugPattern;
@@ -24,23 +25,43 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.matchers.Description;
+import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
-@BugPattern(name = "FormatString", summary = "Invalid printf-style format string", severity = ERROR)
+@BugPattern(summary = "Invalid printf-style format string", severity = ERROR)
 public class FormatString extends BugChecker implements MethodInvocationTreeMatcher {
 
+  private static final Matcher<ExpressionTree> FORMATTED_METHOD =
+      instanceMethod().onExactClass("java.lang.String").named("formatted");
+
   @Override
-  public Description matchMethodInvocation(MethodInvocationTree tree, final VisitorState state) {
-    ImmutableList<ExpressionTree> args = FormatStringUtils.formatMethodArguments(tree, state);
-    if (args.isEmpty()) {
-      return Description.NO_MATCH;
-    }
+  public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
+    ImmutableList<ExpressionTree> args;
     MethodSymbol sym = ASTHelpers.getSymbol(tree);
-    if (sym == null) {
+
+    if (FORMATTED_METHOD.matches(tree, state)) {
+      /*
+        Java 15 and greater supports the formatted method on an instance of string. If found
+        then use the string value as the pattern and all-of-the arguments and send directly to
+        the validate method.
+      */
+      ExpressionTree receiver = ASTHelpers.getReceiver(tree);
+      if (receiver == null) {
+        // an unqualified call to 'formatted', possibly inside the definition
+        // of java.lang.String
+        return Description.NO_MATCH;
+      }
+      args =
+          ImmutableList.<ExpressionTree>builder().add(receiver).addAll(tree.getArguments()).build();
+
+    } else {
+      args = FormatStringUtils.formatMethodArguments(tree, state);
+    }
+    if (args.isEmpty()) {
       return Description.NO_MATCH;
     }
     FormatStringValidation.ValidationResult result =

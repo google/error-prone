@@ -49,6 +49,23 @@ public final class FloggerSplitLogStatementTest {
   }
 
   @Test
+  public void positiveVar() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.common.flogger.FluentLogger;",
+            "class Test {",
+            "  private static final FluentLogger logger = FluentLogger.forEnclosingClass();",
+            " void splitLog() {",
+            "    // BUG: Diagnostic contains:",
+            "    var api = logger.atInfo();",
+            "    api.log(\"foo\");",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void negative() {
     compilationHelper
         .addSourceLines(

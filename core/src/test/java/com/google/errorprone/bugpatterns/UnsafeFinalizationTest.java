@@ -16,10 +16,7 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static org.junit.Assume.assumeTrue;
-
 import com.google.errorprone.CompilationTestHelper;
-import com.google.errorprone.util.RuntimeVersion;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -44,6 +41,7 @@ public class UnsafeFinalizationTest {
             "  public MyAwesomeGame() {",
             "    nativeResourcePtr = doNativeInit();",
             "  }",
+            "  @SuppressWarnings(\"removal\")",
             "  @Override",
             "  protected void finalize() throws Throwable {",
             "    cleanUpNativeResources(nativeResourcePtr);",
@@ -66,6 +64,7 @@ public class UnsafeFinalizationTest {
             "class MyAwesomeGame {",
             "  private static long nativeResourcePtr;",
             "  private native void playAwesomeGame(long nativeResourcePtr);",
+            "  @SuppressWarnings(\"removal\")",
             "  @Override protected void finalize() {}",
             "  public void run() {",
             "    playAwesomeGame(nativeResourcePtr);",
@@ -86,6 +85,7 @@ public class UnsafeFinalizationTest {
             "NativeResource.java",
             "class NativeResource {",
             "  private static long ctx;",
+            "  @SuppressWarnings(\"removal\")",
             "  @Override protected void finalize() {}",
             "  public void run() {",
             "    NativeStuff.doNative(ctx, this);",
@@ -102,6 +102,7 @@ public class UnsafeFinalizationTest {
             "class MyAwesomeGame {",
             "  private static String nativeResourcePtr;",
             "  private static native void playAwesomeGame(String nativeResourcePtr);",
+            "  @SuppressWarnings(\"removal\")",
             "  @Override protected void finalize() {}",
             "  public static void run() {",
             "    playAwesomeGame(nativeResourcePtr);",
@@ -118,6 +119,7 @@ public class UnsafeFinalizationTest {
             "class MyAwesomeGame {",
             "  private static long nativeResourcePtr;",
             "  private static void playAwesomeGame(long nativeResourcePtr) {}",
+            "  @SuppressWarnings(\"removal\")",
             "  @Override protected void finalize() {}",
             "  public static void run() {",
             "    playAwesomeGame(nativeResourcePtr);",
@@ -139,6 +141,7 @@ public class UnsafeFinalizationTest {
             "  public MyAwesomeGame() {",
             "    nativeResourcePtr = doNativeInit();",
             "  }",
+            "  @SuppressWarnings(\"removal\")",
             "  @Override",
             "  protected void finalize() throws Throwable {",
             "    cleanUpNativeResources(nativeResourcePtr);",
@@ -154,7 +157,6 @@ public class UnsafeFinalizationTest {
 
   @Test
   public void negativeFence() {
-    assumeTrue(RuntimeVersion.isAtLeast9());
     compilationTestHelper
         .addSourceLines(
             "MyAwesomeGame.java",
@@ -167,6 +169,7 @@ public class UnsafeFinalizationTest {
             "  public MyAwesomeGame() {",
             "    nativeResourcePtr = doNativeInit();",
             "  }",
+            "  @SuppressWarnings(\"removal\")",
             "  @Override",
             "  protected void finalize() throws Throwable {",
             "    cleanUpNativeResources(nativeResourcePtr);",

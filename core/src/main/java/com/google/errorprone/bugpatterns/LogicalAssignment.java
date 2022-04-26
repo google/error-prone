@@ -39,7 +39,6 @@ import com.sun.source.tree.WhileLoopTree;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
-    name = "LogicalAssignment",
     summary =
         "Assignment where a boolean expression was expected;"
             + " use == if this assignment wasn't expected or add parentheses for clarity.",

@@ -23,6 +23,7 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
+import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
@@ -31,17 +32,13 @@ import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 
-import com.google.errorprone.fixes.SuggestedFixes;
-
 /** Check for calls to {@code java.time} APIs that silently use the default system time-zone. */
 @BugPattern(
-    name = "JavaTimeDefaultTimeZone",
     summary = "java.time APIs that silently use the default system time-zone are not allowed.",
     explanation =
         "Using APIs that silently use the default system time-zone is dangerous. "
             + "The default system time-zone can vary from machine to machine or JVM to JVM. "
-            + "You must choose an explicit ZoneId."
-    ,
+            + "You must choose an explicit ZoneId.",
     severity = WARNING)
 public final class JavaTimeDefaultTimeZone extends BugChecker
     implements MethodInvocationTreeMatcher {
@@ -85,9 +82,6 @@ public final class JavaTimeDefaultTimeZone extends BugChecker
       return false;
     }
     MethodSymbol symbol = ASTHelpers.getSymbol(tree);
-    if (symbol == null) {
-      return false;
-    }
 
     switch (symbol.getSimpleName().toString()) {
       case "now":

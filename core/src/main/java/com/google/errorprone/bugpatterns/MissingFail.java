@@ -79,9 +79,10 @@ import java.util.Set;
 import java.util.regex.Pattern;
 import javax.lang.model.element.Name;
 
-/** @author schmitt@google.com (Peter Schmitt) */
+/**
+ * @author schmitt@google.com (Peter Schmitt)
+ */
 @BugPattern(
-    name = "MissingFail",
     altNames = "missing-fail",
     summary = "Not calling fail() when expecting an exception masks bugs",
     severity = WARNING)
@@ -232,7 +233,10 @@ public class MissingFail extends BugChecker implements TryTreeMatcher {
       Optional<Fix> assertThrowsFix =
           AssertThrowsUtils.tryFailToAssertThrows(tree, tryStatements, Optional.empty(), state);
       Fix failFix = addFailCall(tree, lastTryStatement, state);
-      return buildDescription(lastTryStatement).addFix(assertThrowsFix).addFix(failFix).build();
+      return buildDescription(lastTryStatement)
+          .addFix(assertThrowsFix.orElse(SuggestedFix.emptyFix()))
+          .addFix(failFix)
+          .build();
     } else {
       return Description.NO_MATCH;
     }

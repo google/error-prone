@@ -45,7 +45,6 @@ import java.util.List;
  * message.
  */
 @BugPattern(
-    name = "FloggerLogWithCause",
     summary =
         "Setting the caught exception as the cause of the log message may provide more context for"
             + " anyone debugging errors.",
@@ -65,7 +64,7 @@ public final class FloggerLogWithCause extends BugChecker implements CatchTreeMa
 
   @Override
   public Description matchCatch(CatchTree tree, VisitorState state) {
-    if (isSuppressed(tree.getParameter())) {
+    if (isSuppressed(tree.getParameter(), state)) {
       return Description.NO_MATCH;
     }
     List<? extends StatementTree> statements = tree.getBlock().getStatements();

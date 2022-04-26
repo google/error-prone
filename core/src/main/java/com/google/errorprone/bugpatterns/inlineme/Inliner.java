@@ -19,10 +19,12 @@ package com.google.errorprone.bugpatterns.inlineme;
 import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.common.collect.MoreCollectors.onlyElement;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
+import static com.google.errorprone.util.ASTHelpers.enclosingPackage;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
-import static com.google.errorprone.util.MoreAnnotations.asStringValue;
+import static com.google.errorprone.util.ASTHelpers.hasDirectAnnotationWithSimpleName;
+import static com.google.errorprone.util.ASTHelpers.stringContainsComments;
 import static com.google.errorprone.util.MoreAnnotations.getValue;
 import static com.google.errorprone.util.SideEffectAnalysis.hasSideEffect;
 
@@ -53,6 +55,7 @@ import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
@@ -63,7 +66,7 @@ import java.util.stream.Stream;
  */
 @BugPattern(
     name = "InlineMeInliner",
-    summary = "This API is deprecated and the caller should be 'inlined'.",
+    summary = "Callers of this API should be inlined.",
     severity = WARNING,
     tags = Inliner.FINDING_TAG)
 public final class Inliner extends BugChecker
@@ -71,40 +74,47 @@ public final class Inliner extends BugChecker
 
   public static final String FINDING_TAG = "JavaInlineMe";
 
+  static final String PREFIX_FLAG = "InlineMe:Prefix";
+  static final String SKIP_COMMENTS_FLAG = "InlineMe:SkipInliningsWithComments";
+
   private static final Splitter PACKAGE_SPLITTER = Splitter.on('.');
 
-  static final String PREFIX_FLAG = "InlineMe:Prefix";
+  private static final String CHECK_FIX_COMPILES = "InlineMe:CheckFixCompiles";
 
-  static final String ALLOW_BREAKING_CHANGES_FLAG = "InlineMe:AllowBreakingChanges";
-
-  private static final String INLINE_ME = "com.google.errorprone.annotations.InlineMe";
-
-  private static final String VALIDATION_DISABLED =
-      "com.google.errorprone.annotations.InlineMeValidationDisabled";
+  private static final String INLINE_ME = "InlineMe";
+  private static final String VALIDATION_DISABLED = "InlineMeValidationDisabled";
 
   private final ImmutableSet<String> apiPrefixes;
-  private final boolean allowBreakingChanges;
+  private final boolean skipCallsitesWithComments;
+  private final boolean checkFixCompiles;
 
   public Inliner(ErrorProneFlags flags) {
     this.apiPrefixes =
         ImmutableSet.copyOf(flags.getSet(PREFIX_FLAG).orElse(ImmutableSet.<String>of()));
-    this.allowBreakingChanges = flags.getBoolean(ALLOW_BREAKING_CHANGES_FLAG).orElse(false);
+    this.skipCallsitesWithComments = flags.getBoolean(SKIP_COMMENTS_FLAG).orElse(true);
+    this.checkFixCompiles = flags.getBoolean(CHECK_FIX_COMPILES).orElse(false);
   }
-
-  // TODO(b/163596864): Add support for inlining fields
 
   @Override
   public Description matchNewClass(NewClassTree tree, VisitorState state) {
+    MethodSymbol symbol = getSymbol(tree);
+    if (!hasDirectAnnotationWithSimpleName(symbol, INLINE_ME)) {
+      return Description.NO_MATCH;
+    }
     ImmutableList<String> callingVars =
         tree.getArguments().stream().map(state::getSourceForNode).collect(toImmutableList());
 
     String receiverString = "new " + state.getSourceForNode(tree.getIdentifier());
 
-    return match(tree, getSymbol(tree), callingVars, receiverString, null, state);
+    return match(tree, symbol, callingVars, receiverString, null, state);
   }
 
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
+    MethodSymbol symbol = getSymbol(tree);
+    if (!hasDirectAnnotationWithSimpleName(symbol, INLINE_ME)) {
+      return Description.NO_MATCH;
+    }
     ImmutableList<String> callingVars =
         tree.getArguments().stream().map(state::getSourceForNode).collect(toImmutableList());
 
@@ -127,7 +137,7 @@ public final class Inliner extends BugChecker
       }
     }
 
-    return match(tree, getSymbol(tree), callingVars, receiverString, receiver, state);
+    return match(tree, symbol, callingVars, receiverString, receiver, state);
   }
 
   private Description match(
@@ -137,7 +147,8 @@ public final class Inliner extends BugChecker
       String receiverString,
       ExpressionTree receiver,
       VisitorState state) {
-    if (!hasAnnotation(symbol, INLINE_ME, state)) {
+    Optional<InlineMeData> inlineMe = InlineMeData.createFromSymbol(symbol);
+    if (inlineMe.isEmpty()) {
       return Description.NO_MATCH;
     }
 
@@ -146,20 +157,20 @@ public final class Inliner extends BugChecker
       return Description.NO_MATCH;
     }
 
-    Attribute.Compound inlineMe =
-        symbol.getRawAttributes().stream()
-            .filter(a -> a.type.tsym.getQualifiedName().contentEquals(INLINE_ME))
-            .collect(onlyElement());
+    if (skipCallsitesWithComments
+        && stringContainsComments(state.getSourceForNode(tree), state.context)) {
+      return Description.NO_MATCH;
+    }
 
     SuggestedFix.Builder builder = SuggestedFix.builder();
 
     Map<String, String> typeNames = new HashMap<>();
-    for (String newImport : getStrings(inlineMe, "imports")) {
+    for (String newImport : inlineMe.get().imports()) {
       String typeName = Iterables.getLast(PACKAGE_SPLITTER.split(newImport));
       String qualifiedTypeName = SuggestedFixes.qualifyType(state, builder, newImport);
       typeNames.put(typeName, qualifiedTypeName);
     }
-    for (String newStaticImport : getStrings(inlineMe, "staticImports")) {
+    for (String newStaticImport : inlineMe.get().staticImports()) {
       builder.addStaticImport(newStaticImport);
     }
 
@@ -172,7 +183,7 @@ public final class Inliner extends BugChecker
     if (symbol.isVarArgs()) {
       // If we're calling a varargs method, its inlining *should* have the varargs parameter in a
       // reasonable position. If there are are 0 arguments, we'll need to do more surgery
-      if (callingVars.size() - 1 == varNames.size()) {
+      if (callingVars.size() == varNames.size() - 1) {
         varargsWithEmptyArguments = true;
       } else {
         ImmutableList<String> nonvarargs = callingVars.subList(0, varNames.size() - 1);
@@ -186,7 +197,7 @@ public final class Inliner extends BugChecker
       }
     }
 
-    String replacement = asStringValue(getValue(inlineMe, "replacement").get()).get();
+    String replacement = inlineMe.get().replacement();
     int replacementStart = ((DiagnosticPosition) tree).getStartPosition();
     int replacementEnd = state.getEndPosition(tree);
 
@@ -226,22 +237,25 @@ public final class Inliner extends BugChecker
       // Ex: foo(int a, int... others) -> this.bar(a, others)
       // If caller passes 0 args in the varargs position, we want to remove the preceding comma to
       // make this.bar(a) (as opposed to "this.bar(a, )"
-      String capturePrefixForVarargs =
-          (varargsWithEmptyArguments && i == varNames.size() - 1) ? "(,\\s*)?" : "";
+      boolean terminalVarargsReplacement = varargsWithEmptyArguments && i == varNames.size() - 1;
+      String capturePrefixForVarargs = terminalVarargsReplacement ? "(?:,\\s*)?" : "";
       // We want to avoid replacing a method invocation with the same name as the method.
-      String findArgName =
-          "\\b" + capturePrefixForVarargs + Pattern.quote(varNames.get(i)) + "\\b([^(])";
-      replacement =
-          replacement.replaceAll(findArgName, Matcher.quoteReplacement(callingVars.get(i)) + "$1");
+      Pattern extractArgAndNextToken =
+          Pattern.compile(
+              "\\b" + capturePrefixForVarargs + Pattern.quote(varNames.get(i)) + "\\b([^(])");
+      String replacementResult =
+          Matcher.quoteReplacement(terminalVarargsReplacement ? "" : callingVars.get(i)) + "$1";
+      Matcher matcher = extractArgAndNextToken.matcher(replacement);
+      replacement = matcher.replaceAll(replacementResult);
     }
 
     builder.replace(replacementStart, replacementEnd, replacement);
 
     SuggestedFix fix = builder.build();
 
-    // If there are no imports to add, then there's no new dependencies, so we can verify that it
-    // compilesWithFix(); if there are new imports to add, then we can't validate that it compiles.
-    if (fix.getImportsToAdd().isEmpty() && !allowBreakingChanges) {
+    if (checkFixCompiles && fix.getImportsToAdd().isEmpty()) {
+      // If there are no new imports being added (then there are no new dependencies). Therefore, we
+      // can verify that the fix compiles (if CHECK_FIX_COMPILES is enabled).
       return SuggestedFixes.compilesWithFix(fix, state)
           ? describe(tree, fix, api)
           : Description.NO_MATCH;
@@ -258,7 +272,7 @@ public final class Inliner extends BugChecker
   }
 
   private Description describe(Tree tree, SuggestedFix fix, Api api) {
-    return buildDescription(tree).setMessage(api.deprecationMessage()).addFix(fix).build();
+    return buildDescription(tree).setMessage(api.message()).addFix(fix).build();
   }
 
   @AutoValue
@@ -267,10 +281,10 @@ public final class Inliner extends BugChecker
 
     static Api create(MethodSymbol method, VisitorState state) {
       String extraMessage = "";
-      if (hasAnnotation(method, VALIDATION_DISABLED, state)) {
+      if (hasDirectAnnotationWithSimpleName(method, VALIDATION_DISABLED)) {
         Attribute.Compound inlineMeValidationDisabled =
             method.getRawAttributes().stream()
-                .filter(a -> a.type.tsym.getQualifiedName().contentEquals(VALIDATION_DISABLED))
+                .filter(a -> a.type.tsym.getSimpleName().contentEquals(VALIDATION_DISABLED))
                 .collect(onlyElement());
         String reason = Iterables.getOnlyElement(getStrings(inlineMeValidationDisabled, "value"));
         extraMessage = " NOTE: this is an unvalidated inlining! Reasoning: " + reason;
@@ -278,7 +292,9 @@ public final class Inliner extends BugChecker
       return new AutoValue_Inliner_Api(
           method.owner.getQualifiedName().toString(),
           method.getSimpleName().toString(),
+          enclosingPackage(method).toString(),
           method.isConstructor(),
+          hasAnnotation(method, "java.lang.Deprecated", state),
           extraMessage);
     }
 
@@ -286,13 +302,19 @@ public final class Inliner extends BugChecker
 
     abstract String methodName();
 
+    abstract String packageName();
+
     abstract boolean isConstructor();
+
+    abstract boolean isDeprecated();
 
     abstract String extraMessage();
 
-    final String deprecationMessage() {
-      return shortName()
-          + " is deprecated and should be inlined"
+    final String message() {
+      return "Migrate (via inlining) away from "
+          + (isDeprecated() ? "deprecated " : "")
+          + shortName()
+          + "."
           + extraMessage();
     }
 
@@ -302,11 +324,12 @@ public final class Inliner extends BugChecker
     }
 
     /**
-     * Returns a short, human readable description of this API (e.g., {@code
-     * ClassName.methodName()}).
+     * Returns a short, human readable description of this API in markdown format (e.g., {@code
+     * `ClassName.methodName()`}).
      */
     final String shortName() {
-      return String.format("%s.%s()", simpleClassName(), methodName());
+      String humanReadableClassName = className().replaceFirst(packageName() + ".", "");
+      return String.format("`%s.%s()`", humanReadableClassName, methodName());
     }
 
     /** Returns the simple class name (e.g., {@code ClassName}). */

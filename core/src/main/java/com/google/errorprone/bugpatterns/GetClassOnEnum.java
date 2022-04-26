@@ -31,7 +31,6 @@ import com.sun.source.tree.MethodInvocationTree;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
-    name = "GetClassOnEnum",
     summary = "Calling getClass() on an enum may return a subclass of the enum type",
     severity = WARNING,
     tags = StandardTags.FRAGILE_CODE)

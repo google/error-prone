@@ -41,10 +41,7 @@ import com.sun.tools.javac.code.Types;
  * @author bill.pugh@gmail.com (Bill Pugh)
  * @author eaftan@google.com (Eddie Aftandilian)
  */
-@BugPattern(
-    name = "BadShiftAmount",
-    summary = "Shift by an amount that is out of range",
-    severity = ERROR)
+@BugPattern(summary = "Shift by an amount that is out of range", severity = ERROR)
 public class BadShiftAmount extends BugChecker implements BinaryTreeMatcher {
 
   /**

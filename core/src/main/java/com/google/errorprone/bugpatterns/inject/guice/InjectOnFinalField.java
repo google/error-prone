@@ -26,12 +26,15 @@ import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.VariableTreeMatcher;
+import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.sun.source.tree.VariableTree;
 
-/** @author sgoldfeder@google.com (Steven Goldfeder) */
+/**
+ * @author sgoldfeder@google.com (Steven Goldfeder)
+ */
 @BugPattern(
     name = "GuiceInjectOnFinalField",
     summary =
@@ -46,7 +49,8 @@ public class InjectOnFinalField extends BugChecker implements VariableTreeMatche
   @Override
   public Description matchVariable(VariableTree tree, VisitorState state) {
     if (FINAL_FIELD_WITH_GUICE_INJECT.matches(tree, state)) {
-      return describeMatch(tree, SuggestedFixes.removeModifiers(tree, state, FINAL));
+      return describeMatch(
+          tree, SuggestedFixes.removeModifiers(tree, state, FINAL).orElse(SuggestedFix.emptyFix()));
     }
     return Description.NO_MATCH;
   }

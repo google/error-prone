@@ -46,7 +46,6 @@ import java.util.Objects;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
-    name = "StreamResourceLeak",
     altNames = "FilesLinesLeak",
     summary =
         "Streams that encapsulate a closeable resource should be closed using"

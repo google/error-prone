@@ -34,7 +34,6 @@ import java.util.Map;
  * @author avenet@google.com (Arnaud J. Venet)
  */
 @BugPattern(
-    name = "HardCodedSdCardPath",
     altNames = {"SdCardPath"},
     summary = "Hardcoded reference to /sdcard",
     severity = WARNING)
@@ -54,7 +53,7 @@ public class HardCodedSdCardPath extends BugChecker implements LiteralTreeMatche
           .put("file:///sdcard", SDCARD)
           .put("/data/data", DATA)
           .put("/data/user", DATA)
-          .build();
+          .buildOrThrow();
 
   @Override
   public Description matchLiteral(LiteralTree tree, VisitorState state) {

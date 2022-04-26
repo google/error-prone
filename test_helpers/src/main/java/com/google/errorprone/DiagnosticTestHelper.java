@@ -102,7 +102,7 @@ public class DiagnosticTestHelper {
   }
 
   public static Matcher<Diagnostic<? extends JavaFileObject>> diagnosticLineAndColumn(
-      final long line, final long column) {
+      long line, long column) {
     return new TypeSafeDiagnosingMatcher<Diagnostic<? extends JavaFileObject>>() {
       @Override
       protected boolean matchesSafely(
@@ -136,7 +136,7 @@ public class DiagnosticTestHelper {
   }
 
   public static Matcher<Diagnostic<? extends JavaFileObject>> diagnosticOnLine(
-      final URI fileURI, final long line) {
+      URI fileURI, long line) {
     return new TypeSafeDiagnosingMatcher<Diagnostic<? extends JavaFileObject>>() {
       @Override
       public boolean matchesSafely(
@@ -171,7 +171,7 @@ public class DiagnosticTestHelper {
   }
 
   public static Matcher<Diagnostic<? extends JavaFileObject>> diagnosticOnLine(
-      final URI fileURI, final long line, final Predicate<? super String> matcher) {
+      URI fileURI, long line, Predicate<? super String> matcher) {
     return new TypeSafeDiagnosingMatcher<Diagnostic<? extends JavaFileObject>>() {
       @Override
       public boolean matchesSafely(
@@ -216,7 +216,7 @@ public class DiagnosticTestHelper {
   }
 
   public static Matcher<Diagnostic<? extends JavaFileObject>> diagnosticMessage(
-      final Matcher<String> matcher) {
+      Matcher<String> matcher) {
     return new TypeSafeDiagnosingMatcher<Diagnostic<? extends JavaFileObject>>() {
       @Override
       public boolean matchesSafely(
@@ -282,8 +282,8 @@ public class DiagnosticTestHelper {
   public void assertHasDiagnosticOnAllMatchingLines(
       JavaFileObject source, LookForCheckNameInDiagnostic lookForCheckNameInDiagnostic)
       throws IOException {
-    final List<Diagnostic<? extends JavaFileObject>> diagnostics = getDiagnostics();
-    final LineNumberReader reader =
+    List<Diagnostic<? extends JavaFileObject>> diagnostics = getDiagnostics();
+    LineNumberReader reader =
         new LineNumberReader(CharSource.wrap(source.getCharContent(false)).openStream());
     do {
       String line = reader.readLine();

@@ -41,7 +41,6 @@ import java.util.Map;
 import javax.lang.model.type.TypeKind;
 
 @BugPattern(
-    name = "ArraysAsListPrimitiveArray",
     summary = "Arrays.asList does not autobox primitive arrays, as one might expect.",
     severity = ERROR)
 public class ArraysAsListPrimitiveArray extends BugChecker implements MethodInvocationTreeMatcher {

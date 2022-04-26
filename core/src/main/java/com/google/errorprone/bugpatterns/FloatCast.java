@@ -16,11 +16,13 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.common.collect.Sets.immutableEnumSet;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
 import static com.google.errorprone.util.ASTHelpers.isSameType;
 
+import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.TypeCastTreeMatcher;
@@ -37,25 +39,20 @@ import com.sun.source.tree.TypeCastTree;
 import com.sun.source.util.TreePath;
 import com.sun.tools.javac.code.Symtab;
 import com.sun.tools.javac.code.Type;
-import java.util.EnumSet;
-import java.util.Set;
 import javax.lang.model.type.TypeKind;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
-@BugPattern(
-    name = "FloatCast",
-    summary = "Use parentheses to make the precedence explicit",
-    severity = WARNING)
+@BugPattern(summary = "Use parentheses to make the precedence explicit", severity = WARNING)
 public class FloatCast extends BugChecker implements TypeCastTreeMatcher {
 
-  static final Set<TypeKind> FLOATING_POINT = EnumSet.of(TypeKind.FLOAT, TypeKind.DOUBLE);
+  private static final ImmutableSet<TypeKind> INTEGRAL =
+      immutableEnumSet(TypeKind.LONG, TypeKind.INT);
 
-  static final Set<TypeKind> INTEGRAL = EnumSet.of(TypeKind.LONG, TypeKind.INT);
-
-  static final Matcher<ExpressionTree> IGNORED_METHODS =
+  private static final Matcher<ExpressionTree> IGNORED_METHODS =
       staticMethod().onClass("java.lang.Math").namedAnyOf("floor", "ceil", "signum", "rint");
 
-  static final Matcher<ExpressionTree> POW = staticMethod().onClass("java.lang.Math").named("pow");
+  private static final Matcher<ExpressionTree> POW =
+      staticMethod().onClass("java.lang.Math").named("pow");
 
   @Override
   public Description matchTypeCast(TypeCastTree tree, VisitorState state) {

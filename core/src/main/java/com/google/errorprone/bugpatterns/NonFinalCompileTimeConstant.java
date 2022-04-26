@@ -36,7 +36,6 @@ import com.sun.tools.javac.code.Symbol.VarSymbol;
  * @author cushon@google.com (Liam Miller-Cushon)
  */
 @BugPattern(
-    name = "NonFinalCompileTimeConstant",
     summary = "@CompileTimeConstant parameters should be final or effectively final",
     severity = ERROR)
 public class NonFinalCompileTimeConstant extends BugChecker implements MethodTreeMatcher {
@@ -48,9 +47,6 @@ public class NonFinalCompileTimeConstant extends BugChecker implements MethodTre
     }
     for (VariableTree parameter : tree.getParameters()) {
       VarSymbol sym = ASTHelpers.getSymbol(parameter);
-      if (sym == null) {
-        continue;
-      }
       if (!CompileTimeConstantExpressionMatcher.hasCompileTimeConstantAnnotation(state, sym)) {
         continue;
       }

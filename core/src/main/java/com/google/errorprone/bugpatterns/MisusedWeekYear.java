@@ -29,7 +29,6 @@ import java.util.Optional;
  * <p>This bug caused a Twitter outage in December 2014.
  */
 @BugPattern(
-    name = "MisusedWeekYear",
     summary =
         "Use of \"YYYY\" (week year) in a date pattern without \"ww\" (week in year). "
             + "You probably meant to use \"yyyy\" (year) instead.",

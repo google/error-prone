@@ -38,15 +38,19 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.InjectMatchers;
 import com.google.errorprone.matchers.Matcher;
+import com.google.errorprone.suppliers.Supplier;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.ClassTree;
+import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import java.lang.annotation.Retention;
 import javax.annotation.Nullable;
 
 // TODO(b/180081278): Rename this check to MissingRuntimeRetention
-/** @author sgoldfeder@google.com (Steven Goldfeder) */
+/**
+ * @author sgoldfeder@google.com (Steven Goldfeder)
+ */
 @BugPattern(
     name = "InjectScopeOrQualifierAnnotationRetention",
     summary = "Scoping and qualifier annotations must have runtime retention.",
@@ -82,9 +86,7 @@ public class ScopeOrQualifierAnnotationRetention extends BugChecker implements C
         // Is this in a dagger component?
         ClassTree outer = ASTHelpers.findEnclosingNode(state.getPath(), ClassTree.class);
         if (outer != null
-            && allOf(
-                    InjectMatchers.IS_DAGGER_COMPONENT_OR_MODULE)
-                .matches(outer, state)) {
+            && allOf(InjectMatchers.IS_DAGGER_COMPONENT_OR_MODULE).matches(outer, state)) {
           return Description.NO_MATCH;
         }
         return describe(classTree, state, ASTHelpers.getAnnotation(classSymbol, Retention.class));
@@ -107,8 +109,7 @@ public class ScopeOrQualifierAnnotationRetention extends BugChecker implements C
     }
     AnnotationTree retentionNode = null;
     for (AnnotationTree annotation : classTree.getModifiers().getAnnotations()) {
-      if (ASTHelpers.getSymbol(annotation)
-          .equals(state.getSymbolFromString(RETENTION_ANNOTATION))) {
+      if (ASTHelpers.getSymbol(annotation).equals(JAVA_LANG_ANNOTATION_RETENTION.get(state))) {
         retentionNode = annotation;
       }
     }
@@ -120,4 +121,7 @@ public class ScopeOrQualifierAnnotationRetention extends BugChecker implements C
             .replace(retentionNode, "@Retention(RUNTIME)")
             .build());
   }
+
+  private static final Supplier<Symbol> JAVA_LANG_ANNOTATION_RETENTION =
+      VisitorState.memoize(state -> state.getSymbolFromString(RETENTION_ANNOTATION));
 }

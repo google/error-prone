@@ -33,7 +33,6 @@ import com.sun.source.tree.MethodInvocationTree;
  * @author bhagwani@google.com (Sumit Bhagwani)
  */
 @BugPattern(
-    name = "ProtocolBufferOrdinal",
     summary = "To get the tag number of a protocol buffer enum, use getNumber() instead.",
     severity = ERROR)
 public class ProtocolBufferOrdinal extends BugChecker implements MethodInvocationTreeMatcher {

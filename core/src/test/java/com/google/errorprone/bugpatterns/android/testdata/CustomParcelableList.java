@@ -23,7 +23,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
-/** @author epmjohnston@google.com (Emily P.M. Johnston) */
+/**
+ * @author epmjohnston@google.com (Emily P.M. Johnston)
+ */
 public class CustomParcelableList<T> implements List<T>, Parcelable {
 
   @Override

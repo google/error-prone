@@ -30,9 +30,10 @@ import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
 import com.sun.source.tree.MethodTree;
 
-/** @author bhagwani@google.com (Sumit Bhagwani) */
+/**
+ * @author bhagwani@google.com (Sumit Bhagwani)
+ */
 @BugPattern(
-    name = "CloseableProvides",
     summary = "Providing Closeable resources makes their lifecycle unclear",
     severity = WARNING)
 public class CloseableProvides extends BugChecker implements MethodTreeMatcher {
@@ -40,8 +41,7 @@ public class CloseableProvides extends BugChecker implements MethodTreeMatcher {
   private static final Matcher<MethodTree> CLOSEABLE_PROVIDES_MATCHER =
       allOf(
           InjectMatchers.hasProvidesAnnotation(),
-          methodReturns(Matchers.isSubtypeOf("java.io.Closeable"))
-          );
+          methodReturns(Matchers.isSubtypeOf("java.io.Closeable")));
 
   @Override
   public Description matchMethod(MethodTree tree, VisitorState state) {

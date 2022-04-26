@@ -38,7 +38,7 @@ public final class InvalidBlockTagTest {
         .addInputLines(
             "Test.java", //
             "interface Test {",
-            "  /** @returns anything */",
+            "  /** @return anything */",
             "  void foo();",
             "}")
         .addOutputLines(

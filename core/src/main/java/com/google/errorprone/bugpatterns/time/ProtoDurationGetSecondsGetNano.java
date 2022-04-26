@@ -35,7 +35,6 @@ import com.sun.source.tree.MethodInvocationTree;
  * @author kak@google.com (Kurt Alfred Kluever)
  */
 @BugPattern(
-    name = "ProtoDurationGetSecondsGetNano",
     summary = "getNanos() only accesses the underlying nanosecond-adjustment of the duration.",
     explanation =
         "If you call duration.getNanos(), you must also call duration.getSeconds() in 'nearby' "

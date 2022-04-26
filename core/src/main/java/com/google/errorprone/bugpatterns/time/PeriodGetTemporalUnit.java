@@ -18,6 +18,7 @@ package com.google.errorprone.bugpatterns.time;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.bugpatterns.time.DurationGetTemporalUnit.getInvalidChronoUnit;
 
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -36,7 +37,6 @@ import java.util.EnumSet;
  * {@code MONTHS}, or {@code DAYS}.
  */
 @BugPattern(
-    name = "PeriodGetTemporalUnit",
     summary = "Period.get() only works with YEARS, MONTHS, or DAYS.",
     explanation =
         "`Period.get(TemporalUnit)` only works when passed `ChronoUnit.YEARS`, `ChronoUnit.MONTHS`,"
@@ -44,8 +44,9 @@ import java.util.EnumSet;
             + " `UnsupportedTemporalTypeException`.",
     severity = ERROR)
 public final class PeriodGetTemporalUnit extends BugChecker implements MethodInvocationTreeMatcher {
-  private static final EnumSet<ChronoUnit> INVALID_TEMPORAL_UNITS =
-      EnumSet.complementOf(EnumSet.of(ChronoUnit.YEARS, ChronoUnit.MONTHS, ChronoUnit.DAYS));
+  private static final ImmutableSet<ChronoUnit> INVALID_TEMPORAL_UNITS =
+      ImmutableSet.copyOf(
+          EnumSet.complementOf(EnumSet.of(ChronoUnit.YEARS, ChronoUnit.MONTHS, ChronoUnit.DAYS)));
 
   private static final Matcher<ExpressionTree> MATCHER =
       Matchers.instanceMethod()

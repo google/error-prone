@@ -19,6 +19,7 @@ package com.google.errorprone;
 import static com.google.common.base.Preconditions.checkState;
 import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.common.truth.Truth.assertWithMessage;
+import static com.google.errorprone.BugCheckerInfo.canonicalName;
 import static com.google.errorprone.FileObjects.forResource;
 import static com.google.errorprone.FileObjects.forSourceLines;
 import static java.nio.charset.StandardCharsets.UTF_8;
@@ -34,7 +35,6 @@ import com.google.errorprone.DiagnosticTestHelper.LookForCheckNameInDiagnostic;
 import com.google.errorprone.annotations.CheckReturnValue;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.scanner.ScannerSupplier;
-import com.google.errorprone.util.RuntimeVersion;
 import com.sun.tools.javac.api.JavacTool;
 import com.sun.tools.javac.main.Main.Result;
 import java.io.BufferedWriter;
@@ -114,7 +114,8 @@ public class CompilationTestHelper {
   public static CompilationTestHelper newInstance(
       Class<? extends BugChecker> checker, Class<?> clazz) {
     ScannerSupplier scannerSupplier = ScannerSupplier.fromBugCheckerClasses(checker);
-    String checkName = checker.getAnnotation(BugPattern.class).name();
+    String checkName =
+        canonicalName(checker.getSimpleName(), checker.getAnnotation(BugPattern.class));
     return new CompilationTestHelper(scannerSupplier, checkName, clazz);
   }
 
@@ -135,7 +136,7 @@ public class CompilationTestHelper {
    * Creates a list of arguments to pass to the compiler. Uses DEFAULT_ARGS as the base and appends
    * the overridden classpath, if provided, and any extraArgs that were provided.
    */
-  private static List<String> buildArguments(
+  private static ImmutableList<String> buildArguments(
       @Nullable List<Class<?>> overrideClasspath, List<String> extraArgs) {
     ImmutableList.Builder<String> result = ImmutableList.<String>builder().addAll(DEFAULT_ARGS);
     getOverrideClasspath(overrideClasspath)
@@ -210,9 +211,6 @@ public class CompilationTestHelper {
   }
 
   public CompilationTestHelper addModules(String... modules) {
-    if (!RuntimeVersion.isAtLeast9()) {
-      return this;
-    }
     return setArgs(
         stream(modules)
             .map(m -> String.format("--add-exports=%s=ALL-UNNAMED", m))

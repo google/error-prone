@@ -19,7 +19,6 @@ package com.google.errorprone.bugpatterns;
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
-import com.google.errorprone.ErrorProneFlags;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -31,8 +30,7 @@ public class MethodCanBeStaticTest {
       CompilationTestHelper.newInstance(MethodCanBeStatic.class, getClass());
 
   private final BugCheckerRefactoringTestHelper refactoringHelper =
-      BugCheckerRefactoringTestHelper.newInstance(
-          new MethodCanBeStatic(ErrorProneFlags.empty()), getClass());
+      BugCheckerRefactoringTestHelper.newInstance(MethodCanBeStatic.class, getClass());
 
   @Test
   public void positive() {
@@ -137,7 +135,12 @@ public class MethodCanBeStaticTest {
   public void positiveRecursive() {
     refactoringHelper
         .addInputLines(
-            "Test.java", "class Test {", "  private int a(int x) {", "    return a(x);", "  }", "}")
+            "Test.java", //
+            "class Test {",
+            "  private int a(int x) {",
+            "    return a(x);",
+            "  }",
+            "}")
         .addOutputLines(
             "Test.java",
             "class Test {",
@@ -171,6 +174,21 @@ public class MethodCanBeStaticTest {
             "  // BUG: Diagnostic contains: private static <T> T f(",
             "  private <T> T f(int x, int y) {",
             "    return null;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void negativeSuppressedByKeep() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.errorprone.annotations.Keep;",
+            "class Test {",
+            "  @Keep",
+            "  private int add(int x, int y) {",
+            "    return x + y;",
             "  }",
             "}")
         .doTest();
@@ -372,9 +390,18 @@ public class MethodCanBeStaticTest {
   @Test
   public void negative_baseClass() {
     testHelper
-        .addSourceLines("A.java", "class A {", "  void foo() {}", "}")
         .addSourceLines(
-            "B.java", "class B extends A {", "  private void bar() {", "    foo();", "  }", "}")
+            "A.java", //
+            "class A {",
+            "  void foo() {}",
+            "}")
+        .addSourceLines(
+            "B.java", //
+            "class B extends A {",
+            "  private void bar() {",
+            "    foo();",
+            "  }",
+            "}")
         .doTest();
   }
 
@@ -442,6 +469,19 @@ public class MethodCanBeStaticTest {
             "  }",
             "}")
         .setArgs(ImmutableList.of("-XepOpt:MethodCanBeStatic:FindingPerSite"))
+        .doTest();
+  }
+
+  @Test
+  public void abstractMethod_notFlagged() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  private static abstract class Foo {",
+            "    abstract void frobnicate();",
+            "  }",
+            "}")
         .doTest();
   }
 }

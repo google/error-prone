@@ -16,10 +16,7 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static org.junit.Assume.assumeFalse;
-
 import com.google.errorprone.CompilationTestHelper;
-import com.google.errorprone.util.RuntimeVersion;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -137,24 +134,6 @@ public class EqualsHashCodeTest {
             "class Test {",
             "  public boolean equals(@Nullable Object o) {",
             "    return super.equals(o);",
-            "  }",
-            "}")
-        .doTest();
-  }
-
-  @Test
-  public void dontFlagJavaLangObject() {
-    assumeFalse(RuntimeVersion.isAtLeast9());
-    compilationHelper
-        .addSourceLines(
-            "Object.java",
-            "package java.lang;",
-            "public class Object {",
-            "  public boolean equals(Object that) {",
-            "    return this == that;",
-            "  }",
-            "  public int hashCode() {",
-            "    return 1;",
             "  }",
             "}")
         .doTest();

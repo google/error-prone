@@ -25,7 +25,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** @author alexeagle@google.com (Alex Eagle) */
+/**
+ * @author alexeagle@google.com (Alex Eagle)
+ */
 @RunWith(JUnit4.class)
 public class CollectionIncompatibleTypeTest {
   private final CompilationTestHelper compilationHelper =
@@ -292,6 +294,22 @@ public class CollectionIncompatibleTypeTest {
             "  static void b() {",
             "    // BUG: Diagnostic contains: Integer is not compatible with String",
             "    a(Sets::difference);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void wildcardBoundedCollectionTypes() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.util.List;",
+            "import java.util.Set;",
+            "public interface Test {",
+            "  static void test(Set<? extends List<Integer>> xs, Set<? extends Set<Integer>> ys) {",
+            "    // BUG: Diagnostic contains:",
+            "    xs.containsAll(ys);",
             "  }",
             "}")
         .doTest();

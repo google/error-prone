@@ -34,6 +34,7 @@ import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.JUnitMatchers;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
+import com.google.errorprone.suppliers.Supplier;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.MethodTree;
@@ -41,12 +42,12 @@ import com.sun.source.util.TreePath;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.TypeSymbol;
 import com.sun.tools.javac.code.Type;
+import com.sun.tools.javac.util.Name;
 import java.io.InputStream;
 import javax.lang.model.element.ElementKind;
 
 /** Checks that InputStreams should override int read(byte[], int, int); */
 @BugPattern(
-    name = "InputStreamSlowMultibyteRead",
     summary =
         "Please also override int read(byte[], int, int), otherwise multi-byte reads from this "
             + "input stream are likely to be slow.",
@@ -90,7 +91,7 @@ public class InputStreamSlowMultibyteRead extends BugChecker implements ClassTre
         ASTHelpers.resolveExistingMethod(
             state,
             thisClassSymbol,
-            state.getName("read"),
+            READ.get(state),
             ImmutableList.of(byteArrayType, intType, intType),
             ImmutableList.of());
 
@@ -125,4 +126,6 @@ public class InputStreamSlowMultibyteRead extends BugChecker implements ClassTre
 
     return describeMatch(readByteMethod);
   }
+
+  private static final Supplier<Name> READ = VisitorState.memoize(state -> state.getName("read"));
 }

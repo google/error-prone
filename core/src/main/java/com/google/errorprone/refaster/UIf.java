@@ -19,6 +19,7 @@ package com.google.errorprone.refaster;
 import com.google.auto.value.AutoValue;
 import com.google.common.base.Function;
 import com.google.common.base.Optional;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.google.errorprone.refaster.ControlFlowVisitor.Result;
 import com.sun.source.tree.IfTree;
@@ -61,7 +62,7 @@ abstract class UIf implements UStatement, IfTree {
   }
 
   private static Function<Unifier, Choice<Unifier>> unifyUStatementWithSingleStatement(
-      @Nullable final UStatement toUnify, @Nullable final StatementTree target) {
+      @Nullable UStatement toUnify, @Nullable StatementTree target) {
     return (Unifier unifier) -> {
       if (toUnify == null) {
         return (target == null) ? Choice.of(unifier) : Choice.<Unifier>none();
@@ -77,17 +78,17 @@ abstract class UIf implements UStatement, IfTree {
   @Override
   @Nullable
   public Choice<UnifierWithUnconsumedStatements> apply(UnifierWithUnconsumedStatements state) {
-    java.util.List<? extends StatementTree> unconsumedStatements = state.unconsumedStatements();
+    ImmutableList<? extends StatementTree> unconsumedStatements = state.unconsumedStatements();
     if (unconsumedStatements.isEmpty()) {
       return Choice.none();
     }
-    final java.util.List<? extends StatementTree> unconsumedStatementsTail =
+    ImmutableList<? extends StatementTree> unconsumedStatementsTail =
         unconsumedStatements.subList(1, unconsumedStatements.size());
     StatementTree firstStatement = unconsumedStatements.get(0);
     if (firstStatement.getKind() != Kind.IF) {
       return Choice.none();
     }
-    final IfTree ifTree = (IfTree) firstStatement;
+    IfTree ifTree = (IfTree) firstStatement;
     Unifier unifier = state.unifier();
     Choice<UnifierWithUnconsumedStatements> forwardMatch =
         getCondition()

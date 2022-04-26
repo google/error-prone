@@ -235,4 +235,54 @@ public final class RedundantOverrideTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void paramAnnotationAddedInOverride() {
+    testHelper
+        .addSourceLines(
+            "DemoAnnotation.java", //
+            "package foo;",
+            "@interface DemoAnnotation {}")
+        .addSourceLines(
+            "A.java", //
+            "package foo;",
+            "class A {",
+            "  protected void swap(int a) {}",
+            "}")
+        .addSourceLines(
+            "B.java",
+            "package foo;",
+            "class B extends A {",
+            "  @Override",
+            "  protected void swap(@DemoAnnotation int a) {",
+            "    super.swap(a);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void paramAnnotationOmittedInOverride() {
+    testHelper
+        .addSourceLines(
+            "DemoAnnotation.java", //
+            "package foo;",
+            "@interface DemoAnnotation {}")
+        .addSourceLines(
+            "A.java", //
+            "package foo;",
+            "class A {",
+            "  protected void swap(@DemoAnnotation int a) {}",
+            "}")
+        .addSourceLines(
+            "B.java",
+            "package foo;",
+            "class B extends A {",
+            "  @Override",
+            "  protected void swap(int a) {",
+            "    super.swap(a);",
+            "  }",
+            "}")
+        .doTest();
+  }
 }

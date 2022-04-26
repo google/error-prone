@@ -34,7 +34,9 @@ import java.util.List;
 import java.util.Set;
 import javax.annotation.Nullable;
 
-/** @author alexeagle@google.com (Alex Eagle) */
+/**
+ * @author alexeagle@google.com (Alex Eagle)
+ */
 public class SuggestedFix implements Fix {
 
   private final String shortDescription;
@@ -336,7 +338,7 @@ public class SuggestedFix implements Fix {
      */
     private static void checkNotSyntheticConstructor(Tree tree) {
       if (tree instanceof MethodTree && ASTHelpers.isGeneratedConstructor((MethodTree) tree)) {
-        throw new AssertionError("Cannot edit synthetic AST nodes");
+        throw new IllegalArgumentException("Cannot edit synthetic AST nodes");
       }
     }
   }

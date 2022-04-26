@@ -31,7 +31,7 @@ import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.Tree.Kind;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
-@BugPattern(name = "DeadThread", summary = "Thread created but not started", severity = ERROR)
+@BugPattern(summary = "Thread created but not started", severity = ERROR)
 public class DeadThread extends BugChecker implements NewClassTreeMatcher {
 
   private static final Matcher<ExpressionTree> NEW_THREAD =

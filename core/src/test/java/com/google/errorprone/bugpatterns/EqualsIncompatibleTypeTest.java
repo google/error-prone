@@ -25,7 +25,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** @author avenet@google.com (Arnaud J. Venet) */
+/**
+ * @author avenet@google.com (Arnaud J. Venet)
+ */
 @RunWith(JUnit4.class)
 public class EqualsIncompatibleTypeTest {
   private final CompilationTestHelper compilationHelper =
@@ -116,6 +118,128 @@ public class EqualsIncompatibleTypeTest {
             "class Test {",
             "  boolean t(Stream<Integer> xs, Object x) {",
             "    return xs.anyMatch(x::equals);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void wildcards_whenIncompatible() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "",
+            "public class Test {",
+            "  public void test(Class<? extends Integer> a, Class<? extends String> b) {",
+            "    // BUG: Diagnostic contains:",
+            "    a.equals(b);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void unconstrainedWildcard_compatibleWithAnything() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;",
+            "",
+            "public class Test {",
+            "  public void test(java.lang.reflect.Method m, Class<?> c) {",
+            "    TestProtoMessage.class.equals(m.getParameterTypes()[0]);",
+            "    TestProtoMessage.class.equals(c);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void enumsCanBeEqual() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  enum E {A, B}",
+            "  public void test() {",
+            "    E.A.equals(E.B);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void protoBuildersCannotBeEqual() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;",
+            "import com.google.errorprone.bugpatterns.proto.ProtoTest.TestOneOfMessage;",
+            "",
+            "public class Test {",
+            "  public void test() {",
+            "    // BUG: Diagnostic contains: . Though",
+            "    TestProtoMessage.newBuilder().equals(TestProtoMessage.newBuilder());",
+            "    // BUG: Diagnostic contains:",
+            "    TestProtoMessage.newBuilder().equals(TestOneOfMessage.newBuilder());",
+            "    // BUG: Diagnostic contains:",
+            "    TestProtoMessage.newBuilder().equals(TestOneOfMessage.getDefaultInstance());",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void enumsNamedBuilderCanBeEqual() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "public class Test {",
+            "  enum FooBuilder { A }",
+            "  public boolean test(FooBuilder a, FooBuilder b) {",
+            "    return a.equals(b);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void flaggedOff_protoBuildersNotConsideredIncomparable() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;",
+            "",
+            "public class Test {",
+            "  public void test() {",
+            "    TestProtoMessage.newBuilder().equals(TestProtoMessage.newBuilder());",
+            "    TestProtoMessage.getDefaultInstance()",
+            "        .equals(TestProtoMessage.getDefaultInstance());",
+            "  }",
+            "}")
+        .setArgs("-XepOpt:TypeCompatibility:TreatBuildersAsIncomparable=false")
+        .doTest();
+  }
+
+  @Test
+  public void protoBuilderComparedWithinAutoValue() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.auto.value.AutoValue;",
+            "import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;",
+            "@AutoValue",
+            "abstract class Test {",
+            "  abstract TestProtoMessage.Builder b();",
+            "}")
+        .addSourceLines(
+            "AutoValue_Test.java",
+            "import javax.annotation.processing.Generated;",
+            "@Generated(\"com.google.auto.value.processor.AutoValueProcessor\")",
+            "abstract class AutoValue_Test extends Test {",
+            "  @Override",
+            "  public boolean equals(Object o) {",
+            "    return ((Test) o).b().equals(b());",
             "  }",
             "}")
         .doTest();

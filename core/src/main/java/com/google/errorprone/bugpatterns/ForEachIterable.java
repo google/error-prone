@@ -53,10 +53,7 @@ import java.util.List;
 import javax.annotation.Nullable;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
-@BugPattern(
-    name = "ForEachIterable",
-    summary = "This loop can be replaced with an enhanced for loop.",
-    severity = SUGGESTION)
+@BugPattern(summary = "This loop can be replaced with an enhanced for loop.", severity = SUGGESTION)
 public class ForEachIterable extends BugChecker implements VariableTreeMatcher {
 
   private static final Matcher<ExpressionTree> HAS_NEXT =

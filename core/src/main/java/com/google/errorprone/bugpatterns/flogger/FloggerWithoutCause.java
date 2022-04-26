@@ -39,7 +39,6 @@ import javax.lang.model.type.TypeKind;
  * Detects Flogger log statements that pass Exceptions to the log method instead of using withCause.
  */
 @BugPattern(
-    name = "FloggerWithoutCause",
     summary = "Use withCause to associate Exceptions with log statements",
     severity = BugPattern.SeverityLevel.WARNING)
 public class FloggerWithoutCause extends BugChecker
@@ -52,7 +51,7 @@ public class FloggerWithoutCause extends BugChecker
       instanceMethod().onDescendantOf("com.google.common.flogger.LoggingApi").named("withCause");
 
   @Override
-  public Description matchMethodInvocation(MethodInvocationTree tree, final VisitorState state) {
+  public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
     if (!LOG_METHOD.matches(tree, state)) {
       return Description.NO_MATCH;
     }
@@ -62,7 +61,7 @@ public class FloggerWithoutCause extends BugChecker
       return Description.NO_MATCH;
     }
 
-    final AtomicBoolean withCause = new AtomicBoolean(false);
+    AtomicBoolean withCause = new AtomicBoolean(false);
     tree.accept(
         new TreeScanner<Void, Void>() {
           @Override
@@ -95,7 +94,7 @@ public class FloggerWithoutCause extends BugChecker
             && ASTHelpers.isSubtype(argType, state.getSymtab().throwableType, state)) {
           return arg;
         }
-      } catch (Throwable t) {
+      } catch (RuntimeException t) {
         // ignore completion failures
       }
     }

@@ -24,6 +24,7 @@ import static com.google.errorprone.matchers.Matchers.instanceMethod;
 import static com.google.errorprone.matchers.Matchers.staticEqualsInvocation;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
 import static com.google.errorprone.matchers.Matchers.toType;
+import static com.google.errorprone.util.ASTHelpers.getGeneratedBy;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.getReceiverType;
 import static com.google.errorprone.util.ASTHelpers.getType;
@@ -44,9 +45,10 @@ import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Type;
 
-/** @author avenet@google.com (Arnaud J. Venet) */
+/**
+ * @author avenet@google.com (Arnaud J. Venet)
+ */
 @BugPattern(
-    name = "EqualsIncompatibleType",
     summary = "An equality test between objects with incompatible types always returns false",
     severity = WARNING)
 public class EqualsIncompatibleType extends BugChecker
@@ -70,7 +72,7 @@ public class EqualsIncompatibleType extends BugChecker
 
   @Override
   public Description matchMethodInvocation(
-      MethodInvocationTree invocationTree, final VisitorState state) {
+      MethodInvocationTree invocationTree, VisitorState state) {
     if (!STATIC_EQUALS_MATCHER.matches(invocationTree, state)
         && !INSTANCE_EQUALS_MATCHER.matches(invocationTree, state)) {
       return NO_MATCH;
@@ -131,6 +133,10 @@ public class EqualsIncompatibleType extends BugChecker
       return NO_MATCH;
     }
 
+    if (getGeneratedBy(state).contains("com.google.auto.value.processor.AutoValueProcessor")) {
+      return NO_MATCH;
+    }
+
     // When we reach this point, we know that the two following facts hold:
     // (1) The types of the receiver and the argument to the eventual invocation of
     //     java.lang.Object.equals() are incompatible.
@@ -142,12 +148,13 @@ public class EqualsIncompatibleType extends BugChecker
     return buildDescription(invocationTree)
         .setMessage(
             getMessage(
-                invocationTree,
-                receiverType,
-                argumentType,
-                compatibilityReport.lhs(),
-                compatibilityReport.rhs(),
-                state))
+                    invocationTree,
+                    receiverType,
+                    argumentType,
+                    compatibilityReport.lhs(),
+                    compatibilityReport.rhs(),
+                    state)
+                + compatibilityReport.extraReason())
         .build();
   }
 
@@ -202,5 +209,4 @@ public class EqualsIncompatibleType extends BugChecker
       return argumentTypeString;
     }
   }
-
 }

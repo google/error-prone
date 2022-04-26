@@ -42,7 +42,6 @@ import java.util.Arrays;
  * DateTimeException}).
  */
 @BugPattern(
-    name = "DurationTemporalUnit",
     summary = "Duration APIs only work for DAYS or exact durations.",
     explanation =
         "Duration APIs only work for TemporalUnits with exact durations or"

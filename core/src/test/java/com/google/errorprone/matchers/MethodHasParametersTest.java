@@ -33,7 +33,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** @author eaftan@google.com (Eddie Aftandilian) */
+/**
+ * @author eaftan@google.com (Eddie Aftandilian)
+ */
 @RunWith(JUnit4.class)
 public class MethodHasParametersTest extends CompilerBasedAbstractTest {
 
@@ -118,7 +120,7 @@ public class MethodHasParametersTest extends CompilerBasedAbstractTest {
     public abstract void assertDone();
   }
 
-  private Scanner methodMatches(final boolean shouldMatch, final MethodHasParameters toMatch) {
+  private Scanner methodMatches(boolean shouldMatch, MethodHasParameters toMatch) {
     ScannerTest test =
         new ScannerTest() {
           private boolean matched = false;

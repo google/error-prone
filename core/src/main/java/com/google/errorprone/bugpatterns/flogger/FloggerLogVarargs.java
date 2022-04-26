@@ -35,9 +35,10 @@ import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
 
-/** @author Graeme Morgan (ghm@google.com) */
+/**
+ * @author Graeme Morgan (ghm@google.com)
+ */
 @BugPattern(
-    name = "FloggerLogVarargs",
     summary = "logVarargs should be used to pass through format strings and arguments.",
     severity = ERROR)
 public final class FloggerLogVarargs extends BugChecker implements MethodInvocationTreeMatcher {

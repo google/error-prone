@@ -28,7 +28,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
-    name = "UseEnumSwitch",
     summary = "Prefer using a switch instead of a chained if-else for enums",
     severity = SUGGESTION)
 public class UseEnumSwitch extends AbstractUseSwitch {

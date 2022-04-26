@@ -42,7 +42,6 @@ import com.sun.tools.javac.tree.JCTree;
  * @author amalloy@google.com (Alan Malloy)
  */
 @BugPattern(
-    name = "WithSignatureDiscouraged",
     summary = "withSignature is discouraged. Prefer .named and/or .withParameters where possible.",
     severity = WARNING)
 public class WithSignatureDiscouraged extends BugChecker implements MethodInvocationTreeMatcher {

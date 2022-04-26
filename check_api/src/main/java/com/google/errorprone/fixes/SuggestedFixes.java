@@ -34,6 +34,7 @@ import static com.sun.tools.javac.code.TypeTag.CLASS;
 import static com.sun.tools.javac.util.Position.NOPOS;
 import static java.util.stream.Collectors.joining;
 
+import com.google.auto.value.AutoValue;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Joiner;
 import com.google.common.base.Objects;
@@ -51,6 +52,7 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.apply.DescriptionBasedDiff;
 import com.google.errorprone.apply.ImportOrganizer;
 import com.google.errorprone.apply.SourceFile;
+import com.google.errorprone.fixes.SuggestedFixes.FixCompiler.Result;
 import com.google.errorprone.util.ASTHelpers;
 import com.google.errorprone.util.ErrorProneToken;
 import com.google.errorprone.util.FindIdentifiers;
@@ -96,15 +98,18 @@ import com.sun.tools.javac.parser.Tokens.Comment;
 import com.sun.tools.javac.parser.Tokens.TokenKind;
 import com.sun.tools.javac.tree.DCTree;
 import com.sun.tools.javac.tree.DCTree.DCDocComment;
+import com.sun.tools.javac.tree.EndPosTable;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 import com.sun.tools.javac.util.Context;
+import com.sun.tools.javac.util.JCDiagnostic;
 import com.sun.tools.javac.util.Options;
 import com.sun.tools.javac.util.Position;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Target;
+import java.lang.reflect.Method;
 import java.net.JarURLConnection;
 import java.net.URI;
 import java.util.ArrayDeque;
@@ -122,6 +127,7 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.stream.IntStream;
 import java.util.stream.StreamSupport;
 import javax.annotation.Nullable;
 import javax.lang.model.element.Element;
@@ -267,7 +273,7 @@ public final class SuggestedFixes {
   /** Removes modifiers from the given class, method, or field declaration. */
   public static Optional<SuggestedFix> removeModifiers(
       Tree tree, VisitorState state, Modifier... modifiers) {
-    Set<Modifier> toRemove = ImmutableSet.copyOf(modifiers);
+    ImmutableSet<Modifier> toRemove = ImmutableSet.copyOf(modifiers);
     ModifiersTree originalModifiers = getModifiers(tree);
     if (originalModifiers == null) {
       return Optional.empty();
@@ -445,6 +451,11 @@ public final class SuggestedFixes {
   /**
    * Provides a name to use for the (fully qualified) method provided in {@code qualifiedName},
    * trying to static import it if possible. Adds imports to {@code fix} as appropriate.
+   *
+   * <p>The heuristic is quite conservative: it won't add a static import if an identifier with the
+   * same name is referenced anywhere in the class. Otherwise, we'd have to implement overload
+   * resolution, and ensure that adding a new static import doesn't change the semantics of existing
+   * code.
    */
   public static String qualifyStaticImport(
       String qualifiedName, SuggestedFix.Builder fix, VisitorState state) {
@@ -494,12 +505,30 @@ public final class SuggestedFixes {
         leaf instanceof DCTree.DCEndPosTree, "no end position information for %s", leaf.getKind());
     DCTree.DCEndPosTree<?> node = (DCTree.DCEndPosTree<?>) leaf;
     DCTree.DCDocComment comment = (DCTree.DCDocComment) docPath.getDocComment();
-    fix.replace((int) node.getSourcePosition(comment), node.getEndPos(comment), replacement);
+    fix.replace(
+        node.pos(comment).getStartPosition(), endPosition(node, comment, docPath), replacement);
+  }
+
+  private static int endPosition(
+      DCTree.DCEndPosTree<?> node, DCTree.DCDocComment comment, DocTreePath docPath) {
+    try {
+      Method method = DCTree.DCEndPosTree.class.getMethod("getEndPos", DCTree.DCDocComment.class);
+      return (int) method.invoke(node, comment);
+    } catch (NoSuchMethodException e) {
+      // continue below
+    } catch (ReflectiveOperationException e) {
+      throw new LinkageError(e.getMessage(), e);
+    }
+
+    JCDiagnostic.DiagnosticPosition pos = node.pos(comment);
+    EndPosTable endPositions =
+        ((JCCompilationUnit) docPath.getTreePath().getCompilationUnit()).endPositions;
+    return pos.getEndPosition(endPositions);
   }
 
   /**
-   * Fully qualifies a javadoc reference, e.g. for replacing {@code {@link List}} with {@code {@link
-   * java.util.List}}
+   * Fully qualifies a javadoc reference, e.g. for replacing <code>{&#64;link List}</code> with
+   * <code>{&#64;link java.util.List}</code>.
    *
    * @param fix the fix builder to add to
    * @param docPath the path to a {@link DCTree.DCReference} element
@@ -531,6 +560,28 @@ public final class SuggestedFixes {
   }
 
   /**
+   * Removes {@code tree} from {@code trees}, assuming that {@code trees} represents a
+   * comma-separated list of expressions containing {@code tree}.
+   *
+   * <p>Can be used to remove a single element from an annotation. Does not remove the enclosing
+   * parentheses if no elements are left.
+   */
+  public static SuggestedFix removeElement(
+      ExpressionTree tree, List<? extends ExpressionTree> trees, VisitorState state) {
+    int indexOf = trees.indexOf(tree);
+    checkArgument(indexOf != -1, "trees must contain tree");
+    if (trees.size() == 1) {
+      return SuggestedFix.delete(tree);
+    }
+    int startPos = getStartPosition(tree);
+    int endPos = state.getEndPosition(tree);
+    if (indexOf == trees.size() - 1) {
+      return SuggestedFix.replace(state.getEndPosition(trees.get(indexOf - 1)), endPos, "");
+    }
+    return SuggestedFix.replace(startPos, getStartPosition(trees.get(indexOf + 1)), "");
+  }
+
+  /**
    * Instructs {@link #addMembers(ClassTree, VisitorState, AdditionPosition, String, String...)}
    * whether to add the new member(s) at the beginning of the class, or at the end.
    */
@@ -541,7 +592,7 @@ public final class SuggestedFixes {
       int pos(ClassTree tree, VisitorState state) {
         // We scan backwards from the first member, looking for the class's opening { token.
         int classStart = getStartPosition(tree);
-        List<? extends Tree> members =
+        ImmutableList<? extends Tree> members =
             tree.getMembers().stream()
                 /* Throw away generated members, which may be synthetic, or whose start
                 position may be the same as the class's. We only want to look at members defined
@@ -648,7 +699,7 @@ public final class SuggestedFixes {
    * replacement}.
    */
   public static SuggestedFix renameVariable(
-      VariableTree tree, final String replacement, VisitorState state) {
+      VariableTree tree, String replacement, VisitorState state) {
     String name = tree.getName().toString();
     int typeEndPos = state.getEndPosition(tree.getType());
     // handle implicit lambda parameter types
@@ -665,9 +716,9 @@ public final class SuggestedFixes {
    * replacement}.
    */
   public static SuggestedFix renameVariableUsages(
-      VariableTree tree, final String replacement, VisitorState state) {
-    final SuggestedFix.Builder fix = SuggestedFix.builder();
-    final Symbol.VarSymbol sym = getSymbol(tree);
+      VariableTree tree, String replacement, VisitorState state) {
+    SuggestedFix.Builder fix = SuggestedFix.builder();
+    Symbol.VarSymbol sym = getSymbol(tree);
     new TreeScanner<Void, Void>() {
       @Override
       public Void visitIdentifier(IdentifierTree tree, Void unused) {
@@ -692,8 +743,7 @@ public final class SuggestedFixes {
   }
 
   /** Be warned, only changes method name at the declaration. */
-  public static SuggestedFix renameMethod(
-      MethodTree tree, final String replacement, VisitorState state) {
+  public static SuggestedFix renameMethod(MethodTree tree, String replacement, VisitorState state) {
     // Search tokens from beginning of method tree to beginning of method body.
     int basePos = getStartPosition(tree);
     int endPos =
@@ -713,7 +763,7 @@ public final class SuggestedFixes {
    * replacement}.
    */
   public static SuggestedFix renameMethodWithInvocations(
-      MethodTree tree, final String replacement, VisitorState state) {
+      MethodTree tree, String replacement, VisitorState state) {
     SuggestedFix.Builder fix = SuggestedFix.builder().merge(renameMethod(tree, replacement, state));
     MethodSymbol sym = getSymbol(tree);
     new TreeScanner<Void, Void>() {
@@ -844,7 +894,7 @@ public final class SuggestedFixes {
 
   /** Deletes the given exceptions from a method's throws clause. */
   public static Fix deleteExceptions(
-      MethodTree tree, final VisitorState state, List<ExpressionTree> toDelete) {
+      MethodTree tree, VisitorState state, List<ExpressionTree> toDelete) {
     List<? extends ExpressionTree> trees = tree.getThrows();
     if (toDelete.size() == trees.size()) {
       return SuggestedFix.replace(
@@ -1033,7 +1083,7 @@ public final class SuggestedFixes {
       return;
     }
     fixBuilder.merge(
-        updateAnnotationArgumentValues(suppressAnnotationTree, "value", newWarningSet));
+        updateAnnotationArgumentValues(suppressAnnotationTree, state, "value", newWarningSet));
   }
 
   private static List<? extends AnnotationTree> findAnnotationsTree(Tree tree) {
@@ -1102,21 +1152,41 @@ public final class SuggestedFixes {
   }
 
   /**
+   * @deprecated use {@link #updateAnnotationArgumentValues(AnnotationTree, VisitorState, String,
+   *     Collection)} instead
+   */
+  @Deprecated
+  public static SuggestedFix.Builder updateAnnotationArgumentValues(
+      AnnotationTree annotation, String parameterName, Collection<String> newValues) {
+    return updateAnnotationArgumentValues(annotation, null, parameterName, newValues);
+  }
+
+  /**
    * Returns a fix that updates {@code newValues} to the {@code parameterName} argument for {@code
    * annotation}, regardless of whether there is already an argument.
    *
    * <p>N.B.: {@code newValues} are source-code strings, not string literal values.
    */
   public static SuggestedFix.Builder updateAnnotationArgumentValues(
-      AnnotationTree annotation, String parameterName, Collection<String> newValues) {
+      AnnotationTree annotation,
+      VisitorState state,
+      String parameterName,
+      Collection<String> newValues) {
     if (annotation.getArguments().isEmpty()) {
       String parameterPrefix = parameterName.equals("value") ? "" : (parameterName + " = ");
       return SuggestedFix.builder()
           .replace(
               annotation,
-              annotation
-                  .toString()
-                  .replaceFirst("\\(\\)", "(" + parameterPrefix + newArgument(newValues) + ")"));
+              '@'
+                  // TODO(cushon): remove null check once deprecated overload of
+                  // updateAnnotationArgumentValues is removed
+                  + (state != null
+                      ? state.getSourceForNode(annotation.getAnnotationType())
+                      : annotation.getAnnotationType().toString())
+                  + '('
+                  + parameterPrefix
+                  + newArgument(newValues)
+                  + ')');
     }
     Optional<ExpressionTree> maybeExistingArgument = findArgument(annotation, parameterName);
     if (!maybeExistingArgument.isPresent()) {
@@ -1220,75 +1290,15 @@ public final class SuggestedFixes {
       return true;
     }
 
-    JCCompilationUnit compilationUnit = (JCCompilationUnit) state.getPath().getCompilationUnit();
-    JavaFileObject modifiedFile = compilationUnit.getSourceFile();
-    BasicJavacTask javacTask = (BasicJavacTask) state.context.get(JavacTask.class);
-    if (javacTask == null) {
-      throw new IllegalArgumentException("No JavacTask in context.");
-    }
-    Arguments arguments = Arguments.instance(javacTask.getContext());
-    List<JavaFileObject> fileObjects = new ArrayList<>(arguments.getFileObjects());
-    URI modifiedFileUri = modifiedFile.toUri();
-    for (int i = 0; i < fileObjects.size(); i++) {
-      final JavaFileObject oldFile = fileObjects.get(i);
-      if (modifiedFileUri.equals(oldFile.toUri())) {
-        DescriptionBasedDiff diff =
-            DescriptionBasedDiff.create(compilationUnit, ImportOrganizer.STATIC_FIRST_ORGANIZER);
-        diff.handleFix(fix);
-        SourceFile fixSource;
-        try {
-          fixSource =
-              new SourceFile(
-                  modifiedFile.getName(),
-                  modifiedFile.getCharContent(false /*ignoreEncodingErrors*/));
-        } catch (IOException e) {
-          return false;
-        }
-        diff.applyDifferences(fixSource);
-        fileObjects.set(
-            i,
-            new SimpleJavaFileObject(sourceURI(modifiedFile.toUri()), Kind.SOURCE) {
-              @Override
-              public CharSequence getCharContent(boolean ignoreEncodingErrors) throws IOException {
-                return fixSource.getAsSequence();
-              }
-            });
-        break;
-      }
-    }
-    DiagnosticCollector<JavaFileObject> diagnosticListener = new DiagnosticCollector<>();
-    Context context = new Context();
-    Options options = Options.instance(context);
-    Options originalOptions = Options.instance(javacTask.getContext());
-    for (String key : originalOptions.keySet()) {
-      String value = originalOptions.get(key);
-      if (key.equals("-Xplugin:") && value.startsWith("ErrorProne")) {
-        // When using the -Xplugin Error Prone integration, disable Error Prone for speculative
-        // recompiles to avoid infinite recursion.
-        continue;
-      }
-      if (SOURCE_TARGET_OPTIONS.contains(key) && originalOptions.isSet("--release")) {
-        // javac does not allow -source and -target to be specified explicitly when --release is,
-        // but does add them in response to passing --release. Here we invert that operation.
-        continue;
-      }
-      options.put(key, value);
-    }
-    JavacTask newTask =
-        JavacTool.create()
-            .getTask(
-                CharStreams.nullWriter(),
-                state.context.get(JavaFileManager.class),
-                diagnosticListener,
-                extraOptions,
-                arguments.getClassNames(),
-                fileObjects,
-                context);
+    FixCompiler fixCompiler;
     try {
-      newTask.analyze();
+      fixCompiler = FixCompiler.create(fix, state);
     } catch (IOException e) {
-      throw new UncheckedIOException(e);
+      return false;
     }
+
+    Result compilationResult = fixCompiler.compile(extraOptions);
+    URI modifiedFileUri = FixCompiler.getModifiedFileUri(state);
 
     // If we reached the maximum number of diagnostics of a given kind without finding one in the
     // modified compilation unit, we won't find any more diagnostics, but we can't be sure that
@@ -1298,7 +1308,7 @@ public final class SuggestedFixes {
     int countWarnings = 0;
     boolean warningIsError = false;
     boolean warningInSameCompilationUnit = false;
-    for (Diagnostic<? extends JavaFileObject> diagnostic : diagnosticListener.getDiagnostics()) {
+    for (Diagnostic<? extends JavaFileObject> diagnostic : compilationResult.diagnostics()) {
       warningIsError |= diagnostic.getCode().equals("compiler.err.warnings.and.werror");
       JavaFileObject diagnosticSource = diagnostic.getSource();
       // If the source's origin is unknown, assume that new diagnostics are due to a modification.
@@ -1326,6 +1336,124 @@ public final class SuggestedFixes {
       }
     }
     return true;
+  }
+
+  /**
+   * A class to hold the files from the compilation context, with a diff applied to the
+   * currently-processed one; the files can then be recompiled.
+   */
+  public static final class FixCompiler {
+    private final List<JavaFileObject> fileObjects;
+    private final VisitorState state;
+    private final BasicJavacTask javacTask;
+
+    private FixCompiler(
+        List<JavaFileObject> fileObjects, VisitorState state, BasicJavacTask javacTask) {
+      this.fileObjects = fileObjects;
+      this.state = state;
+      this.javacTask = javacTask;
+    }
+
+    public Result compile(ImmutableList<String> extraOptions) {
+      DiagnosticCollector<JavaFileObject> diagnosticListener = new DiagnosticCollector<>();
+      Context context = createContext();
+      Arguments arguments = Arguments.instance(javacTask.getContext());
+      JavacTask newTask =
+          JavacTool.create()
+              .getTask(
+                  CharStreams.nullWriter(),
+                  state.context.get(JavaFileManager.class),
+                  diagnosticListener,
+                  extraOptions,
+                  arguments.getClassNames(),
+                  fileObjects,
+                  context);
+      try {
+        newTask.analyze();
+      } catch (IOException e) {
+        throw new UncheckedIOException(e);
+      }
+      return Result.create(diagnosticListener.getDiagnostics());
+    }
+
+    private Context createContext() {
+      Context context = new Context();
+      Options options = Options.instance(context);
+      Options originalOptions = Options.instance(javacTask.getContext());
+      for (String key : originalOptions.keySet()) {
+        String value = originalOptions.get(key);
+        if (key.equals("-Xplugin:") && value.startsWith("ErrorProne")) {
+          // When using the -Xplugin Error Prone integration, disable Error Prone for speculative
+          // recompiles to avoid infinite recursion.
+          continue;
+        }
+        if (SOURCE_TARGET_OPTIONS.contains(key) && originalOptions.isSet("--release")) {
+          // javac does not allow -source and -target to be specified explicitly when --release is,
+          // but does add them in response to passing --release. Here we invert that operation.
+          continue;
+        }
+        options.put(key, value);
+      }
+      return context;
+    }
+
+    public static URI getModifiedFileUri(VisitorState state) {
+      JCCompilationUnit compilationUnit = (JCCompilationUnit) state.getPath().getCompilationUnit();
+      JavaFileObject modifiedFile = compilationUnit.getSourceFile();
+      return modifiedFile.toUri();
+    }
+
+    public static FixCompiler create(Fix fix, VisitorState state) throws IOException {
+      BasicJavacTask javacTask = (BasicJavacTask) state.context.get(JavacTask.class);
+      if (javacTask == null) {
+        throw new IllegalArgumentException("No JavacTask in context.");
+      }
+      Arguments arguments = Arguments.instance(javacTask.getContext());
+      ArrayList<JavaFileObject> fileObjects = new ArrayList<>(arguments.getFileObjects());
+      applyFix(fix, state, fileObjects);
+      return new FixCompiler(fileObjects, state, javacTask);
+    }
+
+    private static void applyFix(Fix fix, VisitorState state, ArrayList<JavaFileObject> fileObjects)
+        throws IOException {
+
+      JCCompilationUnit compilationUnit = (JCCompilationUnit) state.getPath().getCompilationUnit();
+      JavaFileObject modifiedFile = compilationUnit.getSourceFile();
+      CharSequence modifiedFileContent =
+          modifiedFile.getCharContent(/* ignoreEncodingErrors= */ false);
+
+      URI modifiedFileUri = getModifiedFileUri(state);
+      IntStream.range(0, fileObjects.size())
+          .filter(i -> fileObjects.get(i).toUri().equals(modifiedFileUri))
+          .findFirst()
+          .ifPresent(
+              i -> {
+                DescriptionBasedDiff diff =
+                    DescriptionBasedDiff.create(
+                        compilationUnit, ImportOrganizer.STATIC_FIRST_ORGANIZER);
+                diff.handleFix(fix);
+                SourceFile fixSource = new SourceFile(modifiedFile.getName(), modifiedFileContent);
+                diff.applyDifferences(fixSource);
+                fileObjects.set(
+                    i,
+                    new SimpleJavaFileObject(sourceURI(modifiedFile.toUri()), Kind.SOURCE) {
+                      @Override
+                      public CharSequence getCharContent(boolean ignoreEncodingErrors) {
+                        return fixSource.getAsSequence();
+                      }
+                    });
+              });
+    }
+
+    /** The result of the compilation. */
+    @AutoValue
+    public abstract static class Result {
+      public abstract List<Diagnostic<? extends JavaFileObject>> diagnostics();
+
+      private static Result create(List<Diagnostic<? extends JavaFileObject>> diagnostics) {
+        return new AutoValue_SuggestedFixes_FixCompiler_Result(diagnostics);
+      }
+    }
   }
 
   private static final ImmutableSet<String> SOURCE_TARGET_OPTIONS =

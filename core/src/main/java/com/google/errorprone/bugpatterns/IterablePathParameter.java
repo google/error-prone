@@ -41,7 +41,6 @@ import javax.lang.model.element.ElementKind;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
-    name = "IterablePathParameter",
     summary = "Path implements Iterable<Path>; prefer Collection<Path> for clarity",
     severity = ERROR)
 public class IterablePathParameter extends BugChecker implements VariableTreeMatcher {
@@ -49,7 +48,7 @@ public class IterablePathParameter extends BugChecker implements VariableTreeMat
   public Description matchVariable(VariableTree tree, VisitorState state) {
     Type type = ASTHelpers.getType(tree);
     VarSymbol symbol = ASTHelpers.getSymbol(tree);
-    if (type == null || symbol == null) {
+    if (type == null) {
       return NO_MATCH;
     }
     if (symbol.getKind() != ElementKind.PARAMETER) {

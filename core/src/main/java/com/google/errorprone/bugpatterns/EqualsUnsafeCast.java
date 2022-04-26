@@ -49,14 +49,11 @@ import java.util.List;
  * @author ghm@google.com (Graeme Morgan)
  */
 @BugPattern(
-    name = "EqualsUnsafeCast",
     summary =
         "The contract of #equals states that it should return false for incompatible types, "
             + "while this implementation may throw ClassCastException.",
     severity = WARNING)
 public final class EqualsUnsafeCast extends BugChecker implements MethodTreeMatcher {
-
-  private static final String INSTANCEOF_CHECK = "if (!(%s instanceof %s)) { return false; }";
 
   @Override
   public Description matchMethod(MethodTree tree, VisitorState state) {
@@ -100,7 +97,7 @@ public final class EqualsUnsafeCast extends BugChecker implements MethodTreeMatc
                   SuggestedFix.prefixWith(
                       enclosingStatement,
                       String.format(
-                          INSTANCEOF_CHECK,
+                          "if (!(%s instanceof %s)) { return false; }",
                           state.getSourceForNode(expression),
                           state.getSourceForNode(node.getType())))));
         }

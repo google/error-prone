@@ -42,7 +42,6 @@ import com.sun.tools.javac.code.TypeTag;
  * @author awturner@google.com (Andy Turner)
  */
 @BugPattern(
-    name = "UnnecessaryBoxedAssignment",
     summary = "This expression can be implicitly boxed.",
     explanation =
         "It is unnecessary for this assignment or return expression to be boxed explicitly.",

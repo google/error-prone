@@ -55,11 +55,6 @@ public class ImmutableEnumChecker extends BugChecker implements ClassTreeMatcher
 
   private final WellKnownMutability wellKnownMutability;
 
-  @Deprecated // Used reflectively, but you should pass in ErrorProneFlags to get custom mutability
-  public ImmutableEnumChecker() {
-    this(ErrorProneFlags.empty());
-  }
-
   public ImmutableEnumChecker(ErrorProneFlags flags) {
     this.wellKnownMutability = WellKnownMutability.fromFlags(flags);
   }
@@ -67,7 +62,7 @@ public class ImmutableEnumChecker extends BugChecker implements ClassTreeMatcher
   @Override
   public Description matchClass(ClassTree tree, VisitorState state) {
     ClassSymbol symbol = getSymbol(tree);
-    if (symbol == null || !symbol.isEnum()) {
+    if (!symbol.isEnum()) {
       return NO_MATCH;
     }
 
@@ -110,8 +105,7 @@ public class ImmutableEnumChecker extends BugChecker implements ClassTreeMatcher
   }
 
   private static final ImmutableSet<String> EXEMPT_ANNOTATIONS =
-      ImmutableSet.of(
-          "com.google.errorprone.annotations.Immutable");
+      ImmutableSet.of("com.google.errorprone.annotations.Immutable");
 
   private static boolean hasExemptAnnotation(Symbol symbol, VisitorState state) {
     return EXEMPT_ANNOTATIONS.stream()

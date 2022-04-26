@@ -56,7 +56,6 @@ import java.util.regex.Pattern;
  * @author glorioso@google.com (Nick Glorioso)
  */
 @BugPattern(
-    name = "SizeGreaterThanOrEqualsZero",
     summary =
         "Comparison of a size >= 0 is always true, did you intend to check for " + "non-emptiness?",
     severity = ERROR)
@@ -100,12 +99,12 @@ public class SizeGreaterThanOrEqualsZero extends BugChecker implements BinaryTre
           .put("java.lang.String", MethodName.LENGTH, true)
           .put("java.lang.StringBuilder", MethodName.LENGTH, false)
           .put("java.lang.StringBuffer", MethodName.LENGTH, false)
-          .build();
+          .buildOrThrow();
 
   private static final ImmutableTable<String, MethodName, Boolean> STATIC_CLASSES =
       ImmutableTable.<String, MethodName, Boolean>builder()
           .put("com.google.common.collect.Iterables", MethodName.SIZE, true)
-          .build();
+          .buildOrThrow();
 
   private static final Matcher<ExpressionTree> SIZE_OR_LENGTH_INSTANCE_METHOD =
       anyOf(
@@ -176,9 +175,6 @@ public class SizeGreaterThanOrEqualsZero extends BugChecker implements BinaryTre
     // Make sure it's the count method for a repeated field, not the get method for a non-repeated
     // field named <something>_count, by checking for other methods on the repeated field.
     MethodSymbol methodCallSym = getSymbol((MethodInvocationTree) tree);
-    if (methodCallSym == null) {
-      return false;
-    }
     Scope protoClassMembers = methodCallSym.owner.members();
     java.util.regex.Matcher getCountRegexMatcher =
         PROTO_COUNT_METHOD_PATTERN.matcher(methodCallSym.getSimpleName().toString());
@@ -221,7 +217,7 @@ public class SizeGreaterThanOrEqualsZero extends BugChecker implements BinaryTre
   private Description provideReplacementForStaticMethodInvocation(
       BinaryTree tree,
       MethodInvocationTree callToSize,
-      final VisitorState state,
+      VisitorState state,
       ExpressionType expressionType) {
     ExpressionTree classToken = getReceiver(callToSize);
 

@@ -47,7 +47,6 @@ import com.sun.source.util.TreeScanner;
  * @author ghm@google.com (Graeme Morgan)
  */
 @BugPattern(
-    name = "LockNotBeforeTry",
     summary =
         "Calls to Lock#lock should be immediately followed by a try block which releases the lock.",
     severity = WARNING,

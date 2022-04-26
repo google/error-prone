@@ -42,12 +42,14 @@ import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
+import com.google.errorprone.suppliers.Supplier;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.util.TreePath;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
+import com.sun.tools.javac.code.Type;
 import javax.annotation.Nullable;
 
 /**
@@ -67,7 +69,6 @@ import javax.annotation.Nullable;
  * }</pre>
  */
 @BugPattern(
-    name = "ChainedAssertionLosesContext",
     summary =
         "Inside a Subject, use check(...) instead of assert*() to preserve user-supplied messages"
             + " and other settings.",
@@ -200,9 +201,6 @@ public final class ChainedAssertionLosesContext extends BugChecker
   private static FactoryMethodName tryFindFactory(
       MethodInvocationTree assertThatCall, VisitorState state) {
     MethodSymbol assertThatSymbol = getSymbol(assertThatCall);
-    if (assertThatSymbol == null) {
-      return null;
-    }
     /*
      * First, a special case for ProtoTruth.protos(). Usually the main case below finds it OK, but
      * sometimes it misses it, I believe because it can't decide between that and
@@ -256,7 +254,7 @@ public final class ChainedAssertionLosesContext extends BugChecker
      * IterableSubject.UsingCorrespondence.
      */
     return isSubtype(
-        getDeclaredSymbol(enclosingClass).type, state.getTypeFromString(SUBJECT_CLASS), state);
+        getDeclaredSymbol(enclosingClass).type, COM_GOOGLE_COMMON_TRUTH_SUBJECT.get(state), state);
   }
 
   @Nullable
@@ -303,4 +301,7 @@ public final class ChainedAssertionLosesContext extends BugChecker
       instanceMethod()
           .onDescendantOf("com.google.common.truth.StandardSubjectBuilder")
           .namedAnyOf("withMessage", "about");
+
+  private static final Supplier<Type> COM_GOOGLE_COMMON_TRUTH_SUBJECT =
+      VisitorState.memoize(state -> state.getTypeFromString(SUBJECT_CLASS));
 }

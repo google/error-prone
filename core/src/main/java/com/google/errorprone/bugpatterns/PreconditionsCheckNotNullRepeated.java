@@ -37,7 +37,6 @@ import java.util.List;
  * @author bhagwani@google.com (Sumit Bhagwani)
  */
 @BugPattern(
-    name = "PreconditionsCheckNotNullRepeated",
     summary =
         "Including the first argument of checkNotNull in the failure message is not useful, "
             + "as it will always be `null`.",
@@ -69,7 +68,7 @@ public class PreconditionsCheckNotNullRepeated extends BugChecker
       String nullArgSource = state.getSourceForNode(args.get(0));
       // Special case in case there are only two args and they're same.
       // checkNotNull(T reference, Object errorMessage)
-      if (numArgs == 2 && i == 1) {
+      if (numArgs == 2) {
         return buildDescription(args.get(1))
             .setMessage(String.format(MESSAGE, nullArgSource))
             .addFix(

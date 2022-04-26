@@ -23,7 +23,6 @@ import static org.junit.Assert.assertThrows;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
-import java.util.Map;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -111,9 +110,9 @@ public final class ErrorProneFlagsTest {
             .put("a", "FIRST_A")
             .put("b", "b2")
             .put("c", "c2")
-            .build();
+            .buildOrThrow();
 
-    Map<String, String> actualCombinedMap = flags1.plus(flags2).getFlagsMap();
+    ImmutableMap<String, String> actualCombinedMap = flags1.plus(flags2).getFlagsMap();
 
     assertThat(actualCombinedMap).containsExactlyEntriesIn(expectedCombinedMap);
   }
@@ -142,10 +141,13 @@ public final class ErrorProneFlagsTest {
         ErrorProneFlags.builder()
             .parseFlag("-XepOpt:Colour=RED")
             .parseFlag("-XepOpt:Colours=YELLOW,GREEN")
+            .parseFlag("-XepOpt:CaseInsensitiveColours=yellow,green")
             .parseFlag("-XepOpt:EmptyColours=")
             .build();
     assertThat(flags.getEnum("Colour", Colour.class)).hasValue(Colour.RED);
     assertThat(flags.getEnumSet("Colours", Colour.class))
+        .hasValue(ImmutableSet.of(Colour.YELLOW, Colour.GREEN));
+    assertThat(flags.getEnumSet("CaseInsensitiveColours", Colour.class))
         .hasValue(ImmutableSet.of(Colour.YELLOW, Colour.GREEN));
     assertThat(flags.getEnumSet("EmptyColours", Colour.class)).hasValue(ImmutableSet.of());
     assertThat(flags.getEnumSet("NoSuchColours", Colour.class)).isEmpty();

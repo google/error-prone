@@ -41,7 +41,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** @author deminguyen@google.com (Demi Nguyen) */
+/**
+ * @author deminguyen@google.com (Demi Nguyen)
+ */
 @RunWith(JUnit4.class)
 public class NullnessPropagationTest {
 
@@ -225,7 +227,6 @@ public class NullnessPropagationTest {
         .doTest();
   }
 
-  
   @Test
   public void testProtoGetters() {
     compilationHelper
@@ -831,7 +832,6 @@ public class NullnessPropagationTest {
 
   /** BugPattern to test dataflow analysis using nullness propagation */
   @BugPattern(
-      name = "NullnessPropagationChecker",
       summary = "Test checker for NullnessPropagationTest",
       explanation =
           "Outputs an error for each call to triggerNullnessChecker, describing its "

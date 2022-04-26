@@ -41,7 +41,6 @@ import java.util.List;
  * @author glorioso@google.com (Nick Glorioso)
  */
 @BugPattern(
-    name = "JUnit4TearDownNotRun",
     summary = "tearDown() method will not be run; please add JUnit's @After annotation",
     severity = ERROR)
 public class JUnit4TearDownNotRun extends AbstractJUnit4InitMethodNotRun {

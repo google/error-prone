@@ -27,7 +27,9 @@ import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.MethodTree;
 import java.util.Set;
 
-/** @author cushon@google.com (Liam Miller-Cushon) */
+/**
+ * @author cushon@google.com (Liam Miller-Cushon)
+ */
 @BugPattern(
     name = "LockMethodChecker",
     altNames = {"GuardedBy"},
@@ -57,7 +59,7 @@ public class LockMethodChecker extends AbstractLockMethodChecker {
 
   @Override
   protected String buildMessage(String unhandled) {
-    return "The following locks are specifed in this method's @LockMethod annotation but are not"
+    return "The following locks are specified in this method's @LockMethod annotation but are not"
         + " acquired: "
         + unhandled;
   }

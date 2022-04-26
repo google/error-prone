@@ -39,7 +39,6 @@ import com.sun.source.tree.Tree;
 
 /** Flags uses of parameters in non-parameterized tests. */
 @BugPattern(
-    name = "TestParametersNotInitialized",
     summary =
         "This test has @TestParameter fields but is using the default JUnit4 runner. The"
             + " parameters will not be initialised beyond their default value.",

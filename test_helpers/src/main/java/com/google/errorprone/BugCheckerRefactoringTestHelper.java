@@ -47,7 +47,6 @@ import com.google.errorprone.scanner.ErrorProneScanner;
 import com.google.errorprone.scanner.ErrorProneScannerTransformer;
 import com.google.errorprone.scanner.Scanner;
 import com.google.errorprone.scanner.ScannerSupplier;
-import com.google.errorprone.util.RuntimeVersion;
 import com.google.googlejavaformat.java.Formatter;
 import com.google.googlejavaformat.java.FormatterException;
 import com.google.testing.compile.JavaFileObjects;
@@ -153,7 +152,7 @@ public class BugCheckerRefactoringTestHelper {
   private final ScannerSupplier scannerSupplier;
 
   private FixChooser fixChooser = FixChoosers.FIRST;
-  private List<String> options = ImmutableList.of();
+  private ImmutableList<String> options = ImmutableList.of();
   private boolean allowBreakingChanges = false;
   private String importOrder = "static-first";
 
@@ -164,7 +163,9 @@ public class BugCheckerRefactoringTestHelper {
     this.scannerSupplier = scannerSupplier;
   }
 
-  /** @deprecated prefer {@link #newInstance(Class, Class)} */
+  /**
+   * @deprecated prefer {@link #newInstance(Class, Class)}
+   */
   @Deprecated
   public static BugCheckerRefactoringTestHelper newInstance(
       BugChecker refactoringBugChecker, Class<?> clazz) {
@@ -203,9 +204,6 @@ public class BugCheckerRefactoringTestHelper {
   }
 
   public BugCheckerRefactoringTestHelper addModules(String... modules) {
-    if (!RuntimeVersion.isAtLeast9()) {
-      return this;
-    }
     return setArgs(
         Arrays.stream(modules)
             .map(m -> String.format("--add-exports=%s=ALL-UNNAMED", m))
@@ -272,8 +270,7 @@ public class BugCheckerRefactoringTestHelper {
 
   @CanIgnoreReturnValue
   private JCCompilationUnit doCompile(
-      final JavaFileObject input, Iterable<JavaFileObject> files, Context context)
-      throws IOException {
+      JavaFileObject input, Iterable<JavaFileObject> files, Context context) throws IOException {
     JavacTool tool = JavacTool.create();
     DiagnosticCollector<JavaFileObject> diagnosticsCollector = new DiagnosticCollector<>();
     ErrorProneOptions errorProneOptions;
@@ -315,7 +312,7 @@ public class BugCheckerRefactoringTestHelper {
   private JavaFileObject applyDiff(
       JavaFileObject sourceFileObject, Context context, JCCompilationUnit tree) throws IOException {
     ImportOrganizer importOrganizer = ImportOrderParser.getImportOrganizer(importOrder);
-    final DescriptionBasedDiff diff = DescriptionBasedDiff.create(tree, importOrganizer);
+    DescriptionBasedDiff diff = DescriptionBasedDiff.create(tree, importOrganizer);
     ErrorProneOptions errorProneOptions = context.get(ErrorProneOptions.class);
     ErrorProneScannerTransformer.create(scannerSupplier.applyOverrides(errorProneOptions).get())
         .apply(

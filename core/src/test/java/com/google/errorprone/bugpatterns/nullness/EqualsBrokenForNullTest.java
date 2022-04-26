@@ -21,7 +21,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** @author bhagwani@google.com (Sumit Bhagwani) */
+/**
+ * @author bhagwani@google.com (Sumit Bhagwani)
+ */
 @RunWith(JUnit4.class)
 public class EqualsBrokenForNullTest {
 
@@ -52,6 +54,27 @@ public class EqualsBrokenForNullTest {
             "    }",
             "    Test<?, ?> that = (Test<?, ?>) other;",
             "    return a.equals(that.a) && b.equals(that.b);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void nullableParameter() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.util.Optional;",
+            "class Test {",
+            "  public boolean equals(Object other) {",
+            "    if (other == null) {",
+            "      return false;",
+            "    }",
+            "    if (other instanceof Test) {",
+            "      Test otherTest = (Test) other;",
+            "      Optional.empty().map(x -> otherTest.toString());",
+            "    }",
+            "    return other.equals(this);",
             "  }",
             "}")
         .doTest();

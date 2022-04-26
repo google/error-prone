@@ -39,7 +39,6 @@ import java.util.regex.Pattern;
  * @author bhagwani@google.com (Sumit Bhagwani)
  */
 @BugPattern(
-    name = "TruthConstantAsserts",
     summary = "Truth Library assert is called on a constant.",
     severity = WARNING,
     tags = StandardTags.FRAGILE_CODE)

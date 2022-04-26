@@ -20,6 +20,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.ComparisonChain;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Ordering;
 import com.google.common.collect.Range;
 import com.google.common.collect.RangeMap;
@@ -146,6 +147,13 @@ public class Replacements {
   public Set<Replacement> descending() {
     // TODO(cushon): refactor SuggestedFix#getReplacements and just return a Collection,
     return new LinkedHashSet<>(replacements.values());
+  }
+
+  /** Non-overlapping replacements, sorted in ascending order by position. */
+  public ImmutableSet<Replacement> ascending() {
+    // TODO(amalloy): Encourage using this instead of descending()
+    // Applying replacements in forward order is substantially more efficient, and only a bit harder
+    return ImmutableSet.copyOf(replacements.descendingMap().values());
   }
 
   public boolean isEmpty() {

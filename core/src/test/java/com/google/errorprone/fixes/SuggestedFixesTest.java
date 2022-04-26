@@ -23,7 +23,6 @@ import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.isSameType;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
-import static org.junit.Assume.assumeTrue;
 
 import com.google.common.base.Verify;
 import com.google.common.collect.ImmutableList;
@@ -34,6 +33,7 @@ import com.google.errorprone.BugPattern;
 import com.google.errorprone.CompilationTestHelper;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
+import com.google.errorprone.bugpatterns.BugChecker.AnnotationTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.LiteralTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
@@ -45,10 +45,12 @@ import com.google.errorprone.bugpatterns.RemoveUnusedImports;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
-import com.google.errorprone.util.RuntimeVersion;
 import com.sun.source.doctree.LinkTree;
+import com.sun.source.tree.AnnotationTree;
+import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ExpressionTree;
+import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.LambdaExpressionTree;
 import com.sun.source.tree.LiteralTree;
 import com.sun.source.tree.MethodInvocationTree;
@@ -73,7 +75,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** @author cushon@google.com (Liam Miller-Cushon) */
+/**
+ * @author cushon@google.com (Liam Miller-Cushon)
+ */
 @RunWith(JUnit4.class)
 public class SuggestedFixesTest {
 
@@ -103,7 +107,7 @@ public class SuggestedFixesTest {
       for (Modifier mod : Modifier.values()) {
         builder.put(mod.toString(), mod);
       }
-      return builder.build();
+      return builder.buildOrThrow();
     }
 
     @Override
@@ -261,7 +265,7 @@ public class SuggestedFixesTest {
   }
 
   /** Test checker that casts returned expression. */
-  @BugPattern(name = "CastReturn", severity = ERROR, summary = "Adds casts to returned expressions")
+  @BugPattern(severity = ERROR, summary = "Adds casts to returned expressions")
   public static class CastReturn extends BugChecker implements ReturnTreeMatcher {
 
     @Override
@@ -413,7 +417,7 @@ public class SuggestedFixesTest {
   }
 
   /** A test check that adds an annotation to all return types. */
-  @BugPattern(name = "AddAnnotation", summary = "Add an annotation", severity = ERROR)
+  @BugPattern(summary = "Add an annotation", severity = ERROR)
   public static class AddAnnotation extends BugChecker implements BugChecker.MethodTreeMatcher {
     @Override
     public Description matchMethod(MethodTree tree, VisitorState state) {
@@ -569,10 +573,7 @@ public class SuggestedFixesTest {
   }
 
   /** A test check that replaces all methods' return types with a given type. */
-  @BugPattern(
-      name = "ReplaceReturnType",
-      summary = "Change the method return type",
-      severity = ERROR)
+  @BugPattern(summary = "Change the method return type", severity = ERROR)
   public static class ReplaceReturnType extends BugChecker implements BugChecker.MethodTreeMatcher {
     private final String newReturnType;
 
@@ -601,10 +602,7 @@ public class SuggestedFixesTest {
   }
 
   /** A test check that replaces all methods' return types with a given type. */
-  @BugPattern(
-      name = "ReplaceReturnTypeString",
-      summary = "Change the method return type",
-      severity = ERROR)
+  @BugPattern(summary = "Change the method return type", severity = ERROR)
   public static class ReplaceReturnTypeString extends BugChecker
       implements BugChecker.MethodTreeMatcher {
     private final String newReturnType;
@@ -767,10 +765,7 @@ public class SuggestedFixesTest {
   }
 
   /** A test check that replaces all checkNotNulls with verifyNotNull. */
-  @BugPattern(
-      name = "ReplaceMethodInvocations",
-      summary = "Replaces checkNotNull with verifyNotNull.",
-      severity = ERROR)
+  @BugPattern(summary = "Replaces checkNotNull with verifyNotNull.", severity = ERROR)
   public static class ReplaceMethodInvocations extends BugChecker
       implements BugChecker.MethodInvocationTreeMatcher {
     private static final Matcher<ExpressionTree> CHECK_NOT_NULL =
@@ -905,20 +900,17 @@ public class SuggestedFixesTest {
   }
 
   /** A test check that qualifies javadoc link. */
-  @BugPattern(
-      name = "JavadocQualifier",
-      summary = "all javadoc links should be qualified",
-      severity = ERROR)
+  @BugPattern(summary = "all javadoc links should be qualified", severity = ERROR)
   public static class JavadocQualifier extends BugChecker implements BugChecker.ClassTreeMatcher {
     @Override
-    public Description matchClass(ClassTree tree, final VisitorState state) {
-      final DCTree.DCDocComment comment =
+    public Description matchClass(ClassTree tree, VisitorState state) {
+      DCTree.DCDocComment comment =
           ((JCTree.JCCompilationUnit) state.getPath().getCompilationUnit())
               .docComments.getCommentTree((JCTree) tree);
       if (comment == null) {
         return Description.NO_MATCH;
       }
-      final SuggestedFix.Builder fix = SuggestedFix.builder();
+      SuggestedFix.Builder fix = SuggestedFix.builder();
       new DocTreePathScanner<Void, Void>() {
         @Override
         public Void visitLink(LinkTree node, Void unused) {
@@ -958,7 +950,7 @@ public class SuggestedFixesTest {
   }
 
   /** A {@link BugChecker} for testing. */
-  @BugPattern(name = "SuppressMe", summary = "", severity = ERROR)
+  @BugPattern(summary = "", severity = ERROR)
   public static final class SuppressMe extends BugChecker
       implements LiteralTreeMatcher, VariableTreeMatcher {
     @Override
@@ -1034,7 +1026,7 @@ public class SuggestedFixesTest {
   }
 
   /** A {@link BugChecker} for testing. */
-  @BugPattern(name = "SuppressMeWithComment", summary = "", severity = ERROR)
+  @BugPattern(summary = "", severity = ERROR)
   public static final class SuppressMeWithComment extends BugChecker implements LiteralTreeMatcher {
     private final String lineComment;
 
@@ -1123,7 +1115,7 @@ public class SuggestedFixesTest {
   }
 
   /** A {@link BugChecker} for testing. */
-  @BugPattern(name = "RemoveSuppressFromMe", summary = "", severity = ERROR)
+  @BugPattern(summary = "", severity = ERROR)
   public static final class RemoveSuppressFromMe extends BugChecker implements LiteralTreeMatcher {
 
     @Override
@@ -1216,8 +1208,42 @@ public class SuggestedFixesTest {
         .doTest(TestMode.AST_MATCH);
   }
 
+  /** A {@link BugChecker} for testing. */
+  @BugPattern(name = "UpdateDoNotCallArgument", summary = "", severity = ERROR)
+  public static final class UpdateDoNotCallArgumentChecker extends BugChecker
+      implements AnnotationTreeMatcher {
+    @Override
+    public Description matchAnnotation(AnnotationTree tree, VisitorState state) {
+      SuggestedFix.Builder fixBuilder =
+          SuggestedFixes.updateAnnotationArgumentValues(
+              tree, state, "value", ImmutableList.of("\"Danger\""));
+      return describeMatch(tree, fixBuilder.build());
+    }
+  }
+
+  @Test
+  public void updateAnnotationArgumentValues_noArguments() {
+    BugCheckerRefactoringTestHelper refactorTestHelper =
+        BugCheckerRefactoringTestHelper.newInstance(
+            UpdateDoNotCallArgumentChecker.class, getClass());
+    refactorTestHelper
+        .addInputLines(
+            "in/Test.java",
+            "import com.google.errorprone.annotations.DoNotCall;",
+            "public class Test {",
+            "  @DoNotCall void m() {}",
+            "}")
+        .addOutputLines(
+            "out/Test.java",
+            "import com.google.errorprone.annotations.DoNotCall;",
+            "public class Test {",
+            "  @DoNotCall(\"Danger\") void m() {}",
+            "}")
+        .doTest(TestMode.AST_MATCH);
+  }
+
   /** A test bugchecker that deletes any field whose removal doesn't break the compilation. */
-  @BugPattern(name = "CompilesWithFixChecker", summary = "", severity = ERROR)
+  @BugPattern(summary = "", severity = ERROR)
   public static class CompilesWithFixChecker extends BugChecker implements VariableTreeMatcher {
     @Override
     public Description matchVariable(VariableTree tree, VisitorState state) {
@@ -1253,7 +1279,6 @@ public class SuggestedFixesTest {
 
   @Test
   public void compilesWithFix_releaseFlag() {
-    assumeTrue(RuntimeVersion.isAtLeast9());
     BugCheckerRefactoringTestHelper.newInstance(CompilesWithFixChecker.class, getClass())
         .setArgs("--release", "9")
         .addInputLines(
@@ -1374,7 +1399,7 @@ public class SuggestedFixesTest {
   }
 
   /** Test checker that renames variables. */
-  @BugPattern(name = "RenamesVariableChecker", summary = "", severity = ERROR)
+  @BugPattern(summary = "", severity = ERROR)
   public static class RenamesVariableChecker extends BugChecker implements VariableTreeMatcher {
 
     private final String toReplace;
@@ -1572,7 +1597,7 @@ public class SuggestedFixesTest {
   }
 
   /** Test checker that removes and adds modifiers in the same fix. */
-  @BugPattern(name = "RemoveAddModifier", summary = "", severity = ERROR)
+  @BugPattern(summary = "", severity = ERROR)
   public static class RemoveAddModifier extends BugChecker implements ClassTreeMatcher {
 
     @Override
@@ -1595,10 +1620,7 @@ public class SuggestedFixesTest {
   }
 
   /** A bugchecker for testing suggested fixes. */
-  @BugPattern(
-      name = "PrefixAddImportCheck",
-      summary = "A bugchecker for testing suggested fixes.",
-      severity = ERROR)
+  @BugPattern(summary = "A bugchecker for testing suggested fixes.", severity = ERROR)
   public static class PrefixAddImportCheck extends BugChecker implements ClassTreeMatcher {
     @Override
     public Description matchClass(ClassTree tree, VisitorState state) {
@@ -1636,7 +1658,7 @@ public class SuggestedFixesTest {
   }
 
   /** A {@link BugChecker} for testing. */
-  @BugPattern(name = "RenameMethodChecker", summary = "RenameMethodChecker", severity = ERROR)
+  @BugPattern(summary = "RenameMethodChecker", severity = ERROR)
   public static class RenameMethodChecker extends BugChecker
       implements MethodInvocationTreeMatcher {
     @Override
@@ -1677,10 +1699,7 @@ public class SuggestedFixesTest {
    * Test checker that raises a diagnostic with the result of {@link SuggestedFixes#qualifyType} on
    * new instances.
    */
-  @BugPattern(
-      name = "QualifyTypeLocalClassChecker",
-      summary = "QualifyTypeLocalClassChecker",
-      severity = ERROR)
+  @BugPattern(summary = "QualifyTypeLocalClassChecker", severity = ERROR)
   public static class QualifyTypeLocalClassChecker extends BugChecker
       implements NewClassTreeMatcher {
 
@@ -1791,10 +1810,7 @@ public class SuggestedFixesTest {
   }
 
   /** Test checker that adds @SuppressWarnings when compilation succeeds in the current unit. */
-  @BugPattern(
-      name = "AddSuppressWarningsIfCompilationSucceedsOnlyInSameCompilationUnit",
-      summary = "",
-      severity = ERROR)
+  @BugPattern(summary = "", severity = ERROR)
   public static final class AddSuppressWarningsIfCompilationSucceedsOnlyInSameCompilationUnit
       extends BugChecker implements ClassTreeMatcher {
     @Override
@@ -1839,10 +1855,7 @@ public class SuggestedFixesTest {
   }
 
   /** Test checker that adds @SuppressWarnings when compilation succeeds in all units. */
-  @BugPattern(
-      name = "AddSuppressWarningsIfCompilationSucceedsInAllCompilationUnits",
-      summary = "",
-      severity = ERROR)
+  @BugPattern(summary = "", severity = ERROR)
   public static final class AddSuppressWarningsIfCompilationSucceedsInAllCompilationUnits
       extends BugChecker implements ClassTreeMatcher {
     @Override
@@ -1956,5 +1969,50 @@ public class SuggestedFixesTest {
     assertThat(fix.getImportsToAdd())
         .containsExactly("import static " + firstImport, "import static " + secondImport)
         .inOrder();
+  }
+
+  @Test
+  public void removeElement() {
+    BugCheckerRefactoringTestHelper.newInstance(RemoveAnnotationElement.class, getClass())
+        .addInputLines(
+            "Anno.java", //
+            "@interface Anno {",
+            "  int a() default 0;",
+            "  int b() default 0;",
+            "}")
+        .expectUnchanged()
+        .addInputLines(
+            "Test.java",
+            "class Test {",
+            "  @Anno(a = 1) class A {}",
+            "  @Anno(a = 1, b = 2) class B {}",
+            "  @Anno(b = 1, a = 2) class C {}",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "class Test {",
+            "  @Anno() class A {}",
+            "  @Anno(b = 2) class B {}",
+            "  @Anno(b = 1) class C {}",
+            "}")
+        .doTest();
+  }
+
+  /** Bugpattern for testing. */
+  @BugPattern(name = "RemoveAnnotationElement", summary = "", severity = ERROR)
+  public static final class RemoveAnnotationElement extends BugChecker
+      implements AnnotationTreeMatcher {
+    @Override
+    public Description matchAnnotation(AnnotationTree tree, VisitorState state) {
+      return tree.getArguments().stream()
+          .filter(
+              t ->
+                  ((IdentifierTree) ((AssignmentTree) t).getVariable())
+                      .getName()
+                      .contentEquals("a"))
+          .findFirst()
+          .map(t -> describeMatch(t, SuggestedFixes.removeElement(t, tree.getArguments(), state)))
+          .orElse(NO_MATCH);
+    }
   }
 }

@@ -43,6 +43,35 @@ public final class UnusedMethodTest {
   }
 
   @Test
+  public void unusedPrivateMethod() {
+    helper
+        .addSourceLines(
+            "UnusedPrivateMethod.java",
+            "package unusedvars;",
+            "import com.google.errorprone.annotations.Keep;",
+            "import java.lang.annotation.ElementType;",
+            "import java.lang.annotation.Retention;",
+            "import java.lang.annotation.RetentionPolicy;",
+            "import java.lang.annotation.Target;",
+            "import javax.inject.Inject;",
+            "public class UnusedPrivateMethod {",
+            "  public void test() {",
+            "    used();",
+            "  }",
+            "  private void used() {}",
+            "  // BUG: Diagnostic contains: Method 'notUsed' is never used.",
+            "  private void notUsed() {}",
+            "  @Inject",
+            "  private void notUsedExempted() {}",
+            "  @Keep",
+            "  @Target(ElementType.METHOD)",
+            "  @Retention(RetentionPolicy.SOURCE)",
+            "  private @interface ProvidesCustom {}",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void unuseds() {
     helper
         .addSourceLines(
@@ -272,6 +301,166 @@ public final class UnusedMethodTest {
             "  private static Stream<String> parameters() {",
             "    return Stream.of();",
             "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void overriddenMethodNotCalledWithinClass() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  private class Inner {",
+            "    @Override public String toString() { return null; }",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void methodWithinPrivateInnerClass_isEligible() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  private class Inner {",
+            "    // BUG: Diagnostic contains:",
+            "    public void foo() {}",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void unusedConstructor() {
+    helper
+        .addSourceLines(
+            "Test.java", //
+            "class Test {",
+            "  // BUG: Diagnostic contains: Constructor 'Test'",
+            "  private Test(int a) {}",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void unusedConstructor_refactoredToPrivateNoArgVersion() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java", //
+            "class Test {",
+            "  private Test(int a) {}",
+            "}")
+        .addOutputLines(
+            "Test.java", //
+            "class Test {",
+            "  private Test() {}",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void unusedConstructor_finalFieldsLeftDangling_noFix() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java", //
+            "class Test {",
+            "  private final int a;",
+            "  private Test(int a) {",
+            "    this.a = a;",
+            "  }",
+            "}")
+        .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
+  public void unusedConstructor_nonFinalFields_stillRefactored() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java", //
+            "class Test {",
+            "  private int a;",
+            "  private Test(int a) {}",
+            "}")
+        .addOutputLines(
+            "Test.java", //
+            "class Test {",
+            "  private int a;",
+            "  private Test() {}",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void unusedConstructor_removed() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java", //
+            "class Test {",
+            "  private Test(int a) {}",
+            "  private Test(String a) {}",
+            "  public Test of() { return new Test(1); }",
+            "}")
+        .addOutputLines(
+            "Test.java", //
+            "class Test {",
+            "  private Test(int a) {}",
+            "  public Test of() { return new Test(1); }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void privateConstructor_calledWithinClass() {
+    helper
+        .addSourceLines(
+            "Test.java", //
+            "class Test {",
+            "  private Test(int a) {}",
+            "  public Test of(int a) {",
+            "    return new Test(a);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void zeroArgConstructor_notFlagged() {
+    helper
+        .addSourceLines(
+            "Test.java", //
+            "class Test {",
+            "  private Test() {}",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void annotationProperty_assignedByname() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  private @interface Anno {",
+            "    int value() default 1;",
+            "  }",
+            "  @Anno(value = 1) int b;",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void annotationProperty_assignedAsDefault() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  private @interface Anno {",
+            "    int value();",
+            "  }",
+            "  @Anno(1) int a;",
             "}")
         .doTest();
   }

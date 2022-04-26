@@ -35,7 +35,6 @@ import com.sun.source.tree.ThrowTree;
 
 /** Bugpattern to discourage throwing base exception classes. */
 @BugPattern(
-    name = "ThrowSpecificExceptions",
     summary =
         "Base exception classes should be treated as abstract. If the exception is intended to be"
             + " caught, throw a domain-specific exception. Otherwise, prefer a more specific"
@@ -47,7 +46,6 @@ import com.sun.source.tree.ThrowTree;
             + "\n\n"
             + "2. Clarity: Base exception classes offer no information on the nature of the"
             + " failure.",
-
     severity = WARNING)
 public final class ThrowSpecificExceptions extends BugChecker implements NewClassTreeMatcher {
   private static final ImmutableList<AbstractLikeException> ABSTRACT_LIKE_EXCEPTIONS =
@@ -68,7 +66,7 @@ public final class ThrowSpecificExceptions extends BugChecker implements NewClas
         SuggestedFix.Builder fix = SuggestedFix.builder();
         String className =
             SuggestedFixes.qualifyType(state, fix, abstractLikeException.replacement());
-        return describeMatch(tree, SuggestedFix.replace(tree.getIdentifier(), className));
+        return describeMatch(tree, fix.replace(tree.getIdentifier(), className).build());
       }
     }
     return Description.NO_MATCH;

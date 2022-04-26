@@ -52,14 +52,12 @@ import javax.lang.model.element.ElementKind;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
-    name = "WildcardImport",
     summary = "Wildcard imports, static or otherwise, should not be used",
     severity = SUGGESTION,
     linkType = CUSTOM,
     documentSuppression = false,
     tags = StandardTags.STYLE,
-    link = "https://google.github.io/styleguide/javaguide.html#s3.3.1-wildcard-imports"
-    )
+    link = "https://google.github.io/styleguide/javaguide.html?cl=head#s3.3.1-wildcard-imports")
 public class WildcardImport extends BugChecker implements CompilationUnitTreeMatcher {
 
   /** Maximum number of members to import before switching to qualified names. */
@@ -192,7 +190,7 @@ public class WildcardImport extends BugChecker implements CompilationUnitTreeMat
       VisitorState state) {
     Map<Symbol, List<TypeToImport>> toFix =
         typesToImport.stream().collect(Collectors.groupingBy(TypeToImport::owner));
-    final SuggestedFix.Builder fix = SuggestedFix.builder();
+    SuggestedFix.Builder fix = SuggestedFix.builder();
     for (ImportTree importToDelete : wildcardImports) {
       String importSpecification = state.getSourceForNode(importToDelete.getQualifiedIdentifier());
       if (importToDelete.isStatic()) {
@@ -202,7 +200,7 @@ public class WildcardImport extends BugChecker implements CompilationUnitTreeMat
       }
     }
     for (Map.Entry<Symbol, List<TypeToImport>> entry : toFix.entrySet()) {
-      final Symbol owner = entry.getKey();
+      Symbol owner = entry.getKey();
       if (entry.getKey().getKind() != ElementKind.PACKAGE
           && entry.getValue().size() > MAX_MEMBER_IMPORTS) {
         qualifiedNameFix(fix, owner, state);
@@ -219,10 +217,9 @@ public class WildcardImport extends BugChecker implements CompilationUnitTreeMat
    * Add an import for {@code owner}, and qualify all on demand imported references to members of
    * owner by owner's simple name.
    */
-  private static void qualifiedNameFix(
-      final SuggestedFix.Builder fix, final Symbol owner, VisitorState state) {
+  private static void qualifiedNameFix(SuggestedFix.Builder fix, Symbol owner, VisitorState state) {
     fix.addImport(owner.getQualifiedName().toString());
-    final JCCompilationUnit unit = (JCCompilationUnit) state.getPath().getCompilationUnit();
+    JCCompilationUnit unit = (JCCompilationUnit) state.getPath().getCompilationUnit();
     new TreePathScanner<Void, Void>() {
       @Override
       public Void visitIdentifier(IdentifierTree tree, Void unused) {

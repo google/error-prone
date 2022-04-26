@@ -16,7 +16,11 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static org.junit.Assume.assumeTrue;
+
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
+import com.google.errorprone.CompilationTestHelper;
+import com.google.errorprone.util.RuntimeVersion;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -24,6 +28,10 @@ import org.junit.runners.JUnit4;
 /** {@link SwitchDefault}Test */
 @RunWith(JUnit4.class)
 public class SwitchDefaultTest {
+
+  private final CompilationTestHelper compilationHelper =
+      CompilationTestHelper.newInstance(SwitchDefault.class, getClass());
+
   private final BugCheckerRefactoringTestHelper testHelper =
       BugCheckerRefactoringTestHelper.newInstance(SwitchDefault.class, getClass());
 
@@ -220,6 +228,65 @@ public class SwitchDefaultTest {
             "      default: // fall through",
             "    }",
             "    return false;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void newNotation_validDefault() {
+    assumeTrue(RuntimeVersion.isAtLeast14());
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  public static void nothing1() { }",
+            "  public static void nothing2() { }",
+            "  public static void nothing3() { }",
+            "  public static void switchDefaultCrash(int i)",
+            "  {",
+            "        switch(i) {",
+            "            case 0 -> nothing1();",
+            "            case 1 -> nothing2();",
+            "            default -> nothing3();",
+            "        }",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void newNotation_changeOrder() {
+    assumeTrue(RuntimeVersion.isAtLeast14());
+    testHelper
+        .addInputLines(
+            "Test.java",
+            "class Test {",
+            "  public static void nothing1() { }",
+            "  public static void nothing2() { }",
+            "  public static void nothing3() { }",
+            "  public static void switchDefaultCrash(int i)",
+            "  {",
+            "        switch(i) {",
+            "            default -> nothing3();",
+            "            case 0 -> nothing1();",
+            "            case 1 -> nothing2();",
+            "        }",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "class Test {",
+            "  public static void nothing1() { }",
+            "  public static void nothing2() { }",
+            "  public static void nothing3() { }",
+            "  public static void switchDefaultCrash(int i)",
+            "  {",
+            "        switch(i) {",
+            "            case 0 -> nothing1();",
+            "            case 1 -> nothing2();",
+            "            default -> nothing3();",
+            "        }",
             "  }",
             "}")
         .doTest();

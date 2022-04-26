@@ -36,7 +36,6 @@ import com.sun.source.tree.MethodInvocationTree;
  * where the {@link java.time.temporal.TemporalAmount} is a non-zero {@link java.time.Duration}.
  */
 @BugPattern(
-    name = "LocalDateTemporalAmount",
     summary =
         "LocalDate.plus() and minus() does not work with Durations. LocalDate represents civil"
             + " time (years/months/days), so java.time.Period is the appropriate thing to add or"

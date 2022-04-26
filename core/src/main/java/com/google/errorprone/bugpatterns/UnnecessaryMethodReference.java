@@ -48,7 +48,6 @@ import com.sun.tools.javac.code.Type;
 
 /** Matches unnecessary uses of method references. */
 @BugPattern(
-    name = "UnnecessaryMethodReference",
     severity = SeverityLevel.WARNING,
     summary = "This method reference is unnecessary, and can be replaced with the variable itself.")
 public final class UnnecessaryMethodReference extends BugChecker

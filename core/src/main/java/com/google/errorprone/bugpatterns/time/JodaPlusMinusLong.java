@@ -39,7 +39,6 @@ import java.util.List;
  * <type> = {Duration,Instant,DateTime,DateMidnight}}.
  */
 @BugPattern(
-    name = "JodaPlusMinusLong",
     summary =
         "Use of JodaTime's type.plus(long) or type.minus(long) is not allowed (where <type> = "
             + "{Duration,Instant,DateTime,DateMidnight}). Please use "

@@ -106,7 +106,7 @@ public abstract class AbstractUTreeTest {
     inliner = new Inliner(context, bindings);
   }
 
-  protected JCExpression ident(final String name) {
+  protected JCExpression ident(String name) {
     return MockitoHamcrest.argThat(
         new TypeSafeMatcher<JCExpression>() {
           @Override

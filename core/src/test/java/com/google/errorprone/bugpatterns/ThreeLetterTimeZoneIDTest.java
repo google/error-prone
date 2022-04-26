@@ -18,11 +18,11 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.common.truth.Truth.assertThat;
 
+import com.google.common.collect.ImmutableList;
 import com.google.errorprone.CompilationTestHelper;
 import java.time.ZoneId;
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.TimeZone;
 import java.util.stream.Collectors;
@@ -31,7 +31,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** @author awturner@google.com (Andy Turner) */
+/**
+ * @author awturner@google.com (Andy Turner)
+ */
 @RunWith(JUnit4.class)
 public class ThreeLetterTimeZoneIDTest {
 
@@ -58,11 +60,7 @@ public class ThreeLetterTimeZoneIDTest {
     // This is here for debugging, to allow printing of the suggested replacements.
     for (String id : TimeZone.getAvailableIDs()) {
       if (id.length() == 3) {
-        System.out.printf(
-            "%s %s %s%n",
-            id,
-            ThreeLetterTimeZoneID.getReplacement(id, false).replacements,
-            ThreeLetterTimeZoneID.getReplacement(id, true).replacements);
+        System.out.printf("%s %s %s%n", id, replacements(id, false), replacements(id, true));
       }
     }
   }
@@ -145,14 +143,14 @@ public class ThreeLetterTimeZoneIDTest {
 
   @Test
   public void testReplacements_PST() {
-    List<String> replacements = ThreeLetterTimeZoneID.getReplacement("PST", false).replacements;
+    ImmutableList<String> replacements = replacements("PST", false);
     // Suggests IANA ID first, then the fixed offset.
     assertThat(replacements).containsExactly("America/Los_Angeles", "Etc/GMT+8").inOrder();
   }
 
   @Test
   public void testReplacements_EST() {
-    List<String> replacements = ThreeLetterTimeZoneID.getReplacement("EST", false).replacements;
+    ImmutableList<String> replacements = replacements("EST", false);
     // Suggests fixed offset first, then the IANA ID, because this the former has the same rules as
     // TimeZone.getTimeZone("EST").
     assertThat(replacements).containsExactly("Etc/GMT+5", "America/New_York").inOrder();
@@ -160,7 +158,7 @@ public class ThreeLetterTimeZoneIDTest {
 
   @Test
   public void testReplacements_IST() {
-    List<String> replacements = ThreeLetterTimeZoneID.getReplacement("IST", false).replacements;
+    ImmutableList<String> replacements = replacements("IST", false);
     assertThat(replacements).containsExactly("Asia/Kolkata").inOrder();
   }
 
@@ -169,8 +167,12 @@ public class ThreeLetterTimeZoneIDTest {
     // Only rule-equivalent suggestions are made (unless we have explicitly provided suggestions) -
     // we don't suggest "China Standard Time" for CST, because the existing code is semantically
     // equivalent to US "Central Standard Time".
-    List<String> replacements = ThreeLetterTimeZoneID.getReplacement("CST", false).replacements;
+    ImmutableList<String> replacements = replacements("CST", false);
     assertThat(replacements).contains("America/Chicago");
     assertThat(replacements).doesNotContain("Asia/Shanghai");
+  }
+
+  private static ImmutableList<String> replacements(String zone, boolean inJodaTimeContext) {
+    return ThreeLetterTimeZoneID.getReplacement(zone, inJodaTimeContext, "message").replacements;
   }
 }

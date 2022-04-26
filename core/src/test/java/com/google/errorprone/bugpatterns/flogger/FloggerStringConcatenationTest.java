@@ -69,4 +69,52 @@ public class FloggerStringConcatenationTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void minus() {
+    testHelper
+        .addInputLines(
+            "in/Test.java",
+            "import com.google.common.flogger.FluentLogger;",
+            "class Test {",
+            "  private static final FluentLogger logger = FluentLogger.forEnclosingClass();",
+            "  public void method(String world, int i) {",
+            "    logger.atInfo().log(\"hello \" + world + \" \" + (i - 1));",
+            "  }",
+            "}")
+        .addOutputLines(
+            "out/Test.java",
+            "import com.google.common.flogger.FluentLogger;",
+            "class Test {",
+            "  private static final FluentLogger logger = FluentLogger.forEnclosingClass();",
+            "  public void method(String world, int i) {",
+            "    logger.atInfo().log(\"hello %s %d\", world, i - 1);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void numericOps() {
+    testHelper
+        .addInputLines(
+            "in/Test.java",
+            "import com.google.common.flogger.FluentLogger;",
+            "class Test {",
+            "  private static final FluentLogger logger = FluentLogger.forEnclosingClass();",
+            "  public void method(int x, int y) {",
+            "    logger.atInfo().log(x + y + \" sum; mean \" + (x + y) / 2);",
+            "  }",
+            "}")
+        .addOutputLines(
+            "out/Test.java",
+            "import com.google.common.flogger.FluentLogger;",
+            "class Test {",
+            "  private static final FluentLogger logger = FluentLogger.forEnclosingClass();",
+            "  public void method(int x, int y) {",
+            "    logger.atInfo().log(\"%d sum; mean %d\", x + y, (x + y) / 2);",
+            "  }",
+            "}")
+        .doTest();
+  }
 }

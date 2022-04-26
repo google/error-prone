@@ -50,7 +50,8 @@ abstract class UPlaceholderStatement implements UStatement {
     for (int i = 0; i < placeholderParams.size(); i++) {
       builder.put(placeholderParams.get(i), argumentsList.get(i));
     }
-    return new AutoValue_UPlaceholderStatement(placeholder, builder.build(), implementationFlow);
+    return new AutoValue_UPlaceholderStatement(
+        placeholder, builder.buildOrThrow(), implementationFlow);
   }
 
   abstract PlaceholderMethod placeholder();
@@ -96,9 +97,8 @@ abstract class UPlaceholderStatement implements UStatement {
   }
 
   @Override
-  public Choice<UnifierWithUnconsumedStatements> apply(
-      final UnifierWithUnconsumedStatements initState) {
-    final PlaceholderUnificationVisitor visitor =
+  public Choice<UnifierWithUnconsumedStatements> apply(UnifierWithUnconsumedStatements initState) {
+    PlaceholderUnificationVisitor visitor =
         PlaceholderUnificationVisitor.create(
             TreeMaker.instance(initState.unifier().getContext()), arguments());
 
@@ -119,14 +119,14 @@ abstract class UPlaceholderStatement implements UStatement {
     if (verification.allRequiredMatched()) {
       realOptions = choiceToHere.or(realOptions);
     }
-    for (final StatementTree targetStatement : initState.unconsumedStatements()) {
+    for (StatementTree targetStatement : initState.unconsumedStatements()) {
       if (!verification.scan(targetStatement, initState.unifier())) {
         break; // we saw a variable that's not allowed to be referenced
       }
       // Consume another statement, or if that fails, fall back to the previous choices...
       choiceToHere =
           choiceToHere.thenChoose(
-              (final State<ConsumptionState> consumptionState) ->
+              (State<ConsumptionState> consumptionState) ->
                   visitor
                       .unifyStatement(targetStatement, consumptionState)
                       .transform(
@@ -143,7 +143,7 @@ abstract class UPlaceholderStatement implements UStatement {
               .containsAll(placeholder().requiredParameters())) {
             Unifier resultUnifier = consumptionState.unifier().fork();
             int nConsumedStatements = consumptionState.result().consumedStatements();
-            java.util.List<? extends StatementTree> remainingStatements =
+            ImmutableList<? extends StatementTree> remainingStatements =
                 initState
                     .unconsumedStatements()
                     .subList(nConsumedStatements, initState.unconsumedStatements().size());
@@ -167,8 +167,7 @@ abstract class UPlaceholderStatement implements UStatement {
   }
 
   @Override
-  public List<JCStatement> inlineStatements(final Inliner inliner)
-      throws CouldNotResolveImportException {
+  public List<JCStatement> inlineStatements(Inliner inliner) throws CouldNotResolveImportException {
     try {
       Optional<List<JCStatement>> binding = inliner.getOptionalBinding(placeholder().blockKey());
 
@@ -181,9 +180,9 @@ abstract class UPlaceholderStatement implements UStatement {
                   (JCExpression expr) -> {
                     switch (implementationFlow()) {
                       case NEVER_EXITS:
-                        return List.of((JCStatement) inliner.maker().Exec(expr));
+                        return List.of(inliner.maker().Exec(expr));
                       case ALWAYS_RETURNS:
-                        return List.of((JCStatement) inliner.maker().Return(expr));
+                        return List.of(inliner.maker().Return(expr));
                       default:
                         throw new AssertionError();
                     }

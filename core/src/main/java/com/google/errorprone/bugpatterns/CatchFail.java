@@ -38,10 +38,10 @@ import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.JUnitMatchers;
 import com.google.errorprone.matchers.Matcher;
+import com.google.errorprone.suppliers.Supplier;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.CatchTree;
 import com.sun.source.tree.ExpressionStatementTree;
-import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
@@ -49,12 +49,13 @@ import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.TryTree;
 import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.code.Attribute.Compound;
+import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Type.UnionClassType;
 import com.sun.tools.javac.code.Types;
-import java.util.Collection;
+import com.sun.tools.javac.util.Name;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -62,14 +63,10 @@ import java.util.stream.Stream;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
-    name = "CatchFail",
     summary =
         "Ignoring exceptions and calling fail() is unnecessary, and makes test output less useful",
     severity = WARNING)
 public class CatchFail extends BugChecker implements TryTreeMatcher {
-
-  public static final Matcher<ExpressionTree> ASSERT_WITH_MESSAGE =
-      staticMethod().onClass("com.google.common.truth.Truth").named("assertWithMessage");
 
   private static final Matcher<StatementTree> FAIL_METHOD =
       expressionStatement(
@@ -126,11 +123,8 @@ public class CatchFail extends BugChecker implements TryTreeMatcher {
           StatementTree statementTree = getOnlyElement(c.getBlock().getStatements());
           MethodInvocationTree methodInvocationTree =
               (MethodInvocationTree) ((ExpressionStatementTree) statementTree).getExpression();
-          String message = null;
-          if (message == null && !methodInvocationTree.getArguments().isEmpty()) {
-            message = getMessageOrFormat(methodInvocationTree, state);
-          }
-          if (message != null) {
+          if (!methodInvocationTree.getArguments().isEmpty()) {
+            String message = getMessageOrFormat(methodInvocationTree, state);
             // only catch and rethrow to add additional context, not for raw `fail()` calls
             fix.replace(
                 statementTree,
@@ -184,7 +178,7 @@ public class CatchFail extends BugChecker implements TryTreeMatcher {
     }
 
     // Fix up the enclosing method's throws declaration to include the new thrown exception types.
-    Collection<Type> thrownTypes = ASTHelpers.getSymbol(enclosing).getThrownTypes();
+    List<Type> thrownTypes = ASTHelpers.getSymbol(enclosing).getThrownTypes();
     Types types = state.getTypes();
     // Find all types in the deleted catch blocks that are not already in the throws declaration.
     ImmutableList<Type> toThrow =
@@ -222,12 +216,11 @@ public class CatchFail extends BugChecker implements TryTreeMatcher {
 
   /** Returns true if the given method symbol has a {@code @Test(expected=...)} annotation. */
   private static boolean isExpectedExceptionTest(MethodSymbol sym, VisitorState state) {
-    Compound attribute =
-        sym.attribute(state.getSymbolFromString(JUnitMatchers.JUNIT4_TEST_ANNOTATION));
+    Compound attribute = sym.attribute(ORG_JUNIT_TEST.get(state));
     if (attribute == null) {
       return false;
     }
-    return attribute.member(state.getName("expected")) != null;
+    return attribute.member(EXPECTED.get(state)) != null;
   }
 
   private boolean catchVariableIsUsed(CatchTree c) {
@@ -247,4 +240,11 @@ public class CatchFail extends BugChecker implements TryTreeMatcher {
             null);
     return found[0];
   }
+
+  private static final Supplier<Name> EXPECTED =
+      VisitorState.memoize(state -> state.getName("expected"));
+
+  private static final Supplier<Symbol> ORG_JUNIT_TEST =
+      VisitorState.memoize(
+          state -> state.getSymbolFromString(JUnitMatchers.JUNIT4_TEST_ANNOTATION));
 }

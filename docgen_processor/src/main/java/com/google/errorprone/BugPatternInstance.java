@@ -45,7 +45,8 @@ public final class BugPatternInstance {
     instance.className = element.toString();
 
     BugPattern annotation = element.getAnnotation(BugPattern.class);
-    instance.name = annotation.name();
+    instance.name =
+        annotation.name().isEmpty() ? element.getSimpleName().toString() : annotation.name();
     instance.altNames = annotation.altNames();
     instance.tags = annotation.tags();
     instance.severity = annotation.severity();

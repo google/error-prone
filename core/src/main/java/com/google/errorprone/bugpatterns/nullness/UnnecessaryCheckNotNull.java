@@ -58,7 +58,6 @@ import java.util.Set;
  * @author bhagwani@google.com (Sumit Bhagwani)
  */
 @BugPattern(
-    name = "UnnecessaryCheckNotNull",
     summary = "This null check is unnecessary; the expression can never be null",
     severity = ERROR,
     altNames = {"PreconditionsCheckNotNull", "PreconditionsCheckNotNullPrimitive"})
@@ -229,7 +228,7 @@ public class UnnecessaryCheckNotNull extends BugChecker implements MethodInvocat
    * ==> {} x.y.z(s.t) ==> {x,s}
    */
   static List<IdentifierTree> getVariableUses(ExpressionTree tree) {
-    final List<IdentifierTree> freeVars = new ArrayList<>();
+    List<IdentifierTree> freeVars = new ArrayList<>();
 
     new TreeScanner<Void, Void>() {
       @Override

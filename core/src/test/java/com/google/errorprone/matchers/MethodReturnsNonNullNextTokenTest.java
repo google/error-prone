@@ -26,7 +26,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** @author deminguyen@google.com (Demi Nguyen) */
+/**
+ * @author deminguyen@google.com (Demi Nguyen)
+ */
 @RunWith(JUnit4.class)
 public class MethodReturnsNonNullNextTokenTest extends CompilerBasedAbstractTest {
 
@@ -61,7 +63,7 @@ public class MethodReturnsNonNullNextTokenTest extends CompilerBasedAbstractTest
   }
 
   @Test
-  public void shouldNotMatchOverridenMethod() {
+  public void shouldNotMatchOverriddenMethod() {
     writeFile(
         "A.java",
         "import java.util.StringTokenizer;",
@@ -73,7 +75,7 @@ public class MethodReturnsNonNullNextTokenTest extends CompilerBasedAbstractTest
         "  public String nextToken() {",
         "    return \"overridden method\";",
         "  }",
-        "  public void testOverridenNextToken() {",
+        "  public void testOverriddenNextToken() {",
         "    nextToken();",
         "  }",
         "}");
@@ -81,8 +83,7 @@ public class MethodReturnsNonNullNextTokenTest extends CompilerBasedAbstractTest
         methodInvocationMatches(/* shouldMatch= */ false, Matchers.methodReturnsNonNull()));
   }
 
-  private Scanner methodInvocationMatches(
-      final boolean shouldMatch, final Matcher<ExpressionTree> toMatch) {
+  private Scanner methodInvocationMatches(boolean shouldMatch, Matcher<ExpressionTree> toMatch) {
     return new Scanner() {
       @Override
       public Void visitMethodInvocation(MethodInvocationTree node, VisitorState visitorState) {

@@ -40,13 +40,8 @@ import java.util.Optional;
  *
  * @author endobson@google.com (Eric Dobson)
  */
-@BugPattern(
-    name = "BigDecimalLiteralDouble",
-    summary = "new BigDecimal(double) loses precision in this case.",
-    severity = WARNING)
+@BugPattern(summary = "new BigDecimal(double) loses precision in this case.", severity = WARNING)
 public class BigDecimalLiteralDouble extends BugChecker implements NewClassTreeMatcher {
-
-  private static final String ACTUAL_VALUE = " The exact value here is `new BigDecimal(\"%s\")`.";
 
   private static final BigInteger LONG_MAX = BigInteger.valueOf(Long.MAX_VALUE);
   private static final BigInteger LONG_MIN = BigInteger.valueOf(Long.MIN_VALUE);
@@ -118,7 +113,9 @@ public class BigDecimalLiteralDouble extends BugChecker implements NewClassTreeM
   private Description suggestReplacement(
       ExpressionTree tree, BigDecimal actualValue, String replacement) {
     return buildDescription(tree)
-        .setMessage(message() + String.format(ACTUAL_VALUE, actualValue))
+        .setMessage(
+            message()
+                + String.format(" The exact value here is `new BigDecimal(\"%s\")`.", actualValue))
         .addFix(SuggestedFix.replace(tree, replacement))
         .build();
   }

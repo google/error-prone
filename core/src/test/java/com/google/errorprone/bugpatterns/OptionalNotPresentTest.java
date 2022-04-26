@@ -20,7 +20,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** @author mariasam@google.com (Maria Sam) */
+/**
+ * @author mariasam@google.com (Maria Sam)
+ */
 @RunWith(JUnit4.class)
 public class OptionalNotPresentTest {
 
@@ -51,6 +53,59 @@ public class OptionalNotPresentTest {
             "  int g(Map<String, Optional<Integer>> m) {",
             "    if (!m.get(\"one\").isPresent()) {",
             "      return m.get(\"two\").get();",
+            "    }",
+            "    return -1;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void negation_butNotNegatingOptionalCheck() {
+    compilationTestHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.util.Optional;",
+            "class Test {",
+            "  int g(Optional<Integer> o) {",
+            "    if (!equals(this) && o.isPresent()) {",
+            "      return o.orElseThrow();",
+            "    }",
+            "    return -1;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void isEmpty() {
+    compilationTestHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.util.Optional;",
+            "class Test {",
+            "  int g(Optional<Integer> o) {",
+            "    if (o.isEmpty()) {",
+            "      // BUG: Diagnostic contains:",
+            "      return o.get();",
+            "    }",
+            "    return -1;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void orElseThrow() {
+    compilationTestHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.util.Optional;",
+            "class Test {",
+            "  int g(Optional<Integer> o) {",
+            "    if (o.isEmpty()) {",
+            "      // BUG: Diagnostic contains:",
+            "      return o.orElseThrow();",
             "    }",
             "    return -1;",
             "  }",

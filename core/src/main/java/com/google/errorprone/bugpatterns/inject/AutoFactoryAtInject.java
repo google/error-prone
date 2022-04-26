@@ -38,9 +38,10 @@ import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
 
-/** @author ronshapiro@google.com (Ron Shapiro) */
+/**
+ * @author ronshapiro@google.com (Ron Shapiro)
+ */
 @BugPattern(
-    name = "AutoFactoryAtInject",
     summary = "@AutoFactory and @Inject should not be used in the same type.",
     severity = ERROR)
 public class AutoFactoryAtInject extends BugChecker implements AnnotationTreeMatcher {

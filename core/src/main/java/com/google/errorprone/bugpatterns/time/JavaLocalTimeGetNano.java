@@ -37,7 +37,6 @@ import java.time.LocalTime;
  * to {@link LocalTime#getSecond}.
  */
 @BugPattern(
-    name = "JavaLocalTimeGetNano",
     summary =
         "localTime.getNano() only accesses the nanos-of-second field."
             + " It's rare to only use getNano() without a nearby getSecond() call.",

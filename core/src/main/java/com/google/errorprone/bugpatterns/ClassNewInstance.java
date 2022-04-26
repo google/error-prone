@@ -56,7 +56,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
-    name = "ClassNewInstance",
     summary =
         "Class.newInstance() bypasses exception checking; prefer"
             + " getDeclaredConstructor().newInstance()",
@@ -86,7 +85,7 @@ public class ClassNewInstance extends BugChecker implements MethodInvocationTree
 
   // if the match occurrs inside the body of a try statement with existing catch clauses
   // update or add a catch block to handle the new exceptions
-  private static boolean fixExceptions(final VisitorState state, SuggestedFix.Builder fix) {
+  private static boolean fixExceptions(VisitorState state, SuggestedFix.Builder fix) {
     TryTree tryTree = null;
     OUTER:
     for (TreePath path = state.getPath(); path != null; path = path.getParentPath()) {
@@ -106,7 +105,7 @@ public class ClassNewInstance extends BugChecker implements MethodInvocationTree
     for (CatchTree c : tryTree.getCatches()) {
       catches.put(ASTHelpers.getType(c.getParameter().getType()), c);
     }
-    UnhandledResult<CatchTree> result = unhandled(catches.build(), state);
+    UnhandledResult<CatchTree> result = unhandled(catches.buildOrThrow(), state);
     if (result.unhandled.isEmpty()) {
       // no fix needed
       return true;
@@ -157,7 +156,7 @@ public class ClassNewInstance extends BugChecker implements MethodInvocationTree
     }
     // if the catch blocks contain calls to newInstance, don't delete any of them to avoid
     // overlapping fixes
-    final AtomicBoolean newInstanceInCatch = new AtomicBoolean(false);
+    AtomicBoolean newInstanceInCatch = new AtomicBoolean(false);
     ((JCTree) result.handles.values().iterator().next())
         .accept(
             new TreeScanner() {
@@ -199,7 +198,7 @@ public class ClassNewInstance extends BugChecker implements MethodInvocationTree
     for (ExpressionTree e : methodTree.getThrows()) {
       thrown.put(ASTHelpers.getType(e), e);
     }
-    UnhandledResult<ExpressionTree> result = unhandled(thrown.build(), state);
+    UnhandledResult<ExpressionTree> result = unhandled(thrown.buildOrThrow(), state);
     if (result.unhandled.isEmpty()) {
       return;
     }
@@ -260,6 +259,6 @@ public class ClassNewInstance extends BugChecker implements MethodInvocationTree
         toHandle.removeIf((Type elem) -> ASTHelpers.isSubtype(elem, precise, state));
       }
     }
-    return new UnhandledResult<>(ImmutableSet.copyOf(toHandle), newHandles.build());
+    return new UnhandledResult<>(ImmutableSet.copyOf(toHandle), newHandles.buildOrThrow());
   }
 }

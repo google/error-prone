@@ -45,11 +45,7 @@ import java.util.List;
 import java.util.Optional;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
-@BugPattern(
-    name = "TryFailRefactoring",
-    summary = "Prefer assertThrows to try/fail",
-    severity = SUGGESTION,
-    tags = REFACTORING)
+@BugPattern(summary = "Prefer assertThrows to try/fail", severity = SUGGESTION, tags = REFACTORING)
 public class TryFailRefactoring extends BugChecker implements TryTreeMatcher {
 
   private static final Matcher<StatementTree> FAIL_METHOD =
@@ -77,12 +73,12 @@ public class TryFailRefactoring extends BugChecker implements TryTreeMatcher {
     }
     // try body statements, excluding the trailing `fail()`
     List<? extends StatementTree> throwingStatements = body.subList(0, body.size() - 1);
-    Iterable<? extends ExpressionTree> failArgs =
+    List<? extends ExpressionTree> failArgs =
         ((MethodInvocationTree) ((ExpressionStatementTree) getLast(body)).getExpression())
             .getArguments();
     Optional<Tree> message = Optional.ofNullable(Iterables.get(failArgs, 0, null));
     Optional<Fix> fix =
         AssertThrowsUtils.tryFailToAssertThrows(tree, throwingStatements, message, state);
-    return fix.isPresent() ? describeMatch(tree, fix) : NO_MATCH;
+    return fix.map(f -> describeMatch(tree, f)).orElse(NO_MATCH);
   }
 }

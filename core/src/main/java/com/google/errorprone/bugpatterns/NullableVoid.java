@@ -33,7 +33,6 @@ import javax.lang.model.type.TypeKind;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
-    name = "NullableVoid",
     summary =
         "void-returning methods should not be annotated with @Nullable,"
             + " since they cannot return null",
@@ -44,9 +43,6 @@ public class NullableVoid extends BugChecker implements MethodTreeMatcher {
   @Override
   public Description matchMethod(MethodTree tree, VisitorState state) {
     MethodSymbol sym = ASTHelpers.getSymbol(tree);
-    if (sym == null) {
-      return NO_MATCH;
-    }
     if (sym.getReturnType().getKind() != TypeKind.VOID) {
       return NO_MATCH;
     }

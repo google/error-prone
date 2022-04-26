@@ -29,6 +29,7 @@ import static com.google.errorprone.util.ASTHelpers.getSymbol;
 
 import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Sets;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
@@ -44,7 +45,6 @@ import com.sun.source.tree.Tree.Kind;
 import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
-import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
@@ -56,7 +56,6 @@ import javax.lang.model.element.ElementKind;
  * @author ghm@google.com (Graeme Morgan)
  */
 @BugPattern(
-    name = "EqualsWrongThing",
     summary =
         "Comparing different pairs of fields/getters in an equals implementation is probably "
             + "a mistake.",
@@ -66,8 +65,8 @@ public final class EqualsWrongThing extends BugChecker implements MethodTreeMatc
   private static final Matcher<MethodInvocationTree> COMPARISON_METHOD =
       anyOf(staticMethod().onClass("java.util.Arrays").named("equals"), staticEqualsInvocation());
 
-  private static final EnumSet<ElementKind> FIELD_TYPES =
-      EnumSet.of(ElementKind.FIELD, ElementKind.METHOD);
+  private static final ImmutableSet<ElementKind> FIELD_TYPES =
+      Sets.immutableEnumSet(ElementKind.FIELD, ElementKind.METHOD);
 
   @Override
   public Description matchMethod(MethodTree tree, VisitorState state) {

@@ -104,15 +104,17 @@ public class OrphanedFormatStringTest {
         .doTest();
   }
 
+  // "$ f" is a valid format string, because ' ' is a flag
+  // TODO(b/165671890): consider adding a heuristic to skip these
   @Test
-  public void percent() {
+  public void spaceAfterPercent() {
     testHelper
         .addSourceLines(
             "Test.java",
             "class Test {",
             "  void f() {",
-            "    StringBuilder messageBuilder = ",
-            "        new StringBuilder(\"hakuna % matata\").append(\"y\").append(\"n\");",
+            "    // BUG: Diagnostic contains:",
+            "    StringBuilder messageBuilder = new StringBuilder(\"more than 50% finished\");",
             "  }",
             "}")
         .doTest();
@@ -128,6 +130,37 @@ public class OrphanedFormatStringTest {
             "  void test() {",
             "    // BUG: Diagnostic contains:",
             "    assertWithMessage(\"%s\").that(\"\").isNull();",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void flogger() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.common.flogger.FluentLogger;",
+            "class Test {",
+            "  private static final FluentLogger logger = FluentLogger.forEnclosingClass();",
+            "  public void f() {",
+            "    // BUG: Diagnostic contains:",
+            "    logger.atInfo().log(\"hello %d\");",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void negativeFlogger() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.common.flogger.FluentLogger;",
+            "class Test {",
+            "  private static final FluentLogger logger = FluentLogger.forEnclosingClass();",
+            "  public void f(String arg) {",
+            "    logger.atInfo().log(\"hello %d\", arg);",
             "  }",
             "}")
         .doTest();

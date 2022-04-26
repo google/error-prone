@@ -362,4 +362,16 @@ public final class PrivateConstructorForUtilityClassTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void ignoreAutoValue() {
+    CompilationTestHelper.newInstance(PrivateConstructorForUtilityClass.class, getClass())
+        .addSourceLines(
+            "Foo.java",
+            "import com.google.auto.value.AutoValue;",
+            "@AutoValue",
+            "public abstract class Foo {",
+            "}")
+        .doTest();
+  }
 }

@@ -39,8 +39,4 @@ abstract class ParameterPair {
   boolean isAlternativePairing() {
     return formal().index() != actual().index();
   }
-
-  boolean isOriginalPairing() {
-    return formal().index() == actual().index();
-  }
 }

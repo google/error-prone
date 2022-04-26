@@ -38,7 +38,6 @@ import java.util.Objects;
  * @author bhagwani@google.com (Sumit Bhagwani)
  */
 @BugPattern(
-    name = "TruthGetOrDefault",
     summary = "Asserting on getOrDefault is unclear; prefer containsEntry or doesNotContainKey",
     severity = WARNING)
 public final class TruthGetOrDefault extends BugChecker implements MethodInvocationTreeMatcher {

@@ -21,7 +21,6 @@ import static java.util.Arrays.asList;
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode;
 import com.google.errorprone.CompilationTestHelper;
-import com.google.errorprone.util.RuntimeVersion;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -51,6 +50,90 @@ public class UnusedNestedClassTest {
             "Test.java", //
             "class A {",
             "  class B {}",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void anonymousClass_noFinding() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java", //
+            "import java.util.function.Function;",
+            "import java.util.stream.Stream;",
+            "class A {",
+            "  private Stream<String> map(Stream<Object> xs) {",
+            "    return xs.map(new Function<Object, String>() {",
+            "      @Override",
+            "      public String apply(Object o) {",
+            "        return o.toString();",
+            "      }",
+            "    });",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void anonymousClass_asAStatement_unused() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java", //
+            "import java.util.function.Function;",
+            "import java.util.stream.Stream;",
+            "class A {",
+            "  void test() {",
+            // TODO(ghm): This should probably report an error, but maybe it's not within scope
+            // of this check?
+            "    new Function<Object, String>() {",
+            "      @Override",
+            "      public String apply(Object o) {",
+            "        return o.toString();",
+            "      }",
+            "    };",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void localClass_used_noFinding() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java", //
+            "import java.util.function.Function;",
+            "import java.util.stream.Stream;",
+            "class A {",
+            "  private Stream<String> map(Stream<Object> xs) {",
+            "    class Mapper implements Function<Object, String> {",
+            "      @Override",
+            "      public String apply(Object o) {",
+            "        return o.toString();",
+            "      }",
+            "    }",
+            "    return xs.map(new Mapper());",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void localClass_unused_finding() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java", //
+            "import java.util.function.Function;",
+            "import java.util.stream.Stream;",
+            "class A {",
+            "  void test() {",
+            "    // BUG: Diagnostic contains:",
+            "    class Mapper implements Function<Object, String> {",
+            "      @Override",
+            "      public String apply(Object o) {",
+            "        return o.toString();",
+            "      }",
+            "    }",
+            "  }",
             "}")
         .doTest();
   }
@@ -106,6 +189,19 @@ public class UnusedNestedClassTest {
   }
 
   @Test
+  public void usedReflectively_suppressed() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.errorprone.annotations.Keep;",
+            "class A {",
+            "  @Keep",
+            "  private class B {}",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void refactoring() {
     BugCheckerRefactoringTestHelper.newInstance(UnusedNestedClass.class, getClass())
         .addInputLines(
@@ -123,9 +219,6 @@ public class UnusedNestedClassTest {
 
   @Test
   public void moduleInfo() {
-    if (!RuntimeVersion.isAtLeast9()) {
-      return;
-    }
     compilationHelper
         .setArgs(asList("-source", "9", "-target", "9"))
         .addSourceLines(

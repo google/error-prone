@@ -113,12 +113,16 @@ public class UTypeVar extends UType {
     return upperBound;
   }
 
-  /** @param lowerBound the lowerBound to set */
+  /**
+   * @param lowerBound the lowerBound to set
+   */
   public void setLowerBound(UType lowerBound) {
     this.lowerBound = checkNotNull(lowerBound);
   }
 
-  /** @param upperBound the upperBound to set */
+  /**
+   * @param upperBound the upperBound to set
+   */
   public void setUpperBound(UType upperBound) {
     this.upperBound = checkNotNull(upperBound);
   }

@@ -37,9 +37,10 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-/** @author mariasam@google.com (Maria Sam) */
+/**
+ * @author mariasam@google.com (Maria Sam)
+ */
 @BugPattern(
-    name = "IncrementInForLoopAndHeader",
     summary = "This for loop increments the same variable in the header and in the body",
     severity = WARNING)
 public class IncrementInForLoopAndHeader extends BugChecker implements ForLoopTreeMatcher {

@@ -63,7 +63,6 @@ import javax.lang.model.element.Modifier;
  * @author ghm@google.com (Graeme Morgan)
  */
 @BugPattern(
-    name = "EqualsGetClass",
     summary = "Prefer instanceof to getClass when implementing Object#equals.",
     severity = WARNING,
     tags = StandardTags.FRAGILE_CODE)
@@ -88,7 +87,7 @@ public final class EqualsGetClass extends BugChecker implements MethodInvocation
       return Description.NO_MATCH;
     }
     ClassSymbol classSymbol = getSymbol(classTree);
-    if (classSymbol == null || classSymbol.isAnonymous()) {
+    if (classSymbol.isAnonymous()) {
       return Description.NO_MATCH;
     }
     MethodTree methodTree = (MethodTree) methodTreePath.getLeaf();
@@ -98,8 +97,7 @@ public final class EqualsGetClass extends BugChecker implements MethodInvocation
     VariableTree parameter = getOnlyElement(methodTree.getParameters());
     ExpressionTree receiver = getReceiver(tree);
     VarSymbol symbol = getSymbol(parameter);
-    if (symbol == null
-        || receiver == null
+    if (receiver == null
         || receiver.getKind() != Kind.IDENTIFIER
         || !symbol.equals(getSymbol(receiver))) {
       return Description.NO_MATCH;

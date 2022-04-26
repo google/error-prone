@@ -22,7 +22,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** @author rburny@google.com (Radoslaw Burny) */
+/**
+ * @author rburny@google.com (Radoslaw Burny)
+ */
 @RunWith(JUnit4.class)
 public class JUnit3TestNotRunTest {
 
@@ -108,7 +110,7 @@ public class JUnit3TestNotRunTest {
             "Test.java",
             "import junit.framework.TestCase;",
             "public class Test extends TestCase {",
-            "  // BUG: Diagnostic contains: JUnit3TestNotRun",
+            "  // BUG: Diagnostic contains:",
             "  private void testDoesStuff() {}",
             "}")
         .doTest();
@@ -121,7 +123,7 @@ public class JUnit3TestNotRunTest {
             "Test.java",
             "import junit.framework.TestCase;",
             "public class Test extends TestCase {",
-            "  // BUG: Diagnostic contains: JUnit3TestNotRun",
+            "  // BUG: Diagnostic contains:",
             "  private void tsetDoesStuff() {}",
             "}")
         .doTest();
@@ -143,6 +145,74 @@ public class JUnit3TestNotRunTest {
             "import org.junit.Test;",
             "public class DoesStuffTest extends TestCase {",
             "  public void testDoesStuff() throws Exception {}",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void hasParameters_butOtherwiseLooksLikeATestMethod() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import junit.framework.TestCase;",
+            "public class Test extends TestCase {",
+            "  // BUG: Diagnostic contains:",
+            "  public void testDoesStuff(boolean param) {}",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void suppressionWorks() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import junit.framework.TestCase;",
+            "public class Test extends TestCase {",
+            "  @SuppressWarnings(\"JUnit3TestNotRun\")",
+            "  public void testDoesStuff(boolean param) {}",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void hasParameters_butInABaseClass() {
+    compilationHelper
+        .addSourceLines(
+            "TestBase.java",
+            "import junit.framework.TestCase;",
+            "public class TestBase extends TestCase {",
+            "  public void testDoesStuff(boolean param) {}",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void hasParameters_calledElsewhere_noFinding() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import junit.framework.TestCase;",
+            "public class Test extends TestCase {",
+            "  public void testActually() { testDoesStuff(true); }",
+            "  public void testDoesStuff(boolean param) {}",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void hasParameters_isOverride_noFinding() {
+    compilationHelper
+        .addSourceLines(
+            "Foo.java", //
+            "interface Foo {",
+            "  void testDoesStuff(boolean param);",
+            "}")
+        .addSourceLines(
+            "Test.java",
+            "import junit.framework.TestCase;",
+            "public class Test extends TestCase implements Foo {",
+            "  public void testDoesStuff(boolean param) {}",
             "}")
         .doTest();
   }

@@ -50,7 +50,7 @@ public class AssistedParametersNegativeCases {
   }
 
   /**
-   * Class has constructor with one @Assisted parameters with a value specified and and another
+   * Class has constructor with one @Assisted parameters with a value specified and another
    * parameter of the same type.
    */
   public class TestClass4 {
@@ -64,6 +64,7 @@ public class AssistedParametersNegativeCases {
    */
   public class TestClass5 {
     @Inject
-    public TestClass5(@Assisted("foo") List<String> x, @Assisted("foo") List<Integer> y, String z) {}
+    public TestClass5(
+        @Assisted("foo") List<String> x, @Assisted("foo") List<Integer> y, String z) {}
   }
 }

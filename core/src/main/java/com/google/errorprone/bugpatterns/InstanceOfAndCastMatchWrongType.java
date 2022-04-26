@@ -50,7 +50,6 @@ import javax.annotation.Nullable;
  * @author mariasam@google.com (Maria Sam)
  */
 @BugPattern(
-    name = "InstanceOfAndCastMatchWrongType",
     summary = "Casting inside an if block should be plausibly consistent with the instanceof type",
     severity = WARNING)
 public class InstanceOfAndCastMatchWrongType extends BugChecker implements TypeCastTreeMatcher {

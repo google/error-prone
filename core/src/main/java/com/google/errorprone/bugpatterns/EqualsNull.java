@@ -16,7 +16,7 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
+import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.BugPattern.StandardTags.FRAGILE_CODE;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.allOf;
@@ -44,14 +44,13 @@ import com.sun.source.tree.Tree.Kind;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
-    name = "EqualsNull",
     summary =
         "The contract of Object.equals() states that for any non-null reference value x,"
             + " x.equals(null) should return false. If x is null, a NullPointerException is thrown."
             + " Consider replacing equals() with the == operator.",
     tags = FRAGILE_CODE,
-    severity = WARNING)
-public class EqualsNull extends BugChecker implements MethodInvocationTreeMatcher {
+    severity = ERROR)
+public final class EqualsNull extends BugChecker implements MethodInvocationTreeMatcher {
 
   private static final Matcher<MethodInvocationTree> EQUALS_NULL =
       allOf(instanceEqualsInvocation(), argument(0, kindIs(Kind.NULL_LITERAL)));

@@ -35,7 +35,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 @BugPattern(
-    name = "TypeParameterUnusedInFormals",
     summary =
         "Declaring a type parameter that is only used in the return type is a misuse of"
             + " generics: operations on the type parameter are unchecked, it hides unsafe casts at"
@@ -47,9 +46,6 @@ public class TypeParameterUnusedInFormals extends BugChecker implements MethodTr
   @Override
   public Description matchMethod(MethodTree tree, VisitorState state) {
     MethodSymbol methodSymbol = ASTHelpers.getSymbol(tree);
-    if (methodSymbol == null) {
-      return Description.NO_MATCH;
-    }
 
     // Only match methods where the return type is just a type parameter.
     // e.g. the following is OK: <T> List<T> newArrayList();

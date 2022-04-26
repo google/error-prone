@@ -38,7 +38,6 @@ import java.util.Optional;
  * @author cushon@google.com (Liam Miller-Cushon)
  */
 @BugPattern(
-    name = "ArrayToString",
     summary = "Calling toString on an array does not provide useful information",
     severity = ERROR)
 public class ArrayToString extends AbstractToString {

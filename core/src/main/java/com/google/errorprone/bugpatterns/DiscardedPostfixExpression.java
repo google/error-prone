@@ -33,7 +33,6 @@ import com.sun.tools.javac.tree.JCTree.JCLambda;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
-    name = "DiscardedPostfixExpression",
     summary = "The result of this unary operation on a lambda parameter is discarded",
     severity = SeverityLevel.ERROR)
 public class DiscardedPostfixExpression extends BugChecker implements UnaryTreeMatcher {

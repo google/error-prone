@@ -51,6 +51,7 @@
         <configuration>
           <source>1.7</source>
           <target>1.7</target>
+          <compilerArgs combine.self="override" />
         </configuration>
       </plugin>
       <plugin>

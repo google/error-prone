@@ -62,7 +62,7 @@ public abstract class ScannerSupplier implements Supplier<Scanner> {
     for (BugCheckerInfo check : checkers) {
       severities.put(check.canonicalName(), check.defaultSeverity());
     }
-    return severities.build();
+    return severities.buildOrThrow();
   }
 
   /** Returns a {@link ScannerSupplier} with a specific list of {@link BugChecker} classes. */
@@ -139,7 +139,7 @@ public abstract class ScannerSupplier implements Supplier<Scanner> {
    */
   @CheckReturnValue
   public ScannerSupplier applyOverrides(ErrorProneOptions errorProneOptions) {
-    Map<String, Severity> severityOverrides = errorProneOptions.getSeverityMap();
+    ImmutableMap<String, Severity> severityOverrides = errorProneOptions.getSeverityMap();
     if (severityOverrides.isEmpty()
         && errorProneOptions.getFlags().isEmpty()
         && !errorProneOptions.isEnableAllChecksAsWarnings()

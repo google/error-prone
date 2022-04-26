@@ -33,7 +33,6 @@ import com.sun.source.tree.MethodInvocationTree;
  * @author conklinh@google.com
  */
 @BugPattern(
-    name = "CharacterGetNumericValue",
     summary =
         "getNumericValue has unexpected behaviour: it interprets A-Z as base-36 digits with values"
             + " 10-35, but also supports non-arabic numerals and miscellaneous numeric unicode"

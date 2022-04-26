@@ -85,10 +85,12 @@ public final class HeldLockAnalyzer {
       VisitorState state,
       LockEventListener listener,
       Predicate<Tree> isSuppressed,
-      GuardedByFlags flags) {
+      GuardedByFlags flags,
+      boolean reportMissingGuards) {
     HeldLockSet locks = HeldLockSet.empty();
     locks = handleMonitorGuards(state, locks, flags);
-    new LockScanner(state, listener, isSuppressed, flags).scan(state.getPath(), locks);
+    new LockScanner(state, listener, isSuppressed, flags, reportMissingGuards)
+        .scan(state.getPath(), locks);
   }
 
   // Don't use Class#getName() for inner classes, we don't want `Monitor$Guard`
@@ -123,6 +125,7 @@ public final class HeldLockAnalyzer {
     private final LockEventListener listener;
     private final Predicate<Tree> isSuppressed;
     private final GuardedByFlags flags;
+    private final boolean reportMissingGuards;
 
     private static final GuardedByExpression.Factory F = new GuardedByExpression.Factory();
 
@@ -130,11 +133,13 @@ public final class HeldLockAnalyzer {
         VisitorState visitorState,
         LockEventListener listener,
         Predicate<Tree> isSuppressed,
-        GuardedByFlags flags) {
+        GuardedByFlags flags,
+        boolean reportMissingGuards) {
       this.visitorState = visitorState;
       this.listener = listener;
       this.isSuppressed = isSuppressed;
       this.flags = flags;
+      this.reportMissingGuards = reportMissingGuards;
     }
 
     @Override
@@ -239,23 +244,33 @@ public final class HeldLockAnalyzer {
 
     private void checkMatch(ExpressionTree tree, HeldLockSet locks) {
       for (String guardString : GuardedByUtils.getGuardValues(tree, visitorState)) {
-        GuardedByBinder.bindString(
-                guardString, GuardedBySymbolResolver.from(tree, visitorState), flags)
-            .ifPresent(
-                guard -> {
-                  Optional<GuardedByExpression> boundGuard =
-                      ExpectedLockCalculator.from(
-                          (JCTree.JCExpression) tree, guard, visitorState, flags);
-                  if (!boundGuard.isPresent()) {
-                    // We couldn't resolve a guarded by expression in the current scope, so we can't
-                    // guarantee the access is protected and must report an error to be safe.
-                    listener.handleGuardedAccess(
-                        tree, new GuardedByExpression.Factory().error(guardString), locks);
-                    return;
-                  }
-                  listener.handleGuardedAccess(tree, boundGuard.get(), locks);
-                });
+        Optional<GuardedByExpression> guard =
+            GuardedByBinder.bindString(
+                guardString,
+                GuardedBySymbolResolver.from(tree, visitorState.withPath(getCurrentPath())),
+                flags);
+        if (!guard.isPresent()) {
+          if (reportMissingGuards) {
+            invalidLock(tree, locks, guardString);
+          }
+          continue;
+        }
+        Optional<GuardedByExpression> boundGuard =
+            ExpectedLockCalculator.from(
+                (JCTree.JCExpression) tree, guard.get(), visitorState, flags);
+        if (!boundGuard.isPresent()) {
+          // We couldn't resolve a guarded by expression in the current scope, so we can't
+          // guarantee the access is protected and must report an error to be safe.
+          invalidLock(tree, locks, guardString);
+          continue;
+        }
+        listener.handleGuardedAccess(tree, boundGuard.get(), locks);
       }
+    }
+
+    private void invalidLock(ExpressionTree tree, HeldLockSet locks, String guardString) {
+      listener.handleGuardedAccess(
+          tree, new GuardedByExpression.Factory().error(guardString), locks);
     }
   }
 

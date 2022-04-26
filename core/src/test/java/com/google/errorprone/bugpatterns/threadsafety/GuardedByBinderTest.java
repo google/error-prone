@@ -516,6 +516,7 @@ public class GuardedByBinderTest {
                   exprString,
                   GuardedBySymbolResolver.from(
                       ASTHelpers.getSymbol(classDecl),
+                      null,
                       compilationUnit,
                       task.getContext(),
                       null,

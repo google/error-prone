@@ -30,7 +30,7 @@ or to call the method on a different instance:
 
 ```java
 class Delegate implements Processor {
-  Procesor delegate;
+  Processor delegate;
 
   void process(String name, int id) {
     process(name, id); // error

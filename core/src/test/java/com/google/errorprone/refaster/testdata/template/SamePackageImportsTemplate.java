@@ -16,24 +16,22 @@
 
 package com.google.errorprone.refaster.testdata.template;
 
-import com.google.common.collect.Maps;
+import com.google.common.collect.ImmutableMap;
 import com.google.errorprone.refaster.ImportPolicy;
 import com.google.errorprone.refaster.annotation.AfterTemplate;
 import com.google.errorprone.refaster.annotation.BeforeTemplate;
 import com.google.errorprone.refaster.annotation.UseImportPolicy;
-import java.util.AbstractMap;
-import java.util.Map;
 
 /** Sample template generating references to nested classes in java.util. */
 public class SamePackageImportsTemplate<K, V> {
   @BeforeTemplate
-  Map.Entry<K, V> immutableEntry(K k, V v) {
-    return Maps.immutableEntry(k, v);
+  ImmutableMap.Builder<K, V> builderFactory() {
+    return ImmutableMap.builder();
   }
 
   @AfterTemplate
   @UseImportPolicy(ImportPolicy.IMPORT_CLASS_DIRECTLY)
-  Map.Entry<K, V> abstractMapEntry(K k, V v) {
-    return new AbstractMap.SimpleImmutableEntry<>(k, v);
+  ImmutableMap.Builder<K, V> builderConstructor() {
+    return new ImmutableMap.Builder<>();
   }
 }

@@ -41,7 +41,6 @@ import java.util.Iterator;
  * @author mariasam@google.com (Maria Sam)
  */
 @BugPattern(
-    name = "ShortCircuitBoolean",
     summary = "Prefer the short-circuiting boolean operators && and || to & and |.",
     severity = WARNING,
     tags = StandardTags.FRAGILE_CODE)

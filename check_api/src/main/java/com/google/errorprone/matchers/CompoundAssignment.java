@@ -16,31 +16,29 @@
 
 package com.google.errorprone.matchers;
 
+import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.VisitorState;
 import com.sun.source.tree.CompoundAssignmentTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.Tree.Kind;
-import java.util.HashSet;
 import java.util.Set;
 
 /** Matcher for a compound-assignment operator expression. */
 public class CompoundAssignment implements Matcher<CompoundAssignmentTree> {
 
-  private static final Set<Kind> COMPOUND_ASSIGNMENT_OPERATORS = new HashSet<>(11);
-
-  static {
-    COMPOUND_ASSIGNMENT_OPERATORS.add(Kind.AND_ASSIGNMENT);
-    COMPOUND_ASSIGNMENT_OPERATORS.add(Kind.DIVIDE_ASSIGNMENT);
-    COMPOUND_ASSIGNMENT_OPERATORS.add(Kind.LEFT_SHIFT_ASSIGNMENT);
-    COMPOUND_ASSIGNMENT_OPERATORS.add(Kind.MINUS_ASSIGNMENT);
-    COMPOUND_ASSIGNMENT_OPERATORS.add(Kind.MULTIPLY_ASSIGNMENT);
-    COMPOUND_ASSIGNMENT_OPERATORS.add(Kind.OR_ASSIGNMENT);
-    COMPOUND_ASSIGNMENT_OPERATORS.add(Kind.PLUS_ASSIGNMENT);
-    COMPOUND_ASSIGNMENT_OPERATORS.add(Kind.REMAINDER_ASSIGNMENT);
-    COMPOUND_ASSIGNMENT_OPERATORS.add(Kind.RIGHT_SHIFT_ASSIGNMENT);
-    COMPOUND_ASSIGNMENT_OPERATORS.add(Kind.UNSIGNED_RIGHT_SHIFT_ASSIGNMENT);
-    COMPOUND_ASSIGNMENT_OPERATORS.add(Kind.XOR_ASSIGNMENT);
-  }
+  private static final ImmutableSet<Kind> COMPOUND_ASSIGNMENT_OPERATORS =
+      ImmutableSet.of(
+          Kind.AND_ASSIGNMENT,
+          Kind.DIVIDE_ASSIGNMENT,
+          Kind.LEFT_SHIFT_ASSIGNMENT,
+          Kind.MINUS_ASSIGNMENT,
+          Kind.MULTIPLY_ASSIGNMENT,
+          Kind.OR_ASSIGNMENT,
+          Kind.PLUS_ASSIGNMENT,
+          Kind.REMAINDER_ASSIGNMENT,
+          Kind.RIGHT_SHIFT_ASSIGNMENT,
+          Kind.UNSIGNED_RIGHT_SHIFT_ASSIGNMENT,
+          Kind.XOR_ASSIGNMENT);
 
   private final Set<Kind> operators;
   private final Matcher<ExpressionTree> receiverMatcher;

@@ -16,12 +16,13 @@
 
 package com.google.errorprone.bugpatterns.flogger;
 
-import static com.google.common.base.Preconditions.checkState;
 import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.bugpatterns.flogger.FloggerHelpers.inferFormatSpecifier;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.constValue;
+import static com.google.errorprone.util.ASTHelpers.getType;
+import static com.google.errorprone.util.ASTHelpers.isSameType;
 import static java.util.stream.Collectors.joining;
 
 import com.google.errorprone.BugPattern;
@@ -45,7 +46,6 @@ import java.util.List;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
-    name = "FloggerStringConcatenation",
     summary =
         "Prefer string formatting using printf placeholders (e.g. %s) instead of string"
             + " concatenation",
@@ -75,16 +75,20 @@ public class FloggerStringConcatenation extends BugChecker implements MethodInvo
         new SimpleTreeVisitor<Void, Void>() {
           @Override
           public Void visitBinary(BinaryTree tree, Void unused) {
-            checkState(tree.getKind().equals(Kind.PLUS));
-            tree.getLeftOperand().accept(this, null);
-            tree.getRightOperand().accept(this, null);
-            return null;
+            if (tree.getKind().equals(Kind.PLUS)
+                && isSameType(getType(tree), state.getSymtab().stringType, state)) {
+              // + yielding a String is concatenation, and should use placeholders for each part.
+              tree.getLeftOperand().accept(this, null);
+              return tree.getRightOperand().accept(this, null);
+            } else {
+              // Otherwise it's not concatenation, and should be its own placeholder
+              return defaultAction(tree, null);
+            }
           }
 
           @Override
           public Void visitParenthesized(ParenthesizedTree node, Void unused) {
-            node.getExpression().accept(this, null);
-            return null;
+            return node.getExpression().accept(this, null);
           }
 
           @Override

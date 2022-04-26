@@ -28,6 +28,7 @@ import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.NewClassTreeMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
+import com.google.errorprone.suppliers.Supplier;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
@@ -67,6 +68,9 @@ public class JavaUtilDateChecker extends BugChecker
   }
 
   private static boolean isDate(VisitorState state, Type type) {
-    return ASTHelpers.isSameType(type, state.getTypeFromString("java.util.Date"), state);
+    return ASTHelpers.isSameType(type, JAVA_UTIL_DATE.get(state), state);
   }
+
+  private static final Supplier<Type> JAVA_UTIL_DATE =
+      VisitorState.memoize(state -> state.getTypeFromString("java.util.Date"));
 }

@@ -31,7 +31,6 @@ import java.lang.annotation.Annotation;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
-    name = "GetClassOnAnnotation",
     summary = "Calling getClass() on an annotation may return a proxy class",
     severity = ERROR)
 public class GetClassOnAnnotation extends BugChecker

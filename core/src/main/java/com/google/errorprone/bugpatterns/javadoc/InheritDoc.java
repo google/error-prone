@@ -44,7 +44,6 @@ import com.sun.tools.javac.code.Symbol.MethodSymbol;
  * @author ghm@google.com (Graeme Morgan)
  */
 @BugPattern(
-    name = "InheritDoc",
     summary = "Invalid use of @inheritDoc.",
     severity = WARNING,
     tags = StandardTags.STYLE,
@@ -99,7 +98,7 @@ public final class InheritDoc extends BugChecker
         @Override
         public Void visitMethod(MethodTree methodTree, Void unused) {
           MethodSymbol methodSymbol = getSymbol(methodTree);
-          if (methodSymbol != null && findSuperMethods(methodSymbol, state.getTypes()).isEmpty()) {
+          if (findSuperMethods(methodSymbol, state.getTypes()).isEmpty()) {
             state.reportMatch(
                 buildDescription(diagnosticPosition(getCurrentPath(), state))
                     .setMessage(

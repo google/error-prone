@@ -62,15 +62,15 @@ abstract class UClassDecl extends USimpleStatement implements ClassTree {
     abstract ImmutableList<UMethodDecl> remainingMembers();
 
     static Function<Unifier, UnifierWithRemainingMembers> withRemaining(
-        final Iterable<UMethodDecl> remainingMembers) {
+        Iterable<UMethodDecl> remainingMembers) {
       return (Unifier unifier) -> create(unifier, remainingMembers);
     }
   }
 
   private static Function<UnifierWithRemainingMembers, Choice<UnifierWithRemainingMembers>> match(
-      final Tree tree) {
-    return (final UnifierWithRemainingMembers state) -> {
-      final ImmutableList<UMethodDecl> currentMembers = state.remainingMembers();
+      Tree tree) {
+    return (UnifierWithRemainingMembers state) -> {
+      ImmutableList<UMethodDecl> currentMembers = state.remainingMembers();
       Choice<Integer> methodChoice =
           Choice.from(
               ContiguousSet.create(

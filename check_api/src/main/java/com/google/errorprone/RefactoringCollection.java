@@ -23,7 +23,7 @@ import static java.nio.file.StandardOpenOption.CREATE;
 import com.google.auto.value.AutoValue;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Iterables;
-import com.google.common.collect.Multimap;
+import com.google.common.collect.SetMultimap;
 import com.google.errorprone.ErrorProneOptions.PatchingOptions;
 import com.google.errorprone.apply.DescriptionBasedDiff;
 import com.google.errorprone.apply.FileDestination;
@@ -56,7 +56,8 @@ class RefactoringCollection implements DescriptionListener.Factory {
 
   private static final Logger logger = Logger.getLogger(RefactoringCollection.class.getName());
 
-  private final Multimap<URI, DelegatingDescriptionListener> foundSources = HashMultimap.create();
+  private final SetMultimap<URI, DelegatingDescriptionListener> foundSources =
+      HashMultimap.create();
   private final Path rootPath;
   private final FileDestination fileDestination;
   private final Function<URI, RefactoringResult> postProcess;

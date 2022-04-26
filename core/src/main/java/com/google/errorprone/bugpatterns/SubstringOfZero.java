@@ -33,7 +33,6 @@ import java.util.Objects;
 
 /** Check for calls to String's {@code foo.substring(0)}. */
 @BugPattern(
-    name = "SubstringOfZero",
     summary = "String.substring(0) returns the original String",
     explanation =
         "String.substring(int) gives you the substring from the index to the end, inclusive."

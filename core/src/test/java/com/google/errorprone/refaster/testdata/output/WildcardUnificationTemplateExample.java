@@ -30,6 +30,5 @@ public class WildcardUnificationTemplateExample {
     ImmutableList<String> actual = ImmutableList.of("kurt", "kluever");
     ImmutableList<String> expected = ImmutableList.of("kluever", "kurt");
     assertThat(actual).containsExactlyElementsIn(expected);
-    
   }
 }

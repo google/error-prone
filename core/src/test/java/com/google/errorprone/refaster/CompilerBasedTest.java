@@ -16,7 +16,6 @@
 
 package com.google.errorprone.refaster;
 
-
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.io.CharStreams;
@@ -32,7 +31,6 @@ import com.sun.tools.javac.tree.TreeInfo;
 import com.sun.tools.javac.tree.TreeScanner;
 import com.sun.tools.javac.util.Context;
 import java.io.IOException;
-import java.util.Map;
 import javax.tools.DiagnosticCollector;
 import javax.tools.JavaCompiler;
 import javax.tools.JavaFileObject;
@@ -46,8 +44,8 @@ import javax.tools.StandardJavaFileManager;
 public class CompilerBasedTest {
   protected Context context;
   protected SourceFile sourceFile;
-  protected Iterable<JCCompilationUnit> compilationUnits;
-  private Map<String, JCMethodDecl> methods;
+  protected ImmutableList<JCCompilationUnit> compilationUnits;
+  private ImmutableMap<String, JCMethodDecl> methods;
 
   protected void compile(TreeScanner scanner, JavaFileObject fileObject) {
     JavaCompiler compiler = JavacTool.create();
@@ -80,9 +78,8 @@ public class CompilerBasedTest {
   }
 
   protected void compile(JavaFileObject fileObject) {
-    final ImmutableMap.Builder<String, JCMethodDecl> methodsBuilder = ImmutableMap.builder();
-    final ImmutableList.Builder<JCCompilationUnit> compilationUnitsBuilder =
-        ImmutableList.builder();
+    ImmutableMap.Builder<String, JCMethodDecl> methodsBuilder = ImmutableMap.builder();
+    ImmutableList.Builder<JCCompilationUnit> compilationUnitsBuilder = ImmutableList.builder();
     compile(
         new TreeScanner() {
           @Override
@@ -99,7 +96,7 @@ public class CompilerBasedTest {
           }
         },
         fileObject);
-    this.methods = methodsBuilder.build();
+    this.methods = methodsBuilder.buildOrThrow();
     this.compilationUnits = compilationUnitsBuilder.build();
   }
 

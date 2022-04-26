@@ -38,7 +38,6 @@ import com.sun.source.util.TreeScanner;
  * @author siyuanl@google.com (Siyuan Liu)
  */
 @BugPattern(
-    name = "ToStringReturnsNull",
     summary = "An implementation of Object.toString() should never return null.",
     severity = WARNING)
 public class ToStringReturnsNull extends BugChecker implements MethodTreeMatcher {

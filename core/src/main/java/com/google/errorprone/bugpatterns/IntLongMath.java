@@ -41,7 +41,6 @@ import javax.lang.model.type.TypeKind;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
-    name = "IntLongMath",
     summary = "Expression of type int may overflow before being assigned to a long",
     severity = WARNING,
     tags = FRAGILE_CODE)
@@ -93,7 +92,7 @@ public class IntLongMath extends BugChecker
       return NO_MATCH;
     }
     // Note that we don't care about boxing as int isn't assignable to Long;
-    // primtive widening conversions can't be combined with autoboxing.
+    // primitive widening conversions can't be combined with autoboxing.
     if (ASTHelpers.getType(init).getKind() != TypeKind.INT) {
       return NO_MATCH;
     }

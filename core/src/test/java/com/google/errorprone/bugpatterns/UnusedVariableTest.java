@@ -14,12 +14,14 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static org.junit.Assume.assumeTrue;
+
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.BugCheckerRefactoringTestHelper.FixChoosers;
 import com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode;
 import com.google.errorprone.CompilationTestHelper;
-import com.google.errorprone.ErrorProneFlags;
+import com.google.errorprone.util.RuntimeVersion;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -32,8 +34,7 @@ public class UnusedVariableTest {
   private final CompilationTestHelper helper =
       CompilationTestHelper.newInstance(UnusedVariable.class, getClass());
   private final BugCheckerRefactoringTestHelper refactoringHelper =
-      BugCheckerRefactoringTestHelper.newInstance(
-          new UnusedVariable(ErrorProneFlags.empty()), getClass());
+      BugCheckerRefactoringTestHelper.newInstance(UnusedVariable.class, getClass());
 
   @Test
   public void exemptedByReceiverParameter() {
@@ -1077,16 +1078,26 @@ public class UnusedVariableTest {
 
   @Test
   public void unusedAssignment_initialAssignmentNull_givesWarning() {
-    helper
-        .addSourceLines(
+    refactoringHelper
+        .addInputLines(
             "Test.java",
             "package unusedvars;",
             "public class Test {",
-            "  public void test() {",
-            "    // BUG: Diagnostic contains: assignment",
-            "    Integer a = null;",
-            "    a = 1;",
-            "    a.hashCode();",
+            "  public String test() {",
+            "    String a = null;",
+            "    hashCode();",
+            "    a = toString();",
+            "    return a;",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "package unusedvars;",
+            "public class Test {",
+            "  public String test() {",
+            "    hashCode();",
+            "    String a = toString();",
+            "    return a;",
             "  }",
             "}")
         .doTest();
@@ -1351,6 +1362,99 @@ public class UnusedVariableTest {
             "  }",
             "}")
         .setFixChooser(FixChoosers.SECOND)
+        .doTest();
+  }
+
+  @Test
+  public void simpleRecord() {
+    assumeTrue(RuntimeVersion.isAtLeast16());
+    helper
+        .addSourceLines(
+            "SimpleRecord.java", //
+            "public record SimpleRecord (Integer foo, Long bar) {}")
+        .expectNoDiagnostics()
+        .doTest();
+  }
+
+  @Test
+  public void nestedRecord() {
+    assumeTrue(RuntimeVersion.isAtLeast16());
+    helper
+        .addSourceLines(
+            "SimpleClass.java",
+            "public class SimpleClass {",
+            "   public record SimpleRecord (Integer foo, Long bar) {}",
+            "}")
+        .expectNoDiagnostics()
+        .doTest();
+  }
+
+  @Test
+  public void unusedInRecord() {
+    assumeTrue(RuntimeVersion.isAtLeast16());
+    helper
+        .addSourceLines(
+            "SimpleClass.java",
+            "public class SimpleClass {",
+            "  public record SimpleRecord (Integer foo, Long bar) {",
+            "    void f() {",
+            "      // BUG: Diagnostic contains: is never read",
+            "      int x = foo;",
+            "    }",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void manyUnusedAssignments_terminalAssignmentBecomesVariable() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            "public class Test {",
+            "  public void test () {",
+            "    Integer a = 1;",
+            "    a = 2;",
+            "    a = 3;",
+            "    a.hashCode();",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "public class Test {",
+            "  public void test () {",
+            "    Integer a = 3;",
+            "    a.hashCode();",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void unusedVariable_withinPrivateInnerClass() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  private class Inner {",
+            "    // BUG: Diagnostic contains:",
+            "    public int foo = 1;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void parcelableCreator_noFinding() {
+    helper
+        .addSourceFile("android/testdata/stubs/android/os/Parcel.java")
+        .addSourceFile("android/testdata/stubs/android/os/Parcelable.java")
+        .addSourceLines(
+            "Test.java",
+            "import android.os.Parcelable;",
+            "class Test {",
+            "  private static final Parcelable.Creator<Test> CREATOR = null;",
+            "}")
         .doTest();
   }
 }

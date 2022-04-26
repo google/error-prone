@@ -32,7 +32,6 @@ import com.sun.source.tree.ImportTree;
  * @author cushon@google.com (Liam Miller-Cushon)
  */
 @BugPattern(
-    name = "NonCanonicalStaticImport",
     summary = "Static import of type uses non-canonical name",
     severity = ERROR,
     documentSuppression = false)

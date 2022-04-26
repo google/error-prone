@@ -20,6 +20,8 @@ import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Sets;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.StandardTags;
 import com.google.errorprone.VisitorState;
@@ -33,27 +35,25 @@ import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.tools.javac.tree.JCTree.JCBinary;
 import com.sun.tools.javac.tree.TreeInfo;
-import java.util.EnumSet;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
-    name = "OperatorPrecedence",
     summary = "Use grouping parenthesis to make the operator precedence explicit",
     severity = WARNING,
     tags = StandardTags.STYLE)
 public class OperatorPrecedence extends BugChecker implements BinaryTreeMatcher {
 
-  private static final EnumSet<Kind> CONDITIONAL =
-      EnumSet.of(Kind.AND, Kind.OR, Kind.XOR, Kind.CONDITIONAL_AND, Kind.CONDITIONAL_OR);
+  private static final ImmutableSet<Kind> CONDITIONAL =
+      Sets.immutableEnumSet(Kind.AND, Kind.OR, Kind.XOR, Kind.CONDITIONAL_AND, Kind.CONDITIONAL_OR);
 
-  private static final EnumSet<Kind> SHIFT =
-      EnumSet.of(Kind.LEFT_SHIFT, Kind.RIGHT_SHIFT, Kind.UNSIGNED_RIGHT_SHIFT);
+  private static final ImmutableSet<Kind> SHIFT =
+      Sets.immutableEnumSet(Kind.LEFT_SHIFT, Kind.RIGHT_SHIFT, Kind.UNSIGNED_RIGHT_SHIFT);
 
-  private static final EnumSet<Kind> ARITHMETIC =
-      EnumSet.of(Kind.PLUS, Kind.MULTIPLY, Kind.DIVIDE, Kind.MINUS);
+  private static final ImmutableSet<Kind> ARITHMETIC =
+      Sets.immutableEnumSet(Kind.PLUS, Kind.MULTIPLY, Kind.DIVIDE, Kind.MINUS);
 
-  private static final EnumSet<Kind> SAFE_ASSOCIATIVE_OPERATORS =
-      EnumSet.of(Kind.CONDITIONAL_AND, Kind.CONDITIONAL_OR, Kind.PLUS);
+  private static final ImmutableSet<Kind> SAFE_ASSOCIATIVE_OPERATORS =
+      Sets.immutableEnumSet(Kind.CONDITIONAL_AND, Kind.CONDITIONAL_OR, Kind.PLUS);
 
   @Override
   public Description matchBinary(BinaryTree tree, VisitorState state) {

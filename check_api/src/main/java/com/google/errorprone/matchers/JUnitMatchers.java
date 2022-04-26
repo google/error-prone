@@ -29,7 +29,7 @@ import static com.google.errorprone.matchers.Matchers.hasArgumentWithValue;
 import static com.google.errorprone.matchers.Matchers.hasMethod;
 import static com.google.errorprone.matchers.Matchers.hasModifier;
 import static com.google.errorprone.matchers.Matchers.isSubtypeOf;
-import static com.google.errorprone.matchers.Matchers.methodHasParameters;
+import static com.google.errorprone.matchers.Matchers.methodHasNoParameters;
 import static com.google.errorprone.matchers.Matchers.methodHasVisibility;
 import static com.google.errorprone.matchers.Matchers.methodIsNamed;
 import static com.google.errorprone.matchers.Matchers.methodNameStartsWith;
@@ -41,6 +41,7 @@ import static com.google.errorprone.util.ASTHelpers.findSuperMethods;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static javax.lang.model.element.NestingKind.TOP_LEVEL;
 
+import com.google.common.collect.ImmutableList;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.AnnotationTree;
@@ -54,8 +55,6 @@ import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Type.ClassType;
-import java.util.Arrays;
-import java.util.Collection;
 import javax.lang.model.element.Modifier;
 
 /**
@@ -145,14 +144,14 @@ public final class JUnitMatchers {
   public static final Matcher<MethodTree> isJunit3TestCase =
       allOf(
           methodNameStartsWith("test"),
-          methodHasParameters(),
+          methodHasNoParameters(),
           Matchers.<MethodTree>hasModifier(Modifier.PUBLIC),
           methodReturns(VOID_TYPE));
 
   /** Common matcher for possible JUnit setUp/tearDown methods. */
   private static final Matcher<MethodTree> looksLikeJUnitSetUpOrTearDown =
       allOf(
-          methodHasParameters(),
+          methodHasNoParameters(),
           anyOf(
               methodHasVisibility(MethodVisibility.Visibility.PUBLIC),
               methodHasVisibility(MethodVisibility.Visibility.PROTECTED)),
@@ -212,9 +211,9 @@ public final class JUnitMatchers {
    * A list of test runners that this matcher should look for in the @RunWith annotation. Subclasses
    * of the test runners are also matched.
    */
-  private static final Collection<String> TEST_RUNNERS =
-      Arrays.asList(
-          "org.mockito.runners.MockitoJUnitRunner", "org.junit.runners.BlockJUnit4ClassRunner");
+  private static final ImmutableList<String> TEST_RUNNERS =
+      ImmutableList.of(
+          "org.mockito.junit.MockitoJUnitRunner", "org.junit.runners.BlockJUnit4ClassRunner");
 
   /**
    * Matches an argument of type {@code Class<T>}, where T is a subtype of one of the test runners

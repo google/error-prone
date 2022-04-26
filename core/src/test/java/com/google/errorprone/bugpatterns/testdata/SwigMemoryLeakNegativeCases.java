@@ -26,6 +26,7 @@ public class SwigMemoryLeakNegativeCases {
     swigCPtr = cPtr;
   }
 
+  @SuppressWarnings("removal") // deprecated for removal starting in JDK 18
   protected void finalize() {
     delete();
   }

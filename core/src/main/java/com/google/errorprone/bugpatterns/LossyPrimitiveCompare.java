@@ -41,7 +41,6 @@ import java.util.function.Predicate;
  * @author awturner@google.com (Andy Turner)
  */
 @BugPattern(
-    name = "LossyPrimitiveCompare",
     summary = "Using an unnecessarily-wide comparison method can lead to lossy comparison",
     explanation =
         "Implicit widening conversions when comparing two primitives with methods like"

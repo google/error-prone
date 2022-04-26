@@ -21,7 +21,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** @author ronshapiro@google.com (Ron Shapiro) */
+/**
+ * @author ronshapiro@google.com (Ron Shapiro)
+ */
 @RunWith(JUnit4.class)
 public class AutoFactoryAtInjectTest {
 

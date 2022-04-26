@@ -70,8 +70,8 @@ public class AnnotationDoesNotHaveArgumentTest extends CompilerBasedAbstractTest
     assertCompiles(annotationMatches(false));
   }
 
-  private Scanner annotationMatches(final boolean shouldMatch) {
-    final AnnotationDoesNotHaveArgument toMatch = new AnnotationDoesNotHaveArgument("value");
+  private Scanner annotationMatches(boolean shouldMatch) {
+    AnnotationDoesNotHaveArgument toMatch = new AnnotationDoesNotHaveArgument("value");
     return new Scanner() {
       @Override
       public Void visitAnnotation(AnnotationTree node, VisitorState visitorState) {

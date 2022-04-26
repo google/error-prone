@@ -16,8 +16,11 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static org.junit.Assume.assumeTrue;
+
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
+import com.google.errorprone.util.RuntimeVersion;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -136,6 +139,23 @@ public class UnnecessaryParenthesesTest {
   }
 
   @Test
+  public void lambda() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            "import java.util.function.Function;",
+            "class Test {",
+            "  Function<Void, Void> f() {",
+            "    // BUG: Diagnostic contains:",
+            "    Function<Void, Void> r = (y -> y);",
+            "    // BUG: Diagnostic contains:",
+            "    return (y -> y);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void unaryPostFixParenthesesNotNeeded() {
     testHelper
         .addInputLines(
@@ -178,6 +198,64 @@ public class UnnecessaryParenthesesTest {
             "    (++i).toString();",
             "  }",
             "}")
+        .doTest();
+  }
+
+  @Test
+  public void negativeStatements() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  void print(boolean b, int i) {",
+            "    if (b) {}",
+            "    while (b) {}",
+            "    do {} while (b);",
+            "    switch (i) {}",
+            "    synchronized (this) {}",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void positiveStatements() {
+    testHelper
+        .addInputLines(
+            "Test.java",
+            "class Test {",
+            "  int f(boolean b, Integer x) {",
+            "    assert(b);",
+            "    return(x);",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "class Test {",
+            "  int f(boolean b, Integer x) {",
+            "    assert b;",
+            "    return x;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void switchExpression() {
+    assumeTrue(RuntimeVersion.isAtLeast12());
+    helper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  public boolean match(String value) {",
+            "    return switch (value) {",
+            "    case \"true\" -> true;",
+            "    case \"false\" -> false;",
+            "    default -> throw new RuntimeException(\"Unable to match\");",
+            "    };",
+            "  }",
+            "}")
+        .expectNoDiagnostics()
         .doTest();
   }
 }

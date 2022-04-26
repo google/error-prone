@@ -26,7 +26,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** @author deminguyen@google.com (Demi Nguyen) */
+/**
+ * @author deminguyen@google.com (Demi Nguyen)
+ */
 @RunWith(JUnit4.class)
 public class MethodReturnsNonNullToStringTest extends CompilerBasedAbstractTest {
 
@@ -98,7 +100,7 @@ public class MethodReturnsNonNullToStringTest extends CompilerBasedAbstractTest 
   }
 
   @Test
-  public void shoudlNotMatchWhenMethodSignatureDiffers() {
+  public void shouldNotMatchWhenMethodSignatureDiffers() {
     writeFile(
         "A.java",
         "  public String toString(int i) {",
@@ -110,8 +112,7 @@ public class MethodReturnsNonNullToStringTest extends CompilerBasedAbstractTest 
         "}");
   }
 
-  private Scanner methodInvocationMatches(
-      final boolean shouldMatch, final Matcher<ExpressionTree> toMatch) {
+  private Scanner methodInvocationMatches(boolean shouldMatch, Matcher<ExpressionTree> toMatch) {
     return new Scanner() {
       @Override
       public Void visitMethodInvocation(MethodInvocationTree node, VisitorState visitorState) {

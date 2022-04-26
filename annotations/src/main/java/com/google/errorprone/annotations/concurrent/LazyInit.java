@@ -15,7 +15,6 @@
  */
 package com.google.errorprone.annotations.concurrent;
 
-
 import com.google.errorprone.annotations.IncompatibleModifiers;
 import com.google.errorprone.annotations.Modifier;
 import java.lang.annotation.ElementType;

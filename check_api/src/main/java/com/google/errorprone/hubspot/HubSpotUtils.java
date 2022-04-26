@@ -79,18 +79,15 @@ public class HubSpotUtils {
   private static final Map<String, Long> TIMING_DATA = new ConcurrentHashMap<>();
   private static final Supplier<PathMatcher> GENERATED_PATTERN = VisitorState.memoize(getGeneratedPathsMatcher());
 
-  public static ScannerSupplier createScannerSupplier(Iterable<BugChecker> extraBugCheckers) {
+  public static ScannerSupplier createScannerSupplier(Iterable<Class<? extends BugChecker>> extraBugCheckers) {
     ImmutableList.Builder<BugCheckerInfo> builder = ImmutableList.builder();
-    Iterator<BugChecker> iter = extraBugCheckers.iterator();
-    while (iter.hasNext()) {
+    for (Class<? extends BugChecker> checker : extraBugCheckers) {
       try {
-        Class<? extends BugChecker> checker = iter.next().getClass();
         builder.add(BugCheckerInfo.create(checker));
       } catch (Throwable e) {
         recordCheckLoadError(e);
       }
     }
-
     return ScannerSupplier.fromBugCheckerInfos(builder.build());
   }
 

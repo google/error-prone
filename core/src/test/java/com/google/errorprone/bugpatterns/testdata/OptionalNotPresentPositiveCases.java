@@ -17,37 +17,45 @@ package com.google.errorprone.bugpatterns.testdata;
 
 import java.util.Optional;
 
-/** @author mariasam@google.com on 8/3/17. */
 public class OptionalNotPresentPositiveCases {
 
   public void test(Optional<String> testStr) {
-    // BUG: Diagnostic contains: Optional
     if (!testStr.isPresent()) {
+      // BUG: Diagnostic contains: Optional
       String str = testStr.get();
     }
   }
 
   public void testMultipleStatements(Optional<String> optional) {
-    // BUG: Diagnostic contains: Optional
     if (!optional.isPresent()) {
       String test = "test";
+      // BUG: Diagnostic contains: Optional
       String str = optional.get();
     }
   }
 
   public void testNestedIf(Optional<String> optional) {
-    // BUG: Diagnostic contains: Optional
     if (!optional.isPresent()) {
       if (optional == Optional.of("")) {
+        // BUG: Diagnostic contains: Optional
         String str = optional.get();
       }
     }
   }
 
   public void testAnd(Optional<String> optional) {
-    // BUG: Diagnostic contains: Optional
     if (!optional.isPresent() && 7 == 7) {
+      // BUG: Diagnostic contains: Optional
       String str = optional.get();
+    }
+  }
+
+  public String checkedInElse(Optional<String> optional) {
+    if (optional.isPresent()) {
+      return optional.get();
+    } else {
+      // BUG: Diagnostic contains: Optional
+      return optional.get();
     }
   }
 }

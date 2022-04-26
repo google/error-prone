@@ -61,7 +61,7 @@ public class FinallyNegativeCase2 {
     try {
     } finally {
       try {
-        // This exception will propogate out through the enclosing finally,
+        // This exception will propagate out through the enclosing finally,
         // but we don't do exception analysis and have no way of knowing that.
         // Xlint:finally doesn't handle this either, since it only reports
         // situations where the end of a finally block is unreachable as

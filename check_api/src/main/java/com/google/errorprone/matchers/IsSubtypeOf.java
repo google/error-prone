@@ -24,7 +24,9 @@ import com.google.errorprone.suppliers.Supplier;
 import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Type;
 
-/** @author eaftan@google.com (Eddie Aftandilian) */
+/**
+ * @author eaftan@google.com (Eddie Aftandilian)
+ */
 public class IsSubtypeOf<T extends Tree> extends AbstractTypeMatcher<T> {
 
   public IsSubtypeOf(Supplier<Type> typeToCompareSupplier) {

@@ -72,7 +72,6 @@ import java.util.Set;
  * OuterClass.InnerClass} and {@code InnerClass}).
  */
 @BugPattern(
-    name = "DifferentNameButSame",
     severity = SeverityLevel.WARNING,
     summary =
         "This type is referred to in different ways within this file, which may be confusing.",

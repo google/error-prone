@@ -35,6 +35,7 @@ import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
+import com.google.errorprone.suppliers.Supplier;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
@@ -51,7 +52,6 @@ import java.util.concurrent.TimeUnit;
  * which accepts a {@code <long, TimeUnit>} pair.
  */
 @BugPattern(
-    name = "DurationToLongTimeUnit",
     summary = "Unit mismatch when decomposing a Duration or Instant to call a <long, TimeUnit> API",
     severity = ERROR)
 // TODO(kak): we should probably rename this as it works for Instants/Timestamps too
@@ -104,7 +104,7 @@ public final class DurationToLongTimeUnit extends BugChecker
           // ProtoTime
           .put(instanceMethod().onExactClass(PROTO_DURATION).named("getSeconds"), SECONDS)
           .put(instanceMethod().onExactClass(PROTO_TIMESTAMP).named("getSeconds"), SECONDS)
-          .build();
+          .buildOrThrow();
 
   private static final Matcher<ExpressionTree> TIME_UNIT_DECOMPOSITION =
       instanceMethod().onExactClass(TIME_UNIT).named("convert").withParameters(JAVA_DURATION);
@@ -115,7 +115,7 @@ public final class DurationToLongTimeUnit extends BugChecker
 
     if (arguments.size() >= 2) { // TODO(kak): Do we want to check varargs as well?
       Type longType = state.getSymtab().longType;
-      Type timeUnitType = state.getTypeFromString(TIME_UNIT);
+      Type timeUnitType = JAVA_UTIL_CONCURRENT_TIMEUNIT.get(state);
       for (int i = 0; i < arguments.size() - 1; i++) {
         ExpressionTree arg0 = arguments.get(i);
         ExpressionTree timeUnitTree = arguments.get(i + 1);
@@ -181,4 +181,7 @@ public final class DurationToLongTimeUnit extends BugChecker
     }
     return Optional.empty();
   }
+
+  private static final Supplier<Type> JAVA_UTIL_CONCURRENT_TIMEUNIT =
+      VisitorState.memoize(state -> state.getTypeFromString(TIME_UNIT));
 }

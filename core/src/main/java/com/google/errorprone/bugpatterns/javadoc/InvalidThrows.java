@@ -42,7 +42,6 @@ import javax.lang.model.element.Element;
  * @author ghm@google.com (Graeme Morgan)
  */
 @BugPattern(
-    name = "InvalidThrows",
     summary = "The documented method doesn't actually throw this checked exception.",
     severity = WARNING,
     tags = StandardTags.STYLE,

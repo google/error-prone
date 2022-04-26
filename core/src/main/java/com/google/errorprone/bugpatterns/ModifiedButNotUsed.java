@@ -17,6 +17,7 @@ package com.google.errorprone.bugpatterns;
 import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.common.collect.Iterables.getOnlyElement;
+import static com.google.common.collect.Streams.concat;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.allOf;
@@ -25,17 +26,15 @@ import static com.google.errorprone.matchers.Matchers.kindIs;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
 import static com.google.errorprone.matchers.method.MethodMatchers.constructor;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
-import static com.google.errorprone.predicates.TypePredicates.isDescendantOf;
-import static com.google.errorprone.predicates.TypePredicates.isDescendantOfAny;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.isConsideredFinal;
+import static com.google.errorprone.util.ASTHelpers.streamReceivers;
 import static java.util.stream.Collectors.joining;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
-import com.google.common.collect.Streams;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.ExpressionStatementTreeMatcher;
@@ -77,7 +76,6 @@ import java.util.stream.Stream;
  * @author ghm@google.com (Graeme Morgan)
  */
 @BugPattern(
-    name = "ModifiedButNotUsed",
     summary = "A collection or proto builder was created, but its values were never accessed.",
     severity = WARNING)
 public class ModifiedButNotUsed extends BugChecker
@@ -90,7 +88,7 @@ public class ModifiedButNotUsed extends BugChecker
           "com.google.common.collect.ImmutableMultimap");
 
   private static final ImmutableSet<String> COLLECTIONS =
-      Streams.concat(
+      concat(
               GUAVA_IMMUTABLES.stream().map(i -> i + ".Builder"),
               Stream.of(
                   "java.util.Collection", "java.util.Map", "com.google.common.collect.Multimap"))
@@ -150,12 +148,12 @@ public class ModifiedButNotUsed extends BugChecker
                               .map(i -> Suppliers.typeFromString(i + ".Builder"))
                               .collect(toImmutableList())))),
           staticMethod()
-              .onClass(isDescendantOfAny(GUAVA_IMMUTABLES))
+              .onDescendantOfAny(GUAVA_IMMUTABLES)
               .namedAnyOf("builder", "builderWithExpectedSize"),
           allOf(
               kindIs(Kind.NEW_CLASS),
               constructor().forClass(new DescendantOf(Suppliers.typeFromString(MESSAGE_BUILDER)))),
-          staticMethod().onClass(isDescendantOf(MESSAGE)).named("newBuilder"),
+          staticMethod().onDescendantOf(MESSAGE).named("newBuilder"),
           instanceMethod().onDescendantOf(MESSAGE).namedAnyOf("toBuilder", "newBuilderForType"));
 
   private static final Matcher<ExpressionTree> NEW_COLLECTION =
@@ -286,10 +284,11 @@ public class ModifiedButNotUsed extends BugChecker
    * Whether this is a chain of method invocations terminating in a new proto or collection builder.
    */
   private static boolean newFluentChain(ExpressionTree tree, VisitorState state) {
-    while (tree instanceof MethodInvocationTree && FLUENT_CHAIN.matches(tree, state)) {
-      tree = getReceiver(tree);
-    }
-    return tree != null && FLUENT_CONSTRUCTOR.matches(tree, state);
+    return concat(Stream.of(tree), streamReceivers(tree))
+        .filter(t -> !FLUENT_CHAIN.matches(t, state))
+        .findFirst()
+        .map(t -> FLUENT_CONSTRUCTOR.matches(t, state))
+        .orElse(false);
   }
 
   private static class UnusedScanner extends TreePathScanner<Void, Void> {

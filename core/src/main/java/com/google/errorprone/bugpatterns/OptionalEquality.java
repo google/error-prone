@@ -27,7 +27,6 @@ import com.sun.tools.javac.code.Type;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
-    name = "OptionalEquality",
     summary = "Comparison using reference equality instead of value equality",
     severity = ERROR)
 public class OptionalEquality extends AbstractReferenceEquality {

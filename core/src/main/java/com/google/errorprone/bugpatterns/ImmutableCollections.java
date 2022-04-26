@@ -85,7 +85,7 @@ public final class ImmutableCollections {
           .put(
               java.util.EnumMap.class.getName(),
               com.google.common.collect.ImmutableMap.class.getName())
-          .build();
+          .buildOrThrow();
 
   public static boolean isImmutableType(Type type) {
     return MUTABLE_TO_IMMUTABLE_CLASS_NAME_MAP.containsValue(getTypeQualifiedName(type));

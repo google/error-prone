@@ -85,7 +85,7 @@ public final class RefasterRuleBuilderScanner extends SimpleTreeVisitor<Void, Vo
     ClassSymbol sym = ASTHelpers.getSymbol(tree);
     RefasterRuleBuilderScanner scanner = new RefasterRuleBuilderScanner(context);
     // visit abstract methods first
-    List<MethodTree> methods =
+    ImmutableList<MethodTree> methods =
         new Ordering<MethodTree>() {
           @Override
           public int compare(MethodTree l, MethodTree r) {
@@ -128,7 +128,7 @@ public final class RefasterRuleBuilderScanner extends SimpleTreeVisitor<Void, Vo
             PlaceholderMethod.create(
                 tree.getName(),
                 templater.template(sym.getReturnType()),
-                params.build(),
+                params.buildOrThrow(),
                 UTemplater.annotationMap(sym)));
       } else if (ASTHelpers.hasAnnotation(tree, BeforeTemplate.class, state)) {
         checkState(afterTemplates.isEmpty(), "BeforeTemplate must come before AfterTemplate");
@@ -144,12 +144,12 @@ public final class RefasterRuleBuilderScanner extends SimpleTreeVisitor<Void, Vo
             "Placeholder methods must have @Placeholder, but abstract method does not: " + tree);
       }
       return null;
-    } catch (Throwable t) {
+    } catch (RuntimeException t) {
       throw new RuntimeException("Error analysing: " + tree.getName(), t);
     }
   }
 
-  private Collection<? extends CodeTransformer> createMatchers(
+  private ImmutableList<? extends CodeTransformer> createMatchers(
       Iterable<UTypeVar> typeVars,
       String qualifiedTemplateClass,
       ImmutableClassToInstanceMap<Annotation> annotationMap) {

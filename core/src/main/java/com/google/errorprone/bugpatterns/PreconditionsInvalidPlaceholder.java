@@ -37,9 +37,10 @@ import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import java.util.regex.Pattern;
 
-/** @author Louis Wasserman */
+/**
+ * @author Louis Wasserman
+ */
 @BugPattern(
-    name = "PreconditionsInvalidPlaceholder",
     summary = "Preconditions only accepts the %s placeholder in error message strings",
     severity = ERROR,
     tags = StandardTags.LIKELY_ERROR)

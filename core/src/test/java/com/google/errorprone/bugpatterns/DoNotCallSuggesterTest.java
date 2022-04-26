@@ -163,7 +163,7 @@ public class DoNotCallSuggesterTest {
   }
 
   @Test
-  public void finalClass_publicFinalMethod_overridenMethod() {
+  public void finalClass_publicFinalMethod_overriddenMethod() {
     testHelper
         .addSourceLines(
             "Test.java",
@@ -178,7 +178,7 @@ public class DoNotCallSuggesterTest {
   }
 
   @Test
-  public void finalClass_publicFinalMethod_effectivelyOverridenMethod() {
+  public void finalClass_publicFinalMethod_effectivelyOverriddenMethod() {
     testHelper
         .addSourceLines(
             "Test.java",

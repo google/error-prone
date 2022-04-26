@@ -55,7 +55,6 @@ import com.sun.tools.javac.util.Name;
  * @author cushon@google.com (Liam Miller-Cushon)
  */
 @BugPattern(
-    name = "Finally",
     altNames = {"finally", "ThrowFromFinallyBlock"},
     summary =
         "If you return or throw from a finally, then values returned or thrown from the"

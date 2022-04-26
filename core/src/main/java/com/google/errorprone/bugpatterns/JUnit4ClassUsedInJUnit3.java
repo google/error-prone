@@ -35,9 +35,10 @@ import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.Tree;
 
-/** @author jdesprez@google.com (Julien Desprez) */
+/**
+ * @author jdesprez@google.com (Julien Desprez)
+ */
 @BugPattern(
-    name = "JUnit4ClassUsedInJUnit3",
     summary =
         "Some JUnit4 construct cannot be used in a JUnit3 context. Convert your class to JUnit4 "
             + "style to use them.",

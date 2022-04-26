@@ -40,12 +40,12 @@ import java.util.concurrent.ForkJoinTask;
 
 /** See BugPattern annotation. */
 @BugPattern(
-    name = "FutureReturnValueIgnored",
     summary =
         "Return value of methods returning Future must be checked. Ignoring returned Futures "
             + "suppresses exceptions thrown from the code that completes the Future.",
     severity = WARNING,
-    tags = StandardTags.FRAGILE_CODE)
+    tags = StandardTags.FRAGILE_CODE,
+    documentSuppression = false)
 public class FutureReturnValueIgnored extends AbstractReturnValueIgnored
     implements ReturnTreeMatcher {
 
@@ -90,7 +90,7 @@ public class FutureReturnValueIgnored extends AbstractReturnValueIgnored
       new Matcher<ExpressionTree>() {
         @Override
         public boolean matches(ExpressionTree tree, VisitorState state) {
-          Type futureType = state.getTypeFromString("java.util.concurrent.Future");
+          Type futureType = JAVA_UTIL_CONCURRENT_FUTURE.get(state);
           if (futureType == null) {
             return false;
           }
@@ -144,4 +144,7 @@ public class FutureReturnValueIgnored extends AbstractReturnValueIgnored
   }
 
   private final Supplier<Type> futureType = Suppliers.typeFromString("java.util.concurrent.Future");
+
+  private static final Supplier<Type> JAVA_UTIL_CONCURRENT_FUTURE =
+      VisitorState.memoize(state -> state.getTypeFromString("java.util.concurrent.Future"));
 }

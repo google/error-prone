@@ -24,7 +24,6 @@ import java.lang.annotation.Target;
 /**
  * An annotation that disables validation of the {@link InlineMe} annotation's correctness (i.e.:
  * that it accurately represents an inlining of the annotated method).
- *
  */
 @Target({METHOD, CONSTRUCTOR})
 public @interface InlineMeValidationDisabled {

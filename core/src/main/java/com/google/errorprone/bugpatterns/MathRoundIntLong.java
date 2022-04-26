@@ -40,7 +40,6 @@ import com.sun.source.tree.MethodInvocationTree;
  * @author seibelsabrina@google.com (Sabrina Seibel)
  */
 @BugPattern(
-    name = "MathRoundIntLong",
     summary = "Math.round(Integer) results in truncation",
     explanation =
         "Math.round() called with an integer or long type results in truncation"

@@ -43,7 +43,6 @@ import javax.annotation.Nullable;
  * @author deltazulu@google.com (Donald Duo Zhao)
  */
 @BugPattern(
-    name = "ModifySourceCollectionInStream",
     summary = "Modifying the backing source during stream operations may cause unintended results.",
     severity = WARNING)
 public class ModifySourceCollectionInStream extends BugChecker

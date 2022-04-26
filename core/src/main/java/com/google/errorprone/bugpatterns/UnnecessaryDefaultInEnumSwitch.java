@@ -42,12 +42,10 @@ import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Symbol.TypeSymbol;
 import com.sun.tools.javac.tree.JCTree.JCSwitch;
 import java.util.List;
-import java.util.Set;
 import javax.lang.model.element.ElementKind;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
-    name = "UnnecessaryDefaultInEnumSwitch",
     summary =
         "Switch handles all enum values: an explicit default case is unnecessary and defeats error"
             + " checking for non-exhaustive switches.",
@@ -231,7 +229,7 @@ public class UnnecessaryDefaultInEnumSwitch extends BugChecker implements Switch
   }
 
   private static SetView<String> unhandledCases(SwitchTree tree, TypeSymbol switchType) {
-    Set<String> handledCases =
+    ImmutableSet<String> handledCases =
         tree.getCases().stream()
             .map(CaseTree::getExpression)
             .filter(IdentifierTree.class::isInstance)

@@ -36,7 +36,7 @@ public final class Regexes {
           .put('n', '\n')
           .put('f', '\f')
           .put('r', '\r')
-          .build();
+          .buildOrThrow();
 
   private static final CharMatcher UNESCAPED_CONSTRUCT = CharMatcher.anyOf("[].^$?*+{}()|");
 

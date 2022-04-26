@@ -38,7 +38,6 @@ import com.sun.source.util.DocTreePathScanner;
 
 /** Discourages using URLs in {@literal @}see tags. */
 @BugPattern(
-    name = "UrlInSee",
     summary =
         "URLs should not be used in @see tags; they are designed for Java elements which could be"
             + " used with @link.",

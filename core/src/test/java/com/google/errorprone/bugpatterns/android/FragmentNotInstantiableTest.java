@@ -26,12 +26,13 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** @author avenet@google.com (Arnaud J. Venet) */
+/**
+ * @author avenet@google.com (Arnaud J. Venet)
+ */
 @RunWith(JUnit4.class)
 public class FragmentNotInstantiableTest {
   /** Used for testing a custom FragmentNotInstantiable. */
   @BugPattern(
-      name = "CustomFragmentNotInstantiable",
       summary =
           "Subclasses of CustomFragment must be instantiable via Class#newInstance():"
               + " the class must be public, static and have a public nullary constructor",

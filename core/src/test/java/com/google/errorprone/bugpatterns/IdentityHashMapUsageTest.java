@@ -133,4 +133,24 @@ public class IdentityHashMapUsageTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void fieldType() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            "import java.util.IdentityHashMap;",
+            "import java.util.Map;",
+            "class Test {",
+            "  private final Map<String, Integer> m = new IdentityHashMap<>();",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "import java.util.IdentityHashMap;",
+            "import java.util.Map;",
+            "class Test {",
+            "  private final IdentityHashMap<String, Integer> m = new IdentityHashMap<>();",
+            "}")
+        .doTest();
+  }
 }

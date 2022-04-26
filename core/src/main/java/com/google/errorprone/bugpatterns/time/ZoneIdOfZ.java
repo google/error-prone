@@ -40,7 +40,6 @@ import com.sun.source.tree.MethodInvocationTree;
  * @author kak@google.com (Kurt Alfred Kluever)
  */
 @BugPattern(
-    name = "ZoneIdOfZ",
     summary = "Use ZoneOffset.UTC instead of ZoneId.of(\"Z\").",
     explanation =
         "Avoid the magic constant (ZoneId.of(\"Z\")) in favor of a more descriptive API: "

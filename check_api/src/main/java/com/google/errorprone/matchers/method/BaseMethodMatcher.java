@@ -24,8 +24,7 @@ import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 interface BaseMethodMatcher {
-  @Nullable
-  MatchState match(ExpressionTree tree);
+  @Nullable MatchState match(ExpressionTree tree);
 
   BaseMethodMatcher METHOD =
       tree -> {

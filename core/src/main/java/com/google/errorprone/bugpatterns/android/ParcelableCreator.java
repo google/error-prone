@@ -30,6 +30,7 @@ import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
+import com.google.errorprone.suppliers.Supplier;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.Tree;
@@ -49,7 +50,6 @@ import javax.lang.model.element.Modifier;
  * @author Sumit Bhagwani (bhagwani@google.com)
  */
 @BugPattern(
-    name = "ParcelableCreator",
     summary = "Detects classes which implement Parcelable but don't have CREATOR",
     severity = SeverityLevel.ERROR)
 public class ParcelableCreator extends BugChecker implements ClassTreeMatcher {
@@ -73,7 +73,7 @@ public class ParcelableCreator extends BugChecker implements ClassTreeMatcher {
       return Description.NO_MATCH;
     }
 
-    Symbol parcelableCreatorSymbol = state.getSymbolFromString("android.os.Parcelable$Creator");
+    Symbol parcelableCreatorSymbol = ANDROID_OS_PARCELABLE_CREATOR.get(state);
     if (parcelableCreatorSymbol == null) {
       return Description.NO_MATCH;
     }
@@ -114,4 +114,7 @@ public class ParcelableCreator extends BugChecker implements ClassTreeMatcher {
     }
     return ASTHelpers.isSubtype(classType, Iterables.getOnlyElement(typeArguments), state);
   }
+
+  private static final Supplier<Symbol> ANDROID_OS_PARCELABLE_CREATOR =
+      VisitorState.memoize(state -> state.getSymbolFromString("android.os.Parcelable$Creator"));
 }

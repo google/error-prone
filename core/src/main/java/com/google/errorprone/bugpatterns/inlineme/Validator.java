@@ -17,25 +17,28 @@
 package com.google.errorprone.bugpatterns.inlineme;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
-import static com.google.errorprone.util.ASTHelpers.getAnnotation;
+import static com.google.errorprone.util.ASTHelpers.findSuperMethods;
+import static com.google.errorprone.util.ASTHelpers.getSymbol;
+import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
+import static com.google.errorprone.util.ASTHelpers.hasDirectAnnotationWithSimpleName;
 
 import com.google.common.base.CharMatcher;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
-import com.google.errorprone.annotations.InlineMe;
 import com.google.errorprone.annotations.InlineMeValidationDisabled;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
+import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
 import com.google.errorprone.util.ErrorProneToken;
 import com.google.errorprone.util.ErrorProneTokens;
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.MethodTree;
+import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.util.Context;
 import java.util.EnumSet;
 import java.util.Set;
@@ -50,27 +53,49 @@ import java.util.function.Predicate;
     documentSuppression = false,
     severity = ERROR)
 public final class Validator extends BugChecker implements MethodTreeMatcher {
-  private final boolean checkForArgumentReuse;
+  static final String CLEANUP_INLINE_ME_FLAG = "InlineMe:CleanupInlineMes";
+
+  private final boolean cleanupInlineMes;
 
   public Validator(ErrorProneFlags flags) {
-    checkForArgumentReuse =
-        flags.getBoolean(InlinabilityResult.DISALLOW_ARGUMENT_REUSE).orElse(true);
+    this.cleanupInlineMes = flags.getBoolean(CLEANUP_INLINE_ME_FLAG).orElse(false);
   }
 
   @Override
   public Description matchMethod(MethodTree tree, VisitorState state) {
-    // if the API doesn't have the @InlineMe annotation, then return no match
-    // TODO(glorioso): Use meta-annotation methods/variables to avoid a compile-time dependency on
-    // the annotation class.
-    InlineMe anno = getAnnotation(tree, InlineMe.class);
-    if (anno == null) {
-      return Description.NO_MATCH;
+    MethodSymbol symbol = getSymbol(tree);
+    if (cleanupInlineMes) {
+      return shouldDelete(symbol, state)
+          // TODO(b/216312289): maybe use SuggestedFixes.delete(tree)?
+          ? describeMatch(tree, SuggestedFixes.replaceIncludingComments(state.getPath(), "", state))
+          : Description.NO_MATCH;
+    } else {
+      return InlineMeData.createFromSymbol(symbol)
+          .map(data -> match(data, tree, state))
+          .orElse(Description.NO_MATCH);
     }
+  }
 
-    InlinabilityResult result = InlinabilityResult.forMethod(tree, state, checkForArgumentReuse);
+  /** Whether or not the API should be deleted when run in cleanup mode. */
+  private static boolean shouldDelete(MethodSymbol symbol, VisitorState state) {
+    // Clean up (delete) the API if
+    //   * it's @InlineMe'd
+    //   * it isn't @InlineMeValidationDisabled (this prevents us from deleting default methods)
+    //   * it isn't an @Override (since the code would likely no longer compile, or it would start
+    //     inheriting behavior from the supertype).
+
+    // TODO(kak): it would be nice if we could query to see if there are still any existing
+    // usages of the API before unilaterally deleting it.
+    return hasDirectAnnotationWithSimpleName(symbol, "InlineMe")
+        && !hasAnnotation(symbol, "java.lang.Override", state)
+        && findSuperMethods(symbol, state.getTypes()).isEmpty();
+  }
+
+  private Description match(InlineMeData existingAnnotation, MethodTree tree, VisitorState state) {
+    InlinabilityResult result = InlinabilityResult.forMethod(tree, state);
     if (!result.isValidForValidator()) {
       return buildDescription(tree)
-          .setMessage(result.error().getErrorMessage())
+          .setMessage(result.errorMessage())
           // This method is un-inlineable, so let's remove the annotation (since we can't fix it)
           .addFix(SuggestedFix.delete(getInlineMeAnnotationTree(tree)))
           .build();
@@ -79,13 +104,12 @@ public final class Validator extends BugChecker implements MethodTreeMatcher {
     InlineMeData inferredFromMethodBody =
         InlineMeData.buildExpectedInlineMeAnnotation(state, result.body());
     Set<MismatchedInlineMeComponents> mismatches =
-        compatibleWithAnnotation(inferredFromMethodBody, anno, state.context);
+        compatibleWithAnnotation(inferredFromMethodBody, existingAnnotation, state.context);
     if (mismatches.isEmpty()) {
       return Description.NO_MATCH;
     }
 
     // There's some mismatch, render an error.
-    InlineMeData existingAnnotation = InlineMeData.fromAnnotationInstance(anno);
     return buildDescription(tree)
         .setMessage(renderInlineMeMismatch(inferredFromMethodBody, existingAnnotation, mismatches))
         .addFix(
@@ -135,7 +159,7 @@ public final class Validator extends BugChecker implements MethodTreeMatcher {
   }
 
   private static Set<MismatchedInlineMeComponents> compatibleWithAnnotation(
-      InlineMeData inferredFromMethodBody, InlineMe anno, Context context) {
+      InlineMeData inferredFromMethodBody, InlineMeData anno, Context context) {
     EnumSet<MismatchedInlineMeComponents> mismatches =
         EnumSet.noneOf(MismatchedInlineMeComponents.class);
 
@@ -145,10 +169,10 @@ public final class Validator extends BugChecker implements MethodTreeMatcher {
         anno.replacement(), inferredFromMethodBody.replacement(), context)) {
       mismatches.add(MismatchedInlineMeComponents.REPLACEMENT_STRING);
     }
-    if (!inferredFromMethodBody.imports().equals(ImmutableSet.copyOf(anno.imports()))) {
+    if (!inferredFromMethodBody.imports().equals(anno.imports())) {
       mismatches.add(MismatchedInlineMeComponents.IMPORTS);
     }
-    if (!inferredFromMethodBody.staticImports().equals(ImmutableSet.copyOf(anno.staticImports()))) {
+    if (!inferredFromMethodBody.staticImports().equals(anno.staticImports())) {
       mismatches.add(MismatchedInlineMeComponents.STATIC_IMPORTS);
     }
     return mismatches;

@@ -53,6 +53,26 @@ public class MemberNameTest {
   }
 
   @Test
+  public void staticFields() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            "class Test {",
+            "  private static int Foo;",
+            "  private static int FooBar;",
+            "  private static int Bar_Foo;",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "class Test {",
+            "  private static int foo;",
+            "  private static int fooBar;",
+            "  private static int barFoo;",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void nameWithUnderscores_mixedCasing() {
     refactoringHelper
         .addInputLines(
