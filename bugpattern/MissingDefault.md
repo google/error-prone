@@ -4,7 +4,7 @@ summary: The Google Java Style Guide requires that each switch statement include
   a default statement group, even if it contains no code. (This requirement is lifted
   for any switch statement that covers all values of an enum.)
 layout: bugpattern
-tags: Style
+tags: ''
 severity: WARNING
 ---
 
