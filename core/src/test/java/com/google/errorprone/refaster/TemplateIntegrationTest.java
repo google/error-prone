@@ -351,11 +351,6 @@ public class TemplateIntegrationTest extends CompilerBasedTest {
   }
 
   @Test
-  public void placeholderAllowsGenerics() throws IOException {
-    runTest("PlaceholderAllowsGenericsTemplate");
-  }
-
-  @Test
   public void unnecessaryLambdaParens() throws IOException {
     runTest("UnnecessaryLambdaParens");
   }
