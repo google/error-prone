@@ -3,7 +3,7 @@ title: SystemExitOutsideMain
 summary: Code that contains System.exit() is untestable.
 layout: bugpattern
 tags: ''
-severity: WARNING
+severity: ERROR
 ---
 
 <!--

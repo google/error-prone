@@ -1275,6 +1275,9 @@ Static and default interface methods are not natively supported on older Android
 __[StaticQualifiedUsingExpression](bugpattern/StaticQualifiedUsingExpression)__<br>
 A static variable or method should be qualified with a class name, not expression
 
+__[SystemExitOutsideMain](bugpattern/SystemExitOutsideMain)__<br>
+Code that contains System.exit() is untestable.
+
 __[UnlockMethod](bugpattern/UnlockMethod)__<br>
 This method does not acquire the locks specified by its @UnlockMethod annotation
 
@@ -1387,9 +1390,6 @@ This primitive integral type is only used to construct time types. It would be c
 
 __[SuppressWarningsWithoutExplanation](bugpattern/SuppressWarningsWithoutExplanation)__<br>
 Use of @SuppressWarnings should be accompanied by a comment describing why the warning is safe to ignore.
-
-__[SystemExitOutsideMain](bugpattern/SystemExitOutsideMain)__<br>
-Code that contains System.exit() is untestable.
 
 __[SystemOut](bugpattern/SystemOut)__<br>
 Printing to standard output should only be used for debugging, not in production code
