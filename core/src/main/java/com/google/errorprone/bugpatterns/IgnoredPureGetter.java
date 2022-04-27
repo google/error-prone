@@ -58,7 +58,6 @@ public final class IgnoredPureGetter extends AbstractReturnValueIgnored {
           state -> state.getTypeFromString("com.google.protobuf.MutableMessageLite"));
 
   private final boolean checkAllProtos;
-  private final boolean checkAutoBuilders;
 
   public IgnoredPureGetter() {
     this(ErrorProneFlags.empty());
@@ -67,7 +66,6 @@ public final class IgnoredPureGetter extends AbstractReturnValueIgnored {
   public IgnoredPureGetter(ErrorProneFlags flags) {
     super(flags);
     this.checkAllProtos = flags.getBoolean("IgnoredPureGetter:CheckAllProtos").orElse(true);
-    this.checkAutoBuilders = flags.getBoolean("IgnoredPureGetter:CheckAutoBuilders").orElse(true);
   }
 
   @Override
@@ -126,8 +124,7 @@ public final class IgnoredPureGetter extends AbstractReturnValueIgnored {
       }
       // The return value of any abstract method on an @AutoBuilder (which doesn't return the
       // Builder itself) needs to be used.
-      if (checkAutoBuilders
-          && hasAnnotation(owner, "com.google.auto.value.AutoBuilder", state)
+      if (hasAnnotation(owner, "com.google.auto.value.AutoBuilder", state)
           && !isSameType(symbol.getReturnType(), owner.type, state)) {
         return Optional.of(PureGetterKind.AUTO_BUILDER);
       }
