@@ -1,6 +1,6 @@
 ---
 title: MixedDescriptors
-summary: 'The field number passed into #getFieldByNumber belongs to a different proto
+summary: 'The field number passed into #findFieldByNumber belongs to a different proto
   to the Descriptor.'
 layout: bugpattern
 tags: ''

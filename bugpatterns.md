@@ -345,7 +345,7 @@ __[MisusedWeekYear](bugpattern/MisusedWeekYear)__<br>
 Use of &quot;YYYY&quot; (week year) in a date pattern without &quot;ww&quot; (week in year). You probably meant to use &quot;yyyy&quot; (year) instead.
 
 __[MixedDescriptors](bugpattern/MixedDescriptors)__<br>
-The field number passed into #getFieldByNumber belongs to a different proto to the Descriptor.
+The field number passed into #findFieldByNumber belongs to a different proto to the Descriptor.
 
 __[MockitoUsage](bugpattern/MockitoUsage)__<br>
 Missing method call for verify(mock) here
