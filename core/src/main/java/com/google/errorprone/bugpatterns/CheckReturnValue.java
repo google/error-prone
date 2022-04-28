@@ -28,6 +28,7 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
+import com.google.errorprone.bugpatterns.checkreturnvalue.ExternalCanIgnoreReturnValue;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
@@ -41,7 +42,6 @@ import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import java.util.Optional;
-import java.util.stream.Stream;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Name;
 
@@ -65,15 +65,35 @@ public class CheckReturnValue extends AbstractReturnValueIgnored
           CAN_IGNORE_RETURN_VALUE,
           CrvOpinion.SHOULD_BE_CIRV);
 
-  private static Stream<FoundAnnotation> findAnnotation(Symbol sym) {
-    return ANNOTATIONS.entrySet().stream()
-        .filter(annoSpec -> hasDirectAnnotationWithSimpleName(sym, annoSpec.getKey()))
-        .limit(1)
-        .map(annotation -> FoundAnnotation.create(scope(sym), annotation.getValue()));
+  private static Optional<FoundAnnotation> controllingAnnotation(
+      MethodSymbol sym, VisitorState visitorState) {
+    // In priority order, we want a source-local annotation on the symbol, then the external API
+    // file, then the enclosing elements of sym.
+    return findAnnotation(sym)
+        .or(
+            () ->
+                asAnnotationFromConfig(sym, visitorState)
+                    .or(() -> findAnnotationOnEnclosingSymbols(sym.owner)));
   }
 
-  private static Optional<FoundAnnotation> firstAnnotation(MethodSymbol sym) {
-    return ASTHelpers.enclosingElements(sym).flatMap(CheckReturnValue::findAnnotation).findFirst();
+  private static Optional<FoundAnnotation> findAnnotation(Symbol sym) {
+    return ANNOTATIONS.entrySet().stream()
+        .filter(annoSpec -> hasDirectAnnotationWithSimpleName(sym, annoSpec.getKey()))
+        .map(annotation -> FoundAnnotation.create(scope(sym), annotation.getValue()))
+        .findFirst();
+  }
+
+  private static Optional<FoundAnnotation> findAnnotationOnEnclosingSymbols(Symbol sym) {
+    return ASTHelpers.enclosingElements(sym).flatMap(e -> findAnnotation(e).stream()).findFirst();
+  }
+
+  private static Optional<FoundAnnotation> asAnnotationFromConfig(
+      MethodSymbol sym, VisitorState visitorState) {
+    if (ExternalCanIgnoreReturnValue.externallyConfiguredCirvAnnotation(sym, visitorState)) {
+      return Optional.of(
+          FoundAnnotation.create(AnnotationScope.METHOD_EXTERNAL_ANNO, CrvOpinion.SHOULD_BE_CIRV));
+    }
+    return Optional.empty();
   }
 
   private static AnnotationScope scope(Symbol sym) {
@@ -106,21 +126,20 @@ public class CheckReturnValue extends AbstractReturnValueIgnored
   public Matcher<ExpressionTree> specializedMatcher() {
     return (tree, state) -> {
       Optional<MethodSymbol> maybeMethod = methodToInspect(tree);
-      if (!maybeMethod.isPresent()) {
+      if (maybeMethod.isEmpty()) {
         return false;
       }
 
-      return crvOpinionForMethod(maybeMethod.get())
+      return crvOpinionForMethod(maybeMethod.get(), state)
           .map(CrvOpinion.SHOULD_BE_CRV::equals)
           .orElse(false);
     };
   }
 
-  private Optional<CrvOpinion> crvOpinionForMethod(MethodSymbol sym) {
-    Optional<CrvOpinion> opinionFromAnnotation =
-        firstAnnotation(sym).map(FoundAnnotation::checkReturnValueOpinion);
-    if (opinionFromAnnotation.isPresent()) {
-      return opinionFromAnnotation;
+  private Optional<CrvOpinion> crvOpinionForMethod(MethodSymbol sym, VisitorState state) {
+    Optional<FoundAnnotation> annotationForSymbol = controllingAnnotation(sym, state);
+    if (annotationForSymbol.isPresent()) {
+      return annotationForSymbol.map(FoundAnnotation::checkReturnValueOpinion);
     }
 
     // In the event there is no opinion from annotations, we use the checker's configuration to
@@ -177,13 +196,13 @@ public class CheckReturnValue extends AbstractReturnValueIgnored
 
   @Override
   public boolean isCovered(ExpressionTree tree, VisitorState state) {
-    return methodSymbol(tree).flatMap(this::crvOpinionForMethod).isPresent();
+    return methodSymbol(tree).flatMap(sym -> crvOpinionForMethod(sym, state)).isPresent();
   }
 
   @Override
   public ImmutableMap<String, ?> getMatchMetadata(ExpressionTree tree, VisitorState state) {
     return methodSymbol(tree)
-        .flatMap(CheckReturnValue::firstAnnotation)
+        .flatMap(sym -> controllingAnnotation(sym, state))
         .map(found -> ImmutableMap.of("annotation_scope", found.scope()))
         .orElse(ImmutableMap.of());
   }
@@ -278,6 +297,7 @@ public class CheckReturnValue extends AbstractReturnValueIgnored
 
   enum AnnotationScope {
     METHOD,
+    METHOD_EXTERNAL_ANNO,
     CLASS,
     PACKAGE
   }

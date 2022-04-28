@@ -16,11 +16,20 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 import com.google.auto.value.processor.AutoBuilderProcessor;
 import com.google.auto.value.processor.AutoValueProcessor;
+import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.CompilationTestHelper;
+import java.io.IOException;
+import java.io.UncheckedIOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
@@ -32,6 +41,8 @@ public class CheckReturnValueTest {
 
   private final CompilationTestHelper compilationHelper =
       CompilationTestHelper.newInstance(CheckReturnValue.class, getClass());
+
+  @Rule public TemporaryFolder temporaryFolder = new TemporaryFolder();
 
   @Test
   public void testPositiveCases() {
@@ -863,6 +874,22 @@ public class CheckReturnValueTest {
   }
 
   @Test
+  public void allMethods_withExternallyConfiguredIgnoreList() {
+    compileWithExternalApis("java.util.List#add(java.lang.Object)")
+        .addSourceLines(
+            "Test.java",
+            "import java.util.List;",
+            "class Test {",
+            "  public static void foo(List<Integer> x) {",
+            "    x.add(42);",
+            "    // BUG: Diagnostic contains: Ignored return value of 'get'",
+            "    x.get(0);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void usingElementInTestExpected() {
     compilationHelperLookingAtAllConstructors()
         .addSourceLines(
@@ -1022,5 +1049,18 @@ public class CheckReturnValueTest {
 
   private CompilationTestHelper compilationHelperLookingAtAllMethods() {
     return compilationHelper.setArgs("-XepOpt:" + CheckReturnValue.CHECK_ALL_METHODS + "=true");
+  }
+
+  private CompilationTestHelper compileWithExternalApis(String... apis) {
+    try {
+      Path file = temporaryFolder.newFile().toPath();
+      Files.writeString(file, Joiner.on('\n').join(apis), UTF_8);
+
+      return compilationHelper.setArgs(
+          "-XepOpt:" + CheckReturnValue.CHECK_ALL_METHODS + "=true",
+          "-XepOpt:CheckReturnValue:ApiExclusionList=" + file);
+    } catch (IOException e) {
+      throw new UncheckedIOException(e);
+    }
   }
 }
