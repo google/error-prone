@@ -130,13 +130,14 @@ public class CheckReturnValue extends AbstractReturnValueIgnored
         return false;
       }
 
-      return crvOpinionForMethod(maybeMethod.get(), state)
+      return crvOpinionForMethod(maybeMethod.get(), tree, state)
           .map(CrvOpinion.SHOULD_BE_CRV::equals)
           .orElse(false);
     };
   }
 
-  private Optional<CrvOpinion> crvOpinionForMethod(MethodSymbol sym, VisitorState state) {
+  private Optional<CrvOpinion> crvOpinionForMethod(
+      MethodSymbol sym, ExpressionTree tree, VisitorState state) {
     Optional<FoundAnnotation> annotationForSymbol = controllingAnnotation(sym, state);
     if (annotationForSymbol.isPresent()) {
       return annotationForSymbol.map(FoundAnnotation::checkReturnValueOpinion);
@@ -144,7 +145,15 @@ public class CheckReturnValue extends AbstractReturnValueIgnored
 
     // In the event there is no opinion from annotations, we use the checker's configuration to
     // decide what the "default" for the universe is.
-    if (checkAllMethods || (checkAllConstructors && sym.isConstructor())) {
+    if (checkAllConstructors && sym.isConstructor()) {
+      return Optional.of(CrvOpinion.SHOULD_BE_CRV);
+    }
+
+    if (checkAllMethods) {
+      // There are carveouts for methods we know to be ignorable by default.
+      if (ModifiedButNotUsed.FLUENT_SETTER.matches(tree, state)) {
+        return Optional.of(CrvOpinion.SHOULD_BE_CIRV);
+      }
       return Optional.of(CrvOpinion.SHOULD_BE_CRV);
     }
     // NB: You might consider this SHOULD_BE_CIRV (here, where the default is to not check any
@@ -196,7 +205,7 @@ public class CheckReturnValue extends AbstractReturnValueIgnored
 
   @Override
   public boolean isCovered(ExpressionTree tree, VisitorState state) {
-    return methodSymbol(tree).flatMap(sym -> crvOpinionForMethod(sym, state)).isPresent();
+    return methodSymbol(tree).flatMap(sym -> crvOpinionForMethod(sym, tree, state)).isPresent();
   }
 
   @Override
