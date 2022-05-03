@@ -16,6 +16,7 @@
 
 package com.google.errorprone.dataflow.nullnesspropagation;
 
+import static com.google.common.truth.Truth.assertThat;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.fixes.SuggestedFix.replace;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
@@ -40,7 +41,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** @author bennostein@google.com (Benno Stein) */
+/**
+ * @author bennostein@google.com (Benno Stein)
+ */
 @RunWith(JUnit4.class)
 public class NullnessInferenceTest {
 
@@ -576,7 +579,6 @@ public class NullnessInferenceTest {
 
   /** BugPattern to test inference of nullness qualifiers */
   @BugPattern(
-      name = "NullnessInferenceChecker",
       summary = "Test checker for NullnessInferenceTest",
       explanation =
           "Outputs an error for each call to inspectInferredExpression and inspectInferredGenerics,"
@@ -603,7 +605,8 @@ public class NullnessInferenceTest {
         InferredNullability inferenceRes =
             NullnessQualifierInference.getInferredNullability(
                 ASTHelpers.findEnclosingNode(root, MethodTree.class));
-        assert methodInvocation.getArguments().get(0).getKind() == Kind.METHOD_INVOCATION;
+        assertThat(methodInvocation.getArguments().get(0).getKind())
+            .isEqualTo(Kind.METHOD_INVOCATION);
         MethodInvocationTree callsiteToInspect =
             (MethodInvocationTree) methodInvocation.getArguments().get(0);
         return describeMatch(

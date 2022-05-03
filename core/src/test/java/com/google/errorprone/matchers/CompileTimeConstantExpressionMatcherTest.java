@@ -222,7 +222,7 @@ public class CompileTimeConstantExpressionMatcherTest {
   }
 
   /** A test-only bugpattern for testing {@link CompileTimeConstantExpressionMatcher}. */
-  @BugPattern(name = "CompileTimeConstantExpressionMatcherTester", severity = WARNING, summary = "")
+  @BugPattern(severity = WARNING, summary = "")
   public static final class CompileTimeConstantExpressionMatcherTester extends BugChecker
       implements VariableTreeMatcher {
     @Override

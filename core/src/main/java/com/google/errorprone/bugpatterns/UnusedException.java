@@ -31,6 +31,7 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.CatchTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
+import com.google.errorprone.suppliers.Supplier;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.CatchTree;
 import com.sun.source.tree.NewClassTree;
@@ -73,11 +74,13 @@ public final class UnusedException extends BugChecker implements CatchTreeMatche
 
   @Override
   public Description matchCatch(CatchTree tree, VisitorState state) {
-    if (isSuppressed(tree.getParameter()) || isSuppressedViaName(tree.getParameter())) {
+    if (isSuppressed(tree.getParameter(), state) || isSuppressedViaName(tree.getParameter())) {
       return Description.NO_MATCH;
     }
     VarSymbol exceptionSymbol = ASTHelpers.getSymbol(tree.getParameter());
-    if (isSameType(exceptionSymbol.asType(), state.getSymtab().interruptedExceptionType, state)) {
+    Type exceptionType = exceptionSymbol.asType();
+    if (isSameType(exceptionType, state.getSymtab().interruptedExceptionType, state)
+        || isSameType(exceptionType, JAVA_IO_INTERRUPTEDIOEXCEPTION.get(state), state)) {
       return Description.NO_MATCH;
     }
     AtomicBoolean symbolUsed = new AtomicBoolean(false);
@@ -136,9 +139,6 @@ public final class UnusedException extends BugChecker implements CatchTreeMatche
     }
     ImmutableList<MethodSymbol> constructors = ASTHelpers.getConstructors((ClassSymbol) symbol);
     MethodSymbol constructorSymbol = ASTHelpers.getSymbol(constructor);
-    if (constructorSymbol == null) {
-      return Optional.empty();
-    }
     List<Type> types = getParameterTypes(constructorSymbol);
     for (MethodSymbol proposedConstructor : constructors) {
       List<Type> proposedTypes = getParameterTypes(proposedConstructor);
@@ -188,4 +188,7 @@ public final class UnusedException extends BugChecker implements CatchTreeMatche
   private static List<Type> getParameterTypes(MethodSymbol constructorSymbol) {
     return constructorSymbol.type.getParameterTypes();
   }
+
+  private static final Supplier<Type> JAVA_IO_INTERRUPTEDIOEXCEPTION =
+      VisitorState.memoize(state -> state.getTypeFromString("java.io.InterruptedIOException"));
 }

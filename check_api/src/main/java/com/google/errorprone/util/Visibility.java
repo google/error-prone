@@ -17,6 +17,7 @@
 package com.google.errorprone.util;
 
 import static com.google.errorprone.util.ASTHelpers.enclosingClass;
+import static com.google.errorprone.util.ASTHelpers.enclosingPackage;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
 
@@ -90,7 +91,7 @@ public enum Visibility implements Comparable<Visibility> {
       JCCompilationUnit compilationUnit = (JCCompilationUnit) state.getPath().getCompilationUnit();
       PackageSymbol packge = compilationUnit.packge;
       // TODO(ghm): Should we handle the default (unnamed) package here?
-      return symbol.packge().equals(packge);
+      return enclosingPackage(symbol).equals(packge);
     }
 
     @Override

@@ -55,7 +55,7 @@ public final class InitializeInline extends BugChecker implements VariableTreeMa
       return NO_MATCH;
     }
     VarSymbol symbol = getSymbol(tree);
-    if (symbol == null || !isConsideredFinal(symbol)) {
+    if (!isConsideredFinal(symbol)) {
       return NO_MATCH;
     }
     List<TreePath> assignments = new ArrayList<>();

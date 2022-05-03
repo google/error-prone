@@ -48,7 +48,9 @@ import com.sun.tools.javac.tree.DCTree.DCReference;
 import java.util.LinkedHashSet;
 import javax.annotation.Nullable;
 
-/** @author gak@google.com (Gregory Kick) */
+/**
+ * @author gak@google.com (Gregory Kick)
+ */
 @BugPattern(
     summary = "Unused imports",
     severity = SUGGESTION,
@@ -61,14 +63,14 @@ public final class RemoveUnusedImports extends BugChecker implements Compilation
   @Override
   public Description matchCompilationUnit(
       CompilationUnitTree compilationUnitTree, VisitorState state) {
-    final ImmutableSetMultimap<ImportTree, Symbol> importedSymbols =
+    ImmutableSetMultimap<ImportTree, Symbol> importedSymbols =
         getImportedSymbols(compilationUnitTree, state);
 
     if (importedSymbols.isEmpty()) {
       return NO_MATCH;
     }
 
-    final LinkedHashSet<ImportTree> unusedImports = new LinkedHashSet<>(importedSymbols.keySet());
+    LinkedHashSet<ImportTree> unusedImports = new LinkedHashSet<>(importedSymbols.keySet());
     new TreeSymbolScanner(JavacTrees.instance(state.context))
         .scan(
             compilationUnitTree,

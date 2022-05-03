@@ -17,6 +17,7 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.common.collect.Iterables.getOnlyElement;
+import static com.google.errorprone.util.ASTHelpers.enclosingPackage;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 
 import com.google.auto.value.AutoValue;
@@ -193,7 +194,7 @@ public final class StaticImports {
           continue;
         case 0:
         case Flags.PROTECTED:
-          if (member.packge() != pkg) {
+          if (enclosingPackage(member) != pkg) {
             continue;
           }
           break;

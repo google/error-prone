@@ -45,7 +45,6 @@ public class ParameterTest {
    * of the second one.
    */
   @BugPattern(
-      name = "IsFirstAssignableToSecond",
       severity = SeverityLevel.ERROR,
       summary = "Print whether the type of the first argument is assignable to the second one")
   public static class IsFirstAssignableToSecond extends BugChecker
@@ -107,10 +106,7 @@ public class ParameterTest {
   }
 
   /** A {@link BugChecker} that prints the name extracted for the first argument */
-  @BugPattern(
-      name = "PrintNameOfFirstArgument",
-      severity = SeverityLevel.ERROR,
-      summary = "Print the name of the first argument")
+  @BugPattern(severity = SeverityLevel.ERROR, summary = "Print the name of the first argument")
   public static class PrintNameOfFirstArgument extends BugChecker
       implements MethodInvocationTreeMatcher {
 
@@ -302,7 +298,6 @@ public class ParameterTest {
 
   /** A {@link BugChecker} that prints whether the first argument is constant */
   @BugPattern(
-      name = "PrintIsConstantFirstArgument",
       severity = SeverityLevel.ERROR,
       summary = "Print whether the first argument is constant")
   public static class PrintIsConstantFirstArgument extends BugChecker

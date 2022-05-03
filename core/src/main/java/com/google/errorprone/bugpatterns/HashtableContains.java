@@ -33,7 +33,6 @@ import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Types;
-import com.sun.tools.javac.tree.JCTree;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
@@ -105,7 +104,7 @@ public class HashtableContains extends BugChecker implements MethodInvocationTre
 
   private static Fix replaceMethodName(
       MethodInvocationTree tree, VisitorState state, String newName) {
-    String source = state.getSourceForNode((JCTree) tree.getMethodSelect());
+    String source = state.getSourceForNode(tree.getMethodSelect());
     int idx = source.lastIndexOf("contains");
     String replacement =
         source.substring(0, idx) + newName + source.substring(idx + "contains".length());

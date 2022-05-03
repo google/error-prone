@@ -112,7 +112,7 @@ public class FunctionalInterfaceClash extends BugChecker implements ClassTreeMat
           continue;
         }
 
-        if (isSuppressed(member)) {
+        if (isSuppressed(member, state)) {
           continue;
         }
 

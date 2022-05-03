@@ -29,6 +29,7 @@ message TestProtoMessage {
   repeated TestFieldProtoMessage multi_field = 2;
   optional int32 test_field_named_count = 3;
   optional bool boolean_field = 4;
+  map<int32, int32> weight = 5;
 
   extensions 100 to 199;
 }

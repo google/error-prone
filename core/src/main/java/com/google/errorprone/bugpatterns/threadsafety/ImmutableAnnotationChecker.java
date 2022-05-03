@@ -66,9 +66,7 @@ public class ImmutableAnnotationChecker extends BugChecker implements ClassTreeM
   @Override
   public Description matchClass(ClassTree tree, VisitorState state) {
     ClassSymbol symbol = getSymbol(tree);
-    if (symbol == null
-        || symbol.isAnnotationType()
-        || !WellKnownMutability.isAnnotation(state, symbol.type)) {
+    if (symbol.isAnnotationType() || !WellKnownMutability.isAnnotation(state, symbol.type)) {
       return NO_MATCH;
     }
     if (!Collections.disjoint(getGeneratedBy(symbol, state), IGNORED_PROCESSORS)) {

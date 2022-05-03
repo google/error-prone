@@ -20,7 +20,6 @@ import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
-import static java.util.Optional.empty;
 import static java.util.Optional.ofNullable;
 
 import com.google.common.collect.ImmutableList;
@@ -43,9 +42,10 @@ import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Type;
 import java.util.Optional;
-import javax.lang.model.element.Modifier;
 
-/** @author amesbah@google.com (Ali Mesbah) */
+/**
+ * @author amesbah@google.com (Ali Mesbah)
+ */
 @BugPattern(
     summary =
         "Use Java's utility functional interfaces instead of Function<A, B> for primitive types.",
@@ -145,7 +145,7 @@ public class LambdaFunctionalInterface extends BugChecker implements MethodTreeM
     MethodSymbol methodSym = ASTHelpers.getSymbol(tree);
 
     // precondition (1)
-    if (!methodSym.getModifiers().contains(Modifier.PRIVATE)) {
+    if (!ASTHelpers.canBeRemoved(methodSym, state)) {
       return Description.NO_MATCH;
     }
 
@@ -245,8 +245,8 @@ public class LambdaFunctionalInterface extends BugChecker implements MethodTreeM
         new TreeScanner<Void, Void>() {
           @Override
           public Void visitMethodInvocation(MethodInvocationTree callTree, Void unused) {
-            final MethodSymbol methodSymbol = getSymbol(callTree);
-            if (methodSymbol != null && sym.equals(methodSymbol)) {
+            MethodSymbol methodSymbol = getSymbol(callTree);
+            if (sym.equals(methodSymbol)) {
               methodMap.put(methodSymbol.toString(), callTree);
             }
             return super.visitMethodInvocation(callTree, unused);
@@ -269,8 +269,7 @@ public class LambdaFunctionalInterface extends BugChecker implements MethodTreeM
   }
 
   private static Optional<String> getMappingForFunctionFromTree(Tree param) {
-    Optional<Type> type = ofNullable(ASTHelpers.getType(param));
-    return (type == null) ? empty() : getMappingForFunction(type.get().toString());
+    return ofNullable(ASTHelpers.getType(param)).flatMap(t -> getMappingForFunction(t.toString()));
   }
 
   private static Optional<String> getMappingForFunction(String function) {

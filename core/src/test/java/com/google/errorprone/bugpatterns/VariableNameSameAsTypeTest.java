@@ -21,7 +21,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** @author kayco@google.com (Kayla Walker) & seibelsabrina@google.com (Sabrina Seibel) */
+/**
+ * @author kayco@google.com (Kayla Walker) & seibelsabrina@google.com (Sabrina Seibel)
+ */
 @RunWith(JUnit4.class)
 public class VariableNameSameAsTypeTest {
 

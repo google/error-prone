@@ -53,7 +53,7 @@ import javax.lang.model.type.TypeKind;
  */
 public final class TypeCompatibilityUtils {
   private static final String WITHOUT_EQUALS_REASON =
-      " Though these types are the same, the type doesn't implement equals.";
+      ". Though these types are the same, the type doesn't implement equals.";
   private final boolean treatBuildersAsIncomparable;
 
   public static TypeCompatibilityUtils fromFlags(ErrorProneFlags flags) {
@@ -96,6 +96,7 @@ public final class TypeCompatibilityUtils {
       // comparable to themselves. It would be reasonable to mistake Builders as having value
       // semantics, which may be misleading.
       if (treatBuildersAsIncomparable
+          && !leftUpperBound.tsym.isEnum()
           && leftUpperBound.isFinal()
           && leftUpperBound.tsym.name.toString().endsWith("Builder")) {
         Names names = state.getNames();

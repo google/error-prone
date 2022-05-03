@@ -35,7 +35,9 @@ import java.time.Duration;
 import java.time.ZoneId;
 import java.util.TimeZone;
 
-/** @author awturner@google.com (Andy Turner) */
+/**
+ * @author awturner@google.com (Andy Turner)
+ */
 @BugPattern(
     summary =
         "Three-letter time zone identifiers are deprecated, may be ambiguous, and might not do "
@@ -55,7 +57,7 @@ public class ThreeLetterTimeZoneID extends BugChecker implements MethodInvocatio
           .withParameters("java.util.TimeZone");
 
   @Override
-  public Description matchMethodInvocation(MethodInvocationTree tree, final VisitorState state) {
+  public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
     if (!METHOD_MATCHER.matches(tree, state)) {
       return Description.NO_MATCH;
     }

@@ -49,9 +49,10 @@ import javax.annotation.Nullable;
 import javax.lang.model.element.Parameterizable;
 import javax.lang.model.element.TypeParameterElement;
 
-/** @author glorioso@google.com (Nick Glorioso) */
+/**
+ * @author glorioso@google.com (Nick Glorioso)
+ */
 @BugPattern(
-    name = "IncompatibleArgumentType",
     summary = "Passing argument to a generic method with an incompatible type.",
     severity = ERROR)
 public class IncompatibleArgumentType extends BugChecker implements MethodInvocationTreeMatcher {
@@ -91,7 +92,7 @@ public class IncompatibleArgumentType extends BugChecker implements MethodInvoca
     List<? extends ExpressionTree> arguments = methodInvocationTree.getArguments();
     // The unbound MethodSymbol for bar(), with type parameters <A> and <B>
     MethodSymbol declaredMethod = ASTHelpers.getSymbol(methodInvocationTree);
-    if (arguments.isEmpty() || declaredMethod == null) {
+    if (arguments.isEmpty()) {
       return Description.NO_MATCH;
     }
 

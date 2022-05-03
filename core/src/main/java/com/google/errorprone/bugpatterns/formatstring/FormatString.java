@@ -32,19 +32,16 @@ import com.sun.source.tree.MethodInvocationTree;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
-@BugPattern(name = "FormatString", summary = "Invalid printf-style format string", severity = ERROR)
+@BugPattern(summary = "Invalid printf-style format string", severity = ERROR)
 public class FormatString extends BugChecker implements MethodInvocationTreeMatcher {
 
   private static final Matcher<ExpressionTree> FORMATTED_METHOD =
       instanceMethod().onExactClass("java.lang.String").named("formatted");
 
   @Override
-  public Description matchMethodInvocation(MethodInvocationTree tree, final VisitorState state) {
+  public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
     ImmutableList<ExpressionTree> args;
     MethodSymbol sym = ASTHelpers.getSymbol(tree);
-    if (sym == null) {
-      return Description.NO_MATCH;
-    }
 
     if (FORMATTED_METHOD.matches(tree, state)) {
       /*

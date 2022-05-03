@@ -66,7 +66,7 @@ public final class AutoValueSubclassLeaked extends BugChecker
       CompilationUnitTree tree,
       ImmutableSet<Type> autoValueClassesFromThisFile,
       VisitorState state) {
-    new SuppressibleTreePathScanner<Void, Void>() {
+    new SuppressibleTreePathScanner<Void, Void>(state) {
 
       @Override
       public Void visitClass(ClassTree classTree, Void unused) {

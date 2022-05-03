@@ -22,7 +22,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** @author cushon@google.com (Liam Miller-Cushon) */
+/**
+ * @author cushon@google.com (Liam Miller-Cushon)
+ */
 @RunWith(JUnit4.class)
 public class FieldCanBeFinalTest {
 
@@ -64,6 +66,21 @@ public class FieldCanBeFinalTest {
             "import com.google.errorprone.annotations.Keep;",
             "class Test {",
             "  @Keep private int x;",
+            "  Test() {",
+            "    x = 42;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void injectAnnotatedFields_ignored() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import javax.inject.Inject;",
+            "class Test {",
+            "  @Inject private int x;",
             "  Test() {",
             "    x = 42;",
             "  }",

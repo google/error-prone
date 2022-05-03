@@ -33,7 +33,7 @@ import java.io.UncheckedIOException;
     severity = ERROR)
 public class Java7ApiChecker extends ApiDiffChecker {
 
-  static final ApiDiff API_DIFF = loadApiDiff();
+  public static final ApiDiff API_DIFF = loadApiDiff();
 
   private static ApiDiff loadApiDiff() {
     try {

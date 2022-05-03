@@ -196,6 +196,22 @@ public final class UnnecessarilyFullyQualifiedTest {
   }
 
   @Test
+  public void innerClass() {
+    helper
+        .addInputLines(
+            "A.java", //
+            "package test;",
+            "public class A {",
+            "  class B {}",
+            "  void test (A a) {",
+            "    a.new B() {};",
+            "  }",
+            "}")
+        .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
   public void packageInfo() {
     CompilationTestHelper.newInstance(UnnecessarilyFullyQualified.class, getClass())
         .addSourceLines(

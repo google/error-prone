@@ -27,11 +27,12 @@ import com.sun.source.tree.LiteralTree;
 import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.tools.javac.code.Type;
-import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.util.Convert;
 import javax.lang.model.type.TypeKind;
 
-/** @author lowasser@google.com (Louis Wasserman) */
+/**
+ * @author lowasser@google.com (Louis Wasserman)
+ */
 @BugPattern(
     severity = ERROR,
     summary = "StringBuilder does not have a char constructor; this invokes the int constructor.")
@@ -53,8 +54,7 @@ public class StringBuilderInitWithChar extends BugChecker implements NewClassTre
           return describeMatch(
               tree,
               SuggestedFix.replace(
-                  tree,
-                  "new StringBuilder().append(" + state.getSourceForNode((JCTree) argument) + ")"));
+                  tree, "new StringBuilder().append(" + state.getSourceForNode(argument) + ")"));
         }
       }
     }

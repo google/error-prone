@@ -30,9 +30,10 @@ import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.sun.source.tree.AnnotationTree;
 
-/** @author glorioso@google.com (Nick Glorioso) */
+/**
+ * @author glorioso@google.com (Nick Glorioso)
+ */
 @BugPattern(
-    name = "ProvidesMethodOutsideOfModule",
     summary = "@Provides methods need to be declared in a Module to have any effect.",
     severity = ERROR)
 public class ProvidesMethodOutsideOfModule extends BugChecker implements AnnotationTreeMatcher {

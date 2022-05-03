@@ -594,7 +594,7 @@ public final class PreferredInterfaceTypeTest {
             "    final Provider<List<String>> fooProvider = ",
             "      new Provider<List<String>>() {",
             "        @Override",
-            "        // BUG: Diagnostic contains: narrow the return type",
+            "        // BUG: Diagnostic contains: even when overriding a method",
             "        public List<String> get() {",
             "          return ImmutableList.of(\"foo\", \"bar\");",
             "        }",
@@ -852,7 +852,20 @@ public final class PreferredInterfaceTypeTest {
             "import java.util.ArrayList;",
             "import java.util.List;",
             "class Test {",
-            "  static final List<String> MUTABLE = new ArrayList<>();",
+            "  static Iterable<String> mutable = new ArrayList<>();",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void replacementNotSubtypeOfDeclaredType_noFinding() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.util.Deque;",
+            "import java.util.LinkedList;",
+            "class Test {",
+            "  private final Deque<String> foos = new LinkedList<>();",
             "}")
         .doTest();
   }

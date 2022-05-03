@@ -43,7 +43,7 @@ public final class StaticAssignmentInConstructor extends BugChecker implements M
   @Override
   public Description matchMethod(MethodTree tree, VisitorState state) {
     MethodSymbol methodSymbol = getSymbol(tree);
-    if (methodSymbol == null || !methodSymbol.isConstructor()) {
+    if (!methodSymbol.isConstructor()) {
       return NO_MATCH;
     }
     new TreeScanner<Void, Void>() {

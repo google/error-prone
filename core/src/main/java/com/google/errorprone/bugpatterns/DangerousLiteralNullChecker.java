@@ -106,9 +106,6 @@ public class DangerousLiteralNullChecker extends BugChecker implements LiteralTr
       return NO_MATCH;
     }
     MethodSymbol sym = ASTHelpers.getSymbol(invocation);
-    if (sym == null) {
-      return NO_MATCH;
-    }
     String newBody = RULE_LOOKUP.get(state).get(sym.owner.getQualifiedName(), sym.name);
     if (newBody == null) {
       return NO_MATCH;

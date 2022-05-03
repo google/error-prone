@@ -104,6 +104,7 @@ import org.checkerframework.errorprone.dataflow.cfg.node.LocalVariableNode;
 import org.checkerframework.errorprone.dataflow.cfg.node.MethodInvocationNode;
 import org.checkerframework.errorprone.dataflow.cfg.node.Node;
 import org.checkerframework.errorprone.dataflow.cfg.node.NotEqualNode;
+import org.checkerframework.errorprone.dataflow.cfg.node.SwitchExpressionNode;
 import org.checkerframework.errorprone.dataflow.cfg.node.TypeCastNode;
 import org.checkerframework.errorprone.dataflow.cfg.node.VariableDeclarationNode;
 
@@ -581,6 +582,11 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
         Types.instance(context),
         Symtab.instance(context));
     return returnValueNullness(node, callee);
+  }
+
+  @Override
+  Nullness visitSwitchExpression(SwitchExpressionNode node, SubNodeValues inputs, Updates updates) {
+    return NULLABLE;
   }
 
   @Override

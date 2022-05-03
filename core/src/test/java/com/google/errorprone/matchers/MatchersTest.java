@@ -458,7 +458,6 @@ public class MatchersTest {
   }
 
   @BugPattern(
-      name = "InLoopChecker",
       summary = "Checker that flags the given expression statement if the given matcher matches",
       severity = ERROR)
   public static class InLoopChecker extends MatcherChecker {
@@ -472,7 +471,6 @@ public class MatchersTest {
   }
 
   @BugPattern(
-      name = "MethodTreeChecker",
       summary = "Checker that flags the given method declaration if the given matcher matches",
       severity = ERROR)
   static class MethodTreeChecker extends BugChecker implements MethodTreeMatcher {
@@ -506,7 +504,6 @@ public class MatchersTest {
 
   /** Simple checker to make sure sameArgument doesn't throw IndexOutOfBoundsException. */
   @BugPattern(
-      name = "SameArgumentChecker",
       summary = "Checker that matches invocation if the first argument is repeated",
       severity = ERROR)
   public static class SameArgumentChecker extends BugChecker
@@ -525,7 +522,6 @@ public class MatchersTest {
 
   /** Checker that makes sure symbolHasAnnotation matches on MethodInvocationTree. */
   @BugPattern(
-      name = "NoAnnotatedDeclarationCallsChecker",
       summary = "Checker that flags the given method invocation if the given matcher matches",
       severity = ERROR)
   public static class NoAnnotatedDeclarationCallsChecker extends BugChecker
@@ -540,10 +536,7 @@ public class MatchersTest {
   }
 
   /** Checker that checks if a class is in a particular package. */
-  @BugPattern(
-      name = "PackageNameChecker",
-      summary = "Checks the name of the package",
-      severity = ERROR)
+  @BugPattern(summary = "Checks the name of the package", severity = ERROR)
   public static class PackageNameChecker extends BugChecker implements ClassTreeMatcher {
     private static final Matcher<Tree> MATCHER = Matchers.packageStartsWith("test.foo");
 
@@ -554,10 +547,7 @@ public class MatchersTest {
   }
 
   /** Checker that checks if an argument is 'Boolean.TRUE'. */
-  @BugPattern(
-      name = "BooleanConstantTrueChecker",
-      summary = "BooleanConstantTrueChecker",
-      severity = ERROR)
+  @BugPattern(summary = "BooleanConstantTrueChecker", severity = ERROR)
   public static class BooleanConstantTrueChecker extends BugChecker
       implements MethodInvocationTreeMatcher {
 

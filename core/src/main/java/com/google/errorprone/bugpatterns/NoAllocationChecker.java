@@ -393,9 +393,6 @@ public class NoAllocationChecker extends BugChecker
       return NO_MATCH;
     }
     MethodSymbol symbol = ASTHelpers.getSymbol(tree);
-    if (symbol == null) {
-      return NO_MATCH;
-    }
     return findSuperMethods(symbol, state.getTypes()).stream()
         .filter(s -> ASTHelpers.hasAnnotation(s, NoAllocation.class.getName(), state))
         .findAny()

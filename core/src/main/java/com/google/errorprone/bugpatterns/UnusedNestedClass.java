@@ -18,6 +18,7 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
+import static com.google.errorprone.util.ASTHelpers.canBeRemoved;
 import static com.google.errorprone.util.ASTHelpers.enclosingClass;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.shouldKeep;
@@ -36,6 +37,7 @@ import com.sun.source.util.TreePath;
 import com.sun.source.util.TreePathScanner;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
+import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -51,7 +53,7 @@ public final class UnusedNestedClass extends BugChecker implements CompilationUn
 
   @Override
   public Description matchCompilationUnit(CompilationUnitTree tree, VisitorState state) {
-    PrivateNestedClassScanner privateNestedClassScanner = new PrivateNestedClassScanner();
+    PrivateNestedClassScanner privateNestedClassScanner = new PrivateNestedClassScanner(state);
     privateNestedClassScanner.scan(state.getPath(), null);
 
     Map<ClassSymbol, TreePath> privateNestedClasses = privateNestedClassScanner.classes;
@@ -69,28 +71,27 @@ public final class UnusedNestedClass extends BugChecker implements CompilationUn
   private final class PrivateNestedClassScanner extends TreePathScanner<Void, Void> {
     private final Map<ClassSymbol, TreePath> classes = new HashMap<>();
 
-    private PrivateNestedClassScanner() {}
+    private final VisitorState state;
+
+    private PrivateNestedClassScanner(VisitorState state) {
+      this.state = state;
+    }
 
     @Override
     public Void visitClass(ClassTree classTree, Void unused) {
-      if (ignoreUnusedClass(classTree)) {
+      if (ignoreUnusedClass(classTree, state)) {
         return null;
       }
       ClassSymbol symbol = getSymbol(classTree);
-      if (symbol != null && symbol.isPrivate()) {
+      boolean isAnonymous = classTree.getSimpleName().length() == 0;
+      if (!isAnonymous && (canBeRemoved(symbol) || symbol.owner instanceof MethodSymbol)) {
         classes.put(symbol, getCurrentPath());
       }
       return super.visitClass(classTree, null);
     }
 
-    private boolean ignoreUnusedClass(ClassTree classTree) {
-      if (isSuppressed(classTree)) {
-        return true;
-      }
-      if (shouldKeep(classTree)) {
-        return true;
-      }
-      return false;
+    private boolean ignoreUnusedClass(ClassTree classTree, VisitorState state) {
+      return isSuppressed(classTree, state) || shouldKeep(classTree);
     }
   }
 
@@ -101,9 +102,6 @@ public final class UnusedNestedClass extends BugChecker implements CompilationUn
     @Override
     public Void visitClass(ClassTree classTree, Void unused) {
       ClassSymbol symbol = getSymbol(classTree);
-      if (symbol == null) {
-        return super.visitClass(classTree, null);
-      }
       withinClasses.add(symbol);
       super.visitClass(classTree, null);
       withinClasses.remove(symbol);

@@ -320,6 +320,7 @@ public final class ConstantExpressions {
         return receiver + symbol().getSimpleName();
       }
       return receiver
+          + (symbol().isStatic() ? symbol().owner.getSimpleName() + "." : "")
           + symbol().getSimpleName()
           + arguments().stream().map(Object::toString).collect(joining(", ", "(", ")"));
     }
@@ -350,8 +351,9 @@ public final class ConstantExpressions {
             ? getReceiver(tree)
             : null;
 
+    Symbol symbol = getSymbol(tree);
     Optional<ConstantExpression> receiverConstant;
-    if (receiver == null) {
+    if (receiver == null || (symbol != null && symbol.isStatic())) {
       receiverConstant = Optional.empty();
     } else {
       receiverConstant = constantExpression(receiver, state);

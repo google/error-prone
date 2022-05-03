@@ -56,7 +56,7 @@ public class RefasterRuleCompilerAnalyzer implements TaskListener {
     if (tree == null) {
       return;
     }
-    final List<CodeTransformer> rules = new ArrayList<>();
+    List<CodeTransformer> rules = new ArrayList<>();
     new TreeScanner<Void, Context>() {
       @Override
       public Void visitClass(ClassTree node, Context context) {

@@ -1429,4 +1429,32 @@ public class UnusedVariableTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void unusedVariable_withinPrivateInnerClass() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  private class Inner {",
+            "    // BUG: Diagnostic contains:",
+            "    public int foo = 1;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void parcelableCreator_noFinding() {
+    helper
+        .addSourceFile("android/testdata/stubs/android/os/Parcel.java")
+        .addSourceFile("android/testdata/stubs/android/os/Parcelable.java")
+        .addSourceLines(
+            "Test.java",
+            "import android.os.Parcelable;",
+            "class Test {",
+            "  private static final Parcelable.Creator<Test> CREATOR = null;",
+            "}")
+        .doTest();
+  }
 }

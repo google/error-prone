@@ -16,6 +16,8 @@
 
 package com.google.errorprone.matchers;
 
+import static com.google.errorprone.util.ASTHelpers.getSymbol;
+
 import com.google.errorprone.VisitorState;
 import com.sun.source.tree.MethodTree;
 import java.util.Set;
@@ -36,11 +38,11 @@ public class MethodVisibility implements Matcher<MethodTree> {
 
   @Override
   public boolean matches(MethodTree t, VisitorState state) {
-    Set<Modifier> modifiers = t.getModifiers().getFlags();
+    Set<Modifier> modifiers = getSymbol(t).getModifiers();
     if (visibility == Visibility.DEFAULT) {
-      return !(modifiers.contains(Visibility.PUBLIC.toModifier())
-          || modifiers.contains(Visibility.PROTECTED.toModifier())
-          || modifiers.contains(Visibility.PRIVATE.toModifier()));
+      return !modifiers.contains(Visibility.PUBLIC.toModifier())
+          && !modifiers.contains(Visibility.PROTECTED.toModifier())
+          && !modifiers.contains(Visibility.PRIVATE.toModifier());
     } else {
       return modifiers.contains(visibility.toModifier());
     }

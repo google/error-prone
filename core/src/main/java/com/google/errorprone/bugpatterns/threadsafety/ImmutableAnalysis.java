@@ -257,14 +257,14 @@ public class ImmutableAnalysis {
   }
 
   /** Check a single field for immutability. */
-  private Violation isFieldImmutable(
+  Violation isFieldImmutable(
       Optional<Tree> tree,
       ImmutableSet<String> immutableTyParams,
       ClassSymbol classSym,
       ClassType classType,
       VarSymbol var,
       ViolationReporter reporter) {
-    if (bugChecker.isSuppressed(var)) {
+    if (bugChecker.isSuppressed(var, state)) {
       return Violation.absent();
     }
     if (!var.getModifiers().contains(Modifier.FINAL)

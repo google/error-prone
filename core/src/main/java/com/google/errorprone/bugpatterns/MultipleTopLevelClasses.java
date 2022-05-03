@@ -16,9 +16,9 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.common.base.MoreObjects.firstNonNull;
 import static com.google.errorprone.BugPattern.LinkType.CUSTOM;
 import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
+import static com.google.errorprone.matchers.Description.NO_MATCH;
 
 import com.google.common.base.Joiner;
 import com.google.errorprone.BugPattern;
@@ -41,16 +41,11 @@ import java.util.List;
     linkType = CUSTOM,
     tags = StandardTags.STYLE,
     link = "https://google.github.io/styleguide/javaguide.html#s3.4.1-one-top-level-class")
-public class MultipleTopLevelClasses extends BugChecker implements CompilationUnitTreeMatcher {
+public final class MultipleTopLevelClasses extends BugChecker
+    implements CompilationUnitTreeMatcher {
 
   @Override
   public Description matchCompilationUnit(CompilationUnitTree tree, VisitorState state) {
-    if (tree.getTypeDecls().size() <= 1) {
-      // package-info.java files have zero top-level declarations, everything
-      // else should have exactly one.
-      return Description.NO_MATCH;
-    }
-
     List<String> names = new ArrayList<>();
     for (Tree member : tree.getTypeDecls()) {
       if (member instanceof ClassTree) {
@@ -60,12 +55,12 @@ public class MultipleTopLevelClasses extends BugChecker implements CompilationUn
           case INTERFACE:
           case ANNOTATION_TYPE:
           case ENUM:
-            if (isSuppressed(classMember)) {
+            if (isSuppressed(classMember, state)) {
               // If any top-level classes have @SuppressWarnings("TopLevel"), ignore
               // this compilation unit. We can't rely on the normal suppression
               // mechanism because the only enclosing element is the package declaration,
               // and @SuppressWarnings can't be applied to packages.
-              return Description.NO_MATCH;
+              return NO_MATCH;
             }
             names.add(classMember.getSimpleName().toString());
             break;
@@ -77,14 +72,15 @@ public class MultipleTopLevelClasses extends BugChecker implements CompilationUn
     if (names.size() <= 1) {
       // this can happen with multiple type declarations if some of them are
       // empty (e.g. ";" at the top level counts as an empty type decl)
-      return Description.NO_MATCH;
+      return NO_MATCH;
     }
     String message =
         String.format(
             "Expected at most one top-level class declaration, instead found: %s",
             Joiner.on(", ").join(names));
-    return buildDescription(firstNonNull(tree.getPackageName(), tree.getTypeDecls().get(0)))
-        .setMessage(message)
-        .build();
+    for (Tree typeDecl : tree.getTypeDecls()) {
+      state.reportMatch(buildDescription(typeDecl).setMessage(message).build());
+    }
+    return NO_MATCH;
   }
 }

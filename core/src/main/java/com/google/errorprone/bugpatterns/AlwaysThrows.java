@@ -25,6 +25,7 @@ import static com.google.errorprone.util.ASTHelpers.constValue;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static java.util.Arrays.stream;
 
+import com.google.common.base.Throwables;
 import com.google.common.collect.HashMultiset;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
@@ -37,7 +38,6 @@ import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.bugpatterns.threadsafety.ConstantExpressions;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
-import com.google.errorprone.matchers.method.MethodMatchers;
 import com.google.errorprone.util.ASTHelpers;
 import com.google.protobuf.ByteString;
 import com.sun.source.tree.ExpressionTree;
@@ -46,6 +46,7 @@ import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import java.lang.reflect.InvocationTargetException;
+import java.util.UUID;
 import java.util.function.Consumer;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
@@ -87,9 +88,9 @@ public class AlwaysThrows extends BugChecker implements MethodInvocationTreeMatc
           .namedAnyOf("put")
           .withParameters("java.lang.Object", "java.lang.Object");
 
-  enum Apis {
+  enum Api {
     PARSE_TIME(
-        MethodMatchers.staticMethod()
+        staticMethod()
             .onClassAny(VALIDATORS.keySet())
             .named("parse")
             .withParameters("java.lang.CharSequence")) {
@@ -100,30 +101,36 @@ public class AlwaysThrows extends BugChecker implements MethodInvocationTreeMatc
       }
     },
     BYTE_STRING(
-        MethodMatchers.staticMethod()
+        staticMethod()
             .onClass("com.google.protobuf.ByteString")
             .named("fromHex")
             .withParameters("java.lang.String")) {
       @Override
-      void validate(MethodInvocationTree tree, String argument) throws Throwable {
+      void validate(MethodInvocationTree tree, String argument) {
         try {
           ByteString.class.getMethod("fromHex", String.class).invoke(null, argument);
         } catch (NoSuchMethodException | IllegalAccessException e) {
           return;
         } catch (InvocationTargetException e) {
-          throw e.getCause();
+          throw Throwables.getCauseAs(e.getCause(), NumberFormatException.class);
         }
+      }
+    },
+    UUID_PARSE(staticMethod().onClass("java.util.UUID").named("fromString")) {
+      @Override
+      void validate(MethodInvocationTree tree, String argument) {
+        var unused = UUID.fromString(argument);
       }
     };
 
-    Apis(Matcher<ExpressionTree> matcher) {
+    Api(Matcher<ExpressionTree> matcher) {
       this.matcher = matcher;
     }
 
     @SuppressWarnings("ImmutableEnumChecker") // is immutable
     private final Matcher<ExpressionTree> matcher;
 
-    abstract void validate(MethodInvocationTree tree, String argument) throws Throwable;
+    abstract void validate(MethodInvocationTree tree, String argument) throws Exception;
   }
 
   private final ConstantExpressions constantExpressions;
@@ -160,8 +167,8 @@ public class AlwaysThrows extends BugChecker implements MethodInvocationTreeMatc
         return checkImmutableMapOf(tree, /* index= */ 1, state);
       }
     }
-    Apis api =
-        stream(Apis.values()).filter(m -> m.matcher.matches(tree, state)).findAny().orElse(null);
+    Api api =
+        stream(Api.values()).filter(m -> m.matcher.matches(tree, state)).findAny().orElse(null);
     if (api == null) {
       return NO_MATCH;
     }
@@ -171,7 +178,7 @@ public class AlwaysThrows extends BugChecker implements MethodInvocationTreeMatc
     }
     try {
       api.validate(tree, argument);
-    } catch (Throwable t) {
+    } catch (Exception t) {
       return buildDescription(tree)
           .setMessage(
               String.format(

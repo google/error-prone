@@ -24,6 +24,7 @@ import static com.google.errorprone.fixes.SuggestedFixes.renameVariableUsages;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.instanceMethod;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
+import static com.google.errorprone.util.ASTHelpers.canBeRemoved;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 
@@ -87,10 +88,7 @@ public final class ConstantPatternCompile extends BugChecker implements Variable
     if (outerMethodTree == null) {
       return NO_MATCH;
     }
-    Symbol sym = getSymbol(tree);
-    if (sym == null) {
-      return NO_MATCH;
-    }
+    VarSymbol sym = getSymbol(tree);
     switch (sym.getKind()) {
       case RESOURCE_VARIABLE:
         return describeMatch(tree);
@@ -114,8 +112,7 @@ public final class ConstantPatternCompile extends BugChecker implements Variable
     }
     MethodSymbol methodSymbol = getSymbol(outerMethodTree);
     boolean canUseStatic =
-        (methodSymbol != null
-                && methodSymbol.owner.enclClass().getNestingKind() == NestingKind.TOP_LEVEL)
+        methodSymbol.owner.enclClass().getNestingKind() == NestingKind.TOP_LEVEL
             || outerMethodTree.getModifiers().getFlags().contains(Modifier.STATIC);
     String replacement =
         String.format(
@@ -160,7 +157,7 @@ public final class ConstantPatternCompile extends BugChecker implements Variable
         || !regexSym.getKind().equals(ElementKind.FIELD)
         || !regexSym.isStatic()
         || !regexSym.getModifiers().contains(Modifier.FINAL)
-        || !isSelfOrTransitiveOwnerPrivate(regexSym)) {
+        || !canBeRemoved((VarSymbol) regexSym)) {
       return SuggestedFix.emptyFix();
     }
     VariableTree[] defs = {null};
@@ -206,19 +203,6 @@ public final class ConstantPatternCompile extends BugChecker implements Variable
         .merge(renameVariableUsages(tree, def.getName().toString(), state))
         .delete(tree)
         .build();
-  }
-
-  /**
-   * Returns true if the symbol is private, or contained by another symbol that is private (e.g. a
-   * private member class).
-   */
-  private static boolean isSelfOrTransitiveOwnerPrivate(Symbol sym) {
-    for (; sym != null; sym = sym.owner) {
-      if (sym.isPrivate()) {
-        return true;
-      }
-    }
-    return false;
   }
 
   /** Infer a name when upgrading the {@code Pattern} local to a constant. */

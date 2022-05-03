@@ -49,9 +49,6 @@ public class CacheLoaderNull extends BugChecker implements MethodTreeMatcher {
       return NO_MATCH;
     }
     MethodSymbol sym = ASTHelpers.getSymbol(tree);
-    if (sym == null) {
-      return NO_MATCH;
-    }
     if (!ASTHelpers.isSubtype(sym.owner.asType(), CACHE_LOADER_TYPE.get(state), state)) {
       return NO_MATCH;
     }

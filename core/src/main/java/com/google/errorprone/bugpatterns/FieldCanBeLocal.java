@@ -79,12 +79,11 @@ public final class FieldCanBeLocal extends BugChecker implements CompilationUnit
     SetMultimap<VarSymbol, Tree> uses =
         MultimapBuilder.linkedHashKeys().linkedHashSetValues().build();
 
-    new SuppressibleTreePathScanner<Void, Void>() {
+    new SuppressibleTreePathScanner<Void, Void>(state) {
       @Override
       public Void visitVariable(VariableTree variableTree, Void unused) {
         VarSymbol symbol = getSymbol(variableTree);
-        if (symbol != null
-            && symbol.getKind() == ElementKind.FIELD
+        if (symbol.getKind() == ElementKind.FIELD
             && symbol.isPrivate()
             && canBeLocal(variableTree)
             && !shouldKeep(variableTree)) {
@@ -119,7 +118,7 @@ public final class FieldCanBeLocal extends BugChecker implements CompilationUnit
 
       @Override
       public Void visitClass(ClassTree classTree, Void unused) {
-        if (isSuppressed(classTree)) {
+        if (isSuppressed(classTree, state)) {
           return null;
         }
         inMethod = false;

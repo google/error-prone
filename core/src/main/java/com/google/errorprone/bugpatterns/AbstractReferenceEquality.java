@@ -29,12 +29,15 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
+import com.google.errorprone.util.FindIdentifiers;
 import com.sun.source.tree.BinaryTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.util.TreePath;
+import com.sun.tools.javac.code.Kinds.KindSelector;
+import com.sun.tools.javac.code.Symbol;
 import java.util.List;
 import java.util.Optional;
 
@@ -42,8 +45,7 @@ import java.util.Optional;
  * Abstract implementation of a BugPattern that detects the use of reference equality to compare
  * classes with value semantics.
  *
- * <p>See e.g. {@link NumericEquality}, {@link OptionalEquality}, {@link
- * ProtoStringFieldReferenceEquality}, and {@link StringEquality}.
+ * <p>See e.g. {@link OptionalEquality}, {@link ProtoStringFieldReferenceEquality}.
  *
  * @author cushon@google.com (Liam Miller-Cushon)
  */
@@ -104,21 +106,28 @@ public abstract class AbstractReferenceEquality extends BugChecker implements Bi
 
     // If the lhs is possibly-null, provide both options.
     if (nullness != NONNULL) {
-      if (state.isAndroidCompatible()) {
-        builder.addFix(
-            SuggestedFix.builder()
-                .replace(
-                    tree, String.format("%sObjects.equal(%s, %s)", prefix, lhsSource, rhsSource))
-                .addImport("com.google.common.base.Objects")
-                .build());
+      Symbol existingObjects = FindIdentifiers.findIdent("Objects", state, KindSelector.TYP);
+      ObjectsFix preferredFix;
+      if (existingObjects != null
+          && existingObjects
+              .type
+              .tsym
+              .getQualifiedName()
+              .contentEquals(ObjectsFix.GUAVA.className)) {
+        preferredFix = ObjectsFix.GUAVA;
+      } else if (existingObjects != null
+          && existingObjects
+              .type
+              .tsym
+              .getQualifiedName()
+              .contentEquals(ObjectsFix.JAVA_UTIL.className)) {
+        preferredFix = ObjectsFix.JAVA_UTIL;
+      } else if (state.isAndroidCompatible()) {
+        preferredFix = ObjectsFix.GUAVA;
       } else {
-        builder.addFix(
-            SuggestedFix.builder()
-                .replace(
-                    tree, String.format("%sObjects.equals(%s, %s)", prefix, lhsSource, rhsSource))
-                .addImport("java.util.Objects")
-                .build());
+        preferredFix = ObjectsFix.JAVA_UTIL;
       }
+      builder.addFix(preferredFix.fix(tree, prefix, lhsSource, rhsSource));
     }
     if (nullness != NULL) {
       builder.addFix(
@@ -129,6 +138,26 @@ public abstract class AbstractReferenceEquality extends BugChecker implements Bi
                   prefix,
                   lhs instanceof BinaryTree ? String.format("(%s)", lhsSource) : lhsSource,
                   rhsSource)));
+    }
+  }
+
+  private enum ObjectsFix {
+    JAVA_UTIL("java.util.Objects", "Objects.equals"),
+    GUAVA("com.google.common.base.Objects", "Objects.equal");
+
+    private final String className;
+    private final String methodName;
+
+    ObjectsFix(String className, String methodName) {
+      this.className = className;
+      this.methodName = methodName;
+    }
+
+    SuggestedFix fix(BinaryTree tree, String prefix, String lhsSource, String rhsSource) {
+      return SuggestedFix.builder()
+          .replace(tree, String.format("%s%s(%s, %s)", prefix, methodName, lhsSource, rhsSource))
+          .addImport(className)
+          .build();
     }
   }
 

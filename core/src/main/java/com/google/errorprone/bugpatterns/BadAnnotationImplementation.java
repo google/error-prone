@@ -62,7 +62,7 @@ public class BadAnnotationImplementation extends BugChecker implements ClassTree
       allOf(anyOf(kindIs(CLASS), kindIs(ENUM)), isSubtypeOf(ANNOTATION_TYPE));
 
   @Override
-  public Description matchClass(ClassTree classTree, final VisitorState state) {
+  public Description matchClass(ClassTree classTree, VisitorState state) {
     if (!CLASS_TREE_MATCHER.matches(classTree, state)) {
       return Description.NO_MATCH;
     }
@@ -80,7 +80,7 @@ public class BadAnnotationImplementation extends BugChecker implements ClassTree
     // Otherwise walk up type hierarchy looking for equals and hashcode methods
     MethodSymbol equals = null;
     MethodSymbol hashCode = null;
-    final Types types = state.getTypes();
+    Types types = state.getTypes();
     Name equalsName = EQUALS.get(state);
     Predicate<MethodSymbol> equalsPredicate =
         new Predicate<MethodSymbol>() {

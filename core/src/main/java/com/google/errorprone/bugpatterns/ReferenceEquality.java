@@ -85,7 +85,7 @@ public class ReferenceEquality extends AbstractReferenceEquality {
       return false;
     }
     MethodSymbol sym = ASTHelpers.getSymbol(methodTree);
-    if (sym == null || sym.isStatic()) {
+    if (sym.isStatic()) {
       return false;
     }
     if (overridesMethodOnType(classType, sym, symtab.comparatorType, "compare", state)) {

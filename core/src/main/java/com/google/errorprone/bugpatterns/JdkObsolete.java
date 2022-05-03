@@ -160,9 +160,6 @@ public class JdkObsolete extends BugChecker
   @Override
   public Description matchNewClass(NewClassTree tree, VisitorState state) {
     MethodSymbol constructor = ASTHelpers.getSymbol(tree);
-    if (constructor == null) {
-      return NO_MATCH;
-    }
     Symbol owner = constructor.owner;
     Description description =
         describeIfObsolete(
@@ -201,9 +198,6 @@ public class JdkObsolete extends BugChecker
       return NO_MATCH;
     }
     ClassSymbol symbol = ASTHelpers.getSymbol(tree);
-    if (symbol == null) {
-      return NO_MATCH;
-    }
     return describeIfObsolete(null, state.getTypes().directSupertypes(symbol.asType()), state);
   }
 
@@ -419,9 +413,6 @@ public class JdkObsolete extends BugChecker
   private static boolean implementingObsoleteMethod(
       MethodTree enclosingMethod, VisitorState state, Type type) {
     MethodSymbol method = ASTHelpers.getSymbol(enclosingMethod);
-    if (method == null) {
-      return false;
-    }
     if (ASTHelpers.findSuperMethods(method, state.getTypes()).isEmpty()) {
       // not an override
       return false;

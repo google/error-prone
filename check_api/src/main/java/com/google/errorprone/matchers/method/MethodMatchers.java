@@ -25,13 +25,17 @@ import java.util.regex.Pattern;
 
 public final class MethodMatchers {
 
-  /** @deprecated use {@code Matcher<ExpressionTree>} instead of referring directly to this type. */
+  /**
+   * @deprecated use {@code Matcher<ExpressionTree>} instead of referring directly to this type.
+   */
   @Deprecated
   public interface MethodMatcher extends Matcher<ExpressionTree> {}
 
   // Language definition for fluent method matchers.
 
-  /** @deprecated use {@code Matcher<ExpressionTree>} instead of referring directly to this type. */
+  /**
+   * @deprecated use {@code Matcher<ExpressionTree>} instead of referring directly to this type.
+   */
   @Deprecated
   public interface InstanceMethodMatcher extends MethodMatcher {
     /** Match on types that satisfy the given predicate. */
@@ -65,7 +69,9 @@ public final class MethodMatchers {
     MethodClassMatcher anyClass();
   }
 
-  /** @deprecated use {@code Matcher<ExpressionTree>} instead of referring directly to this type. */
+  /**
+   * @deprecated use {@code Matcher<ExpressionTree>} instead of referring directly to this type.
+   */
   @Deprecated
   public interface StaticMethodMatcher extends MethodMatcher {
     /** Match on types that satisfy the given predicate. */
@@ -99,7 +105,9 @@ public final class MethodMatchers {
     MethodClassMatcher anyClass();
   }
 
-  /** @deprecated use {@code Matcher<ExpressionTree>} instead of referring directly to this type. */
+  /**
+   * @deprecated use {@code Matcher<ExpressionTree>} instead of referring directly to this type.
+   */
   @Deprecated
   public interface AnyMethodMatcher extends MethodMatcher {
     /** Match the given type exactly. */
@@ -124,7 +132,9 @@ public final class MethodMatchers {
     MethodClassMatcher anyClass();
   }
 
-  /** @deprecated use {@code Matcher<ExpressionTree>} instead of referring directly to this type. */
+  /**
+   * @deprecated use {@code Matcher<ExpressionTree>} instead of referring directly to this type.
+   */
   @Deprecated
   public interface MethodClassMatcher extends MethodMatcher {
     /** Match methods with the given name. (e.g. {@code toString}) */
@@ -152,11 +162,15 @@ public final class MethodMatchers {
     MethodSignatureMatcher withSignature(String signature);
   }
 
-  /** @deprecated use {@code Matcher<ExpressionTree>} instead of referring directly to this type. */
+  /**
+   * @deprecated use {@code Matcher<ExpressionTree>} instead of referring directly to this type.
+   */
   @Deprecated
   public interface MethodSignatureMatcher extends MethodMatcher {}
 
-  /** @deprecated use {@code Matcher<ExpressionTree>} instead of referring directly to this type. */
+  /**
+   * @deprecated use {@code Matcher<ExpressionTree>} instead of referring directly to this type.
+   */
   @Deprecated
   public interface MethodNameMatcher extends MethodMatcher {
     /** Match methods with no formal parameters. */
@@ -173,7 +187,9 @@ public final class MethodMatchers {
     ParameterMatcher withParametersOfType(Iterable<Supplier<Type>> parameters);
   }
 
-  /** @deprecated use {@code Matcher<ExpressionTree>} instead of referring directly to this type. */
+  /**
+   * @deprecated use {@code Matcher<ExpressionTree>} instead of referring directly to this type.
+   */
   @Deprecated
   public interface ConstructorMatcher extends MethodMatcher {
     /** Match on types that satisfy the given predicate. */
@@ -186,7 +202,9 @@ public final class MethodMatchers {
     ConstructorClassMatcher forClass(Supplier<Type> classType);
   }
 
-  /** @deprecated use {@code Matcher<ExpressionTree>} instead of referring directly to this type. */
+  /**
+   * @deprecated use {@code Matcher<ExpressionTree>} instead of referring directly to this type.
+   */
   @Deprecated
   public interface ConstructorClassMatcher extends MethodMatcher {
     /** Match constructors with no formal parameters. */
@@ -202,7 +220,9 @@ public final class MethodMatchers {
     ParameterMatcher withParametersOfType(Iterable<Supplier<Type>> parameters);
   }
 
-  /** @deprecated use {@code Matcher<ExpressionTree>} instead of referring directly to this type. */
+  /**
+   * @deprecated use {@code Matcher<ExpressionTree>} instead of referring directly to this type.
+   */
   @Deprecated
   public interface ParameterMatcher extends MethodMatcher {}
 

@@ -24,24 +24,23 @@ import com.sun.tools.javac.code.Type;
 
 /** Enumerates types which have poorly-defined behaviour for equals. */
 public enum TypesWithUndefinedEquality {
+  // keep-sorted start
+  CHAR_SEQUENCE("CharSequence", "java.lang.CharSequence"),
+  COLLECTION("Collection", "java.util.Collection"),
+  DATE("Date", "java.util.Date"),
+  IMMUTABLE_COLLECTION("ImmutableCollection", "com.google.common.collect.ImmutableCollection"),
+  IMMUTABLE_MULTIMAP("ImmutableMultimap", "com.google.common.collect.ImmutableMultimap"),
+  ITERABLE("Iterable", "com.google.common.collect.FluentIterable", "java.lang.Iterable"),
   LONG_SPARSE_ARRAY(
       "LongSparseArray",
-      "android.util.LongSparseArray",
       "android.support.v4.util.LongSparseArrayCompat",
-      "androidx.core.util.LongSparseArrayCompat",
-      "androidx.collection.LongSparseArrayCompat"),
-  SPARSE_ARRAY(
-      "SparseArray",
-      "android.util.SparseArray",
-      "androidx.collection.SparseArrayCompat",
-      "androidx.collection.SparseArrayCompat"),
+      "android.util.LongSparseArray",
+      "androidx.collection.LongSparseArrayCompat",
+      "androidx.core.util.LongSparseArrayCompat"),
   MULTIMAP("Multimap", "com.google.common.collect.Multimap"),
-  CHAR_SEQUENCE("CharSequence", "java.lang.CharSequence"),
-  ITERABLE("Iterable", "java.lang.Iterable", "com.google.common.collect.FluentIterable"),
-  COLLECTION("Collection", "java.util.Collection"),
-  IMMUTABLE_COLLECTION("ImmutableCollection", "com.google.common.collect.ImmutableCollection"),
   QUEUE("Queue", "java.util.Queue"),
-  DATE("Date", "java.util.Date");
+  SPARSE_ARRAY("SparseArray", "android.util.SparseArray", "androidx.collection.SparseArrayCompat");
+  // keep-sorted end
 
   private final String shortName;
   private final ImmutableSet<String> typeNames;

@@ -20,12 +20,13 @@ import static com.google.common.base.Ascii.isUpperCase;
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.errorprone.BugPattern.LinkType.CUSTOM;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
+import static com.google.errorprone.fixes.SuggestedFix.emptyFix;
 import static com.google.errorprone.fixes.SuggestedFixes.renameMethodWithInvocations;
 import static com.google.errorprone.fixes.SuggestedFixes.renameVariable;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.JUnitMatchers.TEST_CASE;
 import static com.google.errorprone.util.ASTHelpers.annotationsAmong;
-import static com.google.errorprone.util.ASTHelpers.findSuperMethod;
+import static com.google.errorprone.util.ASTHelpers.canBeRemoved;
 import static com.google.errorprone.util.ASTHelpers.findSuperMethods;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
@@ -44,6 +45,7 @@ import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
+import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.util.Name;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
@@ -75,28 +77,27 @@ public final class MemberName extends BugChecker implements MethodTreeMatcher, V
                   .map(s::getName)
                   .collect(toImmutableSet()));
 
+  private static final String STATIC_VARIABLE_FINDING =
+      "Static variables should be named in UPPER_SNAKE_CASE if deeply immutable or lowerCamelCase"
+          + " if not.";
+
   @Override
   public Description matchMethod(MethodTree tree, VisitorState state) {
     MethodSymbol symbol = getSymbol(tree);
-    if (symbol == null) {
-      return NO_MATCH;
-    }
     if (!annotationsAmong(symbol.owner, EXEMPTED_CLASS_ANNOTATIONS.get(state), state).isEmpty()) {
       return NO_MATCH;
     }
     if (!annotationsAmong(symbol, EXEMPTED_METHOD_ANNOTATIONS.get(state), state).isEmpty()) {
       return NO_MATCH;
     }
-    if (hasTestAnnotation(symbol)
-        || findSuperMethods(symbol, state.getTypes()).stream()
-            .anyMatch(s -> hasTestAnnotation(s))) {
+    if (hasTestAnnotation(symbol)) {
       return NO_MATCH;
     }
     // It is a surprisingly common error to replace @Test with @Ignore to ignore a test.
     if (hasAnnotation(symbol, "org.junit.Ignore", state)) {
       return NO_MATCH;
     }
-    if (findSuperMethod(getSymbol(tree), state.getTypes()).isPresent()) {
+    if (!findSuperMethods(symbol, state.getTypes()).isEmpty()) {
       return NO_MATCH;
     }
     if (tree.getModifiers().getFlags().contains(Modifier.NATIVE)) {
@@ -111,11 +112,11 @@ public final class MemberName extends BugChecker implements MethodTreeMatcher, V
       return NO_MATCH;
     }
     String name = tree.getName().toString();
-    if (isConformant(name)) {
+    if (isConformant(symbol, name)) {
       return NO_MATCH;
     }
-    String suggested = suggestedRename(name);
-    return suggested.equals(name) || !symbol.isPrivate()
+    String suggested = suggestedRename(symbol, name);
+    return suggested.equals(name) || !canBeRemoved(symbol, state)
         ? buildDescription(tree)
             .setMessage(
                 String.format(
@@ -133,31 +134,27 @@ public final class MemberName extends BugChecker implements MethodTreeMatcher, V
 
   @Override
   public Description matchVariable(VariableTree tree, VisitorState state) {
-    Symbol symbol = getSymbol(tree);
-    if (symbol == null) {
-      return NO_MATCH;
-    }
-    // TODO(ghm): We could validate static variables too; they can contain underscores, but should
-    // be either UPPER_UNDERSCORE or lowerCamel, not some mix of both.
-    if (symbol.isStatic()) {
-      return NO_MATCH;
-    }
+    VarSymbol symbol = getSymbol(tree);
     String name = tree.getName().toString();
     // Try to avoid dual-matching with ConstantCaseForConstants.
     if (UPPER_UNDERSCORE_PATTERN.matcher(name).matches() && !symbol.isStatic()) {
       return NO_MATCH;
     }
-    if (isConformant(name)) {
+    if (isConformant(symbol, name)) {
       return NO_MATCH;
     }
-    String suggested = suggestedRename(name);
-    return suggested.equals(name) || !canBeRenamed(symbol)
-        ? describeMatch(tree)
-        : describeMatch(tree, renameVariable(tree, suggested, state));
+    String suggested = suggestedRename(symbol, name);
+    return buildDescription(tree)
+        .addFix(
+            suggested.equals(name) || !canBeRenamed(symbol)
+                ? emptyFix()
+                : renameVariable(tree, suggested, state))
+        .setMessage(isStaticVariable(symbol) ? STATIC_VARIABLE_FINDING : message())
+        .build();
   }
 
-  private static String suggestedRename(String name) {
-    if (UPPER_UNDERSCORE_PATTERN.matcher(name).matches()) {
+  private static String suggestedRename(Symbol symbol, String name) {
+    if (!isStaticVariable(symbol) && UPPER_UNDERSCORE_PATTERN.matcher(name).matches()) {
       return CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, name);
     }
     if (LOWER_UNDERSCORE_PATTERN.matcher(name).matches()) {
@@ -172,15 +169,22 @@ public final class MemberName extends BugChecker implements MethodTreeMatcher, V
             .collect(joining("")));
   }
 
-  private static final Pattern LOWER_UNDERSCORE_PATTERN = Pattern.compile("[a-z0-9_]+");
-  private static final Pattern UPPER_UNDERSCORE_PATTERN = Pattern.compile("[A-Z0-9_]+");
-  private static final Splitter UNDERSCORE_SPLITTER = Splitter.on('_');
-
   private static boolean canBeRenamed(Symbol symbol) {
     return symbol.isPrivate() || symbol.getKind().equals(ElementKind.LOCAL_VARIABLE);
   }
 
-  private static boolean isConformant(String name) {
+  private static boolean isConformant(Symbol symbol, String name) {
+    if (isStaticVariable(symbol) && UPPER_UNDERSCORE_PATTERN.matcher(name).matches()) {
+      return true;
+    }
     return !name.contains("_") && !isUpperCase(name.charAt(0));
   }
+
+  private static boolean isStaticVariable(Symbol symbol) {
+    return symbol instanceof VarSymbol && symbol.isStatic();
+  }
+
+  private static final Pattern LOWER_UNDERSCORE_PATTERN = Pattern.compile("[a-z0-9_]+");
+  private static final Pattern UPPER_UNDERSCORE_PATTERN = Pattern.compile("[A-Z0-9_]+");
+  private static final Splitter UNDERSCORE_SPLITTER = Splitter.on('_');
 }

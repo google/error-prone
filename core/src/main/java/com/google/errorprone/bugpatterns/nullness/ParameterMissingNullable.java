@@ -48,7 +48,6 @@ import com.sun.tools.javac.code.Symbol;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
-    name = "ParameterMissingNullable",
     summary = "Parameter has handling for null but is not annotated @Nullable",
     severity = SUGGESTION)
 public class ParameterMissingNullable extends BugChecker implements BinaryTreeMatcher {

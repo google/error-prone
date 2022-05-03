@@ -29,7 +29,9 @@ import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.sun.source.tree.MethodInvocationTree;
 
-/** @author glorioso@google.com (Nick Glorioso) */
+/**
+ * @author glorioso@google.com (Nick Glorioso)
+ */
 @BugPattern(
     summary =
         "This pattern will silently corrupt certain byte sequences from the serialized protocol "

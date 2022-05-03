@@ -77,22 +77,7 @@ public class CheckReturnValuePositiveCases {
   }
 
   public void constructor() {
-    /*
-     * We may or may not want to treat this as a bug. On the one hand, the
-     * subclass might be "using" the superclass, so it might not be being
-     * "ignored." (Plus, it would be a pain to produce a valid suggested fix
-     * that incorporates any subclass constructor body, which might even contain
-     * calls to methods in the class.) On the other hand, the more likely
-     * scenario may be a class like IteratorTester, which requires (a) that the
-     * user subclass it to implement a method and (b) that the user call test()
-     * on the constructed object. There, it would be nice if IteratorTester
-     * could be annotated with @CheckReturnValue to mean "anyone who creates an
-     * anonymous subclasses of this should still do something with that
-     * subclass." But perhaps that's an abuse of @CheckReturnValue.
-     *
-     * Anyway, these tests are here to ensure that subclasses don't don't crash
-     * the compiler.
-     */
+    // BUG: Diagnostic contains: Ignored return value
     new MyObject() {};
 
     class MySubObject1 extends MyObject {}

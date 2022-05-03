@@ -29,7 +29,7 @@ import static com.google.errorprone.matchers.Matchers.hasArgumentWithValue;
 import static com.google.errorprone.matchers.Matchers.hasMethod;
 import static com.google.errorprone.matchers.Matchers.hasModifier;
 import static com.google.errorprone.matchers.Matchers.isSubtypeOf;
-import static com.google.errorprone.matchers.Matchers.methodHasParameters;
+import static com.google.errorprone.matchers.Matchers.methodHasNoParameters;
 import static com.google.errorprone.matchers.Matchers.methodHasVisibility;
 import static com.google.errorprone.matchers.Matchers.methodIsNamed;
 import static com.google.errorprone.matchers.Matchers.methodNameStartsWith;
@@ -144,14 +144,14 @@ public final class JUnitMatchers {
   public static final Matcher<MethodTree> isJunit3TestCase =
       allOf(
           methodNameStartsWith("test"),
-          methodHasParameters(),
+          methodHasNoParameters(),
           Matchers.<MethodTree>hasModifier(Modifier.PUBLIC),
           methodReturns(VOID_TYPE));
 
   /** Common matcher for possible JUnit setUp/tearDown methods. */
   private static final Matcher<MethodTree> looksLikeJUnitSetUpOrTearDown =
       allOf(
-          methodHasParameters(),
+          methodHasNoParameters(),
           anyOf(
               methodHasVisibility(MethodVisibility.Visibility.PUBLIC),
               methodHasVisibility(MethodVisibility.Visibility.PROTECTED)),

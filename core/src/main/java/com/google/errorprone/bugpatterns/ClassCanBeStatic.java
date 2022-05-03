@@ -47,9 +47,9 @@ public class ClassCanBeStatic extends BugChecker implements ClassTreeMatcher {
       "com.google.errorprone.refaster.annotation.BeforeTemplate";
 
   @Override
-  public Description matchClass(final ClassTree tree, final VisitorState state) {
-    final ClassSymbol currentClass = ASTHelpers.getSymbol(tree);
-    if (currentClass == null || !currentClass.hasOuterInstance()) {
+  public Description matchClass(ClassTree tree, VisitorState state) {
+    ClassSymbol currentClass = ASTHelpers.getSymbol(tree);
+    if (!currentClass.hasOuterInstance()) {
       return NO_MATCH;
     }
     if (currentClass.getNestingKind() != NestingKind.MEMBER) {

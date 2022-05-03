@@ -34,6 +34,7 @@ import static com.google.errorprone.util.ASTHelpers.constValue;
 import static com.google.errorprone.util.ASTHelpers.findEnclosingMethod;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.isConsideredFinal;
+import static com.google.errorprone.util.ASTHelpers.methodCanBeOverridden;
 import static com.sun.source.tree.Tree.Kind.NULL_LITERAL;
 import static java.lang.Boolean.FALSE;
 import static java.util.regex.Pattern.compile;
@@ -72,7 +73,6 @@ import javax.lang.model.element.Name;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
-    name = "ReturnMissingNullable",
     summary = "Method returns a definitely null value but is not annotated @Nullable",
     severity = SUGGESTION)
 public class ReturnMissingNullable extends BugChecker implements CompilationUnitTreeMatcher {
@@ -311,21 +311,23 @@ public class ReturnMissingNullable extends BugChecker implements CompilationUnit
           return;
         }
 
+        MethodSymbol method = getSymbol(methodTree);
         List<? extends StatementTree> statements = methodTree.getBody().getStatements();
         if (beingConservative
             && statements.size() == 1
             && getOnlyElement(statements) == returnTree
-            && returnExpression.getKind() == NULL_LITERAL) {
+            && returnExpression.getKind() == NULL_LITERAL
+            && methodCanBeOverridden(method)) {
           /*
-           * When the entire method body is `return null`, I worry that this may be a stub
-           * implementation that all "real" implementations are meant to override. Ideally such
-           * stubs would use implementation like `throw new UnsupportedOperationException()`, but
-           * let's assume the worst.
+           * When the entire body of an overrideable method is `return null`, we are sometimes
+           * looking at a "stub" implementation that all "real" implementations are meant to
+           * override. Ideally such stubs would use implementation like `throw new
+           * UnsupportedOperationException()`, but we see `return null` often enough in practice
+           * that it warrants a special case when running in conservative mode.
            */
           return;
         }
 
-        MethodSymbol method = getSymbol(methodTree);
         Type returnType = method.getReturnType();
         if (beingConservative && isVoid(returnType, state)) {
           // `@Nullable Void` is accurate but noisy, so some users won't want it.
@@ -370,7 +372,7 @@ public class ReturnMissingNullable extends BugChecker implements CompilationUnit
 
       @Override
       public Void scan(Tree tree, Void unused) {
-        if (isSuppressed(tree)) {
+        if (isSuppressed(tree, stateForCompilationUnit)) {
           return null;
         }
         return super.scan(tree, unused);

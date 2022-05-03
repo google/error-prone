@@ -80,6 +80,7 @@ public final class AlreadyChecked extends BugChecker implements CompilationUnitT
     private final VisitorState state;
 
     private IfScanner(VisitorState state) {
+      super(state);
       this.state = state;
     }
 

@@ -47,7 +47,9 @@ import java.util.List;
 import java.util.function.Predicate;
 import javax.lang.model.element.ElementKind;
 
-/** @author scottjohnson@google.com (Scott Johnson) */
+/**
+ * @author scottjohnson@google.com (Scott Johnson)
+ */
 @BugPattern(summary = "Using a collection function with itself as the argument.", severity = ERROR)
 public class ModifyingCollectionWithItself extends BugChecker
     implements MethodInvocationTreeMatcher {
@@ -140,7 +142,7 @@ public class ModifyingCollectionWithItself extends BugChecker
     return fixes;
   }
 
-  private static Predicate<JCVariableDecl> isCollectionVariable(final VisitorState state) {
+  private static Predicate<JCVariableDecl> isCollectionVariable(VisitorState state) {
     return var -> variableType(isSubtypeOf("java.util.Collection")).matches(var, state);
   }
 

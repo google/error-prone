@@ -104,7 +104,7 @@ public final class FormatStringValidation {
   public static ValidationResult validate(
       @Nullable MethodSymbol formatMethodSymbol,
       Collection<? extends ExpressionTree> arguments,
-      final VisitorState state) {
+      VisitorState state) {
     Preconditions.checkArgument(
         !arguments.isEmpty(),
         "A format method should have one or more arguments, but method (%s) has zero arguments.",
@@ -134,7 +134,7 @@ public final class FormatStringValidation {
                 (ExpressionTree input) -> {
                   try {
                     return getInstance(input, state);
-                  } catch (Throwable t) {
+                  } catch (RuntimeException t) {
                     // ignore symbol completion failures
                     return null;
                   }

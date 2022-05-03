@@ -22,6 +22,7 @@ import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
+import static com.google.errorprone.util.ASTHelpers.canBeRemoved;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
@@ -47,6 +48,7 @@ import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePathScanner;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
+import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
@@ -87,10 +89,9 @@ public class UnnecessaryAnonymousClass extends BugChecker implements VariableTre
     if (!(member instanceof MethodTree)) {
       return NO_MATCH;
     }
-    Symbol varSym = getSymbol(tree);
-    if (varSym == null
-        || varSym.getKind() != ElementKind.FIELD
-        || !varSym.isPrivate()
+    VarSymbol varSym = getSymbol(tree);
+    if (varSym.getKind() != ElementKind.FIELD
+        || !canBeRemoved(varSym)
         || !varSym.getModifiers().contains(Modifier.FINAL)) {
       return NO_MATCH;
     }
@@ -100,9 +101,6 @@ public class UnnecessaryAnonymousClass extends BugChecker implements VariableTre
       return NO_MATCH;
     }
     MethodSymbol methodSymbol = getSymbol(implementation);
-    if (methodSymbol == null) {
-      return NO_MATCH;
-    }
     Symbol descriptorSymbol = state.getTypes().findDescriptorSymbol(type.tsym);
     if (!methodSymbol.getSimpleName().contentEquals(descriptorSymbol.getSimpleName())) {
       return NO_MATCH;

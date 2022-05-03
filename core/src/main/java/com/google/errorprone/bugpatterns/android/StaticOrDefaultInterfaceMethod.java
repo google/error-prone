@@ -35,9 +35,10 @@ import com.google.errorprone.matchers.Matcher;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
 
-/** @author epmjohnston@google.com (Emily P.M. Johnston) */
+/**
+ * @author epmjohnston@google.com (Emily P.M. Johnston)
+ */
 @BugPattern(
-    name = "StaticOrDefaultInterfaceMethod",
     summary =
         "Static and default interface methods are not natively supported on older Android devices."
             + " ",

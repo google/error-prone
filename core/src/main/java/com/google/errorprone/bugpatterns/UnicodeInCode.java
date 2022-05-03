@@ -21,6 +21,7 @@ import static com.google.common.collect.Streams.concat;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ErrorProneTokens.getTokens;
+import static java.lang.String.format;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableRangeSet;
@@ -31,10 +32,11 @@ import com.google.errorprone.bugpatterns.BugChecker.CompilationUnitTreeMatcher;
 import com.google.errorprone.fixes.FixedPosition;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ErrorProneToken;
+import com.google.errorprone.util.SourceCodeEscapers;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.tools.javac.parser.Tokens.TokenKind;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /** Bans using non-ASCII Unicode characters outside string literals and comments. */
 @BugPattern(
@@ -47,7 +49,7 @@ public final class UnicodeInCode extends BugChecker implements CompilationUnitTr
   public Description matchCompilationUnit(CompilationUnitTree tree, VisitorState state) {
     ImmutableRangeSet<Integer> commentsAndLiterals = commentsAndLiterals(state);
 
-    List<Integer> violatingLocations = new ArrayList<>();
+    Map<Integer, Character> violations = new LinkedHashMap<>();
 
     CharSequence sourceCode = state.getSourceCode();
 
@@ -55,19 +57,28 @@ public final class UnicodeInCode extends BugChecker implements CompilationUnitTr
       char c = sourceCode.charAt(i);
 
       if (!isAcceptableAscii(c) && !commentsAndLiterals.contains(i)) {
-        violatingLocations.add(i);
+        violations.put(i, c);
       }
     }
 
-    if (violatingLocations.isEmpty()) {
+    if (violations.isEmpty()) {
       return NO_MATCH;
     }
 
     ImmutableRangeSet<Integer> suppressedRegions = suppressedRegions(state);
 
-    for (Integer violatingLocation : violatingLocations) {
+    for (var e : violations.entrySet()) {
+      int violatingLocation = e.getKey();
+      char c = e.getValue();
       if (!suppressedRegions.contains(violatingLocation)) {
-        state.reportMatch(describeMatch(new FixedPosition(tree, violatingLocation)));
+        state.reportMatch(
+            buildDescription(new FixedPosition(tree, violatingLocation))
+                .setMessage(
+                    format(
+                        "Avoid using non-ASCII Unicode character (%s) outside of comments and"
+                            + " literals, as they can be confusing.",
+                        SourceCodeEscapers.javaCharEscaper().escape(Character.toString(c))))
+                .build());
       }
     }
     return NO_MATCH;

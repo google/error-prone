@@ -87,10 +87,10 @@ public class ProtoFieldNullComparison extends BugChecker implements CompilationU
 
   private static final Matcher<MethodInvocationTree> TRUTH_NOT_NULL =
       allOf(
-          instanceMethod().onDescendantOf("com.google.common.truth.Subject").named("isNotNull"),
+          instanceMethod().anyClass().named("isNotNull"),
           receiverOfInvocation(
               anyOf(
-                  staticMethod().onClass("com.google.common.truth.Truth").namedAnyOf("assertThat"),
+                  staticMethod().anyClass().namedAnyOf("assertThat"),
                   instanceMethod()
                       .onDescendantOf("com.google.common.truth.StandardSubjectBuilder")
                       .named("that"))));
@@ -137,12 +137,10 @@ public class ProtoFieldNullComparison extends BugChecker implements CompilationU
               "com.google.protobuf.GeneratedMessageLite", "com.google.protobuf.GeneratedMessage");
 
   private final boolean matchTestAssertions;
-  private final boolean matchOptionals;
 
   public ProtoFieldNullComparison(ErrorProneFlags flags) {
     this.matchTestAssertions =
         flags.getBoolean("ProtoFieldNullComparison:MatchTestAssertions").orElse(false);
-    this.matchOptionals = flags.getBoolean("ProtoFieldNullComparison:MatchOptionals").orElse(true);
   }
 
   @Override
@@ -162,22 +160,22 @@ public class ProtoFieldNullComparison extends BugChecker implements CompilationU
 
     @Override
     public Void visitMethod(MethodTree method, Void unused) {
-      return isSuppressed(method) ? null : super.visitMethod(method, unused);
+      return isSuppressed(method, state) ? null : super.visitMethod(method, unused);
     }
 
     @Override
     public Void visitClass(ClassTree clazz, Void unused) {
-      return isSuppressed(clazz) ? null : super.visitClass(clazz, unused);
+      return isSuppressed(clazz, state) ? null : super.visitClass(clazz, unused);
     }
 
     @Override
     public Void visitVariable(VariableTree variable, Void unused) {
       Symbol symbol = ASTHelpers.getSymbol(variable);
-      if (variable.getInitializer() != null && symbol != null && isConsideredFinal(symbol)) {
+      if (variable.getInitializer() != null && isConsideredFinal(symbol)) {
         getInitializer(variable.getInitializer())
             .ifPresent(e -> effectivelyFinalValues.put(symbol, e));
       }
-      return isSuppressed(variable) ? null : super.visitVariable(variable, null);
+      return isSuppressed(variable, state) ? null : super.visitVariable(variable, null);
     }
 
     private Optional<ExpressionTree> getInitializer(ExpressionTree tree) {
@@ -230,7 +228,7 @@ public class ProtoFieldNullComparison extends BugChecker implements CompilationU
       } else if (matchTestAssertions && ASSERT_NOT_NULL.matches(node, subState)) {
         argument = getLast(node.getArguments());
         problemType = ProblemUsage.JUNIT;
-      } else if (matchOptionals && OF_NULLABLE.matches(node, subState)) {
+      } else if (OF_NULLABLE.matches(node, subState)) {
         argument = getOnlyElement(node.getArguments());
         problemType = ProblemUsage.OPTIONAL;
       } else if (matchTestAssertions && TRUTH_NOT_NULL.matches(node, subState)) {
@@ -240,7 +238,9 @@ public class ProtoFieldNullComparison extends BugChecker implements CompilationU
         return super.visitMethodInvocation(node, null);
       }
       getFixer(argument, subState)
-          .map(f -> describeMatch(node, problemType.fix(f, node, subState)))
+          .map(f -> problemType.fix(f, node, subState))
+          .filter(f -> !f.isEmpty())
+          .map(f -> describeMatch(node, f))
           .ifPresent(state::reportMatch);
 
       return super.visitMethodInvocation(node, null);
@@ -281,7 +281,9 @@ public class ProtoFieldNullComparison extends BugChecker implements CompilationU
   /** Generates a replacement hazzer, if available. */
   @FunctionalInterface
   private interface Fixer {
-    /** @param negated whether the hazzer should be negated. */
+    /**
+     * @param negated whether the hazzer should be negated.
+     */
     Optional<String> getHazzer(boolean negated, VisitorState state);
   }
 

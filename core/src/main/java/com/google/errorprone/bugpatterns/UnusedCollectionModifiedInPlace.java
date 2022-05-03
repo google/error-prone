@@ -31,7 +31,9 @@ import com.google.errorprone.matchers.Matcher;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.Tree.Kind;
 
-/** @author eaftan@google.com (Eddie Aftandilian) */
+/**
+ * @author eaftan@google.com (Eddie Aftandilian)
+ */
 @BugPattern(
     summary = "Collection is modified in place, but the result is not used",
     severity = ERROR)

@@ -40,9 +40,10 @@ import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
 
-/** @author gak@google.com (Gregory Kick) */
+/**
+ * @author gak@google.com (Gregory Kick)
+ */
 @BugPattern(
-    name = "PrivateConstructorForNoninstantiableModule",
     summary = "Add a private constructor to modules that will not be instantiated by Dagger.",
     severity = SUGGESTION)
 public class PrivateConstructorForNoninstantiableModule extends BugChecker
@@ -108,7 +109,7 @@ public class PrivateConstructorForNoninstantiableModule extends BugChecker
   }
 
   private static <T extends Tree> Predicate<T> matcherAsPredicate(
-      final Matcher<? super T> matcher, final VisitorState state) {
+      Matcher<? super T> matcher, VisitorState state) {
     return new Predicate<T>() {
       @Override
       public boolean apply(T t) {

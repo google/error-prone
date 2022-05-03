@@ -54,9 +54,10 @@ import com.sun.tools.javac.util.Name;
 import javax.annotation.Nullable;
 import javax.lang.model.element.Modifier;
 
-/** @author epmjohnston@google.com (Emily P.M. Johnston) */
+/**
+ * @author epmjohnston@google.com (Emily P.M. Johnston)
+ */
 @BugPattern(
-    name = "FragmentInjection",
     summary =
         "Classes extending PreferenceActivity must implement isValidFragment such that it does not"
             + " unconditionally return true to prevent vulnerability to fragment injection"

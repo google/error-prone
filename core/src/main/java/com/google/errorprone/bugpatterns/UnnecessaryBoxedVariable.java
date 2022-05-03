@@ -17,14 +17,19 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
+import static com.google.errorprone.util.ASTHelpers.findEnclosingMethod;
+import static com.google.errorprone.util.ASTHelpers.getSymbol;
 
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.ListMultimap;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.VisitorState;
-import com.google.errorprone.bugpatterns.BugChecker.VariableTreeMatcher;
+import com.google.errorprone.bugpatterns.BugChecker.CompilationUnitTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
@@ -32,10 +37,12 @@ import com.google.errorprone.util.ASTHelpers;
 import com.google.errorprone.util.ASTHelpers.TargetType;
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.AssignmentTree;
+import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.CompoundAssignmentTree;
 import com.sun.source.tree.EnhancedForLoopTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
+import com.sun.source.tree.LambdaExpressionTree;
 import com.sun.source.tree.MemberReferenceTree;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
@@ -52,10 +59,10 @@ import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.TypeTag;
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 import javax.lang.model.element.ElementKind;
 
 /**
@@ -70,77 +77,85 @@ import javax.lang.model.element.ElementKind;
             + " corresponding primitive type, which avoids the cost of constructing an unnecessary"
             + " object.",
     severity = SeverityLevel.SUGGESTION)
-public class UnnecessaryBoxedVariable extends BugChecker implements VariableTreeMatcher {
+public class UnnecessaryBoxedVariable extends BugChecker implements CompilationUnitTreeMatcher {
   private static final Matcher<ExpressionTree> VALUE_OF_MATCHER =
       staticMethod().onClass(UnnecessaryBoxedVariable::isBoxableType).named("valueOf");
 
   @Override
-  public Description matchVariable(VariableTree tree, VisitorState state) {
-    Optional<Type> unboxed = unboxed(tree, state);
-    if (!unboxed.isPresent()) {
-      return Description.NO_MATCH;
-    }
+  public Description matchCompilationUnit(CompilationUnitTree tree, VisitorState state) {
+    FindBoxedUsagesScanner usages = new FindBoxedUsagesScanner(state);
+    usages.scan(tree, null);
 
-    VarSymbol varSymbol = ASTHelpers.getSymbol(tree);
-    if (varSymbol == null) {
-      return Description.NO_MATCH;
-    }
+    new SuppressibleTreePathScanner<Void, Void>(state) {
+      @Override
+      public Void visitVariable(VariableTree tree, Void unused) {
+        VisitorState innerState = state.withPath(getCurrentPath());
+        unboxed(tree, innerState)
+            .flatMap(u -> handleVariable(u, usages, tree, innerState))
+            .ifPresent(state::reportMatch);
+        return super.visitVariable(tree, null);
+      }
+    }.scan(tree, null);
+    return NO_MATCH;
+  }
+
+  private Optional<Description> handleVariable(
+      Type unboxed, FindBoxedUsagesScanner usages, VariableTree tree, VisitorState state) {
+    VarSymbol varSymbol = getSymbol(tree);
     switch (varSymbol.getKind()) {
       case PARAMETER:
-        if (!canChangeMethodSignature(state, (MethodSymbol) varSymbol.getEnclosingElement())) {
-          return Description.NO_MATCH;
+        if (!canChangeMethodSignature(state, (MethodSymbol) varSymbol.getEnclosingElement())
+            || state.getPath().getParentPath().getLeaf() instanceof LambdaExpressionTree) {
+          return Optional.empty();
         }
         // Fall through.
       case LOCAL_VARIABLE:
         if (!variableMatches(tree, state)) {
-          return Description.NO_MATCH;
+          return Optional.empty();
         }
         break;
       default:
-        return Description.NO_MATCH;
+        return Optional.empty();
     }
 
-    Optional<TreePath> enclosingMethod = getEnclosingMethod(state.getPath());
-    if (!enclosingMethod.isPresent()) {
-      return Description.NO_MATCH;
-    }
+    return fixVariable(unboxed, usages, tree, state);
+  }
 
-    TreePath path = enclosingMethod.get();
-    FindBoxedUsagesScanner scanner = new FindBoxedUsagesScanner(varSymbol, path, state);
-    scanner.scan(path, null);
-    if (scanner.boxedUsageFound) {
-      return Description.NO_MATCH;
+  private Optional<Description> fixVariable(
+      Type unboxed, FindBoxedUsagesScanner usages, VariableTree tree, VisitorState state) {
+    VarSymbol varSymbol = getSymbol(tree);
+    if (usages.boxedUsageFound.contains(varSymbol)) {
+      return Optional.empty();
     }
-    if (!scanner.used && varSymbol.getKind() == ElementKind.PARAMETER) {
+    if (!usages.dereferenced.contains(varSymbol) && varSymbol.getKind() == ElementKind.PARAMETER) {
       // If it isn't used and it is a parameter, don't fix it, because this could introduce a new
       // NPE.
-      return Description.NO_MATCH;
+      return Optional.empty();
     }
 
     SuggestedFix.Builder fixBuilder = SuggestedFix.builder();
-    fixBuilder.replace(tree.getType(), unboxed.get().tsym.getSimpleName().toString());
+    fixBuilder.replace(tree.getType(), unboxed.tsym.getSimpleName().toString());
 
-    fixMethodInvocations(scanner.fixableSimpleMethodInvocations, fixBuilder, state);
-    fixNullCheckInvocations(scanner.fixableNullCheckInvocations, fixBuilder, state);
-    fixCastingInvocations(
-        scanner.fixableCastMethodInvocations, enclosingMethod.get(), fixBuilder, state);
+    fixMethodInvocations(usages.fixableSimpleMethodInvocations.get(varSymbol), fixBuilder, state);
+    fixNullCheckInvocations(usages.fixableNullCheckInvocations.get(varSymbol), fixBuilder, state);
+    fixCastingInvocations(usages.fixableCastMethodInvocations.get(varSymbol), fixBuilder, state);
 
     // Remove @Nullable annotation, if present.
     AnnotationTree nullableAnnotation =
         ASTHelpers.getAnnotationWithSimpleName(tree.getModifiers().getAnnotations(), "Nullable");
-    if (nullableAnnotation != null) {
-      fixBuilder.replace(nullableAnnotation, "");
-      return buildDescription(tree)
-          .setMessage(
-              "All usages of this @Nullable variable would result in a NullPointerException when it"
-                  + " actually is null. Use the primitive type if this variable should never be"
-                  + " null, or else fix the code to avoid unboxing or invoking its instance"
-                  + " methods.")
-          .addFix(fixBuilder.build())
-          .build();
-    } else {
-      return describeMatch(tree, fixBuilder.build());
+    if (nullableAnnotation == null) {
+      return Optional.of(describeMatch(tree, fixBuilder.build()));
     }
+    fixBuilder.replace(nullableAnnotation, "");
+    return Optional.of(
+        buildDescription(tree)
+            .setMessage(
+                "All usages of this @Nullable variable would result in a NullPointerException when"
+                    + " it actually is null. Use the primitive type if this variable should never"
+                    + " be null, or else fix the code to avoid unboxing or invoking its instance"
+                    + " methods.")
+            .addFix(fixBuilder.build())
+            .build());
   }
 
   private static Optional<Type> unboxed(Tree tree, VisitorState state) {
@@ -199,15 +214,12 @@ public class UnnecessaryBoxedVariable extends BugChecker implements VariableTree
   }
 
   private static void fixCastingInvocations(
-      List<MethodInvocationTree> castMethodInvocations,
-      TreePath enclosingMethod,
-      SuggestedFix.Builder fixBuilder,
-      VisitorState state) {
-    for (MethodInvocationTree castInvocation : castMethodInvocations) {
+      List<TreePath> castMethodInvocations, SuggestedFix.Builder fixBuilder, VisitorState state) {
+    for (TreePath castPath : castMethodInvocations) {
+      MethodInvocationTree castInvocation = (MethodInvocationTree) castPath.getLeaf();
       ExpressionTree receiver = ASTHelpers.getReceiver(castInvocation);
       Type expressionType = ASTHelpers.getType(castInvocation);
 
-      TreePath castPath = TreePath.getPath(enclosingMethod, castInvocation);
       if (castPath.getParentPath() != null
           && castPath.getParentPath().getLeaf().getKind() == Kind.EXPRESSION_STATEMENT) {
         // If we were to replace X.intValue(); with (int) x;, the code wouldn't compile because
@@ -268,18 +280,6 @@ public class UnnecessaryBoxedVariable extends BugChecker implements VariableTree
     return VALUE_OF_MATCHER.matches(expression, state);
   }
 
-  private static Optional<TreePath> getEnclosingMethod(TreePath path) {
-    while (path != null
-        && path.getLeaf().getKind() != Kind.CLASS
-        && path.getLeaf().getKind() != Kind.LAMBDA_EXPRESSION) {
-      if (path.getLeaf().getKind() == Kind.METHOD) {
-        return Optional.of(path);
-      }
-      path = path.getParentPath();
-    }
-    return Optional.empty();
-  }
-
   private static boolean isBoxableType(Type type, VisitorState state) {
     Type unboxedType = state.getTypes().unboxedType(type);
     return unboxedType != null && unboxedType.getTag() != TypeTag.NONE;
@@ -315,25 +315,25 @@ public class UnnecessaryBoxedVariable extends BugChecker implements VariableTree
             staticMethod().onClass("com.google.common.base.Verify").named("verifyNonNull"),
             staticMethod().onClass("java.util.Objects").named("requireNonNull"));
 
-    private final VarSymbol varSymbol;
-    private final TreePath path;
     private final VisitorState state;
-    private final List<MethodInvocationTree> fixableSimpleMethodInvocations = new ArrayList<>();
-    private final List<TreePath> fixableNullCheckInvocations = new ArrayList<>();
-    private final List<MethodInvocationTree> fixableCastMethodInvocations = new ArrayList<>();
+    private final ListMultimap<VarSymbol, MethodInvocationTree> fixableSimpleMethodInvocations =
+        ArrayListMultimap.create();
+    private final ListMultimap<VarSymbol, TreePath> fixableNullCheckInvocations =
+        ArrayListMultimap.create();
+    private final ListMultimap<VarSymbol, TreePath> fixableCastMethodInvocations =
+        ArrayListMultimap.create();
 
-    private boolean boxedUsageFound;
-    private boolean used;
+    private final Set<VarSymbol> boxedUsageFound = new HashSet<>();
+    private final Set<VarSymbol> dereferenced = new HashSet<>();
 
-    FindBoxedUsagesScanner(VarSymbol varSymbol, TreePath path, VisitorState state) {
-      this.varSymbol = varSymbol;
-      this.path = path;
+    FindBoxedUsagesScanner(VisitorState state) {
       this.state = state;
     }
 
     @Override
     public Void scan(Tree tree, Void unused) {
-      if (boxedUsageFound) {
+      var symbol = getSymbol(tree);
+      if (boxedUsageFound.contains(symbol)) {
         return null;
       }
       return super.scan(tree, unused);
@@ -341,18 +341,17 @@ public class UnnecessaryBoxedVariable extends BugChecker implements VariableTree
 
     @Override
     public Void visitAssignment(AssignmentTree node, Void unused) {
-      Symbol nodeSymbol = ASTHelpers.getSymbol(node.getVariable());
-      if (!Objects.equals(nodeSymbol, varSymbol)) {
+      Symbol nodeSymbol = getSymbol(node.getVariable());
+      if (!isBoxed(nodeSymbol, state)) {
         return super.visitAssignment(node, unused);
       }
-      used = true;
       // The variable of interest is being assigned. Check if the expression is non-primitive,
       // and go on to scan the expression.
       if (!checkAssignmentExpression(node.getExpression())) {
         return scan(node.getExpression(), unused);
       }
 
-      boxedUsageFound = true;
+      boxedUsageFound.add((VarSymbol) nodeSymbol);
       return null;
     }
 
@@ -364,21 +363,19 @@ public class UnnecessaryBoxedVariable extends BugChecker implements VariableTree
       // If the value is assigned a non-primitive value, we need to keep it non-primitive.
       // Unless it's an invocation of Boxed.valueOf or new Boxed, in which case it doesn't need to
       // be kept boxed since we know the result of valueOf is non-null.
-      return !VALUE_OF_MATCHER.matches(
-              expression, state.withPath(TreePath.getPath(path, expression)))
+      return !VALUE_OF_MATCHER.matches(expression, state.withPath(getCurrentPath()))
           && expression.getKind() != Kind.NEW_CLASS;
     }
 
     @Override
     public Void visitIdentifier(IdentifierTree node, Void unused) {
-      Symbol nodeSymbol = ASTHelpers.getSymbol(node);
-      if (Objects.equals(nodeSymbol, varSymbol)) {
-        used = true;
-        TreePath identifierPath = TreePath.getPath(path, node);
-        VisitorState identifierState = state.withPath(identifierPath);
+      Symbol nodeSymbol = getSymbol(node);
+      if (isBoxed(nodeSymbol, state)) {
+        dereferenced.add((VarSymbol) nodeSymbol);
+        VisitorState identifierState = state.withPath(getCurrentPath());
         TargetType targetType = ASTHelpers.targetType(identifierState);
         if (targetType != null && !targetType.type().isPrimitive()) {
-          boxedUsageFound = true;
+          boxedUsageFound.add((VarSymbol) nodeSymbol);
           return null;
         }
       }
@@ -395,28 +392,27 @@ public class UnnecessaryBoxedVariable extends BugChecker implements VariableTree
     @Override
     public Void visitMethodInvocation(MethodInvocationTree node, Void unused) {
       if (NULL_CHECK_MATCH.matches(node, state)) {
-        Symbol firstArgSymbol =
-            ASTHelpers.getSymbol(ASTHelpers.stripParentheses(node.getArguments().get(0)));
-        if (Objects.equals(firstArgSymbol, varSymbol)) {
-          used = true;
-          fixableNullCheckInvocations.add(getCurrentPath());
+        Symbol firstArgSymbol = getSymbol(ASTHelpers.stripParentheses(node.getArguments().get(0)));
+        if (isBoxed(firstArgSymbol, state)) {
+          dereferenced.add((VarSymbol) firstArgSymbol);
+          fixableNullCheckInvocations.put((VarSymbol) firstArgSymbol, getCurrentPath());
           return null;
         }
       }
 
       Tree receiver = ASTHelpers.getReceiver(node);
-      if (receiver != null && Objects.equals(ASTHelpers.getSymbol(receiver), varSymbol)) {
-        used = true;
+      Symbol receiverSymbol = getSymbol(receiver);
+      if (receiver != null && isBoxed(receiverSymbol, state)) {
         if (SIMPLE_METHOD_MATCH.matches(node, state)) {
-          fixableSimpleMethodInvocations.add(node);
+          fixableSimpleMethodInvocations.put((VarSymbol) receiverSymbol, node);
           return null;
         }
         if (CAST_METHOD_MATCH.matches(node, state)) {
-          fixableCastMethodInvocations.add(node);
+          fixableCastMethodInvocations.put((VarSymbol) receiverSymbol, getCurrentPath());
           return null;
         }
 
-        boxedUsageFound = true;
+        boxedUsageFound.add((VarSymbol) receiverSymbol);
         return null;
       }
 
@@ -425,20 +421,21 @@ public class UnnecessaryBoxedVariable extends BugChecker implements VariableTree
 
     @Override
     public Void visitReturn(ReturnTree node, Void unused) {
-      Symbol nodeSymbol = ASTHelpers.getSymbol(ASTHelpers.stripParentheses(node.getExpression()));
-      if (!Objects.equals(nodeSymbol, varSymbol)) {
+      Symbol nodeSymbol = getSymbol(ASTHelpers.stripParentheses(node.getExpression()));
+      if (!isBoxed(nodeSymbol, state)) {
         return super.visitReturn(node, unused);
       }
-      used = true;
+      dereferenced.add((VarSymbol) nodeSymbol);
 
       // Don't count a return value as a boxed usage, except if we are returning a parameter, and
       // the method's return type is boxed.
-      if (varSymbol.getKind() == ElementKind.PARAMETER) {
-        MethodTree enclosingMethod =
-            ASTHelpers.findEnclosingNode(getCurrentPath(), MethodTree.class);
-        Type returnType = ASTHelpers.getType(enclosingMethod.getReturnType());
-        if (!returnType.isPrimitive()) {
-          boxedUsageFound = true;
+      if (nodeSymbol.getKind() == ElementKind.PARAMETER) {
+        MethodTree enclosingMethod = findEnclosingMethod(state.withPath(getCurrentPath()));
+        if (enclosingMethod != null) {
+          Type returnType = ASTHelpers.getType(enclosingMethod.getReturnType());
+          if (!returnType.isPrimitive()) {
+            boxedUsageFound.add((VarSymbol) nodeSymbol);
+          }
         }
       }
       return null;
@@ -448,14 +445,19 @@ public class UnnecessaryBoxedVariable extends BugChecker implements VariableTree
     public Void visitMemberReference(MemberReferenceTree node, Void unused) {
       ExpressionTree qualifierExpression = node.getQualifierExpression();
       if (qualifierExpression.getKind() == Kind.IDENTIFIER) {
-        Symbol symbol = ASTHelpers.getSymbol(qualifierExpression);
-        if (Objects.equals(symbol, varSymbol)) {
-          boxedUsageFound = true;
-          used = true;
+        Symbol symbol = getSymbol(qualifierExpression);
+        if (isBoxed(symbol, state)) {
+          boxedUsageFound.add((VarSymbol) symbol);
+          dereferenced.add((VarSymbol) symbol);
           return null;
         }
       }
       return super.visitMemberReference(node, unused);
     }
+  }
+
+  private static boolean isBoxed(Symbol symbol, VisitorState state) {
+    return symbol instanceof VarSymbol
+        && !state.getTypes().isSameType(state.getTypes().unboxedType(symbol.type), Type.noType);
   }
 }

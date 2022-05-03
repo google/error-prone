@@ -104,12 +104,12 @@ public final class Unifier {
   }
 
   public static <T, U extends Unifiable<? super T>> Function<Unifier, Choice<Unifier>> unifications(
-      @Nullable final U unifiable, @Nullable final T target) {
+      @Nullable U unifiable, @Nullable T target) {
     return (Unifier unifier) -> unifyNullable(unifier, unifiable, target);
   }
 
   public static <T, U extends Unifiable<? super T>> Choice<Unifier> unifyNullable(
-      Unifier unifier, @Nullable final U unifiable, @Nullable final T target) {
+      Unifier unifier, @Nullable U unifiable, @Nullable T target) {
     if (target == null && unifiable == null) {
       return Choice.of(unifier);
     } else if (target == null || unifiable == null) {
@@ -120,14 +120,12 @@ public final class Unifier {
   }
 
   public static <T, U extends Unifiable<? super T>> Function<Unifier, Choice<Unifier>> unifications(
-      @Nullable final List<U> toUnify, @Nullable final List<? extends T> targets) {
+      @Nullable List<U> toUnify, @Nullable List<? extends T> targets) {
     return unifications(toUnify, targets, /* allowVarargs= */ false);
   }
 
   public static <T, U extends Unifiable<? super T>> Function<Unifier, Choice<Unifier>> unifications(
-      @Nullable final List<U> toUnify,
-      @Nullable final List<? extends T> targets,
-      final boolean allowVarargs) {
+      @Nullable List<U> toUnify, @Nullable List<? extends T> targets, boolean allowVarargs) {
     return (Unifier unifier) -> unifyList(unifier, toUnify, targets, allowVarargs);
   }
 
@@ -136,7 +134,7 @@ public final class Unifier {
    * specified lists, disallowing varargs.
    */
   public static <T, U extends Unifiable<? super T>> Choice<Unifier> unifyList(
-      Unifier unifier, @Nullable List<U> toUnify, @Nullable final List<? extends T> targets) {
+      Unifier unifier, @Nullable List<U> toUnify, @Nullable List<? extends T> targets) {
     return unifyList(unifier, toUnify, targets, /* allowVarargs= */ false);
   }
 
@@ -147,7 +145,7 @@ public final class Unifier {
   public static <T, U extends Unifiable<? super T>> Choice<Unifier> unifyList(
       Unifier unifier,
       @Nullable List<U> toUnify,
-      @Nullable final List<? extends T> targets,
+      @Nullable List<? extends T> targets,
       boolean allowVarargs) {
     if (toUnify == null && targets == null) {
       return Choice.of(unifier);
@@ -163,8 +161,8 @@ public final class Unifier {
     for (index = 0; index < toUnify.size(); index++) {
       U toUnifyNext = toUnify.get(index);
       if (allowVarargs && toUnifyNext instanceof URepeated) {
-        final URepeated repeated = (URepeated) toUnifyNext;
-        final int startIndex = index;
+        URepeated repeated = (URepeated) toUnifyNext;
+        int startIndex = index;
         return choice
             .condition(index + 1 == toUnify.size())
             .thenOption(

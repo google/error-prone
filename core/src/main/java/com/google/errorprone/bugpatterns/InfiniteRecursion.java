@@ -19,7 +19,6 @@ package com.google.errorprone.bugpatterns;
 import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
-import static com.google.errorprone.util.ASTHelpers.stripParentheses;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -31,9 +30,11 @@ import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
+import com.sun.source.tree.ParenthesizedTree;
 import com.sun.source.tree.ReturnTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
+import com.sun.source.tree.TypeCastTree;
 import com.sun.source.util.SimpleTreeVisitor;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 
@@ -47,28 +48,43 @@ public class InfiniteRecursion extends BugChecker implements BugChecker.MethodTr
     if (tree.getBody() == null || tree.getBody().getStatements().size() != 1) {
       return NO_MATCH;
     }
-    Tree statement = stripParentheses(getOnlyElement(tree.getBody().getStatements()));
-    ExpressionTree expr =
+    Tree statement = getOnlyElement(tree.getBody().getStatements());
+    MethodInvocationTree invocation =
         statement.accept(
-            new SimpleTreeVisitor<ExpressionTree, Void>() {
+            new SimpleTreeVisitor<MethodInvocationTree, Void>() {
               @Override
-              public ExpressionTree visitExpressionStatement(
+              public MethodInvocationTree visitExpressionStatement(
                   ExpressionStatementTree tree, Void unused) {
-                return tree.getExpression();
+                return visit(tree.getExpression(), null);
               }
 
               @Override
-              public ExpressionTree visitReturn(ReturnTree tree, Void unused) {
-                return tree.getExpression();
+              public MethodInvocationTree visitParenthesized(ParenthesizedTree tree, Void unused) {
+                return visit(tree.getExpression(), null);
+              }
+
+              @Override
+              public MethodInvocationTree visitReturn(ReturnTree tree, Void unused) {
+                return visit(tree.getExpression(), null);
+              }
+
+              @Override
+              public MethodInvocationTree visitTypeCast(TypeCastTree tree, Void unused) {
+                return visit(tree.getExpression(), null);
+              }
+
+              @Override
+              protected MethodInvocationTree defaultAction(Tree tree, Void unused) {
+                return tree instanceof MethodInvocationTree ? (MethodInvocationTree) tree : null;
               }
             },
             null);
-    if (!(expr instanceof MethodInvocationTree)) {
+    if (invocation == null) {
       return NO_MATCH;
     }
-    ExpressionTree select = ((MethodInvocationTree) expr).getMethodSelect();
+    ExpressionTree select = invocation.getMethodSelect();
     MethodSymbol sym = ASTHelpers.getSymbol(tree);
-    if (sym == null || !sym.equals(ASTHelpers.getSymbol(expr))) {
+    if (!sym.equals(ASTHelpers.getSymbol(invocation))) {
       return NO_MATCH;
     }
     if (!sym.isStatic()) {

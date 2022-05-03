@@ -38,7 +38,9 @@ import com.sun.source.tree.Tree.Kind;
 import com.sun.source.util.TreePath;
 import java.util.List;
 
-/** @author anishvisaria98@gmail.com (Anish Visaria) */
+/**
+ * @author anishvisaria98@gmail.com (Anish Visaria)
+ */
 @BugPattern(
     summary =
         "Modifying a collection while iterating over it in a loop may cause a"

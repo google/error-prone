@@ -18,7 +18,6 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.common.collect.Multimaps.asMap;
-import static com.google.common.collect.Streams.stream;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.fixes.SuggestedFixes.qualifyType;
 import static com.google.errorprone.matchers.ChildMultiMatcher.MatchType.AT_LEAST_ONE;
@@ -31,6 +30,7 @@ import static com.google.errorprone.matchers.Matchers.methodReturns;
 import static com.google.errorprone.matchers.Matchers.variableType;
 import static com.google.errorprone.predicates.TypePredicates.isDescendantOf;
 import static com.google.errorprone.suppliers.Suppliers.typeFromString;
+import static com.google.errorprone.util.ASTHelpers.canBeRemoved;
 import static com.google.errorprone.util.ASTHelpers.findSuperMethods;
 import static com.google.errorprone.util.ASTHelpers.getErasedTypeTree;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
@@ -54,7 +54,6 @@ import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
 import com.google.errorprone.predicates.TypePredicate;
-import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.LambdaExpressionTree;
@@ -182,7 +181,7 @@ public final class PreferredInterfaceType extends BugChecker implements Compilat
 
   private ImmutableMap<Symbol, Tree> getFixableTypes(VisitorState state) {
     ImmutableMap.Builder<Symbol, Tree> fixableTypes = ImmutableMap.builder();
-    new SuppressibleTreePathScanner<Void, Void>() {
+    new SuppressibleTreePathScanner<Void, Void>(state) {
       @Override
       public Void visitVariable(VariableTree tree, Void unused) {
         VarSymbol symbol = getSymbol(tree);
@@ -202,13 +201,10 @@ public final class PreferredInterfaceType extends BugChecker implements Compilat
         if (SHOULD_IGNORE.matches(tree, state)) {
           return false;
         }
-        if (symbol.getKind() == ElementKind.FIELD) {
-          if (!isConsideredFinal(symbol)
-              && stream(getCurrentPath())
-                  .map(ASTHelpers::getSymbol)
-                  .noneMatch(s -> s != null && s.isPrivate())) {
-            return false;
-          }
+        if (symbol.getKind() == ElementKind.FIELD
+            && !isConsideredFinal(symbol)
+            && !canBeRemoved(symbol)) {
+          return false;
         }
         return variableType(INTERESTING_TYPE).matches(tree, state);
       }
@@ -217,7 +213,6 @@ public final class PreferredInterfaceType extends BugChecker implements Compilat
       public Void visitMethod(MethodTree node, Void unused) {
         MethodSymbol methodSymbol = getSymbol(node);
         if (methodReturns(INTERESTING_TYPE).matches(node, state)
-            && methodSymbol != null
             && !methodCanBeOverridden(methodSymbol)
             && !SHOULD_IGNORE.matches(node, state)) {
           fixableTypes.put(methodSymbol, node.getReturnType());
@@ -246,6 +241,7 @@ public final class PreferredInterfaceType extends BugChecker implements Compilat
           .reduce(types::lub)
           .flatMap(type -> toGoodReplacement(type, state))
           .filter(replacement -> !isSubtype(getType(tree), replacement, state))
+          .filter(replacement -> isSubtype(replacement, getType(tree), state))
           .ifPresent(
               type -> {
                 SuggestedFix.Builder builder = SuggestedFix.builder();
@@ -299,9 +295,7 @@ public final class PreferredInterfaceType extends BugChecker implements Compilat
       " type can use a more specific type to convey more information to callers.";
 
   private static final String OVERRIDE_NOTE =
-      " Note that it is legal to narrow the return type when overriding a parent method. And"
-          + " because this method cannot be overridden, doing so cannot cause problems for any"
-          + " subclasses.";
+      " Note that it is possible to return a more specific type even when overriding a method.";
 
   private static Optional<Type> toGoodReplacement(Type type, VisitorState state) {
     return BETTER_TYPES.stream()

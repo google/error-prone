@@ -26,7 +26,6 @@ import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
-import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import java.util.Locale;
 
 /** Format string utilities. */
@@ -55,10 +54,6 @@ public final class FormatStringUtils {
   public static ImmutableList<ExpressionTree> formatMethodArguments(
       MethodInvocationTree tree, VisitorState state) {
     if (!FORMAT_METHOD.matches(tree, state)) {
-      return ImmutableList.of();
-    }
-    MethodSymbol sym = ASTHelpers.getSymbol(tree);
-    if (sym == null) {
       return ImmutableList.of();
     }
     ImmutableList<ExpressionTree> args = ImmutableList.copyOf(tree.getArguments());

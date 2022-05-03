@@ -21,7 +21,9 @@ import com.sun.tools.javac.util.Name;
 import java.lang.annotation.Annotation;
 import java.util.Set;
 
-/** @author alexeagle@google.com (Alex Eagle) */
+/**
+ * @author alexeagle@google.com (Alex Eagle)
+ */
 public interface Suppressible {
   /**
    * Returns all of the name strings that this checker should respect as part of a

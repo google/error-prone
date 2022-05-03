@@ -76,10 +76,10 @@ public final class RequiredAnnotationProcessor extends AbstractProcessor {
     }
   }
 
-  private void validateElement(final Element element) {
+  private void validateElement(Element element) {
     TypeMirror requiredAnnotationTypeMirror =
         processingEnv.getElementUtils().getTypeElement(RequiredAnnotation.class.getName()).asType();
-    for (final AnnotationMirror annotation :
+    for (AnnotationMirror annotation :
         processingEnv.getElementUtils().getAllAnnotationMirrors(element)) {
       AnnotationMirror requiredAnnotationMirror =
           getAnnotationMirror(

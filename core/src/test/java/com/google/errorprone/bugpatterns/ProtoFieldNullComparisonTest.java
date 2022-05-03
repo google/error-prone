@@ -21,7 +21,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** @author flx@google.com (Felix Berger) */
+/**
+ * @author flx@google.com (Felix Berger)
+ */
 @RunWith(JUnit4.class)
 @Ignore("b/130670448")
 public final class ProtoFieldNullComparisonTest {
@@ -325,6 +327,7 @@ public final class ProtoFieldNullComparisonTest {
             "Test.java",
             "import static com.google.common.truth.Truth.assertThat;",
             "import static org.junit.Assert.assertNotNull;",
+            "import com.google.common.truth.extensions.proto.ProtoTruth;",
             "import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;",
             "import com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage;",
             "import java.util.List;",
@@ -336,6 +339,8 @@ public final class ProtoFieldNullComparisonTest {
             "    assertNotNull(\"Message\", message.getMessage());",
             "    // BUG: Diagnostic contains: assertThat(message.hasMessage()).isTrue()",
             "    assertThat(message.getMessage()).isNotNull();",
+            "    // BUG: Diagnostic contains: assertThat(message.hasMessage()).isTrue()",
+            "    ProtoTruth.assertThat(message.getMessage()).isNotNull();",
             "  }",
             "}")
         .setArgs(ImmutableList.of("-XepOpt:ProtoFieldNullComparison:MatchTestAssertions"))

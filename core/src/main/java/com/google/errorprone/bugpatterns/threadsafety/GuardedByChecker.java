@@ -63,7 +63,7 @@ public class GuardedByChecker extends BugChecker
   }
 
   @Override
-  public Description matchMethod(MethodTree tree, final VisitorState state) {
+  public Description matchMethod(MethodTree tree, VisitorState state) {
     // Constructors (and field initializers, instance initializers, and class initializers) are free
     // to mutate guarded state without holding the necessary locks. It is assumed that all objects
     // (and classes) are thread-local during initialization.
@@ -85,7 +85,7 @@ public class GuardedByChecker extends BugChecker
         state,
         (ExpressionTree tree, GuardedByExpression guard, HeldLockSet live) ->
             report(GuardedByChecker.this.checkGuardedAccess(tree, guard, live, state), state),
-        this::isSuppressed,
+        tree1 -> isSuppressed(tree1, state),
         flags,
         reportMissingGuards);
   }

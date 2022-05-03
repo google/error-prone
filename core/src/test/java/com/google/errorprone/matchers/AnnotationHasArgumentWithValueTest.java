@@ -27,7 +27,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** @author alexeagle@google.com (Alex Eagle) */
+/**
+ * @author alexeagle@google.com (Alex Eagle)
+ */
 @RunWith(JUnit4.class)
 public class AnnotationHasArgumentWithValueTest extends CompilerBasedAbstractTest {
   @Before
@@ -76,8 +78,7 @@ public class AnnotationHasArgumentWithValueTest extends CompilerBasedAbstractTes
             new AnnotationHasArgumentWithValue("value", stringLiteral("unchecked"))));
   }
 
-  private Scanner annotationMatches(
-      final boolean shouldMatch, final AnnotationHasArgumentWithValue toMatch) {
+  private Scanner annotationMatches(boolean shouldMatch, AnnotationHasArgumentWithValue toMatch) {
     return new Scanner() {
       @Override
       public Void visitAnnotation(AnnotationTree node, VisitorState visitorState) {

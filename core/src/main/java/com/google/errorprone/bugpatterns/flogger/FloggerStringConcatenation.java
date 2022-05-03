@@ -46,7 +46,6 @@ import java.util.List;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
-    name = "FloggerStringConcatenation",
     summary =
         "Prefer string formatting using printf placeholders (e.g. %s) instead of string"
             + " concatenation",

@@ -67,7 +67,9 @@ import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** @author cushon@google.com (Liam Miller-Cushon) */
+/**
+ * @author cushon@google.com (Liam Miller-Cushon)
+ */
 @RunWith(JUnit4.class)
 public class ErrorProneJavaCompilerTest {
 
@@ -355,7 +357,6 @@ public class ErrorProneJavaCompilerTest {
   }
 
   @BugPattern(
-      name = "DeleteMethod",
       summary =
           "You appear to be using methods; prefer to implement all program logic inside the main"
               + " function by flipping bits in a single long[].",
@@ -379,10 +380,11 @@ public class ErrorProneJavaCompilerTest {
             Collections.<String>emptyList(),
             ImmutableList.<Class<? extends BugChecker>>of(DeleteMethod.class));
     assertThat(result.succeeded).isFalse();
+    assertThat(result.output).isEmpty();
     assertThat(result.diagnosticHelper.getDiagnostics()).hasSize(1);
     assertThat(
             Iterables.getOnlyElement(result.diagnosticHelper.getDiagnostics()).getMessage(ENGLISH))
-        .contains("AssertionError: Cannot edit synthetic AST nodes");
+        .contains("IllegalArgumentException: Cannot edit synthetic AST nodes");
   }
 
   @Test

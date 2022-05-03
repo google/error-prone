@@ -33,7 +33,9 @@ import com.sun.source.tree.ConditionalExpressionTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.tools.javac.code.Type;
 
-/** @author awturner@google.com (Andy Turner) */
+/**
+ * @author awturner@google.com (Andy Turner)
+ */
 @BugPattern(
     summary =
         "A conditional expression with numeric operands of differing types will perform binary "

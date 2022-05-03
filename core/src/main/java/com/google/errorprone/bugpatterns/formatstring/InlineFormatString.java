@@ -58,7 +58,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
-    name = "InlineFormatString",
     summary =
         "Prefer to create format strings inline, instead of extracting them to a single-use"
             + " constant",
@@ -97,9 +96,6 @@ public class InlineFormatString extends BugChecker implements CompilationUnitTre
   private static @Nullable ExpressionTree formatMethodAnnotationArguments(
       MethodInvocationTree tree, VisitorState state) {
     MethodSymbol sym = getSymbol(tree);
-    if (sym == null) {
-      return null;
-    }
     if (!ASTHelpers.hasAnnotation(sym, FormatMethod.class, state)) {
       return null;
     }
@@ -176,11 +172,11 @@ public class InlineFormatString extends BugChecker implements CompilationUnitTre
         },
         null);
     // find the field declarations
-    new SuppressibleTreePathScanner<Void, Void>() {
+    new SuppressibleTreePathScanner<Void, Void>(state) {
       @Override
       public Void visitVariable(VariableTree tree, Void unused) {
         VarSymbol sym = getSymbol(tree);
-        if (sym != null && uses.containsKey(sym)) {
+        if (uses.containsKey(sym)) {
           declarations.put(sym, tree);
         }
         return super.visitVariable(tree, null);

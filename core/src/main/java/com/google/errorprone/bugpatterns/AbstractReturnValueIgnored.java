@@ -19,23 +19,13 @@ package com.google.errorprone.bugpatterns;
 import static com.google.common.collect.Multimaps.toMultimap;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.allOf;
-import static com.google.errorprone.matchers.Matchers.anyOf;
-import static com.google.errorprone.matchers.Matchers.enclosingNode;
-import static com.google.errorprone.matchers.Matchers.expressionStatement;
-import static com.google.errorprone.matchers.Matchers.isLastStatementInBlock;
-import static com.google.errorprone.matchers.Matchers.kindIs;
-import static com.google.errorprone.matchers.Matchers.nextStatement;
 import static com.google.errorprone.matchers.Matchers.not;
 import static com.google.errorprone.matchers.Matchers.parentNode;
-import static com.google.errorprone.matchers.Matchers.previousStatement;
-import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
-import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
-import static com.google.errorprone.util.ASTHelpers.getType;
-import static com.google.errorprone.util.ASTHelpers.isVoidType;
 
 import com.google.common.base.Suppliers;
 import com.google.common.collect.ImmutableListMultimap;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ListMultimap;
 import com.google.common.collect.MultimapBuilder;
@@ -51,6 +41,7 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
+import com.google.errorprone.matchers.UnusedReturnValueMatcher;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionStatementTree;
 import com.sun.source.tree.ExpressionTree;
@@ -61,9 +52,7 @@ import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.ReturnTree;
-import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree;
-import com.sun.source.tree.Tree.Kind;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.TypeVariableSymbol;
@@ -74,7 +63,6 @@ import com.sun.tools.javac.tree.JCTree.JCIdent;
 import com.sun.tools.javac.tree.JCTree.JCMethodInvocation;
 import java.lang.reflect.InvocationHandler;
 import java.util.ArrayDeque;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -102,33 +90,11 @@ public abstract class AbstractReturnValueIgnored extends BugChecker
         ReturnTreeMatcher,
         NewClassTreeMatcher {
 
-  private final Supplier<Matcher<ExpressionTree>> methodInvocationMatcher =
-      Suppliers.memoize(
-          () ->
-              allOf(
-                  parentNode(
-                      anyOf(
-                          AbstractReturnValueIgnored::isVoidReturningLambdaExpression,
-                          kindIs(Kind.EXPRESSION_STATEMENT))),
-                  not((t, s) -> isVoidType(getType(t), s)),
-                  specializedMatcher(),
-                  not(AbstractReturnValueIgnored::mockitoInvocation),
-                  not((t, s) -> allowInExceptionThrowers() && expectedExceptionTest(t, s))));
+  private final Supplier<UnusedReturnValueMatcher> unusedReturnValueMatcher =
+      Suppliers.memoize(() -> UnusedReturnValueMatcher.get(allowInExceptionThrowers()));
 
-  private final Supplier<Matcher<MemberReferenceTree>> memberReferenceTreeMatcher =
-      Suppliers.memoize(
-          () ->
-              allOf(
-                  AbstractReturnValueIgnored::isVoidReturningMethodReferenceExpression,
-                  // Skip cases where the method we're referencing really does return void.
-                  // We're only looking for cases where the referenced method does not return
-                  // void, but it's being used on a void-returning functional interface.
-                  not((t, s) -> isVoidReturningMethod(getSymbol(t), s)),
-                  not(
-                      (t, s) ->
-                          allowInExceptionThrowers()
-                              && Matchers.isThrowingFunctionalInterface(ASTHelpers.getType(t), s)),
-                  specializedMatcher()));
+  private final Supplier<Matcher<ExpressionTree>> matcher =
+      Suppliers.memoize(() -> allOf(unusedReturnValueMatcher.get(), this::isCheckReturnValue));
 
   private final Supplier<Matcher<MemberReferenceTree>> lostReferenceTreeMatcher =
       Suppliers.memoize(
@@ -149,16 +115,11 @@ public abstract class AbstractReturnValueIgnored extends BugChecker
     this.constantExpressions = ConstantExpressions.fromFlags(flags);
   }
 
-  private static boolean isVoidReturningMethod(MethodSymbol meth, VisitorState state) {
-    // Constructors "return" void but produce a real non-void value.
-    return !meth.isConstructor() && isVoidType(meth.getReturnType(), state);
-  }
-
   @Override
   public Description matchMethodInvocation(
       MethodInvocationTree methodInvocationTree, VisitorState state) {
     Description description =
-        methodInvocationMatcher.get().matches(methodInvocationTree, state)
+        matcher.get().matches(methodInvocationTree, state)
             ? describeReturnValueIgnored(methodInvocationTree, state)
             : NO_MATCH;
     if (!description.equals(NO_MATCH)) {
@@ -169,7 +130,7 @@ public abstract class AbstractReturnValueIgnored extends BugChecker
 
   @Override
   public Description matchNewClass(NewClassTree newClassTree, VisitorState state) {
-    return methodInvocationMatcher.get().matches(newClassTree, state)
+    return matcher.get().matches(newClassTree, state)
         ? describeReturnValueIgnored(newClassTree, state)
         : NO_MATCH;
   }
@@ -177,9 +138,7 @@ public abstract class AbstractReturnValueIgnored extends BugChecker
   @Override
   public Description matchMemberReference(MemberReferenceTree tree, VisitorState state) {
     Description description =
-        memberReferenceTreeMatcher.get().matches(tree, state)
-            ? describeReturnValueIgnored(tree, state)
-            : NO_MATCH;
+        matcher.get().matches(tree, state) ? describeReturnValueIgnored(tree, state) : NO_MATCH;
     if (!lostType(state).isPresent() || !description.equals(NO_MATCH)) {
       return description;
     }
@@ -189,25 +148,27 @@ public abstract class AbstractReturnValueIgnored extends BugChecker
     return description;
   }
 
-  private static boolean isVoidReturningMethodReferenceExpression(
-      MemberReferenceTree tree, VisitorState state) {
-    return functionalInterfaceReturnsExactlyVoid(ASTHelpers.getType(tree), state);
-  }
-
-  private static boolean isVoidReturningLambdaExpression(Tree tree, VisitorState state) {
-    return tree instanceof LambdaExpressionTree
-        && functionalInterfaceReturnsExactlyVoid(getType(tree), state);
+  /**
+   * Returns whether this checker makes any determination about whether the given tree's return
+   * value should be used or not. Most checkers either determine that an expression is CRV or make
+   * no determination.
+   */
+  public boolean isCovered(ExpressionTree tree, VisitorState state) {
+    return isCheckReturnValue(tree, state);
   }
 
   /**
-   * Checks that the return value of a functional interface is void. Note, we do not use
-   * ASTHelpers.isVoidType here, return values of Void are actually type-checked. Only
-   * void-returning functions silently ignore return values of any type.
+   * Returns whether the given tree's return value should be used according to this checker,
+   * regardless of whether or not the return value is actually used.
    */
-  private static boolean functionalInterfaceReturnsExactlyVoid(
-      Type interfaceType, VisitorState state) {
-    return state.getTypes().findDescriptorType(interfaceType).getReturnType().getKind()
-        == TypeKind.VOID;
+  public final boolean isCheckReturnValue(ExpressionTree tree, VisitorState state) {
+    // TODO(cgdecker): Just replace specializedMatcher with this?
+    return specializedMatcher().matches(tree, state);
+  }
+
+  /** Returns a map of optional metadata about why this check matched the given tree. */
+  public ImmutableMap<String, ?> getMatchMetadata(ExpressionTree tree, VisitorState state) {
+    return ImmutableMap.of();
   }
 
   /**
@@ -324,68 +285,6 @@ public abstract class AbstractReturnValueIgnored extends BugChecker
     return message();
   }
 
-  private static final Matcher<ExpressionTree> FAIL_METHOD =
-      anyOf(
-          instanceMethod().onDescendantOf("com.google.common.truth.AbstractVerb").named("fail"),
-          instanceMethod()
-              .onDescendantOf("com.google.common.truth.StandardSubjectBuilder")
-              .named("fail"),
-          staticMethod().onClass("org.junit.Assert").named("fail"),
-          staticMethod().onClass("junit.framework.Assert").named("fail"),
-          staticMethod().onClass("junit.framework.TestCase").named("fail"));
-
-  private static final Matcher<StatementTree> EXPECTED_EXCEPTION_MATCHER =
-      anyOf(
-          // expectedException.expect(Foo.class); me();
-          allOf(
-              isLastStatementInBlock(),
-              previousStatement(
-                  expressionStatement(
-                      anyOf(instanceMethod().onExactClass("org.junit.rules.ExpectedException"))))),
-          // try { me(); fail(); } catch (Throwable t) {}
-          allOf(enclosingNode(kindIs(Kind.TRY)), nextStatement(expressionStatement(FAIL_METHOD))),
-          // assertThrows(Throwable.class, () => { me(); })
-          allOf(
-              anyOf(isLastStatementInBlock(), parentNode(kindIs(Kind.LAMBDA_EXPRESSION))),
-              // Within the context of a ThrowingRunnable/Executable:
-              (t, s) -> Matchers.methodCallInDeclarationOfThrowingRunnable(s)));
-
-  /** Allow return values to be ignored in tests that expect an exception to be thrown. */
-  static boolean expectedExceptionTest(Tree tree, VisitorState state) {
-    // Allow unused return values in tests that check for thrown exceptions, e.g.:
-    //
-    // try {
-    //   Foo.newFoo(-1);
-    //   fail();
-    // } catch (IllegalArgumentException expected) {
-    // }
-    //
-    StatementTree statement = ASTHelpers.findEnclosingNode(state.getPath(), StatementTree.class);
-    return statement != null && EXPECTED_EXCEPTION_MATCHER.matches(statement, state);
-  }
-
-  private static final Matcher<ExpressionTree> MOCKITO_MATCHER =
-      anyOf(
-          staticMethod().onClass("org.mockito.Mockito").named("verify"),
-          instanceMethod().onDescendantOf("org.mockito.stubbing.Stubber").named("when"),
-          instanceMethod().onDescendantOf("org.mockito.InOrder").named("verify"));
-
-  /**
-   * Don't match the method that is invoked through {@code Mockito.verify(t)} or {@code
-   * doReturn(val).when(t)}.
-   */
-  static boolean mockitoInvocation(Tree tree, VisitorState state) {
-    if (!(tree instanceof JCMethodInvocation)) {
-      return false;
-    }
-    JCMethodInvocation invocation = (JCMethodInvocation) tree;
-    if (!(invocation.getMethodSelect() instanceof JCFieldAccess)) {
-      return false;
-    }
-    ExpressionTree receiver = ASTHelpers.getReceiver(invocation);
-    return MOCKITO_MATCHER.matches(receiver, state);
-  }
-
   private Description checkLostType(MethodInvocationTree tree, VisitorState state) {
     Optional<Type> optionalType = lostType(state);
     if (!optionalType.isPresent()) {
@@ -444,7 +343,7 @@ public abstract class AbstractReturnValueIgnored extends BugChecker
       if (!returnTypeChoosing.isEmpty()) {
         ListMultimap<TypeVariableSymbol, TypeInfo> resolved = getResolvedGenerics(tree);
         for (TypeVariableSymbol returnTypeChoosingSymbol : returnTypeChoosing) {
-          Collection<TypeInfo> types = resolved.get(returnTypeChoosingSymbol);
+          List<TypeInfo> types = resolved.get(returnTypeChoosingSymbol);
           for (TypeInfo type : types) {
             if (ASTHelpers.isSubtype(type.resolvedVariableType, lostType, state)) {
               return buildDescription(type.tree)
@@ -462,8 +361,7 @@ public abstract class AbstractReturnValueIgnored extends BugChecker
     if (allOf(
             allOf(
                 parentNode(AbstractReturnValueIgnored::isObjectReturningLambdaExpression),
-                not(AbstractReturnValueIgnored::mockitoInvocation),
-                not(AbstractReturnValueIgnored::expectedExceptionTest)),
+                not(unusedReturnValueMatcher.get()::isAllowed)),
             specializedMatcher(),
             not((t, s) -> ASTHelpers.isVoidType(ASTHelpers.getType(t), s)))
         .matches(tree, state)) {

@@ -64,7 +64,7 @@ public class ShouldHaveEvenArgs extends BugChecker implements MethodInvocationTr
     List<? extends ExpressionTree> arguments = methodInvocationTree.getArguments();
 
     MethodSymbol methodSymbol = getSymbol(methodInvocationTree);
-    if (methodSymbol == null || !methodSymbol.isVarArgs()) {
+    if (!methodSymbol.isVarArgs()) {
       return Description.NO_MATCH;
     }
     Type varArgsArrayType = getLast(methodSymbol.params()).type;

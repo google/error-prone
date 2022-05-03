@@ -137,7 +137,7 @@ public class ApiDiffCheckerTest {
         new BaseErrorProneJavaCompiler(
             ScannerSupplier.fromScanner(new ErrorProneScanner(new SampleApiDiffChecker(diff))));
 
-    final CompilationResult result =
+    CompilationResult result =
         new CompilationBuilder(errorProneCompiler, tempFolder.newFolder(), fileManager)
             .setSources(
                 new SourceBuilder(tempFolder.newFolder())
@@ -199,7 +199,7 @@ public class ApiDiffCheckerTest {
         new BaseErrorProneJavaCompiler(
             ScannerSupplier.fromScanner(new ErrorProneScanner(new SampleApiDiffChecker(diff))));
 
-    final CompilationResult result =
+    CompilationResult result =
         new CompilationBuilder(errorProneCompiler, tempFolder.newFolder(), fileManager)
             .setSources(
                 new SourceBuilder(tempFolder.newFolder())
@@ -258,7 +258,7 @@ public class ApiDiffCheckerTest {
         new BaseErrorProneJavaCompiler(
             ScannerSupplier.fromScanner(new ErrorProneScanner(new SampleApiDiffChecker(diff))));
 
-    final CompilationResult result =
+    CompilationResult result =
         new CompilationBuilder(errorProneCompiler, tempFolder.newFolder(), fileManager)
             .setSources(
                 new SourceBuilder(tempFolder.newFolder())
@@ -333,7 +333,7 @@ public class ApiDiffCheckerTest {
         new BaseErrorProneJavaCompiler(
             ScannerSupplier.fromScanner(new ErrorProneScanner(new SampleApiDiffChecker(diff))));
 
-    final CompilationResult result =
+    CompilationResult result =
         new CompilationBuilder(errorProneCompiler, tempFolder.newFolder(), fileManager)
             .setSources(
                 new SourceBuilder(tempFolder.newFolder())
@@ -392,7 +392,7 @@ public class ApiDiffCheckerTest {
         new BaseErrorProneJavaCompiler(
             ScannerSupplier.fromScanner(new ErrorProneScanner(new SampleApiDiffChecker(diff))));
 
-    final CompilationResult result =
+    CompilationResult result =
         new CompilationBuilder(errorProneCompiler, tempFolder.newFolder(), fileManager)
             .setSources(
                 new SourceBuilder(tempFolder.newFolder())

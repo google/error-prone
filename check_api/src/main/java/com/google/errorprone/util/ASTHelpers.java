@@ -169,7 +169,6 @@ import java.util.function.Predicate;
 import java.util.stream.Stream;
 import javax.annotation.Nullable;
 import javax.lang.model.element.AnnotationMirror;
-import javax.lang.model.element.AnnotationValue;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.type.TypeKind;
@@ -283,17 +282,17 @@ public class ASTHelpers {
 
   /** Gets the symbol for a class. */
   public static ClassSymbol getSymbol(ClassTree tree) {
-    return ((JCClassDecl) tree).sym;
+    return checkNotNull(((JCClassDecl) tree).sym, "%s had a null ClassSymbol", tree);
   }
 
   /** Gets the symbol for a package. */
   public static PackageSymbol getSymbol(PackageTree tree) {
-    return ((JCPackageDecl) tree).packge;
+    return checkNotNull(((JCPackageDecl) tree).packge, "%s had a null PackageSymbol", tree);
   }
 
   /** Gets the symbol for a method. */
   public static MethodSymbol getSymbol(MethodTree tree) {
-    return ((JCMethodDecl) tree).sym;
+    return checkNotNull(((JCMethodDecl) tree).sym, "%s had a null MethodSymbol", tree);
   }
 
   /** Gets the method symbol for a new class. */
@@ -308,7 +307,7 @@ public class ASTHelpers {
 
   /** Gets the symbol for a variable. */
   public static VarSymbol getSymbol(VariableTree tree) {
-    return ((JCVariableDecl) tree).sym;
+    return checkNotNull(((JCVariableDecl) tree).sym, "%s had a null VariableTree", tree);
   }
 
   /** Gets the symbol for a method invocation. */
@@ -331,7 +330,37 @@ public class ASTHelpers {
     return (MethodSymbol) sym;
   }
 
-  /* Checks whether an expression requires parentheses. */
+  /**
+   * Returns whether this symbol is safe to remove. That is, if it cannot be accessed from outside
+   * its own compilation unit.
+   *
+   * <p>For variables this just means that one of the enclosing elements is private; for methods, it
+   * also means that this symbol is not an override.
+   */
+  public static boolean canBeRemoved(Symbol symbol, VisitorState state) {
+    if (symbol instanceof MethodSymbol
+        && !findSuperMethods((MethodSymbol) symbol, state.getTypes()).isEmpty()) {
+      return false;
+    }
+    return isEffectivelyPrivate(symbol);
+  }
+
+  /** See {@link #canBeRemoved(Symbol, VisitorState)}. */
+  public static boolean canBeRemoved(VarSymbol symbol) {
+    return isEffectivelyPrivate(symbol);
+  }
+
+  /** See {@link #canBeRemoved(Symbol, VisitorState)}. */
+  public static boolean canBeRemoved(ClassSymbol symbol) {
+    return isEffectivelyPrivate(symbol);
+  }
+
+  /** Returns whether this symbol or any of its owners are private. */
+  private static boolean isEffectivelyPrivate(Symbol symbol) {
+    return enclosingElements(symbol).anyMatch(Symbol::isPrivate);
+  }
+
+  /** Checks whether an expression requires parentheses. */
   public static boolean requiresParentheses(ExpressionTree expression, VisitorState state) {
     switch (expression.getKind()) {
       case IDENTIFIER:
@@ -950,7 +979,9 @@ public class ASTHelpers {
     return hasDirectAnnotationWithSimpleName(getDeclaredSymbol(tree), simpleName);
   }
 
-  /** @deprecated use {@link #shouldKeep} instead */
+  /**
+   * @deprecated use {@link #shouldKeep} instead
+   */
   @Deprecated
   @InlineMe(
       replacement = "ASTHelpers.shouldKeep(tree)",
@@ -1024,7 +1055,9 @@ public class ASTHelpers {
     return sym == null ? null : sym.getAnnotation(annotationClass);
   }
 
-  /** @return all values of the given enum type, in declaration order. */
+  /**
+   * @return all values of the given enum type, in declaration order.
+   */
   public static LinkedHashSet<String> enumValues(TypeSymbol enumType) {
     if (enumType.getKind() != ElementKind.ENUM) {
       throw new IllegalStateException();
@@ -1126,16 +1159,29 @@ public class ASTHelpers {
     return sym.owner == null ? null : sym.owner.enclClass();
   }
 
-  /** Return the enclosing {@code PackageSymbol} of the given symbol, or {@code null}. */
+  /**
+   * Return the enclosing {@code PackageSymbol} of the given symbol, or {@code null}.
+   *
+   * <p>Prefer this to {@link Symbol#packge}, which throws a {@link NullPointerException} for
+   * symbols that are not contained by a package: https://bugs.openjdk.java.net/browse/JDK-8231911
+   */
+  @Nullable
   public static PackageSymbol enclosingPackage(Symbol sym) {
-    return sym.packge();
+    Symbol curr = sym;
+    while (curr != null) {
+      if (curr.getKind().equals(ElementKind.PACKAGE)) {
+        return (PackageSymbol) curr;
+      }
+      curr = curr.owner;
+    }
+    return null;
   }
 
   /** Return true if the given symbol is defined in the current package. */
   public static boolean inSamePackage(Symbol targetSymbol, VisitorState state) {
     JCCompilationUnit compilationUnit = (JCCompilationUnit) state.getPath().getCompilationUnit();
     PackageSymbol usePackage = compilationUnit.packge;
-    PackageSymbol targetPackage = targetSymbol.packge();
+    PackageSymbol targetPackage = enclosingPackage(targetSymbol);
 
     return targetPackage != null
         && usePackage != null
@@ -1523,7 +1569,7 @@ public class ASTHelpers {
     return attribute.getElementValues().entrySet().stream()
         .filter(e -> e.getKey().getSimpleName().contentEquals("value"))
         .findFirst()
-        .map(e -> MoreAnnotations.asStrings((AnnotationValue) e.getValue()))
+        .map(e -> MoreAnnotations.asStrings(e.getValue()))
         .orElseGet(() -> Stream.of(attribute.type.tsym.getQualifiedName().toString()));
   }
 
@@ -1929,7 +1975,7 @@ public class ASTHelpers {
     @Override
     public Type visitNewClass(NewClassTree tree, Void unused) {
       if (Objects.equals(current, tree.getEnclosingExpression())) {
-        return ((ClassSymbol) ASTHelpers.getSymbol(tree.getIdentifier())).owner.type;
+        return ASTHelpers.getSymbol(tree.getIdentifier()).owner.type;
       }
       return visitMethodInvocationOrNewClass(
           tree.getArguments(), ASTHelpers.getSymbol(tree), ((JCNewClass) tree).constructorType);

@@ -29,7 +29,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** @author bhagwani@google.com (Sumit Bhagwani) */
+/**
+ * @author bhagwani@google.com (Sumit Bhagwani)
+ */
 @RunWith(JUnit4.class)
 public class ObjectToStringTest {
 
@@ -66,7 +68,7 @@ public class ObjectToStringTest {
   // A bugchecker that eagerly completes the missing symbol for testIncompleteClasspath below,
   // to avoid the CompletionFailure being reported later.
   /** A checker for {@link #testIncompleteClasspath}. */
-  @BugPattern(name = "CompletionChecker", summary = "", severity = ERROR)
+  @BugPattern(summary = "", severity = ERROR)
   public static class CompletionChecker extends BugChecker implements ClassTreeMatcher {
     @Override
     public Description matchClass(ClassTree tree, VisitorState state) {

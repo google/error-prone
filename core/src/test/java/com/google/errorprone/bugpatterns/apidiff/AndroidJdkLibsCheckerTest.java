@@ -214,7 +214,6 @@ public class AndroidJdkLibsCheckerTest extends Java7ApiCheckerTest {
             "import java.util.Collection;",
             "class T {",
             "  void f(Iterable<?> i, Collection<?> c) {",
-            "    // BUG: Diagnostic contains: java.lang.Iterable#forEach",
             "    i.forEach(System.err::println);",
             "    c.forEach(System.err::println);",
             "  }",

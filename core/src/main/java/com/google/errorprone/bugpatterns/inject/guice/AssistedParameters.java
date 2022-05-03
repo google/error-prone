@@ -57,7 +57,9 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-/** @author sgoldfeder@google.com (Steven Goldfeder) */
+/**
+ * @author sgoldfeder@google.com (Steven Goldfeder)
+ */
 @BugPattern(
     name = "GuiceAssistedParameters",
     summary =
@@ -75,7 +77,7 @@ public class AssistedParameters extends BugChecker implements MethodTreeMatcher 
       methodHasParameters(MatchType.AT_LEAST_ONE, Matchers.hasAnnotation(ASSISTED_ANNOTATION));
 
   @Override
-  public final Description matchMethod(MethodTree constructor, final VisitorState state) {
+  public final Description matchMethod(MethodTree constructor, VisitorState state) {
     if (!IS_CONSTRUCTOR_WITH_INJECT_OR_ASSISTED.matches(constructor, state)) {
       return Description.NO_MATCH;
     }

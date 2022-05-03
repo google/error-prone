@@ -20,6 +20,7 @@ import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
+import static com.google.errorprone.util.ASTHelpers.enclosingPackage;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
@@ -50,7 +51,7 @@ import java.util.Optional;
  */
 @BugPattern(
     summary =
-        "The field number passed into #getFieldByNumber belongs to a different proto"
+        "The field number passed into #findFieldByNumber belongs to a different proto"
             + " to the Descriptor.",
     severity = ERROR)
 public final class MixedDescriptors extends BugChecker implements MethodInvocationTreeMatcher {
@@ -95,7 +96,7 @@ public final class MixedDescriptors extends BugChecker implements MethodInvocati
 
   /** Ignore packages specifically qualified as proto1 or proto2. */
   private static boolean shouldConsider(TypeSymbol symbol) {
-    String packge = symbol.packge().toString();
+    String packge = enclosingPackage(symbol).toString();
     return !(packge.contains(".proto1api") || packge.contains(".proto2api"));
   }
 

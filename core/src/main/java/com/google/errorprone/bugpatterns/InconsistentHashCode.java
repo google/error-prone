@@ -182,12 +182,10 @@ public final class InconsistentHashCode extends BugChecker implements ClassTreeM
     @Override
     public Void visitMethodInvocation(MethodInvocationTree tree, Void unused) {
       MethodSymbol symbol = getSymbol(tree);
-      if (symbol != null) {
-        if (knownMethods.containsKey(symbol)) {
-          accessedFields.addAll(knownMethods.get(symbol));
-        } else if (!symbol.isStatic() && !acceptableMethods.matches(tree, state)) {
-          failed = true;
-        }
+      if (knownMethods.containsKey(symbol)) {
+        accessedFields.addAll(knownMethods.get(symbol));
+      } else if (!symbol.isStatic() && !acceptableMethods.matches(tree, state)) {
+        failed = true;
       }
       return super.visitMethodInvocation(tree, null);
     }

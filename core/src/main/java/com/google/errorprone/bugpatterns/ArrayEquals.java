@@ -35,7 +35,9 @@ import com.google.errorprone.matchers.Matcher;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
 
-/** @author eaftan@google.com (Eddie Aftandilian) */
+/**
+ * @author eaftan@google.com (Eddie Aftandilian)
+ */
 @BugPattern(summary = "Reference equality used to compare arrays", severity = ERROR)
 public class ArrayEquals extends BugChecker implements MethodInvocationTreeMatcher {
   /** Matches when the equals instance method is used to compare two arrays. */

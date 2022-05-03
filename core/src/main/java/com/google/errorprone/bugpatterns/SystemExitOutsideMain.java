@@ -15,7 +15,7 @@
  */
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
+import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.enclosingMethod;
 import static com.google.errorprone.matchers.Matchers.hasModifier;
@@ -49,7 +49,7 @@ import java.util.Optional;
  *
  * @author seibelsabrina@google.com (Sabrina Seibel)
  */
-@BugPattern(summary = "Code that contains System.exit() is untestable.", severity = WARNING)
+@BugPattern(summary = "Code that contains System.exit() is untestable.", severity = ERROR)
 public class SystemExitOutsideMain extends BugChecker implements MethodInvocationTreeMatcher {
   private static final Matcher<ExpressionTree> CALLS_TO_SYSTEM_EXIT =
       staticMethod().onClass("java.lang.System").named("exit");

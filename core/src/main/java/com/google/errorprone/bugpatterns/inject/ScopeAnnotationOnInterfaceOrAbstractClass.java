@@ -37,7 +37,9 @@ import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Flags;
 
-/** @author sgoldfeder@google.com (Steven Goldfeder) */
+/**
+ * @author sgoldfeder@google.com (Steven Goldfeder)
+ */
 @BugPattern(
     name = "InjectScopeAnnotationOnInterfaceOrAbstractClass",
     summary = "Scope annotation on an interface or abstract class is not allowed",

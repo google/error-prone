@@ -35,6 +35,7 @@ import javax.lang.model.element.Modifier;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
+    altNames = {"TopLevelName"},
     summary = "The source file name should match the name of the top-level class it contains",
     severity = ERROR,
     documentSuppression = false,
@@ -52,7 +53,7 @@ public class ClassName extends BugChecker implements CompilationUnitTreeMatcher 
     for (Tree member : tree.getTypeDecls()) {
       if (member instanceof ClassTree) {
         ClassTree classMember = (ClassTree) member;
-        if (isSuppressed(classMember)) {
+        if (isSuppressed(classMember, state)) {
           // If any top-level classes have @SuppressWarnings("ClassName"), ignore
           // this compilation unit. We can't rely on the normal suppression
           // mechanism because the only enclosing element is the package declaration,

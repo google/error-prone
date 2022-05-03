@@ -46,9 +46,6 @@ public final class UnnecessaryFinal extends BugChecker implements VariableTreeMa
   @Override
   public Description matchVariable(VariableTree tree, VisitorState state) {
     Symbol symbol = getSymbol(tree);
-    if (symbol == null) {
-      return NO_MATCH;
-    }
     if (symbol.getKind() == ElementKind.FIELD) {
       return NO_MATCH;
     }

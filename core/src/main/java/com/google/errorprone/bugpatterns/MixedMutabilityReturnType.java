@@ -193,6 +193,7 @@ public final class MixedMutabilityReturnType extends BugChecker
 
     private ReturnTypesScanner(
         VisitorState state, Set<VarSymbol> immutable, Set<VarSymbol> mutable) {
+      super(state);
       this.state = state;
       this.immutable = immutable;
       this.mutable = mutable;

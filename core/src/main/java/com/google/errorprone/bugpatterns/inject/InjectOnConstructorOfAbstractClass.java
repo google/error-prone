@@ -41,7 +41,9 @@ import com.google.errorprone.matchers.MultiMatcher.MultiMatchResult;
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.MethodTree;
 
-/** @author glorioso@google.com (Nick Glorioso) */
+/**
+ * @author glorioso@google.com (Nick Glorioso)
+ */
 @BugPattern(
     summary =
         "Constructors on abstract classes are never directly @Inject'ed, only the constructors"

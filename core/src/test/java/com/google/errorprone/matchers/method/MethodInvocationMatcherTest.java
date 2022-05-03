@@ -62,7 +62,6 @@ public class MethodInvocationMatcherTest {
 
   /** A {@link BugChecker} for test. */
   @BugPattern(
-      name = "MethodInvocationChecker",
       summary = "Checker that flags the given method invocation if the matcher matches",
       severity = ERROR)
   public static class MethodInvocationChecker extends BugChecker

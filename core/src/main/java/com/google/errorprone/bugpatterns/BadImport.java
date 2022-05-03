@@ -49,7 +49,9 @@ import java.util.List;
 import java.util.Set;
 import javax.lang.model.element.Name;
 
-/** @author awturner@google.com (Andy Turner) */
+/**
+ * @author awturner@google.com (Andy Turner)
+ */
 @BugPattern(
     summary =
         "Importing nested classes/static methods/static fields with commonly-used names can make "
@@ -169,7 +171,7 @@ public class BadImport extends BugChecker implements ImportTreeMatcher {
     CompilationUnitTree compilationUnit = state.getPath().getCompilationUnit();
     TreePath path = TreePath.getPath(compilationUnit, compilationUnit);
     IdentifierTree firstFound =
-        new SuppressibleTreePathScanner<IdentifierTree, Void>() {
+        new SuppressibleTreePathScanner<IdentifierTree, Void>(state) {
           @Override
           public IdentifierTree reduce(IdentifierTree r1, IdentifierTree r2) {
             return (r2 != null) ? r2 : r1;
@@ -178,7 +180,7 @@ public class BadImport extends BugChecker implements ImportTreeMatcher {
           @Override
           public IdentifierTree visitIdentifier(IdentifierTree node, Void unused) {
             Symbol nodeSymbol = getSymbol(node);
-            if (symbols.contains(nodeSymbol) && !isSuppressed(node)) {
+            if (symbols.contains(nodeSymbol) && !isSuppressed(node, state)) {
               if (getCurrentPath().getParentPath().getLeaf().getKind() != Kind.CASE) {
                 builder.prefixWith(node, enclosingReplacement);
                 moveTypeAnnotations(node);

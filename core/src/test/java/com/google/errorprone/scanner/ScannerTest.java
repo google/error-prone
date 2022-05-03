@@ -101,7 +101,6 @@ public class ScannerTest {
   public @interface OkToUseFoo {}
 
   @BugPattern(
-      name = "ShouldNotUseFoo",
       summary = "Code should not use Foo.",
       severity = ERROR,
       suppressionAnnotations = OkToUseFoo.class)

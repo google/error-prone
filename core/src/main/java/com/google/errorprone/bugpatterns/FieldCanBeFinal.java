@@ -16,7 +16,9 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
+import static com.google.errorprone.util.ASTHelpers.canBeRemoved;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
+import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
 import static com.google.errorprone.util.ASTHelpers.shouldKeep;
 
 import com.google.common.collect.ImmutableSet;
@@ -55,7 +57,9 @@ import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 
-/** @author Liam Miller-Cushon (cushon@google.com) */
+/**
+ * @author Liam Miller-Cushon (cushon@google.com)
+ */
 @BugPattern(
     summary = "This field is only assigned during initialization; consider making it final",
     severity = SUGGESTION)
@@ -203,21 +207,18 @@ public class FieldCanBeFinal extends BugChecker implements CompilationUnitTreeMa
   public Description matchCompilationUnit(CompilationUnitTree tree, VisitorState state) {
     VariableAssignmentRecords writes = new VariableAssignmentRecords();
     new FinalScanner(writes, state).scan(state.getPath(), InitializationContext.NONE);
-    outer:
     for (VariableAssignments var : writes.getAssignments()) {
       if (!var.isEffectivelyFinal()) {
         continue;
       }
-      if (!var.sym.isPrivate()) {
+      if (!canBeRemoved(var.sym)) {
         continue;
       }
       if (shouldKeep(var.declaration)) {
         continue;
       }
-      for (String annotation : IMPLICIT_VAR_ANNOTATIONS) {
-        if (ASTHelpers.hasAnnotation(var.sym, annotation, state)) {
-          continue outer;
-        }
+      if (IMPLICIT_VAR_ANNOTATIONS.stream().anyMatch(a -> hasAnnotation(var.sym, a, state))) {
+        continue;
       }
       for (Attribute.Compound anno : var.sym.getAnnotationMirrors()) {
         TypeElement annoElement = (TypeElement) anno.getAnnotationType().asElement();
@@ -230,12 +231,8 @@ public class FieldCanBeFinal extends BugChecker implements CompilationUnitTreeMa
       }
       VariableTree varDecl = var.declaration();
       SuggestedFixes.addModifiers(varDecl, state, Modifier.FINAL)
-          .ifPresent(
-              f -> {
-                if (SuggestedFixes.compilesWithFix(f, state)) {
-                  state.reportMatch(describeMatch(varDecl, f));
-                }
-              });
+          .filter(f -> SuggestedFixes.compilesWithFix(f, state))
+          .ifPresent(f -> state.reportMatch(describeMatch(varDecl, f)));
     }
     return Description.NO_MATCH;
   }
@@ -254,7 +251,7 @@ public class FieldCanBeFinal extends BugChecker implements CompilationUnitTreeMa
     @Override
     public Void visitVariable(VariableTree node, InitializationContext init) {
       VarSymbol sym = ASTHelpers.getSymbol(node);
-      if (sym != null && sym.getKind() == ElementKind.FIELD && !isSuppressed(node)) {
+      if (sym.getKind() == ElementKind.FIELD && !isSuppressed(node, compilationState)) {
         writes.recordDeclaration(sym, node);
       }
       return super.visitVariable(node, InitializationContext.NONE);
@@ -278,7 +275,7 @@ public class FieldCanBeFinal extends BugChecker implements CompilationUnitTreeMa
     @Override
     public Void visitMethod(MethodTree node, InitializationContext init) {
       MethodSymbol sym = ASTHelpers.getSymbol(node);
-      if (sym != null && sym.isConstructor()) {
+      if (sym.isConstructor()) {
         init = InitializationContext.INSTANCE;
       }
       return super.visitMethod(node, init);
@@ -314,7 +311,7 @@ public class FieldCanBeFinal extends BugChecker implements CompilationUnitTreeMa
     public Void visitClass(ClassTree node, InitializationContext init) {
       VisitorState state = compilationState.withPath(getCurrentPath());
 
-      if (isSuppressed(node)) {
+      if (isSuppressed(node, state)) {
         return null;
       }
 

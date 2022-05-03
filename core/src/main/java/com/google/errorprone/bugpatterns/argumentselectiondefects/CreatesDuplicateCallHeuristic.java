@@ -101,15 +101,13 @@ class CreatesDuplicateCallHeuristic implements Heuristic {
       @Override
       public Void visitMethod(MethodTree methodTree, Void unused) {
         MethodSymbol methodSymbol = ASTHelpers.getSymbol(methodTree);
-        if (methodSymbol != null) {
-          // if the method declared here is the one we are calling then add it
-          addToResult(methodSymbol, methodTree);
+        // if the method declared here is the one we are calling then add it
+        addToResult(methodSymbol, methodTree);
 
-          // if any supermethod of the one declared here is the one we are calling then add it
-          for (MethodSymbol superSymbol :
-              ASTHelpers.findSuperMethods(methodSymbol, state.getTypes())) {
-            addToResult(superSymbol, methodTree);
-          }
+        // if any supermethod of the one declared here is the one we are calling then add it
+        for (MethodSymbol superSymbol :
+            ASTHelpers.findSuperMethods(methodSymbol, state.getTypes())) {
+          addToResult(superSymbol, methodTree);
         }
         return super.visitMethod(methodTree, unused);
       }

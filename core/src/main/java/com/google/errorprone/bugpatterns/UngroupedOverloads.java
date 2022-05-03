@@ -19,7 +19,6 @@ package com.google.errorprone.bugpatterns;
 import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
-import static com.google.errorprone.BugPattern.StandardTags.STYLE;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static java.util.stream.Collectors.joining;
@@ -45,14 +44,15 @@ import java.util.Map;
 import java.util.stream.Stream;
 import javax.lang.model.element.Name;
 
-/** @author hanuszczak@google.com (Łukasz Hanuszczak) */
+/**
+ * @author hanuszczak@google.com (Łukasz Hanuszczak)
+ */
 @BugPattern(
     summary =
         "Constructors and methods with the same name should appear sequentially with no other code"
             + " in between, even when modifiers such as static or private differ between the"
             + " methods. Please re-order or re-name methods.",
-    severity = SUGGESTION,
-    tags = STYLE)
+    severity = SUGGESTION)
 public class UngroupedOverloads extends BugChecker implements ClassTreeMatcher {
 
   private final Boolean batchFindings;
@@ -135,7 +135,7 @@ public class UngroupedOverloads extends BugChecker implements ClassTreeMatcher {
     if (group == 0) {
       return Stream.empty();
     }
-    if (overloads.stream().anyMatch(m -> isSuppressed(m.tree()))) {
+    if (overloads.stream().anyMatch(m -> isSuppressed(m.tree(), state))) {
       return Stream.empty();
     }
     // build a fix that replaces the first overload with all the overloads grouped together

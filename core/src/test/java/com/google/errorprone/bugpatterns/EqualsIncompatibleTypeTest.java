@@ -25,7 +25,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** @author avenet@google.com (Arnaud J. Venet) */
+/**
+ * @author avenet@google.com (Arnaud J. Venet)
+ */
 @RunWith(JUnit4.class)
 public class EqualsIncompatibleTypeTest {
   private final CompilationTestHelper compilationHelper =
@@ -176,12 +178,26 @@ public class EqualsIncompatibleTypeTest {
             "",
             "public class Test {",
             "  public void test() {",
-            "    // BUG: Diagnostic contains: implement equals",
+            "    // BUG: Diagnostic contains: . Though",
             "    TestProtoMessage.newBuilder().equals(TestProtoMessage.newBuilder());",
             "    // BUG: Diagnostic contains:",
             "    TestProtoMessage.newBuilder().equals(TestOneOfMessage.newBuilder());",
             "    // BUG: Diagnostic contains:",
             "    TestProtoMessage.newBuilder().equals(TestOneOfMessage.getDefaultInstance());",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void enumsNamedBuilderCanBeEqual() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "public class Test {",
+            "  enum FooBuilder { A }",
+            "  public boolean test(FooBuilder a, FooBuilder b) {",
+            "    return a.equals(b);",
             "  }",
             "}")
         .doTest();
@@ -202,6 +218,30 @@ public class EqualsIncompatibleTypeTest {
             "  }",
             "}")
         .setArgs("-XepOpt:TypeCompatibility:TreatBuildersAsIncomparable=false")
+        .doTest();
+  }
+
+  @Test
+  public void protoBuilderComparedWithinAutoValue() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.auto.value.AutoValue;",
+            "import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;",
+            "@AutoValue",
+            "abstract class Test {",
+            "  abstract TestProtoMessage.Builder b();",
+            "}")
+        .addSourceLines(
+            "AutoValue_Test.java",
+            "import javax.annotation.processing.Generated;",
+            "@Generated(\"com.google.auto.value.processor.AutoValueProcessor\")",
+            "abstract class AutoValue_Test extends Test {",
+            "  @Override",
+            "  public boolean equals(Object o) {",
+            "    return ((Test) o).b().equals(b());",
+            "  }",
+            "}")
         .doTest();
   }
 }

@@ -82,9 +82,6 @@ public final class JavaTimeDefaultTimeZone extends BugChecker
       return false;
     }
     MethodSymbol symbol = ASTHelpers.getSymbol(tree);
-    if (symbol == null) {
-      return false;
-    }
 
     switch (symbol.getSimpleName().toString()) {
       case "now":

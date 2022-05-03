@@ -143,10 +143,10 @@ public final class CompilationBuilderHelpers {
     }
 
     public Path compileOutputToJarOrDie() throws IOException {
-      final Path outputDir = compileOrDie().classOutput();
-      final Path outputJar = outputDir.resolve("output.jar");
+      Path outputDir = compileOrDie().classOutput();
+      Path outputJar = outputDir.resolve("output.jar");
       try (OutputStream os = Files.newOutputStream(outputJar);
-          final JarOutputStream jos = new JarOutputStream(os)) {
+          JarOutputStream jos = new JarOutputStream(os)) {
         Files.walkFileTree(
             outputDir,
             new SimpleFileVisitor<Path>() {

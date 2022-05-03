@@ -59,7 +59,7 @@ public class ProtectedMembersInFinalClass extends BugChecker implements ClassTre
   }
 
   @Override
-  public Description matchClass(final ClassTree tree, final VisitorState state) {
+  public Description matchClass(ClassTree tree, VisitorState state) {
     if (!HAS_FINAL.matches(tree, state)) {
       return NO_MATCH;
     }
@@ -70,7 +70,7 @@ public class ProtectedMembersInFinalClass extends BugChecker implements ClassTre
             .filter(m -> HAS_PROTECTED.matches(m, state))
             .filter(
                 m -> !(m instanceof MethodTree) || methodHasNoParentMethod((MethodTree) m, state))
-            .filter(m -> !isSuppressed(m))
+            .filter(m -> !isSuppressed(m, state))
             .collect(toImmutableList());
     if (relevantMembers.isEmpty()) {
       return NO_MATCH;

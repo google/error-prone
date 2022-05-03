@@ -26,7 +26,9 @@ import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
 import com.google.errorprone.matchers.Description;
 import com.sun.source.tree.ClassTree;
 
-/** @author mwacker@google.com (Mike Wacker) */
+/**
+ * @author mwacker@google.com (Mike Wacker)
+ */
 @BugPattern(
     summary =
         "Test class inherits from JUnit 3's TestCase but has JUnit 4 @Test or @RunWith"

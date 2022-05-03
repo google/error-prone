@@ -127,24 +127,21 @@ public class IsInstanceOfClass extends BugChecker implements MethodInvocationTre
       // expr.getClass() -> "expr"
       MethodInvocationTree receiverInvocation = (MethodInvocationTree) tree;
       MethodSymbol sym = ASTHelpers.getSymbol(receiverInvocation);
-      if (sym != null) {
-        if (sym.getSimpleName().contentEquals("getClass") && sym.params().isEmpty()) {
-          if (receiverInvocation.getMethodSelect() instanceof IdentifierTree) {
-            // unqualified `getClass()`
-            return Operand.create(Kind.EXPR, state.getSourceForNode(tree), source);
-          }
-          return Operand.create(
-              Kind.GET_CLASS,
-              state.getSourceForNode((JCTree) ASTHelpers.getReceiver(receiverInvocation)),
-              source);
+      if (sym.getSimpleName().contentEquals("getClass") && sym.params().isEmpty()) {
+        if (receiverInvocation.getMethodSelect() instanceof IdentifierTree) {
+          // unqualified `getClass()`
+          return Operand.create(Kind.EXPR, state.getSourceForNode(tree), source);
         }
+        return Operand.create(
+            Kind.GET_CLASS,
+            state.getSourceForNode(ASTHelpers.getReceiver(receiverInvocation)),
+            source);
       }
     } else if (tree instanceof MemberSelectTree) {
       // Foo.class -> "Foo"
       MemberSelectTree select = (MemberSelectTree) tree;
       if (select.getIdentifier().contentEquals("class")) {
-        return Operand.create(
-            Kind.LITERAL, state.getSourceForNode((JCTree) select.getExpression()), source);
+        return Operand.create(Kind.LITERAL, state.getSourceForNode(select.getExpression()), source);
       }
     }
     return Operand.create(Kind.EXPR, source, source);

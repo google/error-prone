@@ -31,7 +31,9 @@ import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.util.TreePath;
 
-/** @author mariasam@google.com (Maria Sam) */
+/**
+ * @author mariasam@google.com (Maria Sam)
+ */
 @BugPattern(
     summary =
         "Multiple calls to either parallel or sequential are unnecessary and cause confusion.",

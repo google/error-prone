@@ -48,7 +48,6 @@ import org.junit.runners.JUnit4;
 public class UnsuppressibleTest {
 
   @BugPattern(
-      name = "MyChecker",
       summary = "Test checker that is unsuppressible",
       explanation = "Test checker that that is unsuppressible",
       suppressionAnnotations = {},

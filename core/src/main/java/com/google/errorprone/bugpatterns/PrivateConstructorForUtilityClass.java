@@ -45,7 +45,9 @@ import com.sun.source.tree.VariableTree;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import javax.lang.model.element.Modifier;
 
-/** @author gak@google.com (Gregory Kick) */
+/**
+ * @author gak@google.com (Gregory Kick)
+ */
 @BugPattern(
     summary =
         "Classes which are not intended to be instantiated should be made non-instantiable with a"

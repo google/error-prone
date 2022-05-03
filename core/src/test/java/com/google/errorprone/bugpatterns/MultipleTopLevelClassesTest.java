@@ -33,9 +33,10 @@ public class MultipleTopLevelClassesTest {
     compilationHelper
         .addSourceLines(
             "a/A.java",
-            "// BUG: Diagnostic contains: one top-level class declaration, instead found: One, Two",
             "package a;",
+            "// BUG: Diagnostic contains: one top-level class declaration, instead found: One, Two",
             "class One {}",
+            "// BUG: Diagnostic contains:",
             "class Two {}")
         .doTest();
   }
@@ -57,6 +58,7 @@ public class MultipleTopLevelClassesTest {
             "a/A.java", //
             "// BUG: Diagnostic contains:",
             "class A {}",
+            "// BUG: Diagnostic contains:",
             "class B {}")
         .doTest();
   }
@@ -74,7 +76,12 @@ public class MultipleTopLevelClassesTest {
 
   @Test
   public void emptyDeclaration() {
-    compilationHelper.addSourceLines("a/A.java", "package a;", "class Test {};").doTest();
+    compilationHelper
+        .addSourceLines(
+            "a/A.java", //
+            "package a;",
+            "class Test {};")
+        .doTest();
   }
 
   @Test
@@ -82,14 +89,17 @@ public class MultipleTopLevelClassesTest {
     compilationHelper
         .addSourceLines(
             "a/A.java",
+            "package a;",
             "// BUG: Diagnostic contains:",
             "// one top-level class declaration, instead found: Test, Extra",
-            "package a;",
             "import java.util.List;;",
+            "// BUG: Diagnostic contains:",
             "import java.util.ArrayList;",
+            "// BUG: Diagnostic contains:",
             "class Test {",
             "  List<String> xs = new ArrayList<>();",
             "}",
+            "// BUG: Diagnostic contains:",
             "class Extra {}")
         .doTest();
   }

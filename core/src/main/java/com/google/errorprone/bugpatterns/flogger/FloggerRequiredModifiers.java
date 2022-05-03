@@ -76,7 +76,6 @@ import javax.lang.model.element.NestingKind;
 
 /** Ensures that class-level FluentLogger objects are private static final. */
 @BugPattern(
-    name = "FloggerRequiredModifiers",
     summary =
         "FluentLogger.forEnclosingClass should always be saved to a private static final field.",
     link = "https://google.github.io/flogger/best_practice#modifiers",
@@ -227,9 +226,6 @@ public final class FloggerRequiredModifiers extends BugChecker
       Type loggerType = LOGGER_TYPE.get(state);
       MethodInvocationTree method = (MethodInvocationTree) initializer;
       MethodSymbol methodSym = ASTHelpers.getSymbol(method);
-      if (methodSym == null) {
-        return false; // Something is broken, just give up
-      }
       if (methodSym.isStatic()
           && methodSym.owner.equals(owner)
           && ASTHelpers.isSameType(loggerType, methodSym.getReturnType(), state)) {
@@ -275,12 +271,10 @@ public final class FloggerRequiredModifiers extends BugChecker
     MethodTree owningMethod = state.findEnclosing(MethodTree.class);
     if (owningMethod != null) {
       MethodSymbol methodSym = ASTHelpers.getSymbol(owningMethod);
-      if (methodSym != null) {
-        Type returnType = methodSym.getReturnType();
-        // Could be null for initializer blocks
-        if (ASTHelpers.isSameType(loggerType, returnType, state)) {
-          return NO_MATCH;
-        }
+      Type returnType = methodSym.getReturnType();
+      // Could be null for initializer blocks
+      if (ASTHelpers.isSameType(loggerType, returnType, state)) {
+        return NO_MATCH;
       }
     }
 

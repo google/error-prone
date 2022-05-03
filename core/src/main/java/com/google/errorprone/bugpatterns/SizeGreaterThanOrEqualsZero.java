@@ -175,9 +175,6 @@ public class SizeGreaterThanOrEqualsZero extends BugChecker implements BinaryTre
     // Make sure it's the count method for a repeated field, not the get method for a non-repeated
     // field named <something>_count, by checking for other methods on the repeated field.
     MethodSymbol methodCallSym = getSymbol((MethodInvocationTree) tree);
-    if (methodCallSym == null) {
-      return false;
-    }
     Scope protoClassMembers = methodCallSym.owner.members();
     java.util.regex.Matcher getCountRegexMatcher =
         PROTO_COUNT_METHOD_PATTERN.matcher(methodCallSym.getSimpleName().toString());
@@ -220,7 +217,7 @@ public class SizeGreaterThanOrEqualsZero extends BugChecker implements BinaryTre
   private Description provideReplacementForStaticMethodInvocation(
       BinaryTree tree,
       MethodInvocationTree callToSize,
-      final VisitorState state,
+      VisitorState state,
       ExpressionType expressionType) {
     ExpressionTree classToken = getReceiver(callToSize);
 

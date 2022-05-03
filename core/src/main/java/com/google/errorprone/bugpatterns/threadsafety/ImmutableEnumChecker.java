@@ -62,7 +62,7 @@ public class ImmutableEnumChecker extends BugChecker implements ClassTreeMatcher
   @Override
   public Description matchClass(ClassTree tree, VisitorState state) {
     ClassSymbol symbol = getSymbol(tree);
-    if (symbol == null || !symbol.isEnum()) {
+    if (!symbol.isEnum()) {
       return NO_MATCH;
     }
 

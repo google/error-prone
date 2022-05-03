@@ -29,7 +29,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** @author deminguyen@google.com (Demi Nguyen) */
+/**
+ * @author deminguyen@google.com (Demi Nguyen)
+ */
 @RunWith(JUnit4.class)
 public class NonNullLiteralTest extends CompilerBasedAbstractTest {
 
@@ -113,8 +115,7 @@ public class NonNullLiteralTest extends CompilerBasedAbstractTest {
     assertCompiles(nonNullLiteralMatches(/* shouldMatch= */ false, Matchers.nonNullLiteral()));
   }
 
-  private Scanner nonNullLiteralMatches(
-      final boolean shouldMatch, final Matcher<ExpressionTree> toMatch) {
+  private Scanner nonNullLiteralMatches(boolean shouldMatch, Matcher<ExpressionTree> toMatch) {
     return new Scanner() {
       @Override
       public Void visitLiteral(LiteralTree node, VisitorState visitorState) {

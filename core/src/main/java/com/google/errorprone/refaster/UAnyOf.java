@@ -50,7 +50,7 @@ public abstract class UAnyOf extends UExpression {
   }
 
   @Override
-  protected Choice<Unifier> defaultAction(final Tree tree, final Unifier unifier) {
+  protected Choice<Unifier> defaultAction(Tree tree, Unifier unifier) {
     return Choice.from(expressions())
         .thenChoose(
             (UExpression expression) ->

@@ -93,9 +93,6 @@ public class DoNotCallSuggester extends BugChecker implements MethodTreeMatcher 
   public Description matchMethod(MethodTree tree, VisitorState state) {
     // if we can't find the method symbol, exit
     MethodSymbol symbol = getSymbol(tree);
-    if (symbol == null) {
-      return NO_MATCH;
-    }
 
     // if the method is abstract, exit
     if (tree.getBody() == null) {

@@ -57,7 +57,7 @@ public final class SameNameButDifferent extends BugChecker implements Compilatio
   @Override
   public Description matchCompilationUnit(CompilationUnitTree tree, VisitorState state) {
     Table<String, TypeSymbol, List<TreePath>> table = HashBasedTable.create();
-    new SuppressibleTreePathScanner<Void, Void>() {
+    new SuppressibleTreePathScanner<Void, Void>(state) {
       @Override
       public Void visitMemberSelect(MemberSelectTree memberSelectTree, Void unused) {
         if (!shouldIgnore()) {

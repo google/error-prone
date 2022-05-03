@@ -43,6 +43,21 @@ public final class AlreadyCheckedTest {
   }
 
   @Test
+  public void thisAndThat() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  public void test(boolean a, boolean b) {",
+            "    if (a && b) {",
+            "    } else if (a) {",
+            "    } else if (b) {}",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void guardBlock() {
     helper
         .addSourceLines(
@@ -357,6 +372,27 @@ public final class AlreadyCheckedTest {
             "      if (a.equals(Duration.ofSeconds(2))) {}",
             "      // BUG: Diagnostic contains:",
             "      if (a.equals(Duration.ofSeconds(1))) {}",
+            "    }",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void durationsComparedUsingFactoryMethods_withDifferentImport() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            "import static java.time.Duration.ofSeconds;",
+            "import java.time.Duration;",
+            "class Test {",
+            "  public void test(Duration a, Duration b) {",
+            "    if (a.equals(Duration.ofSeconds(1))) {",
+            "      if (a.equals(Duration.ofSeconds(2))) {}",
+            "      // BUG: Diagnostic contains:",
+            "      if (a.equals(ofSeconds(1))) {}",
+            "      // BUG: Diagnostic contains:",
+            "      if (a.equals(java.time.Duration.ofSeconds(1))) {}",
             "    }",
             "  }",
             "}")

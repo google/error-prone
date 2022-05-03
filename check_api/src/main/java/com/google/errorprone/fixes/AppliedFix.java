@@ -18,11 +18,9 @@ package com.google.errorprone.fixes;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Iterables;
 import com.sun.tools.javac.tree.EndPosTable;
-import java.io.IOException;
-import java.io.LineNumberReader;
-import java.io.StringReader;
-import java.util.HashSet;
 import java.util.Set;
 import javax.annotation.Nullable;
 
@@ -64,74 +62,73 @@ public class AppliedFix {
      */
     @Nullable
     public AppliedFix apply(Fix suggestedFix) {
-      StringBuilder replaced = new StringBuilder(source);
+      // We apply the replacements in ascending order here. Descending is simpler, since applying a
+      // replacement can't change the index for future replacements, but it leads to quadratic
+      // copying behavior as we constantly shift the tail of the file around in our StringBuilder.
+      ImmutableSet<Replacement> replacements =
+          ascending(suggestedFix.getReplacements(endPositions));
+      if (replacements.isEmpty()) {
+        return null;
+      }
 
-      // We have to apply the replacements in descending order, since otherwise the positions in
-      // subsequent replacements are invalidated by earlier replacements.
-      Set<Replacement> replacements = descending(suggestedFix.getReplacements(endPositions));
-
-      Set<Integer> modifiedLines = new HashSet<>();
+      StringBuilder replaced = new StringBuilder();
+      int positionInOriginal = 0;
       for (Replacement repl : replacements) {
         checkArgument(
             repl.endPosition() <= source.length(),
             "End [%s] should not exceed source length [%s]",
             repl.endPosition(),
             source.length());
-        replaced.replace(repl.startPosition(), repl.endPosition(), repl.replaceWith());
 
-        // Find the line number(s) being modified
-        // TODO: this could be more efficient
-        try {
-          LineNumberReader lineNumberReader =
-              new LineNumberReader(new StringReader(source.toString()));
-          lineNumberReader.skip(repl.startPosition());
-          modifiedLines.add(lineNumberReader.getLineNumber());
-        } catch (IOException e) {
-          // impossible since source is in-memory
-        }
+        // Write the unmodified content leading up to this change
+        replaced.append(source, positionInOriginal, repl.startPosition());
+        // And the modified content for this change
+        replaced.append(repl.replaceWith());
+        // Then skip everything from source between start and end
+        positionInOriginal = repl.endPosition();
       }
+      // Flush out any remaining content after the final change
+      replaced.append(source, positionInOriginal, source.length());
 
-      // Not sure this is really the right behavior, but otherwise we can end up with an infinite
-      // loop below.
-      if (modifiedLines.isEmpty()) {
-        return null;
+      // Find the changed line containing the first edit
+      String snippet = firstEditedLine(replaced, Iterables.get(replacements, 0));
+      if (snippet.isEmpty()) {
+        return new AppliedFix("to remove this line", /* isRemoveLine= */ true);
       }
-
-      LineNumberReader lineNumberReader =
-          new LineNumberReader(new StringReader(replaced.toString()));
-      String snippet = null;
-      boolean isRemoveLine = false;
-      try {
-        while (!modifiedLines.contains(lineNumberReader.getLineNumber())) {
-          lineNumberReader.readLine();
-        }
-        // TODO: this is over-simplified; need a failing test case
-        snippet = lineNumberReader.readLine();
-        if (snippet == null) {
-          // The file's last line was removed.
-          snippet = "";
-        } else {
-          snippet = snippet.trim();
-          // snip comment from line
-          if (snippet.contains("//")) {
-            snippet = snippet.substring(0, snippet.indexOf("//")).trim();
-          }
-        }
-        if (snippet.isEmpty()) {
-          isRemoveLine = true;
-          snippet = "to remove this line";
-        }
-      } catch (IOException e) {
-        // impossible since source is in-memory
-      }
-      return new AppliedFix(snippet, isRemoveLine);
+      return new AppliedFix(snippet, /* isRemoveLine= */ false);
     }
 
     /** Get the replacements in an appropriate order to apply correctly. */
-    private static Set<Replacement> descending(Set<Replacement> set) {
+    private static ImmutableSet<Replacement> ascending(Set<Replacement> set) {
       Replacements replacements = new Replacements();
       set.forEach(replacements::add);
-      return replacements.descending();
+      return replacements.ascending();
+    }
+
+    /**
+     * Finds the full text of the first line that's changed. In this case "line" means "bracketed by
+     * \n characters". We don't handle \r\n specially, because the strings that javac provides to
+     * Error Prone have already been transformed from platform line endings to newlines (and even if
+     * it didn't, the dangling \r characters would be handled by a trim() call).
+     */
+    private static String firstEditedLine(StringBuilder content, Replacement firstEdit) {
+      // We subtract 1 here because we want to find the first newline *before* the edit, not one
+      // at its beginning.
+      int startOfFirstEditedLine = content.lastIndexOf("\n", firstEdit.startPosition() - 1);
+      int endOfFirstEditedLine = content.indexOf("\n", firstEdit.startPosition());
+      if (startOfFirstEditedLine == -1) {
+        startOfFirstEditedLine = 0; // Change to start of file with no preceding newline
+      }
+      if (endOfFirstEditedLine == -1) {
+        // Change to last line of file
+        endOfFirstEditedLine = content.length();
+      }
+      String snippet = content.substring(startOfFirstEditedLine, endOfFirstEditedLine);
+      snippet = snippet.trim();
+      if (snippet.contains("//")) {
+        snippet = snippet.substring(0, snippet.indexOf("//")).trim();
+      }
+      return snippet;
     }
   }
 

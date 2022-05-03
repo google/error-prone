@@ -165,7 +165,7 @@ public final class InterruptedExceptionSwallowed extends BugChecker
             && !blockChecksForInterruptedException(catchTree.getBlock(), state)
             && !(exceptionIsRethrown(catchTree, catchTree.getParameter(), state)
                 && methodDeclaresInterruptedException(state.findEnclosing(MethodTree.class), state))
-            && !isSuppressed(catchTree.getParameter())) {
+            && !isSuppressed(catchTree.getParameter(), state)) {
           return describeMatch(catchTree, createFix(catchTree));
         }
       }

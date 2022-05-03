@@ -195,7 +195,7 @@ public final class ChainingConstructorIgnoresParameter extends BugChecker
   }
 
   private static boolean referencesIdentifierWithName(
-      final String name, ExpressionTree tree, VisitorState state) {
+      String name, ExpressionTree tree, VisitorState state) {
     Matcher<IdentifierTree> identifierMatcher =
         new Matcher<IdentifierTree>() {
           @Override

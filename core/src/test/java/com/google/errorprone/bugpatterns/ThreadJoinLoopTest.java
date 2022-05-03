@@ -23,7 +23,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** @author mariasam@google.com (Maria Sam) on 7/10/17. */
+/**
+ * @author mariasam@google.com (Maria Sam) on 7/10/17.
+ */
 @RunWith(JUnit4.class)
 public class ThreadJoinLoopTest {
 

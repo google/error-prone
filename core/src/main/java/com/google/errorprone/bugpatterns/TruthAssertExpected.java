@@ -136,7 +136,7 @@ public final class TruthAssertExpected extends BugChecker implements MethodInvoc
               public List<? extends ExpressionTree> visitMethodInvocation(
                   MethodInvocationTree node, Void unused) {
                 MethodSymbol symbol = ASTHelpers.getSymbol(node);
-                if (symbol == null || !symbol.isStatic()) {
+                if (!symbol.isStatic()) {
                   return null;
                 }
                 return node.getArguments();

@@ -319,7 +319,7 @@ public class ErrorProneJavacPluginTest {
   }
 
   /** A bugpattern for testing. */
-  @BugPattern(name = "TestCompilesWithFix", summary = "", severity = SeverityLevel.ERROR)
+  @BugPattern(summary = "", severity = SeverityLevel.ERROR)
   public static class TestCompilesWithFix extends BugChecker implements ReturnTreeMatcher {
 
     @Override

@@ -45,7 +45,9 @@ import com.sun.source.tree.TypeCastTree;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.TypeTag;
 
-/** @author irogers@google.com (Ian Rogers) */
+/**
+ * @author irogers@google.com (Ian Rogers)
+ */
 @BugPattern(
     summary = "Possible sign flip from narrowing conversion",
     severity = WARNING,

@@ -20,6 +20,7 @@ import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.getGeneratedBy;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
+import static com.google.errorprone.util.ASTHelpers.isGeneratedConstructor;
 import static com.google.errorprone.util.FindIdentifiers.findIdent;
 import static com.sun.tools.javac.code.Kinds.KindSelector.VAL_TYP;
 import static java.util.stream.Collectors.toCollection;
@@ -37,10 +38,12 @@ import com.google.errorprone.bugpatterns.BugChecker.CompilationUnitTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
+import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.ImportTree;
 import com.sun.source.tree.MemberSelectTree;
+import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.util.SimpleTreeVisitor;
 import com.sun.source.util.TreePath;
@@ -80,10 +83,29 @@ public final class UnnecessarilyFullyQualified extends BugChecker
     }
     Table<Name, TypeSymbol, List<TreePath>> table = HashBasedTable.create();
     SetMultimap<Name, TypeSymbol> identifiersSeen = HashMultimap.create();
-    new SuppressibleTreePathScanner<Void, Void>() {
+    new SuppressibleTreePathScanner<Void, Void>(state) {
       @Override
       public Void visitImport(ImportTree importTree, Void unused) {
         return null;
+      }
+
+      @Override
+      public Void visitClass(ClassTree tree, Void unused) {
+        scan(tree.getModifiers(), null);
+        scan(tree.getTypeParameters(), null);
+        // Some anonymous classes have an extends clause which is fully qualified. Just ignore it.
+        if (!getSymbol(tree).isAnonymous()) {
+          scan(tree.getExtendsClause(), null);
+          scan(tree.getImplementsClause(), null);
+        }
+        scan(tree.getMembers(), null);
+        return null;
+      }
+
+      @Override
+      public Void visitMethod(MethodTree tree, Void unused) {
+        // Some generated constructors sneak in a fully qualified argument.
+        return isGeneratedConstructor(tree) ? null : super.visitMethod(tree, null);
       }
 
       @Override

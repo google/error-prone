@@ -43,7 +43,9 @@ import com.sun.source.tree.MethodTree;
 import java.util.ArrayList;
 import java.util.List;
 
-/** @author Nick Glorioso (glorioso@google.com) */
+/**
+ * @author Nick Glorioso (glorioso@google.com)
+ */
 @BugPattern(
     summary =
         "Qualifiers/Scope annotations on @Inject methods don't have any effect."

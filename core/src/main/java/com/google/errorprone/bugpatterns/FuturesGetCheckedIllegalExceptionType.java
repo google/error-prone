@@ -44,7 +44,6 @@ import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type;
-import com.sun.tools.javac.code.Type.ClassType;
 import com.sun.tools.javac.code.Types;
 import java.util.List;
 
@@ -101,7 +100,7 @@ public final class FuturesGetCheckedIllegalExceptionType extends BugChecker
             return false;
           }
 
-          List<Type> typeArguments = ((ClassType) argType).getTypeArguments();
+          List<Type> typeArguments = argType.getTypeArguments();
           Type exceptionType = Iterables.getFirst(typeArguments, null);
           return types.isSubtype(exceptionType, runtimeExceptionType);
         }

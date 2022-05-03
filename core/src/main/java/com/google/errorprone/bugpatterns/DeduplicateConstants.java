@@ -158,9 +158,6 @@ public class DeduplicateConstants extends BugChecker implements CompilationUnitT
 
       private void saveConstValue(VariableTree tree, Scope scope) {
         VarSymbol sym = ASTHelpers.getSymbol(tree);
-        if (sym == null) {
-          return;
-        }
         if (!isConsideredFinal(sym)) {
           return;
         }

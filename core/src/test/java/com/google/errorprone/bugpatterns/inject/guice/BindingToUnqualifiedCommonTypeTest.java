@@ -21,7 +21,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** @author glorioso@google.com (Nick Glorioso) */
+/**
+ * @author glorioso@google.com (Nick Glorioso)
+ */
 @RunWith(JUnit4.class)
 public class BindingToUnqualifiedCommonTypeTest {
   private final CompilationTestHelper compilationHelper =

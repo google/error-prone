@@ -59,9 +59,7 @@ public class UnsafeFinalization extends BugChecker implements MethodInvocationTr
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
     MethodSymbol sym = ASTHelpers.getSymbol(tree);
     // Match invocations of static native methods.
-    if (sym == null
-        || !sym.isStatic()
-        || !ASTHelpers.asFlagSet(sym.flags()).contains(Flag.NATIVE)) {
+    if (!sym.isStatic() || !ASTHelpers.asFlagSet(sym.flags()).contains(Flag.NATIVE)) {
       return NO_MATCH;
     }
     // Find the enclosing method declaration where the invocation occurs.
@@ -73,7 +71,7 @@ public class UnsafeFinalization extends BugChecker implements MethodInvocationTr
     // static methods don't have an instance to finalize, and we shouldn't need to worry about
     // finalization during construction.
     MethodSymbol enclosing = ASTHelpers.getSymbol(method);
-    if (enclosing == null || enclosing.isStatic() || enclosing.isConstructor()) {
+    if (enclosing.isStatic() || enclosing.isConstructor()) {
       return NO_MATCH;
     }
     // Check if any arguments of the static native method are members (e.g. fields) of the enclosing

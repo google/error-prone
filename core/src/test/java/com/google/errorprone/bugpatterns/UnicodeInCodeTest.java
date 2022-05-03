@@ -78,7 +78,7 @@ public final class UnicodeInCodeTest {
         .addSourceLines(
             "Test.java", //
             "class Test {",
-            "  // BUG: Diagnostic contains:",
+            "  // BUG: Diagnostic contains: Unicode character (\\u03c0)",
             "  static final double \u03C0 = 3;",
             "}")
         .doTest();

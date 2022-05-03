@@ -67,7 +67,7 @@ public class AmbiguousMethodReference extends BugChecker implements ClassTreeMat
         continue;
       }
       MethodSymbol msym = getSymbol((MethodTree) member);
-      if (isSuppressed(msym)) {
+      if (isSuppressed(msym, state)) {
         continue;
       }
       List<MethodSymbol> clash = methods.remove(methodReferenceDescriptor(types, msym));

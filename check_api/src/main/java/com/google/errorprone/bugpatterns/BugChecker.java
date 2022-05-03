@@ -19,12 +19,15 @@ package com.google.errorprone.bugpatterns;
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.errorprone.util.ASTHelpers.getModifiers;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
+import static com.google.errorprone.util.ASTHelpers.getSymbol;
 
 import com.google.common.collect.ImmutableRangeSet;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Range;
 import com.google.errorprone.BugCheckerInfo;
 import com.google.errorprone.BugPattern.SeverityLevel;
+import com.google.errorprone.ErrorProneOptions;
+import com.google.errorprone.SuppressionInfo;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.annotations.CheckReturnValue;
 import com.google.errorprone.fixes.Fix;
@@ -248,17 +251,17 @@ public abstract class BugChecker implements Suppressible, Serializable {
   }
 
   /**
-   * Returns true if the given tree is annotated with a {@code @SuppressWarnings} that disables this
-   * bug checker.
+   * @deprecated use {@link #isSuppressed(Tree, VisitorState)} instead
    */
+  @Deprecated
   public boolean isSuppressed(Tree tree) {
     return isSuppressed(ASTHelpers.getAnnotation(tree, SuppressWarnings.class));
   }
 
   /**
-   * Returns true if the given symbol is annotated with a {@code @SuppressWarnings} that disables
-   * this bug checker.
+   * @deprecated use {@link #isSuppressed(Symbol, VisitorState)} instead
    */
+  @Deprecated
   public boolean isSuppressed(Symbol symbol) {
     return isSuppressed(ASTHelpers.getAnnotation(symbol, SuppressWarnings.class));
   }
@@ -268,13 +271,45 @@ public abstract class BugChecker implements Suppressible, Serializable {
         && !Collections.disjoint(Arrays.asList(suppression.value()), allNames());
   }
 
+  /**
+   * Returns true if the given tree is annotated with a {@code @SuppressWarnings} that disables this
+   * bug checker.
+   */
+  public boolean isSuppressed(Tree tree, VisitorState state) {
+    Symbol sym = getSymbol(tree);
+    return sym != null && isSuppressed(sym, state);
+  }
+
+  /**
+   * Returns true if the given symbol is annotated with a {@code @SuppressWarnings} or other
+   * annotation that disables this bug checker.
+   */
+  public boolean isSuppressed(Symbol sym, VisitorState state) {
+    ErrorProneOptions errorProneOptions = state.errorProneOptions();
+    boolean suppressedInGeneratedCode =
+        errorProneOptions.disableWarningsInGeneratedCode()
+            && state.severityMap().get(canonicalName()) != SeverityLevel.ERROR;
+    SuppressionInfo.SuppressedState suppressedState =
+        SuppressionInfo.EMPTY
+            .withExtendedSuppressions(sym, state, customSuppressionAnnotationNames.get(state))
+            .suppressedState(BugChecker.this, suppressedInGeneratedCode, state);
+    return suppressedState == SuppressionInfo.SuppressedState.SUPPRESSED;
+  }
+
+  private final Supplier<? extends Set<? extends Name>> customSuppressionAnnotationNames =
+      VisitorState.memoize(
+          state ->
+              customSuppressionAnnotations().stream()
+                  .map(a -> state.getName(a.getName()))
+                  .collect(toImmutableSet()));
+
   /** Computes a RangeSet of code regions which are suppressed by this bug checker. */
   public ImmutableRangeSet<Integer> suppressedRegions(VisitorState state) {
     ImmutableRangeSet.Builder<Integer> suppressedRegions = ImmutableRangeSet.builder();
     new TreeScanner<Void, Void>() {
       @Override
       public Void scan(Tree tree, Void unused) {
-        if (getModifiers(tree) != null && isSuppressed(tree)) {
+        if (getModifiers(tree) != null && isSuppressed(tree, state)) {
           suppressedRegions.add(Range.closed(getStartPosition(tree), state.getEndPosition(tree)));
         } else {
           super.scan(tree, null);
@@ -517,11 +552,34 @@ public abstract class BugChecker implements Suppressible, Serializable {
 
   /** A {@link TreePathScanner} which skips trees which are suppressed for this check. */
   protected class SuppressibleTreePathScanner<A, B> extends TreePathScanner<A, B> {
+
+    // TODO(cushon): make this protected once it is required; currently it would shadow
+    // other variables named state and break checks that pass the deprecated constructor
+    private final VisitorState state;
+
+    public SuppressibleTreePathScanner(VisitorState state) {
+      this.state = state;
+    }
+
+    /**
+     * @deprecated use {@link #SuppressibleTreePathScanner(VisitorState)} instead
+     */
+    @Deprecated
+    public SuppressibleTreePathScanner() {
+      this(null);
+    }
+
     @Override
     public A scan(Tree tree, B b) {
       boolean isSuppressible =
           tree instanceof ClassTree || tree instanceof MethodTree || tree instanceof VariableTree;
-      return isSuppressible && isSuppressed(tree) ? null : super.scan(tree, b);
+      if (isSuppressible) {
+        boolean suppressed = state != null ? isSuppressed(tree, state) : isSuppressed(tree);
+        if (suppressed) {
+          return null;
+        }
+      }
+      return super.scan(tree, b);
     }
   }
 }

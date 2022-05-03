@@ -22,7 +22,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** @author alexeagle@google.com (Alex Eagle) */
+/** Tests for {@link ReturnValueIgnored}. */
 @RunWith(JUnit4.class)
 public class ReturnValueIgnoredTest {
 
@@ -727,6 +727,40 @@ public class ReturnValueIgnoredTest {
             "    c.getMethod(\"toString\");",
             "    // BUG: Diagnostic contains: ReturnValueIgnored",
             "    c.desiredAssertionStatus();",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void constructorOfAbstractModule() {
+    compilationHelper
+        .addSourceLines(
+            "TestModule.java",
+            "import com.google.inject.AbstractModule;",
+            "class TestModule extends AbstractModule {",
+            "  public TestModule() {}",
+            "  public static void foo() {",
+            "    // BUG: Diagnostic contains: Ignored return value of 'TestModule'",
+            "    new TestModule();",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void constructorOfModule() {
+    compilationHelper
+        .addSourceLines(
+            "TestModule.java",
+            "import com.google.inject.Binder;",
+            "import com.google.inject.Module;",
+            "class TestModule implements Module {",
+            "  public TestModule() {}",
+            "  @Override public void configure(Binder binder) {}",
+            "  public static void foo() {",
+            "    // BUG: Diagnostic contains: Ignored return value of 'TestModule'",
+            "    new TestModule();",
             "  }",
             "}")
         .doTest();

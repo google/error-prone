@@ -32,7 +32,7 @@ public final class IgnoredPureGetterTest {
       BugCheckerRefactoringTestHelper.newInstance(IgnoredPureGetter.class, getClass());
 
   @Test
-  public void autoValueCase() {
+  public void autoValue() {
     helper
         .addSourceLines(
             "A.java", //
@@ -53,7 +53,65 @@ public final class IgnoredPureGetterTest {
   }
 
   @Test
-  public void autoValueCase_secondFix() {
+  public void autoValueBuilder() {
+    helper
+        .addSourceLines(
+            "Animal.java",
+            "import com.google.auto.value.AutoValue;",
+            "@AutoValue",
+            "abstract class Animal {",
+            "  abstract String name();",
+            "  @AutoValue.Builder",
+            "  abstract static class Builder {",
+            "    abstract Builder setName(String name);",
+            "    abstract Animal build();",
+            "  }",
+            "}")
+        .addSourceLines(
+            "B.java",
+            "class B {",
+            "  void test(Animal.Builder builder) {",
+            // The setters are OK
+            "    builder.setName(\"dog\");",
+            "    // BUG: Diagnostic contains:",
+            "    builder.build();",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void autoValueStepBuilder() {
+    helper
+        .addSourceLines(
+            "Animal.java",
+            "import com.google.auto.value.AutoValue;",
+            "@AutoValue",
+            "public abstract class Animal {",
+            "  public abstract String name();",
+            "  public abstract int legs();",
+            "  public interface NameStep { LegStep setName(String name); }",
+            "  public interface LegStep { Build setLegs(int legs); }",
+            "  public interface Build { Animal build(); }",
+            "  @AutoValue.Builder",
+            "  abstract static class Builder implements NameStep, LegStep, Build {}",
+            "}")
+        .addSourceLines(
+            "B.java",
+            "class B {",
+            "  void test(Animal.Builder builder) {",
+            // The setters are OK
+            "    builder.setName(\"dog\");",
+            "    builder.setLegs(4);",
+            // We don't currently catch this, but maybe we should?
+            "    builder.build();",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void autoValue_secondFix() {
     refactoringHelper
         .addInputLines(
             "A.java", //
@@ -85,31 +143,139 @@ public final class IgnoredPureGetterTest {
   }
 
   @Test
-  public void protoCases() {
+  public void autoBuilder_getters() {
     helper
         .addSourceLines(
-            "Test.java",
-            "import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;",
-            "class Test {",
-            "  void test(TestProtoMessage message) {",
-            "    // BUG: Diagnostic contains:",
-            "    message.getMessage();",
-            "    // BUG: Diagnostic contains:",
-            "    message.hasMessage();",
+            "Named.java",
+            "import com.google.auto.value.AutoBuilder;",
+            "import java.util.Optional;",
+            "public class Named {",
+            "  Named(String name, String nickname) {}",
+            "  @AutoBuilder",
+            "  public abstract static class Builder {",
+            "    public abstract Builder setName(String x);",
+            "    public abstract Builder setNickname(String x);",
+            "    abstract String getName();",
+            "    abstract Optional<String> getNickname();",
+            "    abstract Named autoBuild();",
+            "    public Named build() {",
+            "      if (!getNickname().isPresent()) {",
+            "        setNickname(getName());",
+            "      }",
+            "      return autoBuild();",
+            "    }",
+            "  }",
+            "}")
+        .addSourceLines(
+            "B.java",
+            "class B {",
+            "  void test(Named.Builder builder) {",
+            // The setters are OK
+            "    builder.setName(\"Stumpy\");",
+            "    builder.setNickname(\"Stumps\");",
+            "    // BUG: Diagnostic contains: IgnoredPureGetter",
+            "    builder.getName();",
+            "    // BUG: Diagnostic contains: IgnoredPureGetter",
+            "    builder.getNickname();",
+            "    // BUG: Diagnostic contains: IgnoredPureGetter",
+            "    builder.autoBuild();",
+            // build() isn't covered since it's non-abstract
+            "    builder.build();",
             "  }",
             "}")
         .doTest();
   }
 
   @Test
-  public void repeatedFieldNotFlagged() {
+  public void autoBuilder_buildIsntCrv() {
+    helper
+        .addSourceLines(
+            "Named.java",
+            "import com.google.auto.value.AutoBuilder;",
+            "import java.time.LocalTime;",
+            "@AutoBuilder(callMethod = \"of\", ofClass = LocalTime.class)",
+            "interface LocalTimeBuilder {",
+            "  LocalTimeBuilder setHour(int hour);",
+            "  LocalTimeBuilder setMinute(int minute);",
+            "  LocalTimeBuilder setSecond(int second);",
+            "  LocalTimeBuilder setNanoOfSecond(int nanoOfSecond);",
+            "  int getHour();",
+            "  int getMinute();",
+            "  int getSecond();",
+            "  int getNanoOfSecond();",
+            "  LocalTime build();", // calls: LocalTime.of(...)
+            "}")
+        .addSourceLines(
+            "B.java",
+            "class B {",
+            "  void test(LocalTimeBuilder builder) {",
+            // the setters are treated as CIRV:
+            "    builder.setHour(12);",
+            "    builder.setMinute(12);",
+            "    builder.setSecond(12);",
+            // the getters are treated as CRV:
+            "    // BUG: Diagnostic contains: IgnoredPureGetter",
+            "    builder.getHour();",
+            "    // BUG: Diagnostic contains: IgnoredPureGetter",
+            "    builder.getMinute();",
+            "    // BUG: Diagnostic contains: IgnoredPureGetter",
+            "    builder.getSecond();",
+            "    // BUG: Diagnostic contains: IgnoredPureGetter",
+            "    builder.getNanoOfSecond();",
+            // TODO(b/229107551): this shouldn't be treated as CRV
+            "    // BUG: Diagnostic contains: IgnoredPureGetter",
+            "    builder.build();",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void refactoringHelper() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            "import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;",
+            "class Test {",
+            "  void test(TestProtoMessage message) {",
+            "    message.getMessage();",
+            "    message.hasMessage();",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;",
+            "class Test {",
+            "  void test(TestProtoMessage message) {",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void protoInstanceMethodsFlagged() {
     helper
         .addSourceLines(
             "Test.java",
             "import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;",
             "class Test {",
             "  void test(TestProtoMessage message) {",
+            "    // BUG: Diagnostic contains: IgnoredPureGetter",
             "    message.getMultiField(1);",
+            "    // BUG: Diagnostic contains: IgnoredPureGetter",
+            "    message.getWeightMap();",
+            "    // BUG: Diagnostic contains: IgnoredPureGetter",
+            "    message.getWeightOrDefault(1, 42);",
+            "    // BUG: Diagnostic contains: IgnoredPureGetter",
+            "    message.getWeightOrThrow(1);",
+            "    // BUG: Diagnostic contains: IgnoredPureGetter",
+            "    message.containsWeight(1);",
+            "    // BUG: Diagnostic contains: IgnoredPureGetter",
+            "    message.getWeightCount();",
+            "    // BUG: Diagnostic contains: IgnoredPureGetter",
+            "    message.getMessage();",
+            "    // BUG: Diagnostic contains: IgnoredPureGetter",
+            "    message.hasMessage();",
             "  }",
             "}")
         .doTest();

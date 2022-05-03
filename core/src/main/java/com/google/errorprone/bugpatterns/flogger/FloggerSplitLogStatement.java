@@ -40,7 +40,6 @@ import com.sun.source.tree.VariableTree;
 
 /** Bugpattern to prevent splitting flogger log invocations into multiple statements. */
 @BugPattern(
-    name = "FloggerSplitLogStatement",
     summary = "Splitting log statements and using Api instances directly breaks logging.",
     linkType = CUSTOM,
     link = "https://google.github.io/flogger/best_practice#no-split",

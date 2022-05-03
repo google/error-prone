@@ -56,7 +56,7 @@ public class DateFormatConstant extends BugChecker implements VariableTreeMatche
       return NO_MATCH;
     }
     VarSymbol sym = ASTHelpers.getSymbol(tree);
-    if (sym == null || sym.getKind() != ElementKind.FIELD) {
+    if (sym.getKind() != ElementKind.FIELD) {
       return NO_MATCH;
     }
     String name = sym.getSimpleName().toString();
@@ -81,7 +81,7 @@ public class DateFormatConstant extends BugChecker implements VariableTreeMatche
   }
 
   private static Fix threadLocalFix(
-      VariableTree tree, VisitorState state, final VarSymbol sym, SuggestedFix rename) {
+      VariableTree tree, VisitorState state, VarSymbol sym, SuggestedFix rename) {
     SuggestedFix.Builder fix =
         SuggestedFix.builder()
             .merge(rename)

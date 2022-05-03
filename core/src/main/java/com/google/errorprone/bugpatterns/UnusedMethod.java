@@ -27,8 +27,10 @@ import static com.google.errorprone.fixes.SuggestedFix.emptyFix;
 import static com.google.errorprone.fixes.SuggestedFixes.replaceIncludingComments;
 import static com.google.errorprone.matchers.Matchers.SERIALIZATION_METHODS;
 import static com.google.errorprone.suppliers.Suppliers.typeFromString;
+import static com.google.errorprone.util.ASTHelpers.canBeRemoved;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
+import static com.google.errorprone.util.ASTHelpers.isGeneratedConstructor;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
 import static com.google.errorprone.util.ASTHelpers.scope;
 import static com.google.errorprone.util.ASTHelpers.shouldKeep;
@@ -49,9 +51,9 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.suppliers.Supplier;
 import com.sun.source.tree.AnnotationTree;
+import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
-import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.MemberReferenceTree;
 import com.sun.source.tree.MemberSelectTree;
@@ -105,6 +107,7 @@ public final class UnusedMethod extends BugChecker implements CompilationUnitTre
           "javax.persistence.PostLoad",
           "javax.validation.constraints.AssertFalse",
           "javax.validation.constraints.AssertTrue",
+          "org.apache.beam.sdk.transforms.DoFn.ProcessElement",
           "org.aspectj.lang.annotation.Pointcut",
           "org.aspectj.lang.annotation.Before",
           "org.springframework.context.annotation.Bean",
@@ -138,6 +141,10 @@ public final class UnusedMethod extends BugChecker implements CompilationUnitTre
     AtomicBoolean ignoreUnusedMethods = new AtomicBoolean(false);
 
     class MethodFinder extends SuppressibleTreePathScanner<Void, Void> {
+      MethodFinder(VisitorState state) {
+        super(state);
+      }
+
       @Override
       public Void visitClass(ClassTree tree, Void unused) {
         if (exemptedBySuperType(getType(tree), state)) {
@@ -209,8 +216,8 @@ public final class UnusedMethod extends BugChecker implements CompilationUnitTre
           return false;
         }
         MethodSymbol methodSymbol = getSymbol(tree);
-        if (methodSymbol == null
-            || isExemptedConstructor(methodSymbol, state)
+        if (isExemptedConstructor(methodSymbol, state)
+            || isGeneratedConstructor(tree)
             || SERIALIZATION_METHODS.matches(tree, state)) {
           return false;
         }
@@ -223,7 +230,7 @@ public final class UnusedMethod extends BugChecker implements CompilationUnitTre
           }
         }
 
-        return tree.getModifiers().getFlags().contains(Modifier.PRIVATE);
+        return canBeRemoved(methodSymbol, state);
       }
 
       private boolean isExemptedConstructor(MethodSymbol methodSymbol, VisitorState state) {
@@ -238,7 +245,7 @@ public final class UnusedMethod extends BugChecker implements CompilationUnitTre
         return false;
       }
     }
-    new MethodFinder().scan(state.getPath(), null);
+    new MethodFinder(state).scan(state.getPath(), null);
 
     class FilterUsedMethods extends TreePathScanner<Void, Void> {
       @Override
@@ -253,28 +260,31 @@ public final class UnusedMethod extends BugChecker implements CompilationUnitTre
         super.visitMemberReference(tree, null);
         MethodSymbol symbol = getSymbol(tree);
         unusedMethods.remove(symbol);
-        if (symbol != null) {
-          symbol.getParameters().forEach(unusedMethods::remove);
-        }
+        symbol.getParameters().forEach(unusedMethods::remove);
         return null;
       }
 
       @Override
       public Void visitMethodInvocation(MethodInvocationTree tree, Void unused) {
-        handle(tree);
+        handle(getSymbol(tree));
         return super.visitMethodInvocation(tree, null);
       }
 
       @Override
       public Void visitNewClass(NewClassTree tree, Void unused) {
-        handle(tree);
+        handle(getSymbol(tree));
         return super.visitNewClass(tree, null);
       }
 
-      private void handle(ExpressionTree tree) {
-        Symbol methodSymbol = getSymbol(tree);
-        if (methodSymbol != null) {
-          unusedMethods.remove(methodSymbol);
+      @Override
+      public Void visitAssignment(AssignmentTree tree, Void unused) {
+        handle(getSymbol(tree.getVariable()));
+        return super.visitAssignment(tree, unused);
+      }
+
+      private void handle(Symbol symbol) {
+        if (symbol instanceof MethodSymbol) {
+          unusedMethods.remove(symbol);
         }
       }
 
@@ -291,9 +301,6 @@ public final class UnusedMethod extends BugChecker implements CompilationUnitTre
        */
       private void handleMethodSource(MethodTree tree) {
         MethodSymbol sym = getSymbol(tree);
-        if (sym == null) {
-          return;
-        }
         Name name = ORG_JUNIT_JUPITER_PARAMS_PROVIDER_METHODSOURCE.get(state);
         sym.getRawAttributes().stream()
             .filter(a -> a.type.tsym.getQualifiedName().equals(name))
@@ -346,7 +353,8 @@ public final class UnusedMethod extends BugChecker implements CompilationUnitTre
     for (TreePath unusedPath : unusedPaths) {
       Tree unusedTree = unusedPath.getLeaf();
       MethodSymbol symbol = getSymbol((MethodTree) unusedTree);
-      String message = String.format("Private method '%s' is never used.", symbol.getSimpleName());
+
+      String message = String.format("Method '%s' is never used.", symbol.getSimpleName());
       state.reportMatch(
           buildDescription(unusedTree)
               .addFix(replaceIncludingComments(unusedPath, "", state))
@@ -377,8 +385,7 @@ public final class UnusedMethod extends BugChecker implements CompilationUnitTre
         fixable = true;
       }
 
-      String message =
-          String.format("Private constructor '%s' is never used.", symbol.getSimpleName());
+      String message = String.format("Constructor '%s' is never used.", symbol.getSimpleName());
       trees.forEach(t -> fix.merge(replaceIncludingComments(t, "", state)));
       state.reportMatch(
           buildDescription(trees.get(0).getLeaf())
@@ -388,7 +395,7 @@ public final class UnusedMethod extends BugChecker implements CompilationUnitTre
     }
   }
 
-  static boolean hasNativeMethods(CompilationUnitTree tree) {
+  private static boolean hasNativeMethods(CompilationUnitTree tree) {
     AtomicBoolean hasAnyNativeMethods = new AtomicBoolean(false);
     new TreeScanner<Void, Void>() {
       @Override

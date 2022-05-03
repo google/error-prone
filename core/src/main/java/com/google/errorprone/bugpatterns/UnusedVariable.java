@@ -24,6 +24,7 @@ import static com.google.common.collect.Iterables.getLast;
 import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Matchers.SERIALIZATION_METHODS;
+import static com.google.errorprone.util.ASTHelpers.canBeRemoved;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
@@ -53,6 +54,7 @@ import com.google.errorprone.bugpatterns.BugChecker.CompilationUnitTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
+import com.google.errorprone.suppliers.Supplier;
 import com.google.errorprone.suppliers.Suppliers;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.AnnotationTree;
@@ -565,11 +567,13 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
       if (exemptedByName(variableTree.getName())) {
         return null;
       }
-      if (isSuppressed(variableTree)) {
+      if (isSuppressed(variableTree, state)) {
         return null;
       }
       VarSymbol symbol = getSymbol(variableTree);
-      if (symbol == null) {
+      if (symbol.getKind() == ElementKind.FIELD
+          && symbol.getSimpleName().contentEquals("CREATOR")
+          && isSubtype(symbol.type, PARCELABLE_CREATOR.get(state), state)) {
         return null;
       }
       if (symbol.getKind() == ElementKind.FIELD
@@ -624,8 +628,7 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
       if ((symbol.flags() & RECORD_FLAG) == RECORD_FLAG) {
         return false;
       }
-      return variableTree.getModifiers().getFlags().contains(Modifier.PRIVATE)
-          && !SPECIAL_FIELDS.contains(symbol.getSimpleName().toString());
+      return canBeRemoved(symbol) && !SPECIAL_FIELDS.contains(symbol.getSimpleName().toString());
     }
 
     private static final long RECORD_FLAG = 1L << 61;
@@ -655,7 +658,7 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
 
     @Override
     public Void visitClass(ClassTree tree, Void unused) {
-      if (isSuppressed(tree)) {
+      if (isSuppressed(tree, state)) {
         return null;
       }
       if (EXEMPTING_SUPER_TYPES.stream()
@@ -676,7 +679,7 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
       if (SERIALIZATION_METHODS.matches(tree, state)) {
         return scan(tree.getBody(), null);
       }
-      return isSuppressed(tree) ? null : super.visitMethod(tree, unused);
+      return isSuppressed(tree, state) ? null : super.visitMethod(tree, unused);
     }
   }
 
@@ -872,9 +875,7 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
     public Void visitMemberReference(MemberReferenceTree tree, Void unused) {
       super.visitMemberReference(tree, null);
       MethodSymbol symbol = getSymbol(tree);
-      if (symbol != null) {
-        symbol.getParameters().forEach(unusedElements::remove);
-      }
+      symbol.getParameters().forEach(unusedElements::remove);
       return null;
     }
 
@@ -981,4 +982,7 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
           Optional.ofNullable(assignmentTree));
     }
   }
+
+  private static final Supplier<Type> PARCELABLE_CREATOR =
+      VisitorState.memoize(state -> state.getTypeFromString("android.os.Parcelable.Creator"));
 }
