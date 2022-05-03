@@ -123,4 +123,17 @@ public final class ApiTest {
                         + "#with(com.google.inject.Module[])"));
     assertThat(thrown).hasMessageThat().contains("'[' is not a valid identifier");
   }
+
+  @Test
+  public void parseApi_methodWithVarargs_b231250004() {
+    String string = "com.beust.jcommander.JCommander#<init>(java.lang.Object,java.lang.String...)";
+    Api api = Api.parse(string);
+    assertThat(api.className()).isEqualTo("com.beust.jcommander.JCommander");
+    assertThat(api.methodName()).isEqualTo("<init>");
+    assertThat(api.parameterTypes())
+        .containsExactly("java.lang.Object", "java.lang.String...")
+        .inOrder();
+    assertThat(api.isConstructor()).isTrue();
+    assertThat(api.toString()).isEqualTo(string);
+  }
 }
