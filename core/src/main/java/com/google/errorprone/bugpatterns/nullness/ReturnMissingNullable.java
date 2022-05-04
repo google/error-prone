@@ -24,6 +24,7 @@ import static com.google.errorprone.VisitorState.memoize;
 import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.fixByAddingNullableAnnotationToReturnType;
 import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.hasDefinitelyNullBranch;
 import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.isVoid;
+import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.nullnessChecksShouldBeConservative;
 import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.varsProvenNullByParentIf;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.anyMethod;
@@ -185,7 +186,7 @@ public class ReturnMissingNullable extends BugChecker implements CompilationUnit
   private final boolean beingConservative;
 
   public ReturnMissingNullable(ErrorProneFlags flags) {
-    this.beingConservative = flags.getBoolean("Nullness:Conservative").orElse(true);
+    this.beingConservative = nullnessChecksShouldBeConservative(flags);
   }
 
   @Override
