@@ -24,9 +24,7 @@ import static com.google.errorprone.matchers.Matchers.toType;
 import static com.google.errorprone.matchers.Matchers.typeCast;
 import static com.google.errorprone.util.ASTHelpers.constValue;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
-import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.isConsideredFinal;
-import static com.google.errorprone.util.ASTHelpers.isSubtype;
 
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.annotations.CompileTimeConstant;
@@ -35,6 +33,7 @@ import com.sun.source.tree.BinaryTree;
 import com.sun.source.tree.ConditionalExpressionTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
+import com.sun.source.tree.ParenthesizedTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.TypeCastTree;
@@ -112,16 +111,13 @@ public class CompileTimeConstantExpressionMatcher implements Matcher<ExpressionT
             public Boolean visitBinary(BinaryTree tree, Void unused) {
               return defaultAction(tree, null)
                   || (tree.getKind().equals(Kind.PLUS)
-                      // There's no principled reason not to extend this to non-String types, we're
-                      // just erring on the side of caution until further extensions are requested.
-                      && isString(tree.getLeftOperand())
-                      && isString(tree.getRightOperand())
                       && tree.getLeftOperand().accept(this, null)
                       && tree.getRightOperand().accept(this, null));
             }
 
-            private boolean isString(ExpressionTree tree) {
-              return isSubtype(getType(tree), state.getSymtab().stringType, state);
+            @Override
+            public Boolean visitParenthesized(ParenthesizedTree tree, Void unused) {
+              return tree.getExpression().accept(this, null);
             }
 
             @Override
