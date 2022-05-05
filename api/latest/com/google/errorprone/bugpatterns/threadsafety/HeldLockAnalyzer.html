@@ -145,9 +145,9 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <tbody>
 <tr class="alt-color" id="i0">
 <td class="col-first"><code>static void</code></td>
-<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#analyze(com.google.errorprone.VisitorState,com.google.errorprone.bugpatterns.threadsafety.HeldLockAnalyzer.LockEventListener,com.google.common.base.Predicate,com.google.errorprone.bugpatterns.threadsafety.GuardedByFlags,boolean)">analyze</a></span>&#8203;(<a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#analyze(com.google.errorprone.VisitorState,com.google.errorprone.bugpatterns.threadsafety.HeldLockAnalyzer.LockEventListener,java.util.function.Predicate,com.google.errorprone.bugpatterns.threadsafety.GuardedByFlags,boolean)">analyze</a></span>&#8203;(<a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
 <a href="HeldLockAnalyzer.LockEventListener.html" title="interface in com.google.errorprone.bugpatterns.threadsafety">HeldLockAnalyzer.LockEventListener</a>&nbsp;listener,
-com.google.common.base.Predicate&lt;com.sun.source.tree.Tree&gt;&nbsp;isSuppressed,
+<a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/Predicate.html" title="class or interface in java.util.function" class="external-link">Predicate</a>&lt;com.sun.source.tree.Tree&gt;&nbsp;isSuppressed,
 <a href="GuardedByFlags.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByFlags</a>&nbsp;flags,
 boolean&nbsp;reportMissingGuards)</code></th>
 <td class="col-last">
@@ -174,11 +174,11 @@ boolean&nbsp;reportMissingGuards)</code></th>
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="analyze(com.google.errorprone.VisitorState,com.google.errorprone.bugpatterns.threadsafety.HeldLockAnalyzer.LockEventListener,com.google.common.base.Predicate,com.google.errorprone.bugpatterns.threadsafety.GuardedByFlags,boolean)">
+<section class="detail" id="analyze(com.google.errorprone.VisitorState,com.google.errorprone.bugpatterns.threadsafety.HeldLockAnalyzer.LockEventListener,java.util.function.Predicate,com.google.errorprone.bugpatterns.threadsafety.GuardedByFlags,boolean)">
 <h3>analyze</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="member-name">analyze</span>&#8203;(<span class="parameters"><a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
 <a href="HeldLockAnalyzer.LockEventListener.html" title="interface in com.google.errorprone.bugpatterns.threadsafety">HeldLockAnalyzer.LockEventListener</a>&nbsp;listener,
-com.google.common.base.Predicate&lt;com.sun.source.tree.Tree&gt;&nbsp;isSuppressed,
+<a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/Predicate.html" title="class or interface in java.util.function" class="external-link">Predicate</a>&lt;com.sun.source.tree.Tree&gt;&nbsp;isSuppressed,
 <a href="GuardedByFlags.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByFlags</a>&nbsp;flags,
 boolean&nbsp;reportMissingGuards)</span></div>
 <div class="block">Analyzes a method body, tracking the set of held locks and checking accesses to guarded
