@@ -16,15 +16,12 @@
 
 package com.google.errorprone;
 
-import static com.google.common.collect.ImmutableList.toImmutableList;
-
 import java.util.ServiceLoader;
 
 import javax.tools.JavaFileManager;
 import javax.tools.StandardLocation;
 
-
-import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Iterables;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.hubspot.HubSpotUtils;
 import com.google.errorprone.scanner.ScannerSupplier;
@@ -47,17 +44,17 @@ public final class ErrorPronePlugins {
       loader = ErrorPronePlugins.class.getClassLoader();
     }
 
-    ImmutableList<Class<? extends BugChecker>> extraBugCheckers =
-        ServiceLoader.load(BugChecker.class, loader).stream()
-            .map(ServiceLoader.Provider::type)
-            .collect(toImmutableList());
-
-    if (extraBugCheckers.isEmpty()) {
+    // The upstream version that creates a list throws an exception
+    // by too-eagerly resolving the bug checkers
+    Iterable<BugChecker> extraBugCheckers = ServiceLoader.load(BugChecker.class, loader);
+    if (Iterables.isEmpty(extraBugCheckers)) {
       return scannerSupplier;
     } else if (HubSpotUtils.isErrorHandlingEnabled(options)) {
        return scannerSupplier.plus(HubSpotUtils.createScannerSupplier(extraBugCheckers));
     } else {
-       return scannerSupplier.plus(ScannerSupplier.fromBugCheckerClasses(extraBugCheckers));
+       return scannerSupplier.plus(
+           ScannerSupplier.fromBugCheckerClasses(
+               Iterables.transform(extraBugCheckers, BugChecker::getClass)));
     }
   }
 
