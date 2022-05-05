@@ -15,6 +15,7 @@
  */
 package com.google.errorprone.bugpatterns.inject.dagger;
 
+import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
 import static com.google.errorprone.bugpatterns.inject.dagger.DaggerAnnotations.isBindingDeclarationMethod;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
@@ -25,9 +26,7 @@ import static com.google.errorprone.util.ASTHelpers.isGeneratedConstructor;
 import static com.sun.source.tree.Tree.Kind.CLASS;
 import static com.sun.source.tree.Tree.Kind.METHOD;
 
-import com.google.common.base.Predicate;
-import com.google.common.base.Predicates;
-import com.google.common.collect.FluentIterable;
+import com.google.common.collect.ImmutableList;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
@@ -39,6 +38,7 @@ import com.google.errorprone.matchers.Matcher;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
+import java.util.function.Predicate;
 
 /**
  * @author gak@google.com (Gregory Kick)
@@ -48,14 +48,6 @@ import com.sun.source.tree.Tree;
     severity = SUGGESTION)
 public class PrivateConstructorForNoninstantiableModule extends BugChecker
     implements ClassTreeMatcher {
-  private static final Predicate<Tree> IS_CONSTRUCTOR =
-      new Predicate<Tree>() {
-        @Override
-        public boolean apply(Tree tree) {
-          return getSymbol(tree).isConstructor();
-        }
-      };
-
   @Override
   public Description matchClass(ClassTree classTree, VisitorState state) {
     if (!DaggerAnnotations.isAnyModule().matches(classTree, state)) {
@@ -67,35 +59,32 @@ public class PrivateConstructorForNoninstantiableModule extends BugChecker
       return NO_MATCH;
     }
 
-    FluentIterable<? extends Tree> nonSyntheticMembers =
-        FluentIterable.from(classTree.getMembers())
+    ImmutableList<Tree> nonSyntheticMembers =
+        classTree.getMembers().stream()
             .filter(
-                Predicates.not(
-                    new Predicate<Tree>() {
-                      @Override
-                      public boolean apply(Tree tree) {
-                        return tree.getKind().equals(METHOD)
-                            && isGeneratedConstructor((MethodTree) tree);
-                      }
-                    }));
+                tree ->
+                    !(tree.getKind().equals(METHOD) && isGeneratedConstructor((MethodTree) tree)))
+            .collect(toImmutableList());
 
     // ignore empty modules
     if (nonSyntheticMembers.isEmpty()) {
       return NO_MATCH;
     }
 
-    if (nonSyntheticMembers.anyMatch(IS_CONSTRUCTOR)) {
+    if (nonSyntheticMembers.stream().anyMatch(tree -> getSymbol(tree).isConstructor())) {
       return NO_MATCH;
     }
 
     boolean hasBindingDeclarationMethods =
-        nonSyntheticMembers.anyMatch(matcherAsPredicate(isBindingDeclarationMethod(), state));
+        nonSyntheticMembers.stream()
+            .anyMatch(matcherAsPredicate(isBindingDeclarationMethod(), state));
 
     if (hasBindingDeclarationMethods) {
       return describeMatch(classTree, addPrivateConstructor(classTree, state));
     }
 
-    boolean allStaticMembers = nonSyntheticMembers.allMatch(matcherAsPredicate(isStatic(), state));
+    boolean allStaticMembers =
+        nonSyntheticMembers.stream().allMatch(matcherAsPredicate(isStatic(), state));
 
     if (allStaticMembers) {
       return describeMatch(classTree, addPrivateConstructor(classTree, state));
@@ -110,11 +99,6 @@ public class PrivateConstructorForNoninstantiableModule extends BugChecker
 
   private static <T extends Tree> Predicate<T> matcherAsPredicate(
       Matcher<? super T> matcher, VisitorState state) {
-    return new Predicate<T>() {
-      @Override
-      public boolean apply(T t) {
-        return matcher.matches(t, state);
-      }
-    };
+    return t -> matcher.matches(t, state);
   }
 }

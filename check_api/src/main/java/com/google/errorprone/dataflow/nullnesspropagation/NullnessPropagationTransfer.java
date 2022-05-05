@@ -30,8 +30,6 @@ import static org.checkerframework.errorprone.javacutil.TreeUtils.elementFromDec
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
-import com.google.common.base.Predicate;
-import com.google.common.base.Predicates;
 import com.google.common.base.Strings;
 import com.google.common.base.Verify;
 import com.google.common.collect.ImmutableList;
@@ -85,6 +83,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Predicate;
 import javax.annotation.Nullable;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeVariable;
@@ -200,7 +199,7 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
             String.class.getName());
 
     @Override
-    public boolean apply(MethodInfo methodInfo) {
+    public boolean test(MethodInfo methodInfo) {
       // Any method explicitly annotated is trusted to behave as advertised.
       Optional<Nullness> fromAnnotations =
           NullnessAnnotations.fromAnnotations(methodInfo.annotations());
@@ -308,7 +307,7 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
    * returning methods.
    */
   public NullnessPropagationTransfer(Predicate<MethodInfo> additionalNonNullReturningMethods) {
-    this(NULLABLE, Predicates.or(new ReturnValueIsNonNull(), additionalNonNullReturningMethods));
+    this(NULLABLE, new ReturnValueIsNonNull().or(additionalNonNullReturningMethods));
   }
 
   /**
@@ -789,7 +788,7 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
       return NONNULL;
     }
 
-    Nullness assumedNullness = methodReturnsNonNull.apply(callee) ? NONNULL : NULLABLE;
+    Nullness assumedNullness = methodReturnsNonNull.test(callee) ? NONNULL : NULLABLE;
     if (!callee.isGenericResult) {
       // We only care about inference results for methods that return a type variable.
       return assumedNullness;
