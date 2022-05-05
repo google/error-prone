@@ -134,6 +134,8 @@ public abstract class Api {
           break;
         case ',': // for separating parameters
         case '.': // for package names and fully qualified parameter names
+        case '[': // for array signature types
+        case ']': // for array signature types
           break;
         default:
           check(isJavaIdentifierPart(ch), api, "'" + ch + "' is not a valid identifier");
@@ -187,6 +189,30 @@ public abstract class Api {
           isJavaIdentifierStart(parameter.charAt(0)),
           api,
           "parameters must start with a valid character");
+
+      // Array specs must be in balanced pairs at the *end* of the parameter.
+      boolean parsingArrayStart = false;
+      boolean hasArraySpecifiers = false;
+      for (int i = 1; i < parameter.length(); i++) {
+        char c = parameter.charAt(i);
+        switch (c) {
+          case '[':
+            check(!parsingArrayStart, api, "multiple consecutive [");
+            hasArraySpecifiers = true;
+            parsingArrayStart = true;
+            break;
+          case ']':
+            check(parsingArrayStart, api, "unbalanced ] in array type");
+            parsingArrayStart = false;
+            break;
+          default:
+            check(
+                !hasArraySpecifiers,
+                api,
+                "types with array specifiers should end in those specifiers");
+        }
+      }
+      check(!parsingArrayStart, api, "[ without closing ] at the end of a parameter type");
     }
     // make sure the class name starts with a valid Java identifier character
     check(
