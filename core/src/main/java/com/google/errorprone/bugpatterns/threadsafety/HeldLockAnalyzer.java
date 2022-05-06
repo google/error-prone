@@ -387,17 +387,9 @@ public final class HeldLockAnalyzer {
         return;
       }
       for (String lockString : annotation.value()) {
-        Optional<GuardedByExpression> guard =
-            GuardedByBinder.bindString(
-                lockString, GuardedBySymbolResolver.from(tree, state), flags);
-        // TODO(cushon): http://docs.oracle.com/javase/8/docs/api/java/util/Optional.html#ifPresent
-        if (guard.isPresent()) {
-          Optional<GuardedByExpression> lock =
-              ExpectedLockCalculator.from((JCExpression) tree, guard.get(), state, flags);
-          if (lock.isPresent()) {
-            locks.add(lock.get());
-          }
-        }
+        GuardedByBinder.bindString(lockString, GuardedBySymbolResolver.from(tree, state), flags)
+            .flatMap(guard -> ExpectedLockCalculator.from((JCExpression) tree, guard, state, flags))
+            .ifPresent(locks::add);
       }
     }
   }
