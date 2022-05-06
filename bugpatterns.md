@@ -1257,9 +1257,6 @@ Use of class, field, or method that is not compatible with JDK 7
 __[Java8ApiChecker](bugpattern/Java8ApiChecker)__<br>
 Use of class, field, or method that is not compatible with JDK 8
 
-__[LockMethodChecker](bugpattern/LockMethodChecker)__<br>
-This method does not acquire the locks specified by its @LockMethod annotation
-
 __[LongLiteralLowerCaseSuffix](bugpattern/LongLiteralLowerCaseSuffix)__<br>
 Prefer &#39;L&#39; to &#39;l&#39; for the suffix to long literals
 
@@ -1277,9 +1274,6 @@ A static variable or method should be qualified with a class name, not expressio
 
 __[SystemExitOutsideMain](bugpattern/SystemExitOutsideMain)__<br>
 Code that contains System.exit() is untestable.
-
-__[UnlockMethod](bugpattern/UnlockMethod)__<br>
-This method does not acquire the locks specified by its @UnlockMethod annotation
 
 ## Experimental : WARNING
 

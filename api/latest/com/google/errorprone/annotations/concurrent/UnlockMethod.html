@@ -72,7 +72,11 @@ loadScripts(document, 'script');</script>
 <hr>
 <pre><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/Target.html" title="class or interface in java.lang.annotation" class="external-link">@Target</a>(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/ElementType.html#METHOD" title="class or interface in java.lang.annotation" class="external-link">METHOD</a>)
 <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/Retention.html" title="class or interface in java.lang.annotation" class="external-link">@Retention</a>(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/RetentionPolicy.html#CLASS" title="class or interface in java.lang.annotation" class="external-link">CLASS</a>)
+<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Deprecated.html" title="class or interface in java.lang" class="external-link">@Deprecated</a>
 public @interface <span class="type-name-label">UnlockMethod</span></pre>
+<div class="deprecation-block"><span class="deprecated-label">Deprecated.</span>
+<div class="deprecation-comment">the correctness of this annotation is not enforced; it will soon be removed.</div>
+</div>
 <div class="block">The method to which this annotation is applied releases one or more locks. The caller must hold
  the locks when the function is entered, and will not hold them when it completes.
 
@@ -113,7 +117,9 @@ public @interface <span class="type-name-label">UnlockMethod</span></pre>
 <tr class="alt-color">
 <td class="col-first"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>[]</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#value()">value</a></span></code></th>
-<td class="col-last">&nbsp;</td>
+<td class="col-last">
+<div class="block"><span class="deprecated-label">Deprecated.</span></div>
+&nbsp;</td>
 </tr>
 </tbody>
 </table>
@@ -133,6 +139,7 @@ public @interface <span class="type-name-label">UnlockMethod</span></pre>
 <section class="detail" id="value()">
 <h3>value</h3>
 <div class="member-signature"><span class="return-type"><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>[]</span>&nbsp;<span class="member-name">value</span></div>
+<div class="deprecation-block"><span class="deprecated-label">Deprecated.</span></div>
 </section>
 </li>
 </ul>

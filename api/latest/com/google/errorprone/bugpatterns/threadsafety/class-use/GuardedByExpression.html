@@ -190,46 +190,6 @@ loadScripts(document, 'script');</script>
 <div class="block">Determine the lock expression that needs to be held when accessing a specific guarded member.</div>
 </td>
 </tr>
-<tr class="row-color">
-<td class="col-first"><code>protected abstract <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a>&lt;<a href="../GuardedByExpression.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByExpression</a>&gt;</code></td>
-<th class="col-second" scope="row"><span class="type-name-label">AbstractLockMethodChecker.</span><code><span class="member-name-link"><a href="../AbstractLockMethodChecker.html#getActual(com.sun.source.tree.MethodTree,com.google.errorprone.VisitorState)">getActual</a></span>&#8203;(com.sun.source.tree.MethodTree&nbsp;tree,
-<a href="../../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
-<td class="col-last">
-<div class="block">Searches the method body for locks that are acquired/released.</div>
-</td>
-</tr>
-<tr class="alt-color">
-<td class="col-first"><code>protected <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a>&lt;<a href="../GuardedByExpression.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByExpression</a>&gt;</code></td>
-<th class="col-second" scope="row"><span class="type-name-label">LockMethodChecker.</span><code><span class="member-name-link"><a href="../LockMethodChecker.html#getActual(com.sun.source.tree.MethodTree,com.google.errorprone.VisitorState)">getActual</a></span>&#8203;(com.sun.source.tree.MethodTree&nbsp;tree,
-<a href="../../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
-<td class="col-last">&nbsp;</td>
-</tr>
-<tr class="row-color">
-<td class="col-first"><code>protected <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a>&lt;<a href="../GuardedByExpression.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByExpression</a>&gt;</code></td>
-<th class="col-second" scope="row"><span class="type-name-label">UnlockMethodChecker.</span><code><span class="member-name-link"><a href="../UnlockMethodChecker.html#getActual(com.sun.source.tree.MethodTree,com.google.errorprone.VisitorState)">getActual</a></span>&#8203;(com.sun.source.tree.MethodTree&nbsp;tree,
-<a href="../../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
-<td class="col-last">&nbsp;</td>
-</tr>
-<tr class="alt-color">
-<td class="col-first"><code>protected abstract <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a>&lt;<a href="../GuardedByExpression.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByExpression</a>&gt;</code></td>
-<th class="col-second" scope="row"><span class="type-name-label">AbstractLockMethodChecker.</span><code><span class="member-name-link"><a href="../AbstractLockMethodChecker.html#getUnwanted(com.sun.source.tree.MethodTree,com.google.errorprone.VisitorState)">getUnwanted</a></span>&#8203;(com.sun.source.tree.MethodTree&nbsp;tree,
-<a href="../../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
-<td class="col-last">
-<div class="block">Searches the method body for the incorrect lock operation (e.g.</div>
-</td>
-</tr>
-<tr class="row-color">
-<td class="col-first"><code>protected <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a>&lt;<a href="../GuardedByExpression.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByExpression</a>&gt;</code></td>
-<th class="col-second" scope="row"><span class="type-name-label">LockMethodChecker.</span><code><span class="member-name-link"><a href="../LockMethodChecker.html#getUnwanted(com.sun.source.tree.MethodTree,com.google.errorprone.VisitorState)">getUnwanted</a></span>&#8203;(com.sun.source.tree.MethodTree&nbsp;tree,
-<a href="../../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
-<td class="col-last">&nbsp;</td>
-</tr>
-<tr class="alt-color">
-<td class="col-first"><code>protected <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a>&lt;<a href="../GuardedByExpression.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByExpression</a>&gt;</code></td>
-<th class="col-second" scope="row"><span class="type-name-label">UnlockMethodChecker.</span><code><span class="member-name-link"><a href="../UnlockMethodChecker.html#getUnwanted(com.sun.source.tree.MethodTree,com.google.errorprone.VisitorState)">getUnwanted</a></span>&#8203;(com.sun.source.tree.MethodTree&nbsp;tree,
-<a href="../../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
-<td class="col-last">&nbsp;</td>
-</tr>
 </tbody>
 </table>
 </div>
