@@ -500,11 +500,9 @@ import com.google.errorprone.bugpatterns.threadsafety.ImmutableAnnotationChecker
 import com.google.errorprone.bugpatterns.threadsafety.ImmutableChecker;
 import com.google.errorprone.bugpatterns.threadsafety.ImmutableEnumChecker;
 import com.google.errorprone.bugpatterns.threadsafety.ImmutableRefactoring;
-import com.google.errorprone.bugpatterns.threadsafety.LockMethodChecker;
 import com.google.errorprone.bugpatterns.threadsafety.StaticGuardedByInstance;
 import com.google.errorprone.bugpatterns.threadsafety.SynchronizeOnNonFinalField;
 import com.google.errorprone.bugpatterns.threadsafety.ThreadPriorityCheck;
-import com.google.errorprone.bugpatterns.threadsafety.UnlockMethodChecker;
 import com.google.errorprone.bugpatterns.time.DateChecker;
 import com.google.errorprone.bugpatterns.time.DurationFrom;
 import com.google.errorprone.bugpatterns.time.DurationGetTemporalUnit;
@@ -1051,7 +1049,6 @@ public class BuiltInCheckerSuppliers {
           Java7ApiChecker.class,
           Java8ApiChecker.class,
           LambdaFunctionalInterface.class,
-          LockMethodChecker.class,
           LongLiteralLowerCaseSuffix.class,
           MemberName.class,
           MethodCanBeStatic.class,
@@ -1101,7 +1098,6 @@ public class BuiltInCheckerSuppliers {
           TypeParameterNaming.class,
           TypeToString.class,
           UngroupedOverloads.class,
-          UnlockMethodChecker.class,
           UnnecessarilyFullyQualified.class,
           UnnecessarilyVisible.class,
           UnnecessaryAnonymousClass.class,
