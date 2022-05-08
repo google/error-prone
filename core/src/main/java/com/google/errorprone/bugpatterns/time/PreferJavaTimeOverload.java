@@ -33,7 +33,6 @@ import static java.util.concurrent.TimeUnit.MINUTES;
 import static java.util.concurrent.TimeUnit.NANOSECONDS;
 import static java.util.concurrent.TimeUnit.SECONDS;
 
-import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterables;
 import com.google.errorprone.BugPattern;
@@ -63,6 +62,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Predicate;
 import javax.annotation.Nullable;
 
 /** This check suggests the use of {@code java.time}-based APIs, when available. */
@@ -394,7 +394,7 @@ public final class PreferJavaTimeOverload extends BugChecker
   private static boolean hasMatchingMethods(
       Name name, Predicate<MethodSymbol> predicate, Type startClass, Types types) {
     Predicate<Symbol> matchesMethodPredicate =
-        sym -> sym instanceof MethodSymbol && predicate.apply((MethodSymbol) sym);
+        sym -> sym instanceof MethodSymbol && predicate.test((MethodSymbol) sym);
 
     // Iterate over all classes and interfaces that startClass inherits from.
     for (Type superClass : types.closure(startClass)) {

@@ -22,14 +22,18 @@ import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.fixByAddi
 import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.fixByAddingNullableAnnotationToType;
 import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.fixByAnnotatingTypeUseOnlyLocationWithNullableAnnotation;
 import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.isVoid;
+import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.nullnessChecksShouldBeConservative;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.hasNoExplicitType;
+import static com.sun.source.tree.Tree.Kind.METHOD;
 import static javax.lang.model.element.ElementKind.LOCAL_VARIABLE;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Iterables;
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
@@ -41,6 +45,7 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.AnnotatedTypeTree;
+import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.ParameterizedTypeTree;
 import com.sun.source.tree.Tree;
@@ -55,6 +60,12 @@ import com.sun.tools.javac.code.Type;
 @BugPattern(summary = "The type Void is not annotated @Nullable", severity = SUGGESTION)
 public class VoidMissingNullable extends BugChecker
     implements ParameterizedTypeTreeMatcher, MethodTreeMatcher, VariableTreeMatcher {
+  private final boolean beingConservative;
+
+  public VoidMissingNullable(ErrorProneFlags flags) {
+    this.beingConservative = nullnessChecksShouldBeConservative(flags);
+  }
+
   /*
    * TODO(cpovirk): Handle `Void[]`, probably mostly in casts, while avoiding `Void[].class`.
    *
@@ -73,6 +84,14 @@ public class VoidMissingNullable extends BugChecker
   @Override
   public Description matchParameterizedType(
       ParameterizedTypeTree parameterizedTypeTree, VisitorState state) {
+    if (beingConservative && state.errorProneOptions().isTestOnlyTarget()) {
+      return NO_MATCH;
+    }
+
+    if (beingConservative && !isInNullMarkedScope(state)) {
+      return NO_MATCH;
+    }
+
     for (Tree tree : parameterizedTypeTree.getTypeArguments()) {
       if (tree instanceof WildcardTree) {
         tree = ((WildcardTree) tree).getBound();
@@ -82,10 +101,36 @@ public class VoidMissingNullable extends BugChecker
     return NO_MATCH; // Any reports were made through state.reportMatch.
   }
 
+  /*
+   * TODO(cpovirk): Consider promoting this variant of isInNullMarkedScope to live in NullnessUtils
+   * alongside the main variant. But note that it may be even more expensive than the main variant,
+   * and see the more ambitious alternative TODO(cpovirk): in that file.
+   */
+  private static boolean isInNullMarkedScope(VisitorState state) {
+    for (Tree tree : state.getPath()) {
+      if (tree.getKind().asInterface().equals(ClassTree.class) || tree.getKind() == METHOD) {
+        Symbol enclosingElement = getSymbol(tree);
+        if (tree == null) {
+          continue;
+        }
+        return NullnessUtils.isInNullMarkedScope(enclosingElement, state);
+      }
+    }
+    throw new AssertionError(
+        "parameterized type without enclosing element: " + Iterables.toString(state.getPath()));
+  }
+
   @Override
   public Description matchMethod(MethodTree tree, VisitorState state) {
+    if (beingConservative && state.errorProneOptions().isTestOnlyTarget()) {
+      return NO_MATCH;
+    }
+
     MethodSymbol sym = getSymbol(tree);
     if (!typeMatches(sym.getReturnType(), sym, state)) {
+      return NO_MATCH;
+    }
+    if (beingConservative && !NullnessUtils.isInNullMarkedScope(sym, state)) {
       return NO_MATCH;
     }
     return describeMatch(tree, fixByAddingNullableAnnotationToReturnType(state, tree));
@@ -93,6 +138,10 @@ public class VoidMissingNullable extends BugChecker
 
   @Override
   public Description matchVariable(VariableTree tree, VisitorState state) {
+    if (beingConservative && state.errorProneOptions().isTestOnlyTarget()) {
+      return NO_MATCH;
+    }
+
     if (hasNoExplicitType(tree, state)) {
       /*
        * In the case of `var`, a declaration-annotation @Nullable would be valid. But a type-use
@@ -107,6 +156,9 @@ public class VoidMissingNullable extends BugChecker
       return NO_MATCH; // Local variables are discussed in the comment about `var`, etc. above.
     }
     if (!typeMatches(sym.type, sym, state)) {
+      return NO_MATCH;
+    }
+    if (beingConservative && !NullnessUtils.isInNullMarkedScope(sym, state)) {
       return NO_MATCH;
     }
     SuggestedFix fix = fixByAddingNullableAnnotationToType(state, tree);

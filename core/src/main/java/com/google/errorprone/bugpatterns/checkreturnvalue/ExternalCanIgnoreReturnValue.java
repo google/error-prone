@@ -23,6 +23,7 @@ import com.google.common.collect.Iterables;
 import com.google.common.io.LineProcessor;
 import com.google.common.io.MoreFiles;
 import com.google.errorprone.VisitorState;
+import com.google.errorprone.bugpatterns.checkreturnvalue.ResultUseRule.MethodRule;
 import com.google.errorprone.suppliers.Supplier;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import java.io.IOException;
@@ -31,7 +32,13 @@ import java.nio.file.Paths;
 import java.util.Optional;
 
 /** External source of information about @CanIgnoreReturnValue-equivalent API's. */
-public class ExternalCanIgnoreReturnValue {
+public final class ExternalCanIgnoreReturnValue extends MethodRule {
+
+  /** Returns a rule using an external list of APIs to ignore. */
+  public static ResultUseRule externalIgnoreList() {
+    return new ExternalCanIgnoreReturnValue();
+  }
+
   private ExternalCanIgnoreReturnValue() {}
 
   private static final String EXTERNAL_API_EXCLUSION_LIST = "CheckReturnValue:ApiExclusionList";
@@ -44,6 +51,18 @@ public class ExternalCanIgnoreReturnValue {
                   .getFlags()
                   .get(EXTERNAL_API_EXCLUSION_LIST)
                   .map(ExternalCanIgnoreReturnValue::tryLoadingConfigFile));
+
+  @Override
+  public String id() {
+    return "EXTERNAL_API_EXCLUSION_LIST";
+  }
+
+  @Override
+  public Optional<ResultUsePolicy> evaluateMethod(MethodSymbol method, VisitorState state) {
+    return externallyConfiguredCirvAnnotation(method, state)
+        ? Optional.of(ResultUsePolicy.OPTIONAL)
+        : Optional.empty();
+  }
 
   public static boolean externallyConfiguredCirvAnnotation(MethodSymbol m, VisitorState s) {
     return EXTERNAL_RESOURCE.get(s).map(protoList -> protoList.methodMatches(m, s)).orElse(false);

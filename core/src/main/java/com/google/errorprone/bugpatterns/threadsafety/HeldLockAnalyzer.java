@@ -19,7 +19,6 @@ package com.google.errorprone.bugpatterns.threadsafety;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 
 import com.google.auto.value.AutoValue;
-import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.google.errorprone.VisitorState;
@@ -54,6 +53,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Predicate;
 import javax.lang.model.element.Modifier;
 
 /**
@@ -144,7 +144,7 @@ public final class HeldLockAnalyzer {
 
     @Override
     public Void visitMethod(MethodTree tree, HeldLockSet locks) {
-      if (isSuppressed.apply(tree)) {
+      if (isSuppressed.test(tree)) {
         return null;
       }
       // Synchronized instance methods hold the 'this' lock; synchronized static methods
@@ -234,12 +234,12 @@ public final class HeldLockAnalyzer {
 
     @Override
     public Void visitVariable(VariableTree node, HeldLockSet locks) {
-      return isSuppressed.apply(node) ? null : super.visitVariable(node, locks);
+      return isSuppressed.test(node) ? null : super.visitVariable(node, locks);
     }
 
     @Override
     public Void visitClass(ClassTree node, HeldLockSet locks) {
-      return isSuppressed.apply(node) ? null : super.visitClass(node, locks);
+      return isSuppressed.test(node) ? null : super.visitClass(node, locks);
     }
 
     private void checkMatch(ExpressionTree tree, HeldLockSet locks) {
@@ -387,17 +387,9 @@ public final class HeldLockAnalyzer {
         return;
       }
       for (String lockString : annotation.value()) {
-        Optional<GuardedByExpression> guard =
-            GuardedByBinder.bindString(
-                lockString, GuardedBySymbolResolver.from(tree, state), flags);
-        // TODO(cushon): http://docs.oracle.com/javase/8/docs/api/java/util/Optional.html#ifPresent
-        if (guard.isPresent()) {
-          Optional<GuardedByExpression> lock =
-              ExpectedLockCalculator.from((JCExpression) tree, guard.get(), state, flags);
-          if (lock.isPresent()) {
-            locks.add(lock.get());
-          }
-        }
+        GuardedByBinder.bindString(lockString, GuardedBySymbolResolver.from(tree, state), flags)
+            .flatMap(guard -> ExpectedLockCalculator.from((JCExpression) tree, guard, state, flags))
+            .ifPresent(locks::add);
       }
     }
   }

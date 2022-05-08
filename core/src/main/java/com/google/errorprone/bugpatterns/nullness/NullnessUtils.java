@@ -26,6 +26,7 @@ import static com.google.errorprone.matchers.Matchers.instanceMethod;
 import static com.google.errorprone.suppliers.Suppliers.JAVA_LANG_VOID_TYPE;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
+import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
 import static com.google.errorprone.util.ASTHelpers.stripParentheses;
 import static com.sun.source.tree.Tree.Kind.ARRAY_TYPE;
 import static com.sun.source.tree.Tree.Kind.IDENTIFIER;
@@ -83,6 +84,31 @@ class NullnessUtils {
       instanceMethod().onDescendantOf("com.google.common.base.Optional").named("orNull");
   private static final Matcher<ExpressionTree> OPTIONAL_OR_ELSE =
       instanceMethod().onDescendantOf("java.util.Optional").named("orElse");
+
+  static boolean nullnessChecksShouldBeConservative(ErrorProneFlags flags) {
+    return flags.getBoolean("Nullness:Conservative").orElse(true);
+  }
+
+  /*
+   * TODO(cpovirk): Walking up the tree of enclosing elements may be more expensive than we'd like.
+   * (But I haven't checked.) To improve upon that, would we go so far as to build special tracking
+   * of @NullMarked-ness of the current TreePath into Error Prone itself? (Of course, even that
+   * would help only with the case in which we're interested in the @NullMarked-ness of the tree
+   * we're currently visiting.)
+   *
+   * Another advantage of that approach is that callers wouldn't need to start from a Symbol. For
+   * example, VoidMissingNullable.matchParameterizedType wouldn't have to walk up the path to find
+   * such a Symbol.
+   */
+
+  static boolean isInNullMarkedScope(Symbol sym, VisitorState state) {
+    for (; sym != null; sym = sym.getEnclosingElement()) {
+      if (hasAnnotation(sym, "org.jspecify.nullness.NullMarked", state)) {
+        return true;
+      }
+    }
+    return false;
+  }
 
   /**
    * Returns a {@link SuggestedFix} to add a {@code Nullable} annotation to the given method's

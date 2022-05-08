@@ -42,6 +42,12 @@ public final class ApiTest {
           "java.lang.String#foo)()",
           "java.lang.String#foo)(",
           "java.lang.String#<init>(,)",
+          "java.lang.String#get(int[][)",
+          "java.lang.String#get(int[[])",
+          "java.lang.String#get(int[]])",
+          "java.lang.String#get(int])",
+          "java.lang.String#get(int[)",
+          "java.lang.String#get(int[]a)",
           "java.lang.String#<>()",
           "java.lang.String#hi<>()",
           "java.lang.String#<>hi()",
@@ -112,16 +118,17 @@ public final class ApiTest {
   }
 
   @Test
-  public void parseApi_methodWithArray_b219754967() {
-    IllegalArgumentException thrown =
-        assertThrows(
-            "b/219754967 - cannot parse array signatures",
-            IllegalArgumentException.class,
-            () ->
-                Api.parse(
-                    "com.google.inject.util.Modules.OverriddenModuleBuilder"
-                        + "#with(com.google.inject.Module[])"));
-    assertThat(thrown).hasMessageThat().contains("'[' is not a valid identifier");
+  public void parseApi_methodWithArray() {
+    String string =
+        "com.google.inject.util.Modules.OverriddenModuleBuilder#with(com.google.inject.Module[],int[][][])";
+    Api api = Api.parse(string);
+    assertThat(api.className()).isEqualTo("com.google.inject.util.Modules.OverriddenModuleBuilder");
+    assertThat(api.methodName()).isEqualTo("with");
+    assertThat(api.parameterTypes())
+        .containsExactly("com.google.inject.Module[]", "int[][][]")
+        .inOrder();
+    assertThat(api.isConstructor()).isFalse();
+    assertThat(api.toString()).isEqualTo(string);
   }
 
   @Test

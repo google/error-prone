@@ -21,6 +21,7 @@ import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.findDecla
 import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.fixByAddingNullableAnnotationToType;
 import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.getNullCheck;
 import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.hasDefinitelyNullBranch;
+import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.nullnessChecksShouldBeConservative;
 import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.varsProvenNullByParentIf;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
@@ -57,7 +58,7 @@ public class FieldMissingNullable extends BugChecker
   private final boolean beingConservative;
 
   public FieldMissingNullable(ErrorProneFlags flags) {
-    this.beingConservative = flags.getBoolean("Nullness:Conservative").orElse(true);
+    this.beingConservative = nullnessChecksShouldBeConservative(flags);
   }
 
   @Override
