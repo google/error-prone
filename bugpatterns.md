@@ -1349,6 +1349,9 @@ This interface only contains static fields and methods; consider making it a fin
 __[InterruptedExceptionSwallowed](bugpattern/InterruptedExceptionSwallowed)__<br>
 This catch block appears to be catching an explicitly declared InterruptedException as an Exception/Throwable and not handling the interruption separately.
 
+__[Interruption](bugpattern/Interruption)__<br>
+Always pass &#39;false&#39; to &#39;Future.cancel()&#39;, unless you are propagating a cancellation-with-interrupt from another caller
+
 __[MemberName](bugpattern/MemberName)__<br>
 Methods and non-static variables should be named in lowerCamelCase.
 
