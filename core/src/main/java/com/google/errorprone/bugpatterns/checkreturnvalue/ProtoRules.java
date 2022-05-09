@@ -54,13 +54,27 @@ public final class ProtoRules {
 
     @Override
     public Optional<ResultUsePolicy> evaluateMethod(MethodSymbol method, VisitorState state) {
-      Type ownerType = method.owner.type;
-      if (ASTHelpers.isSubtype(ownerType, MESSAGE_LITE_BUILDER.get(state), state)) {
-        if (SETTERS.matcher(method.name).matches()) {
+      if (isProtoBuilderType(state, method.owner.type)) {
+        String methodName = method.name.toString();
+        if (SETTERS.matcher(methodName).matches()) {
+          return Optional.of(ResultUsePolicy.OPTIONAL);
+        }
+        if (isGetterOfSubmessageBuilder(methodName)
+            && isProtoBuilderType(state, method.getReturnType())) {
           return Optional.of(ResultUsePolicy.OPTIONAL);
         }
       }
       return Optional.empty();
+    }
+
+    private static boolean isProtoBuilderType(VisitorState state, Type ownerType) {
+      return ASTHelpers.isSubtype(ownerType, MESSAGE_LITE_BUILDER.get(state), state);
+    }
+
+    // fooBuilder.getBarBuilder() mutates the builder such that foo.hasBar() is now true.
+    private static boolean isGetterOfSubmessageBuilder(String name) {
+      // TODO(glorioso): Any other naming conventions to check?
+      return name.startsWith("get") && name.endsWith("Builder") && !name.endsWith("OrBuilder");
     }
   }
 
