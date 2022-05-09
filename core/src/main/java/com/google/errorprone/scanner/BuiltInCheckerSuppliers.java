@@ -169,6 +169,7 @@ import com.google.errorprone.bugpatterns.InstanceOfAndCastMatchWrongType;
 import com.google.errorprone.bugpatterns.IntLongMath;
 import com.google.errorprone.bugpatterns.InterfaceWithOnlyStatics;
 import com.google.errorprone.bugpatterns.InterruptedExceptionSwallowed;
+import com.google.errorprone.bugpatterns.Interruption;
 import com.google.errorprone.bugpatterns.InvalidPatternSyntax;
 import com.google.errorprone.bugpatterns.InvalidTimeZoneID;
 import com.google.errorprone.bugpatterns.InvalidZoneId;
@@ -1045,6 +1046,7 @@ public class BuiltInCheckerSuppliers {
           InsecureCipherMode.class,
           InterfaceWithOnlyStatics.class,
           InterruptedExceptionSwallowed.class,
+          Interruption.class,
           IterablePathParameter.class,
           Java7ApiChecker.class,
           Java8ApiChecker.class,
