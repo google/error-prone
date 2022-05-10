@@ -30,6 +30,7 @@ import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
+import com.google.errorprone.annotations.CompileTimeConstant;
 import com.google.errorprone.matchers.Matcher;
 import com.sun.source.tree.ExpressionTree;
 import java.util.List;
@@ -138,7 +139,11 @@ public abstract class Api {
         case ']': // for array signature types
           break;
         default:
-          check(isJavaIdentifierPart(ch), api, "'" + ch + "' is not a valid identifier");
+          checkArgument(
+              isJavaIdentifierPart(ch),
+              "Unable to parse '%s' because '%s' is not a valid identifier",
+              api,
+              ch);
       }
     }
 
@@ -167,7 +172,11 @@ public abstract class Api {
 
       // make sure the only thing between the < and > is exactly "init"
       String constructorName = api.substring(lessThanIndex + 1, greaterThanIndex);
-      check(constructorName.equals("init"), api, "invalid method name: " + constructorName);
+      checkArgument(
+          constructorName.equals("init"),
+          "Unable to parse '%s' because %s is an invalid method name",
+          api,
+          constructorName);
     }
 
     String className = api.substring(0, hashIndex);
@@ -231,7 +240,9 @@ public abstract class Api {
     return new AutoValue_Api(className, methodName, paramList);
   }
 
-  private static void check(boolean condition, String api, String reason) {
+  // The @CompileTimeConstant is for performance - reason should be constant and not eagerly
+  // constructed.
+  private static void check(boolean condition, String api, @CompileTimeConstant String reason) {
     checkArgument(condition, "Unable to parse '%s' because %s", api, reason);
   }
 }
