@@ -16,26 +16,36 @@
 
 package com.google.errorprone.bugpatterns.nullness;
 
+import static com.google.common.collect.Streams.forEachPair;
 import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
 import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.findDeclaration;
 import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.fixByAddingNullableAnnotationToType;
 import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.getNullCheck;
+import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.hasDefinitelyNullBranch;
+import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.isAlreadyAnnotatedNullable;
+import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.nullnessChecksShouldBeConservative;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
+import static com.google.errorprone.util.ASTHelpers.enclosingClass;
+import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.hasNoExplicitType;
 import static javax.lang.model.element.ElementKind.PARAMETER;
+import static javax.lang.model.type.TypeKind.TYPEVAR;
 
+import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.BinaryTreeMatcher;
+import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
+import com.google.errorprone.bugpatterns.BugChecker.NewClassTreeMatcher;
 import com.google.errorprone.bugpatterns.nullness.NullnessUtils.NullCheck;
-import com.google.errorprone.dataflow.nullnesspropagation.Nullness;
-import com.google.errorprone.dataflow.nullnesspropagation.NullnessAnnotations;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.sun.source.tree.AssertTree;
 import com.sun.source.tree.BinaryTree;
+import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IfTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.NewClassTree;
@@ -45,14 +55,29 @@ import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
 import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.code.Symbol;
+import com.sun.tools.javac.code.Symbol.ClassSymbol;
+import com.sun.tools.javac.code.Symbol.MethodSymbol;
+import java.util.List;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
     summary = "Parameter has handling for null but is not annotated @Nullable",
     severity = SUGGESTION)
-public class ParameterMissingNullable extends BugChecker implements BinaryTreeMatcher {
+public final class ParameterMissingNullable extends BugChecker
+    implements BinaryTreeMatcher, MethodInvocationTreeMatcher, NewClassTreeMatcher {
+  private final boolean beingConservative;
+
+  public ParameterMissingNullable(ErrorProneFlags flags) {
+    this.beingConservative = nullnessChecksShouldBeConservative(flags);
+  }
+
   @Override
   public Description matchBinary(BinaryTree tree, VisitorState state) {
+    if (beingConservative) {
+      // The rules in matchBinary are mostly heuristics, as discussed in the large comment below.
+      return NO_MATCH;
+    }
+
     /*
      * This check's basic principle is: If an implementation checks `param == null` or
      * `param != null`, then it's going to take one of two actions:
@@ -153,9 +178,7 @@ public class ParameterMissingNullable extends BugChecker implements BinaryTreeMa
   }
 
   private static boolean isParameterWithoutNullable(Symbol sym) {
-    return sym != null
-        && sym.getKind() == PARAMETER
-        && NullnessAnnotations.fromAnnotationsOn(sym).orElse(null) != Nullness.NULLABLE;
+    return sym != null && sym.getKind() == PARAMETER && !isAlreadyAnnotatedNullable(sym);
   }
 
   private static boolean nullCheckLikelyToProduceException(VisitorState state) {
@@ -206,6 +229,104 @@ public class ParameterMissingNullable extends BugChecker implements BinaryTreeMa
      * didn't add any value for the code I tested on.
      */
     return likelyToProduceException[0];
+  }
+
+  @Override
+  public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
+    return matchCall(getSymbol(tree), tree.getArguments(), state);
+  }
+
+  @Override
+  public Description matchNewClass(NewClassTree tree, VisitorState state) {
+    return matchCall(getSymbol(tree), tree.getArguments(), state);
+  }
+
+  private static boolean hasExtraParameterForEnclosingInstance(MethodSymbol symbol) {
+    if (!symbol.isConstructor()) {
+      return false;
+    }
+    ClassSymbol constructedClass = enclosingClass(symbol);
+    return enclosingClass(constructedClass) != null && !constructedClass.isStatic();
+  }
+
+  private Description matchCall(
+      MethodSymbol methodSymbol, List<? extends ExpressionTree> arguments, VisitorState state) {
+    if (hasExtraParameterForEnclosingInstance(methodSymbol)) {
+      // TODO(cpovirk): Figure out the right way to handle the implicit outer `this` parameter.
+      return NO_MATCH;
+    }
+
+    if (methodSymbol.isVarArgs()) {
+      /*
+       * TODO(cpovirk): Figure out the right way to handle this, or at least handle all parameters
+       * but the last.
+       */
+      return NO_MATCH;
+    }
+
+    forEachPair(
+        arguments.stream(),
+        methodSymbol.getParameters().stream(),
+        (argTree, paramSymbol) -> {
+          if (!hasDefinitelyNullBranch(
+              argTree,
+              /*
+               * TODO(cpovirk): Precompute sets of definitelyNullVars and varsProvenNullByParentIf
+               * instead of passing empty sets.
+               */
+              ImmutableSet.of(),
+              ImmutableSet.of(),
+              state)) {
+            return;
+          }
+
+          if (isAlreadyAnnotatedNullable(paramSymbol)) {
+            return;
+          }
+
+          if (paramSymbol.asType().getKind() == TYPEVAR) {
+            // TODO(cpovirk): Don't always give up for type variables, at least in aggressive mode.
+            return;
+          }
+
+          VariableTree paramTree = findDeclaration(state, paramSymbol);
+          if (paramTree == null) {
+            /*
+             * First, we can't reliably make changes to declarations in other compilation units.
+             *
+             * But even if we could, we'd "trust" calls in other compilation units less: Plenty of
+             * code passes null when it "shouldn't":
+             *
+             * - Some code gets away with it because that call never runs.
+             *
+             * - Some tests get away with it because they know that no one will read the value.
+             *
+             * - Some tests are deliberately checking that passing null produces NPE.
+             *
+             * Still, maybe we'd consider trusting such calls when running in aggressive mode if we
+             * had the ability someday.
+             */
+            return;
+          }
+
+          SuggestedFix fix = fixByAddingNullableAnnotationToType(state, paramTree);
+          if (fix.isEmpty()) {
+            return;
+          }
+
+          /*
+           * TODO(cpovirk): Would it be better to report this on the parameter, rather than the
+           * argument? If so, we may want to rework this checker to be a CompilationUnitMatcher.
+           * That way, it can scan the whole file to find parameters and *then* evaluate
+           * suppressions. (Under the current MethodInvocationTreeMatcher approach, a suppression at
+           * the *arg* site would suppress errors that would be reported on the param. Even if we
+           * were to manually make suppressions at the param *also* have an effect, the remaining
+           * effect for *arg*-site suppressions would be unfortunate.)
+           */
+          state.reportMatch(describeMatch(argTree, fix));
+        });
+
+    return NO_MATCH;
   }
 
   /*

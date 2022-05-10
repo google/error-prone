@@ -19,6 +19,7 @@ package com.google.errorprone.bugpatterns.nullness;
 import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
 import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.fixByAddingNullableAnnotationToType;
+import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.isAlreadyAnnotatedNullable;
 import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.isInNullMarkedScope;
 import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.nullnessChecksShouldBeConservative;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
@@ -30,8 +31,6 @@ import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
-import com.google.errorprone.dataflow.nullnesspropagation.Nullness;
-import com.google.errorprone.dataflow.nullnesspropagation.NullnessAnnotations;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.sun.source.tree.MethodTree;
@@ -61,7 +60,7 @@ public class EqualsMissingNullable extends BugChecker implements MethodTreeMatch
 
     VariableTree parameterTree = getOnlyElement(methodTree.getParameters());
     VarSymbol parameter = getSymbol(parameterTree);
-    if (NullnessAnnotations.fromAnnotationsOn(parameter).orElse(null) == Nullness.NULLABLE) {
+    if (isAlreadyAnnotatedNullable(parameter)) {
       return NO_MATCH;
     }
 
