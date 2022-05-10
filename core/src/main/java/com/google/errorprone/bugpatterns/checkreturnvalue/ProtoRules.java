@@ -45,7 +45,8 @@ public final class ProtoRules {
 
   /** Rules for methods on proto builders. */
   private static final class ProtoBuilder extends MethodRule {
-    private static final Pattern SETTERS = Pattern.compile("(add|clear|remove|set|put).+");
+    private static final Pattern RETURNS_THIS =
+        Pattern.compile("(add|clear|merge|remove|set|put).*");
 
     @Override
     public String id() {
@@ -56,7 +57,7 @@ public final class ProtoRules {
     public Optional<ResultUsePolicy> evaluateMethod(MethodSymbol method, VisitorState state) {
       if (isProtoBuilderType(state, method.owner.type)) {
         String methodName = method.name.toString();
-        if (SETTERS.matcher(methodName).matches()) {
+        if (RETURNS_THIS.matcher(methodName).matches()) {
           return Optional.of(ResultUsePolicy.OPTIONAL);
         }
         if (isGetterOfSubmessageBuilder(methodName)
