@@ -100,7 +100,6 @@ public class ImmutableChecker extends BugChecker
 
   private final WellKnownMutability wellKnownMutability;
   private final ImmutableSet<String> immutableAnnotations;
-  private final boolean matchLambdas;
 
   ImmutableChecker(ImmutableSet<String> immutableAnnotations) {
     this(ErrorProneFlags.empty(), immutableAnnotations);
@@ -113,14 +112,10 @@ public class ImmutableChecker extends BugChecker
   private ImmutableChecker(ErrorProneFlags flags, ImmutableSet<String> immutableAnnotations) {
     this.wellKnownMutability = WellKnownMutability.fromFlags(flags);
     this.immutableAnnotations = immutableAnnotations;
-    this.matchLambdas = flags.getBoolean("ImmutableChecker:MatchLambdas").orElse(true);
   }
 
   @Override
   public Description matchLambdaExpression(LambdaExpressionTree tree, VisitorState state) {
-    if (!matchLambdas) {
-      return NO_MATCH;
-    }
     TypeSymbol lambdaType = getType(tree).tsym;
     ImmutableAnalysis analysis = createImmutableAnalysis(state);
     Violation info =
@@ -259,9 +254,6 @@ public class ImmutableChecker extends BugChecker
   public Description matchMemberReference(MemberReferenceTree tree, VisitorState state) {
     // check instantiations of `@ImmutableTypeParameter`s in method references
     checkInvocation(tree, getSymbol(tree), ((JCMemberReference) tree).referentType, state);
-    if (!matchLambdas) {
-      return NO_MATCH;
-    }
     ImmutableAnalysis analysis = createImmutableAnalysis(state);
     TypeSymbol memberReferenceType = targetType(state).type().tsym;
     Violation info =
