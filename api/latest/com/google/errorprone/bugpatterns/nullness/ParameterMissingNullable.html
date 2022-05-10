@@ -15,7 +15,7 @@
 <script type="text/javascript" src="../../../../../script-dir/jquery-ui.min.js"></script>
 </head>
 <body class="class-declaration-page">
-<script type="text/javascript">var data = {"i0":10};
+<script type="text/javascript">var data = {"i0":10,"i1":10,"i2":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "alt-color";
 var rowColor = "row-color";
@@ -84,12 +84,12 @@ loadScripts(document, 'script');</script>
 <section class="description">
 <dl class="notes">
 <dt>All Implemented Interfaces:</dt>
-<dd><code><a href="../BugChecker.BinaryTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.BinaryTreeMatcher</a></code>, <code><a href="../../matchers/Suppressible.html" title="interface in com.google.errorprone.matchers">Suppressible</a></code>, <code><a href="https://docs.oracle.com/javase/8/docs/api/java/io/Serializable.html" title="class or interface in java.io" class="external-link">Serializable</a></code></dd>
+<dd><code><a href="../BugChecker.BinaryTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.BinaryTreeMatcher</a></code>, <code><a href="../BugChecker.MethodInvocationTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.MethodInvocationTreeMatcher</a></code>, <code><a href="../BugChecker.NewClassTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.NewClassTreeMatcher</a></code>, <code><a href="../../matchers/Suppressible.html" title="interface in com.google.errorprone.matchers">Suppressible</a></code>, <code><a href="https://docs.oracle.com/javase/8/docs/api/java/io/Serializable.html" title="class or interface in java.io" class="external-link">Serializable</a></code></dd>
 </dl>
 <hr>
-<pre>public class <span class="type-name-label">ParameterMissingNullable</span>
+<pre>public final class <span class="type-name-label">ParameterMissingNullable</span>
 extends <a href="../BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a>
-implements <a href="../BugChecker.BinaryTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.BinaryTreeMatcher</a></pre>
+implements <a href="../BugChecker.BinaryTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.BinaryTreeMatcher</a>, <a href="../BugChecker.MethodInvocationTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.MethodInvocationTreeMatcher</a>, <a href="../BugChecker.NewClassTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.NewClassTreeMatcher</a></pre>
 <div class="block">A <a href="../BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>; see the associated <a href="../../BugPattern.html" title="annotation in com.google.errorprone"><code>BugPattern</code></a> annotation for details.</div>
 <dl class="notes">
 <dt>See Also:</dt>
@@ -122,7 +122,7 @@ implements <a href="../BugChecker.BinaryTreeMatcher.html" title="interface in co
 </thead>
 <tbody>
 <tr class="alt-color">
-<th class="col-constructor-name" scope="row"><code><span class="member-name-link"><a href="#%3Cinit%3E()">ParameterMissingNullable</a></span>()</code></th>
+<th class="col-constructor-name" scope="row"><code><span class="member-name-link"><a href="#%3Cinit%3E(com.google.errorprone.ErrorProneFlags)">ParameterMissingNullable</a></span>&#8203;(<a href="../../ErrorProneFlags.html" title="class in com.google.errorprone">ErrorProneFlags</a>&nbsp;flags)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
 </tbody>
@@ -152,6 +152,18 @@ implements <a href="../BugChecker.BinaryTreeMatcher.html" title="interface in co
 <a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
+<tr class="row-color" id="i1">
+<td class="col-first"><code><a href="../../matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#matchMethodInvocation(com.sun.source.tree.MethodInvocationTree,com.google.errorprone.VisitorState)">matchMethodInvocation</a></span>&#8203;(com.sun.source.tree.MethodInvocationTree&nbsp;tree,
+<a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
+<td class="col-last">&nbsp;</td>
+</tr>
+<tr class="alt-color" id="i2">
+<td class="col-first"><code><a href="../../matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#matchNewClass(com.sun.source.tree.NewClassTree,com.google.errorprone.VisitorState)">matchNewClass</a></span>&#8203;(com.sun.source.tree.NewClassTree&nbsp;tree,
+<a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
+<td class="col-last">&nbsp;</td>
+</tr>
 </tbody>
 </table>
 </div>
@@ -177,9 +189,9 @@ implements <a href="../BugChecker.BinaryTreeMatcher.html" title="interface in co
 <h2>Constructor Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="&lt;init&gt;()">
+<section class="detail" id="&lt;init&gt;(com.google.errorprone.ErrorProneFlags)">
 <h3>ParameterMissingNullable</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="member-name">ParameterMissingNullable</span>()</div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="member-name">ParameterMissingNullable</span>&#8203;(<span class="parameters"><a href="../../ErrorProneFlags.html" title="class in com.google.errorprone">ErrorProneFlags</a>&nbsp;flags)</span></div>
 </section>
 </li>
 </ul>
@@ -198,6 +210,28 @@ implements <a href="../BugChecker.BinaryTreeMatcher.html" title="interface in co
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code><a href="../BugChecker.BinaryTreeMatcher.html#matchBinary(com.sun.source.tree.BinaryTree,com.google.errorprone.VisitorState)">matchBinary</a></code>&nbsp;in interface&nbsp;<code><a href="../BugChecker.BinaryTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.BinaryTreeMatcher</a></code></dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="matchMethodInvocation(com.sun.source.tree.MethodInvocationTree,com.google.errorprone.VisitorState)">
+<h3>matchMethodInvocation</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../../matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></span>&nbsp;<span class="member-name">matchMethodInvocation</span>&#8203;(<span class="parameters">com.sun.source.tree.MethodInvocationTree&nbsp;tree,
+<a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
+<dl class="notes">
+<dt>Specified by:</dt>
+<dd><code><a href="../BugChecker.MethodInvocationTreeMatcher.html#matchMethodInvocation(com.sun.source.tree.MethodInvocationTree,com.google.errorprone.VisitorState)">matchMethodInvocation</a></code>&nbsp;in interface&nbsp;<code><a href="../BugChecker.MethodInvocationTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.MethodInvocationTreeMatcher</a></code></dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="matchNewClass(com.sun.source.tree.NewClassTree,com.google.errorprone.VisitorState)">
+<h3>matchNewClass</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../../matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></span>&nbsp;<span class="member-name">matchNewClass</span>&#8203;(<span class="parameters">com.sun.source.tree.NewClassTree&nbsp;tree,
+<a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
+<dl class="notes">
+<dt>Specified by:</dt>
+<dd><code><a href="../BugChecker.NewClassTreeMatcher.html#matchNewClass(com.sun.source.tree.NewClassTree,com.google.errorprone.VisitorState)">matchNewClass</a></code>&nbsp;in interface&nbsp;<code><a href="../BugChecker.NewClassTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.NewClassTreeMatcher</a></code></dd>
 </dl>
 </section>
 </li>
