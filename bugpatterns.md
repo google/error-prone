@@ -374,6 +374,9 @@ Calling getAnnotation on an annotation that is not retained at runtime.
 __[NullTernary](bugpattern/NullTernary)__<br>
 This conditional expression may evaluate to null, which will result in an NPE when the result is unboxed.
 
+__[NullableOnContainingClass](bugpattern/NullableOnContainingClass)__<br>
+Type-use nullability annotations should annotate the inner class, not the outer class (e.g., write &#96;A.@Nullable B&#96; instead of &#96;@Nullable A.B&#96;).
+
 __[OptionalEquality](bugpattern/OptionalEquality)__<br>
 Comparison using reference equality instead of value equality
 
