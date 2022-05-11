@@ -16,6 +16,7 @@
 
 package com.google.errorprone.bugpatterns.checkreturnvalue;
 
+import static com.google.common.base.CharMatcher.whitespace;
 import static com.google.common.truth.Truth.assertThat;
 import static org.junit.Assert.assertThrows;
 
@@ -106,15 +107,15 @@ public final class ApiTest {
   @Test
   public void parseApi_methodWithParamsAndSpaces() {
     String string =
-        "com.google.android.libraries.stitch.binder.Binder"
-            + "#get(android.content.Context,java.lang.Class)";
+        "  com.google.android.libraries.stitch.binder.Binder"
+            + "#get(android.content.Context , java.lang.Class) ";
     Api api = Api.parse(string);
     assertThat(api.methodName()).isEqualTo("get");
     assertThat(api.parameterTypes())
         .containsExactly("android.content.Context", "java.lang.Class")
         .inOrder();
     assertThat(api.isConstructor()).isFalse();
-    assertThat(api.toString()).isEqualTo(string);
+    assertThat(api.toString()).isEqualTo(whitespace().removeFrom(string));
   }
 
   @Test
