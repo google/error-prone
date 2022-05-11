@@ -97,6 +97,19 @@ public class EqualsMissingNullableTest {
   }
 
   @Test
+  public void testNegativeAlreadyAnnotatedWithProtobufAnnotation() {
+    aggressiveHelper
+        .addSourceLines(
+            "ProtoMethodAcceptsNullParameter.java", "@interface ProtoMethodAcceptsNullParameter {}")
+        .addSourceLines(
+            "Foo.java",
+            "abstract class Foo {",
+            "  public abstract boolean equals(@ProtoMethodAcceptsNullParameter Object o);",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void testNegativeNotObjectEquals() {
     aggressiveHelper
         .addSourceLines(
