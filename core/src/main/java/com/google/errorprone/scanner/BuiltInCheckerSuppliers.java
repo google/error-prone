@@ -249,6 +249,7 @@ import com.google.errorprone.bugpatterns.NonRuntimeAnnotation;
 import com.google.errorprone.bugpatterns.NullOptional;
 import com.google.errorprone.bugpatterns.NullTernary;
 import com.google.errorprone.bugpatterns.NullableConstructor;
+import com.google.errorprone.bugpatterns.NullableOnContainingClass;
 import com.google.errorprone.bugpatterns.NullablePrimitive;
 import com.google.errorprone.bugpatterns.NullablePrimitiveArray;
 import com.google.errorprone.bugpatterns.NullableVoid;
@@ -703,6 +704,7 @@ public class BuiltInCheckerSuppliers {
           NonFinalCompileTimeConstant.class,
           NonRuntimeAnnotation.class,
           NullTernary.class,
+          NullableOnContainingClass.class,
           OptionalEquality.class,
           OptionalMapUnusedValue.class,
           OptionalOfRedundantMethod.class,
