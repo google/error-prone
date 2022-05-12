@@ -29,9 +29,14 @@ import com.google.auto.value.AutoValue;
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
+import com.google.errorprone.VisitorState;
 import com.google.errorprone.annotations.CompileTimeConstant;
 import com.google.errorprone.matchers.Matcher;
 import com.sun.source.tree.ExpressionTree;
+import com.sun.tools.javac.code.Symbol.MethodSymbol;
+import com.sun.tools.javac.code.Type;
+import com.sun.tools.javac.code.TypeMetadata;
+import com.sun.tools.javac.code.Types;
 import java.util.List;
 
 /**
@@ -43,6 +48,24 @@ import java.util.List;
 @AutoValue
 public abstract class Api {
 
+  /** Returns the {@code Api} representation of the given {@code symbol}. */
+  public static Api fromSymbol(MethodSymbol symbol, VisitorState state) {
+    Types types = state.getTypes();
+    return new AutoValue_Api(
+        symbol.owner.getQualifiedName().toString(),
+        symbol.name.toString(),
+        symbol.getParameters().stream()
+            .map(p -> erasedType(p.type, types))
+            .collect(toImmutableList()));
+  }
+
+  private static String erasedType(Type type, Types types) {
+    // Removes type arguments, replacing w/ upper bounds
+    Type erasedType = types.erasure(type);
+    Type unannotated = erasedType.cloneWithMetadata(TypeMetadata.EMPTY); // Removes type annotations
+    return unannotated.toString();
+  }
+
   // TODO(b/223668437): use this (or something other than the Matcher<> API)
   static Matcher<ExpressionTree> createMatcherFromApis(List<String> apis) {
     return anyOf(apis.stream().map(Api::parse).map(Api::matcher).collect(toImmutableList()));
@@ -53,16 +76,16 @@ public abstract class Api {
   }
 
   /** Returns the fully qualified type that contains the given method/constructor. */
-  abstract String className();
+  public abstract String className();
 
   /**
    * Returns the simple name of the method. If the API is a constructor (i.e., {@code
    * isConstructor() == true}), then {@code "<init>"} is returned.
    */
-  abstract String methodName();
+  public abstract String methodName();
 
   /** Returns the list of fully qualified parameter types for the given method/constructor. */
-  abstract ImmutableList<String> parameterTypes();
+  public abstract ImmutableList<String> parameterTypes();
 
   @Override
   public final String toString() {
