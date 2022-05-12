@@ -54,7 +54,8 @@ public class Interruption extends BugChecker implements MethodInvocationTreeMatc
 
   private static final Matcher<ExpressionTree> CANCEL =
       instanceMethod()
-          .onDescendantOf("java.util.concurrent.Future")
+          .onDescendantOfAny(
+              "java.util.concurrent.Future", "com.google.common.util.concurrent.ClosingFuture")
           .named("cancel")
           .withParameters("boolean");
 

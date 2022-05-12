@@ -46,6 +46,21 @@ public class InterruptionTest {
   }
 
   @Test
+  public void positiveClosingFuture() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.common.util.concurrent.ClosingFuture;",
+            "class Test {",
+            "  void f(ClosingFuture<?> f) {",
+            "    // BUG: Diagnostic contains: f.cancel(false)",
+            "    f.cancel(true);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void positiveInterrupt() {
     compilationHelper
         .addSourceLines(
