@@ -35,7 +35,8 @@ import com.google.errorprone.matchers.Matcher;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Type;
-import com.sun.tools.javac.code.TypeMetadata;
+import com.sun.tools.javac.code.Type.ArrayType;
+import com.sun.tools.javac.code.Type.StructuralTypeMapping;
 import com.sun.tools.javac.code.Types;
 import java.util.List;
 
@@ -55,16 +56,35 @@ public abstract class Api {
         symbol.owner.getQualifiedName().toString(),
         symbol.name.toString(),
         symbol.getParameters().stream()
-            .map(p -> erasedType(p.type, types))
+            .map(p -> fullyErasedAndUnannotatedType(p.type, types))
             .collect(toImmutableList()));
   }
 
-  private static String erasedType(Type type, Types types) {
+  private static String fullyErasedAndUnannotatedType(Type type, Types types) {
     // Removes type arguments, replacing w/ upper bounds
-    Type erasedType = types.erasure(type);
-    Type unannotated = erasedType.cloneWithMetadata(TypeMetadata.EMPTY); // Removes type annotations
-    return unannotated.toString();
+    Type erasedType = types.erasureRecursive(type);
+    Type unannotatedType = erasedType.accept(ANNOTATION_REMOVER, null);
+    return unannotatedType.toString();
   }
+
+  /**
+   * Removes type metadata (e.g.: type annotations) from types, as well as from "containing
+   * structures" like arrays. Notably, this annotation remover doesn't handle Type parameters, as it
+   * only attempts to handle erased types.
+   */
+  private static final StructuralTypeMapping<Void> ANNOTATION_REMOVER =
+      new StructuralTypeMapping<>() {
+        @Override
+        public Type visitType(Type t, Void unused) {
+          return t.baseType();
+        }
+
+        // Remove annotations from all enclosing containers
+        @Override
+        public Type visitArrayType(ArrayType t, Void unused) {
+          return super.visitArrayType((ArrayType) t.baseType(), unused);
+        }
+      };
 
   // TODO(b/223668437): use this (or something other than the Matcher<> API)
   static Matcher<ExpressionTree> createMatcherFromApis(List<String> apis) {
