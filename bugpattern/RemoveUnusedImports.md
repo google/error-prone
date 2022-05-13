@@ -17,8 +17,8 @@ This import is unused.
 
 ## The check reported an import that was actually used!
 
-The check has no known bugs. If you it reports an unused import that looks like
-it was actually used, try removing it and recompiling. If everything still
+The check has no known bugs. If it reports an unused import that looks like it
+was actually used, try removing it and recompiling. If everything still
 compiles, it was unused.
 
 Note that the check can detect some unused imports that `google-java-format`
