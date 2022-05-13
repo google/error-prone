@@ -17,6 +17,9 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.bugpatterns.checkreturnvalue.AutoValueRules.autoBuilders;
+import static com.google.errorprone.bugpatterns.checkreturnvalue.AutoValueRules.autoValueBuilders;
+import static com.google.errorprone.bugpatterns.checkreturnvalue.AutoValueRules.autoValues;
 import static com.google.errorprone.bugpatterns.checkreturnvalue.ExternalCanIgnoreReturnValue.externalIgnoreList;
 import static com.google.errorprone.bugpatterns.checkreturnvalue.ProtoRules.mutableProtos;
 import static com.google.errorprone.bugpatterns.checkreturnvalue.ProtoRules.protoBuilders;
@@ -82,6 +85,9 @@ public class CheckReturnValue extends AbstractReturnValueIgnored
             mapAnnotationSimpleName(CAN_IGNORE_RETURN_VALUE, OPTIONAL),
             protoBuilders(),
             mutableProtos(),
+            autoValues(),
+            autoValueBuilders(),
+            autoBuilders(),
             externalIgnoreList(),
             globalDefault(methodPolicy, constructorPolicy));
   }
