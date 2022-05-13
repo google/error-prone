@@ -119,7 +119,7 @@ public class ModifiedButNotUsed extends BugChecker
       anyOf(
           instanceMethod()
               .onDescendantOf(MESSAGE_BUILDER)
-              .withNameMatching(Pattern.compile("(add|clear|remove|set|put).+")),
+              .withNameMatching(Pattern.compile("(add|clear|merge|remove|set|put).*")),
           instanceMethod()
               .onDescendantOfAny(
                   GUAVA_IMMUTABLES.stream().map(c -> c + ".Builder").collect(toImmutableSet()))
