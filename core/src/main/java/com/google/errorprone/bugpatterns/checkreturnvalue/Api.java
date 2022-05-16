@@ -26,6 +26,7 @@ import static java.lang.Character.isJavaIdentifierPart;
 import static java.lang.Character.isJavaIdentifierStart;
 
 import com.google.auto.value.AutoValue;
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
@@ -138,7 +139,8 @@ public abstract class Api {
    *   <li>an instance method with types erased (e.g., {@code java.util.List#add(java.lang.Object)})
    * </ul>
    */
-  static Api parse(String api) {
+  @VisibleForTesting
+  public static Api parse(String api) {
     Parser p = new Parser(api);
 
     // Let's parse this in 3 parts:
