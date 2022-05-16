@@ -1787,7 +1787,7 @@ public class ASTHelpers {
           break;
         case PLUS_ASSIGNMENT:
           Type stringType = state.getSymtab().stringType;
-          if (types.isSameType(stringType, variableType)) {
+          if (types.isSuperType(variableType, stringType)) {
             return stringType;
           }
           break;
