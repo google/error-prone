@@ -15,7 +15,7 @@
 <script type="text/javascript" src="../../../../../script-dir/jquery-ui.min.js"></script>
 </head>
 <body class="class-declaration-page">
-<script type="text/javascript">var data = {"i0":6,"i1":9,"i2":6,"i3":6,"i4":10};
+<script type="text/javascript">var data = {"i0":6,"i1":9,"i2":6,"i3":6,"i4":9,"i5":10};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],2:["t2","Instance Methods"],4:["t3","Abstract Methods"],8:["t4","Concrete Methods"]};
 var altColor = "alt-color";
 var rowColor = "row-color";
@@ -157,6 +157,13 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 </td>
 </tr>
 <tr class="alt-color" id="i4">
+<td class="col-first"><code>static <a href="Api.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">Api</a></code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#parse(java.lang.String)">parse</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;api)</code></th>
+<td class="col-last">
+<div class="block">Parses an API string into an <a href="Api.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue"><code>Api</code></a>.</div>
+</td>
+</tr>
+<tr class="row-color" id="i5">
 <td class="col-first"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#toString()">toString</a></span>()</code></th>
 <td class="col-last">&nbsp;</td>
@@ -231,6 +238,20 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <dt>Overrides:</dt>
 <dd><code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#toString()" title="class or interface in java.lang" class="external-link">toString</a></code>&nbsp;in class&nbsp;<code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></code></dd>
 </dl>
+</section>
+</li>
+<li>
+<section class="detail" id="parse(java.lang.String)">
+<h3>parse</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="Api.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">Api</a></span>&nbsp;<span class="member-name">parse</span>&#8203;(<span class="parameters"><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;api)</span></div>
+<div class="block">Parses an API string into an <a href="Api.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue"><code>Api</code></a>. Example API strings are:
+
+ <ul>
+   <li>a constructor (e.g., <code>java.net.URI#&lt;init&gt;(java.lang.String)</code>)
+   <li>a static method (e.g., <code>java.net.URI#create(java.lang.String)</code>)
+   <li>an instance method (e.g., <code>java.util.List#get(int)</code>)
+   <li>an instance method with types erased (e.g., <code>java.util.List#add(java.lang.Object)</code>)
+ </ul></div>
 </section>
 </li>
 </ul>
