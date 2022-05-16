@@ -24,8 +24,10 @@ import static com.google.errorprone.util.ASTHelpers.isSameType;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.StandardTags;
+import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
+import com.google.errorprone.bugpatterns.threadsafety.ConstantExpressions;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
@@ -51,6 +53,17 @@ import javax.lang.model.element.Modifier;
     severity = WARNING,
     tags = StandardTags.FRAGILE_CODE)
 public class UnsynchronizedOverridesSynchronized extends BugChecker implements MethodTreeMatcher {
+
+  private final ConstantExpressions constantExpressions;
+
+  public UnsynchronizedOverridesSynchronized() {
+    this(ErrorProneFlags.empty());
+  }
+
+  public UnsynchronizedOverridesSynchronized(ErrorProneFlags flags) {
+    this.constantExpressions = ConstantExpressions.fromFlags(flags);
+  }
+
   @Override
   public Description matchMethod(MethodTree methodTree, VisitorState state) {
     MethodSymbol methodSymbol = ASTHelpers.getSymbol(methodTree);
@@ -86,8 +99,11 @@ public class UnsynchronizedOverridesSynchronized extends BugChecker implements M
     return sym.getModifiers().contains(Modifier.SYNCHRONIZED);
   }
 
-  /** Don't flag methods that are empty or trivially delegate to a super-implementation. */
-  private static boolean ignore(MethodTree method, VisitorState state) {
+  /**
+   * Don't flag methods that are empty, trivially delegate to a super-implementation, or return a
+   * constant.
+   */
+  private boolean ignore(MethodTree method, VisitorState state) {
     return firstNonNull(
         new TreeScanner<Boolean, Void>() {
           @Override
@@ -104,6 +120,10 @@ public class UnsynchronizedOverridesSynchronized extends BugChecker implements M
 
           @Override
           public Boolean visitReturn(ReturnTree tree, Void unused) {
+            ExpressionTree expression = tree.getExpression();
+            if (constantExpressions.constantExpression(expression, state).isPresent()) {
+              return true;
+            }
             return scan(tree.getExpression(), null);
           }
 
