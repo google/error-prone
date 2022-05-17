@@ -61,7 +61,7 @@ public abstract class Api {
             .collect(toImmutableList()));
   }
 
-  private static String fullyErasedAndUnannotatedType(Type type, Types types) {
+  static String fullyErasedAndUnannotatedType(Type type, Types types) {
     // Removes type arguments, replacing w/ upper bounds
     Type erasedType = types.erasureRecursive(type);
     Type unannotatedType = erasedType.accept(ANNOTATION_REMOVER, null);
@@ -141,7 +141,21 @@ public abstract class Api {
    */
   @VisibleForTesting
   public static Api parse(String api) {
-    Parser p = new Parser(api);
+    return parse(api, false);
+  }
+
+  /**
+   * Parses an API string into an {@link Api}. Example API strings are:
+   *
+   * <ul>
+   *   <li>a constructor (e.g., {@code java.net.URI#<init>(java.lang.String)})
+   *   <li>a static method (e.g., {@code java.net.URI#create(java.lang.String)})
+   *   <li>an instance method (e.g., {@code java.util.List#get(int)})
+   *   <li>an instance method with types erased (e.g., {@code java.util.List#add(java.lang.Object)})
+   * </ul>
+   */
+  static Api parse(String api, boolean assumeNoWhitespace) {
+    Parser p = new Parser(api, assumeNoWhitespace);
 
     // Let's parse this in 3 parts:
     //   * Fully-qualified owning name, followed by #
@@ -159,10 +173,12 @@ public abstract class Api {
 
   private static final class Parser {
     private final String api;
+    private final boolean assumeNoWhitespace;
     private int position = -1;
 
-    Parser(String api) {
+    Parser(String api, boolean assumeNoWhitespace) {
       this.api = api;
+      this.assumeNoWhitespace = assumeNoWhitespace;
     }
 
     String owningType() {
@@ -337,11 +353,15 @@ public abstract class Api {
         checkArgument(
             position < api.length(), "Could not parse '%s' as it must contain an '%s'", delimiter);
         next = api.charAt(position);
-      } while (whitespace().matches(next));
+      } while (!assumeNoWhitespace && whitespace().matches(next));
       return next;
     }
 
     void ensureNoMoreCharacters() {
+      if (assumeNoWhitespace) {
+        return;
+      }
+
       while (++position < api.length()) {
         check(whitespace().matches(api.charAt(position)), api, "it should end in ')'");
       }
