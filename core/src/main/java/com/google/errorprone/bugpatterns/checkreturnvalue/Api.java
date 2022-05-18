@@ -37,7 +37,9 @@ import com.sun.source.tree.ExpressionTree;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Type.ArrayType;
+import com.sun.tools.javac.code.Type.ClassType;
 import com.sun.tools.javac.code.Type.StructuralTypeMapping;
+import com.sun.tools.javac.code.TypeMetadata;
 import com.sun.tools.javac.code.Types;
 import java.util.List;
 
@@ -80,10 +82,15 @@ public abstract class Api {
           return t.baseType();
         }
 
+        @Override
+        public Type visitClassType(ClassType t, Void unused) {
+          return super.visitClassType(t.cloneWithMetadata(TypeMetadata.EMPTY), unused);
+        }
+
         // Remove annotations from all enclosing containers
         @Override
         public Type visitArrayType(ArrayType t, Void unused) {
-          return super.visitArrayType((ArrayType) t.baseType(), unused);
+          return super.visitArrayType(t.cloneWithMetadata(TypeMetadata.EMPTY), unused);
         }
       };
 
