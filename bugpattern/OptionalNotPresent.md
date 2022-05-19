@@ -1,7 +1,7 @@
 ---
 title: OptionalNotPresent
 summary: This Optional has been confirmed to be empty at this point, so the call to
-  `get` will throw.
+  `get()` or `orElseThrow()` will always throw.
 layout: bugpattern
 tags: ''
 severity: WARNING

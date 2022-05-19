@@ -1010,7 +1010,7 @@ __[OptionalMapToOptional](bugpattern/OptionalMapToOptional)__<br>
 Mapping to another Optional will yield a nested Optional. Did you mean flatMap?
 
 __[OptionalNotPresent](bugpattern/OptionalNotPresent)__<br>
-This Optional has been confirmed to be empty at this point, so the call to &#96;get&#96; will throw.
+This Optional has been confirmed to be empty at this point, so the call to &#96;get()&#96; or &#96;orElseThrow()&#96; will always throw.
 
 __[OrphanedFormatString](bugpattern/OrphanedFormatString)__<br>
 String literal contains format specifiers, but is not passed to a format method
