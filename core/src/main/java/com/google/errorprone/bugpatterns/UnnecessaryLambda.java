@@ -190,11 +190,32 @@ public class UnnecessaryLambda extends BugChecker
     class Scanner extends TreePathScanner<Void, Void> {
 
       boolean fixable = true;
+      boolean inInitializer = false;
 
       @Override
       public Void visitMethodInvocation(MethodInvocationTree node, Void unused) {
         check(node);
         return super.visitMethodInvocation(node, null);
+      }
+
+      @Override
+      public Void visitVariable(VariableTree node, Void unused) {
+        boolean wasInInitializer = inInitializer;
+        if (sym.equals(getSymbol(node))) {
+          inInitializer = true;
+        }
+        super.visitVariable(node, null);
+        inInitializer = wasInInitializer;
+        return null;
+      }
+
+      @Override
+      public Void visitMemberSelect(MemberSelectTree node, Void unused) {
+        if (inInitializer && sym.equals(getSymbol(node))) {
+          // We're not smart enough to rewrite a recursive lambda.
+          fixable = false;
+        }
+        return super.visitMemberSelect(node, unused);
       }
 
       private void check(MethodInvocationTree node) {

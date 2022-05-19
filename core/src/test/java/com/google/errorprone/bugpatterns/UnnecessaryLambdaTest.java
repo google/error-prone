@@ -316,4 +316,17 @@ public class UnnecessaryLambdaTest {
         .expectUnchanged()
         .doTest();
   }
+
+  @Test
+  public void recursiveLambda_ignored() {
+    testHelper
+        .addInputLines(
+            "Test.java",
+            "import java.util.function.Predicate;",
+            "class Test {",
+            "  private static final Predicate<String> F = x -> Test.F.test(x);",
+            "}")
+        .expectUnchanged()
+        .doTest();
+  }
 }
