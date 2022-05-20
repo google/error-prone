@@ -2853,4 +2853,74 @@ public class ImmutableCheckerTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void anonymousClass_cannotCloseAroundMutableLocal() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.errorprone.annotations.Immutable;",
+            "import java.util.List;",
+            "import java.util.ArrayList;",
+            "class Test {",
+            "  @Immutable interface ImmutableFunction<A, B> { A apply(B b); }",
+            "  void test(ImmutableFunction<Integer, Integer> f) {",
+            "    List<Integer> xs = new ArrayList<>();",
+            "    // BUG: Diagnostic contains:",
+            "    test(new ImmutableFunction<>() {",
+            "      @Override public Integer apply(Integer x) {",
+            "        return xs.get(x);",
+            "      }",
+            "    });",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void anonymousClass_hasMutableFieldSuppressed_noWarningAtUsageSite() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.errorprone.annotations.Immutable;",
+            "import java.util.List;",
+            "import java.util.ArrayList;",
+            "class Test {",
+            "  @Immutable interface ImmutableFunction<A, B> { A apply(B b); }",
+            "  void test(ImmutableFunction<Integer, Integer> f) {",
+            "    test(new ImmutableFunction<>() {",
+            "      @Override public Integer apply(Integer x) {",
+            "        return xs.get(x);",
+            "      }",
+            "      @SuppressWarnings(\"Immutable\")",
+            "      List<Integer> xs = new ArrayList<>();",
+            "    });",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void anonymousClass_canCallSuperMethodOnNonImmutableSuperClass() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.errorprone.annotations.Immutable;",
+            "import java.util.List;",
+            "import java.util.ArrayList;",
+            "class Test {",
+            "  interface Function<A, B> { default void foo() {} }",
+            "  @Immutable interface ImmutableFunction<A, B> extends Function<A, B> { A apply(B b);"
+                + " }",
+            "  void test(ImmutableFunction<Integer, Integer> f) {",
+            "    test(new ImmutableFunction<>() {",
+            "      @Override public Integer apply(Integer x) {",
+            "        foo();",
+            "        return 0;",
+            "      }",
+            "    });",
+            "  }",
+            "}")
+        .doTest();
+  }
 }

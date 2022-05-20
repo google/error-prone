@@ -25,6 +25,7 @@ import static com.google.errorprone.util.ASTHelpers.getReceiverType;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
+import static com.google.errorprone.util.ASTHelpers.isSameType;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
 import static com.google.errorprone.util.ASTHelpers.targetType;
 import static java.lang.String.format;
@@ -47,7 +48,6 @@ import com.google.errorprone.bugpatterns.BugChecker.MemberReferenceTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.NewClassTreeMatcher;
-import com.google.errorprone.bugpatterns.threadsafety.ImmutableAnalysis.ViolationReporter;
 import com.google.errorprone.bugpatterns.threadsafety.ThreadSafety.Violation;
 import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.SuggestedFix;
@@ -100,6 +100,7 @@ public class ImmutableChecker extends BugChecker
 
   private final WellKnownMutability wellKnownMutability;
   private final ImmutableSet<String> immutableAnnotations;
+  private final boolean handleAnonymousClasses;
 
   ImmutableChecker(ImmutableSet<String> immutableAnnotations) {
     this(ErrorProneFlags.empty(), immutableAnnotations);
@@ -112,6 +113,8 @@ public class ImmutableChecker extends BugChecker
   private ImmutableChecker(ErrorProneFlags flags, ImmutableSet<String> immutableAnnotations) {
     this.wellKnownMutability = WellKnownMutability.fromFlags(flags);
     this.immutableAnnotations = immutableAnnotations;
+    this.handleAnonymousClasses =
+        flags.getBoolean("ImmutableChecker:HandleAnonymousClasses").orElse(true);
   }
 
   @Override
@@ -128,121 +131,9 @@ public class ImmutableChecker extends BugChecker
     if (!hasImmutableAnnotation(lambdaType, state)) {
       return NO_MATCH;
     }
-    Set<VarSymbol> variablesClosed = new HashSet<>();
-    SetMultimap<ClassSymbol, MethodSymbol> typesClosed = LinkedHashMultimap.create();
-    Set<VarSymbol> variablesOwnedByLambda = new HashSet<>();
-
-    new TreePathScanner<Void, Void>() {
-      @Override
-      public Void visitVariable(VariableTree tree, Void unused) {
-        var symbol = getSymbol(tree);
-        variablesOwnedByLambda.add(symbol);
-        return super.visitVariable(tree, null);
-      }
-
-      @Override
-      public Void visitMethodInvocation(MethodInvocationTree tree, Void unused) {
-        if (getReceiver(tree) == null) {
-          var symbol = getSymbol(tree);
-          if (!symbol.isStatic()) {
-            effectiveTypeOfThis(symbol, getCurrentPath(), state)
-                .ifPresent(t -> typesClosed.put(t, symbol));
-          }
-        }
-        return super.visitMethodInvocation(tree, null);
-      }
-
-      @Override
-      public Void visitMemberSelect(MemberSelectTree tree, Void unused) {
-        // Note: member selects are not intrinsically problematic; the issue is what might be on the
-        // LHS of them, which is going to be handled by another visit* method.
-
-        // If we're only seeing a field access, don't complain about the fact we closed around
-        // `this`. This is special-case as it would otherwise be vexing to complain about accessing
-        // a field of type ImmutableList.
-        if (tree.getExpression() instanceof IdentifierTree
-            && getSymbol(tree) instanceof VarSymbol
-            && ((IdentifierTree) tree.getExpression()).getName().contentEquals("this")) {
-          handleIdentifier(getSymbol(tree));
-          return null;
-        }
-        return super.visitMemberSelect(tree, null);
-      }
-
-      @Override
-      public Void visitIdentifier(IdentifierTree tree, Void unused) {
-        handleIdentifier(getSymbol(tree));
-        return super.visitIdentifier(tree, null);
-      }
-
-      private void handleIdentifier(Symbol symbol) {
-        if (symbol instanceof VarSymbol
-            && !variablesOwnedByLambda.contains(symbol)
-            && !symbol.isStatic()) {
-          variablesClosed.add((VarSymbol) symbol);
-        }
-      }
-    }.scan(state.getPath(), null);
-
-    ImmutableSet<String> typarams =
-        immutableTypeParametersInScope(getSymbol(tree), state, analysis);
-    variablesClosed.stream()
-        .map(closedVariable -> checkClosedLambdaVariable(closedVariable, tree, typarams, analysis))
-        .filter(Violation::isPresent)
-        .forEachOrdered(
-            v -> {
-              String message = formLambdaReason(lambdaType) + ", but " + v.message();
-              state.reportMatch(buildDescription(tree).setMessage(message).build());
-            });
-    for (var entry : typesClosed.asMap().entrySet()) {
-      var classSymbol = entry.getKey();
-      var methods = entry.getValue();
-      if (!hasImmutableAnnotation(classSymbol.type.tsym, state)) {
-        String message =
-            format(
-                "%s, but accesses instance method(s) '%s' on '%s' which is not @Immutable.",
-                formLambdaReason(lambdaType),
-                methods.stream().map(Symbol::getSimpleName).collect(joining(", ")),
-                classSymbol.getSimpleName());
-        state.reportMatch(buildDescription(tree).setMessage(message).build());
-      }
-    }
+    checkClosedTypes(tree, state, lambdaType, analysis);
 
     return NO_MATCH;
-  }
-
-  /**
-   * Gets the effective type of `this`, had the bare invocation of {@code symbol} been qualified
-   * with it.
-   */
-  private static Optional<ClassSymbol> effectiveTypeOfThis(
-      MethodSymbol symbol, TreePath currentPath, VisitorState state) {
-    return stream(currentPath.iterator())
-        .filter(ClassTree.class::isInstance)
-        .map(t -> ASTHelpers.getSymbol((ClassTree) t))
-        .filter(c -> isSubtype(c.type, symbol.owner.type, state))
-        .findFirst();
-  }
-
-  private Violation checkClosedLambdaVariable(
-      VarSymbol closedVariable,
-      LambdaExpressionTree tree,
-      ImmutableSet<String> typarams,
-      ImmutableAnalysis analysis) {
-    if (!closedVariable.getKind().equals(ElementKind.FIELD)) {
-      return analysis.isThreadSafeType(false, typarams, closedVariable.type);
-    }
-    return analysis.isFieldImmutable(
-        Optional.empty(),
-        typarams,
-        (ClassSymbol) closedVariable.owner,
-        (ClassType) closedVariable.owner.type,
-        closedVariable,
-        (t, v) -> buildDescription(tree));
-  }
-
-  private static String formLambdaReason(TypeSymbol typeSymbol) {
-    return "This lambda implements @Immutable interface '" + typeSymbol.getSimpleName() + "'";
   }
 
   private boolean hasImmutableAnnotation(TypeSymbol tsym, VisitorState state) {
@@ -483,6 +374,10 @@ public class ImmutableChecker extends BugChecker
     if (superType == null) {
       return NO_MATCH;
     }
+
+    if (handleAnonymousClasses) {
+      checkClosedTypes(tree, state, superType.tsym, analysis);
+    }
     // We don't need to check that the superclass has an immutable instantiation.
     // The anonymous instance can only be referred to using a superclass type, so
     // the type arguments will be validated at any type use site where we care about
@@ -499,16 +394,140 @@ public class ImmutableChecker extends BugChecker
             Optional.of(tree),
             typarams,
             ASTHelpers.getType(tree),
-            new ViolationReporter() {
-              @Override
-              public Description.Builder describe(Tree tree, Violation info) {
-                return describeAnonymous(tree, superType, info);
-              }
-            });
+            (t, i) -> describeAnonymous(t, superType, i));
     if (!info.isPresent()) {
       return NO_MATCH;
     }
     return describeAnonymous(tree, superType, info).build();
+  }
+
+  private void checkClosedTypes(
+      Tree lambdaOrAnonymousClass,
+      VisitorState state,
+      TypeSymbol lambdaType,
+      ImmutableAnalysis analysis) {
+    Set<VarSymbol> variablesClosed = new HashSet<>();
+    SetMultimap<ClassSymbol, MethodSymbol> typesClosed = LinkedHashMultimap.create();
+    Set<VarSymbol> variablesOwnedByLambda = new HashSet<>();
+
+    new TreePathScanner<Void, Void>() {
+      @Override
+      public Void visitVariable(VariableTree tree, Void unused) {
+        var symbol = getSymbol(tree);
+        variablesOwnedByLambda.add(symbol);
+        return super.visitVariable(tree, null);
+      }
+
+      @Override
+      public Void visitMethodInvocation(MethodInvocationTree tree, Void unused) {
+        if (getReceiver(tree) == null) {
+          var symbol = getSymbol(tree);
+          if (!symbol.isStatic() && !symbol.isConstructor()) {
+            effectiveTypeOfThis(symbol, getCurrentPath(), state)
+                .filter(t -> !isSameType(t.type, getType(lambdaOrAnonymousClass), state))
+                .ifPresent(t -> typesClosed.put(t, symbol));
+          }
+        }
+        return super.visitMethodInvocation(tree, null);
+      }
+
+      @Override
+      public Void visitMemberSelect(MemberSelectTree tree, Void unused) {
+        // Note: member selects are not intrinsically problematic; the issue is what might be on the
+        // LHS of them, which is going to be handled by another visit* method.
+
+        // If we're only seeing a field access, don't complain about the fact we closed around
+        // `this`. This is special-case as it would otherwise be vexing to complain about accessing
+        // a field of type ImmutableList.
+        if (tree.getExpression() instanceof IdentifierTree
+            && getSymbol(tree) instanceof VarSymbol
+            && ((IdentifierTree) tree.getExpression()).getName().contentEquals("this")) {
+          handleIdentifier(getSymbol(tree));
+          return null;
+        }
+        return super.visitMemberSelect(tree, null);
+      }
+
+      @Override
+      public Void visitIdentifier(IdentifierTree tree, Void unused) {
+        handleIdentifier(getSymbol(tree));
+        return super.visitIdentifier(tree, null);
+      }
+
+      private void handleIdentifier(Symbol symbol) {
+        if (symbol instanceof VarSymbol
+            && !variablesOwnedByLambda.contains(symbol)
+            && !symbol.isStatic()) {
+          variablesClosed.add((VarSymbol) symbol);
+        }
+      }
+    }.scan(state.getPath(), null);
+
+    ImmutableSet<String> typarams =
+        immutableTypeParametersInScope(getSymbol(lambdaOrAnonymousClass), state, analysis);
+    variablesClosed.stream()
+        .map(
+            closedVariable ->
+                checkClosedVariable(closedVariable, lambdaOrAnonymousClass, typarams, analysis))
+        .filter(Violation::isPresent)
+        .forEachOrdered(
+            v -> {
+              String message =
+                  formAnonymousReason(lambdaOrAnonymousClass, lambdaType) + ", but " + v.message();
+              state.reportMatch(
+                  buildDescription(lambdaOrAnonymousClass).setMessage(message).build());
+            });
+    for (var entry : typesClosed.asMap().entrySet()) {
+      var classSymbol = entry.getKey();
+      var methods = entry.getValue();
+      if (!hasImmutableAnnotation(classSymbol.type.tsym, state)) {
+        String message =
+            format(
+                "%s, but accesses instance method(s) '%s' on '%s' which is not @Immutable.",
+                formAnonymousReason(lambdaOrAnonymousClass, lambdaType),
+                methods.stream().map(Symbol::getSimpleName).collect(joining(", ")),
+                classSymbol.getSimpleName());
+        state.reportMatch(buildDescription(lambdaOrAnonymousClass).setMessage(message).build());
+      }
+    }
+  }
+
+  /**
+   * Gets the effective type of `this`, had the bare invocation of {@code symbol} been qualified
+   * with it.
+   */
+  private static Optional<ClassSymbol> effectiveTypeOfThis(
+      MethodSymbol symbol, TreePath currentPath, VisitorState state) {
+    return stream(currentPath.iterator())
+        .filter(ClassTree.class::isInstance)
+        .map(t -> ASTHelpers.getSymbol((ClassTree) t))
+        .filter(c -> isSubtype(c.type, symbol.owner.type, state))
+        .findFirst();
+  }
+
+  private Violation checkClosedVariable(
+      VarSymbol closedVariable,
+      Tree tree,
+      ImmutableSet<String> typarams,
+      ImmutableAnalysis analysis) {
+    if (!closedVariable.getKind().equals(ElementKind.FIELD)) {
+      return analysis.isThreadSafeType(false, typarams, closedVariable.type);
+    }
+    return analysis.isFieldImmutable(
+        Optional.empty(),
+        typarams,
+        (ClassSymbol) closedVariable.owner,
+        (ClassType) closedVariable.owner.type,
+        closedVariable,
+        (t, v) -> buildDescription(tree));
+  }
+
+  private static String formAnonymousReason(Tree tree, TypeSymbol typeSymbol) {
+    return "This "
+        + (tree instanceof LambdaExpressionTree ? "lambda" : "anonymous class")
+        + " implements @Immutable interface '"
+        + typeSymbol.getSimpleName()
+        + "'";
   }
 
   private Description.Builder describeAnonymous(Tree tree, Type superType, Violation info) {
