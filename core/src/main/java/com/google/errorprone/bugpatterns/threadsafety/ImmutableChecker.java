@@ -154,17 +154,17 @@ public class ImmutableChecker extends BugChecker
 
       @Override
       public Void visitMemberSelect(MemberSelectTree tree, Void unused) {
-        // Special case the access of fields to allow accessing fields which would pass an immutable
-        // check.
+        // Note: member selects are not intrinsically problematic; the issue is what might be on the
+        // LHS of them, which is going to be handled by another visit* method.
+
+        // If we're only seeing a field access, don't complain about the fact we closed around
+        // `this`. This is special-case as it would otherwise be vexing to complain about accessing
+        // a field of type ImmutableList.
         if (tree.getExpression() instanceof IdentifierTree
-            && getSymbol(tree) instanceof VarSymbol) {
+            && getSymbol(tree) instanceof VarSymbol
+            && ((IdentifierTree) tree.getExpression()).getName().contentEquals("this")) {
           handleIdentifier(getSymbol(tree));
-          // If we're only seeing a field access, don't complain about the fact we closed around
-          // `this`.
-          if (tree.getExpression() instanceof IdentifierTree
-              && ((IdentifierTree) tree.getExpression()).getName().contentEquals("this")) {
-            return null;
-          }
+          return null;
         }
         return super.visitMemberSelect(tree, null);
       }

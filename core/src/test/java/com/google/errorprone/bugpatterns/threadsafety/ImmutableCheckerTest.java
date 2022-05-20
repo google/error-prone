@@ -2526,6 +2526,25 @@ public class ImmutableCheckerTest {
   }
 
   @Test
+  public void lambda_cannotCloseAroundMutableFieldQualifiedWithThis() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.errorprone.annotations.Immutable;",
+            "import java.util.ArrayList;",
+            "import java.util.List;",
+            "class Test {",
+            "  @Immutable interface ImmutableFunction<A, B> { A apply(B b); }",
+            "  private int b = 1;",
+            "  void test(ImmutableFunction<Integer, Integer> f) {",
+            "    // BUG: Diagnostic contains:",
+            "    test(x -> this.b);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void lambda_cannotCloseAroundMutableLocal() {
     compilationHelper
         .addSourceLines(
@@ -2805,6 +2824,31 @@ public class ImmutableCheckerTest {
             "  void test(ImmutableProvider<?> f) {",
             "    // BUG: Diagnostic contains:",
             "    test(() -> new ArrayList<>());",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void chainedGettersAreAcceptable() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.errorprone.annotations.Immutable;",
+            "import java.util.ArrayList;",
+            "import java.util.List;",
+            "class Test {",
+            "  final Test t = null;",
+            "  final List<String> xs = new ArrayList<>();",
+            "  final List<String> getXs() {",
+            "    return xs;",
+            "  }",
+            "  @Immutable interface ImmutableFunction { String apply(String b); }",
+            "  void test(ImmutableFunction f) {",
+            "    test(x -> {",
+            "      Test t = new Test();",
+            "      return t.xs.get(0) + t.getXs().get(0) + t.t.t.xs.get(0);",
+            "    });",
             "  }",
             "}")
         .doTest();
