@@ -86,10 +86,12 @@ public final class HeldLockAnalyzer {
       LockEventListener listener,
       Predicate<Tree> isSuppressed,
       GuardedByFlags flags,
-      boolean reportMissingGuards) {
+      boolean reportMissingGuards,
+      boolean checkTryWithResources) {
     HeldLockSet locks = HeldLockSet.empty();
     locks = handleMonitorGuards(state, locks, flags);
-    new LockScanner(state, listener, isSuppressed, flags, reportMissingGuards)
+    new LockScanner(
+            state, listener, isSuppressed, flags, reportMissingGuards, checkTryWithResources)
         .scan(state.getPath(), locks);
   }
 
@@ -126,6 +128,7 @@ public final class HeldLockAnalyzer {
     private final Predicate<Tree> isSuppressed;
     private final GuardedByFlags flags;
     private final boolean reportMissingGuards;
+    private final boolean checkTryWithResources;
 
     private static final GuardedByExpression.Factory F = new GuardedByExpression.Factory();
 
@@ -134,12 +137,14 @@ public final class HeldLockAnalyzer {
         LockEventListener listener,
         Predicate<Tree> isSuppressed,
         GuardedByFlags flags,
-        boolean reportMissingGuards) {
+        boolean reportMissingGuards,
+        boolean checkTryWithResources) {
       this.visitorState = visitorState;
       this.listener = listener;
       this.isSuppressed = isSuppressed;
       this.flags = flags;
       this.reportMissingGuards = reportMissingGuards;
+      this.checkTryWithResources = checkTryWithResources;
     }
 
     @Override
@@ -182,12 +187,11 @@ public final class HeldLockAnalyzer {
       // are held for the entirety of the try and catch statements.
       Collection<GuardedByExpression> releasedLocks =
           ReleasedLockFinder.find(tree.getFinallyBlock(), visitorState, flags);
-      if (resources.isEmpty()) {
+      // We don't know what to do with the try-with-resources block.
+      // TODO(cushon) - recognize common try-with-resources patterns. Currently there is no
+      // standard implementation of an AutoCloseable lock resource to detect.
+      if (checkTryWithResources || resources.isEmpty()) {
         scan(tree.getBlock(), locks.plusAll(releasedLocks));
-      } else {
-        // We don't know what to do with the try-with-resources block.
-        // TODO(cushon) - recognize common try-with-resources patterns. Currently there is no
-        // standard implementation of an AutoCloseable lock resource to detect.
       }
       scan(tree.getCatches(), locks.plusAll(releasedLocks));
       scan(tree.getFinallyBlock(), locks);
