@@ -329,10 +329,15 @@ com.sun.tools.javac.util.Context&nbsp;context)</span></div>
 <li>
 <section class="detail" id="actualTypes(com.google.errorprone.refaster.Inliner)">
 <h3>actualTypes</h3>
-<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">com.sun.tools.javac.util.List&lt;com.sun.tools.javac.code.Type&gt;</span>&nbsp;<span class="member-name">actualTypes</span>&#8203;(<span class="parameters"><a href="Inliner.html" title="class in com.google.errorprone.refaster">Inliner</a>&nbsp;inliner)</span></div>
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">com.sun.tools.javac.util.List&lt;com.sun.tools.javac.code.Type&gt;</span>&nbsp;<span class="member-name">actualTypes</span>&#8203;(<span class="parameters"><a href="Inliner.html" title="class in com.google.errorprone.refaster">Inliner</a>&nbsp;inliner)</span>
+                                                                            throws <span class="exceptions"><a href="CouldNotResolveImportException.html" title="class in com.google.errorprone.refaster">CouldNotResolveImportException</a></span></div>
 <div class="block">Returns a list of the actual types to be matched. This consists of the types of the expressions
  bound to the @BeforeTemplate method parameters, concatenated with the types of the expressions
  bound to expression placeholders, sorted by the name of the placeholder method.</div>
+<dl class="notes">
+<dt>Throws:</dt>
+<dd><code><a href="CouldNotResolveImportException.html" title="class in com.google.errorprone.refaster">CouldNotResolveImportException</a></code></dd>
+</dl>
 </section>
 </li>
 <li>
