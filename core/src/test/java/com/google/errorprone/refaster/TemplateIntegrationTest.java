@@ -235,6 +235,11 @@ public class TemplateIntegrationTest extends CompilerBasedTest {
   }
 
   @Test
+  public void voidExpressionPlaceholder() throws IOException {
+    runTest("VoidExpressionPlaceholderTemplate");
+  }
+
+  @Test
   public void blockPlaceholder() throws IOException {
     runTest("BlockPlaceholderTemplate");
   }
