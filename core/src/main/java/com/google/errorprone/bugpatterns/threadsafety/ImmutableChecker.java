@@ -25,6 +25,7 @@ import static com.google.errorprone.util.ASTHelpers.getReceiverType;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
+import static com.google.errorprone.util.ASTHelpers.isLocal;
 import static com.google.errorprone.util.ASTHelpers.isSameType;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
 import static com.google.errorprone.util.ASTHelpers.targetType;
@@ -320,6 +321,11 @@ public class ImmutableChecker extends BugChecker
             ASTHelpers.getType(tree),
             (Tree matched, Violation violation) ->
                 describeClass(matched, sym, annotation, violation));
+
+    Type superType = immutableSupertype(sym, state);
+    if (handleAnonymousClasses && superType != null && isLocal(sym)) {
+      checkClosedTypes(tree, state, superType.tsym, analysis);
+    }
 
     if (!info.isPresent()) {
       return NO_MATCH;

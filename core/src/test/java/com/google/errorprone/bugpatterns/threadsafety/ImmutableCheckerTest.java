@@ -375,6 +375,52 @@ public class ImmutableCheckerTest {
   }
 
   @Test
+  public void withinMutableClass() {
+    compilationHelper
+        .addSourceLines(
+            "A.java",
+            "import com.google.errorprone.annotations.Immutable;",
+            "import java.util.ArrayList;",
+            "import java.util.List;",
+            "class A {",
+            "  List<Integer> xs = new ArrayList<>();",
+            "  // BUG: Diagnostic contains: has mutable enclosing instance",
+            "  @Immutable class B {",
+            "    int get() {",
+            "      return xs.get(0);",
+            "    }",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void localClassCapturingMutableState() {
+    compilationHelper
+        .addSourceLines(
+            "A.java",
+            "import com.google.errorprone.annotations.Immutable;",
+            "import java.util.ArrayList;",
+            "import java.util.List;",
+            "@Immutable",
+            "class A {",
+            "  @Immutable interface B { int get(); }",
+            "  void test() {",
+            "    List<Integer> xs = new ArrayList<>();",
+            "    @Immutable",
+            "    // BUG: Diagnostic contains: but 'List' is mutable",
+            "    class C implements B {",
+            "      @Override",
+            "      public int get() {",
+            "        return xs.get(0);",
+            "      }",
+            "    }",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void typeParameterWithImmutableBound() {
     compilationHelper
         .addSourceLines(
