@@ -16,6 +16,7 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.errorprone.bugpatterns.SerializableReads.BANNED_OBJECT_INPUT_STREAM_METHODS;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.enclosingClass;
@@ -25,7 +26,6 @@ import static com.google.errorprone.matchers.Matchers.isSubtypeOf;
 import static com.google.errorprone.matchers.Matchers.methodIsNamed;
 import static com.google.errorprone.matchers.Matchers.not;
 
-import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.VisitorState;
@@ -40,28 +40,6 @@ import com.sun.source.tree.MethodInvocationTree;
     summary = "Deserializing user input via the `Serializable` API is extremely dangerous",
     severity = SeverityLevel.ERROR)
 public final class BanSerializableRead extends BugChecker implements MethodInvocationTreeMatcher {
-
-  private static final ImmutableSet<String> BANNED_OBJECT_INPUT_STREAM_METHODS =
-      ImmutableSet.of(
-          // Prevent reading objects unsafely into memory
-          "readObject",
-
-          // This is the same, the default value
-          "defaultReadObject",
-
-          // This is for trusted subclasses
-          "readObjectOverride",
-
-          // Ultimately, a lot of the safety worries come
-          // from being able to construct arbitrary classes via
-          // reading in class descriptors. I don't think anyone
-          // will bother calling this directly, but I don't see
-          // any reason not to block it.
-          "readClassDescriptor",
-
-          // These are basically the same as above
-          "resolveClass",
-          "resolveObject");
 
   private static final Matcher<ExpressionTree> EXEMPT =
       anyOf(
