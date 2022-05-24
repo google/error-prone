@@ -121,7 +121,8 @@ public class UnsynchronizedOverridesSynchronized extends BugChecker implements M
           @Override
           public Boolean visitReturn(ReturnTree tree, Void unused) {
             ExpressionTree expression = tree.getExpression();
-            if (constantExpressions.constantExpression(expression, state).isPresent()) {
+            if (expression == null
+                || constantExpressions.constantExpression(expression, state).isPresent()) {
               return true;
             }
             return scan(tree.getExpression(), null);

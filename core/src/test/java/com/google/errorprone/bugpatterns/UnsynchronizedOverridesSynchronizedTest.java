@@ -157,6 +157,11 @@ public class UnsynchronizedOverridesSynchronizedTest {
             "      super.f();",
             "    }",
             "  }",
+            "  class D extends Lib {",
+            "    public void f() {",
+            "      return;",
+            "    }",
+            "  }",
             "}")
         .doTest();
   }
