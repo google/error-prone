@@ -128,6 +128,21 @@ public final class NonCanonicalTypeTest {
   }
 
   @Test
+  public void qualifiedName_inLambdaParameter_cantFix() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.util.function.Function;",
+            "class Test {",
+            "  interface Rec extends Function<Rec, Rec> {}\n",
+            "  void run() {",
+            "    Rec f = x -> x.apply(x);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void qualifiedName_ambiguous() {
     compilationHelper
         .addSourceLines(
