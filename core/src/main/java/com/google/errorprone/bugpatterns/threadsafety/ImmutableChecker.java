@@ -259,7 +259,6 @@ public class ImmutableChecker extends BugChecker
 
     if (tree.getSimpleName().length() == 0) {
       // anonymous classes have empty names
-      // TODO(cushon): once Java 8 happens, require @Immutable on anonymous classes
       return handleAnonymousClass(tree, state, analysis);
     }
 
