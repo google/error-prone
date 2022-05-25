@@ -742,6 +742,7 @@ public final class ThreadSafety {
     if (attr.isPresent()) {
       ImmutableList<String> containerElements = containerOf(state, attr.get());
       if (elementAnnotation != null && containerElements.isEmpty()) {
+
         containerElements =
             sym.getTypeParameters().stream()
                 .filter(p -> p.getAnnotation(elementAnnotation) != null)
