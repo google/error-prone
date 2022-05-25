@@ -664,6 +664,9 @@ Java classes shouldn&#39;t use default package
 __[DeprecatedVariable](bugpattern/DeprecatedVariable)__<br>
 Applying the @Deprecated annotation to local variables or parameters has no effect
 
+__[DirectInvocationOnMock](bugpattern/DirectInvocationOnMock)__<br>
+Methods should not be directly invoked on mocks. Should this be part of a verify(..) call?
+
 __[DistinctVarargsChecker](bugpattern/DistinctVarargsChecker)__<br>
 Method expects distinct arguments at some/all positions
 
