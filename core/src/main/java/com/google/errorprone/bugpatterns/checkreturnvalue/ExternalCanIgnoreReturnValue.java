@@ -37,6 +37,7 @@ import com.sun.tools.javac.code.Types;
 import com.sun.tools.javac.util.List;
 import java.io.IOException;
 import java.io.UncheckedIOException;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -80,7 +81,7 @@ public final class ExternalCanIgnoreReturnValue extends MethodRule {
 
   /** Encapsulates asking "does this API match the list of APIs I care about"? */
   @FunctionalInterface
-  private interface MethodPredicate {
+  interface MethodPredicate {
     boolean methodMatches(MethodSymbol methodSymbol, VisitorState state);
   }
 
@@ -90,25 +91,25 @@ public final class ExternalCanIgnoreReturnValue extends MethodRule {
   enum ConfigParser {
     AS_STRINGS {
       @Override
-      MethodPredicate load(CharSource file) throws IOException {
-        return configByInterpretingMethodsAsStrings(file);
+      MethodPredicate load(Path file) throws IOException {
+        return configByInterpretingMethodsAsStrings(MoreFiles.asCharSource(file, UTF_8));
       }
     },
     PARSE_TOKENS {
       @Override
-      MethodPredicate load(CharSource file) throws IOException {
-        return configByParsingApiObjects(file);
+      MethodPredicate load(Path file) throws IOException {
+        return configByParsingApiObjects(MoreFiles.asCharSource(file, UTF_8));
       }
     };
 
-    abstract MethodPredicate load(CharSource file) throws IOException;
+    abstract MethodPredicate load(Path file) throws IOException;
   }
 
   private static MethodPredicate loadConfigListFromFile(String filename, ErrorProneFlags flags) {
     ConfigParser configParser =
         flags.getEnum(EXCLUSION_LIST_PARSER, ConfigParser.class).orElse(ConfigParser.AS_STRINGS);
     try {
-      CharSource file = MoreFiles.asCharSource(Paths.get(filename), UTF_8);
+      Path file = Paths.get(filename);
       return configParser.load(file);
     } catch (IOException e) {
       throw new UncheckedIOException(
@@ -133,20 +134,7 @@ public final class ExternalCanIgnoreReturnValue extends MethodRule {
       private String apiSignature(MethodSymbol methodSymbol, Types types) {
         return methodSymbol.owner.getQualifiedName()
             + "#"
-            + methodSymbol.name
-            + "("
-            + paramsString(methodSymbol, types)
-            + ")";
-      }
-
-      private String paramsString(MethodSymbol symbol, Types types) {
-        if (symbol.params().isEmpty()) {
-          return "";
-        }
-        return String.join(
-            ",",
-            Iterables.transform(
-                symbol.params(), p -> fullyErasedAndUnannotatedType(p.type, types)));
+            + methodNameAndParams(methodSymbol, types);
       }
     };
   }
@@ -160,7 +148,7 @@ public final class ExternalCanIgnoreReturnValue extends MethodRule {
               .collect(toImmutableSetMultimap(Api::className, api -> api));
     }
     return (methodSymbol, state) ->
-        apis.get(methodSymbol.enclClass().getQualifiedName().toString()).stream()
+        apis.get(surroundingClass(methodSymbol)).stream()
             .anyMatch(
                 api ->
                     methodSymbol.getSimpleName().contentEquals(api.methodName())
@@ -168,10 +156,26 @@ public final class ExternalCanIgnoreReturnValue extends MethodRule {
                             api.parameterTypes(), methodSymbol.params(), state.getTypes()));
   }
 
+  static String surroundingClass(MethodSymbol methodSymbol) {
+    return methodSymbol.enclClass().getQualifiedName().toString();
+  }
+
+  static String methodNameAndParams(MethodSymbol methodSymbol, Types types) {
+    return methodSymbol.name + "(" + paramsString(types, methodSymbol.params()) + ")";
+  }
+
   private static boolean methodParametersMatch(
       ImmutableList<String> parameters, List<VarSymbol> methodParams, Types types) {
     return Iterables.elementsEqual(
         parameters,
         Iterables.transform(methodParams, p -> fullyErasedAndUnannotatedType(p.type, types)));
+  }
+
+  private static String paramsString(Types types, List<VarSymbol> params) {
+    if (params.isEmpty()) {
+      return "";
+    }
+    return String.join(
+        ",", Iterables.transform(params, p -> fullyErasedAndUnannotatedType(p.type, types)));
   }
 }
