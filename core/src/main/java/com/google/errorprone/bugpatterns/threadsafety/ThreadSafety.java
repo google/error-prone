@@ -232,47 +232,6 @@ public final class ThreadSafety {
     }
   }
 
-  /** Use {@link #builder()} instead. */
-  // TODO(ghm): Delete after a JB release.
-  @Deprecated
-  public ThreadSafety(
-      VisitorState state,
-      KnownTypes knownTypes,
-      Set<String> markerAnnotations,
-      Set<String> acceptedAnnotations,
-      @Nullable Class<? extends Annotation> containerOfAnnotation,
-      @Nullable Class<? extends Annotation> suppressAnnotation) {
-    this(
-        state,
-        knownTypes,
-        markerAnnotations,
-        acceptedAnnotations,
-        containerOfAnnotation,
-        suppressAnnotation,
-        /* typeParameterAnnotation= */ null);
-  }
-
-  /** Use {@link #builder()} instead. */
-  @Deprecated
-  public ThreadSafety(
-      VisitorState state,
-      KnownTypes knownTypes,
-      Set<String> markerAnnotations,
-      Set<String> acceptedAnnotations,
-      @Nullable Class<? extends Annotation> containerOfAnnotation,
-      @Nullable Class<? extends Annotation> suppressAnnotation,
-      @Nullable Class<? extends Annotation> typeParameterAnnotation) {
-    this(
-        state,
-        Purpose.FOR_IMMUTABLE_CHECKER,
-        knownTypes,
-        markerAnnotations,
-        acceptedAnnotations,
-        containerOfAnnotation,
-        suppressAnnotation,
-        typeParameterAnnotation);
-  }
-
   private ThreadSafety(
       VisitorState state,
       Purpose purpose,
