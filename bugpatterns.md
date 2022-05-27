@@ -1301,6 +1301,9 @@ A call to Binder.clearCallingIdentity() should be followed by Binder.restoreCall
 __[BindingToUnqualifiedCommonType](bugpattern/BindingToUnqualifiedCommonType)__<br>
 This code declares a binding for a common value type without a Qualifier annotation.
 
+__[CanIgnoreReturnValueSuggester](bugpattern/CanIgnoreReturnValueSuggester)__<br>
+Methods that always &#39;return this&#39; should be annotated with @CanIgnoreReturnValue
+
 __[CatchingUnchecked](bugpattern/CatchingUnchecked)__<br>
 This catch block catches &#96;Exception&#96;, but can only catch unchecked exceptions. Consider catching RuntimeException (or something more specific) instead so it is more apparent that no checked exceptions are being handled.
 

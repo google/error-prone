@@ -1604,6 +1604,13 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Indicates that the return value of the annotated API(s) can be safely ignored.</div>
 </dd>
+<dt><a href="com/google/errorprone/bugpatterns/checkreturnvalue/CanIgnoreReturnValueSuggester.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue"><span class="type-name-link">CanIgnoreReturnValueSuggester</span></a> - Class in <a href="com/google/errorprone/bugpatterns/checkreturnvalue/package-summary.html">com.google.errorprone.bugpatterns.checkreturnvalue</a></dt>
+<dd>
+<div class="block">Checker that recommends annotating a method with <code>@CanIgnoreReturnValue</code> if the method
+ always returns <code>this</code>.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/checkreturnvalue/CanIgnoreReturnValueSuggester.html#%3Cinit%3E()">CanIgnoreReturnValueSuggester()</a></span> - Constructor for class com.google.errorprone.bugpatterns.checkreturnvalue.<a href="com/google/errorprone/bugpatterns/checkreturnvalue/CanIgnoreReturnValueSuggester.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">CanIgnoreReturnValueSuggester</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/CannotMockFinalClass.html" title="class in com.google.errorprone.bugpatterns"><span class="type-name-link">CannotMockFinalClass</span></a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
 <dd>
 <div class="block">Bug pattern to recognize attempts to mock final types.</div>
@@ -8029,6 +8036,8 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/CheckNotNullMultipleTimes.html#matchMethod(com.sun.source.tree.MethodTree,com.google.errorprone.VisitorState)">matchMethod(MethodTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/CheckNotNullMultipleTimes.html" title="class in com.google.errorprone.bugpatterns">CheckNotNullMultipleTimes</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/checkreturnvalue/CanIgnoreReturnValueSuggester.html#matchMethod(com.sun.source.tree.MethodTree,com.google.errorprone.VisitorState)">matchMethod(MethodTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.checkreturnvalue.<a href="com/google/errorprone/bugpatterns/checkreturnvalue/CanIgnoreReturnValueSuggester.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">CanIgnoreReturnValueSuggester</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/CheckReturnValue.html#matchMethod(com.sun.source.tree.MethodTree,com.google.errorprone.VisitorState)">matchMethod(MethodTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/CheckReturnValue.html" title="class in com.google.errorprone.bugpatterns">CheckReturnValue</a></dt>
 <dd>
 <div class="block">Validate <code>@CheckReturnValue</code> and <a href="com/google/errorprone/annotations/CanIgnoreReturnValue.html" title="annotation in com.google.errorprone.annotations"><code>CanIgnoreReturnValue</code></a> usage on methods.</div>
@@ -12272,14 +12281,6 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.html" title="class in com.google.errorprone.bugpatterns.threadsafety"><span class="type-name-link">ThreadSafety</span></a> - Class in <a href="com/google/errorprone/bugpatterns/threadsafety/package-summary.html">com.google.errorprone.bugpatterns.threadsafety</a></dt>
 <dd>
 <div class="block">A class which gives information about the annotation of types; if a type isn't annotated, <a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.Violation.html" title="class in com.google.errorprone.bugpatterns.threadsafety"><code>ThreadSafety.Violation</code></a> gives information as to why it is not.</div>
-</dd>
-<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.html#%3Cinit%3E(com.google.errorprone.VisitorState,com.google.errorprone.bugpatterns.threadsafety.ThreadSafety.KnownTypes,java.util.Set,java.util.Set,java.lang.Class,java.lang.Class)">ThreadSafety(VisitorState, ThreadSafety.KnownTypes, Set&lt;String&gt;, Set&lt;String&gt;, Class&lt;? extends Annotation&gt;, Class&lt;? extends Annotation&gt;)</a></span> - Constructor for class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety</a></dt>
-<dd>
-<div class="deprecation-block"><span class="deprecated-label">Deprecated.</span></div>
-</dd>
-<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.html#%3Cinit%3E(com.google.errorprone.VisitorState,com.google.errorprone.bugpatterns.threadsafety.ThreadSafety.KnownTypes,java.util.Set,java.util.Set,java.lang.Class,java.lang.Class,java.lang.Class)">ThreadSafety(VisitorState, ThreadSafety.KnownTypes, Set&lt;String&gt;, Set&lt;String&gt;, Class&lt;? extends Annotation&gt;, Class&lt;? extends Annotation&gt;, Class&lt;? extends Annotation&gt;)</a></span> - Constructor for class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety</a></dt>
-<dd>
-<div class="deprecation-block"><span class="deprecated-label">Deprecated.</span></div>
 </dd>
 <dt><a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.Builder.html" title="class in com.google.errorprone.bugpatterns.threadsafety"><span class="type-name-link">ThreadSafety.Builder</span></a> - Class in <a href="com/google/errorprone/bugpatterns/threadsafety/package-summary.html">com.google.errorprone.bugpatterns.threadsafety</a></dt>
 <dd>

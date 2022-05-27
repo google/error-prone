@@ -71,6 +71,10 @@ loadScripts(document, 'script');</script>
 <th class="col-first" scope="row"><a href="#com.google.errorprone.bugpatterns.checkreturnvalue">com.google.errorprone.bugpatterns.checkreturnvalue</a></th>
 <td class="col-last">&nbsp;</td>
 </tr>
+<tr class="alt-color">
+<th class="col-first" scope="row"><a href="#com.google.errorprone.refaster">com.google.errorprone.refaster</a></th>
+<td class="col-last">&nbsp;</td>
+</tr>
 </tbody>
 </table>
 </div>
@@ -144,6 +148,33 @@ loadScripts(document, 'script');</script>
 <th class="col-second" scope="row"><span class="type-name-label">ResultUsePolicyEvaluator.Builder.</span><code><span class="member-name-link"><a href="../../bugpatterns/checkreturnvalue/ResultUsePolicyEvaluator.Builder.html#addRules(java.lang.Iterable)">addRules</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Iterable.html" title="class or interface in java.lang" class="external-link">Iterable</a>&lt;? extends <a href="../../bugpatterns/checkreturnvalue/ResultUseRule.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUseRule</a>&gt;&nbsp;rules)</code></th>
 <td class="col-last">
 <div class="block">Adds all the given <code>rules</code>.</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="com.google.errorprone.refaster">
+<h2>Uses of <a href="../CanIgnoreReturnValue.html" title="annotation in com.google.errorprone.annotations">CanIgnoreReturnValue</a> in <a href="../../refaster/package-summary.html">com.google.errorprone.refaster</a></h2>
+<div class="use-summary">
+<table class="summary-table">
+<caption><span>Methods in <a href="../../refaster/package-summary.html">com.google.errorprone.refaster</a> with annotations of type <a href="../CanIgnoreReturnValue.html" title="annotation in com.google.errorprone.annotations">CanIgnoreReturnValue</a></span></caption>
+<thead>
+<tr>
+<th class="col-first" scope="col">Modifier and Type</th>
+<th class="col-second" scope="col">Method</th>
+<th class="col-last" scope="col">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="alt-color">
+<td class="col-first"><code>static &lt;T&gt;&nbsp;T</code></td>
+<th class="col-second" scope="row"><span class="type-name-label">Refaster.</span><code><span class="member-name-link"><a href="../../refaster/Refaster.html#anyOf(T...)">anyOf</a></span>&#8203;(T...&nbsp;expressions)</code></th>
+<td class="col-last">
+<div class="block">Indicates that Refaster should attempt to match a target expression against each of the
+ specified template expressions, in order, and succeed at the first match.</div>
 </td>
 </tr>
 </tbody>
