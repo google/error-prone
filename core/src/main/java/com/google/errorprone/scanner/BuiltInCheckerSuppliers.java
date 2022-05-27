@@ -415,6 +415,7 @@ import com.google.errorprone.bugpatterns.apidiff.Java8ApiChecker;
 import com.google.errorprone.bugpatterns.argumentselectiondefects.ArgumentSelectionDefectChecker;
 import com.google.errorprone.bugpatterns.argumentselectiondefects.AssertEqualsArgumentOrderChecker;
 import com.google.errorprone.bugpatterns.argumentselectiondefects.AutoValueConstructorOrderChecker;
+import com.google.errorprone.bugpatterns.checkreturnvalue.CanIgnoreReturnValueSuggester;
 import com.google.errorprone.bugpatterns.checkreturnvalue.UsingJsr305CheckReturnValue;
 import com.google.errorprone.bugpatterns.collectionincompatibletype.CollectionIncompatibleType;
 import com.google.errorprone.bugpatterns.collectionincompatibletype.CollectionUndefinedEquality;
@@ -1014,6 +1015,7 @@ public class BuiltInCheckerSuppliers {
           BinderIdentityRestoredDangerously.class, // TODO: enable this by default.
           BindingToUnqualifiedCommonType.class,
           BooleanParameter.class,
+          CanIgnoreReturnValueSuggester.class,
           CatchingUnchecked.class,
           CheckedExceptionNotThrown.class,
           ClassName.class,
