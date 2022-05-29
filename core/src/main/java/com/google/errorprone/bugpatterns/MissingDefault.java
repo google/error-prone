@@ -81,18 +81,19 @@ public class MissingDefault extends BugChecker implements SwitchTreeMatcher {
       return NO_MATCH;
     }
 
+    //CS304 Issue link: https://github.com/google/error-prone/issues/2709
     if (defaultCase.getCaseKind() == CaseTree.CaseKind.RULE && defaultCase.getBody() != null ){
       if (!defaultCase.getBody().toString().equals("{\r\n}")){
         return NO_MATCH;
       }
     }
-
     // If `default` case is empty, and last in switch, add `// fall out` comment
     // TODO(epmjohnston): Maybe move comment logic to https://errorprone.info/bugpattern/FallThrough
     int idx = tree.getCases().indexOf(defaultCase);
     if (idx != tree.getCases().size() - 1) {
       return NO_MATCH;
     }
+    //CS304 Issue link: https://github.com/google/error-prone/issues/2709
     if (state
         .getOffsetTokens(state.getStartPosition(defaultCase), state.getEndPosition(tree))
         .stream()

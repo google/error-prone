@@ -382,6 +382,8 @@
               <version>${autoservice.version}</version>
             </path>
           </annotationProcessorPaths>
+            <source>12</source>
+            <target>12</target>
         </configuration>
       </plugin>
       <!-- Include the @BugPattern annotation in the main distribution

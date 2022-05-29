@@ -41,20 +41,8 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
-import com.sun.source.tree.BlockTree;
-import com.sun.source.tree.ExpressionTree;
-import com.sun.source.tree.IdentifierTree;
-import com.sun.source.tree.LambdaExpressionTree;
-import com.sun.source.tree.MemberSelectTree;
-import com.sun.source.tree.MethodInvocationTree;
-import com.sun.source.tree.MethodTree;
-import com.sun.source.tree.ModifiersTree;
-import com.sun.source.tree.ParenthesizedTree;
-import com.sun.source.tree.ReturnTree;
-import com.sun.source.tree.Tree;
+import com.sun.source.tree.*;
 import com.sun.source.tree.Tree.Kind;
-import com.sun.source.tree.TypeCastTree;
-import com.sun.source.tree.VariableTree;
 import com.sun.source.util.SimpleTreeVisitor;
 import com.sun.source.util.TreePathScanner;
 import com.sun.tools.javac.code.Symbol;
@@ -62,6 +50,9 @@ import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.TypeTag;
 import com.sun.tools.javac.code.Types.FunctionDescriptorLookupError;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.function.Predicate;
 import javax.lang.model.element.ElementKind;
@@ -82,6 +73,14 @@ public class UnnecessaryLambda extends BugChecker
     if (!tree.getParameters().isEmpty() || !tree.getThrows().isEmpty()) {
       return NO_MATCH;
     }
+    ArrayList<Integer> arr = new ArrayList<>();
+    List<? extends StatementTree> statements = tree.getBody().getStatements();
+    for (StatementTree statement: statements){
+      if (statement.getKind().equals(Kind.ENHANCED_FOR_LOOP)){
+        return NO_MATCH;
+      }
+    }
+
     LambdaExpressionTree lambda = LAMBDA_VISITOR.visit(tree.getBody(), null);
     if (lambda == null) {
       return NO_MATCH;

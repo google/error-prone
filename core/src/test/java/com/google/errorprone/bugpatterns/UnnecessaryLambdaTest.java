@@ -25,295 +25,361 @@ import org.junit.runners.JUnit4;
 @RunWith(JUnit4.class)
 public class UnnecessaryLambdaTest {
 
-  private final BugCheckerRefactoringTestHelper testHelper =
-      BugCheckerRefactoringTestHelper.newInstance(UnnecessaryLambda.class, getClass());
+    private final BugCheckerRefactoringTestHelper testHelper =
+            BugCheckerRefactoringTestHelper.newInstance(UnnecessaryLambda.class, getClass());
 
-  @Test
-  public void method() {
-    testHelper
-        .addInputLines(
-            "Test.java",
-            "import java.util.function.Function;",
-            "class Test {",
-            "  private Function<String, String> f() {",
-            "    return x -> {",
-            "      return \"hello \" + x;",
-            "    };",
-            "  }",
-            "  void g() {",
-            "    Function<String, String> f = f();",
-            "    System.err.println(f().apply(\"world\"));",
-            "  }",
-            "}")
-        .addOutputLines(
-            "Test.java",
-            "import java.util.function.Function;",
-            "class Test {",
-            "  private String f(String x) {",
-            "    return \"hello \" + x;",
-            "  }",
-            "  void g() {",
-            "    Function<String, String> f = this::f;",
-            "    System.err.println(f(\"world\"));",
-            "  }",
-            "}")
-        .doTest();
-  }
+    @Test
+    public void method() {
+        testHelper
+                .addInputLines(
+                        "Test.java",
+                        "import java.util.function.Function;",
+                        "class Test {",
+                        "  private Function<String, String> f() {",
+                        "    return x -> {",
+                        "      return \"hello \" + x;",
+                        "    };",
+                        "  }",
+                        "  void g() {",
+                        "    Function<String, String> f = f();",
+                        "    System.err.println(f().apply(\"world\"));",
+                        "  }",
+                        "}")
+                .addOutputLines(
+                        "Test.java",
+                        "import java.util.function.Function;",
+                        "class Test {",
+                        "  private String f(String x) {",
+                        "    return \"hello \" + x;",
+                        "  }",
+                        "  void g() {",
+                        "    Function<String, String> f = this::f;",
+                        "    System.err.println(f(\"world\"));",
+                        "  }",
+                        "}")
+                .doTest();
+    }
 
-  @Test
-  public void method_effectivelyPrivate() {
-    testHelper
-        .addInputLines(
-            "Test.java",
-            "import java.util.function.Function;",
-            "class Test {",
-            "  private class Inner {",
-            "    Function<String, String> f() {",
-            "      return x -> {",
-            "        return \"hello \" + x;",
-            "      };",
-            "    }",
-            "    void g() {",
-            "      Function<String, String> f = f();",
-            "      System.err.println(f().apply(\"world\"));",
-            "    }",
-            "  }",
-            "}")
-        .addOutputLines(
-            "Test.java",
-            "import java.util.function.Function;",
-            "class Test {",
-            "  private class Inner {",
-            "    String f(String x) {",
-            "      return \"hello \" + x;",
-            "    }",
-            "    void g() {",
-            "      Function<String, String> f = this::f;",
-            "      System.err.println(f(\"world\"));",
-            "    }",
-            "  }",
-            "}")
-        .doTest();
-  }
+    @Test
+    public void method_effectivelyPrivate() {
+        testHelper
+                .addInputLines(
+                        "Test.java",
+                        "import java.util.function.Function;",
+                        "class Test {",
+                        "  private class Inner {",
+                        "    Function<String, String> f() {",
+                        "      return x -> {",
+                        "        return \"hello \" + x;",
+                        "      };",
+                        "    }",
+                        "    void g() {",
+                        "      Function<String, String> f = f();",
+                        "      System.err.println(f().apply(\"world\"));",
+                        "    }",
+                        "  }",
+                        "}")
+                .addOutputLines(
+                        "Test.java",
+                        "import java.util.function.Function;",
+                        "class Test {",
+                        "  private class Inner {",
+                        "    String f(String x) {",
+                        "      return \"hello \" + x;",
+                        "    }",
+                        "    void g() {",
+                        "      Function<String, String> f = this::f;",
+                        "      System.err.println(f(\"world\"));",
+                        "    }",
+                        "  }",
+                        "}")
+                .doTest();
+    }
 
-  @Test
-  public void method_static() {
-    testHelper
-        .addInputLines(
-            "Test.java",
-            "import java.util.function.Function;",
-            "class Test {",
-            "  private static Function<String, String> f() {",
-            "    return x -> \"hello \" + x;",
-            "  }",
-            "  void g() {",
-            "    Function<String, String> f = f();",
-            "    System.err.println(f().apply(\"world\"));",
-            "  }",
-            "}")
-        .addOutputLines(
-            "Test.java",
-            "import java.util.function.Function;",
-            "class Test {",
-            "  private static String f(String x) {",
-            "    return \"hello \" + x;",
-            "  }",
-            "  void g() {",
-            "    Function<String, String> f = Test::f;",
-            "    System.err.println(f(\"world\"));",
-            "  }",
-            "}")
-        .doTest();
-  }
+    @Test
+    public void method_static() {
+        testHelper
+                .addInputLines(
+                        "Test.java",
+                        "import java.util.function.Function;",
+                        "class Test {",
+                        "  private static Function<String, String> f() {",
+                        "    return x -> \"hello \" + x;",
+                        "  }",
+                        "  void g() {",
+                        "    Function<String, String> f = f();",
+                        "    System.err.println(f().apply(\"world\"));",
+                        "  }",
+                        "}")
+                .addOutputLines(
+                        "Test.java",
+                        "import java.util.function.Function;",
+                        "class Test {",
+                        "  private static String f(String x) {",
+                        "    return \"hello \" + x;",
+                        "  }",
+                        "  void g() {",
+                        "    Function<String, String> f = Test::f;",
+                        "    System.err.println(f(\"world\"));",
+                        "  }",
+                        "}")
+                .doTest();
+    }
 
-  @Test
-  public void method_void() {
-    testHelper
-        .addInputLines(
-            "Test.java",
-            "import java.util.function.Consumer;",
-            "class Test {",
-            "  private Consumer<String> f() {",
-            "    return x -> System.err.println(x);",
-            "  }",
-            "  void g() {",
-            "    Consumer<String> f = f();",
-            "    f().accept(\"world\");",
-            "  }",
-            "}")
-        .addOutputLines(
-            "Test.java",
-            "import java.util.function.Consumer;",
-            "class Test {",
-            "  private void f(String x) {",
-            "    System.err.println(x);",
-            "  }",
-            "  void g() {",
-            "    Consumer<String> f = this::f;",
-            "    f(\"world\");",
-            "  }",
-            "}")
-        .doTest();
-  }
+    @Test
+    public void method_void() {
+        testHelper
+                .addInputLines(
+                        "Test.java",
+                        "import java.util.function.Consumer;",
+                        "class Test {",
+                        "  private Consumer<String> f() {",
+                        "    return x -> System.err.println(x);",
+                        "  }",
+                        "  void g() {",
+                        "    Consumer<String> f = f();",
+                        "    f().accept(\"world\");",
+                        "  }",
+                        "}")
+                .addOutputLines(
+                        "Test.java",
+                        "import java.util.function.Consumer;",
+                        "class Test {",
+                        "  private void f(String x) {",
+                        "    System.err.println(x);",
+                        "  }",
+                        "  void g() {",
+                        "    Consumer<String> f = this::f;",
+                        "    f(\"world\");",
+                        "  }",
+                        "}")
+                .doTest();
+    }
 
-  @Test
-  public void variable_instance() {
-    testHelper
-        .addInputLines(
-            "Test.java",
-            "import java.util.function.Function;",
-            "class Test {",
-            "  private final Function<String, String> camelCase = x -> \"hello \" + x;",
-            "  void g() {",
-            "    Function<String, String> f = camelCase;",
-            "    System.err.println(camelCase.apply(\"world\"));",
-            "  }",
-            "}")
-        .addOutputLines(
-            "Test.java",
-            "import java.util.function.Function;",
-            "class Test {",
-            "  private String camelCase(String x) {",
-            "    return \"hello \" + x;",
-            "  }",
-            "  void g() {",
-            "    Function<String, String> f = this::camelCase;",
-            "    System.err.println(camelCase(\"world\"));",
-            "  }",
-            "}")
-        .doTest();
-  }
+    @Test
+    public void variable_instance() {
+        testHelper
+                .addInputLines(
+                        "Test.java",
+                        "import java.util.function.Function;",
+                        "class Test {",
+                        "  private final Function<String, String> camelCase = x -> \"hello \" + x;",
+                        "  void g() {",
+                        "    Function<String, String> f = camelCase;",
+                        "    System.err.println(camelCase.apply(\"world\"));",
+                        "  }",
+                        "}")
+                .addOutputLines(
+                        "Test.java",
+                        "import java.util.function.Function;",
+                        "class Test {",
+                        "  private String camelCase(String x) {",
+                        "    return \"hello \" + x;",
+                        "  }",
+                        "  void g() {",
+                        "    Function<String, String> f = this::camelCase;",
+                        "    System.err.println(camelCase(\"world\"));",
+                        "  }",
+                        "}")
+                .doTest();
+    }
 
-  @Test
-  public void variable_static() {
-    testHelper
-        .addInputLines(
-            "Test.java",
-            "import java.util.function.Function;",
-            "class Test {",
-            "  private static final Function<String, String> F = x -> \"hello \" + x;",
-            "  void g() {",
-            "    Function<String, String> l = Test.F;",
-            "    System.err.println(F.apply(\"world\"));",
-            "  }",
-            "}")
-        .addOutputLines(
-            "Test.java",
-            "import java.util.function.Function;",
-            "class Test {",
-            "  private static String f(String x) {",
-            "    return \"hello \" + x;",
-            "  }",
-            "  void g() {",
-            "    Function<String, String> l = Test::f;",
-            "    System.err.println(f(\"world\"));",
-            "  }",
-            "}")
-        .doTest();
-  }
+    @Test
+    public void variable_static() {
+        testHelper
+                .addInputLines(
+                        "Test.java",
+                        "import java.util.function.Function;",
+                        "class Test {",
+                        "  private static final Function<String, String> F = x -> \"hello \" + x;",
+                        "  void g() {",
+                        "    Function<String, String> l = Test.F;",
+                        "    System.err.println(F.apply(\"world\"));",
+                        "  }",
+                        "}")
+                .addOutputLines(
+                        "Test.java",
+                        "import java.util.function.Function;",
+                        "class Test {",
+                        "  private static String f(String x) {",
+                        "    return \"hello \" + x;",
+                        "  }",
+                        "  void g() {",
+                        "    Function<String, String> l = Test::f;",
+                        "    System.err.println(f(\"world\"));",
+                        "  }",
+                        "}")
+                .doTest();
+    }
 
-  @Test
-  public void method_shapes() {
-    testHelper
-        .addInputLines(
-            "Test.java",
-            "import java.util.function.BiFunction;",
-            "import java.util.function.Supplier;",
-            "class Test {",
-            "  private Supplier<String> f() {",
-            "    return () -> \"hello \";",
-            "  }",
-            "  private BiFunction<String, String, String> g() {",
-            "    return (a, b) -> a + \"hello \" + b;",
-            "  }",
-            "  private Runnable h() {",
-            "    return () -> System.err.println();",
-            "  }",
-            "  void main() {",
-            "    System.err.println(f().get());",
-            "    System.err.println(g().apply(\"a\", \"b\"));",
-            "    h().run();",
-            "  }",
-            "}")
-        .addOutputLines(
-            "Test.java",
-            "import java.util.function.BiFunction;",
-            "import java.util.function.Supplier;",
-            "class Test {",
-            "  private String f() {",
-            "    return \"hello \";",
-            "  }",
-            "  private String g(String a, String b) {",
-            "    return a + \"hello \" + b;",
-            "  }",
-            "  private void h() {",
-            "    System.err.println();",
-            "  }",
-            "  void main() {",
-            "    System.err.println(f());",
-            "    System.err.println(g(\"a\", \"b\"));",
-            "    h();",
-            "  }",
-            "}")
-        .doTest();
-  }
+    @Test
+    public void method_shapes() {
+        testHelper
+                .addInputLines(
+                        "Test.java",
+                        "import java.util.function.BiFunction;",
+                        "import java.util.function.Supplier;",
+                        "class Test {",
+                        "  private Supplier<String> f() {",
+                        "    return () -> \"hello \";",
+                        "  }",
+                        "  private BiFunction<String, String, String> g() {",
+                        "    return (a, b) -> a + \"hello \" + b;",
+                        "  }",
+                        "  private Runnable h() {",
+                        "    return () -> System.err.println();",
+                        "  }",
+                        "  void main() {",
+                        "    System.err.println(f().get());",
+                        "    System.err.println(g().apply(\"a\", \"b\"));",
+                        "    h().run();",
+                        "  }",
+                        "}")
+                .addOutputLines(
+                        "Test.java",
+                        "import java.util.function.BiFunction;",
+                        "import java.util.function.Supplier;",
+                        "class Test {",
+                        "  private String f() {",
+                        "    return \"hello \";",
+                        "  }",
+                        "  private String g(String a, String b) {",
+                        "    return a + \"hello \" + b;",
+                        "  }",
+                        "  private void h() {",
+                        "    System.err.println();",
+                        "  }",
+                        "  void main() {",
+                        "    System.err.println(f());",
+                        "    System.err.println(g(\"a\", \"b\"));",
+                        "    h();",
+                        "  }",
+                        "}")
+                .doTest();
+    }
 
-  @Test
-  public void nonFunctionalInterfaceMethod() {
-    testHelper
-        .addInputLines(
-            "Test.java",
-            "import java.util.function.Predicate;",
-            "class Test {",
-            "  private static final Predicate<String> F = x -> \"hello \".equals(x);",
-            "  void g() {",
-            "    Predicate<String> l = Test.F.and(x -> true);",
-            "  }",
-            "}")
-        .expectUnchanged()
-        .doTest();
-  }
+    @Test
+    public void nonFunctionalInterfaceMethod() {
+        testHelper
+                .addInputLines(
+                        "Test.java",
+                        "import java.util.function.Predicate;",
+                        "class Test {",
+                        "  private static final Predicate<String> F = x -> \"hello \".equals(x);",
+                        "  void g() {",
+                        "    Predicate<String> l = Test.F.and(x -> true);",
+                        "  }",
+                        "}")
+                .expectUnchanged()
+                .doTest();
+    }
 
-  @Test
-  public void variable_bind() {
-    testHelper
-        .addInputLines(
-            "Bind.java",
-            "package com.google.inject.testing.fieldbinder;",
-            "import static java.lang.annotation.ElementType.FIELD;",
-            "import static java.lang.annotation.RetentionPolicy.RUNTIME;",
-            "import java.lang.annotation.Retention;",
-            "import java.lang.annotation.Target;",
-            "@Retention(RUNTIME)",
-            "@Target({FIELD})",
-            "public @interface Bind {}")
-        .expectUnchanged()
-        .addInputLines(
-            "Test.java",
-            "import java.util.function.Function;",
-            "import com.google.inject.testing.fieldbinder.Bind;",
-            "class Test {",
-            "  @Bind",
-            "  private final Function<String, String> camelCase = x -> \"hello \" + x;",
-            "  void g() {",
-            "    Function<String, String> f = camelCase;",
-            "    System.err.println(camelCase.apply(\"world\"));",
-            "  }",
-            "}")
-        .expectUnchanged()
-        .doTest();
-  }
+    @Test
+    public void variable_bind() {
+        testHelper
+                .addInputLines(
+                        "Bind.java",
+                        "package com.google.inject.testing.fieldbinder;",
+                        "import static java.lang.annotation.ElementType.FIELD;",
+                        "import static java.lang.annotation.RetentionPolicy.RUNTIME;",
+                        "import java.lang.annotation.Retention;",
+                        "import java.lang.annotation.Target;",
+                        "@Retention(RUNTIME)",
+                        "@Target({FIELD})",
+                        "public @interface Bind {}")
+                .expectUnchanged()
+                .addInputLines(
+                        "Test.java",
+                        "import java.util.function.Function;",
+                        "import com.google.inject.testing.fieldbinder.Bind;",
+                        "class Test {",
+                        "  @Bind",
+                        "  private final Function<String, String> camelCase = x -> \"hello \" + x;",
+                        "  void g() {",
+                        "    Function<String, String> f = camelCase;",
+                        "    System.err.println(camelCase.apply(\"world\"));",
+                        "  }",
+                        "}")
+                .expectUnchanged()
+                .doTest();
+    }
 
-  @Test
-  public void variable_notAFunctionalInterface() {
-    testHelper
-        .addInputLines(
-            "Test.java",
-            "import java.util.function.Function;",
-            "class Test {",
-            "  private static final Object F = (Function<String, String>) x -> \"hello \" + x;",
-            "}")
-        .expectUnchanged()
-        .doTest();
-  }
+    @Test
+    public void variable_notAFunctionalInterface() {
+        testHelper
+                .addInputLines(
+                        "Test.java",
+                        "import java.util.function.Function;",
+                        "class Test {",
+                        "  private static final Object F = (Function<String, String>) x -> \"hello \" + x;",
+                        "}")
+                .expectUnchanged()
+                .doTest();
+    }
+
+    @Test
+    public void recursiveLambda_ignored() {
+        testHelper
+                .addInputLines(
+                        "Test.java",
+                        "import java.util.function.Predicate;",
+                        "class Test {",
+                        "  private static final Predicate<String> F = x -> Test.F.test(x);",
+                        "}")
+                .expectUnchanged()
+                .doTest();
+    }
+
+
+    /**
+     * Test for Iterable,created by Lanjing Yi
+     *
+     * **/
+    @Test
+    public void testIterable() {
+        testHelper
+                .addInputLines(
+                        "Test.java",
+                        "import java.util.stream.IntStream;",
+                        "import java.util.ArrayList;",
+                        "class Test {",
+                        "  void someLoopyCode() {",
+                        "    ArrayList<Integer> arr = new ArrayList<>();",
+                        "    arr.add(1);",
+                        "    for (int i : arr) {",
+                        "         i = i - 1;",
+                        "    }",
+                        "  }",
+                        "}")
+                .expectUnchanged()
+                .doTest();
+    }
+
+
+
+
+    /**
+     * Test for Enhanced forLoop,created by Lanjing Yi
+     *
+     * **/
+    @Test
+    public void testEnhancedForLoop() {
+        testHelper
+                .addInputLines(
+                        "Test.java",
+                        "import java.util.stream.IntStream;",
+                        "import java.util.ArrayList;",
+                        "class Test {",
+                        "  void someLoopyCode() {",
+                        "    ArrayList<Integer> arr = new ArrayList<>();",
+                        "    arr.add(1);",
+                        "    for (int i : arr) {",
+                        "         i = i - 1;",
+                        "    }",
+                        "  }",
+                        "}")
+                .expectUnchanged()
+                .doTest();
+    }
+
 }

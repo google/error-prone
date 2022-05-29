@@ -595,6 +595,7 @@ public class VisitorState {
         getSourceCode().subSequence(start, end).toString(), start, context);
   }
 
+  //CS304 Issue link: https://github.com/google/error-prone/issues/2709
   /** Returns the start position of the node. */
   public int getStartPosition(Tree node) {
     JCCompilationUnit compilationUnit = (JCCompilationUnit) getPath().getCompilationUnit();

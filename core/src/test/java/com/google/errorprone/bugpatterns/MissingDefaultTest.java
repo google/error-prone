@@ -264,7 +264,7 @@ public class MissingDefaultTest {
         .doTest();
   }
 
-
+  //CS304 Issue link: https://github.com/google/error-prone/issues/2709
   @Test
   public void arrowSwitchWithoutComment(){
     assumeTrue(RuntimeVersion.isAtLeast14());
@@ -286,7 +286,7 @@ public class MissingDefaultTest {
         .doTest();
   }
 
-
+  //CS304 Issue link: https://github.com/google/error-prone/issues/2709
   @Test
   public void arrowSwitchCommentAboveBraces(){
     assumeTrue(RuntimeVersion.isAtLeast14());
@@ -311,6 +311,7 @@ public class MissingDefaultTest {
         .doTest();
   }
 
+  //CS304 Issue link: https://github.com/google/error-prone/issues/2709
   @Test
   public void arrowSwitchCommentInMiddle(){
     assumeTrue(RuntimeVersion.isAtLeast14());
@@ -334,6 +335,7 @@ public class MissingDefaultTest {
         .doTest();
   }
 
+  //CS304 Issue link: https://github.com/google/error-prone/issues/2709
   @Test
   public void arrowSwitchCommentAfterArrow(){
     assumeTrue(RuntimeVersion.isAtLeast14());
@@ -356,6 +358,7 @@ public class MissingDefaultTest {
         .doTest();
   }
 
+  //CS304 Issue link: https://github.com/google/error-prone/issues/2709
   @Test
   public void arrowSwitchCommentInsideBraces(){
     assumeTrue(RuntimeVersion.isAtLeast14());
@@ -380,7 +383,7 @@ public class MissingDefaultTest {
         .doTest();
   }
 
-
+  //CS304 Issue link: https://github.com/google/error-prone/issues/2709
   @Test
   public void arrowSwitchWithComment(){
     assumeTrue(RuntimeVersion.isAtLeast14());
@@ -401,6 +404,4 @@ public class MissingDefaultTest {
             "}")
         .doTest();
   }
-
-
 }
