@@ -22,7 +22,6 @@ import static com.google.errorprone.matchers.Description.NO_MATCH;
 
 import com.google.common.collect.Iterables;
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.StandardTags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.SwitchTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
@@ -43,8 +42,7 @@ import javax.lang.model.element.ElementKind;
         "The Google Java Style Guide requires that each switch statement includes a default"
             + " statement group, even if it contains no code. (This requirement is lifted for any"
             + " switch statement that covers all values of an enum.)",
-    severity = WARNING,
-    tags = StandardTags.STYLE)
+    severity = WARNING)
 public class MissingDefault extends BugChecker implements SwitchTreeMatcher {
   @Override
   public Description matchSwitch(SwitchTree tree, VisitorState state) {
@@ -80,22 +78,14 @@ public class MissingDefault extends BugChecker implements SwitchTreeMatcher {
     if (statements != null && !statements.isEmpty()) {
       return NO_MATCH;
     }
-
-    //CS304 Issue link: https://github.com/google/error-prone/issues/2709
-    if (defaultCase.getCaseKind() == CaseTree.CaseKind.RULE && defaultCase.getBody() != null ){
-      if (!defaultCase.getBody().toString().equals("{\r\n}")){
-        return NO_MATCH;
-      }
-    }
     // If `default` case is empty, and last in switch, add `// fall out` comment
     // TODO(epmjohnston): Maybe move comment logic to https://errorprone.info/bugpattern/FallThrough
     int idx = tree.getCases().indexOf(defaultCase);
     if (idx != tree.getCases().size() - 1) {
       return NO_MATCH;
     }
-    //CS304 Issue link: https://github.com/google/error-prone/issues/2709
     if (state
-        .getOffsetTokens(state.getStartPosition(defaultCase), state.getEndPosition(tree))
+        .getOffsetTokens(state.getEndPosition(defaultCase), state.getEndPosition(tree))
         .stream()
         .anyMatch(t -> !t.comments().isEmpty())) {
       return NO_MATCH;
