@@ -118,6 +118,13 @@ public final class FieldCanBeLocal extends BugChecker implements CompilationUnit
 
       @Override
       public Void visitClass(ClassTree classTree, Void unused) {
+         
+        if(getSymbol(classTree).getKind()== ElementKind.RECORD){
+          for(Tree t: classTree.getMembers()){
+            potentialFields.remove(getSymbol(t));
+          }
+        }
+          
         if (isSuppressed(classTree, state)) {
           return null;
         }
