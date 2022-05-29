@@ -53,7 +53,6 @@ import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.ReturnTree;
 import com.sun.source.tree.Tree;
-import com.sun.source.tree.Tree.Kind;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.TypeVariableSymbol;
@@ -74,7 +73,7 @@ import javax.lang.model.element.Name;
 import javax.lang.model.type.TypeKind;
 
 /**
- * An abstract base class to matc/////h API usages in which the return value is not used.
+ * An abstract base class to match API usages in which the return value is not used.
  *
  * <p>In addition to regular contexts in which a return value isn't used (e.g.: the result of {@code
  * String.trim()} is just ignored), this class has the capacity to determine if the result is cast
@@ -192,7 +191,6 @@ public abstract class AbstractReturnValueIgnored extends BugChecker
    * Override this to return false to forbid discarding return values in testers that are testing
    * whether an exception is thrown.
    */
-
   protected boolean allowInExceptionThrowers() {
     return true;
   }
@@ -201,7 +199,6 @@ public abstract class AbstractReturnValueIgnored extends BugChecker
    * Fixes the error by assigning the result of the call to the receiver reference, or deleting the
    * method call. Subclasses may override if they prefer a different description.
    */
-  //it is where the fix suggest be made
   protected Description describeReturnValueIgnored(
       MethodInvocationTree methodInvocationTree, VisitorState state) {
     // Find the root of the field access chain, i.e. a.intern().trim() ==> a.
@@ -222,10 +219,9 @@ public abstract class AbstractReturnValueIgnored extends BugChecker
 
     Fix fix = SuggestedFix.emptyFix();
     Symbol symbol = getSymbol(identifierExpr);
-    if (symbol != null
+    if (identifierExpr != null
+        && symbol != null
         && !symbol.name.contentEquals("this")
-        //check if the exp is lamda
-        && state.getPath().getParentPath().getLeaf().getKind() != Kind.LAMBDA_EXPRESSION
         && returnType != null
         && state.getTypes().isAssignable(returnType, identifierType)) {
       // Fix by assigning the assigning the result of the call to the root receiver reference.
