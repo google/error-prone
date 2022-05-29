@@ -27,14 +27,18 @@ import org.junit.runners.JUnit4;
 /** {@link ParameterMissingNullable}Test */
 @RunWith(JUnit4.class)
 public class ParameterMissingNullableTest {
-  private final CompilationTestHelper helper =
+  private final CompilationTestHelper conservativeHelper =
       CompilationTestHelper.newInstance(ParameterMissingNullable.class, getClass());
-  private final BugCheckerRefactoringTestHelper refactoringHelper =
-      BugCheckerRefactoringTestHelper.newInstance(ParameterMissingNullable.class, getClass());
+  private final CompilationTestHelper aggressiveHelper =
+      CompilationTestHelper.newInstance(ParameterMissingNullable.class, getClass())
+          .setArgs("-XepOpt:Nullness:Conservative=false");
+  private final BugCheckerRefactoringTestHelper aggressiveRefactoringHelper =
+      BugCheckerRefactoringTestHelper.newInstance(ParameterMissingNullable.class, getClass())
+          .setArgs("-XepOpt:Nullness:Conservative=false");
 
   @Test
   public void testPositiveIf() {
-    helper
+    aggressiveHelper
         .addSourceLines(
             "Foo.java",
             "class Foo {",
@@ -50,7 +54,7 @@ public class ParameterMissingNullableTest {
 
   @Test
   public void testPositiveIfWithUnrelatedThrow() {
-    helper
+    aggressiveHelper
         .addSourceLines(
             "Foo.java",
             "class Foo {",
@@ -71,7 +75,7 @@ public class ParameterMissingNullableTest {
   public void testPositiveDespiteWhileLoop() {
     // TODO(cpovirk): This doesn't look "positive" to me.
     // TODO(cpovirk): Also, I *think* the lack of braces on the while() loop is intentional?
-    helper
+    aggressiveHelper
         .addSourceLines(
             "Foo.java",
             "import static com.google.common.base.Preconditions.checkArgument;",
@@ -86,7 +90,7 @@ public class ParameterMissingNullableTest {
 
   @Test
   public void testPositiveTernary() {
-    helper
+    aggressiveHelper
         .addSourceLines(
             "Foo.java",
             "class Foo {",
@@ -100,8 +104,72 @@ public class ParameterMissingNullableTest {
   }
 
   @Test
+  public void testPositiveCallToMethod() {
+    conservativeHelper
+        .addSourceLines(
+            "Foo.java",
+            "class Foo {",
+            "  void foo(Integer i) {}",
+            "  void bar() {",
+            "    // BUG: Diagnostic contains: @Nullable",
+            "    foo(null);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void testPositiveCallToTopLevelConstructor() {
+    conservativeHelper
+        .addSourceLines(
+            "Foo.java",
+            "class Foo {",
+            "  Foo(Integer i) {}",
+            "  void bar() {",
+            "    // BUG: Diagnostic contains: @Nullable",
+            "    new Foo(null);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void testPositiveCallToNestedConstructor() {
+    conservativeHelper
+        .addSourceLines(
+            "Foo.java",
+            "class Foo {",
+            "  static class Nested {",
+            "    Nested(Integer i) {}",
+            "  }",
+            "  void bar() {",
+            "    // BUG: Diagnostic contains: @Nullable",
+            "    new Foo.Nested(null);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void testNegativeCallToNestedConstructor() {
+    conservativeHelper
+        .addSourceLines(
+            "Foo.java",
+            "class Foo {",
+            "  class Nested {",
+            "    Nested(Integer i) {}",
+            "  }",
+            "  void bar() {",
+            // TODO(cpovirk): Recognize this.
+            "    new Nested(null);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void testDeclarationAnnotatedLocation() {
-    refactoringHelper
+    aggressiveRefactoringHelper
         .addInputLines(
             "in/Foo.java",
             "import javax.annotation.Nullable;",
@@ -127,7 +195,7 @@ public class ParameterMissingNullableTest {
 
   @Test
   public void testTypeAnnotatedLocation() {
-    refactoringHelper
+    aggressiveRefactoringHelper
         .addInputLines(
             "in/Foo.java",
             "import org.checkerframework.checker.nullness.qual.Nullable;",
@@ -153,7 +221,7 @@ public class ParameterMissingNullableTest {
 
   @Test
   public void testNegativeAlreadyAnnotated() {
-    helper
+    aggressiveHelper
         .addSourceLines(
             "Foo.java",
             "import javax.annotation.Nullable;",
@@ -169,7 +237,7 @@ public class ParameterMissingNullableTest {
 
   @Test
   public void testNegativeCasesAlreadyTypeAnnotatedInnerClass() {
-    helper
+    aggressiveHelper
         .addSourceLines(
             "Foo.java",
             "import org.checkerframework.checker.nullness.qual.Nullable;",
@@ -187,7 +255,7 @@ public class ParameterMissingNullableTest {
 
   @Test
   public void testNegativePreconditionCheckMethod() {
-    helper
+    aggressiveHelper
         .addSourceLines(
             "Foo.java",
             "import static com.google.common.base.Preconditions.checkArgument;",
@@ -201,7 +269,7 @@ public class ParameterMissingNullableTest {
 
   @Test
   public void testNegativeOtherCheckMethod() {
-    helper
+    aggressiveHelper
         .addSourceLines(
             "Foo.java",
             "class Foo {",
@@ -215,7 +283,7 @@ public class ParameterMissingNullableTest {
 
   @Test
   public void testNegativeAssert() {
-    helper
+    aggressiveHelper
         .addSourceLines(
             "Foo.java",
             "class Foo {",
@@ -228,7 +296,7 @@ public class ParameterMissingNullableTest {
 
   @Test
   public void testNegativeCheckNotAgainstNull() {
-    helper
+    aggressiveHelper
         .addSourceLines(
             "Foo.java",
             "class Foo {",
@@ -243,7 +311,7 @@ public class ParameterMissingNullableTest {
 
   @Test
   public void testNegativeCheckOfNonParameter() {
-    helper
+    aggressiveHelper
         .addSourceLines(
             "Foo.java",
             "class Foo {",
@@ -259,7 +327,7 @@ public class ParameterMissingNullableTest {
 
   @Test
   public void testNegativeThrow() {
-    helper
+    aggressiveHelper
         .addSourceLines(
             "Foo.java",
             "class Foo {",
@@ -277,7 +345,7 @@ public class ParameterMissingNullableTest {
 
   @Test
   public void testNegativeCreateException() {
-    helper
+    aggressiveHelper
         .addSourceLines(
             "Foo.java",
             "class Foo {",
@@ -295,7 +363,7 @@ public class ParameterMissingNullableTest {
 
   @Test
   public void testNegativeLambdaParameter() {
-    helper
+    aggressiveHelper
         .addSourceLines(
             "Foo.java",
             "interface Foo {",
@@ -307,7 +375,7 @@ public class ParameterMissingNullableTest {
 
   @Test
   public void testNegativeDoWhileLoop() {
-    helper
+    aggressiveHelper
         .addSourceLines(
             "Foo.java",
             "class Foo {",
@@ -328,7 +396,7 @@ public class ParameterMissingNullableTest {
      * people would prefer that in most cases. We could consider adding @Nullable if people would
      * find it useful.
      */
-    helper
+    aggressiveHelper
         .addSourceLines(
             "Foo.java",
             "class Foo {",
@@ -345,13 +413,88 @@ public class ParameterMissingNullableTest {
   @Test
   public void testNegativeForLoop() {
     // Similar to testNegativeWhileLoop, @Nullable would be defensible here.
-    helper
+    aggressiveHelper
         .addSourceLines(
             "Foo.java",
             "class Foo {",
             "  Foo next;",
             "  void foo(Foo foo) {",
             "    for (; foo != null; foo = foo.next) {}",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void testNegativeCallArgNotNull() {
+    conservativeHelper
+        .addSourceLines(
+            "Foo.java",
+            "class Foo {",
+            "  void foo(Integer i) {}",
+            "  void bar() {",
+            "    foo(1);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void testNegativeCallAlreadyAnnotated() {
+    conservativeHelper
+        .addSourceLines(
+            "Foo.java",
+            "import javax.annotation.Nullable;",
+            "class Foo {",
+            "  void foo(@Nullable Integer i) {}",
+            "  void bar() {",
+            "    foo(null);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void testNegativeCallTypeVariable() {
+    conservativeHelper
+        .addSourceLines(
+            "Foo.java",
+            "class Foo {",
+            "  <T> void foo(T t) {}",
+            "  void bar() {",
+            "    foo(null);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void testNegativeCallOtherCompilationUnit() {
+    conservativeHelper
+        .addSourceLines(
+            "Foo.java", //
+            "class Foo {",
+            "  void foo(Integer i) {}",
+            "}")
+        .addSourceLines(
+            "Bar.java", //
+            "class Bar {",
+            "  void bar(Foo foo) {",
+            "    foo.foo(null);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void testNegativeCallVarargs() {
+    conservativeHelper
+        .addSourceLines(
+            "Foo.java",
+            "class Foo {",
+            "  void foo(Integer... i) {}",
+            "  void bar() {",
+            "    foo(null, 1);",
             "  }",
             "}")
         .doTest();

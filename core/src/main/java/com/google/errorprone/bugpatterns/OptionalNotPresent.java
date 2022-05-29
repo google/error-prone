@@ -48,8 +48,8 @@ import java.util.stream.Stream;
  */
 @BugPattern(
     summary =
-        "This Optional has been confirmed to be empty at this point, so the call to `get` will"
-            + " throw.",
+        "This Optional has been confirmed to be empty at this point, so the call to `get()` or"
+            + " `orElseThrow()` will always throw.",
     severity = WARNING)
 public final class OptionalNotPresent extends BugChecker implements CompilationUnitTreeMatcher {
   private static final Matcher<ExpressionTree> OPTIONAL_GET =

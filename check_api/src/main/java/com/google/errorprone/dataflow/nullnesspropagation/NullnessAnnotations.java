@@ -41,13 +41,19 @@ public class NullnessAnnotations {
   // TODO(kmb): Correctly handle JSR 305 @Nonnull(NEVER) etc.
   private static final Predicate<String> ANNOTATION_RELEVANT_TO_NULLNESS =
       Pattern.compile(
-              ".*\\b((Recently)?Nullable(Decl|Type)?|(Recently)?NotNull|NonNull(Decl|Type)?|"
-                  + "Nonnull|CheckForNull|PolyNull|MonotonicNonNull(Decl)?)$")
+              ".*\\b("
+                  + "(Recently)?NotNull|NonNull(Decl|Type)?|Nonnull|"
+                  + "(Recently)?Nullable(Decl|Type)?|CheckForNull|PolyNull|MonotonicNonNull(Decl)?|"
+                  + "ProtoMethodMayReturnNull|ProtoMethodAcceptsNullParameter|"
+                  + "ProtoPassThroughNullness"
+                  + ")$")
           .asPredicate();
   private static final Predicate<String> NULLABLE_ANNOTATION =
       Pattern.compile(
               ".*\\b("
-                  + "(Recently)?Nullable(Decl|Type)?|CheckForNull|PolyNull|MonotonicNonNull(Decl)?"
+                  + "(Recently)?Nullable(Decl|Type)?|CheckForNull|PolyNull|MonotonicNonNull(Decl)?|"
+                  + "ProtoMethodMayReturnNull|ProtoMethodAcceptsNullParameter|"
+                  + "ProtoPassThroughNullness"
                   + ")$")
           .asPredicate();
 

@@ -17,10 +17,19 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.bugpatterns.checkreturnvalue.AutoValueRules.autoBuilders;
+import static com.google.errorprone.bugpatterns.checkreturnvalue.AutoValueRules.autoValueBuilders;
+import static com.google.errorprone.bugpatterns.checkreturnvalue.AutoValueRules.autoValues;
+import static com.google.errorprone.bugpatterns.checkreturnvalue.ExternalCanIgnoreReturnValue.externalIgnoreList;
+import static com.google.errorprone.bugpatterns.checkreturnvalue.ProtoRules.mutableProtos;
+import static com.google.errorprone.bugpatterns.checkreturnvalue.ProtoRules.protoBuilders;
+import static com.google.errorprone.bugpatterns.checkreturnvalue.ResultUsePolicy.EXPECTED;
+import static com.google.errorprone.bugpatterns.checkreturnvalue.ResultUsePolicy.OPTIONAL;
+import static com.google.errorprone.bugpatterns.checkreturnvalue.Rules.globalDefault;
+import static com.google.errorprone.bugpatterns.checkreturnvalue.Rules.mapAnnotationSimpleName;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.hasDirectAnnotationWithSimpleName;
 
-import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableMap;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.ErrorProneFlags;
@@ -28,6 +37,8 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
+import com.google.errorprone.bugpatterns.checkreturnvalue.ResultUsePolicy;
+import com.google.errorprone.bugpatterns.checkreturnvalue.ResultUsePolicyEvaluator;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
@@ -38,10 +49,8 @@ import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.NewClassTree;
 import com.sun.tools.javac.code.Symbol;
-import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import java.util.Optional;
-import java.util.stream.Stream;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Name;
 
@@ -58,44 +67,33 @@ public class CheckReturnValue extends AbstractReturnValueIgnored
   private static final String CHECK_RETURN_VALUE = "CheckReturnValue";
   private static final String CAN_IGNORE_RETURN_VALUE = "CanIgnoreReturnValue";
 
-  private static final ImmutableMap<String, CrvOpinion> ANNOTATIONS =
-      ImmutableMap.of(
-          CHECK_RETURN_VALUE,
-          CrvOpinion.SHOULD_BE_CRV,
-          CAN_IGNORE_RETURN_VALUE,
-          CrvOpinion.SHOULD_BE_CIRV);
-
-  private static Stream<FoundAnnotation> findAnnotation(Symbol sym) {
-    return ANNOTATIONS.entrySet().stream()
-        .filter(annoSpec -> hasDirectAnnotationWithSimpleName(sym, annoSpec.getKey()))
-        .limit(1)
-        .map(annotation -> FoundAnnotation.create(scope(sym), annotation.getValue()));
-  }
-
-  private static Optional<FoundAnnotation> firstAnnotation(MethodSymbol sym) {
-    return ASTHelpers.enclosingElements(sym).flatMap(CheckReturnValue::findAnnotation).findFirst();
-  }
-
-  private static AnnotationScope scope(Symbol sym) {
-    if (sym instanceof MethodSymbol) {
-      return AnnotationScope.METHOD;
-    } else if (sym instanceof ClassSymbol) {
-      return AnnotationScope.CLASS;
-    } else {
-      return AnnotationScope.PACKAGE;
-    }
-  }
-
   static final String CHECK_ALL_CONSTRUCTORS = "CheckReturnValue:CheckAllConstructors";
   static final String CHECK_ALL_METHODS = "CheckReturnValue:CheckAllMethods";
 
-  private final boolean checkAllConstructors;
-  private final boolean checkAllMethods;
+  private final Optional<ResultUsePolicy> constructorPolicy;
+  private final Optional<ResultUsePolicy> methodPolicy;
+  private final ResultUsePolicyEvaluator evaluator;
 
   public CheckReturnValue(ErrorProneFlags flags) {
     super(flags);
-    this.checkAllConstructors = flags.getBoolean(CHECK_ALL_CONSTRUCTORS).orElse(false);
-    this.checkAllMethods = flags.getBoolean(CHECK_ALL_METHODS).orElse(false);
+    this.constructorPolicy = defaultPolicy(flags, CHECK_ALL_CONSTRUCTORS);
+    this.methodPolicy = defaultPolicy(flags, CHECK_ALL_METHODS);
+
+    this.evaluator =
+        ResultUsePolicyEvaluator.create(
+            mapAnnotationSimpleName(CHECK_RETURN_VALUE, EXPECTED),
+            mapAnnotationSimpleName(CAN_IGNORE_RETURN_VALUE, OPTIONAL),
+            protoBuilders(),
+            mutableProtos(),
+            autoValues(),
+            autoValueBuilders(),
+            autoBuilders(),
+            externalIgnoreList(),
+            globalDefault(methodPolicy, constructorPolicy));
+  }
+
+  private static Optional<ResultUsePolicy> defaultPolicy(ErrorProneFlags flags, String flag) {
+    return flags.getBoolean(flag).map(check -> check ? EXPECTED : OPTIONAL);
   }
 
   /**
@@ -104,41 +102,11 @@ public class CheckReturnValue extends AbstractReturnValueIgnored
    */
   @Override
   public Matcher<ExpressionTree> specializedMatcher() {
-    return (tree, state) -> {
-      Optional<MethodSymbol> maybeMethod = methodToInspect(tree);
-      if (!maybeMethod.isPresent()) {
-        return false;
-      }
-
-      return crvOpinionForMethod(maybeMethod.get())
-          .map(CrvOpinion.SHOULD_BE_CRV::equals)
-          .orElse(false);
-    };
-  }
-
-  private Optional<CrvOpinion> crvOpinionForMethod(MethodSymbol sym) {
-    Optional<CrvOpinion> opinionFromAnnotation =
-        firstAnnotation(sym).map(FoundAnnotation::checkReturnValueOpinion);
-    if (opinionFromAnnotation.isPresent()) {
-      return opinionFromAnnotation;
-    }
-
-    // In the event there is no opinion from annotations, we use the checker's configuration to
-    // decide what the "default" for the universe is.
-    if (checkAllMethods || (checkAllConstructors && sym.isConstructor())) {
-      return Optional.of(CrvOpinion.SHOULD_BE_CRV);
-    }
-    // NB: You might consider this SHOULD_BE_CIRV (here, where the default is to not check any
-    // unannotated method, and no annotation exists)
-    // However, we also use this judgement in the "should be covered" part of the analysis, so we
-    // want to distinguish the states of "the world is CRV-by-default, but this method is annotated"
-    // from "the world is CIRV-by-default, and this method was unannotated".
-    return Optional.empty();
-  }
-
-  enum CrvOpinion {
-    SHOULD_BE_CRV,
-    SHOULD_BE_CIRV
+    return (tree, state) ->
+        methodToInspect(tree)
+            .map(method -> evaluator.evaluate(method, state))
+            .orElse(OPTIONAL)
+            .equals(EXPECTED);
   }
 
   private static Optional<MethodSymbol> methodToInspect(ExpressionTree tree) {
@@ -177,14 +145,23 @@ public class CheckReturnValue extends AbstractReturnValueIgnored
 
   @Override
   public boolean isCovered(ExpressionTree tree, VisitorState state) {
-    return methodSymbol(tree).flatMap(this::crvOpinionForMethod).isPresent();
+    return methodToInspect(tree).stream()
+        .flatMap(method -> evaluator.evaluations(method, state))
+        .findFirst()
+        .isPresent();
   }
 
   @Override
   public ImmutableMap<String, ?> getMatchMetadata(ExpressionTree tree, VisitorState state) {
-    return methodSymbol(tree)
-        .flatMap(CheckReturnValue::firstAnnotation)
-        .map(found -> ImmutableMap.of("annotation_scope", found.scope()))
+    return methodToInspect(tree).stream()
+        .flatMap(method -> evaluator.evaluations(method, state))
+        .findFirst()
+        .map(
+            evaluation ->
+                ImmutableMap.of(
+                    "rule", evaluation.rule(),
+                    "policy", evaluation.policy(),
+                    "scope", evaluation.scope()))
         .orElse(ImmutableMap.of());
   }
 
@@ -206,6 +183,8 @@ public class CheckReturnValue extends AbstractReturnValueIgnored
     boolean checkReturn = hasDirectAnnotationWithSimpleName(method, CHECK_RETURN_VALUE);
     boolean canIgnore = hasDirectAnnotationWithSimpleName(method, CAN_IGNORE_RETURN_VALUE);
 
+    // TODO(cgdecker): We can check this with evaluator.checkForConflicts now, though I want to
+    //  think more about how we build and format error messages in that.
     if (checkReturn && canIgnore) {
       return buildDescription(tree).setMessage(String.format(BOTH_ERROR, "method")).build();
     }
@@ -246,7 +225,7 @@ public class CheckReturnValue extends AbstractReturnValueIgnored
   @Override
   protected String getMessage(Name name) {
     return String.format(
-        checkAllMethods
+        methodPolicy.orElse(OPTIONAL).equals(EXPECTED)
             ? "Ignored return value of '%s', which wasn't annotated with @CanIgnoreReturnValue"
             : "Ignored return value of '%s', which is annotated with @CheckReturnValue",
         name);
@@ -254,7 +233,7 @@ public class CheckReturnValue extends AbstractReturnValueIgnored
 
   @Override
   protected Description describeReturnValueIgnored(NewClassTree newClassTree, VisitorState state) {
-    return checkAllConstructors
+    return constructorPolicy.orElse(OPTIONAL).equals(EXPECTED)
         ? buildDescription(newClassTree)
             .setMessage(
                 String.format(
@@ -263,22 +242,5 @@ public class CheckReturnValue extends AbstractReturnValueIgnored
                     state.getSourceForNode(newClassTree.getIdentifier())))
             .build()
         : super.describeReturnValueIgnored(newClassTree, state);
-  }
-
-  @AutoValue
-  abstract static class FoundAnnotation {
-    static FoundAnnotation create(AnnotationScope scope, CrvOpinion opinion) {
-      return new AutoValue_CheckReturnValue_FoundAnnotation(scope, opinion);
-    }
-
-    abstract AnnotationScope scope();
-
-    abstract CrvOpinion checkReturnValueOpinion();
-  }
-
-  enum AnnotationScope {
-    METHOD,
-    CLASS,
-    PACKAGE
   }
 }

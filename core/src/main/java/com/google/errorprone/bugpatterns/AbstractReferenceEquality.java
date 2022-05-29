@@ -38,6 +38,9 @@ import com.sun.source.tree.Tree.Kind;
 import com.sun.source.util.TreePath;
 import com.sun.tools.javac.code.Kinds.KindSelector;
 import com.sun.tools.javac.code.Symbol;
+import com.sun.tools.javac.code.Symbol.TypeSymbol;
+import com.sun.tools.javac.code.Type;
+import com.sun.tools.javac.util.Name;
 import java.util.List;
 import java.util.Optional;
 
@@ -81,6 +84,26 @@ public abstract class AbstractReferenceEquality extends BugChecker implements Bi
     return builder.build();
   }
 
+  private static boolean symbolsTypeHasName(Symbol sym, String name) {
+    if (sym == null) {
+      return false;
+    }
+    Type type = sym.type;
+    if (type == null) {
+      return false;
+    }
+    TypeSymbol tsym = type.tsym;
+    if (tsym == null) {
+      return false;
+    }
+    Name typeName = tsym.getQualifiedName();
+    if (typeName == null) {
+      // Probably shouldn't happen, but might as well check
+      return false;
+    }
+    return typeName.contentEquals(name);
+  }
+
   protected void addFixes(Description.Builder builder, BinaryTree tree, VisitorState state) {
     ExpressionTree lhs = tree.getLeftOperand();
     ExpressionTree rhs = tree.getRightOperand();
@@ -108,19 +131,9 @@ public abstract class AbstractReferenceEquality extends BugChecker implements Bi
     if (nullness != NONNULL) {
       Symbol existingObjects = FindIdentifiers.findIdent("Objects", state, KindSelector.TYP);
       ObjectsFix preferredFix;
-      if (existingObjects != null
-          && existingObjects
-              .type
-              .tsym
-              .getQualifiedName()
-              .contentEquals(ObjectsFix.GUAVA.className)) {
+      if (symbolsTypeHasName(existingObjects, ObjectsFix.GUAVA.className)) {
         preferredFix = ObjectsFix.GUAVA;
-      } else if (existingObjects != null
-          && existingObjects
-              .type
-              .tsym
-              .getQualifiedName()
-              .contentEquals(ObjectsFix.JAVA_UTIL.className)) {
+      } else if (symbolsTypeHasName(existingObjects, ObjectsFix.JAVA_UTIL.className)) {
         preferredFix = ObjectsFix.JAVA_UTIL;
       } else if (state.isAndroidCompatible()) {
         preferredFix = ObjectsFix.GUAVA;

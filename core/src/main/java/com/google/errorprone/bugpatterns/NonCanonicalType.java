@@ -20,6 +20,7 @@ import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.fixes.SuggestedFixes.qualifyType;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.enclosingClass;
+import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 
 import com.google.errorprone.BugPattern;
@@ -33,6 +34,7 @@ import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.TypeSymbol;
+import com.sun.tools.javac.util.Position;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -63,6 +65,10 @@ public final class NonCanonicalType extends BugChecker implements MemberSelectTr
       if (!Visibility.fromModifiers(symbol.getModifiers()).shouldBeVisible(tree, state)) {
         return NO_MATCH;
       }
+    }
+    if (getStartPosition(tree) == Position.NOPOS) {
+      // Can't suggest changing a synthetic type tree
+      return NO_MATCH;
     }
     SuggestedFix.Builder fixBuilder = SuggestedFix.builder();
     SuggestedFix fix =

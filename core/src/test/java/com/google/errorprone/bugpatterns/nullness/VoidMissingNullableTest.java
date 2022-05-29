@@ -27,14 +27,18 @@ import org.junit.runners.JUnit4;
 /** {@link VoidMissingNullable}Test */
 @RunWith(JUnit4.class)
 public class VoidMissingNullableTest {
-  private final CompilationTestHelper compilationHelper =
+  private final CompilationTestHelper conservativeCompilationHelper =
       CompilationTestHelper.newInstance(VoidMissingNullable.class, getClass());
-  private final BugCheckerRefactoringTestHelper refactoringHelper =
-      BugCheckerRefactoringTestHelper.newInstance(VoidMissingNullable.class, getClass());
+  private final CompilationTestHelper aggressiveCompilationHelper =
+      CompilationTestHelper.newInstance(VoidMissingNullable.class, getClass())
+          .setArgs("-XepOpt:Nullness:Conservative=false");
+  private final BugCheckerRefactoringTestHelper aggressiveRefactoringHelper =
+      BugCheckerRefactoringTestHelper.newInstance(VoidMissingNullable.class, getClass())
+          .setArgs("-XepOpt:Nullness:Conservative=false");
 
   @Test
   public void positive() {
-    compilationHelper
+    aggressiveCompilationHelper
         .addSourceLines(
             "Test.java",
             "import javax.annotation.Nullable;",
@@ -51,7 +55,7 @@ public class VoidMissingNullableTest {
 
   @Test
   public void testDeclarationAnnotatedLocation() {
-    refactoringHelper
+    aggressiveRefactoringHelper
         .addInputLines(
             "in/Foo.java",
             "import javax.annotation.Nullable;",
@@ -75,7 +79,7 @@ public class VoidMissingNullableTest {
 
   @Test
   public void testTypeAnnotatedLocation() {
-    refactoringHelper
+    aggressiveRefactoringHelper
         .addInputLines(
             "in/Foo.java",
             "import org.checkerframework.checker.nullness.qual.Nullable;",
@@ -99,7 +103,7 @@ public class VoidMissingNullableTest {
 
   @Test
   public void negativeAlreadyAnnotated() {
-    compilationHelper
+    aggressiveCompilationHelper
         .addSourceLines(
             "Test.java",
             "import javax.annotation.Nullable;",
@@ -114,7 +118,7 @@ public class VoidMissingNullableTest {
 
   @Test
   public void negativeNotVoid() {
-    compilationHelper
+    aggressiveCompilationHelper
         .addSourceLines(
             "Test.java",
             "import javax.annotation.Nullable;",
@@ -129,7 +133,7 @@ public class VoidMissingNullableTest {
 
   @Test
   public void positiveTypeArgument() {
-    compilationHelper
+    aggressiveCompilationHelper
         .addSourceLines(
             "Test.java",
             "import java.util.List;",
@@ -148,7 +152,7 @@ public class VoidMissingNullableTest {
 
   @Test
   public void positiveTypeArgumentOtherAnnotation() {
-    compilationHelper
+    aggressiveCompilationHelper
         .addSourceLines(
             "NonNull.java",
             "import java.lang.annotation.ElementType;",
@@ -176,7 +180,7 @@ public class VoidMissingNullableTest {
 
   @Test
   public void negativeTypeArgumentAlreadyAnnotated() {
-    compilationHelper
+    aggressiveCompilationHelper
         .addSourceLines(
             "Nullable.java",
             "import java.lang.annotation.ElementType;",
@@ -200,7 +204,7 @@ public class VoidMissingNullableTest {
 
   @Test
   public void negativeTypeArgumentAlreadyAnnotatedAnonymous() {
-    compilationHelper
+    aggressiveCompilationHelper
         .addSourceLines(
             "Nullable.java",
             "import java.lang.annotation.ElementType;",
@@ -223,7 +227,7 @@ public class VoidMissingNullableTest {
 
   @Test
   public void negativeTypeArgumentNotVoid() {
-    compilationHelper
+    aggressiveCompilationHelper
         .addSourceLines(
             "Nullable.java",
             "import java.lang.annotation.ElementType;",
@@ -247,7 +251,7 @@ public class VoidMissingNullableTest {
 
   @Test
   public void negativeTypeArgumentDeclarationNullable() {
-    compilationHelper
+    aggressiveCompilationHelper
         .addSourceLines(
             "Test.java",
             "import java.util.List;",
@@ -263,7 +267,7 @@ public class VoidMissingNullableTest {
 
   @Test
   public void positiveLambdaParameter() {
-    compilationHelper
+    aggressiveCompilationHelper
         .addSourceLines(
             "Test.java",
             "import javax.annotation.Nullable;",
@@ -278,7 +282,7 @@ public class VoidMissingNullableTest {
 
   @Test
   public void negativeLambdaParameterNoType() {
-    compilationHelper
+    aggressiveCompilationHelper
         .addSourceLines(
             "Test.java",
             "import javax.annotation.Nullable;",
@@ -294,7 +298,7 @@ public class VoidMissingNullableTest {
 
   @Test
   public void negativeVar() {
-    compilationHelper
+    aggressiveCompilationHelper
         .addSourceLines(
             "Test.java",
             "import javax.annotation.Nullable;",
@@ -310,7 +314,7 @@ public class VoidMissingNullableTest {
 
   @Test
   public void negativeOtherLocalVariable() {
-    compilationHelper
+    aggressiveCompilationHelper
         .addSourceLines(
             "Test.java",
             "import javax.annotation.Nullable;",
@@ -320,6 +324,33 @@ public class VoidMissingNullableTest {
             "  void f() {",
             "    Void v = this.v;",
             "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void positiveConservativeNullMarked() {
+    conservativeCompilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import javax.annotation.Nullable;",
+            "import org.jspecify.nullness.NullMarked;",
+            "@NullMarked",
+            "class Test {",
+            "  // BUG: Diagnostic contains: @Nullable",
+            "  Void v;",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void negativeConservativeNotNullMarked() {
+    conservativeCompilationHelper
+        .addSourceLines(
+            "Test.java", //
+            "import javax.annotation.Nullable;",
+            "class Test {",
+            "  Void v;",
             "}")
         .doTest();
   }

@@ -16,6 +16,8 @@
 
 package com.google.errorprone.refaster;
 
+import com.google.errorprone.annotations.CanIgnoreReturnValue;
+
 /**
  * Static utilities to indicate special handling in Refaster templates.
  *
@@ -68,6 +70,7 @@ public class Refaster {
    * </code></pre>
    */
   @SafeVarargs
+  @CanIgnoreReturnValue
   public static <T> T anyOf(T... expressions) {
     throw new UnsupportedOperationException();
   }

@@ -115,11 +115,11 @@ public class ModifiedButNotUsed extends BugChecker
 
   private static final String MESSAGE_BUILDER = MESSAGE + ".Builder";
 
-  private static final Matcher<ExpressionTree> FLUENT_SETTER =
+  static final Matcher<ExpressionTree> FLUENT_SETTER =
       anyOf(
           instanceMethod()
               .onDescendantOf(MESSAGE_BUILDER)
-              .withNameMatching(Pattern.compile("(add|clear|remove|set).+")),
+              .withNameMatching(Pattern.compile("(add|clear|merge|remove|set|put).*")),
           instanceMethod()
               .onDescendantOfAny(
                   GUAVA_IMMUTABLES.stream().map(c -> c + ".Builder").collect(toImmutableSet()))

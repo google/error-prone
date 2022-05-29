@@ -19,7 +19,6 @@ package com.google.errorprone.bugpatterns.threadsafety;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 
 import com.google.auto.value.AutoValue;
-import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.google.errorprone.VisitorState;
@@ -54,6 +53,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Predicate;
 import javax.lang.model.element.Modifier;
 
 /**
@@ -86,10 +86,12 @@ public final class HeldLockAnalyzer {
       LockEventListener listener,
       Predicate<Tree> isSuppressed,
       GuardedByFlags flags,
-      boolean reportMissingGuards) {
+      boolean reportMissingGuards,
+      boolean checkTryWithResources) {
     HeldLockSet locks = HeldLockSet.empty();
     locks = handleMonitorGuards(state, locks, flags);
-    new LockScanner(state, listener, isSuppressed, flags, reportMissingGuards)
+    new LockScanner(
+            state, listener, isSuppressed, flags, reportMissingGuards, checkTryWithResources)
         .scan(state.getPath(), locks);
   }
 
@@ -126,6 +128,7 @@ public final class HeldLockAnalyzer {
     private final Predicate<Tree> isSuppressed;
     private final GuardedByFlags flags;
     private final boolean reportMissingGuards;
+    private final boolean checkTryWithResources;
 
     private static final GuardedByExpression.Factory F = new GuardedByExpression.Factory();
 
@@ -134,17 +137,19 @@ public final class HeldLockAnalyzer {
         LockEventListener listener,
         Predicate<Tree> isSuppressed,
         GuardedByFlags flags,
-        boolean reportMissingGuards) {
+        boolean reportMissingGuards,
+        boolean checkTryWithResources) {
       this.visitorState = visitorState;
       this.listener = listener;
       this.isSuppressed = isSuppressed;
       this.flags = flags;
       this.reportMissingGuards = reportMissingGuards;
+      this.checkTryWithResources = checkTryWithResources;
     }
 
     @Override
     public Void visitMethod(MethodTree tree, HeldLockSet locks) {
-      if (isSuppressed.apply(tree)) {
+      if (isSuppressed.test(tree)) {
         return null;
       }
       // Synchronized instance methods hold the 'this' lock; synchronized static methods
@@ -182,12 +187,11 @@ public final class HeldLockAnalyzer {
       // are held for the entirety of the try and catch statements.
       Collection<GuardedByExpression> releasedLocks =
           ReleasedLockFinder.find(tree.getFinallyBlock(), visitorState, flags);
-      if (resources.isEmpty()) {
+      // We don't know what to do with the try-with-resources block.
+      // TODO(cushon) - recognize common try-with-resources patterns. Currently there is no
+      // standard implementation of an AutoCloseable lock resource to detect.
+      if (checkTryWithResources || resources.isEmpty()) {
         scan(tree.getBlock(), locks.plusAll(releasedLocks));
-      } else {
-        // We don't know what to do with the try-with-resources block.
-        // TODO(cushon) - recognize common try-with-resources patterns. Currently there is no
-        // standard implementation of an AutoCloseable lock resource to detect.
       }
       scan(tree.getCatches(), locks.plusAll(releasedLocks));
       scan(tree.getFinallyBlock(), locks);
@@ -234,12 +238,12 @@ public final class HeldLockAnalyzer {
 
     @Override
     public Void visitVariable(VariableTree node, HeldLockSet locks) {
-      return isSuppressed.apply(node) ? null : super.visitVariable(node, locks);
+      return isSuppressed.test(node) ? null : super.visitVariable(node, locks);
     }
 
     @Override
     public Void visitClass(ClassTree node, HeldLockSet locks) {
-      return isSuppressed.apply(node) ? null : super.visitClass(node, locks);
+      return isSuppressed.test(node) ? null : super.visitClass(node, locks);
     }
 
     private void checkMatch(ExpressionTree tree, HeldLockSet locks) {
@@ -387,17 +391,9 @@ public final class HeldLockAnalyzer {
         return;
       }
       for (String lockString : annotation.value()) {
-        Optional<GuardedByExpression> guard =
-            GuardedByBinder.bindString(
-                lockString, GuardedBySymbolResolver.from(tree, state), flags);
-        // TODO(cushon): http://docs.oracle.com/javase/8/docs/api/java/util/Optional.html#ifPresent
-        if (guard.isPresent()) {
-          Optional<GuardedByExpression> lock =
-              ExpectedLockCalculator.from((JCExpression) tree, guard.get(), state, flags);
-          if (lock.isPresent()) {
-            locks.add(lock.get());
-          }
-        }
+        GuardedByBinder.bindString(lockString, GuardedBySymbolResolver.from(tree, state), flags)
+            .flatMap(guard -> ExpectedLockCalculator.from((JCExpression) tree, guard, state, flags))
+            .ifPresent(locks::add);
       }
     }
   }

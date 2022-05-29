@@ -99,6 +99,7 @@ public final class UnusedMethod extends BugChecker implements CompilationUnitTre
           "com.google.inject.Inject",
           "com.google.inject.multibindings.ProvidesIntoMap",
           "com.google.inject.multibindings.ProvidesIntoSet",
+          "com.tngtech.java.junit.dataprovider.DataProvider",
           "javax.annotation.PreDestroy",
           "javax.annotation.PostConstruct",
           "javax.inject.Inject",

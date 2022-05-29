@@ -192,7 +192,7 @@ public final class InvalidBlockTag extends BugChecker
         String message =
             String.format(
                 "@%1$s is not a valid tag, but is a parameter name. "
-                    + "Use {@code %1%s} to refer to parameter names inline.",
+                    + "Use {@code %1$s} to refer to parameter names inline.",
                 tagName);
         state.reportMatch(
             buildDescription(diagnosticPosition(getCurrentPath(), state))

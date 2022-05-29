@@ -56,10 +56,13 @@ public class GuardedByChecker extends BugChecker
   private final GuardedByFlags flags = GuardedByFlags.allOn();
 
   private final boolean reportMissingGuards;
+  private final boolean checkTryWithResources;
 
   public GuardedByChecker(ErrorProneFlags errorProneFlags) {
     reportMissingGuards =
         errorProneFlags.getBoolean("GuardedByChecker:reportMissingGuards").orElse(true);
+    checkTryWithResources =
+        errorProneFlags.getBoolean("GuardedByChecker:checkTryWithResources").orElse(true);
   }
 
   @Override
@@ -87,7 +90,8 @@ public class GuardedByChecker extends BugChecker
             report(GuardedByChecker.this.checkGuardedAccess(tree, guard, live, state), state),
         tree1 -> isSuppressed(tree1, state),
         flags,
-        reportMissingGuards);
+        reportMissingGuards,
+        checkTryWithResources);
   }
 
   @Override

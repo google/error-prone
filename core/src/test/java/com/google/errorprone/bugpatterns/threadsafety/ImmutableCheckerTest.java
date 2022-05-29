@@ -375,6 +375,52 @@ public class ImmutableCheckerTest {
   }
 
   @Test
+  public void withinMutableClass() {
+    compilationHelper
+        .addSourceLines(
+            "A.java",
+            "import com.google.errorprone.annotations.Immutable;",
+            "import java.util.ArrayList;",
+            "import java.util.List;",
+            "class A {",
+            "  List<Integer> xs = new ArrayList<>();",
+            "  // BUG: Diagnostic contains: has mutable enclosing instance",
+            "  @Immutable class B {",
+            "    int get() {",
+            "      return xs.get(0);",
+            "    }",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void localClassCapturingMutableState() {
+    compilationHelper
+        .addSourceLines(
+            "A.java",
+            "import com.google.errorprone.annotations.Immutable;",
+            "import java.util.ArrayList;",
+            "import java.util.List;",
+            "@Immutable",
+            "class A {",
+            "  @Immutable interface B { int get(); }",
+            "  void test() {",
+            "    List<Integer> xs = new ArrayList<>();",
+            "    @Immutable",
+            "    // BUG: Diagnostic contains: but 'List' is mutable",
+            "    class C implements B {",
+            "      @Override",
+            "      public int get() {",
+            "        return xs.get(0);",
+            "      }",
+            "    }",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void typeParameterWithImmutableBound() {
     compilationHelper
         .addSourceLines(
@@ -2526,6 +2572,25 @@ public class ImmutableCheckerTest {
   }
 
   @Test
+  public void lambda_cannotCloseAroundMutableFieldQualifiedWithThis() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.errorprone.annotations.Immutable;",
+            "import java.util.ArrayList;",
+            "import java.util.List;",
+            "class Test {",
+            "  @Immutable interface ImmutableFunction<A, B> { A apply(B b); }",
+            "  private int b = 1;",
+            "  void test(ImmutableFunction<Integer, Integer> f) {",
+            "    // BUG: Diagnostic contains:",
+            "    test(x -> this.b);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void lambda_cannotCloseAroundMutableLocal() {
     compilationHelper
         .addSourceLines(
@@ -2805,6 +2870,101 @@ public class ImmutableCheckerTest {
             "  void test(ImmutableProvider<?> f) {",
             "    // BUG: Diagnostic contains:",
             "    test(() -> new ArrayList<>());",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void chainedGettersAreAcceptable() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.errorprone.annotations.Immutable;",
+            "import java.util.ArrayList;",
+            "import java.util.List;",
+            "class Test {",
+            "  final Test t = null;",
+            "  final List<String> xs = new ArrayList<>();",
+            "  final List<String> getXs() {",
+            "    return xs;",
+            "  }",
+            "  @Immutable interface ImmutableFunction { String apply(String b); }",
+            "  void test(ImmutableFunction f) {",
+            "    test(x -> {",
+            "      Test t = new Test();",
+            "      return t.xs.get(0) + t.getXs().get(0) + t.t.t.xs.get(0);",
+            "    });",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void anonymousClass_cannotCloseAroundMutableLocal() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.errorprone.annotations.Immutable;",
+            "import java.util.List;",
+            "import java.util.ArrayList;",
+            "class Test {",
+            "  @Immutable interface ImmutableFunction<A, B> { A apply(B b); }",
+            "  void test(ImmutableFunction<Integer, Integer> f) {",
+            "    List<Integer> xs = new ArrayList<>();",
+            "    // BUG: Diagnostic contains:",
+            "    test(new ImmutableFunction<>() {",
+            "      @Override public Integer apply(Integer x) {",
+            "        return xs.get(x);",
+            "      }",
+            "    });",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void anonymousClass_hasMutableFieldSuppressed_noWarningAtUsageSite() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.errorprone.annotations.Immutable;",
+            "import java.util.List;",
+            "import java.util.ArrayList;",
+            "class Test {",
+            "  @Immutable interface ImmutableFunction<A, B> { A apply(B b); }",
+            "  void test(ImmutableFunction<Integer, Integer> f) {",
+            "    test(new ImmutableFunction<>() {",
+            "      @Override public Integer apply(Integer x) {",
+            "        return xs.get(x);",
+            "      }",
+            "      @SuppressWarnings(\"Immutable\")",
+            "      List<Integer> xs = new ArrayList<>();",
+            "    });",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void anonymousClass_canCallSuperMethodOnNonImmutableSuperClass() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.errorprone.annotations.Immutable;",
+            "import java.util.List;",
+            "import java.util.ArrayList;",
+            "class Test {",
+            "  interface Function<A, B> { default void foo() {} }",
+            "  @Immutable interface ImmutableFunction<A, B> extends Function<A, B> { A apply(B b);"
+                + " }",
+            "  void test(ImmutableFunction<Integer, Integer> f) {",
+            "    test(new ImmutableFunction<>() {",
+            "      @Override public Integer apply(Integer x) {",
+            "        foo();",
+            "        return 0;",
+            "      }",
+            "    });",
             "  }",
             "}")
         .doTest();

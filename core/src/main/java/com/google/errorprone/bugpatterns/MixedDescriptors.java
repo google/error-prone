@@ -51,7 +51,7 @@ import java.util.Optional;
  */
 @BugPattern(
     summary =
-        "The field number passed into #getFieldByNumber belongs to a different proto"
+        "The field number passed into #findFieldByNumber belongs to a different proto"
             + " to the Descriptor.",
     severity = ERROR)
 public final class MixedDescriptors extends BugChecker implements MethodInvocationTreeMatcher {

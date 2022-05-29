@@ -355,6 +355,12 @@
       <version>${flogger.version}</version>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>org.jspecify</groupId>
+      <artifactId>jspecify</artifactId>
+      <version>${jspecify.version}</version>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 
   <build>

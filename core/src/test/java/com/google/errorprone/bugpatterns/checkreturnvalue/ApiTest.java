@@ -16,6 +16,7 @@
 
 package com.google.errorprone.bugpatterns.checkreturnvalue;
 
+import static com.google.common.base.CharMatcher.whitespace;
 import static com.google.common.truth.Truth.assertThat;
 import static org.junit.Assert.assertThrows;
 
@@ -42,6 +43,12 @@ public final class ApiTest {
           "java.lang.String#foo)()",
           "java.lang.String#foo)(",
           "java.lang.String#<init>(,)",
+          "java.lang.String#get(int[][)",
+          "java.lang.String#get(int[[])",
+          "java.lang.String#get(int[]])",
+          "java.lang.String#get(int])",
+          "java.lang.String#get(int[)",
+          "java.lang.String#get(int[]a)",
           "java.lang.String#<>()",
           "java.lang.String#hi<>()",
           "java.lang.String#<>hi()",
@@ -100,27 +107,41 @@ public final class ApiTest {
   @Test
   public void parseApi_methodWithParamsAndSpaces() {
     String string =
-        "com.google.android.libraries.stitch.binder.Binder"
-            + "#get(android.content.Context,java.lang.Class)";
+        "  com.google.android.libraries.stitch.binder.Binder"
+            + "#get(android.content.Context , java.lang.Class) ";
     Api api = Api.parse(string);
     assertThat(api.methodName()).isEqualTo("get");
     assertThat(api.parameterTypes())
         .containsExactly("android.content.Context", "java.lang.Class")
         .inOrder();
     assertThat(api.isConstructor()).isFalse();
+    assertThat(api.toString()).isEqualTo(whitespace().removeFrom(string));
+  }
+
+  @Test
+  public void parseApi_methodWithArray() {
+    String string =
+        "com.google.inject.util.Modules.OverriddenModuleBuilder#with(com.google.inject.Module[],int[][][])";
+    Api api = Api.parse(string);
+    assertThat(api.className()).isEqualTo("com.google.inject.util.Modules.OverriddenModuleBuilder");
+    assertThat(api.methodName()).isEqualTo("with");
+    assertThat(api.parameterTypes())
+        .containsExactly("com.google.inject.Module[]", "int[][][]")
+        .inOrder();
+    assertThat(api.isConstructor()).isFalse();
     assertThat(api.toString()).isEqualTo(string);
   }
 
   @Test
-  public void parseApi_methodWithArray_b219754967() {
-    IllegalArgumentException thrown =
-        assertThrows(
-            "b/219754967 - cannot parse array signatures",
-            IllegalArgumentException.class,
-            () ->
-                Api.parse(
-                    "com.google.inject.util.Modules.OverriddenModuleBuilder"
-                        + "#with(com.google.inject.Module[])"));
-    assertThat(thrown).hasMessageThat().contains("'[' is not a valid identifier");
+  public void parseApi_methodWithVarargs_b231250004() {
+    String string = "com.beust.jcommander.JCommander#<init>(java.lang.Object,java.lang.String...)";
+    Api api = Api.parse(string);
+    assertThat(api.className()).isEqualTo("com.beust.jcommander.JCommander");
+    assertThat(api.methodName()).isEqualTo("<init>");
+    assertThat(api.parameterTypes())
+        .containsExactly("java.lang.Object", "java.lang.String...")
+        .inOrder();
+    assertThat(api.isConstructor()).isTrue();
+    assertThat(api.toString()).isEqualTo(string);
   }
 }

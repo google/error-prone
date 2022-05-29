@@ -1043,11 +1043,8 @@ public class GuardedByCheckerTest {
         .doTest();
   }
 
-  // Test that the contents of try-with-resources block are ignored (for now), but the catch and
-  // finally blocks are checked.
-  // TODO(cushon): support try-with-resources block.
   @Test
-  public void tryWithResourcesAreNotFullyUnsupported() {
+  public void tryWithResources_resourceVariables() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -1060,7 +1057,8 @@ public class GuardedByCheckerTest {
             "  int x;",
             "  void m(AutoCloseable c) throws Exception {",
             "    try (AutoCloseable unused = c) {",
-            "      x++;  // should be an error!",
+            "      // BUG: Diagnostic contains:",
+            "      x++;",
             "    } catch (Exception e) {",
             "      // BUG: Diagnostic contains:",
             "      // should be guarded by 'this.lock'",

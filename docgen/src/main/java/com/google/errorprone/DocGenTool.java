@@ -86,7 +86,7 @@ public final class DocGenTool {
 
   public static void main(String[] args) throws IOException {
     Options options = new Options();
-    JCommander unused = new JCommander(options, args);
+    new JCommander(options).parse(args);
 
     Path bugPatterns = Paths.get(options.bugPatterns);
     if (!Files.exists(bugPatterns)) {

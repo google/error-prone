@@ -381,5 +381,4 @@ public class UnnecessaryLambdaTest {
                 .expectUnchanged()
                 .doTest();
     }
-
 }

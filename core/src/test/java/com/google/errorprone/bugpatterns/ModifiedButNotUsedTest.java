@@ -218,6 +218,9 @@ public final class ModifiedButNotUsedTest {
             "    TestProtoMessage.Builder proto3 =",
             "        // BUG: Diagnostic contains:",
             "        TestProtoMessage.getDefaultInstance().toBuilder().clearMessage();",
+            "    TestProtoMessage.Builder proto4 =",
+            "        // BUG: Diagnostic contains:",
+            "        TestProtoMessage.getDefaultInstance().toBuilder().clear();",
             "  }",
             "}")
         .doTest();
@@ -307,7 +310,7 @@ public final class ModifiedButNotUsedTest {
   }
 
   @Test
-  public void protoUnusedButNotModified() {
+  public void protoBuilderMergeFrom() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -315,7 +318,7 @@ public final class ModifiedButNotUsedTest {
             "import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;",
             "class Test {",
             "  void foo(TestProtoMessage proto) throws Exception {",
-            // Consider mergeFrom as a use, given it throws a checked exception.
+            "    // BUG: Diagnostic contains:",
             "    TestProtoMessage.newBuilder().mergeFrom(new byte[0]).build();",
             "  }",
             "}")

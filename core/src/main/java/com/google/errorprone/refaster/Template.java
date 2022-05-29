@@ -37,6 +37,7 @@ import com.sun.tools.javac.code.Symtab;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Type.ForAll;
 import com.sun.tools.javac.code.Type.MethodType;
+import com.sun.tools.javac.code.TypeTag;
 import com.sun.tools.javac.code.Types;
 import com.sun.tools.javac.comp.Attr;
 import com.sun.tools.javac.comp.AttrContext;
@@ -139,7 +140,14 @@ public abstract class Template<M extends TemplateMatch> implements Serializable 
         Ordering.natural()
             .immutableSortedCopy(
                 Iterables.filter(inliner.bindings.keySet(), PlaceholderExpressionKey.class))) {
-      result.add(key.method.returnType().inline(inliner));
+      Type type = key.method.returnType().inline(inliner);
+      // Skip void placeholder expressions, because
+      // a) if the expected type is void, any actual type is acceptable
+      // b) these types are used as the argument types in a synthetic MethodType, and method
+      //    argument types cannot be void
+      if (!type.getTag().equals(TypeTag.VOID)) {
+        result.add(type);
+      }
     }
     return List.from(result);
   }
@@ -149,7 +157,7 @@ public abstract class Template<M extends TemplateMatch> implements Serializable 
    * bound to the @BeforeTemplate method parameters, concatenated with the types of the expressions
    * bound to expression placeholders, sorted by the name of the placeholder method.
    */
-  protected List<Type> actualTypes(Inliner inliner) {
+  protected List<Type> actualTypes(Inliner inliner) throws CouldNotResolveImportException {
     ArrayList<Type> result = new ArrayList<>();
     ImmutableList<String> argNames = expressionArgumentTypes().keySet().asList();
     for (int i = 0; i < expressionArgumentTypes().size(); i++) {
@@ -177,7 +185,11 @@ public abstract class Template<M extends TemplateMatch> implements Serializable 
         Ordering.natural()
             .immutableSortedCopy(
                 Iterables.filter(inliner.bindings.keySet(), PlaceholderExpressionKey.class))) {
-      result.add(inliner.getBinding(key).type);
+      Type keyType = key.method.returnType().inline(inliner);
+      // See comment in `expectedTypes` for why we skip void placeholder keys.
+      if (!keyType.getTag().equals(TypeTag.VOID)) {
+        result.add(inliner.getBinding(key).type);
+      }
     }
     return List.from(result);
   }
