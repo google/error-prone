@@ -118,7 +118,8 @@ public final class FieldCanBeLocal extends BugChecker implements CompilationUnit
 
       @Override
       public Void visitClass(ClassTree classTree, Void unused) {
-         
+         //issue: https://github.com/google/error-prone/issues/3002   exclude record attributes from analyzied
+   
         if(classTree.getKind()== Kind.RECORD){
           for(Tree t: classTree.getMembers()){
             potentialFields.remove(getSymbol(t));
