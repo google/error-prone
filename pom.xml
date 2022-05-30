@@ -36,7 +36,7 @@
     <autovalue.version>1.9</autovalue.version>
     <junit.version>4.13.2</junit.version>
     <dataflow.version>3.21.1</dataflow.version>
-    <mockito.version>3.12.4</mockito.version>
+    <mockito.version>4.6.0</mockito.version>
     <compile.testing.version>0.19</compile.testing.version>
     <caffeine.version>3.0.5</caffeine.version>
     <flogger.version>0.7.4</flogger.version>
