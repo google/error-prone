@@ -1,6 +1,6 @@
 In
 [*Detecting Argument Selection Defects*](https://static.googleusercontent.com/media/research.google.com/en//pubs/archive/46317.pdf)
-by Rice et. al., the authors argue that methods should have 5 of fewer
+by Rice et. al., the authors argue that methods should have 5 or fewer
 parameters (see section 7.1). APIs with larger than this number often lead to
 parameter mismatch bugs (e.g, calling `create(firstName, lastName)` instead of
 `create(lastName, firstName)`).
