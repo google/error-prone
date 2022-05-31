@@ -160,12 +160,11 @@ class RefactoringCollection implements DescriptionListener.Factory {
 
   RefactoringResult applyChanges(URI uri) throws Exception {
     Collection<DelegatingDescriptionListener> listeners = foundSources.removeAll(uri);
-    if (listeners.isEmpty()) {
-      return RefactoringResult.create("", RefactoringResultType.NO_CHANGES);
+    if (doApplyProcess(fileDestination, new FsFileSource(rootPath), listeners)) {
+      return postProcess.apply(uri);
     }
 
-    doApplyProcess(fileDestination, new FsFileSource(rootPath), listeners);
-    return postProcess.apply(uri);
+    return RefactoringResult.create("", RefactoringResultType.NO_CHANGES);
   }
 
   private static void writePatchFile(
@@ -185,15 +184,21 @@ class RefactoringCollection implements DescriptionListener.Factory {
     }
   }
 
-  private static void doApplyProcess(
+  private static boolean doApplyProcess(
       FileDestination fileDestination,
       FileSource fileSource,
       Collection<DelegatingDescriptionListener> listeners) {
+    boolean appliedDiff = false;
     for (DelegatingDescriptionListener listener : listeners) {
+      if (listener.base.isEmpty()) {
+        continue;
+      }
+
       try {
         SourceFile file = fileSource.readFile(listener.base.getRelevantFileName());
         listener.base.applyDifferences(file);
         fileDestination.writeFile(file);
+        appliedDiff = true;
       } catch (IOException e) {
         logger.log(
             Level.WARNING,
@@ -201,6 +206,8 @@ class RefactoringCollection implements DescriptionListener.Factory {
             e);
       }
     }
+
+    return appliedDiff;
   }
 
   private static final class DelegatingDescriptionListener implements DescriptionListener {
