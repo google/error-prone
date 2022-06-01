@@ -119,6 +119,64 @@ public class SuggesterTest {
   }
 
   @Test
+  public void testUnqualifiedStaticFieldReference() {
+    refactoringTestHelper
+        .addInputLines(
+            "Client.java",
+            "package com.google.frobber;",
+            "public final class Client {",
+            "  public static final String STR = \"kurt\";",
+            "  @Deprecated",
+            "  public int stringLength() {",
+            "    return STR.length();",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Client.java",
+            "package com.google.frobber;",
+            "import com.google.errorprone.annotations.InlineMe;",
+            "public final class Client {",
+            "  public static final String STR = \"kurt\";",
+            // TODO(b/234643232): this is a bug; it should be "Client.STR.length()" plus an import
+            "  @InlineMe(replacement = \"STR.length()\")",
+            "  @Deprecated",
+            "  public int stringLength() {",
+            "    return STR.length();",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void testQualifiedStaticFieldReference() {
+    refactoringTestHelper
+        .addInputLines(
+            "Client.java",
+            "package com.google.frobber;",
+            "public final class Client {",
+            "  public static final String STR = \"kurt\";",
+            "  @Deprecated",
+            "  public int stringLength() {",
+            "    return Client.STR.length();",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Client.java",
+            "package com.google.frobber;",
+            "import com.google.errorprone.annotations.InlineMe;",
+            "public final class Client {",
+            "  public static final String STR = \"kurt\";",
+            "  @InlineMe(replacement = \"Client.STR.length()\", "
+                + "imports = \"com.google.frobber.Client\")",
+            "  @Deprecated",
+            "  public int stringLength() {",
+            "    return Client.STR.length();",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void testProtectedConstructor() {
     refactoringTestHelper
         .addInputLines(
