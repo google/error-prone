@@ -146,7 +146,7 @@ public final class CanIgnoreReturnValueSuggester extends BugChecker implements M
 
       @Override
       public Void visitNewClass(NewClassTree node, Void unused) {
-        // don't descend into new classes
+        // don't descend into declarations of anonymous classes
         return null;
       }
     }.scan(state.getPath(), null);
