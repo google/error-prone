@@ -79,6 +79,43 @@ public class ProvidesNullTest {
         .doTest();
   }
 
+  @Test
+  public void hasTypeUseNullableOnMethod() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import dagger.Provides;",
+            "import org.checkerframework.checker.nullness.qual.Nullable;",
+            "public class Test {",
+            "  @Provides",
+            "  @Nullable",
+            "  public Object providesObject() {",
+            "    // BUG: Diagnostic contains: Did you mean '@Nullable' or 'throw new"
+                + " RuntimeException();'",
+            "    return null;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void hasTypeUseNullableOnReturnType() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import dagger.Provides;",
+            "import org.checkerframework.checker.nullness.qual.Nullable;",
+            "public class Test {",
+            "  @Provides",
+            "  public @Nullable Object providesObject() {",
+            "    // BUG: Diagnostic contains: Did you mean '@Nullable' or 'throw new"
+                + " RuntimeException();'",
+            "    return null;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
   /**
    * Tests that we do not flag Guice {@code @Provides} methods. While this is also wrong, there is
    * no enforcement in Guice and so the incorrect usage is too common to error on.
