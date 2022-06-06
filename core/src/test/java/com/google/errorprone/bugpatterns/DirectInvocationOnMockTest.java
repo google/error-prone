@@ -156,6 +156,26 @@ public final class DirectInvocationOnMockTest {
   }
 
   @Test
+  public void directInvocationOnMock_withinCustomWhen_noFinding() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            "import static org.mockito.Mockito.mock;",
+            "import org.mockito.stubbing.OngoingStubbing;",
+            "class Test {",
+            "  public <T> OngoingStubbing<T> when(T t) {",
+            "    return org.mockito.Mockito.when(t);",
+            "  }",
+            "  public Object test() {",
+            "    Test test = mock(Test.class);",
+            "    when(test.test()).thenReturn(null);",
+            "    return null;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void directInvocationOnMock_withinWhenWithCast_noFinding() {
     helper
         .addSourceLines(

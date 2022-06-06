@@ -20,6 +20,7 @@ import static com.google.common.collect.Streams.stream;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.fixes.SuggestedFixes.qualifyStaticImport;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
+import static com.google.errorprone.matchers.Matchers.anyMethod;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
@@ -130,6 +131,5 @@ public final class DirectInvocationOnMock extends BugChecker implements Compilat
   private static final Matcher<ExpressionTree> MOCK =
       staticMethod().onClass("org.mockito.Mockito").named("mock").withParameters("java.lang.Class");
 
-  private static final Matcher<ExpressionTree> WHEN =
-      staticMethod().onClass("org.mockito.Mockito").named("when");
+  private static final Matcher<ExpressionTree> WHEN = anyMethod().anyClass().named("when");
 }
