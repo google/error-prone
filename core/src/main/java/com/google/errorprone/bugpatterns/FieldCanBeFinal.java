@@ -24,6 +24,7 @@ import static com.google.errorprone.util.ASTHelpers.shouldKeep;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.CompilationUnitTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFixes;
@@ -53,6 +54,8 @@ import java.util.Collection;
 import java.util.EnumSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
@@ -67,8 +70,8 @@ public class FieldCanBeFinal extends BugChecker implements CompilationUnitTreeMa
 
   /** Annotations that imply a field is non-constant. */
   // TODO(cushon): consider supporting @Var as a meta-annotation
-  private static final ImmutableSet<String> IMPLICIT_VAR_ANNOTATIONS =
-      ImmutableSet.of(
+  private final Set<String> implicitVarAnnotations =
+      Sets.newHashSet(
           "javax.inject.Inject",
           "com.google.inject.Inject",
           "com.google.inject.testing.fieldbinder.Bind",
@@ -109,6 +112,13 @@ public class FieldCanBeFinal extends BugChecker implements CompilationUnitTreeMa
     INSTANCE,
     /** Neither a static or instance initializer. */
     NONE
+  }
+
+  static final String VAR_ANNOTATIONS_FLAG_NAME = "FieldCanBeFinal:NonConstantVarAnnotation";
+
+  public FieldCanBeFinal(ErrorProneFlags flags) {
+    Optional<Set<String>> extraAnnotations = flags.getSet(VAR_ANNOTATIONS_FLAG_NAME);
+    extraAnnotations.ifPresent(this.implicitVarAnnotations::addAll);
   }
 
   /** A record of all assignments to variables in the current compilation unit. */
@@ -217,7 +227,7 @@ public class FieldCanBeFinal extends BugChecker implements CompilationUnitTreeMa
       if (shouldKeep(var.declaration)) {
         continue;
       }
-      if (IMPLICIT_VAR_ANNOTATIONS.stream().anyMatch(a -> hasAnnotation(var.sym, a, state))) {
+      if (implicitVarAnnotations.stream().anyMatch(a -> hasAnnotation(var.sym, a, state))) {
         continue;
       }
       for (Attribute.Compound anno : var.sym.getAnnotationMirrors()) {
