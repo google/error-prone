@@ -22,10 +22,10 @@ import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.findDecla
 import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.fixByAddingNullableAnnotationToType;
 import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.getNullCheck;
 import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.hasDefinitelyNullBranch;
+import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.hasExtraParameterForEnclosingInstance;
 import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.isAlreadyAnnotatedNullable;
 import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.nullnessChecksShouldBeConservative;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
-import static com.google.errorprone.util.ASTHelpers.enclosingClass;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.hasNoExplicitType;
@@ -55,7 +55,6 @@ import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
 import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.code.Symbol;
-import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import java.util.List;
 
@@ -241,25 +240,17 @@ public final class ParameterMissingNullable extends BugChecker
     return matchCall(getSymbol(tree), tree.getArguments(), state);
   }
 
-  private static boolean hasExtraParameterForEnclosingInstance(MethodSymbol symbol) {
-    if (!symbol.isConstructor()) {
-      return false;
-    }
-    ClassSymbol constructedClass = enclosingClass(symbol);
-    return enclosingClass(constructedClass) != null && !constructedClass.isStatic();
-  }
-
   private Description matchCall(
       MethodSymbol methodSymbol, List<? extends ExpressionTree> arguments, VisitorState state) {
     if (hasExtraParameterForEnclosingInstance(methodSymbol)) {
-      // TODO(cpovirk): Figure out the right way to handle the implicit outer `this` parameter.
+      // TODO(b/232103314): Figure out the right way to handle the implicit outer `this` parameter.
       return NO_MATCH;
     }
 
     if (methodSymbol.isVarArgs()) {
       /*
-       * TODO(cpovirk): Figure out the right way to handle this, or at least handle all parameters
-       * but the last.
+       * TODO(b/232103314): Figure out the right way to handle this, or at least handle all
+       * parameters but the last.
        */
       return NO_MATCH;
     }

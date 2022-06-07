@@ -24,6 +24,7 @@ import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.NullableA
 import static com.google.errorprone.fixes.SuggestedFix.emptyFix;
 import static com.google.errorprone.matchers.Matchers.instanceMethod;
 import static com.google.errorprone.suppliers.Suppliers.JAVA_LANG_VOID_TYPE;
+import static com.google.errorprone.util.ASTHelpers.enclosingClass;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
@@ -67,6 +68,7 @@ import com.sun.source.util.Trees;
 import com.sun.tools.javac.code.Kinds.KindSelector;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
+import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.processing.JavacProcessingEnvironment;
@@ -229,6 +231,15 @@ class NullnessUtils {
 
   static boolean isAlreadyAnnotatedNullable(Symbol symbol) {
     return NullnessAnnotations.fromAnnotationsOn(symbol).orElse(null) == Nullness.NULLABLE;
+  }
+
+  static boolean hasExtraParameterForEnclosingInstance(MethodSymbol symbol) {
+    // TODO(b/232103314): Figure out which cases the implicit outer `this` parameter exists in.
+    if (!symbol.isConstructor()) {
+      return false;
+    }
+    ClassSymbol constructedClass = enclosingClass(symbol);
+    return enclosingClass(constructedClass) != null && !constructedClass.isStatic();
   }
 
   @com.google.auto.value.AutoValue // fully qualified to work around JDK-7177813(?) in JDK8 build

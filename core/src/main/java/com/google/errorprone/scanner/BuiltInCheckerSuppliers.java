@@ -495,6 +495,7 @@ import com.google.errorprone.bugpatterns.nullness.EqualsBrokenForNull;
 import com.google.errorprone.bugpatterns.nullness.EqualsMissingNullable;
 import com.google.errorprone.bugpatterns.nullness.ExtendsObject;
 import com.google.errorprone.bugpatterns.nullness.FieldMissingNullable;
+import com.google.errorprone.bugpatterns.nullness.NullArgumentForNonNullParameter;
 import com.google.errorprone.bugpatterns.nullness.ParameterMissingNullable;
 import com.google.errorprone.bugpatterns.nullness.ReturnMissingNullable;
 import com.google.errorprone.bugpatterns.nullness.UnnecessaryCheckNotNull;
@@ -707,6 +708,7 @@ public class BuiltInCheckerSuppliers {
           NonCanonicalStaticImport.class,
           NonFinalCompileTimeConstant.class,
           NonRuntimeAnnotation.class,
+          NullArgumentForNonNullParameter.class,
           NullTernary.class,
           NullableOnContainingClass.class,
           OptionalEquality.class,
