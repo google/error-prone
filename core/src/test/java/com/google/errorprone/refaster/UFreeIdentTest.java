@@ -17,10 +17,18 @@
 package com.google.errorprone.refaster;
 
 import static com.google.common.truth.Truth.assertThat;
+import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
 
 import com.google.common.testing.EqualsTester;
 import com.google.common.testing.SerializableTester;
-import com.sun.tools.javac.tree.JCTree.JCExpression;
+import com.google.errorprone.BugPattern;
+import com.google.errorprone.CompilationTestHelper;
+import com.google.errorprone.VisitorState;
+import com.google.errorprone.bugpatterns.BugChecker;
+import com.google.errorprone.bugpatterns.BugChecker.ExpressionStatementTreeMatcher;
+import com.google.errorprone.matchers.Description;
+import com.sun.source.tree.ExpressionStatementTree;
+import com.sun.tools.javac.util.Context;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -41,10 +49,34 @@ public class UFreeIdentTest extends AbstractUTreeTest {
 
   @Test
   public void binds() {
-    JCExpression expr = parseExpression("\"abcdefg\".charAt(x + 1)");
-    UFreeIdent ident = UFreeIdent.create("foo");
-    assertThat(ident.unify(expr, unifier)).isNotNull();
-    assertThat(unifier.getBindings()).containsExactly(new UFreeIdent.Key("foo"), expr);
+    CompilationTestHelper.newInstance(DummyChecker.class, getClass())
+        .addSourceLines(
+            "A.java",
+            "class A {",
+            "  public void bar() {",
+            "    int x = 0;",
+            "    \"abcdefg\".charAt(x + 1);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @BugPattern(
+      summary = "Verify that unifying the expression results in the correct binding",
+      explanation = "For test purposes only",
+      severity = SUGGESTION)
+  public static class DummyChecker extends BugChecker implements ExpressionStatementTreeMatcher {
+    @Override
+    public Description matchExpressionStatement(ExpressionStatementTree tree, VisitorState state) {
+      Unifier unifier = new Unifier(new Context());
+      UFreeIdent ident = UFreeIdent.create("foo");
+
+      assertThat(ident.unify(tree.getExpression(), unifier)).isNotNull();
+      assertThat(unifier.getBindings())
+          .containsExactly(new UFreeIdent.Key("foo"), tree.getExpression());
+
+      return Description.NO_MATCH;
+    }
   }
 
   @Test
