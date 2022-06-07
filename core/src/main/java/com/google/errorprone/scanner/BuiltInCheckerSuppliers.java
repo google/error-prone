@@ -302,6 +302,7 @@ import com.google.errorprone.bugpatterns.ReturnsNullCollection;
 import com.google.errorprone.bugpatterns.RobolectricShadowDirectlyOn;
 import com.google.errorprone.bugpatterns.RxReturnValueIgnored;
 import com.google.errorprone.bugpatterns.SameNameButDifferent;
+import com.google.errorprone.bugpatterns.SelfAlwaysReturnsThis;
 import com.google.errorprone.bugpatterns.SelfAssignment;
 import com.google.errorprone.bugpatterns.SelfComparison;
 import com.google.errorprone.bugpatterns.SelfEquals;
@@ -949,6 +950,7 @@ public class BuiltInCheckerSuppliers {
           RxReturnValueIgnored.class,
           SameNameButDifferent.class,
           ScopeAnnotationOnInterfaceOrAbstractClass.class,
+          SelfAlwaysReturnsThis.class,
           ShortCircuitBoolean.class,
           StaticAssignmentInConstructor.class,
           StaticAssignmentOfThrowable.class,
