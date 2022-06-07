@@ -34,6 +34,7 @@ import com.google.errorprone.suppliers.Supplier;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.LambdaExpressionTree;
+import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.ReturnTree;
@@ -90,6 +91,12 @@ public final class CanIgnoreReturnValueSuggester extends BugChecker implements M
       return Description.NO_MATCH;
     }
 
+    if (methodSymbol.getSimpleName().contentEquals("self")
+        && methodSymbol.getParameters().isEmpty()) {
+      // would we want to actually suggest @CheckReturnValue on a self() method???
+      return Description.NO_MATCH;
+    }
+
     // if the method is already directly annotated w/ @CIRV, bail out
     if (hasAnnotation(methodTree, CIRV, state)) {
       return Description.NO_MATCH;
@@ -132,6 +139,12 @@ public final class CanIgnoreReturnValueSuggester extends BugChecker implements M
         ExpressionTree returnExpression = returnTree.getExpression();
         if (returnExpression instanceof IdentifierTree) {
           if (((IdentifierTree) returnExpression).getName().contentEquals("this")) {
+            return true;
+          }
+        }
+        if (returnExpression instanceof MethodInvocationTree) {
+          MethodInvocationTree mit = (MethodInvocationTree) returnExpression;
+          if (state.getSourceForNode(mit.getMethodSelect()).contentEquals("self")) {
             return true;
           }
         }

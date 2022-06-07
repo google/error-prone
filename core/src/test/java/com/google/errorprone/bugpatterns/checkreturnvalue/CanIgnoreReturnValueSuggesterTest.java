@@ -53,6 +53,36 @@ public class CanIgnoreReturnValueSuggesterTest {
   }
 
   @Test
+  public void testReturnSelf_b234875737() {
+    helper
+        .addInputLines(
+            "Client.java",
+            "package com.google.frobber;",
+            "public final class Client {",
+            "  public Client getValue() {",
+            "    return self();",
+            "  }",
+            "  private Client self() {",
+            "    return this;",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Client.java",
+            "package com.google.frobber;",
+            "import com.google.errorprone.annotations.CanIgnoreReturnValue;",
+            "public final class Client {",
+            "  @CanIgnoreReturnValue",
+            "  public Client getValue() {",
+            "    return self();",
+            "  }",
+            "  private Client self() {",
+            "    return this;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void testSimpleCaseAlreadyAnnotatedWithCirv() {
     helper
         .addInputLines(
