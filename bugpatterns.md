@@ -371,6 +371,9 @@ __[NonFinalCompileTimeConstant](bugpattern/NonFinalCompileTimeConstant)__<br>
 __[NonRuntimeAnnotation](bugpattern/NonRuntimeAnnotation)__<br>
 Calling getAnnotation on an annotation that is not retained at runtime.
 
+__[NullArgumentForNonNullParameter](bugpattern/NullArgumentForNonNullParameter)__<br>
+Null is not permitted for this parameter.
+
 __[NullTernary](bugpattern/NullTernary)__<br>
 This conditional expression may evaluate to null, which will result in an NPE when the result is unboxed.
 
@@ -1077,6 +1080,9 @@ Returned Rx objects must be checked. Ignoring a returned Rx value means it is ne
 
 __[SameNameButDifferent](bugpattern/SameNameButDifferent)__<br>
 This type name shadows another in a way that may be confusing.
+
+__[SelfAlwaysReturnsThis](bugpattern/SelfAlwaysReturnsThis)__<br>
+Non-abstract instance methods named &#39;self()&#39; that return the enclosing class must always &#39;return this&#39;
 
 __[ShortCircuitBoolean](bugpattern/ShortCircuitBoolean)__<br>
 Prefer the short-circuiting boolean operators &amp;&amp; and || to &amp; and |.
