@@ -16,7 +16,9 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.common.base.MoreObjects.firstNonNull;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
+import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.enclosingClass;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
@@ -36,8 +38,8 @@ import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.TypeCastTree;
 import com.sun.source.tree.VariableTree;
+import com.sun.source.util.SimpleTreeVisitor;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
-import com.sun.tools.javac.code.Symbol.VarSymbol;
 
 /**
  * Non-abstract instance methods named {@code self()} that return the enclosing class must always
@@ -49,9 +51,6 @@ import com.sun.tools.javac.code.Symbol.VarSymbol;
             + " 'return this'",
     severity = WARNING)
 public final class SelfAlwaysReturnsThis extends BugChecker implements MethodTreeMatcher {
-
-  // TODO(kak): can we use a MethodMatcher instead? Or is that only for MethodInvocationTree's?
-
   @Override
   public Description matchMethod(MethodTree methodTree, VisitorState state) {
     MethodSymbol methodSymbol = getSymbol(methodTree);
@@ -67,18 +66,18 @@ public final class SelfAlwaysReturnsThis extends BugChecker implements MethodTre
         || !methodSymbol.getParameters().isEmpty()
         || methodSymbol.isStatic()
         || methodTree.getBody() == null) {
-      return Description.NO_MATCH;
+      return NO_MATCH;
     }
 
     // * not have a void (or Void) return type
     Tree returnType = methodTree.getReturnType();
     if (isVoidType(getType(returnType), state)) {
-      return Description.NO_MATCH;
+      return NO_MATCH;
     }
 
     // * have the same return type as the enclosing type
     if (!isSameType(getType(returnType), enclosingClass(methodSymbol).type, state)) {
-      return Description.NO_MATCH;
+      return NO_MATCH;
     }
 
     // * have a body that is exactly 1 statement
@@ -89,43 +88,22 @@ public final class SelfAlwaysReturnsThis extends BugChecker implements MethodTre
       if (statement instanceof ReturnTree) {
         ExpressionTree returnExpression = ((ReturnTree) statement).getExpression();
 
-        // e.g., `return this;`
-        if (isThis(returnExpression)) {
-          return Description.NO_MATCH;
-        }
-
-        // e.g., `return (T) this;`
-        if (returnExpression instanceof TypeCastTree) {
-          TypeCastTree typeCastTree = (TypeCastTree) returnExpression;
-          if (isThis(typeCastTree.getExpression())) {
-            return Description.NO_MATCH;
-          }
+        if (maybeCastThis(returnExpression)) {
+          return NO_MATCH;
         }
       }
     }
 
     // * or have a body that is exactly 2 statement
     if (methodTree.getBody().getStatements().size() == 2) {
-
       // * the 1st statement is an assignment (e.g., Builder self = (Builder) this;)
       StatementTree firstStatement = methodTree.getBody().getStatements().get(0);
-      if (firstStatement instanceof VariableTree) {
-        VariableTree variableTree = (VariableTree) firstStatement;
-        if (variableTree.getInitializer() instanceof TypeCastTree) {
-          TypeCastTree typeCastTree = (TypeCastTree) variableTree.getInitializer();
-          if (isThis(typeCastTree.getExpression())) {
-            VarSymbol assignedVariable = getSymbol(variableTree);
-
-            // * the 2nd statement is a return of the previous variable (e.g., return self;)
-            StatementTree secondStatement = methodTree.getBody().getStatements().get(1);
-            if (secondStatement instanceof ReturnTree) {
-              ReturnTree returnTree = (ReturnTree) secondStatement;
-              if (assignedVariable != null
-                  && assignedVariable.equals(getSymbol(returnTree.getExpression()))) {
-                return Description.NO_MATCH;
-              }
-            }
-          }
+      StatementTree secondStatement = methodTree.getBody().getStatements().get(1);
+      if (firstStatement instanceof VariableTree && secondStatement instanceof ReturnTree) {
+        if (maybeCastThis(((VariableTree) firstStatement).getInitializer())
+            && getSymbol(firstStatement)
+                .equals(getSymbol(((ReturnTree) secondStatement).getExpression()))) {
+          return NO_MATCH;
         }
       }
     }
@@ -134,7 +112,23 @@ public final class SelfAlwaysReturnsThis extends BugChecker implements MethodTre
         methodTree, SuggestedFix.replace(methodTree.getBody(), "{ return this; }"));
   }
 
-  /** Returns whether or not the given {@link ExpressionTree} is exactly {@code this}. */
+  private static boolean maybeCastThis(Tree tree) {
+    return firstNonNull(
+        new SimpleTreeVisitor<Boolean, Void>() {
+          @Override
+          public Boolean visitTypeCast(TypeCastTree tree, Void unused) {
+            return visit(tree.getExpression(), null);
+          }
+
+          @Override
+          public Boolean visitIdentifier(IdentifierTree tree, Void unused) {
+            return isThis(tree);
+          }
+        }.visit(tree, null),
+        false);
+  }
+
+  /** Returns whether the given {@link ExpressionTree} is exactly {@code this}. */
   private static boolean isThis(ExpressionTree expression) {
     if (expression instanceof IdentifierTree) {
       return ((IdentifierTree) expression).getName().contentEquals("this");
