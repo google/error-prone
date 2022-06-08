@@ -112,21 +112,6 @@ public class NullArgumentForNonNullParameterTest {
   }
 
   @Test
-  public void testPositiveNullMarkedComGoogleCommon() {
-    conservativeHelper
-        .addSourceLines(
-            "Foo.java",
-            "import com.google.common.base.Ascii;",
-            "class Foo {",
-            "  void foo() {",
-            "    // BUG: Diagnostic contains: ",
-            "    Ascii.toLowerCase(null);",
-            "  }",
-            "}")
-        .doTest();
-  }
-
-  @Test
   public void testNegativeNullMarkedComGoogleCommonButNullable() {
     conservativeHelper
         .addSourceLines(
