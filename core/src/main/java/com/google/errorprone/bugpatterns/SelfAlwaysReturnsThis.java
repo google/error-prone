@@ -80,6 +80,8 @@ public final class SelfAlwaysReturnsThis extends BugChecker implements MethodTre
       return NO_MATCH;
     }
 
+    // TODO(kak): we should probably re-used the TreePathScanner from CanIgnoreReturnValueSuggester
+
     // * have a body that is exactly 1 statement
     if (methodTree.getBody().getStatements().size() == 1) {
 

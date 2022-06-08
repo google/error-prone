@@ -59,6 +59,61 @@ public class SelfAlwaysReturnsThisTest {
   }
 
   @Test
+  public void testSelfReturnsThis_withCastAndTryCatch() {
+    helper
+        .addInputLines(
+            "Builder.java",
+            "package com.google.frobber;",
+            "public final class Builder {",
+            "  public Builder self() {",
+            "    try {",
+            "      return (Builder) this;",
+            "    } catch (ClassCastException e) {",
+            // sometimes people log here?
+            "      throw e;",
+            "    }",
+            "  }",
+            "}")
+        // TODO(b/235255949): this should probably be .expectUnchanged()
+        .addOutputLines(
+            "Builder.java",
+            "package com.google.frobber;",
+            "public final class Builder {",
+            "  public Builder self() {",
+            "    return this;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void testSelfReturnsThis_withMultipleReturnStatements() {
+    helper
+        .addInputLines(
+            "Builder.java",
+            "package com.google.frobber;",
+            "public final class Builder {",
+            "  public Builder self() {",
+            "    if (System.currentTimeMillis() % 2 == 0) {",
+            "      return this;",
+            "    } else {",
+            "      return this;",
+            "    }",
+            "  }",
+            "}")
+        // TODO(b/235255949): this should probably be .expectUnchanged()
+        .addOutputLines(
+            "Builder.java",
+            "package com.google.frobber;",
+            "public final class Builder {",
+            "  public Builder self() {",
+            "    return this;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void testSelfReturnsThis_withTwoStatementCast() {
     helper
         .addInputLines(
