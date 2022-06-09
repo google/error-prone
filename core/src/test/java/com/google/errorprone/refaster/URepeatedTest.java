@@ -39,7 +39,7 @@ public class URepeatedTest extends AbstractUTreeTest {
 
   @Test
   public void unifies() {
-    CompilationTestHelper.newInstance(DummyChecker.class, getClass())
+    CompilationTestHelper.newInstance(UnificationChecker.class, getClass())
         .addSourceLines(
             "A.java",
             "class A {",
@@ -52,10 +52,12 @@ public class URepeatedTest extends AbstractUTreeTest {
   }
 
   @BugPattern(
+      name = "UnificationChecker",
       summary = "Verify that unifying the expression results in the correct binding",
       explanation = "For test purposes only",
       severity = SUGGESTION)
-  public static class DummyChecker extends BugChecker implements ExpressionStatementTreeMatcher {
+  public static class UnificationChecker extends BugChecker
+      implements ExpressionStatementTreeMatcher {
     @Override
     public Description matchExpressionStatement(ExpressionStatementTree tree, VisitorState state) {
       Unifier unifier = new Unifier(new Context());
