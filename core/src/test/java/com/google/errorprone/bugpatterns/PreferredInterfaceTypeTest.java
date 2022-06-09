@@ -869,4 +869,16 @@ public final class PreferredInterfaceTypeTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void charSequences() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  // BUG: Diagnostic contains: String",
+            "  private final CharSequence a = \"foo\";",
+            "}")
+        .doTest();
+  }
 }
