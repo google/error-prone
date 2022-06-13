@@ -21,6 +21,7 @@ import static com.google.errorprone.matchers.Description.NO_MATCH;
 
 import com.google.common.base.Joiner;
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.LambdaExpressionTreeMatcher;
@@ -54,6 +55,16 @@ public class GuardedByChecker extends BugChecker
 
   private final GuardedByFlags flags = GuardedByFlags.allOn();
 
+  private final boolean reportMissingGuards;
+  private final boolean checkTryWithResources;
+
+  public GuardedByChecker(ErrorProneFlags errorProneFlags) {
+    reportMissingGuards =
+        errorProneFlags.getBoolean("GuardedByChecker:reportMissingGuards").orElse(true);
+    checkTryWithResources =
+        errorProneFlags.getBoolean("GuardedByChecker:checkTryWithResources").orElse(true);
+  }
+
   @Override
   public Description matchMethod(MethodTree tree, VisitorState state) {
     // Constructors (and field initializers, instance initializers, and class initializers) are free
@@ -78,7 +89,9 @@ public class GuardedByChecker extends BugChecker
         (ExpressionTree tree, GuardedByExpression guard, HeldLockSet live) ->
             report(GuardedByChecker.this.checkGuardedAccess(tree, guard, live, state), state),
         tree1 -> isSuppressed(tree1, state),
-        flags);
+        flags,
+        reportMissingGuards,
+        checkTryWithResources);
   }
 
   @Override

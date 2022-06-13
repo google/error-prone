@@ -1673,6 +1673,7 @@ public class GuardedByCheckerTest {
             "    }",
             "  }",
             "}")
+        .setArgs("-XepOpt:GuardedByChecker:reportMissingGuards=true")
         .doTest();
   }
 
@@ -1769,6 +1770,7 @@ public class GuardedByCheckerTest {
             "    lib.doSomething();",
             "  }",
             "}")
+        .setArgs("-XepOpt:GuardedByChecker:reportMissingGuards=true")
         .doTest();
   }
 
@@ -1816,6 +1818,7 @@ public class GuardedByCheckerTest {
             "    worker.f(work);",
             "  }",
             "}")
+        .setArgs("-XepOpt:GuardedByChecker:reportMissingGuards=true")
         .doTest();
   }
 
@@ -1843,6 +1846,7 @@ public class GuardedByCheckerTest {
             "    }",
             "  }",
             "}")
+        .setArgs("-XepOpt:GuardedByChecker:reportMissingGuards=true")
         .doTest();
   }
 
@@ -1869,6 +1873,7 @@ public class GuardedByCheckerTest {
             "    }",
             "  }",
             "}")
+        .setArgs("-XepOpt:GuardedByChecker:reportMissingGuards=true")
         .doTest();
   }
 
@@ -1891,6 +1896,7 @@ public class GuardedByCheckerTest {
             "    f(0);",
             "  }",
             "}")
+        .setArgs("-XepOpt:GuardedByChecker:reportMissingGuards=true")
         .doTest();
   }
 }
