@@ -403,12 +403,10 @@ public class PreferJavaTimeOverloadTest {
   }
 
   @Test
-  public void ignoredApisAreExcluded() {
-  }
+  public void ignoredApisAreExcluded() {}
 
   @Test
-  public void b138221392() {
-  }
+  public void b138221392() {}
 
   @Test
   public void durationDividedBy() {

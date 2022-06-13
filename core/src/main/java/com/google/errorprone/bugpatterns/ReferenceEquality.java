@@ -22,6 +22,7 @@ import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.StandardTags;
 import com.google.errorprone.VisitorState;
+import com.google.errorprone.suppliers.Supplier;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ExpressionTree;
@@ -36,7 +37,6 @@ import com.sun.tools.javac.util.Name;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
-    name = "ReferenceEquality",
     summary = "Comparison using reference equality instead of value equality",
     severity = WARNING,
     tags = StandardTags.FRAGILE_CODE)
@@ -85,7 +85,7 @@ public class ReferenceEquality extends AbstractReferenceEquality {
       return false;
     }
     MethodSymbol sym = ASTHelpers.getSymbol(methodTree);
-    if (sym == null || sym.isStatic()) {
+    if (sym.isStatic()) {
       return false;
     }
     if (overridesMethodOnType(classType, sym, symtab.comparatorType, "compare", state)) {
@@ -116,7 +116,7 @@ public class ReferenceEquality extends AbstractReferenceEquality {
 
   /** Check if the method declares or inherits an implementation of .equals() */
   public static boolean implementsEquals(Type type, VisitorState state) {
-    Name equalsName = state.getName("equals");
+    Name equalsName = EQUALS.get(state);
     Symbol objectEquals = getOnlyMember(state, state.getSymtab().objectType, "equals");
     for (Type sup : state.getTypes().closure(type)) {
       if (sup.tsym.isInterface()) {
@@ -137,4 +137,7 @@ public class ReferenceEquality extends AbstractReferenceEquality {
     }
     return false;
   }
+
+  private static final Supplier<Name> EQUALS =
+      VisitorState.memoize(state -> state.getName("equals"));
 }

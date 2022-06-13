@@ -45,9 +45,10 @@ import java.util.Map;
 import java.util.stream.Stream;
 import javax.lang.model.element.Name;
 
-/** @author hanuszczak@google.com (Łukasz Hanuszczak) */
+/**
+ * @author hanuszczak@google.com (Łukasz Hanuszczak)
+ */
 @BugPattern(
-    name = "UngroupedOverloads",
     summary =
         "Constructors and methods with the same name should appear sequentially with no other code"
             + " in between, even when modifiers such as static or private differ between the"
@@ -136,7 +137,7 @@ public class UngroupedOverloads extends BugChecker implements ClassTreeMatcher {
     if (group == 0) {
       return Stream.empty();
     }
-    if (overloads.stream().anyMatch(m -> isSuppressed(m.tree()))) {
+    if (overloads.stream().anyMatch(m -> isSuppressed(m.tree(), state))) {
       return Stream.empty();
     }
     // build a fix that replaces the first overload with all the overloads grouped together

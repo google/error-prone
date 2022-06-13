@@ -36,7 +36,6 @@ import com.sun.source.tree.MethodTree;
  * @author mariasam@google.com (Maria Sam)
  */
 @BugPattern(
-    name = "OverrideThrowableToString",
     summary =
         "To return a custom message with a Throwable class, one should "
             + "override getMessage() instead of toString().",
@@ -60,7 +59,7 @@ public final class OverrideThrowableToString extends BugChecker implements Class
     return methods.stream()
         .filter(m -> Matchers.toStringMethodDeclaration().matches(m, state))
         .findFirst()
-        .map(m -> describeMatch(classTree, SuggestedFixes.renameMethod(m, "getMessage", state)))
+        .map(m -> describeMatch(m, SuggestedFixes.renameMethod(m, "getMessage", state)))
         .orElse(Description.NO_MATCH);
   }
 }

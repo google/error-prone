@@ -45,6 +45,8 @@ public class RandomCastTest {
             "    // BUG: Diagnostic contains:",
             "    y = (long) new Random().nextDouble();",
             "    // BUG: Diagnostic contains:",
+            "    y = (long) (new Random().nextDouble());",
+            "    // BUG: Diagnostic contains:",
             "    int z = (int) Math.random();",
             "  }",
             "}")

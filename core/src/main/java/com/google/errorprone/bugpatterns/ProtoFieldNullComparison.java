@@ -30,7 +30,9 @@ import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.isConsideredFinal;
 import static com.google.errorprone.util.ASTHelpers.isSameType;
 
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
+import com.google.common.collect.Sets;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
@@ -40,6 +42,7 @@ import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
+import com.google.errorprone.suppliers.Supplier;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.BinaryTree;
 import com.sun.source.tree.ClassTree;
@@ -59,7 +62,6 @@ import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
 import java.util.Arrays;
-import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -68,10 +70,7 @@ import java.util.Set;
 import javax.annotation.Nullable;
 
 /** Matches comparison of proto fields to {@code null}. */
-@BugPattern(
-    name = "ProtoFieldNullComparison",
-    summary = "Protobuf fields cannot be null.",
-    severity = ERROR)
+@BugPattern(summary = "Protobuf fields cannot be null.", severity = ERROR)
 public class ProtoFieldNullComparison extends BugChecker implements CompilationUnitTreeMatcher {
 
   // TODO(b/111109484): Try to consolidate these with NullnessPropagationTransfer.
@@ -88,18 +87,18 @@ public class ProtoFieldNullComparison extends BugChecker implements CompilationU
 
   private static final Matcher<MethodInvocationTree> TRUTH_NOT_NULL =
       allOf(
-          instanceMethod().onDescendantOf("com.google.common.truth.Subject").named("isNotNull"),
+          instanceMethod().anyClass().named("isNotNull"),
           receiverOfInvocation(
               anyOf(
-                  staticMethod().onClass("com.google.common.truth.Truth").namedAnyOf("assertThat"),
+                  staticMethod().anyClass().namedAnyOf("assertThat"),
                   instanceMethod()
                       .onDescendantOf("com.google.common.truth.StandardSubjectBuilder")
                       .named("that"))));
 
   private static final Matcher<Tree> RETURNS_LIST = Matchers.isSubtypeOf("java.util.List");
 
-  private static final Set<Kind> COMPARISON_OPERATORS =
-      EnumSet.of(Kind.EQUAL_TO, Kind.NOT_EQUAL_TO);
+  private static final ImmutableSet<Kind> COMPARISON_OPERATORS =
+      Sets.immutableEnumSet(Kind.EQUAL_TO, Kind.NOT_EQUAL_TO);
 
   private static final Matcher<ExpressionTree> EXTENSION_METHODS_WITH_FIX =
       instanceMethod()
@@ -138,12 +137,10 @@ public class ProtoFieldNullComparison extends BugChecker implements CompilationU
               "com.google.protobuf.GeneratedMessageLite", "com.google.protobuf.GeneratedMessage");
 
   private final boolean matchTestAssertions;
-  private final boolean matchOptionals;
 
   public ProtoFieldNullComparison(ErrorProneFlags flags) {
     this.matchTestAssertions =
         flags.getBoolean("ProtoFieldNullComparison:MatchTestAssertions").orElse(false);
-    this.matchOptionals = flags.getBoolean("ProtoFieldNullComparison:MatchOptionals").orElse(true);
   }
 
   @Override
@@ -163,22 +160,22 @@ public class ProtoFieldNullComparison extends BugChecker implements CompilationU
 
     @Override
     public Void visitMethod(MethodTree method, Void unused) {
-      return isSuppressed(method) ? null : super.visitMethod(method, unused);
+      return isSuppressed(method, state) ? null : super.visitMethod(method, unused);
     }
 
     @Override
     public Void visitClass(ClassTree clazz, Void unused) {
-      return isSuppressed(clazz) ? null : super.visitClass(clazz, unused);
+      return isSuppressed(clazz, state) ? null : super.visitClass(clazz, unused);
     }
 
     @Override
     public Void visitVariable(VariableTree variable, Void unused) {
       Symbol symbol = ASTHelpers.getSymbol(variable);
-      if (variable.getInitializer() != null && symbol != null && isConsideredFinal(symbol)) {
+      if (variable.getInitializer() != null && isConsideredFinal(symbol)) {
         getInitializer(variable.getInitializer())
             .ifPresent(e -> effectivelyFinalValues.put(symbol, e));
       }
-      return isSuppressed(variable) ? null : super.visitVariable(variable, null);
+      return isSuppressed(variable, state) ? null : super.visitVariable(variable, null);
     }
 
     private Optional<ExpressionTree> getInitializer(ExpressionTree tree) {
@@ -231,7 +228,7 @@ public class ProtoFieldNullComparison extends BugChecker implements CompilationU
       } else if (matchTestAssertions && ASSERT_NOT_NULL.matches(node, subState)) {
         argument = getLast(node.getArguments());
         problemType = ProblemUsage.JUNIT;
-      } else if (matchOptionals && OF_NULLABLE.matches(node, subState)) {
+      } else if (OF_NULLABLE.matches(node, subState)) {
         argument = getOnlyElement(node.getArguments());
         problemType = ProblemUsage.OPTIONAL;
       } else if (matchTestAssertions && TRUTH_NOT_NULL.matches(node, subState)) {
@@ -241,7 +238,9 @@ public class ProtoFieldNullComparison extends BugChecker implements CompilationU
         return super.visitMethodInvocation(node, null);
       }
       getFixer(argument, subState)
-          .map(f -> describeMatch(node, problemType.fix(f, node, subState)))
+          .map(f -> problemType.fix(f, node, subState))
+          .filter(f -> !f.isEmpty())
+          .map(f -> describeMatch(node, f))
           .ifPresent(state::reportMatch);
 
       return super.visitMethodInvocation(node, null);
@@ -282,7 +281,9 @@ public class ProtoFieldNullComparison extends BugChecker implements CompilationU
   /** Generates a replacement hazzer, if available. */
   @FunctionalInterface
   private interface Fixer {
-    /** @param negated whether the hazzer should be negated. */
+    /**
+     * @param negated whether the hazzer should be negated.
+     */
     Optional<String> getHazzer(boolean negated, VisitorState state);
   }
 
@@ -402,7 +403,7 @@ public class ProtoFieldNullComparison extends BugChecker implements CompilationU
           MethodInvocationTree methodInvocation = (MethodInvocationTree) tree;
           Type argumentType =
               ASTHelpers.getType(Iterables.getOnlyElement(methodInvocation.getArguments()));
-          Symbol extension = state.getSymbolFromString("com.google.protobuf.ExtensionLite");
+          Symbol extension = COM_GOOGLE_PROTOBUF_EXTENSIONLITE.get(state);
           Type genericsArgument = state.getTypes().asSuper(argumentType, extension);
 
           // If there are not two arguments then it is a raw type
@@ -523,4 +524,7 @@ public class ProtoFieldNullComparison extends BugChecker implements CompilationU
 
     abstract SuggestedFix fix(Fixer fixer, ExpressionTree tree, VisitorState state);
   }
+
+  private static final Supplier<Symbol> COM_GOOGLE_PROTOBUF_EXTENSIONLITE =
+      VisitorState.memoize(state -> state.getSymbolFromString("com.google.protobuf.ExtensionLite"));
 }

@@ -80,7 +80,8 @@ public class JavacErrorDescriptionListener implements DescriptionListener {
     checkNotNull(resources.getCompilation().endPositions);
     try {
       CharSequence sourceFileContent = sourceFile.getCharContent(true);
-      fixToAppliedFix = fix -> AppliedFix.fromSource(sourceFileContent, resources.getCompilation().endPositions).apply(fix);
+      AppliedFix.Applier applier = AppliedFix.fromSource(sourceFileContent, resources.getCompilation().endPositions);
+      fixToAppliedFix = applier::apply;
     } catch (IOException e) {
       throw new UncheckedIOException(e);
     }

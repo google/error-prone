@@ -27,6 +27,7 @@ import static com.google.errorprone.util.ASTHelpers.getReturnType;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
+import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
 import static com.google.errorprone.util.ASTHelpers.isConsideredFinal;
 import static com.google.errorprone.util.ASTHelpers.isSameType;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
@@ -35,17 +36,20 @@ import com.google.common.base.CaseFormat;
 import com.google.common.base.Strings;
 import com.google.common.base.Verify;
 import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.Multimap;
+import com.google.common.collect.ListMultimap;
 import com.google.common.collect.Streams;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.annotations.MustBeClosed;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
+import com.google.errorprone.matchers.UnusedReturnValueMatcher;
+import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.ConditionalExpressionTree;
 import com.sun.source.tree.ExpressionStatementTree;
 import com.sun.source.tree.ExpressionTree;
+import com.sun.source.tree.LambdaExpressionTree;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
@@ -75,9 +79,12 @@ import javax.lang.model.element.Modifier;
  */
 public abstract class AbstractMustBeClosedChecker extends BugChecker {
 
+  private static final String MUST_BE_CLOSED_ANNOTATION_NAME =
+      MustBeClosed.class.getCanonicalName();
+
   /** Matches trees annotated with {@link MustBeClosed}. */
   protected static final Matcher<Tree> HAS_MUST_BE_CLOSED_ANNOTATION =
-      symbolHasAnnotation(MustBeClosed.class.getCanonicalName());
+      symbolHasAnnotation(MUST_BE_CLOSED_ANNOTATION_NAME);
 
   private static final Matcher<ExpressionTree> CLOSE_METHOD =
       instanceMethod().onDescendantOf("java.lang.AutoCloseable").named("close");
@@ -126,8 +133,8 @@ public abstract class AbstractMustBeClosedChecker extends BugChecker {
     if (description == NO_MATCH) {
       return NO_MATCH;
     }
-    if (AbstractReturnValueIgnored.expectedExceptionTest(tree, state)
-        || AbstractReturnValueIgnored.mockitoInvocation(tree, state)
+    if (UnusedReturnValueMatcher.expectedExceptionTest(state)
+        || UnusedReturnValueMatcher.mockitoInvocation(tree, state)
         || MOCKITO_MATCHER.matches(state.getPath().getParentPath().getLeaf(), state)) {
       return NO_MATCH;
     }
@@ -162,9 +169,11 @@ public abstract class AbstractMustBeClosedChecker extends BugChecker {
                     .addImport(MustBeClosed.class.getCanonicalName())
                     .build());
           }
-          // In a lambda that returns a MBC variable, there's no place to suggest annotating the
-          // method, and suggesting a try/finally is inane. Instead, just issue a fixless finding.
-          return emptyFix(tree);
+          // If enclosingMethod returned null, we must be returning from a statement lambda.
+          return handleTailPositionInLambda(tree, state);
+        case LAMBDA_EXPRESSION:
+          // The method invocation is the body of an expression lambda.
+          return handleTailPositionInLambda(tree, state);
         case CONDITIONAL_EXPRESSION:
           ConditionalExpressionTree conditionalExpressionTree =
               (ConditionalExpressionTree) path.getLeaf();
@@ -211,6 +220,23 @@ public abstract class AbstractMustBeClosedChecker extends BugChecker {
       addFix(description, tree, state, aggregator);
       return description.build();
     }
+  }
+
+  private Description handleTailPositionInLambda(ExpressionTree tree, VisitorState state) {
+    LambdaExpressionTree lambda =
+        ASTHelpers.findEnclosingNode(state.getPath(), LambdaExpressionTree.class);
+    if (lambda == null) {
+      // Apparently we're not inside a lambda?!
+      return emptyFix(tree);
+    }
+    if (hasAnnotation(
+        state.getTypes().findDescriptorSymbol(getType(lambda).tsym),
+        MUST_BE_CLOSED_ANNOTATION_NAME,
+        state)) {
+      return NO_MATCH;
+    }
+
+    return emptyFix(tree);
   }
 
   private Description emptyFix(Tree tree) {
@@ -338,7 +364,6 @@ public abstract class AbstractMustBeClosedChecker extends BugChecker {
     }
     return Optional.of(
         new TryBlock(
-            tree,
             stmt,
             fix.prefixWith(
                 stmt,
@@ -357,7 +382,6 @@ public abstract class AbstractMustBeClosedChecker extends BugChecker {
     SuggestedFix.Builder fix = SuggestedFix.builder();
     return Optional.of(
         new TryBlock(
-            tree,
             fix.prefixWith(
                     declaringStatement,
                     String.format(
@@ -378,7 +402,6 @@ public abstract class AbstractMustBeClosedChecker extends BugChecker {
     SuggestedFix.Builder fix = SuggestedFix.builder();
     return Optional.of(
         new TryBlock(
-            tree,
             var,
             fix.replace(
                     afterTypePos,
@@ -401,7 +424,6 @@ public abstract class AbstractMustBeClosedChecker extends BugChecker {
     }
     return Optional.of(
         new TryBlock(
-            decl,
             enclosingBlock,
             SuggestedFix.builder()
                 .prefixWith(
@@ -438,19 +460,16 @@ public abstract class AbstractMustBeClosedChecker extends BugChecker {
    * all be inserted at once atomically.
    */
   private static class TryBlock {
-    final Tree location;
     final Optional<Tree> closeBraceAfter;
     final SuggestedFix.Builder otherChanges;
 
     /** For changes that don't need to insert a close brace. */
-    TryBlock(Tree location, SuggestedFix.Builder changes) {
-      this.location = location;
+    TryBlock(SuggestedFix.Builder changes) {
       this.closeBraceAfter = Optional.empty();
       this.otherChanges = changes;
     }
 
-    TryBlock(Tree location, Tree closeBraceAfter, SuggestedFix.Builder otherChanges) {
-      this.location = location;
+    TryBlock(Tree closeBraceAfter, SuggestedFix.Builder otherChanges) {
       this.closeBraceAfter = Optional.of(closeBraceAfter);
       this.otherChanges = otherChanges;
     }
@@ -475,7 +494,7 @@ public abstract class AbstractMustBeClosedChecker extends BugChecker {
   private static final class FindingPerMethod implements FixAggregator {
     private FindingPerMethod() {}
 
-    private final Multimap<Optional<Tree>, TryBlock> reports = ArrayListMultimap.create();
+    private final ListMultimap<Optional<Tree>, TryBlock> reports = ArrayListMultimap.create();
 
     @Override
     public Optional<SuggestedFix> report(TryBlock fix) {

@@ -28,6 +28,7 @@ import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.annotations.CheckReturnValue;
 import com.google.errorprone.annotations.Immutable;
 import com.google.errorprone.fixes.Fix;
+import com.google.errorprone.fixes.SuggestedFix;
 import com.sun.source.tree.Tree;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition;
@@ -69,7 +70,7 @@ public class Description {
    * A list of fixes to suggest in an error message or use in automated refactoring. Fixes are in
    * order of decreasing preference, from most preferred to least preferred.
    */
-  public final List<Fix> fixes;
+  public final ImmutableList<Fix> fixes;
 
   /** Is this a warning, error, etc.? */
   public final BugPattern.SeverityLevel severity;
@@ -209,7 +210,9 @@ public class Description {
      *
      * @param fix a suggested fix for this problem
      * @throws NullPointerException if {@code fix} is {@code null}
+     * @deprecated prefer referring to empty fixes using {@link SuggestedFix#emptyFix()}.
      */
+    @Deprecated
     public Builder addFix(Optional<? extends Fix> fix) {
       checkNotNull(fix, "fix must not be null");
       fix.ifPresent(this::addFix);

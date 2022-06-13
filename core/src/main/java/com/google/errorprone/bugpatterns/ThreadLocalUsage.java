@@ -33,19 +33,18 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.NewClassTreeMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
+import com.google.errorprone.suppliers.Supplier;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
+import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
-@BugPattern(
-    name = "ThreadLocalUsage",
-    summary = "ThreadLocals should be stored in static fields",
-    severity = WARNING)
+@BugPattern(summary = "ThreadLocals should be stored in static fields", severity = WARNING)
 public class ThreadLocalUsage extends BugChecker implements NewClassTreeMatcher {
 
   private static final Matcher<ExpressionTree> NEW_THREAD_LOCAL =
@@ -66,7 +65,7 @@ public class ThreadLocalUsage extends BugChecker implements NewClassTreeMatcher 
       return NO_MATCH;
     }
     VarSymbol sym = getSymbol((VariableTree) parent);
-    if (sym != null && sym.isStatic()) {
+    if (sym.isStatic()) {
       return NO_MATCH;
     }
     if (Streams.stream(state.getPath())
@@ -77,7 +76,7 @@ public class ThreadLocalUsage extends BugChecker implements NewClassTreeMatcher 
               if (hasDirectAnnotationWithSimpleName(getSymbol(c), "Singleton")) {
                 return true;
               }
-              Type scopeType = state.getTypeFromString("com.google.inject.Scope");
+              Type scopeType = COM_GOOGLE_INJECT_SCOPE.get(state);
               if (isSubtype(getType(c), scopeType, state)) {
                 return true;
               }
@@ -106,7 +105,7 @@ public class ThreadLocalUsage extends BugChecker implements NewClassTreeMatcher 
     if (type == null) {
       return false;
     }
-    type = state.getTypes().asSuper(type, state.getSymbolFromString("java.lang.ThreadLocal"));
+    type = state.getTypes().asSuper(type, JAVA_LANG_THREADLOCAL.get(state));
     if (type == null) {
       return false;
     }
@@ -117,9 +116,18 @@ public class ThreadLocalUsage extends BugChecker implements NewClassTreeMatcher 
     if (WELL_KNOWN_TYPES.contains(argType.asElement().getQualifiedName().toString())) {
       return true;
     }
-    if (isSubtype(argType, state.getTypeFromString("java.text.DateFormat"), state)) {
+    if (isSubtype(argType, JAVA_TEXT_DATEFORMAT.get(state), state)) {
       return true;
     }
     return false;
   }
+
+  private static final Supplier<Symbol> JAVA_LANG_THREADLOCAL =
+      VisitorState.memoize(state -> state.getSymbolFromString("java.lang.ThreadLocal"));
+
+  private static final Supplier<Type> COM_GOOGLE_INJECT_SCOPE =
+      VisitorState.memoize(state -> state.getTypeFromString("com.google.inject.Scope"));
+
+  private static final Supplier<Type> JAVA_TEXT_DATEFORMAT =
+      VisitorState.memoize(state -> state.getTypeFromString("java.text.DateFormat"));
 }

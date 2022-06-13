@@ -90,7 +90,6 @@ public class HubSpotUtils {
         recordCheckLoadError(e);
       }
     }
-
     return ScannerSupplier.fromBugCheckerInfos(builder.build());
   }
 

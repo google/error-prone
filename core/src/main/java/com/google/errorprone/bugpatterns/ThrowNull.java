@@ -29,7 +29,6 @@ import com.sun.source.tree.ThrowTree;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
-    name = "ThrowNull",
     summary = "Throwing 'null' always results in a NullPointerException being thrown.",
     severity = ERROR)
 public class ThrowNull extends BugChecker implements ThrowTreeMatcher {

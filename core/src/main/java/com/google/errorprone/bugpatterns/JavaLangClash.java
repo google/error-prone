@@ -21,6 +21,7 @@ import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static javax.lang.model.element.Modifier.PUBLIC;
 
+import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.StandardTags;
 import com.google.errorprone.VisitorState;
@@ -40,7 +41,6 @@ import com.sun.tools.javac.util.Name;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
-    name = "JavaLangClash",
     summary = "Never reuse class names from java.lang",
     severity = WARNING,
     tags = StandardTags.STYLE)
@@ -58,6 +58,15 @@ public class JavaLangClash extends BugChecker
     return check(tree, ((JCTypeParameter) tree).getName(), state);
   }
 
+  private static final ImmutableSet<String> IGNORED =
+      ImmutableSet.of(
+          // java.lang.Compiler is deprecated for removal in 9 and should not be used, so we don't
+          // care
+          // if other types named 'Compiler' are declared
+          "Compiler",
+          // References to java.lang.Module are rare, and it is a commonly used simple name
+          "Module");
+
   private Description check(Tree tree, Name simpleName, VisitorState state) {
     Symtab symtab = state.getSymtab();
     PackageSymbol javaLang = symtab.enterPackage(symtab.java_base, state.getNames().java_lang);
@@ -70,9 +79,7 @@ public class JavaLangClash extends BugChecker
     if (other == null || other.equals(symbol)) {
       return NO_MATCH;
     }
-    if (simpleName.contentEquals("Compiler")) {
-      // java.lang.Compiler is deprecated for removal in 9 and should not be used, so we don't care
-      // if other types named 'Compiler' are declared
+    if (IGNORED.contains(simpleName.toString())) {
       return NO_MATCH;
     }
     return buildDescription(tree)

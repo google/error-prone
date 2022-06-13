@@ -635,7 +635,7 @@ public class ParameterNameTest {
             "    foo(/* args...= */ 1, 2);",
             "  }",
             "}")
-        .doTest();
+        .doTest(TEXT_MATCH);
   }
 
   @Test
@@ -648,6 +648,7 @@ public class ParameterNameTest {
             "",
             "  void bar() {",
             "    foo(1, /* foo= */ 2);",
+            "    foo(1, /* foo...= */ 2);",
             "  }",
             "}")
         .addOutputLines(
@@ -657,9 +658,10 @@ public class ParameterNameTest {
             "",
             "  void bar() {",
             "    foo(1, /* foo */ 2);",
+            "    foo(1, /* foo... */ 2);",
             "  }",
             "}")
-        .doTest();
+        .doTest(TEXT_MATCH);
   }
 
   @Test

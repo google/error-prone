@@ -22,6 +22,7 @@ import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.FileObjects.forResources;
 import static org.junit.Assert.assertThrows;
 
+import com.google.common.collect.ImmutableList;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.ReturnTreeMatcher;
 import com.google.errorprone.bugpatterns.EmptyIfStatement;
@@ -42,12 +43,13 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** @author eaftan@google.com (Eddie Aftandilian) */
+/**
+ * @author eaftan@google.com (Eddie Aftandilian)
+ */
 @RunWith(JUnit4.class)
 public class CommandLineFlagTest {
 
   @BugPattern(
-      name = "DisableableChecker",
       altNames = "foo",
       summary = "Disableable checker that flags all return statements as errors",
       explanation = "Disableable checker that flags all return statements as errors",
@@ -60,7 +62,6 @@ public class CommandLineFlagTest {
   }
 
   @BugPattern(
-      name = "NondisableableChecker",
       summary = "NondisableableChecker checker that flags all return statements as errors",
       explanation = "NondisableableChecker checker that flags all return statements as errors",
       disableable = false,
@@ -73,7 +74,6 @@ public class CommandLineFlagTest {
   }
 
   @BugPattern(
-      name = "WarningChecker",
       summary = "Checker that flags all return statements as warnings",
       explanation = "Checker that flags all return statements as warnings",
       severity = WARNING)
@@ -85,7 +85,6 @@ public class CommandLineFlagTest {
   }
 
   @BugPattern(
-      name = "ErrorChecker",
       summary = "Checker that flags all return statements as errors",
       explanation = "Checker that flags all return statements as errors",
       severity = ERROR)
@@ -138,7 +137,7 @@ public class CommandLineFlagTest {
   @Test
   public void canEnableWithDefaultSeverity() {
     ErrorProneTestCompiler compiler = builder.build();
-    List<JavaFileObject> sources =
+    ImmutableList<JavaFileObject> sources =
         forResources(EmptyIfStatement.class, "testdata/EmptyIfStatementPositiveCases.java");
 
     Result exitCode = compiler.compile(sources);
@@ -152,7 +151,7 @@ public class CommandLineFlagTest {
   @Test
   public void canEnableWithOverriddenSeverity() {
     ErrorProneTestCompiler compiler = builder.build();
-    List<JavaFileObject> sources =
+    ImmutableList<JavaFileObject> sources =
         forResources(EmptyIfStatement.class, "testdata/EmptyIfStatementPositiveCases.java");
 
     Result exitCode = compiler.compile(sources);
@@ -170,7 +169,8 @@ public class CommandLineFlagTest {
   public void canPromoteToError() {
     ErrorProneTestCompiler compiler =
         builder.report(ScannerSupplier.fromBugCheckerClasses(WarningChecker.class)).build();
-    List<JavaFileObject> sources = forResources(getClass(), "CommandLineFlagTestFile.java");
+    ImmutableList<JavaFileObject> sources =
+        forResources(getClass(), "CommandLineFlagTestFile.java");
 
     Result exitCode = compiler.compile(sources);
     assertThat(exitCode).isEqualTo(Result.OK);
@@ -184,7 +184,8 @@ public class CommandLineFlagTest {
   public void canDemoteToWarning() {
     ErrorProneTestCompiler compiler =
         builder.report(ScannerSupplier.fromBugCheckerClasses(ErrorChecker.class)).build();
-    List<JavaFileObject> sources = forResources(getClass(), "CommandLineFlagTestFile.java");
+    ImmutableList<JavaFileObject> sources =
+        forResources(getClass(), "CommandLineFlagTestFile.java");
 
     Result exitCode = compiler.compile(sources);
     assertThat(exitCode).isEqualTo(Result.ERROR);
@@ -199,7 +200,8 @@ public class CommandLineFlagTest {
   public void canDisable() {
     ErrorProneTestCompiler compiler =
         builder.report(ScannerSupplier.fromBugCheckerClasses(DisableableChecker.class)).build();
-    List<JavaFileObject> sources = forResources(getClass(), "CommandLineFlagTestFile.java");
+    ImmutableList<JavaFileObject> sources =
+        forResources(getClass(), "CommandLineFlagTestFile.java");
 
     Result exitCode = compiler.compile(sources);
     assertThat(exitCode).isEqualTo(Result.ERROR);
@@ -214,7 +216,8 @@ public class CommandLineFlagTest {
   public void cantDisableNondisableableCheck() {
     ErrorProneTestCompiler compiler =
         builder.report(ScannerSupplier.fromBugCheckerClasses(NondisableableChecker.class)).build();
-    List<JavaFileObject> sources = forResources(getClass(), "CommandLineFlagTestFile.java");
+    ImmutableList<JavaFileObject> sources =
+        forResources(getClass(), "CommandLineFlagTestFile.java");
 
     InvalidCommandLineOptionException expected =
         assertThrows(
@@ -226,7 +229,8 @@ public class CommandLineFlagTest {
   @Test
   public void cantOverrideNonexistentCheck() {
     ErrorProneTestCompiler compiler = builder.build();
-    List<JavaFileObject> sources = forResources(getClass(), "CommandLineFlagTestFile.java");
+    ImmutableList<JavaFileObject> sources =
+        forResources(getClass(), "CommandLineFlagTestFile.java");
     List<String> badOptions =
         Arrays.asList(
             "-Xep:BogusChecker:ERROR",
@@ -247,7 +251,8 @@ public class CommandLineFlagTest {
   public void cantOverrideByAltname() {
     ErrorProneTestCompiler compiler =
         builder.report(ScannerSupplier.fromBugCheckerClasses(DisableableChecker.class)).build();
-    List<JavaFileObject> sources = forResources(getClass(), "CommandLineFlagTestFile.java");
+    ImmutableList<JavaFileObject> sources =
+        forResources(getClass(), "CommandLineFlagTestFile.java");
 
     InvalidCommandLineOptionException expected =
         assertThrows(
@@ -259,7 +264,8 @@ public class CommandLineFlagTest {
   @Test
   public void ignoreUnknownChecksFlagAllowsOverridingUnknownCheck() {
     ErrorProneTestCompiler compiler = builder.build();
-    List<JavaFileObject> sources = forResources(getClass(), "CommandLineFlagTestFile.java");
+    ImmutableList<JavaFileObject> sources =
+        forResources(getClass(), "CommandLineFlagTestFile.java");
     List<String> badOptions =
         Arrays.asList(
             "-Xep:BogusChecker:ERROR",

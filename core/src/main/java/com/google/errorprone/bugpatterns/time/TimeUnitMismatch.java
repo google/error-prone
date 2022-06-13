@@ -53,6 +53,7 @@ import com.google.errorprone.bugpatterns.BugChecker.VariableTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
+import com.google.errorprone.suppliers.Supplier;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.ExpressionTree;
@@ -66,6 +67,7 @@ import com.sun.source.tree.VariableTree;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
+import com.sun.tools.javac.code.Type;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
@@ -74,7 +76,6 @@ import javax.annotation.Nullable;
 
 /** Checker that detects likely time-unit mismatches by looking at identifier names. */
 @BugPattern(
-    name = "TimeUnitMismatch",
     summary =
         "An value that appears to be represented in one unit is used where another appears to be "
             + "required (e.g., seconds where nanos are needed)",
@@ -127,21 +128,17 @@ public final class TimeUnitMismatch extends BugChecker
   @Override
   public Description matchNewClass(NewClassTree tree, VisitorState state) {
     MethodSymbol symbol = getSymbol(tree);
-    if (symbol != null) {
-      checkAll(symbol.getParameters(), tree.getArguments(), state);
-    }
+    checkAll(symbol.getParameters(), tree.getArguments(), state);
     return ANY_MATCHES_WERE_ALREADY_REPORTED;
   }
 
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
     MethodSymbol symbol = getSymbol(tree);
-    if (symbol != null) {
-      checkTimeUnitToUnit(tree, symbol, state);
-      boolean setterMethodReported = checkSetterStyleMethod(tree, symbol, state);
-      if (!setterMethodReported) {
-        checkAll(symbol.getParameters(), tree.getArguments(), state);
-      }
+    checkTimeUnitToUnit(tree, symbol, state);
+    boolean setterMethodReported = checkSetterStyleMethod(tree, symbol, state);
+    if (!setterMethodReported) {
+      checkAll(symbol.getParameters(), tree.getArguments(), state);
     }
     return ANY_MATCHES_WERE_ALREADY_REPORTED;
   }
@@ -191,8 +188,7 @@ public final class TimeUnitMismatch extends BugChecker
   }
 
   private static boolean isTimeUnit(Symbol receiverSymbol, VisitorState state) {
-    return isSameType(
-        state.getTypeFromString("java.util.concurrent.TimeUnit"), receiverSymbol.type, state);
+    return isSameType(JAVA_UTIL_CONCURRENT_TIMEUNIT.get(state), receiverSymbol.type, state);
   }
 
   private static final ImmutableBiMap<TimeUnit, String> TIME_UNIT_TO_UNIT_METHODS =
@@ -204,7 +200,7 @@ public final class TimeUnitMismatch extends BugChecker
           .put(MINUTES, "toMinutes")
           .put(HOURS, "toHours")
           .put(DAYS, "toDays")
-          .build();
+          .buildOrThrow();
 
   private boolean checkAll(
       List<VarSymbol> formals, List<? extends ExpressionTree> actuals, VisitorState state) {
@@ -281,8 +277,7 @@ public final class TimeUnitMismatch extends BugChecker
       message +=
           " WARNING: The suggested replacement truncates fractional seconds, so a value "
               + "like 999ms becomes 0.";
-      message +=
-          "Consider performing a floating-point division instead.";
+      message += "Consider performing a floating-point division instead.";
       // TODO(cpovirk): Offer this as a suggested fix.
     }
 
@@ -395,7 +390,7 @@ public final class TimeUnitMismatch extends BugChecker
       return SECONDS;
     }
 
-    List<String> words = fixUnitCamelCase(splitToLowercaseTerms(name));
+    ImmutableList<String> words = fixUnitCamelCase(splitToLowercaseTerms(name));
 
     // People use variable names like "firstTimestamp" and "secondTimestamp."
     // This check is somewhat redundant with the "second" check above.
@@ -493,7 +488,7 @@ public final class TimeUnitMismatch extends BugChecker
     return out.build();
   }
 
-  private static Set<TimeUnit> timeUnits(List<String> wordsLists) {
+  private static ImmutableSet<TimeUnit> timeUnits(List<String> wordsLists) {
     return wordsLists.stream()
         .map(UNIT_FOR_SUFFIX::get)
         .filter(x -> x != null)
@@ -550,4 +545,7 @@ public final class TimeUnitMismatch extends BugChecker
    * have already been reported by manual calls to {@link VisitorState#reportMatch}.
    */
   private static final Description ANY_MATCHES_WERE_ALREADY_REPORTED = Description.NO_MATCH;
+
+  private static final Supplier<Type> JAVA_UTIL_CONCURRENT_TIMEUNIT =
+      VisitorState.memoize(state -> state.getTypeFromString("java.util.concurrent.TimeUnit"));
 }

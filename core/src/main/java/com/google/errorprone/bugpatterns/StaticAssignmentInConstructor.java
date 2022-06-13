@@ -35,7 +35,6 @@ import com.sun.tools.javac.code.Symbol.MethodSymbol;
 
 /** Checks for static fields being assigned within constructors. */
 @BugPattern(
-    name = "StaticAssignmentInConstructor",
     severity = WARNING,
     summary =
         "This assignment is to a static field. Mutating static state from a constructor is highly"
@@ -44,7 +43,7 @@ public final class StaticAssignmentInConstructor extends BugChecker implements M
   @Override
   public Description matchMethod(MethodTree tree, VisitorState state) {
     MethodSymbol methodSymbol = getSymbol(tree);
-    if (methodSymbol == null || !methodSymbol.isConstructor()) {
+    if (!methodSymbol.isConstructor()) {
       return NO_MATCH;
     }
     new TreeScanner<Void, Void>() {

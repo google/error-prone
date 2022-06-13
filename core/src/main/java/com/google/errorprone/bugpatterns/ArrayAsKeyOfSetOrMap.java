@@ -29,7 +29,6 @@ import com.sun.tools.javac.code.Type;
  * @author eleanorh@google.com (Eleanor Harris)
  */
 @BugPattern(
-    name = "ArrayAsKeyOfSetOrMap",
     summary =
         "Arrays do not override equals() or hashCode, so comparisons will be done on"
             + " reference equality only. If neither deduplication nor lookup are needed, "

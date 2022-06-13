@@ -47,10 +47,7 @@ import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.code.Symbol;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
-@BugPattern(
-    name = "LoopConditionChecker",
-    summary = "Loop condition is never modified in loop body.",
-    severity = ERROR)
+@BugPattern(summary = "Loop condition is never modified in loop body.", severity = ERROR)
 public class LoopConditionChecker extends BugChecker
     implements ForLoopTreeMatcher, DoWhileLoopTreeMatcher, WhileLoopTreeMatcher {
 

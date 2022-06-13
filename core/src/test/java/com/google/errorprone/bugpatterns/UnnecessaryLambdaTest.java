@@ -61,6 +61,42 @@ public class UnnecessaryLambdaTest {
   }
 
   @Test
+  public void method_effectivelyPrivate() {
+    testHelper
+        .addInputLines(
+            "Test.java",
+            "import java.util.function.Function;",
+            "class Test {",
+            "  private class Inner {",
+            "    Function<String, String> f() {",
+            "      return x -> {",
+            "        return \"hello \" + x;",
+            "      };",
+            "    }",
+            "    void g() {",
+            "      Function<String, String> f = f();",
+            "      System.err.println(f().apply(\"world\"));",
+            "    }",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "import java.util.function.Function;",
+            "class Test {",
+            "  private class Inner {",
+            "    String f(String x) {",
+            "      return \"hello \" + x;",
+            "    }",
+            "    void g() {",
+            "      Function<String, String> f = this::f;",
+            "      System.err.println(f(\"world\"));",
+            "    }",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void method_static() {
     testHelper
         .addInputLines(
@@ -263,6 +299,19 @@ public class UnnecessaryLambdaTest {
             "    Function<String, String> f = camelCase;",
             "    System.err.println(camelCase.apply(\"world\"));",
             "  }",
+            "}")
+        .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
+  public void variable_notAFunctionalInterface() {
+    testHelper
+        .addInputLines(
+            "Test.java",
+            "import java.util.function.Function;",
+            "class Test {",
+            "  private static final Object F = (Function<String, String>) x -> \"hello \" + x;",
             "}")
         .expectUnchanged()
         .doTest();

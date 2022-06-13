@@ -63,7 +63,9 @@ import java.util.Optional;
 import javax.annotation.Nullable;
 import javax.lang.model.util.Elements;
 
-/** @author alexeagle@google.com (Alex Eagle) */
+/**
+ * @author alexeagle@google.com (Alex Eagle)
+ */
 public class VisitorState {
 
   private final SharedState sharedState;
@@ -258,6 +260,10 @@ public class VisitorState {
 
   public ErrorProneOptions errorProneOptions() {
     return sharedState.errorProneOptions;
+  }
+
+  public Map<String, SeverityLevel> severityMap() {
+    return sharedState.severityMap;
   }
 
   public void reportMatch(Description description) {

@@ -46,7 +46,6 @@ import javax.lang.model.element.Name;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
-    name = "DoNotClaimAnnotations",
     summary =
         "Don't 'claim' annotations in annotation processors; Processor#process should"
             + " unconditionally return `false`",

@@ -137,7 +137,7 @@ public class ApiDiffCheckerTest {
         new BaseErrorProneJavaCompiler(
             ScannerSupplier.fromScanner(new ErrorProneScanner(new SampleApiDiffChecker(diff))));
 
-    final CompilationResult result =
+    CompilationResult result =
         new CompilationBuilder(errorProneCompiler, tempFolder.newFolder(), fileManager)
             .setSources(
                 new SourceBuilder(tempFolder.newFolder())
@@ -199,7 +199,7 @@ public class ApiDiffCheckerTest {
         new BaseErrorProneJavaCompiler(
             ScannerSupplier.fromScanner(new ErrorProneScanner(new SampleApiDiffChecker(diff))));
 
-    final CompilationResult result =
+    CompilationResult result =
         new CompilationBuilder(errorProneCompiler, tempFolder.newFolder(), fileManager)
             .setSources(
                 new SourceBuilder(tempFolder.newFolder())
@@ -258,7 +258,7 @@ public class ApiDiffCheckerTest {
         new BaseErrorProneJavaCompiler(
             ScannerSupplier.fromScanner(new ErrorProneScanner(new SampleApiDiffChecker(diff))));
 
-    final CompilationResult result =
+    CompilationResult result =
         new CompilationBuilder(errorProneCompiler, tempFolder.newFolder(), fileManager)
             .setSources(
                 new SourceBuilder(tempFolder.newFolder())
@@ -333,7 +333,7 @@ public class ApiDiffCheckerTest {
         new BaseErrorProneJavaCompiler(
             ScannerSupplier.fromScanner(new ErrorProneScanner(new SampleApiDiffChecker(diff))));
 
-    final CompilationResult result =
+    CompilationResult result =
         new CompilationBuilder(errorProneCompiler, tempFolder.newFolder(), fileManager)
             .setSources(
                 new SourceBuilder(tempFolder.newFolder())
@@ -392,7 +392,7 @@ public class ApiDiffCheckerTest {
         new BaseErrorProneJavaCompiler(
             ScannerSupplier.fromScanner(new ErrorProneScanner(new SampleApiDiffChecker(diff))));
 
-    final CompilationResult result =
+    CompilationResult result =
         new CompilationBuilder(errorProneCompiler, tempFolder.newFolder(), fileManager)
             .setSources(
                 new SourceBuilder(tempFolder.newFolder())
@@ -419,7 +419,8 @@ public class ApiDiffCheckerTest {
         .addSourceLines(
             "Lib.java",
             "package my.lib;",
-            "import com.google.errorprone.bugpatterns.apidiff.ApiDiffCheckerTest.RequiresNewApiVersion;",
+            "import"
+                + " com.google.errorprone.bugpatterns.apidiff.ApiDiffCheckerTest.RequiresNewApiVersion;",
             "@RequiresNewApiVersion",
             "public final class Lib {}")
         .addSourceLines(
@@ -438,12 +439,14 @@ public class ApiDiffCheckerTest {
         .addSourceLines(
             "Lib.java",
             "package my.lib;",
-            "import com.google.errorprone.bugpatterns.apidiff.ApiDiffCheckerTest.RequiresNewApiVersion;",
+            "import"
+                + " com.google.errorprone.bugpatterns.apidiff.ApiDiffCheckerTest.RequiresNewApiVersion;",
             "@RequiresNewApiVersion",
             "public final class Lib {}")
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.bugpatterns.apidiff.ApiDiffCheckerTest.RequiresNewApiVersion;",
+            "import"
+                + " com.google.errorprone.bugpatterns.apidiff.ApiDiffCheckerTest.RequiresNewApiVersion;",
             "import my.lib.Lib;",
             "class Test {",
             "  @RequiresNewApiVersion",
@@ -458,7 +461,8 @@ public class ApiDiffCheckerTest {
         .addSourceLines(
             "Lib.java",
             "package my.lib;",
-            "import com.google.errorprone.bugpatterns.apidiff.ApiDiffCheckerTest.RequiresNewApiVersion;",
+            "import"
+                + " com.google.errorprone.bugpatterns.apidiff.ApiDiffCheckerTest.RequiresNewApiVersion;",
             "public final class Lib {",
             "  @RequiresNewApiVersion",
             "  public void foo() {}",
@@ -481,7 +485,8 @@ public class ApiDiffCheckerTest {
         .addSourceLines(
             "Lib.java",
             "package my.lib;",
-            "import com.google.errorprone.bugpatterns.apidiff.ApiDiffCheckerTest.RequiresNewApiVersion;",
+            "import"
+                + " com.google.errorprone.bugpatterns.apidiff.ApiDiffCheckerTest.RequiresNewApiVersion;",
             "public final class Lib {",
             "  @RequiresNewApiVersion",
             "  public static final int FOO = 1;",

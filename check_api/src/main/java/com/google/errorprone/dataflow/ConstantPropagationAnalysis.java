@@ -19,8 +19,8 @@ package com.google.errorprone.dataflow;
 import com.sun.source.util.TreePath;
 import com.sun.tools.javac.util.Context;
 import javax.annotation.Nullable;
-import org.checkerframework.shaded.dataflow.constantpropagation.Constant;
-import org.checkerframework.shaded.dataflow.constantpropagation.ConstantPropagationTransfer;
+import org.checkerframework.errorprone.dataflow.constantpropagation.Constant;
+import org.checkerframework.errorprone.dataflow.constantpropagation.ConstantPropagationTransfer;
 
 /** An interface to the constant propagation analysis. */
 public final class ConstantPropagationAnalysis {

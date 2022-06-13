@@ -27,6 +27,7 @@ import com.google.errorprone.BugPattern.StandardTags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.IfTreeMatcher;
+import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
@@ -93,7 +94,9 @@ public class DoubleCheckedLocking extends BugChecker implements IfTreeMatcher {
     Description.Builder builder = buildDescription(outerIf);
     JCTree fieldDecl = findFieldDeclaration(state.getPath(), sym);
     if (fieldDecl != null) {
-      builder.addFix(SuggestedFixes.addModifiers(fieldDecl, state, Modifier.VOLATILE));
+      builder.addFix(
+          SuggestedFixes.addModifiers(fieldDecl, state, Modifier.VOLATILE)
+              .orElse(SuggestedFix.emptyFix()));
     }
     return builder.build();
   }
@@ -186,7 +189,7 @@ public class DoubleCheckedLocking extends BugChecker implements IfTreeMatcher {
     /** The synchronized statement */
     abstract SynchronizedTree synchTree();
 
-    /** The inner if statement * */
+    /** The inner if statement */
     abstract IfTree innerIf();
 
     /** The variable (local or field) that is double-checked */
@@ -269,7 +272,7 @@ public class DoubleCheckedLocking extends BugChecker implements IfTreeMatcher {
    * Visits (possibly nested) block statements and returns the first child statement with the given
    * class.
    */
-  private static <T> T getChild(StatementTree tree, final Class<T> clazz) {
+  private static <T> T getChild(StatementTree tree, Class<T> clazz) {
     return tree.accept(
         new SimpleTreeVisitor<T, Void>() {
           @Override

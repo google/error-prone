@@ -47,11 +47,10 @@ import javax.lang.model.element.ElementKind;
 
 /** Detects locks on boxed primitives. */
 @BugPattern(
-    name = "LockOnBoxedPrimitive",
     summary =
         "It is dangerous to use a boxed primitive as a lock as it can unintentionally lead to"
             + " sharing a lock with another piece of code.",
-    severity = SeverityLevel.WARNING)
+    severity = SeverityLevel.ERROR)
 public class LockOnBoxedPrimitive extends BugChecker
     implements SynchronizedTreeMatcher, MethodInvocationTreeMatcher {
 

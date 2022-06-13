@@ -25,7 +25,9 @@ import org.junit.runners.BlockJUnit4ClassRunner;
 import org.junit.runners.JUnit4;
 import org.junit.runners.ParentRunner;
 
-/** @author glorioso@google.com (Nick Glorioso) */
+/**
+ * @author glorioso@google.com (Nick Glorioso)
+ */
 @RunWith(JUnit4.class)
 public class JUnit4SetUpNotRunTest {
 

@@ -163,4 +163,24 @@ public class ConstantOverflowTest {
         .addOutputLines("out/Test.java", "class Test {", "  int a = 'a' + Integer.MAX_VALUE;", "}")
         .doTest();
   }
+
+  @Test
+  public void varType() {
+    BugCheckerRefactoringTestHelper.newInstance(ConstantOverflow.class, getClass())
+        .addInputLines(
+            "Test.java", //
+            "class Test {",
+            "  void f() {",
+            "    var x = 1 + Integer.MAX_VALUE;",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java", //
+            "class Test {",
+            "  void f() {",
+            "    var x = 1L + Integer.MAX_VALUE;",
+            "  }",
+            "}")
+        .doTest();
+  }
 }

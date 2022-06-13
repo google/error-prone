@@ -44,7 +44,6 @@ import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type;
-import com.sun.tools.javac.code.Type.ClassType;
 import com.sun.tools.javac.code.Types;
 import java.util.List;
 
@@ -53,7 +52,6 @@ import java.util.List;
  * pass an incompatible exception type.
  */
 @BugPattern(
-    name = "FuturesGetCheckedIllegalExceptionType",
     summary = "Futures.getChecked requires a checked exception type with a standard constructor.",
     severity = ERROR)
 public final class FuturesGetCheckedIllegalExceptionType extends BugChecker
@@ -86,8 +84,7 @@ public final class FuturesGetCheckedIllegalExceptionType extends BugChecker
   }
 
   private static final Matcher<ExpressionTree> FUTURES_GET_CHECKED_MATCHER =
-      anyOf(
-          staticMethod().onClass(Futures.class.getName()).named("getChecked"));
+      anyOf(staticMethod().onClass(Futures.class.getName()).named("getChecked"));
 
   private static final Matcher<ExpressionTree> CLASS_OBJECT_FOR_CLASS_EXTENDING_RUNTIME_EXCEPTION =
       new Matcher<ExpressionTree>() {
@@ -103,7 +100,7 @@ public final class FuturesGetCheckedIllegalExceptionType extends BugChecker
             return false;
           }
 
-          List<Type> typeArguments = ((ClassType) argType).getTypeArguments();
+          List<Type> typeArguments = argType.getTypeArguments();
           Type exceptionType = Iterables.getFirst(typeArguments, null);
           return types.isSubtype(exceptionType, runtimeExceptionType);
         }

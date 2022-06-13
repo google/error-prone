@@ -1,29 +1,31 @@
-**/target/*
 **/.classpath
+**/.gitignore
 **/.project
 **/.settings
-**/.gitignore
+**/target/*
 *.iml
 .java-version
 
 # intellij
-.idea/workspace.xml
-.idea/tasks.xml
-.idea/vcs.xml
 .idea/ant.xml
-.idea/dataSources.local.xml
-.idea/dataSources.ids
+.idea/codestream.xml
 .idea/codeStyleSettings.xml
 .idea/compiler.xml
-.idea/encodings.xml
-.idea/modules.xml
-.idea/uiDesigner.xml
-.idea/libraries
 .idea/copyright
-.idea/shelf
-.idea/inspectionProfiles/
+.idea/dataSources.ids
+.idea/dataSources.local.xml
 .idea/dictionaries
+.idea/encodings.xml
+.idea/inspectionProfiles/
+.idea/jarRepositories.xml
+.idea/libraries
 .idea/misc.xml
+.idea/modules.xml
+.idea/shelf
+.idea/tasks.xml
+.idea/uiDesigner.xml
+.idea/vcs.xml
+.idea/workspace.xml
 
 # bazel
 bazel-bazel

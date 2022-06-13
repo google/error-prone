@@ -38,7 +38,6 @@ import java.util.regex.Pattern;
 
 /** Matches misuse of link tags within throws tags. */
 @BugPattern(
-    name = "InvalidThrowsLink",
     summary =
         "Javadoc links to exceptions in @throws without a @link tag (@throws Exception, not"
             + " @throws {@link Exception}).",

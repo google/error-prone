@@ -37,7 +37,6 @@ import com.sun.source.tree.MethodInvocationTree;
  * @author bhagwani@google.com (Sumit Bhagwani)
  */
 @BugPattern(
-    name = "LiteEnumValueOf",
     summary =
         "Instead of converting enums to string and back, its numeric value should be used instead"
             + " as it is the stable part of the protocol defined by the enum.",

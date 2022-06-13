@@ -16,6 +16,7 @@
 
 package com.google.errorprone.bugpatterns.inlineme;
 
+import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
 import java.util.regex.Pattern;
 import org.junit.Test;
@@ -228,7 +229,7 @@ public class ValidatorTest {
             "  private final String str = null;",
             "  @InlineMe(replacement = \"str;\")",
             "  @Deprecated",
-            "  // BUG: Diagnostic contains: references deprecated or non-public APIs",
+            "  // BUG: Diagnostic contains: deprecated or less visible API elements: str",
             "  public String before() {",
             "    return str;",
             "  }",
@@ -262,7 +263,8 @@ public class ValidatorTest {
             "public final class Client {",
             "  @InlineMe(replacement = \"this.privateMethod();\")",
             "  @Deprecated",
-            "  // BUG: Diagnostic contains: references deprecated or non-public APIs",
+            "  // BUG: Diagnostic contains: deprecated or less visible API elements:"
+                + " privateMethod()",
             "  public String before() {",
             "    return privateMethod();",
             "  }",
@@ -293,6 +295,8 @@ public class ValidatorTest {
             "}")
         .doTest();
   }
+
+  private static final Pattern FROM_ANNOTATION = Pattern.compile("FromAnnotation: \\[.*;]");
 
   @Test
   public void testConstructor() {
@@ -491,6 +495,9 @@ public class ValidatorTest {
         .doTest();
   }
 
+  private static final Pattern INFERRED_FROM_BODY =
+      Pattern.compile("InferredFromBody: .*\\.Builder]");
+
   @Test
   public void testAllowingNestedClassImport() {
     helper
@@ -517,8 +524,7 @@ public class ValidatorTest {
             "    }",
             "  }",
             "}")
-        .expectErrorMessage(
-            "BAR", Pattern.compile("InferredFromBody: .*\\.Builder]").asPredicate()::test)
+        .expectErrorMessage("BAR", INFERRED_FROM_BODY.asPredicate()::test)
         .doTest();
   }
 
@@ -559,7 +565,7 @@ public class ValidatorTest {
             "  private String name;",
             "  @InlineMe(replacement = \"this.name = name;\")",
             "  @Deprecated",
-            "  // BUG: Diagnostic contains: references deprecated or non-public APIs",
+            "  // BUG: Diagnostic contains: deprecated or less visible API elements: this.name",
             "  public void setName(String name) {",
             "    this.name = name;",
             "  }",
@@ -698,5 +704,37 @@ public class ValidatorTest {
             "  }",
             "}")
         .doTest();
+  }
+
+  @Test
+  public void testCustomInlineMe() {
+    helper
+        .addSourceLines(
+            "InlineMe.java", //
+            "package bespoke;",
+            "public @interface InlineMe {",
+            "  String replacement();",
+            "  String[] imports() default {};",
+            "  String[] staticImports() default {};",
+            "}")
+        .addSourceLines(
+            "Client.java",
+            "import bespoke.InlineMe;",
+            "public final class Client {",
+            "  @Deprecated",
+            "  @InlineMe(replacement = \"this.foo3(value)\")", // should be foo2(value)!!!
+            "  // BUG: Diagnostic contains: @InlineMe(replacement = \"this.foo2(value)\")",
+            "  public void foo1(String value) {",
+            "    foo2(value);",
+            "  }",
+            "  public void foo2(String value) {",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  private BugCheckerRefactoringTestHelper getHelperInCleanupMode() {
+    return BugCheckerRefactoringTestHelper.newInstance(Validator.class, getClass())
+        .setArgs("-XepOpt:" + Validator.CLEANUP_INLINE_ME_FLAG + "=true");
   }
 }

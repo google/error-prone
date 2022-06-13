@@ -21,7 +21,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** @author lowasser@google.com (Louis Wasserman) */
+/**
+ * @author lowasser@google.com (Louis Wasserman)
+ */
 @RunWith(JUnit4.class)
 public class StringBuilderInitWithCharTest {
 

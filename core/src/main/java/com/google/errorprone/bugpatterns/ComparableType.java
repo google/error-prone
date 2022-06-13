@@ -30,9 +30,10 @@ import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Type.ClassType;
 
-/** @author amesbah@google.com (Ali Mesbah) */
+/**
+ * @author amesbah@google.com (Ali Mesbah)
+ */
 @BugPattern(
-    name = "ComparableType",
     summary =
         "Implementing 'Comparable<T>' where T is not the same as the implementing class is"
             + " incorrect, since it violates the symmetry contract of compareTo.",

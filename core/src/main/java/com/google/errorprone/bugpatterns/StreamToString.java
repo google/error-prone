@@ -29,7 +29,6 @@ import java.util.Optional;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
-    name = "StreamToString",
     summary = "Calling toString on a Stream does not provide useful information",
     severity = ERROR)
 public class StreamToString extends AbstractToString {

@@ -52,7 +52,6 @@ import javax.lang.model.element.ElementKind;
  * {@code *}.
  */
 @BugPattern(
-    name = "AlmostJavadoc",
     summary =
         "This comment contains Javadoc or HTML tags, but isn't started with a double asterisk"
             + " (/**); is it meant to be Javadoc?",
@@ -124,7 +123,7 @@ public final class AlmostJavadoc extends BugChecker implements CompilationUnitTr
   private ImmutableMap<Integer, Tree> getJavadocableTrees(
       CompilationUnitTree tree, VisitorState state) {
     Map<Integer, Tree> javadoccablePositions = new HashMap<>();
-    new SuppressibleTreePathScanner<Void, Void>() {
+    new SuppressibleTreePathScanner<Void, Void>(state) {
       @Override
       public Void visitClass(ClassTree classTree, Void unused) {
         if (!shouldMatch()) {

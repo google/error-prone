@@ -33,7 +33,6 @@ import com.sun.source.tree.MethodInvocationTree;
 
 /** Check for calls to {@code duration.withSeconds(long)}. */
 @BugPattern(
-    name = "JavaDurationWithSeconds",
     summary = "Use of java.time.Duration.withSeconds(long) is not allowed.",
     explanation =
         "Duration's withSeconds(long) method is often a source of bugs because it returns a copy "

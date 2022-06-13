@@ -67,7 +67,7 @@ public class ModifySourceCollectionInStreamPositiveCases {
         .forEach(cases[0].mutableValues::add);
   }
 
-  private List<Integer> mutateStreamSourceLambadaExperssion(
+  private List<Integer> mutateStreamSourceLambdaExpression(
       ImmutableList<Integer> mutableParamList) {
     Stream<Integer> values1 =
         mutableParamList.stream()

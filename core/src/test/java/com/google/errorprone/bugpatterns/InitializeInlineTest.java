@@ -68,6 +68,26 @@ public final class InitializeInlineTest {
   }
 
   @Test
+  public void multipleAssignment_withinBlock() {
+    compilationHelper
+        .addInputLines(
+            "Test.java",
+            "class Test {",
+            "  int test() {",
+            "    int a;",
+            "    if (true) {",
+            "      a = 1;",
+            "      return a;",
+            "    }",
+            "    a = 2;",
+            "    return a;",
+            "  }",
+            "}")
+        .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
   public void assignedWithinTry_noMatch() {
     compilationHelper
         .addInputLines(

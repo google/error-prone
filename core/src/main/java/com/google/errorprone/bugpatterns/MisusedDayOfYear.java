@@ -23,7 +23,6 @@ import java.util.Optional;
 
 /** Ban use of D (day-of-year) in a date format pattern that also contains M (month-of-year). */
 @BugPattern(
-    name = "MisusedDayOfYear",
     summary =
         "Use of 'DD' (day of year) in a date pattern with 'MM' (month of year) is not likely to be"
             + " intentional, as it would lead to dates like 'March 73rd'.",

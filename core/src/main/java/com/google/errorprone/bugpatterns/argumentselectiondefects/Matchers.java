@@ -54,9 +54,6 @@ final class Matchers {
         @Override
         public boolean matches(NewClassTree tree, VisitorState state) {
           MethodSymbol sym = ASTHelpers.getSymbol(tree);
-          if (sym == null) {
-            return false;
-          }
 
           ClassSymbol owner = (ClassSymbol) sym.owner;
           if (owner == null) {

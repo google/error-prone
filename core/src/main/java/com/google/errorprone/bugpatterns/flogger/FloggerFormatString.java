@@ -36,13 +36,13 @@ import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
-import com.sun.tools.javac.tree.JCTree;
-import edu.umd.cs.findbugs.formatStringChecker.ExtraFormatArgumentsException;
+import java.util.List;
 import javax.annotation.Nullable;
 
-/** @author cushon@google.com (Liam Miller-Cushon) */
+/**
+ * @author cushon@google.com (Liam Miller-Cushon)
+ */
 @BugPattern(
-    name = "FloggerFormatString",
     altNames = "FormatString",
     summary = "Invalid printf-style format string",
     severity = ERROR)
@@ -59,13 +59,13 @@ public class FloggerFormatString extends BugChecker implements MethodInvocationT
     if (!FORMAT_METHOD.matches(tree, state)) {
       return NO_MATCH;
     }
-    if (tree.getArguments().isEmpty()) {
+    List<? extends ExpressionTree> args = tree.getArguments();
+    if (args.size() <= 1) {
+      // log(String)'s argument isn't a format string, see FloggerLogString
+      // we also warn on mistakes like `log("hello %s")` in OrphanedFormatString
       return NO_MATCH;
     }
     MethodSymbol sym = ASTHelpers.getSymbol(tree);
-    if (sym == null) {
-      return Description.NO_MATCH;
-    }
     FormatStringValidation.ValidationResult result =
         FormatStringValidation.validate(sym, tree.getArguments(), state);
     if (result == null) {
@@ -84,13 +84,8 @@ public class FloggerFormatString extends BugChecker implements MethodInvocationT
    * suggest using {@code withCause(e)} instead of adding a format specifier.
    */
   @Nullable
-  private Fix withCauseFix(
-      ValidationResult result, MethodInvocationTree tree, final VisitorState state) {
-    if (!(result.exception() instanceof ExtraFormatArgumentsException)) {
-      return null;
-    }
-    ExtraFormatArgumentsException exception = (ExtraFormatArgumentsException) result.exception();
-    if (exception.used >= exception.provided) {
+  private Fix withCauseFix(ValidationResult result, MethodInvocationTree tree, VisitorState state) {
+    if (!result.message().startsWith("extra format arguments")) {
       return null;
     }
     ExpressionTree last = getLast(tree.getArguments());
@@ -99,7 +94,7 @@ public class FloggerFormatString extends BugChecker implements MethodInvocationT
     }
 
     // if there's already a call to withCause, don't suggest adding another one
-    final boolean[] withCause = {false};
+    boolean[] withCause = {false};
     tree.accept(
         new TreeScanner<Void, Void>() {
           @Override
@@ -117,8 +112,8 @@ public class FloggerFormatString extends BugChecker implements MethodInvocationT
 
     return SuggestedFix.builder()
         .replace(
-            state.getEndPosition((JCTree) tree.getArguments().get(tree.getArguments().size() - 2)),
-            state.getEndPosition((JCTree) last),
+            state.getEndPosition(tree.getArguments().get(tree.getArguments().size() - 2)),
+            state.getEndPosition(last),
             "")
         .postfixWith(
             ASTHelpers.getReceiver(tree),

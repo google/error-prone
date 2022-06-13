@@ -71,9 +71,6 @@ public class ProvidesNull extends BugChecker implements ReturnTreeMatcher {
       }
     }
     MethodSymbol enclosingMethodSym = ASTHelpers.getSymbol(enclosingMethod);
-    if (enclosingMethodSym == null) {
-      return Description.NO_MATCH;
-    }
 
     if (!ASTHelpers.hasAnnotation(enclosingMethodSym, "dagger.Provides", state)
         || ASTHelpers.hasDirectAnnotationWithSimpleName(enclosingMethodSym, "Nullable")) {

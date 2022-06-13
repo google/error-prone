@@ -41,7 +41,6 @@ import java.util.regex.Pattern;
  * @author bhagwani@google.com (Sumit Bhagwani)
  */
 @BugPattern(
-    name = "TruthSelfEquals",
     summary =
         "isEqualTo should not be used to test an object for equality with itself; the"
             + " assertion will never fail.",

@@ -42,7 +42,9 @@ import java.util.Set;
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
 
-/** @author alexeagle@google.com (Alex Eagle) */
+/**
+ * @author alexeagle@google.com (Alex Eagle)
+ */
 public class BugPatternIndexWriter {
 
   @AutoValue
@@ -99,11 +101,11 @@ public class BugPatternIndexWriter {
     templateData.put("bugpatterns", bugpatternData);
 
     if (target == Target.EXTERNAL) {
-      Map<String, String> frontmatterData =
+      ImmutableMap<String, String> frontmatterData =
           ImmutableMap.<String, String>builder()
               .put("title", "Bug Patterns")
               .put("layout", "bugpatterns")
-              .build();
+              .buildOrThrow();
       DumperOptions options = new DumperOptions();
       options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
       Yaml yaml = new Yaml(options);

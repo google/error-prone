@@ -29,9 +29,7 @@ import com.sun.source.tree.ImportTree;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
-    name = "UnnecessaryStaticImport",
     summary = "Using static imports for types is unnecessary",
-
     severity = SUGGESTION,
     documentSuppression = false,
     tags = StandardTags.STYLE)

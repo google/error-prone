@@ -48,7 +48,6 @@ import java.util.Optional;
  * @author ghm@google.com (Graeme Morgan)
  */
 @BugPattern(
-    name = "FloatingPointAssertionWithinEpsilon",
     summary =
         "This fuzzy equality check is using a tolerance less than the gap to the next number. "
             + "You may want a less restrictive tolerance, or to assert equality.",

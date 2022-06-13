@@ -169,7 +169,7 @@ public final class Comments {
             // unless the previous argument was not on the previous line with it
             argumentTracker.addCommentToPreviousArgument(c, Position.ANY);
           } else {
-            // if the comment comes after the end of the invocation and its not on the same line
+            // if the comment comes after the end of the invocation and it's not on the same line
             // as the final argument then we need to ignore it
             if (commentStart <= invocationEnd
                 || lineMap.getLineNumber(commentStart)

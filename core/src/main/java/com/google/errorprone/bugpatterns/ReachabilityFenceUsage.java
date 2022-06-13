@@ -29,10 +29,10 @@ import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.TryTree;
+import java.util.Objects;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
-    name = "ReachabilityFenceUsage",
     summary = "reachabilityFence should always be called inside a finally block",
     severity = WARNING)
 public class ReachabilityFenceUsage extends BugChecker implements MethodInvocationTreeMatcher {
@@ -50,7 +50,7 @@ public class ReachabilityFenceUsage extends BugChecker implements MethodInvocati
     for (Tree enclosing : state.getPath().getParentPath()) {
       switch (enclosing.getKind()) {
         case TRY:
-          if (((TryTree) enclosing).getFinallyBlock().equals(previous)) {
+          if (Objects.equals(((TryTree) enclosing).getFinallyBlock(), previous)) {
             return NO_MATCH;
           }
           break;

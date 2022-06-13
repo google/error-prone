@@ -38,7 +38,6 @@ import java.time.Duration;
  * @author kak@google.com (Kurt Alfred Kluever)
  */
 @BugPattern(
-    name = "PeriodFrom",
     summary = "Period.from(Period) returns itself; from(Duration) throws a runtime exception.",
     explanation =
         "Period.from(TemporalAmount) will always throw a DateTimeException when "

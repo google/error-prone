@@ -44,7 +44,6 @@ import javax.annotation.Nullable;
  * @author ghm@google.com (Graeme Morgan)
  */
 @BugPattern(
-    name = "EscapedEntity",
     summary = "HTML entities in @code/@literal tags will appear literally in the rendered javadoc.",
     severity = WARNING,
     documentSuppression = false)

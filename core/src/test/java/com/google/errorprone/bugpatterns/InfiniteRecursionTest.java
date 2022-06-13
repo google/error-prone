@@ -135,6 +135,34 @@ public class InfiniteRecursionTest {
   }
 
   @Test
+  public void positiveCast() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test<X> {",
+            "  String overrideOfSomeMethodThatReturnsObject() {",
+            "    // BUG: Diagnostic contains:",
+            "    return (String) overrideOfSomeMethodThatReturnsObject();",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void positiveCastWithParens() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test<X> {",
+            "  String overrideOfSomeMethodThatReturnsObject() {",
+            "    // BUG: Diagnostic contains:",
+            "    return (String) (overrideOfSomeMethodThatReturnsObject());",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void overload() {
     compilationHelper
         .addSourceLines(

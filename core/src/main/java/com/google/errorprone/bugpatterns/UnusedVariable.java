@@ -24,10 +24,12 @@ import static com.google.common.collect.Iterables.getLast;
 import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Matchers.SERIALIZATION_METHODS;
+import static com.google.errorprone.util.ASTHelpers.canBeRemoved;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
+import static com.google.errorprone.util.ASTHelpers.shouldKeep;
 import static com.google.errorprone.util.SideEffectAnalysis.hasSideEffect;
 import static com.sun.source.tree.Tree.Kind.POSTFIX_DECREMENT;
 import static com.sun.source.tree.Tree.Kind.POSTFIX_INCREMENT;
@@ -52,6 +54,7 @@ import com.google.errorprone.bugpatterns.BugChecker.CompilationUnitTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
+import com.google.errorprone.suppliers.Supplier;
 import com.google.errorprone.suppliers.Suppliers;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.AnnotationTree;
@@ -111,7 +114,6 @@ import javax.lang.model.type.NullType;
 
 /** Bugpattern to detect unused declarations. */
 @BugPattern(
-    name = "UnusedVariable",
     altNames = {"unused", "UnusedParameters"},
     summary = "Unused.",
     severity = WARNING,
@@ -134,14 +136,14 @@ public class UnusedVariable extends BugChecker implements CompilationUnitTreeMat
           "org.junit.Rule",
           "org.openqa.selenium.support.FindAll",
           "org.openqa.selenium.support.FindBy",
-          "org.openqa.selenium.support.FindBys");
+          "org.openqa.selenium.support.FindBys",
+          "org.apache.beam.sdk.transforms.DoFn.TimerId",
+          "org.apache.beam.sdk.transforms.DoFn.StateId");
 
   private final ImmutableSet<String> methodAnnotationsExemptingParameters;
 
   /** The set of types exempting a type that is extending or implementing them. */
-  private static final ImmutableSet<String> EXEMPTING_SUPER_TYPES =
-      ImmutableSet.of(
-          );
+  private static final ImmutableSet<String> EXEMPTING_SUPER_TYPES = ImmutableSet.of();
 
   /** The set of types exempting a field of type extending them. */
   private static final ImmutableSet<String> EXEMPTING_FIELD_SUPER_TYPES =
@@ -157,8 +159,7 @@ public class UnusedVariable extends BugChecker implements CompilationUnitTreeMat
 
   public UnusedVariable(ErrorProneFlags flags) {
     ImmutableSet.Builder<String> methodAnnotationsExemptingParameters =
-        ImmutableSet.<String>builder()
-            .add("org.robolectric.annotation.Implementation");
+        ImmutableSet.<String>builder().add("org.robolectric.annotation.Implementation");
     flags
         .getList("Unused:methodAnnotationsExemptingParameters")
         .ifPresent(methodAnnotationsExemptingParameters::addAll);
@@ -277,15 +278,24 @@ public class UnusedVariable extends BugChecker implements CompilationUnitTreeMat
             .filter(tp -> tp.getLeaf() instanceof VariableTree)
             .findFirst()
             .map(tp -> (VariableTree) tp.getLeaf());
+
+    // Find the first reassignment which wasn't only used by an ultimately unused assignment. If
+    // there is one, it should become a variable declaration.
     Optional<AssignmentTree> reassignment =
         specs.stream()
             .map(UnusedSpec::terminatingAssignment)
             .flatMap(Streams::stream)
-            .filter(a -> allUsageSites.stream().noneMatch(tp -> tp.getLeaf().equals(a)))
+            .filter(
+                a ->
+                    allUsageSites.stream()
+                        .noneMatch(
+                            tp ->
+                                tp.getLeaf() instanceof ExpressionStatementTree
+                                    && ((ExpressionStatementTree) tp.getLeaf())
+                                        .getExpression()
+                                        .equals(a)))
             .findFirst();
-    if (removedVariableTree.isPresent()
-        && reassignment.isPresent()
-        && !TOP_LEVEL_EXPRESSIONS.contains(reassignment.get().getExpression().getKind())) {
+    if (removedVariableTree.isPresent() && reassignment.isPresent()) {
       return SuggestedFix.prefixWith( // not needed if top-level statement
           reassignment.get(), state.getSourceForNode(removedVariableTree.get().getType()) + " ");
     }
@@ -528,8 +538,7 @@ public class UnusedVariable extends BugChecker implements CompilationUnitTreeMat
    * Looks at the list of {@code annotations} and see if there is any annotation which exists {@code
    * exemptingAnnotations}.
    */
-  private static boolean exemptedByAnnotation(
-      List<? extends AnnotationTree> annotations, VisitorState state) {
+  private static boolean exemptedByAnnotation(List<? extends AnnotationTree> annotations) {
     for (AnnotationTree annotation : annotations) {
       Type annotationType = ASTHelpers.getType(annotation);
       if (annotationType == null) {
@@ -567,11 +576,13 @@ public class UnusedVariable extends BugChecker implements CompilationUnitTreeMat
       if (exemptedByName(variableTree.getName())) {
         return null;
       }
-      if (isSuppressed(variableTree)) {
+      if (isSuppressed(variableTree, state)) {
         return null;
       }
       VarSymbol symbol = getSymbol(variableTree);
-      if (symbol == null) {
+      if (symbol.getKind() == ElementKind.FIELD
+          && symbol.getSimpleName().contentEquals("CREATOR")
+          && isSubtype(symbol.type, PARCELABLE_CREATOR.get(state), state)) {
         return null;
       }
       if (symbol.getKind() == ElementKind.FIELD
@@ -580,7 +591,8 @@ public class UnusedVariable extends BugChecker implements CompilationUnitTreeMat
       }
       super.visitVariable(variableTree, null);
       // Return if the element is exempted by an annotation.
-      if (exemptedByAnnotation(variableTree.getModifiers().getAnnotations(), state)) {
+      if (exemptedByAnnotation(variableTree.getModifiers().getAnnotations())
+          || shouldKeep(variableTree)) {
         return null;
       }
       switch (symbol.getKind()) {
@@ -622,9 +634,13 @@ public class UnusedVariable extends BugChecker implements CompilationUnitTreeMat
           && ASTHelpers.hasDirectAnnotationWithSimpleName(variableTree, "Inject")) {
         return true;
       }
-      return variableTree.getModifiers().getFlags().contains(Modifier.PRIVATE)
-          && !SPECIAL_FIELDS.contains(symbol.getSimpleName().toString());
+      if ((symbol.flags() & RECORD_FLAG) == RECORD_FLAG) {
+        return false;
+      }
+      return canBeRemoved(symbol) && !SPECIAL_FIELDS.contains(symbol.getSimpleName().toString());
     }
+
+    private static final long RECORD_FLAG = 1L << 61;
 
     /** Returns whether {@code sym} can be removed without updating call sites in other files. */
     private boolean isParameterSubjectToAnalysis(Symbol sym) {
@@ -651,7 +667,7 @@ public class UnusedVariable extends BugChecker implements CompilationUnitTreeMat
 
     @Override
     public Void visitClass(ClassTree tree, Void unused) {
-      if (isSuppressed(tree)) {
+      if (isSuppressed(tree, state)) {
         return null;
       }
       if (EXEMPTING_SUPER_TYPES.stream()
@@ -672,7 +688,7 @@ public class UnusedVariable extends BugChecker implements CompilationUnitTreeMat
       if (SERIALIZATION_METHODS.matches(tree, state)) {
         return scan(tree.getBody(), null);
       }
-      return isSuppressed(tree) ? null : super.visitMethod(tree, unused);
+      return isSuppressed(tree, state) ? null : super.visitMethod(tree, unused);
     }
   }
 
@@ -868,9 +884,7 @@ public class UnusedVariable extends BugChecker implements CompilationUnitTreeMat
     public Void visitMemberReference(MemberReferenceTree tree, Void unused) {
       super.visitMemberReference(tree, null);
       MethodSymbol symbol = getSymbol(tree);
-      if (symbol != null) {
-        symbol.getParameters().forEach(unusedElements::remove);
-      }
+      symbol.getParameters().forEach(unusedElements::remove);
       return null;
     }
 
@@ -947,7 +961,7 @@ public class UnusedVariable extends BugChecker implements CompilationUnitTreeMat
 
   @AutoValue
   abstract static class UnusedSpec {
-    /** {@link Symbol} of the unsued element. */
+    /** {@link Symbol} of the unused element. */
     abstract Symbol symbol();
 
     /** {@link VariableTree} or {@link AssignmentTree} for the original assignment site. */
@@ -977,4 +991,7 @@ public class UnusedVariable extends BugChecker implements CompilationUnitTreeMat
           Optional.ofNullable(assignmentTree));
     }
   }
+
+  private static final Supplier<Type> PARCELABLE_CREATOR =
+      VisitorState.memoize(state -> state.getTypeFromString("android.os.Parcelable.Creator"));
 }

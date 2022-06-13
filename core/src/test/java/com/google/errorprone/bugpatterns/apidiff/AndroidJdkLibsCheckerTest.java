@@ -16,21 +16,19 @@
 
 package com.google.errorprone.bugpatterns.apidiff;
 
-
+import com.google.common.collect.ImmutableList;
 import com.google.errorprone.CompilationTestHelper;
-import java.util.Collections;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
 /** {@link AndroidJdkLibsChecker}Test. */
-
 @RunWith(JUnit4.class)
 public class AndroidJdkLibsCheckerTest extends Java7ApiCheckerTest {
 
   private final CompilationTestHelper allowJava8Helper =
       CompilationTestHelper.newInstance(AndroidJdkLibsChecker.class, getClass())
-          .setArgs(Collections.singletonList("-XepOpt:Android:Java8Libs"));
+          .setArgs(ImmutableList.of("-XepOpt:Android:Java8Libs"));
 
   public AndroidJdkLibsCheckerTest() {
     super(AndroidJdkLibsChecker.class);
@@ -187,6 +185,38 @@ public class AndroidJdkLibsCheckerTest extends Java7ApiCheckerTest {
             "Test.java",
             "import java.util.Spliterator;",
             "public abstract class Test implements Spliterator.OfInt {",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void forEach() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.util.Collection;",
+            "class T {",
+            "  void f(Iterable<?> i, Collection<?> c) {",
+            "    // BUG: Diagnostic contains: java.lang.Iterable#forEach",
+            "    i.forEach(System.err::println);",
+            "    // BUG: Diagnostic contains: java.lang.Iterable#forEach",
+            "    c.forEach(System.err::println);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void allowJava8Flag_forEach() {
+    allowJava8Helper
+        .addSourceLines(
+            "Test.java",
+            "import java.util.Collection;",
+            "class T {",
+            "  void f(Iterable<?> i, Collection<?> c) {",
+            "    i.forEach(System.err::println);",
+            "    c.forEach(System.err::println);",
+            "  }",
             "}")
         .doTest();
   }

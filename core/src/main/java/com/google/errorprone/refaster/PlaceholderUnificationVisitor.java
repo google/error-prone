@@ -22,6 +22,7 @@ import com.google.auto.value.AutoValue;
 import com.google.common.base.Function;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.errorprone.refaster.PlaceholderUnificationVisitor.State;
 import com.google.errorprone.refaster.UPlaceholderExpression.PlaceholderParamIdent;
@@ -107,10 +108,8 @@ import com.sun.tools.javac.tree.JCTree.Tag;
 import com.sun.tools.javac.tree.TreeMaker;
 import com.sun.tools.javac.util.List;
 import com.sun.tools.javac.util.Name;
-import java.util.Collections;
 import java.util.EnumSet;
 import java.util.Map;
-import java.util.Set;
 import java.util.function.BiFunction;
 
 import javax.annotation.Nullable;
@@ -169,19 +168,18 @@ abstract class PlaceholderUnificationVisitor
    * ...)}, then the {@code Choice} will contain any ways this tree can be unified with {@code
    * arg1}, {@code arg2}, or the other arguments.
    */
-  Choice<State<PlaceholderParamIdent>> tryBindArguments(
-      final ExpressionTree node, final State<?> state) {
+  Choice<State<PlaceholderParamIdent>> tryBindArguments(ExpressionTree node, State<?> state) {
     return Choice.from(arguments().entrySet())
         .thenChoose(
-            (final Map.Entry<UVariableDecl, UExpression> entry) ->
+            (Map.Entry<UVariableDecl, UExpression> entry) ->
                 unifyParam(entry.getKey(), entry.getValue(), node, state.fork()));
   }
 
   private Choice<State<PlaceholderParamIdent>> unifyParam(
-      final UVariableDecl placeholderParam,
+      UVariableDecl placeholderParam,
       UExpression placeholderArg,
       ExpressionTree toUnify,
-      final State<?> state) {
+      State<?> state) {
     return placeholderArg
         .unify(toUnify, state.unifier())
         .transform(
@@ -208,7 +206,7 @@ abstract class PlaceholderUnificationVisitor
       return Choice.of(state.<List<JCTree>>withResult(null));
     }
     Choice<State<List<JCTree>>> choice = Choice.of(state.withResult(List.<JCTree>nil()));
-    for (final Tree node : nodes) {
+    for (Tree node : nodes) {
       choice =
           choice.thenChoose(
               (State<List<JCTree>> s) ->
@@ -402,7 +400,7 @@ abstract class PlaceholderUnificationVisitor
   }
 
   @Override
-  public Choice<State<JCArrayAccess>> visitArrayAccess(final ArrayAccessTree node, State<?> state) {
+  public Choice<State<JCArrayAccess>> visitArrayAccess(ArrayAccessTree node, State<?> state) {
     return chooseSubtrees(
         state,
         s -> unifyExpression(node.getExpression(), s),
@@ -411,8 +409,8 @@ abstract class PlaceholderUnificationVisitor
   }
 
   @Override
-  public Choice<State<JCBinary>> visitBinary(final BinaryTree node, State<?> state) {
-    final Tag tag = ((JCBinary) node).getTag();
+  public Choice<State<JCBinary>> visitBinary(BinaryTree node, State<?> state) {
+    Tag tag = ((JCBinary) node).getTag();
     return chooseSubtrees(
         state,
         s -> unifyExpression(node.getLeftOperand(), s),
@@ -422,7 +420,7 @@ abstract class PlaceholderUnificationVisitor
 
   @Override
   public Choice<State<JCMethodInvocation>> visitMethodInvocation(
-      final MethodInvocationTree node, State<?> state) {
+      MethodInvocationTree node, State<?> state) {
     return chooseSubtrees(
         state,
         s -> unifyExpression(node.getMethodSelect(), s),
@@ -431,8 +429,7 @@ abstract class PlaceholderUnificationVisitor
   }
 
   @Override
-  public Choice<State<JCFieldAccess>> visitMemberSelect(
-      final MemberSelectTree node, State<?> state) {
+  public Choice<State<JCFieldAccess>> visitMemberSelect(MemberSelectTree node, State<?> state) {
     return chooseSubtrees(
         state,
         s -> unifyExpression(node.getExpression(), s),
@@ -444,12 +441,12 @@ abstract class PlaceholderUnificationVisitor
     return chooseSubtrees(state, s -> unifyExpression(node.getExpression(), s), maker()::Parens);
   }
 
-  private static final Set<Tag> MUTATING_UNARY_TAGS =
-      Collections.unmodifiableSet(EnumSet.of(Tag.PREINC, Tag.PREDEC, Tag.POSTINC, Tag.POSTDEC));
+  private static final ImmutableSet<Tag> MUTATING_UNARY_TAGS =
+      ImmutableSet.copyOf(EnumSet.of(Tag.PREINC, Tag.PREDEC, Tag.POSTINC, Tag.POSTDEC));
 
   @Override
   public Choice<State<JCUnary>> visitUnary(UnaryTree node, State<?> state) {
-    final Tag tag = ((JCUnary) node).getTag();
+    Tag tag = ((JCUnary) node).getTag();
     return chooseSubtrees(
             state, s -> unifyExpression(node.getExpression(), s), expr -> maker().Unary(tag, expr))
         .condition(
@@ -459,7 +456,7 @@ abstract class PlaceholderUnificationVisitor
   }
 
   @Override
-  public Choice<State<JCTypeCast>> visitTypeCast(final TypeCastTree node, State<?> state) {
+  public Choice<State<JCTypeCast>> visitTypeCast(TypeCastTree node, State<?> state) {
     return chooseSubtrees(
         state,
         s -> unifyExpression(node.getExpression(), s),
@@ -467,7 +464,7 @@ abstract class PlaceholderUnificationVisitor
   }
 
   @Override
-  public Choice<State<JCInstanceOf>> visitInstanceOf(final InstanceOfTree node, State<?> state) {
+  public Choice<State<JCInstanceOf>> visitInstanceOf(InstanceOfTree node, State<?> state) {
     return chooseSubtrees(
         state,
         s -> unifyExpression(node.getExpression(), s),
@@ -475,7 +472,7 @@ abstract class PlaceholderUnificationVisitor
   }
 
   @Override
-  public Choice<State<JCNewClass>> visitNewClass(final NewClassTree node, State<?> state) {
+  public Choice<State<JCNewClass>> visitNewClass(NewClassTree node, State<?> state) {
     if (node.getEnclosingExpression() != null
         || (node.getTypeArguments() != null && !node.getTypeArguments().isEmpty())) {
       return Choice.none();
@@ -509,7 +506,7 @@ abstract class PlaceholderUnificationVisitor
   }
 
   @Override
-  public Choice<State<JCNewArray>> visitNewArray(final NewArrayTree node, State<?> state) {
+  public Choice<State<JCNewArray>> visitNewArray(NewArrayTree node, State<?> state) {
     return chooseSubtrees(
         state,
         s -> unifyExpressions(node.getDimensions(), s),
@@ -519,7 +516,7 @@ abstract class PlaceholderUnificationVisitor
 
   @Override
   public Choice<State<JCConditional>> visitConditionalExpression(
-      final ConditionalExpressionTree node, State<?> state) {
+      ConditionalExpressionTree node, State<?> state) {
     return chooseSubtrees(
         state,
         s -> unifyExpression(node.getCondition(), s),
@@ -529,7 +526,7 @@ abstract class PlaceholderUnificationVisitor
   }
 
   @Override
-  public Choice<State<JCAssign>> visitAssignment(final AssignmentTree node, State<?> state) {
+  public Choice<State<JCAssign>> visitAssignment(AssignmentTree node, State<?> state) {
     return chooseSubtrees(
             state,
             s -> unifyExpression(node.getVariable(), s),
@@ -540,7 +537,7 @@ abstract class PlaceholderUnificationVisitor
 
   @Override
   public Choice<State<JCAssignOp>> visitCompoundAssignment(
-      final CompoundAssignmentTree node, State<?> state) {
+      CompoundAssignmentTree node, State<?> state) {
     return chooseSubtrees(
             state,
             s -> unifyExpression(node.getVariable(), s),
@@ -568,7 +565,7 @@ abstract class PlaceholderUnificationVisitor
 
   @Override
   public Choice<State<JCEnhancedForLoop>> visitEnhancedForLoop(
-      final EnhancedForLoopTree node, State<?> state) {
+      EnhancedForLoopTree node, State<?> state) {
     return chooseSubtrees(
         state,
         s -> unifyExpression(node.getExpression(), s),
@@ -577,7 +574,7 @@ abstract class PlaceholderUnificationVisitor
   }
 
   @Override
-  public Choice<State<JCIf>> visitIf(final IfTree node, State<?> state) {
+  public Choice<State<JCIf>> visitIf(IfTree node, State<?> state) {
     return chooseSubtrees(
         state,
         s -> unifyExpression(node.getCondition(), s),
@@ -587,7 +584,7 @@ abstract class PlaceholderUnificationVisitor
   }
 
   @Override
-  public Choice<State<JCDoWhileLoop>> visitDoWhileLoop(final DoWhileLoopTree node, State<?> state) {
+  public Choice<State<JCDoWhileLoop>> visitDoWhileLoop(DoWhileLoopTree node, State<?> state) {
     return chooseSubtrees(
         state,
         s -> unifyStatement(node.getStatement(), s),
@@ -596,7 +593,7 @@ abstract class PlaceholderUnificationVisitor
   }
 
   @Override
-  public Choice<State<JCForLoop>> visitForLoop(final ForLoopTree node, State<?> state) {
+  public Choice<State<JCForLoop>> visitForLoop(ForLoopTree node, State<?> state) {
     return chooseSubtrees(
         state,
         s -> unifyStatements(node.getInitializer(), s),
@@ -609,7 +606,7 @@ abstract class PlaceholderUnificationVisitor
 
   @Override
   public Choice<State<JCLabeledStatement>> visitLabeledStatement(
-      final LabeledStatementTree node, State<?> state) {
+      LabeledStatementTree node, State<?> state) {
     return chooseSubtrees(
         state,
         s -> unifyStatement(node.getStatement(), s),
@@ -617,7 +614,7 @@ abstract class PlaceholderUnificationVisitor
   }
 
   @Override
-  public Choice<State<JCVariableDecl>> visitVariable(final VariableTree node, State<?> state) {
+  public Choice<State<JCVariableDecl>> visitVariable(VariableTree node, State<?> state) {
     return chooseSubtrees(
         state,
         s -> unifyExpression(node.getInitializer(), s),
@@ -631,7 +628,7 @@ abstract class PlaceholderUnificationVisitor
   }
 
   @Override
-  public Choice<State<JCWhileLoop>> visitWhileLoop(final WhileLoopTree node, State<?> state) {
+  public Choice<State<JCWhileLoop>> visitWhileLoop(WhileLoopTree node, State<?> state) {
     return chooseSubtrees(
         state,
         s -> unifyExpression(node.getCondition(), s),
@@ -640,8 +637,7 @@ abstract class PlaceholderUnificationVisitor
   }
 
   @Override
-  public Choice<State<JCSynchronized>> visitSynchronized(
-      final SynchronizedTree node, State<?> state) {
+  public Choice<State<JCSynchronized>> visitSynchronized(SynchronizedTree node, State<?> state) {
     return chooseSubtrees(
         state,
         s -> unifyExpression(node.getExpression(), s),
@@ -655,7 +651,7 @@ abstract class PlaceholderUnificationVisitor
   }
 
   @Override
-  public Choice<State<JCTry>> visitTry(final TryTree node, State<?> state) {
+  public Choice<State<JCTry>> visitTry(TryTree node, State<?> state) {
     return chooseSubtrees(
         state,
         s -> unify(node.getResources(), s),
@@ -672,7 +668,7 @@ abstract class PlaceholderUnificationVisitor
   }
 
   @Override
-  public Choice<State<JCCatch>> visitCatch(final CatchTree node, State<?> state) {
+  public Choice<State<JCCatch>> visitCatch(CatchTree node, State<?> state) {
     return chooseSubtrees(
         state,
         s -> unifyStatement(node.getBlock(), s),
@@ -680,7 +676,7 @@ abstract class PlaceholderUnificationVisitor
   }
 
   @Override
-  public Choice<State<JCSwitch>> visitSwitch(final SwitchTree node, State<?> state) {
+  public Choice<State<JCSwitch>> visitSwitch(SwitchTree node, State<?> state) {
     return chooseSubtrees(
         state,
         s -> unifyExpression(node.getExpression(), s),
@@ -689,7 +685,7 @@ abstract class PlaceholderUnificationVisitor
   }
 
   @Override
-  public Choice<State<JCCase>> visitCase(final CaseTree node, State<?> state) {
+  public Choice<State<JCCase>> visitCase(CaseTree node, State<?> state) {
     return chooseSubtrees(
         state, s -> unifyStatements(node.getStatements(), s), stmts -> makeCase(node, stmts));
   }
@@ -714,7 +710,7 @@ abstract class PlaceholderUnificationVisitor
                     caseKind,
                     List.of((JCExpression) node.getExpression()),
                     stmts,
-                    /* body= */ null);
+                    /* body */ null);
       } else {
         return (JCCase)
             TreeMaker.class
@@ -727,8 +723,7 @@ abstract class PlaceholderUnificationVisitor
   }
 
   @Override
-  public Choice<State<JCLambda>> visitLambdaExpression(
-      final LambdaExpressionTree node, State<?> state) {
+  public Choice<State<JCLambda>> visitLambdaExpression(LambdaExpressionTree node, State<?> state) {
     return chooseSubtrees(
         state,
         s -> unify(node.getBody(), s),
@@ -742,7 +737,7 @@ abstract class PlaceholderUnificationVisitor
 
   @Override
   public Choice<State<JCMemberReference>> visitMemberReference(
-      final MemberReferenceTree node, State<?> state) {
+      MemberReferenceTree node, State<?> state) {
     return chooseSubtrees(
         state,
         s -> unifyExpression(node.getQualifierExpression(), s),

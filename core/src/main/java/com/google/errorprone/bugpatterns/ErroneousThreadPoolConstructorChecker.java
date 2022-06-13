@@ -38,7 +38,6 @@ import java.util.List;
  * {@code workQueue}
  */
 @BugPattern(
-    name = "ErroneousThreadPoolConstructorChecker",
     summary = "Thread pool size will never go beyond corePoolSize if an unbounded queue is used",
     severity = WARNING)
 public final class ErroneousThreadPoolConstructorChecker extends BugChecker

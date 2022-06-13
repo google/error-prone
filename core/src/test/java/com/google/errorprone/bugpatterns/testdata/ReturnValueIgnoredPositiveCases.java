@@ -71,7 +71,7 @@ public class ReturnValueIgnoredPositiveCases {
   StringBuffer sb = new StringBuffer("hello");
 
   {
-    // BUG: Diagnostic contains: remove this line
+    // BUG: Diagnostic contains:
     sb.toString().trim();
   }
 
@@ -97,7 +97,7 @@ public class ReturnValueIgnoredPositiveCases {
     c.abs();
     // BUG: Diagnostic contains: c = c.divide(new BigDecimal("4.5"))
     c.divide(new BigDecimal("4.5"));
-    // BUG: Diagnostic contains: remove this line
+    // BUG: Diagnostic contains:
     new BigDecimal("10").add(c);
   }
 

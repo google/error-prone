@@ -27,7 +27,9 @@ import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.MethodTree;
 import java.util.Set;
 
-/** @author cushon@google.com (Liam Miller-Cushon) */
+/**
+ * @author cushon@google.com (Liam Miller-Cushon)
+ */
 @BugPattern(
     name = "UnlockMethod",
     altNames = {"GuardedBy"},

@@ -35,7 +35,6 @@ import com.sun.tools.javac.code.Type;
 
 /** Flags flogger instances being passed around. */
 @BugPattern(
-    name = "FloggerPassedAround",
     summary =
         "There is no advantage to passing around a logger rather than declaring one in the class"
             + " that needs it.",
@@ -53,7 +52,7 @@ public final class FloggerPassedAround extends BugChecker implements MethodTreeM
   public Description matchMethod(MethodTree tree, VisitorState state) {
     for (Tree parameter : tree.getParameters()) {
       Type type = getType(parameter);
-      if (type != null && LOGGER_TYPE.apply(type, state) && !isSuppressed(parameter)) {
+      if (type != null && LOGGER_TYPE.apply(type, state) && !isSuppressed(parameter, state)) {
         state.reportMatch(describeMatch(parameter));
       }
     }

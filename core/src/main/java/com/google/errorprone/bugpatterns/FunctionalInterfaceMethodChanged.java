@@ -19,6 +19,7 @@ package com.google.errorprone.bugpatterns;
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.errorprone.suppliers.Suppliers.JAVA_LANG_VOID_TYPE;
 
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.SeverityLevel;
@@ -43,12 +44,12 @@ import com.sun.tools.javac.code.Symbol.TypeSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Types;
 import java.util.Collections;
-import java.util.Set;
 import javax.lang.model.element.Modifier;
 
-/** @author Louis Wasserman */
+/**
+ * @author Louis Wasserman
+ */
 @BugPattern(
-    name = "FunctionalInterfaceMethodChanged",
     summary =
         "Casting a lambda to this @FunctionalInterface can cause a behavior change from casting to"
             + " a functional superinterface, which is surprising to users.  Prefer decorator"
@@ -65,7 +66,7 @@ public class FunctionalInterfaceMethodChanged extends BugChecker implements Meth
     if (tree.getModifiers().getFlags().contains(Modifier.DEFAULT)
         && IS_FUNCTIONAL_INTERFACE.matches(enclosingClazz, state)) {
       Types types = state.getTypes();
-      Set<Symbol> functionalSuperInterfaceSams =
+      ImmutableSet<Symbol> functionalSuperInterfaceSams =
           enclosingClazz.getImplementsClause().stream()
               .filter(t -> IS_FUNCTIONAL_INTERFACE.matches(t, state))
               .map(ASTHelpers::getSymbol)

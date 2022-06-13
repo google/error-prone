@@ -25,17 +25,13 @@ import java.util.stream.Stream;
 
 /** Suggests not mocking AutoValue classes. */
 @BugPattern(
-    name = "DoNotMockAutoValue",
     summary =
         "AutoValue classes represent pure data classes, so mocking them should not be necessary."
             + " Construct a real instance of the class instead.",
     severity = WARNING)
 public final class DoNotMockAutoValue extends AbstractMockChecker<AutoValue> {
   private static final TypeExtractor<VariableTree> MOCKED_VAR =
-      fieldAnnotatedWithOneOf(
-          Stream.of(
-              "org.mockito.Mock",
-              "org.mockito.Spy"));
+      fieldAnnotatedWithOneOf(Stream.of("org.mockito.Mock", "org.mockito.Spy"));
 
   public DoNotMockAutoValue() {
     super(

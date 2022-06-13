@@ -19,6 +19,7 @@ package com.google.errorprone.bugpatterns;
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.MoreCollectors;
 import com.google.common.collect.Streams;
 import com.google.errorprone.BugPattern;
@@ -45,7 +46,6 @@ import java.util.stream.Collectors;
 import javax.lang.model.element.Name;
 
 @BugPattern(
-    name = "TypeParameterShadowing",
     summary = "Type parameter declaration overrides another type parameter already declared",
     severity = WARNING,
     tags = StandardTags.STYLE)
@@ -104,7 +104,7 @@ public class TypeParameterShadowing extends BugChecker
     descriptionBuilder.setMessage(message);
 
     // Map conflictingTypeSymbol to its new name
-    Set<String> typeVarsInScope =
+    ImmutableSet<String> typeVarsInScope =
         Streams.concat(enclosingTypeSymbols.stream(), symbol.getTypeParameters().stream())
             .map(v -> v.name.toString())
             .collect(toImmutableSet());

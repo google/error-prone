@@ -16,19 +16,25 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.common.collect.Streams.stream;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
 import static com.google.errorprone.util.ASTHelpers.findSuperMethods;
+import static com.google.errorprone.util.ASTHelpers.getReceiver;
+import static com.google.errorprone.util.ASTHelpers.getSymbol;
+import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
+import static com.google.errorprone.util.ASTHelpers.isConsideredFinal;
+import static com.google.errorprone.util.ASTHelpers.isSameType;
 
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableListMultimap;
 import com.google.common.collect.ImmutableMap;
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
-import com.google.errorprone.bugpatterns.BugChecker.MemberReferenceTreeMatcher;
-import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
+import com.google.errorprone.bugpatterns.BugChecker.CompilationUnitTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.fixes.SuggestedFixes;
@@ -36,27 +42,35 @@ import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
 import com.google.errorprone.util.MoreAnnotations;
+import com.sun.source.tree.AssignmentTree;
+import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MemberReferenceTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
-import com.sun.source.tree.Tree;
+import com.sun.source.tree.VariableTree;
+import com.sun.source.util.TreePathScanner;
 import com.sun.tools.javac.code.Attribute;
+import com.sun.tools.javac.code.Flags;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
+import com.sun.tools.javac.code.Symbol.VarSymbol;
+import com.sun.tools.javac.code.Type;
+import com.sun.tools.javac.code.Types;
 import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Stream;
 import javax.lang.model.element.Modifier;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
-// TODO(cushon): this should subsume ImmutableModification and LocalizableWrongToString
 @BugPattern(name = "DoNotCall", summary = "This method should not be called.", severity = ERROR)
 public class DoNotCallChecker extends BugChecker
-    implements MethodTreeMatcher, MethodInvocationTreeMatcher, MemberReferenceTreeMatcher {
+    implements MethodTreeMatcher, CompilationUnitTreeMatcher {
 
   // If your method cannot be annotated with @DoNotCall (e.g., it's a JDK or thirdparty method),
   // then add it to this Map with an explanation.
   private static final ImmutableMap<Matcher<ExpressionTree>, String> THIRD_PARTY_METHODS =
-      new ImmutableMap.Builder<Matcher<ExpressionTree>, String>()
+      ImmutableMap.<Matcher<ExpressionTree>, String>builder()
           .put(
               staticMethod()
                   .onClass("org.junit.Assert")
@@ -114,23 +128,18 @@ public class DoNotCallChecker extends BugChecker
                   .onExactClass("java.util.concurrent.locks.ReentrantReadWriteLock.ReadLock")
                   .named("newCondition"),
               "ReadLocks do not support conditions.")
-          .build();
+          .put(
+              instanceMethod().onExactClass("java.lang.StackTraceElement").named("getClass"),
+              "Calling getClass on StackTraceElement returns the Class object for"
+                  + " StackTraceElement, you probably meant to retrieve the class containing the"
+                  + " execution point represented by this stack trace element using getClassName")
+          .buildOrThrow();
 
   static final String DO_NOT_CALL = "com.google.errorprone.annotations.DoNotCall";
 
-  private final boolean checkThirdPartyMethods;
-
-  public DoNotCallChecker(ErrorProneFlags flags) {
-    this.checkThirdPartyMethods =
-        flags.getBoolean("DoNotCallChecker:CheckThirdPartyMethods").orElse(true);
-  }
-
   @Override
   public Description matchMethod(MethodTree tree, VisitorState state) {
-    MethodSymbol symbol = ASTHelpers.getSymbol(tree);
-    if (symbol == null) {
-      return NO_MATCH;
-    }
+    MethodSymbol symbol = getSymbol(tree);
     if (hasAnnotation(tree, DO_NOT_CALL, state)) {
       if (symbol.getModifiers().contains(Modifier.PRIVATE)) {
         return buildDescription(tree)
@@ -145,7 +154,9 @@ public class DoNotCallChecker extends BugChecker
       }
       return buildDescription(tree)
           .setMessage("Methods annotated with @DoNotCall should be final or static.")
-          .addFix(SuggestedFixes.addModifiers(tree, state, Modifier.FINAL))
+          .addFix(
+              SuggestedFixes.addModifiers(tree, state, Modifier.FINAL)
+                  .orElse(SuggestedFix.emptyFix()))
           .build();
     }
     return findSuperMethods(symbol, state.getTypes()).stream()
@@ -171,34 +182,115 @@ public class DoNotCallChecker extends BugChecker
   }
 
   @Override
-  public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
-    if (checkThirdPartyMethods) {
-      for (Map.Entry<Matcher<ExpressionTree>, String> matcher : THIRD_PARTY_METHODS.entrySet()) {
-        if (matcher.getKey().matches(tree, state)) {
-          return buildDescription(tree).setMessage(matcher.getValue()).build();
-        }
+  public Description matchCompilationUnit(CompilationUnitTree tree, VisitorState state) {
+    ImmutableListMultimap<VarSymbol, Type> assignedTypes = getAssignedTypes(state);
+
+    new SuppressibleTreePathScanner<Void, Void>(state) {
+      @Override
+      public Void visitMethodInvocation(MethodInvocationTree tree, Void unused) {
+        handleTree(tree, getSymbol(tree));
+        return super.visitMethodInvocation(tree, null);
       }
-    }
-    return checkTree(tree, ASTHelpers.getSymbol(tree), state);
+
+      @Override
+      public Void visitMemberReference(MemberReferenceTree tree, Void unused) {
+        handleTree(tree, getSymbol(tree));
+        return super.visitMemberReference(tree, null);
+      }
+
+      private void handleTree(ExpressionTree tree, MethodSymbol symbol) {
+        for (Map.Entry<Matcher<ExpressionTree>, String> matcher : THIRD_PARTY_METHODS.entrySet()) {
+          if (matcher.getKey().matches(tree, state)) {
+            state.reportMatch(buildDescription(tree).setMessage(matcher.getValue()).build());
+            return;
+          }
+        }
+        checkTree(tree, symbol, state);
+      }
+
+      private void checkTree(ExpressionTree tree, MethodSymbol sym, VisitorState state) {
+        mustNotCall(tree, sym, state).ifPresent(symbol -> handleDoNotCall(tree, symbol, state));
+      }
+
+      private void handleDoNotCall(ExpressionTree tree, Symbol symbol, VisitorState state) {
+        String doNotCall = getDoNotCallValue(symbol);
+        StringBuilder message = new StringBuilder("This method should not be called");
+        if (doNotCall.isEmpty()) {
+          message.append(", see its documentation for details.");
+        } else {
+          message.append(": ").append(doNotCall);
+        }
+        state.reportMatch(buildDescription(tree).setMessage(message.toString()).build());
+      }
+
+      private Optional<Symbol> mustNotCall(
+          ExpressionTree tree, MethodSymbol sym, VisitorState state) {
+        if (hasAnnotation(sym, DO_NOT_CALL, state)) {
+          return Optional.of(sym);
+        }
+        ExpressionTree receiver = getReceiver(tree);
+        Symbol receiverSymbol = getSymbol(receiver);
+        if (!(receiverSymbol instanceof VarSymbol)) {
+          return Optional.empty();
+        }
+        ImmutableList<Type> assigned = assignedTypes.get((VarSymbol) receiverSymbol);
+        if (!assigned.stream().allMatch(t -> isSameType(t, assigned.get(0), state))) {
+          return Optional.empty();
+        }
+        Types types = state.getTypes();
+        return assigned.stream()
+            .flatMap(
+                typeSeen ->
+                    types.closure(typeSeen).stream()
+                        .flatMap(
+                            t ->
+                                t.tsym.members() == null
+                                    ? Stream.empty()
+                                    : stream(t.tsym.members().getSymbolsByName(sym.name)))
+                        .filter(
+                            symbol ->
+                                !sym.isStatic()
+                                    && (sym.flags() & Flags.SYNTHETIC) == 0
+                                    && hasAnnotation(symbol, DO_NOT_CALL, state)
+                                    && symbol.overrides(
+                                        sym,
+                                        types.erasure(typeSeen).tsym,
+                                        types,
+                                        /* checkResult= */ true)))
+            .findFirst();
+      }
+    }.scan(state.getPath(), null);
+    return NO_MATCH;
   }
 
-  @Override
-  public Description matchMemberReference(MemberReferenceTree tree, VisitorState state) {
-    return checkTree(tree, ASTHelpers.getSymbol(tree), state);
-  }
+  private ImmutableListMultimap<VarSymbol, Type> getAssignedTypes(VisitorState state) {
+    ImmutableListMultimap.Builder<VarSymbol, Type> assignedTypes = ImmutableListMultimap.builder();
+    new TreePathScanner<Void, Void>() {
+      @Override
+      public Void visitVariable(VariableTree node, Void unused) {
+        VarSymbol symbol = getSymbol(node);
+        if (node.getInitializer() != null && isConsideredFinal(symbol)) {
+          Type type = getType(node.getInitializer());
+          if (type != null) {
+            assignedTypes.put(symbol, type);
+          }
+        }
+        return super.visitVariable(node, null);
+      }
 
-  private Description checkTree(Tree tree, MethodSymbol sym, VisitorState state) {
-    if (!hasAnnotation(sym, DO_NOT_CALL, state)) {
-      return NO_MATCH;
-    }
-    String doNotCall = getDoNotCallValue(sym);
-    StringBuilder message = new StringBuilder("This method should not be called");
-    if (doNotCall.isEmpty()) {
-      message.append(", see its documentation for details.");
-    } else {
-      message.append(": ").append(doNotCall);
-    }
-    return buildDescription(tree).setMessage(message.toString()).build();
+      @Override
+      public Void visitAssignment(AssignmentTree node, Void unused) {
+        Symbol assignee = getSymbol(node.getVariable());
+        if (assignee instanceof VarSymbol && isConsideredFinal(assignee)) {
+          Type type = getType(node.getExpression());
+          if (type != null) {
+            assignedTypes.put((VarSymbol) assignee, type);
+          }
+        }
+        return super.visitAssignment(node, null);
+      }
+    }.scan(state.getPath(), null);
+    return assignedTypes.build();
   }
 
   private static String getDoNotCallValue(Symbol symbol) {

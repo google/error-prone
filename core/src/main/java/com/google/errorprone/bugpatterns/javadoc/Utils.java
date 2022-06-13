@@ -19,6 +19,7 @@ package com.google.errorprone.bugpatterns.javadoc;
 import static com.google.errorprone.names.LevenshteinEditDistance.getEditDistance;
 
 import com.google.errorprone.VisitorState;
+import com.google.errorprone.fixes.FixedPosition;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.doctree.DocCommentTree;
@@ -29,7 +30,6 @@ import com.sun.source.util.DocSourcePositions;
 import com.sun.source.util.DocTreePath;
 import com.sun.tools.javac.api.JavacTrees;
 import com.sun.tools.javac.tree.DCTree.DCDocComment;
-import com.sun.tools.javac.tree.EndPosTable;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 import com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition;
@@ -97,27 +97,7 @@ final class Utils {
   }
 
   static DiagnosticPosition getDiagnosticPosition(int startPosition, Tree tree) {
-    return new DiagnosticPosition() {
-      @Override
-      public JCTree getTree() {
-        return (JCTree) tree;
-      }
-
-      @Override
-      public int getStartPosition() {
-        return startPosition;
-      }
-
-      @Override
-      public int getPreferredPosition() {
-        return startPosition;
-      }
-
-      @Override
-      public int getEndPosition(EndPosTable endPosTable) {
-        return startPosition;
-      }
-    };
+    return new FixedPosition(tree, startPosition);
   }
 
   @Nullable

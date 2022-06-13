@@ -19,20 +19,24 @@ package com.google.errorprone.refaster;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
+import static com.google.common.collect.ImmutableSet.toImmutableSet;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
+import com.google.common.collect.Streams;
 import com.sun.tools.javac.code.Symbol.PackageSymbol;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 import com.sun.tools.javac.tree.JCTree.JCExpression;
-import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
 import com.sun.tools.javac.tree.JCTree.JCImport;
 import com.sun.tools.javac.tree.TreeMaker;
 import com.sun.tools.javac.util.Context;
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Stream;
 
 /**
  * Policy specifying when and how to import classes when inlining types.
@@ -55,7 +59,7 @@ public enum ImportPolicy {
         // Special handling to ensure that the pretty-printer always recognizes Refaster references
         return inliner.maker().Ident(inliner.asName("Refaster"));
       }
-      List<String> allImports = getAllImports(inliner);
+      ImmutableSet<String> allImports = getAllImports(inliner, WhichImports.NON_STATIC);
       /*
        * Check if topLevelClazz or fullyQualifiedClazz is already imported.
        * If fullyQualifiedClazz is imported, return the class name.
@@ -110,19 +114,6 @@ public enum ImportPolicy {
           .maker()
           .Select(
               classReference(inliner, topLevelClazz, fullyQualifiedClazz), inliner.asName(member));
-    }
-
-    /* Returns a combined list of strings from importsInSource and importsToAdd. */
-    private List<String> getAllImports(Inliner inliner) {
-      List<String> allImports = new ArrayList<>(inliner.getImportsToAdd());
-      if (inliner.getContext() != null
-          && inliner.getContext().get(JCCompilationUnit.class) != null) {
-        for (JCImport jcImport : inliner.getContext().get(JCCompilationUnit.class).getImports()) {
-          JCFieldAccess qualified = (JCFieldAccess) jcImport.getQualifiedIdentifier();
-          allImports.add(qualified.toString());
-        }
-      }
-      return allImports;
     }
 
     private JCExpression makeSelectExpression(
@@ -207,7 +198,11 @@ public enum ImportPolicy {
         return IMPORT_TOP_LEVEL.staticReference(
             inliner, topLevelClazz, fullyQualifiedClazz, member);
       }
-      inliner.addStaticImport(fullyQualifiedClazz + "." + member);
+      // Check to see if the reference is already static-imported.
+      String importableName = fullyQualifiedClazz + "." + member;
+      if (!getAllImports(inliner, WhichImports.STATIC).contains(importableName)) {
+        inliner.addStaticImport(importableName);
+      }
       return inliner.maker().Ident(inliner.asName(member));
     }
   };
@@ -230,4 +225,51 @@ public enum ImportPolicy {
       CharSequence topLevelClazz,
       CharSequence fullyQualifiedClazz,
       CharSequence member);
+
+  private enum WhichImports {
+    STATIC {
+      @Override
+      Stream<String> getExistingImports(Inliner inliner) {
+        return inliner.getStaticImportsToAdd().stream();
+      }
+
+      @Override
+      boolean existingImportMatches(JCImport jcImport) {
+        return jcImport.isStatic();
+      }
+    },
+    NON_STATIC {
+      @Override
+      Stream<String> getExistingImports(Inliner inliner) {
+        return inliner.getImportsToAdd().stream();
+      }
+
+      @Override
+      boolean existingImportMatches(JCImport jcImport) {
+        // An inner type can be imported non-statically or statically
+        return true;
+      }
+    };
+
+    abstract Stream<String> getExistingImports(Inliner inliner);
+
+    abstract boolean existingImportMatches(JCImport jcImport);
+  }
+
+  /**
+   * Returns the set of imports that already exist of the import type (both in the source file and
+   * in the pending list of imports to add).
+   */
+  private static ImmutableSet<String> getAllImports(Inliner inliner, WhichImports whichImports) {
+    return Streams.concat(
+            whichImports.getExistingImports(inliner),
+            Optional.ofNullable(inliner.getContext())
+                .map(c -> c.get(JCCompilationUnit.class))
+                .map(JCCompilationUnit::getImports)
+                .map(Collection::stream)
+                .orElse(Stream.of())
+                .filter(whichImports::existingImportMatches)
+                .map(imp -> imp.getQualifiedIdentifier().toString()))
+        .collect(toImmutableSet());
+  }
 }

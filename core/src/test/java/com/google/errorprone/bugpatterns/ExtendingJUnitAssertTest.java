@@ -21,7 +21,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** @author kayco@google.com (Kayla Walker) */
+/**
+ * @author kayco@google.com (Kayla Walker)
+ */
 @RunWith(JUnit4.class)
 public class ExtendingJUnitAssertTest {
 

@@ -33,7 +33,7 @@ public abstract class Match {
     for (Map.Entry<Bindings.Key<?>, Object> entry : match.getUnifier().getBindings().entrySet()) {
       builder.put(entry.getKey().getIdentifier(), entry.getValue().toString());
     }
-    return create(builder.build());
+    return create(builder.buildOrThrow());
   }
 
   public static Match create(Map<String, String> bindings) {

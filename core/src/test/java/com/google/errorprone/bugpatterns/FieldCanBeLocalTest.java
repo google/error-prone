@@ -495,6 +495,33 @@ public final class FieldCanBeLocalTest {
   }
 
   @Test
+  public void unusedPrivateMethod() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.errorprone.annotations.Keep;",
+            "import java.lang.annotation.ElementType;",
+            "import java.lang.annotation.Retention;",
+            "import java.lang.annotation.RetentionPolicy;",
+            "import java.lang.annotation.Target;",
+            "import javax.inject.Inject;",
+            "public class Test {",
+            "  @Keep private int a;",
+            "  @ProvidesCustom private int b;",
+            "  public int test(int aa, int bb) {",
+            "    a = aa;",
+            "    b = bb;",
+            "    return a + b;",
+            "  }",
+            "  @Keep",
+            "  @Target(ElementType.FIELD)",
+            "  @Retention(RetentionPolicy.SOURCE)",
+            "  private @interface ProvidesCustom {}",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void accessedInOtherMethod() {
     helper
         .addSourceLines(

@@ -26,7 +26,6 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Streams;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.LinkType;
-import com.google.errorprone.BugPattern.StandardTags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.TypeParameterTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFixes;
@@ -55,15 +54,12 @@ import javax.lang.model.element.Name;
  * @author glorioso@google.com (Nick Glorioso)
  */
 @BugPattern(
-    name = "TypeParameterNaming",
     summary =
         "Type parameters must be a single letter with an optional numeric suffix,"
             + " or an UpperCamelCase name followed by the letter 'T'.",
     severity = SUGGESTION,
-    tags = StandardTags.STYLE,
     linkType = LinkType.CUSTOM,
-    link = "https://google.github.io/styleguide/javaguide.html#s5.2.8-type-variable-names"
-    )
+    link = "https://google.github.io/styleguide/javaguide.html#s5.2.8-type-variable-names")
 public class TypeParameterNaming extends BugChecker implements TypeParameterTreeMatcher {
 
   private static final Pattern TRAILING_DIGIT_EXTRACTOR = Pattern.compile("^(.*?)(\\d+)$");

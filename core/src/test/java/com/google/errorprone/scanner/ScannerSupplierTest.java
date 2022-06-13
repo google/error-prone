@@ -44,12 +44,12 @@ import com.google.errorprone.bugpatterns.BadShiftAmount;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.ChainingConstructorIgnoresParameter;
 import com.google.errorprone.bugpatterns.DepAnn;
-import com.google.errorprone.bugpatterns.DivZero;
 import com.google.errorprone.bugpatterns.EqualsIncompatibleType;
 import com.google.errorprone.bugpatterns.LongLiteralLowerCaseSuffix;
+import com.google.errorprone.bugpatterns.MethodCanBeStatic;
 import com.google.errorprone.bugpatterns.PackageLocation;
+import com.google.errorprone.bugpatterns.ReferenceEquality;
 import com.google.errorprone.bugpatterns.StaticQualifiedUsingExpression;
-import com.google.errorprone.bugpatterns.StringEquality;
 import com.google.errorprone.bugpatterns.nullness.UnnecessaryCheckNotNull;
 import com.sun.source.util.JavacTask;
 import com.sun.tools.javac.api.JavacTool;
@@ -325,16 +325,18 @@ public class ScannerSupplierTest {
     // The 'AllDisabledChecksAsWarnings' flag doesn't populate through to additional plugins
     assertScanner(
             ss.applyOverrides(epOptions)
-                .plus(ScannerSupplier.fromBugCheckerClasses(DivZero.class).filter(t -> false)))
+                .plus(
+                    ScannerSupplier.fromBugCheckerClasses(MethodCanBeStatic.class)
+                        .filter(t -> false)))
         .hasEnabledChecks(BadShiftAmount.class, StaticQualifiedUsingExpression.class);
   }
 
   @Test
   public void applyOverridesDisableErrors() {
-    // BadShiftAmount (error), ArrayEquals (unsuppressible error), StringEquality (warning)
+    // BadShiftAmount (error), ArrayEquals (unsuppressible error), ReferenceEquality (warning)
     ScannerSupplier ss =
         ScannerSupplier.fromBugCheckerClasses(
-            BadShiftAmount.class, UnsuppressibleArrayEquals.class, StringEquality.class);
+            BadShiftAmount.class, UnsuppressibleArrayEquals.class, ReferenceEquality.class);
 
     ErrorProneOptions epOptions =
         ErrorProneOptions.processArgs(ImmutableList.of("-XepAllErrorsAsWarnings"));
@@ -344,31 +346,31 @@ public class ScannerSupplierTest {
             ImmutableMap.of(
                 "ArrayEquals", SeverityLevel.ERROR, // Unsuppressible, not demoted
                 "BadShiftAmount", SeverityLevel.WARNING, // Demoted from error to warning
-                "StringEquality", SeverityLevel.WARNING)); // Already warning, unaffected
+                "ReferenceEquality", SeverityLevel.WARNING)); // Already warning, unaffected
 
     // Flags after AllErrorsAsWarnings flag should override it.
     epOptions =
         ErrorProneOptions.processArgs(
-            ImmutableList.of("-XepAllErrorsAsWarnings", "-Xep:StringEquality:ERROR"));
+            ImmutableList.of("-XepAllErrorsAsWarnings", "-Xep:ReferenceEquality:ERROR"));
 
     assertScanner(ss.applyOverrides(epOptions))
         .hasSeverities(
             ImmutableMap.of(
                 "ArrayEquals", SeverityLevel.ERROR,
                 "BadShiftAmount", SeverityLevel.WARNING,
-                "StringEquality", SeverityLevel.ERROR));
+                "ReferenceEquality", SeverityLevel.ERROR));
 
     // AllErrorsAsWarnings flag should override all error-level severity flags that come before it.
     epOptions =
         ErrorProneOptions.processArgs(
-            ImmutableList.of("-Xep:StringEquality:ERROR", "-XepAllErrorsAsWarnings"));
+            ImmutableList.of("-Xep:ReferenceEquality:ERROR", "-XepAllErrorsAsWarnings"));
 
     assertScanner(ss.applyOverrides(epOptions))
         .hasSeverities(
             ImmutableMap.of(
                 "ArrayEquals", SeverityLevel.ERROR,
                 "BadShiftAmount", SeverityLevel.WARNING,
-                "StringEquality", SeverityLevel.WARNING));
+                "ReferenceEquality", SeverityLevel.WARNING));
 
     // AllErrorsAsWarnings only overrides error-level severity flags.
     // That is, checks disabled before the flag are left disabled, not promoted to warnings.
@@ -380,9 +382,9 @@ public class ScannerSupplierTest {
         .hasSeverities(
             ImmutableMap.of(
                 "ArrayEquals", SeverityLevel.ERROR,
-                "StringEquality", SeverityLevel.WARNING));
+                "ReferenceEquality", SeverityLevel.WARNING));
     assertScanner(ss.applyOverrides(epOptions))
-        .hasEnabledChecks(UnsuppressibleArrayEquals.class, StringEquality.class);
+        .hasEnabledChecks(UnsuppressibleArrayEquals.class, ReferenceEquality.class);
   }
 
   @Test
@@ -465,18 +467,20 @@ public class ScannerSupplierTest {
   public void applyOverridesSetsSeverity() {
     ScannerSupplier ss =
         ScannerSupplier.fromBugCheckerClasses(
-            BadShiftAmount.class, ChainingConstructorIgnoresParameter.class, StringEquality.class);
+            BadShiftAmount.class,
+            ChainingConstructorIgnoresParameter.class,
+            ReferenceEquality.class);
     ErrorProneOptions epOptions =
         ErrorProneOptions.processArgs(
             ImmutableList.of(
-                "-Xep:ChainingConstructorIgnoresParameter:WARN", "-Xep:StringEquality:ERROR"));
+                "-Xep:ChainingConstructorIgnoresParameter:WARN", "-Xep:ReferenceEquality:ERROR"));
     ScannerSupplier overriddenScannerSupplier = ss.applyOverrides(epOptions);
 
-    Map<String, SeverityLevel> expected =
+    ImmutableMap<String, SeverityLevel> expected =
         ImmutableMap.of(
             "BadShiftAmount", SeverityLevel.ERROR,
             "ChainingConstructorIgnoresParameter", SeverityLevel.WARNING,
-            "StringEquality", SeverityLevel.ERROR);
+            "ReferenceEquality", SeverityLevel.ERROR);
 
     assertScanner(overriddenScannerSupplier).hasSeverities(expected);
   }
@@ -492,7 +496,7 @@ public class ScannerSupplierTest {
                 "-XepOpt:FirstFlag=overridden", "-XepOpt:SecondFlag=AValue", "-XepOpt:FirstFlag"));
     ScannerSupplier overriddenScannerSupplier = ss.applyOverrides(epOptions);
 
-    Map<String, String> expected =
+    ImmutableMap<String, String> expected =
         ImmutableMap.of(
             "FirstFlag", "true",
             "SecondFlag", "AValue");
@@ -507,18 +511,20 @@ public class ScannerSupplierTest {
         ScannerSupplier.fromBugCheckerClasses(
                 BadShiftAmount.class,
                 ChainingConstructorIgnoresParameter.class,
-                StringEquality.class)
+                ReferenceEquality.class)
             .filter(Predicates.alwaysFalse());
     assertScanner(ss).hasEnabledChecks(); // Everything's off
 
     ErrorProneOptions epOptions =
         ErrorProneOptions.processArgs(
-            ImmutableList.of("-Xep:StringEquality:OFF", "-XepAllDisabledChecksAsWarnings"));
+            ImmutableList.of("-Xep:ReferenceEquality:OFF", "-XepAllDisabledChecksAsWarnings"));
 
     ScannerSupplier withOverrides = ss.applyOverrides(epOptions);
     assertScanner(withOverrides)
         .hasEnabledChecks(
-            BadShiftAmount.class, ChainingConstructorIgnoresParameter.class, StringEquality.class);
+            BadShiftAmount.class,
+            ChainingConstructorIgnoresParameter.class,
+            ReferenceEquality.class);
 
     ImmutableMap<String, SeverityLevel> expectedSeverities =
         ImmutableMap.of(
@@ -526,16 +532,16 @@ public class ScannerSupplierTest {
             SeverityLevel.WARNING,
             "ChainingConstructorIgnoresParameter",
             SeverityLevel.WARNING,
-            "StringEquality",
+            "ReferenceEquality",
             SeverityLevel.WARNING);
     assertScanner(withOverrides).hasSeverities(expectedSeverities);
 
     epOptions =
         ErrorProneOptions.processArgs(
             ImmutableList.of(
-                "-Xep:StringEquality:OFF",
+                "-Xep:ReferenceEquality:OFF",
                 "-XepAllDisabledChecksAsWarnings",
-                "-Xep:StringEquality:OFF"));
+                "-Xep:ReferenceEquality:OFF"));
 
     withOverrides = ss.applyOverrides(epOptions);
     assertScanner(withOverrides)

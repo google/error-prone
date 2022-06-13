@@ -22,6 +22,7 @@ import static com.google.errorprone.bugpatterns.DoNotCallChecker.DO_NOT_CALL;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.enclosingClass;
 import static com.google.errorprone.util.ASTHelpers.findClass;
+import static com.google.errorprone.util.ASTHelpers.findSuperMethods;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
@@ -37,11 +38,9 @@ import com.google.errorprone.matchers.Description;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.ThrowTree;
-import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Type;
-import com.sun.tools.javac.code.Types;
 import javax.lang.model.element.Modifier;
 
 /**
@@ -49,7 +48,6 @@ import javax.lang.model.element.Modifier;
  * calls at compile-time instead failing at runtime.
  */
 @BugPattern(
-    name = "DoNotCallSuggester",
     summary =
         "Consider annotating methods that always throw with @DoNotCall. "
             + "Read more at https://errorprone.info/bugpattern/DoNotCall",
@@ -95,9 +93,6 @@ public class DoNotCallSuggester extends BugChecker implements MethodTreeMatcher 
   public Description matchMethod(MethodTree tree, VisitorState state) {
     // if we can't find the method symbol, exit
     MethodSymbol symbol = getSymbol(tree);
-    if (symbol == null) {
-      return NO_MATCH;
-    }
 
     // if the method is abstract, exit
     if (tree.getBody() == null) {
@@ -167,7 +162,7 @@ public class DoNotCallSuggester extends BugChecker implements MethodTreeMatcher 
     }
 
     // if the method is an "effective override" (they forgot to add @Override), exit
-    if (isEffectivelyOverride(symbol, state.getTypes())) {
+    if (!findSuperMethods(symbol, state.getTypes()).isEmpty()) {
       return NO_MATCH;
     }
 
@@ -186,32 +181,5 @@ public class DoNotCallSuggester extends BugChecker implements MethodTreeMatcher 
                 + " break any existing callers of this API).")
         .addFix(fix)
         .build();
-  }
-
-  // this code is stolen from MissingOverride.java
-  private static boolean isEffectivelyOverride(Symbol sym, Types types) {
-    // static methods can't be overrides
-    if (sym.isStatic()) {
-      return false;
-    }
-    ClassSymbol owner = sym.enclClass();
-    for (Type s : types.closure(owner.type)) {
-      if (s.asElement().equals(owner)) {
-        continue;
-      }
-      for (Symbol m : s.tsym.members().getSymbolsByName(sym.name)) {
-        if (!(m instanceof MethodSymbol)) {
-          continue;
-        }
-        MethodSymbol msym = (MethodSymbol) m;
-        if (msym.isStatic()) {
-          continue;
-        }
-        if (sym.overrides(msym, owner, types, /* checkResult= */ false)) {
-          return true;
-        }
-      }
-    }
-    return false;
   }
 }

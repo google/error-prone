@@ -57,9 +57,10 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
-/** @author gak@google.com (Gregory Kick) */
+/**
+ * @author gak@google.com (Gregory Kick)
+ */
 @BugPattern(
-    name = "EmptySetMultibindingContributions",
     summary =
         "@Multibinds is a more efficient and declarative mechanism for ensuring that a set"
             + " multibinding is present in the graph.",
@@ -201,7 +202,7 @@ public final class EmptySetMultibindingContributions extends BugChecker
       }
     }
 
-    EnumSet<Flag> methodFlags = Flags.asFlagSet(modifiers.flags);
+    EnumSet<Flag> methodFlags = ASTHelpers.asFlagSet(modifiers.flags);
     methodFlags.remove(Flags.Flag.STATIC);
     methodFlags.remove(Flags.Flag.FINAL);
     methodFlags.add(Flags.Flag.ABSTRACT);
@@ -221,7 +222,7 @@ public final class EmptySetMultibindingContributions extends BugChecker
       classModifierStringsBuilder.add(state.getSourceForNode(annotation));
     }
 
-    EnumSet<Flag> classFlags = Flags.asFlagSet(enclosingClassModifiers.flags);
+    EnumSet<Flag> classFlags = ASTHelpers.asFlagSet(enclosingClassModifiers.flags);
     classFlags.remove(Flags.Flag.FINAL);
     classFlags.add(Flags.Flag.ABSTRACT);
     for (Flag flag : classFlags) {

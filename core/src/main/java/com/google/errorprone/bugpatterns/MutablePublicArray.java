@@ -37,7 +37,6 @@ import javax.lang.model.element.Modifier;
 
 /** Check for public static final declaration of Arrays. */
 @BugPattern(
-    name = "MutablePublicArray",
     summary =
         "Non-empty arrays are mutable, so this `public static final` array is not a constant"
             + " and can be modified by clients of this class.  Prefer an ImmutableList, or provide"

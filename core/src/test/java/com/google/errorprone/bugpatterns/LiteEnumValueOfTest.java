@@ -16,11 +16,7 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static org.junit.Assume.assumeFalse;
-import static org.junit.Assume.assumeTrue;
-
 import com.google.errorprone.CompilationTestHelper;
-import com.google.errorprone.util.RuntimeVersion;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -77,18 +73,7 @@ public final class LiteEnumValueOfTest {
   }
 
   @Test
-  public void testNegativeCaseJDK8OrEarlier() {
-    assumeFalse(RuntimeVersion.isAtLeast9());
-    testGeneratedAutoValueClass("javax.annotation.Generated");
-  }
-
-  @Test
   public void testNegativeCaseJDK9OrAbove() {
-    assumeTrue(RuntimeVersion.isAtLeast9());
-    testGeneratedAutoValueClass("javax.annotation.processing.Generated");
-  }
-
-  private void testGeneratedAutoValueClass(String importClass) {
     compilationHelper
         .addSourceLines(
             "ProtoLiteEnum.java",
@@ -106,7 +91,7 @@ public final class LiteEnumValueOfTest {
         .addSourceLines("TestData.java", "class TestData {}")
         .addSourceLines(
             "$AutoValue_TestData.java",
-            "import " + importClass + ";",
+            "import javax.annotation.processing.Generated;",
             "@Generated(\"com.google.auto.value.processor.AutoValueProcessor\")",
             "class $AutoValue_TestData extends TestData {}")
         .addSourceLines(
@@ -114,7 +99,7 @@ public final class LiteEnumValueOfTest {
             "import android.os.Parcel;",
             "import android.os.Parcelable;",
             "import com.google.errorprone.bugpatterns.proto.ProtoTest.TestEnum;",
-            "import " + importClass + ";",
+            "import javax.annotation.processing.Generated;",
             "@Generated(\"com.ryanharter.auto.value.parcel.AutoValueParcelExtension\")",
             "class AutoValue_TestData extends $AutoValue_TestData {",
             "    AutoValue_TestData(ProtoLiteEnum protoLiteEnum) {}",

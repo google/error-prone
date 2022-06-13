@@ -45,7 +45,6 @@ import java.util.stream.Collectors;
  * @author bhagwani@google.com (Sumit Bhagwani)
  */
 @BugPattern(
-    name = "ComputeIfAbsentAmbiguousReference",
     summary = "computeIfAbsent passes the map key to the provided class's constructor",
     severity = ERROR)
 public final class ComputeIfAbsentAmbiguousReference extends BugChecker

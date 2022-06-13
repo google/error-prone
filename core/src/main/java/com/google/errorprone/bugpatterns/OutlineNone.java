@@ -37,7 +37,6 @@ import java.util.regex.Pattern;
 
 /** Check for the a11y antipattern of setting CSS outline attributes to none or 0. */
 @BugPattern(
-    name = "OutlineNone",
     summary =
         "Setting CSS outline style to none or 0 (while not otherwise providing visual focus "
             + "indicators) is inaccessible for users navigating a web page without a mouse.",

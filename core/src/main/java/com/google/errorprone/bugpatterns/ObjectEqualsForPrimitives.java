@@ -37,7 +37,6 @@ import com.sun.source.tree.MethodInvocationTree;
  * @author vlk@google.com (Volodymyr Kachurovskyi)
  */
 @BugPattern(
-    name = "ObjectEqualsForPrimitives",
     summary = "Avoid unnecessary boxing by using plain == for primitive types.",
     tags = StandardTags.PERFORMANCE,
     severity = WARNING)

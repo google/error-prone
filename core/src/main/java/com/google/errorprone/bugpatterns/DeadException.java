@@ -46,9 +46,10 @@ import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree;
 
-/** @author alexeagle@google.com (Alex Eagle) */
+/**
+ * @author alexeagle@google.com (Alex Eagle)
+ */
 @BugPattern(
-    name = "DeadException",
     altNames = "ThrowableInstanceNeverThrown",
     summary = "Exception created but not thrown",
     severity = ERROR)

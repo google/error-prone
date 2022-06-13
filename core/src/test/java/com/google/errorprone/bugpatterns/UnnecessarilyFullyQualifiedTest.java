@@ -82,6 +82,52 @@ public final class UnnecessarilyFullyQualifiedTest {
   }
 
   @Test
+  public void refersToMultipleTypes_dependingOnLocation() {
+    helper
+        .addInputLines(
+            "Outer.java", //
+            "package a;",
+            "public class Outer {",
+            "  public class List {}",
+            "}")
+        .expectUnchanged()
+        .addInputLines(
+            "Test.java",
+            "package b;",
+            "import a.Outer;",
+            "interface Test {",
+            "  java.util.List foo();",
+            "  public abstract class Inner extends Outer {",
+            "    abstract List bar();",
+            "  }",
+            "}")
+        .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
+  public void inconsistentImportUsage() {
+    helper
+        .addInputLines(
+            "Test.java",
+            "import java.util.List;",
+            "public class Test {",
+            "  public java.util.List<?> foo(List<?> list) {",
+            "    return list;",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "import java.util.List;",
+            "public class Test {",
+            "  public List<?> foo(List<?> list) {",
+            "    return list;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void clashesWithTypeInSuperType() {
     helper
         .addInputLines(
@@ -144,6 +190,22 @@ public final class UnnecessarilyFullyQualifiedTest {
             "Test.java", //
             "interface Test {",
             "  pkg.Annotation foo();",
+            "}")
+        .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
+  public void innerClass() {
+    helper
+        .addInputLines(
+            "A.java", //
+            "package test;",
+            "public class A {",
+            "  class B {}",
+            "  void test (A a) {",
+            "    a.new B() {};",
+            "  }",
             "}")
         .expectUnchanged()
         .doTest();

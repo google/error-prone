@@ -33,13 +33,13 @@ import java.io.UncheckedIOException;
     severity = ERROR)
 public class Java7ApiChecker extends ApiDiffChecker {
 
-  static final ApiDiff API_DIFF = loadApiDiff();
+  public static final ApiDiff API_DIFF = loadApiDiff();
 
   private static ApiDiff loadApiDiff() {
     try {
       ApiDiffProto.Diff.Builder diffBuilder = ApiDiffProto.Diff.newBuilder();
       byte[] diffData =
-          Resources.toByteArray(Resources.getResource(Java7ApiChecker.class, "7to8diff.binarypb"));
+          Resources.toByteArray(Resources.getResource(Java7ApiChecker.class, "7to11diff.binarypb"));
       diffBuilder
           .mergeFrom(diffData)
           .addClassDiff(

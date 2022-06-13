@@ -33,7 +33,6 @@ import com.sun.source.tree.MethodInvocationTree;
 
 /** Check for calls to {@code duration.withMillis(long)}. */
 @BugPattern(
-    name = "JodaDurationWithMillis",
     summary =
         "Use of duration.withMillis(long) is not allowed. Please use Duration.millis(long) "
             + "instead.",

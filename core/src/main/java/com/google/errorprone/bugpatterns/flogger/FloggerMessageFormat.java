@@ -33,9 +33,10 @@ import com.sun.source.tree.MethodInvocationTree;
 import java.util.List;
 import java.util.regex.Pattern;
 
-/** @author cushon@google.com (Liam Miller-Cushon) */
+/**
+ * @author cushon@google.com (Liam Miller-Cushon)
+ */
 @BugPattern(
-    name = "FloggerMessageFormat",
     summary = "Invalid message format-style format specifier ({0}), expected printf-style (%s)",
     explanation =
         "Flogger uses printf-style format specifiers, such as %s and %d. Message format-style"

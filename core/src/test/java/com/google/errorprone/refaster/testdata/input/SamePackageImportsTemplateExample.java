@@ -14,16 +14,14 @@
  * limitations under the License.
  */
 
-package java.util;
-
-import com.google.common.collect.Maps;
+package com.google.common.collect;
 
 /**
  * Test data for {@code SamePackageImportsTemplate}.
  */
 public class SamePackageImportsTemplateExample {
   public void example() {
-    Map.Entry<String, Integer> entry = Maps.immutableEntry("foo", 3);
-    System.out.println(entry);
+    ImmutableMap.Builder<String, Integer> builder = ImmutableMap.builder();
+    System.out.println(builder.buildOrThrow());
   }
 }

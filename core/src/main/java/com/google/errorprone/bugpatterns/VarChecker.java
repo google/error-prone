@@ -55,9 +55,6 @@ public class VarChecker extends BugChecker implements VariableTreeMatcher {
   @Override
   public Description matchVariable(VariableTree tree, VisitorState state) {
     Symbol sym = ASTHelpers.getSymbol(tree);
-    if (sym == null) {
-      return Description.NO_MATCH;
-    }
     if (ASTHelpers.hasAnnotation(sym, Var.class, state)) {
       if ((sym.flags() & Flags.EFFECTIVELY_FINAL) != 0) {
         return buildDescription(tree)

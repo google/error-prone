@@ -16,10 +16,7 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static org.junit.Assume.assumeTrue;
-
 import com.google.errorprone.CompilationTestHelper;
-import com.google.errorprone.util.RuntimeVersion;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -95,7 +92,6 @@ public class ComputeIfAbsentAmbiguousReferenceTest {
 
   @Test
   public void testNegativeCase_parameterNameMatch() {
-    assumeTrue(RuntimeVersion.isAtLeast9());
     compilationHelper
         .addSourceLines(
             "in/Test.java",

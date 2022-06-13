@@ -40,7 +40,6 @@ import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Type.ClassType;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -242,7 +241,7 @@ public class ImmutableAnalysis {
     }
     // javac gives us members in reverse declaration order
     // handling them in declaration order leads to marginally better diagnostics
-    List<Symbol> members =
+    ImmutableList<Symbol> members =
         ImmutableList.copyOf(ASTHelpers.scope(classSym.members()).getSymbols(instanceFieldFilter))
             .reverse();
     for (Symbol member : members) {
@@ -258,14 +257,14 @@ public class ImmutableAnalysis {
   }
 
   /** Check a single field for immutability. */
-  private Violation isFieldImmutable(
+  Violation isFieldImmutable(
       Optional<Tree> tree,
       ImmutableSet<String> immutableTyParams,
       ClassSymbol classSym,
       ClassType classType,
       VarSymbol var,
       ViolationReporter reporter) {
-    if (bugChecker.isSuppressed(var)) {
+    if (bugChecker.isSuppressed(var, state)) {
       return Violation.absent();
     }
     if (!var.getModifiers().contains(Modifier.FINAL)

@@ -43,7 +43,6 @@ import java.lang.reflect.Constructor;
  * @author bhagwani@google.com (Sumit Bhagwani)
  */
 @BugPattern(
-    name = "UnsafeReflectiveConstructionCast",
     summary =
         "Prefer `asSubclass` instead of casting the result of `newInstance`,"
             + " to detect classes of incorrect type before invoking their constructors."

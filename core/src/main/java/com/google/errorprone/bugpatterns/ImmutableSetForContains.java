@@ -29,6 +29,8 @@ import static com.google.errorprone.matchers.Matchers.isStatic;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
+import static com.google.errorprone.util.ASTHelpers.shouldKeep;
+import static com.google.errorprone.util.ASTHelpers.streamReceivers;
 import static java.util.stream.Collectors.toMap;
 
 import com.google.common.collect.ImmutableList;
@@ -64,7 +66,6 @@ import javax.lang.model.element.Modifier;
  * ImmutableList} when using only contains, containsAll and isEmpty.
  */
 @BugPattern(
-    name = "ImmutableSetForContains",
     summary =
         "This private static ImmutableList is only used for contains, containsAll or isEmpty"
             + " checks; prefer ImmutableSet.",
@@ -80,6 +81,7 @@ public final class ImmutableSetForContains extends BugChecker implements ClassTr
 
   private static final Matcher<Tree> EXCLUSIONS =
       anyOf(
+          (t, s) -> shouldKeep(t),
           hasAnnotationWithSimpleName("Bind"),
           hasAnnotationWithSimpleName("Inject"));
 
@@ -117,7 +119,7 @@ public final class ImmutableSetForContains extends BugChecker implements ClassTr
     SuggestedFix.Builder fix = SuggestedFix.builder();
     Optional<VariableTree> firstReplacement = Optional.empty();
     for (VariableTree var : immutableListVar) {
-      if (isSuppressed(var)) {
+      if (isSuppressed(var, state)) {
         continue;
       }
       if (!usageScanner.disallowedVarUsages.get(getSymbol(var))) {
@@ -177,11 +179,9 @@ public final class ImmutableSetForContains extends BugChecker implements ClassTr
 
   private static Optional<ExpressionTree> getRootMethod(
       MethodInvocationTree methodInvocationTree, VisitorState state) {
-    ExpressionTree receiver = getReceiver(methodInvocationTree);
-    while (receiver != null && IMMUTABLE_BUILDER_METHODS.matches(receiver, state)) {
-      receiver = getReceiver(receiver);
-    }
-    return Optional.ofNullable(receiver);
+    return streamReceivers(methodInvocationTree)
+        .filter(t -> !IMMUTABLE_BUILDER_METHODS.matches(t, state))
+        .findFirst();
   }
 
   // Scans the tree for all usages of immutable list vars and determines if any usage will prevent

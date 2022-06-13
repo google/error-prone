@@ -116,7 +116,7 @@ public class ConstructorOfClassTest extends CompilerBasedAbstractTest {
     public abstract void assertDone();
   }
 
-  private Scanner classMatches(final boolean shouldMatch, final ConstructorOfClass toMatch) {
+  private Scanner classMatches(boolean shouldMatch, ConstructorOfClass toMatch) {
     ScannerTest test =
         new ScannerTest() {
           private boolean matched = false;

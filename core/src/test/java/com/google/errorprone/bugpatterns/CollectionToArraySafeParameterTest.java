@@ -15,15 +15,14 @@
  */
 package com.google.errorprone.bugpatterns;
 
-import static org.junit.Assume.assumeFalse;
-
 import com.google.errorprone.CompilationTestHelper;
-import com.google.errorprone.util.RuntimeVersion;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** @author mariasam@google.com (Maria Sam) on 6/27/17. */
+/**
+ * @author mariasam@google.com (Maria Sam) on 6/27/17.
+ */
 @RunWith(JUnit4.class)
 public class CollectionToArraySafeParameterTest {
   private final CompilationTestHelper compilationHelper =
@@ -37,22 +36,6 @@ public class CollectionToArraySafeParameterTest {
   @Test
   public void testNegativeCases() {
     compilationHelper.addSourceFile("CollectionToArraySafeParameterNegativeCases.java").doTest();
-  }
-
-  // regression test for https://github.com/google/error-prone/issues/733
-  @Test
-  public void issue733() {
-    assumeFalse(RuntimeVersion.isAtLeast11()); // toArray(null) is ambiguous in 11
-    compilationHelper
-        .addSourceLines(
-            "Test.java",
-            "import java.util.Map;",
-            "class Test {",
-            "  void f(Map<Integer, Integer> map) {",
-            "    map.keySet().toArray(null);",
-            "  }",
-            "}")
-        .doTest();
   }
 
   // regression test for b/67022899

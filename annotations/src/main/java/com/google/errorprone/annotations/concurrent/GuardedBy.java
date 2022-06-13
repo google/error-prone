@@ -28,8 +28,8 @@ import java.lang.annotation.Target;
 public @interface GuardedBy {
   /**
    * The lock that should be held, specified in the format given in <a
-   * href="https://errorprone.info/bugpattern/GuardedBy">the documentation for the corresponding Error Prone
-   * check</a>.
+   * href="https://errorprone.info/bugpattern/GuardedBy">the documentation for the corresponding
+   * Error Prone check</a>.
    */
   String value();
 }

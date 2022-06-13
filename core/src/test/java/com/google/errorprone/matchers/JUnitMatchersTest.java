@@ -31,7 +31,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** @author epmjohnston@google.com (Emily Johnston) */
+/**
+ * @author epmjohnston@google.com (Emily Johnston)
+ */
 @RunWith(JUnit4.class)
 public final class JUnitMatchersTest {
 
@@ -185,7 +187,6 @@ public final class JUnitMatchersTest {
 
   /** Helper class to surface which version of JUnit a class looks like to Error Prone. */
   @BugPattern(
-      name = "JUnitVersionMatcher",
       summary = "Matches on JUnit test classes, emits description with its JUnit version.",
       severity = SeverityLevel.WARNING)
   public static class JUnitVersionMatcher extends BugChecker implements ClassTreeMatcher {

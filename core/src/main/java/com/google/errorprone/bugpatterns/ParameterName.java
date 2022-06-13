@@ -16,6 +16,7 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.common.base.MoreObjects.firstNonNull;
 import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.common.collect.Iterables.getLast;
 import static com.google.common.collect.Streams.forEachPair;
@@ -56,7 +57,6 @@ import java.util.regex.Matcher;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
-    name = "ParameterName",
     summary =
         "Detects `/* name= */`-style comments on actual parameters where the name doesn't match the"
             + " formal parameter",
@@ -65,10 +65,6 @@ public class ParameterName extends BugChecker
     implements MethodInvocationTreeMatcher, NewClassTreeMatcher {
 
   private final ImmutableList<String> exemptPackages;
-
-  public ParameterName() {
-    this(ErrorProneFlags.empty());
-  }
 
   public ParameterName(ErrorProneFlags errorProneFlags) {
     this.exemptPackages =
@@ -258,7 +254,8 @@ public class ParameterName extends BugChecker
               Comments.getTextFromComment(comment));
       if (m.matches()) {
         SuggestedFix rewriteCommentFix =
-            rewriteComment(comment, String.format("/* %s%s */", m.group(1), m.group(2)));
+            rewriteComment(
+                comment, String.format("/* %s%s */", m.group(1), firstNonNull(m.group(2), "")));
         state.reportMatch(
             buildDescription(arg)
                 .addFix(rewriteCommentFix)

@@ -204,7 +204,7 @@ public class NullnessPropagationTransferCases2 {
     // BUG: Diagnostic contains: (Non-null)
     triggerNullnessChecker(s);
   }
-  
+
   public void classgetNamesMethods() {
     Class<?> klass = this.getClass();
     // BUG: Diagnostic contains: (Non-null)

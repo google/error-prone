@@ -34,9 +34,10 @@ import com.sun.source.tree.MethodInvocationTree;
 import com.sun.tools.javac.code.Attribute.RetentionPolicy;
 import com.sun.tools.javac.code.Type;
 
-/** @author scottjohnson@google.com (Scott Johnson) */
+/**
+ * @author scottjohnson@google.com (Scott Johnson)
+ */
 @BugPattern(
-    name = "NonRuntimeAnnotation",
     summary = "Calling getAnnotation on an annotation that is not retained at runtime.",
     severity = ERROR)
 public class NonRuntimeAnnotation extends BugChecker implements MethodInvocationTreeMatcher {

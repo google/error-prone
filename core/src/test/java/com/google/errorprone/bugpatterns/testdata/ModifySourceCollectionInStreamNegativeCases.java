@@ -48,7 +48,7 @@ public class ModifySourceCollectionInStreamNegativeCases {
         .forEach(cases[1].mutableValues::add);
   }
 
-  private List<Integer> mutateStreamSourceLambadaExperssion() {
+  private List<Integer> mutateStreamSourceLambdaExpression() {
 
     List<Integer> localCopy = new ArrayList<>();
 

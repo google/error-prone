@@ -450,9 +450,7 @@ public class InlinerTest {
             "  protected final void before(int value) {",
             "    after(Duration.ofMillis(value));",
             "  }",
-            // TODO(b/187169365): Validator currently doesn't like inlining non-public members.
-            //   Consider allowing protected members if the method being inlined is also protected?
-            "  public void after(Duration value) {",
+            "  protected void after(Duration value) {",
             "  }",
             "}")
         .expectUnchanged()
@@ -492,9 +490,7 @@ public class InlinerTest {
             "  protected Parent(int value) {",
             "    this(Duration.ofMillis(value));",
             "  }",
-            // TODO(b/187169365): Validator currently doesn't like inlining non-public members.
-            //   Consider allowing protected members if the method being inlined is also protected?
-            "  public Parent(Duration value) {",
+            "  protected Parent(Duration value) {",
             "  }",
             "}")
         .expectUnchanged()
@@ -852,8 +848,44 @@ public class InlinerTest {
   }
 
   @Test
-  public void testReplaceWithJustParameter() {
+  public void testVarargsWithPrecedingElements() {
     refactoringTestHelper
+        .addInputLines(
+            "Client.java",
+            "import com.google.errorprone.annotations.InlineMe;",
+            "public final class Client {",
+            "  @Deprecated",
+            "  @InlineMe(replacement = \"this.after(first, inputs)\")",
+            "  public void before(int first, int... inputs) {",
+            "    after(first, inputs);",
+            "  }",
+            "  public void after(int first, int... inputs) {}",
+            "}")
+        .expectUnchanged()
+        .addInputLines(
+            "Caller.java",
+            "public final class Caller {",
+            "  public void doTest() {",
+            "    Client client = new Client();",
+            "    client.before(1);",
+            "    client.before(1, 2, 3);",
+            "  }",
+            "}")
+        .addOutputLines(
+            "out/Caller.java",
+            "public final class Caller {",
+            "  public void doTest() {",
+            "    Client client = new Client();",
+            "    client.after(1);",
+            "    client.after(1, 2, 3);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void testReplaceWithJustParameter() {
+    bugCheckerWithCheckFixCompiles()
         .allowBreakingChanges()
         .addInputLines(
             "Client.java",
@@ -890,7 +922,7 @@ public class InlinerTest {
 
   @Test
   public void testOrderOfOperations() {
-    refactoringTestHelper
+    bugCheckerWithCheckFixCompiles()
         .allowBreakingChanges()
         .addInputLines(
             "Client.java",
@@ -925,7 +957,7 @@ public class InlinerTest {
 
   @Test
   public void testOrderOfOperationsWithParamAddition() {
-    refactoringTestHelper
+    bugCheckerWithCheckFixCompiles()
         .allowBreakingChanges()
         .addInputLines(
             "Client.java",
@@ -960,7 +992,7 @@ public class InlinerTest {
 
   @Test
   public void testOrderOfOperationsWithTrailingOperand() {
-    refactoringTestHelper
+    bugCheckerWithCheckFixCompiles()
         .allowBreakingChanges()
         .addInputLines(
             "Client.java",
@@ -988,100 +1020,6 @@ public class InlinerTest {
             "    Client client = new Client();",
             // TODO(kak): hmm, why don't we inline this?
             "    int x = client.multiply(5 + 3, 10) * 5;",
-            "  }",
-            "}")
-        .doTest();
-  }
-
-  @Test
-  public void testSublist() {
-    refactoringTestHelper
-        .setArgs("-XepOpt:" + InlinabilityResult.DISALLOW_ARGUMENT_REUSE + "=false")
-        .addInputLines(
-            "Client.java",
-            "import com.google.errorprone.annotations.InlineMe;",
-            "import java.util.List;",
-            "public final class Client {",
-            "  @Deprecated",
-            "  @InlineMe(replacement = \"list.subList(list.size() - n, list.size())\")",
-            "  public List<String> last(List<String> list, int n) {",
-            "    return list.subList(list.size() - n, list.size());",
-            "  }",
-            "}")
-        .expectUnchanged()
-        .addInputLines(
-            "Caller.java",
-            "import java.util.ArrayList;",
-            "import java.util.List;",
-            "public final class Caller {",
-            "  public void doTest() {",
-            "    List<String> list = new ArrayList<>();",
-            "    list.add(\"hi\");",
-            "    Client client = new Client();",
-            "    List<String> result = client.last(list, 1);",
-            "  }",
-            "}")
-        .addOutputLines(
-            "out/Caller.java",
-            "import java.util.ArrayList;",
-            "import java.util.List;",
-            "public final class Caller {",
-            "  public void doTest() {",
-            "    List<String> list = new ArrayList<>();",
-            "    list.add(\"hi\");",
-            "    Client client = new Client();",
-            "    List<String> result = list.subList(list.size() - 1, list.size());",
-            "  }",
-            "}")
-        .doTest();
-  }
-
-  @Test
-  public void testSublistPassingMethod() {
-    refactoringTestHelper
-        .setArgs("-XepOpt:" + InlinabilityResult.DISALLOW_ARGUMENT_REUSE + "=false")
-        .addInputLines(
-            "Client.java",
-            "import com.google.errorprone.annotations.InlineMe;",
-            "import java.util.List;",
-            "public final class Client {",
-            "  @Deprecated",
-            "  @InlineMe(replacement = \"list.subList(list.size() - n, list.size())\")",
-            "  public List<String> last(List<String> list, int n) {",
-            "    return list.subList(list.size() - n, list.size());",
-            "  }",
-            "}")
-        .expectUnchanged()
-        .addInputLines(
-            "Caller.java",
-            "import java.util.ArrayList;",
-            "import java.util.List;",
-            "public final class Caller {",
-            "  public void doTest() {",
-            "    Client client = new Client();",
-            "    List<String> result = client.last(getList(), 1);",
-            "  }",
-            "  public List<String> getList() {",
-            "    List<String> list = new ArrayList<>();",
-            "    list.add(\"hi\");",
-            "    return list;",
-            "  }",
-            "}")
-        .addOutputLines(
-            "out/Caller.java",
-            "import java.util.ArrayList;",
-            "import java.util.List;",
-            "public final class Caller {",
-            "  public void doTest() {",
-            "    Client client = new Client();",
-            // TODO(b/188184784): this is a bug, as there's no guarantee that getList() returns the
-            // same list every time (or it may be expensive!)
-            "    List<String> result = getList().subList(getList().size() - 1, getList().size());",
-            "  }",
-            "  public List<String> getList() {",
-            "    List<String> list = new ArrayList<>();",
-            "    list.add(\"hi\");",
-            "    return list;",
             "  }",
             "}")
         .doTest();
@@ -1123,8 +1061,93 @@ public class InlinerTest {
         .doTest();
   }
 
-  private BugCheckerRefactoringTestHelper buildBugCheckerWithPrefixFlag(String prefix) {
+  @Test
+  public void testTrailingSemicolon() {
+    refactoringTestHelper
+        .addInputLines(
+            "Client.java",
+            "import com.google.errorprone.annotations.InlineMe;",
+            "public final class Client {",
+            "  @InlineMe(replacement = \"this.after(/* foo= */ isAdmin);;;;\")",
+            "  @Deprecated",
+            "  public boolean before(boolean isAdmin) {",
+            "    return after(/* foo= */ isAdmin);",
+            "  }",
+            "  public boolean after(boolean isAdmin) { return isAdmin; }",
+            "}")
+        .expectUnchanged()
+        .addInputLines(
+            "Caller.java",
+            "public final class Caller {",
+            "  public void doTest() {",
+            "    Client client = new Client();",
+            "    boolean x = (client.before(false) || true);",
+            "  }",
+            "}")
+        .addOutputLines(
+            "out/Caller.java",
+            "public final class Caller {",
+            "  public void doTest() {",
+            "    Client client = new Client();",
+            "    boolean x = (client.after(/* false = */ false) || true);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void testCustomInlineMe() {
+    refactoringTestHelper
+        .addInputLines(
+            "InlineMe.java", //
+            "package bespoke;",
+            "public @interface InlineMe {",
+            "  String replacement();",
+            "  String[] imports() default {};",
+            "  String[] staticImports() default {};",
+            "}")
+        .expectUnchanged()
+        .addInputLines(
+            "Client.java",
+            "import bespoke.InlineMe;",
+            "public final class Client {",
+            "  @Deprecated",
+            "  @InlineMe(replacement = \"this.foo2(value)\")",
+            "  public void foo1(String value) {",
+            "    foo2(value);",
+            "  }",
+            "  public void foo2(String value) {",
+            "  }",
+            "}")
+        .expectUnchanged()
+        .addInputLines(
+            "Caller.java",
+            "public final class Caller {",
+            "  public void doTest() {",
+            "    Client client = new Client();",
+            "    client.foo1(\"frobber!\");",
+            "    client.foo1(\"don't change this!\");",
+            "  }",
+            "}")
+        .addOutputLines(
+            "out/Caller.java",
+            "public final class Caller {",
+            "  public void doTest() {",
+            "    Client client = new Client();",
+            "    client.foo2(\"frobber!\");",
+            "    client.foo2(\"don't change this!\");",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  private BugCheckerRefactoringTestHelper bugCheckerWithPrefixFlag(String prefix) {
     return BugCheckerRefactoringTestHelper.newInstance(Inliner.class, getClass())
         .setArgs("-XepOpt:" + PREFIX_FLAG + "=" + prefix);
+  }
+
+  private BugCheckerRefactoringTestHelper bugCheckerWithCheckFixCompiles() {
+    return BugCheckerRefactoringTestHelper.newInstance(Inliner.class, getClass())
+        .setArgs("-XepOpt:InlineMe:CheckFixCompiles=true");
   }
 }

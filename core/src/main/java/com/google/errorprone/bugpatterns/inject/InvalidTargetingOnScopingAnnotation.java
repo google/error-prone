@@ -50,7 +50,9 @@ import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.Set;
 
-/** @author sgoldfeder@google.com (Steven Goldfeder) */
+/**
+ * @author sgoldfeder@google.com (Steven Goldfeder)
+ */
 @BugPattern(
     name = "InjectInvalidTargetingOnScopingAnnotation",
     summary = "A scoping annotation's Target should include TYPE and METHOD.",

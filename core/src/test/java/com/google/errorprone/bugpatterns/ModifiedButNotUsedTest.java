@@ -201,7 +201,6 @@ public final class ModifiedButNotUsedTest {
   }
 
   @Test
-  
   public void proto() {
     compilationHelper
         .addSourceLines(
@@ -225,7 +224,6 @@ public final class ModifiedButNotUsedTest {
   }
 
   @Test
-  
   public void protoSideEffects() {
     refactoringHelper
         .addInputLines(
@@ -256,7 +254,6 @@ public final class ModifiedButNotUsedTest {
   }
 
   @Test
-  
   public void protoNegative() {
     compilationHelper
         .addSourceLines(
@@ -292,7 +289,6 @@ public final class ModifiedButNotUsedTest {
   }
 
   @Test
-  
   public void protoUnusedExpression() {
     compilationHelper
         .addSourceLines(
@@ -311,7 +307,6 @@ public final class ModifiedButNotUsedTest {
   }
 
   @Test
-  
   public void protoUnusedButNotModified() {
     compilationHelper
         .addSourceLines(
@@ -328,7 +323,6 @@ public final class ModifiedButNotUsedTest {
   }
 
   @Test
-  
   public void protoUnusedExpressionViaBuilderGetter() {
     compilationHelper
         .addSourceLines(

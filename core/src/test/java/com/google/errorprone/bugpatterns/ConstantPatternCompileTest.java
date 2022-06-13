@@ -253,4 +253,19 @@ public class ConstantPatternCompileTest {
 
   // Don't convert String constants to patterns if they're used anywhere other than a single
   // Pattern.compile call.
+
+  @Test
+  public void testOnlyCode_noFinding() {
+    compilationHelper
+        .addSourceLines(
+            "in/Test.java",
+            "import java.util.regex.Pattern;",
+            "class Test {",
+            "  public static void test() {",
+            "    Pattern pattern = Pattern.compile(\".*\");",
+            "  }",
+            "}")
+        .setArgs("-XepCompilingTestOnlyCode")
+        .doTest();
+  }
 }

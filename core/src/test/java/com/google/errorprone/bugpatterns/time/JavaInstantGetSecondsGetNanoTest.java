@@ -15,10 +15,7 @@
  */
 package com.google.errorprone.bugpatterns.time;
 
-import static org.junit.Assume.assumeFalse;
-
 import com.google.errorprone.CompilationTestHelper;
-import com.google.errorprone.util.RuntimeVersion;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -323,22 +320,6 @@ public class JavaInstantGetSecondsGetNanoTest {
             "    // BUG: Diagnostic contains: JavaInstantGetSecondsGetNano",
             "    Runnable r = () -> INSTANT.getNano();",
             "    long seconds = INSTANT.getEpochSecond();",
-            "  }",
-            "}")
-        .doTest();
-  }
-
-  @Test
-  public void testByJavaTime() {
-    assumeFalse(RuntimeVersion.isAtLeast9());
-    compilationHelper
-        .addSourceLines(
-            "test/TestCase.java",
-            "package java.time;",
-            "public class TestCase {",
-            "  private static final Instant INSTANT = Instant.EPOCH;",
-            "  public static void foo() {",
-            "    int nanos = INSTANT.getNano();",
             "  }",
             "}")
         .doTest();

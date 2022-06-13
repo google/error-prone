@@ -42,10 +42,7 @@ import javax.lang.model.element.ElementKind;
  *
  * @author andrewrice@google.com (Andrew Rice)
  */
-@BugPattern(
-    name = "AssertEqualsArgumentOrderChecker",
-    summary = "Arguments are swapped in assertEquals-like call",
-    severity = WARNING)
+@BugPattern(summary = "Arguments are swapped in assertEquals-like call", severity = WARNING)
 public class AssertEqualsArgumentOrderChecker extends BugChecker
     implements MethodInvocationTreeMatcher {
 
@@ -64,9 +61,6 @@ public class AssertEqualsArgumentOrderChecker extends BugChecker
     }
 
     MethodSymbol symbol = ASTHelpers.getSymbol(tree);
-    if (symbol == null) {
-      return Description.NO_MATCH;
-    }
 
     InvocationInfo invocationInfo = InvocationInfo.createFromMethodInvocation(tree, symbol, state);
 

@@ -35,7 +35,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-/** @author cushon@google.com (Liam Miller-Cushon) */
+/**
+ * @author cushon@google.com (Liam Miller-Cushon)
+ */
 public final class GuardedByUtils {
   public static ImmutableSet<String> getGuardValues(Symbol sym) {
     return getAnnotationValueAsStrings(sym);
@@ -75,7 +77,7 @@ public final class GuardedByUtils {
     JCTree.JCExpression exp;
     try {
       exp = parser.parseExpression();
-    } catch (Throwable e) {
+    } catch (RuntimeException e) {
       throw new IllegalGuardedBy(e.getMessage());
     }
     int len = (parser.getEndPos(exp) - exp.getStartPosition());

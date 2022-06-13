@@ -86,4 +86,14 @@ public class JavaLangClashTest {
             "public class Compiler {}")
         .doTest();
   }
+
+  @Test
+  public void negative_module() {
+    testHelper
+        .addSourceLines(
+            "Module.java", //
+            "package p;",
+            "public class Module {}")
+        .doTest();
+  }
 }

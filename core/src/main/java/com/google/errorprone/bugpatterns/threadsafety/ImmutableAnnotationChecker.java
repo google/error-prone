@@ -55,16 +55,9 @@ public class ImmutableAnnotationChecker extends BugChecker implements ClassTreeM
           + " @com.google.errorprone.annotations.Immutable is unnecessary";
 
   private static final ImmutableSet<String> IGNORED_PROCESSORS =
-      ImmutableSet.of(
-          "com.google.auto.value.processor.AutoAnnotationProcessor"
-          );
+      ImmutableSet.of("com.google.auto.value.processor.AutoAnnotationProcessor");
 
   private final WellKnownMutability wellKnownMutability;
-
-  @Deprecated // Used reflectively, but you should pass in ErrorProneFlags to get custom mutability
-  public ImmutableAnnotationChecker() {
-    this(ErrorProneFlags.empty());
-  }
 
   public ImmutableAnnotationChecker(ErrorProneFlags flags) {
     this.wellKnownMutability = WellKnownMutability.fromFlags(flags);
@@ -73,9 +66,7 @@ public class ImmutableAnnotationChecker extends BugChecker implements ClassTreeM
   @Override
   public Description matchClass(ClassTree tree, VisitorState state) {
     ClassSymbol symbol = getSymbol(tree);
-    if (symbol == null
-        || symbol.isAnnotationType()
-        || !WellKnownMutability.isAnnotation(state, symbol.type)) {
+    if (symbol.isAnnotationType() || !WellKnownMutability.isAnnotation(state, symbol.type)) {
       return NO_MATCH;
     }
     if (!Collections.disjoint(getGeneratedBy(symbol, state), IGNORED_PROCESSORS)) {

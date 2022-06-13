@@ -57,8 +57,8 @@ import java.lang.annotation.Target;
  * subtle reasoning about safe data races and deep knowledge of the Java Memory Model.
  *
  * <p>Use of this annotation is validated by <a
- * href="https://errorprone.info/bugpattern/Immutable">Error Prone's immutability analysis</a>, which
- * ensures that all {@code @Immutable}-annotated classes are deeply immutable according to the
+ * href="https://errorprone.info/bugpattern/Immutable">Error Prone's immutability analysis</a>,
+ * which ensures that all {@code @Immutable}-annotated classes are deeply immutable according to the
  * conservative definition above. Non-final classes may be annotated with {@code @Immutable}, and
  * any code compiled by Error Prone will be checked to ensure that no mutable subtypes of
  * {@code @Immutable}-annotated classes exist.

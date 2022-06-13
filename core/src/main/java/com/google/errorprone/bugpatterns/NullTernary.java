@@ -29,7 +29,6 @@ import com.sun.source.tree.Tree.Kind;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
-    name = "NullTernary",
     summary =
         "This conditional expression may evaluate to null, which will result in an NPE when the"
             + " result is unboxed.",

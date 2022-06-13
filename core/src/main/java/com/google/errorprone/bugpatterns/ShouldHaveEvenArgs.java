@@ -39,7 +39,6 @@ import java.util.List;
  * @author bhagwani@google.com (Sumit Bhagwani)
  */
 @BugPattern(
-    name = "ShouldHaveEvenArgs",
     summary = "This method must be called with an even number of arguments.",
     severity = ERROR)
 public class ShouldHaveEvenArgs extends BugChecker implements MethodInvocationTreeMatcher {
@@ -65,7 +64,7 @@ public class ShouldHaveEvenArgs extends BugChecker implements MethodInvocationTr
     List<? extends ExpressionTree> arguments = methodInvocationTree.getArguments();
 
     MethodSymbol methodSymbol = getSymbol(methodInvocationTree);
-    if (methodSymbol == null || !methodSymbol.isVarArgs()) {
+    if (!methodSymbol.isVarArgs()) {
       return Description.NO_MATCH;
     }
     Type varArgsArrayType = getLast(methodSymbol.params()).type;

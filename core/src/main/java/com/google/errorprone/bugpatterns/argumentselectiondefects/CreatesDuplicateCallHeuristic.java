@@ -73,7 +73,7 @@ class CreatesDuplicateCallHeuristic implements Heuristic {
    * @param state is the current visitor state
    * @return a list containing argument lists for each call found
    */
-  private static List<List<Parameter>> findArgumentsForOtherInstances(
+  private static ImmutableList<List<Parameter>> findArgumentsForOtherInstances(
       MethodSymbol calledMethod, Tree currentNode, VisitorState state) {
 
     Tree enclosingNode = ASTHelpers.findEnclosingNode(state.getPath(), MethodTree.class);
@@ -101,15 +101,13 @@ class CreatesDuplicateCallHeuristic implements Heuristic {
       @Override
       public Void visitMethod(MethodTree methodTree, Void unused) {
         MethodSymbol methodSymbol = ASTHelpers.getSymbol(methodTree);
-        if (methodSymbol != null) {
-          // if the method declared here is the one we are calling then add it
-          addToResult(methodSymbol, methodTree);
+        // if the method declared here is the one we are calling then add it
+        addToResult(methodSymbol, methodTree);
 
-          // if any supermethod of the one declared here is the one we are calling then add it
-          for (MethodSymbol superSymbol :
-              ASTHelpers.findSuperMethods(methodSymbol, state.getTypes())) {
-            addToResult(superSymbol, methodTree);
-          }
+        // if any supermethod of the one declared here is the one we are calling then add it
+        for (MethodSymbol superSymbol :
+            ASTHelpers.findSuperMethods(methodSymbol, state.getTypes())) {
+          addToResult(superSymbol, methodTree);
         }
         return super.visitMethod(methodTree, unused);
       }

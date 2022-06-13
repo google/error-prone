@@ -19,7 +19,6 @@ package com.google.errorprone.bugpatterns;
 import com.google.auto.value.processor.AutoValueProcessor;
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.CompilationTestHelper;
-import com.google.errorprone.util.RuntimeVersion;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -68,9 +67,7 @@ public class ExtendsAutoValueTest {
         .addSourceLines(
             "TestClass.java",
             "import com.google.auto.value.AutoValue;",
-            (RuntimeVersion.isAtLeast9()
-                ? "import javax.annotation.processing.Generated;"
-                : "import javax.annotation.Generated;"),
+            "import javax.annotation.processing.Generated;",
             "@AutoValue class AutoClass {}",
             "@Generated(value=\"hi\") public class TestClass extends AutoClass {}")
         .doTest();
@@ -175,9 +172,7 @@ public class ExtendsAutoValueTest {
         .addSourceLines(
             "TestClass.java",
             "import com.google.auto.value.AutoValue;",
-            (RuntimeVersion.isAtLeast9()
-                ? "import javax.annotation.processing.Generated;"
-                : "import javax.annotation.Generated;"),
+            "import javax.annotation.processing.Generated;",
             "@AutoValue class AutoClass {}",
             "",
             "@Generated(\"generator\")",

@@ -54,9 +54,10 @@ import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Type.UnionClassType;
 import com.sun.tools.javac.code.Types;
 
-/** @author epmjohnston@google.com */
+/**
+ * @author epmjohnston@google.com
+ */
 @BugPattern(
-    name = "WakelockReleasedDangerously",
     tags = StandardTags.FRAGILE_CODE,
     summary =
         "A wakelock acquired with a timeout may be released by the system before calling"
@@ -203,9 +204,7 @@ public class WakelockReleasedDangerously extends BugChecker implements MethodInv
           public Void visitMethodInvocation(MethodInvocationTree callTree, Void unused) {
             if (sym.equals(getSymbol(getReceiver(callTree)))) {
               MethodSymbol methodSymbol = getSymbol(callTree);
-              if (methodSymbol != null) {
-                methodMap.put(methodSymbol.getSimpleName().toString(), callTree);
-              }
+              methodMap.put(methodSymbol.getSimpleName().toString(), callTree);
             }
             return super.visitMethodInvocation(callTree, unused);
           }

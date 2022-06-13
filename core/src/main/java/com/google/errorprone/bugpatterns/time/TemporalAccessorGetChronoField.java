@@ -33,7 +33,6 @@ import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
-import com.sun.tools.javac.util.List;
 import com.sun.tools.javac.util.Name;
 import java.time.DayOfWeek;
 import java.time.Instant;
@@ -60,6 +59,7 @@ import java.time.chrono.ThaiBuddhistDate;
 import java.time.chrono.ThaiBuddhistEra;
 import java.time.temporal.ChronoField;
 import java.time.temporal.TemporalAccessor;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -67,7 +67,6 @@ import java.util.Optional;
  * throw an {@code UnsupportedTemporalTypeException}.
  */
 @BugPattern(
-    name = "TemporalAccessorGetChronoField",
     summary = "TemporalAccessor.get() only works for certain values of ChronoField.",
     explanation =
         "TemporalAccessor.get(ChronoField) only works for certain values of ChronoField. E.g., "

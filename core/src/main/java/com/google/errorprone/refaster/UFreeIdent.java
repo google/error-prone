@@ -69,7 +69,7 @@ public abstract class UFreeIdent extends UIdent {
   }
 
   @Override
-  protected Choice<Unifier> defaultAction(Tree target, final Unifier unifier) {
+  protected Choice<Unifier> defaultAction(Tree target, Unifier unifier) {
     if (target instanceof JCExpression) {
       JCExpression expression = (JCExpression) target;
 

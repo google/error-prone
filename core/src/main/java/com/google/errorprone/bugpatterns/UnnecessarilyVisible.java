@@ -31,6 +31,7 @@ import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
+import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.suppliers.Supplier;
 import com.sun.source.tree.MethodTree;
@@ -42,7 +43,6 @@ import javax.lang.model.element.Modifier;
 
 /** Suggests restricting the visibility of methods which should only be called by a framework. */
 @BugPattern(
-    name = "UnnecessarilyVisible",
     altNames = "RestrictInjectVisibility",
     summary =
         "Some methods (such as those annotated with @Inject or @Provides) are only intended to be"
@@ -94,7 +94,9 @@ public final class UnnecessarilyVisible extends BugChecker implements MethodTree
       return NO_MATCH;
     }
     return buildDescription(tree)
-        .addFix(removeModifiers(tree.getModifiers(), state, badModifiers))
+        .addFix(
+            removeModifiers(tree.getModifiers(), state, badModifiers)
+                .orElse(SuggestedFix.emptyFix()))
         .setMessage(
             message()
                 + (annotationsAmong(symbol, INJECT_ANNOTATIONS.get(state), state).isEmpty()

@@ -36,7 +36,6 @@ import java.util.List;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
-    name = "IdentityHashMapBoxing",
     summary =
         "Using IdentityHashMap with a boxed type as the key is risky since boxing may produce"
             + " distinct instances",

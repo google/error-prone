@@ -34,7 +34,6 @@ import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.Tree.Kind;
 
 @BugPattern(
-    name = "ProtoStringFieldReferenceEquality",
     severity = ERROR,
     summary = "Comparing protobuf fields of type String using reference equality")
 public class ProtoStringFieldReferenceEquality extends BugChecker implements BinaryTreeMatcher {

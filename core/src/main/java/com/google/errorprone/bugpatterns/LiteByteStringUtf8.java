@@ -29,9 +29,10 @@ import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.sun.source.tree.MethodInvocationTree;
 
-/** @author glorioso@google.com (Nick Glorioso) */
+/**
+ * @author glorioso@google.com (Nick Glorioso)
+ */
 @BugPattern(
-    name = "LiteByteStringUtf8",
     summary =
         "This pattern will silently corrupt certain byte sequences from the serialized protocol "
             + "message. Use ByteString or byte[] directly",

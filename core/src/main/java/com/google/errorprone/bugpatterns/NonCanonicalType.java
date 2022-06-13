@@ -38,7 +38,6 @@ import java.util.regex.Pattern;
 
 /** Flags types being referred to by their non-canonical name. */
 @BugPattern(
-    name = "NonCanonicalType",
     summary = "This type is referred to by a non-canonical name, which may be misleading.",
     severity = WARNING)
 public final class NonCanonicalType extends BugChecker implements MemberSelectTreeMatcher {

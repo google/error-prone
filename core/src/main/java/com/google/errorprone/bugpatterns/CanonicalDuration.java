@@ -36,6 +36,7 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
+import com.sun.source.tree.BinaryTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.LiteralTree;
 import com.sun.source.tree.MethodInvocationTree;
@@ -54,7 +55,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
-    name = "CanonicalDuration",
     summary = "Duration can be expressed more clearly with different units",
     severity = WARNING)
 public class CanonicalDuration extends BugChecker implements MethodInvocationTreeMatcher {
@@ -65,7 +65,7 @@ public class CanonicalDuration extends BugChecker implements MethodInvocationTre
 
     private final String durationFullyQualifiedName;
 
-    private Api(String durationFullyQualifiedName) {
+    Api(String durationFullyQualifiedName) {
       this.durationFullyQualifiedName = durationFullyQualifiedName;
     }
 
@@ -92,7 +92,7 @@ public class CanonicalDuration extends BugChecker implements MethodInvocationTre
           .put(Api.JODA, ChronoUnit.HOURS, "standardHours")
           .put(Api.JODA, ChronoUnit.MINUTES, "standardMinutes")
           .put(Api.JODA, ChronoUnit.SECONDS, "standardSeconds")
-          .build();
+          .buildOrThrow();
 
   private static final ImmutableMap<String, TemporalUnit> METHOD_NAME_TO_UNIT =
       FACTORIES.rowMap().values().stream()
@@ -107,7 +107,7 @@ public class CanonicalDuration extends BugChecker implements MethodInvocationTre
           .put(ChronoUnit.SECONDS, Converter.from(Duration::getSeconds, Duration::ofSeconds))
           .put(ChronoUnit.MILLIS, Converter.from(Duration::toMillis, Duration::ofMillis))
           .put(ChronoUnit.NANOS, Converter.from(Duration::toNanos, Duration::ofNanos))
-          .build();
+          .buildOrThrow();
 
   // Represent a single day/hour/minute as hours/minutes/seconds is sometimes used to allow a block
   // of durations to have consistent units.
@@ -141,7 +141,7 @@ public class CanonicalDuration extends BugChecker implements MethodInvocationTre
     List<Number> constValues =
         allInvocationsInParentExpression.stream()
             .map(t -> getOnlyElement(t.getArguments()))
-            .map(arg -> (arg instanceof LiteralTree) ? arg : null)
+            .map(arg -> entirelyLiterals(arg) ? arg : null)
             .map(arg -> constValue(arg, Number.class))
             .collect(toList());
 
@@ -214,6 +214,20 @@ public class CanonicalDuration extends BugChecker implements MethodInvocationTre
       }
     }
     return NO_MATCH;
+  }
+
+  private static boolean entirelyLiterals(ExpressionTree arg) {
+    AtomicBoolean anyNonLiterals = new AtomicBoolean();
+    new TreeScanner<Void, Void>() {
+      @Override
+      public Void scan(Tree tree, Void unused) {
+        if (!(tree instanceof LiteralTree) && !(tree instanceof BinaryTree)) {
+          anyNonLiterals.set(true);
+        }
+        return super.scan(tree, null);
+      }
+    }.scan(arg, null);
+    return !anyNonLiterals.get();
   }
 
   private Description handleAllZeros(

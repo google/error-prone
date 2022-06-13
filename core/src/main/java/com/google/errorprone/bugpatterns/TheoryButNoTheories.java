@@ -45,7 +45,6 @@ import java.util.stream.Stream;
 
 /** Flags uses of {@code @Theory} (and others) in non-{@code Theories}-run tests. */
 @BugPattern(
-    name = "TheoryButNoTheories",
     summary =
         "This test has members annotated with @Theory, @DataPoint, or @DataPoints but is using the"
             + " default JUnit4 runner.",

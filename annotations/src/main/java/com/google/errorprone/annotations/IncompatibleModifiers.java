@@ -44,7 +44,9 @@ import java.lang.annotation.Target;
 @Target(ElementType.ANNOTATION_TYPE)
 public @interface IncompatibleModifiers {
 
-  /** @deprecated use {@link #modifier} instead */
+  /**
+   * @deprecated use {@link #modifier} instead
+   */
   @Deprecated
   javax.lang.model.element.Modifier[] value() default {};
 

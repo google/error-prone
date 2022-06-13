@@ -33,11 +33,10 @@ import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.NewClassTree;
 import com.sun.tools.javac.code.Type;
-import com.sun.tools.javac.util.List;
+import java.util.List;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
-    name = "Incomparable",
     summary = "Types contained in sorted collections must implement Comparable.",
     severity = ERROR)
 public class Incomparable extends BugChecker implements NewClassTreeMatcher {

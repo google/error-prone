@@ -26,6 +26,7 @@ import static com.google.errorprone.matchers.Matchers.isSameType;
 import static com.google.errorprone.matchers.Matchers.kindIs;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
+import static com.google.errorprone.util.ASTHelpers.shouldKeep;
 
 import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableList;
@@ -68,7 +69,6 @@ import javax.lang.model.element.Modifier;
 
 /** Refactoring to suggest Immutable types for member collection that are not mutated. */
 @BugPattern(
-    name = "ImmutableMemberCollection",
     summary = "If you don't intend to mutate a member collection prefer using Immutable types.",
     severity = SUGGESTION)
 public final class ImmutableMemberCollection extends BugChecker implements ClassTreeMatcher {
@@ -116,6 +116,7 @@ public final class ImmutableMemberCollection extends BugChecker implements Class
   // TODO(ashishkedia) : Share this with ImmutableSetForContains.
   private static final Matcher<Tree> EXCLUSIONS =
       anyOf(
+          (t, s) -> shouldKeep(t),
           hasAnnotationWithSimpleName("Bind"),
           hasAnnotationWithSimpleName("Inject"));
 
@@ -125,7 +126,7 @@ public final class ImmutableMemberCollection extends BugChecker implements Class
         classTree.getMembers().stream()
             .filter(member -> PRIVATE_FINAL_VAR_MATCHER.matches(member, state))
             .filter(member -> !EXCLUSIONS.matches(member, state))
-            .filter(member -> !isSuppressed(member))
+            .filter(member -> !isSuppressed(member, state))
             .map(VariableTree.class::cast)
             .flatMap(varTree -> stream(isReplaceable(varTree, state)))
             .collect(toImmutableMap(ReplaceableVar::symbol, var -> var));

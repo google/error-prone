@@ -19,7 +19,6 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH;
 
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
-import com.google.errorprone.CompilationTestHelper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -28,9 +27,12 @@ import org.junit.runners.JUnit4;
 @RunWith(JUnit4.class)
 public class CanonicalDurationTest {
 
+  private final BugCheckerRefactoringTestHelper helper =
+      BugCheckerRefactoringTestHelper.newInstance(CanonicalDuration.class, getClass());
+
   @Test
   public void refactoringJavaTime() {
-    BugCheckerRefactoringTestHelper.newInstance(CanonicalDuration.class, getClass())
+    helper
         .addInputLines(
             "in/A.java", //
             "package a;",
@@ -66,7 +68,7 @@ public class CanonicalDurationTest {
 
   @Test
   public void refactoringJoda() {
-    BugCheckerRefactoringTestHelper.newInstance(CanonicalDuration.class, getClass())
+    helper
         .addInputLines(
             "in/A.java", //
             "package a;",
@@ -100,7 +102,7 @@ public class CanonicalDurationTest {
 
   @Test
   public void refactoringJavaTimeStaticImport() {
-    BugCheckerRefactoringTestHelper.newInstance(CanonicalDuration.class, getClass())
+    helper
         .addInputLines(
             "in/A.java", //
             "package a;",
@@ -130,7 +132,7 @@ public class CanonicalDurationTest {
 
   @Test
   public void refactoringJodaStaticImport() {
-    BugCheckerRefactoringTestHelper.newInstance(CanonicalDuration.class, getClass())
+    helper
         .addInputLines(
             "in/A.java", //
             "package a;",
@@ -159,8 +161,8 @@ public class CanonicalDurationTest {
 
   @Test
   public void ignoredMethod() {
-    CompilationTestHelper.newInstance(CanonicalDuration.class, getClass())
-        .addSourceLines(
+    helper
+        .addInputLines(
             "A.java",
             "package a;",
             "import java.time.Duration;",
@@ -174,12 +176,13 @@ public class CanonicalDurationTest {
             "    Duration.ofHours(24);",
             "  }",
             "}")
+        .expectUnchanged()
         .doTest();
   }
 
   @Test
   public void consistentWithinExpression() {
-    BugCheckerRefactoringTestHelper.newInstance(CanonicalDuration.class, getClass())
+    helper
         .addInputLines(
             "A.java",
             "package a;",
@@ -206,6 +209,29 @@ public class CanonicalDurationTest {
             "  static final List<Duration> negative = asList(ofSeconds(120), ofSeconds(121));",
             "",
             "  static final List<Duration> positive = asList(ofMinutes(2), ofMinutes(3));",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void fixConstantExpressions() {
+    helper
+        .addInputLines(
+            "A.java",
+            "package a;",
+            "import static java.time.Duration.ofSeconds;",
+            "import java.time.Duration;",
+            "public class A {",
+            "  static final Duration positive = ofSeconds(2 * 60);",
+            "}")
+        .addOutputLines(
+            "A.java",
+            "package a;",
+            "import static java.time.Duration.ofMinutes;",
+            "import static java.time.Duration.ofSeconds;",
+            "import java.time.Duration;",
+            "public class A {",
+            "  static final Duration positive = ofMinutes(2);",
             "}")
         .doTest();
   }

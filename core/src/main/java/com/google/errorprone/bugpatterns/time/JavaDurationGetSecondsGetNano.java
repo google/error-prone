@@ -37,7 +37,6 @@ import com.sun.source.tree.MethodInvocationTree;
  * @author kak@google.com (Kurt Alfred Kluever)
  */
 @BugPattern(
-    name = "JavaDurationGetSecondsGetNano",
     summary =
         "duration.getNano() only accesses the underlying nanosecond adjustment from the whole "
             + "second.",

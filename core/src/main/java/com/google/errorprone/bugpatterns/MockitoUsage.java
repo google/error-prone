@@ -34,13 +34,8 @@ import com.sun.source.tree.Tree.Kind;
 import java.util.List;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
-@BugPattern(
-    name = "MockitoUsage",
-    summary = "Missing method call for verify(mock) here",
-    severity = ERROR)
+@BugPattern(summary = "Missing method call for verify(mock) here", severity = ERROR)
 public class MockitoUsage extends BugChecker implements MethodInvocationTreeMatcher {
-
-  private static final String MESSAGE_FORMAT = "Missing method call for %s here";
 
   private static final Matcher<ExpressionTree> MOCK_METHOD =
       anyOf(
@@ -61,7 +56,7 @@ public class MockitoUsage extends BugChecker implements MethodInvocationTreeMatc
     if (state.getPath().getParentPath().getLeaf().getKind() != Tree.Kind.EXPRESSION_STATEMENT) {
       return Description.NO_MATCH;
     }
-    String message = String.format(MESSAGE_FORMAT, state.getSourceForNode(tree));
+    String message = String.format("Missing method call for %s here", state.getSourceForNode(tree));
     Description.Builder builder = buildDescription(tree).setMessage(message);
     buildFix(builder, tree, state);
     return builder.build();

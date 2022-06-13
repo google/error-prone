@@ -37,7 +37,9 @@ import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Flags;
 
-/** @author sgoldfeder@google.com (Steven Goldfeder) */
+/**
+ * @author sgoldfeder@google.com (Steven Goldfeder)
+ */
 @BugPattern(
     name = "InjectScopeAnnotationOnInterfaceOrAbstractClass",
     summary = "Scope annotation on an interface or abstract class is not allowed",
@@ -46,8 +48,8 @@ public class ScopeAnnotationOnInterfaceOrAbstractClass extends BugChecker
     implements AnnotationTreeMatcher {
 
   /**
-   * Matches annotations that are themselves annotated with with @ScopeAnnotation(Guice)
-   * or @Scope(Javax).
+   * Matches annotations that are themselves annotated with {@code @ScopeAnnotation(Guice)} or
+   * {@code @Scope(Javax)}.
    */
   private static final Matcher<AnnotationTree> SCOPE_ANNOTATION_MATCHER =
       Matchers.<AnnotationTree>anyOf(

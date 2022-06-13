@@ -16,10 +16,7 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static org.junit.Assume.assumeTrue;
-
 import com.google.errorprone.CompilationTestHelper;
-import com.google.errorprone.util.RuntimeVersion;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -50,9 +47,7 @@ public class DefaultPackageTest {
     compilationHelper
         .addSourceLines(
             "Test.java", //
-            (RuntimeVersion.isAtLeast9()
-                ? "import javax.annotation.processing.Generated;"
-                : "import javax.annotation.Generated;"),
+            "import javax.annotation.processing.Generated;",
             "@Generated(\"generator\")",
             "class Test {",
             "}")
@@ -94,7 +89,6 @@ public class DefaultPackageTest {
 
   @Test
   public void moduleInfo() {
-    assumeTrue(RuntimeVersion.isAtLeast9());
 
     compilationHelper
         .addSourceLines(

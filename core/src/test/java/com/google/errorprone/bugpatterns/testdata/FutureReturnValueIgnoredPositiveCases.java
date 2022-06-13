@@ -195,7 +195,6 @@ public class FutureReturnValueIgnoredPositiveCases {
             runnable -> runnable.run()));
 
     ListenableFuture<Object> done =
-        // BUG: Diagnostic contains: nested type
         transform(
             // BUG: Diagnostic contains: nested type
             transform(

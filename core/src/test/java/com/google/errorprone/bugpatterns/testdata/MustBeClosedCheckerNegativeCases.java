@@ -118,4 +118,24 @@ public class MustBeClosedCheckerNegativeCases {
       super(0);
     }
   }
+
+  interface ResourceFactory {
+    @MustBeClosed
+    MustBeClosedAnnotatedConstructor getResource();
+  }
+
+  void consumeCloseable(ResourceFactory factory) {
+    try (Closeable c = factory.getResource()) {}
+  }
+
+  void expressionLambdaReturningCloseable() {
+    consumeCloseable(() -> new MustBeClosedAnnotatedConstructor());
+  }
+
+  void statementLambdaReturningCloseable() {
+    consumeCloseable(
+        () -> {
+          return new MustBeClosedAnnotatedConstructor();
+        });
+  }
 }

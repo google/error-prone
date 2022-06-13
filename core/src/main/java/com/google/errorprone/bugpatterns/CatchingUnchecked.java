@@ -42,7 +42,6 @@ import javax.annotation.Nullable;
  * Flags code which catches {@link RuntimeException}s under the guise of catching {@link Exception}.
  */
 @BugPattern(
-    name = "CatchingUnchecked",
     summary =
         "This catch block catches `Exception`, but can only catch unchecked exceptions. Consider"
             + " catching RuntimeException (or something more specific) instead so it is more"

@@ -19,6 +19,7 @@ package com.google.errorprone.bugpatterns;
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
+import static com.google.errorprone.util.ASTHelpers.enclosingPackage;
 import static com.google.errorprone.util.ASTHelpers.findSuperMethod;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
@@ -42,6 +43,7 @@ import com.sun.source.util.SimpleTreeVisitor;
 import com.sun.tools.javac.api.JavacTrees;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
+import com.sun.tools.javac.code.Symbol.VarSymbol;
 import java.util.Objects;
 import java.util.Optional;
 import javax.annotation.Nullable;
@@ -49,7 +51,6 @@ import javax.lang.model.element.Modifier;
 
 /** Removes overrides which purely pass through to the method in the super class. */
 @BugPattern(
-    name = "RedundantOverride",
     summary = "This overriding method is redundant, and can be removed.",
     severity = WARNING)
 public final class RedundantOverride extends BugChecker implements MethodTreeMatcher {
@@ -57,9 +58,6 @@ public final class RedundantOverride extends BugChecker implements MethodTreeMat
   @Override
   public Description matchMethod(MethodTree tree, VisitorState state) {
     MethodSymbol methodSymbol = getSymbol(tree);
-    if (methodSymbol == null) {
-      return NO_MATCH;
-    }
     Optional<MethodSymbol> maybeSuperMethod = findSuperMethod(methodSymbol, state.getTypes());
     if (!maybeSuperMethod.isPresent()) {
       return NO_MATCH;
@@ -96,7 +94,7 @@ public final class RedundantOverride extends BugChecker implements MethodTreeMat
     }
     // Overriding a protected member in another package broadens the visibility to the new package.
     if (methodSymbol.getModifiers().contains(Modifier.PROTECTED)
-        && !Objects.equals(superMethod.packge(), methodSymbol.packge())) {
+        && !Objects.equals(enclosingPackage(superMethod), enclosingPackage(methodSymbol))) {
       return NO_MATCH;
     }
     // Exempt any change in annotations (aside from @Override).
@@ -108,12 +106,18 @@ public final class RedundantOverride extends BugChecker implements MethodTreeMat
         .isEmpty()) {
       return NO_MATCH;
     }
+    // we're matching parameter by parameter.
     for (int i = 0; i < tree.getParameters().size(); ++i) {
       if (!(methodInvocationTree.getArguments().get(i) instanceof IdentifierTree)) {
         return NO_MATCH;
       }
-      if (!getSymbol(tree.getParameters().get(i))
-          .equals(getSymbol(methodInvocationTree.getArguments().get(i)))) {
+      VarSymbol varSymbol = getSymbol(tree.getParameters().get(i));
+      if (!varSymbol.equals(getSymbol(methodInvocationTree.getArguments().get(i)))) {
+        return NO_MATCH;
+      }
+      ImmutableSet<Symbol> paramAnnotations = getAnnotations(varSymbol);
+      ImmutableSet<Symbol> superParamAnnotations = getAnnotations(superMethod.params.get(i));
+      if (!superParamAnnotations.equals(paramAnnotations)) {
         return NO_MATCH;
       }
     }
@@ -150,7 +154,7 @@ public final class RedundantOverride extends BugChecker implements MethodTreeMat
         null);
   }
 
-  private static ImmutableSet<Symbol> getAnnotations(MethodSymbol symbol) {
+  private static ImmutableSet<Symbol> getAnnotations(Symbol symbol) {
     return symbol.getRawAttributes().stream().map(a -> a.type.tsym).collect(toImmutableSet());
   }
 }

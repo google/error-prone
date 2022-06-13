@@ -16,8 +16,6 @@
 
 package com.google.errorprone;
 
-import static com.google.common.collect.ImmutableSet.toImmutableSet;
-
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.annotations.CheckReturnValue;
 import com.google.errorprone.annotations.Immutable;
@@ -38,7 +36,6 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.stream.Stream;
 
 /**
  * Immutable container of "suppression signals" - annotations or other information gathered from
@@ -58,12 +55,6 @@ public class SuppressionInfo {
   private static final Supplier<Name> ANDROID_SUPPRESS_LINT =
       VisitorState.memoize(state -> state.getName("android.annotation.SuppressLint"));
   private static final Supplier<Name> VALUE = VisitorState.memoize(state -> state.getName("value"));
-  private static final Supplier<ImmutableSet<Name>> GENERATED_ANNOTATIONS =
-      VisitorState.memoize(
-          state ->
-              Stream.of("javax.annotation.Generated", "javax.annotation.processing.Generated")
-                  .map(state::getName)
-                  .collect(toImmutableSet()));
   private final ImmutableSet<String> suppressWarningsStrings;
 
   @SuppressWarnings("Immutable") /* Name is javac's interned version of a string. */
@@ -79,7 +70,7 @@ public class SuppressionInfo {
   }
 
   private static boolean isGenerated(Symbol sym, VisitorState state) {
-    return !ASTHelpers.annotationsAmong(sym, GENERATED_ANNOTATIONS.get(state), state).isEmpty();
+    return !ASTHelpers.getGeneratedBy(sym, state).isEmpty();
   }
 
   /**

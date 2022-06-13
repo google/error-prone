@@ -22,7 +22,6 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
 /** {@link Java7ApiChecker}Test */
-
 @RunWith(JUnit4.class)
 public class Java7ApiCheckerTest {
 
@@ -90,6 +89,7 @@ public class Java7ApiCheckerTest {
             "    return map.keySet();",
             "  }",
             "  Set<String> getKeySet(ConcurrentHashMap<String, String> map) {",
+            "    // BUG: Diagnostic contains: keySet()",
             "    return map.keySet();",
             "  }",
             "}")

@@ -182,7 +182,7 @@ public class ForEachIterableTest {
 
   @Test
   public void iteratorMemberMethod() {
-    BugCheckerRefactoringTestHelper.newInstance(new ForEachIterable(), getClass())
+    BugCheckerRefactoringTestHelper.newInstance(ForEachIterable.class, getClass())
         .addInputLines(
             "in/Test.java",
             "import java.util.Iterator;",

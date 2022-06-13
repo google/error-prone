@@ -43,9 +43,10 @@ import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import java.util.Arrays;
 import javax.lang.model.element.Modifier;
 
-/** @author eaftan@google.com (Eddie Aftandilian) */
+/**
+ * @author eaftan@google.com (Eddie Aftandilian)
+ */
 @BugPattern(
-    name = "MissingSuperCall",
     summary = "Overriding method is missing a call to overridden super method",
     severity = ERROR)
 // TODO(eaftan): Add support for JDK methods that cannot be annotated, such as
@@ -62,7 +63,7 @@ public class MissingSuperCall extends BugChecker
 
     private final String fullyQualifiedName;
 
-    private AnnotationType(String fullyQualifiedName) {
+    AnnotationType(String fullyQualifiedName) {
       this.fullyQualifiedName = fullyQualifiedName;
     }
 
@@ -102,9 +103,6 @@ public class MissingSuperCall extends BugChecker
     }
 
     MethodSymbol methodSym = ASTHelpers.getSymbol(methodTree);
-    if (methodSym == null) {
-      return Description.NO_MATCH;
-    }
 
     if (!methodSym.getModifiers().contains(Modifier.ABSTRACT)) {
       return Description.NO_MATCH;
@@ -130,9 +128,6 @@ public class MissingSuperCall extends BugChecker
   @Override
   public Description matchMethod(MethodTree tree, VisitorState state) {
     MethodSymbol methodSym = ASTHelpers.getSymbol(tree);
-    if (methodSym == null) {
-      return Description.NO_MATCH;
-    }
 
     // Allow abstract methods.
     if (methodSym.getModifiers().contains(Modifier.ABSTRACT)) {
@@ -192,19 +187,15 @@ public class MissingSuperCall extends BugChecker
     @Override
     public Boolean visitMethodInvocation(MethodInvocationTree tree, Void unused) {
       boolean result = false;
-      MethodSymbol methodSym = ASTHelpers.getSymbol(tree);
-      if (methodSym != null) {
-        ExpressionTree methodSelect = tree.getMethodSelect();
-        if (methodSelect.getKind() == Kind.MEMBER_SELECT) {
-          MemberSelectTree memberSelect = (MemberSelectTree) methodSelect;
-          result =
-              ASTHelpers.isSuper(memberSelect.getExpression())
-                  && memberSelect.getIdentifier().contentEquals(overridingMethodName);
-        }
+      ExpressionTree methodSelect = tree.getMethodSelect();
+      if (methodSelect.getKind() == Kind.MEMBER_SELECT) {
+        MemberSelectTree memberSelect = (MemberSelectTree) methodSelect;
+        result =
+            ASTHelpers.isSuper(memberSelect.getExpression())
+                && memberSelect.getIdentifier().contentEquals(overridingMethodName);
       }
       return result || super.visitMethodInvocation(tree, unused);
     }
-
 
     @Override
     public Boolean reduce(Boolean b1, Boolean b2) {
@@ -219,5 +210,4 @@ public class MissingSuperCall extends BugChecker
   private static String getMethodName(MethodSymbol methodSym) {
     return String.format("%s#%s", methodSym.owner, methodSym.getSimpleName());
   }
-
 }

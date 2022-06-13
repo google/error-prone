@@ -58,7 +58,6 @@ import java.util.Map;
  * </ul>
  */
 @BugPattern(
-    name = "CollectionIncompatibleType",
     summary = "Incompatible type as argument to Object-accepting Java collections method",
     severity = ERROR)
 public class CollectionIncompatibleType extends BugChecker
@@ -79,7 +78,6 @@ public class CollectionIncompatibleType extends BugChecker
         flags.getEnum("CollectionIncompatibleType:FixType", FixType.class).orElse(FixType.NONE);
     this.typeCompatibilityUtils = TypeCompatibilityUtils.fromFlags(flags);
   }
-
 
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
@@ -104,9 +102,6 @@ public class CollectionIncompatibleType extends BugChecker
     if (compatibilityReport.isCompatible()) {
       return NO_MATCH;
     }
-
-    // For error message, use simple names instead of fully qualified names unless they are
-    // identical.
     String sourceType = Signatures.prettyType(result.sourceType());
     String targetType = Signatures.prettyType(result.targetType());
     if (sourceType.equals(targetType)) {
@@ -115,7 +110,8 @@ public class CollectionIncompatibleType extends BugChecker
     }
 
     Description.Builder description =
-        buildDescription(tree).setMessage(result.message(sourceType, targetType));
+        buildDescription(tree)
+            .setMessage(result.message(sourceType, targetType) + compatibilityReport.extraReason());
 
     switch (fixType) {
       case PRINT_TYPES_AS_COMMENT:
@@ -143,5 +139,4 @@ public class CollectionIncompatibleType extends BugChecker
 
     return description.build();
   }
-
 }

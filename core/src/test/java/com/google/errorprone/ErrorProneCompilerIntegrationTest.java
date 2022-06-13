@@ -226,7 +226,7 @@ public class ErrorProneCompilerIntegrationTest {
     assertThat(outputStream.toString(), exitCode, is(Result.OK));
   }
 
-  @BugPattern(name = "ConstructorMatcher", explanation = "", severity = ERROR, summary = "")
+  @BugPattern(explanation = "", severity = ERROR, summary = "")
   public static class ConstructorMatcher extends BugChecker implements MethodTreeMatcher {
     @Override
     public Description matchMethod(MethodTree tree, VisitorState state) {
@@ -254,7 +254,7 @@ public class ErrorProneCompilerIntegrationTest {
     assertThat(outputStream.toString(), exitCode, is(Result.OK));
   }
 
-  @BugPattern(name = "SuperCallMatcher", explanation = "", severity = ERROR, summary = "")
+  @BugPattern(explanation = "", severity = ERROR, summary = "")
   static class SuperCallMatcher extends BugChecker implements MethodInvocationTreeMatcher {
     @Override
     public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
@@ -484,7 +484,7 @@ public class ErrorProneCompilerIntegrationTest {
     assertThat(outputStream.toString(), exitCode, is(Result.ERROR));
   }
 
-  @BugPattern(name = "CrashOnReturn", explanation = "", summary = "", severity = ERROR)
+  @BugPattern(explanation = "", summary = "", severity = ERROR)
   public static class CrashOnReturn extends BugChecker implements ReturnTreeMatcher {
     @Override
     public Description matchReturn(ReturnTree tree, VisitorState state) {
@@ -559,7 +559,6 @@ public class ErrorProneCompilerIntegrationTest {
   }
 
   @BugPattern(
-      name = "CPSChecker",
       summary = "Using 'return' is considered harmful",
       explanation = "Please refactor your code into continuation passing style.",
       severity = ERROR)
@@ -595,10 +594,7 @@ public class ErrorProneCompilerIntegrationTest {
    * Trivial bug checker for testing command line flags. Forbids methods from returning the string
    * provided by "-XepOpt:Forbidden=<VALUE>" flag.
    */
-  @BugPattern(
-      name = "ForbiddenString",
-      summary = "Please don't return this const value",
-      severity = ERROR)
+  @BugPattern(summary = "Please don't return this const value", severity = ERROR)
   public static class ForbiddenString extends BugChecker implements ReturnTreeMatcher {
     private final String forbiddenString;
 

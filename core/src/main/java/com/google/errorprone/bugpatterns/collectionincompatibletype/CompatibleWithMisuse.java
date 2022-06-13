@@ -21,6 +21,7 @@ import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 
 import com.google.common.base.Joiner;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -44,7 +45,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-/** @author glorioso@google.com (Nick Glorioso) */
+/**
+ * @author glorioso@google.com (Nick Glorioso)
+ */
 @BugPattern(
     name = "CompatibleWithAnnotationMisuse",
     summary = "@CompatibleWith's value is not a type argument.",
@@ -95,7 +98,7 @@ public class CompatibleWithMisuse extends BugChecker implements AnnotationTreeMa
           annoTree, "There are no type arguments in scope to match against.");
     }
 
-    Set<String> validNames =
+    ImmutableSet<String> validNames =
         potentialTypeVars.stream()
             .map(TypeVariableSymbol::getSimpleName)
             .map(Object::toString)
@@ -122,7 +125,7 @@ public class CompatibleWithMisuse extends BugChecker implements AnnotationTreeMa
   // @CompatibleWith("X"), @CompatibleWith(value = "X"),
   // @CompatibleWith(SOME_FIELD_WHOSE_CONSTANT_VALUE_IS_X)
   // => X
-  // This function assumes the the annotation tree will only have one argument, of type String, that
+  // This function assumes the annotation tree will only have one argument, of type String, that
   // is required.
   private static String valueArgumentFromCompatibleWithAnnotation(AnnotationTree tree) {
     ExpressionTree argumentValue = Iterables.getOnlyElement(tree.getArguments());

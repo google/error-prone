@@ -128,6 +128,10 @@ public final class FindIdentifiers {
 
   @Nullable
   private static ClassTree getEnclosingClass(TreePath treePath) {
+    if (treePath.getLeaf() instanceof ClassTree) {
+      return (ClassTree) treePath.getLeaf();
+    }
+
     while (treePath != null) {
       TreePath parent = treePath.getParentPath();
       if (parent == null) {
@@ -380,7 +384,7 @@ public final class FindIdentifiers {
     };
   }
 
-  private static boolean isVisible(VarSymbol var, final TreePath path) {
+  private static boolean isVisible(VarSymbol var, TreePath path) {
     switch (var.getKind()) {
       case ENUM_CONSTANT:
       case FIELD:

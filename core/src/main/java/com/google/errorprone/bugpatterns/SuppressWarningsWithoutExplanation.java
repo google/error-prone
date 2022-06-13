@@ -43,7 +43,6 @@ import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.LineMap;
 import com.sun.source.tree.Tree;
 import com.sun.tools.javac.parser.Tokens.Comment;
-import java.util.Optional;
 
 /**
  * Finds occurrences of {@code @SuppressWarnings} where there is definitely no explanation for why
@@ -53,15 +52,13 @@ import java.util.Optional;
  * {@code deprecation} as a trial.
  */
 @BugPattern(
-    name = "SuppressWarningsWithoutExplanation",
     summary =
         "Use of @SuppressWarnings should be accompanied by a comment describing why the warning is"
             + " safe to ignore.",
     tags = BugPattern.StandardTags.STYLE,
     severity = WARNING,
     linkType = CUSTOM,
-    link = "https://google.github.io/styleguide/javaguide.html#s8.4.2-how-to-handle-a-warning"
-    )
+    link = "https://google.github.io/styleguide/javaguide.html#s8.4.2-how-to-handle-a-warning")
 public final class SuppressWarningsWithoutExplanation extends BugChecker
     implements CompilationUnitTreeMatcher {
   private static final Matcher<AnnotationTree> SUPPRESS_WARNINGS =
@@ -85,7 +82,7 @@ public final class SuppressWarningsWithoutExplanation extends BugChecker
       return NO_MATCH;
     }
     ImmutableRangeSet<Long> linesWithComments = linesWithComments(state);
-    new SuppressibleTreePathScanner<Void, Void>() {
+    new SuppressibleTreePathScanner<Void, Void>(state) {
       @Override
       public Void visitAnnotation(AnnotationTree annotationTree, Void unused) {
         if (!SUPPRESS_WARNINGS.matches(annotationTree, state)) {
@@ -104,8 +101,8 @@ public final class SuppressWarningsWithoutExplanation extends BugChecker
               describeMatch(
                   annotationTree,
                   emitDummyFixes
-                      ? Optional.of(SuggestedFix.postfixWith(annotationTree, " // Safe because..."))
-                      : Optional.empty()));
+                      ? SuggestedFix.postfixWith(annotationTree, " // Safe because...")
+                      : SuggestedFix.emptyFix()));
         }
         return super.visitAnnotation(annotationTree, null);
       }

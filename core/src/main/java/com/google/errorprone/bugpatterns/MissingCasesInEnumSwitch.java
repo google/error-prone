@@ -40,7 +40,6 @@ import javax.lang.model.element.ElementKind;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
-    name = "MissingCasesInEnumSwitch",
     summary = "Switches on enum types should either handle all values, or have a default case.",
     severity = WARNING)
 public class MissingCasesInEnumSwitch extends BugChecker implements SwitchTreeMatcher {

@@ -37,10 +37,7 @@ import javax.annotation.Nullable;
  *
  * @author Simon Nickerson (sjnickerson@google.com)
  */
-@BugPattern(
-    name = "LongLiteralLowerCaseSuffix",
-    summary = "Prefer 'L' to 'l' for the suffix to long literals",
-    severity = ERROR)
+@BugPattern(summary = "Prefer 'L' to 'l' for the suffix to long literals", severity = ERROR)
 public class LongLiteralLowerCaseSuffix extends BugChecker implements LiteralTreeMatcher {
 
   private static final Matcher<LiteralTree> matcher =

@@ -44,18 +44,18 @@ public final class ErrorPronePlugins {
       loader = ErrorPronePlugins.class.getClassLoader();
     }
 
+    // The upstream version that creates a list throws an exception
+    // by too-eagerly resolving the bug checkers
     Iterable<BugChecker> extraBugCheckers = ServiceLoader.load(BugChecker.class, loader);
     if (Iterables.isEmpty(extraBugCheckers)) {
       return scannerSupplier;
+    } else if (HubSpotUtils.isErrorHandlingEnabled(options)) {
+       return scannerSupplier.plus(HubSpotUtils.createScannerSupplier(extraBugCheckers));
+    } else {
+       return scannerSupplier.plus(
+           ScannerSupplier.fromBugCheckerClasses(
+               Iterables.transform(extraBugCheckers, BugChecker::getClass)));
     }
-
-    if (HubSpotUtils.isErrorHandlingEnabled(options)) {
-      return scannerSupplier.plus(HubSpotUtils.createScannerSupplier(extraBugCheckers));
-    }
-
-    return scannerSupplier.plus(
-        ScannerSupplier.fromBugCheckerClasses(
-            Iterables.transform(extraBugCheckers, BugChecker::getClass)));
   }
 
   private ErrorPronePlugins() {}

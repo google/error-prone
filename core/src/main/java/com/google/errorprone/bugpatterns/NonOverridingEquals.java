@@ -54,7 +54,6 @@ import com.sun.tools.javac.util.Name;
 
 /** Bug checker for equals methods that don't actually override equals. */
 @BugPattern(
-    name = "NonOverridingEquals",
     summary = "equals method doesn't override Object.equals",
     severity = WARNING,
     tags = StandardTags.FRAGILE_CODE)

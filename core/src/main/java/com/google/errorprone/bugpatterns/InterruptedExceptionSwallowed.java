@@ -76,7 +76,6 @@ import javax.annotation.Nullable;
  * catching a supertype, and not specially handled.
  */
 @BugPattern(
-    name = "InterruptedExceptionSwallowed",
     summary =
         "This catch block appears to be catching an explicitly declared InterruptedException as an"
             + " Exception/Throwable and not handling the interruption separately.",
@@ -166,7 +165,7 @@ public final class InterruptedExceptionSwallowed extends BugChecker
             && !blockChecksForInterruptedException(catchTree.getBlock(), state)
             && !(exceptionIsRethrown(catchTree, catchTree.getParameter(), state)
                 && methodDeclaresInterruptedException(state.findEnclosing(MethodTree.class), state))
-            && !isSuppressed(catchTree.getParameter())) {
+            && !isSuppressed(catchTree.getParameter(), state)) {
           return describeMatch(catchTree, createFix(catchTree));
         }
       }

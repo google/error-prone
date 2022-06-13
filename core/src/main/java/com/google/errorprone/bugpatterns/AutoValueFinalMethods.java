@@ -46,7 +46,6 @@ import javax.lang.model.element.Modifier;
  * @author bhagwani@google.com (Sumit Bhagwani)
  */
 @BugPattern(
-    name = "AutoValueFinalMethods",
     summary =
         "Make toString(), hashCode() and equals() final in AutoValue classes"
             + ", so it is clear to readers that AutoValue is not overriding them",

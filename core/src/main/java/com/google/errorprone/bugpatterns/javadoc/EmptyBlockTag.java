@@ -26,6 +26,7 @@ import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.VariableTreeMatcher;
+import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.sun.source.doctree.BlockTagTree;
 import com.sun.source.doctree.DeprecatedTree;
@@ -39,7 +40,6 @@ import com.sun.source.tree.VariableTree;
 import com.sun.source.util.DocTreePath;
 import com.sun.source.util.DocTreePathScanner;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Matches block tags ({@literal @}param, {@literal @}return, {@literal @}throws,
@@ -48,7 +48,6 @@ import java.util.Optional;
  * @author andrewash@google.com (Andrew Ash)
  */
 @BugPattern(
-    name = "EmptyBlockTag",
     summary =
         "A block tag (@param, @return, @throws, @deprecated) has an empty description. Block tags"
             + " without descriptions don't add much value for future readers of the code; consider"
@@ -125,8 +124,8 @@ public final class EmptyBlockTag extends BugChecker
                 // Don't generate a fix for deprecated; this will be annoying in conjunction with
                 // the check which requires a @deprecated tag for @Deprecated elements.
                 blockTagTree.getTagName().equals("deprecated")
-                    ? Optional.empty()
-                    : Optional.of(Utils.replace(blockTagTree, "", state))));
+                    ? SuggestedFix.emptyFix()
+                    : Utils.replace(blockTagTree, "", state)));
       }
     }
   }

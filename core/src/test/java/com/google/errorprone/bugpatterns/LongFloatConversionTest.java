@@ -57,4 +57,25 @@ public class LongFloatConversionTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void methodHandle() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.lang.invoke.MethodHandle;",
+            "import java.nio.ByteBuffer;",
+            "class Test {",
+            "  private static final long L = 42;",
+            "  private static final MethodHandle MH = null;",
+            "  long f(ByteBuffer buf) {",
+            "    try {",
+            "      return (long) MH.invoke(buf, L);",
+            "    } catch (Throwable throwable) {",
+            "      return 0;",
+            "    }",
+            "  }",
+            "}")
+        .doTest();
+  }
 }

@@ -195,7 +195,7 @@ public class EnclosingTest extends CompilerBasedAbstractTest {
     return fooMatches(shouldMatch, USED_UNDER_LOOP_STATEMENT_ACCORDING_TO_BLOCK_OR_CASE);
   }
 
-  private Scanner fooMatches(final boolean shouldMatch, final Matcher<Tree> matcher) {
+  private Scanner fooMatches(boolean shouldMatch, Matcher<Tree> matcher) {
     ScannerTest test =
         new ScannerTest() {
           boolean matched = false;

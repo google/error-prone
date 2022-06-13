@@ -35,7 +35,6 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import javax.annotation.Nullable;
@@ -118,14 +117,14 @@ class BugPatternFileGenerator implements LineProcessor<List<BugPatternInstance>>
       }
 
       if (generateFrontMatter) {
-        Map<String, String> frontmatterData =
+        ImmutableMap<String, String> frontmatterData =
             ImmutableMap.<String, String>builder()
                 .put("title", pattern.name)
                 .put("summary", pattern.summary)
                 .put("layout", "bugpattern")
                 .put("tags", Joiner.on(", ").join(pattern.tags))
                 .put("severity", pattern.severity.toString())
-                .build();
+                .buildOrThrow();
         DumperOptions options = new DumperOptions();
         options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
         Yaml yaml = new Yaml(new SafeConstructor(), new Representer(), options);
@@ -159,7 +158,7 @@ class BugPatternFileGenerator implements LineProcessor<List<BugPatternInstance>>
 
       MustacheFactory mf = new DefaultMustacheFactory();
       Mustache mustache = mf.compile("com/google/errorprone/resources/bugpattern.mustache");
-      mustache.execute(writer, templateData.build());
+      mustache.execute(writer, templateData.buildOrThrow());
     }
     return true;
   }

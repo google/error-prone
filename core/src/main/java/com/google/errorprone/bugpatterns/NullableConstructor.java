@@ -32,7 +32,6 @@ import com.sun.tools.javac.code.Symbol;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
-    name = "NullableConstructor",
     summary = "Constructors should not be annotated with @Nullable since they cannot return null",
     severity = WARNING,
     tags = StandardTags.STYLE)
@@ -41,9 +40,6 @@ public class NullableConstructor extends BugChecker implements MethodTreeMatcher
   @Override
   public Description matchMethod(MethodTree tree, VisitorState state) {
     Symbol sym = ASTHelpers.getSymbol(tree);
-    if (sym == null) {
-      return NO_MATCH;
-    }
     if (!sym.isConstructor()) {
       return NO_MATCH;
     }

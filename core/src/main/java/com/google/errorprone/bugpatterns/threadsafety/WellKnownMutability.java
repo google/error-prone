@@ -17,6 +17,7 @@
 package com.google.errorprone.bugpatterns.threadsafety;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.collect.ImmutableList.toImmutableList;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -36,6 +37,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Stream;
 
 /** A collection of types with known mutability. */
 @Immutable
@@ -45,31 +47,50 @@ public final class WellKnownMutability implements ThreadSafety.KnownTypes {
   private final ImmutableMap<String, AnnotationInfo> knownImmutableClasses;
 
   /** Types that are known to be mutable. */
-  private final ImmutableSet<String> knownUnsafeClasses;
+  private final ImmutableSet<String> knownMutableClasses;
 
   private WellKnownMutability(List<String> knownImmutable, List<String> knownUnsafe) {
-    knownImmutableClasses = buildImmutableClasses(knownImmutable);
-    knownUnsafeClasses = buildUnsafeClasses(knownUnsafe);
+    this.knownImmutableClasses = buildImmutableClasses(knownImmutable);
+    this.knownMutableClasses = buildMutableClasses(knownUnsafe);
   }
 
   public static WellKnownMutability fromFlags(ErrorProneFlags flags) {
     List<String> immutable = flags.getList("Immutable:KnownImmutable").orElse(ImmutableList.of());
-    List<String> unsafe = flags.getList("Immutable:KnownUnsafe").orElse(ImmutableList.of());
-    return new WellKnownMutability(immutable, unsafe);
+    ImmutableList<String> mutable =
+        // Please use "KnownMutable", as it's a bit clearer what we mean. "KnownUnsafe" is kept
+        // for a while for backwards compatibility.
+        Stream.of("Immutable:KnownMutable", "Immutable:KnownUnsafe")
+            .flatMap(f -> flags.getList(f).orElse(ImmutableList.of()).stream())
+            .collect(toImmutableList());
+    return new WellKnownMutability(immutable, mutable);
   }
 
   public Map<String, AnnotationInfo> getKnownImmutableClasses() {
     return knownImmutableClasses;
   }
 
+  /**
+   * @deprecated {@link #getKnownImmutableClasses()} is clearer if you're dealing with this specific
+   *     class.
+   */
   @Override
+  @Deprecated
   public Map<String, AnnotationInfo> getKnownSafeClasses() {
     return getKnownImmutableClasses();
   }
 
+  public ImmutableSet<String> getKnownMutableClasses() {
+    return knownMutableClasses;
+  }
+
+  /**
+   * @deprecated {@link #getKnownMutableClasses()} is clearer if you're dealing with this specific
+   *     class.
+   */
   @Override
+  @Deprecated
   public Set<String> getKnownUnsafeClasses() {
-    return knownUnsafeClasses;
+    return getKnownMutableClasses();
   }
 
   static class Builder {
@@ -115,7 +136,7 @@ public final class WellKnownMutability implements ThreadSafety.KnownTypes {
     }
 
     public ImmutableMap<String, AnnotationInfo> build() {
-      return mapBuilder.build();
+      return mapBuilder.buildOrThrow();
     }
   }
 
@@ -250,6 +271,9 @@ public final class WellKnownMutability implements ThreadSafety.KnownTypes {
         .add("java.time.zone.ZoneOffsetTransitionRule")
         .add("java.time.zone.ZoneRules")
         .add("java.time.zone.ZoneRulesProvider")
+        .add("kotlin.Unit")
+        .add("kotlin.Pair", "A", "B")
+        .add("kotlin.Triple", "A", "B", "C")
         .add("org.threeten.bp.Duration")
         .add("org.threeten.bp.Instant")
         .add("org.threeten.bp.LocalDate")
@@ -321,10 +345,11 @@ public final class WellKnownMutability implements ThreadSafety.KnownTypes {
         .build();
   }
 
-  private static ImmutableSet<String> buildUnsafeClasses(List<String> knownUnsafes) {
+  private static ImmutableSet<String> buildMutableClasses(List<String> knownMutables) {
     return ImmutableSet.<String>builder()
-        .addAll(knownUnsafes)
+        .addAll(knownMutables)
         .addAll(ImmutableCollections.MUTABLE_TO_IMMUTABLE_CLASS_NAME_MAP.keySet())
+        .add("com.google.common.util.concurrent.AtomicDouble")
         .add("com.google.protobuf.util.FieldMaskUtil.MergeOptions")
         .add(java.util.BitSet.class.getName())
         .add(java.util.Calendar.class.getName())
@@ -336,15 +361,20 @@ public final class WellKnownMutability implements ThreadSafety.KnownTypes {
         .add(java.util.EnumMap.class.getName())
         .add(java.util.EnumSet.class.getName())
         .add(java.util.List.class.getName())
+        .add(java.util.logging.Logger.class.getName())
         .add(java.util.Map.class.getName())
         .add(java.util.HashMap.class.getName())
         .add(java.util.HashSet.class.getName())
         .add(java.util.NavigableMap.class.getName())
         .add(java.util.NavigableSet.class.getName())
+        .add(java.util.Random.class.getName())
         .add(java.util.TreeMap.class.getName())
         .add(java.util.TreeSet.class.getName())
         .add(java.util.Vector.class.getName())
         .add(java.util.Set.class.getName())
+        .add(java.util.concurrent.atomic.AtomicBoolean.class.getName())
+        .add(java.util.concurrent.atomic.AtomicReference.class.getName())
+        .add(java.util.concurrent.atomic.AtomicLong.class.getName())
         .build();
   }
 

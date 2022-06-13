@@ -17,12 +17,15 @@
 package com.google.errorprone.bugpatterns.inlineme;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
+import static com.google.errorprone.matchers.InjectMatchers.hasProvidesAnnotation;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
+import static com.google.errorprone.util.ASTHelpers.hasDirectAnnotationWithSimpleName;
+import static com.google.errorprone.util.ASTHelpers.shouldKeep;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
-import com.google.errorprone.annotations.InlineMe;
+import com.google.errorprone.annotations.DoNotCall;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.bugpatterns.inlineme.InlinabilityResult.InlineValidationErrorReason;
@@ -40,12 +43,15 @@ import javax.lang.model.element.Modifier;
             + " its callers, please annotate it with @InlineMe.",
     severity = WARNING)
 public final class Suggester extends BugChecker implements MethodTreeMatcher {
+  private static final String INLINE_ME = "InlineMe";
 
-  private final boolean checkForArgumentReuse;
+  private final String inlineMe;
 
-  public Suggester(ErrorProneFlags flags) {
-    checkForArgumentReuse =
-        flags.getBoolean(InlinabilityResult.DISALLOW_ARGUMENT_REUSE).orElse(true);
+  public Suggester(ErrorProneFlags errorProneFlags) {
+    inlineMe =
+        errorProneFlags
+            .get("InlineMe:annotation")
+            .orElse("com.google.errorprone.annotations.InlineMe");
   }
 
   @Override
@@ -56,13 +62,22 @@ public final class Suggester extends BugChecker implements MethodTreeMatcher {
     }
 
     // if the API is already annotated with @InlineMe, then return no match
-    if (hasAnnotation(tree, InlineMe.class, state)) {
+    if (hasDirectAnnotationWithSimpleName(tree, INLINE_ME)) {
+      return Description.NO_MATCH;
+    }
+
+    // if the API is already annotated with @DoNotCall, then return no match
+    if (hasAnnotation(tree, DoNotCall.class, state)) {
+      return Description.NO_MATCH;
+    }
+
+    // don't suggest on APIs that get called reflectively
+    if (shouldKeep(tree) || hasProvidesAnnotation().matches(tree, state)) {
       return Description.NO_MATCH;
     }
 
     // if the body is not inlineable, then return no match
-    InlinabilityResult inlinabilityResult =
-        InlinabilityResult.forMethod(tree, state, checkForArgumentReuse);
+    InlinabilityResult inlinabilityResult = InlinabilityResult.forMethod(tree, state);
     if (!inlinabilityResult.isValidForSuggester()) {
       return Description.NO_MATCH;
     }
@@ -70,7 +85,7 @@ public final class Suggester extends BugChecker implements MethodTreeMatcher {
     // We attempt to actually build the annotation as a SuggestedFix.
     SuggestedFix.Builder fixBuilder =
         SuggestedFix.builder()
-            .addImport(InlineMe.class.getCanonicalName())
+            .addImport(inlineMe)
             .prefixWith(
                 tree,
                 InlineMeData.buildExpectedInlineMeAnnotation(state, inlinabilityResult.body())

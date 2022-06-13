@@ -48,9 +48,10 @@ import com.sun.tools.javac.tree.JCTree.JCVariableDecl;
 import java.util.List;
 import javax.annotation.Nullable;
 
-/** @author bhagwani@google.com (Sumit Bhagwani) */
+/**
+ * @author bhagwani@google.com (Sumit Bhagwani)
+ */
 @BugPattern(
-    name = "SelfEquals",
     summary = "Testing an object for equality with itself will always be true.",
     severity = ERROR)
 public class SelfEquals extends BugChecker implements MethodInvocationTreeMatcher {

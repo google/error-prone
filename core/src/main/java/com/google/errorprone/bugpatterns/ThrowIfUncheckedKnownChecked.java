@@ -38,10 +38,7 @@ import javax.lang.model.type.TypeMirror;
 import javax.lang.model.type.UnionType;
 
 /** Catches no-op calls to {@code Throwables.throwIfUnchecked}. */
-@BugPattern(
-    name = "ThrowIfUncheckedKnownChecked",
-    summary = "throwIfUnchecked(knownCheckedException) is a no-op.",
-    severity = ERROR)
+@BugPattern(summary = "throwIfUnchecked(knownCheckedException) is a no-op.", severity = ERROR)
 public class ThrowIfUncheckedKnownChecked extends BugChecker
     implements MethodInvocationTreeMatcher {
 

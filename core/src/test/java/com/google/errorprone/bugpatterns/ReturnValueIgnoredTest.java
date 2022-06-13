@@ -16,16 +16,13 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static org.junit.Assume.assumeTrue;
-
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
-import com.google.errorprone.util.RuntimeVersion;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** @author alexeagle@google.com (Alex Eagle) */
+/** Tests for {@link ReturnValueIgnored}. */
 @RunWith(JUnit4.class)
 public class ReturnValueIgnoredTest {
 
@@ -199,7 +196,6 @@ public class ReturnValueIgnoredTest {
 
   @Test
   public void optionalInstanceMethods_jdk9() {
-    assumeTrue(RuntimeVersion.isAtLeast9());
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -216,7 +212,6 @@ public class ReturnValueIgnoredTest {
 
   @Test
   public void optionalInstanceMethods_jdk10() {
-    assumeTrue(RuntimeVersion.isAtLeast10());
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -233,7 +228,6 @@ public class ReturnValueIgnoredTest {
 
   @Test
   public void optionalInstanceMethods_jdk11() {
-    assumeTrue(RuntimeVersion.isAtLeast11());
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -356,13 +350,19 @@ public class ReturnValueIgnoredTest {
             "    // BUG: Diagnostic contains: ReturnValueIgnored",
             "    map.containsValue(42);",
             "  }",
+            "  void doTest(Map.Entry<Integer, Integer> entry) {",
+            "    // BUG: Diagnostic contains: ReturnValueIgnored",
+            "    entry.getKey();",
+            "    // BUG: Diagnostic contains: ReturnValueIgnored",
+            "    entry.getValue();",
+            "    entry.setValue(42);",
+            "  }",
             "}")
         .doTest();
   }
 
   @Test
   public void mapMethods_java11() {
-    assumeTrue(RuntimeVersion.isAtLeast11());
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -427,6 +427,21 @@ public class ReturnValueIgnoredTest {
   }
 
   @Test
+  public void constructors() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  void f() throws Exception {",
+            // TODO: we haven't yet enabled constructor checking for basic types yet,
+            //   just making sure it doesn't crash
+            "    new String(\"Hello\");",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void testProtoMessageNewBuilder() {
     compilationHelper
         .addSourceLines(
@@ -473,6 +488,7 @@ public class ReturnValueIgnoredTest {
             "import java.util.stream.Stream;",
             "final class Test {",
             "  public void f() {",
+            "    Optional.of(42);",
             "    Optional.of(42).orElseThrow(AssertionError::new);",
             "    Stream.of(Optional.of(42)).forEach(o -> o.orElseThrow(AssertionError::new));",
             "  }",
@@ -483,6 +499,7 @@ public class ReturnValueIgnoredTest {
             "import java.util.stream.Stream;",
             "final class Test {",
             "  public void f() {",
+            "    Optional.of(42).orElseThrow(AssertionError::new);",
             "    Stream.of(Optional.of(42)).forEach(o -> o.orElseThrow(AssertionError::new));",
             "  }",
             "}")
@@ -536,7 +553,6 @@ public class ReturnValueIgnoredTest {
 
   @Test
   public void testCollectionToArray_java8() {
-    assumeTrue(RuntimeVersion.isAtLeast9());
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -558,14 +574,193 @@ public class ReturnValueIgnoredTest {
             "Test.java",
             "class Test {",
             "  void test(Test t, Object o) {",
-            "    // BUG: Diagnostic contains:",
+            "    // BUG: Diagnostic contains: ReturnValueIgnored",
             "    t.equals(o);",
-            "    // BUG: Diagnostic contains:",
+            "    // BUG: Diagnostic contains: ReturnValueIgnored",
             "    o.equals(t);",
-            "    // BUG: Diagnostic contains:",
+            "    // BUG: Diagnostic contains: ReturnValueIgnored",
             "    t.hashCode();",
-            "    // BUG: Diagnostic contains:",
+            "    // BUG: Diagnostic contains: ReturnValueIgnored",
             "    t.getClass();",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void charSequenceMethods() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  void test(CharSequence cs) {",
+            "    // BUG: Diagnostic contains: ReturnValueIgnored",
+            "    cs.charAt(0);",
+            "    // BUG: Diagnostic contains: ReturnValueIgnored",
+            "    cs.chars();",
+            "    // BUG: Diagnostic contains: ReturnValueIgnored",
+            "    cs.codePoints();",
+            "    // BUG: Diagnostic contains: ReturnValueIgnored",
+            "    cs.length();",
+            "    // BUG: Diagnostic contains: ReturnValueIgnored",
+            "    cs.subSequence(1, 2);",
+            "    // BUG: Diagnostic contains: ReturnValueIgnored",
+            "    cs.toString();",
+            "  }",
+            "  void test(StringBuilder sb) {",
+            "    sb.append(\"hi\");",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void enumMethods() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.util.concurrent.TimeUnit;",
+            "class Test {",
+            "  void test(Enum e) {",
+            "    // BUG: Diagnostic contains: ReturnValueIgnored",
+            "    e.getDeclaringClass();",
+            "    // BUG: Diagnostic contains: ReturnValueIgnored",
+            "    e.name();",
+            "    // BUG: Diagnostic contains: ReturnValueIgnored",
+            "    e.ordinal();",
+            "    // BUG: Diagnostic contains: ReturnValueIgnored",
+            "    TimeUnit.valueOf(\"MILLISECONDS\");",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void enumMethodsOnSubtype() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.lang.invoke.VarHandle;",
+            "class Test {",
+            "  void test(VarHandle.AccessMode accessMode) {",
+            "    accessMode.methodName();",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void throwableMethods() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  void test(Throwable t) {",
+            // These 2 APIs are OK to ignore (they just return this)
+            "    t.fillInStackTrace();",
+            "    t.initCause(new Throwable());",
+            "    // BUG: Diagnostic contains: ReturnValueIgnored",
+            "    t.getCause();",
+            "    // BUG: Diagnostic contains: ReturnValueIgnored",
+            "    t.getLocalizedMessage();",
+            "    // BUG: Diagnostic contains: ReturnValueIgnored",
+            "    t.getMessage();",
+            "    // BUG: Diagnostic contains: ReturnValueIgnored",
+            "    t.getStackTrace();",
+            "    // BUG: Diagnostic contains: ReturnValueIgnored",
+            "    t.getSuppressed();",
+            "    // BUG: Diagnostic contains: ReturnValueIgnored",
+            "    t.toString();",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void objectsMethods() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.util.Objects;",
+            "class Test {",
+            "  void test(Object o) {",
+            // These APIs are OK to ignore
+            "    Objects.checkFromIndexSize(0, 1, 2);",
+            "    Objects.checkFromToIndex(0, 1, 2);",
+            "    Objects.checkIndex(0, 1);",
+            "    Objects.requireNonNull(o);",
+            "    Objects.requireNonNull(o, \"message\");",
+            "    Objects.requireNonNull(o, () -> \"messageSupplier\");",
+            "    Objects.requireNonNullElse(o, new Object());",
+            "    Objects.requireNonNullElseGet(o, () -> new Object());",
+            "    // BUG: Diagnostic contains: ReturnValueIgnored",
+            "    Objects.compare(\"B\", \"a\", String.CASE_INSENSITIVE_ORDER);",
+            "    // BUG: Diagnostic contains: ReturnValueIgnored",
+            "    Objects.deepEquals(new Object(), new Object());",
+            "    // BUG: Diagnostic contains: ReturnValueIgnored",
+            "    Objects.equals(new Object(), new Object());",
+            "    // BUG: Diagnostic contains: ReturnValueIgnored",
+            "    Objects.hash(new Object(), new Object());",
+            "    // BUG: Diagnostic contains: ReturnValueIgnored",
+            "    Objects.hashCode(o);",
+            "    // BUG: Diagnostic contains: ReturnValueIgnored",
+            "    Objects.isNull(o);",
+            "    // BUG: Diagnostic contains: ReturnValueIgnored",
+            "    Objects.nonNull(o);",
+            "    // BUG: Diagnostic contains: ReturnValueIgnored",
+            "    Objects.toString(o);",
+            "    // BUG: Diagnostic contains: ReturnValueIgnored",
+            "    Objects.toString(o, \"defaultValue\");",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void classMethods() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  void test(Class<?> c) throws Exception {",
+            "    Class.forName(\"java.sql.Date\");",
+            "    c.getMethod(\"toString\");",
+            "    // BUG: Diagnostic contains: ReturnValueIgnored",
+            "    c.desiredAssertionStatus();",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void constructorOfAbstractModule() {
+    compilationHelper
+        .addSourceLines(
+            "TestModule.java",
+            "import com.google.inject.AbstractModule;",
+            "class TestModule extends AbstractModule {",
+            "  public TestModule() {}",
+            "  public static void foo() {",
+            "    // BUG: Diagnostic contains: Ignored return value of 'TestModule'",
+            "    new TestModule();",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void constructorOfModule() {
+    compilationHelper
+        .addSourceLines(
+            "TestModule.java",
+            "import com.google.inject.Binder;",
+            "import com.google.inject.Module;",
+            "class TestModule implements Module {",
+            "  public TestModule() {}",
+            "  @Override public void configure(Binder binder) {}",
+            "  public static void foo() {",
+            "    // BUG: Diagnostic contains: Ignored return value of 'TestModule'",
+            "    new TestModule();",
             "  }",
             "}")
         .doTest();

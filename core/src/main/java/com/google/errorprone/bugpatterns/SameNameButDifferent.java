@@ -51,14 +51,13 @@ import javax.lang.model.element.ElementKind;
 
 /** Looks for types being shadowed by other types in a way that may be confusing. */
 @BugPattern(
-    name = "SameNameButDifferent",
     summary = "This type name shadows another in a way that may be confusing.",
     severity = WARNING)
 public final class SameNameButDifferent extends BugChecker implements CompilationUnitTreeMatcher {
   @Override
   public Description matchCompilationUnit(CompilationUnitTree tree, VisitorState state) {
     Table<String, TypeSymbol, List<TreePath>> table = HashBasedTable.create();
-    new SuppressibleTreePathScanner<Void, Void>() {
+    new SuppressibleTreePathScanner<Void, Void>(state) {
       @Override
       public Void visitMemberSelect(MemberSelectTree memberSelectTree, Void unused) {
         if (!shouldIgnore()) {

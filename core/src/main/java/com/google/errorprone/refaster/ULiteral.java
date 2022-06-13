@@ -78,7 +78,7 @@ public abstract class ULiteral extends UExpression implements LiteralTree {
           .put(Kind.BOOLEAN_LITERAL, TypeTag.BOOLEAN)
           .put(Kind.NULL_LITERAL, TypeTag.BOT)
           .put(Kind.STRING_LITERAL, TypeTag.CLASS)
-          .build();
+          .buildOrThrow();
 
   public static ULiteral create(Kind kind, Object value) {
     checkArgument(LIT_KIND_TAG.containsKey(kind), "%s is not a literal kind", kind);

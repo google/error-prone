@@ -39,7 +39,7 @@ import java.util.regex.Pattern;
 /**
  * Processes command-line options specific to error-prone.
  *
- * <p>Documentation for the available flags are available at https://errorprone.info/docs/flags
+ * <p>Documentation for the available flags are available at https://errorprone.infoflags
  *
  * @author eaftan@google.com (Eddie Aftandilian)
  */

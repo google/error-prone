@@ -32,6 +32,7 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
+import com.google.errorprone.suppliers.Supplier;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.Tree.Kind;
@@ -51,7 +52,6 @@ import javax.annotation.Nullable;
  * meet the contract specified by the {@link Annotation} interface.
  */
 @BugPattern(
-    name = "BadAnnotationImplementation",
     summary =
         "Classes that implement Annotation must override equals and hashCode. Consider "
             + "using AutoAnnotation instead of implementing Annotation by hand.",
@@ -62,7 +62,7 @@ public class BadAnnotationImplementation extends BugChecker implements ClassTree
       allOf(anyOf(kindIs(CLASS), kindIs(ENUM)), isSubtypeOf(ANNOTATION_TYPE));
 
   @Override
-  public Description matchClass(ClassTree classTree, final VisitorState state) {
+  public Description matchClass(ClassTree classTree, VisitorState state) {
     if (!CLASS_TREE_MATCHER.matches(classTree, state)) {
       return Description.NO_MATCH;
     }
@@ -80,8 +80,8 @@ public class BadAnnotationImplementation extends BugChecker implements ClassTree
     // Otherwise walk up type hierarchy looking for equals and hashcode methods
     MethodSymbol equals = null;
     MethodSymbol hashCode = null;
-    final Types types = state.getTypes();
-    Name equalsName = state.getName("equals");
+    Types types = state.getTypes();
+    Name equalsName = EQUALS.get(state);
     Predicate<MethodSymbol> equalsPredicate =
         new Predicate<MethodSymbol>() {
           @Override
@@ -94,7 +94,7 @@ public class BadAnnotationImplementation extends BugChecker implements ClassTree
                     methodSymbol.getParameters().get(0).type, state.getSymtab().objectType);
           }
         };
-    Name hashCodeName = state.getName("hashCode");
+    Name hashCodeName = HASHCODE.get(state);
     Predicate<MethodSymbol> hashCodePredicate =
         new Predicate<MethodSymbol>() {
           @Override
@@ -140,4 +140,10 @@ public class BadAnnotationImplementation extends BugChecker implements ClassTree
     }
     return null;
   }
+
+  private static final Supplier<Name> EQUALS =
+      VisitorState.memoize(state -> state.getName("equals"));
+
+  private static final Supplier<Name> HASHCODE =
+      VisitorState.memoize(state -> state.getName("hashCode"));
 }

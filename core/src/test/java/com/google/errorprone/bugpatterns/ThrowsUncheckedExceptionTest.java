@@ -23,7 +23,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** @author yulissa@google.com (Yulissa Arroyo-Paredes) */
+/**
+ * @author yulissa@google.com (Yulissa Arroyo-Paredes)
+ */
 @RunWith(JUnit4.class)
 public final class ThrowsUncheckedExceptionTest {
   private final CompilationTestHelper compilationHelper =

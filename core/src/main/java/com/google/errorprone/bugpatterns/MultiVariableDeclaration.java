@@ -48,13 +48,11 @@ import java.util.List;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
-    name = "MultiVariableDeclaration",
     summary = "Variable declarations should declare only one variable",
     severity = SUGGESTION,
     linkType = CUSTOM,
     tags = StandardTags.STYLE,
-    link = "https://google.github.io/styleguide/javaguide.html#s4.8.2.1-variables-per-declaration"
-    )
+    link = "https://google.github.io/styleguide/javaguide.html#s4.8.2.1-variables-per-declaration")
 public class MultiVariableDeclaration extends BugChecker
     implements ClassTreeMatcher, BlockTreeMatcher {
 

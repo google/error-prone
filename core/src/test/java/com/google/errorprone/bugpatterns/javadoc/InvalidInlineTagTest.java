@@ -226,6 +226,22 @@ public final class InvalidInlineTagTest {
   }
 
   @Test
+  public void erroneousTag_doesNotMungeEntireJavadoc() {
+    refactoring
+        .addInputLines(
+            "Test.java",
+            "interface Test {",
+            "  /**",
+            "   * Frobnicates a {@code foo).",
+            "   * @param foo {@link #foo}",
+            "   */",
+            "  void frobnicate(String foo);",
+            "}")
+        .expectUnchanged()
+        .doTest(TestMode.TEXT_MATCH);
+  }
+
+  @Test
   public void testInvalidTagMessage() {
     assertEquals(
         "@type is not a valid tag, but is a parameter name. Use {@code type} to refer to parameter"

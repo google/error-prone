@@ -16,6 +16,8 @@
 
 package com.google.errorprone.refaster;
 
+import static org.junit.Assert.assertThrows;
+
 import com.google.common.testing.EqualsTester;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -40,9 +42,9 @@ public class BindingsTest {
     }
   }
 
-  @Test(expected = ClassCastException.class)
+  @Test
   public void testPutRestricts() {
-    Bindings.create().put(new Key("foo"), 3);
+    assertThrows(ClassCastException.class, () -> Bindings.create().put(new Key("foo"), 3));
   }
 
   @Test

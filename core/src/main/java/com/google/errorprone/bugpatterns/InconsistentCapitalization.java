@@ -43,7 +43,6 @@ import javax.lang.model.element.ElementKind;
 
 /** Checker for variables under the same scope that only differ in capitalization. */
 @BugPattern(
-    name = "InconsistentCapitalization",
     summary =
         "It is confusing to have a field and a parameter under the same scope that differ only in "
             + "capitalization.",
@@ -185,7 +184,7 @@ public class InconsistentCapitalization extends BugChecker implements ClassTreeM
         ImmutableMap<String, Symbol> fieldNamesMap, TreePath path) {
       ImmutableMap.Builder<TreePath, Symbol> matchedParametersBuilder = ImmutableMap.builder();
       new MatchingParametersScanner(fieldNamesMap, matchedParametersBuilder).scan(path, null);
-      return matchedParametersBuilder.build();
+      return matchedParametersBuilder.buildOrThrow();
     }
 
     private final ImmutableMap<String, Symbol> fields;

@@ -36,7 +36,6 @@ import java.util.List;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
-    name = "IndexOfChar",
     summary =
         "The first argument to indexOf is a Unicode code point, and the second is the index to"
             + " start the search from",
@@ -45,7 +44,7 @@ public class IndexOfChar extends BugChecker implements MethodInvocationTreeMatch
   private static final Matcher<ExpressionTree> MATCHER =
       MethodMatchers.instanceMethod()
           .onExactClass(Suppliers.STRING_TYPE)
-          .named("indexOf")
+          .namedAnyOf("indexOf", "lastIndexOf")
           .withParameters("int", "int");
 
   @Override

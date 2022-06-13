@@ -36,18 +36,18 @@ import com.sun.tools.javac.processing.JavacProcessingEnvironment;
 import com.sun.tools.javac.util.Context;
 import javax.annotation.Nullable;
 import javax.annotation.processing.ProcessingEnvironment;
-import org.checkerframework.shaded.dataflow.analysis.AbstractValue;
-import org.checkerframework.shaded.dataflow.analysis.Analysis;
-import org.checkerframework.shaded.dataflow.analysis.ForwardAnalysisImpl;
-import org.checkerframework.shaded.dataflow.analysis.ForwardTransferFunction;
-import org.checkerframework.shaded.dataflow.analysis.Store;
-import org.checkerframework.shaded.dataflow.analysis.TransferFunction;
-import org.checkerframework.shaded.dataflow.cfg.ControlFlowGraph;
-import org.checkerframework.shaded.dataflow.cfg.UnderlyingAST;
-import org.checkerframework.shaded.dataflow.cfg.builder.CFGBuilder;
+import org.checkerframework.errorprone.dataflow.analysis.AbstractValue;
+import org.checkerframework.errorprone.dataflow.analysis.Analysis;
+import org.checkerframework.errorprone.dataflow.analysis.ForwardAnalysisImpl;
+import org.checkerframework.errorprone.dataflow.analysis.ForwardTransferFunction;
+import org.checkerframework.errorprone.dataflow.analysis.Store;
+import org.checkerframework.errorprone.dataflow.analysis.TransferFunction;
+import org.checkerframework.errorprone.dataflow.cfg.ControlFlowGraph;
+import org.checkerframework.errorprone.dataflow.cfg.UnderlyingAST;
+import org.checkerframework.errorprone.dataflow.cfg.builder.CFGBuilder;
 
 /**
- * Provides a wrapper around {@link org.checkerframework.shaded.dataflow.analysis.Analysis}.
+ * Provides a wrapper around {@link org.checkerframework.errorprone.dataflow.analysis.Analysis}.
  *
  * @author konne@google.com (Konstantin Weitz)
  */
@@ -78,11 +78,11 @@ public final class DataFlow {
               new CacheLoader<AnalysisParams, Analysis<?, ?, ?>>() {
                 @Override
                 public Analysis<?, ?, ?> load(AnalysisParams key) {
-                  final ControlFlowGraph cfg = key.cfg();
-                  final ForwardTransferFunction<?, ?> transfer = key.transferFunction();
+                  ControlFlowGraph cfg = key.cfg();
+                  ForwardTransferFunction<?, ?> transfer = key.transferFunction();
 
                   @SuppressWarnings({"unchecked", "rawtypes"})
-                  final Analysis<?, ?, ?> analysis = new ForwardAnalysisImpl(transfer);
+                  Analysis<?, ?, ?> analysis = new ForwardAnalysisImpl(transfer);
                   analysis.performAnalysis(cfg);
                   return analysis;
                 }
@@ -95,8 +95,8 @@ public final class DataFlow {
               new CacheLoader<CfgParams, ControlFlowGraph>() {
                 @Override
                 public ControlFlowGraph load(CfgParams key) {
-                  final TreePath methodPath = key.methodPath();
-                  final UnderlyingAST ast;
+                  TreePath methodPath = key.methodPath();
+                  UnderlyingAST ast;
                   ClassTree classTree = null;
                   MethodTree methodTree = null;
                   for (Tree parent : methodPath) {
@@ -119,7 +119,7 @@ public final class DataFlow {
                     // must be an initializer per findEnclosingMethodOrLambdaOrInitializer
                     ast = new UnderlyingAST.CFGStatement(methodPath.getLeaf(), classTree);
                   }
-                  final ProcessingEnvironment env = key.environment();
+                  ProcessingEnvironment env = key.environment();
 
                   analysisCache.invalidateAll();
                   CompilationUnitTree root = methodPath.getCompilationUnit();
@@ -169,17 +169,17 @@ public final class DataFlow {
   private static <
           A extends AbstractValue<A>, S extends Store<S>, T extends ForwardTransferFunction<A, S>>
       Result<A, S, T> methodDataflow(TreePath methodPath, Context context, T transfer) {
-    final ProcessingEnvironment env = JavacProcessingEnvironment.instance(context);
+    ProcessingEnvironment env = JavacProcessingEnvironment.instance(context);
 
-    final ControlFlowGraph cfg;
+    ControlFlowGraph cfg;
     try {
       cfg = cfgCache.getUnchecked(CfgParams.create(methodPath, env));
     } catch (UncheckedExecutionException e) {
       throw e.getCause() instanceof CompletionFailure ? (CompletionFailure) e.getCause() : e;
     }
-    final AnalysisParams aparams = AnalysisParams.create(transfer, cfg, env);
+    AnalysisParams aparams = AnalysisParams.create(transfer, cfg, env);
     @SuppressWarnings("unchecked")
-    final Analysis<A, S, T> analysis = (Analysis<A, S, T>) analysisCache.getUnchecked(aparams);
+    Analysis<A, S, T> analysis = (Analysis<A, S, T>) analysisCache.getUnchecked(aparams);
 
     return new Result<A, S, T>() {
       @Override
@@ -202,7 +202,7 @@ public final class DataFlow {
    * initializer block). Example of an expression outside of such constructs is the identifier in an
    * import statement.
    *
-   * <p>Note that for intializers, each inline field initializer or initializer block is treated
+   * <p>Note that for initializers, each inline field initializer or initializer block is treated
    * separately. I.e., we don't merge all initializers into one virtual block for dataflow.
    *
    * @return dataflow result for the given expression or {@code null} if the expression is not part
@@ -212,20 +212,20 @@ public final class DataFlow {
   public static <
           A extends AbstractValue<A>, S extends Store<S>, T extends ForwardTransferFunction<A, S>>
       A expressionDataflow(TreePath exprPath, Context context, T transfer) {
-    final Tree leaf = exprPath.getLeaf();
+    Tree leaf = exprPath.getLeaf();
     Preconditions.checkArgument(
         leaf instanceof ExpressionTree,
         "Leaf of exprPath must be of type ExpressionTree, but was %s",
         leaf.getClass().getName());
 
-    final ExpressionTree expr = (ExpressionTree) leaf;
-    final TreePath enclosingMethodPath = findEnclosingMethodOrLambdaOrInitializer(exprPath);
+    ExpressionTree expr = (ExpressionTree) leaf;
+    TreePath enclosingMethodPath = findEnclosingMethodOrLambdaOrInitializer(exprPath);
     if (enclosingMethodPath == null) {
       // expression is not part of a method, lambda, or initializer
       return null;
     }
 
-    final Tree method = enclosingMethodPath.getLeaf();
+    Tree method = enclosingMethodPath.getLeaf();
     if (method instanceof MethodTree && ((MethodTree) method).getBody() == null) {
       // expressions can occur in abstract methods, for example {@code Map.Entry} in:
       //

@@ -35,7 +35,6 @@ import java.util.List;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
-    name = "NCopiesOfChar",
     summary =
         "The first argument to nCopies is the number of copies, and the second is the item to copy",
     severity = ERROR)

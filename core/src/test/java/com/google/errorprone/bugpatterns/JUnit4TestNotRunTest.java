@@ -23,7 +23,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** @author eaftan@google.com (Eddie Aftandilian) */
+/**
+ * @author eaftan@google.com (Eddie Aftandilian)
+ */
 @RunWith(JUnit4.class)
 public class JUnit4TestNotRunTest {
 
@@ -498,16 +500,12 @@ public class JUnit4TestNotRunTest {
 
   @Test
   public void testNegativeCase1() {
-    compilationHelper
-        .addSourceFile("JUnit4TestNotRunNegativeCase1.java")
-        .doTest();
+    compilationHelper.addSourceFile("JUnit4TestNotRunNegativeCase1.java").doTest();
   }
 
   @Test
   public void testNegativeCase2() {
-    compilationHelper
-        .addSourceFile("JUnit4TestNotRunNegativeCase2.java")
-        .doTest();
+    compilationHelper.addSourceFile("JUnit4TestNotRunNegativeCase2.java").doTest();
   }
 
   @Test
@@ -517,9 +515,7 @@ public class JUnit4TestNotRunTest {
 
   @Test
   public void testNegativeCase4() {
-    compilationHelper
-        .addSourceFile("JUnit4TestNotRunNegativeCase4.java")
-        .doTest();
+    compilationHelper.addSourceFile("JUnit4TestNotRunNegativeCase4.java").doTest();
   }
 
   @Test

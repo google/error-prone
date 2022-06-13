@@ -15,11 +15,8 @@
  */
 package com.google.errorprone.bugpatterns.time;
 
-import static org.junit.Assume.assumeTrue;
-
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.CompilationTestHelper;
-import com.google.errorprone.util.RuntimeVersion;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -308,7 +305,6 @@ public class DurationToLongTimeUnitTest {
 
   @Test
   public void timeUnitFromConvert() {
-    assumeTrue(RuntimeVersion.isAtLeast11());
     helper
         .addSourceLines(
             "TestClass.java",

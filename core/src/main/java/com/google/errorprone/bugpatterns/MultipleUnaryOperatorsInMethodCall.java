@@ -32,9 +32,10 @@ import com.sun.source.tree.UnaryTree;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-/** @author sulku@google.com (Marsela Sulku) */
+/**
+ * @author sulku@google.com (Marsela Sulku)
+ */
 @BugPattern(
-    name = "MultipleUnaryOperatorsInMethodCall",
     summary = "Avoid having multiple unary operators acting on the same variable in a method call",
     severity = WARNING)
 public class MultipleUnaryOperatorsInMethodCall extends BugChecker

@@ -20,7 +20,6 @@ import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
-import static java.util.Optional.empty;
 import static java.util.Optional.ofNullable;
 
 import com.google.common.collect.ImmutableList;
@@ -43,11 +42,11 @@ import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Type;
 import java.util.Optional;
-import javax.lang.model.element.Modifier;
 
-/** @author amesbah@google.com (Ali Mesbah) */
+/**
+ * @author amesbah@google.com (Ali Mesbah)
+ */
 @BugPattern(
-    name = "LambdaFunctionalInterface",
     summary =
         "Use Java's utility functional interfaces instead of Function<A, B> for primitive types.",
     severity = SUGGESTION)
@@ -55,7 +54,7 @@ public class LambdaFunctionalInterface extends BugChecker implements MethodTreeM
   private static final String JAVA_UTIL_FUNCTION_FUNCTION = "java.util.function.Function";
   private static final String JAVA_LANG_NUMBER = "java.lang.Number";
 
-  private static final ImmutableMap<String, String> methodMappings =
+  private static final ImmutableMap<String, String> METHOD_MAPPINGS =
       ImmutableMap.<String, String>builder()
           .put(
               JAVA_UTIL_FUNCTION_FUNCTION + "<java.lang.Double,java.lang.Double>",
@@ -102,9 +101,9 @@ public class LambdaFunctionalInterface extends BugChecker implements MethodTreeM
           .put(
               JAVA_UTIL_FUNCTION_FUNCTION + "<T,java.lang.Double>",
               "java.util.function.ToDoubleFunction<T>")
-          .build();
+          .buildOrThrow();
 
-  private static final ImmutableMap<String, String> applyMappings =
+  private static final ImmutableMap<String, String> APPLY_MAPPINGS =
       ImmutableMap.<String, String>builder()
           .put("java.util.function.DoubleToIntFunction", "applyAsInt")
           .put("java.util.function.DoubleToLongFunction", "applyAsLong")
@@ -115,7 +114,7 @@ public class LambdaFunctionalInterface extends BugChecker implements MethodTreeM
           .put("java.util.function.ToIntFunction<T>", "applyAsInt")
           .put("java.util.function.ToDoubleFunction<T>", "applyAsDouble")
           .put("java.util.function.ToLongFunction<T>", "applyAsLong")
-          .build();
+          .buildOrThrow();
 
   /**
    * Identifies methods with parameters that have a generic argument with Int, Long, or Double. If
@@ -146,7 +145,7 @@ public class LambdaFunctionalInterface extends BugChecker implements MethodTreeM
     MethodSymbol methodSym = ASTHelpers.getSymbol(tree);
 
     // precondition (1)
-    if (!methodSym.getModifiers().contains(Modifier.PRIVATE)) {
+    if (!ASTHelpers.canBeRemoved(methodSym, state)) {
       return Description.NO_MATCH;
     }
 
@@ -246,8 +245,8 @@ public class LambdaFunctionalInterface extends BugChecker implements MethodTreeM
         new TreeScanner<Void, Void>() {
           @Override
           public Void visitMethodInvocation(MethodInvocationTree callTree, Void unused) {
-            final MethodSymbol methodSymbol = getSymbol(callTree);
-            if (methodSymbol != null && sym.equals(methodSymbol)) {
+            MethodSymbol methodSymbol = getSymbol(callTree);
+            if (sym.equals(methodSymbol)) {
               methodMap.put(methodSymbol.toString(), callTree);
             }
             return super.visitMethodInvocation(callTree, unused);
@@ -270,16 +269,15 @@ public class LambdaFunctionalInterface extends BugChecker implements MethodTreeM
   }
 
   private static Optional<String> getMappingForFunctionFromTree(Tree param) {
-    Optional<Type> type = ofNullable(ASTHelpers.getType(param));
-    return (type == null) ? empty() : getMappingForFunction(type.get().toString());
+    return ofNullable(ASTHelpers.getType(param)).flatMap(t -> getMappingForFunction(t.toString()));
   }
 
   private static Optional<String> getMappingForFunction(String function) {
-    return ofNullable(methodMappings.get(function));
+    return ofNullable(METHOD_MAPPINGS.get(function));
   }
 
   private static Optional<String> getMappingForApply(String apply) {
-    return ofNullable(applyMappings.get(apply));
+    return ofNullable(APPLY_MAPPINGS.get(apply));
   }
 
   private static String getFunctionName(String fullyQualifiedName) {

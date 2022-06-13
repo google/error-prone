@@ -28,9 +28,10 @@ import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
 import com.sun.source.tree.MethodInvocationTree;
 
-/** @author sulku@google.com (Marsela Sulku) */
+/**
+ * @author sulku@google.com (Marsela Sulku)
+ */
 @BugPattern(
-    name = "FuzzyEqualsShouldNotBeUsedInEqualsMethod",
     summary = "DoubleMath.fuzzyEquals should never be used in an Object.equals() method",
     severity = ERROR)
 public class FuzzyEqualsShouldNotBeUsedInEqualsMethod extends BugChecker

@@ -542,4 +542,21 @@ public class TruthIncompatibleTypeTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void comparingElementsUsingRawCollection_noFinding() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import static com.google.common.truth.Truth.assertThat;",
+            "import com.google.common.collect.ImmutableList;",
+            "import com.google.common.truth.Correspondence;",
+            "public class Test {",
+            "  @SuppressWarnings(\"unchecked\")",
+            "  public void f(Iterable xs, Correspondence<Long, String> c) {",
+            "    assertThat(xs).comparingElementsUsing(c).doesNotContain(\"\");",
+            "  }",
+            "}")
+        .doTest();
+  }
 }

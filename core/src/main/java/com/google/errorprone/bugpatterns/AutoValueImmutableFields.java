@@ -42,19 +42,11 @@ import javax.lang.model.element.Modifier;
  * @author bhagwani@google.com (Sumit Bhagwani)
  */
 @BugPattern(
-    name = "AutoValueImmutableFields",
     altNames = "mutable",
     summary = "AutoValue recommends using immutable collections",
     severity = WARNING,
     documentSuppression = false)
 public class AutoValueImmutableFields extends BugChecker implements ClassTreeMatcher {
-
-  private static final String MESSAGE =
-      "AutoValue instances should be deeply immutable. Therefore, we recommend returning %s "
-          + "instead. Read more at "
-          + "http://goo.gl/qWo9sC"
-      ;
-
   private static final ImmutableListMultimap<String, Matcher<MethodTree>> REPLACEMENT_TO_MATCHERS =
       ImmutableListMultimap.<String, Matcher<MethodTree>>builder()
           .put("ImmutableCollection", returning("java.util.Collection"))
@@ -139,14 +131,18 @@ public class AutoValueImmutableFields extends BugChecker implements ClassTreeMat
   public Description matchClass(ClassTree tree, VisitorState state) {
     if (ASTHelpers.hasAnnotation(tree, "com.google.auto.value.AutoValue", state)) {
       for (Tree memberTree : tree.getMembers()) {
-        if (memberTree instanceof MethodTree && !isSuppressed(memberTree)) {
+        if (memberTree instanceof MethodTree && !isSuppressed(memberTree, state)) {
           MethodTree methodTree = (MethodTree) memberTree;
           if (ABSTRACT_MATCHER.matches(methodTree, state)) {
             for (Map.Entry<String, Matcher<MethodTree>> entry : REPLACEMENT_TO_MATCHERS.entries()) {
               if (entry.getValue().matches(methodTree, state)) {
                 state.reportMatch(
                     buildDescription(methodTree)
-                        .setMessage(String.format(MESSAGE, entry.getKey()))
+                        .setMessage(
+                            String.format(
+                                "AutoValue instances should be deeply immutable. Therefore, we"
+                                    + " recommend returning %s instead.",
+                                entry.getKey()))
                         .build());
               }
             }

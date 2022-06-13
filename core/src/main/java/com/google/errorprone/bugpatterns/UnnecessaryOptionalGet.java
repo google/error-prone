@@ -39,7 +39,6 @@ import com.sun.source.util.TreeScanner;
  * functions of Optionals.
  */
 @BugPattern(
-    name = "UnnecessaryOptionalGet",
     summary =
         "This code can be simplified by directly using the lambda parameters instead of calling"
             + " get..() on optional.",
@@ -61,7 +60,7 @@ public final class UnnecessaryOptionalGet extends BugChecker
       anyOf(
           instanceMethod()
               .onExactClass("java.util.Optional")
-              .namedAnyOf("get", "orElse", "orElseGet", "orElseThrow"),
+              .namedAnyOf("get", "orElseThrow", "orElse", "orElseGet", "orElseThrow"),
           instanceMethod()
               .onExactClass("java.util.OptionalLong")
               .namedAnyOf("getAsLong", "orElse", "orElseGet", "orElseThrow"),

@@ -58,10 +58,7 @@ import com.sun.tools.javac.code.Type.ArrayType;
 import java.util.stream.Stream;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
-@BugPattern(
-    name = "TruthIncompatibleType",
-    summary = "Argument is not compatible with the subject's type.",
-    severity = WARNING)
+@BugPattern(summary = "Argument is not compatible with the subject's type.", severity = WARNING)
 public class TruthIncompatibleType extends BugChecker implements MethodInvocationTreeMatcher {
 
   private static final Matcher<ExpressionTree> START_OF_ASSERTION =
@@ -76,7 +73,14 @@ public class TruthIncompatibleType extends BugChecker implements MethodInvocatio
               .onDescendantOf("com.google.common.truth.StandardSubjectBuilder")
               .named("that"));
 
-  private final Matcher<ExpressionTree> isEqualTo;
+  private static final Matcher<ExpressionTree> IS_EQUAL_TO =
+      anyOf(
+          instanceMethod()
+              .onDescendantOf("com.google.common.truth.Subject")
+              .namedAnyOf("isEqualTo", "isNotEqualTo"),
+          instanceMethod()
+              .onDescendantOf("com.google.common.truth.extensions.proto.ProtoFluentAssertion")
+              .namedAnyOf("isEqualTo", "isNotEqualTo"));
 
   private static final Matcher<ExpressionTree> FLUENT_PROTO_CHAIN =
       anyOf(
@@ -142,21 +146,7 @@ public class TruthIncompatibleType extends BugChecker implements MethodInvocatio
   private final TypeCompatibilityUtils typeCompatibilityUtils;
 
   public TruthIncompatibleType(ErrorProneFlags flags) {
-    boolean handleProtoTruth = flags.getBoolean("TruthIncompatibleType:ProtoTruth").orElse(true);
-
     this.typeCompatibilityUtils = TypeCompatibilityUtils.fromFlags(flags);
-    this.isEqualTo =
-        handleProtoTruth
-            ? anyOf(
-                instanceMethod()
-                    .onDescendantOf("com.google.common.truth.Subject")
-                    .namedAnyOf("isEqualTo", "isNotEqualTo"),
-                instanceMethod()
-                    .onDescendantOf("com.google.common.truth.extensions.proto.ProtoFluentAssertion")
-                    .namedAnyOf("isEqualTo", "isNotEqualTo"))
-            : instanceMethod()
-                .onDescendantOf("com.google.common.truth.Subject")
-                .namedAnyOf("isEqualTo", "isNotEqualTo");
   }
 
   @Override
@@ -175,7 +165,7 @@ public class TruthIncompatibleType extends BugChecker implements MethodInvocatio
   }
 
   private Stream<Description> matchEquality(MethodInvocationTree tree, VisitorState state) {
-    if (!isEqualTo.matches(tree, state)) {
+    if (!IS_EQUAL_TO.matches(tree, state)) {
       return Stream.empty();
     }
     ExpressionTree receiver = getReceiver(tree);
@@ -283,6 +273,10 @@ public class TruthIncompatibleType extends BugChecker implements MethodInvocatio
             getOnlyElement(getSymbol((MethodInvocationTree) receiver).getParameters()).type,
             ignoringCasts(getOnlyElement(((MethodInvocationTree) receiver).getArguments())),
             state);
+    if (targetType == null) {
+      // The target collection may be raw.
+      return Stream.empty();
+    }
     ExpressionTree argument = getOnlyElement(tree.getArguments());
     Type sourceType = getCorrespondenceTypeArg(argument, state);
     // This is different to the others: we're checking for castability, not possible equality.
@@ -439,8 +433,11 @@ public class TruthIncompatibleType extends BugChecker implements MethodInvocatio
             .setMessage(
                 String.format(
                     "Argument '%s' should not be passed to this method: its type `%s` is"
-                        + " not compatible with `%s`",
-                    state.getSourceForNode(tree), sourceTypeName, targetTypeName))
+                        + " not compatible with `%s`"
+                        + compatibilityReport.extraReason(),
+                    state.getSourceForNode(tree),
+                    sourceTypeName,
+                    targetTypeName))
             .build());
   }
 
@@ -479,7 +476,9 @@ public class TruthIncompatibleType extends BugChecker implements MethodInvocatio
   }
 
   private static boolean isNumericType(Type parameter, VisitorState state) {
-    return parameter.isNumeric()
-        || isSubtype(parameter, state.getTypeFromString("java.lang.Number"), state);
+    return parameter.isNumeric() || isSubtype(parameter, JAVA_LANG_NUMBER.get(state), state);
   }
+
+  private static final Supplier<Type> JAVA_LANG_NUMBER =
+      VisitorState.memoize(state -> state.getTypeFromString("java.lang.Number"));
 }

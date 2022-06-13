@@ -23,11 +23,11 @@ import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.CompilationUnitTreeMatcher;
 import com.google.errorprone.matchers.Description;
+import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.CompilationUnitTree;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
-    name = "PackageInfo",
     summary = "Declaring types inside package-info.java files is very bad form",
     severity = ERROR)
 public class PackageInfo extends BugChecker implements CompilationUnitTreeMatcher {
@@ -36,7 +36,7 @@ public class PackageInfo extends BugChecker implements CompilationUnitTreeMatche
     if (tree.getSourceFile() == null) {
       return NO_MATCH;
     }
-    String name = tree.getSourceFile().getName();
+    String name = ASTHelpers.getFileName(tree);
     int idx = name.lastIndexOf('/');
     if (idx != -1) {
       name = name.substring(idx + 1);

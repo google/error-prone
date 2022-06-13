@@ -93,8 +93,11 @@ public @interface BugPattern {
 
   /**
    * A unique identifier for this bug, used for @SuppressWarnings and in the compiler error message.
+   *
+   * <p>If this is not specified (or specified as an empty string), the class name of the check will
+   * be used instead.
    */
-  String name();
+  String name() default "";
 
   /** Alternate identifiers for this bug, which may also be used in @SuppressWarnings. */
   String[] altNames() default {};
@@ -146,9 +149,7 @@ public @interface BugPattern {
 
   SeverityLevel severity();
 
-  /**
-   * The severity of the diagnostic.
-   */
+  /** The severity of the diagnostic. */
   enum SeverityLevel {
     ERROR,
     WARNING,
@@ -183,7 +184,9 @@ public @interface BugPattern {
    */
   boolean documentSuppression() default true;
 
-  /** @deprecated this is a no-op that will be removed in the future */
+  /**
+   * @deprecated this is a no-op that will be removed in the future
+   */
   @Deprecated
   boolean generateExamplesFromTestCases() default true;
 }

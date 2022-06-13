@@ -22,6 +22,7 @@ import com.google.auto.value.AutoValue;
 import com.google.common.collect.ContiguousSet;
 import com.google.common.collect.DiscreteDomain;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSortedSet;
 import com.google.common.collect.Range;
 import com.google.errorprone.refaster.UStatement.UnifierWithUnconsumedStatements;
 import com.sun.source.tree.StatementTree;
@@ -30,7 +31,6 @@ import com.sun.source.tree.TreeVisitor;
 import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.tree.JCTree.JCStatement;
 import com.sun.tools.javac.util.ListBuffer;
-import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
@@ -82,8 +82,7 @@ abstract class UBlank implements UStatement {
   }
 
   @Override
-  public Choice<UnifierWithUnconsumedStatements> apply(
-      final UnifierWithUnconsumedStatements state) {
+  public Choice<UnifierWithUnconsumedStatements> apply(UnifierWithUnconsumedStatements state) {
     int goodIndex = 0;
     while (goodIndex < state.unconsumedStatements().size()) {
       StatementTree stmt = state.unconsumedStatements().get(goodIndex);
@@ -97,14 +96,14 @@ abstract class UBlank implements UStatement {
         goodIndex++;
       }
     }
-    Collection<Integer> breakPoints =
+    ImmutableSortedSet<Integer> breakPoints =
         ContiguousSet.create(Range.closed(0, goodIndex), DiscreteDomain.integers());
     return Choice.from(breakPoints)
         .transform(
             (Integer k) -> {
               Unifier unifier = state.unifier().fork();
               unifier.putBinding(key(), state.unconsumedStatements().subList(0, k));
-              List<? extends StatementTree> remaining =
+              ImmutableList<? extends StatementTree> remaining =
                   state.unconsumedStatements().subList(k, state.unconsumedStatements().size());
               return UnifierWithUnconsumedStatements.create(unifier, remaining);
             });

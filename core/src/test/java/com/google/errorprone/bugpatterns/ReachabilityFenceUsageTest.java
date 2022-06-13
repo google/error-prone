@@ -16,10 +16,7 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static org.junit.Assume.assumeTrue;
-
 import com.google.errorprone.CompilationTestHelper;
-import com.google.errorprone.util.RuntimeVersion;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -33,7 +30,6 @@ public final class ReachabilityFenceUsageTest {
 
   @Test
   public void positive() {
-    assumeTrue(RuntimeVersion.isAtLeast9());
     compilationTestHelper
         .addSourceLines(
             "Test.java",
@@ -48,8 +44,24 @@ public final class ReachabilityFenceUsageTest {
   }
 
   @Test
+  public void positive_try() {
+    compilationTestHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.lang.ref.Reference;",
+            "class Test {",
+            "  public void run() {",
+            "    try {",
+            "      // BUG: Diagnostic contains:",
+            "      Reference.reachabilityFence(this);",
+            "    } catch (Exception e) {}",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void negative() {
-    assumeTrue(RuntimeVersion.isAtLeast9());
     compilationTestHelper
         .addSourceLines(
             "Test.java",

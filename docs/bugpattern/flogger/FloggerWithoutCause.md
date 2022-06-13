@@ -11,7 +11,7 @@ logger.atWarning().withCause(e).log("Unexpected exception");
 ```
 
 If you intended not to log the stack trace or other parts of the exception, you
-should explictly log the parts you want to keep so the intent is clear in the
+should explicitly log the parts you want to keep so the intent is clear in the
 code:
 
 ```java

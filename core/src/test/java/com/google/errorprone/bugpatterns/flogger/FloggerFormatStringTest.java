@@ -70,9 +70,8 @@ public class FloggerFormatStringTest {
             "import com.google.common.flogger.FluentLogger;",
             "class Test {",
             "  private static final FluentLogger logger = FluentLogger.forEnclosingClass();",
-            "  public void f(Exception e, Throwable t) {",
+            "  public void f(Exception e, Throwable t, String s) {",
             "    logger.atInfo().withCause(e).log(\"hello %s\", e);",
-            "    logger.atInfo().log();",
             "  }",
             "}")
         .doTest();
@@ -107,6 +106,23 @@ public class FloggerFormatStringTest {
             "  public void f(Object... xs) {",
             "    // BUG: Diagnostic contains:",
             "    logger.atInfo().log(\"hello %s %s\", xs);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  // log(String)  takes a literal string, not a format string
+  @Test
+  public void negativeLogString() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "package test;",
+            "import com.google.common.flogger.FluentLogger;",
+            "class Test {",
+            "  private static final FluentLogger logger = FluentLogger.forEnclosingClass();",
+            "  public void f() {",
+            "    logger.atSevere().log(\"hello %s\");",
             "  }",
             "}")
         .doTest();

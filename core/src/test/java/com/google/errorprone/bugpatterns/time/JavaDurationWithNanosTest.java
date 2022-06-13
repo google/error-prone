@@ -15,10 +15,7 @@
  */
 package com.google.errorprone.bugpatterns.time;
 
-import static org.junit.Assume.assumeFalse;
-
 import com.google.errorprone.CompilationTestHelper;
-import com.google.errorprone.util.RuntimeVersion;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -57,19 +54,6 @@ public class JavaDurationWithNanosTest {
   }
 
   @Test
-  public void durationWithNanosInsideJavaTime() {
-    assumeFalse(RuntimeVersion.isAtLeast9());
-    helper
-        .addSourceLines(
-            "TestClass.java",
-            "package java.time;",
-            "public class TestClass {",
-            "  private static final Duration DURATION = Duration.ZERO.withNanos(42);",
-            "}")
-        .doTest();
-  }
-
-  @Test
   public void durationWithNanosPrimitiveImportClash() {
     helper
         .addSourceLines(
@@ -83,5 +67,4 @@ public class JavaDurationWithNanosTest {
             "}")
         .doTest();
   }
-
 }

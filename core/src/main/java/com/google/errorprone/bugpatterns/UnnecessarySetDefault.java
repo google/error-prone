@@ -62,10 +62,7 @@ import java.util.OptionalInt;
 import java.util.OptionalLong;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
-@BugPattern(
-    name = "UnnecessarySetDefault",
-    summary = "Unnecessary call to NullPointerTester#setDefault",
-    severity = SUGGESTION)
+@BugPattern(summary = "Unnecessary call to NullPointerTester#setDefault", severity = SUGGESTION)
 public class UnnecessarySetDefault extends BugChecker implements MethodInvocationTreeMatcher {
 
   private static final Matcher<ExpressionTree> SET_DEFAULT =
@@ -206,7 +203,7 @@ public class UnnecessarySetDefault extends BugChecker implements MethodInvocatio
           .put("OptionalInt.class", factoryMatcher(OptionalInt.class, "empty"))
           .put("OptionalLong.class", factoryMatcher(OptionalLong.class, "empty"))
           .put("OptionalDouble.class", factoryMatcher(OptionalDouble.class, "empty"))
-          .build();
+          .buildOrThrow();
 
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {

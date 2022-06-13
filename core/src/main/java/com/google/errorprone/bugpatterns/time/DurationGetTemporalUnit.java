@@ -18,6 +18,7 @@ package com.google.errorprone.bugpatterns.time;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -41,7 +42,6 @@ import java.util.Optional;
  * SECONDS} or {@code NANOS}.
  */
 @BugPattern(
-    name = "DurationGetTemporalUnit",
     summary = "Duration.get() only works with SECONDS or NANOS.",
     explanation =
         "`Duration.get(TemporalUnit)` only works when passed `ChronoUnit.SECONDS` or "
@@ -53,8 +53,8 @@ import java.util.Optional;
     severity = ERROR)
 public final class DurationGetTemporalUnit extends BugChecker
     implements MethodInvocationTreeMatcher {
-  private static final EnumSet<ChronoUnit> INVALID_TEMPORAL_UNITS =
-      EnumSet.complementOf(EnumSet.of(ChronoUnit.SECONDS, ChronoUnit.NANOS));
+  private static final ImmutableSet<ChronoUnit> INVALID_TEMPORAL_UNITS =
+      ImmutableSet.copyOf(EnumSet.complementOf(EnumSet.of(ChronoUnit.SECONDS, ChronoUnit.NANOS)));
 
   private static final ImmutableMap<ChronoUnit, String> SUGGESTIONS =
       ImmutableMap.<ChronoUnit, String>builder()
@@ -63,10 +63,7 @@ public final class DurationGetTemporalUnit extends BugChecker
           .put(ChronoUnit.MINUTES, ".toMinutes()")
           // SECONDS is omitted because it's a valid parameter
           .put(ChronoUnit.MILLIS, ".toMillis()")
-          // TODO(kak): Do we want to add MICROS here? We'd need to add a static import for
-          // com.google.common.time.Durations.toMicros;
-          // NANOS is omitted because it's a valid parameter
-          .build();
+          .buildOrThrow();
 
   private static final Matcher<ExpressionTree> MATCHER =
       Matchers.instanceMethod()

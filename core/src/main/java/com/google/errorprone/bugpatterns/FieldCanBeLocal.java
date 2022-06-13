@@ -21,11 +21,12 @@ import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
 import static com.google.errorprone.util.ASTHelpers.getAnnotation;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
+import static com.google.errorprone.util.ASTHelpers.shouldKeep;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
-import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapBuilder;
+import com.google.common.collect.SetMultimap;
 import com.google.common.collect.Sets;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -62,7 +63,6 @@ import javax.lang.model.element.ElementKind;
 
 /** Flags fields which can be replaced with local variables. */
 @BugPattern(
-    name = "FieldCanBeLocal",
     altNames = {"unused", "Unused"},
     summary = "This field can be replaced with a local variable in the methods that use it.",
     severity = SUGGESTION,
@@ -74,19 +74,19 @@ public final class FieldCanBeLocal extends BugChecker implements CompilationUnit
   @Override
   public Description matchCompilationUnit(CompilationUnitTree tree, VisitorState state) {
     Map<VarSymbol, TreePath> potentialFields = new LinkedHashMap<>();
-    Multimap<VarSymbol, TreePath> unconditionalAssignments =
+    SetMultimap<VarSymbol, TreePath> unconditionalAssignments =
         MultimapBuilder.linkedHashKeys().linkedHashSetValues().build();
-    Multimap<VarSymbol, Tree> uses = MultimapBuilder.linkedHashKeys().linkedHashSetValues().build();
+    SetMultimap<VarSymbol, Tree> uses =
+        MultimapBuilder.linkedHashKeys().linkedHashSetValues().build();
 
-    new SuppressibleTreePathScanner<Void, Void>() {
+    new SuppressibleTreePathScanner<Void, Void>(state) {
       @Override
       public Void visitVariable(VariableTree variableTree, Void unused) {
         VarSymbol symbol = getSymbol(variableTree);
-        if (symbol != null
-            && symbol.getKind() == ElementKind.FIELD
+        if (symbol.getKind() == ElementKind.FIELD
             && symbol.isPrivate()
             && canBeLocal(variableTree)
-        ) {
+            && !shouldKeep(variableTree)) {
           potentialFields.put(symbol, getCurrentPath());
         }
         return null;
@@ -118,7 +118,7 @@ public final class FieldCanBeLocal extends BugChecker implements CompilationUnit
 
       @Override
       public Void visitClass(ClassTree classTree, Void unused) {
-        if (isSuppressed(classTree)) {
+        if (isSuppressed(classTree, state)) {
           return null;
         }
         inMethod = false;

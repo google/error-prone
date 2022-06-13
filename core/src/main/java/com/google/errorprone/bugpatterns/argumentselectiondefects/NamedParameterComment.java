@@ -112,7 +112,7 @@ public final class NamedParameterComment {
       case LINE:
         // sometimes people use comments around arguments for higher level structuring - such as
         // dividing two separate blocks of arguments. In these cases we want to avoid concluding
-        // that its a match. Therefore we also check to make sure that the comment is not really
+        // that it's a match. Therefore we also check to make sure that the comment is not really
         // long and that it doesn't contain acsii-art style markup.
         String commentText = Comments.getTextFromComment(comment);
         boolean textMatches =

@@ -35,11 +35,10 @@ import javax.lang.model.type.TypeKind;
 
 /** Discourages inadvertently using reference equality on boxed primitives in AtomicReference. */
 @BugPattern(
-    name = "PrimitiveAtomicReference",
     summary =
         "Using compareAndSet with boxed primitives is dangerous, as reference rather than value"
-            + " equality is used. Consider using AtomicInteger, AtomicLong, or AtomicBoolean"
-            + " instead.",
+            + " equality is used. Consider using AtomicInteger, AtomicLong, AtomicBoolean from JDK"
+            + " or AtomicDouble from Guava instead.",
     severity = WARNING)
 public final class PrimitiveAtomicReference extends BugChecker
     implements MethodInvocationTreeMatcher {

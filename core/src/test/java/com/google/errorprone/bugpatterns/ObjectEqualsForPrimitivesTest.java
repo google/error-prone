@@ -21,7 +21,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** @author vlk@google.com (Volodymyr Kachurovskyi) */
+/**
+ * @author vlk@google.com (Volodymyr Kachurovskyi)
+ */
 @RunWith(JUnit4.class)
 public class ObjectEqualsForPrimitivesTest {
 

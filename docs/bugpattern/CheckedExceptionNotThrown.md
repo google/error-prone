@@ -1,7 +1,7 @@
 Java allows methods to declare that they throw checked exceptions even when they
-don't. This can lead to call sites beng forced to explicitly handle or propagate
-exceptions which provably can never occur. It may also lead readers of the code
-to search for possibly throwing paths where none exist.
+don't. This can lead to call sites being forced to explicitly handle or
+propagate exceptions which provably can never occur. It may also lead readers of
+the code to search for possibly throwing paths where none exist.
 
 ```java
 private static void validateRequest(Request request) throws IOException {

@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns.threadsafety;
 
 import com.google.errorprone.CompilationTestHelper;
-import com.google.errorprone.util.RuntimeVersion;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -339,9 +338,7 @@ public class ImmutableAnnotationCheckerTest {
         .addSourceLines(
             "Test.java",
             "import java.lang.annotation.Annotation;",
-            (RuntimeVersion.isAtLeast9()
-                ? "import javax.annotation.processing.Generated;"
-                : "import javax.annotation.Generated;"),
+            "import javax.annotation.processing.Generated;",
             "@Generated(\"com.google.auto.value.processor.AutoAnnotationProcessor\")",
             "class Test implements Deprecated {",
             "  public Class<? extends Annotation> annotationType() { return Deprecated.class; }",

@@ -48,7 +48,6 @@ import java.util.regex.Pattern;
  * @author ghm@google.com (Graeme Morgan)
  */
 @BugPattern(
-    name = "ProtoRedundantSet",
     summary = "A field on a protocol buffer was set twice in the same chained expression.",
     severity = WARNING,
     tags = StandardTags.FRAGILE_CODE)
