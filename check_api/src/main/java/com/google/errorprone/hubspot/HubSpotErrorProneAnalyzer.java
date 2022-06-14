@@ -19,56 +19,40 @@ package com.google.errorprone.hubspot;
 import com.google.errorprone.ErrorProneAnalyzer;
 import com.google.errorprone.ErrorProneOptions;
 import com.sun.source.util.TaskEvent;
-import com.sun.source.util.TaskEvent.Kind;
 import com.sun.source.util.TaskListener;
-import com.sun.tools.javac.util.Context;
 
 public class HubSpotErrorProneAnalyzer implements TaskListener {
-  private final Context context;
-  private final ErrorProneOptions options;
   private final ErrorProneAnalyzer delegate;
 
 
-  public static TaskListener wrap(Context context, ErrorProneOptions options, ErrorProneAnalyzer analyzer) {
-    return new HubSpotErrorProneAnalyzer(context, options, analyzer);
+  public static TaskListener wrap(ErrorProneOptions options, ErrorProneAnalyzer analyzer) {
+    if (HubSpotUtils.isErrorHandlingEnabled(options)) {
+      return new HubSpotErrorProneAnalyzer(analyzer);
+    } else {
+      return analyzer;
+    }
   }
 
-  private HubSpotErrorProneAnalyzer(Context context, ErrorProneOptions options, ErrorProneAnalyzer delegate) {
-    this.context = context;
-    this.options = options;
+  private HubSpotErrorProneAnalyzer(ErrorProneAnalyzer delegate) {
     this.delegate = delegate;
   }
 
   @Override
-  public void started(TaskEvent taskEvent) {
-    if (taskEvent.getKind() == Kind.COMPILATION) {
-      HubSpotLifecycleManager.instance(context).handleStartup();
-    }
-
+  public void started(TaskEvent e) {
     try {
-      delegate.started(taskEvent);
+      delegate.started(e);
     } catch (Throwable t) {
-      if (HubSpotUtils.isErrorHandlingEnabled(options)) {
-        HubSpotUtils.recordUncaughtException(t);
-      }
-
+      HubSpotUtils.recordUncaughtException(t);
       throw t;
     }
   }
 
   @Override
-  public void finished(TaskEvent taskEvent) {
-    if (taskEvent.getKind() == Kind.COMPILATION) {
-      HubSpotLifecycleManager.instance(context).handleShutdown();
-    }
-
+  public void finished(TaskEvent e) {
     try {
-      delegate.finished(taskEvent);
+      delegate.finished(e);
     } catch (Throwable t) {
-      if (HubSpotUtils.isErrorHandlingEnabled(options)) {
-        HubSpotUtils.recordUncaughtException(t);
-      }
-
+      HubSpotUtils.recordUncaughtException(t);
       throw t;
     }
   }
