@@ -8,8 +8,8 @@ callers.
 
 ## Casting
 
-If an unchecked cast is required, use a single-statement cast, with the
-suppression on the method (rather than the statement). For example
+If an unchecked cast is required, prefer a single-statement cast, with the
+suppression on the method (rather than the statement). For example:
 
 ```java
   @SuppressWarnings("unchecked")
