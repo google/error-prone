@@ -74,15 +74,7 @@ public class SelfAlwaysReturnsThisTest {
             "    }",
             "  }",
             "}")
-        // TODO(b/235255949): this should probably be .expectUnchanged()
-        .addOutputLines(
-            "Builder.java",
-            "package com.google.frobber;",
-            "public final class Builder {",
-            "  public Builder self() {",
-            "    return this;",
-            "  }",
-            "}")
+        .expectUnchanged()
         .doTest();
   }
 
@@ -101,15 +93,7 @@ public class SelfAlwaysReturnsThisTest {
             "    }",
             "  }",
             "}")
-        // TODO(b/235255949): this should probably be .expectUnchanged()
-        .addOutputLines(
-            "Builder.java",
-            "package com.google.frobber;",
-            "public final class Builder {",
-            "  public Builder self() {",
-            "    return this;",
-            "  }",
-            "}")
+        .expectUnchanged()
         .doTest();
   }
 

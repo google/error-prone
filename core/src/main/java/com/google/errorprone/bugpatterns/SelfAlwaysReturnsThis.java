@@ -22,6 +22,7 @@ import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.enclosingClass;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
+import static com.google.errorprone.util.ASTHelpers.isConsideredFinal;
 import static com.google.errorprone.util.ASTHelpers.isSameType;
 import static com.google.errorprone.util.ASTHelpers.isVoidType;
 
@@ -32,14 +33,20 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
+import com.sun.source.tree.LambdaExpressionTree;
 import com.sun.source.tree.MethodTree;
+import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.ReturnTree;
-import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.TypeCastTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.SimpleTreeVisitor;
+import com.sun.source.util.TreePathScanner;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
+import com.sun.tools.javac.code.Symbol.VarSymbol;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Non-abstract instance methods named {@code self()} that return the enclosing class must always
@@ -82,32 +89,53 @@ public final class SelfAlwaysReturnsThis extends BugChecker implements MethodTre
 
     // TODO(kak): we should probably re-used the TreePathScanner from CanIgnoreReturnValueSuggester
 
-    // * have a body that is exactly 1 statement
-    if (methodTree.getBody().getStatements().size() == 1) {
+    // This TreePathScanner is mostly copied from CanIgnoreReturnValueSuggester
+    AtomicBoolean allReturnThis = new AtomicBoolean(true);
+    AtomicBoolean atLeastOneReturn = new AtomicBoolean(false);
 
-      // * the 1 statement is "return this;" or "return (T) this;"
-      StatementTree statement = methodTree.getBody().getStatements().get(0);
-      if (statement instanceof ReturnTree) {
-        ExpressionTree returnExpression = ((ReturnTree) statement).getExpression();
+    new TreePathScanner<Void, Void>() {
+      private final Set<VarSymbol> thises = new HashSet<>();
 
-        if (maybeCastThis(returnExpression)) {
-          return NO_MATCH;
+      @Override
+      public Void visitVariable(VariableTree variableTree, Void unused) {
+        VarSymbol symbol = getSymbol(variableTree);
+        if (isConsideredFinal(symbol) && maybeCastThis(variableTree.getInitializer())) {
+          thises.add(symbol);
         }
+        return super.visitVariable(variableTree, null);
       }
-    }
 
-    // * or have a body that is exactly 2 statement
-    if (methodTree.getBody().getStatements().size() == 2) {
-      // * the 1st statement is an assignment (e.g., Builder self = (Builder) this;)
-      StatementTree firstStatement = methodTree.getBody().getStatements().get(0);
-      StatementTree secondStatement = methodTree.getBody().getStatements().get(1);
-      if (firstStatement instanceof VariableTree && secondStatement instanceof ReturnTree) {
-        if (maybeCastThis(((VariableTree) firstStatement).getInitializer())
-            && getSymbol(firstStatement)
-                .equals(getSymbol(((ReturnTree) secondStatement).getExpression()))) {
-          return NO_MATCH;
+      @Override
+      public Void visitReturn(ReturnTree returnTree, Void unused) {
+        atLeastOneReturn.set(true);
+        if (!isThis(returnTree.getExpression())) {
+          allReturnThis.set(false);
+          // once we've set allReturnThis to false, no need to descend further
+          return null;
         }
+        return super.visitReturn(returnTree, null);
       }
+
+      /** Returns whether the given {@link ExpressionTree} is {@code this}. */
+      private boolean isThis(ExpressionTree returnExpression) {
+        return maybeCastThis(returnExpression) || thises.contains(getSymbol(returnExpression));
+      }
+
+      @Override
+      public Void visitLambdaExpression(LambdaExpressionTree node, Void unused) {
+        // don't descend into lambdas
+        return null;
+      }
+
+      @Override
+      public Void visitNewClass(NewClassTree node, Void unused) {
+        // don't descend into declarations of anonymous classes
+        return null;
+      }
+    }.scan(state.getPath(), null);
+
+    if (atLeastOneReturn.get() && allReturnThis.get()) {
+      return NO_MATCH;
     }
 
     return describeMatch(
@@ -117,6 +145,7 @@ public final class SelfAlwaysReturnsThis extends BugChecker implements MethodTre
   private static boolean maybeCastThis(Tree tree) {
     return firstNonNull(
         new SimpleTreeVisitor<Boolean, Void>() {
+
           @Override
           public Boolean visitTypeCast(TypeCastTree tree, Void unused) {
             return visit(tree.getExpression(), null);
@@ -124,17 +153,9 @@ public final class SelfAlwaysReturnsThis extends BugChecker implements MethodTre
 
           @Override
           public Boolean visitIdentifier(IdentifierTree tree, Void unused) {
-            return isThis(tree);
+            return tree.getName().contentEquals("this");
           }
         }.visit(tree, null),
         false);
-  }
-
-  /** Returns whether the given {@link ExpressionTree} is exactly {@code this}. */
-  private static boolean isThis(ExpressionTree expression) {
-    if (expression instanceof IdentifierTree) {
-      return ((IdentifierTree) expression).getName().contentEquals("this");
-    }
-    return false;
   }
 }
