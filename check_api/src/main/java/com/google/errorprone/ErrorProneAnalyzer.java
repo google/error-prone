@@ -100,7 +100,7 @@ public class ErrorProneAnalyzer implements TaskListener {
         descriptionListenerFactory);
   }
 
-  private ErrorProneAnalyzer(
+  public ErrorProneAnalyzer(
       Supplier<CodeTransformer> transformer,
       ErrorProneOptions errorProneOptions,
       Context context,
@@ -117,17 +117,7 @@ public class ErrorProneAnalyzer implements TaskListener {
   private int errorProneErrors = 0;
 
   @Override
-  public void started(TaskEvent taskEvent) {
-    if (taskEvent.getKind() == Kind.COMPILATION) {
-      HubSpotLifecycleManager.instance(context).handleStartup();
-    }
-  }
-
-  @Override
   public void finished(TaskEvent taskEvent) {
-    if (taskEvent.getKind() == Kind.COMPILATION) {
-      HubSpotLifecycleManager.instance(context).handleShutdown();
-    }
     if (taskEvent.getKind() != Kind.ANALYZE) {
       return;
     }

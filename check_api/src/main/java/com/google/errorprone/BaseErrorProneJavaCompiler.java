@@ -50,7 +50,6 @@ import javax.annotation.Nullable;
 import javax.lang.model.SourceVersion;
 import javax.tools.DiagnosticListener;
 import javax.tools.JavaCompiler;
-import javax.tools.JavaCompiler.CompilationTask;
 import javax.tools.JavaFileManager;
 import javax.tools.JavaFileObject;
 import javax.tools.StandardJavaFileManager;
@@ -97,10 +96,13 @@ public class BaseErrorProneJavaCompiler implements JavaCompiler {
     checkCompilePolicy(Options.instance(context).get("compilePolicy"));
     setupMessageBundle(context);
     RefactoringCollection[] refactoringCollection = {null};
-    javacTask.addTaskListener(
-        HubSpotErrorProneAnalyzer.wrap(
-            errorProneOptions,
-            createAnalyzer(scannerSupplier, errorProneOptions, context, refactoringCollection)));
+    if (errorProneOptions.patchingOptions().doRefactor()) {
+      javacTask.addTaskListener(
+          createAnalyzer(scannerSupplier, errorProneOptions, context, refactoringCollection));
+    } else {
+      javacTask.addTaskListener(
+          HubSpotErrorProneAnalyzer.create(scannerSupplier, errorProneOptions, context));
+    }
     if (refactoringCollection[0] != null) {
       javacTask.addTaskListener(new RefactoringTask(context, refactoringCollection[0]));
     }
