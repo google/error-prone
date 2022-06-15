@@ -16,11 +16,14 @@
 
 package com.google.errorprone.bugpatterns.threadsafety;
 
+import static org.junit.Assume.assumeTrue;
+
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.CompilationTestHelper;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import com.google.errorprone.annotations.Immutable;
 import com.google.errorprone.annotations.concurrent.LazyInit;
+import com.google.errorprone.util.RuntimeVersion;
 import java.util.Arrays;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -2965,6 +2968,29 @@ public class ImmutableCheckerTest {
             "        return 0;",
             "      }",
             "    });",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void switchExpressionsResultingInGenericTypes_doesNotThrow() {
+    assumeTrue(RuntimeVersion.isAtLeast14());
+    compilationHelper
+        .addSourceLines(
+            "Kind.java",
+            "import com.google.errorprone.annotations.Immutable;",
+            "@Immutable enum Kind { A, B; }")
+        .addSourceLines(
+            "Test.java",
+            "import java.util.Optional;",
+            "import java.util.function.Supplier;",
+            "class Test {",
+            "  Supplier<Optional<String>> test(Kind kind) {",
+            "    return switch (kind) {",
+            "      case A -> Optional::empty;",
+            "      case B -> () -> Optional.of(\"\");",
+            "    };",
             "  }",
             "}")
         .doTest();
