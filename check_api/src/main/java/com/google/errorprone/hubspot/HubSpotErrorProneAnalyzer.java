@@ -22,8 +22,10 @@ import com.google.errorprone.scanner.ScannerSupplier;
 import com.sun.source.util.TaskEvent;
 import com.sun.source.util.TaskEvent.Kind;
 import com.sun.source.util.TaskListener;
+import com.sun.tools.javac.api.ClientCodeWrapper.Trusted;
 import com.sun.tools.javac.util.Context;
 
+@Trusted
 public class HubSpotErrorProneAnalyzer implements TaskListener {
   private final Context context;
   private final ErrorProneOptions options;
