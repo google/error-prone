@@ -417,6 +417,7 @@ import com.google.errorprone.bugpatterns.argumentselectiondefects.ArgumentSelect
 import com.google.errorprone.bugpatterns.argumentselectiondefects.AssertEqualsArgumentOrderChecker;
 import com.google.errorprone.bugpatterns.argumentselectiondefects.AutoValueConstructorOrderChecker;
 import com.google.errorprone.bugpatterns.checkreturnvalue.CanIgnoreReturnValueSuggester;
+import com.google.errorprone.bugpatterns.checkreturnvalue.NoCanIgnoreReturnValueOnClasses;
 import com.google.errorprone.bugpatterns.checkreturnvalue.UsingJsr305CheckReturnValue;
 import com.google.errorprone.bugpatterns.collectionincompatibletype.CollectionIncompatibleType;
 import com.google.errorprone.bugpatterns.collectionincompatibletype.CollectionUndefinedEquality;
@@ -1073,6 +1074,7 @@ public class BuiltInCheckerSuppliers {
           MultiVariableDeclaration.class,
           MultipleTopLevelClasses.class,
           NoAllocationChecker.class,
+          NoCanIgnoreReturnValueOnClasses.class,
           NonCanonicalStaticMemberImport.class,
           PackageLocation.class,
           ParameterComment.class,
