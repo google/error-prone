@@ -45,6 +45,7 @@ import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.UnusedReturnValueMatcher;
 import com.google.errorprone.util.ASTHelpers;
+import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.ConditionalExpressionTree;
 import com.sun.source.tree.ExpressionStatementTree;
@@ -245,7 +246,7 @@ public abstract class AbstractMustBeClosedChecker extends BugChecker {
 
   private static boolean variableInitializationCountsAsClosing(VarSymbol var) {
     // static final fields don't need to be closed, because they never leave scope
-    return var.isStatic() && var.getModifiers().contains(Modifier.FINAL);
+    return (var.isStatic() || var.owner.isEnum()) && var.getModifiers().contains(Modifier.FINAL);
   }
 
   // We allow calling @MBC methods anywhere inside of a static initializer. This is a compromise:
@@ -258,8 +259,12 @@ public abstract class AbstractMustBeClosedChecker extends BugChecker {
     return Streams.stream(state.getPath())
         .anyMatch(
             tree ->
-                tree instanceof VariableTree
-                    && variableInitializationCountsAsClosing((VarSymbol) getSymbol(tree)));
+                (tree instanceof VariableTree
+                        && variableInitializationCountsAsClosing((VarSymbol) getSymbol(tree)))
+                    || (tree instanceof AssignmentTree
+                        && getSymbol(((AssignmentTree) tree).getVariable()) instanceof VarSymbol
+                        && variableInitializationCountsAsClosing(
+                            (VarSymbol) getSymbol(((AssignmentTree) tree).getVariable()))));
   }
 
   /**

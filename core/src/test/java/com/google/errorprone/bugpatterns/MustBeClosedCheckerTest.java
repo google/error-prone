@@ -50,4 +50,26 @@ public class MustBeClosedCheckerTest {
         .allowBreakingChanges() // The fix is best-effort, and some variable names may clash
         .doTest();
   }
+
+  @Test
+  public void enumInitializer() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.errorprone.annotations.MustBeClosed;",
+            "import java.io.Closeable;",
+            "enum Test {",
+            "  A;",
+            "  interface Foo extends Closeable {}",
+            "  @MustBeClosed static Foo createResource() {",
+            "    return null;",
+            "  }",
+            "  private final Foo resource;",
+            "  private final Foo resource2 = createResource();",
+            "  Test() {",
+            "    this.resource = createResource();",
+            "  }",
+            "}")
+        .doTest();
+  }
 }
