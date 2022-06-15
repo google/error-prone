@@ -120,11 +120,15 @@ public class ImmutableChecker extends BugChecker
 
   @Override
   public Description matchLambdaExpression(LambdaExpressionTree tree, VisitorState state) {
-    TypeSymbol lambdaType = getType(tree).tsym;
+    Type type = getType(tree);
+    if (type == null) {
+      return NO_MATCH;
+    }
+    TypeSymbol lambdaType = type.tsym;
     ImmutableAnalysis analysis = createImmutableAnalysis(state);
     Violation info =
         analysis.checkInstantiation(
-            lambdaType.getTypeParameters(), getType(tree).getTypeArguments());
+            lambdaType.getTypeParameters(), type.getTypeArguments());
 
     if (info.isPresent()) {
       state.reportMatch(buildDescription(tree).setMessage(info.message()).build());
@@ -147,10 +151,18 @@ public class ImmutableChecker extends BugChecker
     // check instantiations of `@ImmutableTypeParameter`s in method references
     checkInvocation(tree, getSymbol(tree), ((JCMemberReference) tree).referentType, state);
     ImmutableAnalysis analysis = createImmutableAnalysis(state);
-    TypeSymbol memberReferenceType = targetType(state).type().tsym;
+    ASTHelpers.TargetType targetType = targetType(state);
+    if (targetType == null) {
+      return NO_MATCH;
+    }
+    TypeSymbol memberReferenceType = targetType.type().tsym;
+    Type type = getType(tree);
+    if (type == null) {
+      return NO_MATCH;
+    }
     Violation info =
         analysis.checkInstantiation(
-            memberReferenceType.getTypeParameters(), getType(tree).getTypeArguments());
+            memberReferenceType.getTypeParameters(), type.getTypeArguments());
 
     if (info.isPresent()) {
       state.reportMatch(buildDescription(tree).setMessage(info.message()).build());
@@ -190,11 +202,15 @@ public class ImmutableChecker extends BugChecker
     // check instantiations of `@ImmutableTypeParameter`s in generic constructor invocations
     checkInvocation(tree, getSymbol(tree), ((JCNewClass) tree).constructorType, state);
     // check instantiations of `@ImmutableTypeParameter`s in class constructor invocations
+    Type type = getType(tree);
+    if (type == null) {
+      return NO_MATCH;
+    }
     checkInstantiation(
         tree,
         state,
         getSymbol(tree.getIdentifier()).getTypeParameters(),
-        ASTHelpers.getType(tree).getTypeArguments());
+        type.getTypeArguments());
 
     ClassTree classBody = tree.getClassBody();
 
@@ -210,11 +226,15 @@ public class ImmutableChecker extends BugChecker
 
   @Override
   public Description matchMethod(MethodTree tree, VisitorState state) {
+    Type type = getType(tree);
+    if (type == null) {
+      return NO_MATCH;
+    }
     checkInstantiation(
         tree,
         state,
         getSymbol(tree).getTypeParameters(),
-        ASTHelpers.getType(tree).getTypeArguments());
+        type.getTypeArguments());
     return NO_MATCH;
   }
 
@@ -336,22 +356,28 @@ public class ImmutableChecker extends BugChecker
   private void checkClassTreeInstantiation(
       ClassTree tree, VisitorState state, ImmutableAnalysis analysis) {
     for (Tree implementTree : tree.getImplementsClause()) {
-      checkInstantiation(
-          tree,
-          state,
-          analysis,
-          getSymbol(implementTree).getTypeParameters(),
-          ASTHelpers.getType(implementTree).getTypeArguments());
+      Type type = getType(implementTree);
+      if (type != null) {
+        checkInstantiation(
+                tree,
+                state,
+                analysis,
+                getSymbol(implementTree).getTypeParameters(),
+                type.getTypeArguments());
+      }
     }
 
     Tree extendsClause = tree.getExtendsClause();
     if (extendsClause != null) {
-      checkInstantiation(
-          tree,
-          state,
-          analysis,
-          getSymbol(extendsClause).getTypeParameters(),
-          ASTHelpers.getType(extendsClause).getTypeArguments());
+      Type type = getType(extendsClause);
+      if (type != null) {
+        checkInstantiation(
+                tree,
+                state,
+                analysis,
+                getSymbol(extendsClause).getTypeParameters(),
+                type.getTypeArguments());
+      }
     }
   }
 
@@ -394,11 +420,15 @@ public class ImmutableChecker extends BugChecker
     //   return new ImmutableBox<>(t);
     // }
     ImmutableSet<String> typarams = immutableTypeParametersInScope(sym, state, analysis);
+    ClassType classType = getType(tree);
+    if (classType == null) {
+      return NO_MATCH;
+    }
     Violation info =
         analysis.areFieldsImmutable(
             Optional.of(tree),
             typarams,
-            ASTHelpers.getType(tree),
+            classType,
             (t, i) -> describeAnonymous(t, superType, i));
     if (!info.isPresent()) {
       return NO_MATCH;
