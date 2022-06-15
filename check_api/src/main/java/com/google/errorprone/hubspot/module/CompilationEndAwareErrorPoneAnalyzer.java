@@ -16,8 +16,12 @@
 
 package com.google.errorprone.hubspot.module;
 
+import java.util.List;
+import java.util.Set;
+
 import com.google.common.base.Supplier;
 import com.google.common.base.Suppliers;
+import com.google.common.reflect.Reflection;
 import com.google.errorprone.ErrorProneAnalyzer;
 import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.ErrorProneOptions;
@@ -28,6 +32,7 @@ import com.google.errorprone.descriptionlistener.DescriptionListeners;
 import com.google.errorprone.hubspot.HubSpotUtils;
 import com.google.errorprone.scanner.ErrorProneScanner;
 import com.google.errorprone.scanner.ErrorProneScannerTransformer;
+import com.google.errorprone.scanner.Scanner;
 import com.google.errorprone.scanner.ScannerSupplier;
 import com.sun.source.util.TaskEvent;
 import com.sun.source.util.TaskEvent.Kind;
@@ -45,12 +50,12 @@ public class CompilationEndAwareErrorPoneAnalyzer implements TaskListener {
   public static CompilationEndAwareErrorPoneAnalyzer create(ScannerSupplier scannerSupplier, ErrorProneOptions errorProneOptions, Context context) {
     context.put(ErrorProneFlags.class, errorProneOptions.getFlags());
 
-    Supplier<ErrorProneScanner> memoizedScanner = Suppliers.memoize(
+    Supplier<Scanner> memoizedScanner = Suppliers.memoize(
         () -> {
           // we can't load plugins from the processorpath until the filemanager has been
           // initialized, so do it lazily
           try {
-                return (ErrorProneScanner) ErrorPronePlugins.loadPlugins(scannerSupplier, errorProneOptions, context)
+                return ErrorPronePlugins.loadPlugins(scannerSupplier, errorProneOptions, context)
                     .applyOverrides(errorProneOptions)
                     .get();
           } catch (InvalidCommandLineOptionException e) {
@@ -71,14 +76,14 @@ public class CompilationEndAwareErrorPoneAnalyzer implements TaskListener {
   // This class takes a memoized scanner so that we can later access the same instances
   // of BugChecker that were used by the actual tree traversal. A bit of a hack, but error-pone
   // doesn't really provide a better way to get at the checks
-  private final Supplier<ErrorProneScanner> memoizedScanner;
+  private final Supplier<Scanner> memoizedScanner;
   private final ErrorProneOptions errorProneOptions;
   private final Context context;
   private final ErrorProneAnalyzer delegate;
 
   private boolean hasHadFatalError = false;
 
-  private CompilationEndAwareErrorPoneAnalyzer(Supplier<ErrorProneScanner> memoizedScanner,
+  private CompilationEndAwareErrorPoneAnalyzer(Supplier<Scanner> memoizedScanner,
                                                ErrorProneOptions errorProneOptions,
                                                Context context,
                                                ErrorProneAnalyzer delegate) {
@@ -124,14 +129,25 @@ public class CompilationEndAwareErrorPoneAnalyzer implements TaskListener {
 
   public void onModuleFinished() {
     try {
+      Scanner scanner = memoizedScanner.get();
+      if (!(scanner instanceof ErrorProneScanner)) {
+
+        if (scanner.getClass().getEnclosingClass() != null && Reflection.getPackageName(scanner.getClass()).startsWith("com.google.errorprone.")) {
+          // This happens in some tests that still use deprecated testing methods
+          return;
+        } else {
+          throw new IllegalStateException("Unexpected scanner type " + scanner.getClass());
+        }
+      }
+
       ModuleState moduleState = ModuleState.create(
           context,
           DescriptionListeners.factory(context),
-          memoizedScanner.get().severityMap(),
+          scanner.severityMap(),
           errorProneOptions
       );
 
-      for (BugChecker bugChecker : memoizedScanner.get().getBugCheckers()) {
+      for (BugChecker bugChecker : ((ErrorProneScanner)scanner).getBugCheckers()) {
         if (bugChecker instanceof ModuleFinishedMatcher) {
           moduleState.reportMatch(
               ((ModuleFinishedMatcher)bugChecker).visitFinishedModule(moduleState)
