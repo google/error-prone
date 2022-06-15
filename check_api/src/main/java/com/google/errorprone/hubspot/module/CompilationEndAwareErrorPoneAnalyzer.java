@@ -76,6 +76,8 @@ public class CompilationEndAwareErrorPoneAnalyzer implements TaskListener {
   private final Context context;
   private final ErrorProneAnalyzer delegate;
 
+  private boolean hasHadFatalError = false;
+
   private CompilationEndAwareErrorPoneAnalyzer(Supplier<ErrorProneScanner> memoizedScanner,
                                                ErrorProneOptions errorProneOptions,
                                                Context context,
@@ -95,6 +97,8 @@ public class CompilationEndAwareErrorPoneAnalyzer implements TaskListener {
         HubSpotUtils.recordUncaughtException(t);
       }
 
+      hasHadFatalError = true;
+
       throw t;
     }
   }
@@ -108,10 +112,12 @@ public class CompilationEndAwareErrorPoneAnalyzer implements TaskListener {
         HubSpotUtils.recordUncaughtException(t);
       }
 
+      hasHadFatalError = true;
+
       throw t;
     }
 
-    if (e.getKind() == Kind.COMPILATION) {
+    if (e.getKind() == Kind.COMPILATION && !hasHadFatalError) {
       onModuleFinished();
     }
   }
