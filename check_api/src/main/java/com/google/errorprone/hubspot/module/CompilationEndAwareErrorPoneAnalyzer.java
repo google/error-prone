@@ -16,9 +16,6 @@
 
 package com.google.errorprone.hubspot.module;
 
-import java.util.List;
-import java.util.Set;
-
 import com.google.common.base.Supplier;
 import com.google.common.base.Suppliers;
 import com.google.common.reflect.Reflection;
@@ -148,9 +145,9 @@ public class CompilationEndAwareErrorPoneAnalyzer implements TaskListener {
       );
 
       for (BugChecker bugChecker : ((ErrorProneScanner)scanner).getBugCheckers()) {
-        if (bugChecker instanceof ModuleFinishedMatcher) {
+        if (bugChecker instanceof ModuleAwareChecker) {
           moduleState.reportMatch(
-              ((ModuleFinishedMatcher)bugChecker).visitFinishedModule(moduleState)
+              ((ModuleAwareChecker)bugChecker).onModuleFinished(moduleState)
           );
         }
       }

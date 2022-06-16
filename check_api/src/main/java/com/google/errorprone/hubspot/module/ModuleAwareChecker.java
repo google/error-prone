@@ -16,6 +16,6 @@
 
 package com.google.errorprone.hubspot.module;
 
-public interface ModuleFinishedMatcher {
-  ModuleDescription visitFinishedModule(ModuleState moduleState);
+public interface ModuleAwareChecker {
+  ModuleDescription onModuleFinished(ModuleState moduleState);
 }
