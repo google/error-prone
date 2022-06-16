@@ -17,7 +17,7 @@
 package com.google.errorprone.bugpatterns.checkreturnvalue;
 
 import static com.google.common.base.MoreObjects.firstNonNull;
-import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
+import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.fixes.SuggestedFixes.qualifyType;
 import static com.google.errorprone.matchers.ChildMultiMatcher.MatchType.AT_LEAST_ONE;
 import static com.google.errorprone.matchers.Matchers.annotations;
@@ -67,7 +67,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
         "@CanIgnoreReturnValue should not be applied to classes as it almost always overmatches (as"
             + " it applies to constructors and all methods), and the CIRVness isn't conferred to"
             + " its subclasses.",
-    severity = WARNING)
+    severity = ERROR)
 public final class NoCanIgnoreReturnValueOnClasses extends BugChecker implements ClassTreeMatcher {
   private static final String CRV = "com.google.errorprone.annotations.CheckReturnValue";
   private static final String CIRV = "com.google.errorprone.annotations.CanIgnoreReturnValue";
