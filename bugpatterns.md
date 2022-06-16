@@ -362,6 +362,9 @@ This method returns a resource which must be managed carefully, not just left fo
 __[NCopiesOfChar](bugpattern/NCopiesOfChar)__<br>
 The first argument to nCopies is the number of copies, and the second is the item to copy
 
+__[NoCanIgnoreReturnValueOnClasses](bugpattern/NoCanIgnoreReturnValueOnClasses)__<br>
+@CanIgnoreReturnValue should not be applied to classes as it almost always overmatches (as it applies to constructors and all methods), and the CIRVness isn&#39;t conferred to its subclasses.
+
 __[NonCanonicalStaticImport](bugpattern/NonCanonicalStaticImport)__<br>
 Static import of type uses non-canonical name
 
@@ -1375,9 +1378,6 @@ Methods and non-static variables should be named in lowerCamelCase.
 
 __[MissingDefault](bugpattern/MissingDefault)__<br>
 The Google Java Style Guide requires that each switch statement includes a default statement group, even if it contains no code. (This requirement is lifted for any switch statement that covers all values of an enum.)
-
-__[NoCanIgnoreReturnValueOnClasses](bugpattern/NoCanIgnoreReturnValueOnClasses)__<br>
-@CanIgnoreReturnValue should not be applied to classes as it almost always overmatches (as it applies to constructors and all methods), and the CIRVness isn&#39;t conferred to its subclasses.
 
 __[NonCanonicalStaticMemberImport](bugpattern/NonCanonicalStaticMemberImport)__<br>
 Static import of member uses non-canonical name

@@ -5,7 +5,7 @@ summary: '@CanIgnoreReturnValue should not be applied to classes as it almost al
   conferred to its subclasses.'
 layout: bugpattern
 tags: ''
-severity: WARNING
+severity: ERROR
 ---
 
 <!--
