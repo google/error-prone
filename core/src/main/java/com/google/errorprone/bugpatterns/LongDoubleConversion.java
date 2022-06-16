@@ -18,6 +18,7 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
+import static com.google.errorprone.util.ASTHelpers.constValue;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.targetType;
 
@@ -39,7 +40,7 @@ import javax.lang.model.type.TypeKind;
         "Conversion from long to double may lose precision; use an explicit cast to double if this"
             + " was intentional",
     severity = WARNING)
-public class LongDoubleConversion extends BugChecker implements MethodInvocationTreeMatcher {
+public final class LongDoubleConversion extends BugChecker implements MethodInvocationTreeMatcher {
 
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
@@ -51,6 +52,10 @@ public class LongDoubleConversion extends BugChecker implements MethodInvocation
 
   private void checkArgument(ExpressionTree argument, VisitorState state) {
     if (!getType(argument).getKind().equals(TypeKind.LONG)) {
+      return;
+    }
+    Object constant = constValue(argument);
+    if (constant instanceof Long && constant.equals((long) ((Long) constant).doubleValue())) {
       return;
     }
     ASTHelpers.TargetType targetType =
