@@ -79,81 +79,87 @@ loadScripts(document, 'script');</script>
 </td>
 </tr>
 <tr class="alt-color">
+<th class="col-first" scope="row"><a href="BuilderReturnThis.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">BuilderReturnThis</a></th>
+<td class="col-last">
+<div class="block">Discourages builder instance methods that do not return 'this'.</div>
+</td>
+</tr>
+<tr class="row-color">
 <th class="col-first" scope="row"><a href="CanIgnoreReturnValueSuggester.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">CanIgnoreReturnValueSuggester</a></th>
 <td class="col-last">
 <div class="block">Checker that recommends annotating a method with <code>@CanIgnoreReturnValue</code> if the method
  always returns <code>this</code>.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <th class="col-first" scope="row"><a href="ExternalCanIgnoreReturnValue.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ExternalCanIgnoreReturnValue</a></th>
 <td class="col-last">
 <div class="block">External source of information about @CanIgnoreReturnValue-equivalent API's.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <th class="col-first" scope="row"><a href="NoCanIgnoreReturnValueOnClasses.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">NoCanIgnoreReturnValueOnClasses</a></th>
 <td class="col-last">
 <div class="block">Checker that "pushes" the <code>@CanIgnoreReturnValue</code> annotation down from classes to methods.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <th class="col-first" scope="row"><a href="ProtoRules.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ProtoRules</a></th>
 <td class="col-last">
 <div class="block">Rules for methods on proto messages and builders.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <th class="col-first" scope="row"><a href="ResultUsePolicyEvaluator.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUsePolicyEvaluator</a></th>
 <td class="col-last">
 <div class="block">Evaluates methods and their enclosing classes and packages to determine a <a href="ResultUsePolicy.html" title="enum in com.google.errorprone.bugpatterns.checkreturnvalue"><code>ResultUsePolicy</code></a>
  for the methods.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <th class="col-first" scope="row"><a href="ResultUsePolicyEvaluator.Builder.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUsePolicyEvaluator.Builder</a></th>
 <td class="col-last">
 <div class="block">Builder for <a href="ResultUsePolicyEvaluator.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue"><code>ResultUsePolicyEvaluator</code></a>.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <th class="col-first" scope="row"><a href="ResultUseRule.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUseRule</a></th>
 <td class="col-last">
 <div class="block">A rule for determining <a href="ResultUsePolicy.html" title="enum in com.google.errorprone.bugpatterns.checkreturnvalue"><code>ResultUsePolicy</code></a> for methods and/or constructors.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <th class="col-first" scope="row"><a href="ResultUseRule.Evaluation.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUseRule.Evaluation</a></th>
 <td class="col-last">
 <div class="block">An evaluation that a rule makes.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <th class="col-first" scope="row"><a href="ResultUseRule.GlobalRule.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUseRule.GlobalRule</a></th>
 <td class="col-last">
 <div class="block">A global rule that is evaluated when none of the more specific rules determine a <a href="ResultUsePolicy.html" title="enum in com.google.errorprone.bugpatterns.checkreturnvalue"><code>ResultUsePolicy</code></a> for a method.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <th class="col-first" scope="row"><a href="ResultUseRule.MethodRule.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUseRule.MethodRule</a></th>
 <td class="col-last">
 <div class="block">A rule that evaluates methods and constructors to determine a <a href="ResultUsePolicy.html" title="enum in com.google.errorprone.bugpatterns.checkreturnvalue"><code>ResultUsePolicy</code></a> for them.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <th class="col-first" scope="row"><a href="ResultUseRule.SymbolRule.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUseRule.SymbolRule</a></th>
 <td class="col-last">
 <div class="block">A rule that evaluates symbols of any kind to determine a <a href="ResultUsePolicy.html" title="enum in com.google.errorprone.bugpatterns.checkreturnvalue"><code>ResultUsePolicy</code></a> to associate
  with them.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <th class="col-first" scope="row"><a href="Rules.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">Rules</a></th>
 <td class="col-last">
 <div class="block">Factories for common kinds <a href="ResultUseRule.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue"><code>ResultUseRule</code></a>s.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <th class="col-first" scope="row"><a href="UsingJsr305CheckReturnValue.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">UsingJsr305CheckReturnValue</a></th>
 <td class="col-last">
 <div class="block">Checker that recommends using ErrorProne's version of <code>@CheckReturnValue</code> over the version

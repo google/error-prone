@@ -1310,6 +1310,9 @@ A call to Binder.clearCallingIdentity() should be followed by Binder.restoreCall
 __[BindingToUnqualifiedCommonType](bugpattern/BindingToUnqualifiedCommonType)__<br>
 This code declares a binding for a common value type without a Qualifier annotation.
 
+__[BuilderReturnThis](bugpattern/BuilderReturnThis)__<br>
+Builder instance method does not return &#39;this&#39;
+
 __[CanIgnoreReturnValueSuggester](bugpattern/CanIgnoreReturnValueSuggester)__<br>
 Methods that always &#39;return this&#39; should be annotated with @CanIgnoreReturnValue
 
