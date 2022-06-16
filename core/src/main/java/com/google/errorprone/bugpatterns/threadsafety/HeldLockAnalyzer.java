@@ -85,14 +85,10 @@ public final class HeldLockAnalyzer {
       VisitorState state,
       LockEventListener listener,
       Predicate<Tree> isSuppressed,
-      GuardedByFlags flags,
-      boolean reportMissingGuards,
-      boolean checkTryWithResources) {
+      GuardedByFlags flags) {
     HeldLockSet locks = HeldLockSet.empty();
     locks = handleMonitorGuards(state, locks, flags);
-    new LockScanner(
-            state, listener, isSuppressed, flags, reportMissingGuards, checkTryWithResources)
-        .scan(state.getPath(), locks);
+    new LockScanner(state, listener, isSuppressed, flags).scan(state.getPath(), locks);
   }
 
   // Don't use Class#getName() for inner classes, we don't want `Monitor$Guard`
@@ -127,8 +123,6 @@ public final class HeldLockAnalyzer {
     private final LockEventListener listener;
     private final Predicate<Tree> isSuppressed;
     private final GuardedByFlags flags;
-    private final boolean reportMissingGuards;
-    private final boolean checkTryWithResources;
 
     private static final GuardedByExpression.Factory F = new GuardedByExpression.Factory();
 
@@ -136,15 +130,11 @@ public final class HeldLockAnalyzer {
         VisitorState visitorState,
         LockEventListener listener,
         Predicate<Tree> isSuppressed,
-        GuardedByFlags flags,
-        boolean reportMissingGuards,
-        boolean checkTryWithResources) {
+        GuardedByFlags flags) {
       this.visitorState = visitorState;
       this.listener = listener;
       this.isSuppressed = isSuppressed;
       this.flags = flags;
-      this.reportMissingGuards = reportMissingGuards;
-      this.checkTryWithResources = checkTryWithResources;
     }
 
     @Override
@@ -187,12 +177,9 @@ public final class HeldLockAnalyzer {
       // are held for the entirety of the try and catch statements.
       Collection<GuardedByExpression> releasedLocks =
           ReleasedLockFinder.find(tree.getFinallyBlock(), visitorState, flags);
-      // We don't know what to do with the try-with-resources block.
       // TODO(cushon) - recognize common try-with-resources patterns. Currently there is no
       // standard implementation of an AutoCloseable lock resource to detect.
-      if (checkTryWithResources || resources.isEmpty()) {
-        scan(tree.getBlock(), locks.plusAll(releasedLocks));
-      }
+      scan(tree.getBlock(), locks.plusAll(releasedLocks));
       scan(tree.getCatches(), locks.plusAll(releasedLocks));
       scan(tree.getFinallyBlock(), locks);
       return null;
@@ -254,9 +241,7 @@ public final class HeldLockAnalyzer {
                 GuardedBySymbolResolver.from(tree, visitorState.withPath(getCurrentPath())),
                 flags);
         if (!guard.isPresent()) {
-          if (reportMissingGuards) {
-            invalidLock(tree, locks, guardString);
-          }
+          invalidLock(tree, locks, guardString);
           continue;
         }
         Optional<GuardedByExpression> boundGuard =
