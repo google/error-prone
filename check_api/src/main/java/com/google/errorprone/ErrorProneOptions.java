@@ -52,8 +52,8 @@ public class ErrorProneOptions {
   private static final String PATCH_IMPORT_ORDER_PREFIX = "-XepPatchImportOrder:";
   private static final String EXCLUDED_PATHS_PREFIX = "-XepExcludedPaths:";
   private static final String IGNORE_LARGE_CODE_GENERATORS = "-XepIgnoreLargeCodeGenerators:";
-
   private static final String ERRORS_AS_WARNINGS_FLAG = "-XepAllErrorsAsWarnings";
+  private static final String SUGGESTIONS_AS_WARNINGS_FLAG = "-XepAllSuggestionsAsWarnings";
   private static final String ENABLE_ALL_CHECKS = "-XepAllDisabledChecksAsWarnings";
   private static final String IGNORE_SUPPRESSION_ANNOTATIONS = "-XepIgnoreSuppressionAnnotations";
   private static final String DISABLE_ALL_CHECKS = "-XepDisableAllChecks";
@@ -75,6 +75,7 @@ public class ErrorProneOptions {
             || option.equals(IGNORE_UNKNOWN_CHECKS_FLAG)
             || option.equals(DISABLE_WARNINGS_IN_GENERATED_CODE_FLAG)
             || option.equals(ERRORS_AS_WARNINGS_FLAG)
+            || option.equals(SUGGESTIONS_AS_WARNINGS_FLAG)
             || option.equals(ENABLE_ALL_CHECKS)
             || option.equals(DISABLE_ALL_CHECKS)
             || option.equals(IGNORE_SUPPRESSION_ANNOTATIONS)
@@ -163,6 +164,7 @@ public class ErrorProneOptions {
   private final boolean disableWarningsInGeneratedCode;
   private final boolean disableAllWarnings;
   private final boolean dropErrorsToWarnings;
+  private final boolean suggestionsAsWarnings;
   private final boolean enableAllChecksAsWarnings;
   private final boolean disableAllChecks;
   private final boolean isTestOnlyTarget;
@@ -180,6 +182,7 @@ public class ErrorProneOptions {
       boolean disableWarningsInGeneratedCode,
       boolean disableAllWarnings,
       boolean dropErrorsToWarnings,
+      boolean suggestionsAsWarnings,
       boolean enableAllChecksAsWarnings,
       boolean disableAllChecks,
       boolean isTestOnlyTarget,
@@ -195,6 +198,7 @@ public class ErrorProneOptions {
     this.disableWarningsInGeneratedCode = disableWarningsInGeneratedCode;
     this.disableAllWarnings = disableAllWarnings;
     this.dropErrorsToWarnings = dropErrorsToWarnings;
+    this.suggestionsAsWarnings = suggestionsAsWarnings;
     this.enableAllChecksAsWarnings = enableAllChecksAsWarnings;
     this.disableAllChecks = disableAllChecks;
     this.isTestOnlyTarget = isTestOnlyTarget;
@@ -230,6 +234,10 @@ public class ErrorProneOptions {
     return dropErrorsToWarnings;
   }
 
+  public boolean isSuggestionsAsWarnings() {
+    return suggestionsAsWarnings;
+  }
+
   public boolean isTestOnlyTarget() {
     return isTestOnlyTarget;
   }
@@ -263,6 +271,7 @@ public class ErrorProneOptions {
     private boolean disableAllWarnings = false;
     private boolean disableWarningsInGeneratedCode = false;
     private boolean dropErrorsToWarnings = false;
+    private boolean suggestionsAsWarnings = false;
     private boolean enableAllChecksAsWarnings = false;
     private boolean disableAllChecks = false;
     private boolean isTestOnlyTarget = false;
@@ -319,6 +328,10 @@ public class ErrorProneOptions {
       this.dropErrorsToWarnings = dropErrorsToWarnings;
     }
 
+    public void setSuggestionsAsWarnings(boolean suggestionsAsWarnings) {
+      this.suggestionsAsWarnings = suggestionsAsWarnings;
+    }
+
     public void setDisableAllWarnings(boolean disableAllWarnings) {
       severityMap.entrySet().stream()
           .filter(e -> e.getValue() == Severity.WARN)
@@ -364,6 +377,7 @@ public class ErrorProneOptions {
           disableWarningsInGeneratedCode,
           disableAllWarnings,
           dropErrorsToWarnings,
+          suggestionsAsWarnings,
           enableAllChecksAsWarnings,
           disableAllChecks,
           isTestOnlyTarget,
@@ -419,6 +433,9 @@ public class ErrorProneOptions {
           break;
         case ERRORS_AS_WARNINGS_FLAG:
           builder.setDropErrorsToWarnings(true);
+          break;
+        case SUGGESTIONS_AS_WARNINGS_FLAG:
+          builder.setSuggestionsAsWarnings(true);
           break;
         case ENABLE_ALL_CHECKS:
           builder.setEnableAllChecksAsWarnings(true);

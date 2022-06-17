@@ -153,6 +153,13 @@ public class ErrorProneOptionsTest {
   }
 
   @Test
+  public void recognizesAllSuggestionsAsWarnings() {
+    ErrorProneOptions options =
+            ErrorProneOptions.processArgs(new String[] {"-XepAllSuggestionsAsWarnings"});
+    assertThat(options.isSuggestionsAsWarnings()).isTrue();
+  }
+
+  @Test
   public void recognizesDisableAllChecks() {
     ErrorProneOptions options =
         ErrorProneOptions.processArgs(new String[] {"-XepDisableAllChecks"});
