@@ -101,7 +101,6 @@ public class ImmutableChecker extends BugChecker
 
   private final WellKnownMutability wellKnownMutability;
   private final ImmutableSet<String> immutableAnnotations;
-  private final boolean handleAnonymousClasses;
 
   ImmutableChecker(ImmutableSet<String> immutableAnnotations) {
     this(ErrorProneFlags.empty(), immutableAnnotations);
@@ -114,8 +113,6 @@ public class ImmutableChecker extends BugChecker
   private ImmutableChecker(ErrorProneFlags flags, ImmutableSet<String> immutableAnnotations) {
     this.wellKnownMutability = WellKnownMutability.fromFlags(flags);
     this.immutableAnnotations = immutableAnnotations;
-    this.handleAnonymousClasses =
-        flags.getBoolean("ImmutableChecker:HandleAnonymousClasses").orElse(true);
   }
 
   @Override
@@ -322,7 +319,7 @@ public class ImmutableChecker extends BugChecker
                 describeClass(matched, sym, annotation, violation));
 
     Type superType = immutableSupertype(sym, state);
-    if (handleAnonymousClasses && superType != null && isLocal(sym)) {
+    if (superType != null && isLocal(sym)) {
       checkClosedTypes(tree, state, superType.tsym, analysis);
     }
 
@@ -380,9 +377,7 @@ public class ImmutableChecker extends BugChecker
       return NO_MATCH;
     }
 
-    if (handleAnonymousClasses) {
-      checkClosedTypes(tree, state, superType.tsym, analysis);
-    }
+    checkClosedTypes(tree, state, superType.tsym, analysis);
     // We don't need to check that the superclass has an immutable instantiation.
     // The anonymous instance can only be referred to using a superclass type, so
     // the type arguments will be validated at any type use site where we care about
