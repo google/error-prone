@@ -133,9 +133,8 @@ public class ImmutableCheckerTest {
         .addSourceLines(
             "MyTest.java",
             "import java.lang.annotation.Annotation;",
-            "// BUG: Diagnostic contains:",
-            "// extends @Immutable type Test, but is not annotated as immutable",
             "final class MyTest implements Test {",
+            "  // BUG: Diagnostic contains: non-final field 'xs'",
             "  public Object[] xs = {};",
             "  public Class<? extends Annotation> annotationType() {",
             "    return null;",
@@ -1062,14 +1061,13 @@ public class ImmutableCheckerTest {
         .addSourceLines(
             "threadsafety/Test.java",
             "package threadsafety;",
-            "// BUG: Diagnostic contains: extends @Immutable",
             "class Test implements J {",
+            "  // BUG: Diagnostic contains: non-final field 'x'",
             "  public int x = 0;",
             "}")
         .addSourceLines(
             "threadsafety/J.java", //
             "package threadsafety;",
-            "// BUG: Diagnostic contains: extends @Immutable",
             "interface J extends I {",
             "}")
         .doTest();

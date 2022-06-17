@@ -50,8 +50,6 @@ import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.NewClassTreeMatcher;
 import com.google.errorprone.bugpatterns.threadsafety.ThreadSafety.Violation;
-import com.google.errorprone.fixes.Fix;
-import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ClassTree;
@@ -101,6 +99,7 @@ public class ImmutableChecker extends BugChecker
 
   private final WellKnownMutability wellKnownMutability;
   private final ImmutableSet<String> immutableAnnotations;
+  private final boolean handleAnonymousClasses;
 
   ImmutableChecker(ImmutableSet<String> immutableAnnotations) {
     this(ErrorProneFlags.empty(), immutableAnnotations);
@@ -113,6 +112,8 @@ public class ImmutableChecker extends BugChecker
   private ImmutableChecker(ErrorProneFlags flags, ImmutableSet<String> immutableAnnotations) {
     this.wellKnownMutability = WellKnownMutability.fromFlags(flags);
     this.immutableAnnotations = immutableAnnotations;
+    this.handleAnonymousClasses =
+        flags.getBoolean("ImmutableChecker:HandleAnonymousClasses").orElse(true);
   }
 
   @Override
@@ -259,11 +260,13 @@ public class ImmutableChecker extends BugChecker
       return handleAnonymousClass(tree, state, analysis);
     }
 
-    AnnotationInfo annotation = analysis.getImmutableAnnotation(tree, state);
+    AnnotationInfo annotation = getImmutableAnnotation(analysis, tree, state);
     if (annotation == null) {
-      // If the type isn't annotated we don't check for immutability, but we do
-      // report an error if it extends/implements any @Immutable-annotated types.
-      return checkSubtype(tree, state);
+      // If the type isn't annotated, and doesn't extend anything annotated, there's nothing to do
+      // An earlier version of the check required an explicit annotation on classes that extended
+      // @Immutable classes, but didn't enforce the subtyping requirement for interfaces. We now
+      // don't require the explicit annotations on any subtypes.
+      return NO_MATCH;
     }
 
     // Special-case visiting declarations of known-immutable types; these uses
@@ -319,7 +322,7 @@ public class ImmutableChecker extends BugChecker
                 describeClass(matched, sym, annotation, violation));
 
     Type superType = immutableSupertype(sym, state);
-    if (superType != null && isLocal(sym)) {
+    if (handleAnonymousClasses && superType != null && isLocal(sym)) {
       checkClosedTypes(tree, state, superType.tsym, analysis);
     }
 
@@ -377,7 +380,9 @@ public class ImmutableChecker extends BugChecker
       return NO_MATCH;
     }
 
-    checkClosedTypes(tree, state, superType.tsym, analysis);
+    if (handleAnonymousClasses) {
+      checkClosedTypes(tree, state, superType.tsym, analysis);
+    }
     // We don't need to check that the superclass has an immutable instantiation.
     // The anonymous instance can only be referred to using a superclass type, so
     // the type arguments will be validated at any type use site where we care about
@@ -540,21 +545,23 @@ public class ImmutableChecker extends BugChecker
 
   // Strong behavioural subtyping
 
-  /** Check for classes without {@code @Immutable} that have immutable supertypes. */
-  private Description checkSubtype(ClassTree tree, VisitorState state) {
+  /**
+   * Check for classes with {@code @Immutable}, or that inherited it from a super class or
+   * interface.
+   */
+  private AnnotationInfo getImmutableAnnotation(
+      ImmutableAnalysis analysis, ClassTree tree, VisitorState state) {
+    AnnotationInfo annotation = analysis.getImmutableAnnotation(tree, state);
+    if (annotation != null) {
+      return annotation;
+    }
+    // getImmutableAnnotation inherits annotations from classes, but not interfaces.
     ClassSymbol sym = getSymbol(tree);
     Type superType = immutableSupertype(sym, state);
-    if (superType == null) {
-      return NO_MATCH;
+    if (superType != null) {
+      return analysis.getImmutableAnnotation(superType.tsym, state);
     }
-    String message =
-        format("Class extends @Immutable type %s, but is not annotated as immutable", superType);
-    Fix fix =
-        SuggestedFix.builder()
-            .prefixWith(tree, "@Immutable ")
-            .addImport(Immutable.class.getName())
-            .build();
-    return buildDescription(tree).setMessage(message).addFix(fix).build();
+    return null;
   }
 
   /**
