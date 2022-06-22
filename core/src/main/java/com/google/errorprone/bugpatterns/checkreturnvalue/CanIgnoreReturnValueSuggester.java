@@ -38,6 +38,7 @@ import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.ReturnTree;
+import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.util.TreePathScanner;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
@@ -97,6 +98,16 @@ public final class CanIgnoreReturnValueSuggester extends BugChecker implements M
       return Description.NO_MATCH;
     }
 
+    // if the method doesn't do anything but "return this", bail out; see b/236423646
+    if (methodTree.getBody().getStatements().size() == 1) {
+      StatementTree onlyStatement = methodTree.getBody().getStatements().get(0);
+      if (onlyStatement instanceof ReturnTree) {
+        if (returnsThis((ReturnTree) onlyStatement, state)) {
+          return Description.NO_MATCH;
+        }
+      }
+    }
+
     // if the method is already directly annotated w/ @CIRV, bail out
     if (hasAnnotation(methodTree, CIRV, state)) {
       return Description.NO_MATCH;
@@ -126,29 +137,12 @@ public final class CanIgnoreReturnValueSuggester extends BugChecker implements M
       @Override
       public Void visitReturn(ReturnTree returnTree, Void unused) {
         atLeastOneReturn.set(true);
-        if (!returnsThis(returnTree)) {
+        if (!returnsThis(returnTree, state)) {
           allReturnThis.set(false);
           // once we've set allReturnThis to false, no need to descend further
           return null;
         }
         return super.visitReturn(returnTree, null);
-      }
-
-      /** Returns whether or not the given {@link ReturnTree} returns exactly {@code this}. */
-      private boolean returnsThis(ReturnTree returnTree) {
-        ExpressionTree returnExpression = returnTree.getExpression();
-        if (returnExpression instanceof IdentifierTree) {
-          if (((IdentifierTree) returnExpression).getName().contentEquals("this")) {
-            return true;
-          }
-        }
-        if (returnExpression instanceof MethodInvocationTree) {
-          MethodInvocationTree mit = (MethodInvocationTree) returnExpression;
-          if (state.getSourceForNode(mit.getMethodSelect()).contentEquals("self")) {
-            return true;
-          }
-        }
-        return false;
       }
 
       @Override
@@ -175,6 +169,23 @@ public final class CanIgnoreReturnValueSuggester extends BugChecker implements M
       return describeMatch(methodTree, fix.build());
     }
     return Description.NO_MATCH;
+  }
+
+  /** Returns whether or not the given {@link ReturnTree} returns exactly {@code this}. */
+  private static boolean returnsThis(ReturnTree returnTree, VisitorState state) {
+    ExpressionTree returnExpression = returnTree.getExpression();
+    if (returnExpression instanceof IdentifierTree) {
+      if (((IdentifierTree) returnExpression).getName().contentEquals("this")) {
+        return true;
+      }
+    }
+    if (returnExpression instanceof MethodInvocationTree) {
+      MethodInvocationTree mit = (MethodInvocationTree) returnExpression;
+      if (state.getSourceForNode(mit.getMethodSelect()).contentEquals("self")) {
+        return true;
+      }
+    }
+    return false;
   }
 
   private static boolean isProtoBuilderSubtype(Type ownerType, VisitorState state) {
