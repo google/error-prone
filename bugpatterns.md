@@ -616,6 +616,9 @@ The result of CacheLoader#load must be non-null.
 __[CannotMockFinalClass](bugpattern/CannotMockFinalClass)__<br>
 Mockito cannot mock final classes
 
+__[CannotMockFinalMethod](bugpattern/CannotMockFinalMethod)__<br>
+Mockito cannot mock final methods, and can&#39;t detect this at runtime
+
 __[CanonicalDuration](bugpattern/CanonicalDuration)__<br>
 Duration can be expressed more clearly with different units
 
