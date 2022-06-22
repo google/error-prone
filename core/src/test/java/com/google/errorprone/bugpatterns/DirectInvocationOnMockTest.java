@@ -191,4 +191,19 @@ public final class DirectInvocationOnMockTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void finalMethodInvoked_noFinding() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            "import static org.mockito.Mockito.mock;",
+            "class Test {",
+            "  public Object test() {",
+            "    Test test = mock(Test.class);",
+            "    return test.getClass();",
+            "  }",
+            "}")
+        .doTest();
+  }
 }

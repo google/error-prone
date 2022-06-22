@@ -43,6 +43,7 @@ import com.sun.source.tree.Tree;
 import com.sun.source.tree.TypeCastTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreeScanner;
+import com.sun.tools.javac.code.Flags;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 
 /** A bugpattern; see the description. */
@@ -59,6 +60,9 @@ public final class DirectInvocationOnMock extends BugChecker implements Compilat
     new SuppressibleTreePathScanner<Void, Void>(state) {
       @Override
       public Void visitMethodInvocation(MethodInvocationTree tree, Void unused) {
+        if ((getSymbol(tree).flags() & Flags.FINAL) != 0) {
+          return null;
+        }
         Tree parent =
             stream(getCurrentPath())
                 .skip(1)
