@@ -613,12 +613,6 @@ ByteBuffer.array() shouldn&#39;t be called unless ByteBuffer.arrayOffset() is us
 __[CacheLoaderNull](bugpattern/CacheLoaderNull)__<br>
 The result of CacheLoader#load must be non-null.
 
-__[CannotMockFinalClass](bugpattern/CannotMockFinalClass)__<br>
-Mockito cannot mock final classes
-
-__[CannotMockFinalMethod](bugpattern/CannotMockFinalMethod)__<br>
-Mockito cannot mock final methods, and can&#39;t detect this at runtime
-
 __[CanonicalDuration](bugpattern/CanonicalDuration)__<br>
 Duration can be expressed more clearly with different units
 
@@ -1318,6 +1312,12 @@ Builder instance method does not return &#39;this&#39;
 
 __[CanIgnoreReturnValueSuggester](bugpattern/CanIgnoreReturnValueSuggester)__<br>
 Methods that always &#39;return this&#39; should be annotated with @CanIgnoreReturnValue
+
+__[CannotMockFinalClass](bugpattern/CannotMockFinalClass)__<br>
+Mockito cannot mock final classes
+
+__[CannotMockFinalMethod](bugpattern/CannotMockFinalMethod)__<br>
+Mockito cannot mock final methods, and can&#39;t detect this at runtime
 
 __[CatchingUnchecked](bugpattern/CatchingUnchecked)__<br>
 This catch block catches &#96;Exception&#96;, but can only catch unchecked exceptions. Consider catching RuntimeException (or something more specific) instead so it is more apparent that no checked exceptions are being handled.
