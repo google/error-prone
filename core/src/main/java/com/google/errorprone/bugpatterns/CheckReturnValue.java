@@ -37,6 +37,7 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
+import com.google.errorprone.bugpatterns.checkreturnvalue.PackagesRule;
 import com.google.errorprone.bugpatterns.checkreturnvalue.ResultUsePolicy;
 import com.google.errorprone.bugpatterns.checkreturnvalue.ResultUsePolicyEvaluator;
 import com.google.errorprone.matchers.Description;
@@ -70,6 +71,8 @@ public class CheckReturnValue extends AbstractReturnValueIgnored
   static final String CHECK_ALL_CONSTRUCTORS = "CheckReturnValue:CheckAllConstructors";
   static final String CHECK_ALL_METHODS = "CheckReturnValue:CheckAllMethods";
 
+  static final String CRV_PACKAGES = "CheckReturnValue:Packages";
+
   private final Optional<ResultUsePolicy> constructorPolicy;
   private final Optional<ResultUsePolicy> methodPolicy;
   private final ResultUsePolicyEvaluator evaluator;
@@ -79,17 +82,29 @@ public class CheckReturnValue extends AbstractReturnValueIgnored
     this.constructorPolicy = defaultPolicy(flags, CHECK_ALL_CONSTRUCTORS);
     this.methodPolicy = defaultPolicy(flags, CHECK_ALL_METHODS);
 
-    this.evaluator =
-        ResultUsePolicyEvaluator.create(
-            mapAnnotationSimpleName(CHECK_RETURN_VALUE, EXPECTED),
-            mapAnnotationSimpleName(CAN_IGNORE_RETURN_VALUE, OPTIONAL),
-            protoBuilders(),
-            mutableProtos(),
-            autoValues(),
-            autoValueBuilders(),
-            autoBuilders(),
-            externalIgnoreList(),
-            globalDefault(methodPolicy, constructorPolicy));
+    ResultUsePolicyEvaluator.Builder builder =
+        ResultUsePolicyEvaluator.builder()
+            .addRules(
+                // The order of these rules matters somewhat because when checking a method, we'll
+                // evaluate them in the order they're listed here and stop as soon as one of them
+                // returns a result. The order shouldn't matter because most of these, with the
+                // exception of perhaps the external ignore list, are equivalent in importance and
+                // we should be checking declarations to ensure they aren't producing differing
+                // results (i.e. ensuring an @AutoValue.Builder setter method isn't annotated @CRV).
+                mapAnnotationSimpleName(CHECK_RETURN_VALUE, EXPECTED),
+                mapAnnotationSimpleName(CAN_IGNORE_RETURN_VALUE, OPTIONAL),
+                protoBuilders(),
+                mutableProtos(),
+                autoValues(),
+                autoValueBuilders(),
+                autoBuilders(),
+
+                // This is conceptually lower precedence than the above rules.
+                externalIgnoreList());
+    flags
+        .getList(CRV_PACKAGES)
+        .ifPresent(packagePatterns -> builder.addRule(PackagesRule.fromPatterns(packagePatterns)));
+    this.evaluator = builder.addRule(globalDefault(methodPolicy, constructorPolicy)).build();
   }
 
   private static Optional<ResultUsePolicy> defaultPolicy(ErrorProneFlags flags, String flag) {

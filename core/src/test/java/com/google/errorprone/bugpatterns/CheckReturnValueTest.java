@@ -1042,6 +1042,64 @@ public class CheckReturnValueTest {
         .doTest();
   }
 
+  @Test
+  public void testPackagesRule() {
+    compilationHelperWithPackagePatterns("java.util")
+        .addSourceLines(
+            "Test.java",
+            "import java.util.List;",
+            "import java.util.regex.Pattern;",
+            "class Test {",
+            "  public static void foo(List<Integer> list, Pattern pattern) {",
+            "    // BUG: Diagnostic contains: Ignored return value of 'get'",
+            "    list.get(0);",
+            "    // BUG: Diagnostic contains: Ignored return value of 'matcher'",
+            "    pattern.matcher(\"blah\");",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void testPackagesRule_negativePattern() {
+    compilationHelperWithPackagePatterns("java.util", "-java.util.regex")
+        .addSourceLines(
+            "Test.java",
+            "import java.util.List;",
+            "import java.util.regex.Pattern;",
+            "class Test {",
+            "  public static void foo(List<Integer> list, Pattern pattern) {",
+            "    // BUG: Diagnostic contains: Ignored return value of 'get'",
+            "    list.get(0);",
+            "    pattern.matcher(\"blah\");",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void testPackagesRule_negativePattern_doesNotMakeOptional() {
+    // A negative pattern just makes the packages rule itself not apply to that package and its
+    // subpackages if it otherwise would because of a positive pattern on a superpackage. It doesn't
+    // make APIs in that package CIRV.
+    compilationHelperWithPackagePatterns("java.util", "-java.util.regex")
+        .addSourceLines(
+            "Test.java",
+            "import java.util.List;",
+            "import java.util.regex.Pattern;",
+            "import java.util.regex.PatternSyntaxException;",
+            "class Test {",
+            "  public static void foo(List<Integer> list, Pattern pattern) {",
+            "    // BUG: Diagnostic contains: Ignored return value of 'get'",
+            "    list.get(0);",
+            "    pattern.matcher(\"blah\");",
+            "    // BUG: Diagnostic contains: Ignored return value",
+            "    new PatternSyntaxException(\"\", \"\", 0);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
   private CompilationTestHelper compilationHelperLookingAtAllConstructors() {
     return compilationHelper.setArgs(
         "-XepOpt:" + CheckReturnValue.CHECK_ALL_CONSTRUCTORS + "=true");
@@ -1062,5 +1120,11 @@ public class CheckReturnValueTest {
     } catch (IOException e) {
       throw new UncheckedIOException(e);
     }
+  }
+
+  private CompilationTestHelper compilationHelperWithPackagePatterns(String... patterns) {
+    return compilationHelper.setArgs(
+        "-XepOpt:" + CheckReturnValue.CRV_PACKAGES + "=" + Joiner.on(',').join(patterns),
+        "-XepOpt:" + CheckReturnValue.CHECK_ALL_CONSTRUCTORS + "=true");
   }
 }

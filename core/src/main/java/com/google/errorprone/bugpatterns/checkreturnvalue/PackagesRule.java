@@ -16,9 +16,11 @@
 
 package com.google.errorprone.bugpatterns.checkreturnvalue;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.checkreturnvalue.ResultUseRule.SymbolRule;
+import com.google.errorprone.suppliers.Supplier;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.PackageSymbol;
 import com.sun.tools.javac.util.Name;
@@ -28,20 +30,34 @@ import java.util.Optional;
  * A rule that enables checking for methods belonging to a set of packages or any of their
  * subpackages.
  */
-final class PackagesRule extends SymbolRule {
+public final class PackagesRule extends SymbolRule {
 
-  private final ImmutableMap<Name, Boolean> packages;
+  /**
+   * Returns a new rule using the given package {@code patterns}. Each pattern string must either be
+   * the fully qualified name of a package (to enable checking for methods in that package and its
+   * subpackages) or a {@code -} character followed by the fully qualified name of a package (to
+   * disable checking for methods in that package and its subpackages).
+   */
+  public static PackagesRule fromPatterns(Iterable<String> patterns) {
+    return new PackagesRule(ImmutableList.copyOf(patterns));
+  }
 
-  public PackagesRule(VisitorState state, Iterable<String> patterns) {
-    ImmutableMap.Builder<Name, Boolean> builder = ImmutableMap.builder();
-    for (String pattern : patterns) {
-      if (pattern.charAt(0) == '-') {
-        builder.put(state.getName(pattern.substring(1)), false);
-      } else {
-        builder.put(state.getName(pattern), true);
-      }
-    }
-    this.packages = builder.buildOrThrow();
+  private final Supplier<ImmutableMap<Name, Boolean>> packagesSupplier;
+
+  private PackagesRule(ImmutableList<String> patterns) {
+    this.packagesSupplier =
+        VisitorState.memoize(
+            state -> {
+              ImmutableMap.Builder<Name, Boolean> builder = ImmutableMap.builder();
+              for (String pattern : patterns) {
+                if (pattern.charAt(0) == '-') {
+                  builder.put(state.getName(pattern.substring(1)), false);
+                } else {
+                  builder.put(state.getName(pattern), true);
+                }
+              }
+              return builder.buildOrThrow();
+            });
   }
 
   @Override
@@ -52,7 +68,7 @@ final class PackagesRule extends SymbolRule {
   @Override
   public Optional<ResultUsePolicy> evaluate(Symbol symbol, VisitorState state) {
     while (symbol instanceof PackageSymbol) {
-      Boolean value = packages.get(((PackageSymbol) symbol).fullname);
+      Boolean value = packagesSupplier.get(state).get(((PackageSymbol) symbol).fullname);
       if (value != null) {
         return value
             ? Optional.of(ResultUsePolicy.EXPECTED)
