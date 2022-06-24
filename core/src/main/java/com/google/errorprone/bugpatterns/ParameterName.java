@@ -18,8 +18,6 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.common.base.MoreObjects.firstNonNull;
 import static com.google.common.collect.ImmutableList.toImmutableList;
-import static com.google.common.collect.Iterables.getLast;
-import static com.google.common.collect.Streams.forEachPair;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
@@ -52,7 +50,10 @@ import com.sun.tools.javac.util.Position;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
+import java.util.function.Consumer;
 import java.util.regex.Matcher;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
@@ -80,18 +81,21 @@ public class ParameterName extends BugChecker
 
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
-    checkArguments(tree, tree.getArguments(), state);
+    checkArguments(tree, tree.getArguments(), state.getEndPosition(tree.getMethodSelect()), state);
     return NO_MATCH;
   }
 
   @Override
   public Description matchNewClass(NewClassTree tree, VisitorState state) {
-    checkArguments(tree, tree.getArguments(), state);
+    checkArguments(tree, tree.getArguments(), state.getEndPosition(tree.getIdentifier()), state);
     return NO_MATCH;
   }
 
   private void checkArguments(
-      Tree tree, List<? extends ExpressionTree> arguments, VisitorState state) {
+      Tree tree,
+      List<? extends ExpressionTree> arguments,
+      int argListStartPosition,
+      VisitorState state) {
     if (arguments.isEmpty()) {
       return;
     }
@@ -99,55 +103,77 @@ public class ParameterName extends BugChecker
     if (NamedParameterComment.containsSyntheticParameterName(sym)) {
       return;
     }
-    int start = getStartPosition(tree);
-    int end = state.getEndPosition(getLast(arguments));
-    if (start == Position.NOPOS || end == Position.NOPOS) {
+    int start = argListStartPosition;
+    if (start == Position.NOPOS) {
       // best effort work-around for https://github.com/google/error-prone/issues/780
-      return;
-    }
-    String source = state.getSourceCode().subSequence(start, end).toString();
-    if (!source.contains("/*")) {
-      // fast path if the arguments don't contain anything that looks like a comment
       return;
     }
     String enclosingClass = ASTHelpers.enclosingClass(sym).toString();
     if (exemptPackages.stream().anyMatch(enclosingClass::startsWith)) {
       return;
     }
-    Deque<ErrorProneToken> tokens =
-        new ArrayDeque<>(ErrorProneTokens.getTokens(source, start, state.context));
-    forEachPair(
-        sym.getParameters().stream(),
-        arguments.stream(),
-        (p, a) -> {
-          if (advanceTokens(tokens, a, state)) {
-            checkArgument(p, a, tokens.removeFirst(), state);
-          }
-        });
+    Iterator<? extends ExpressionTree> argumentIterator = arguments.iterator();
+    // For each parameter/argument pair, we tokenize the characters between the end of the
+    // previous argument (or the start of the argument list, in the case of the first argument)
+    // and the start of the current argument. The `start` variable is advanced each time, stepping
+    // over each argument when we finish processing it.
+    for (VarSymbol param : sym.getParameters()) {
+      if (!argumentIterator.hasNext()) {
+        return; // A vararg parameter has zero corresponding arguments passed
+      }
+      ExpressionTree argument = argumentIterator.next();
+      Optional<Range<Integer>> positions = positions(argument, state);
+      if (positions.isEmpty()) {
+        return;
+      }
+      start =
+          processArgument(
+              positions.get(), start, state, tok -> checkArgument(param, argument, tok, state));
+    }
 
     // handle any varargs arguments after the first
-    int numParams = sym.getParameters().size();
-    int numArgs = arguments.size();
-    if (numParams < numArgs) {
-      for (ExpressionTree arg : arguments.subList(numParams, numArgs)) {
-        if (advanceTokens(tokens, arg, state)) {
-          checkComment(arg, tokens.removeFirst(), state);
-        }
+    while (argumentIterator.hasNext()) {
+      ExpressionTree argument = argumentIterator.next();
+      Optional<Range<Integer>> positions = positions(argument, state);
+      if (positions.isEmpty()) {
+        return;
       }
+      start =
+          processArgument(positions.get(), start, state, tok -> checkComment(argument, tok, state));
     }
   }
 
-  private static boolean advanceTokens(
-      Deque<ErrorProneToken> tokens, ExpressionTree actual, VisitorState state) {
-    while (!tokens.isEmpty() && tokens.getFirst().pos() < getStartPosition(actual)) {
+  /** Returns the source span for a tree, or empty if the position information is not available. */
+  Optional<Range<Integer>> positions(Tree tree, VisitorState state) {
+    int endPosition = state.getEndPosition(tree);
+    if (endPosition == Position.NOPOS) {
+      return Optional.empty();
+    }
+    return Optional.of(Range.closedOpen(getStartPosition(tree), endPosition));
+  }
+
+  private static int processArgument(
+      Range<Integer> positions,
+      int offset,
+      VisitorState state,
+      Consumer<ErrorProneToken> consumer) {
+    String source = state.getSourceCode().subSequence(offset, positions.upperEndpoint()).toString();
+    Deque<ErrorProneToken> tokens =
+        new ArrayDeque<>(ErrorProneTokens.getTokens(source, offset, state.context));
+    if (advanceTokens(tokens, positions)) {
+      consumer.accept(tokens.removeFirst());
+    }
+    return positions.upperEndpoint();
+  }
+
+  private static boolean advanceTokens(Deque<ErrorProneToken> tokens, Range<Integer> actual) {
+    while (!tokens.isEmpty() && tokens.getFirst().pos() < actual.lowerEndpoint()) {
       tokens.removeFirst();
     }
     if (tokens.isEmpty()) {
       return false;
     }
-    Range<Integer> argRange =
-        Range.closedOpen(getStartPosition(actual), state.getEndPosition(actual));
-    if (!argRange.contains(tokens.getFirst().pos())) {
+    if (!actual.contains(tokens.getFirst().pos())) {
       return false;
     }
     return true;
