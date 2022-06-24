@@ -128,7 +128,7 @@
     </dependency>
     <dependency>
       <!-- Apache 2.0 -->
-      <groupId>com.google.gwt</groupId>
+      <groupId>org.gwtproject</groupId>
       <artifactId>gwt-user</artifactId>
       <version>${gwt.version}</version>
       <scope>test</scope>
