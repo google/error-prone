@@ -47,16 +47,13 @@ import java.util.Map;
 public final class UnicodeInCode extends BugChecker implements CompilationUnitTreeMatcher {
   @Override
   public Description matchCompilationUnit(CompilationUnitTree tree, VisitorState state) {
-    ImmutableRangeSet<Integer> commentsAndLiterals = commentsAndLiterals(state);
-
     Map<Integer, Character> violations = new LinkedHashMap<>();
-
-    CharSequence sourceCode = state.getSourceCode();
+    String sourceCode = state.getSourceCode().toString();
 
     for (int i = 0; i < sourceCode.length(); ++i) {
       char c = sourceCode.charAt(i);
 
-      if (!isAcceptableAscii(c) && !commentsAndLiterals.contains(i)) {
+      if (!isAcceptableAscii(c)) {
         violations.put(i, c);
       }
     }
@@ -65,12 +62,13 @@ public final class UnicodeInCode extends BugChecker implements CompilationUnitTr
       return NO_MATCH;
     }
 
-    ImmutableRangeSet<Integer> suppressedRegions = suppressedRegions(state);
+    ImmutableRangeSet<Integer> permissibleUnicodeRegions =
+        suppressedRegions(state).union(commentsAndLiterals(state, sourceCode));
 
     for (var e : violations.entrySet()) {
       int violatingLocation = e.getKey();
       char c = e.getValue();
-      if (!suppressedRegions.contains(violatingLocation)) {
+      if (!permissibleUnicodeRegions.contains(violatingLocation)) {
         state.reportMatch(
             buildDescription(new FixedPosition(tree, violatingLocation))
                 .setMessage(
@@ -88,9 +86,8 @@ public final class UnicodeInCode extends BugChecker implements CompilationUnitTr
     return (c >= 0x20 && c <= 0x7E) || c == '\n' || c == '\r' || c == '\t';
   }
 
-  private static ImmutableRangeSet<Integer> commentsAndLiterals(VisitorState state) {
-    ImmutableList<ErrorProneToken> tokens =
-        getTokens(state.getSourceCode().toString(), state.context);
+  private static ImmutableRangeSet<Integer> commentsAndLiterals(VisitorState state, String source) {
+    ImmutableList<ErrorProneToken> tokens = getTokens(source, state.context);
     return ImmutableRangeSet.unionOf(
         concat(
                 tokens.stream()
