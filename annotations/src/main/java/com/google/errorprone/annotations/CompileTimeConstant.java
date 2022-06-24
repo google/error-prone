@@ -47,7 +47,7 @@ import java.lang.annotation.Target;
  *
  * <pre>{@code
  * public class C {
- *   private static final S = "Hello";
+ *   private static final String S = "Hello";
  *   void m(@CompileTimeConstant final String s) { }
  *   void n(@CompileTimeConstant final String t) {
  *     m(S + " World!");
