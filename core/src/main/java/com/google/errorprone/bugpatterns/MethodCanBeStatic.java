@@ -24,6 +24,7 @@ import static com.google.errorprone.matchers.Matchers.SERIALIZATION_METHODS;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static java.util.Collections.disjoint;
 import static javax.lang.model.element.Modifier.ABSTRACT;
+import static javax.lang.model.element.Modifier.DEFAULT;
 import static javax.lang.model.element.Modifier.NATIVE;
 import static javax.lang.model.element.Modifier.SYNCHRONIZED;
 
@@ -250,7 +251,7 @@ public class MethodCanBeStatic extends BugChecker implements CompilationUnitTree
   }
 
   private static final ImmutableSet<Modifier> EXCLUDED_MODIFIERS =
-      immutableEnumSet(NATIVE, SYNCHRONIZED, ABSTRACT);
+      immutableEnumSet(NATIVE, SYNCHRONIZED, ABSTRACT, DEFAULT);
 
   /** Information about a {@link MethodSymbol} and whether it can be made static. */
   private static final class MethodDetails {

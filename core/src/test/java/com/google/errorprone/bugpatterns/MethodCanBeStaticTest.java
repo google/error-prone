@@ -484,4 +484,12 @@ public class MethodCanBeStaticTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void defaultMethodExempted() {
+    testHelper
+        .addSourceLines(
+            "Test.java", "class Test {", "  private interface Foo { default void foo() {} }", "}")
+        .doTest();
+  }
 }
