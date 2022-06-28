@@ -35,6 +35,7 @@ import static com.sun.source.tree.Tree.Kind.NULL_LITERAL;
 import static com.sun.source.tree.Tree.Kind.PARAMETERIZED_TYPE;
 import static com.sun.tools.javac.parser.Tokens.TokenKind.DOT;
 
+import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
@@ -242,7 +243,7 @@ class NullnessUtils {
     return enclosingClass(constructedClass) != null && !constructedClass.isStatic();
   }
 
-  @com.google.auto.value.AutoValue // fully qualified to work around JDK-7177813(?) in JDK8 build
+  @AutoValue
   abstract static class NullableAnnotationToUse {
     static NullableAnnotationToUse annotationToBeImported(String qualifiedName, boolean isTypeUse) {
       return new AutoValue_NullnessUtils_NullableAnnotationToUse(
@@ -334,7 +335,7 @@ class NullnessUtils {
             .orElse(
                 state.isAndroidCompatible()
                     ? "androidx.annotation.Nullable"
-                    : "javax.annotation.Nullable");
+                    : "org.jspecify.nullness.Nullable");
     if (sym != null) {
       ClassSymbol classSym = (ClassSymbol) sym;
       if (classSym.isAnnotationType()) {
@@ -342,7 +343,7 @@ class NullnessUtils {
         return annotationWithoutImporting(
             "Nullable", isTypeUse(classSym.className()), /*isAlreadyInScope=*/ true);
       } else {
-        // It's not an annotation type. We have to fully-qualify the import.
+        // The imported `Nullable` is not an annotation type. Fully qualify the annotation.
         return annotationWithoutImporting(
             defaultType, isTypeUse(defaultType), /*isAlreadyInScope=*/ false);
       }

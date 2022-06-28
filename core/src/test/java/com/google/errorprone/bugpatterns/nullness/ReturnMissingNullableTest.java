@@ -720,10 +720,10 @@ public class ReturnMissingNullableTest {
         .addOutputLines(
             "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
             "package com.google.errorprone.bugpatterns.nullness;",
-            "import javax.annotation.Nullable;",
+            "import org.jspecify.nullness.Nullable;",
             "public class LiteralNullReturnTest {",
-            "  @Nullable ",
-            "  public String getMessage(boolean b) {",
+            "",
+            "  public @Nullable String getMessage(boolean b) {",
             "    if (b) {",
             "      return null;",
             "    } else {",
@@ -1541,8 +1541,8 @@ public class ReturnMissingNullableTest {
         .addOutputLines(
             "out/Test.java",
             "class T {",
-            "  @javax.annotation.Nullable private final Object method(boolean b) { return b ? null"
-                + " : 0; }",
+            "  @org.jspecify.nullness.Nullable private final Object method(boolean b) { return b ?"
+                + " null : 0; }",
             "  class Nullable {}",
             "}")
         .doTest();
@@ -1564,9 +1564,9 @@ public class ReturnMissingNullableTest {
             "}")
         .addOutputLines(
             "out/Test.java",
-            "import javax.annotation.Nullable;",
+            "import org.jspecify.nullness.Nullable;",
             "class T {",
-            "  @Nullable private final Object method(boolean b) {",
+            "  private final @Nullable Object method(boolean b) {",
             "    if (b) {",
             "      return null;",
             "    } else {",
