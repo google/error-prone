@@ -17,6 +17,7 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH;
+import static org.junit.Assume.assumeTrue;
 
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
@@ -70,6 +71,13 @@ public class FloatingPointLiteralPrecisionTest {
 
   @Test
   public void replacementTooLong() {
+    // In JDK versions before 19, String.valueOf(1e23) was 9.999999999999999E22, and the logic we're
+    // testing here was introduced to avoid introducing strings like that in rewrites. JDK 19 fixes
+    // https://bugs.openjdk.org/browse/JDK-4511638 (over 20 years after it was filed) so
+    // we don't need the logic or its test there.
+    String string1e23 = String.valueOf(1e23);
+    assumeTrue(string1e23.length() > "1e23".length() * 3);
+
     String[] input = {
       "class Test {", //
       "  // BUG: Diagnostic contains:",
