@@ -17,9 +17,11 @@
 package com.google.errorprone.bugpatterns.nullness;
 
 import static com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH;
+import static org.junit.Assume.assumeTrue;
 
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
+import com.google.errorprone.util.RuntimeVersion;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -130,6 +132,84 @@ public class ReturnMissingNullableTest {
             "  public String getMessage(int x) {",
             "    // BUG: Diagnostic contains: @Nullable",
             "    return (x >= 0 ? null : \"negative\");",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void testSwitchExpressionTree() {
+    assumeTrue(RuntimeVersion.isAtLeast12());
+
+    createCompilationTestHelper()
+        .addSourceLines(
+            "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
+            "package com.google.errorprone.bugpatterns.nullness;",
+            "public class LiteralNullReturnTest {",
+            "  public String getMessage(int x) {",
+            "    // BUG: Diagnostic contains: @Nullable",
+            "    return switch (x) {",
+            "      case 0 -> null;",
+            "      default -> \"non-zero\";",
+            "    };",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void testSwitchExpressionTree_negative() {
+    assumeTrue(RuntimeVersion.isAtLeast12());
+
+    createCompilationTestHelper()
+        .addSourceLines(
+            "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
+            "package com.google.errorprone.bugpatterns.nullness;",
+            "public class LiteralNullReturnTest {",
+            "  public String getMessage(int x) {",
+            "    return switch (x) {",
+            "      case 0 -> \"zero\";",
+            "      default -> \"non-zero\";",
+            "    };",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void testSwitchStatement() {
+    createCompilationTestHelper()
+        .addSourceLines(
+            "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
+            "package com.google.errorprone.bugpatterns.nullness;",
+            "public class LiteralNullReturnTest {",
+            "  public String getMessage(int x) {",
+            "    switch (x) {",
+            "      case 0:",
+            "        // BUG: Diagnostic contains: @Nullable",
+            "        return null;",
+            "      default:",
+            "        return \"non-zero\";",
+            "    }",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void testSwitchStatement_negative() {
+    createCompilationTestHelper()
+        .addSourceLines(
+            "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
+            "package com.google.errorprone.bugpatterns.nullness;",
+            "public class LiteralNullReturnTest {",
+            "  public String getMessage(int x) {",
+            "    switch (x) {",
+            "      case 0:",
+            "        return \"zero\";",
+            "      default:",
+            "        return \"non-zero\";",
+            "    }",
             "  }",
             "}")
         .doTest();

@@ -34,6 +34,7 @@ import static com.sun.source.tree.Tree.Kind.IDENTIFIER;
 import static com.sun.source.tree.Tree.Kind.NULL_LITERAL;
 import static com.sun.source.tree.Tree.Kind.PARAMETERIZED_TYPE;
 import static com.sun.tools.javac.parser.Tokens.TokenKind.DOT;
+import static java.lang.Boolean.TRUE;
 
 import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableSet;
@@ -51,6 +52,7 @@ import com.sun.source.tree.ArrayTypeTree;
 import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.BinaryTree;
 import com.sun.source.tree.BlockTree;
+import com.sun.source.tree.CaseTree;
 import com.sun.source.tree.ConditionalExpressionTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
@@ -73,6 +75,9 @@ import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.processing.JavacProcessingEnvironment;
+import java.lang.reflect.Method;
+import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import javax.annotation.Nullable;
 import javax.lang.model.element.Name;
@@ -505,7 +510,7 @@ class NullnessUtils {
         return visit(tree.getExpression(), unused);
       }
 
-      // TODO(cpovirk): visitSwitchExpression
+      // For visitSwitchExpression logic, see defaultAction.
 
       @Override
       public Boolean visitTypeCast(TypeCastTree tree, Void unused) {
@@ -521,7 +526,13 @@ class NullnessUtils {
          * null)`.)
          */
         return isVoid(getType(tree), stateForCompilationUnit)
-            || definitelyNullVars.contains(getSymbol(tree));
+            || definitelyNullVars.contains(getSymbol(tree))
+            /*
+             * TODO(cpovirk): It would be nicer to report the finding on the null-returning `case`
+             * rather than on the `switch` as a whole. To do so, maybe we could change our visitor
+             * to accept `Boolean isCaseOfReturnedExpressionSwitch` instead of `Void unused`?
+             */
+            || isSwitchExpressionWithDefinitelyNullBranch(tree);
       }
 
       boolean isOptionalOrNull(MethodInvocationTree tree) {
@@ -533,8 +544,41 @@ class NullnessUtils {
          * But consider whether that would interfere with the TODO at the top of that method.
          */
       }
+
+      boolean isSwitchExpressionWithDefinitelyNullBranch(Tree tree) {
+        return tree.getKind().name().equals("SWITCH_EXPRESSION")
+            && getCases(tree).stream()
+                .map(NullnessUtils::getBody)
+                .anyMatch(t -> Objects.equals(visit(t, null), TRUE));
+      }
     }.visit(tree, null);
   }
+
+  private static List<?> getCases(Tree switchExpressionTree) {
+    try {
+      if (getCasesMethod == null) {
+        getCasesMethod =
+            Class.forName("com.sun.source.tree.SwitchExpressionTree").getMethod("getCases");
+      }
+      return (List<?>) getCasesMethod.invoke(switchExpressionTree);
+    } catch (ReflectiveOperationException e) {
+      throw new LinkageError(e.getMessage(), e);
+    }
+  }
+
+  private static Tree getBody(Object caseTree) {
+    try {
+      if (getBodyMethod == null) {
+        getBodyMethod = CaseTree.class.getMethod("getBody");
+      }
+      return (Tree) getBodyMethod.invoke(caseTree);
+    } catch (ReflectiveOperationException e) {
+      throw new LinkageError(e.getMessage(), e);
+    }
+  }
+
+  private static Method getCasesMethod;
+  private static Method getBodyMethod;
 
   /** Returns true if this is {@code x == null ? x : ...} or similar. */
   private static boolean isTernaryXIfXIsNull(ConditionalExpressionTree tree) {
