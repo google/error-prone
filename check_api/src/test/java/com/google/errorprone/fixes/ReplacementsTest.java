@@ -69,24 +69,24 @@ public class ReplacementsTest {
       };
 
   @Test
-  public void descending() {
+  public void ascending() {
     assertThat(
             Iterables.transform(
                 new Replacements()
                     .add(Replacement.create(0, 0, "hello"))
                     .add(Replacement.create(0, 1, "hello"))
-                    .descending(),
+                    .ascending(),
                 AS_RANGES))
-        .containsExactly(Range.closedOpen(0, 1), Range.closedOpen(0, 0))
+        .containsExactly(Range.closedOpen(0, 0), Range.closedOpen(0, 1))
         .inOrder();
     assertThat(
             Iterables.transform(
                 new Replacements()
                     .add(Replacement.create(0, 1, "hello"))
                     .add(Replacement.create(0, 0, "hello"))
-                    .descending(),
+                    .ascending(),
                 AS_RANGES))
-        .containsExactly(Range.closedOpen(0, 1), Range.closedOpen(0, 0))
+        .containsExactly(Range.closedOpen(0, 0), Range.closedOpen(0, 1))
         .inOrder();
   }
 

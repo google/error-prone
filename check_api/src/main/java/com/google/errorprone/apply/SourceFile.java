@@ -16,9 +16,15 @@
 
 package com.google.errorprone.apply;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Iterables;
 import com.google.common.io.CharSource;
+import com.google.errorprone.fixes.Replacement;
+import com.google.errorprone.fixes.Replacements;
 import java.io.IOException;
 import java.io.LineNumberReader;
 import java.io.StringReader;
@@ -157,5 +163,52 @@ public class SourceFile {
                   + "position %d, requested end position %d, replacement %s",
               path, sourceBuilder.length(), startPosition, endPosition, replacement));
     }
+  }
+
+  void makeReplacements(Replacements changes) {
+    ImmutableSet<Replacement> replacements = changes.ascending();
+    switch (replacements.size()) {
+      case 0:
+        return;
+      case 1:
+        {
+          Replacement onlyReplacement = Iterables.getOnlyElement(replacements);
+          replaceChars(
+              onlyReplacement.startPosition(),
+              onlyReplacement.endPosition(),
+              onlyReplacement.replaceWith());
+          return;
+        }
+      default:
+        break;
+    }
+
+    // Since we have many replacements to make all at once, it's better to start off with a clean
+    // slate, rather than make multiple separate replacements which each require shifting around
+    // the tail of our sourceBuilder. If we do them all at once, we can work forward from the
+    // beginning of the tile, so that each new replacement does not affect any previous
+    // replacements.
+    StringBuilder newContent = new StringBuilder();
+    int positionInOriginal = 0;
+    for (Replacement repl : replacements) {
+      checkArgument(
+          repl.endPosition() <= sourceBuilder.length(),
+          "End [%s] should not exceed source length [%s]",
+          repl.endPosition(),
+          sourceBuilder.length());
+
+      // Write the unmodified content leading up to this change
+      newContent.append(sourceBuilder, positionInOriginal, repl.startPosition());
+      // And the modified content for this change
+      newContent.append(repl.replaceWith());
+      // Then skip everything from source between start and end
+      positionInOriginal = repl.endPosition();
+    }
+    // Flush out any remaining content after the final change
+    newContent.append(sourceBuilder, positionInOriginal, sourceBuilder.length());
+    // Overwrite the contents of our old buffer. Note we mutate the existing StringBuilder rather
+    // than replacing it, because other clients may have a view of the content via getAsSequence,
+    // and we want that view to reflect the new content.
+    setSourceText(newContent);
   }
 }

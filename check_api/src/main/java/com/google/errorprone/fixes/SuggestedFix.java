@@ -94,7 +94,7 @@ public class SuggestedFix implements Fix {
       replacements.add(
           fix.getReplacement(endPositions), Replacements.CoalescePolicy.EXISTING_FIRST);
     }
-    return replacements.descending();
+    return replacements.ascending();
   }
 
   /** {@link Builder#replace(Tree, String)} */

@@ -143,7 +143,12 @@ public class Replacements {
     }
   }
 
-  /** Non-overlapping replacements, sorted in descending order by position. */
+  /**
+   * Non-overlapping replacements, sorted in descending order by position. Prefer using {@link
+   * #ascending} when applying changes, because applying changes in reverse tends to result in
+   * quadratic-time copying of the underlying string.
+   */
+  @Deprecated
   public Set<Replacement> descending() {
     // TODO(cushon): refactor SuggestedFix#getReplacements and just return a Collection,
     return new LinkedHashSet<>(replacements.values());
@@ -151,8 +156,6 @@ public class Replacements {
 
   /** Non-overlapping replacements, sorted in ascending order by position. */
   public ImmutableSet<Replacement> ascending() {
-    // TODO(amalloy): Encourage using this instead of descending()
-    // Applying replacements in forward order is substantially more efficient, and only a bit harder
     return ImmutableSet.copyOf(replacements.descendingMap().values());
   }
 

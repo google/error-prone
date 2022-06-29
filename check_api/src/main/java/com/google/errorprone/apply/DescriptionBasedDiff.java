@@ -123,9 +123,6 @@ public final class DescriptionBasedDiff implements DescriptionListener, Diff {
             Replacements.CoalescePolicy.REPLACEMENT_FIRST);
       }
     }
-    for (Replacement replacement : replacements.descending()) {
-      sourceFile.replaceChars(
-          replacement.startPosition(), replacement.endPosition(), replacement.replaceWith());
-    }
+    sourceFile.makeReplacements(replacements);
   }
 }
