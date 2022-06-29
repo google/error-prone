@@ -46,6 +46,7 @@ import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.parser.Tokens.Comment;
+import com.sun.tools.javac.parser.Tokens.Comment.CommentStyle;
 import com.sun.tools.javac.util.Position;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -199,6 +200,11 @@ public class ParameterName extends BugChecker
       VarSymbol formal, ExpressionTree actual, ErrorProneToken token, VisitorState state) {
     List<FixInfo> matches = new ArrayList<>();
     for (Comment comment : token.comments()) {
+      if (comment.getStyle().equals(CommentStyle.LINE)) {
+        // These are usually not intended as a parameter comment, and we don't want to flag if they
+        // happen to match the parameter comment format.
+        continue;
+      }
       Matcher m =
           NamedParameterComment.PARAMETER_COMMENT_PATTERN.matcher(
               Comments.getTextFromComment(comment));
