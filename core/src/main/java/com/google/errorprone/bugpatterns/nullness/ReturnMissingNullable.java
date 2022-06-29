@@ -74,6 +74,14 @@ import javax.lang.model.element.Name;
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
     summary = "Method returns a definitely null value but is not annotated @Nullable",
+    explanation =
+        "Annotating a method @Nullable communicates to tools that the method can return null. That"
+            + " means they can check that callers handle a returned null correctly.\n\n"
+            + "Adding @Nullable may require updating callers so that they deal with the"
+            + " possibly-null value. This can happen for example with Kotlin callers, or with Java"
+            + " callers that are checked for null-safety by static-analysis tools. Alternatively,"
+            + " depending on the tool, it may be possible to annotate Java callers temporarily with"
+            + " @SuppressWarnings(\"nullness\").",
     severity = SUGGESTION)
 public class ReturnMissingNullable extends BugChecker implements CompilationUnitTreeMatcher {
   private static final Matcher<StatementTree> METHODS_THAT_NEVER_RETURN =
