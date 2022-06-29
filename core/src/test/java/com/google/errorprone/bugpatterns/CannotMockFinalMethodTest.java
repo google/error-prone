@@ -56,7 +56,7 @@ public final class CannotMockFinalMethodTest {
             "  }",
             "  void test() {",
             "    // BUG: Diagnostic contains:",
-            "    verify(this.foo());",
+            "    verify(this).foo();",
             "  }",
             "}")
         .doTest();
