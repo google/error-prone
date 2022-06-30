@@ -14,6 +14,7 @@
 
 package com.google.errorprone.bugpatterns;
 
+import com.google.common.collect.ImmutableList;
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode;
 import com.google.errorprone.CompilationTestHelper;
@@ -135,6 +136,21 @@ public final class UnusedMethodTest {
             "    int unusedLocal = a;",
             "  }",
             "}")
+        .doTest();
+  }
+
+  @Test
+  public void exemptedByCustomAnnotation() {
+    helper
+        .addSourceLines("Foo.java", "package example;", "@interface Foo {}")
+        .addSourceLines(
+            "ExemptedByCustomAnnotation.java",
+            "package example;",
+            "class ExemptedByCustomAnnotation {",
+            "  @Foo",
+            "  private void bar() {}",
+            "}")
+        .setArgs("-XepOpt:UnusedMethod:ExemptingMethodAnnotations=example.Foo")
         .doTest();
   }
 
