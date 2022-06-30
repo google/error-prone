@@ -21,6 +21,7 @@ import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.fixes.SuggestedFixes.qualifyStaticImport;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.anyMethod;
+import static com.google.errorprone.matchers.Matchers.instanceMethod;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
@@ -44,7 +45,10 @@ import com.sun.source.tree.TypeCastTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.code.Flags;
+import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
+import java.util.HashSet;
+import java.util.Set;
 
 /** A bugpattern; see the description. */
 @BugPattern(
@@ -56,10 +60,25 @@ public final class DirectInvocationOnMock extends BugChecker implements Compilat
   @Override
   public Description matchCompilationUnit(CompilationUnitTree tree, VisitorState state) {
     ImmutableSet<VarSymbol> mocks = findMocks(state);
+    Set<MethodSymbol> methodsCallingRealImplementations = new HashSet<>();
 
     new SuppressibleTreePathScanner<Void, Void>(state) {
       @Override
       public Void visitMethodInvocation(MethodInvocationTree tree, Void unused) {
+        if (THEN_CALL_REAL_METHOD.matches(tree, state)) {
+          var receiver = getReceiver(tree);
+          if (receiver != null && WHEN.matches(receiver, state)) {
+            ExpressionTree firstArgument = ((MethodInvocationTree) receiver).getArguments().get(0);
+            var firstArgumentSymbol = getSymbol(firstArgument);
+            if (firstArgumentSymbol instanceof MethodSymbol) {
+              methodsCallingRealImplementations.add((MethodSymbol) firstArgumentSymbol);
+            }
+          }
+          return super.visitMethodInvocation(tree, null);
+        }
+        if (methodsCallingRealImplementations.contains(getSymbol(tree))) {
+          return super.visitMethodInvocation(tree, null);
+        }
         if ((getSymbol(tree).flags() & Flags.FINAL) != 0) {
           return null;
         }
@@ -136,4 +155,9 @@ public final class DirectInvocationOnMock extends BugChecker implements Compilat
       staticMethod().onClass("org.mockito.Mockito").named("mock").withParameters("java.lang.Class");
 
   private static final Matcher<ExpressionTree> WHEN = anyMethod().anyClass().named("when");
+
+  private static final Matcher<ExpressionTree> THEN_CALL_REAL_METHOD =
+      instanceMethod()
+          .onDescendantOf("org.mockito.stubbing.OngoingStubbing")
+          .named("thenCallRealMethod");
 }
