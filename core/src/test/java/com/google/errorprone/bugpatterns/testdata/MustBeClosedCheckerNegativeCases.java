@@ -80,6 +80,11 @@ public class MustBeClosedCheckerNegativeCases {
     return new Foo().mustBeClosedAnnotatedMethod();
   }
 
+  @MustBeClosed
+  Closeable ternary(boolean condition) {
+    return condition ? new Foo().mustBeClosedAnnotatedMethod() : null;
+  }
+
   void tryWithResources() {
     Foo foo = new Foo();
     Closeable closeable = foo.mustBeClosedAnnotatedMethod();
@@ -137,5 +142,9 @@ public class MustBeClosedCheckerNegativeCases {
         () -> {
           return new MustBeClosedAnnotatedConstructor();
         });
+  }
+
+  void methodReferenceReturningCloseable() {
+    consumeCloseable(MustBeClosedAnnotatedConstructor::new);
   }
 }

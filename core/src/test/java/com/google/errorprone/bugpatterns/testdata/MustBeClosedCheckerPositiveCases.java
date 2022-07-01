@@ -19,6 +19,7 @@ package com.google.errorprone.bugpatterns.testdata;
 import com.google.errorprone.annotations.MustBeClosed;
 import java.util.stream.Stream;
 
+@SuppressWarnings({"UnusedNestedClass", "UnusedVariable"})
 class MustBeClosedCheckerPositiveCases {
 
   class DoesNotImplementAutoCloseable {
@@ -112,6 +113,7 @@ class MustBeClosedCheckerPositiveCases {
   }
 
   void positiveCase8() {
+    // Lambda has a fixless finding because no reasonable fix can be suggested
     Lambda expression =
         () -> {
           // BUG: Diagnostic contains:
@@ -120,6 +122,11 @@ class MustBeClosedCheckerPositiveCases {
   }
 
   void positiveCase9() {
+    // TODO(b/218377318): BUG: Diagnostic contains:
+    Lambda expression = new Foo()::mustBeClosedAnnotatedMethod;
+  }
+
+  void positiveCase10() {
     new Foo() {
       @Override
       public Closeable mustBeClosedAnnotatedMethod() {
@@ -129,10 +136,36 @@ class MustBeClosedCheckerPositiveCases {
     };
   }
 
-  int expressionDeclaredVariable() {
+  void subexpression() {
+    // BUG: Diagnostic contains:
+    new Foo().mustBeClosedAnnotatedMethod().method();
+  }
+
+  void ternary(boolean condition) {
+    // BUG: Diagnostic contains:
+    int result = condition ? new Foo().mustBeClosedAnnotatedMethod().method() : 0;
+  }
+
+  int variableDeclaration() {
     // BUG: Diagnostic contains:
     int result = new Foo().mustBeClosedAnnotatedMethod().method();
     return result;
+  }
+
+  void forLoopInitialization() {
+    // TODO(b/236715080): fix results in invalid code. BUG: Diagnostic contains:
+    // for (int i = new Foo().mustBeClosedAnnotatedMethod().method(); i > 0; --i) { }
+  }
+
+  void forLoopConditionUnfixable() {
+    // TODO(b/236715080): suggested fix changes behavior.
+    // BUG: Diagnostic contains:
+    for (int i = 0; i < new Foo().mustBeClosedAnnotatedMethod().method(); ++i) {}
+  }
+
+  void forLoopUpdateUnfixable() {
+    // TODO(b/236715080): fix results in invalid code. BUG: Diagnostic contains:
+    // for (int i = 0; i < 100; i += new Foo().mustBeClosedAnnotatedMethod().method()) {}
   }
 
   void tryWithResources_nonFinal() {

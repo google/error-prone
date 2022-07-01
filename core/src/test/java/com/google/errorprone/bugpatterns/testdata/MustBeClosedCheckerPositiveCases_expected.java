@@ -19,10 +19,12 @@ package com.google.errorprone.bugpatterns.testdata;
 import com.google.errorprone.annotations.MustBeClosed;
 import java.util.stream.Stream;
 
+@SuppressWarnings({"UnusedNestedClass", "UnusedVariable"})
 class MustBeClosedCheckerPositiveCases {
 
   class DoesNotImplementAutoCloseable {
     @MustBeClosed
+    // BUG: Diagnostic contains: MustBeClosed should only annotate constructors of AutoCloseables.
     DoesNotImplementAutoCloseable() {}
 
     @MustBeClosed
@@ -124,6 +126,11 @@ class MustBeClosedCheckerPositiveCases {
   }
 
   void positiveCase9() {
+    // TODO(b/218377318): BUG: Diagnostic contains:
+    Lambda expression = new Foo()::mustBeClosedAnnotatedMethod;
+  }
+
+  void positiveCase10() {
     new Foo() {
       @MustBeClosed
       @Override
@@ -134,12 +141,46 @@ class MustBeClosedCheckerPositiveCases {
     };
   }
 
-  int expressionDeclaredVariable() {
+  void subexpression() {
+    // BUG: Diagnostic contains:
+    try (Closeable closeable = new Foo().mustBeClosedAnnotatedMethod()) {
+      closeable.method();
+    }
+  }
+
+  void ternary(boolean condition) {
+    // BUG: Diagnostic contains:
+    int result;
+    try (Closeable closeable = new Foo().mustBeClosedAnnotatedMethod()) {
+      result = condition ? closeable.method() : 0;
+    }
+  }
+
+  int variableDeclaration() {
+    // BUG: Diagnostic contains:
     int result;
     try (Closeable closeable = new Foo().mustBeClosedAnnotatedMethod()) {
       result = closeable.method();
     }
     return result;
+  }
+
+  void forLoopInitialization() {
+    // TODO(b/236715080): fix results in invalid code. BUG: Diagnostic contains:
+    // for (int i = new Foo().mustBeClosedAnnotatedMethod().method(); i > 0; --i) {}
+  }
+
+  void forLoopConditionUnfixable() {
+    // TODO(b/236715080): suggested fix changes behavior.
+    // BUG: Diagnostic contains:
+    try (final Closeable closeable = new Foo().mustBeClosedAnnotatedMethod()) {
+      for (int i = 0; i < closeable.method(); ++i) {}
+    }
+  }
+
+  void forLoopUpdateUnfixable() {
+    // TODO(b/236715080): fix results in invalid code. BUG: Diagnostic contains:
+    // for (int i = 0; i < 100; i += new Foo().mustBeClosedAnnotatedMethod().method()) {}
   }
 
   void tryWithResources_nonFinal() {
