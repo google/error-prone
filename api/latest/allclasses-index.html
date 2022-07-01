@@ -1062,7 +1062,7 @@ loadScripts(document, 'script');</script>
 <td class="col-first"><a href="com/google/errorprone/bugpatterns/checkreturnvalue/CanIgnoreReturnValueSuggester.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">CanIgnoreReturnValueSuggester</a></td>
 <th class="col-last" scope="row">
 <div class="block">Checker that recommends annotating a method with <code>@CanIgnoreReturnValue</code> if the method
- always returns <code>this</code>.</div>
+ returns <code>this</code> (or other methods that are likely to also just return <code>this</code>).</div>
 </th>
 </tr>
 <tr class="row-color" id="i187">

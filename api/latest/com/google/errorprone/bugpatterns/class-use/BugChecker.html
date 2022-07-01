@@ -3087,7 +3087,7 @@ int&nbsp;count)</code></th>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../checkreturnvalue/CanIgnoreReturnValueSuggester.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">CanIgnoreReturnValueSuggester</a></span></code></th>
 <td class="col-last">
 <div class="block">Checker that recommends annotating a method with <code>@CanIgnoreReturnValue</code> if the method
- always returns <code>this</code>.</div>
+ returns <code>this</code> (or other methods that are likely to also just return <code>this</code>).</div>
 </td>
 </tr>
 <tr class="alt-color">

@@ -91,7 +91,7 @@ loadScripts(document, 'script');</script>
 extends <a href="../BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a>
 implements <a href="../BugChecker.MethodTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.MethodTreeMatcher</a></pre>
 <div class="block">Checker that recommends annotating a method with <code>@CanIgnoreReturnValue</code> if the method
- always returns <code>this</code>.</div>
+ returns <code>this</code> (or other methods that are likely to also just return <code>this</code>).</div>
 <dl class="notes">
 <dt>See Also:</dt>
 <dd><a href="../../../../../serialized-form.html#com.google.errorprone.bugpatterns.checkreturnvalue.CanIgnoreReturnValueSuggester">Serialized Form</a></dd>
