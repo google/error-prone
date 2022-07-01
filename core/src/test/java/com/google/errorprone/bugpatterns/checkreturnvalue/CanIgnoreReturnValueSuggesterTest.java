@@ -407,4 +407,48 @@ public class CanIgnoreReturnValueSuggesterTest {
         .expectUnchanged()
         .doTest();
   }
+
+  @Test
+  public void testDelegateToCirvMethod() {
+    helper
+        .addInputLines(
+            "Client.java",
+            "package com.google.frobber;",
+            "import com.google.errorprone.annotations.CanIgnoreReturnValue;",
+            "import java.util.Arrays;",
+            "import java.util.List;",
+            "public final class Client {",
+            "  public Client setFoo(String... args) {",
+            "    return setFoo(Arrays.asList(args));",
+            "  }",
+            "  public Client setFoos(String... args) {",
+            "    return this.setFoo(Arrays.asList(args));",
+            "  }",
+            "  @CanIgnoreReturnValue",
+            "  public Client setFoo(List<String> args) {",
+            "    return this;",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Client.java",
+            "package com.google.frobber;",
+            "import com.google.errorprone.annotations.CanIgnoreReturnValue;",
+            "import java.util.Arrays;",
+            "import java.util.List;",
+            "public final class Client {",
+            "  @CanIgnoreReturnValue",
+            "  public Client setFoo(String... args) {",
+            "    return setFoo(Arrays.asList(args));",
+            "  }",
+            "  @CanIgnoreReturnValue",
+            "  public Client setFoos(String... args) {",
+            "    return this.setFoo(Arrays.asList(args));",
+            "  }",
+            "  @CanIgnoreReturnValue",
+            "  public Client setFoo(List<String> args) {",
+            "    return this;",
+            "  }",
+            "}")
+        .doTest();
+  }
 }
