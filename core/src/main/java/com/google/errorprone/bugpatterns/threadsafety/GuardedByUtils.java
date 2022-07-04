@@ -34,6 +34,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * @author cushon@google.com (Liam Miller-Cushon)
@@ -137,7 +138,7 @@ public final class GuardedByUtils {
     return GuardedByValidationResult.ok();
   }
 
-  public static Symbol bindGuardedByString(
+  public static @Nullable Symbol bindGuardedByString(
       Tree tree, String guard, VisitorState visitorState, GuardedByFlags flags) {
     Optional<GuardedByExpression> bound =
         GuardedByBinder.bindString(guard, GuardedBySymbolResolver.from(tree, visitorState), flags);

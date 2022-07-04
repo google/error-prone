@@ -48,6 +48,7 @@ import com.sun.tools.javac.code.Symbol.VarSymbol;
 import java.lang.reflect.InvocationTargetException;
 import java.util.UUID;
 import java.util.function.Consumer;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(summary = "Detects calls that will fail at runtime", severity = ERROR)
@@ -219,7 +220,7 @@ public class AlwaysThrows extends BugChecker implements MethodInvocationTreeMatc
     return checkForRepeatedKeys(tree, keys);
   }
 
-  private Object getConstantKey(ExpressionTree key, VisitorState state) {
+  private @Nullable Object getConstantKey(ExpressionTree key, VisitorState state) {
     return constantExpressions.constantExpression(key, state).orElse(null);
   }
 

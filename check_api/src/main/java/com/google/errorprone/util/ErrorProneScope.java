@@ -27,6 +27,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.Arrays;
 import java.util.function.Predicate;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /** A compatibility wrapper around {@code com.sun.tools.javac.util.Filter} */
 public final class ErrorProneScope {
@@ -59,7 +60,7 @@ public final class ErrorProneScope {
 
   private static final Class<?> FILTER_CLASS = getFilterClass();
 
-  private static Class<?> getFilterClass() {
+  private static @Nullable Class<?> getFilterClass() {
     if (RuntimeVersion.isAtLeast17()) {
       return null;
     }

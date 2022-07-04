@@ -355,6 +355,7 @@ public class FloggerArgumentToString extends BugChecker implements MethodInvocat
     return describeMatch(tree, fix.build());
   }
 
+  @Nullable
   private static Parameter unwrap(ExpressionTree argument, char placeholder, VisitorState state) {
     for (Unwrapper unwrapper : Unwrapper.values()) {
       if (unwrapper.matcher.matches(argument, state)) {

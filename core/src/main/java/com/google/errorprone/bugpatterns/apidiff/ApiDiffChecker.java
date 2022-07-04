@@ -38,6 +38,7 @@ import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Types;
 import java.lang.annotation.Annotation;
 import java.util.Optional;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /** A base Error Prone check implementation to enforce compliance with a given API diff. */
 public abstract class ApiDiffChecker extends BugChecker
@@ -125,7 +126,7 @@ public abstract class ApiDiffChecker extends BugChecker
    * Finds the class of the expression's receiver: the declaring class of a static member access, or
    * the type that an instance member is accessed on.
    */
-  private static ClassSymbol getReceiver(ExpressionTree tree, Symbol sym) {
+  private static @Nullable ClassSymbol getReceiver(ExpressionTree tree, Symbol sym) {
     if (sym.isStatic() || sym instanceof ClassSymbol) {
       return sym.enclClass();
     }

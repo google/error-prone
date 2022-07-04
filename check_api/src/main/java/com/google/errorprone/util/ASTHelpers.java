@@ -1752,6 +1752,7 @@ public class ASTHelpers {
       return null;
     }
 
+    @Nullable
     @Override
     public Type visitCase(CaseTree tree, Void unused) {
       Tree t = parent.getParentPath().getLeaf();
@@ -1856,6 +1857,7 @@ public class ASTHelpers {
       throw new AssertionError("return not enclosed by method or lambda");
     }
 
+    @Nullable
     @Override
     public Type visitSynchronized(SynchronizedTree node, Void unused) {
       // The null occurs if you've asked for the type of the parentheses around the expression.

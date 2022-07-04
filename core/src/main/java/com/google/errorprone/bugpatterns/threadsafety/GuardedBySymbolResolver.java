@@ -225,6 +225,7 @@ public class GuardedBySymbolResolver implements GuardedByBinder.Resolver {
     return null;
   }
 
+  @Nullable
   @Override
   public Symbol resolveTypeLiteral(ExpressionTree expr) {
     checkGuardedBy(expr instanceof IdentifierTree, "bad type literal: %s", expr);
@@ -266,6 +267,7 @@ public class GuardedBySymbolResolver implements GuardedByBinder.Resolver {
     return type;
   }
 
+  @Nullable
   private Symbol getSuperType(Symbol symbol, String name) {
     for (Type t : types.closure(symbol.type)) {
       if (t.asElement().getSimpleName().contentEquals(name)) {
@@ -275,6 +277,7 @@ public class GuardedBySymbolResolver implements GuardedByBinder.Resolver {
     return null;
   }
 
+  @Nullable
   private static Symbol getLexicallyEnclosing(ClassSymbol symbol, String name) {
     Symbol current = symbol.owner;
     while (true) {
@@ -296,6 +299,7 @@ public class GuardedBySymbolResolver implements GuardedByBinder.Resolver {
     return attr.attribIdent(tm.Ident(visitorState.getName(name)), compilationUnit);
   }
 
+  @Nullable
   @Override
   public Symbol resolveEnclosingClass(ExpressionTree expr) {
     checkGuardedBy(expr instanceof IdentifierTree, "bad type literal: %s", expr);
@@ -350,6 +354,7 @@ public class GuardedBySymbolResolver implements GuardedByBinder.Resolver {
       return new AutoValue_GuardedBySymbolResolver_MethodInfo(sym, arguments);
     }
 
+    @Nullable
     static MethodInfo create(Tree tree, VisitorState visitorState) {
       Symbol sym = ASTHelpers.getSymbol(tree);
       if (!(sym instanceof MethodSymbol)) {

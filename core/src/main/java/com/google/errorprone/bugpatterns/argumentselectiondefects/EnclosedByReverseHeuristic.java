@@ -24,6 +24,7 @@ import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import java.util.Optional;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Detect whether the method invocation we are examining is enclosed by either a method or a class
@@ -74,7 +75,7 @@ class EnclosedByReverseHeuristic implements Heuristic {
     return findReverseWordsMatchInParentNodes(state) == null;
   }
 
-  protected String findReverseWordsMatchInParentNodes(VisitorState state) {
+  protected @Nullable String findReverseWordsMatchInParentNodes(VisitorState state) {
     for (Tree tree : state.getPath()) {
       Optional<String> name = getName(tree);
       if (name.isPresent()) {

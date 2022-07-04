@@ -44,6 +44,7 @@ import com.sun.tools.javac.code.Symbol.TypeVariableSymbol;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * @author glorioso@google.com (Nick Glorioso)
@@ -127,7 +128,7 @@ public class CompatibleWithMisuse extends BugChecker implements AnnotationTreeMa
   // => X
   // This function assumes the annotation tree will only have one argument, of type String, that
   // is required.
-  private static String valueArgumentFromCompatibleWithAnnotation(AnnotationTree tree) {
+  private static @Nullable String valueArgumentFromCompatibleWithAnnotation(AnnotationTree tree) {
     ExpressionTree argumentValue = Iterables.getOnlyElement(tree.getArguments());
     if (argumentValue.getKind() != Kind.ASSIGNMENT) {
       // :-| Annotation symbol broken. Punt?

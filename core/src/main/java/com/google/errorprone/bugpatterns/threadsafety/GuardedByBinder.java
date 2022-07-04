@@ -35,6 +35,7 @@ import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.util.Names;
 import java.util.Optional;
 import javax.lang.model.element.Name;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * A binder from {@code @GuardedBy} annotations to {@link GuardedByExpression}s.
@@ -320,7 +321,8 @@ public final class GuardedByBinder {
          * Returns the owner if the given member is declared in a lexically enclosing scope, and
          * {@code null} otherwise.
          */
-        private ClassSymbol isEnclosedIn(ClassSymbol startingClass, Symbol member, Types types) {
+        private @Nullable ClassSymbol isEnclosedIn(
+            ClassSymbol startingClass, Symbol member, Types types) {
           for (ClassSymbol scope = startingClass.owner.enclClass();
               scope != null;
               scope = scope.owner.enclClass()) {

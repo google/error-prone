@@ -610,6 +610,7 @@ public final class ThreadSafety {
   }
 
   /** Returns an enclosing instance for the specified type if it is thread-safe. */
+  @Nullable
   public Type mutableEnclosingInstance(Optional<ClassTree> tree, ClassType type) {
     if (tree.isPresent()
         && !CanBeStaticAnalyzer.referencesOuter(
@@ -675,6 +676,7 @@ public final class ThreadSafety {
     return result.build();
   }
 
+  @Nullable
   private AnnotationInfo getAnnotation(
       Symbol sym, ImmutableSet<String> annotationsToCheck, VisitorState state) {
     for (String annotation : annotationsToCheck) {
@@ -686,6 +688,7 @@ public final class ThreadSafety {
     return null;
   }
 
+  @Nullable
   private AnnotationInfo getAnnotation(
       Symbol sym,
       VisitorState state,

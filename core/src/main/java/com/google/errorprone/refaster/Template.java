@@ -492,6 +492,7 @@ public abstract class Template<M extends TemplateMatch> implements Serializable 
   }
 
   /** Reflectively instantiate the package-private {@code MethodResolutionPhase} enum. */
+  @Nullable
   private static Object newMethodResolutionPhase(boolean autoboxing) {
     for (Class<?> c : Resolve.class.getDeclaredClasses()) {
       if (!c.getName().equals("com.sun.tools.javac.comp.Resolve$MethodResolutionPhase")) {

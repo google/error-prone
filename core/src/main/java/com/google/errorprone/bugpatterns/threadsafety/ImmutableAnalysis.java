@@ -47,6 +47,7 @@ import java.util.function.Predicate;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.type.TypeKind;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /** Analyzes types for deep immutability. */
 public class ImmutableAnalysis {
@@ -323,7 +324,7 @@ public class ImmutableAnalysis {
    * Gets the {@link Tree}'s {@code @Immutable} annotation info, either from an annotation on the
    * symbol or from the list of well-known immutable types.
    */
-  AnnotationInfo getImmutableAnnotation(Tree tree, VisitorState state) {
+  @Nullable AnnotationInfo getImmutableAnnotation(Tree tree, VisitorState state) {
     Symbol sym = ASTHelpers.getSymbol(tree);
     return sym == null ? null : threadSafety.getMarkerOrAcceptedAnnotation(sym, state);
   }

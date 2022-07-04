@@ -66,6 +66,7 @@ import java.util.Objects;
 import java.util.function.Predicate;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
@@ -303,7 +304,7 @@ public class UnnecessaryLambda extends BugChecker
         }
 
         @Override
-        public LambdaExpressionTree visitBlock(BlockTree node, Void unused) {
+        public @Nullable LambdaExpressionTree visitBlock(BlockTree node, Void unused) {
           // when processing a method body, only consider methods with a single `return` statement
           // that returns a method
           return node.getStatements().size() == 1
@@ -312,7 +313,7 @@ public class UnnecessaryLambda extends BugChecker
         }
 
         @Override
-        public LambdaExpressionTree visitReturn(ReturnTree node, Void unused) {
+        public @Nullable LambdaExpressionTree visitReturn(ReturnTree node, Void unused) {
           return node.getExpression() != null ? node.getExpression().accept(this, null) : null;
         }
 

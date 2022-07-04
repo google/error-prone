@@ -128,6 +128,7 @@ public class Bindings extends ForwardingMap<Bindings.Key<?>, Object> {
     return (V) super.put(key, value);
   }
 
+  @Nullable
   @Override
   public Object put(Key<?> key, Object value) {
     checkNotNull(key, "key");

@@ -371,6 +371,7 @@ public final class TimeUnitMismatch extends BugChecker
           isSameType("java.lang.Long"),
           isSameType("java.lang.Double"));
 
+  @Nullable
   @VisibleForTesting
   static TimeUnit unitSuggestedByName(String name) {
     // Tuple types, especially Pair, trip us up. Skip APIs that might be from them.

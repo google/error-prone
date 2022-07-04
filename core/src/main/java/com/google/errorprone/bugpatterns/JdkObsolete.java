@@ -354,6 +354,7 @@ public class JdkObsolete extends BugChecker
     return Optional.of(fix.build());
   }
 
+  @Nullable
   private static TreePath findEnclosingMethod(VisitorState state) {
     TreePath path = state.getPath();
     while (path != null) {

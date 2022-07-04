@@ -53,6 +53,7 @@ import com.sun.tools.javac.code.Symbol.VarSymbol;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.NestingKind;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Flags variables initialized with {@link java.util.regex.Pattern#compile(String)} calls that could
@@ -206,7 +207,7 @@ public final class ConstantPatternCompile extends BugChecker implements Variable
   }
 
   /** Infer a name when upgrading the {@code Pattern} local to a constant. */
-  private static String inferName(VariableTree tree, VisitorState state) {
+  private static @Nullable String inferName(VariableTree tree, VisitorState state) {
     String name;
     if ((name = fromName(tree)) != null) {
       return name;
@@ -221,7 +222,7 @@ public final class ConstantPatternCompile extends BugChecker implements Variable
   }
 
   /** Use the existing local variable's name, unless it's terrible. */
-  private static String fromName(VariableTree tree) {
+  private static @Nullable String fromName(VariableTree tree) {
     String name = LOWER_CAMEL.to(UPPER_UNDERSCORE, tree.getName().toString());
     if (name.length() > 1 && !name.equals("PATTERN")) {
       return name;
@@ -235,7 +236,7 @@ public final class ConstantPatternCompile extends BugChecker implements Variable
    * <p>e.g. use {@code FOO_PATTERN} for {@code Pattern.compile(FOO)} and {@code
    * Pattern.compile(FOO_REGEX)}.
    */
-  private static String fromInitializer(VariableTree tree) {
+  private static @Nullable String fromInitializer(VariableTree tree) {
     ExpressionTree regex = ((MethodInvocationTree) tree.getInitializer()).getArguments().get(0);
     if (!(regex instanceof IdentifierTree)) {
       return null;
@@ -256,7 +257,7 @@ public final class ConstantPatternCompile extends BugChecker implements Variable
    * If the pattern is only used once in a call to {@code matcher}, and the argument is a local, use
    * that local's name. For example, infer {@code FOO_PATTERN} from {@code pattern.matcher(foo)}.
    */
-  private static String fromUse(VariableTree tree, VisitorState state) {
+  private static @Nullable String fromUse(VariableTree tree, VisitorState state) {
     VarSymbol sym = getSymbol(tree);
     ImmutableList.Builder<TreePath> usesBuilder = ImmutableList.builder();
     new TreePathScanner<Void, Void>() {

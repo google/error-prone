@@ -82,6 +82,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import javax.lang.model.element.ElementKind;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
@@ -544,7 +545,7 @@ public class ImmutableChecker extends BugChecker
    * Check for classes with {@code @Immutable}, or that inherited it from a super class or
    * interface.
    */
-  private AnnotationInfo getImmutableAnnotation(
+  private @Nullable AnnotationInfo getImmutableAnnotation(
       ImmutableAnalysis analysis, ClassTree tree, VisitorState state) {
     AnnotationInfo annotation = analysis.getImmutableAnnotation(tree, state);
     if (annotation != null) {
@@ -563,7 +564,7 @@ public class ImmutableChecker extends BugChecker
    * Returns the type of the first superclass or superinterface in the hierarchy annotated with
    * {@code @Immutable}, or {@code null} if no such super type exists.
    */
-  private Type immutableSupertype(Symbol sym, VisitorState state) {
+  private @Nullable Type immutableSupertype(Symbol sym, VisitorState state) {
     for (Type superType : state.getTypes().closure(sym.type)) {
       if (superType.tsym.equals(sym.type.tsym)) {
         continue;

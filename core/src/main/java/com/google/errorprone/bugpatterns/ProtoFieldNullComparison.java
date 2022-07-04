@@ -181,6 +181,7 @@ public class ProtoFieldNullComparison extends BugChecker implements CompilationU
     private Optional<ExpressionTree> getInitializer(ExpressionTree tree) {
       return Optional.ofNullable(
           new SimpleTreeVisitor<ExpressionTree, Void>() {
+            @Nullable
             @Override
             public ExpressionTree visitMethodInvocation(MethodInvocationTree node, Void unused) {
               return PROTO_RECEIVER.matches(node, state) ? node : null;
@@ -290,6 +291,7 @@ public class ProtoFieldNullComparison extends BugChecker implements CompilationU
   private enum GetterTypes {
     /** {@code proto.getFoo()} */
     SCALAR {
+      @Nullable
       @Override
       Fixer match(ExpressionTree tree, VisitorState state) {
         if (tree.getKind() != Kind.METHOD_INVOCATION) {
@@ -335,6 +337,7 @@ public class ProtoFieldNullComparison extends BugChecker implements CompilationU
     },
     /** {@code proto.getRepeatedFoo(index)} */
     VECTOR_INDEXED {
+      @Nullable
       @Override
       Fixer match(ExpressionTree tree, VisitorState state) {
         if (tree.getKind() != Kind.METHOD_INVOCATION) {
@@ -365,6 +368,7 @@ public class ProtoFieldNullComparison extends BugChecker implements CompilationU
     },
     /** {@code proto.getRepeatedFooList()} */
     VECTOR {
+      @Nullable
       @Override
       Fixer match(ExpressionTree tree, VisitorState state) {
         if (tree.getKind() != Kind.METHOD_INVOCATION) {
@@ -391,6 +395,7 @@ public class ProtoFieldNullComparison extends BugChecker implements CompilationU
     },
     /** {@code proto.getField(f)} or {@code proto.getExtension(outer, extension)}; */
     EXTENSION_METHOD {
+      @Nullable
       @Override
       Fixer match(ExpressionTree tree, VisitorState state) {
         if (EXTENSION_METHODS_WITH_NO_FIX.matches(tree, state)) {

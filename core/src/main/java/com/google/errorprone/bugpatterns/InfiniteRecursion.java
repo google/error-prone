@@ -37,6 +37,7 @@ import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.TypeCastTree;
 import com.sun.source.util.SimpleTreeVisitor;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
@@ -74,7 +75,7 @@ public class InfiniteRecursion extends BugChecker implements BugChecker.MethodTr
               }
 
               @Override
-              protected MethodInvocationTree defaultAction(Tree tree, Void unused) {
+              protected @Nullable MethodInvocationTree defaultAction(Tree tree, Void unused) {
                 return tree instanceof MethodInvocationTree ? (MethodInvocationTree) tree : null;
               }
             },

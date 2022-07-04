@@ -47,6 +47,7 @@ import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.code.Symbol;
 import java.util.List;
 import java.util.Optional;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * @author mariasam@google.com (Maria Sam)
@@ -136,7 +137,7 @@ public class FloggerRedundantIsEnabled extends BugChecker implements IfTreeMatch
         new SimpleTreeVisitor<ExpressionTree, Void>() {
 
           @Override
-          protected ExpressionTree defaultAction(Tree tree, Void unused) {
+          protected @Nullable ExpressionTree defaultAction(Tree tree, Void unused) {
             return tree instanceof ExpressionTree ? (ExpressionTree) tree : null;
           }
 

@@ -205,6 +205,7 @@ public class ForOverrideChecker extends BugChecker
   }
 
   /** Get the outermost class/interface/enum of an element, or null if none. */
+  @Nullable
   private static Type getOutermostClass(VisitorState state) {
     return findLast(
             stream(state.getPath())

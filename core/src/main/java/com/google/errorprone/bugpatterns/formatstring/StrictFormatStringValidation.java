@@ -100,6 +100,7 @@ public class StrictFormatStringValidation {
   }
 
   /** Helps {@code validate()} validate a format string that is declared as a method parameter. */
+  @Nullable
   private static ValidationResult validateFormatStringParameter(
       ExpressionTree formatStringTree,
       Symbol formatStringSymbol,
@@ -219,6 +220,7 @@ public class StrictFormatStringValidation {
                     return super.visitVariable(node, unused);
                   }
 
+                  @Nullable
                   @Override
                   public ValidationResult reduce(ValidationResult r1, ValidationResult r2) {
                     if (r1 == null && r2 == null) {
