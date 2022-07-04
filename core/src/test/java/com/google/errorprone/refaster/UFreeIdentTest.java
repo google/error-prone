@@ -62,7 +62,6 @@ public class UFreeIdentTest extends AbstractUTreeTest {
   }
 
   @BugPattern(
-      name = "UnificationChecker",
       summary = "Verify that unifying the expression results in the correct binding",
       explanation = "For test purposes only",
       severity = SUGGESTION)
