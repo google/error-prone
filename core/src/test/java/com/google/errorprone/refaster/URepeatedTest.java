@@ -25,9 +25,9 @@ import com.google.errorprone.BugPattern;
 import com.google.errorprone.CompilationTestHelper;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
-import com.google.errorprone.bugpatterns.BugChecker.ExpressionStatementTreeMatcher;
+import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.matchers.Description;
-import com.sun.source.tree.ExpressionStatementTree;
+import com.sun.source.tree.MethodInvocationTree;
 import com.sun.tools.javac.util.Context;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -56,16 +56,14 @@ public class URepeatedTest extends AbstractUTreeTest {
       summary = "Verify that unifying the expression results in the correct binding",
       explanation = "For test purposes only",
       severity = SUGGESTION)
-  public static class UnificationChecker extends BugChecker
-      implements ExpressionStatementTreeMatcher {
+  public static class UnificationChecker extends BugChecker implements MethodInvocationTreeMatcher {
     @Override
-    public Description matchExpressionStatement(ExpressionStatementTree tree, VisitorState state) {
+    public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
       Unifier unifier = new Unifier(new Context());
       URepeated ident = URepeated.create("foo", UFreeIdent.create("foo"));
 
-      assertThat(ident.unify(tree.getExpression(), unifier)).isNotNull();
-      assertThat(unifier.getBindings())
-          .containsExactly(new UFreeIdent.Key("foo"), tree.getExpression());
+      assertThat(ident.unify(tree, unifier)).isNotNull();
+      assertThat(unifier.getBindings()).containsExactly(new UFreeIdent.Key("foo"), tree);
 
       return Description.NO_MATCH;
     }
