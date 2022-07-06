@@ -2226,10 +2226,7 @@ public class ASTHelpers {
 
     @Override
     public Void visitNewClass(NewClassTree tree, Void unused) {
-      MethodSymbol symbol = getSymbol(tree);
-      if (symbol != null) {
-        getThrownTypes().addAll(symbol.getThrownTypes());
-      }
+      getThrownTypes().addAll(getSymbol(tree).getThrownTypes());
       return super.visitNewClass(tree, null);
     }
 

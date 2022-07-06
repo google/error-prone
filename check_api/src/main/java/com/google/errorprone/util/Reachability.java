@@ -167,9 +167,6 @@ public class Reachability {
         return false;
       }
       MethodSymbol sym = getSymbol((MethodInvocationTree) expression);
-      if (sym == null) {
-        return false;
-      }
       return sym.owner.getQualifiedName().contentEquals("java.lang.System")
           && sym.getSimpleName().contentEquals("exit");
     }

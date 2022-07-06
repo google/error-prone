@@ -110,9 +110,6 @@ public class VoidMissingNullable extends BugChecker
     for (Tree tree : state.getPath()) {
       if (tree.getKind().asInterface().equals(ClassTree.class) || tree.getKind() == METHOD) {
         Symbol enclosingElement = getSymbol(tree);
-        if (tree == null) {
-          continue;
-        }
         return NullnessUtils.isInNullMarkedScope(enclosingElement, state);
       }
     }
