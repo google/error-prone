@@ -1204,6 +1204,9 @@ Unused.
 __[UnusedNestedClass](bugpattern/UnusedNestedClass)__<br>
 This nested class is unused, and can be removed.
 
+__[UnusedTypeParameter](bugpattern/UnusedTypeParameter)__<br>
+This type parameter is unused and can be removed.
+
 __[UnusedVariable](bugpattern/UnusedVariable)__<br>
 Unused.
 
