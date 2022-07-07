@@ -85,6 +85,18 @@ public final class UnicodeInCodeTest {
   }
 
   @Test
+  public void positiveMultiCharacterGivesOneFinding() {
+    helper
+        .addSourceLines(
+            "Test.java", //
+            "class Test {",
+            "  // BUG: Diagnostic contains: Unicode character (\\u03c0\\u03c0)",
+            "  static final double \u03C0\u03C0 = 3;",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void suppressibleAtClassLevel() {
     helper
         .addSourceLines(

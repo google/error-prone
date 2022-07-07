@@ -21,22 +21,22 @@ import static com.google.common.collect.Streams.concat;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ErrorProneTokens.getTokens;
+import static com.google.errorprone.util.SourceCodeEscapers.javaCharEscaper;
 import static java.lang.String.format;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableRangeSet;
 import com.google.common.collect.Range;
+import com.google.common.collect.RangeSet;
+import com.google.common.collect.TreeRangeSet;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.CompilationUnitTreeMatcher;
 import com.google.errorprone.fixes.FixedPosition;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ErrorProneToken;
-import com.google.errorprone.util.SourceCodeEscapers;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.tools.javac.parser.Tokens.TokenKind;
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 /** Bans using non-ASCII Unicode characters outside string literals and comments. */
 @BugPattern(
@@ -47,14 +47,14 @@ import java.util.Map;
 public final class UnicodeInCode extends BugChecker implements CompilationUnitTreeMatcher {
   @Override
   public Description matchCompilationUnit(CompilationUnitTree tree, VisitorState state) {
-    Map<Integer, Character> violations = new LinkedHashMap<>();
+    RangeSet<Integer> violations = TreeRangeSet.create();
     String sourceCode = state.getSourceCode().toString();
 
     for (int i = 0; i < sourceCode.length(); ++i) {
       char c = sourceCode.charAt(i);
 
       if (!isAcceptableAscii(c)) {
-        violations.put(i, c);
+        violations.add(Range.closedOpen(i, i + 1));
       }
     }
 
@@ -65,17 +65,18 @@ public final class UnicodeInCode extends BugChecker implements CompilationUnitTr
     ImmutableRangeSet<Integer> permissibleUnicodeRegions =
         suppressedRegions(state).union(commentsAndLiterals(state, sourceCode));
 
-    for (var e : violations.entrySet()) {
-      int violatingLocation = e.getKey();
-      char c = e.getValue();
-      if (!permissibleUnicodeRegions.contains(violatingLocation)) {
+    for (var range : violations.asDescendingSetOfRanges()) {
+      if (!permissibleUnicodeRegions.encloses(range)) {
         state.reportMatch(
-            buildDescription(new FixedPosition(tree, violatingLocation))
+            buildDescription(new FixedPosition(tree, range.lowerEndpoint()))
                 .setMessage(
                     format(
                         "Avoid using non-ASCII Unicode character (%s) outside of comments and"
                             + " literals, as they can be confusing.",
-                        SourceCodeEscapers.javaCharEscaper().escape(Character.toString(c))))
+                        javaCharEscaper()
+                            .escape(
+                                sourceCode.substring(
+                                    range.lowerEndpoint(), range.upperEndpoint()))))
                 .build());
       }
     }
