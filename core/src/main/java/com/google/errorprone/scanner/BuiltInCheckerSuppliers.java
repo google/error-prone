@@ -388,6 +388,7 @@ import com.google.errorprone.bugpatterns.UnusedCollectionModifiedInPlace;
 import com.google.errorprone.bugpatterns.UnusedException;
 import com.google.errorprone.bugpatterns.UnusedMethod;
 import com.google.errorprone.bugpatterns.UnusedNestedClass;
+import com.google.errorprone.bugpatterns.UnusedTypeParameter;
 import com.google.errorprone.bugpatterns.UnusedVariable;
 import com.google.errorprone.bugpatterns.UseCorrectAssertInTests;
 import com.google.errorprone.bugpatterns.UseEnumSwitch;
@@ -997,6 +998,7 @@ public class BuiltInCheckerSuppliers {
           UnsynchronizedOverridesSynchronized.class,
           UnusedMethod.class,
           UnusedNestedClass.class,
+          UnusedTypeParameter.class,
           UnusedVariable.class,
           UseBinds.class,
           UseCorrectAssertInTests.class,

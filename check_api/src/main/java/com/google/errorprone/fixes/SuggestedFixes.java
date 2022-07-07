@@ -567,7 +567,7 @@ public final class SuggestedFixes {
    * parentheses if no elements are left.
    */
   public static SuggestedFix removeElement(
-      ExpressionTree tree, List<? extends ExpressionTree> trees, VisitorState state) {
+      Tree tree, List<? extends Tree> trees, VisitorState state) {
     int indexOf = trees.indexOf(tree);
     checkArgument(indexOf != -1, "trees must contain tree");
     if (trees.size() == 1) {
