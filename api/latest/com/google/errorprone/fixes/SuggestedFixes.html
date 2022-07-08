@@ -772,8 +772,7 @@ com.sun.source.tree.Tree&nbsp;owningTree,
 <li>
 <section class="detail" id="addSuppressWarnings(com.google.errorprone.VisitorState,java.lang.String)">
 <h3>addSuppressWarnings</h3>
-<div class="member-signature"><span class="annotations"><a href="https://docs.oracle.com/javase/8/docs/api/javax/annotation/Nullable.html" title="class or interface in javax.annotation" class="external-link">@Nullable</a>
-</span><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a></span>&nbsp;<span class="member-name">addSuppressWarnings</span>&#8203;(<span class="parameters"><a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a></span>&nbsp;<span class="member-name">addSuppressWarnings</span>&#8203;(<span class="parameters"><a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
 <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;warningToSuppress)</span></div>
 <div class="block">Returns a fix that adds a <code>@SuppressWarnings(warningToSuppress)</code> to the closest
  suppressible element to the node pointed at by <code>state.getPath()</code>.</div>
@@ -786,8 +785,7 @@ com.sun.source.tree.Tree&nbsp;owningTree,
 <li>
 <section class="detail" id="addSuppressWarnings(com.google.errorprone.VisitorState,java.lang.String,java.lang.String)">
 <h3>addSuppressWarnings</h3>
-<div class="member-signature"><span class="annotations"><a href="https://docs.oracle.com/javase/8/docs/api/javax/annotation/Nullable.html" title="class or interface in javax.annotation" class="external-link">@Nullable</a>
-</span><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a></span>&nbsp;<span class="member-name">addSuppressWarnings</span>&#8203;(<span class="parameters"><a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a></span>&nbsp;<span class="member-name">addSuppressWarnings</span>&#8203;(<span class="parameters"><a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
 <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;warningToSuppress,
 <a href="https://docs.oracle.com/javase/8/docs/api/javax/annotation/Nullable.html" title="class or interface in javax.annotation" class="external-link">@Nullable</a>
 <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;lineComment)</span></div>
@@ -801,7 +799,7 @@ com.sun.source.tree.Tree&nbsp;owningTree,
  <p>In the event that a suppressible element couldn't be found (e.g.: the state is pointing at a
  CompilationUnit, or some other internal inconsistency has occurred), or the enclosing
  suppressible element already has a <code>@SuppressWarnings</code> annotation with <code>
- warningToSuppress</code>, this method will return null.</div>
+ warningToSuppress</code>, this method will throw an <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/IllegalArgumentException.html" title="class or interface in java.lang" class="external-link"><code>IllegalArgumentException</code></a>.</div>
 </section>
 </li>
 <li>
