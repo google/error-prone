@@ -53,8 +53,10 @@ public final class ProtoRules {
 
   /** Rules for methods on protos. */
   private static final class ProtoRule extends MethodRule {
-    private static final Pattern RETURNS_THIS =
-        Pattern.compile("(add|clear|merge|remove|set|put).*");
+    // Methods that start this way produce a modification to the proto, and either return this
+    // or return the parameter given, for chaining purposes.
+    private static final Pattern NAMED_MUTATOR_METHOD =
+        Pattern.compile("(add|clear|insert|merge|remove|set|put).*");
 
     private final Supplier<Type> parentType;
     private final String id;
@@ -73,11 +75,10 @@ public final class ProtoRules {
     public Optional<ResultUsePolicy> evaluateMethod(MethodSymbol method, VisitorState state) {
       if (isProtoSubtype(method.owner.type, state)) {
         String methodName = method.name.toString();
-        if (RETURNS_THIS.matcher(methodName).matches()) {
+        if (NAMED_MUTATOR_METHOD.matcher(methodName).matches()) {
           return Optional.of(ResultUsePolicy.OPTIONAL);
         }
-        if (isGetterOfSubmessageBuilder(methodName)
-            && isProtoSubtype(method.getReturnType(), state)) {
+        if (isMutatingAccessorMethod(methodName) && isProtoSubtype(method.getReturnType(), state)) {
           return Optional.of(ResultUsePolicy.OPTIONAL);
         }
       }
@@ -88,11 +89,16 @@ public final class ProtoRules {
       return isSubtype(ownerType, parentType.get(state), state);
     }
 
-    // fooBuilder.getBarBuilder() mutates the builder such that foo.hasBar() is now true.
-    private static boolean isGetterOfSubmessageBuilder(String name) {
+    private static boolean isMutatingAccessorMethod(String name) {
       // TODO(glorioso): Any other naming conventions to check?
       // TODO(glorioso): Maybe worth making this a regex instead? But think about performance
-      return name.startsWith("get") && name.endsWith("Builder") && !name.endsWith("OrBuilder");
+      if (name.startsWith("get")) {
+        // fooBuilder.getBarBuilder() mutates the builder such that foo.hasBar() is now true.
+        return (name.endsWith("Builder") && !name.endsWith("OrBuilder"))
+            // mutableFoo.getMutableBar() mutates Foo so that mutableFoo.hasBar() is now true
+            || name.startsWith("getMutable");
+      }
+      return false;
     }
   }
 
