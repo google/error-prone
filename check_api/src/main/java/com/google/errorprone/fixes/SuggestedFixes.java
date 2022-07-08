@@ -926,7 +926,6 @@ public final class SuggestedFixes {
    *
    * @see #addSuppressWarnings(VisitorState, String, String)
    */
-  @Nullable
   public static SuggestedFix addSuppressWarnings(VisitorState state, String warningToSuppress) {
     return addSuppressWarnings(state, warningToSuppress, null);
   }
@@ -942,14 +941,16 @@ public final class SuggestedFixes {
    * <p>In the event that a suppressible element couldn't be found (e.g.: the state is pointing at a
    * CompilationUnit, or some other internal inconsistency has occurred), or the enclosing
    * suppressible element already has a {@code @SuppressWarnings} annotation with {@code
-   * warningToSuppress}, this method will return null.
+   * warningToSuppress}, this method will throw an {@link IllegalArgumentException}.
    */
-  @Nullable
   public static SuggestedFix addSuppressWarnings(
       VisitorState state, String warningToSuppress, @Nullable String lineComment) {
     SuggestedFix.Builder fixBuilder = SuggestedFix.builder();
     addSuppressWarnings(fixBuilder, state, warningToSuppress, lineComment);
-    return fixBuilder.isEmpty() ? null : fixBuilder.build();
+    if (fixBuilder.isEmpty()) {
+      throw new IllegalArgumentException("Couldn't find a node to attach @SuppressWarnings.");
+    }
+    return fixBuilder.build();
   }
 
   /**
