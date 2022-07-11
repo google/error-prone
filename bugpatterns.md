@@ -949,6 +949,9 @@ A summary line is required on public/protected Javadocs.
 __[MixedMutabilityReturnType](bugpattern/MixedMutabilityReturnType)__<br>
 This method returns both mutable and immutable collections or maps from different paths. This may be confusing for users of the method.
 
+__[MockNotUsedInProduction](bugpattern/MockNotUsedInProduction)__<br>
+This mock is configured but never escapes to be used in production code. Should it be removed?
+
 __[ModifiedButNotUsed](bugpattern/ModifiedButNotUsed)__<br>
 A collection or proto builder was created, but its values were never accessed.
 
