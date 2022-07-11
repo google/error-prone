@@ -613,6 +613,9 @@ ByteBuffer.array() shouldn&#39;t be called unless ByteBuffer.arrayOffset() is us
 __[CacheLoaderNull](bugpattern/CacheLoaderNull)__<br>
 The result of CacheLoader#load must be non-null.
 
+__[CanIgnoreReturnValueSuggester](bugpattern/CanIgnoreReturnValueSuggester)__<br>
+Methods that always &#39;return this&#39; should be annotated with @CanIgnoreReturnValue
+
 __[CanonicalDuration](bugpattern/CanonicalDuration)__<br>
 Duration can be expressed more clearly with different units
 
@@ -1315,9 +1318,6 @@ This code declares a binding for a common value type without a Qualifier annotat
 
 __[BuilderReturnThis](bugpattern/BuilderReturnThis)__<br>
 Builder instance method does not return &#39;this&#39;
-
-__[CanIgnoreReturnValueSuggester](bugpattern/CanIgnoreReturnValueSuggester)__<br>
-Methods that always &#39;return this&#39; should be annotated with @CanIgnoreReturnValue
 
 __[CannotMockFinalClass](bugpattern/CannotMockFinalClass)__<br>
 Mockito cannot mock final classes
