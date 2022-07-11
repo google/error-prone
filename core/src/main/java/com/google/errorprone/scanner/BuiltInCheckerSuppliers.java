@@ -224,6 +224,7 @@ import com.google.errorprone.bugpatterns.MisusedWeekYear;
 import com.google.errorprone.bugpatterns.MixedArrayDimensions;
 import com.google.errorprone.bugpatterns.MixedDescriptors;
 import com.google.errorprone.bugpatterns.MixedMutabilityReturnType;
+import com.google.errorprone.bugpatterns.MockNotUsedInProduction;
 import com.google.errorprone.bugpatterns.MockitoUsage;
 import com.google.errorprone.bugpatterns.ModifiedButNotUsed;
 import com.google.errorprone.bugpatterns.ModifyCollectionInEnhancedForLoop;
@@ -911,6 +912,7 @@ public class BuiltInCheckerSuppliers {
           MissingOverride.class,
           MissingSummary.class,
           MixedMutabilityReturnType.class,
+          MockNotUsedInProduction.class,
           ModifiedButNotUsed.class,
           ModifyCollectionInEnhancedForLoop.class,
           ModifySourceCollectionInStream.class,
