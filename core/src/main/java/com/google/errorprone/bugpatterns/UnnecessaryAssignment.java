@@ -121,13 +121,23 @@ public final class UnnecessaryAssignment extends BugChecker
 
   @Override
   public Description matchVariable(VariableTree tree, VisitorState state) {
+    boolean hasMockAnnotation = HAS_MOCK_ANNOTATION.matches(tree, state);
+    boolean hasInjectyAnnotation = HAS_NON_MOCK_FRAMEWORK_ANNOTATION.matches(tree, state);
+    if (hasMockAnnotation && hasInjectyAnnotation) {
+      return buildDescription(tree)
+          .setMessage(
+              "Fields shouldn't be annotated with both @Mock and another @Inject-like annotation,"
+                  + " because both Mockito and the injector will assign to the field, and one of"
+                  + " the values will overwrite the other")
+          .build();
+    }
     if (tree.getInitializer() == null) {
       return NO_MATCH;
     }
-    if (HAS_MOCK_ANNOTATION.matches(tree, state)) {
+    if (hasMockAnnotation) {
       return describeMatch(tree, createMockFix(tree, state));
     }
-    if (HAS_NON_MOCK_FRAMEWORK_ANNOTATION.matches(tree, state)) {
+    if (hasInjectyAnnotation) {
       Description.Builder description = buildDescription(tree);
       if (!tree.getModifiers().getFlags().contains(Modifier.FINAL)) {
         String source =
