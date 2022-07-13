@@ -33,6 +33,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableListMultimap;
 import com.google.common.collect.ImmutableMap;
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.CompilationUnitTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
@@ -66,6 +67,18 @@ import javax.lang.model.element.Modifier;
 @BugPattern(name = "DoNotCall", summary = "This method should not be called.", severity = ERROR)
 public class DoNotCallChecker extends BugChecker
     implements MethodTreeMatcher, CompilationUnitTreeMatcher {
+  private final boolean checkNewGetClassMethods;
+
+  public DoNotCallChecker(ErrorProneFlags flags) {
+    checkNewGetClassMethods =
+        flags.getBoolean("DoNotCallChecker:CheckNewGetClassMethods").orElse(true);
+  }
+
+  private static final Matcher<ExpressionTree> STACK_TRACE_ELEMENT_GET_CLASS =
+      instanceMethod().onExactClass("java.lang.StackTraceElement").named("getClass");
+
+  private static final Matcher<ExpressionTree> ANY_GET_CLASS =
+      instanceMethod().anyClass().named("getClass");
 
   // If your method cannot be annotated with @DoNotCall (e.g., it's a JDK or thirdparty method),
   // then add it to this Map with an explanation.
@@ -133,6 +146,46 @@ public class DoNotCallChecker extends BugChecker
               "Calling getClass on StackTraceElement returns the Class object for"
                   + " StackTraceElement, you probably meant to retrieve the class containing the"
                   + " execution point represented by this stack trace element using getClassName")
+          .put(
+              instanceMethod().onExactClass("java.lang.StackWalker").named("getClass"),
+              "Calling getClass on StackWalker returns the Class object for StackWalker, you"
+                  + " probably meant to retrieve the class containing the execution point"
+                  + " represented by this StackWalker using getCallerClass")
+          .put(
+              instanceMethod().onExactClass("java.lang.StackWalker$StackFrame").named("getClass"),
+              "Calling getClass on StackFrame returns the Class object for StackFrame, you probably"
+                  + " meant to retrieve the class containing the execution point represented by"
+                  + " this StackFrame using getClassName")
+          .put(
+              instanceMethod().onExactClass("java.lang.reflect.Constructor").named("getClass"),
+              "Calling getClass on Constructor returns the Class object for Constructor, you"
+                  + " probably meant to retrieve the class containing the constructor represented"
+                  + " by this Constructor using getDeclaringClass")
+          .put(
+              instanceMethod().onExactClass("java.lang.reflect.Field").named("getClass"),
+              "Calling getClass on Field returns the Class object for Field, you probably meant to"
+                  + " retrieve the class containing the field represented by this Field using"
+                  + " getDeclaringClass")
+          .put(
+              instanceMethod().onExactClass("java.lang.reflect.Method").named("getClass"),
+              "Calling getClass on Method returns the Class object for Method, you probably meant"
+                  + " to retrieve the class containing the method represented by this Method using"
+                  + " getDeclaringClass")
+          .put(
+              instanceMethod().onExactClass("java.beans.BeanDescriptor").named("getClass"),
+              "Calling getClass on BeanDescriptor returns the Class object for BeanDescriptor, you"
+                  + " probably meant to retrieve the class described by this BeanDescriptor using"
+                  + " getBeanClass")
+          .put(
+              /*
+               * LockInfo has a publicly visible subclass, MonitorInfo. It seems unlikely that
+               * anyone is using getClass() in an attempt to distinguish the two. (If anyone is,
+               * then it would make more sense to use instanceof, anyway.)
+               */
+              instanceMethod().onDescendantOf("java.lang.management.LockInfo").named("getClass"),
+              "Calling getClass on LockInfo returns the Class object for LockInfo, you probably"
+                  + " meant to retrieve the class of the object that is being locked using"
+                  + " getClassName")
           .buildOrThrow();
 
   static final String DO_NOT_CALL = "com.google.errorprone.annotations.DoNotCall";
@@ -201,6 +254,11 @@ public class DoNotCallChecker extends BugChecker
       private void handleTree(ExpressionTree tree, MethodSymbol symbol) {
         for (Map.Entry<Matcher<ExpressionTree>, String> matcher : THIRD_PARTY_METHODS.entrySet()) {
           if (matcher.getKey().matches(tree, state)) {
+            if (!checkNewGetClassMethods
+                && ANY_GET_CLASS.matches(tree, state)
+                && !STACK_TRACE_ELEMENT_GET_CLASS.matches(tree, state)) {
+              return;
+            }
             state.reportMatch(buildDescription(tree).setMessage(matcher.getValue()).build());
             return;
           }
