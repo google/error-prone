@@ -62,6 +62,7 @@ public final class ExternalCanIgnoreReturnValue extends MethodRule {
                   .errorProneOptions()
                   .getFlags()
                   .get(EXTERNAL_API_EXCLUSION_LIST)
+                  .filter(s -> !s.isEmpty())
                   .map(
                       filename ->
                           loadConfigListFromFile(filename, state.errorProneOptions().getFlags()))
