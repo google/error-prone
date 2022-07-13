@@ -575,6 +575,36 @@ public class ReturnMissingNullableTest {
   }
 
   @Test
+  public void testImplementsMapButAlwaysThrows() {
+    createCompilationTestHelper()
+        .addSourceLines(
+            "MyMap.java",
+            "import java.util.Map;",
+            "abstract class MyMap<K, V> implements Map<K, V> {",
+            "  @Override",
+            "  public V put(K k, V v) {",
+            "    throw new UnsupportedOperationException();",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void testImplementsMapButDoNotCall() {
+    createCompilationTestHelper()
+        .addSourceLines(
+            "MyMap.java",
+            "import com.google.errorprone.annotations.DoNotCall;",
+            "import java.util.Map;",
+            "interface MyMap<K, V> extends Map<K, V> {",
+            "  @DoNotCall",
+            "  @Override",
+            "  V put(K k, V v);",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void testOnlyIfAlreadyInScopeAndItIs() {
     createCompilationTestHelper()
         .setArgs("-XepOpt:Nullness:OnlyIfAnnotationAlreadyInScope=true")

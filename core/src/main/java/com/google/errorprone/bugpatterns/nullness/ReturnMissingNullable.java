@@ -35,9 +35,11 @@ import static com.google.errorprone.matchers.Matchers.staticMethod;
 import static com.google.errorprone.util.ASTHelpers.constValue;
 import static com.google.errorprone.util.ASTHelpers.findEnclosingMethod;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
+import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
 import static com.google.errorprone.util.ASTHelpers.isConsideredFinal;
 import static com.google.errorprone.util.ASTHelpers.methodCanBeOverridden;
 import static com.sun.source.tree.Tree.Kind.NULL_LITERAL;
+import static com.sun.source.tree.Tree.Kind.THROW;
 import static java.lang.Boolean.FALSE;
 import static java.util.regex.Pattern.compile;
 import static javax.lang.model.type.TypeKind.TYPEVAR;
@@ -280,6 +282,17 @@ public class ReturnMissingNullable extends BugChecker implements CompilationUnit
           return;
         }
 
+        if (tree.getBody() != null
+            && tree.getBody().getStatements().size() == 1
+            && getOnlyElement(tree.getBody().getStatements()).getKind() == THROW) {
+          return;
+        }
+
+        if (hasAnnotation(
+            tree, "com.google.errorprone.annotations.DoNotCall", stateForCompilationUnit)) {
+          return;
+        }
+
         for (MethodSymbol methodKnownToReturnNull :
             METHODS_KNOWN_TO_RETURN_NULL.get(stateForCompilationUnit)) {
           if (stateForCompilationUnit
@@ -289,7 +302,13 @@ public class ReturnMissingNullable extends BugChecker implements CompilationUnit
                 fixByAddingNullableAnnotationToReturnType(
                     stateForCompilationUnit.withPath(getCurrentPath()), tree);
             if (!fix.isEmpty()) {
-              stateForCompilationUnit.reportMatch(describeMatch(tree, fix));
+              stateForCompilationUnit.reportMatch(
+                  buildDescription(tree)
+                      .setMessage(
+                          "Nearly all implementations of this method must return null, but it is"
+                              + " not annotated @Nullable")
+                      .addFix(fix)
+                      .build());
             }
           }
         }
