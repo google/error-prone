@@ -183,6 +183,9 @@ public final class SameNameButDifferent extends BugChecker implements Compilatio
     Symbol owner = classSymbol;
     long dots = simpleName.chars().filter(c -> c == '.').count();
     for (long i = 0; i < dots + 1; ++i) {
+      if (owner == null) {
+        return Optional.empty();
+      }
       owner = owner.owner;
     }
     if (owner instanceof ClassSymbol) {
