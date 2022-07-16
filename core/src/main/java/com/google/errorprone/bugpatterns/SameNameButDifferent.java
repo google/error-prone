@@ -41,6 +41,7 @@ import com.sun.tools.javac.code.Kinds.KindSelector;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.TypeSymbol;
+import com.sun.tools.javac.util.Position;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
@@ -48,6 +49,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import javax.lang.model.element.ElementKind;
+import javax.lang.model.element.Name;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /** Looks for types being shadowed by other types in a way that may be confusing. */
 @BugPattern(
@@ -92,21 +95,38 @@ public final class SameNameButDifferent extends BugChecker implements Compilatio
             && getSymbol(parentTree) instanceof ClassSymbol;
       }
 
+      private @Nullable String qualifiedName(Tree tree) {
+        if (state.getEndPosition(tree) == Position.NOPOS) {
+          return null;
+        }
+        ArrayDeque<Name> parts = new ArrayDeque<>();
+        while (tree instanceof MemberSelectTree) {
+          MemberSelectTree select = (MemberSelectTree) tree;
+          parts.addFirst(select.getIdentifier());
+          tree = select.getExpression();
+        }
+        if (!(tree instanceof IdentifierTree)) {
+          return null;
+        }
+        parts.addFirst(((IdentifierTree) tree).getName());
+        return Joiner.on('.').join(parts);
+      }
+
       private void handle(Tree tree) {
         if (tree instanceof IdentifierTree
             && ((IdentifierTree) tree).getName().contentEquals("Builder")) {
           return;
         }
-        String treeSource = state.getSourceForNode(tree);
-        if (treeSource == null) {
+        String qualifiedName = qualifiedName(tree);
+        if (qualifiedName == null) {
           return;
         }
         Symbol symbol = getSymbol(tree);
         if (symbol instanceof ClassSymbol) {
-          List<TreePath> treePaths = table.get(treeSource, symbol.type.tsym);
+          List<TreePath> treePaths = table.get(qualifiedName, symbol.type.tsym);
           if (treePaths == null) {
             treePaths = new ArrayList<>();
-            table.put(treeSource, symbol.type.tsym, treePaths);
+            table.put(qualifiedName, symbol.type.tsym, treePaths);
           }
           treePaths.add(getCurrentPath());
         }
