@@ -59,8 +59,8 @@ import java.util.stream.Stream;
 @BugPattern(
     severity = WARNING,
     summary =
-        "This mock is configured but never escapes to be used in production code. Should it be"
-            + " removed?")
+        "This mock is instantiated and configured, but is never passed to production code. It"
+            + " should be either removed or used.")
 public final class MockNotUsedInProduction extends BugChecker
     implements CompilationUnitTreeMatcher {
   @Override
