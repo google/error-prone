@@ -20,9 +20,11 @@ import static com.google.common.collect.ImmutableSet.toImmutableSet;
 
 import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableSet;
+import com.google.errorprone.annotations.Immutable;
 import java.util.stream.Stream;
 
 /** Describes Javadoc tags, and contains lists of valid tags. */
+@Immutable
 @AutoValue
 abstract class JavadocTag {
 
