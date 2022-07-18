@@ -1,7 +1,7 @@
 ---
 title: MockNotUsedInProduction
-summary: This mock is configured but never escapes to be used in production code.
-  Should it be removed?
+summary: This mock is instantiated and configured, but is never passed to production
+  code. It should be either removed or used.
 layout: bugpattern
 tags: ''
 severity: WARNING

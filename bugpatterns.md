@@ -953,7 +953,7 @@ __[MixedMutabilityReturnType](bugpattern/MixedMutabilityReturnType)__<br>
 This method returns both mutable and immutable collections or maps from different paths. This may be confusing for users of the method.
 
 __[MockNotUsedInProduction](bugpattern/MockNotUsedInProduction)__<br>
-This mock is configured but never escapes to be used in production code. Should it be removed?
+This mock is instantiated and configured, but is never passed to production code. It should be either removed or used.
 
 __[ModifiedButNotUsed](bugpattern/ModifiedButNotUsed)__<br>
 A collection or proto builder was created, but its values were never accessed.
