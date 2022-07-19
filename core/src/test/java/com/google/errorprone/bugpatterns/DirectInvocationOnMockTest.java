@@ -173,6 +173,23 @@ public final class DirectInvocationOnMockTest {
   }
 
   @Test
+  public void directInvocationOnMock_setUpWithDoCallRealMethod_noFinding() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            "import static org.mockito.Mockito.mock;",
+            "import static org.mockito.Mockito.doCallRealMethod;",
+            "class Test {",
+            "  public Object test() {",
+            "    Test test = mock(Test.class);",
+            "    doCallRealMethod().when(test).test();",
+            "    return test.test();",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void directInvocationOnMock_withinCustomWhen_noFinding() {
     helper
         .addSourceLines(

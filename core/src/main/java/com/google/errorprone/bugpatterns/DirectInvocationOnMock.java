@@ -20,8 +20,10 @@ import static com.google.common.collect.Streams.stream;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.fixes.SuggestedFixes.qualifyStaticImport;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
+import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.anyMethod;
 import static com.google.errorprone.matchers.Matchers.instanceMethod;
+import static com.google.errorprone.matchers.Matchers.receiverOfInvocation;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
@@ -73,6 +75,13 @@ public final class DirectInvocationOnMock extends BugChecker implements Compilat
             if (firstArgumentSymbol instanceof MethodSymbol) {
               methodsCallingRealImplementations.add((MethodSymbol) firstArgumentSymbol);
             }
+          }
+          return super.visitMethodInvocation(tree, null);
+        }
+        if (DO_CALL_REAL_METHOD.matches(tree, state)) {
+          var methodSymbol = getSymbol(getCurrentPath().getParentPath().getParentPath().getLeaf());
+          if (methodSymbol instanceof MethodSymbol) {
+            methodsCallingRealImplementations.add((MethodSymbol) methodSymbol);
           }
           return super.visitMethodInvocation(tree, null);
         }
@@ -153,6 +162,12 @@ public final class DirectInvocationOnMock extends BugChecker implements Compilat
 
   private static final Matcher<ExpressionTree> MOCK =
       staticMethod().onClass("org.mockito.Mockito").named("mock").withParameters("java.lang.Class");
+
+  private static final Matcher<MethodInvocationTree> DO_CALL_REAL_METHOD =
+      allOf(
+          instanceMethod().onDescendantOf("org.mockito.stubbing.Stubber").named("when"),
+          receiverOfInvocation(
+              staticMethod().onClass("org.mockito.Mockito").named("doCallRealMethod")));
 
   private static final Matcher<ExpressionTree> WHEN = anyMethod().anyClass().named("when");
 
