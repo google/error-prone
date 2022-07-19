@@ -659,4 +659,49 @@ public class DoNotCallCheckerTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void positive_parameterizedTypeGetClass() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.lang.reflect.ParameterizedType;",
+            "class Test{",
+            " void f(ParameterizedType t) {",
+            "   // BUG: Diagnostic contains: getRawType",
+            "   t.getClass();",
+            " }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void positive_classInfoGetClass() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.common.reflect.ClassPath.ClassInfo;",
+            "class Test{",
+            " void f(ClassInfo i) {",
+            "   // BUG: Diagnostic contains: getName",
+            "   i.getClass();",
+            " }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void positive_typeTokenGetClass() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.common.reflect.TypeToken;",
+            "class Test{",
+            " void f(TypeToken<?> t) {",
+            "   // BUG: Diagnostic contains: getRawType",
+            "   t.getClass();",
+            " }",
+            "}")
+        .doTest();
+  }
 }

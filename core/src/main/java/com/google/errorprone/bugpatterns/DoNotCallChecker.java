@@ -172,6 +172,13 @@ public class DoNotCallChecker extends BugChecker
                   + " to retrieve the class containing the method represented by this Method using"
                   + " getDeclaringClass")
           .put(
+              instanceMethod()
+                  .onExactClass("java.lang.reflect.ParameterizedType")
+                  .named("getClass"),
+              "Calling getClass on ParameterizedType returns the Class object for"
+                  + " ParameterizedType, you probably meant to retrieve the class containing the"
+                  + " method represented by this ParameterizedType using getRawType")
+          .put(
               instanceMethod().onExactClass("java.beans.BeanDescriptor").named("getClass"),
               "Calling getClass on BeanDescriptor returns the Class object for BeanDescriptor, you"
                   + " probably meant to retrieve the class described by this BeanDescriptor using"
@@ -186,6 +193,29 @@ public class DoNotCallChecker extends BugChecker
               "Calling getClass on LockInfo returns the Class object for LockInfo, you probably"
                   + " meant to retrieve the class of the object that is being locked using"
                   + " getClassName")
+          /*
+           * These methods are part of Guava, but we have to list them in this "thirdparty" section:
+           * We can't annotate them with @DoNotCall because we can't override getClass.
+           */
+          .put(
+              instanceMethod()
+                  .onExactClass("com.google.common.reflect.ClassPath$ClassInfo")
+                  .named("getClass"),
+              "Calling getClass on ClassInfo returns the Class object for ClassInfo, you probably"
+                  + " meant to retrieve the class described by this ClassInfo using getName or"
+                  + " load")
+          /*
+           * Users of TypeToken have to create a subclass. The static type of their instance is
+           * probably often still "TypeToken," but that may change as we see more usage of `var`. So
+           * let's check subclasses, too. If anyone defines an overload of getClass on such a
+           * subclass, this check will give that person a bad time in one additional way.
+           */
+          .put(
+              instanceMethod()
+                  .onDescendantOf("com.google.common.reflect.TypeToken")
+                  .named("getClass"),
+              "Calling getClass on TypeToken returns the Class object for TypeToken, you probably"
+                  + " meant to retrieve the class described by this TypeToken using getRawType")
           .buildOrThrow();
 
   static final String DO_NOT_CALL = "com.google.errorprone.annotations.DoNotCall";
