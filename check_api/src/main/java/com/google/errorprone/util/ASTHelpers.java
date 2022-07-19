@@ -1754,14 +1754,30 @@ public class ASTHelpers {
 
     @Override
     public Type visitCase(CaseTree tree, Void unused) {
-      Tree t = parent.getParentPath().getLeaf();
-      // JDK 12+, t can be SwitchExpressionTree
-      if (t instanceof SwitchTree) {
-        SwitchTree switchTree = (SwitchTree) t;
-        return getType(switchTree.getExpression());
+      Tree switchTree = parent.getParentPath().getLeaf();
+      return getType(getSwitchExpression(switchTree));
+    }
+
+    @Nullable
+    private static ExpressionTree getSwitchExpression(Tree tree) {
+      if (tree instanceof SwitchTree) {
+        return ((SwitchTree) tree).getExpression();
       }
-      // TODO(b/176098078): When the ErrorProne project switches to JDK 12, we should check
-      // for SwitchExpressionTree.
+      // Reflection is required for JDK < 12
+      try {
+        Class<?> switchExpression = Class.forName("com.sun.source.tree.SwitchExpressionTree");
+        Class<?> clazz = tree.getClass();
+        if (switchExpression.isAssignableFrom(clazz)) {
+          try {
+            Method method = clazz.getMethod("getExpression");
+            return (ExpressionTree) method.invoke(tree);
+          } catch (ReflectiveOperationException e) {
+            throw new LinkageError(e.getMessage(), e);
+          }
+        }
+      } catch (ClassNotFoundException e) {
+        // continue below
+      }
       return null;
     }
 
