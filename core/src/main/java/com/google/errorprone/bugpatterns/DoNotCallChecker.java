@@ -19,6 +19,8 @@ package com.google.errorprone.bugpatterns;
 import static com.google.common.collect.Streams.stream;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
+import static com.google.errorprone.matchers.Matchers.allOf;
+import static com.google.errorprone.matchers.Matchers.not;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
 import static com.google.errorprone.util.ASTHelpers.findSuperMethods;
@@ -28,6 +30,9 @@ import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
 import static com.google.errorprone.util.ASTHelpers.isConsideredFinal;
 import static com.google.errorprone.util.ASTHelpers.isSameType;
+import static com.sun.source.tree.Tree.Kind.IDENTIFIER;
+import static com.sun.source.tree.Tree.Kind.MEMBER_SELECT;
+import static com.sun.source.tree.Tree.Kind.METHOD_INVOCATION;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableListMultimap;
@@ -46,7 +51,9 @@ import com.google.errorprone.util.MoreAnnotations;
 import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.ExpressionTree;
+import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.MemberReferenceTree;
+import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.VariableTree;
@@ -68,10 +75,12 @@ import javax.lang.model.element.Modifier;
 public class DoNotCallChecker extends BugChecker
     implements MethodTreeMatcher, CompilationUnitTreeMatcher {
   private final boolean checkNewGetClassMethods;
+  private final boolean checkThreadRun;
 
   public DoNotCallChecker(ErrorProneFlags flags) {
     checkNewGetClassMethods =
         flags.getBoolean("DoNotCallChecker:CheckNewGetClassMethods").orElse(true);
+    checkThreadRun = flags.getBoolean("DoNotCallChecker:CheckThreadRun").orElse(true);
   }
 
   private static final Matcher<ExpressionTree> STACK_TRACE_ELEMENT_GET_CLASS =
@@ -79,6 +88,25 @@ public class DoNotCallChecker extends BugChecker
 
   private static final Matcher<ExpressionTree> ANY_GET_CLASS =
       instanceMethod().anyClass().named("getClass");
+
+  private static final Matcher<ExpressionTree> THREAD_RUN =
+      instanceMethod().onDescendantOf("java.lang.Thread").named("run").withNoParameters();
+
+  private static final Matcher<ExpressionTree> CALL_ON_SUPER =
+      (invocation, state) -> {
+        if (invocation.getKind() != METHOD_INVOCATION) {
+          return false;
+        }
+        ExpressionTree select = ((MethodInvocationTree) invocation).getMethodSelect();
+        if (select.getKind() != MEMBER_SELECT) {
+          return false;
+        }
+        ExpressionTree receiver = ((MemberSelectTree) select).getExpression();
+        if (receiver.getKind() != IDENTIFIER) {
+          return false;
+        }
+        return ((IdentifierTree) receiver).getName().contentEquals("super");
+      };
 
   // If your method cannot be annotated with @DoNotCall (e.g., it's a JDK or thirdparty method),
   // then add it to this Map with an explanation.
@@ -216,6 +244,20 @@ public class DoNotCallChecker extends BugChecker
                   .named("getClass"),
               "Calling getClass on TypeToken returns the Class object for TypeToken, you probably"
                   + " meant to retrieve the class described by this TypeToken using getRawType")
+          .put(
+              /*
+               * A call to super.run() from a direct subclass of Thread is a no-op. That could be
+               * worth telling the user about, but it's not as big a deal as "You meant to call
+               * start()," so we ignore it here.
+               *
+               * (And if someone defines a MyThread class with a run() method that does something,
+               * then a call to super.run() from a subclass of *MyThread* would *not* be a no-op,
+               * and we wouldn't want to flag it. Still, *usually* it's likely to be useful to
+               * report a warning even on subclasses of Thread, such as anonymous classes.)
+               */
+              allOf(THREAD_RUN, not(CALL_ON_SUPER)),
+              "Calling run on Thread runs work on this thread, rather than the given thread, you"
+                  + " probably meant to call start")
           .buildOrThrow();
 
   static final String DO_NOT_CALL = "com.google.errorprone.annotations.DoNotCall";
@@ -287,6 +329,9 @@ public class DoNotCallChecker extends BugChecker
             if (!checkNewGetClassMethods
                 && ANY_GET_CLASS.matches(tree, state)
                 && !STACK_TRACE_ELEMENT_GET_CLASS.matches(tree, state)) {
+              return;
+            }
+            if (!checkThreadRun && THREAD_RUN.matches(tree, state)) {
               return;
             }
             state.reportMatch(buildDescription(tree).setMessage(matcher.getValue()).build());

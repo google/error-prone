@@ -704,4 +704,31 @@ public class DoNotCallCheckerTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void positive_threadRun() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            " void f(Thread t) {",
+            "   // BUG: Diagnostic contains: start",
+            "   t.run();",
+            " }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void negative_threadSuperRun() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test extends Thread {",
+            " @Override public void run() {",
+            "   super.run();",
+            " }",
+            "}")
+        .doTest();
+  }
 }
