@@ -101,7 +101,13 @@ public final class DirectInvocationOnMock extends BugChecker implements Compilat
         if (isMock(receiver)
             && !(parent instanceof ExpressionTree
                 && WHEN.matches((ExpressionTree) parent, state))) {
-          var description = buildDescription(tree);
+          var description =
+              buildDescription(tree)
+                  .setMessage(
+                      format(
+                          "Methods should not be directly invoked on the mock `%s`. Should this be"
+                              + " part of a verify(..) call?",
+                          getSymbol(receiver).getSimpleName()));
           if (getCurrentPath().getParentPath().getLeaf() instanceof ExpressionStatementTree) {
             var fix = SuggestedFix.builder();
             String verify = qualifyStaticImport("org.mockito.Mockito.verify", fix, state);

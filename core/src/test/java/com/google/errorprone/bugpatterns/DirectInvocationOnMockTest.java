@@ -40,7 +40,7 @@ public final class DirectInvocationOnMockTest {
             "class Test {",
             "  public void test() {",
             "    Test test = mock(Test.class);",
-            "    // BUG: Diagnostic contains:",
+            "    // BUG: Diagnostic contains: test",
             "    test.test();",
             "  }",
             "}")
