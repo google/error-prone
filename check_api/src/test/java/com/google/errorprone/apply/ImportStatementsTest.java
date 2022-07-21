@@ -20,6 +20,7 @@ import static com.google.common.truth.Truth.assertThat;
 import static org.junit.Assert.assertThrows;
 
 import com.google.common.collect.ImmutableList;
+import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import com.sun.source.tree.TreeVisitor;
 import com.sun.tools.javac.tree.EndPosTable;
 import com.sun.tools.javac.tree.JCTree;
@@ -97,6 +98,7 @@ public class ImportStatementsTest {
      * @param typeName the fully-qualified name of the type being imported
      * @return a new JCImport stub
      */
+    @CanIgnoreReturnValue
     StubImportBuilder addImport(String typeName) {
       return addImport(typeName, /* isStatic= */ false);
     }
@@ -107,6 +109,7 @@ public class ImportStatementsTest {
      * @param typeName the fully-qualified name of the type being imported
      * @return a new JCImport stub
      */
+    @CanIgnoreReturnValue
     StubImportBuilder addStaticImport(String typeName) {
       return addImport(typeName, /* isStatic= */ true);
     }
@@ -118,6 +121,7 @@ public class ImportStatementsTest {
      * @param isStatic whether the import is static
      * @return a new JCImport stub
      */
+    @CanIgnoreReturnValue
     private StubImportBuilder addImport(String typeName, boolean isStatic) {
       // craft import string
       StringBuilder returnSB = new StringBuilder("import ");

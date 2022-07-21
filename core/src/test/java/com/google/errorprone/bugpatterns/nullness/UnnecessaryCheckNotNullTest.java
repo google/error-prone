@@ -24,6 +24,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.google.errorprone.CompilationTestHelper;
 import com.google.errorprone.VisitorState;
+import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import com.google.errorprone.matchers.CompilerBasedAbstractTest;
 import com.google.errorprone.scanner.Scanner;
 import com.sun.source.tree.ExpressionStatementTree;
@@ -226,6 +227,7 @@ public class UnnecessaryCheckNotNullTest extends CompilerBasedAbstractTest {
     private static class Builder {
       private final ImmutableMap.Builder<String, Match> builder = ImmutableMap.builder();
 
+      @CanIgnoreReturnValue
       public Builder add(String expression, String... expected) {
         builder.put(expression, new Match(expected));
         return this;

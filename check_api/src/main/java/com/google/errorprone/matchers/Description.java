@@ -24,6 +24,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.SeverityLevel;
+import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import com.google.errorprone.annotations.CheckReturnValue;
 import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.SuggestedFix;
@@ -174,6 +175,7 @@ public class Description {
      * @param fix a suggested fix for this problem
      * @throws NullPointerException if {@code fix} is {@code null}
      */
+    @CanIgnoreReturnValue
     public Builder addFix(Fix fix) {
       checkNotNull(fix, "fix must not be null");
       if (!fix.isEmpty()) {
@@ -190,6 +192,7 @@ public class Description {
      * @throws NullPointerException if {@code fix} is {@code null}
      * @deprecated prefer referring to empty fixes using {@link SuggestedFix#emptyFix()}.
      */
+    @CanIgnoreReturnValue
     @Deprecated
     public Builder addFix(Optional<? extends Fix> fix) {
       checkNotNull(fix, "fix must not be null");
@@ -203,6 +206,7 @@ public class Description {
      * @param fixes a list of suggested fixes for this problem
      * @throws NullPointerException if {@code fixes} or any of its elements are {@code null}
      */
+    @CanIgnoreReturnValue
     public Builder addAllFixes(List<? extends Fix> fixes) {
       checkNotNull(fixes, "fixes must not be null");
       for (Fix fix : fixes) {
@@ -217,6 +221,7 @@ public class Description {
      *
      * @param message A custom error message without the check name ("[checkname]") or link
      */
+    @CanIgnoreReturnValue
     public Builder setMessage(String message) {
       checkNotNull(message, "message must not be null");
       this.rawMessage = message;
@@ -227,6 +232,7 @@ public class Description {
      * Set a custom link URL. The custom URL will be used instead of the default one which forms
      * part of the {@code @}BugPattern.
      */
+    @CanIgnoreReturnValue
     public Builder setLinkUrl(String linkUrl) {
       checkNotNull(linkUrl, "linkUrl must not be null");
       this.linkUrl = linkUrl;

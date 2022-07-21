@@ -29,6 +29,7 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
 import com.google.common.collect.Streams;
 import com.google.errorprone.VisitorState;
+import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import com.google.errorprone.bugpatterns.CanBeStaticAnalyzer;
 import com.google.errorprone.suppliers.Supplier;
 import com.google.errorprone.util.ASTHelpers;
@@ -145,12 +146,14 @@ public final class ThreadSafety {
     @Nullable private Class<? extends Annotation> typeParameterAnnotation;
 
     /** See {@link Purpose}. */
+    @CanIgnoreReturnValue
     public Builder setPurpose(Purpose purpose) {
       this.purpose = purpose;
       return this;
     }
 
     /** Information about known types and whether they're known to be safe or unsafe. */
+    @CanIgnoreReturnValue
     public Builder knownTypes(KnownTypes knownTypes) {
       this.knownTypes = knownTypes;
       return this;
@@ -160,11 +163,13 @@ public final class ThreadSafety {
      * Annotations that will cause a class to be tested with this {@link ThreadSafety} instance; for
      * example, when testing a class for immutability, this should be @Immutable.
      */
+    @CanIgnoreReturnValue
     public Builder markerAnnotations(Set<String> markerAnnotations) {
       return markerAnnotations(ImmutableSet.copyOf(markerAnnotations));
     }
 
     // TODO(ringwalt): Remove this constructor. We need it for binary compatibility.
+    @CanIgnoreReturnValue
     public Builder markerAnnotations(ImmutableSet<String> markerAnnotations) {
       checkNotNull(markerAnnotations);
       this.markerAnnotations = markerAnnotations;
@@ -177,11 +182,13 @@ public final class ThreadSafety {
      * annotation, @Immutable would be included in this list, as an immutable class is by definition
      * thread-safe.
      */
+    @CanIgnoreReturnValue
     public Builder acceptedAnnotations(Set<String> acceptedAnnotations) {
       return acceptedAnnotations(ImmutableSet.copyOf(acceptedAnnotations));
     }
 
     // TODO(ringwalt): Remove this constructor. We need it for binary compatibility.
+    @CanIgnoreReturnValue
     public Builder acceptedAnnotations(ImmutableSet<String> acceptedAnnotations) {
       checkNotNull(acceptedAnnotations);
       this.acceptedAnnotations = acceptedAnnotations;
@@ -189,6 +196,7 @@ public final class ThreadSafety {
     }
 
     /** An annotation which marks a generic parameter as a container type. */
+    @CanIgnoreReturnValue
     public Builder containerOfAnnotation(Class<? extends Annotation> containerOfAnnotation) {
       checkNotNull(containerOfAnnotation);
       this.containerOfAnnotation = containerOfAnnotation;
@@ -196,6 +204,7 @@ public final class ThreadSafety {
     }
 
     /** An annotation which, when found on a class, should suppress the test */
+    @CanIgnoreReturnValue
     public Builder suppressAnnotation(Class<? extends Annotation> suppressAnnotation) {
       checkNotNull(suppressAnnotation);
       this.suppressAnnotation = suppressAnnotation;
@@ -206,6 +215,7 @@ public final class ThreadSafety {
      * An annotation which, when found on a type parameter, indicates that the type parameter may
      * only be instantiated with thread-safe types.
      */
+    @CanIgnoreReturnValue
     public Builder typeParameterAnnotation(Class<? extends Annotation> typeParameterAnnotation) {
       checkNotNull(typeParameterAnnotation);
       checkArgument(

@@ -198,11 +198,13 @@ public class BugCheckerRefactoringTestHelper {
     return new ExpectOutput(forSourceLines(path, input));
   }
 
+  @CanIgnoreReturnValue
   public BugCheckerRefactoringTestHelper setFixChooser(FixChooser chooser) {
     this.fixChooser = chooser;
     return this;
   }
 
+  @CanIgnoreReturnValue
   public BugCheckerRefactoringTestHelper addModules(String... modules) {
     return setArgs(
         Arrays.stream(modules)
@@ -210,23 +212,27 @@ public class BugCheckerRefactoringTestHelper {
             .collect(toImmutableList()));
   }
 
+  @CanIgnoreReturnValue
   public BugCheckerRefactoringTestHelper setArgs(ImmutableList<String> args) {
     checkState(options.isEmpty());
     this.options = args;
     return this;
   }
 
+  @CanIgnoreReturnValue
   public BugCheckerRefactoringTestHelper setArgs(String... args) {
     this.options = ImmutableList.copyOf(args);
     return this;
   }
 
   /** If set, fixes that produce output that doesn't compile are allowed. Off by default. */
+  @CanIgnoreReturnValue
   public BugCheckerRefactoringTestHelper allowBreakingChanges() {
     allowBreakingChanges = true;
     return this;
   }
 
+  @CanIgnoreReturnValue
   public BugCheckerRefactoringTestHelper setImportOrder(String importOrder) {
     this.importOrder = importOrder;
     return this;
@@ -248,6 +254,7 @@ public class BugCheckerRefactoringTestHelper {
     }
   }
 
+  @CanIgnoreReturnValue
   private BugCheckerRefactoringTestHelper addInputAndOutput(
       JavaFileObject input, JavaFileObject output) {
     sources.put(input, output);

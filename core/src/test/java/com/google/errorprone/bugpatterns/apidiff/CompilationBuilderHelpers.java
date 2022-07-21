@@ -22,6 +22,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 import com.google.auto.value.AutoValue;
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
+import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import com.sun.tools.javac.file.JavacFileManager;
 import java.io.File;
 import java.io.IOException;
@@ -60,6 +61,7 @@ public final class CompilationBuilderHelpers {
       this.tempFolder = tempFolder;
     }
 
+    @CanIgnoreReturnValue
     public SourceBuilder addSourceLines(String name, String... lines) throws IOException {
       Path filePath = Paths.get(tempFolder.getAbsolutePath(), name);
       sources.add(filePath);
@@ -90,16 +92,19 @@ public final class CompilationBuilderHelpers {
       this.fileManager = fileManager;
     }
 
+    @CanIgnoreReturnValue
     public CompilationBuilder setSources(Collection<Path> sources) {
       this.sources = sources;
       return this;
     }
 
+    @CanIgnoreReturnValue
     public CompilationBuilder setClasspath(Collection<Path> classpath) {
       this.classpath = classpath;
       return this;
     }
 
+    @CanIgnoreReturnValue
     CompilationBuilder setJavacopts(Iterable<String> javacopts) {
       this.javacopts = javacopts;
       return this;

@@ -25,6 +25,7 @@ import com.google.common.collect.Ordering;
 import com.google.common.collect.Range;
 import com.google.common.collect.RangeMap;
 import com.google.common.collect.TreeRangeMap;
+import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.LinkedHashSet;
@@ -89,10 +90,12 @@ public class Replacements {
     public abstract String coalesce(String replacement, String existing);
   }
 
+  @CanIgnoreReturnValue
   public Replacements add(Replacement replacement) {
     return add(replacement, CoalescePolicy.REJECT);
   }
 
+  @CanIgnoreReturnValue
   public Replacements add(Replacement replacement, CoalescePolicy coalescePolicy) {
     if (replacements.containsKey(replacement.range())) {
       Replacement existing = replacements.get(replacement.range());

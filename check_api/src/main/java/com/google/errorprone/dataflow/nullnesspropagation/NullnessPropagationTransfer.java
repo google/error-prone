@@ -38,6 +38,7 @@ import com.google.common.collect.ImmutableSetMultimap;
 import com.google.common.io.Files;
 import com.google.common.primitives.UnsignedInteger;
 import com.google.common.primitives.UnsignedLong;
+import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import com.google.errorprone.dataflow.AccessPath;
 import com.google.errorprone.dataflow.AccessPathStore;
 import com.google.errorprone.dataflow.AccessPathValues;
@@ -327,6 +328,7 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
    * Stores the given Javac context to find and analyze field initializers. Set before analyzing a
    * method and reset after.
    */
+  @CanIgnoreReturnValue
   NullnessPropagationTransfer setContext(@Nullable Context context) {
     // This is a best-effort check (similar to ArrayList iterators, for instance), no guarantee
     Preconditions.checkArgument(
@@ -345,6 +347,7 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
    * unit. Analyzing initializers from other compilation units tends to fail because type
    * information is sometimes missing on nodes returned from {@link Trees}.
    */
+  @CanIgnoreReturnValue
   NullnessPropagationTransfer setCompilationUnit(@Nullable CompilationUnitTree compilationUnit) {
     this.compilationUnit = compilationUnit;
     return this;

@@ -16,6 +16,7 @@
 package com.google.errorprone.apply;
 
 import com.google.auto.value.AutoValue;
+import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -182,6 +183,7 @@ public interface ImportOrganizer {
      * @param keys the keys to add, in order, if a key is not in the groups then it is ignored.
      * @return this for chaining.
      */
+    @CanIgnoreReturnValue
     public <K> OrganizedImports addGroups(
         Map<K, ? extends Collection<Import>> groups, Iterable<K> keys) {
       for (K key : keys) {

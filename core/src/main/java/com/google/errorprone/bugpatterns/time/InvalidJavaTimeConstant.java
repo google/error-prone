@@ -41,6 +41,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
+import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.matchers.Description;
@@ -111,6 +112,7 @@ public final class InvalidJavaTimeConstant extends BugChecker
 
       abstract ImmutableList.Builder<MatcherWithUnits> methodsBuilder();
 
+      @CanIgnoreReturnValue
       public Builder addStaticMethod(String methodName, Param... params) {
         methodsBuilder()
             .add(
@@ -123,6 +125,7 @@ public final class InvalidJavaTimeConstant extends BugChecker
         return this;
       }
 
+      @CanIgnoreReturnValue
       public Builder addInstanceMethod(String methodName, Param... params) {
         methodsBuilder()
             .add(

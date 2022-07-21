@@ -18,6 +18,7 @@ package com.google.errorprone.util;
 
 import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableList;
+import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import com.sun.source.tree.Tree;
 import com.sun.tools.javac.parser.Tokens.Comment;
 
@@ -51,6 +52,7 @@ public abstract class Commented<T extends Tree> {
 
     protected abstract ImmutableList.Builder<Comment> afterCommentsBuilder();
 
+    @CanIgnoreReturnValue
     Builder<T> addComment(
         Comment comment, int nodePosition, int tokenizingOffset, Position position) {
       OffsetComment offsetComment = new OffsetComment(comment, tokenizingOffset);
@@ -67,6 +69,7 @@ public abstract class Commented<T extends Tree> {
       return this;
     }
 
+    @CanIgnoreReturnValue
     Builder<T> addAllComment(
         Iterable<? extends Comment> comments,
         int nodePosition,
