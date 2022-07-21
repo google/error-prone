@@ -1,6 +1,6 @@
 ---
 title: CheckReturnValue
-summary: Ignored return value of method that is annotated with @CheckReturnValue
+summary: The result of this call must be used
 layout: bugpattern
 tags: ''
 severity: ERROR

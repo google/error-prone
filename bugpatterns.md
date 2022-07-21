@@ -72,7 +72,7 @@ __[CheckNotNullMultipleTimes](bugpattern/CheckNotNullMultipleTimes)__<br>
 A variable was checkNotNulled multiple times. Did you mean to check something else?
 
 __[CheckReturnValue](bugpattern/CheckReturnValue)__<br>
-Ignored return value of method that is annotated with @CheckReturnValue
+The result of this call must be used
 
 __[CollectionIncompatibleType](bugpattern/CollectionIncompatibleType)__<br>
 Incompatible type as argument to Object-accepting Java collections method
