@@ -17,17 +17,22 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.bugpatterns.CheckReturnValue.MessageTrailerStyle.NONE;
 import static com.google.errorprone.bugpatterns.checkreturnvalue.AutoValueRules.autoBuilders;
 import static com.google.errorprone.bugpatterns.checkreturnvalue.AutoValueRules.autoValueBuilders;
 import static com.google.errorprone.bugpatterns.checkreturnvalue.AutoValueRules.autoValues;
 import static com.google.errorprone.bugpatterns.checkreturnvalue.ExternalCanIgnoreReturnValue.externalIgnoreList;
+import static com.google.errorprone.bugpatterns.checkreturnvalue.ExternalCanIgnoreReturnValue.methodNameAndParams;
+import static com.google.errorprone.bugpatterns.checkreturnvalue.ExternalCanIgnoreReturnValue.surroundingClass;
 import static com.google.errorprone.bugpatterns.checkreturnvalue.ProtoRules.mutableProtos;
 import static com.google.errorprone.bugpatterns.checkreturnvalue.ProtoRules.protoBuilders;
 import static com.google.errorprone.bugpatterns.checkreturnvalue.ResultUsePolicy.EXPECTED;
 import static com.google.errorprone.bugpatterns.checkreturnvalue.ResultUsePolicy.OPTIONAL;
 import static com.google.errorprone.bugpatterns.checkreturnvalue.Rules.globalDefault;
 import static com.google.errorprone.bugpatterns.checkreturnvalue.Rules.mapAnnotationSimpleName;
+import static com.google.errorprone.fixes.SuggestedFix.emptyFix;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
+import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.hasDirectAnnotationWithSimpleName;
 
 import com.google.common.collect.ImmutableMap;
@@ -40,27 +45,32 @@ import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.bugpatterns.checkreturnvalue.PackagesRule;
 import com.google.errorprone.bugpatterns.checkreturnvalue.ResultUsePolicy;
 import com.google.errorprone.bugpatterns.checkreturnvalue.ResultUsePolicyEvaluator;
+import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ExpressionStatementTree;
 import com.sun.source.tree.ExpressionTree;
+import com.sun.source.tree.MemberReferenceTree;
+import com.sun.source.tree.MemberReferenceTree.ReferenceMode;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.NewClassTree;
+import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
+import com.sun.tools.javac.code.Type;
+import com.sun.tools.javac.code.Type.MethodType;
 import java.util.Optional;
 import javax.lang.model.element.ElementKind;
-import javax.lang.model.element.Name;
 
 /**
  * @author eaftan@google.com (Eddie Aftandilian)
  */
 @BugPattern(
     altNames = {"ResultOfMethodCallIgnored", "ReturnValueIgnored"},
-    summary = "Ignored return value of method that is annotated with @CheckReturnValue",
+    summary = "The result of this call must be used",
     severity = ERROR)
 public class CheckReturnValue extends AbstractReturnValueIgnored
     implements MethodTreeMatcher, ClassTreeMatcher {
@@ -73,12 +83,17 @@ public class CheckReturnValue extends AbstractReturnValueIgnored
 
   static final String CRV_PACKAGES = "CheckReturnValue:Packages";
 
+  private final MessageTrailerStyle messageTrailerStyle;
   private final Optional<ResultUsePolicy> constructorPolicy;
   private final Optional<ResultUsePolicy> methodPolicy;
   private final ResultUsePolicyEvaluator evaluator;
 
   public CheckReturnValue(ErrorProneFlags flags) {
     super(flags);
+    this.messageTrailerStyle =
+        flags
+            .getEnum("CheckReturnValue:MessageTrailerStyle", MessageTrailerStyle.class)
+            .orElse(NONE);
     this.constructorPolicy = defaultPolicy(flags, CHECK_ALL_CONSTRUCTORS);
     this.methodPolicy = defaultPolicy(flags, CHECK_ALL_METHODS);
 
@@ -237,25 +252,115 @@ public class CheckReturnValue extends AbstractReturnValueIgnored
     return Description.NO_MATCH;
   }
 
-  @Override
-  protected String getMessage(Name name) {
-    return String.format(
-        methodPolicy.orElse(OPTIONAL).equals(EXPECTED)
-            ? "Ignored return value of '%s', which wasn't annotated with @CanIgnoreReturnValue"
-            : "Ignored return value of '%s', which is annotated with @CheckReturnValue",
-        name);
+  private Description describeInvocationResultIgnored(
+      Tree tree,
+      String shortCall,
+      String shortCallWithoutNew,
+      MethodSymbol symbol,
+      Fix fix,
+      VisitorState state) {
+    String message =
+        String.format(
+            "The result of `%s` must be used\n"
+                + "If you really don't want to use the result, then assign it to a variable:"
+                + " `var unused = ...`.\n"
+                + "\n"
+                + "If callers of `%s` shouldn't be required to use its result,"
+                + " then annotate it with `@CanIgnoreReturnValue`.\n"
+                + "%s",
+            shortCall, shortCallWithoutNew, apiTrailer(symbol, state));
+    return buildDescription(tree).addFix(fix).setMessage(message).build();
   }
 
   @Override
-  protected Description describeReturnValueIgnored(NewClassTree newClassTree, VisitorState state) {
-    return constructorPolicy.orElse(OPTIONAL).equals(EXPECTED)
-        ? buildDescription(newClassTree)
-            .setMessage(
-                String.format(
-                    "Ignored return value of '%s', which wasn't annotated with"
-                        + " @CanIgnoreReturnValue",
-                    state.getSourceForNode(newClassTree.getIdentifier())))
-            .build()
-        : super.describeReturnValueIgnored(newClassTree, state);
+  protected Description describeReturnValueIgnored(MethodInvocationTree tree, VisitorState state) {
+    MethodSymbol symbol = getSymbol(tree);
+    String shortCall = symbol.name + (tree.getArguments().isEmpty() ? "()" : "(...)");
+    String shortCallWithoutNew = shortCall;
+    return describeInvocationResultIgnored(
+        tree, shortCall, shortCallWithoutNew, symbol, makeFix(tree, state), state);
+  }
+
+  @Override
+  protected Description describeReturnValueIgnored(NewClassTree tree, VisitorState state) {
+    MethodSymbol symbol = getSymbol(tree);
+    String shortCallWithoutNew =
+        state.getSourceForNode(tree.getIdentifier())
+            + (tree.getArguments().isEmpty() ? "()" : "(...)");
+    String shortCall = "new " + shortCallWithoutNew;
+    return describeInvocationResultIgnored(
+        tree, shortCall, shortCallWithoutNew, symbol, emptyFix(), state);
+  }
+
+  @Override
+  protected Description describeReturnValueIgnored(MemberReferenceTree tree, VisitorState state) {
+    MethodSymbol symbol = getSymbol(tree);
+    Type type = state.getTypes().memberType(getType(tree.getQualifierExpression()), symbol);
+    // TODO(cgdecker): There are probably other types than MethodType that we could resolve here
+    String parensAndMaybeEllipsis =
+        type instanceof MethodType && ((MethodType) type).getParameterTypes().isEmpty()
+            ? "()"
+            : "(...)";
+
+    String shortCallWithoutNew;
+    String shortCall;
+    if (tree.getMode() == ReferenceMode.NEW) {
+      shortCallWithoutNew =
+          state.getSourceForNode(tree.getQualifierExpression()) + parensAndMaybeEllipsis;
+      shortCall = "new " + shortCallWithoutNew;
+    } else {
+      shortCallWithoutNew = tree.getName() + parensAndMaybeEllipsis;
+      shortCall = shortCallWithoutNew;
+    }
+
+    String implementedMethod =
+        getType(tree).asElement().getSimpleName()
+            + "."
+            + state.getTypes().findDescriptorSymbol(getType(tree).asElement()).getSimpleName();
+    String methodReference = state.getSourceForNode(tree);
+    String message =
+        String.format(
+            "The result of `%s` must be used\n"
+                + "`%s` acts as an implementation of `%s`.\n"
+                + "— which is a `void` method, so it doesn't use the result of `%s`.\n"
+                + "\n"
+                + "To use the result, you may need to restructure your code.\n"
+                + "\n"
+                + "If you really don't want to use the result, then switch to a lambda that assigns"
+                + " it to a variable: `%s -> { var unused = ...; }`.\n"
+                + "\n"
+                + "If callers of `%s` shouldn't be required to use its result,"
+                + " then annotate it with `@CanIgnoreReturnValue`.\n"
+                + "%s",
+            shortCall,
+            methodReference,
+            implementedMethod,
+            shortCall,
+            parensAndMaybeEllipsis,
+            shortCallWithoutNew,
+            apiTrailer(symbol, state));
+    return buildDescription(tree).setMessage(message).build();
+  }
+
+  private String apiTrailer(MethodSymbol symbol, VisitorState state) {
+    if (symbol.enclClass().isAnonymous()) {
+      // I don't think we have a defined format for members of anonymous classes.
+      return "";
+    }
+    switch (messageTrailerStyle) {
+      case NONE:
+        return "";
+      case API_ERASED_SIGNATURE:
+        return "\n\nFull API: "
+            + surroundingClass(symbol)
+            + "#"
+            + methodNameAndParams(symbol, state.getTypes());
+    }
+    throw new AssertionError();
+  }
+
+  enum MessageTrailerStyle {
+    NONE,
+    API_ERASED_SIGNATURE,
   }
 }

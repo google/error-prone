@@ -157,11 +157,11 @@ public final class ExternalCanIgnoreReturnValue extends MethodRule {
                             api.parameterTypes(), methodSymbol.params(), state.getTypes()));
   }
 
-  static String surroundingClass(MethodSymbol methodSymbol) {
+  public static String surroundingClass(MethodSymbol methodSymbol) {
     return methodSymbol.enclClass().getQualifiedName().toString();
   }
 
-  static String methodNameAndParams(MethodSymbol methodSymbol, Types types) {
+  public static String methodNameAndParams(MethodSymbol methodSymbol, Types types) {
     return methodSymbol.name + "(" + paramsString(types, methodSymbol.params()) + ")";
   }
 

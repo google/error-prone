@@ -119,7 +119,7 @@ public class CheckReturnValueTest {
             "Test.java",
             "class Test {",
             "  void m() {",
-            "    // BUG: Diagnostic contains: Ignored return value",
+            "    // BUG: Diagnostic contains: ",
             "    lib.Lib.f();",
             "  }",
             "}")
@@ -140,7 +140,7 @@ public class CheckReturnValueTest {
             "Test.java",
             "class Test {",
             "  void m() {",
-            "    // BUG: Diagnostic contains: Ignored return value",
+            "    // BUG: Diagnostic contains: ",
             "    lib.Lib.f();",
             "  }",
             "}")
@@ -311,7 +311,7 @@ public class CheckReturnValueTest {
             "Test.java",
             "class Test {",
             "  void m() {",
-            "    // BUG: Diagnostic contains: Ignored return value",
+            "    // BUG: Diagnostic contains: ",
             "    lib.Lib.Inner.InnerMost.f();",
             "  }",
             "}")
@@ -537,7 +537,7 @@ public class CheckReturnValueTest {
             "      foo.f(); ",
             "   });",
             "   org.junit.Assert.assertThrows(IllegalStateException.class, () -> { ",
-            "     // BUG: Diagnostic contains: Ignored return value",
+            "     // BUG: Diagnostic contains: ",
             "     foo.f(); ",
             "     foo.f(); ",
             "   });",
@@ -591,13 +591,13 @@ public class CheckReturnValueTest {
             "import static org.junit.Assert.fail;",
             "class Test {",
             "  void f(Foo foo) {",
-            "    // BUG: Diagnostic contains: Ignored return value",
+            "    // BUG: Diagnostic contains: ",
             "    foo.f();",
             "    org.junit.Assert.fail();",
-            "    // BUG: Diagnostic contains: Ignored return value",
+            "    // BUG: Diagnostic contains: ",
             "    foo.f();",
             "    junit.framework.Assert.fail();",
-            "    // BUG: Diagnostic contains: Ignored return value",
+            "    // BUG: Diagnostic contains: ",
             "    foo.f();",
             "    junit.framework.TestCase.fail();",
             "  }",
@@ -663,7 +663,7 @@ public class CheckReturnValueTest {
             "Test.java",
             "class Test {",
             "  void m() {",
-            "    // BUG: Diagnostic contains: Ignored return value",
+            "    // BUG: Diagnostic contains: ",
             "    com.google.errorprone.bugpatterns.CheckReturnValueTest.CRVTest.f();",
             "  }",
             "}")
@@ -680,7 +680,7 @@ public class CheckReturnValueTest {
             "  @com.google.errorprone.annotations.CheckReturnValue",
             "  public Test() {}",
             "  public static void foo() {",
-            "    // BUG: Diagnostic contains: Ignored return value of 'Test'",
+            "    // BUG: Diagnostic contains: ",
             "    new Test();",
             "  }",
             "}")
@@ -834,7 +834,7 @@ public class CheckReturnValueTest {
             "Test.java",
             "class Test {",
             "  void f() {",
-            "    // BUG: Diagnostic contains: Ignored return value of 'Foo', which is annotated",
+            "    // BUG: Diagnostic contains: ",
             "    Runnable ignoresResult = Foo::new;",
             "  }",
             "}")
@@ -849,8 +849,7 @@ public class CheckReturnValueTest {
             "class Test {",
             "  public Test() {}",
             "  public static void foo() {",
-            "    // BUG: Diagnostic contains: Ignored return value of 'Test', which wasn't"
-                + " annotated with @CanIgnoreReturnValue",
+            "    // BUG: Diagnostic contains: ",
             "    new Test();",
             "  }",
             "}")
@@ -865,8 +864,7 @@ public class CheckReturnValueTest {
             "class Test {",
             "  public int bar() { return 42; }",
             "  public static void foo() {",
-            "    // BUG: Diagnostic contains: Ignored return value of 'bar', which wasn't"
-                + " annotated with @CanIgnoreReturnValue",
+            "    // BUG: Diagnostic contains: ",
             "    new Test().bar();",
             "  }",
             "}")
@@ -882,7 +880,7 @@ public class CheckReturnValueTest {
             "class Test {",
             "  public static void foo(List<Integer> x) {",
             "    x.add(42);",
-            "    // BUG: Diagnostic contains: Ignored return value of 'get'",
+            "    // BUG: Diagnostic contains: ",
             "    x.get(0);",
             "  }",
             "}")
@@ -906,12 +904,12 @@ public class CheckReturnValueTest {
             "  @Test(expected = IllegalArgumentException.class) ",
             "  public void fooWith2Statements() {",
             "    Foo f = new Foo();",
-            "    // BUG: Diagnostic contains: Ignored return value of 'Foo'",
+            "    // BUG: Diagnostic contains: ",
             "    new Foo();", // Not OK if there is more than one statement in the block.
             "  }",
             "  @Test(expected = Test.None.class) ", // This is a weird way to spell the default
             "  public void fooWithNone() {",
-            "    // BUG: Diagnostic contains: Ignored return value of 'Foo'",
+            "    // BUG: Diagnostic contains: ",
             "    new Foo();",
             "  }",
             "}")
@@ -948,7 +946,7 @@ public class CheckReturnValueTest {
             "  static void testAnimal() {",
             "    Animal.Builder builder = Animal.builder();",
             "    builder.setNumberOfLegs(4);", // AutoValue.Builder setters are implicitly @CIRV
-            "    // BUG: Diagnostic contains: Ignored return value of 'build'",
+            "    // BUG: Diagnostic contains: ",
             "    builder.build();",
             "  }",
             "}")
@@ -985,12 +983,12 @@ public class CheckReturnValueTest {
             "package com.google.frobber;",
             "public final class PersonCaller {",
             "  static void testPersonBuilder() {",
-            "    // BUG: Diagnostic contains: Ignored return value of 'personBuilder'",
+            "    // BUG: Diagnostic contains: ",
             "    PersonBuilder.personBuilder();",
             "    PersonBuilder builder = PersonBuilder.personBuilder();",
             "    builder.setName(\"kurt\");", // AutoBuilder setters are implicitly @CIRV
             "    builder.setId(42);", // AutoBuilder setters are implicitly @CIRV
-            "    // BUG: Diagnostic contains: Ignored return value of 'build'",
+            "    // BUG: Diagnostic contains: ",
             "    builder.build();",
             "  }",
             "}")
@@ -1030,7 +1028,7 @@ public class CheckReturnValueTest {
             "import java.util.logging.Level;",
             "public final class LogCaller {",
             "  static void testLogCaller() {",
-            "    // BUG: Diagnostic contains: Ignored return value of 'logCaller'",
+            "    // BUG: Diagnostic contains: ",
             "    Caller.logCaller();",
             "    Caller caller = Caller.logCaller();",
             "    caller.setMessage(\"hi\");", // AutoBuilder setters are implicitly @CIRV
@@ -1051,9 +1049,9 @@ public class CheckReturnValueTest {
             "import java.util.regex.Pattern;",
             "class Test {",
             "  public static void foo(List<Integer> list, Pattern pattern) {",
-            "    // BUG: Diagnostic contains: Ignored return value of 'get'",
+            "    // BUG: Diagnostic contains: ",
             "    list.get(0);",
-            "    // BUG: Diagnostic contains: Ignored return value of 'matcher'",
+            "    // BUG: Diagnostic contains: ",
             "    pattern.matcher(\"blah\");",
             "  }",
             "}")
@@ -1069,7 +1067,7 @@ public class CheckReturnValueTest {
             "import java.util.regex.Pattern;",
             "class Test {",
             "  public static void foo(List<Integer> list, Pattern pattern) {",
-            "    // BUG: Diagnostic contains: Ignored return value of 'get'",
+            "    // BUG: Diagnostic contains: ",
             "    list.get(0);",
             "    pattern.matcher(\"blah\");",
             "  }",
@@ -1090,10 +1088,10 @@ public class CheckReturnValueTest {
             "import java.util.regex.PatternSyntaxException;",
             "class Test {",
             "  public static void foo(List<Integer> list, Pattern pattern) {",
-            "    // BUG: Diagnostic contains: Ignored return value of 'get'",
+            "    // BUG: Diagnostic contains: ",
             "    list.get(0);",
             "    pattern.matcher(\"blah\");",
-            "    // BUG: Diagnostic contains: Ignored return value",
+            "    // BUG: Diagnostic contains: ",
             "    new PatternSyntaxException(\"\", \"\", 0);",
             "  }",
             "}")

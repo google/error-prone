@@ -201,6 +201,13 @@ public abstract class AbstractReturnValueIgnored extends BugChecker
    */
   protected Description describeReturnValueIgnored(
       MethodInvocationTree methodInvocationTree, VisitorState state) {
+    return buildDescription(methodInvocationTree)
+        .addFix(makeFix(methodInvocationTree, state))
+        .setMessage(getMessage(getSymbol(methodInvocationTree).getSimpleName()))
+        .build();
+  }
+
+  final Fix makeFix(MethodInvocationTree methodInvocationTree, VisitorState state) {
     // Find the root of the field access chain, i.e. a.intern().trim() ==> a.
     ExpressionTree identifierExpr = ASTHelpers.getRootAssignable(methodInvocationTree);
     Type identifierType = null;
@@ -236,10 +243,7 @@ public abstract class AbstractReturnValueIgnored extends BugChecker
         fix = SuggestedFix.delete(parent);
       }
     }
-    return buildDescription(methodInvocationTree)
-        .addFix(fix)
-        .setMessage(getMessage(getSymbol(methodInvocationTree).getSimpleName()))
-        .build();
+    return fix;
   }
 
   /**
