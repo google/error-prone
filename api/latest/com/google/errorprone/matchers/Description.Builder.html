@@ -170,7 +170,8 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <li>
 <section class="detail" id="addFix(com.google.errorprone.fixes.Fix)">
 <h3>addFix</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="Description.Builder.html" title="class in com.google.errorprone.matchers">Description.Builder</a></span>&nbsp;<span class="member-name">addFix</span>&#8203;(<span class="parameters"><a href="../fixes/Fix.html" title="interface in com.google.errorprone.fixes">Fix</a>&nbsp;fix)</span></div>
+<div class="member-signature"><span class="annotations"><a href="../annotations/CanIgnoreReturnValue.html" title="annotation in com.google.errorprone.annotations">@CanIgnoreReturnValue</a>
+</span><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="Description.Builder.html" title="class in com.google.errorprone.matchers">Description.Builder</a></span>&nbsp;<span class="member-name">addFix</span>&#8203;(<span class="parameters"><a href="../fixes/Fix.html" title="interface in com.google.errorprone.fixes">Fix</a>&nbsp;fix)</span></div>
 <div class="block">Adds a suggested fix for this <code>Description</code>. Fixes should be added in order of
  decreasing preference. Adding an empty fix is a no-op.</div>
 <dl class="notes">
@@ -184,7 +185,8 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <li>
 <section class="detail" id="addFix(java.util.Optional)">
 <h3>addFix</h3>
-<div class="member-signature"><span class="annotations"><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Deprecated.html" title="class or interface in java.lang" class="external-link">@Deprecated</a>
+<div class="member-signature"><span class="annotations"><a href="../annotations/CanIgnoreReturnValue.html" title="annotation in com.google.errorprone.annotations">@CanIgnoreReturnValue</a>
+<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Deprecated.html" title="class or interface in java.lang" class="external-link">@Deprecated</a>
 </span><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="Description.Builder.html" title="class in com.google.errorprone.matchers">Description.Builder</a></span>&nbsp;<span class="member-name">addFix</span>&#8203;(<span class="parameters"><a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;? extends <a href="../fixes/Fix.html" title="interface in com.google.errorprone.fixes">Fix</a>&gt;&nbsp;fix)</span></div>
 <div class="deprecation-block"><span class="deprecated-label">Deprecated.</span>
 <div class="deprecation-comment">prefer referring to empty fixes using <a href="../fixes/SuggestedFix.html#emptyFix()"><code>SuggestedFix.emptyFix()</code></a>.</div>
@@ -202,7 +204,8 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <li>
 <section class="detail" id="addAllFixes(java.util.List)">
 <h3>addAllFixes</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="Description.Builder.html" title="class in com.google.errorprone.matchers">Description.Builder</a></span>&nbsp;<span class="member-name">addAllFixes</span>&#8203;(<span class="parameters"><a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;? extends <a href="../fixes/Fix.html" title="interface in com.google.errorprone.fixes">Fix</a>&gt;&nbsp;fixes)</span></div>
+<div class="member-signature"><span class="annotations"><a href="../annotations/CanIgnoreReturnValue.html" title="annotation in com.google.errorprone.annotations">@CanIgnoreReturnValue</a>
+</span><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="Description.Builder.html" title="class in com.google.errorprone.matchers">Description.Builder</a></span>&nbsp;<span class="member-name">addAllFixes</span>&#8203;(<span class="parameters"><a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;? extends <a href="../fixes/Fix.html" title="interface in com.google.errorprone.fixes">Fix</a>&gt;&nbsp;fixes)</span></div>
 <div class="block">Add each fix in order.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
@@ -215,7 +218,8 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <li>
 <section class="detail" id="setMessage(java.lang.String)">
 <h3>setMessage</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="Description.Builder.html" title="class in com.google.errorprone.matchers">Description.Builder</a></span>&nbsp;<span class="member-name">setMessage</span>&#8203;(<span class="parameters"><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;message)</span></div>
+<div class="member-signature"><span class="annotations"><a href="../annotations/CanIgnoreReturnValue.html" title="annotation in com.google.errorprone.annotations">@CanIgnoreReturnValue</a>
+</span><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="Description.Builder.html" title="class in com.google.errorprone.matchers">Description.Builder</a></span>&nbsp;<span class="member-name">setMessage</span>&#8203;(<span class="parameters"><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;message)</span></div>
 <div class="block">Set a custom error message for this <code>Description</code>. The custom message will be used
  instead of the summary field as the text for the diagnostic message.</div>
 <dl class="notes">
@@ -227,7 +231,8 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <li>
 <section class="detail" id="setLinkUrl(java.lang.String)">
 <h3>setLinkUrl</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="Description.Builder.html" title="class in com.google.errorprone.matchers">Description.Builder</a></span>&nbsp;<span class="member-name">setLinkUrl</span>&#8203;(<span class="parameters"><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;linkUrl)</span></div>
+<div class="member-signature"><span class="annotations"><a href="../annotations/CanIgnoreReturnValue.html" title="annotation in com.google.errorprone.annotations">@CanIgnoreReturnValue</a>
+</span><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="Description.Builder.html" title="class in com.google.errorprone.matchers">Description.Builder</a></span>&nbsp;<span class="member-name">setLinkUrl</span>&#8203;(<span class="parameters"><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;linkUrl)</span></div>
 <div class="block">Set a custom link URL. The custom URL will be used instead of the default one which forms
  part of the <code>@</code>BugPattern.</div>
 </section>

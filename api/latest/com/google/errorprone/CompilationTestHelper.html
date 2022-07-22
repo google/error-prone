@@ -247,7 +247,8 @@ com.google.common.base.Predicate&lt;? super <a href="https://docs.oracle.com/jav
 <li>
 <section class="detail" id="addSourceLines(java.lang.String,java.lang.String...)">
 <h3>addSourceLines</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="CompilationTestHelper.html" title="class in com.google.errorprone">CompilationTestHelper</a></span>&nbsp;<span class="member-name">addSourceLines</span>&#8203;(<span class="parameters"><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;path,
+<div class="member-signature"><span class="annotations"><a href="annotations/CanIgnoreReturnValue.html" title="annotation in com.google.errorprone.annotations">@CanIgnoreReturnValue</a>
+</span><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="CompilationTestHelper.html" title="class in com.google.errorprone">CompilationTestHelper</a></span>&nbsp;<span class="member-name">addSourceLines</span>&#8203;(<span class="parameters"><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;path,
 <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>...&nbsp;lines)</span></div>
 <div class="block">Adds a source file to the test compilation, from the string content of the file.
 
@@ -267,7 +268,8 @@ com.google.common.base.Predicate&lt;? super <a href="https://docs.oracle.com/jav
 <li>
 <section class="detail" id="addSourceFile(java.lang.String)">
 <h3>addSourceFile</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="CompilationTestHelper.html" title="class in com.google.errorprone">CompilationTestHelper</a></span>&nbsp;<span class="member-name">addSourceFile</span>&#8203;(<span class="parameters"><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;path)</span></div>
+<div class="member-signature"><span class="annotations"><a href="annotations/CanIgnoreReturnValue.html" title="annotation in com.google.errorprone.annotations">@CanIgnoreReturnValue</a>
+</span><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="CompilationTestHelper.html" title="class in com.google.errorprone">CompilationTestHelper</a></span>&nbsp;<span class="member-name">addSourceFile</span>&#8203;(<span class="parameters"><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;path)</span></div>
 <div class="block">Adds a source file to the test compilation, from an existing resource file.
 
  <p>See <a href="#addSourceLines(java.lang.String,java.lang.String...)"><code>addSourceLines(java.lang.String, java.lang.String...)</code></a> for how expected diagnostics should be specified.</div>
@@ -280,7 +282,8 @@ com.google.common.base.Predicate&lt;? super <a href="https://docs.oracle.com/jav
 <li>
 <section class="detail" id="withClasspath(java.lang.Class...)">
 <h3>withClasspath</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="CompilationTestHelper.html" title="class in com.google.errorprone">CompilationTestHelper</a></span>&nbsp;<span class="member-name">withClasspath</span>&#8203;(<span class="parameters"><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;...&nbsp;classes)</span></div>
+<div class="member-signature"><span class="annotations"><a href="annotations/CanIgnoreReturnValue.html" title="annotation in com.google.errorprone.annotations">@CanIgnoreReturnValue</a>
+</span><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="CompilationTestHelper.html" title="class in com.google.errorprone">CompilationTestHelper</a></span>&nbsp;<span class="member-name">withClasspath</span>&#8203;(<span class="parameters"><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;...&nbsp;classes)</span></div>
 <div class="block">Sets the classpath for the test compilation, overriding the default of using the runtime
  classpath of the test execution. This is useful to verify correct behavior when the classpath
  is incomplete.</div>
@@ -293,13 +296,15 @@ com.google.common.base.Predicate&lt;? super <a href="https://docs.oracle.com/jav
 <li>
 <section class="detail" id="addModules(java.lang.String...)">
 <h3>addModules</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="CompilationTestHelper.html" title="class in com.google.errorprone">CompilationTestHelper</a></span>&nbsp;<span class="member-name">addModules</span>&#8203;(<span class="parameters"><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>...&nbsp;modules)</span></div>
+<div class="member-signature"><span class="annotations"><a href="annotations/CanIgnoreReturnValue.html" title="annotation in com.google.errorprone.annotations">@CanIgnoreReturnValue</a>
+</span><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="CompilationTestHelper.html" title="class in com.google.errorprone">CompilationTestHelper</a></span>&nbsp;<span class="member-name">addModules</span>&#8203;(<span class="parameters"><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>...&nbsp;modules)</span></div>
 </section>
 </li>
 <li>
 <section class="detail" id="setArgs(java.lang.String...)">
 <h3>setArgs</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="CompilationTestHelper.html" title="class in com.google.errorprone">CompilationTestHelper</a></span>&nbsp;<span class="member-name">setArgs</span>&#8203;(<span class="parameters"><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>...&nbsp;args)</span></div>
+<div class="member-signature"><span class="annotations"><a href="annotations/CanIgnoreReturnValue.html" title="annotation in com.google.errorprone.annotations">@CanIgnoreReturnValue</a>
+</span><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="CompilationTestHelper.html" title="class in com.google.errorprone">CompilationTestHelper</a></span>&nbsp;<span class="member-name">setArgs</span>&#8203;(<span class="parameters"><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>...&nbsp;args)</span></div>
 <div class="block">Sets custom command-line arguments for the compilation. These will be appended to the default
  compilation arguments.</div>
 </section>
@@ -307,7 +312,8 @@ com.google.common.base.Predicate&lt;? super <a href="https://docs.oracle.com/jav
 <li>
 <section class="detail" id="setArgs(java.util.List)">
 <h3>setArgs</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="CompilationTestHelper.html" title="class in com.google.errorprone">CompilationTestHelper</a></span>&nbsp;<span class="member-name">setArgs</span>&#8203;(<span class="parameters"><a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;args)</span></div>
+<div class="member-signature"><span class="annotations"><a href="annotations/CanIgnoreReturnValue.html" title="annotation in com.google.errorprone.annotations">@CanIgnoreReturnValue</a>
+</span><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="CompilationTestHelper.html" title="class in com.google.errorprone">CompilationTestHelper</a></span>&nbsp;<span class="member-name">setArgs</span>&#8203;(<span class="parameters"><a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;args)</span></div>
 <div class="block">Sets custom command-line arguments for the compilation. These will be appended to the default
  compilation arguments.</div>
 </section>
@@ -315,7 +321,8 @@ com.google.common.base.Predicate&lt;? super <a href="https://docs.oracle.com/jav
 <li>
 <section class="detail" id="expectNoDiagnostics()">
 <h3>expectNoDiagnostics</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="CompilationTestHelper.html" title="class in com.google.errorprone">CompilationTestHelper</a></span>&nbsp;<span class="member-name">expectNoDiagnostics</span>()</div>
+<div class="member-signature"><span class="annotations"><a href="annotations/CanIgnoreReturnValue.html" title="annotation in com.google.errorprone.annotations">@CanIgnoreReturnValue</a>
+</span><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="CompilationTestHelper.html" title="class in com.google.errorprone">CompilationTestHelper</a></span>&nbsp;<span class="member-name">expectNoDiagnostics</span>()</div>
 <div class="block">Tells the compilation helper to expect that no diagnostics will be generated, even if the
  source file contains bug markers. Useful for testing that a check is actually disabled when the
  proper command-line argument is passed.</div>
@@ -324,7 +331,8 @@ com.google.common.base.Predicate&lt;? super <a href="https://docs.oracle.com/jav
 <li>
 <section class="detail" id="matchAllDiagnostics()">
 <h3>matchAllDiagnostics</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="CompilationTestHelper.html" title="class in com.google.errorprone">CompilationTestHelper</a></span>&nbsp;<span class="member-name">matchAllDiagnostics</span>()</div>
+<div class="member-signature"><span class="annotations"><a href="annotations/CanIgnoreReturnValue.html" title="annotation in com.google.errorprone.annotations">@CanIgnoreReturnValue</a>
+</span><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="CompilationTestHelper.html" title="class in com.google.errorprone">CompilationTestHelper</a></span>&nbsp;<span class="member-name">matchAllDiagnostics</span>()</div>
 <div class="block">By default, the compilation helper will only inspect diagnostics generated by the check being
  tested. This behaviour can be disabled to test the interaction between Error Prone checks and
  javac diagnostics.</div>
@@ -333,7 +341,8 @@ com.google.common.base.Predicate&lt;? super <a href="https://docs.oracle.com/jav
 <li>
 <section class="detail" id="expectResult(com.sun.tools.javac.main.Main.Result)">
 <h3>expectResult</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="CompilationTestHelper.html" title="class in com.google.errorprone">CompilationTestHelper</a></span>&nbsp;<span class="member-name">expectResult</span>&#8203;(<span class="parameters">com.sun.tools.javac.main.Main.Result&nbsp;result)</span></div>
+<div class="member-signature"><span class="annotations"><a href="annotations/CanIgnoreReturnValue.html" title="annotation in com.google.errorprone.annotations">@CanIgnoreReturnValue</a>
+</span><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="CompilationTestHelper.html" title="class in com.google.errorprone">CompilationTestHelper</a></span>&nbsp;<span class="member-name">expectResult</span>&#8203;(<span class="parameters">com.sun.tools.javac.main.Main.Result&nbsp;result)</span></div>
 <div class="block">Tells the compilation helper to expect a specific result from the compilation, e.g. success or
  failure.</div>
 </section>
@@ -341,7 +350,8 @@ com.google.common.base.Predicate&lt;? super <a href="https://docs.oracle.com/jav
 <li>
 <section class="detail" id="expectErrorMessage(java.lang.String,com.google.common.base.Predicate)">
 <h3>expectErrorMessage</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="CompilationTestHelper.html" title="class in com.google.errorprone">CompilationTestHelper</a></span>&nbsp;<span class="member-name">expectErrorMessage</span>&#8203;(<span class="parameters"><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;key,
+<div class="member-signature"><span class="annotations"><a href="annotations/CanIgnoreReturnValue.html" title="annotation in com.google.errorprone.annotations">@CanIgnoreReturnValue</a>
+</span><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="CompilationTestHelper.html" title="class in com.google.errorprone">CompilationTestHelper</a></span>&nbsp;<span class="member-name">expectErrorMessage</span>&#8203;(<span class="parameters"><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;key,
 com.google.common.base.Predicate&lt;? super <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;matcher)</span></div>
 <div class="block">Expects an error message matching <code>matcher</code> at the line below a comment matching the key.
  For example, given the source

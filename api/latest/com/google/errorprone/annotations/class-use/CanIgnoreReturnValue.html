@@ -68,8 +68,38 @@ loadScripts(document, 'script');</script>
 <td class="col-last">&nbsp;</td>
 </tr>
 <tr class="row-color">
+<th class="col-first" scope="row"><a href="#com.google.errorprone.apply">com.google.errorprone.apply</a></th>
+<td class="col-last">&nbsp;</td>
+</tr>
+<tr class="alt-color">
+<th class="col-first" scope="row"><a href="#com.google.errorprone.bugpatterns">com.google.errorprone.bugpatterns</a></th>
+<td class="col-last">
+<div class="block">Checks added to the java compiler which detect common bug patterns.</div>
+</td>
+</tr>
+<tr class="row-color">
 <th class="col-first" scope="row"><a href="#com.google.errorprone.bugpatterns.checkreturnvalue">com.google.errorprone.bugpatterns.checkreturnvalue</a></th>
 <td class="col-last">&nbsp;</td>
+</tr>
+<tr class="alt-color">
+<th class="col-first" scope="row"><a href="#com.google.errorprone.bugpatterns.threadsafety">com.google.errorprone.bugpatterns.threadsafety</a></th>
+<td class="col-last">&nbsp;</td>
+</tr>
+<tr class="row-color">
+<th class="col-first" scope="row"><a href="#com.google.errorprone.dataflow">com.google.errorprone.dataflow</a></th>
+<td class="col-last">&nbsp;</td>
+</tr>
+<tr class="alt-color">
+<th class="col-first" scope="row"><a href="#com.google.errorprone.fixes">com.google.errorprone.fixes</a></th>
+<td class="col-last">
+<div class="block">Support code for providing automated corrections for defects we find.</div>
+</td>
+</tr>
+<tr class="row-color">
+<th class="col-first" scope="row"><a href="#com.google.errorprone.matchers">com.google.errorprone.matchers</a></th>
+<td class="col-last">
+<div class="block">A predicate DSL for matching javac AST nodes.</div>
+</td>
 </tr>
 <tr class="alt-color">
 <th class="col-first" scope="row"><a href="#com.google.errorprone.refaster">com.google.errorprone.refaster</a></th>
@@ -95,6 +125,69 @@ loadScripts(document, 'script');</script>
 </thead>
 <tbody>
 <tr class="alt-color">
+<td class="col-first"><code><a href="../../BugCheckerRefactoringTestHelper.html" title="class in com.google.errorprone">BugCheckerRefactoringTestHelper</a></code></td>
+<th class="col-second" scope="row"><span class="type-name-label">BugCheckerRefactoringTestHelper.</span><code><span class="member-name-link"><a href="../../BugCheckerRefactoringTestHelper.html#addModules(java.lang.String...)">addModules</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>...&nbsp;modules)</code></th>
+<td class="col-last">&nbsp;</td>
+</tr>
+<tr class="row-color">
+<td class="col-first"><code><a href="../../CompilationTestHelper.html" title="class in com.google.errorprone">CompilationTestHelper</a></code></td>
+<th class="col-second" scope="row"><span class="type-name-label">CompilationTestHelper.</span><code><span class="member-name-link"><a href="../../CompilationTestHelper.html#addModules(java.lang.String...)">addModules</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>...&nbsp;modules)</code></th>
+<td class="col-last">&nbsp;</td>
+</tr>
+<tr class="alt-color">
+<td class="col-first"><code><a href="../../CompilationTestHelper.html" title="class in com.google.errorprone">CompilationTestHelper</a></code></td>
+<th class="col-second" scope="row"><span class="type-name-label">CompilationTestHelper.</span><code><span class="member-name-link"><a href="../../CompilationTestHelper.html#addSourceFile(java.lang.String)">addSourceFile</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;path)</code></th>
+<td class="col-last">
+<div class="block">Adds a source file to the test compilation, from an existing resource file.</div>
+</td>
+</tr>
+<tr class="row-color">
+<td class="col-first"><code><a href="../../CompilationTestHelper.html" title="class in com.google.errorprone">CompilationTestHelper</a></code></td>
+<th class="col-second" scope="row"><span class="type-name-label">CompilationTestHelper.</span><code><span class="member-name-link"><a href="../../CompilationTestHelper.html#addSourceLines(java.lang.String,java.lang.String...)">addSourceLines</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;path,
+<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>...&nbsp;lines)</code></th>
+<td class="col-last">
+<div class="block">Adds a source file to the test compilation, from the string content of the file.</div>
+</td>
+</tr>
+<tr class="alt-color">
+<td class="col-first"><code><a href="../../BugCheckerRefactoringTestHelper.html" title="class in com.google.errorprone">BugCheckerRefactoringTestHelper</a></code></td>
+<th class="col-second" scope="row"><span class="type-name-label">BugCheckerRefactoringTestHelper.</span><code><span class="member-name-link"><a href="../../BugCheckerRefactoringTestHelper.html#allowBreakingChanges()">allowBreakingChanges</a></span>()</code></th>
+<td class="col-last">
+<div class="block">If set, fixes that produce output that doesn't compile are allowed.</div>
+</td>
+</tr>
+<tr class="row-color">
+<td class="col-first"><code><a href="../../CompilationTestHelper.html" title="class in com.google.errorprone">CompilationTestHelper</a></code></td>
+<th class="col-second" scope="row"><span class="type-name-label">CompilationTestHelper.</span><code><span class="member-name-link"><a href="../../CompilationTestHelper.html#expectErrorMessage(java.lang.String,com.google.common.base.Predicate)">expectErrorMessage</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;key,
+com.google.common.base.Predicate&lt;? super <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;matcher)</code></th>
+<td class="col-last">
+<div class="block">Expects an error message matching <code>matcher</code> at the line below a comment matching the key.</div>
+</td>
+</tr>
+<tr class="alt-color">
+<td class="col-first"><code><a href="../../CompilationTestHelper.html" title="class in com.google.errorprone">CompilationTestHelper</a></code></td>
+<th class="col-second" scope="row"><span class="type-name-label">CompilationTestHelper.</span><code><span class="member-name-link"><a href="../../CompilationTestHelper.html#expectNoDiagnostics()">expectNoDiagnostics</a></span>()</code></th>
+<td class="col-last">
+<div class="block">Tells the compilation helper to expect that no diagnostics will be generated, even if the
+ source file contains bug markers.</div>
+</td>
+</tr>
+<tr class="row-color">
+<td class="col-first"><code><a href="../../CompilationTestHelper.html" title="class in com.google.errorprone">CompilationTestHelper</a></code></td>
+<th class="col-second" scope="row"><span class="type-name-label">CompilationTestHelper.</span><code><span class="member-name-link"><a href="../../CompilationTestHelper.html#expectResult(com.sun.tools.javac.main.Main.Result)">expectResult</a></span>&#8203;(com.sun.tools.javac.main.Main.Result&nbsp;result)</code></th>
+<td class="col-last">
+<div class="block">Tells the compilation helper to expect a specific result from the compilation, e.g.</div>
+</td>
+</tr>
+<tr class="alt-color">
+<td class="col-first"><code><a href="../../CompilationTestHelper.html" title="class in com.google.errorprone">CompilationTestHelper</a></code></td>
+<th class="col-second" scope="row"><span class="type-name-label">CompilationTestHelper.</span><code><span class="member-name-link"><a href="../../CompilationTestHelper.html#matchAllDiagnostics()">matchAllDiagnostics</a></span>()</code></th>
+<td class="col-last">
+<div class="block">By default, the compilation helper will only inspect diagnostics generated by the check being
+ tested.</div>
+</td>
+</tr>
+<tr class="row-color">
 <td class="col-first"><code><a href="../../ErrorProneFlags.Builder.html" title="class in com.google.errorprone">ErrorProneFlags.Builder</a></code></td>
 <th class="col-second" scope="row"><span class="type-name-label">ErrorProneFlags.Builder.</span><code><span class="member-name-link"><a href="../../ErrorProneFlags.Builder.html#parseFlag(java.lang.String)">parseFlag</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;flag)</code></th>
 <td class="col-last">
@@ -102,12 +195,107 @@ loadScripts(document, 'script');</script>
  this builder's dictionary, e.g.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code><a href="../../ErrorProneFlags.Builder.html" title="class in com.google.errorprone">ErrorProneFlags.Builder</a></code></td>
 <th class="col-second" scope="row"><span class="type-name-label">ErrorProneFlags.Builder.</span><code><span class="member-name-link"><a href="../../ErrorProneFlags.Builder.html#putFlag(java.lang.String,java.lang.String)">putFlag</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;key,
 <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;value)</code></th>
 <td class="col-last">
 <div class="block">Puts a key-value pair directly in this builder's dictionary.</div>
+</td>
+</tr>
+<tr class="row-color">
+<td class="col-first"><code><a href="../../BugCheckerRefactoringTestHelper.html" title="class in com.google.errorprone">BugCheckerRefactoringTestHelper</a></code></td>
+<th class="col-second" scope="row"><span class="type-name-label">BugCheckerRefactoringTestHelper.</span><code><span class="member-name-link"><a href="../../BugCheckerRefactoringTestHelper.html#setArgs(com.google.common.collect.ImmutableList)">setArgs</a></span>&#8203;(com.google.common.collect.ImmutableList&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;args)</code></th>
+<td class="col-last">&nbsp;</td>
+</tr>
+<tr class="alt-color">
+<td class="col-first"><code><a href="../../BugCheckerRefactoringTestHelper.html" title="class in com.google.errorprone">BugCheckerRefactoringTestHelper</a></code></td>
+<th class="col-second" scope="row"><span class="type-name-label">BugCheckerRefactoringTestHelper.</span><code><span class="member-name-link"><a href="../../BugCheckerRefactoringTestHelper.html#setArgs(java.lang.String...)">setArgs</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>...&nbsp;args)</code></th>
+<td class="col-last">&nbsp;</td>
+</tr>
+<tr class="row-color">
+<td class="col-first"><code><a href="../../CompilationTestHelper.html" title="class in com.google.errorprone">CompilationTestHelper</a></code></td>
+<th class="col-second" scope="row"><span class="type-name-label">CompilationTestHelper.</span><code><span class="member-name-link"><a href="../../CompilationTestHelper.html#setArgs(java.lang.String...)">setArgs</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>...&nbsp;args)</code></th>
+<td class="col-last">
+<div class="block">Sets custom command-line arguments for the compilation.</div>
+</td>
+</tr>
+<tr class="alt-color">
+<td class="col-first"><code><a href="../../CompilationTestHelper.html" title="class in com.google.errorprone">CompilationTestHelper</a></code></td>
+<th class="col-second" scope="row"><span class="type-name-label">CompilationTestHelper.</span><code><span class="member-name-link"><a href="../../CompilationTestHelper.html#setArgs(java.util.List)">setArgs</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;args)</code></th>
+<td class="col-last">
+<div class="block">Sets custom command-line arguments for the compilation.</div>
+</td>
+</tr>
+<tr class="row-color">
+<td class="col-first"><code><a href="../../BugCheckerRefactoringTestHelper.html" title="class in com.google.errorprone">BugCheckerRefactoringTestHelper</a></code></td>
+<th class="col-second" scope="row"><span class="type-name-label">BugCheckerRefactoringTestHelper.</span><code><span class="member-name-link"><a href="../../BugCheckerRefactoringTestHelper.html#setFixChooser(com.google.errorprone.BugCheckerRefactoringTestHelper.FixChooser)">setFixChooser</a></span>&#8203;(<a href="../../BugCheckerRefactoringTestHelper.FixChooser.html" title="interface in com.google.errorprone">BugCheckerRefactoringTestHelper.FixChooser</a>&nbsp;chooser)</code></th>
+<td class="col-last">&nbsp;</td>
+</tr>
+<tr class="alt-color">
+<td class="col-first"><code><a href="../../BugCheckerRefactoringTestHelper.html" title="class in com.google.errorprone">BugCheckerRefactoringTestHelper</a></code></td>
+<th class="col-second" scope="row"><span class="type-name-label">BugCheckerRefactoringTestHelper.</span><code><span class="member-name-link"><a href="../../BugCheckerRefactoringTestHelper.html#setImportOrder(java.lang.String)">setImportOrder</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;importOrder)</code></th>
+<td class="col-last">&nbsp;</td>
+</tr>
+<tr class="row-color">
+<td class="col-first"><code><a href="../../CompilationTestHelper.html" title="class in com.google.errorprone">CompilationTestHelper</a></code></td>
+<th class="col-second" scope="row"><span class="type-name-label">CompilationTestHelper.</span><code><span class="member-name-link"><a href="../../CompilationTestHelper.html#withClasspath(java.lang.Class...)">withClasspath</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;...&nbsp;classes)</code></th>
+<td class="col-last">
+<div class="block">Sets the classpath for the test compilation, overriding the default of using the runtime
+ classpath of the test execution.</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="com.google.errorprone.apply">
+<h2>Uses of <a href="../CanIgnoreReturnValue.html" title="annotation in com.google.errorprone.annotations">CanIgnoreReturnValue</a> in <a href="../../apply/package-summary.html">com.google.errorprone.apply</a></h2>
+<div class="use-summary">
+<table class="summary-table">
+<caption><span>Methods in <a href="../../apply/package-summary.html">com.google.errorprone.apply</a> with annotations of type <a href="../CanIgnoreReturnValue.html" title="annotation in com.google.errorprone.annotations">CanIgnoreReturnValue</a></span></caption>
+<thead>
+<tr>
+<th class="col-first" scope="col">Modifier and Type</th>
+<th class="col-second" scope="col">Method</th>
+<th class="col-last" scope="col">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="alt-color">
+<td class="col-first"><code>&lt;K&gt;&nbsp;<a href="../../apply/ImportOrganizer.OrganizedImports.html" title="class in com.google.errorprone.apply">ImportOrganizer.OrganizedImports</a></code></td>
+<th class="col-second" scope="row"><span class="type-name-label">ImportOrganizer.OrganizedImports.</span><code><span class="member-name-link"><a href="../../apply/ImportOrganizer.OrganizedImports.html#addGroups(java.util.Map,java.lang.Iterable)">addGroups</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;K,&#8203;? extends <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="../../apply/ImportOrganizer.Import.html" title="class in com.google.errorprone.apply">ImportOrganizer.Import</a>&gt;&gt;&nbsp;groups,
+<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Iterable.html" title="class or interface in java.lang" class="external-link">Iterable</a>&lt;K&gt;&nbsp;keys)</code></th>
+<td class="col-last">
+<div class="block">Add groups of already sorted imports.</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="com.google.errorprone.bugpatterns">
+<h2>Uses of <a href="../CanIgnoreReturnValue.html" title="annotation in com.google.errorprone.annotations">CanIgnoreReturnValue</a> in <a href="../../bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></h2>
+<div class="use-summary">
+<table class="summary-table">
+<caption><span>Methods in <a href="../../bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a> with annotations of type <a href="../CanIgnoreReturnValue.html" title="annotation in com.google.errorprone.annotations">CanIgnoreReturnValue</a></span></caption>
+<thead>
+<tr>
+<th class="col-first" scope="col">Modifier and Type</th>
+<th class="col-second" scope="col">Method</th>
+<th class="col-last" scope="col">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="alt-color">
+<td class="col-first"><code><a href="../../bugpatterns/StronglyType.Builder.html" title="class in com.google.errorprone.bugpatterns">StronglyType.Builder</a></code></td>
+<th class="col-second" scope="row"><span class="type-name-label">StronglyType.Builder.</span><code><span class="member-name-link"><a href="../../bugpatterns/StronglyType.Builder.html#addType(com.sun.tools.javac.code.Type)">addType</a></span>&#8203;(com.sun.tools.javac.code.Type&nbsp;type)</code></th>
+<td class="col-last">
+<div class="block">Add a type that can be replaced with a stronger type.</div>
 </td>
 </tr>
 </tbody>
@@ -156,6 +344,313 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
+<section class="detail" id="com.google.errorprone.bugpatterns.threadsafety">
+<h2>Uses of <a href="../CanIgnoreReturnValue.html" title="annotation in com.google.errorprone.annotations">CanIgnoreReturnValue</a> in <a href="../../bugpatterns/threadsafety/package-summary.html">com.google.errorprone.bugpatterns.threadsafety</a></h2>
+<div class="use-summary">
+<table class="summary-table">
+<caption><span>Methods in <a href="../../bugpatterns/threadsafety/package-summary.html">com.google.errorprone.bugpatterns.threadsafety</a> with annotations of type <a href="../CanIgnoreReturnValue.html" title="annotation in com.google.errorprone.annotations">CanIgnoreReturnValue</a></span></caption>
+<thead>
+<tr>
+<th class="col-first" scope="col">Modifier and Type</th>
+<th class="col-second" scope="col">Method</th>
+<th class="col-last" scope="col">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="alt-color">
+<td class="col-first"><code><a href="../../bugpatterns/threadsafety/ThreadSafety.Builder.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.Builder</a></code></td>
+<th class="col-second" scope="row"><span class="type-name-label">ThreadSafety.Builder.</span><code><span class="member-name-link"><a href="../../bugpatterns/threadsafety/ThreadSafety.Builder.html#acceptedAnnotations(com.google.common.collect.ImmutableSet)">acceptedAnnotations</a></span>&#8203;(com.google.common.collect.ImmutableSet&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;acceptedAnnotations)</code></th>
+<td class="col-last">&nbsp;</td>
+</tr>
+<tr class="row-color">
+<td class="col-first"><code><a href="../../bugpatterns/threadsafety/ThreadSafety.Builder.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.Builder</a></code></td>
+<th class="col-second" scope="row"><span class="type-name-label">ThreadSafety.Builder.</span><code><span class="member-name-link"><a href="../../bugpatterns/threadsafety/ThreadSafety.Builder.html#acceptedAnnotations(java.util.Set)">acceptedAnnotations</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;acceptedAnnotations)</code></th>
+<td class="col-last">
+<div class="block">Annotations that do *not* cause a class to be tested, but which are treated as valid
+ annotations to pass the test; for example, if @ThreadSafe is the marker
+ annotation, @Immutable would be included in this list, as an immutable class is by definition
+ thread-safe.</div>
+</td>
+</tr>
+<tr class="alt-color">
+<td class="col-first"><code><a href="../../bugpatterns/threadsafety/ThreadSafety.Builder.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.Builder</a></code></td>
+<th class="col-second" scope="row"><span class="type-name-label">ThreadSafety.Builder.</span><code><span class="member-name-link"><a href="../../bugpatterns/threadsafety/ThreadSafety.Builder.html#containerOfAnnotation(java.lang.Class)">containerOfAnnotation</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;? extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/Annotation.html" title="class or interface in java.lang.annotation" class="external-link">Annotation</a>&gt;&nbsp;containerOfAnnotation)</code></th>
+<td class="col-last">
+<div class="block">An annotation which marks a generic parameter as a container type.</div>
+</td>
+</tr>
+<tr class="row-color">
+<td class="col-first"><code><a href="../../bugpatterns/threadsafety/ThreadSafety.Builder.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.Builder</a></code></td>
+<th class="col-second" scope="row"><span class="type-name-label">ThreadSafety.Builder.</span><code><span class="member-name-link"><a href="../../bugpatterns/threadsafety/ThreadSafety.Builder.html#knownTypes(com.google.errorprone.bugpatterns.threadsafety.ThreadSafety.KnownTypes)">knownTypes</a></span>&#8203;(<a href="../../bugpatterns/threadsafety/ThreadSafety.KnownTypes.html" title="interface in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.KnownTypes</a>&nbsp;knownTypes)</code></th>
+<td class="col-last">
+<div class="block">Information about known types and whether they're known to be safe or unsafe.</div>
+</td>
+</tr>
+<tr class="alt-color">
+<td class="col-first"><code><a href="../../bugpatterns/threadsafety/ThreadSafety.Builder.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.Builder</a></code></td>
+<th class="col-second" scope="row"><span class="type-name-label">ThreadSafety.Builder.</span><code><span class="member-name-link"><a href="../../bugpatterns/threadsafety/ThreadSafety.Builder.html#markerAnnotations(com.google.common.collect.ImmutableSet)">markerAnnotations</a></span>&#8203;(com.google.common.collect.ImmutableSet&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;markerAnnotations)</code></th>
+<td class="col-last">&nbsp;</td>
+</tr>
+<tr class="row-color">
+<td class="col-first"><code><a href="../../bugpatterns/threadsafety/ThreadSafety.Builder.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.Builder</a></code></td>
+<th class="col-second" scope="row"><span class="type-name-label">ThreadSafety.Builder.</span><code><span class="member-name-link"><a href="../../bugpatterns/threadsafety/ThreadSafety.Builder.html#markerAnnotations(java.util.Set)">markerAnnotations</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;markerAnnotations)</code></th>
+<td class="col-last">
+<div class="block">Annotations that will cause a class to be tested with this <a href="../../bugpatterns/threadsafety/ThreadSafety.html" title="class in com.google.errorprone.bugpatterns.threadsafety"><code>ThreadSafety</code></a> instance; for
+ example, when testing a class for immutability, this should be @Immutable.</div>
+</td>
+</tr>
+<tr class="alt-color">
+<td class="col-first"><code><a href="../../bugpatterns/threadsafety/ThreadSafety.Builder.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.Builder</a></code></td>
+<th class="col-second" scope="row"><span class="type-name-label">ThreadSafety.Builder.</span><code><span class="member-name-link"><a href="../../bugpatterns/threadsafety/ThreadSafety.Builder.html#setPurpose(com.google.errorprone.bugpatterns.threadsafety.ThreadSafety.Purpose)">setPurpose</a></span>&#8203;(<a href="../../bugpatterns/threadsafety/ThreadSafety.Purpose.html" title="enum in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.Purpose</a>&nbsp;purpose)</code></th>
+<td class="col-last">
+<div class="block">See <a href="../../bugpatterns/threadsafety/ThreadSafety.Purpose.html" title="enum in com.google.errorprone.bugpatterns.threadsafety"><code>ThreadSafety.Purpose</code></a>.</div>
+</td>
+</tr>
+<tr class="row-color">
+<td class="col-first"><code><a href="../../bugpatterns/threadsafety/ThreadSafety.Builder.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.Builder</a></code></td>
+<th class="col-second" scope="row"><span class="type-name-label">ThreadSafety.Builder.</span><code><span class="member-name-link"><a href="../../bugpatterns/threadsafety/ThreadSafety.Builder.html#suppressAnnotation(java.lang.Class)">suppressAnnotation</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;? extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/Annotation.html" title="class or interface in java.lang.annotation" class="external-link">Annotation</a>&gt;&nbsp;suppressAnnotation)</code></th>
+<td class="col-last">
+<div class="block">An annotation which, when found on a class, should suppress the test</div>
+</td>
+</tr>
+<tr class="alt-color">
+<td class="col-first"><code><a href="../../bugpatterns/threadsafety/ThreadSafety.Builder.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.Builder</a></code></td>
+<th class="col-second" scope="row"><span class="type-name-label">ThreadSafety.Builder.</span><code><span class="member-name-link"><a href="../../bugpatterns/threadsafety/ThreadSafety.Builder.html#typeParameterAnnotation(java.lang.Class)">typeParameterAnnotation</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;? extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/Annotation.html" title="class or interface in java.lang.annotation" class="external-link">Annotation</a>&gt;&nbsp;typeParameterAnnotation)</code></th>
+<td class="col-last">
+<div class="block">An annotation which, when found on a type parameter, indicates that the type parameter may
+ only be instantiated with thread-safe types.</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="com.google.errorprone.dataflow">
+<h2>Uses of <a href="../CanIgnoreReturnValue.html" title="annotation in com.google.errorprone.annotations">CanIgnoreReturnValue</a> in <a href="../../dataflow/package-summary.html">com.google.errorprone.dataflow</a></h2>
+<div class="use-summary">
+<table class="summary-table">
+<caption><span>Methods in <a href="../../dataflow/package-summary.html">com.google.errorprone.dataflow</a> with annotations of type <a href="../CanIgnoreReturnValue.html" title="annotation in com.google.errorprone.annotations">CanIgnoreReturnValue</a></span></caption>
+<thead>
+<tr>
+<th class="col-first" scope="col">Modifier and Type</th>
+<th class="col-second" scope="col">Method</th>
+<th class="col-last" scope="col">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="alt-color">
+<td class="col-first"><code><a href="../../dataflow/AccessPathStore.Builder.html" title="class in com.google.errorprone.dataflow">AccessPathStore.Builder</a>&lt;<a href="../../dataflow/AccessPathStore.Builder.html" title="type parameter in AccessPathStore.Builder">V</a>&gt;</code></td>
+<th class="col-second" scope="row"><span class="type-name-label">AccessPathStore.Builder.</span><code><span class="member-name-link"><a href="../../dataflow/AccessPathStore.Builder.html#setInformation(com.google.errorprone.dataflow.AccessPath,V)">setInformation</a></span>&#8203;(<a href="../../dataflow/AccessPath.html" title="class in com.google.errorprone.dataflow">AccessPath</a>&nbsp;aPath,
+<a href="../../dataflow/AccessPathStore.Builder.html" title="type parameter in AccessPathStore.Builder">V</a>&nbsp;value)</code></th>
+<td class="col-last">&nbsp;</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="com.google.errorprone.fixes">
+<h2>Uses of <a href="../CanIgnoreReturnValue.html" title="annotation in com.google.errorprone.annotations">CanIgnoreReturnValue</a> in <a href="../../fixes/package-summary.html">com.google.errorprone.fixes</a></h2>
+<div class="use-summary">
+<table class="summary-table">
+<caption><span>Methods in <a href="../../fixes/package-summary.html">com.google.errorprone.fixes</a> with annotations of type <a href="../CanIgnoreReturnValue.html" title="annotation in com.google.errorprone.annotations">CanIgnoreReturnValue</a></span></caption>
+<thead>
+<tr>
+<th class="col-first" scope="col">Modifier and Type</th>
+<th class="col-second" scope="col">Method</th>
+<th class="col-last" scope="col">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="alt-color">
+<td class="col-first"><code><a href="../../fixes/Replacements.html" title="class in com.google.errorprone.fixes">Replacements</a></code></td>
+<th class="col-second" scope="row"><span class="type-name-label">Replacements.</span><code><span class="member-name-link"><a href="../../fixes/Replacements.html#add(com.google.errorprone.fixes.Replacement)">add</a></span>&#8203;(<a href="../../fixes/Replacement.html" title="class in com.google.errorprone.fixes">Replacement</a>&nbsp;replacement)</code></th>
+<td class="col-last">&nbsp;</td>
+</tr>
+<tr class="row-color">
+<td class="col-first"><code><a href="../../fixes/Replacements.html" title="class in com.google.errorprone.fixes">Replacements</a></code></td>
+<th class="col-second" scope="row"><span class="type-name-label">Replacements.</span><code><span class="member-name-link"><a href="../../fixes/Replacements.html#add(com.google.errorprone.fixes.Replacement,com.google.errorprone.fixes.Replacements.CoalescePolicy)">add</a></span>&#8203;(<a href="../../fixes/Replacement.html" title="class in com.google.errorprone.fixes">Replacement</a>&nbsp;replacement,
+<a href="../../fixes/Replacements.CoalescePolicy.html" title="enum in com.google.errorprone.fixes">Replacements.CoalescePolicy</a>&nbsp;coalescePolicy)</code></th>
+<td class="col-last">&nbsp;</td>
+</tr>
+<tr class="alt-color">
+<td class="col-first"><code><a href="../../fixes/SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a></code></td>
+<th class="col-second" scope="row"><span class="type-name-label">SuggestedFix.Builder.</span><code><span class="member-name-link"><a href="../../fixes/SuggestedFix.Builder.html#addImport(java.lang.String)">addImport</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;importString)</code></th>
+<td class="col-last">
+<div class="block">Add an import statement as part of this SuggestedFix.</div>
+</td>
+</tr>
+<tr class="row-color">
+<td class="col-first"><code><a href="../../fixes/BranchedSuggestedFixes.Builder.html" title="class in com.google.errorprone.fixes">BranchedSuggestedFixes.Builder</a></code></td>
+<th class="col-second" scope="row"><span class="type-name-label">BranchedSuggestedFixes.Builder.</span><code><span class="member-name-link"><a href="../../fixes/BranchedSuggestedFixes.Builder.html#addOption(com.google.errorprone.fixes.SuggestedFix)">addOption</a></span>&#8203;(<a href="../../fixes/SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a>&nbsp;fix)</code></th>
+<td class="col-last">&nbsp;</td>
+</tr>
+<tr class="alt-color">
+<td class="col-first"><code><a href="../../fixes/SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a></code></td>
+<th class="col-second" scope="row"><span class="type-name-label">SuggestedFix.Builder.</span><code><span class="member-name-link"><a href="../../fixes/SuggestedFix.Builder.html#addStaticImport(java.lang.String)">addStaticImport</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;importString)</code></th>
+<td class="col-last">
+<div class="block">Add a static import statement as part of this SuggestedFix.</div>
+</td>
+</tr>
+<tr class="row-color">
+<td class="col-first"><code><a href="../../fixes/SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a></code></td>
+<th class="col-second" scope="row"><span class="type-name-label">SuggestedFix.Builder.</span><code><span class="member-name-link"><a href="../../fixes/SuggestedFix.Builder.html#delete(com.sun.source.tree.Tree)">delete</a></span>&#8203;(com.sun.source.tree.Tree&nbsp;node)</code></th>
+<td class="col-last">&nbsp;</td>
+</tr>
+<tr class="alt-color">
+<td class="col-first"><code><a href="../../fixes/SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a></code></td>
+<th class="col-second" scope="row"><span class="type-name-label">SuggestedFix.Builder.</span><code><span class="member-name-link"><a href="../../fixes/SuggestedFix.Builder.html#merge(com.google.errorprone.fixes.SuggestedFix)">merge</a></span>&#8203;(<a href="../../fixes/SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a>&nbsp;other)</code></th>
+<td class="col-last">
+<div class="block">Merges all edits from <code>other</code> into <code>this</code>.</div>
+</td>
+</tr>
+<tr class="row-color">
+<td class="col-first"><code><a href="../../fixes/SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a></code></td>
+<th class="col-second" scope="row"><span class="type-name-label">SuggestedFix.Builder.</span><code><span class="member-name-link"><a href="../../fixes/SuggestedFix.Builder.html#merge(com.google.errorprone.fixes.SuggestedFix.Builder)">merge</a></span>&#8203;(<a href="../../fixes/SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a>&nbsp;other)</code></th>
+<td class="col-last">
+<div class="block">Merges all edits from <code>other</code> into <code>this</code>.</div>
+</td>
+</tr>
+<tr class="alt-color">
+<td class="col-first"><code><a href="../../fixes/SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a></code></td>
+<th class="col-second" scope="row"><span class="type-name-label">SuggestedFix.Builder.</span><code><span class="member-name-link"><a href="../../fixes/SuggestedFix.Builder.html#postfixWith(com.sun.source.tree.Tree,java.lang.String)">postfixWith</a></span>&#8203;(com.sun.source.tree.Tree&nbsp;node,
+<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;postfix)</code></th>
+<td class="col-last">&nbsp;</td>
+</tr>
+<tr class="row-color">
+<td class="col-first"><code><a href="../../fixes/SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a></code></td>
+<th class="col-second" scope="row"><span class="type-name-label">SuggestedFix.Builder.</span><code><span class="member-name-link"><a href="../../fixes/SuggestedFix.Builder.html#prefixWith(com.sun.source.tree.Tree,java.lang.String)">prefixWith</a></span>&#8203;(com.sun.source.tree.Tree&nbsp;node,
+<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;prefix)</code></th>
+<td class="col-last">&nbsp;</td>
+</tr>
+<tr class="alt-color">
+<td class="col-first"><code><a href="../../fixes/SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a></code></td>
+<th class="col-second" scope="row"><span class="type-name-label">SuggestedFix.Builder.</span><code><span class="member-name-link"><a href="../../fixes/SuggestedFix.Builder.html#removeImport(java.lang.String)">removeImport</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;importString)</code></th>
+<td class="col-last">
+<div class="block">Remove an import statement as part of this SuggestedFix.</div>
+</td>
+</tr>
+<tr class="row-color">
+<td class="col-first"><code><a href="../../fixes/SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a></code></td>
+<th class="col-second" scope="row"><span class="type-name-label">SuggestedFix.Builder.</span><code><span class="member-name-link"><a href="../../fixes/SuggestedFix.Builder.html#removeStaticImport(java.lang.String)">removeStaticImport</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;importString)</code></th>
+<td class="col-last">
+<div class="block">Remove a static import statement as part of this SuggestedFix.</div>
+</td>
+</tr>
+<tr class="alt-color">
+<td class="col-first"><code><a href="../../fixes/SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a></code></td>
+<th class="col-second" scope="row"><span class="type-name-label">SuggestedFix.Builder.</span><code><span class="member-name-link"><a href="../../fixes/SuggestedFix.Builder.html#replace(int,int,java.lang.String)">replace</a></span>&#8203;(int&nbsp;startPos,
+int&nbsp;endPos,
+<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;replaceWith)</code></th>
+<td class="col-last">
+<div class="block">Replace the characters from startPos, inclusive, until endPos, exclusive, with the given
+ string.</div>
+</td>
+</tr>
+<tr class="row-color">
+<td class="col-first"><code><a href="../../fixes/SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a></code></td>
+<th class="col-second" scope="row"><span class="type-name-label">SuggestedFix.Builder.</span><code><span class="member-name-link"><a href="../../fixes/SuggestedFix.Builder.html#replace(com.sun.source.tree.Tree,java.lang.String)">replace</a></span>&#8203;(com.sun.source.tree.Tree&nbsp;node,
+<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;replaceWith)</code></th>
+<td class="col-last">&nbsp;</td>
+</tr>
+<tr class="alt-color">
+<td class="col-first"><code><a href="../../fixes/SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a></code></td>
+<th class="col-second" scope="row"><span class="type-name-label">SuggestedFix.Builder.</span><code><span class="member-name-link"><a href="../../fixes/SuggestedFix.Builder.html#replace(com.sun.source.tree.Tree,java.lang.String,int,int)">replace</a></span>&#8203;(com.sun.source.tree.Tree&nbsp;node,
+<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;replaceWith,
+int&nbsp;startPosAdjustment,
+int&nbsp;endPosAdjustment)</code></th>
+<td class="col-last">
+<div class="block">Replace a tree node with a string, but adjust the start and end positions as well.</div>
+</td>
+</tr>
+<tr class="row-color">
+<td class="col-first"><code><a href="../../fixes/SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a></code></td>
+<th class="col-second" scope="row"><span class="type-name-label">SuggestedFix.Builder.</span><code><span class="member-name-link"><a href="../../fixes/SuggestedFix.Builder.html#setShortDescription(java.lang.String)">setShortDescription</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;shortDescription)</code></th>
+<td class="col-last">
+<div class="block">Sets a custom short description for this fix.</div>
+</td>
+</tr>
+<tr class="alt-color">
+<td class="col-first"><code><a href="../../fixes/BranchedSuggestedFixes.Builder.html" title="class in com.google.errorprone.fixes">BranchedSuggestedFixes.Builder</a></code></td>
+<th class="col-second" scope="row"><span class="type-name-label">BranchedSuggestedFixes.Builder.</span><code><span class="member-name-link"><a href="../../fixes/BranchedSuggestedFixes.Builder.html#startWith(com.google.errorprone.fixes.SuggestedFix)">startWith</a></span>&#8203;(<a href="../../fixes/SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a>&nbsp;fix)</code></th>
+<td class="col-last">&nbsp;</td>
+</tr>
+<tr class="row-color">
+<td class="col-first"><code><a href="../../fixes/SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a></code></td>
+<th class="col-second" scope="row"><span class="type-name-label">SuggestedFix.Builder.</span><code><span class="member-name-link"><a href="../../fixes/SuggestedFix.Builder.html#swap(com.sun.source.tree.Tree,com.sun.source.tree.Tree)">swap</a></span>&#8203;(com.sun.source.tree.Tree&nbsp;node1,
+com.sun.source.tree.Tree&nbsp;node2)</code></th>
+<td class="col-last">&nbsp;</td>
+</tr>
+<tr class="alt-color">
+<td class="col-first"><code><a href="../../fixes/BranchedSuggestedFixes.Builder.html" title="class in com.google.errorprone.fixes">BranchedSuggestedFixes.Builder</a></code></td>
+<th class="col-second" scope="row"><span class="type-name-label">BranchedSuggestedFixes.Builder.</span><code><span class="member-name-link"><a href="../../fixes/BranchedSuggestedFixes.Builder.html#then()">then</a></span>()</code></th>
+<td class="col-last">&nbsp;</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="com.google.errorprone.matchers">
+<h2>Uses of <a href="../CanIgnoreReturnValue.html" title="annotation in com.google.errorprone.annotations">CanIgnoreReturnValue</a> in <a href="../../matchers/package-summary.html">com.google.errorprone.matchers</a></h2>
+<div class="use-summary">
+<table class="summary-table">
+<caption><span>Methods in <a href="../../matchers/package-summary.html">com.google.errorprone.matchers</a> with annotations of type <a href="../CanIgnoreReturnValue.html" title="annotation in com.google.errorprone.annotations">CanIgnoreReturnValue</a></span></caption>
+<thead>
+<tr>
+<th class="col-first" scope="col">Modifier and Type</th>
+<th class="col-second" scope="col">Method</th>
+<th class="col-last" scope="col">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="alt-color">
+<td class="col-first"><code><a href="../../matchers/Description.Builder.html" title="class in com.google.errorprone.matchers">Description.Builder</a></code></td>
+<th class="col-second" scope="row"><span class="type-name-label">Description.Builder.</span><code><span class="member-name-link"><a href="../../matchers/Description.Builder.html#addAllFixes(java.util.List)">addAllFixes</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;? extends <a href="../../fixes/Fix.html" title="interface in com.google.errorprone.fixes">Fix</a>&gt;&nbsp;fixes)</code></th>
+<td class="col-last">
+<div class="block">Add each fix in order.</div>
+</td>
+</tr>
+<tr class="row-color">
+<td class="col-first"><code><a href="../../matchers/Description.Builder.html" title="class in com.google.errorprone.matchers">Description.Builder</a></code></td>
+<th class="col-second" scope="row"><span class="type-name-label">Description.Builder.</span><code><span class="member-name-link"><a href="../../matchers/Description.Builder.html#addFix(com.google.errorprone.fixes.Fix)">addFix</a></span>&#8203;(<a href="../../fixes/Fix.html" title="interface in com.google.errorprone.fixes">Fix</a>&nbsp;fix)</code></th>
+<td class="col-last">
+<div class="block">Adds a suggested fix for this <code>Description</code>.</div>
+</td>
+</tr>
+<tr class="alt-color">
+<td class="col-first"><code><a href="../../matchers/Description.Builder.html" title="class in com.google.errorprone.matchers">Description.Builder</a></code></td>
+<th class="col-second" scope="row"><span class="type-name-label">Description.Builder.</span><code><span class="member-name-link"><a href="../../matchers/Description.Builder.html#addFix(java.util.Optional)">addFix</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;? extends <a href="../../fixes/Fix.html" title="interface in com.google.errorprone.fixes">Fix</a>&gt;&nbsp;fix)</code></th>
+<td class="col-last">
+<div class="block"><span class="deprecated-label">Deprecated.</span>
+<div class="deprecation-comment">prefer referring to empty fixes using <a href="../../fixes/SuggestedFix.html#emptyFix()"><code>SuggestedFix.emptyFix()</code></a>.</div>
+</div>
+</td>
+</tr>
+<tr class="row-color">
+<td class="col-first"><code><a href="../../matchers/Description.Builder.html" title="class in com.google.errorprone.matchers">Description.Builder</a></code></td>
+<th class="col-second" scope="row"><span class="type-name-label">Description.Builder.</span><code><span class="member-name-link"><a href="../../matchers/Description.Builder.html#setLinkUrl(java.lang.String)">setLinkUrl</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;linkUrl)</code></th>
+<td class="col-last">
+<div class="block">Set a custom link URL.</div>
+</td>
+</tr>
+<tr class="alt-color">
+<td class="col-first"><code><a href="../../matchers/Description.Builder.html" title="class in com.google.errorprone.matchers">Description.Builder</a></code></td>
+<th class="col-second" scope="row"><span class="type-name-label">Description.Builder.</span><code><span class="member-name-link"><a href="../../matchers/Description.Builder.html#setMessage(java.lang.String)">setMessage</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;message)</code></th>
+<td class="col-last">
+<div class="block">Set a custom error message for this <code>Description</code>.</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+</li>
+<li>
 <section class="detail" id="com.google.errorprone.refaster">
 <h2>Uses of <a href="../CanIgnoreReturnValue.html" title="annotation in com.google.errorprone.annotations">CanIgnoreReturnValue</a> in <a href="../../refaster/package-summary.html">com.google.errorprone.refaster</a></h2>
 <div class="use-summary">
@@ -176,6 +671,12 @@ loadScripts(document, 'script');</script>
 <div class="block">Indicates that Refaster should attempt to match a target expression against each of the
  specified template expressions, in order, and succeed at the first match.</div>
 </td>
+</tr>
+<tr class="row-color">
+<td class="col-first"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></code></td>
+<th class="col-second" scope="row"><span class="type-name-label">Bindings.</span><code><span class="member-name-link"><a href="../../refaster/Bindings.html#put(com.google.errorprone.refaster.Bindings.Key,java.lang.Object)">put</a></span>&#8203;(<a href="../../refaster/Bindings.Key.html" title="class in com.google.errorprone.refaster">Bindings.Key</a>&lt;?&gt;&nbsp;key,
+<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;value)</code></th>
+<td class="col-last">&nbsp;</td>
 </tr>
 </tbody>
 </table>

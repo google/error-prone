@@ -76,34 +76,48 @@ loadScripts(document, 'script');</script>
 <td class="col-last">&nbsp;</td>
 </tr>
 <tr class="row-color">
+<th class="col-first" scope="row"><a href="#com.google.errorprone.apply">com.google.errorprone.apply</a></th>
+<td class="col-last">&nbsp;</td>
+</tr>
+<tr class="alt-color">
 <th class="col-first" scope="row"><a href="#com.google.errorprone.bugpatterns">com.google.errorprone.bugpatterns</a></th>
 <td class="col-last">
 <div class="block">Checks added to the java compiler which detect common bug patterns.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <th class="col-first" scope="row"><a href="#com.google.errorprone.bugpatterns.checkreturnvalue">com.google.errorprone.bugpatterns.checkreturnvalue</a></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <th class="col-first" scope="row"><a href="#com.google.errorprone.bugpatterns.threadsafety">com.google.errorprone.bugpatterns.threadsafety</a></th>
 <td class="col-last">&nbsp;</td>
 </tr>
+<tr class="row-color">
+<th class="col-first" scope="row"><a href="#com.google.errorprone.dataflow">com.google.errorprone.dataflow</a></th>
+<td class="col-last">&nbsp;</td>
+</tr>
 <tr class="alt-color">
+<th class="col-first" scope="row"><a href="#com.google.errorprone.fixes">com.google.errorprone.fixes</a></th>
+<td class="col-last">
+<div class="block">Support code for providing automated corrections for defects we find.</div>
+</td>
+</tr>
+<tr class="row-color">
 <th class="col-first" scope="row"><a href="#com.google.errorprone.matchers">com.google.errorprone.matchers</a></th>
 <td class="col-last">
 <div class="block">A predicate DSL for matching javac AST nodes.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <th class="col-first" scope="row"><a href="#com.google.errorprone.refaster">com.google.errorprone.refaster</a></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <th class="col-first" scope="row"><a href="#com.google.errorprone.scanner">com.google.errorprone.scanner</a></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <th class="col-first" scope="row"><a href="#com.google.errorprone.util">com.google.errorprone.util</a></th>
 <td class="col-last">
 <div class="block">Utility code.</div>
@@ -211,6 +225,29 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
+<section class="detail" id="com.google.errorprone.apply">
+<div class="use-summary">
+<table class="summary-table">
+<caption><span>Classes in <a href="package-summary.html">com.google.errorprone.annotations</a> used by <a href="../apply/package-summary.html">com.google.errorprone.apply</a></span></caption>
+<thead>
+<tr>
+<th class="col-first" scope="col">Class</th>
+<th class="col-last" scope="col">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="alt-color">
+<th class="col-first" scope="row"><a href="class-use/CanIgnoreReturnValue.html#com.google.errorprone.apply">CanIgnoreReturnValue</a></th>
+<td class="col-last">
+<div class="block">Indicates that the return value of the annotated API(s) can be safely ignored.</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+</li>
+<li>
 <section class="detail" id="com.google.errorprone.bugpatterns">
 <div class="use-summary">
 <table class="summary-table">
@@ -223,6 +260,12 @@ loadScripts(document, 'script');</script>
 </thead>
 <tbody>
 <tr class="alt-color">
+<th class="col-first" scope="row"><a href="class-use/CanIgnoreReturnValue.html#com.google.errorprone.bugpatterns">CanIgnoreReturnValue</a></th>
+<td class="col-last">
+<div class="block">Indicates that the return value of the annotated API(s) can be safely ignored.</div>
+</td>
+</tr>
+<tr class="row-color">
 <th class="col-first" scope="row"><a href="class-use/CheckReturnValue.html#com.google.errorprone.bugpatterns">CheckReturnValue</a></th>
 <td class="col-last">
 <div class="block">Indicates that the return value of the annotated method must be checked.</div>
@@ -269,29 +312,81 @@ loadScripts(document, 'script');</script>
 </thead>
 <tbody>
 <tr class="alt-color">
+<th class="col-first" scope="row"><a href="class-use/CanIgnoreReturnValue.html#com.google.errorprone.bugpatterns.threadsafety">CanIgnoreReturnValue</a></th>
+<td class="col-last">
+<div class="block">Indicates that the return value of the annotated API(s) can be safely ignored.</div>
+</td>
+</tr>
+<tr class="row-color">
 <th class="col-first" scope="row"><a href="class-use/CheckReturnValue.html#com.google.errorprone.bugpatterns.threadsafety">CheckReturnValue</a></th>
 <td class="col-last">
 <div class="block">Indicates that the return value of the annotated method must be checked.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <th class="col-first" scope="row"><a href="class-use/FormatMethod.html#com.google.errorprone.bugpatterns.threadsafety">FormatMethod</a></th>
 <td class="col-last">
 <div class="block">Annotation for a method that takes a printf-style format string as an argument followed by
  arguments for that format string.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <th class="col-first" scope="row"><a href="class-use/FormatString.html#com.google.errorprone.bugpatterns.threadsafety">FormatString</a></th>
 <td class="col-last">
 <div class="block">Annotation for method parameter declarations which denotes that actual parameters will be used as
  a format string in printf-style formatting.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <th class="col-first" scope="row"><a href="class-use/Immutable.html#com.google.errorprone.bugpatterns.threadsafety">Immutable</a></th>
 <td class="col-last">
 <div class="block">The class to which this annotation is applied is immutable.</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="com.google.errorprone.dataflow">
+<div class="use-summary">
+<table class="summary-table">
+<caption><span>Classes in <a href="package-summary.html">com.google.errorprone.annotations</a> used by <a href="../dataflow/package-summary.html">com.google.errorprone.dataflow</a></span></caption>
+<thead>
+<tr>
+<th class="col-first" scope="col">Class</th>
+<th class="col-last" scope="col">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="alt-color">
+<th class="col-first" scope="row"><a href="class-use/CanIgnoreReturnValue.html#com.google.errorprone.dataflow">CanIgnoreReturnValue</a></th>
+<td class="col-last">
+<div class="block">Indicates that the return value of the annotated API(s) can be safely ignored.</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="com.google.errorprone.fixes">
+<div class="use-summary">
+<table class="summary-table">
+<caption><span>Classes in <a href="package-summary.html">com.google.errorprone.annotations</a> used by <a href="../fixes/package-summary.html">com.google.errorprone.fixes</a></span></caption>
+<thead>
+<tr>
+<th class="col-first" scope="col">Class</th>
+<th class="col-last" scope="col">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="alt-color">
+<th class="col-first" scope="row"><a href="class-use/CanIgnoreReturnValue.html#com.google.errorprone.fixes">CanIgnoreReturnValue</a></th>
+<td class="col-last">
+<div class="block">Indicates that the return value of the annotated API(s) can be safely ignored.</div>
 </td>
 </tr>
 </tbody>
@@ -312,12 +407,18 @@ loadScripts(document, 'script');</script>
 </thead>
 <tbody>
 <tr class="alt-color">
+<th class="col-first" scope="row"><a href="class-use/CanIgnoreReturnValue.html#com.google.errorprone.matchers">CanIgnoreReturnValue</a></th>
+<td class="col-last">
+<div class="block">Indicates that the return value of the annotated API(s) can be safely ignored.</div>
+</td>
+</tr>
+<tr class="row-color">
 <th class="col-first" scope="row"><a href="class-use/CheckReturnValue.html#com.google.errorprone.matchers">CheckReturnValue</a></th>
 <td class="col-last">
 <div class="block">Indicates that the return value of the annotated method must be checked.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <th class="col-first" scope="row"><a href="class-use/ForOverride.html#com.google.errorprone.matchers">ForOverride</a></th>
 <td class="col-last">
 <div class="block">Indicates that the annotated method is provided only to be overridden: it should not be
