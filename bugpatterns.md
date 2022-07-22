@@ -1299,6 +1299,9 @@ A static variable or method should be qualified with a class name, not expressio
 __[SystemExitOutsideMain](bugpattern/SystemExitOutsideMain)__<br>
 Code that contains System.exit() is untestable.
 
+__[UnsafeWildcard](bugpattern/UnsafeWildcard)__<br>
+Certain wildcard types can confuse the compiler.
+
 ## Experimental : WARNING
 
 __[AnnotationPosition](bugpattern/AnnotationPosition)__<br>
