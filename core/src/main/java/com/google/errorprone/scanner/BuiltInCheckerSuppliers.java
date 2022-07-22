@@ -504,6 +504,7 @@ import com.google.errorprone.bugpatterns.nullness.NullArgumentForNonNullParamete
 import com.google.errorprone.bugpatterns.nullness.ParameterMissingNullable;
 import com.google.errorprone.bugpatterns.nullness.ReturnMissingNullable;
 import com.google.errorprone.bugpatterns.nullness.UnnecessaryCheckNotNull;
+import com.google.errorprone.bugpatterns.nullness.UnsafeWildcard;
 import com.google.errorprone.bugpatterns.nullness.VoidMissingNullable;
 import com.google.errorprone.bugpatterns.overloading.InconsistentOverloads;
 import com.google.errorprone.bugpatterns.threadsafety.DoubleCheckedLocking;
@@ -1133,6 +1134,7 @@ public class BuiltInCheckerSuppliers {
           UnnecessarySetDefault.class,
           UnnecessaryStaticImport.class,
           UnsafeLocaleUsage.class,
+          UnsafeWildcard.class,
           UnusedException.class,
           UrlInSee.class,
           UseEnumSwitch.class,
