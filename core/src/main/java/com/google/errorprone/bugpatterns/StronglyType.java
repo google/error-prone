@@ -29,6 +29,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.SetMultimap;
 import com.google.errorprone.VisitorState;
+import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
@@ -94,6 +95,7 @@ public abstract class StronglyType {
     abstract ImmutableSet.Builder<Type> primitiveTypesToReplaceBuilder();
 
     /** Add a type that can be replaced with a stronger type. */
+    @CanIgnoreReturnValue
     public final Builder addType(Type type) {
       primitiveTypesToReplaceBuilder().add(type);
       return this;

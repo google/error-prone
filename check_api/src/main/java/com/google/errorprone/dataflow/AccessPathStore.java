@@ -21,6 +21,7 @@ import static com.google.common.collect.Sets.intersection;
 
 import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableMap;
+import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import javax.annotation.Nullable;
@@ -114,6 +115,7 @@ public abstract class AccessPathStore<V extends AbstractValue<V>>
       this.heap = new LinkedHashMap<>(prototype.heap());
     }
 
+    @CanIgnoreReturnValue
     public Builder<V> setInformation(AccessPath aPath, V value) {
       heap.put(checkNotNull(aPath), checkNotNull(value));
       return this;

@@ -27,6 +27,7 @@ import com.google.common.collect.Sets.SetView;
 import com.google.common.primitives.Primitives;
 import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
+import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import com.google.errorprone.annotations.Immutable;
 import com.google.errorprone.bugpatterns.ImmutableCollections;
 import com.google.errorprone.suppliers.Supplier;
@@ -96,6 +97,7 @@ public final class WellKnownMutability implements ThreadSafety.KnownTypes {
   static class Builder {
     final ImmutableMap.Builder<String, AnnotationInfo> mapBuilder = ImmutableMap.builder();
 
+    @CanIgnoreReturnValue
     public Builder addClasses(Set<Class<?>> clazzs) {
       for (Class<?> clazz : clazzs) {
         add(clazz);
@@ -103,6 +105,7 @@ public final class WellKnownMutability implements ThreadSafety.KnownTypes {
       return this;
     }
 
+    @CanIgnoreReturnValue
     public Builder addStrings(List<String> classNames) {
       for (String className : classNames) {
         add(className);
@@ -110,6 +113,7 @@ public final class WellKnownMutability implements ThreadSafety.KnownTypes {
       return this;
     }
 
+    @CanIgnoreReturnValue
     public Builder add(Class<?> clazz, String... containerOf) {
       ImmutableSet<String> containerTyParams = ImmutableSet.copyOf(containerOf);
       HashSet<String> actualTyParams = new HashSet<>();
@@ -129,6 +133,7 @@ public final class WellKnownMutability implements ThreadSafety.KnownTypes {
       return this;
     }
 
+    @CanIgnoreReturnValue
     public Builder add(String className, String... containerOf) {
       mapBuilder.put(
           className, AnnotationInfo.create(className, ImmutableList.copyOf(containerOf)));

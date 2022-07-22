@@ -20,6 +20,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
+import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
@@ -182,6 +183,7 @@ public class SuggestedFix implements Fix {
       return new SuggestedFix(this);
     }
 
+    @CanIgnoreReturnValue
     private Builder with(FixOperation fix) {
       fixes.add(fix);
       return this;
@@ -193,11 +195,13 @@ public class SuggestedFix implements Fix {
      *
      * <p>Should be limited to one sentence.
      */
+    @CanIgnoreReturnValue
     public Builder setShortDescription(String shortDescription) {
       this.shortDescription = shortDescription;
       return this;
     }
 
+    @CanIgnoreReturnValue
     public Builder replace(Tree node, String replaceWith) {
       checkNotSyntheticConstructor(node);
       return with(new ReplacementFix((DiagnosticPosition) node, replaceWith));
@@ -211,6 +215,7 @@ public class SuggestedFix implements Fix {
      * @param endPos The position at which to end replacing, exclusive
      * @param replaceWith The string to replace with
      */
+    @CanIgnoreReturnValue
     public Builder replace(int startPos, int endPos, String replaceWith) {
       DiagnosticPosition pos = new IndexedPosition(startPos, endPos);
       return with(new ReplacementFix(pos, replaceWith));
@@ -230,6 +235,7 @@ public class SuggestedFix implements Fix {
      * @param startPosAdjustment The adjustment to add to the start position (negative is OK)
      * @param endPosAdjustment The adjustment to add to the end position (negative is OK)
      */
+    @CanIgnoreReturnValue
     public Builder replace(
         Tree node, String replaceWith, int startPosAdjustment, int endPosAdjustment) {
       checkNotSyntheticConstructor(node);
@@ -239,21 +245,25 @@ public class SuggestedFix implements Fix {
               replaceWith));
     }
 
+    @CanIgnoreReturnValue
     public Builder prefixWith(Tree node, String prefix) {
       checkNotSyntheticConstructor(node);
       return with(new PrefixInsertion((DiagnosticPosition) node, prefix));
     }
 
+    @CanIgnoreReturnValue
     public Builder postfixWith(Tree node, String postfix) {
       checkNotSyntheticConstructor(node);
       return with(new PostfixInsertion((DiagnosticPosition) node, postfix));
     }
 
+    @CanIgnoreReturnValue
     public Builder delete(Tree node) {
       checkNotSyntheticConstructor(node);
       return replace(node, "");
     }
 
+    @CanIgnoreReturnValue
     public Builder swap(Tree node1, Tree node2) {
       checkNotSyntheticConstructor(node1);
       checkNotSyntheticConstructor(node2);
@@ -268,6 +278,7 @@ public class SuggestedFix implements Fix {
      * Add an import statement as part of this SuggestedFix. Import string should be of the form
      * "foo.bar.baz".
      */
+    @CanIgnoreReturnValue
     public Builder addImport(String importString) {
       importsToAdd.add("import " + importString);
       return this;
@@ -277,6 +288,7 @@ public class SuggestedFix implements Fix {
      * Add a static import statement as part of this SuggestedFix. Import string should be of the
      * form "foo.bar.baz".
      */
+    @CanIgnoreReturnValue
     public Builder addStaticImport(String importString) {
       importsToAdd.add("import static " + importString);
       return this;
@@ -286,6 +298,7 @@ public class SuggestedFix implements Fix {
      * Remove an import statement as part of this SuggestedFix. Import string should be of the form
      * "foo.bar.baz".
      */
+    @CanIgnoreReturnValue
     public Builder removeImport(String importString) {
       importsToRemove.add("import " + importString);
       return this;
@@ -295,6 +308,7 @@ public class SuggestedFix implements Fix {
      * Remove a static import statement as part of this SuggestedFix. Import string should be of the
      * form "foo.bar.baz".
      */
+    @CanIgnoreReturnValue
     public Builder removeStaticImport(String importString) {
       importsToRemove.add("import static " + importString);
       return this;
@@ -303,6 +317,7 @@ public class SuggestedFix implements Fix {
     /**
      * Merges all edits from {@code other} into {@code this}. If {@code other} is null, do nothing.
      */
+    @CanIgnoreReturnValue
     public Builder merge(@Nullable Builder other) {
       if (other == null) {
         return this;
@@ -319,6 +334,7 @@ public class SuggestedFix implements Fix {
     /**
      * Merges all edits from {@code other} into {@code this}. If {@code other} is null, do nothing.
      */
+    @CanIgnoreReturnValue
     public Builder merge(@Nullable SuggestedFix other) {
       if (other == null) {
         return this;

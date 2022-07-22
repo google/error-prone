@@ -23,6 +23,7 @@ import com.google.common.base.Objects;
 import com.google.common.collect.ForwardingMap;
 import com.google.common.collect.Maps;
 import com.google.common.reflect.TypeToken;
+import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -128,6 +129,7 @@ public class Bindings extends ForwardingMap<Bindings.Key<?>, Object> {
     return (V) super.put(key, value);
   }
 
+  @CanIgnoreReturnValue
   @Nullable
   @Override
   public Object put(Key<?> key, Object value) {
