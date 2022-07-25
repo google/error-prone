@@ -18,11 +18,14 @@ package com.google.errorprone.bugpatterns.checkreturnvalue;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.fixes.SuggestedFixes.qualifyType;
+import static com.google.errorprone.util.ASTHelpers.getReceiver;
+import static com.google.errorprone.util.ASTHelpers.getReturnType;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
 import static com.google.errorprone.util.ASTHelpers.isVoidType;
+import static com.google.errorprone.util.ASTHelpers.stripParentheses;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -31,7 +34,6 @@ import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.suppliers.Supplier;
-import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.LambdaExpressionTree;
@@ -119,7 +121,7 @@ public final class CanIgnoreReturnValueSuggester extends BugChecker implements M
   }
 
   private static boolean isIdentifier(ExpressionTree expr, String identifierName) {
-    expr = ASTHelpers.stripParentheses(expr);
+    expr = stripParentheses(expr);
     if (expr instanceof IdentifierTree) {
       return ((IdentifierTree) expr).getName().contentEquals(identifierName);
     }
@@ -157,13 +159,15 @@ public final class CanIgnoreReturnValueSuggester extends BugChecker implements M
   private static boolean methodReturnsIgnorableValues(MethodTree tree, VisitorState state) {
     class ReturnValuesFromMethodAreIgnorable extends TreeScanner<Void, Void> {
       private final VisitorState state;
-      private MethodSymbol symbol;
+      private final Type enclosingClassType;
+      private final Type methodReturnType;
       private boolean atLeastOneReturn = false;
       private boolean allReturnsIgnorable = true;
 
       private ReturnValuesFromMethodAreIgnorable(VisitorState state, MethodSymbol methSymbol) {
         this.state = state;
-        this.symbol = methSymbol;
+        this.methodReturnType = methSymbol.getReturnType();
+        this.enclosingClassType = methSymbol.enclClass().type;
       }
 
       @Override
@@ -181,16 +185,18 @@ public final class CanIgnoreReturnValueSuggester extends BugChecker implements M
           ReturnTree returnTree, VisitorState state) {
         if (returnTree.getExpression() instanceof MethodInvocationTree) {
           MethodInvocationTree mit = (MethodInvocationTree) returnTree.getExpression();
-          ExpressionTree receiver = ASTHelpers.getReceiver(mit);
+          ExpressionTree receiver = getReceiver(mit);
           MethodSymbol calledMethod = getSymbol(mit);
           if ((receiver == null && !calledMethod.isStatic())
               || isIdentifier(receiver, "this")
               || isIdentifier(receiver, "super")) {
-            // If the method we're calling is @CIRV and returns a subtype of the enclosing symbol,
-            // then we think it's likely ~this.
-            return ASTHelpers.hasAnnotation(calledMethod, CIRV, state)
-                && ASTHelpers.isSubtype(
-                    symbol.enclClass().type, calledMethod.getReturnType(), state);
+            // If the method we're calling is @CIRV and the enclosing class could be represented by
+            // the object being returned by the other method, then it's probable that the other
+            // method is likely to
+            // be an ignorable result.
+            return hasAnnotation(calledMethod, CIRV, state)
+                && isSubtype(enclosingClassType, methodReturnType, state)
+                && isSubtype(enclosingClassType, getReturnType(mit), state);
           }
         }
         return false;
@@ -209,8 +215,7 @@ public final class CanIgnoreReturnValueSuggester extends BugChecker implements M
       }
     }
 
-    ReturnValuesFromMethodAreIgnorable scanner =
-        new ReturnValuesFromMethodAreIgnorable(state, ASTHelpers.getSymbol(tree));
+    var scanner = new ReturnValuesFromMethodAreIgnorable(state, getSymbol(tree));
     scanner.scan(tree, null);
     return scanner.atLeastOneReturn && scanner.allReturnsIgnorable;
   }

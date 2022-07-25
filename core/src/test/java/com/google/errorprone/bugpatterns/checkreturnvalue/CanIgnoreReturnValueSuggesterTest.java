@@ -456,42 +456,30 @@ public class CanIgnoreReturnValueSuggesterTest {
   public void testConverter_b240039465() {
     helper
         .addInputLines(
-            "Client.java",
+            "Parent.java",
             "package com.google.frobber;",
-            "import com.google.common.base.Converter;",
-            "public final class Client extends Converter<String, Integer> {",
-            "  public Integer badMethod(String value) {",
-            "    return convert(value);",
-            "  }",
-            "  @Override",
-            "  public Integer doForward(String value) {",
-            "    return Integer.parseInt(value);",
-            "  }",
-            "  @Override",
-            "  public String doBackward(Integer value) {",
-            "    return String.valueOf(value);",
-            "  }",
-            "}")
-        // TODO(b/240039465): this should be .expectUnchanged()
-        .addOutputLines(
-            "Client.java",
-            "package com.google.frobber;",
-            "import com.google.common.base.Converter;",
             "import com.google.errorprone.annotations.CanIgnoreReturnValue;",
-            "public final class Client extends Converter<String, Integer> {",
+            "abstract class Parent<X> {",
             "  @CanIgnoreReturnValue",
+            "  X doFrom(String in) { return from(in); }",
+            "  abstract X from(String value);",
+            "}")
+        .expectUnchanged()
+        .addInputLines(
+            "Client.java",
+            "package com.google.frobber;",
+            "public final class Client extends Parent<Integer> {",
+            // While doFrom(String) is @CIRV, since it returns Integer, and not Client, we don't add
+            // @CIRV here.
             "  public Integer badMethod(String value) {",
-            "    return convert(value);",
+            "    return doFrom(value);",
             "  }",
             "  @Override",
-            "  public Integer doForward(String value) {",
+            "  public Integer from(String value) {",
             "    return Integer.parseInt(value);",
             "  }",
-            "  @Override",
-            "  public String doBackward(Integer value) {",
-            "    return String.valueOf(value);",
-            "  }",
             "}")
+        .expectUnchanged()
         .doTest();
   }
 }
