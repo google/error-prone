@@ -15,7 +15,7 @@
 <script type="text/javascript" src="../../../../../script-dir/jquery-ui.min.js"></script>
 </head>
 <body class="class-declaration-page">
-<script type="text/javascript">var data = {"i0":9,"i1":9};
+<script type="text/javascript">var data = {"i0":9,"i1":9,"i2":9};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],8:["t4","Concrete Methods"]};
 var altColor = "alt-color";
 var rowColor = "row-color";
@@ -105,13 +105,20 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <tbody>
 <tr class="alt-color" id="i0">
 <td class="col-first"><code>static <a href="ResultUseRule.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUseRule</a></code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#clientInterfaces()">clientInterfaces</a></span>()</code></th>
+<td class="col-last">
+<div class="block">Handles generated ClientInterfaces.</div>
+</td>
+</tr>
+<tr class="row-color" id="i1">
+<td class="col-first"><code>static <a href="ResultUseRule.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUseRule</a></code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#mutableProtos()">mutableProtos</a></span>()</code></th>
 <td class="col-last">
 <div class="block">Returns a rule that handles mutable protos, making their fluent setter methods' results
  ignorable.</div>
 </td>
 </tr>
-<tr class="row-color" id="i1">
+<tr class="alt-color" id="i2">
 <td class="col-first"><code>static <a href="ResultUseRule.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUseRule</a></code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#protoBuilders()">protoBuilders</a></span>()</code></th>
 <td class="col-last">
@@ -151,6 +158,13 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="ResultUseRule.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUseRule</a></span>&nbsp;<span class="member-name">mutableProtos</span>()</div>
 <div class="block">Returns a rule that handles mutable protos, making their fluent setter methods' results
  ignorable.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="clientInterfaces()">
+<h3>clientInterfaces</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="ResultUseRule.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUseRule</a></span>&nbsp;<span class="member-name">clientInterfaces</span>()</div>
+<div class="block">Handles generated ClientInterfaces.</div>
 </section>
 </li>
 </ul>
