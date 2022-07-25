@@ -451,4 +451,47 @@ public class CanIgnoreReturnValueSuggesterTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void testConverter_b240039465() {
+    helper
+        .addInputLines(
+            "Client.java",
+            "package com.google.frobber;",
+            "import com.google.common.base.Converter;",
+            "public final class Client extends Converter<String, Integer> {",
+            "  public Integer badMethod(String value) {",
+            "    return convert(value);",
+            "  }",
+            "  @Override",
+            "  public Integer doForward(String value) {",
+            "    return Integer.parseInt(value);",
+            "  }",
+            "  @Override",
+            "  public String doBackward(Integer value) {",
+            "    return String.valueOf(value);",
+            "  }",
+            "}")
+        // TODO(b/240039465): this should be .expectUnchanged()
+        .addOutputLines(
+            "Client.java",
+            "package com.google.frobber;",
+            "import com.google.common.base.Converter;",
+            "import com.google.errorprone.annotations.CanIgnoreReturnValue;",
+            "public final class Client extends Converter<String, Integer> {",
+            "  @CanIgnoreReturnValue",
+            "  public Integer badMethod(String value) {",
+            "    return convert(value);",
+            "  }",
+            "  @Override",
+            "  public Integer doForward(String value) {",
+            "    return Integer.parseInt(value);",
+            "  }",
+            "  @Override",
+            "  public String doBackward(Integer value) {",
+            "    return String.valueOf(value);",
+            "  }",
+            "}")
+        .doTest();
+  }
 }
