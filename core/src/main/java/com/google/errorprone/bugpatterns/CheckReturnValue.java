@@ -24,6 +24,7 @@ import static com.google.errorprone.bugpatterns.checkreturnvalue.AutoValueRules.
 import static com.google.errorprone.bugpatterns.checkreturnvalue.ExternalCanIgnoreReturnValue.externalIgnoreList;
 import static com.google.errorprone.bugpatterns.checkreturnvalue.ExternalCanIgnoreReturnValue.methodNameAndParams;
 import static com.google.errorprone.bugpatterns.checkreturnvalue.ExternalCanIgnoreReturnValue.surroundingClass;
+import static com.google.errorprone.bugpatterns.checkreturnvalue.ProtoRules.clientInterfaces;
 import static com.google.errorprone.bugpatterns.checkreturnvalue.ProtoRules.mutableProtos;
 import static com.google.errorprone.bugpatterns.checkreturnvalue.ProtoRules.protoBuilders;
 import static com.google.errorprone.bugpatterns.checkreturnvalue.ResultUsePolicy.EXPECTED;
@@ -109,6 +110,7 @@ public class CheckReturnValue extends AbstractReturnValueIgnored
                 mapAnnotationSimpleName(CHECK_RETURN_VALUE, EXPECTED),
                 mapAnnotationSimpleName(CAN_IGNORE_RETURN_VALUE, OPTIONAL),
                 protoBuilders(),
+                clientInterfaces(),
                 mutableProtos(),
                 autoValues(),
                 autoValueBuilders(),
