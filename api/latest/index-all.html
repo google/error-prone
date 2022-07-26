@@ -3807,7 +3807,10 @@ loadScripts(document, 'script');</script>
 <dt><span class="member-name-link"><a href="com/google/errorprone/util/ASTHelpers.html#findSuperMethodInType(com.sun.tools.javac.code.Symbol.MethodSymbol,com.sun.tools.javac.code.Type,com.sun.tools.javac.code.Types)">findSuperMethodInType(Symbol.MethodSymbol, Type, Types)</a></span> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/ASTHelpers.html" title="class in com.google.errorprone.util">ASTHelpers</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/util/ASTHelpers.html#findSuperMethods(com.sun.tools.javac.code.Symbol.MethodSymbol,com.sun.tools.javac.code.Types)">findSuperMethods(Symbol.MethodSymbol, Types)</a></span> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/ASTHelpers.html" title="class in com.google.errorprone.util">ASTHelpers</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Finds supermethods of <code>methodSymbol</code>, not including <code>methodSymbol</code> itself, and
+ including interfaces.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/util/FindIdentifiers.html#findUnusedIdentifiers(com.google.errorprone.VisitorState)">findUnusedIdentifiers(VisitorState)</a></span> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/FindIdentifiers.html" title="class in com.google.errorprone.util">FindIdentifiers</a></dt>
 <dd>
 <div class="block">Finds all variable declarations which are unused at this point in the AST (i.e.</div>
@@ -11916,6 +11919,10 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/StreamResourceLeak.html#%3Cinit%3E()">StreamResourceLeak()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/StreamResourceLeak.html" title="class in com.google.errorprone.bugpatterns">StreamResourceLeak</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/google/errorprone/util/ASTHelpers.html#streamSuperMethods(com.sun.tools.javac.code.Symbol.MethodSymbol,com.sun.tools.javac.code.Types)">streamSuperMethods(Symbol.MethodSymbol, Types)</a></span> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/ASTHelpers.html" title="class in com.google.errorprone.util">ASTHelpers</a></dt>
+<dd>
+<div class="block">See <a href="com/google/errorprone/util/ASTHelpers.html#findSuperMethods(com.sun.tools.javac.code.Symbol.MethodSymbol,com.sun.tools.javac.code.Types)"><code>ASTHelpers.findSuperMethods(MethodSymbol, Types)</code></a>.</div>
+</dd>
 <dt><a href="com/google/errorprone/bugpatterns/StreamToIterable.html" title="class in com.google.errorprone.bugpatterns"><span class="type-name-link">StreamToIterable</span></a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
 <dd>
 <div class="block">Discourage <code>stream::iterator</code> to create <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Iterable.html" title="class or interface in java.lang" class="external-link"><code>Iterable</code></a>s.</div>
