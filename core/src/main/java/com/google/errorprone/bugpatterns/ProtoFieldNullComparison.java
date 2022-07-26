@@ -140,7 +140,7 @@ public class ProtoFieldNullComparison extends BugChecker implements CompilationU
 
   public ProtoFieldNullComparison(ErrorProneFlags flags) {
     this.matchTestAssertions =
-        flags.getBoolean("ProtoFieldNullComparison:MatchTestAssertions").orElse(false);
+        flags.getBoolean("ProtoFieldNullComparison:MatchTestAssertions").orElse(true);
   }
 
   @Override

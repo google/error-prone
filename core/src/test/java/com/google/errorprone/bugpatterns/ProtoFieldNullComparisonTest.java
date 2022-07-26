@@ -343,7 +343,6 @@ public final class ProtoFieldNullComparisonTest {
             "    ProtoTruth.assertThat(message.getMessage()).isNotNull();",
             "  }",
             "}")
-        .setArgs(ImmutableList.of("-XepOpt:ProtoFieldNullComparison:MatchTestAssertions"))
         .doTest();
   }
 
@@ -365,6 +364,7 @@ public final class ProtoFieldNullComparisonTest {
             "    assertThat(message.getMessage()).isNotNull();",
             "  }",
             "}")
+        .setArgs(ImmutableList.of("-XepOpt:ProtoFieldNullComparison:MatchTestAssertions=false"))
         .doTest();
   }
 
