@@ -703,9 +703,18 @@ public class ASTHelpers {
     return null;
   }
 
+  /**
+   * Finds supermethods of {@code methodSymbol}, not including {@code methodSymbol} itself, and
+   * including interfaces.
+   */
   public static Set<MethodSymbol> findSuperMethods(MethodSymbol methodSymbol, Types types) {
     return findSuperMethods(methodSymbol, types, /* skipInterfaces= */ false)
         .collect(toCollection(LinkedHashSet::new));
+  }
+
+  /** See {@link #findSuperMethods(MethodSymbol, Types)}. */
+  public static Stream<MethodSymbol> streamSuperMethods(MethodSymbol methodSymbol, Types types) {
+    return findSuperMethods(methodSymbol, types, /* skipInterfaces= */ false);
   }
 
   private static Stream<MethodSymbol> findSuperMethods(

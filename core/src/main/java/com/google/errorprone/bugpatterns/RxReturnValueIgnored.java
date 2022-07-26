@@ -22,6 +22,7 @@ import static com.google.errorprone.matchers.Matchers.isSubtypeOf;
 import static com.google.errorprone.matchers.Matchers.not;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
+import static com.google.errorprone.util.ASTHelpers.streamSuperMethods;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -66,7 +67,7 @@ public final class RxReturnValueIgnored extends AbstractReturnValueIgnored {
     // if the super-type returned the exact same type. This lets us catch issues where a
     // superclass was annotated with @CanIgnoreReturnValue but the parent did not intend to
     // return an Rx type
-    return ASTHelpers.findSuperMethods(sym, state.getTypes()).stream()
+    return streamSuperMethods(sym, state.getTypes())
         .anyMatch(
             superSym ->
                 hasAnnotation(superSym, CanIgnoreReturnValue.class, state)

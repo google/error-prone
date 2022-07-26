@@ -21,6 +21,7 @@ import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
+import static com.google.errorprone.util.ASTHelpers.streamSuperMethods;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
@@ -189,15 +190,14 @@ public class RestrictedApiChecker extends BugChecker
     }
 
     // Try each super method for @RestrictedApi
-    Optional<MethodSymbol> superWithRestrictedApi =
-        ASTHelpers.findSuperMethods(method, state.getTypes()).stream()
-            .filter((t) -> ASTHelpers.hasAnnotation(t, RestrictedApi.class, state))
-            .findFirst();
-    if (!superWithRestrictedApi.isPresent()) {
-      return NO_MATCH;
-    }
-    return checkRestriction(
-        getRestrictedApiAnnotation(superWithRestrictedApi.get(), state), where, state);
+    return streamSuperMethods(method, state.getTypes())
+        .filter((t) -> ASTHelpers.hasAnnotation(t, RestrictedApi.class, state))
+        .findFirst()
+        .map(
+            superWithRestrictedApi ->
+                checkRestriction(
+                    getRestrictedApiAnnotation(superWithRestrictedApi, state), where, state))
+        .orElse(NO_MATCH);
   }
 
   @Nullable

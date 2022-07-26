@@ -15,8 +15,8 @@
  */
 package com.google.errorprone.matchers;
 
-import static com.google.errorprone.util.ASTHelpers.findSuperMethods;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
+import static com.google.errorprone.util.ASTHelpers.streamSuperMethods;
 
 import com.google.errorprone.VisitorState;
 import com.sun.source.tree.ClassTree;
@@ -44,8 +44,7 @@ public class TestNgMatchers {
     if (hasTestNgAttr(methodSym)) {
       return true;
     }
-    return findSuperMethods(methodSym, state.getTypes()).stream()
-        .anyMatch(TestNgMatchers::hasTestNgAttr);
+    return streamSuperMethods(methodSym, state.getTypes()).anyMatch(TestNgMatchers::hasTestNgAttr);
   }
 
   /** Checks if a class is annotated with any annotation from the org.testng package. */

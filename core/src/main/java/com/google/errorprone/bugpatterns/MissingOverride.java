@@ -18,8 +18,8 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
-import static com.google.errorprone.util.ASTHelpers.findSuperMethods;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
+import static com.google.errorprone.util.ASTHelpers.streamSuperMethods;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.StandardTags;
@@ -59,7 +59,7 @@ public class MissingOverride extends BugChecker implements MethodTreeMatcher {
     if (ignoreInterfaceOverrides && sym.enclClass().isInterface()) {
       return NO_MATCH;
     }
-    return findSuperMethods(sym, state.getTypes()).stream()
+    return streamSuperMethods(sym, state.getTypes())
         .findFirst()
         .filter(unused -> ASTHelpers.getGeneratedBy(state).isEmpty())
         // to allow deprecated methods to be removed non-atomically, we permit overrides of

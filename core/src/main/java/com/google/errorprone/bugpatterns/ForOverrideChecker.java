@@ -20,8 +20,8 @@ import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.common.collect.Streams.findLast;
 import static com.google.common.collect.Streams.stream;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
-import static com.google.errorprone.util.ASTHelpers.findSuperMethods;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
+import static com.google.errorprone.util.ASTHelpers.streamSuperMethods;
 import static java.util.stream.Stream.concat;
 
 import com.google.common.collect.ImmutableList;
@@ -199,7 +199,7 @@ public class ForOverrideChecker extends BugChecker
           "getOverriddenMethods may not be called on a static method");
     }
 
-    return concat(Stream.of(method), findSuperMethods(method, state.getTypes()).stream())
+    return concat(Stream.of(method), streamSuperMethods(method, state.getTypes()))
         .filter(member -> hasAnnotation(member, FOR_OVERRIDE, state))
         .collect(toImmutableList());
   }
