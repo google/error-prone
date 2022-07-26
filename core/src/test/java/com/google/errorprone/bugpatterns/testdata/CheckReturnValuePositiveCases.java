@@ -61,7 +61,7 @@ public class CheckReturnValuePositiveCases {
     callRunnable(() -> this.intValue.increment());
   }
 
-  public void testResolvedToVoidMethodReference() {
+  public void testResolvedToVoidMethodReference(boolean predicate) {
     // BUG: Diagnostic contains: The result of `increment()` must be used
     //
     // `this.intValue::increment` acts as an implementation of `Runnable.run`.
@@ -75,6 +75,8 @@ public class CheckReturnValuePositiveCases {
     // If callers of `increment()` shouldn't be required to use its result, then annotate it with
     // `@CanIgnoreReturnValue`.
     callRunnable(this.intValue::increment);
+    // BUG: Diagnostic contains: The result of `increment()` must be used
+    callRunnable(predicate ? this.intValue::increment : this.intValue::increment2);
   }
 
   public void testConstructorResolvedToVoidMethodReference() {

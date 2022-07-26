@@ -36,6 +36,10 @@ public class CheckReturnValueNegativeCases {
     return 5;
   }
 
+  private int nothingToCheck() {
+    return 42;
+  }
+
   private void callRunnable(Runnable runnable) {
     runnable.run();
   }
@@ -51,11 +55,13 @@ public class CheckReturnValueNegativeCases {
     supplier.get();
   }
 
-  public void testResolvedToVoidLambda() {
+  public void testResolvedToIntLambda(boolean predicate) {
     callSupplier(() -> mustCheck());
+    callSupplier(predicate ? () -> mustCheck() : () -> nothingToCheck());
   }
 
-  public void testMethodReference() {
+  public void testMethodReference(boolean predicate) {
     callSupplier(this::mustCheck);
+    callSupplier(predicate ? this::mustCheck : this::nothingToCheck);
   }
 }
