@@ -872,26 +872,6 @@ public class CheckReturnValueTest {
   }
 
   @Test
-  public void clientInterface() {
-    compilationHelperLookingAtAllMethods()
-        .addSourceLines(
-            "Test.java",
-            "interface ClientInterface {",
-            "  Object foo();",
-            "  public static final class Stub implements ClientInterface {",
-            "    @Override public Object foo() {",
-            "      return null;",
-            "    }",
-            "  }",
-            "  default void test() {",
-            "    foo();",
-            "    new Stub().foo();",
-            "  }",
-            "}")
-        .doTest();
-  }
-
-  @Test
   public void allMethods_withExternallyConfiguredIgnoreList() {
     compileWithExternalApis("java.util.List#add(java.lang.Object)")
         .addSourceLines(

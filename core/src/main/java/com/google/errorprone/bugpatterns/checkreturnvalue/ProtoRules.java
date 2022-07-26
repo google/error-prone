@@ -17,9 +17,7 @@
 package com.google.errorprone.bugpatterns.checkreturnvalue;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.errorprone.util.ASTHelpers.findSuperMethods;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
-import static java.util.stream.Stream.concat;
 
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.checkreturnvalue.ResultUseRule.MethodRule;
@@ -28,7 +26,6 @@ import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Type;
 import java.util.Optional;
 import java.util.regex.Pattern;
-import java.util.stream.Stream;
 
 /** Rules for methods on proto messages and builders. */
 public final class ProtoRules {
@@ -50,26 +47,6 @@ public final class ProtoRules {
   public static ResultUseRule mutableProtos() {
     return new ProtoRule(
         supplier("com.google.protobuf.AbstractMutableMessageLite"), "MUTABLE_PROTO");
-  }
-
-  /** Handles generated ClientInterfaces. */
-  public static ResultUseRule clientInterfaces() {
-    return new MethodRule() {
-      @Override
-      public Optional<ResultUsePolicy> evaluateMethod(MethodSymbol method, VisitorState state) {
-        // We want to exempt implementations of methods on ClientInterface too (e.g. Stub).
-        if (concat(Stream.of(method), findSuperMethods(method, state.getTypes()).stream())
-            .anyMatch(m -> m.owner.getSimpleName().contentEquals("ClientInterface"))) {
-          return Optional.of(ResultUsePolicy.OPTIONAL);
-        }
-        return Optional.empty();
-      }
-
-      @Override
-      public String id() {
-        return "ClientInterface";
-      }
-    };
   }
 
   // TODO(cgdecker): Move proto rules from IgnoredPureGetter and ReturnValueIgnored here
