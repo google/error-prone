@@ -524,6 +524,9 @@ This null check is unnecessary; the expression can never be null
 __[UnnecessaryTypeArgument](bugpattern/UnnecessaryTypeArgument)__<br>
 Non-generic methods should not be invoked with type arguments
 
+__[UnsafeWildcard](bugpattern/UnsafeWildcard)__<br>
+Certain wildcard types can confuse the compiler.
+
 __[UnusedAnonymousClass](bugpattern/UnusedAnonymousClass)__<br>
 Instance created but never used
 
@@ -1298,9 +1301,6 @@ A static variable or method should be qualified with a class name, not expressio
 
 __[SystemExitOutsideMain](bugpattern/SystemExitOutsideMain)__<br>
 Code that contains System.exit() is untestable.
-
-__[UnsafeWildcard](bugpattern/UnsafeWildcard)__<br>
-Certain wildcard types can confuse the compiler.
 
 ## Experimental : WARNING
 
