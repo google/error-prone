@@ -240,7 +240,7 @@ public final class Inliner extends BugChecker
       boolean terminalVarargsReplacement = varargsWithEmptyArguments && i == varNames.size() - 1;
       String capturePrefixForVarargs = terminalVarargsReplacement ? "(?:,\\s*)?" : "";
       // We want to avoid replacing a method invocation with the same name as the method.
-      Pattern extractArgAndNextToken =
+      var extractArgAndNextToken =
           Pattern.compile(
               "\\b" + capturePrefixForVarargs + Pattern.quote(varNames.get(i)) + "\\b([^(])");
       String replacementResult =
