@@ -2157,7 +2157,6 @@ public class ASTHelpers {
 
   /** Scanner for determining what types are thrown by a tree. */
   public static final class ScanThrownTypes extends TreeScanner<Void, Void> {
-    boolean inResources = false;
     ArrayDeque<Set<Type>> thrownTypes = new ArrayDeque<>();
     SetMultimap<VarSymbol, Type> thrownTypesByVariable = HashMultimap.create();
 
@@ -2215,9 +2214,15 @@ public class ASTHelpers {
     }
 
     public void scanResources(TryTree tree) {
-      inResources = true;
+      for (Tree resource : tree.getResources()) {
+        Symbol symbol = getType(resource).tsym;
+
+        if (symbol instanceof ClassSymbol) {
+          getCloseMethod((ClassSymbol) symbol, state)
+              .ifPresent(methodSymbol -> getThrownTypes().addAll(methodSymbol.getThrownTypes()));
+        }
+      }
       scan(tree.getResources(), null);
-      inResources = false;
     }
 
     @Override
@@ -2241,13 +2246,6 @@ public class ASTHelpers {
 
     @Override
     public Void visitVariable(VariableTree tree, Void unused) {
-      if (inResources) {
-        Symbol symbol = getSymbol(tree.getType());
-        if (symbol instanceof ClassSymbol) {
-          getCloseMethod((ClassSymbol) symbol, state)
-              .ifPresent(methodSymbol -> getThrownTypes().addAll(methodSymbol.getThrownTypes()));
-        }
-      }
       return super.visitVariable(tree, null);
     }
 
