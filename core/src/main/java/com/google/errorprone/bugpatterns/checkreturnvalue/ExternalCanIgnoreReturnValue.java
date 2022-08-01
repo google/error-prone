@@ -37,7 +37,6 @@ import com.sun.tools.javac.code.Types;
 import com.sun.tools.javac.util.List;
 import java.io.IOException;
 import java.io.UncheckedIOException;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -92,26 +91,25 @@ public final class ExternalCanIgnoreReturnValue extends MethodRule {
   enum ConfigParser {
     AS_STRINGS {
       @Override
-      MethodPredicate load(Path file) throws IOException {
-        return configByInterpretingMethodsAsStrings(MoreFiles.asCharSource(file, UTF_8));
+      MethodPredicate load(String file, ErrorProneFlags flags) throws IOException {
+        return configByInterpretingMethodsAsStrings(MoreFiles.asCharSource(Paths.get(file), UTF_8));
       }
     },
     PARSE_TOKENS {
       @Override
-      MethodPredicate load(Path file) throws IOException {
-        return configByParsingApiObjects(MoreFiles.asCharSource(file, UTF_8));
+      MethodPredicate load(String file, ErrorProneFlags flags) throws IOException {
+        return configByParsingApiObjects(MoreFiles.asCharSource(Paths.get(file), UTF_8));
       }
     };
 
-    abstract MethodPredicate load(Path file) throws IOException;
+    abstract MethodPredicate load(String file, ErrorProneFlags flags) throws IOException;
   }
 
   private static MethodPredicate loadConfigListFromFile(String filename, ErrorProneFlags flags) {
     ConfigParser configParser =
         flags.getEnum(EXCLUSION_LIST_PARSER, ConfigParser.class).orElse(ConfigParser.AS_STRINGS);
     try {
-      Path file = Paths.get(filename);
-      return configParser.load(file);
+      return configParser.load(filename, flags);
     } catch (IOException e) {
       throw new UncheckedIOException(
           "Could not load external resource for CanIgnoreReturnValue", e);
