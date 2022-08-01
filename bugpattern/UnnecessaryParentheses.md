@@ -3,7 +3,7 @@ title: UnnecessaryParentheses
 summary: These grouping parentheses are unnecessary; it is unlikely the code will
   be misinterpreted without them
 layout: bugpattern
-tags: Style
+tags: ''
 severity: WARNING
 ---
 
