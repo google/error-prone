@@ -14,6 +14,43 @@ To make changes, edit the @BugPattern annotation or the explanation in docs/bugp
 _Alternate names: ResultOfMethodCallIgnored, ReturnValueIgnored_
 
 ## The problem
+When code calls a non-`void` method, it should usually use the value that the
+method returns.
+
+Consider the following code, which ignores the return value of `concat`:
+
+```java
+string.concat("\n");
+```
+
+That code is a no-op because `concat` doesn't modify `string`; it returns a new
+string for the caller to use, as in:
+
+```java
+string = string.concat("\n");
+```
+
+To avoid this bug, Error Prone requires callers to use the return value of
+`concat` and some other well-known methods.
+
+Additionally, Error Prone can be configured to require callers to use the return
+value of any methods that you choose.
+
+### How to tell Error Prone which methods to check
+
+Most methods are like `concat`: Calls to those methods should use their return
+values.
+
+However, there are exceptions. For example, `set.add(element)` returns a
+`boolean`: The return value is `false` if `element` was *already* contained in
+`set`. Typically, callers don't need to know this, so they don't need to use the
+return value.
+
+For Error Prone's `CheckReturnValue` check to be useful, it needs to know which
+methods are like `concat` and which are like `add`.
+
+#### `@CheckReturnValue` and `@CanIgnoreReturnValue`
+
 The `@CheckReturnValue` annotation (available in JSR-305[^jsr] or in
 [Error Prone][epcrv]) marks methods whose return values should be checked. This
 error is triggered when one of these methods is called but the result is not
