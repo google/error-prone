@@ -25,7 +25,7 @@ jobs:
           server-id: ossrh
           server-username: CI_DEPLOY_USERNAME
           server-password: CI_DEPLOY_PASSWORD
-          gpg-private-key: ${{ secrets.GPG_PASSPHRASE }}
+          gpg-private-key: ${{ secrets.GPG_SIGNING_KEY }}
           gpg-passphrase: MAVEN_GPG_PASSPHRASE
      
       - name: Bump Version Number
