@@ -15,6 +15,7 @@ jobs:
     steps:
       - name: Setup Signing Key
         run: |
+          gpgconf --kill gpg-agent
           gpg-agent --daemon --default-cache-ttl 7200
           echo -e "${{ secrets.GPG_SIGNING_KEY }}" | gpg --batch --import --no-tty
           echo "hello world" > temp.txt
