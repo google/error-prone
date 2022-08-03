@@ -12,17 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
-    steps:
-      - name: Setup Signing Key
-        run: |
-          gpgconf --kill gpg-agent
-          gpg-agent --daemon --default-cache-ttl 7200
-          echo -e "${{ secrets.GPG_SIGNING_KEY }}" | gpg --batch --import --no-tty
-          echo "hello world" > temp.txt
-          gpg --detach-sig --yes -v --output=/dev/null --pinentry-mode loopback --passphrase "${{ secrets.GPG_PASSPHRASE }}" temp.txt
-          rm temp.txt
-          gpg --list-secret-keys --keyid-format LONG
-          
+    steps:          
       - name: Checkout
         uses: actions/checkout@v2.4.0
 
@@ -35,6 +25,8 @@ jobs:
           server-id: ossrh
           server-username: CI_DEPLOY_USERNAME
           server-password: CI_DEPLOY_PASSWORD
+          gpg-private-key: ${{ secrets.GPG_PASSPHRASE }}
+          gpg-passphrase: MAVEN_GPG_PASSPHRASE
      
       - name: Bump Version Number
         run: |
@@ -51,6 +43,7 @@ jobs:
         env:
           CI_DEPLOY_USERNAME: ${{ secrets.CI_DEPLOY_USERNAME }}
           CI_DEPLOY_PASSWORD: ${{ secrets.CI_DEPLOY_PASSWORD }}
+          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
         run:
           mvn --no-transfer-progress -P release clean deploy -Dgpg.passphrase="${{ secrets.GPG_PASSPHRASE }}"
 
