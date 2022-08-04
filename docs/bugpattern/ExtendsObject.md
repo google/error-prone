@@ -1,6 +1,4 @@
-`T extends Object` is redundant when using normal (non-Checker Framework
-checked) code.
+`T extends Object` is redundant; both `<T>` and `<T extends Object>` compile to
+identical bytecode
 
-However, `T extends Object` compiles to the same bytecode as `T` when using
-vanilla javac. So, when using Checker on vanilla javac's bytecode, `T extends
-Object` does not imply non-null bounds *outside the same compilation unit*.
+— unless you are using the Checker Framework).
