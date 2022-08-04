@@ -1946,7 +1946,7 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/fixes/Replacements.CoalescePolicy.html#coalesce(java.lang.String,java.lang.String)">coalesce(String, String)</a></span> - Method in enum com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/Replacements.CoalescePolicy.html" title="enum in com.google.errorprone.fixes">Replacements.CoalescePolicy</a></dt>
 <dd>
-<div class="block">Handle an overlapping insert.</div>
+<div class="block">Handle two insertions at the same position.</div>
 </dd>
 <dt><a href="com/google/errorprone/CodeTransformer.html" title="interface in com.google.errorprone"><span class="type-name-link">CodeTransformer</span></a> - Interface in <a href="com/google/errorprone/package-summary.html">com.google.errorprone</a></dt>
 <dd>
@@ -7100,6 +7100,11 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Indicates that the annotated element should not be removed, and that its visibility, modifiers,
  type, and name should not be modified.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/google/errorprone/fixes/Replacements.CoalescePolicy.html#KEEP_ONLY_IDENTICAL_INSERTS">KEEP_ONLY_IDENTICAL_INSERTS</a></span> - com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/Replacements.CoalescePolicy.html" title="enum in com.google.errorprone.fixes">Replacements.CoalescePolicy</a></dt>
+<dd>
+<div class="block">Reject overlapping inserts, but treat duplicate inserts (same text at same position)
+ specially.</div>
 </dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/refaster/UFreeIdent.html#key()">key()</a></span> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/UFreeIdent.html" title="class in com.google.errorprone.refaster">UFreeIdent</a></dt>
 <dd>&nbsp;</dd>

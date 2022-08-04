@@ -127,12 +127,19 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Enum.html" 
 </td>
 </tr>
 <tr class="row-color">
+<th class="col-first" scope="row"><code><span class="member-name-link"><a href="#KEEP_ONLY_IDENTICAL_INSERTS">KEEP_ONLY_IDENTICAL_INSERTS</a></span></code></th>
+<td class="col-last">
+<div class="block">Reject overlapping inserts, but treat duplicate inserts (same text at same position)
+ specially.</div>
+</td>
+</tr>
+<tr class="alt-color">
 <th class="col-first" scope="row"><code><span class="member-name-link"><a href="#REJECT">REJECT</a></span></code></th>
 <td class="col-last">
 <div class="block">Reject overlapping insertions and throw an <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/IllegalArgumentException.html" title="class or interface in java.lang" class="external-link"><code>IllegalArgumentException</code></a>.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <th class="col-first" scope="row"><code><span class="member-name-link"><a href="#REPLACEMENT_FIRST">REPLACEMENT_FIRST</a></span></code></th>
 <td class="col-last">
 <div class="block">Accept overlapping insertions, with the new insertion before the existing one.</div>
@@ -164,7 +171,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Enum.html" 
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#coalesce(java.lang.String,java.lang.String)">coalesce</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;replacement,
 <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;existing)</code></th>
 <td class="col-last">
-<div class="block">Handle an overlapping insert.</div>
+<div class="block">Handle two insertions at the same position.</div>
 </td>
 </tr>
 <tr class="row-color" id="i1">
@@ -214,14 +221,25 @@ the order they are declared.</div>
 <section class="detail" id="REPLACEMENT_FIRST">
 <h3>REPLACEMENT_FIRST</h3>
 <div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="Replacements.CoalescePolicy.html" title="enum in com.google.errorprone.fixes">Replacements.CoalescePolicy</a></span>&nbsp;<span class="member-name">REPLACEMENT_FIRST</span></div>
-<div class="block">Accept overlapping insertions, with the new insertion before the existing one.</div>
+<div class="block">Accept overlapping insertions, with the new insertion before the existing one. Duplicate
+ insertions (inserting the same text at the same position) will still be dropped.</div>
 </section>
 </li>
 <li>
 <section class="detail" id="EXISTING_FIRST">
 <h3>EXISTING_FIRST</h3>
 <div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="Replacements.CoalescePolicy.html" title="enum in com.google.errorprone.fixes">Replacements.CoalescePolicy</a></span>&nbsp;<span class="member-name">EXISTING_FIRST</span></div>
-<div class="block">Accept overlapping insertions, with the existing insertion before the new one.</div>
+<div class="block">Accept overlapping insertions, with the existing insertion before the new one. Duplicate
+ insertions (inserting the same text at the same position) will still be dropped.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="KEEP_ONLY_IDENTICAL_INSERTS">
+<h3>KEEP_ONLY_IDENTICAL_INSERTS</h3>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="Replacements.CoalescePolicy.html" title="enum in com.google.errorprone.fixes">Replacements.CoalescePolicy</a></span>&nbsp;<span class="member-name">KEEP_ONLY_IDENTICAL_INSERTS</span></div>
+<div class="block">Reject overlapping inserts, but treat duplicate inserts (same text at same position)
+ specially. Instead of dropping duplicates, as the other coalesce policies do, this policy
+ keeps them.</div>
 </section>
 </li>
 </ul>
@@ -268,13 +286,13 @@ not permitted.)</div>
 <h3>coalesce</h3>
 <div class="member-signature"><span class="modifiers">public abstract</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="member-name">coalesce</span>&#8203;(<span class="parameters"><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;replacement,
 <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;existing)</span></div>
-<div class="block">Handle an overlapping insert.</div>
+<div class="block">Handle two insertions at the same position.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>replacement</code> - the replacement being added.</dd>
-<dd><code>existing</code> - the existing insert at this range.</dd>
+<dd><code>replacement</code> - the replacement being added</dd>
+<dd><code>existing</code> - the existing insert at this position</dd>
 <dt>Returns:</dt>
-<dd>the coalesced replacement.</dd>
+<dd>the coalesced replacement</dd>
 </dl>
 </section>
 </li>
