@@ -63,4 +63,9 @@ public abstract class Replacement {
 
   /** The source text to appear in the output. */
   public abstract String replaceWith();
+
+  /** Creates a new replacement at the same range with different text. */
+  Replacement withDifferentText(String replaceWith) {
+    return new AutoValue_Replacement(range(), replaceWith);
+  }
 }

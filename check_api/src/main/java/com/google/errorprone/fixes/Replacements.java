@@ -58,36 +58,85 @@ public class Replacements {
   /** A policy for handling overlapping insertions. */
   public enum CoalescePolicy {
     /** Reject overlapping insertions and throw an {@link IllegalArgumentException}. */
-    REJECT {
+    REJECT(DuplicateInsertPolicy.DROP) {
       @Override
       public String coalesce(String replacement, String existing) {
         throw new IllegalArgumentException(
             String.format("%s conflicts with existing replacement %s", replacement, existing));
       }
     },
-    /** Accept overlapping insertions, with the new insertion before the existing one. */
-    REPLACEMENT_FIRST {
+    /**
+     * Accept overlapping insertions, with the new insertion before the existing one. Duplicate
+     * insertions (inserting the same text at the same position) will still be dropped.
+     */
+    REPLACEMENT_FIRST(DuplicateInsertPolicy.DROP) {
       @Override
       public String coalesce(String replacement, String existing) {
         return replacement + existing;
       }
     },
-    /** Accept overlapping insertions, with the existing insertion before the new one. */
-    EXISTING_FIRST {
+    /**
+     * Accept overlapping insertions, with the existing insertion before the new one. Duplicate
+     * insertions (inserting the same text at the same position) will still be dropped.
+     */
+    EXISTING_FIRST(DuplicateInsertPolicy.DROP) {
       @Override
       public String coalesce(String replacement, String existing) {
         return existing + replacement;
       }
+    },
+    /**
+     * Reject overlapping inserts, but treat duplicate inserts (same text at same position)
+     * specially. Instead of dropping duplicates, as the other coalesce policies do, this policy
+     * keeps them.
+     */
+    KEEP_ONLY_IDENTICAL_INSERTS(DuplicateInsertPolicy.KEEP) {
+      @Override
+      public String coalesce(String replacement, String existing) {
+        return REJECT.coalesce(replacement, existing);
+      }
     };
 
+    private final DuplicateInsertPolicy duplicateInsertPolicy;
+
+    CoalescePolicy(DuplicateInsertPolicy duplicateInsertPolicy) {
+      this.duplicateInsertPolicy = duplicateInsertPolicy;
+    }
+
     /**
-     * Handle an overlapping insert.
+     * Handle two insertions at the same position.
      *
-     * @param replacement the replacement being added.
-     * @param existing the existing insert at this range.
-     * @return the coalesced replacement.
+     * @param replacement the replacement being added
+     * @param existing the existing insert at this position
+     * @return the coalesced replacement
      */
     public abstract String coalesce(String replacement, String existing);
+
+    /**
+     * Duplicate inserts are handled specially: usually dropped (e.g. don't add the same import
+     * twice), but can be kept. e.g., a BugChecker that adds {} blocks around some statements may
+     * need to insert a close brace at the same place twice.
+     */
+    private Replacement handleDuplicateInsertion(Replacement replacement) {
+      return duplicateInsertPolicy.combineDuplicateInserts(replacement);
+    }
+
+    private enum DuplicateInsertPolicy {
+      KEEP {
+        @Override
+        Replacement combineDuplicateInserts(Replacement insertion) {
+          return insertion.withDifferentText(insertion.replaceWith() + insertion.replaceWith());
+        }
+      },
+      DROP {
+        @Override
+        Replacement combineDuplicateInserts(Replacement insertion) {
+          return insertion;
+        }
+      };
+
+      abstract Replacement combineDuplicateInserts(Replacement insertion);
+    }
   }
 
   @CanIgnoreReturnValue
@@ -99,19 +148,22 @@ public class Replacements {
   public Replacements add(Replacement replacement, CoalescePolicy coalescePolicy) {
     if (replacements.containsKey(replacement.range())) {
       Replacement existing = replacements.get(replacement.range());
-      if (!existing.equals(replacement)) {
-        if (replacement.range().isEmpty()) {
-          // The replacement is an insertion, and there's an existing insertion at the same point.
-          // In that case, we coalesce the additional insertion with the existing one.
-          replacement =
-              Replacement.create(
-                  existing.startPosition(),
-                  existing.endPosition(),
-                  coalescePolicy.coalesce(replacement.replaceWith(), existing.replaceWith()));
+      if (replacement.range().isEmpty()) {
+        // The replacement is an insertion, and there's an existing insertion at the same point.
+        // First check whether it's a duplicate insert.
+        if (existing.equals(replacement)) {
+          replacement = coalescePolicy.handleDuplicateInsertion(replacement);
         } else {
-          throw new IllegalArgumentException(
-              String.format("%s conflicts with existing replacement %s", replacement, existing));
+          // Coalesce overlapping non-duplicate insertions together.
+          replacement =
+              replacement.withDifferentText(
+                  coalescePolicy.coalesce(replacement.replaceWith(), existing.replaceWith()));
         }
+      } else if (existing.equals(replacement)) {
+        // Two copies of a non-insertion edit. Just ignore the new one since it's already done.
+      } else {
+        throw new IllegalArgumentException(
+            String.format("%s conflicts with existing replacement %s", replacement, existing));
       }
     } else {
       checkOverlaps(replacement);
