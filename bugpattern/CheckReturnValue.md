@@ -38,7 +38,7 @@ value of any methods that you choose.
 
 ### How to tell Error Prone which methods to check
 
-Most methods are like `concat`: Calls to those methods should use their return
+Most methods are like `concat`: Calls to those methods must use their return
 values.
 
 However, there are exceptions. For example, `set.add(element)` returns a
@@ -52,9 +52,8 @@ methods are like `concat` and which are like `add`.
 #### `@CheckReturnValue` and `@CanIgnoreReturnValue`
 
 The `@CheckReturnValue` annotation (available in JSR-305[^jsr] or in
-[Error Prone][epcrv]) marks methods whose return values should be checked. This
-error is triggered when one of these methods is called but the result is not
-used.
+[Error Prone][epcrv]) marks methods whose return values must be used. This error
+is triggered when one of these methods is called but the result is not used.
 
 [^jsr]: Of note, the JSR-305 project was [never fully approved][jsr305], so the
     JSR-305 version of the annotation is not actually official and causes
@@ -63,7 +62,7 @@ used.
 
 `@CheckReturnValue` may be applied to a class or package [^package-info] to
 indicate that all methods in that class or package must have their return values
-checked.
+used.
 
 For convenience, we provide an annotation, [`@CanIgnoreReturnValue`][epcirv], to
 exempt specific methods or classes from this behavior. `@CanIgnoreReturnValue`
