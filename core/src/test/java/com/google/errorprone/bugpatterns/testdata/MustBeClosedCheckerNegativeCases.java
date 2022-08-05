@@ -20,9 +20,10 @@ import static org.junit.Assert.fail;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.when;
 
+import com.google.common.collect.ImmutableList;
 import com.google.errorprone.annotations.MustBeClosed;
 
-@SuppressWarnings("UnnecessaryCast")
+@SuppressWarnings({"UnnecessaryCast", "LambdaToMemberReference"})
 public class MustBeClosedCheckerNegativeCases {
 
   class Closeable implements AutoCloseable {
@@ -154,5 +155,20 @@ public class MustBeClosedCheckerNegativeCases {
 
   void methodReferenceReturningCloseable() {
     consumeCloseable(MustBeClosedAnnotatedConstructor::new);
+  }
+
+  void ternaryFunctionalExpressionReturningCloseable(boolean condition) {
+    consumeCloseable(
+        condition
+            ? () -> new MustBeClosedAnnotatedConstructor()
+            : MustBeClosedAnnotatedConstructor::new);
+  }
+
+  void inferredFunctionalExpressionReturningCloseable(ResourceFactory factory) {
+    ImmutableList.of(
+            factory,
+            () -> new MustBeClosedAnnotatedConstructor(),
+            MustBeClosedAnnotatedConstructor::new)
+        .forEach(this::consumeCloseable);
   }
 }
