@@ -17,6 +17,7 @@
 package com.google.errorprone.bugpatterns.testdata;
 
 import com.google.errorprone.annotations.MustBeClosed;
+import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 @SuppressWarnings({"UnusedNestedClass", "UnusedVariable"})
@@ -67,11 +68,6 @@ class MustBeClosedCheckerPositiveCases {
     }
   }
 
-  interface Lambda {
-
-    Closeable expression();
-  }
-
   void positiveCase1() {
     // BUG: Diagnostic contains:
     new Foo().mustBeClosedAnnotatedMethod();
@@ -112,21 +108,34 @@ class MustBeClosedCheckerPositiveCases {
     return new Foo().mustBeClosedAnnotatedMethod();
   }
 
-  void positiveCase8() {
-    // Lambda has a fixless finding because no reasonable fix can be suggested
-    Lambda expression =
+  void voidLambda() {
+    // Lambda has a fixless finding because no reasonable fix can be suggested.
+    // BUG: Diagnostic contains:
+    Runnable runnable = () -> new Foo().mustBeClosedAnnotatedMethod();
+  }
+
+  void expressionLambda() {
+    Supplier<Closeable> supplier =
+        () ->
+            // BUG: Diagnostic contains:
+            new Foo().mustBeClosedAnnotatedMethod();
+  }
+
+  void statementLambda() {
+    Supplier<Closeable> supplier =
         () -> {
           // BUG: Diagnostic contains:
           return new Foo().mustBeClosedAnnotatedMethod();
         };
   }
 
-  void positiveCase9() {
-    // TODO(b/218377318): BUG: Diagnostic contains:
-    Lambda expression = new Foo()::mustBeClosedAnnotatedMethod;
+  void methodReference() {
+    Supplier<Closeable> supplier =
+        // TODO(b/218377318): BUG: Diagnostic contains:
+        new Foo()::mustBeClosedAnnotatedMethod;
   }
 
-  void positiveCase10() {
+  void anonymousClass() {
     new Foo() {
       @Override
       public Closeable mustBeClosedAnnotatedMethod() {
