@@ -27,7 +27,6 @@ import com.google.common.collect.ImmutableSetMultimap;
 import com.google.common.collect.Iterables;
 import com.google.common.io.CharSource;
 import com.google.common.io.MoreFiles;
-import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.checkreturnvalue.ResultUseRule.MethodRule;
 import com.google.errorprone.suppliers.Supplier;
@@ -64,7 +63,13 @@ public final class ExternalCanIgnoreReturnValue extends MethodRule {
                   .filter(s -> !s.isEmpty())
                   .map(
                       filename ->
-                          loadConfigListFromFile(filename, state.errorProneOptions().getFlags()))
+                          loadConfigListFromFile(
+                              filename,
+                              state
+                                  .errorProneOptions()
+                                  .getFlags()
+                                  .getEnum(EXCLUSION_LIST_PARSER, ConfigParser.class)
+                                  .orElse(ConfigParser.AS_STRINGS)))
                   .orElse((m, s) -> false));
 
   @Override
@@ -91,25 +96,24 @@ public final class ExternalCanIgnoreReturnValue extends MethodRule {
   enum ConfigParser {
     AS_STRINGS {
       @Override
-      MethodPredicate load(String file, ErrorProneFlags flags) throws IOException {
+      MethodPredicate load(String file) throws IOException {
         return configByInterpretingMethodsAsStrings(MoreFiles.asCharSource(Paths.get(file), UTF_8));
       }
     },
     PARSE_TOKENS {
       @Override
-      MethodPredicate load(String file, ErrorProneFlags flags) throws IOException {
+      MethodPredicate load(String file) throws IOException {
         return configByParsingApiObjects(MoreFiles.asCharSource(Paths.get(file), UTF_8));
       }
     };
 
-    abstract MethodPredicate load(String file, ErrorProneFlags flags) throws IOException;
+    abstract MethodPredicate load(String file) throws IOException;
   }
 
-  private static MethodPredicate loadConfigListFromFile(String filename, ErrorProneFlags flags) {
-    ConfigParser configParser =
-        flags.getEnum(EXCLUSION_LIST_PARSER, ConfigParser.class).orElse(ConfigParser.AS_STRINGS);
+  private static MethodPredicate loadConfigListFromFile(
+      String filename, ConfigParser configParser) {
     try {
-      return configParser.load(filename, flags);
+      return configParser.load(filename);
     } catch (IOException e) {
       throw new UncheckedIOException(
           "Could not load external resource for CanIgnoreReturnValue", e);
