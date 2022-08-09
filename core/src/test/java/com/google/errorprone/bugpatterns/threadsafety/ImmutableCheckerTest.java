@@ -19,11 +19,11 @@ package com.google.errorprone.bugpatterns.threadsafety;
 import static org.junit.Assume.assumeTrue;
 
 import com.google.common.collect.ImmutableList;
-import com.google.devtools.java.version.RuntimeVersion;
 import com.google.errorprone.CompilationTestHelper;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import com.google.errorprone.annotations.Immutable;
 import com.google.errorprone.annotations.concurrent.LazyInit;
+import com.google.errorprone.util.RuntimeVersion;
 import java.util.Arrays;
 import org.junit.Ignore;
 import org.junit.Test;
