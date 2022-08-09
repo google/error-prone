@@ -326,7 +326,7 @@
       <!-- Apache 2.0 -->
       <groupId>org.assertj</groupId>
       <artifactId>assertj-core</artifactId>
-      <version>3.22.0</version>
+      <version>3.23.1</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -368,7 +368,7 @@
       <extension>
         <groupId>kr.motd.maven</groupId>
         <artifactId>os-maven-plugin</artifactId>
-        <version>1.6.2</version>
+        <version>1.7.0</version>
       </extension>
     </extensions>
     <plugins>
