@@ -16,6 +16,8 @@
 
 package com.google.errorprone.hubspot.module;
 
+import com.google.common.base.Preconditions;
+import com.google.errorprone.matchers.Description;
 import java.util.Map;
 
 import com.google.errorprone.BugPattern.SeverityLevel;
@@ -59,8 +61,14 @@ public class ModuleState {
   }
 
   public void reportMatch(ModuleDescription moduleDescription) {
-    if (moduleDescription == null || moduleDescription == ModuleDescription.NO_MATCH) {
+    Preconditions.checkNotNull(moduleDescription, "Use ModuleDescription.NO_MATCH to denote an absent finding.");
+    if (moduleDescription == ModuleDescription.NO_MATCH) {
       return;
+    }
+
+    SeverityLevel override = getSeverityMap().get(moduleDescription.getCheckName());
+    if (override != null) {
+      moduleDescription = moduleDescription.applySeverityOverride(override);
     }
 
     listenerFactory
