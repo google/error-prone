@@ -146,9 +146,17 @@ public class CompilationEndAwareErrorPoneAnalyzer implements TaskListener {
 
       for (BugChecker bugChecker : ((ErrorProneScanner)scanner).getBugCheckers()) {
         if (bugChecker instanceof ModuleAwareChecker) {
-          moduleState.reportMatch(
-              ((ModuleAwareChecker)bugChecker).onModuleFinished(moduleState)
-          );
+          try {
+            moduleState.reportMatch(
+                ((ModuleAwareChecker) bugChecker).onModuleFinished(moduleState)
+            );
+          } catch (Throwable t) {
+            if (HubSpotUtils.isErrorHandlingEnabled(errorProneOptions)) {
+              HubSpotUtils.recordError(bugChecker);
+            } else {
+              throw t;
+            }
+          }
         }
       }
     } catch (Throwable t) {
