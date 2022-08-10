@@ -17,6 +17,7 @@
 package com.google.errorprone.hubspot.module;
 
 import com.google.common.base.Preconditions;
+import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.matchers.Description;
 import com.sun.source.util.TreePath;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
@@ -52,7 +53,15 @@ public class ModuleDescription {
     return description;
   }
 
+  public String getCheckName() {
+    return description.checkName;
+  }
+
   public JCCompilationUnit getCompilationUnit() {
     return compilationUnit;
+  }
+
+  public ModuleDescription applySeverityOverride(SeverityLevel severityLevel) {
+    return new ModuleDescription(description.applySeverityOverride(severityLevel), compilationUnit);
   }
 }
