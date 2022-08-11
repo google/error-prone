@@ -16,7 +16,7 @@ _Alternate names: MutableConstantField, MutableMethodReturnType_
 ## The problem
 Where possible, prefer referring to some types by a subtype which conveys more
 information. For example: `ImmutableList` conveys more information (the
-[immutability][javadoc] of the type). than `List`, `List` conveys more
+[immutability][javadoc] of the type) than `List`, `List` conveys more
 information than `Collection`, and `ListMultimap` conveys more information than
 `Multimap`.
 
