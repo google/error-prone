@@ -553,20 +553,10 @@ public abstract class BugChecker implements Suppressible, Serializable {
   /** A {@link TreePathScanner} which skips trees which are suppressed for this check. */
   protected class SuppressibleTreePathScanner<A, B> extends TreePathScanner<A, B> {
 
-    // TODO(cushon): make this protected once it is required; currently it would shadow
-    // other variables named state and break checks that pass the deprecated constructor
-    private final VisitorState state;
+    protected final VisitorState state;
 
     public SuppressibleTreePathScanner(VisitorState state) {
       this.state = state;
-    }
-
-    /**
-     * @deprecated use {@link #SuppressibleTreePathScanner(VisitorState)} instead
-     */
-    @Deprecated
-    public SuppressibleTreePathScanner() {
-      this(null);
     }
 
     @Override
