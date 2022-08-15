@@ -16,7 +16,21 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.common.truth.Truth.assertWithMessage;
+import static java.util.Locale.ENGLISH;
+import static java.util.stream.Collectors.joining;
+
+import com.google.common.collect.ImmutableList;
 import com.google.errorprone.CompilationTestHelper;
+import com.google.errorprone.FileManagers;
+import com.sun.source.util.JavacTask;
+import com.sun.tools.javac.api.JavacTool;
+import com.sun.tools.javac.file.JavacFileManager;
+import java.net.URI;
+import javax.tools.Diagnostic;
+import javax.tools.DiagnosticCollector;
+import javax.tools.JavaFileObject;
+import javax.tools.SimpleJavaFileObject;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -120,5 +134,35 @@ public final class UnicodeInCodeTest {
             "  }",
             "}")
         .doTest();
+  }
+
+  @Test
+  public void asciiSub() {
+    JavacFileManager fileManager = FileManagers.testFileManager();
+    DiagnosticCollector<JavaFileObject> diagnosticCollector = new DiagnosticCollector<>();
+    JavacTask task =
+        JavacTool.create()
+            .getTask(
+                null,
+                fileManager,
+                diagnosticCollector,
+                ImmutableList.of("-Xplugin:ErrorProne", "-XDcompilePolicy=simple"),
+                ImmutableList.of(),
+                ImmutableList.of(
+                    new SimpleJavaFileObject(
+                        URI.create("file:///Test.java"), JavaFileObject.Kind.SOURCE) {
+                      @Override
+                      public String getCharContent(boolean ignoreEncodingErrors) {
+                        return "class Test {}" + ((char) 0x1a);
+                      }
+                    }));
+    boolean ok = task.call();
+    assertWithMessage(
+            diagnosticCollector.getDiagnostics().stream()
+                .filter(d -> d.getKind() == Diagnostic.Kind.ERROR)
+                .map(d -> d.getMessage(ENGLISH))
+                .collect(joining("\n")))
+        .that(ok)
+        .isTrue();
   }
 }

@@ -51,9 +51,7 @@ public final class UnicodeInCode extends BugChecker implements CompilationUnitTr
     String sourceCode = state.getSourceCode().toString();
 
     for (int i = 0; i < sourceCode.length(); ++i) {
-      char c = sourceCode.charAt(i);
-
-      if (!isAcceptableAscii(c)) {
+      if (!isAcceptableAscii(sourceCode, i)) {
         violations.add(Range.closedOpen(i, i + 1));
       }
     }
@@ -81,6 +79,19 @@ public final class UnicodeInCode extends BugChecker implements CompilationUnitTr
       }
     }
     return NO_MATCH;
+  }
+
+  private static boolean isAcceptableAscii(String sourceCode, int i) {
+    char c = sourceCode.charAt(i);
+    if (isAcceptableAscii(c)) {
+      return true;
+    }
+    if (c == 0x1a && i == sourceCode.length() - 1) {
+      // javac inserts ASCII_SUB characters at the end of the input, see:
+      // https://github.com/google/error-prone/issues/3092
+      return true;
+    }
+    return false;
   }
 
   private static boolean isAcceptableAscii(char c) {
