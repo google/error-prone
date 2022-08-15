@@ -76,7 +76,6 @@ public class StrictFormatStringValidation {
     Symbol formatStringSymbol = ASTHelpers.getSymbol(formatStringTree);
     if (!(formatStringSymbol instanceof VarSymbol)) {
       return ValidationResult.create(
-          null,
           String.format(
               "Format strings must be either literals or variables. Other expressions"
                   + " are not valid.\n"
@@ -86,7 +85,7 @@ public class StrictFormatStringValidation {
 
     if (!isConsideredFinal(formatStringSymbol)) {
       return ValidationResult.create(
-          null, "All variables passed as @FormatString must be final or effectively final");
+          "All variables passed as @FormatString must be final or effectively final");
     }
 
     if (formatStringSymbol.getKind() == ElementKind.PARAMETER) {
@@ -108,7 +107,6 @@ public class StrictFormatStringValidation {
       VisitorState state) {
     if (!isFormatStringParameter(formatStringSymbol, state)) {
       return ValidationResult.create(
-          null,
           String.format(
               "Format strings must be compile time constants or parameters annotated "
                   + "@FormatString: %s",
@@ -134,7 +132,6 @@ public class StrictFormatStringValidation {
 
     if (ownerFormatArgTypes.size() != calleeFormatArgTypes.size()) {
       return ValidationResult.create(
-          null,
           String.format(
               "The number of format arguments passed "
                   + "with an @FormatString must match the number of format arguments in the "
@@ -146,7 +143,6 @@ public class StrictFormatStringValidation {
         if (!ASTHelpers.isSameType(
             ownerFormatArgTypes.get(i), calleeFormatArgTypes.get(i), state)) {
           return ValidationResult.create(
-              null,
               String.format(
                   "The format argument types passed "
                       + "with an @FormatString must match the types of the format arguments in "
@@ -173,7 +169,6 @@ public class StrictFormatStringValidation {
       VisitorState state) {
     if (formatStringSymbol.getKind() != ElementKind.LOCAL_VARIABLE) {
       return ValidationResult.create(
-          null,
           String.format(
               "Variables used as format strings that are not local variables must be compile time"
                   + " constants.\n%s is neither a local variable nor a compile time constant.",
@@ -209,7 +204,6 @@ public class StrictFormatStringValidation {
                     if (ASTHelpers.getSymbol(node) == formatStringSymbol) {
                       if (node.getInitializer() == null) {
                         return ValidationResult.create(
-                            null,
                             String.format(
                                 "Variables used as format strings must be initialized when they are"
                                     + " declared.\nInvalid declaration: %s",
@@ -242,7 +236,6 @@ public class StrictFormatStringValidation {
     String value = ASTHelpers.constValue(formatStringRhs, String.class);
     if (value == null) {
       return ValidationResult.create(
-          null,
           String.format(
               "Local format string variables must only be assigned to compile time constant values."
                   + " Invalid format string assignment: %s",
