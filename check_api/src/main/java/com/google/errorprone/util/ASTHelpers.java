@@ -1682,9 +1682,29 @@ public class ASTHelpers {
 
     Type type = new TargetTypeVisitor(current, state, parent).visit(parent.getLeaf(), null);
     if (type == null) {
-      return null;
+      if (CONSTANT_CASE_LABEL_TREE != null
+          && CONSTANT_CASE_LABEL_TREE.isAssignableFrom(parent.getLeaf().getClass())) {
+        type =
+            getType(
+                TargetTypeVisitor.getSwitchExpression(
+                    parent.getParentPath().getParentPath().getLeaf()));
+      }
+      if (type == null) {
+        return null;
+      }
     }
     return TargetType.create(type, parent);
+  }
+
+  @Nullable private static final Class<?> CONSTANT_CASE_LABEL_TREE = constantCaseLabelTree();
+
+  @Nullable
+  private static Class<?> constantCaseLabelTree() {
+    try {
+      return Class.forName("com.sun.source.tree.ConstantCaseLabelTree");
+    } catch (ClassNotFoundException e) {
+      return null;
+    }
   }
 
   private static boolean canHaveTargetType(Tree tree) {
