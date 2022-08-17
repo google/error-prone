@@ -308,6 +308,9 @@ Abstract and default methods are not injectable with javax.inject.Inject
 __[JodaToSelf](bugpattern/JodaToSelf)__<br>
 Use of Joda-Time&#39;s DateTime.toDateTime(), Duration.toDuration(), Instant.toInstant(), Interval.toInterval(), and Period.toPeriod() are not allowed.
 
+__[LenientFormatStringValidation](bugpattern/LenientFormatStringValidation)__<br>
+The number of arguments provided to lenient format methods should match the positional specifiers.
+
 __[LiteByteStringUtf8](bugpattern/LiteByteStringUtf8)__<br>
 This pattern will silently corrupt certain byte sequences from the serialized protocol message. Use ByteString or byte[] directly
 
