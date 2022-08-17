@@ -194,6 +194,7 @@ import com.google.errorprone.bugpatterns.JavaLangClash;
 import com.google.errorprone.bugpatterns.JavaUtilDateChecker;
 import com.google.errorprone.bugpatterns.JdkObsolete;
 import com.google.errorprone.bugpatterns.LambdaFunctionalInterface;
+import com.google.errorprone.bugpatterns.LenientFormatStringValidation;
 import com.google.errorprone.bugpatterns.LiteByteStringUtf8;
 import com.google.errorprone.bugpatterns.LiteEnumValueOf;
 import com.google.errorprone.bugpatterns.LiteProtoToString;
@@ -692,6 +693,7 @@ public class BuiltInCheckerSuppliers {
           JUnitParameterMethodNotFound.class,
           JavaxInjectOnAbstractMethod.class,
           JodaToSelf.class,
+          LenientFormatStringValidation.class,
           LiteByteStringUtf8.class,
           LocalDateTemporalAmount.class,
           LockOnBoxedPrimitive.class,
