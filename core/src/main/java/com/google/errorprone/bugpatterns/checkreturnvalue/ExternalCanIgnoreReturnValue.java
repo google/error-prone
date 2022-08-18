@@ -110,8 +110,7 @@ public final class ExternalCanIgnoreReturnValue extends MethodRule {
     abstract MethodPredicate load(String file) throws IOException;
   }
 
-  private static MethodPredicate loadConfigListFromFile(
-      String filename, ConfigParser configParser) {
+  static MethodPredicate loadConfigListFromFile(String filename, ConfigParser configParser) {
     try {
       return configParser.load(filename);
     } catch (IOException e) {
