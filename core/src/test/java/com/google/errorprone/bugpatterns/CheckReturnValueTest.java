@@ -955,6 +955,36 @@ public class CheckReturnValueTest {
   }
 
   @Test
+  public void testAutoValueGetterMethods() {
+    compilationHelper
+        .addSourceLines(
+            "Animal.java",
+            "package com.google.frobber;",
+            "import com.google.auto.value.AutoValue;",
+            "@AutoValue",
+            "abstract class Animal {",
+            "  abstract String name();",
+            "  abstract int numberOfLegs();",
+            "}")
+        .addSourceLines(
+            "AnimalCaller.java",
+            "package com.google.frobber;",
+            "public final class AnimalCaller {",
+            "  static void testAnimal() {",
+            "    Animal a = new AutoValue_Animal(\"dog\", 4);",
+            "    // BUG: Diagnostic contains: ",
+            "    a.numberOfLegs();",
+            "", // And test usages where the static type is the generated class, too:
+            "    AutoValue_Animal b = new AutoValue_Animal(\"dog\", 4);",
+            "    // BUG: Diagnostic contains: ",
+            "    b.numberOfLegs();",
+            "  }",
+            "}")
+        .setArgs(ImmutableList.of("-processor", AutoValueProcessor.class.getName()))
+        .doTest();
+  }
+
+  @Test
   public void testAutoBuilderSetterMethods() {
     compilationHelper
         .addSourceLines(
@@ -970,13 +1000,13 @@ public class CheckReturnValueTest {
             "import com.google.errorprone.annotations.CheckReturnValue;",
             "@CheckReturnValue",
             "@AutoBuilder(ofClass = Person.class)",
-            "abstract class PersonBuilder {",
+            "interface PersonBuilder {",
             "  static PersonBuilder personBuilder() {",
             "    return new AutoBuilder_PersonBuilder();",
             "  }",
-            "  abstract PersonBuilder setName(String name);",
-            "  abstract PersonBuilder setId(int id);",
-            "  abstract Person build();",
+            "  PersonBuilder setName(String name);",
+            "  PersonBuilder setId(int id);",
+            "  Person build();",
             "}")
         .addSourceLines(
             "PersonCaller.java",
@@ -990,6 +1020,9 @@ public class CheckReturnValueTest {
             "    builder.setId(42);", // AutoBuilder setters are implicitly @CIRV
             "    // BUG: Diagnostic contains: ",
             "    builder.build();",
+            "", // And test usages where the static type is the generated class, too:
+            "    // BUG: Diagnostic contains: ",
+            "    new AutoBuilder_PersonBuilder().build();",
             "  }",
             "}")
         .setArgs(ImmutableList.of("-processor", AutoBuilderProcessor.class.getName()))
