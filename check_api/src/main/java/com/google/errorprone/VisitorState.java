@@ -220,7 +220,12 @@ public class VisitorState {
   }
 
   public VisitorState withPath(TreePath path) {
+    checkNotNull(path);
     return new VisitorState(context, path, suppressedState, sharedState);
+  }
+
+  private VisitorState withNoPathForMemoization() {
+    return new VisitorState(context, null, suppressedState, sharedState);
   }
 
   public VisitorState withSuppression(SuppressedState suppressedState) {
@@ -231,6 +236,13 @@ public class VisitorState {
   }
 
   public TreePath getPath() {
+    if (path == null) {
+      throw new UnsupportedOperationException(
+          "VisitorState.memoize Supplier implementations cannot access the TreePath: The result is"
+              + " cached across multiple CompilationUnitTree instances, which share none of the"
+              + " path. Alternatively, you've managed to call getPath() before the VisitorState's"
+              + " path was initialized.");
+    }
     return path;
   }
 
@@ -676,6 +688,12 @@ public class VisitorState {
 
     @Override
     public synchronized T get(VisitorState state) {
+      /*
+       * Don't let callers rely on the TreePath: The Cache is shared across the whole compilation,
+       * not just the current VisitorState's TreePath's CompilationUnit.
+       */
+      state = state.withNoPathForMemoization();
+
       /* javac is single-threaded, so in principle we don't really need to lock.
       But in practice it's cheap enough to be worth getting peace of mind that this is
       always correct. */
