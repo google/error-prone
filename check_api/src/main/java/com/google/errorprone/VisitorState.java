@@ -700,8 +700,11 @@ public class VisitorState {
 
   /**
    * Produces a cache for a function that is expected to return the same result throughout a
-   * compilation, but requires a VisitorState to compute that result. Do not use this method for a
-   * function that depends on the varying state of a VisitorState (e.g. {@link #getPath()}.
+   * compilation, but requires a {@link VisitorState} to compute that result.
+   *
+   * <p><b>Note:</b> Do not use this method for a function that depends on the varying state of a
+   * {@link com.google.errorprone.VisitorState} (e.g. {@link #getPath()}—including the compilation
+   * unit itself!).
    */
   public static <T> Supplier<T> memoize(Supplier<T> f) {
     return new Cache<>(f);
