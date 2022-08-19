@@ -403,7 +403,7 @@ int&nbsp;count)</code></th>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#memoize(com.google.errorprone.suppliers.Supplier)">memoize</a></span>&#8203;(<a href="suppliers/Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a>&lt;T&gt;&nbsp;f)</code></th>
 <td class="col-last">
 <div class="block">Produces a cache for a function that is expected to return the same result throughout a
- compilation, but requires a VisitorState to compute that result.</div>
+ compilation, but requires a <a href="VisitorState.html" title="class in com.google.errorprone"><code>VisitorState</code></a> to compute that result.</div>
 </td>
 </tr>
 <tr class="row-color" id="i33">
@@ -845,8 +845,11 @@ int&nbsp;end)</span></div>
 <h3>memoize</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="type-parameters">&lt;T&gt;</span>&nbsp;<span class="return-type"><a href="suppliers/Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a>&lt;T&gt;</span>&nbsp;<span class="member-name">memoize</span>&#8203;(<span class="parameters"><a href="suppliers/Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a>&lt;T&gt;&nbsp;f)</span></div>
 <div class="block">Produces a cache for a function that is expected to return the same result throughout a
- compilation, but requires a VisitorState to compute that result. Do not use this method for a
- function that depends on the varying state of a VisitorState (e.g. <a href="#getPath()"><code>getPath()</code></a>.</div>
+ compilation, but requires a <a href="VisitorState.html" title="class in com.google.errorprone"><code>VisitorState</code></a> to compute that result.
+
+ <p><b>Note:</b> Do not use this method for a function that depends on the varying state of a
+ <a href="VisitorState.html" title="class in com.google.errorprone"><code>VisitorState</code></a> (e.g. <a href="#getPath()"><code>getPath()</code></a>—including the compilation
+ unit itself!).</div>
 </section>
 </li>
 <li>
