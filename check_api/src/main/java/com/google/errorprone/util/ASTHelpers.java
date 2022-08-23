@@ -2382,13 +2382,23 @@ public class ASTHelpers {
 
   /**
    * Returns true if the symbol is directly or indirectly local to a method or variable initializer;
-   * see [@code Symbol#isLocal} or {@code Symbol#isDirectlyOrIndirectlyLocal}.
+   * see {@code Symbol#isLocal} or {@code Symbol#isDirectlyOrIndirectlyLocal}.
    */
   public static boolean isLocal(Symbol symbol) {
     try {
       return (boolean) IS_LOCAL.invoke(symbol);
     } catch (ReflectiveOperationException e) {
       throw new LinkageError(e.getMessage(), e);
+    }
+  }
+
+  /** Returns true if the symbol is static. Returns {@code false} for module symbols. */
+  public static boolean isStatic(Symbol symbol) {
+    switch (symbol.getKind()) {
+      case MODULE:
+        return false;
+      default:
+        return symbol.isStatic();
     }
   }
 

@@ -127,7 +127,7 @@ public abstract class ApiDiffChecker extends BugChecker
    * the type that an instance member is accessed on.
    */
   private static @Nullable ClassSymbol getReceiver(ExpressionTree tree, Symbol sym) {
-    if (sym.isStatic() || sym instanceof ClassSymbol) {
+    if (ASTHelpers.isStatic(sym) || sym instanceof ClassSymbol) {
       return sym.enclClass();
     }
     switch (tree.getKind()) {
