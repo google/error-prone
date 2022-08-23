@@ -358,7 +358,10 @@ public abstract class Api {
       do {
         position++;
         checkArgument(
-            position < api.length(), "Could not parse '%s' as it must contain an '%s'", delimiter);
+            position < api.length(),
+            "Could not parse '%s' as it must contain an '%s'",
+            api,
+            delimiter);
         next = api.charAt(position);
       } while (!assumeNoWhitespace && whitespace().matches(next));
       return next;
