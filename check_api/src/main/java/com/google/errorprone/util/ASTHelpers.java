@@ -2404,6 +2404,27 @@ public class ASTHelpers {
     }
   }
 
+  private static final Supplier<Boolean> useCorrectIsAbstract =
+      VisitorState.memoize(
+          s -> s.errorProneOptions().getFlags().getBoolean("UseCorrectIsAbstract").orElse(true));
+
+  /**
+   * Returns true if the given method symbol is abstract.
+   *
+   * @deprecated use {@link #isAbstract} instead.
+   */
+  @Deprecated
+  public static boolean isAbstract(MethodSymbol method, VisitorState state) {
+    return useCorrectIsAbstract.get(state)
+        ? isAbstract(method)
+        : (method.flags() & Flags.ABSTRACT) != 0;
+  }
+
+  /** Returns true if the given method symbol is abstract. */
+  public static boolean isAbstract(MethodSymbol method) {
+    return method.getModifiers().contains(Modifier.ABSTRACT);
+  }
+
   /** Returns a compatibility adapter around {@link Scope}. */
   public static ErrorProneScope scope(Scope scope) {
     return new ErrorProneScope(scope);
