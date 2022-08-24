@@ -27,6 +27,7 @@ import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
 import static com.google.errorprone.util.ASTHelpers.isLocal;
 import static com.google.errorprone.util.ASTHelpers.isSameType;
+import static com.google.errorprone.util.ASTHelpers.isStatic;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
 import static com.google.errorprone.util.ASTHelpers.targetType;
 import static java.lang.String.format;
@@ -458,7 +459,7 @@ public class ImmutableChecker extends BugChecker
       private void handleIdentifier(Symbol symbol) {
         if (symbol instanceof VarSymbol
             && !variablesOwnedByLambda.contains(symbol)
-            && !symbol.isStatic()) {
+            && !isStatic(symbol)) {
           variablesClosed.add((VarSymbol) symbol);
         }
       }
@@ -627,7 +628,7 @@ public class ImmutableChecker extends BugChecker
           result.add(name);
         }
       }
-      if (s.isStatic()) {
+      if (isStatic(s)) {
         break;
       }
     }

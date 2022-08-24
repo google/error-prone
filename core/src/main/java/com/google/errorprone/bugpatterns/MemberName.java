@@ -30,6 +30,7 @@ import static com.google.errorprone.util.ASTHelpers.canBeRemoved;
 import static com.google.errorprone.util.ASTHelpers.findSuperMethods;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
+import static com.google.errorprone.util.ASTHelpers.isStatic;
 import static java.util.stream.Collectors.joining;
 
 import com.google.common.base.CaseFormat;
@@ -181,7 +182,7 @@ public final class MemberName extends BugChecker implements MethodTreeMatcher, V
   }
 
   private static boolean isStaticVariable(Symbol symbol) {
-    return symbol instanceof VarSymbol && symbol.isStatic();
+    return symbol instanceof VarSymbol && isStatic(symbol);
   }
 
   private static final Pattern LOWER_UNDERSCORE_PATTERN = Pattern.compile("[a-z0-9_]+");

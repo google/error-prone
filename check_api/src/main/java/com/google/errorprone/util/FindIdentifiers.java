@@ -19,6 +19,7 @@ package com.google.errorprone.util;
 import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.errorprone.util.ASTHelpers.isConsideredFinal;
+import static com.google.errorprone.util.ASTHelpers.isStatic;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
@@ -406,7 +407,7 @@ public final class FindIdentifiers {
               path,
               (curr, unused) -> {
                 Symbol sym = ASTHelpers.getSymbol(curr);
-                return sym != null && sym.isStatic();
+                return sym != null && isStatic(sym);
               },
               (curr, unused) ->
                   curr instanceof ClassTree && ASTHelpers.getSymbol(curr).equals(var.owner))) {
@@ -470,7 +471,7 @@ public final class FindIdentifiers {
     for (Tree tree : path) {
       switch (tree.getKind()) {
         case METHOD:
-          return ASTHelpers.getSymbol(tree).isStatic();
+          return isStatic(ASTHelpers.getSymbol(tree));
         case BLOCK: // static initializer
           if (((BlockTree) tree).isStatic()) {
             return true;

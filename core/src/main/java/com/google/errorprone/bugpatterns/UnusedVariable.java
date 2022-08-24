@@ -28,6 +28,7 @@ import static com.google.errorprone.util.ASTHelpers.canBeRemoved;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
+import static com.google.errorprone.util.ASTHelpers.isStatic;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
 import static com.google.errorprone.util.ASTHelpers.shouldKeep;
 import static com.google.errorprone.util.SideEffectAnalysis.hasSideEffect;
@@ -390,7 +391,7 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
             String newContent =
                 String.format(
                     "%s{ %s; }",
-                    varSymbol.isStatic() ? "static " : "", state.getSourceForNode(initializer));
+                    isStatic(varSymbol) ? "static " : "", state.getSourceForNode(initializer));
             keepSideEffectsFix.merge(
                 SuggestedFixes.replaceIncludingComments(usagePath, newContent, state));
             removeSideEffectsFix.replace(statement, "");

@@ -24,6 +24,7 @@ import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.common.collect.Streams.stream;
 import static com.google.errorprone.matchers.JUnitMatchers.JUNIT4_RUN_WITH_ANNOTATION;
 import static com.google.errorprone.matchers.Matchers.isSubtypeOf;
+import static com.google.errorprone.util.ASTHelpers.isStatic;
 import static com.sun.tools.javac.code.Scope.LookupKind.NON_RECURSIVE;
 import static java.util.Objects.requireNonNull;
 import static java.util.stream.Collectors.toCollection;
@@ -693,7 +694,7 @@ public class ASTHelpers {
     Scope scope = superType.tsym.members();
     for (Symbol sym : scope.getSymbolsByName(methodSymbol.name)) {
       if (sym != null
-          && !sym.isStatic()
+          && !isStatic(sym)
           && ((sym.flags() & Flags.SYNTHETIC) == 0)
           && methodSymbol.overrides(
               sym, (TypeSymbol) methodSymbol.owner, types, /* checkResult= */ true)) {
@@ -2393,6 +2394,7 @@ public class ASTHelpers {
   }
 
   /** Returns true if the symbol is static. Returns {@code false} for module symbols. */
+  @SuppressWarnings("ASTHelpersSuggestions")
   public static boolean isStatic(Symbol symbol) {
     switch (symbol.getKind()) {
       case MODULE:

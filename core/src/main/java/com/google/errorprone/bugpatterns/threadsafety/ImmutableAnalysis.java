@@ -16,6 +16,8 @@
 
 package com.google.errorprone.bugpatterns.threadsafety;
 
+import static com.google.errorprone.util.ASTHelpers.isStatic;
+
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.VisitorState;
@@ -230,7 +232,7 @@ public class ImmutableAnalysis {
       return Violation.absent();
     }
     Predicate<Symbol> instanceFieldFilter =
-        symbol -> symbol.getKind() == ElementKind.FIELD && !symbol.isStatic();
+        symbol -> symbol.getKind() == ElementKind.FIELD && !isStatic(symbol);
     Map<Symbol, Tree> declarations = new HashMap<>();
     if (tree.isPresent()) {
       for (Tree member : tree.get().getMembers()) {

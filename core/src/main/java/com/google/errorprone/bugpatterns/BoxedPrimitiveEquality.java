@@ -19,6 +19,7 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
+import static com.google.errorprone.util.ASTHelpers.isStatic;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
 
 import com.google.errorprone.BugPattern;
@@ -78,7 +79,7 @@ public final class BoxedPrimitiveEquality extends AbstractReferenceEquality {
   }
 
   private static boolean isStaticConstant(Symbol sym) {
-    return sym instanceof VarSymbol && isFinal(sym) && sym.isStatic();
+    return sym instanceof VarSymbol && isFinal(sym) && isStatic(sym);
   }
 
   public static boolean isFinal(Symbol s) {

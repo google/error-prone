@@ -18,6 +18,7 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
+import static com.google.errorprone.util.ASTHelpers.isStatic;
 
 import com.google.common.base.Ascii;
 import com.google.common.base.Preconditions;
@@ -185,7 +186,7 @@ public class TypeParameterNaming extends BugChecker implements TypeParameterTree
   private static List<TypeVariableSymbol> typeVariablesEnclosing(Symbol sym) {
     List<TypeVariableSymbol> typeVarScopes = new ArrayList<>();
     outer:
-    while (!sym.isStatic()) {
+    while (!isStatic(sym)) {
       sym = sym.owner;
       switch (sym.getKind()) {
         case PACKAGE:

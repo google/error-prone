@@ -21,6 +21,7 @@ import static com.google.common.collect.MoreCollectors.onlyElement;
 import static com.google.errorprone.util.ASTHelpers.findEnclosingNode;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.hasDirectAnnotationWithSimpleName;
+import static com.google.errorprone.util.ASTHelpers.isStatic;
 import static com.google.errorprone.util.MoreAnnotations.getValue;
 
 import com.google.auto.value.AutoValue;
@@ -266,7 +267,7 @@ abstract class InlineMeData {
       // chain.
       if (!(node.getExpression() instanceof MemberSelectTree)) {
         Symbol symbol = getSymbol(node);
-        if (symbol.isStatic()) {
+        if (isStatic(symbol)) {
           maybeAddImport(symbol.owner);
         }
       }
@@ -308,7 +309,7 @@ abstract class InlineMeData {
       //   That seems wrong. Perhaps move the import logic from the other bits here?
       boolean isMemberOfThisClass = isMemberOfThisClass(symbol, parentNode);
       boolean nameUsageRequiresNoQualification = nameUsageDoesntRequireQualification(parentNode);
-      if (symbol.isStatic()) {
+      if (isStatic(symbol)) {
         if (isMemberOfThisClass) {
           addImport(classSymbol.getQualifiedName().toString());
           if (!nameUsageRequiresNoQualification) {

@@ -45,6 +45,7 @@ import com.google.errorprone.bugpatterns.threadsafety.WellKnownMutability;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.suppliers.Supplier;
+import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.MemberSelectTree;
@@ -184,7 +185,7 @@ public final class FieldCanBeStatic extends BugChecker implements VariableTreeMa
         new ConstantExpressionVisitor() {
           @Override
           public void visitIdentifier(Symbol identifier) {
-            if (!(identifier instanceof ClassSymbol) && !identifier.isStatic()) {
+            if (!(identifier instanceof ClassSymbol) && !ASTHelpers.isStatic(identifier)) {
               staticable.set(false);
             }
           }

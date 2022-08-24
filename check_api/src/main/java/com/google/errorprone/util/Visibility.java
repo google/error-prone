@@ -20,6 +20,7 @@ import static com.google.errorprone.util.ASTHelpers.enclosingClass;
 import static com.google.errorprone.util.ASTHelpers.enclosingPackage;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
+import static com.google.errorprone.util.ASTHelpers.isStatic;
 
 import com.google.errorprone.VisitorState;
 import com.sun.source.tree.ClassTree;
@@ -108,7 +109,7 @@ public enum Visibility implements Comparable<Visibility> {
       }
       Symbol symbol = getSymbol(tree);
       ClassTree classTree = ASTHelpers.findEnclosingNode(state.getPath(), ClassTree.class);
-      if (symbol.isStatic()) {
+      if (isStatic(symbol)) {
         if (classTree == null) {
           return false;
         }

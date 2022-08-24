@@ -26,6 +26,7 @@ import static com.google.errorprone.matchers.Matchers.staticEqualsInvocation;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
+import static com.google.errorprone.util.ASTHelpers.isStatic;
 
 import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableSet;
@@ -140,7 +141,7 @@ public final class EqualsWrongThing extends BugChecker implements MethodTreeMatc
     if (lhsSymbol == null || rhsSymbol == null || lhsSymbol.equals(rhsSymbol)) {
       return Optional.empty();
     }
-    if (lhsSymbol.isStatic() || rhsSymbol.isStatic()) {
+    if (isStatic(lhsSymbol) || isStatic(rhsSymbol)) {
       return Optional.empty();
     }
     if (!encl.equals(lhsSymbol.enclClass()) || !encl.equals(rhsSymbol.enclClass())) {

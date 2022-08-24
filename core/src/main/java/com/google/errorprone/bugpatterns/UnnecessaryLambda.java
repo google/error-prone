@@ -28,6 +28,7 @@ import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
+import static com.google.errorprone.util.ASTHelpers.isStatic;
 import static com.sun.tools.javac.util.Position.NOPOS;
 import static java.util.stream.Collectors.joining;
 
@@ -140,7 +141,7 @@ public class UnnecessaryLambda extends BugChecker
     }
     SuggestedFix.Builder fix = SuggestedFix.builder();
     String name =
-        sym.isStatic()
+        isStatic(sym)
             ? UPPER_UNDERSCORE.converterTo(LOWER_CAMEL).convert(tree.getName().toString())
             : tree.getName().toString();
     new TreePathScanner<Void, Void>() {
@@ -292,7 +293,7 @@ public class UnnecessaryLambda extends BugChecker
       fix.replace(
           node,
           String.format(
-              "%s::%s", sym.isStatic() ? sym.owner.enclClass().getSimpleName() : "this", newName));
+              "%s::%s", isStatic(sym) ? sym.owner.enclClass().getSimpleName() : "this", newName));
     }
   }
 

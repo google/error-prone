@@ -27,6 +27,7 @@ import static com.google.errorprone.matchers.Matchers.staticMethod;
 import static com.google.errorprone.util.ASTHelpers.canBeRemoved;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
+import static com.google.errorprone.util.ASTHelpers.isStatic;
 
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.BugPattern;
@@ -156,7 +157,7 @@ public final class ConstantPatternCompile extends BugChecker implements Variable
     Symbol regexSym = getSymbol(regex);
     if (regexSym == null
         || !regexSym.getKind().equals(ElementKind.FIELD)
-        || !regexSym.isStatic()
+        || !isStatic(regexSym)
         || !regexSym.getModifiers().contains(Modifier.FINAL)
         || !canBeRemoved((VarSymbol) regexSym)) {
       return SuggestedFix.emptyFix();

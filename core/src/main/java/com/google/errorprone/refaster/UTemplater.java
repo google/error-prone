@@ -18,6 +18,7 @@ package com.google.errorprone.refaster;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkState;
+import static com.google.errorprone.util.ASTHelpers.isStatic;
 
 import com.google.common.collect.ImmutableClassToInstanceMap;
 import com.google.common.collect.ImmutableList;
@@ -335,7 +336,7 @@ public class UTemplater extends SimpleTreeVisitor<Tree, Void> {
     Symbol sym = ASTHelpers.getSymbol(tree);
     if (sym instanceof ClassSymbol) {
       return UClassIdent.create((ClassSymbol) sym);
-    } else if (sym.isStatic()) {
+    } else if (isStatic(sym)) {
       ExpressionTree selected = tree.getExpression();
       checkState(
           ASTHelpers.getSymbol(selected) instanceof ClassSymbol,
@@ -587,7 +588,7 @@ public class UTemplater extends SimpleTreeVisitor<Tree, Void> {
     Symbol sym = ASTHelpers.getSymbol(tree);
     if (sym instanceof ClassSymbol) {
       return UClassIdent.create((ClassSymbol) sym);
-    } else if (sym != null && sym.isStatic()) {
+    } else if (sym != null && isStatic(sym)) {
       return staticMember(sym);
     } else if (freeVariables.containsKey(tree.getName().toString())) {
       VarSymbol symbol = freeVariables.get(tree.getName().toString());

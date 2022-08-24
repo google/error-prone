@@ -28,6 +28,7 @@ import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.isGeneratedConstructor;
+import static com.google.errorprone.util.ASTHelpers.isStatic;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Range;
@@ -255,8 +256,7 @@ public class UnnecessaryAnonymousClass extends BugChecker implements VariableTre
         return SuggestedFix.replace(
             node,
             String.format(
-                "%s::%s",
-                sym.isStatic() ? sym.owner.enclClass().getSimpleName() : "this", newName));
+                "%s::%s", isStatic(sym) ? sym.owner.enclClass().getSimpleName() : "this", newName));
       }
     }
 

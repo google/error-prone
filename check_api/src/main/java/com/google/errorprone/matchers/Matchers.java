@@ -234,7 +234,7 @@ public class Matchers {
   /** Matches an AST node that represents a non-static field. */
   public static Matcher<ExpressionTree> isInstanceField() {
     return symbolMatcher(
-        (symbol, state) -> symbol.getKind() == ElementKind.FIELD && !symbol.isStatic());
+        (symbol, state) -> symbol.getKind() == ElementKind.FIELD && !ASTHelpers.isStatic(symbol));
   }
 
   /** Matches an AST node that represents a local variable or parameter. */
@@ -631,7 +631,7 @@ public class Matchers {
     return (expressionTree, state) -> {
       if (expressionTree instanceof JCFieldAccess) {
         Symbol symbol = getSymbol(expressionTree);
-        if (symbol.isStatic()
+        if (ASTHelpers.isStatic(symbol)
             && state.getTypes().unboxedTypeOrType(symbol.type).getTag() == TypeTag.BOOLEAN) {
           if (value) {
             return symbol.getSimpleName().contentEquals("TRUE");
@@ -1045,7 +1045,7 @@ public class Matchers {
   public static <T extends Tree> Matcher<T> isStatic() {
     return (tree, state) -> {
       Symbol sym = getSymbol(tree);
-      return sym != null && sym.isStatic();
+      return sym != null && ASTHelpers.isStatic(sym);
     };
   }
 

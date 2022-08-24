@@ -18,6 +18,7 @@ package com.google.errorprone.bugpatterns.threadsafety;
 
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
+import static com.google.errorprone.util.ASTHelpers.isStatic;
 
 import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableSet;
@@ -129,8 +130,8 @@ public final class GuardedByUtils {
     for (GuardedByExpression boundGuard : boundGuards) {
       boolean staticGuard =
           boundGuard.kind() == GuardedByExpression.Kind.CLASS_LITERAL
-              || (boundGuard.sym() != null && boundGuard.sym().isStatic());
-      if (treeSym.isStatic() && !staticGuard) {
+              || (boundGuard.sym() != null && isStatic(boundGuard.sym()));
+      if (isStatic(treeSym) && !staticGuard) {
         return GuardedByValidationResult.invalid("static member guarded by instance");
       }
     }

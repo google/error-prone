@@ -31,6 +31,7 @@ import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
 import static com.google.errorprone.util.ASTHelpers.isConsideredFinal;
+import static com.google.errorprone.util.ASTHelpers.isStatic;
 import static java.lang.String.format;
 import static java.util.stream.Collectors.joining;
 import static javax.lang.model.element.Modifier.ABSTRACT;
@@ -320,7 +321,7 @@ public final class ConstantExpressions {
         return receiver + symbol().getSimpleName();
       }
       return receiver
-          + (symbol().isStatic() ? symbol().owner.getSimpleName() + "." : "")
+          + (isStatic(symbol()) ? symbol().owner.getSimpleName() + "." : "")
           + symbol().getSimpleName()
           + arguments().stream().map(Object::toString).collect(joining(", ", "(", ")"));
     }
@@ -353,7 +354,7 @@ public final class ConstantExpressions {
 
     Symbol symbol = getSymbol(tree);
     Optional<ConstantExpression> receiverConstant;
-    if (receiver == null || (symbol != null && symbol.isStatic())) {
+    if (receiver == null || (symbol != null && isStatic(symbol))) {
       receiverConstant = Optional.empty();
     } else {
       receiverConstant = constantExpression(receiver, state);

@@ -24,6 +24,7 @@ import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.hasExtraP
 import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.nullnessChecksShouldBeConservative;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.suppliers.Suppliers.typeFromString;
+import static com.google.errorprone.util.ASTHelpers.enclosingPackage;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
 import static javax.lang.model.type.TypeKind.TYPEVAR;
@@ -207,7 +208,9 @@ public final class NullArgumentForNonNullParameter extends BugChecker
        */
       if (hasAnnotation(sym, "org.jspecify.nullness.NullMarked", state)
           && (!beingConservative
-              || sym.packge().fullname.startsWith(COM_GOOGLE_COMMON_PREFIX_NAME.get(state)))) {
+              || enclosingPackage(sym)
+                  .fullname
+                  .startsWith(COM_GOOGLE_COMMON_PREFIX_NAME.get(state)))) {
         return true;
       }
     }

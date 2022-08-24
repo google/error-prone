@@ -20,6 +20,7 @@ import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
+import static com.google.errorprone.util.ASTHelpers.isStatic;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
 
 import com.google.errorprone.BugPattern;
@@ -109,7 +110,7 @@ public final class StaticAssignmentOfThrowable extends BugChecker
         Symbol variableSymbol = getSymbol(assignmentTree.getVariable());
         Type variableType = getType(assignmentTree.getVariable());
         if (variableSymbol != null
-            && variableSymbol.isStatic()
+            && isStatic(variableSymbol)
             && isSubtype(variableType, throwableType, state)) {
           state.reportMatch(describeMatch(assignmentTree));
         }
