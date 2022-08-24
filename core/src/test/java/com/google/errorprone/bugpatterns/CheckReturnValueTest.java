@@ -66,7 +66,7 @@ public class CheckReturnValueTest {
             "    return \"string\";",
             "  }",
             "  public void doIt() {",
-            "    // BUG: Diagnostic contains:",
+            "    // BUG: Diagnostic contains: CheckReturnValue",
             "    getString();",
             "  }",
             "}")
@@ -119,7 +119,7 @@ public class CheckReturnValueTest {
             "Test.java",
             "class Test {",
             "  void m() {",
-            "    // BUG: Diagnostic contains: ",
+            "    // BUG: Diagnostic contains: CheckReturnValue",
             "    lib.Lib.f();",
             "  }",
             "}")
@@ -140,7 +140,7 @@ public class CheckReturnValueTest {
             "Test.java",
             "class Test {",
             "  void m() {",
-            "    // BUG: Diagnostic contains: ",
+            "    // BUG: Diagnostic contains: CheckReturnValue",
             "    lib.Lib.f();",
             "  }",
             "}")
@@ -179,7 +179,7 @@ public class CheckReturnValueTest {
             "package lib;",
             "@com.google.errorprone.annotations.CheckReturnValue",
             "public class Test {",
-            "  // BUG: Diagnostic contains:",
+            "  // BUG: Diagnostic contains: CheckReturnValue",
             "  // @CheckReturnValue may not be applied to void-returning methods",
             "  @com.google.errorprone.annotations.CheckReturnValue public static void f() {}",
             "}")
@@ -194,7 +194,7 @@ public class CheckReturnValueTest {
             "package lib;",
             "@com.google.errorprone.annotations.CheckReturnValue",
             "public class Test {",
-            "  // BUG: Diagnostic contains:",
+            "  // BUG: Diagnostic contains: CheckReturnValue",
             "  // @CheckReturnValue may not be applied to void-returning methods",
             "  @com.google.errorprone.annotations.CheckReturnValue public static Void f() {",
             "    return null;",
@@ -286,7 +286,7 @@ public class CheckReturnValueTest {
             "package lib;",
             "@com.google.errorprone.annotations.CheckReturnValue",
             "public class Test {",
-            "  // BUG: Diagnostic contains:",
+            "  // BUG: Diagnostic contains: CheckReturnValue",
             "  // @CanIgnoreReturnValue may not be applied to void-returning methods",
             "  @com.google.errorprone.annotations.CanIgnoreReturnValue public static void f() {}",
             "}")
@@ -311,7 +311,7 @@ public class CheckReturnValueTest {
             "Test.java",
             "class Test {",
             "  void m() {",
-            "    // BUG: Diagnostic contains: ",
+            "    // BUG: Diagnostic contains: CheckReturnValue",
             "    lib.Lib.Inner.InnerMost.f();",
             "  }",
             "}")
@@ -537,7 +537,7 @@ public class CheckReturnValueTest {
             "      foo.f(); ",
             "   });",
             "   org.junit.Assert.assertThrows(IllegalStateException.class, () -> { ",
-            "     // BUG: Diagnostic contains: ",
+            "     // BUG: Diagnostic contains: CheckReturnValue",
             "     foo.f(); ",
             "     foo.f(); ",
             "   });",
@@ -591,13 +591,13 @@ public class CheckReturnValueTest {
             "import static org.junit.Assert.fail;",
             "class Test {",
             "  void f(Foo foo) {",
-            "    // BUG: Diagnostic contains: ",
+            "    // BUG: Diagnostic contains: CheckReturnValue",
             "    foo.f();",
             "    org.junit.Assert.fail();",
-            "    // BUG: Diagnostic contains: ",
+            "    // BUG: Diagnostic contains: CheckReturnValue",
             "    foo.f();",
             "    junit.framework.Assert.fail();",
-            "    // BUG: Diagnostic contains: ",
+            "    // BUG: Diagnostic contains: CheckReturnValue",
             "    foo.f();",
             "    junit.framework.TestCase.fail();",
             "  }",
@@ -663,7 +663,7 @@ public class CheckReturnValueTest {
             "Test.java",
             "class Test {",
             "  void m() {",
-            "    // BUG: Diagnostic contains: ",
+            "    // BUG: Diagnostic contains: CheckReturnValue",
             "    com.google.errorprone.bugpatterns.CheckReturnValueTest.CRVTest.f();",
             "  }",
             "}")
@@ -680,7 +680,7 @@ public class CheckReturnValueTest {
             "  @com.google.errorprone.annotations.CheckReturnValue",
             "  public Test() {}",
             "  public static void foo() {",
-            "    // BUG: Diagnostic contains: ",
+            "    // BUG: Diagnostic contains: CheckReturnValue",
             "    new Test();",
             "  }",
             "}")
@@ -744,7 +744,7 @@ public class CheckReturnValueTest {
             "  @com.google.errorprone.annotations.CheckReturnValue",
             "  public Test() {}",
             "  public static void foo() {",
-            "    // BUG: Diagnostic contains: ",
+            "    // BUG: Diagnostic contains: CheckReturnValue",
             "    new Test() {};",
             "  }",
             "}")
@@ -762,7 +762,7 @@ public class CheckReturnValueTest {
             "    public Inner() {}",
             "  }",
             "  public static void foo() {",
-            "    // BUG: Diagnostic contains: ",
+            "    // BUG: Diagnostic contains: CheckReturnValue",
             "    new Test().new Inner() {};",
             "  }",
             "}")
@@ -778,7 +778,7 @@ public class CheckReturnValueTest {
             "  @com.google.errorprone.annotations.CheckReturnValue",
             "  static class Nested {}",
             "  public static void foo() {",
-            "    // BUG: Diagnostic contains: ",
+            "    // BUG: Diagnostic contains: CheckReturnValue",
             "    new Nested() {};", // The "called" constructor is synthetic, but within @CRV Nested
             "  }",
             "}")
@@ -834,7 +834,7 @@ public class CheckReturnValueTest {
             "Test.java",
             "class Test {",
             "  void f() {",
-            "    // BUG: Diagnostic contains: ",
+            "    // BUG: Diagnostic contains: CheckReturnValue",
             "    Runnable ignoresResult = Foo::new;",
             "  }",
             "}")
@@ -849,7 +849,7 @@ public class CheckReturnValueTest {
             "class Test {",
             "  public Test() {}",
             "  public static void foo() {",
-            "    // BUG: Diagnostic contains: ",
+            "    // BUG: Diagnostic contains: CheckReturnValue",
             "    new Test();",
             "  }",
             "}")
@@ -864,7 +864,7 @@ public class CheckReturnValueTest {
             "class Test {",
             "  public int bar() { return 42; }",
             "  public static void foo() {",
-            "    // BUG: Diagnostic contains: ",
+            "    // BUG: Diagnostic contains: CheckReturnValue",
             "    new Test().bar();",
             "  }",
             "}")
@@ -880,7 +880,7 @@ public class CheckReturnValueTest {
             "class Test {",
             "  public static void foo(List<Integer> x) {",
             "    x.add(42);",
-            "    // BUG: Diagnostic contains: ",
+            "    // BUG: Diagnostic contains: CheckReturnValue",
             "    x.get(0);",
             "  }",
             "}")
@@ -904,12 +904,12 @@ public class CheckReturnValueTest {
             "  @Test(expected = IllegalArgumentException.class) ",
             "  public void fooWith2Statements() {",
             "    Foo f = new Foo();",
-            "    // BUG: Diagnostic contains: ",
+            "    // BUG: Diagnostic contains: CheckReturnValue",
             "    new Foo();", // Not OK if there is more than one statement in the block.
             "  }",
             "  @Test(expected = Test.None.class) ", // This is a weird way to spell the default
             "  public void fooWithNone() {",
-            "    // BUG: Diagnostic contains: ",
+            "    // BUG: Diagnostic contains: CheckReturnValue",
             "    new Foo();",
             "  }",
             "}")
@@ -946,7 +946,50 @@ public class CheckReturnValueTest {
             "  static void testAnimal() {",
             "    Animal.Builder builder = Animal.builder();",
             "    builder.setNumberOfLegs(4);", // AutoValue.Builder setters are implicitly @CIRV
-            "    // BUG: Diagnostic contains: ",
+            "    // BUG: Diagnostic contains: CheckReturnValue",
+            "    builder.build();",
+            "  }",
+            "}")
+        .setArgs(ImmutableList.of("-processor", AutoValueProcessor.class.getName()))
+        .doTest();
+  }
+
+  @Test
+  public void testAutoValueBuilderSetterMethodsOnInterface() {
+    compilationHelper
+        .addSourceLines(
+            "Animal.java",
+            "package com.google.frobber;",
+            "import com.google.auto.value.AutoValue;",
+            "import com.google.errorprone.annotations.CheckReturnValue;",
+            "@AutoValue",
+            "@CheckReturnValue",
+            "abstract class Animal {",
+            "  abstract String name();",
+            "  abstract int numberOfLegs();",
+            "  static Builder builder() {",
+            "    return new AutoValue_Animal.Builder();",
+            "  }",
+            "  @AutoValue.Builder",
+            "  interface Builder {",
+            "    Builder setName(String value);",
+            "    Builder setNumberOfLegs(int numberOfLegs);",
+            "    default Builder defaultMethod(int value) {",
+            "      return new AutoValue_Animal.Builder();",
+            "    }",
+            "    Animal build();",
+            "  }",
+            "}")
+        .addSourceLines(
+            "AnimalCaller.java",
+            "package com.google.frobber;",
+            "public final class AnimalCaller {",
+            "  static void testAnimal() {",
+            "    Animal.Builder builder = Animal.builder();",
+            "    builder.setName(\"Stumpy\");", // AutoValue.Builder setters are implicitly @CIRV
+            // TODO(b/243591158): we can't be sure that the default method returns this!
+            "    builder.defaultMethod(4);",
+            "    // BUG: Diagnostic contains: CheckReturnValue",
             "    builder.build();",
             "  }",
             "}")
@@ -972,11 +1015,11 @@ public class CheckReturnValueTest {
             "public final class AnimalCaller {",
             "  static void testAnimal() {",
             "    Animal a = new AutoValue_Animal(\"dog\", 4);",
-            "    // BUG: Diagnostic contains: ",
+            "    // BUG: Diagnostic contains: CheckReturnValue",
             "    a.numberOfLegs();",
             "", // And test usages where the static type is the generated class, too:
             "    AutoValue_Animal b = new AutoValue_Animal(\"dog\", 4);",
-            "    // BUG: Diagnostic contains: ",
+            "    // BUG: Diagnostic contains: CheckReturnValue",
             "    b.numberOfLegs();",
             "  }",
             "}")
@@ -1013,15 +1056,15 @@ public class CheckReturnValueTest {
             "package com.google.frobber;",
             "public final class PersonCaller {",
             "  static void testPersonBuilder() {",
-            "    // BUG: Diagnostic contains: ",
+            "    // BUG: Diagnostic contains: CheckReturnValue",
             "    PersonBuilder.personBuilder();",
             "    PersonBuilder builder = PersonBuilder.personBuilder();",
             "    builder.setName(\"kurt\");", // AutoBuilder setters are implicitly @CIRV
             "    builder.setId(42);", // AutoBuilder setters are implicitly @CIRV
-            "    // BUG: Diagnostic contains: ",
+            "    // BUG: Diagnostic contains: CheckReturnValue",
             "    builder.build();",
             "", // And test usages where the static type is the generated class, too:
-            "    // BUG: Diagnostic contains: ",
+            "    // BUG: Diagnostic contains: CheckReturnValue",
             "    new AutoBuilder_PersonBuilder().build();",
             "  }",
             "}")
@@ -1061,7 +1104,7 @@ public class CheckReturnValueTest {
             "import java.util.logging.Level;",
             "public final class LogCaller {",
             "  static void testLogCaller() {",
-            "    // BUG: Diagnostic contains: ",
+            "    // BUG: Diagnostic contains: CheckReturnValue",
             "    Caller.logCaller();",
             "    Caller caller = Caller.logCaller();",
             "    caller.setMessage(\"hi\");", // AutoBuilder setters are implicitly @CIRV
@@ -1082,9 +1125,9 @@ public class CheckReturnValueTest {
             "import java.util.regex.Pattern;",
             "class Test {",
             "  public static void foo(List<Integer> list, Pattern pattern) {",
-            "    // BUG: Diagnostic contains: ",
+            "    // BUG: Diagnostic contains: CheckReturnValue",
             "    list.get(0);",
-            "    // BUG: Diagnostic contains: ",
+            "    // BUG: Diagnostic contains: CheckReturnValue",
             "    pattern.matcher(\"blah\");",
             "  }",
             "}")
@@ -1100,7 +1143,7 @@ public class CheckReturnValueTest {
             "import java.util.regex.Pattern;",
             "class Test {",
             "  public static void foo(List<Integer> list, Pattern pattern) {",
-            "    // BUG: Diagnostic contains: ",
+            "    // BUG: Diagnostic contains: CheckReturnValue",
             "    list.get(0);",
             "    pattern.matcher(\"blah\");",
             "  }",
@@ -1121,10 +1164,10 @@ public class CheckReturnValueTest {
             "import java.util.regex.PatternSyntaxException;",
             "class Test {",
             "  public static void foo(List<Integer> list, Pattern pattern) {",
-            "    // BUG: Diagnostic contains: ",
+            "    // BUG: Diagnostic contains: CheckReturnValue",
             "    list.get(0);",
             "    pattern.matcher(\"blah\");",
-            "    // BUG: Diagnostic contains: ",
+            "    // BUG: Diagnostic contains: CheckReturnValue",
             "    new PatternSyntaxException(\"\", \"\", 0);",
             "  }",
             "}")
