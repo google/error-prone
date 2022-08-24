@@ -987,7 +987,7 @@ public class CheckReturnValueTest {
             "  static void testAnimal() {",
             "    Animal.Builder builder = Animal.builder();",
             "    builder.setName(\"Stumpy\");", // AutoValue.Builder setters are implicitly @CIRV
-            // TODO(b/243591158): we can't be sure that the default method returns this!
+            "    // BUG: Diagnostic contains: CheckReturnValue",
             "    builder.defaultMethod(4);",
             "    // BUG: Diagnostic contains: CheckReturnValue",
             "    builder.build();",
