@@ -43,7 +43,7 @@ public class ASTHelpersSuggestions extends BugChecker implements MethodInvocatio
   private static final Matcher<ExpressionTree> SYMBOL =
       instanceMethod()
           .onExactClass("com.sun.tools.javac.code.Symbol")
-          .namedAnyOf("isLocal", "packge", "isStatic");
+          .namedAnyOf("isDirectlyOrIndirectlyLocal", "isLocal", "packge", "isStatic");
 
   private static final Matcher<ExpressionTree> SCOPE =
       instanceMethod().onDescendantOf("com.sun.tools.javac.code.Scope");
@@ -51,7 +51,7 @@ public class ASTHelpersSuggestions extends BugChecker implements MethodInvocatio
   private static final ImmutableMap<String, String> NAMES =
       ImmutableMap.of(
           "packge", "enclosingPackage",
-          "isLocal", "isDirectlyOrIndirectlyLocal");
+          "isDirectlyOrIndirectlyLocal", "isLocal");
 
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
