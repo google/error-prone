@@ -1,4 +1,4 @@
-Direct invocations on [mocks](mockito) should be avoided in tests.
+Direct invocations on [mocks] should be avoided in tests.
 
 When you call a method on a mock, the call normally does only what you have
 configured it to do (through calls to `when(...).thenReturn/thenAnswer`, etc.)
@@ -45,4 +45,4 @@ similar to if the test had called those methods directly. Sometimes, the method
 will have other effects. Both kinds of effects can be confusing, so prefer to
 avoid such calls when possible.
 
-[mockito]: https://site.mockito.org/
+[mocks]: https://site.mockito.org/
