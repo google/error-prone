@@ -113,10 +113,7 @@ public final class AutoValueRules {
        */
       return concat(Stream.of(method), streamSuperMethods(method, state.getTypes()))
           .filter(
-              m ->
-                  // TODO(b/243591158): stop passing `state` here
-                  isAbstract(m, state)
-                      && hasAnnotation(enclosingClass(m), qualifiedAnnotation, state))
+              m -> isAbstract(m) && hasAnnotation(enclosingClass(m), qualifiedAnnotation, state))
           .findFirst()
           .map(methodSymbol -> autoMethodPolicy(methodSymbol, enclosingClass(methodSymbol), state));
     }
