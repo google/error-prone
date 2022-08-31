@@ -17,11 +17,12 @@
 package com.google.errorprone.bugpatterns.checkreturnvalue;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.errorprone.util.ASTHelpers.isSubtype;
+import static com.google.errorprone.predicates.TypePredicates.isDescendantOfAny;
 
+import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.checkreturnvalue.ResultUseRule.MethodRule;
-import com.google.errorprone.suppliers.Supplier;
+import com.google.errorprone.predicates.TypePredicate;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Type;
 import java.util.Optional;
@@ -37,7 +38,9 @@ public final class ProtoRules {
    * ignorable.
    */
   public static ResultUseRule protoBuilders() {
-    return new ProtoRule(supplier("com.google.protobuf.MessageLite.Builder"), "PROTO_BUILDER");
+    return new ProtoRule(
+        isDescendantOfAny(ImmutableSet.of("com.google.protobuf.MessageLite.Builder")),
+        "PROTO_BUILDER");
   }
 
   /**
@@ -46,7 +49,8 @@ public final class ProtoRules {
    */
   public static ResultUseRule mutableProtos() {
     return new ProtoRule(
-        supplier("com.google.protobuf.AbstractMutableMessageLite"), "MUTABLE_PROTO");
+        isDescendantOfAny(ImmutableSet.of("com.google.protobuf.AbstractMutableMessageLite")),
+        "MUTABLE_PROTO");
   }
 
   // TODO(cgdecker): Move proto rules from IgnoredPureGetter and ReturnValueIgnored here
@@ -58,11 +62,11 @@ public final class ProtoRules {
     private static final Pattern NAMED_MUTATOR_METHOD =
         Pattern.compile("(add|clear|insert|merge|remove|set|put).*");
 
-    private final Supplier<Type> parentType;
+    private final TypePredicate typePredicate;
     private final String id;
 
-    ProtoRule(Supplier<Type> parentType, String id) {
-      this.parentType = checkNotNull(parentType);
+    ProtoRule(TypePredicate typePredicate, String id) {
+      this.typePredicate = checkNotNull(typePredicate);
       this.id = checkNotNull(id);
     }
 
@@ -73,6 +77,11 @@ public final class ProtoRules {
 
     @Override
     public Optional<ResultUsePolicy> evaluateMethod(MethodSymbol method, VisitorState state) {
+      /*
+       * TODO(cpovirk): Would it be faster to check the method name before checking the type
+       * hierarchy, at least if we could do so without converting from Name to String and without
+       * using regex matching?
+       */
       if (isProtoSubtype(method.owner.type, state)) {
         String methodName = method.name.toString();
         if (NAMED_MUTATOR_METHOD.matcher(methodName).matches()) {
@@ -86,7 +95,7 @@ public final class ProtoRules {
     }
 
     private boolean isProtoSubtype(Type ownerType, VisitorState state) {
-      return isSubtype(ownerType, parentType.get(state), state);
+      return typePredicate.apply(ownerType, state);
     }
 
     private static boolean isMutatingAccessorMethod(String name) {
@@ -100,9 +109,5 @@ public final class ProtoRules {
       }
       return false;
     }
-  }
-
-  private static Supplier<Type> supplier(String name) {
-    return VisitorState.memoize(s -> s.getTypeFromString(name));
   }
 }
