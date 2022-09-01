@@ -2,7 +2,7 @@
 title: ParameterComment
 summary: Non-standard parameter comment; prefer `/* paramName= */ arg`
 layout: bugpattern
-tags: Style
+tags: ''
 severity: SUGGESTION
 ---
 
