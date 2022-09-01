@@ -23,7 +23,6 @@ import static com.google.errorprone.matchers.Description.NO_MATCH;
 
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.StandardTags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.NewClassTreeMatcher;
@@ -44,8 +43,7 @@ import java.util.stream.Stream;
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
     summary = "Non-standard parameter comment; prefer `/* paramName= */ arg`",
-    severity = SUGGESTION,
-    tags = StandardTags.STYLE)
+    severity = SUGGESTION)
 public class ParameterComment extends BugChecker
     implements MethodInvocationTreeMatcher, NewClassTreeMatcher {
 
