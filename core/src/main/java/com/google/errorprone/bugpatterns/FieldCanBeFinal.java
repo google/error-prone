@@ -69,20 +69,24 @@ public class FieldCanBeFinal extends BugChecker implements CompilationUnitTreeMa
   // TODO(cushon): consider supporting @Var as a meta-annotation
   private static final ImmutableSet<String> IMPLICIT_VAR_ANNOTATIONS =
       ImmutableSet.of(
-          "javax.inject.Inject",
+          // keep-sorted start
+          "com.beust.jcommander.Parameter",
+          "com.google.common.annotations.NonFinalForGwt",
+          "com.google.errorprone.annotations.Var",
+          "com.google.gwt.uibinder.client.UiField",
           "com.google.inject.Inject",
           "com.google.inject.testing.fieldbinder.Bind",
-          "com.google.errorprone.annotations.Var",
-          "com.google.common.annotations.NonFinalForGwt",
           "com.google.testing.junit.testparameterinjector.TestParameter",
+          "javax.inject.Inject",
+          "javax.jdo.annotations.Persistent",
+          "javax.persistence.Id",
+          "javax.xml.bind.annotation.XmlAttribute",
           "org.kohsuke.args4j.Argument",
           "org.kohsuke.args4j.Option",
           "org.mockito.Spy",
-          "javax.jdo.annotations.Persistent",
-          "javax.xml.bind.annotation.XmlAttribute",
-          "com.google.gwt.uibinder.client.UiField",
-          "com.beust.jcommander.Parameter",
-          "javax.persistence.Id");
+          "picocli.CommandLine.Option"
+          // keep-sorted end
+          );
 
   private static final String OBJECTIFY_PREFIX = "com.googlecode.objectify.";
 
