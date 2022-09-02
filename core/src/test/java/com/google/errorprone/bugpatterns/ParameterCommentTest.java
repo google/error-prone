@@ -237,4 +237,21 @@ public class ParameterCommentTest {
         .expectNoDiagnostics()
         .doTest();
   }
+
+  @Test
+  public void matchingCommentsAfterwards() {
+    compilationTestHelper
+        .addSourceLines(
+            "Test.java",
+            "import static com.google.common.truth.Truth.assertThat;",
+            "class Test {",
+            "  public Test a(int a) { return this; }",
+            "  public int b(int b) { return 1; }",
+            "  public void test(Test x) {",
+            "    assertThat(x.a(/* a= */ 1).b(/* b= */ 0)).isEqualTo(1);",
+            "    assertThat(x.a(/* a= */ 2).b(/* b= */ 0)).isEqualTo(1);",
+            "  }",
+            "}")
+        .doTest();
+  }
 }
