@@ -1,6 +1,6 @@
 ---
 title: NonRuntimeAnnotation
-summary: Calling getAnnotation on an annotation that is not retained at runtime.
+summary: Calling getAnnotation on an annotation that is not retained at runtime
 layout: bugpattern
 tags: ''
 severity: ERROR

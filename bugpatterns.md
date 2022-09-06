@@ -375,7 +375,7 @@ __[NonFinalCompileTimeConstant](bugpattern/NonFinalCompileTimeConstant)__<br>
 @CompileTimeConstant parameters should be final or effectively final
 
 __[NonRuntimeAnnotation](bugpattern/NonRuntimeAnnotation)__<br>
-Calling getAnnotation on an annotation that is not retained at runtime.
+Calling getAnnotation on an annotation that is not retained at runtime
 
 __[NullArgumentForNonNullParameter](bugpattern/NullArgumentForNonNullParameter)__<br>
 Null is not permitted for this parameter.
