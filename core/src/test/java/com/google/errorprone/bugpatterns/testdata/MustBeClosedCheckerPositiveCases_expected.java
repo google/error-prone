@@ -53,7 +53,7 @@ class MustBeClosedCheckerPositiveCases {
 
     void sameClass() {
       // BUG: Diagnostic contains:
-      try (Closeable closeable = mustBeClosedAnnotatedMethod()) {}
+      try (var closeable = mustBeClosedAnnotatedMethod()) {}
     }
   }
 
@@ -64,14 +64,13 @@ class MustBeClosedCheckerPositiveCases {
 
     void sameClass() {
       // BUG: Diagnostic contains:
-      try (MustBeClosedAnnotatedConstructor mustBeClosedAnnotatedConstructor =
-          new MustBeClosedAnnotatedConstructor()) {}
+      try (var mustBeClosedAnnotatedConstructor = new MustBeClosedAnnotatedConstructor()) {}
     }
   }
 
   void positiveCase1() {
     // BUG: Diagnostic contains:
-    try (Closeable closeable = new Foo().mustBeClosedAnnotatedMethod()) {}
+    try (var closeable = new Foo().mustBeClosedAnnotatedMethod()) {}
   }
 
   void positiveCase2() {
@@ -82,7 +81,7 @@ class MustBeClosedCheckerPositiveCases {
   void positiveCase3() {
     try {
       // BUG: Diagnostic contains:
-      try (Closeable closeable = new Foo().mustBeClosedAnnotatedMethod()) {}
+      try (var closeable = new Foo().mustBeClosedAnnotatedMethod()) {}
     } finally {
     }
   }
@@ -90,14 +89,13 @@ class MustBeClosedCheckerPositiveCases {
   void positiveCase4() {
     try (Closeable c = new Foo().mustBeClosedAnnotatedMethod()) {
       // BUG: Diagnostic contains:
-      try (Closeable closeable = new Foo().mustBeClosedAnnotatedMethod()) {}
+      try (var closeable = new Foo().mustBeClosedAnnotatedMethod()) {}
     }
   }
 
   void positiveCase5() {
     // BUG: Diagnostic contains:
-    try (MustBeClosedAnnotatedConstructor mustBeClosedAnnotatedConstructor =
-        new MustBeClosedAnnotatedConstructor()) {}
+    try (var mustBeClosedAnnotatedConstructor = new MustBeClosedAnnotatedConstructor()) {}
   }
 
   @MustBeClosed
@@ -152,7 +150,7 @@ class MustBeClosedCheckerPositiveCases {
 
   void subexpression() {
     // BUG: Diagnostic contains:
-    try (Closeable closeable = new Foo().mustBeClosedAnnotatedMethod()) {
+    try (var closeable = new Foo().mustBeClosedAnnotatedMethod()) {
       closeable.method();
     }
   }
@@ -160,7 +158,7 @@ class MustBeClosedCheckerPositiveCases {
   void ternary(boolean condition) {
     // BUG: Diagnostic contains:
     int result;
-    try (Closeable closeable = new Foo().mustBeClosedAnnotatedMethod()) {
+    try (var closeable = new Foo().mustBeClosedAnnotatedMethod()) {
       result = condition ? closeable.method() : 0;
     }
   }
@@ -168,7 +166,7 @@ class MustBeClosedCheckerPositiveCases {
   int variableDeclaration() {
     // BUG: Diagnostic contains:
     int result;
-    try (Closeable closeable = new Foo().mustBeClosedAnnotatedMethod()) {
+    try (var closeable = new Foo().mustBeClosedAnnotatedMethod()) {
       result = closeable.method();
     }
     return result;
@@ -182,7 +180,7 @@ class MustBeClosedCheckerPositiveCases {
   void forLoopConditionUnfixable() {
     // TODO(b/236715080): suggested fix changes behavior.
     // BUG: Diagnostic contains:
-    try (final Closeable closeable = new Foo().mustBeClosedAnnotatedMethod()) {
+    try (final var closeable = new Foo().mustBeClosedAnnotatedMethod()) {
       for (int i = 0; i < closeable.method(); ++i) {}
     }
   }
