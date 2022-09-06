@@ -38,7 +38,7 @@ import com.sun.tools.javac.code.Type;
  * @author scottjohnson@google.com (Scott Johnson)
  */
 @BugPattern(
-    summary = "Calling getAnnotation on an annotation that is not retained at runtime.",
+    summary = "Calling getAnnotation on an annotation that is not retained at runtime",
     severity = ERROR)
 public class NonRuntimeAnnotation extends BugChecker implements MethodInvocationTreeMatcher {
 

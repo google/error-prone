@@ -25,7 +25,7 @@ import java.lang.annotation.RetentionPolicy;
 public class NonRuntimeAnnotationPositiveCases {
 
   public NonRuntime testAnnotation() {
-    // BUG: Diagnostic contains:
+    // BUG: Diagnostic contains: runtime; NonRuntime
     NonRuntimeAnnotationPositiveCases.class.getAnnotation(
         NonRuntimeAnnotationPositiveCases.NonRuntime.class);
     // BUG: Diagnostic contains:
