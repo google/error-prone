@@ -110,6 +110,13 @@ class MustBeClosedCheckerPositiveCases {
     return new Foo().mustBeClosedAnnotatedMethod();
   }
 
+  int existingDeclarationUsesVar() {
+    // Bug: Diagnostic contains:
+    try (var result = new Foo().mustBeClosedAnnotatedMethod()) {
+      return 0;
+    }
+  }
+
   void voidLambda() {
     // Lambda has a fixless finding because no reasonable fix can be suggested.
     // BUG: Diagnostic contains:

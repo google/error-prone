@@ -65,6 +65,7 @@ import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type;
+import com.sun.tools.javac.util.Position;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Objects;
@@ -412,6 +413,10 @@ public abstract class AbstractMustBeClosedChecker extends BugChecker {
     if (enclosingBlock == null) {
       return Optional.empty();
     }
+    Tree declTree = decl.getType();
+    String declType =
+        state.getEndPosition(declTree) == Position.NOPOS ? "var" : state.getSourceForNode(declTree);
+
     return Optional.of(
         new TryBlock(
             enclosingBlock,
@@ -420,9 +425,7 @@ public abstract class AbstractMustBeClosedChecker extends BugChecker {
                     decl,
                     String.format(
                         "try (%s %s = %s) {",
-                        state.getSourceForNode(decl.getType()),
-                        decl.getName(),
-                        state.getSourceForNode(decl.getInitializer())))
+                        declType, decl.getName(), state.getSourceForNode(decl.getInitializer())))
                 .delete(decl)));
   }
 
