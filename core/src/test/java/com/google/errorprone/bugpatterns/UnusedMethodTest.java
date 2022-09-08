@@ -464,4 +464,18 @@ public final class UnusedMethodTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void effectivelyPrivateMethodMadeVisible() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  private class A {",
+            "    public void foo() {}",
+            "  }",
+            "  public class B extends A {}",
+            "}")
+        .doTest();
+  }
 }

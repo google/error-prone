@@ -66,6 +66,7 @@ import com.sun.source.util.TreePath;
 import com.sun.source.util.TreePathScanner;
 import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.code.Symbol;
+import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.TypeSymbol;
 import com.sun.tools.javac.code.Type;
@@ -76,6 +77,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.Name;
@@ -132,6 +134,8 @@ public final class UnusedMethod extends BugChecker implements CompilationUnitTre
     }
     AtomicBoolean ignoreUnusedMethods = new AtomicBoolean(false);
 
+    ImmutableSet<ClassSymbol> classesMadeVisible = getVisibleClasses(tree);
+
     class MethodFinder extends SuppressibleTreePathScanner<Void, Void> {
       MethodFinder(VisitorState state) {
         super(state);
@@ -157,7 +161,7 @@ public final class UnusedMethod extends BugChecker implements CompilationUnitTre
           // be unused. Don't warn about unusedMethods at all in this case.
           ignoreUnusedMethods.set(true);
         }
-        if (isMethodSymbolEligibleForChecking(tree)) {
+        if (isMethodSymbolEligibleForChecking(tree, classesMadeVisible)) {
           unusedMethods.put(getSymbol(tree), getCurrentPath());
         }
         return super.visitMethod(tree, unused);
@@ -196,7 +200,8 @@ public final class UnusedMethod extends BugChecker implements CompilationUnitTre
         return false;
       }
 
-      private boolean isMethodSymbolEligibleForChecking(MethodTree tree) {
+      private boolean isMethodSymbolEligibleForChecking(
+          MethodTree tree, Set<ClassSymbol> classesMadeVisible) {
         if (exemptedByName(tree.getName())) {
           return false;
         }
@@ -208,6 +213,11 @@ public final class UnusedMethod extends BugChecker implements CompilationUnitTre
           return false;
         }
         MethodSymbol methodSymbol = getSymbol(tree);
+        if (!methodSymbol.isPrivate()
+            && classesMadeVisible.stream()
+                .anyMatch(t -> isSubtype(t.type, methodSymbol.owner.type, state))) {
+          return false;
+        }
         if (isExemptedConstructor(methodSymbol, state)
             || isGeneratedConstructor(tree)
             || SERIALIZATION_METHODS.matches(tree, state)) {
@@ -339,6 +349,21 @@ public final class UnusedMethod extends BugChecker implements CompilationUnitTre
     fixConstructors(unusedConstructors, state);
 
     return Description.NO_MATCH;
+  }
+
+  private ImmutableSet<ClassSymbol> getVisibleClasses(CompilationUnitTree tree) {
+    ImmutableSet.Builder<ClassSymbol> classesMadeVisible = ImmutableSet.builder();
+    new TreePathScanner<Void, Void>() {
+      @Override
+      public Void visitClass(ClassTree tree, Void unused) {
+        var symbol = getSymbol(tree);
+        if (!canBeRemoved(symbol)) {
+          classesMadeVisible.add(symbol);
+        }
+        return super.visitClass(tree, null);
+      }
+    }.scan(tree, null);
+    return classesMadeVisible.build();
   }
 
   private void fixNonConstructors(Iterable<TreePath> unusedPaths, VisitorState state) {
