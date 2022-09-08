@@ -16,14 +16,28 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.common.base.Suppliers.memoize;
 import static com.google.common.collect.Multimaps.toMultimap;
+import static com.google.errorprone.fixes.SuggestedFix.delete;
+import static com.google.errorprone.fixes.SuggestedFix.emptyFix;
+import static com.google.errorprone.fixes.SuggestedFix.prefixWith;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.allOf;
+import static com.google.errorprone.matchers.Matchers.isThrowingFunctionalInterface;
 import static com.google.errorprone.matchers.Matchers.not;
 import static com.google.errorprone.matchers.Matchers.parentNode;
+import static com.google.errorprone.util.ASTHelpers.enclosingClass;
+import static com.google.errorprone.util.ASTHelpers.getResultType;
+import static com.google.errorprone.util.ASTHelpers.getReturnType;
+import static com.google.errorprone.util.ASTHelpers.getRootAssignable;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
+import static com.google.errorprone.util.ASTHelpers.getType;
+import static com.google.errorprone.util.ASTHelpers.getTypeSubstitution;
+import static com.google.errorprone.util.ASTHelpers.getUpperBound;
+import static com.google.errorprone.util.ASTHelpers.isSubtype;
+import static com.google.errorprone.util.ASTHelpers.isVoidType;
+import static java.lang.String.format;
 
-import com.google.common.base.Suppliers;
 import com.google.common.collect.ImmutableListMultimap;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
@@ -37,12 +51,9 @@ import com.google.errorprone.bugpatterns.BugChecker.NewClassTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.ReturnTreeMatcher;
 import com.google.errorprone.bugpatterns.threadsafety.ConstantExpressions;
 import com.google.errorprone.fixes.Fix;
-import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
-import com.google.errorprone.matchers.Matchers;
 import com.google.errorprone.matchers.UnusedReturnValueMatcher;
-import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionStatementTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.LambdaExpressionTree;
@@ -60,7 +71,6 @@ import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.TypeTag;
 import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
 import com.sun.tools.javac.tree.JCTree.JCIdent;
-import com.sun.tools.javac.tree.JCTree.JCMethodInvocation;
 import java.lang.reflect.InvocationHandler;
 import java.util.ArrayDeque;
 import java.util.HashSet;
@@ -91,18 +101,18 @@ public abstract class AbstractReturnValueIgnored extends BugChecker
         NewClassTreeMatcher {
 
   private final Supplier<UnusedReturnValueMatcher> unusedReturnValueMatcher =
-      Suppliers.memoize(() -> UnusedReturnValueMatcher.get(allowInExceptionThrowers()));
+      memoize(() -> UnusedReturnValueMatcher.get(allowInExceptionThrowers()));
 
   private final Supplier<Matcher<ExpressionTree>> matcher =
-      Suppliers.memoize(() -> allOf(unusedReturnValueMatcher.get(), this::isCheckReturnValue));
+      memoize(() -> allOf(unusedReturnValueMatcher.get(), this::isCheckReturnValue));
 
   private final Supplier<Matcher<MemberReferenceTree>> lostReferenceTreeMatcher =
-      Suppliers.memoize(
+      memoize(
           () ->
               allOf(
-                  AbstractReturnValueIgnored::isObjectReturningMethodReferenceExpression,
-                  not((t, s) -> isExemptedInterfaceType(ASTHelpers.getType(t), s)),
-                  not((t, s) -> Matchers.isThrowingFunctionalInterface(ASTHelpers.getType(t), s)),
+                  (t, s) -> isObjectReturningMethodReferenceExpression(t, s),
+                  not((t, s) -> isExemptedInterfaceType(getType(t), s)),
+                  not((t, s) -> isThrowingFunctionalInterface(getType(t), s)),
                   specializedMatcher()));
 
   private final ConstantExpressions constantExpressions;
@@ -183,8 +193,7 @@ public abstract class AbstractReturnValueIgnored extends BugChecker
   }
 
   protected String lostTypeMessage(String returnedType, String declaredReturnType) {
-    return String.format(
-        "Returning %s from method that returns %s.", returnedType, declaredReturnType);
+    return format("Returning %s from method that returns %s.", returnedType, declaredReturnType);
   }
 
   /**
@@ -208,8 +217,10 @@ public abstract class AbstractReturnValueIgnored extends BugChecker
   }
 
   final Fix makeFix(MethodInvocationTree methodInvocationTree, VisitorState state) {
+    Type returnType = getReturnType(methodInvocationTree.getMethodSelect());
     // Find the root of the field access chain, i.e. a.intern().trim() ==> a.
-    ExpressionTree identifierExpr = ASTHelpers.getRootAssignable(methodInvocationTree);
+    ExpressionTree identifierExpr = getRootAssignable(methodInvocationTree);
+    Symbol symbol = getSymbol(identifierExpr);
     Type identifierType = null;
     if (identifierExpr != null) {
       if (identifierExpr instanceof JCIdent) {
@@ -221,29 +232,22 @@ public abstract class AbstractReturnValueIgnored extends BugChecker
       }
     }
 
-    Type returnType =
-        ASTHelpers.getReturnType(((JCMethodInvocation) methodInvocationTree).getMethodSelect());
-
-    Fix fix = SuggestedFix.emptyFix();
-    Symbol symbol = getSymbol(identifierExpr);
     if (identifierExpr != null
         && symbol != null
         && !symbol.name.contentEquals("this")
         && returnType != null
         && state.getTypes().isAssignable(returnType, identifierType)) {
-      // Fix by assigning the assigning the result of the call to the root receiver reference.
-      fix =
-          SuggestedFix.prefixWith(
-              methodInvocationTree, state.getSourceForNode(identifierExpr) + " = ");
+      // Fix by assigning the result of the call to the root receiver reference.
+      return prefixWith(methodInvocationTree, state.getSourceForNode(identifierExpr) + " = ");
     } else {
       // Unclear what the programmer intended.  Delete since we don't know what else to do.
       Tree parent = state.getPath().getParentPath().getLeaf();
       if (parent instanceof ExpressionStatementTree
           && constantExpressions.constantExpression(methodInvocationTree, state).isPresent()) {
-        fix = SuggestedFix.delete(parent);
+        return delete(parent);
       }
     }
-    return fix;
+    return emptyFix();
   }
 
   /**
@@ -266,7 +270,7 @@ public abstract class AbstractReturnValueIgnored extends BugChecker
   protected Description describeReturnValueIgnored(NewClassTree newClassTree, VisitorState state) {
     return buildDescription(newClassTree)
         .setMessage(
-            String.format(
+            format(
                 "Ignored return value of '%s'",
                 state.getSourceForNode(newClassTree.getIdentifier())))
         .build();
@@ -292,23 +296,23 @@ public abstract class AbstractReturnValueIgnored extends BugChecker
   private Description checkLostType(MethodInvocationTree tree, VisitorState state) {
     Optional<Type> optionalType = lostType(state);
     if (!optionalType.isPresent()) {
-      return Description.NO_MATCH;
+      return NO_MATCH;
     }
 
     Type lostType = optionalType.get();
 
-    MethodSymbol sym = ASTHelpers.getSymbol(tree);
-    Type returnType = ASTHelpers.getResultType(tree);
+    MethodSymbol sym = getSymbol(tree);
+    Type returnType = getResultType(tree);
     Type returnedFutureType = state.getTypes().asSuper(returnType, lostType.tsym);
     if (returnedFutureType != null
         && !returnedFutureType.hasTag(TypeTag.ERROR) // work around error-prone#996
         && !returnedFutureType.isRaw()) {
-      if (ASTHelpers.isSubtype(
-          ASTHelpers.getUpperBound(returnedFutureType.getTypeArguments().get(0), state.getTypes()),
+      if (isSubtype(
+          getUpperBound(returnedFutureType.getTypeArguments().get(0), state.getTypes()),
           lostType,
           state)) {
         return buildDescription(tree)
-            .setMessage(String.format("Method returns a nested type, %s", returnType))
+            .setMessage(format("Method returns a nested type, %s", returnType))
             .build();
       }
 
@@ -349,10 +353,10 @@ public abstract class AbstractReturnValueIgnored extends BugChecker
         for (TypeVariableSymbol returnTypeChoosingSymbol : returnTypeChoosing) {
           List<TypeInfo> types = resolved.get(returnTypeChoosingSymbol);
           for (TypeInfo type : types) {
-            if (ASTHelpers.isSubtype(type.resolvedVariableType, lostType, state)) {
+            if (isSubtype(type.resolvedVariableType, lostType, state)) {
               return buildDescription(type.tree)
                   .setMessage(
-                      String.format(
+                      format(
                           "Invocation produces a nested type - Type variable %s, as part of return "
                               + "type %s resolved to %s.",
                           returnTypeChoosingSymbol, methodReturnType, type.resolvedVariableType))
@@ -367,12 +371,12 @@ public abstract class AbstractReturnValueIgnored extends BugChecker
                 parentNode(AbstractReturnValueIgnored::isObjectReturningLambdaExpression),
                 not(unusedReturnValueMatcher.get()::isAllowed)),
             specializedMatcher(),
-            not((t, s) -> ASTHelpers.isVoidType(ASTHelpers.getType(t), s)))
+            not((t, s) -> isVoidType(getType(t), s)))
         .matches(tree, state)) {
       return describeReturnValueIgnored(tree, state);
     }
 
-    return Description.NO_MATCH;
+    return NO_MATCH;
   }
 
   private static final class TypeInfo {
@@ -390,9 +394,9 @@ public abstract class AbstractReturnValueIgnored extends BugChecker
 
   private static ListMultimap<TypeVariableSymbol, TypeInfo> getResolvedGenerics(
       MethodInvocationTree tree) {
-    Type type = ASTHelpers.getType(tree.getMethodSelect());
+    Type type = getType(tree.getMethodSelect());
     ImmutableListMultimap<TypeVariableSymbol, Type> subst =
-        ASTHelpers.getTypeSubstitution(type, getSymbol(tree));
+        getTypeSubstitution(type, getSymbol(tree));
     return subst.entries().stream()
         .map(e -> new TypeInfo(e.getKey(), e.getValue(), tree))
         .collect(
@@ -402,7 +406,7 @@ public abstract class AbstractReturnValueIgnored extends BugChecker
 
   private static boolean isObjectReturningMethodReferenceExpression(
       MemberReferenceTree tree, VisitorState state) {
-    return functionalInterfaceReturnsObject(ASTHelpers.getType(tree), state);
+    return functionalInterfaceReturnsObject(getType(tree), state);
   }
 
   private static boolean isObjectReturningLambdaExpression(Tree tree, VisitorState state) {
@@ -410,7 +414,7 @@ public abstract class AbstractReturnValueIgnored extends BugChecker
       return false;
     }
 
-    Type type = ASTHelpers.getType(tree);
+    Type type = getType(tree);
     return functionalInterfaceReturnsObject(type, state) && !isExemptedInterfaceType(type, state);
   }
 
@@ -421,9 +425,9 @@ public abstract class AbstractReturnValueIgnored extends BugChecker
    */
   private static boolean functionalInterfaceReturnsObject(Type interfaceType, VisitorState state) {
     Type objectType = state.getSymtab().objectType;
-    return ASTHelpers.isSubtype(
+    return isSubtype(
         objectType,
-        ASTHelpers.getUpperBound(
+        getUpperBound(
             state.getTypes().findDescriptorType(interfaceType).getReturnType(), state.getTypes()),
         state);
   }
@@ -440,11 +444,11 @@ public abstract class AbstractReturnValueIgnored extends BugChecker
   private static boolean isExemptedInterfaceType(Type type, VisitorState state) {
     return EXEMPTED_TYPES.stream()
         .map(state::getTypeFromString)
-        .anyMatch(t -> ASTHelpers.isSubtype(type, t, state));
+        .anyMatch(t -> isSubtype(type, t, state));
   }
 
   private static boolean isExemptedInterfaceMethod(MethodSymbol symbol, VisitorState state) {
-    return isExemptedInterfaceType(ASTHelpers.enclosingClass(symbol).type, state);
+    return isExemptedInterfaceType(enclosingClass(symbol).type, state);
   }
 
   /** Returning a type from a lambda or method that returns Object loses the type information. */
@@ -452,24 +456,24 @@ public abstract class AbstractReturnValueIgnored extends BugChecker
   public Description matchReturn(ReturnTree tree, VisitorState state) {
     Optional<Type> optionalType = lostType(state);
     if (!optionalType.isPresent()) {
-      return Description.NO_MATCH;
+      return NO_MATCH;
     }
     Type objectType = state.getSymtab().objectType;
     Type lostType = optionalType.get();
-    Type resultType = ASTHelpers.getResultType(tree.getExpression());
+    Type resultType = getResultType(tree.getExpression());
     if (resultType == null) {
-      return Description.NO_MATCH;
+      return NO_MATCH;
     }
     if (resultType.getKind() == TypeKind.NULL || resultType.getKind() == TypeKind.NONE) {
-      return Description.NO_MATCH;
+      return NO_MATCH;
     }
-    if (ASTHelpers.isSubtype(resultType, lostType, state)) {
+    if (isSubtype(resultType, lostType, state)) {
       // Traverse enclosing nodes of this return tree until either a lambda or a Method is reached.
       for (Tree enclosing : state.getPath()) {
         if (enclosing instanceof MethodTree) {
           MethodTree methodTree = (MethodTree) enclosing;
-          MethodSymbol symbol = ASTHelpers.getSymbol(methodTree);
-          if (ASTHelpers.isSubtype(objectType, symbol.getReturnType(), state)
+          MethodSymbol symbol = getSymbol(methodTree);
+          if (isSubtype(objectType, symbol.getReturnType(), state)
               && !isExemptedInterfaceMethod(symbol, state)) {
             return buildDescription(tree)
                 .setMessage(
@@ -491,6 +495,6 @@ public abstract class AbstractReturnValueIgnored extends BugChecker
         }
       }
     }
-    return Description.NO_MATCH;
+    return NO_MATCH;
   }
 }
