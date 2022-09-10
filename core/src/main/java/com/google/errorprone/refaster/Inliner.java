@@ -227,24 +227,9 @@ public final class Inliner {
     sym.type = typeVar;
     typeVarCache.put(var.getName(), typeVar);
     // Any recursive uses of var will point to the same TypeVar object generated above.
-    setUpperBound(typeVar, var.getUpperBound().inline(this));
+    typeVar.setUpperBound(var.getUpperBound().inline(this));
     typeVar.lower = var.getLowerBound().inline(this);
     return typeVar;
-  }
-
-  private static void setUpperBound(TypeVar typeVar, Type bound) {
-    // https://bugs.openjdk.java.net/browse/JDK-8193367
-    try {
-      TypeVar.class.getMethod("setUpperBound", Type.class).invoke(typeVar, bound);
-      return;
-    } catch (ReflectiveOperationException e) {
-      // continue below
-    }
-    try {
-      TypeVar.class.getField("bound").set(typeVar, bound);
-    } catch (ReflectiveOperationException e) {
-      throw new LinkageError(e.getMessage(), e);
-    }
   }
 
   Type inlineTypeVar(UTypeVar var) throws CouldNotResolveImportException {
