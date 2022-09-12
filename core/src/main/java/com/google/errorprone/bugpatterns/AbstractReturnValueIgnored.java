@@ -28,7 +28,6 @@ import static com.google.errorprone.matchers.Matchers.not;
 import static com.google.errorprone.matchers.Matchers.parentNode;
 import static com.google.errorprone.util.ASTHelpers.enclosingClass;
 import static com.google.errorprone.util.ASTHelpers.getResultType;
-import static com.google.errorprone.util.ASTHelpers.getReturnType;
 import static com.google.errorprone.util.ASTHelpers.getRootAssignable;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
@@ -69,8 +68,6 @@ import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.TypeVariableSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.TypeTag;
-import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
-import com.sun.tools.javac.tree.JCTree.JCIdent;
 import java.lang.reflect.InvocationHandler;
 import java.util.ArrayDeque;
 import java.util.HashSet;
@@ -217,20 +214,16 @@ public abstract class AbstractReturnValueIgnored extends BugChecker
   }
 
   final Fix makeFix(MethodInvocationTree methodInvocationTree, VisitorState state) {
-    Type returnType = getReturnType(methodInvocationTree.getMethodSelect());
+    Type returnType = getType(methodInvocationTree);
     // Find the root of the field access chain, i.e. a.intern().trim() ==> a.
+    /*
+     * TODO(cpovirk): Enhance getRootAssignable to return array accesses (e.g., `x[y]`)? If we do,
+     * then we'll also need to accept `symbol == null` (which is fine, since all we need the symbol
+     * for is to check against `this`, and `x[y]` is not `this`.)
+     */
     ExpressionTree identifierExpr = getRootAssignable(methodInvocationTree);
     Symbol symbol = getSymbol(identifierExpr);
-    Type identifierType = null;
-    if (identifierExpr != null) {
-      if (identifierExpr instanceof JCIdent) {
-        identifierType = ((JCIdent) identifierExpr).sym.type;
-      } else if (identifierExpr instanceof JCFieldAccess) {
-        identifierType = ((JCFieldAccess) identifierExpr).sym.type;
-      } else {
-        throw new IllegalStateException("Expected a JCIdent or a JCFieldAccess");
-      }
-    }
+    Type identifierType = getType(identifierExpr);
 
     if (identifierExpr != null
         && symbol != null

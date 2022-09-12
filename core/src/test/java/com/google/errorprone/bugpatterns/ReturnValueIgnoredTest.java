@@ -480,7 +480,7 @@ public class ReturnValueIgnoredTest {
   }
 
   @Test
-  public void refactoring() {
+  public void refactoringDeletesConstantExpressionCall() {
     refactoringHelper
         .addInputLines(
             "Test.java",
@@ -501,6 +501,52 @@ public class ReturnValueIgnoredTest {
             "  public void f() {",
             "    Optional.of(42).orElseThrow(AssertionError::new);",
             "    Stream.of(Optional.of(42)).forEach(o -> o.orElseThrow(AssertionError::new));",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void refactoringAssignsToOriginal() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            "import java.util.Optional;",
+            "class Test {",
+            "  void f(Optional<Integer> o) {",
+            "    o.map(i -> i + 1);",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "import java.util.Optional;",
+            "class Test {",
+            "  void f(Optional<Integer> o) {",
+            "    o = o.map(i -> i + 1);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void refactoringDoesNotAssignToOriginalForTypeArgumentMismatch() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            "import java.util.Optional;",
+            "final class Test {",
+            "  public void f() {",
+            "    Optional<Integer> o = Optional.of(42);",
+            "    o.map(i -> \"value is \" + i);",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "import java.util.Optional;",
+            "final class Test {",
+            "  public void f() {",
+            "    Optional<Integer> o = Optional.of(42);",
+            "    o.map(i -> \"value is \" + i);",
             "  }",
             "}")
         .doTest();

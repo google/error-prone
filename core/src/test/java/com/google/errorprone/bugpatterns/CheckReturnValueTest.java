@@ -22,6 +22,7 @@ import com.google.auto.value.processor.AutoBuilderProcessor;
 import com.google.auto.value.processor.AutoValueProcessor;
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
+import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
 import java.io.IOException;
 import java.io.UncheckedIOException;
@@ -41,6 +42,9 @@ public class CheckReturnValueTest {
 
   private final CompilationTestHelper compilationHelper =
       CompilationTestHelper.newInstance(CheckReturnValue.class, getClass());
+
+  private final BugCheckerRefactoringTestHelper refactoringHelper =
+      BugCheckerRefactoringTestHelper.newInstance(CheckReturnValue.class, getClass());
 
   @Rule public TemporaryFolder temporaryFolder = new TemporaryFolder();
 
@@ -1169,6 +1173,37 @@ public class CheckReturnValueTest {
             "    pattern.matcher(\"blah\");",
             "    // BUG: Diagnostic contains: CheckReturnValue",
             "    new PatternSyntaxException(\"\", \"\", 0);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void refactoringAssignsToOriginalBasedOnSubstitutedTypes() {
+    refactoringHelper
+        .addInputLines(
+            "Builder.java",
+            "@com.google.errorprone.annotations.CheckReturnValue",
+            "interface Builder<B extends Builder<B>> {",
+            "  B setFoo(String s);",
+            "}")
+        .expectUnchanged()
+        .addInputLines(
+            "SomeBuilder.java", //
+            "interface SomeBuilder extends Builder<SomeBuilder> {}")
+        .expectUnchanged()
+        .addInputLines(
+            "Test.java",
+            "class Test {",
+            "  void f(SomeBuilder builder, String s) {",
+            "    builder.setFoo(s);",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "class Test {",
+            "  void f(SomeBuilder builder, String s) {",
+            "    builder = builder.setFoo(s);",
             "  }",
             "}")
         .doTest();
