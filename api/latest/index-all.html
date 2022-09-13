@@ -106,10 +106,6 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/AbstractMustBeClosedChecker.html#%3Cinit%3E()">AbstractMustBeClosedChecker()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/AbstractMustBeClosedChecker.html" title="class in com.google.errorprone.bugpatterns">AbstractMustBeClosedChecker</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/google/errorprone/bugpatterns/AbstractMustBeClosedChecker.FixAggregator.html" title="interface in com.google.errorprone.bugpatterns"><span class="type-name-link">AbstractMustBeClosedChecker.FixAggregator</span></a> - Interface in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
-<dd>
-<div class="block">A strategy for handling and potentially combining multiple fixes.</div>
-</dd>
 <dt><a href="com/google/errorprone/bugpatterns/AbstractReferenceEquality.html" title="class in com.google.errorprone.bugpatterns"><span class="type-name-link">AbstractReferenceEquality</span></a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
 <dd>
 <div class="block">Abstract implementation of a BugPattern that detects the use of reference equality to compare
@@ -254,10 +250,6 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Adds a suggested fix for this <code>Description</code>.</div>
 </dd>
-<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/AbstractMustBeClosedChecker.html#addFix(com.google.errorprone.matchers.Description.Builder,com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState,com.google.errorprone.bugpatterns.AbstractMustBeClosedChecker.FixAggregator)">addFix(Description.Builder, ExpressionTree, VisitorState, AbstractMustBeClosedChecker.FixAggregator)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/AbstractMustBeClosedChecker.html" title="class in com.google.errorprone.bugpatterns">AbstractMustBeClosedChecker</a></dt>
-<dd>&nbsp;</dd>
-<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/StreamResourceLeak.html#addFix(com.google.errorprone.matchers.Description.Builder,com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState,com.google.errorprone.bugpatterns.AbstractMustBeClosedChecker.FixAggregator)">addFix(Description.Builder, ExpressionTree, VisitorState, AbstractMustBeClosedChecker.FixAggregator)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/StreamResourceLeak.html" title="class in com.google.errorprone.bugpatterns">StreamResourceLeak</a></dt>
-<dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/matchers/Description.Builder.html#addFix(java.util.Optional)">addFix(Optional&lt;? extends Fix&gt;)</a></span> - Method in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/Description.Builder.html" title="class in com.google.errorprone.matchers">Description.Builder</a></dt>
 <dd>
 <div class="deprecation-block"><span class="deprecated-label">Deprecated.</span>
@@ -3770,14 +3762,6 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/inlineme/Inliner.html#FINDING_TAG">FINDING_TAG</a></span> - Static variable in class com.google.errorprone.bugpatterns.inlineme.<a href="com/google/errorprone/bugpatterns/inlineme/Inliner.html" title="class in com.google.errorprone.bugpatterns.inlineme">Inliner</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/AbstractMustBeClosedChecker.html#findingPerMethod()">findingPerMethod()</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/AbstractMustBeClosedChecker.html" title="class in com.google.errorprone.bugpatterns">AbstractMustBeClosedChecker</a></dt>
-<dd>
-<div class="block">A FixAggregator that saves up all its findings from within a single method to emit at once.</div>
-</dd>
-<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/AbstractMustBeClosedChecker.html#findingPerSite()">findingPerSite()</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/AbstractMustBeClosedChecker.html" title="class in com.google.errorprone.bugpatterns">AbstractMustBeClosedChecker</a></dt>
-<dd>
-<div class="block">A FixAggregator that emits a separate fix for each method usage.</div>
-</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/util/ASTHelpers.html#findMatchingMethods(com.sun.tools.javac.util.Name,java.util.function.Predicate,com.sun.tools.javac.code.Type,com.sun.tools.javac.code.Types)">findMatchingMethods(Name, Predicate&lt;Symbol.MethodSymbol&gt;, Type, Types)</a></span> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/ASTHelpers.html" title="class in com.google.errorprone.util">ASTHelpers</a></dt>
 <dd>
 <div class="block">Finds all methods in any superclass of <code>startClass</code> with a certain <code>name</code> that
@@ -3830,6 +3814,10 @@ loadScripts(document, 'script');</script>
 <dt><span class="member-name-link"><a href="com/google/errorprone/fixes/SuggestedFixes.AdditionPosition.html#FIRST">FIRST</a></span> - com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/SuggestedFixes.AdditionPosition.html" title="enum in com.google.errorprone.fixes">SuggestedFixes.AdditionPosition</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/collectionincompatibletype/ContainmentMatchers.html#firstNonNullMatchResult(com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)">firstNonNullMatchResult(ExpressionTree, VisitorState)</a></span> - Static method in class com.google.errorprone.bugpatterns.collectionincompatibletype.<a href="com/google/errorprone/bugpatterns/collectionincompatibletype/ContainmentMatchers.html" title="class in com.google.errorprone.bugpatterns.collectionincompatibletype">ContainmentMatchers</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/AbstractMustBeClosedChecker.html#fix(com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)">fix(ExpressionTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/AbstractMustBeClosedChecker.html" title="class in com.google.errorprone.bugpatterns">AbstractMustBeClosedChecker</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/StreamResourceLeak.html#fix(com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)">fix(ExpressionTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/StreamResourceLeak.html" title="class in com.google.errorprone.bugpatterns">StreamResourceLeak</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/fixes/Fix.html" title="interface in com.google.errorprone.fixes"><span class="type-name-link">Fix</span></a> - Interface in <a href="com/google/errorprone/fixes/package-summary.html">com.google.errorprone.fixes</a></dt>
 <dd>
@@ -3959,10 +3947,6 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/apply/PatchFileDestination.html#flush()">flush()</a></span> - Method in class com.google.errorprone.apply.<a href="com/google/errorprone/apply/PatchFileDestination.html" title="class in com.google.errorprone.apply">PatchFileDestination</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/AbstractMustBeClosedChecker.FixAggregator.html#flush()">flush()</a></span> - Method in interface com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/AbstractMustBeClosedChecker.FixAggregator.html" title="interface in com.google.errorprone.bugpatterns">AbstractMustBeClosedChecker.FixAggregator</a></dt>
-<dd>
-<div class="block">Returns a single fix containing all the changes saved up by earlier calls to <a href="com/google/errorprone/bugpatterns/AbstractMustBeClosedChecker.FixAggregator.html#report(com.google.errorprone.bugpatterns.AbstractMustBeClosedChecker.TryBlock)"><code>AbstractMustBeClosedChecker.FixAggregator.report(TryBlock)</code></a></div>
-</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.Purpose.html#FOR_IMMUTABLE_CHECKER">FOR_IMMUTABLE_CHECKER</a></span> - com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.Purpose.html" title="enum in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.Purpose</a></dt>
 <dd>
 <div class="block">This is being used by the immutability bug checker</div>
@@ -8804,13 +8788,11 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/URLEqualsHashCode.html#matchNewClass(com.sun.source.tree.NewClassTree,com.google.errorprone.VisitorState)">matchNewClass(NewClassTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/URLEqualsHashCode.html" title="class in com.google.errorprone.bugpatterns">URLEqualsHashCode</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/AbstractMustBeClosedChecker.html#matchNewClassOrMethodInvocation(com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState,com.google.errorprone.bugpatterns.AbstractMustBeClosedChecker.FixAggregator)">matchNewClassOrMethodInvocation(ExpressionTree, VisitorState, AbstractMustBeClosedChecker.FixAggregator)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/AbstractMustBeClosedChecker.html" title="class in com.google.errorprone.bugpatterns">AbstractMustBeClosedChecker</a></dt>
+<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/AbstractMustBeClosedChecker.html#matchNewClassOrMethodInvocation(com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)">matchNewClassOrMethodInvocation(ExpressionTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/AbstractMustBeClosedChecker.html" title="class in com.google.errorprone.bugpatterns">AbstractMustBeClosedChecker</a></dt>
 <dd>
 <div class="block">Check that the expression <code>tree</code> occurs within the resource variable initializer of a
  try-with-resources statement.</div>
 </dd>
-<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/MustBeClosedChecker.html#matchNewClassOrMethodInvocation(com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState,com.google.errorprone.bugpatterns.AbstractMustBeClosedChecker.FixAggregator)">matchNewClassOrMethodInvocation(ExpressionTree, VisitorState, AbstractMustBeClosedChecker.FixAggregator)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/MustBeClosedChecker.html" title="class in com.google.errorprone.bugpatterns">MustBeClosedChecker</a></dt>
-<dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/BugChecker.ParameterizedTypeTreeMatcher.html#matchParameterizedType(com.sun.source.tree.ParameterizedTypeTree,com.google.errorprone.VisitorState)">matchParameterizedType(ParameterizedTypeTree, VisitorState)</a></span> - Method in interface com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/BugChecker.ParameterizedTypeTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.ParameterizedTypeTreeMatcher</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/nullness/VoidMissingNullable.html#matchParameterizedType(com.sun.source.tree.ParameterizedTypeTree,com.google.errorprone.VisitorState)">matchParameterizedType(ParameterizedTypeTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.nullness.<a href="com/google/errorprone/bugpatterns/nullness/VoidMissingNullable.html" title="class in com.google.errorprone.bugpatterns.nullness">VoidMissingNullable</a></dt>
@@ -9678,8 +9660,6 @@ loadScripts(document, 'script');</script>
  resource variable initializer of a try-with-resources statement.</div>
 </dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/MustBeClosedChecker.html#%3Cinit%3E()">MustBeClosedChecker()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/MustBeClosedChecker.html" title="class in com.google.errorprone.bugpatterns">MustBeClosedChecker</a></dt>
-<dd>&nbsp;</dd>
-<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/MustBeClosedChecker.html#%3Cinit%3E(com.google.errorprone.ErrorProneFlags)">MustBeClosedChecker(ErrorProneFlags)</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/MustBeClosedChecker.html" title="class in com.google.errorprone.bugpatterns">MustBeClosedChecker</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/ImmutableCollections.html#MUTABLE_TO_IMMUTABLE_CLASS_NAME_MAP">MUTABLE_TO_IMMUTABLE_CLASS_NAME_MAP</a></span> - Static variable in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/ImmutableCollections.html" title="class in com.google.errorprone.bugpatterns">ImmutableCollections</a></dt>
 <dd>&nbsp;</dd>
@@ -11227,10 +11207,6 @@ loadScripts(document, 'script');</script>
 <dt><span class="member-name-link"><a href="com/google/errorprone/fixes/Replacement.html#replaceWith()">replaceWith()</a></span> - Method in class com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/Replacement.html" title="class in com.google.errorprone.fixes">Replacement</a></dt>
 <dd>
 <div class="block">The source text to appear in the output.</div>
-</dd>
-<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/AbstractMustBeClosedChecker.FixAggregator.html#report(com.google.errorprone.bugpatterns.AbstractMustBeClosedChecker.TryBlock)">report(AbstractMustBeClosedChecker.TryBlock)</a></span> - Method in interface com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/AbstractMustBeClosedChecker.FixAggregator.html" title="interface in com.google.errorprone.bugpatterns">AbstractMustBeClosedChecker.FixAggregator</a></dt>
-<dd>
-<div class="block">Attempt to report a fix.</div>
 </dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/threadsafety/ImmutableAnalysis.ViolationReporter.html#report(com.sun.source.tree.Tree,com.google.errorprone.bugpatterns.threadsafety.ThreadSafety.Violation,java.util.Optional)">report(Tree, ThreadSafety.Violation, Optional&lt;SuggestedFix&gt;)</a></span> - Method in interface com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/ImmutableAnalysis.ViolationReporter.html" title="interface in com.google.errorprone.bugpatterns.threadsafety">ImmutableAnalysis.ViolationReporter</a></dt>
 <dd>&nbsp;</dd>
