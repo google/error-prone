@@ -63,7 +63,7 @@ public class DocGenProcessor extends AbstractProcessor {
       FileObject manifest =
           processingEnv
               .getFiler()
-              .createResource(StandardLocation.SOURCE_OUTPUT, "", "bugPatterns.txt");
+              .createResource(StandardLocation.CLASS_OUTPUT, "", "bugPatterns.txt");
       pw = new PrintWriter(new OutputStreamWriter(manifest.openOutputStream(), UTF_8), true);
     } catch (IOException e) {
       throw new RuntimeException(e);
