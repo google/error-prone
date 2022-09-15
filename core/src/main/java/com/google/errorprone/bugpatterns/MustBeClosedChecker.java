@@ -24,15 +24,12 @@ import static com.google.errorprone.matchers.Matchers.isSubtypeOf;
 import static com.google.errorprone.matchers.Matchers.methodIsConstructor;
 import static com.google.errorprone.matchers.Matchers.methodReturns;
 import static com.google.errorprone.matchers.Matchers.not;
-import static com.google.errorprone.matchers.method.MethodMatchers.constructor;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.annotations.MustBeClosed;
 import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
-import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
-import com.google.errorprone.bugpatterns.BugChecker.NewClassTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
@@ -40,10 +37,8 @@ import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ExpressionStatementTree;
-import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
-import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
@@ -62,10 +57,7 @@ import java.util.List;
             + " a try-with-resources.",
     severity = ERROR)
 public class MustBeClosedChecker extends AbstractMustBeClosedChecker
-    implements MethodTreeMatcher,
-        MethodInvocationTreeMatcher,
-        NewClassTreeMatcher,
-        ClassTreeMatcher {
+    implements MethodTreeMatcher, ClassTreeMatcher {
 
   private static final Matcher<Tree> IS_AUTOCLOSEABLE = isSubtypeOf(AutoCloseable.class);
 
@@ -74,7 +66,6 @@ public class MustBeClosedChecker extends AbstractMustBeClosedChecker
 
   private static final Matcher<MethodTree> AUTO_CLOSEABLE_CONSTRUCTOR_MATCHER =
       allOf(methodIsConstructor(), enclosingClass(isSubtypeOf(AutoCloseable.class)));
-  private static final Matcher<ExpressionTree> CONSTRUCTOR = constructor();
 
   /**
    * Check that the {@link MustBeClosed} annotation is only used for constructors of AutoCloseables
@@ -82,51 +73,41 @@ public class MustBeClosedChecker extends AbstractMustBeClosedChecker
    */
   @Override
   public Description matchMethod(MethodTree tree, VisitorState state) {
+    // Scan the whole method at once, to avoid name clashes for resource variables.
+    state.reportMatch(
+        scanEntireMethodFor(
+            (t, s) -> {
+              if (!HAS_MUST_BE_CLOSED_ANNOTATION.matches(t, s)) {
+                return false;
+              }
+              if (t instanceof MethodInvocationTree && ASTHelpers.getSymbol(t).isConstructor()) {
+                // Invocations of constructors, like `this()` and `super()`, act kinda weird.
+                // they're handled specially in matchClass, and should be ignored here.
+                return false;
+              }
+              return true;
+            },
+            tree,
+            state));
     if (!HAS_MUST_BE_CLOSED_ANNOTATION.matches(tree, state)) {
-      // Ignore methods and constructors that are not annotated with {@link MustBeClosed}.
+      // But otherwise ignore methods and constructors that are not annotated with {@link
+      // MustBeClosed}.
       return NO_MATCH;
     }
 
+    // If the method/constructor is annotated @MBC, make sure it's a valid annotation.
     boolean isAConstructor = methodIsConstructor().matches(tree, state);
     if (isAConstructor && !AUTO_CLOSEABLE_CONSTRUCTOR_MATCHER.matches(tree, state)) {
       return buildDescription(tree)
           .setMessage("MustBeClosed should only annotate constructors of AutoCloseables.")
           .build();
     }
-
     if (!isAConstructor && !METHOD_RETURNS_AUTO_CLOSEABLE_MATCHER.matches(tree, state)) {
       return buildDescription(tree)
           .setMessage("MustBeClosed should only annotate methods that return an AutoCloseable.")
           .build();
     }
     return NO_MATCH;
-  }
-
-  /**
-   * Check that invocations of methods annotated with {@link MustBeClosed} are called within the
-   * resource variable initializer of a try-with-resources statement.
-   */
-  @Override
-  public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
-    if (!HAS_MUST_BE_CLOSED_ANNOTATION.matches(tree, state)) {
-      return NO_MATCH;
-    }
-    if (CONSTRUCTOR.matches(tree, state)) {
-      return NO_MATCH;
-    }
-    return matchNewClassOrMethodInvocation(tree, state);
-  }
-
-  /**
-   * Check that construction of constructors annotated with {@link MustBeClosed} occurs within the
-   * resource variable initializer of a try-with-resources statement.
-   */
-  @Override
-  public Description matchNewClass(NewClassTree tree, VisitorState state) {
-    if (!HAS_MUST_BE_CLOSED_ANNOTATION.matches(tree, state)) {
-      return NO_MATCH;
-    }
-    return matchNewClassOrMethodInvocation(tree, state);
   }
 
   @Override

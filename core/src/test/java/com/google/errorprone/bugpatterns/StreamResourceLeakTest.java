@@ -16,25 +16,42 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static java.lang.String.format;
 import static org.junit.Assume.assumeTrue;
 
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode;
 import com.google.errorprone.CompilationTestHelper;
 import com.google.errorprone.util.RuntimeVersion;
+import com.google.testing.junit.testparameterinjector.TestParameter;
+import com.google.testing.junit.testparameterinjector.TestParameterInjector;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
 
 /** {@link StreamResourceLeakTest}Test */
-@RunWith(JUnit4.class)
+@RunWith(TestParameterInjector.class)
 public class StreamResourceLeakTest {
 
   private final CompilationTestHelper testHelper =
       CompilationTestHelper.newInstance(StreamResourceLeak.class, getClass());
 
   @Test
-  public void positive() {
+  public void positive(
+      @TestParameter({
+            "Files.newDirectoryStream(p)",
+            "Files.newDirectoryStream(p, /* glob= */ \"*\")",
+            "Files.newDirectoryStream(p, /* filter= */ path -> true)",
+            "Files.list(p)",
+            "Files.walk(p, /* maxDepth= */ 0)",
+            "Files.walk(p)",
+            "Files.find(p, /* maxDepth= */ 0, (path, a) -> true)",
+            "try (Stream<String> stream ="
+                + " Files.lines(p).collect(Collectors.toList()).stream()) {\n"
+                + "    stream.collect(Collectors.joining(\", \"));\n"
+                + "}",
+            "Files.lines(p).collect(Collectors.joining(\", \"))",
+          })
+          String buggySnippet) {
     testHelper
         .addSourceLines(
             "Test.java",
@@ -44,28 +61,9 @@ public class StreamResourceLeakTest {
             "import java.util.stream.Collectors;",
             "import java.util.stream.Stream;",
             "class Test {",
-            "  String f(Path p) throws IOException {",
+            "  void f(Path p) throws IOException {",
             "    // BUG: Diagnostic contains: should be closed",
-            "    Files.newDirectoryStream(p);",
-            "    // BUG: Diagnostic contains: should be closed",
-            "    Files.newDirectoryStream(p, /* glob= */ \"*\");",
-            "    // BUG: Diagnostic contains: should be closed",
-            "    Files.newDirectoryStream(p, /* filter= */ path -> true);",
-            "    // BUG: Diagnostic contains: should be closed",
-            "    Files.list(p);",
-            "    // BUG: Diagnostic contains: should be closed",
-            "    Files.walk(p, /* maxDepth= */ 0);",
-            "    // BUG: Diagnostic contains: should be closed",
-            "    Files.walk(p);",
-            "    // BUG: Diagnostic contains: should be closed",
-            "    Files.find(p, /* maxDepth= */ 0, (path, a) -> true);",
-            "    // BUG: Diagnostic contains: should be closed",
-            "    try (Stream<String> stream ="
-                + " Files.lines(p).collect(Collectors.toList()).stream()) {",
-            "      stream.collect(Collectors.joining(\", \"));",
-            "    }",
-            "    // BUG: Diagnostic contains: should be closed",
-            "    return Files.lines(p).collect(Collectors.joining(\", \"));",
+            format("    %s;", buggySnippet),
             "  }",
             "}")
         .doTest();

@@ -117,6 +117,15 @@ class MustBeClosedCheckerPositiveCases {
     }
   }
 
+  boolean twoCloseablesInOneExpression() {
+    // BUG: Diagnostic contains:
+    try (var closeable = new Foo().mustBeClosedAnnotatedMethod()) {
+      try (var closeable2 = new Foo().mustBeClosedAnnotatedMethod()) {
+        return closeable == closeable2;
+      }
+    }
+  }
+
   void voidLambda() {
     // Lambda has a fixless finding because no reasonable fix can be suggested.
     // BUG: Diagnostic contains:
