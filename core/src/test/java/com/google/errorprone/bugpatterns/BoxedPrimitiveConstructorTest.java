@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import com.google.errorprone.CompilationTestHelper;
-import java.util.Arrays;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -223,22 +222,6 @@ public class BoxedPrimitiveConstructorTest {
             "    // BUG: Diagnostic contains: h = Float.hashCode(dd.floatValue());",
             "    h = new Float(dd).hashCode();",
             "    // BUG: Diagnostic contains: return Long.hashCode(z);",
-            "    return new Long(z).hashCode();",
-            "  }",
-            "}")
-        .doTest();
-  }
-
-  @Test
-  public void hashCodeInJava7() {
-    compilationHelper
-        .setArgs(Arrays.asList("-source", "7", "-target", "7"))
-        .addSourceLines(
-            "Test.java",
-            "public abstract class Test {",
-            "  abstract int g(Integer x);",
-            "  int f(long z) {",
-            "    // BUG: Diagnostic contains: return Longs.hashCode(z);",
             "    return new Long(z).hashCode();",
             "  }",
             "}")
