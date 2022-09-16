@@ -12,6 +12,10 @@ To make changes, edit the @BugPattern annotation or the explanation in docs/bugp
 -->
 
 
+## The problem
+Consider using `LinkageError` instead of `AssertionError` when rethrowing
+reflective exceptions as unchecked exceptions, since it conveys more information
+when reflection fails due to an incompatible change in the classpath.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("RethrowReflectiveOperationExceptionAsLinkageError")` to the enclosing element.
