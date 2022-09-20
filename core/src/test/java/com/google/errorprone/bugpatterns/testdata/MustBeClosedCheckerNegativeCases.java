@@ -48,6 +48,16 @@ public class MustBeClosedCheckerNegativeCases {
     MustBeClosedAnnotatedConstructor() {}
   }
 
+  @SuppressWarnings("MustBeClosedChecker")
+  void respectsSuppressWarnings_onMethod() {
+    new Foo().mustBeClosedAnnotatedMethod();
+  }
+
+  void respectsSuppressWarnings_onLocal() {
+    @SuppressWarnings("MustBeClosedChecker")
+    var unused = new Foo().mustBeClosedAnnotatedMethod();
+  }
+
   void negativeCase3() {
     try (Closeable closeable = new Foo().mustBeClosedAnnotatedMethod()) {}
   }

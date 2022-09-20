@@ -60,7 +60,6 @@ import com.sun.source.tree.Tree;
 import com.sun.source.tree.TryTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
-import com.sun.source.util.TreePathScanner;
 import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
@@ -138,7 +137,7 @@ public abstract class AbstractMustBeClosedChecker extends BugChecker {
     NameSuggester suggester = new NameSuggester();
     Multiset<Tree> closeBraceLocations = HashMultiset.create();
     Tree[] firstIssuedFixLocation = new Tree[1];
-    new TreePathScanner<Void, Void>() {
+    new SuppressibleTreePathScanner<Void, Void>(state) {
       @Override
       public Void visitMethod(MethodTree methodTree, Void aVoid) {
         // Don't descend into sub-methods - we will scanEntireMethod on each later
