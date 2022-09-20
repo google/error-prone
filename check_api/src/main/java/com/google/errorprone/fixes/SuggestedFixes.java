@@ -306,7 +306,7 @@ public final class SuggestedFixes {
    * <ul>
    *   <li>If the symbol is already in scope, its simple name is used.
    *   <li>If the symbol is a {@link Symbol.TypeSymbol} and an enclosing type is imported, that
-   *       enclosing type is used as a qualified.
+   *       enclosing type is used as a qualifier.
    *   <li>Otherwise the outermost enclosing type is imported and used as a qualifier.
    * </ul>
    */

@@ -28,15 +28,22 @@ import static com.google.errorprone.util.ASTHelpers.canBeRemoved;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.isStatic;
+import static java.lang.String.format;
 
+import com.google.common.base.Ascii;
+import com.google.common.collect.HashMultiset;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Multiset;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
-import com.google.errorprone.bugpatterns.BugChecker.VariableTreeMatcher;
+import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
+import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
+import com.sun.source.tree.BlockTree;
+import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.MemberSelectTree;
@@ -51,6 +58,7 @@ import com.sun.tools.javac.code.Flags;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
+import java.util.Optional;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.NestingKind;
@@ -65,40 +73,104 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 @BugPattern(
     summary = "Variables initialized with Pattern#compile calls on constants can be constants",
     severity = WARNING)
-public final class ConstantPatternCompile extends BugChecker implements VariableTreeMatcher {
+public final class ConstantPatternCompile extends BugChecker implements MethodTreeMatcher {
+  private static final ImmutableList<String> PATTERN_CLASSES =
+      ImmutableList.of("java.util.regex.Pattern", "com.google.re2j.Pattern");
 
   private static final Matcher<ExpressionTree> PATTERN_COMPILE_CHECK =
-      staticMethod().onClassAny("java.util.regex.Pattern").named("compile");
+      staticMethod().onClassAny(PATTERN_CLASSES).named("compile");
 
   private static final Matcher<ExpressionTree> MATCHER_MATCHER =
-      instanceMethod().onExactClassAny("java.util.regex.Pattern").named("matcher");
+      instanceMethod().onExactClassAny(PATTERN_CLASSES).named("matcher");
 
   @Override
-  public Description matchVariable(VariableTree tree, VisitorState state) {
-    if (state.errorProneOptions().isTestOnlyTarget()) {
+  public Description matchMethod(MethodTree methodTree, VisitorState state) {
+    BlockTree body = methodTree.getBody();
+    if (body == null) {
       return NO_MATCH;
     }
-    ExpressionTree initializer = tree.getInitializer();
-    if (!PATTERN_COMPILE_CHECK.matches(initializer, state)) {
+    NameUniquifier nameUniquifier = new NameUniquifier();
+    SuggestedFix.Builder fixBuilder = SuggestedFix.builder();
+    Tree[] firstHit = new Tree[1];
+    new TreePathScanner<Void, Void>() {
+      @Override
+      public Void visitMethod(MethodTree node, Void unused) {
+        // Don't descend into sub-methods
+        return null;
+      }
+
+      private Optional<SuggestedFix> tryFix(
+          MethodInvocationTree tree, VisitorState state, NameUniquifier nameUniquifier) {
+        if (!PATTERN_COMPILE_CHECK.matches(tree, state)) {
+          return Optional.empty();
+        }
+        if (!tree.getArguments().stream()
+            .allMatch(ConstantPatternCompile::isArgStaticAndConstant)) {
+          return Optional.empty();
+        }
+        if (state.errorProneOptions().isTestOnlyTarget()) {
+          return Optional.empty();
+        }
+        Tree parent = state.getPath().getParentPath().getLeaf();
+        if (parent instanceof VariableTree) {
+          return handleVariable((VariableTree) parent, state);
+        }
+
+        return Optional.of(handleInlineExpression(tree, state, nameUniquifier));
+      }
+
+      @Override
+      public Void visitMethodInvocation(MethodInvocationTree tree, Void unused) {
+        tryFix(tree, state.withPath(getCurrentPath()), nameUniquifier)
+            .ifPresent(
+                other -> {
+                  fixBuilder.merge(other);
+                  if (firstHit[0] == null) {
+                    firstHit[0] = tree;
+                  }
+                });
+        return super.visitMethodInvocation(tree, unused);
+      }
+    }.scan(new TreePath(state.getPath(), body), null);
+    if (firstHit[0] == null) {
       return NO_MATCH;
     }
-    if (!((MethodInvocationTree) initializer)
-        .getArguments().stream().allMatch(ConstantPatternCompile::isArgStaticAndConstant)) {
-      return NO_MATCH;
-    }
+    return describeMatch(firstHit[0], fixBuilder.build());
+  }
+
+  private static SuggestedFix handleInlineExpression(
+      MethodInvocationTree tree, VisitorState state, NameUniquifier nameUniquifier) {
+    String nameSuggestion =
+        nameUniquifier.uniquify(
+            Optional.ofNullable(findNameFromMatcherArgument(state, state.getPath()))
+                .orElse("PATTERN"));
+    SuggestedFix.Builder fix = SuggestedFix.builder();
+    return fix.replace(tree, nameSuggestion)
+        .merge(
+            SuggestedFixes.addMembers(
+                state.findEnclosing(ClassTree.class),
+                state,
+                format(
+                    "private static final %s %s = %s;",
+                    SuggestedFixes.qualifyType(state, fix, getSymbol(tree).getReturnType().tsym),
+                    nameSuggestion,
+                    state.getSourceForNode(tree))))
+        .build();
+  }
+
+  private static Optional<SuggestedFix> handleVariable(VariableTree tree, VisitorState state) {
     MethodTree outerMethodTree = ASTHelpers.findEnclosingNode(state.getPath(), MethodTree.class);
     if (outerMethodTree == null) {
-      return NO_MATCH;
+      return Optional.empty();
     }
     VarSymbol sym = getSymbol(tree);
     switch (sym.getKind()) {
       case RESOURCE_VARIABLE:
-        return describeMatch(tree);
+        return Optional.of(SuggestedFix.emptyFix());
       case LOCAL_VARIABLE:
-        SuggestedFix fix = fixLocal(tree, outerMethodTree, state);
-        return describeMatch(tree, fix);
+        return Optional.of(fixLocal(tree, outerMethodTree, state));
       default:
-        return NO_MATCH;
+        return Optional.empty();
     }
   }
 
@@ -255,8 +327,9 @@ public final class ConstantPatternCompile extends BugChecker implements Variable
   }
 
   /**
-   * If the pattern is only used once in a call to {@code matcher}, and the argument is a local, use
-   * that local's name. For example, infer {@code FOO_PATTERN} from {@code pattern.matcher(foo)}.
+   * If the pattern is only used once in a call to {@code matcher}, and the argument is a variable,
+   * use that variable's name. For example, infer {@code FOO_PATTERN} from {@code
+   * pattern.matcher(foo)}. If the argument to the call is a method call, use the method's name.
    */
   private static @Nullable String fromUse(VariableTree tree, VisitorState state) {
     VarSymbol sym = getSymbol(tree);
@@ -275,6 +348,14 @@ public final class ConstantPatternCompile extends BugChecker implements Variable
       return null;
     }
     TreePath use = getOnlyElement(uses);
+    return findNameFromMatcherArgument(state, use);
+  }
+
+  /**
+   * If the path at {@code use} is a Pattern object whose .matcher method is being called on a
+   * variable CharSequence, returns the name of that variable.
+   */
+  private static @Nullable String findNameFromMatcherArgument(VisitorState state, TreePath use) {
     Tree grandParent = use.getParentPath().getParentPath().getLeaf();
     if (!(grandParent instanceof ExpressionTree)) {
       return null;
@@ -283,11 +364,22 @@ public final class ConstantPatternCompile extends BugChecker implements Variable
       return null;
     }
     ExpressionTree matchTree = ((MethodInvocationTree) grandParent).getArguments().get(0);
-    if (!(matchTree instanceof IdentifierTree)) {
-      return null;
+    if (matchTree instanceof IdentifierTree) {
+      return convertToConstantName(((IdentifierTree) matchTree).getName().toString());
     }
-    return LOWER_CAMEL.to(UPPER_UNDERSCORE, ((IdentifierTree) matchTree).getName().toString())
-        + "_PATTERN";
+    if (matchTree instanceof MethodInvocationTree) {
+      return convertToConstantName(
+          getSymbol((MethodInvocationTree) matchTree).getSimpleName().toString());
+    }
+    return null;
+  }
+
+  private static String convertToConstantName(String variableName) {
+    String root =
+        variableName.equals(Ascii.toUpperCase(variableName))
+            ? variableName
+            : LOWER_CAMEL.to(UPPER_UNDERSCORE, variableName);
+    return root + "_PATTERN";
   }
 
   private static boolean isArgStaticAndConstant(ExpressionTree arg) {
@@ -299,5 +391,17 @@ public final class ConstantPatternCompile extends BugChecker implements Variable
       return true;
     }
     return (argSymbol.flags() & Flags.STATIC) != 0;
+  }
+
+  private static final class NameUniquifier {
+    final Multiset<String> assignmentCounts = HashMultiset.create();
+
+    String uniquify(String name) {
+      int numPreviousUses = assignmentCounts.add(name, 1);
+      if (numPreviousUses == 0) {
+        return name;
+      }
+      return name + (numPreviousUses + 1);
+    }
   }
 }
