@@ -78,8 +78,8 @@ public class CheckReturnValue extends AbstractReturnValueIgnored
   private static final String CHECK_RETURN_VALUE = "CheckReturnValue";
   private static final String CAN_IGNORE_RETURN_VALUE = "CanIgnoreReturnValue";
 
-  static final String CHECK_ALL_CONSTRUCTORS = "CheckReturnValue:CheckAllConstructors";
-  static final String CHECK_ALL_METHODS = "CheckReturnValue:CheckAllMethods";
+  public static final String CHECK_ALL_CONSTRUCTORS = "CheckReturnValue:CheckAllConstructors";
+  public static final String CHECK_ALL_METHODS = "CheckReturnValue:CheckAllMethods";
 
   static final String CRV_PACKAGES = "CheckReturnValue:Packages";
 
