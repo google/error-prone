@@ -424,6 +424,7 @@ import com.google.errorprone.bugpatterns.argumentselectiondefects.AutoValueConst
 import com.google.errorprone.bugpatterns.checkreturnvalue.BuilderReturnThis;
 import com.google.errorprone.bugpatterns.checkreturnvalue.CanIgnoreReturnValueSuggester;
 import com.google.errorprone.bugpatterns.checkreturnvalue.NoCanIgnoreReturnValueOnClasses;
+import com.google.errorprone.bugpatterns.checkreturnvalue.UnnecessarilyUsedValue;
 import com.google.errorprone.bugpatterns.checkreturnvalue.UsingJsr305CheckReturnValue;
 import com.google.errorprone.bugpatterns.collectionincompatibletype.CollectionIncompatibleType;
 import com.google.errorprone.bugpatterns.collectionincompatibletype.CollectionUndefinedEquality;
@@ -1129,6 +1130,7 @@ public class BuiltInCheckerSuppliers {
           TypeToString.class,
           UngroupedOverloads.class,
           UnnecessarilyFullyQualified.class,
+          UnnecessarilyUsedValue.class,
           UnnecessarilyVisible.class,
           UnnecessaryAnonymousClass.class,
           UnnecessaryBoxedAssignment.class,
