@@ -153,9 +153,12 @@ boolean isOn(State state) {
 
 ## Cases with UNRECOGNIZED
 
-When a switch statement handles all values of a proto-generated enum except for
-UNRECOGNIZED, the UNRECOGNIZED case should be explicitly handled and the default
-should be removed. This is preferred so that `MissingCasesInEnumSwitch` will
+proto3 enums implicitly add an UNRECOGNIZED value to all enums. If a switch
+statement handles all values of a proto-generated enum except for UNRECOGNIZED,
+and has a default cause, we assume this is an attempt to exhaustively cover all
+cases. But in the future, if a new enum value is added, that case will be
+silently caught up in the default case. To avoid this, remove the default case
+and handle UNRECOGNIZED explicitly. This way, `MissingCasesInEnumSwitch` will
 catch unexpected enum types at compile-time instead of runtime.
 
 If the switch statement cannot [complete normally], the default should be
