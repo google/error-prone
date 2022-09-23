@@ -1454,6 +1454,9 @@ This variable is unnecessary, the try-with-resources resource can be a reference
 __[UnnecessarilyFullyQualified](bugpattern/UnnecessarilyFullyQualified)__<br>
 This fully qualified name is unambiguous to the compiler if imported.
 
+__[UnnecessarilyUsedValue](bugpattern/UnnecessarilyUsedValue)__<br>
+The result of this API is ignorable, so it does not need to be captured / assigned into an &#96;unused&#96; variable.
+
 __[UnnecessarilyVisible](bugpattern/UnnecessarilyVisible)__<br>
 Some methods (such as those annotated with @Inject or @Provides) are only intended to be called by a framework, and so should have default visibility.
 

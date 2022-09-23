@@ -70,10 +70,14 @@ loadScripts(document, 'script');</script>
 </td>
 </tr>
 <tr class="row-color">
-<th class="col-first" scope="row"><a href="#com.google.errorprone.bugpatterns.nullness">com.google.errorprone.bugpatterns.nullness</a></th>
+<th class="col-first" scope="row"><a href="#com.google.errorprone.bugpatterns.checkreturnvalue">com.google.errorprone.bugpatterns.checkreturnvalue</a></th>
 <td class="col-last">&nbsp;</td>
 </tr>
 <tr class="alt-color">
+<th class="col-first" scope="row"><a href="#com.google.errorprone.bugpatterns.nullness">com.google.errorprone.bugpatterns.nullness</a></th>
+<td class="col-last">&nbsp;</td>
+</tr>
+<tr class="row-color">
 <th class="col-first" scope="row"><a href="#com.google.errorprone.bugpatterns.time">com.google.errorprone.bugpatterns.time</a></th>
 <td class="col-last">&nbsp;</td>
 </tr>
@@ -153,6 +157,32 @@ loadScripts(document, 'script');</script>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="../UnnecessaryBoxedAssignment.html" title="class in com.google.errorprone.bugpatterns">UnnecessaryBoxedAssignment</a></span></code></th>
 <td class="col-last">
 <div class="block">Finds and fixes unnecessarily boxed return expressions.</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="com.google.errorprone.bugpatterns.checkreturnvalue">
+<h2>Uses of <a href="../BugChecker.AssignmentTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.AssignmentTreeMatcher</a> in <a href="../checkreturnvalue/package-summary.html">com.google.errorprone.bugpatterns.checkreturnvalue</a></h2>
+<div class="use-summary">
+<table class="summary-table">
+<caption><span>Classes in <a href="../checkreturnvalue/package-summary.html">com.google.errorprone.bugpatterns.checkreturnvalue</a> that implement <a href="../BugChecker.AssignmentTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.AssignmentTreeMatcher</a></span></caption>
+<thead>
+<tr>
+<th class="col-first" scope="col">Modifier and Type</th>
+<th class="col-second" scope="col">Class</th>
+<th class="col-last" scope="col">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="alt-color">
+<td class="col-first"><code>class&nbsp;</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="../checkreturnvalue/UnnecessarilyUsedValue.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">UnnecessarilyUsedValue</a></span></code></th>
+<td class="col-last">
+<div class="block">Checker that warns when capturing the result of an ignorable API into an <code>unused</code> variable.</div>
 </td>
 </tr>
 </tbody>
