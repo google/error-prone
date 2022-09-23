@@ -35,32 +35,6 @@ public class ConstantPatternCompileTest {
       BugCheckerRefactoringTestHelper.newInstance(ConstantPatternCompile.class, getClass());
 
   @Test
-  public void testPositiveCases() {
-    compilationHelper
-        .addSourceLines(
-            "in/Test.java",
-            "import java.util.regex.Pattern;",
-            "class Test {",
-            "  private static final String MY_COOL_PATTERN = \"a+\";",
-            "  public static void myPopularStaticMethod() {",
-            "    // BUG: Diagnostic contains: ConstantPatternCompile",
-            "    Pattern pattern = Pattern.compile(MY_COOL_PATTERN);",
-            "    Pattern pattern2;",
-            "    pattern2 = Pattern.compile(MY_COOL_PATTERN);",
-            "  }",
-            "  private void myPopularNonStaticMethod() {",
-            "    // BUG: Diagnostic contains: ConstantPatternCompile",
-            "    Pattern pattern = Pattern.compile(MY_COOL_PATTERN);",
-            "  }",
-            "  private void patternCalledOnLiteral() {",
-            "    // BUG: Diagnostic contains: ConstantPatternCompile",
-            "    Pattern pattern = Pattern.compile(\"literal\");",
-            "  }",
-            "}")
-        .doTest();
-  }
-
-  @Test
   public void testInlineExpressions() {
     testHelper
         .addInputLines(
@@ -188,6 +162,38 @@ public class ConstantPatternCompileTest {
             "  }",
             "  private static final Pattern INPUT_PATTERN = Pattern.compile(\"car\");",
             "  private static final Pattern INPUT_PATTERN2 = Pattern.compile(\"blue\");",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void testSameNameInDifferentMethods() {
+    testHelper
+        .addInputLines(
+            "in/Test.java",
+            "import java.util.regex.Matcher;",
+            "import java.util.regex.Pattern;",
+            "class Test {",
+            "  boolean isCar(String input) {",
+            "    return Pattern.compile(\"car\").matcher(input).matches();",
+            "  }",
+            "  boolean isDog(String input) {",
+            "    return Pattern.compile(\"dog\").matcher(input).matches();",
+            "  }",
+            "}")
+        .addOutputLines(
+            "in/Test.java",
+            "import java.util.regex.Matcher;",
+            "import java.util.regex.Pattern;",
+            "class Test {",
+            "  boolean isCar(String input) {",
+            "    return INPUT_PATTERN.matcher(input).matches();",
+            "  }",
+            "  boolean isDog(String input) {",
+            "    return INPUT_PATTERN2.matcher(input).matches();",
+            "  }",
+            "  private static final Pattern INPUT_PATTERN = Pattern.compile(\"car\");",
+            "  private static final Pattern INPUT_PATTERN2 = Pattern.compile(\"dog\");",
             "}")
         .doTest();
   }

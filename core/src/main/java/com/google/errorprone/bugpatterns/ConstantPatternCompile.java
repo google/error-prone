@@ -36,13 +36,12 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Multiset;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
-import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
+import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
-import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
@@ -73,7 +72,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 @BugPattern(
     summary = "Variables initialized with Pattern#compile calls on constants can be constants",
     severity = WARNING)
-public final class ConstantPatternCompile extends BugChecker implements MethodTreeMatcher {
+public final class ConstantPatternCompile extends BugChecker implements ClassTreeMatcher {
   private static final ImmutableList<String> PATTERN_CLASSES =
       ImmutableList.of("java.util.regex.Pattern", "com.google.re2j.Pattern");
 
@@ -84,54 +83,52 @@ public final class ConstantPatternCompile extends BugChecker implements MethodTr
       instanceMethod().onExactClassAny(PATTERN_CLASSES).named("matcher");
 
   @Override
-  public Description matchMethod(MethodTree methodTree, VisitorState state) {
-    BlockTree body = methodTree.getBody();
-    if (body == null) {
-      return NO_MATCH;
-    }
+  public Description matchClass(ClassTree classTree, VisitorState state) {
     NameUniquifier nameUniquifier = new NameUniquifier();
     SuggestedFix.Builder fixBuilder = SuggestedFix.builder();
     Tree[] firstHit = new Tree[1];
-    new TreePathScanner<Void, Void>() {
-      @Override
-      public Void visitMethod(MethodTree node, Void unused) {
-        // Don't descend into sub-methods
-        return null;
-      }
-
-      private Optional<SuggestedFix> tryFix(
-          MethodInvocationTree tree, VisitorState state, NameUniquifier nameUniquifier) {
-        if (!PATTERN_COMPILE_CHECK.matches(tree, state)) {
-          return Optional.empty();
-        }
-        if (!tree.getArguments().stream()
-            .allMatch(ConstantPatternCompile::isArgStaticAndConstant)) {
-          return Optional.empty();
-        }
-        if (state.errorProneOptions().isTestOnlyTarget()) {
-          return Optional.empty();
-        }
-        Tree parent = state.getPath().getParentPath().getLeaf();
-        if (parent instanceof VariableTree) {
-          return handleVariable((VariableTree) parent, state);
+    for (Tree member : classTree.getMembers()) {
+      new TreePathScanner<Void, Void>() {
+        @Override
+        public Void visitClass(ClassTree node, Void unused) {
+          // Don't descend into nested classes - we'll visit them later
+          return null;
         }
 
-        return Optional.of(handleInlineExpression(tree, state, nameUniquifier));
-      }
+        private Optional<SuggestedFix> tryFix(
+            MethodInvocationTree tree, VisitorState state, NameUniquifier nameUniquifier) {
+          if (!PATTERN_COMPILE_CHECK.matches(tree, state)) {
+            return Optional.empty();
+          }
+          if (!tree.getArguments().stream()
+              .allMatch(ConstantPatternCompile::isArgStaticAndConstant)) {
+            return Optional.empty();
+          }
+          if (state.errorProneOptions().isTestOnlyTarget()) {
+            return Optional.empty();
+          }
+          Tree parent = state.getPath().getParentPath().getLeaf();
+          if (parent instanceof VariableTree) {
+            return handleVariable((VariableTree) parent, state);
+          }
 
-      @Override
-      public Void visitMethodInvocation(MethodInvocationTree tree, Void unused) {
-        tryFix(tree, state.withPath(getCurrentPath()), nameUniquifier)
-            .ifPresent(
-                other -> {
-                  fixBuilder.merge(other);
-                  if (firstHit[0] == null) {
-                    firstHit[0] = tree;
-                  }
-                });
-        return super.visitMethodInvocation(tree, unused);
-      }
-    }.scan(new TreePath(state.getPath(), body), null);
+          return Optional.of(handleInlineExpression(tree, state, nameUniquifier));
+        }
+
+        @Override
+        public Void visitMethodInvocation(MethodInvocationTree tree, Void unused) {
+          tryFix(tree, state.withPath(getCurrentPath()), nameUniquifier)
+              .ifPresent(
+                  other -> {
+                    fixBuilder.merge(other);
+                    if (firstHit[0] == null) {
+                      firstHit[0] = tree;
+                    }
+                  });
+          return super.visitMethodInvocation(tree, unused);
+        }
+      }.scan(new TreePath(state.getPath(), member), null);
+    }
     if (firstHit[0] == null) {
       return NO_MATCH;
     }
