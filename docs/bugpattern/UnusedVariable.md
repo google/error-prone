@@ -1,6 +1,8 @@
 The presence of an unused variable may indicate a bug. This check highlights
-_private_ fields and parameters which are unused and can be safely removed
-without considering the impact on other source files.
+private fields, and parameters of private methods, which are unused and can be
+safely removed without considering the impact on other source files. "Private"
+in this context also includes effectively-private members, like public members
+of private classes.
 
 ## Suppression
 
