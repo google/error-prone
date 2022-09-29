@@ -143,7 +143,8 @@ public abstract class ScannerSupplier implements Supplier<Scanner> {
         && errorProneOptions.getFlags().isEmpty()
         && !errorProneOptions.isEnableAllChecksAsWarnings()
         && !errorProneOptions.isDropErrorsToWarnings()
-        && !errorProneOptions.isDisableAllChecks()) {
+        && !errorProneOptions.isDisableAllChecks()
+        && !errorProneOptions.isDisableAllWarnings()) {
       return this;
     }
 
