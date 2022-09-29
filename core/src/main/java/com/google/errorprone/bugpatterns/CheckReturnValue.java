@@ -30,7 +30,6 @@ import static com.google.errorprone.bugpatterns.checkreturnvalue.ResultUsePolicy
 import static com.google.errorprone.bugpatterns.checkreturnvalue.ResultUsePolicy.OPTIONAL;
 import static com.google.errorprone.bugpatterns.checkreturnvalue.Rules.globalDefault;
 import static com.google.errorprone.bugpatterns.checkreturnvalue.Rules.mapAnnotationSimpleName;
-import static com.google.errorprone.fixes.SuggestedFix.emptyFix;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.hasDirectAnnotationWithSimpleName;
@@ -45,7 +44,6 @@ import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.bugpatterns.checkreturnvalue.PackagesRule;
 import com.google.errorprone.bugpatterns.checkreturnvalue.ResultUsePolicy;
 import com.google.errorprone.bugpatterns.checkreturnvalue.ResultUsePolicyEvaluator;
-import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
@@ -57,7 +55,6 @@ import com.sun.source.tree.MemberReferenceTree.ReferenceMode;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.NewClassTree;
-import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Type;
@@ -253,11 +250,10 @@ public class CheckReturnValue extends AbstractReturnValueIgnored
   }
 
   private Description describeInvocationResultIgnored(
-      Tree tree,
+      ExpressionTree invocationTree,
       String shortCall,
       String shortCallWithoutNew,
       MethodSymbol symbol,
-      Fix fix,
       VisitorState state) {
     String message =
         String.format(
@@ -269,7 +265,10 @@ public class CheckReturnValue extends AbstractReturnValueIgnored
                 + " then annotate it with `@CanIgnoreReturnValue`.\n"
                 + "%s",
             shortCall, shortCallWithoutNew, apiTrailer(symbol, state));
-    return buildDescription(tree).addFix(fix).setMessage(message).build();
+    return buildDescription(invocationTree)
+        .addAllFixes(fixesAtCallSite(invocationTree, state))
+        .setMessage(message)
+        .build();
   }
 
   @Override
@@ -277,8 +276,7 @@ public class CheckReturnValue extends AbstractReturnValueIgnored
     MethodSymbol symbol = getSymbol(tree);
     String shortCall = symbol.name + (tree.getArguments().isEmpty() ? "()" : "(...)");
     String shortCallWithoutNew = shortCall;
-    return describeInvocationResultIgnored(
-        tree, shortCall, shortCallWithoutNew, symbol, makeFix(tree, state), state);
+    return describeInvocationResultIgnored(tree, shortCall, shortCallWithoutNew, symbol, state);
   }
 
   @Override
@@ -288,8 +286,7 @@ public class CheckReturnValue extends AbstractReturnValueIgnored
         state.getSourceForNode(tree.getIdentifier())
             + (tree.getArguments().isEmpty() ? "()" : "(...)");
     String shortCall = "new " + shortCallWithoutNew;
-    return describeInvocationResultIgnored(
-        tree, shortCall, shortCallWithoutNew, symbol, emptyFix(), state);
+    return describeInvocationResultIgnored(tree, shortCall, shortCallWithoutNew, symbol, state);
   }
 
   @Override

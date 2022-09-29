@@ -16,10 +16,11 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Suppliers.memoize;
+import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.common.collect.Multimaps.toMultimap;
 import static com.google.errorprone.fixes.SuggestedFix.delete;
-import static com.google.errorprone.fixes.SuggestedFix.emptyFix;
 import static com.google.errorprone.fixes.SuggestedFix.prefixWith;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.allOf;
@@ -35,8 +36,12 @@ import static com.google.errorprone.util.ASTHelpers.getTypeSubstitution;
 import static com.google.errorprone.util.ASTHelpers.getUpperBound;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
 import static com.google.errorprone.util.ASTHelpers.isVoidType;
+import static com.sun.source.tree.Tree.Kind.EXPRESSION_STATEMENT;
+import static com.sun.source.tree.Tree.Kind.METHOD_INVOCATION;
+import static com.sun.source.tree.Tree.Kind.NEW_CLASS;
 import static java.lang.String.format;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableListMultimap;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
@@ -50,10 +55,10 @@ import com.google.errorprone.bugpatterns.BugChecker.NewClassTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.ReturnTreeMatcher;
 import com.google.errorprone.bugpatterns.threadsafety.ConstantExpressions;
 import com.google.errorprone.fixes.Fix;
+import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.UnusedReturnValueMatcher;
-import com.sun.source.tree.ExpressionStatementTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.LambdaExpressionTree;
 import com.sun.source.tree.MemberReferenceTree;
@@ -208,39 +213,67 @@ public abstract class AbstractReturnValueIgnored extends BugChecker
   protected Description describeReturnValueIgnored(
       MethodInvocationTree methodInvocationTree, VisitorState state) {
     return buildDescription(methodInvocationTree)
-        .addFix(makeFix(methodInvocationTree, state))
+        .addAllFixes(fixesAtCallSite(methodInvocationTree, state))
         .setMessage(getMessage(getSymbol(methodInvocationTree).getSimpleName()))
         .build();
   }
 
-  final Fix makeFix(MethodInvocationTree methodInvocationTree, VisitorState state) {
-    Type returnType = getType(methodInvocationTree);
+  final ImmutableList<Fix> fixesAtCallSite(ExpressionTree invocationTree, VisitorState state) {
+    checkArgument(
+        invocationTree.getKind() == METHOD_INVOCATION || invocationTree.getKind() == NEW_CLASS,
+        "unexpected kind: %s",
+        invocationTree.getKind());
+
+    Tree parent = state.getPath().getParentPath().getLeaf();
+
+    Type resultType = getType(invocationTree);
     // Find the root of the field access chain, i.e. a.intern().trim() ==> a.
     /*
      * TODO(cpovirk): Enhance getRootAssignable to return array accesses (e.g., `x[y]`)? If we do,
      * then we'll also need to accept `symbol == null` (which is fine, since all we need the symbol
      * for is to check against `this`, and `x[y]` is not `this`.)
      */
-    ExpressionTree identifierExpr = getRootAssignable(methodInvocationTree);
+    ExpressionTree identifierExpr =
+        invocationTree.getKind() == METHOD_INVOCATION
+            ? getRootAssignable((MethodInvocationTree) invocationTree)
+            : null; // null root assignable for constructor calls (as well as some method calls)
     Symbol symbol = getSymbol(identifierExpr);
     Type identifierType = getType(identifierExpr);
 
+    /*
+     * A map from short description to fix instance (even though every short description ultimately
+     * will become _part of_ a fix instance later).
+     *
+     * As always, the order of suggested fixes can matter. In practice, it probably matters mostly
+     * just to the checker's own tests. But it also affects the order in which the fixes are printed
+     * during compile errors, and it affects which fix is chosen for automatically generated fix CLs
+     * (though those should be rare inside Google: b/244334502#comment13).
+     *
+     * Note that, when possible, we have separate code that suggests adding @CanIgnoreReturnValue in
+     * preference to all the fixes below.
+     *
+     * The _names_ of the fixes probably don't actually matter inside Google: b/204435834#comment4.
+     * Luckily, they're not a ton harder to include than plain code comments would be.
+     */
+    ImmutableMap.Builder<String, SuggestedFix> fixes = ImmutableMap.builder();
     if (identifierExpr != null
         && symbol != null
         && !symbol.name.contentEquals("this")
-        && returnType != null
-        && state.getTypes().isAssignable(returnType, identifierType)) {
-      // Fix by assigning the result of the call to the root receiver reference.
-      return prefixWith(methodInvocationTree, state.getSourceForNode(identifierExpr) + " = ");
-    } else {
-      // Unclear what the programmer intended.  Delete since we don't know what else to do.
-      Tree parent = state.getPath().getParentPath().getLeaf();
-      if (parent instanceof ExpressionStatementTree
-          && constantExpressions.constantExpression(methodInvocationTree, state).isPresent()) {
-        return delete(parent);
+        && resultType != null
+        && state.getTypes().isAssignable(resultType, identifierType)) {
+      fixes.put(
+          "Assign result back to variable",
+          prefixWith(invocationTree, state.getSourceForNode(identifierExpr) + " = "));
+    }
+    if (parent.getKind() == EXPRESSION_STATEMENT) {
+      if (constantExpressions.constantExpression(invocationTree, state).isPresent()) {
+        fixes.put("Delete call", delete(parent));
       }
     }
-    return emptyFix();
+    return fixes.buildOrThrow().entrySet().stream()
+        .map(
+            e -> SuggestedFix.builder().merge(e.getValue()).setShortDescription(e.getKey()).build())
+        .collect(toImmutableList());
   }
 
   /**
