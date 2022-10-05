@@ -741,6 +741,213 @@ public class CheckReturnValueTest {
         .doTest();
   }
 
+  @Test
+  public void testSuggestCanIgnoreReturnValueForMethodInvocation() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            "import com.google.errorprone.annotations.CheckReturnValue;",
+            "@CheckReturnValue",
+            "class Test {",
+            "  void foo() {",
+            "    makeBarOrThrow();",
+            "  }",
+            "  String makeBarOrThrow() {",
+            "    throw new UnsupportedOperationException();",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "import com.google.errorprone.annotations.CanIgnoreReturnValue;",
+            "import com.google.errorprone.annotations.CheckReturnValue;",
+            "@CheckReturnValue",
+            "class Test {",
+            "  void foo() {",
+            "    makeBarOrThrow();",
+            "  }",
+            "  @CanIgnoreReturnValue",
+            "  String makeBarOrThrow() {",
+            "    throw new UnsupportedOperationException();",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void testSuggestCanIgnoreReturnValueForMethodReference() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            "import com.google.errorprone.annotations.CheckReturnValue;",
+            "@CheckReturnValue",
+            "class Test {",
+            "  Runnable r = this::makeBarOrThrow;",
+            "  String makeBarOrThrow() {",
+            "    throw new UnsupportedOperationException();",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "import com.google.errorprone.annotations.CanIgnoreReturnValue;",
+            "import com.google.errorprone.annotations.CheckReturnValue;",
+            "@CheckReturnValue",
+            "class Test {",
+            "  Runnable r = this::makeBarOrThrow;",
+            "  @CanIgnoreReturnValue",
+            "  String makeBarOrThrow() {",
+            "    throw new UnsupportedOperationException();",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void testSuggestCanIgnoreReturnValueForConstructor() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            "import com.google.errorprone.annotations.CheckReturnValue;",
+            "@CheckReturnValue",
+            "class Test {",
+            "  Test() {}",
+            "  void run() {",
+            "    new Test();",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "import com.google.errorprone.annotations.CanIgnoreReturnValue;",
+            "import com.google.errorprone.annotations.CheckReturnValue;",
+            "@CheckReturnValue",
+            "class Test {",
+            "  @CanIgnoreReturnValue",
+            "  Test() {}",
+            "  void run() {",
+            "    new Test();",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void testSuggestCanIgnoreReturnValueAndRemoveCheckReturnValue() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            "import com.google.errorprone.annotations.CheckReturnValue;",
+            "class Test {",
+            "  void foo() {",
+            "    makeBarOrThrow();",
+            "  }",
+            "  @CheckReturnValue",
+            "  String makeBarOrThrow() {",
+            "    throw new UnsupportedOperationException();",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "import com.google.errorprone.annotations.CanIgnoreReturnValue;",
+            "import com.google.errorprone.annotations.CheckReturnValue;",
+            "class Test {",
+            "  void foo() {",
+            "    makeBarOrThrow();",
+            "  }",
+            "  @CanIgnoreReturnValue",
+            "  String makeBarOrThrow() {",
+            "    throw new UnsupportedOperationException();",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void testDoesNotSuggestCanIgnoreReturnValueForOtherFile() {
+    refactoringHelper
+        .addInputLines(
+            "Lib.java",
+            "import com.google.errorprone.annotations.CheckReturnValue;",
+            "@CheckReturnValue",
+            "class Lib {",
+            "  String makeBarOrThrow() {",
+            "    throw new UnsupportedOperationException();",
+            "  }",
+            "}")
+        .expectUnchanged()
+        .addInputLines(
+            "Test.java",
+            "import com.google.errorprone.annotations.CheckReturnValue;",
+            "@CheckReturnValue",
+            "class Test {",
+            "  void foo(Lib l) {",
+            "    l.makeBarOrThrow();",
+            "  }",
+            "}")
+        // The checker doesn't suggest CIRV, so it applies a different fix instead.
+        .addOutputLines(
+            "Test.java",
+            "import com.google.errorprone.annotations.CheckReturnValue;",
+            "@CheckReturnValue",
+            "class Test {",
+            "  void foo(Lib l) {",
+            "    var unused = l.makeBarOrThrow();",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void testSuggestsVarUnusedForConstructor() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            "@com.google.errorprone.annotations.CheckReturnValue",
+            "class Test {",
+            "  void go() {",
+            "    new Test();",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "@com.google.errorprone.annotations.CheckReturnValue",
+            "class Test {",
+            "  void go() {",
+            "    var unused = new Test();",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void testSuggestsVarUnused2() {
+    refactoringHelper
+        .addInputLines(
+            "Lib.java",
+            "import com.google.errorprone.annotations.CheckReturnValue;",
+            "@CheckReturnValue",
+            "interface Lib {",
+            "  int a();",
+            "  int b();",
+            "}")
+        .expectUnchanged()
+        .addInputLines(
+            "Test.java",
+            "class Test {",
+            "  void foo(Lib lib) {",
+            "    var unused = lib.a();",
+            "    lib.b();",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "class Test {",
+            "  void foo(Lib lib) {",
+            "    var unused = lib.a();",
+            "    var unused2 = lib.b();",
+            "  }",
+            "}")
+        .doTest();
+  }
+
   private CompilationTestHelper compilationHelperLookingAtAllConstructors() {
     return compilationHelper.setArgs(
         "-XepOpt:" + CheckReturnValue.CHECK_ALL_CONSTRUCTORS + "=true");

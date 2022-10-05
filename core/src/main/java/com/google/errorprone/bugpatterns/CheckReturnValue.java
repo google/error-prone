@@ -30,9 +30,14 @@ import static com.google.errorprone.bugpatterns.checkreturnvalue.ResultUsePolicy
 import static com.google.errorprone.bugpatterns.checkreturnvalue.ResultUsePolicy.OPTIONAL;
 import static com.google.errorprone.bugpatterns.checkreturnvalue.Rules.globalDefault;
 import static com.google.errorprone.bugpatterns.checkreturnvalue.Rules.mapAnnotationSimpleName;
+import static com.google.errorprone.fixes.SuggestedFix.emptyFix;
+import static com.google.errorprone.fixes.SuggestedFixes.qualifyType;
+import static com.google.errorprone.util.ASTHelpers.getAnnotationsWithSimpleName;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.hasDirectAnnotationWithSimpleName;
+import static com.google.errorprone.util.ASTHelpers.isGeneratedConstructor;
+import static com.sun.source.tree.Tree.Kind.METHOD;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.errorprone.BugPattern;
@@ -44,6 +49,8 @@ import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.bugpatterns.checkreturnvalue.PackagesRule;
 import com.google.errorprone.bugpatterns.checkreturnvalue.ResultUsePolicy;
 import com.google.errorprone.bugpatterns.checkreturnvalue.ResultUsePolicyEvaluator;
+import com.google.errorprone.fixes.Fix;
+import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
@@ -55,12 +62,16 @@ import com.sun.source.tree.MemberReferenceTree.ReferenceMode;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.NewClassTree;
+import com.sun.source.util.TreePath;
+import com.sun.source.util.Trees;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Type.MethodType;
+import com.sun.tools.javac.processing.JavacProcessingEnvironment;
 import java.util.Optional;
 import javax.lang.model.element.ElementKind;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * @author eaftan@google.com (Eddie Aftandilian)
@@ -266,6 +277,7 @@ public class CheckReturnValue extends AbstractReturnValueIgnored
                 + "%s",
             shortCall, shortCallWithoutNew, apiTrailer(symbol, state));
     return buildDescription(invocationTree)
+        .addFix(fixAtDeclarationSite(symbol, state))
         .addAllFixes(fixesAtCallSite(invocationTree, state))
         .setMessage(message)
         .build();
@@ -336,7 +348,10 @@ public class CheckReturnValue extends AbstractReturnValueIgnored
             parensAndMaybeEllipsis,
             shortCallWithoutNew,
             apiTrailer(symbol, state));
-    return buildDescription(tree).setMessage(message).build();
+    return buildDescription(tree)
+        .setMessage(message)
+        .addFix(fixAtDeclarationSite(symbol, state))
+        .build();
   }
 
   private String apiTrailer(MethodSymbol symbol, VisitorState state) {
@@ -359,5 +374,32 @@ public class CheckReturnValue extends AbstractReturnValueIgnored
   enum MessageTrailerStyle {
     NONE,
     API_ERASED_SIGNATURE,
+  }
+
+  /** Returns a fix that adds {@code @CanIgnoreReturnValue} to the given symbol, if possible. */
+  private static Fix fixAtDeclarationSite(MethodSymbol symbol, VisitorState state) {
+    MethodTree method = findDeclaration(symbol, state);
+    if (method == null || isGeneratedConstructor(method)) {
+      return emptyFix();
+    }
+    SuggestedFix.Builder fix = SuggestedFix.builder();
+    fix.prefixWith(
+        method, "@" + qualifyType(state, fix, CanIgnoreReturnValue.class.getName()) + " ");
+    getAnnotationsWithSimpleName(method.getModifiers().getAnnotations(), CHECK_RETURN_VALUE)
+        .forEach(fix::delete);
+    fix.setShortDescription("Annotate the method with @CanIgnoreReturnValue");
+    return fix.build();
+  }
+
+  private static @Nullable MethodTree findDeclaration(Symbol symbol, VisitorState state) {
+    JavacProcessingEnvironment javacEnv = JavacProcessingEnvironment.instance(state.context);
+    TreePath declPath = Trees.instance(javacEnv).getPath(symbol);
+    // Skip fields declared in other compilation units since we can't make a fix for them here.
+    if (declPath != null
+        && declPath.getCompilationUnit() == state.getPath().getCompilationUnit()
+        && (declPath.getLeaf().getKind() == METHOD)) {
+      return (MethodTree) declPath.getLeaf();
+    }
+    return null;
   }
 }

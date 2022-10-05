@@ -390,6 +390,7 @@ public final class ConstantPatternCompile extends BugChecker implements ClassTre
     return (argSymbol.flags() & Flags.STATIC) != 0;
   }
 
+  // TODO(b/250568455): Make this more widely available.
   private static final class NameUniquifier {
     final Multiset<String> assignmentCounts = HashMultiset.create();
 

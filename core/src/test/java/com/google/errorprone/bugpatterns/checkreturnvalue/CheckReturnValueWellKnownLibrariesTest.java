@@ -19,6 +19,7 @@ package com.google.errorprone.bugpatterns.checkreturnvalue;
 import com.google.auto.value.processor.AutoBuilderProcessor;
 import com.google.auto.value.processor.AutoValueProcessor;
 import com.google.common.collect.ImmutableList;
+import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
 import com.google.errorprone.bugpatterns.CheckReturnValue;
 import org.junit.Rule;
@@ -35,6 +36,9 @@ public class CheckReturnValueWellKnownLibrariesTest {
 
   private final CompilationTestHelper compilationHelper =
       CompilationTestHelper.newInstance(CheckReturnValue.class, getClass());
+
+  private final BugCheckerRefactoringTestHelper refactoringHelper =
+      BugCheckerRefactoringTestHelper.newInstance(CheckReturnValue.class, getClass());
 
   @Rule public TemporaryFolder temporaryFolder = new TemporaryFolder();
 
@@ -63,6 +67,34 @@ public class CheckReturnValueWellKnownLibrariesTest {
             "    verify(t).f();",
             "    doReturn(1).when(t).f();",
             "    Mockito.doReturn(1).when(t).f();",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void testMockitoVerifyMistake() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java", //
+            "interface Test {",
+            "  int f();",
+            "}")
+        .expectUnchanged()
+        .addInputLines(
+            "TestCase.java",
+            "import static org.mockito.Mockito.verify;",
+            "class TestCase {",
+            "  void m(Test t) {",
+            "    verify(t.f());",
+            "  }",
+            "}")
+        .addOutputLines(
+            "TestCase.java",
+            "import static org.mockito.Mockito.verify;",
+            "class TestCase {",
+            "  void m(Test t) {",
+            "    verify(t).f();",
             "  }",
             "}")
         .doTest();
@@ -217,6 +249,85 @@ public class CheckReturnValueWellKnownLibrariesTest {
             "      foo.f();",
             "      assert_().fail();",
             "    } catch (Exception expected) {}",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void truthMissingIsTrue() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            "import static com.google.common.truth.Truth.assertThat;",
+            "class Test {",
+            "  void f(boolean b) {",
+            "    assertThat(b);",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "import static com.google.common.truth.Truth.assertThat;",
+            "class Test {",
+            "  void f(boolean b) {",
+            "    assertThat(b).isTrue();",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void booleanToTruthAssertion() {
+    refactoringHelper
+        .setArgs("-XepCompilingTestOnlyCode")
+        .addInputLines(
+            "Lib.java",
+            "@com.google.errorprone.annotations.CheckReturnValue",
+            "interface Lib {",
+            "  boolean b();",
+            "}")
+        .expectUnchanged()
+        .addInputLines(
+            "Test.java", //
+            "class Test {",
+            "  void go(Lib lib) {",
+            "    lib.b();",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "import static com.google.common.truth.Truth.assertThat;",
+            "class Test {",
+            "  void go(Lib lib) {",
+            "    assertThat(lib.b()).isTrue();",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void booleanToVerifyCall() {
+    refactoringHelper
+        .addInputLines(
+            "Lib.java",
+            "@com.google.errorprone.annotations.CheckReturnValue",
+            "interface Lib {",
+            "  boolean b();",
+            "}")
+        .expectUnchanged()
+        .addInputLines(
+            "Test.java", //
+            "class Test {",
+            "  void go(Lib lib) {",
+            "    lib.b();",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "import static com.google.common.base.Verify.verify;",
+            "class Test {",
+            "  void go(Lib lib) {",
+            "    verify(lib.b());",
             "  }",
             "}")
         .doTest();

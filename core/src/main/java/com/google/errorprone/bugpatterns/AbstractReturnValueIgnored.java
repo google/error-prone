@@ -19,14 +19,19 @@ package com.google.errorprone.bugpatterns;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Suppliers.memoize;
 import static com.google.common.collect.ImmutableList.toImmutableList;
+import static com.google.common.collect.ImmutableSet.toImmutableSet;
+import static com.google.common.collect.Lists.reverse;
 import static com.google.common.collect.Multimaps.toMultimap;
 import static com.google.errorprone.fixes.SuggestedFix.delete;
+import static com.google.errorprone.fixes.SuggestedFix.postfixWith;
 import static com.google.errorprone.fixes.SuggestedFix.prefixWith;
+import static com.google.errorprone.fixes.SuggestedFixes.qualifyStaticImport;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.isThrowingFunctionalInterface;
 import static com.google.errorprone.matchers.Matchers.not;
 import static com.google.errorprone.matchers.Matchers.parentNode;
+import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
 import static com.google.errorprone.util.ASTHelpers.enclosingClass;
 import static com.google.errorprone.util.ASTHelpers.getResultType;
 import static com.google.errorprone.util.ASTHelpers.getRootAssignable;
@@ -36,10 +41,16 @@ import static com.google.errorprone.util.ASTHelpers.getTypeSubstitution;
 import static com.google.errorprone.util.ASTHelpers.getUpperBound;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
 import static com.google.errorprone.util.ASTHelpers.isVoidType;
+import static com.google.errorprone.util.ASTHelpers.matchingMethods;
+import static com.google.errorprone.util.FindIdentifiers.findAllIdents;
 import static com.sun.source.tree.Tree.Kind.EXPRESSION_STATEMENT;
+import static com.sun.source.tree.Tree.Kind.MEMBER_SELECT;
 import static com.sun.source.tree.Tree.Kind.METHOD_INVOCATION;
 import static com.sun.source.tree.Tree.Kind.NEW_CLASS;
+import static com.sun.tools.javac.parser.Tokens.TokenKind.RPAREN;
 import static java.lang.String.format;
+import static java.util.stream.IntStream.range;
+import static java.util.stream.Stream.concat;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableListMultimap;
@@ -63,6 +74,7 @@ import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.LambdaExpressionTree;
 import com.sun.source.tree.MemberReferenceTree;
 import com.sun.source.tree.MemberReferenceTree.ReferenceMode;
+import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.NewClassTree;
@@ -81,6 +93,7 @@ import java.util.Optional;
 import java.util.Queue;
 import java.util.Set;
 import java.util.function.Supplier;
+import java.util.stream.Stream;
 import javax.lang.model.element.Name;
 import javax.lang.model.type.TypeKind;
 
@@ -256,6 +269,64 @@ public abstract class AbstractReturnValueIgnored extends BugChecker
      * Luckily, they're not a ton harder to include than plain code comments would be.
      */
     ImmutableMap.Builder<String, SuggestedFix> fixes = ImmutableMap.builder();
+    if (MOCKITO_VERIFY.matches(invocationTree, state)) {
+      ExpressionTree maybeCallToMock =
+          ((MethodInvocationTree) invocationTree).getArguments().get(0);
+      if (maybeCallToMock.getKind() == METHOD_INVOCATION) {
+        ExpressionTree maybeMethodSelectOnMock =
+            ((MethodInvocationTree) maybeCallToMock).getMethodSelect();
+        if (maybeMethodSelectOnMock.getKind() == MEMBER_SELECT) {
+          MemberSelectTree maybeSelectOnMock = (MemberSelectTree) maybeMethodSelectOnMock;
+          // For this suggestion, we want to move the closing parenthesis:
+          // verify(foo .bar())
+          //           ^      v
+          //           +------+
+          //
+          // The result is:
+          // verify(foo).bar()
+          //
+          // TODO(cpovirk): Suggest this only if `foo` looks like an actual mock object.
+          SuggestedFix.Builder fix = SuggestedFix.builder();
+          fix.postfixWith(maybeSelectOnMock.getExpression(), ")");
+          int closingParen =
+              reverse(state.getOffsetTokensForNode(invocationTree)).stream()
+                  .filter(t -> t.kind() == RPAREN)
+                  .findFirst()
+                  .get()
+                  .pos();
+          fix.replace(closingParen, closingParen + 1, "");
+          fixes.put(
+              format("Verify that %s was called", maybeSelectOnMock.getIdentifier()), fix.build());
+        }
+      }
+    }
+    if (resultType != null && resultType.getKind() == TypeKind.BOOLEAN) {
+      // Fix by calling either assertThat(...).isTrue() or verify(...).
+      if (state.errorProneOptions().isTestOnlyTarget()) {
+        SuggestedFix.Builder fix = SuggestedFix.builder();
+        fix.prefixWith(
+                invocationTree,
+                qualifyStaticImport("com.google.common.truth.Truth.assertThat", fix, state) + "(")
+            .postfixWith(invocationTree, ").isTrue()");
+        fixes.put("Assert that the result is true", fix.build());
+      } else {
+        SuggestedFix.Builder fix = SuggestedFix.builder();
+        fix.prefixWith(
+                invocationTree,
+                qualifyStaticImport("com.google.common.base.Verify.verify", fix, state) + "(")
+            .postfixWith(invocationTree, ")");
+        fixes.put("Insert a runtime check that the result is true", fix.build());
+      }
+    } else if (resultType != null
+        // By looking for any isTrue() method, we handle not just Truth but also AssertJ.
+        && matchingMethods(
+                NAME_OF_IS_TRUE.get(state),
+                m -> m.getParameters().isEmpty(),
+                resultType,
+                state.getTypes())
+            .anyMatch(m -> true)) {
+      fixes.put("Assert that the result is true", postfixWith(invocationTree, ".isTrue()"));
+    }
     if (identifierExpr != null
         && symbol != null
         && !symbol.name.contentEquals("this")
@@ -265,9 +336,31 @@ public abstract class AbstractReturnValueIgnored extends BugChecker
           "Assign result back to variable",
           prefixWith(invocationTree, state.getSourceForNode(identifierExpr) + " = "));
     }
+    /*
+     * TODO(cpovirk): Suggest returning the value from the enclosing method where possible... *if*
+     * we can find a good heuristic. We could consider "Is the return type a protobuf" and/or "Is
+     * this a constructor call or build() call?"
+     */
+    if (parent.getKind() == EXPRESSION_STATEMENT
+        && !constantExpressions.constantExpression(invocationTree, state).isPresent()) {
+      ImmutableSet<String> identifiersInScope =
+          findAllIdents(state).stream().map(v -> v.name.toString()).collect(toImmutableSet());
+      concat(Stream.of("unused"), range(2, 10).mapToObj(i -> "unused" + i))
+          // TODO(b/72928608): Handle even local variables declared *later* within this scope.
+          // TODO(b/250568455): Also check whether we have suggested this name before in this scope.
+          .filter(n -> !identifiersInScope.contains(n))
+          .findFirst()
+          .ifPresent(
+              n ->
+                  fixes.put(
+                      "Suppress error by assigning to a variable",
+                      prefixWith(parent, format("var %s = ", n))));
+    }
     if (parent.getKind() == EXPRESSION_STATEMENT) {
       if (constantExpressions.constantExpression(invocationTree, state).isPresent()) {
         fixes.put("Delete call", delete(parent));
+      } else {
+        fixes.put("Delete call and any side effects", delete(parent));
       }
     }
     return fixes.buildOrThrow().entrySet().stream()
@@ -523,4 +616,10 @@ public abstract class AbstractReturnValueIgnored extends BugChecker
     }
     return NO_MATCH;
   }
+
+  private static final Matcher<ExpressionTree> MOCKITO_VERIFY =
+      staticMethod().onClass("org.mockito.Mockito").named("verify");
+
+  private static final com.google.errorprone.suppliers.Supplier<com.sun.tools.javac.util.Name>
+      NAME_OF_IS_TRUE = VisitorState.memoize(state -> state.getName("isTrue"));
 }
