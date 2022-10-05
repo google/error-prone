@@ -172,22 +172,6 @@ class MustBeClosedCheckerPositiveCases {
     return result;
   }
 
-  void forLoopInitialization() {
-    // TODO(b/236715080): fix results in invalid code. BUG: Diagnostic contains:
-    // for (int i = new Foo().mustBeClosedAnnotatedMethod().method(); i > 0; --i) { }
-  }
-
-  void forLoopConditionUnfixable() {
-    // TODO(b/236715080): suggested fix changes behavior.
-    // BUG: Diagnostic contains:
-    for (int i = 0; i < new Foo().mustBeClosedAnnotatedMethod().method(); ++i) {}
-  }
-
-  void forLoopUpdateUnfixable() {
-    // TODO(b/236715080): fix results in invalid code. BUG: Diagnostic contains:
-    // for (int i = 0; i < 100; i += new Foo().mustBeClosedAnnotatedMethod().method()) {}
-  }
-
   void tryWithResources_nonFinal() {
     Foo foo = new Foo();
     // BUG: Diagnostic contains:
