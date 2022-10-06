@@ -32,11 +32,13 @@ import static com.google.errorprone.bugpatterns.checkreturnvalue.Rules.globalDef
 import static com.google.errorprone.bugpatterns.checkreturnvalue.Rules.mapAnnotationSimpleName;
 import static com.google.errorprone.fixes.SuggestedFix.emptyFix;
 import static com.google.errorprone.fixes.SuggestedFixes.qualifyType;
+import static com.google.errorprone.util.ASTHelpers.enclosingClass;
 import static com.google.errorprone.util.ASTHelpers.getAnnotationsWithSimpleName;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.hasDirectAnnotationWithSimpleName;
 import static com.google.errorprone.util.ASTHelpers.isGeneratedConstructor;
+import static com.google.errorprone.util.ASTHelpers.isLocal;
 import static com.sun.source.tree.Tree.Kind.METHOD;
 
 import com.google.common.collect.ImmutableMap;
@@ -67,7 +69,6 @@ import com.sun.source.util.Trees;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Type;
-import com.sun.tools.javac.code.Type.MethodType;
 import com.sun.tools.javac.processing.JavacProcessingEnvironment;
 import java.util.Optional;
 import javax.lang.model.element.ElementKind;
@@ -92,8 +93,6 @@ public class CheckReturnValue extends AbstractReturnValueIgnored
   static final String CRV_PACKAGES = "CheckReturnValue:Packages";
 
   private final MessageTrailerStyle messageTrailerStyle;
-  private final Optional<ResultUsePolicy> constructorPolicy;
-  private final Optional<ResultUsePolicy> methodPolicy;
   private final ResultUsePolicyEvaluator evaluator;
 
   public CheckReturnValue(ErrorProneFlags flags) {
@@ -102,8 +101,6 @@ public class CheckReturnValue extends AbstractReturnValueIgnored
         flags
             .getEnum("CheckReturnValue:MessageTrailerStyle", MessageTrailerStyle.class)
             .orElse(NONE);
-    this.constructorPolicy = defaultPolicy(flags, CHECK_ALL_CONSTRUCTORS);
-    this.methodPolicy = defaultPolicy(flags, CHECK_ALL_METHODS);
 
     ResultUsePolicyEvaluator.Builder builder =
         ResultUsePolicyEvaluator.builder()
@@ -127,7 +124,13 @@ public class CheckReturnValue extends AbstractReturnValueIgnored
     flags
         .getList(CRV_PACKAGES)
         .ifPresent(packagePatterns -> builder.addRule(PackagesRule.fromPatterns(packagePatterns)));
-    this.evaluator = builder.addRule(globalDefault(methodPolicy, constructorPolicy)).build();
+    this.evaluator =
+        builder
+            .addRule(
+                globalDefault(
+                    defaultPolicy(flags, CHECK_ALL_METHODS),
+                    defaultPolicy(flags, CHECK_ALL_CONSTRUCTORS)))
+            .build();
   }
 
   private static Optional<ResultUsePolicy> defaultPolicy(ErrorProneFlags flags, String flag) {
@@ -305,11 +308,7 @@ public class CheckReturnValue extends AbstractReturnValueIgnored
   protected Description describeReturnValueIgnored(MemberReferenceTree tree, VisitorState state) {
     MethodSymbol symbol = getSymbol(tree);
     Type type = state.getTypes().memberType(getType(tree.getQualifierExpression()), symbol);
-    // TODO(cgdecker): There are probably other types than MethodType that we could resolve here
-    String parensAndMaybeEllipsis =
-        type instanceof MethodType && ((MethodType) type).getParameterTypes().isEmpty()
-            ? "()"
-            : "(...)";
+    String parensAndMaybeEllipsis = type.getParameterTypes().isEmpty() ? "()" : "(...)";
 
     String shortCallWithoutNew;
     String shortCall;
@@ -330,8 +329,8 @@ public class CheckReturnValue extends AbstractReturnValueIgnored
     String message =
         String.format(
             "The result of `%s` must be used\n"
-                + "`%s` acts as an implementation of `%s`.\n"
-                + "— which is a `void` method, so it doesn't use the result of `%s`.\n"
+                + "`%s` acts as an implementation of `%s`"
+                + " -- which is a `void` method, so it doesn't use the result of `%s`.\n"
                 + "\n"
                 + "To use the result, you may need to restructure your code.\n"
                 + "\n"
@@ -355,8 +354,12 @@ public class CheckReturnValue extends AbstractReturnValueIgnored
   }
 
   private String apiTrailer(MethodSymbol symbol, VisitorState state) {
-    if (symbol.enclClass().isAnonymous()) {
-      // I don't think we have a defined format for members of anonymous classes.
+    // (isLocal returns true for both local classes and anonymous classes. That's good for us.)
+    if (isLocal(enclosingClass(symbol))) {
+      /*
+       * We don't have a defined format for members of local and anonymous classes. After all, their
+       * generated class names can change easily as other such classes are introduced.
+       */
       return "";
     }
     switch (messageTrailerStyle) {

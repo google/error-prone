@@ -64,8 +64,8 @@ public class CheckReturnValuePositiveCases {
   public void testResolvedToVoidMethodReference(boolean predicate) {
     // BUG: Diagnostic contains: The result of `increment()` must be used
     //
-    // `this.intValue::increment` acts as an implementation of `Runnable.run`.
-    // — which is a `void` method, so it doesn't use the result of `increment()`.
+    // `this.intValue::increment` acts as an implementation of `Runnable.run`
+    // -- which is a `void` method, so it doesn't use the result of `increment()`.
     //
     // To use the result, you may need to restructure your code.
     //
@@ -82,8 +82,8 @@ public class CheckReturnValuePositiveCases {
   public void testConstructorResolvedToVoidMethodReference() {
     // BUG: Diagnostic contains: The result of `new MyObject()` must be used
     //
-    // `MyObject::new` acts as an implementation of `Runnable.run`.
-    // — which is a `void` method, so it doesn't use the result of `new MyObject()`.
+    // `MyObject::new` acts as an implementation of `Runnable.run`
+    // -- which is a `void` method, so it doesn't use the result of `new MyObject()`.
     //
     // To use the result, you may need to restructure your code.
     //
