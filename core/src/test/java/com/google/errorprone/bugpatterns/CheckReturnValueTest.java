@@ -346,7 +346,7 @@ public class CheckReturnValueTest {
             "@com.google.errorprone.annotations.CanIgnoreReturnValue",
             "@com.google.errorprone.annotations.CheckReturnValue",
             "// BUG: Diagnostic contains: @CheckReturnValue and @CanIgnoreReturnValue cannot"
-                + " both be applied to the same class",
+                + " be applied to the same class",
             "class Test {}")
         .doTest();
   }
@@ -360,7 +360,7 @@ public class CheckReturnValueTest {
             "  @com.google.errorprone.annotations.CanIgnoreReturnValue",
             "  @com.google.errorprone.annotations.CheckReturnValue",
             "  // BUG: Diagnostic contains: @CheckReturnValue and @CanIgnoreReturnValue cannot"
-                + " both be applied to the same method",
+                + " be applied to the same method",
             "  void m() {}",
             "}")
         .doTest();
