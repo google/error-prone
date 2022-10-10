@@ -17,7 +17,7 @@
 package com.google.errorprone.bugpatterns.checkreturnvalue;
 
 import static com.google.common.collect.ImmutableListMultimap.toImmutableListMultimap;
-import static com.google.errorprone.bugpatterns.checkreturnvalue.ResultUsePolicy.OPTIONAL;
+import static com.google.errorprone.bugpatterns.checkreturnvalue.ResultUsePolicy.UNSPECIFIED;
 import static com.google.errorprone.bugpatterns.checkreturnvalue.ResultUseRule.RuleScope.ENCLOSING_ELEMENTS;
 import static com.google.errorprone.bugpatterns.checkreturnvalue.ResultUseRule.RuleScope.GLOBAL;
 import static com.google.errorprone.bugpatterns.checkreturnvalue.ResultUseRule.RuleScope.METHOD;
@@ -82,7 +82,7 @@ public final class ResultUsePolicyEvaluator {
    * apply to it.
    */
   public ResultUsePolicy evaluate(MethodSymbol method, VisitorState state) {
-    return policies(method, state).findFirst().orElse(OPTIONAL);
+    return policies(method, state).findFirst().orElse(UNSPECIFIED);
   }
 
   private Stream<ResultUsePolicy> policies(MethodSymbol method, VisitorState state) {

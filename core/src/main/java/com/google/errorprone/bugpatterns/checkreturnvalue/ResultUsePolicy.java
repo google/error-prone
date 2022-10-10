@@ -27,4 +27,6 @@ public enum ResultUsePolicy {
   EXPECTED,
   /** Use of the result is optional. */
   OPTIONAL,
+  /** It is unspecified whether the result should be used or not. */
+  UNSPECIFIED,
 }

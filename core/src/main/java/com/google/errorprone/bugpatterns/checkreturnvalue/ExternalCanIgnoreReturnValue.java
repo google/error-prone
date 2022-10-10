@@ -80,7 +80,7 @@ public final class ExternalCanIgnoreReturnValue extends MethodRule {
   @Override
   public Optional<ResultUsePolicy> evaluateMethod(MethodSymbol method, VisitorState state) {
     return EXTERNAL_RULE_EVALUATOR.get(state).methodMatches(method, state)
-        ? Optional.of(ResultUsePolicy.OPTIONAL)
+        ? Optional.of(ResultUsePolicy.UNSPECIFIED)
         : Optional.empty();
   }
 

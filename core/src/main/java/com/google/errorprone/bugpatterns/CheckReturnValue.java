@@ -29,6 +29,7 @@ import static com.google.errorprone.bugpatterns.checkreturnvalue.ProtoRules.muta
 import static com.google.errorprone.bugpatterns.checkreturnvalue.ProtoRules.protoBuilders;
 import static com.google.errorprone.bugpatterns.checkreturnvalue.ResultUsePolicy.EXPECTED;
 import static com.google.errorprone.bugpatterns.checkreturnvalue.ResultUsePolicy.OPTIONAL;
+import static com.google.errorprone.bugpatterns.checkreturnvalue.ResultUsePolicy.UNSPECIFIED;
 import static com.google.errorprone.bugpatterns.checkreturnvalue.Rules.globalDefault;
 import static com.google.errorprone.bugpatterns.checkreturnvalue.Rules.mapAnnotationSimpleName;
 import static com.google.errorprone.fixes.SuggestedFix.emptyFix;
@@ -149,11 +150,7 @@ public class CheckReturnValue extends AbstractReturnValueIgnored
    */
   @Override
   public Matcher<ExpressionTree> specializedMatcher() {
-    return (tree, state) ->
-        methodToInspect(tree)
-            .map(method -> evaluator.evaluate(method, state))
-            .orElse(OPTIONAL)
-            .equals(EXPECTED);
+    return (tree, state) -> getMethodPolicy(tree, state).equals(EXPECTED);
   }
 
   private static Optional<MethodSymbol> methodToInspect(ExpressionTree tree) {
@@ -188,6 +185,13 @@ public class CheckReturnValue extends AbstractReturnValueIgnored
   private static Optional<MethodSymbol> methodSymbol(ExpressionTree tree) {
     Symbol sym = ASTHelpers.getSymbol(tree);
     return sym instanceof MethodSymbol ? Optional.of((MethodSymbol) sym) : Optional.empty();
+  }
+
+  /** Returns the {@link ResultUsePolicy} for the method used in the given {@code expression}. */
+  public ResultUsePolicy getMethodPolicy(ExpressionTree expression, VisitorState state) {
+    return methodToInspect(expression)
+        .map(method -> evaluator.evaluate(method, state))
+        .orElse(UNSPECIFIED);
   }
 
   @Override
