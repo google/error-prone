@@ -15,7 +15,7 @@
 <script type="text/javascript" src="../../../../script-dir/jquery-ui.min.js"></script>
 </head>
 <body class="class-declaration-page">
-<script type="text/javascript">var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10};
+<script type="text/javascript">var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "alt-color";
 var rowColor = "row-color";
@@ -213,6 +213,14 @@ implements <a href="BugChecker.MethodTreeMatcher.html" title="interface in com.g
 </td>
 </tr>
 <tr class="alt-color" id="i4">
+<td class="col-first"><code><a href="checkreturnvalue/ResultUsePolicy.html" title="enum in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUsePolicy</a></code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#getMethodPolicy(com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)">getMethodPolicy</a></span>&#8203;(com.sun.source.tree.ExpressionTree&nbsp;expression,
+<a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
+<td class="col-last">
+<div class="block">Returns the <a href="checkreturnvalue/ResultUsePolicy.html" title="enum in com.google.errorprone.bugpatterns.checkreturnvalue"><code>ResultUsePolicy</code></a> for the method used in the given <code>expression</code>.</div>
+</td>
+</tr>
+<tr class="row-color" id="i5">
 <td class="col-first"><code>boolean</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#isCovered(com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)">isCovered</a></span>&#8203;(com.sun.source.tree.ExpressionTree&nbsp;tree,
 <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
@@ -221,7 +229,7 @@ implements <a href="BugChecker.MethodTreeMatcher.html" title="interface in com.g
  value should be used or not.</div>
 </td>
 </tr>
-<tr class="row-color" id="i5">
+<tr class="alt-color" id="i6">
 <td class="col-first"><code><a href="../matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#matchClass(com.sun.source.tree.ClassTree,com.google.errorprone.VisitorState)">matchClass</a></span>&#8203;(com.sun.source.tree.ClassTree&nbsp;tree,
 <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
@@ -230,7 +238,7 @@ implements <a href="BugChecker.MethodTreeMatcher.html" title="interface in com.g
  applied to a class (or interface or enum).</div>
 </td>
 </tr>
-<tr class="alt-color" id="i6">
+<tr class="row-color" id="i7">
 <td class="col-first"><code><a href="../matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#matchMethod(com.sun.source.tree.MethodTree,com.google.errorprone.VisitorState)">matchMethod</a></span>&#8203;(com.sun.source.tree.MethodTree&nbsp;tree,
 <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
@@ -238,7 +246,7 @@ implements <a href="BugChecker.MethodTreeMatcher.html" title="interface in com.g
 <div class="block">Validate <code>@CheckReturnValue</code> and <a href="../annotations/CanIgnoreReturnValue.html" title="annotation in com.google.errorprone.annotations"><code>CanIgnoreReturnValue</code></a> usage on methods.</div>
 </td>
 </tr>
-<tr class="row-color" id="i7">
+<tr class="alt-color" id="i8">
 <td class="col-first"><code><a href="../matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.ExpressionTree&gt;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#specializedMatcher()">specializedMatcher</a></span>()</code></th>
 <td class="col-last">
@@ -325,6 +333,14 @@ implements <a href="BugChecker.MethodTreeMatcher.html" title="interface in com.g
 <dt>Specified by:</dt>
 <dd><code><a href="AbstractReturnValueIgnored.html#specializedMatcher()">specializedMatcher</a></code>&nbsp;in class&nbsp;<code><a href="AbstractReturnValueIgnored.html" title="class in com.google.errorprone.bugpatterns">AbstractReturnValueIgnored</a></code></dd>
 </dl>
+</section>
+</li>
+<li>
+<section class="detail" id="getMethodPolicy(com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)">
+<h3>getMethodPolicy</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="checkreturnvalue/ResultUsePolicy.html" title="enum in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUsePolicy</a></span>&nbsp;<span class="member-name">getMethodPolicy</span>&#8203;(<span class="parameters">com.sun.source.tree.ExpressionTree&nbsp;expression,
+<a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
+<div class="block">Returns the <a href="checkreturnvalue/ResultUsePolicy.html" title="enum in com.google.errorprone.bugpatterns.checkreturnvalue"><code>ResultUsePolicy</code></a> for the method used in the given <code>expression</code>.</div>
 </section>
 </li>
 <li>
