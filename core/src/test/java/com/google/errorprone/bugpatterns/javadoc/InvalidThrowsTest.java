@@ -69,4 +69,19 @@ public final class InvalidThrowsTest {
         .expectUnchanged()
         .doTest(TestMode.TEXT_MATCH);
   }
+
+  @Test
+  public void unrecognisedException_noComplaint() {
+    refactoring
+        .addInputLines(
+            "Test.java",
+            "interface Test {",
+            "  /**",
+            "   * @throws com.google.UnknownRuntimeException when failed",
+            "   */",
+            "  void bar(int a, int b);",
+            "}")
+        .expectUnchanged()
+        .doTest(TestMode.TEXT_MATCH);
+  }
 }
