@@ -33,6 +33,7 @@ import com.sun.tools.javac.code.Symbol.MethodSymbol;
 /** A BugPattern; see the summary */
 @BugPattern(
     summary = "Mockito cannot mock final methods, and can't detect this at runtime",
+    altNames = {"MockitoBadFinalMethod"},
     severity = WARNING)
 public final class CannotMockFinalMethod extends BugChecker implements MethodInvocationTreeMatcher {
 
