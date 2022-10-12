@@ -89,7 +89,7 @@ public class UnnecessaryLambda extends BugChecker
       return NO_MATCH;
     }
     MethodSymbol sym = getSymbol(tree);
-    if (!ASTHelpers.canBeRemoved(sym, state)) {
+    if (!ASTHelpers.canBeRemoved(sym, state) || ASTHelpers.shouldKeep(tree)) {
       return NO_MATCH;
     }
     SuggestedFix.Builder fix = SuggestedFix.builder();

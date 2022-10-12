@@ -329,4 +329,27 @@ public class UnnecessaryLambdaTest {
         .expectUnchanged()
         .doTest();
   }
+
+  @Test
+  public void producesIgnored() {
+    testHelper
+        .addInputLines(
+            "Produces.java", //
+            "@interface Produces {",
+            "}")
+        .expectUnchanged()
+        .addInputLines(
+            "Test.java",
+            "import javax.inject.Provider;",
+            "class Test {",
+            "  private class A {",
+            "    @Produces",
+            "    public Provider<String> foo() {",
+            "      return () -> \"hello \";",
+            "    }",
+            "  }",
+            "}")
+        .expectUnchanged()
+        .doTest();
+  }
 }
