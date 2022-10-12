@@ -11,6 +11,7 @@ severity: WARNING
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+_Alternate names: MockitoBadFinalMethod_
 
 ## The problem
 Mockito cannot mock `final` methods, and cannot tell at runtime that this is
