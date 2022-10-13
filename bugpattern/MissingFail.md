@@ -25,6 +25,29 @@ try {
 }
 ```
 
+This is better:
+
+```java
+import static org.junit.Assert.fail;
+
+try {
+  someOperationThatShouldThrow();
+  fail()
+} catch (SomeException expected) {
+  assertThat(expected).hasMessage("Operation failed");
+}
+```
+
+But using `assertThrows` is preferable and the least error prone:
+
+```java
+import static org.junit.Assert.assertThrows;
+
+SomeException expected =
+    assertThrows(SomeException.class, () -> someOperationThatShouldThrow());
+assertThat(expected).hasMessage("Operation failed");
+```
+
 Without the call to `fail()`, the test is broken: it will pass if the exception
 is never thrown *or* if the exception is thrown with the expected message.
 
