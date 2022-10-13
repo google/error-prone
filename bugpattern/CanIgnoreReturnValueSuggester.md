@@ -1,6 +1,6 @@
 ---
 title: CanIgnoreReturnValueSuggester
-summary: Methods that always 'return this' should be annotated with @CanIgnoreReturnValue
+summary: Methods that always 'return this' should be annotated with @com.google.errorprone.annotations.CanIgnoreReturnValue
 layout: bugpattern
 tags: ''
 severity: WARNING
