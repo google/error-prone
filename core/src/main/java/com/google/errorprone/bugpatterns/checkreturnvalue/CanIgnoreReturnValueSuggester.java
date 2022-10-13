@@ -52,7 +52,9 @@ import com.sun.tools.javac.code.Type;
  * returns {@code this} (or other methods that are likely to also just return {@code this}).
  */
 @BugPattern(
-    summary = "Methods that always 'return this' should be annotated with @CanIgnoreReturnValue",
+    summary =
+        "Methods that always 'return this' should be annotated with"
+            + " @com.google.errorprone.annotations.CanIgnoreReturnValue",
     severity = WARNING)
 public final class CanIgnoreReturnValueSuggester extends BugChecker implements MethodTreeMatcher {
   private static final String CRV = "com.google.errorprone.annotations.CheckReturnValue";
