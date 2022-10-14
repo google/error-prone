@@ -27,6 +27,7 @@ import static com.google.errorprone.matchers.Matchers.staticMethod;
 import static com.google.errorprone.util.ASTHelpers.canBeRemoved;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
+import static com.google.errorprone.util.ASTHelpers.isInStaticInitializer;
 import static com.google.errorprone.util.ASTHelpers.isStatic;
 import static java.lang.String.format;
 
@@ -95,6 +96,19 @@ public final class ConstantPatternCompile extends BugChecker implements ClassTre
           return null;
         }
 
+        @Override
+        public Void visitMethodInvocation(MethodInvocationTree tree, Void unused) {
+          tryFix(tree, state.withPath(getCurrentPath()), nameUniquifier)
+              .ifPresent(
+                  other -> {
+                    fixBuilder.merge(other);
+                    if (firstHit[0] == null) {
+                      firstHit[0] = tree;
+                    }
+                  });
+          return super.visitMethodInvocation(tree, unused);
+        }
+
         private Optional<SuggestedFix> tryFix(
             MethodInvocationTree tree, VisitorState state, NameUniquifier nameUniquifier) {
           if (!PATTERN_COMPILE_CHECK.matches(tree, state)) {
@@ -107,25 +121,15 @@ public final class ConstantPatternCompile extends BugChecker implements ClassTre
           if (state.errorProneOptions().isTestOnlyTarget()) {
             return Optional.empty();
           }
+          if (isInStaticInitializer(state)) {
+            return Optional.empty();
+          }
           Tree parent = state.getPath().getParentPath().getLeaf();
           if (parent instanceof VariableTree) {
             return handleVariable((VariableTree) parent, state);
           }
 
           return Optional.of(handleInlineExpression(tree, state, nameUniquifier));
-        }
-
-        @Override
-        public Void visitMethodInvocation(MethodInvocationTree tree, Void unused) {
-          tryFix(tree, state.withPath(getCurrentPath()), nameUniquifier)
-              .ifPresent(
-                  other -> {
-                    fixBuilder.merge(other);
-                    if (firstHit[0] == null) {
-                      firstHit[0] = tree;
-                    }
-                  });
-          return super.visitMethodInvocation(tree, unused);
         }
       }.scan(new TreePath(state.getPath(), member), null);
     }

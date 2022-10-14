@@ -406,4 +406,18 @@ public class ConstantPatternCompileTest {
         .setArgs("-XepCompilingTestOnlyCode")
         .doTest();
   }
+
+  @Test
+  public void withinList_noFinding() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.common.collect.ImmutableList;",
+            "import java.util.regex.Pattern;",
+            "class Test {",
+            "  private static final ImmutableList<Pattern> patterns =",
+            "      ImmutableList.of(Pattern.compile(\".*\"));",
+            "}")
+        .doTest();
+  }
 }

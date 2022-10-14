@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.common.collect.Streams.stream;
 import static com.google.errorprone.fixes.SuggestedFixes.qualifyType;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.instanceMethod;
@@ -45,7 +44,6 @@ import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.UnusedReturnValueMatcher;
 import com.google.errorprone.util.ASTHelpers;
-import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.ConditionalExpressionTree;
 import com.sun.source.tree.ExpressionStatementTree;
@@ -70,7 +68,6 @@ import java.util.Optional;
 import java.util.stream.Stream;
 import javax.annotation.Nullable;
 import javax.lang.model.element.ElementKind;
-import javax.lang.model.element.Modifier;
 
 /**
  * An abstract check for resources that must be closed; used by {@link StreamResourceLeak} and
@@ -228,7 +225,7 @@ public abstract class AbstractMustBeClosedChecker extends BugChecker {
    */
   private final Optional<Change> matchNewClassOrMethodInvocation(
       ExpressionTree tree, VisitorState state, NameSuggester suggester) {
-    if (isInStaticInitializer(state)) {
+    if (ASTHelpers.isInStaticInitializer(state)) {
       return Optional.empty();
     }
     return checkClosed(tree, state, suggester)
@@ -305,7 +302,7 @@ public abstract class AbstractMustBeClosedChecker extends BugChecker {
             VarSymbol var = (VarSymbol) sym;
             if (var.getKind() == ElementKind.RESOURCE_VARIABLE
                 || isClosedInFinallyClause(var, path, state)
-                || variableInitializationCountsAsClosing(var)) {
+                || ASTHelpers.variableIsStaticFinal(var)) {
               return Optional.empty();
             }
           }
@@ -346,29 +343,6 @@ public abstract class AbstractMustBeClosedChecker extends BugChecker {
 
   private static Optional<Change> findingWithNoFix() {
     return Change.of(SuggestedFix.emptyFix());
-  }
-
-  private static boolean variableInitializationCountsAsClosing(VarSymbol var) {
-    // static final fields don't need to be closed, because they never leave scope
-    return (var.isStatic() || var.owner.isEnum()) && var.getModifiers().contains(Modifier.FINAL);
-  }
-
-  // We allow calling @MBC methods anywhere inside of a static initializer. This is a compromise:
-  // in principle a static final variable might contain a method that creates @MBC objects on
-  // demand, and we'd prefer to mark those as illegal. But the false positive rate is high, and it's
-  // hard to cover every case. For example, stuff like
-  // static final List<Pattern> PATS = STRS.stream().map(s -> Pattern.compile(s)).collect(toList());
-  // is fine, but is hard to detect in a general way.
-  private static boolean isInStaticInitializer(VisitorState state) {
-    return stream(state.getPath())
-        .anyMatch(
-            tree ->
-                (tree instanceof VariableTree
-                        && variableInitializationCountsAsClosing((VarSymbol) getSymbol(tree)))
-                    || (tree instanceof AssignmentTree
-                        && getSymbol(((AssignmentTree) tree).getVariable()) instanceof VarSymbol
-                        && variableInitializationCountsAsClosing(
-                            (VarSymbol) getSymbol(((AssignmentTree) tree).getVariable()))));
   }
 
   /**

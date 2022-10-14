@@ -24,7 +24,6 @@ import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.common.collect.Streams.stream;
 import static com.google.errorprone.matchers.JUnitMatchers.JUNIT4_RUN_WITH_ANNOTATION;
 import static com.google.errorprone.matchers.Matchers.isSubtypeOf;
-import static com.google.errorprone.util.ASTHelpers.isStatic;
 import static com.sun.tools.javac.code.Scope.LookupKind.NON_RECURSIVE;
 import static java.util.Objects.requireNonNull;
 import static java.util.stream.Collectors.toCollection;
@@ -1592,6 +1591,34 @@ public class ASTHelpers {
       default:
         return false;
     }
+  }
+
+  /**
+   * Attempts to detect whether we're in a static-initializer-like context: that includes direct
+   * assignments to static fields, assignments to enum fields, being contained within an expression
+   * which is ultimately assigned to a static field.
+   *
+   * <p>This is very much a heuristic, and not fool-proof.
+   */
+  public static boolean isInStaticInitializer(VisitorState state) {
+    return stream(state.getPath())
+        .anyMatch(
+            tree ->
+                (tree instanceof VariableTree && variableIsStaticFinal((VarSymbol) getSymbol(tree)))
+                    || (tree instanceof AssignmentTree
+                        && getSymbol(((AssignmentTree) tree).getVariable()) instanceof VarSymbol
+                        && variableIsStaticFinal(
+                            (VarSymbol) getSymbol(((AssignmentTree) tree).getVariable()))));
+  }
+
+  /**
+   * Whether the variable is (or should be regarded as) static final.
+   *
+   * <p>We regard instance fields within enums as "static final", as they will only have a finite
+   * number of instances tied to an (effectively) static final enum value.
+   */
+  public static boolean variableIsStaticFinal(VarSymbol var) {
+    return (var.isStatic() || var.owner.isEnum()) && var.getModifiers().contains(Modifier.FINAL);
   }
 
   /** An expression's target type, see {@link #targetType}. */
