@@ -7358,13 +7358,22 @@ com.sun.tools.javac.code.Type&nbsp;t,
 </tr>
 <tr class="row-color">
 <td class="col-first"><code>static boolean</code></td>
+<th class="col-second" scope="row"><span class="type-name-label">ASTHelpers.</span><code><span class="member-name-link"><a href="../util/ASTHelpers.html#isInStaticInitializer(com.google.errorprone.VisitorState)">isInStaticInitializer</a></span>&#8203;(<a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
+<td class="col-last">
+<div class="block">Attempts to detect whether we're in a static-initializer-like context: that includes direct
+ assignments to static fields, assignments to enum fields, being contained within an expression
+ which is ultimately assigned to a static field.</div>
+</td>
+</tr>
+<tr class="alt-color">
+<td class="col-first"><code>static boolean</code></td>
 <th class="col-second" scope="row"><span class="type-name-label">ASTHelpers.</span><code><span class="member-name-link"><a href="../util/ASTHelpers.html#isJUnitTestCode(com.google.errorprone.VisitorState)">isJUnitTestCode</a></span>&#8203;(<a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
 <td class="col-last">
 <div class="block">Returns true if the leaf node in the <code>TreePath</code> from <code>state</code> sits somewhere
  underneath a class or method that is marked as JUnit 3 or 4 test code.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>static boolean</code></td>
 <th class="col-second" scope="row"><span class="type-name-label">ASTHelpers.</span><code><span class="member-name-link"><a href="../util/ASTHelpers.html#isSameType(com.sun.tools.javac.code.Type,com.sun.tools.javac.code.Type,com.google.errorprone.VisitorState)">isSameType</a></span>&#8203;(com.sun.tools.javac.code.Type&nbsp;s,
 com.sun.tools.javac.code.Type&nbsp;t,
@@ -7373,7 +7382,7 @@ com.sun.tools.javac.code.Type&nbsp;t,
 <div class="block">Returns true if <code>erasure(s) == erasure(t)</code>.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>static boolean</code></td>
 <th class="col-second" scope="row"><span class="type-name-label">ASTHelpers.</span><code><span class="member-name-link"><a href="../util/ASTHelpers.html#isSubtype(com.sun.tools.javac.code.Type,com.sun.tools.javac.code.Type,com.google.errorprone.VisitorState)">isSubtype</a></span>&#8203;(com.sun.tools.javac.code.Type&nbsp;s,
 com.sun.tools.javac.code.Type&nbsp;t,
@@ -7382,7 +7391,7 @@ com.sun.tools.javac.code.Type&nbsp;t,
 <div class="block">Returns true if <code>erasure(s) &lt;: erasure(t)</code>.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>static boolean</code></td>
 <th class="col-second" scope="row"><span class="type-name-label">ASTHelpers.</span><code><span class="member-name-link"><a href="../util/ASTHelpers.html#isTestNgTestCode(com.google.errorprone.VisitorState)">isTestNgTestCode</a></span>&#8203;(<a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
 <td class="col-last">
@@ -7390,7 +7399,7 @@ com.sun.tools.javac.code.Type&nbsp;t,
  underneath a class or method that is marked as TestNG test code.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>static boolean</code></td>
 <th class="col-second" scope="row"><span class="type-name-label">ASTHelpers.</span><code><span class="member-name-link"><a href="../util/ASTHelpers.html#isVoidType(com.sun.tools.javac.code.Type,com.google.errorprone.VisitorState)">isVoidType</a></span>&#8203;(com.sun.tools.javac.code.Type&nbsp;type,
 <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
@@ -7398,7 +7407,7 @@ com.sun.tools.javac.code.Type&nbsp;t,
 <div class="block">Return true if the given type is 'void' or 'Void'.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>static <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;com.sun.source.tree.ExpressionTree&gt;</code></td>
 <th class="col-second" scope="row"><span class="type-name-label">ASTHelpers.</span><code><span class="member-name-link"><a href="../util/ASTHelpers.html#matchBinaryTree(com.sun.source.tree.BinaryTree,java.util.List,com.google.errorprone.VisitorState)">matchBinaryTree</a></span>&#8203;(com.sun.source.tree.BinaryTree&nbsp;tree,
 <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.ExpressionTree&gt;&gt;&nbsp;matchers,
@@ -7408,7 +7417,7 @@ com.sun.tools.javac.code.Type&nbsp;t,
  operands in both orders.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>static boolean</code></td>
 <th class="col-second" scope="row"><span class="type-name-label">ASTHelpers.</span><code><span class="member-name-link"><a href="../util/ASTHelpers.html#requiresParentheses(com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)">requiresParentheses</a></span>&#8203;(com.sun.source.tree.ExpressionTree&nbsp;expression,
 <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
@@ -7416,7 +7425,7 @@ com.sun.tools.javac.code.Type&nbsp;t,
 <div class="block">Checks whether an expression requires parentheses.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>static com.sun.tools.javac.code.Symbol.MethodSymbol</code></td>
 <th class="col-second" scope="row"><span class="type-name-label">ASTHelpers.</span><code><span class="member-name-link"><a href="../util/ASTHelpers.html#resolveExistingMethod(com.google.errorprone.VisitorState,com.sun.tools.javac.code.Symbol.TypeSymbol,com.sun.tools.javac.util.Name,java.lang.Iterable,java.lang.Iterable)">resolveExistingMethod</a></span>&#8203;(<a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
 com.sun.tools.javac.code.Symbol.TypeSymbol&nbsp;base,
@@ -7428,7 +7437,7 @@ com.sun.tools.javac.util.Name&nbsp;name,
  argTypes</code> and <code>tyargTypes</code> and return its MethodSymbol.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>abstract boolean</code></td>
 <th class="col-second" scope="row"><span class="type-name-label">Visibility.</span><code><span class="member-name-link"><a href="../util/Visibility.html#shouldBeVisible(com.sun.source.tree.Tree,com.google.errorprone.VisitorState)">shouldBeVisible</a></span>&#8203;(com.sun.source.tree.Tree&nbsp;tree,
 <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
@@ -7437,7 +7446,7 @@ com.sun.tools.javac.util.Name&nbsp;name,
  code.</div>
 </td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code>abstract boolean</code></td>
 <th class="col-second" scope="row"><span class="type-name-label">Visibility.</span><code><span class="member-name-link"><a href="../util/Visibility.html#shouldBeVisible(com.sun.tools.javac.code.Symbol,com.google.errorprone.VisitorState)">shouldBeVisible</a></span>&#8203;(com.sun.tools.javac.code.Symbol&nbsp;symbol,
 <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
@@ -7446,7 +7455,7 @@ com.sun.tools.javac.util.Name&nbsp;name,
  code.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code>static <a href="../util/ASTHelpers.TargetType.html" title="class in com.google.errorprone.util">ASTHelpers.TargetType</a></code></td>
 <th class="col-second" scope="row"><span class="type-name-label">ASTHelpers.</span><code><span class="member-name-link"><a href="../util/ASTHelpers.html#targetType(com.google.errorprone.VisitorState)">targetType</a></span>&#8203;(<a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
 <td class="col-last">

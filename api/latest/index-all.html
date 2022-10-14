@@ -6588,6 +6588,12 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/IsInstanceOfClass.html#%3Cinit%3E()">IsInstanceOfClass()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/IsInstanceOfClass.html" title="class in com.google.errorprone.bugpatterns">IsInstanceOfClass</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/google/errorprone/util/ASTHelpers.html#isInStaticInitializer(com.google.errorprone.VisitorState)">isInStaticInitializer(VisitorState)</a></span> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/ASTHelpers.html" title="class in com.google.errorprone.util">ASTHelpers</a></dt>
+<dd>
+<div class="block">Attempts to detect whether we're in a static-initializer-like context: that includes direct
+ assignments to static fields, assignments to enum fields, being contained within an expression
+ which is ultimately assigned to a static field.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/matchers/JUnitMatchers.html#isJunit3TestCase">isJunit3TestCase</a></span> - Static variable in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/JUnitMatchers.html" title="class in com.google.errorprone.matchers">JUnitMatchers</a></dt>
 <dd>
 <div class="block">Match a method which appears to be a JUnit 3 test case.</div>
@@ -13687,6 +13693,10 @@ the order they are declared.</div>
 <dt><span class="member-name-link"><a href="com/google/errorprone/matchers/Matchers.html#variableInitializer(com.google.errorprone.matchers.Matcher)">variableInitializer(Matcher&lt;ExpressionTree&gt;)</a></span> - Static method in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/Matchers.html" title="class in com.google.errorprone.matchers">Matchers</a></dt>
 <dd>
 <div class="block">Matches on the initializer of a VariableTree AST node.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/google/errorprone/util/ASTHelpers.html#variableIsStaticFinal(com.sun.tools.javac.code.Symbol.VarSymbol)">variableIsStaticFinal(Symbol.VarSymbol)</a></span> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/ASTHelpers.html" title="class in com.google.errorprone.util">ASTHelpers</a></dt>
+<dd>
+<div class="block">Whether the variable is (or should be regarded as) static final.</div>
 </dd>
 <dt><a href="com/google/errorprone/bugpatterns/VariableNameSameAsType.html" title="class in com.google.errorprone.bugpatterns"><span class="type-name-link">VariableNameSameAsType</span></a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
 <dd>
