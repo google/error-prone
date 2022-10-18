@@ -56,4 +56,35 @@ public class ASTHelpersSuggestionsTest {
             "jdk.compiler/com.sun.tools.javac.code", "jdk.compiler/com.sun.tools.javac.util")
         .doTest();
   }
+
+  @Test
+  public void onSymbolSubtyle() {
+    testHelper
+        .addInputLines(
+            "Test.java",
+            "import com.sun.tools.javac.code.Symbol.VarSymbol;",
+            "class Test {",
+            "  void f(VarSymbol s) {",
+            "    s.isStatic();",
+            "    s.packge();",
+            "    s.members().anyMatch(x -> x.isStatic());",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "import static com.google.errorprone.util.ASTHelpers.enclosingPackage;",
+            "import static com.google.errorprone.util.ASTHelpers.isStatic;",
+            "import static com.google.errorprone.util.ASTHelpers.scope;",
+            "import com.sun.tools.javac.code.Symbol.VarSymbol;",
+            "class Test {",
+            "  void f(VarSymbol s) {",
+            "    isStatic(s);",
+            "    enclosingPackage(s);",
+            "    scope(s.members()).anyMatch(x -> isStatic(x));",
+            "  }",
+            "}")
+        .addModules(
+            "jdk.compiler/com.sun.tools.javac.code", "jdk.compiler/com.sun.tools.javac.util")
+        .doTest();
+  }
 }

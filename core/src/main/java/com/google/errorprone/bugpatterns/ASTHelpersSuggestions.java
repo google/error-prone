@@ -42,7 +42,7 @@ public class ASTHelpersSuggestions extends BugChecker implements MethodInvocatio
 
   private static final Matcher<ExpressionTree> SYMBOL =
       instanceMethod()
-          .onExactClass("com.sun.tools.javac.code.Symbol")
+          .onDescendantOf("com.sun.tools.javac.code.Symbol")
           .namedAnyOf("isDirectlyOrIndirectlyLocal", "isLocal", "packge", "isStatic");
 
   private static final Matcher<ExpressionTree> SCOPE =
