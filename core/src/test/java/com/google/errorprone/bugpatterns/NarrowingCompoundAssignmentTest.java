@@ -165,6 +165,43 @@ public class NarrowingCompoundAssignmentTest {
         .doTest();
   }
 
+  // bit twiddling deficient types with constant masks of the same width is fine
+  @Test
+  public void testBitTwiddleConstant() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  void m() {",
+            "    short s = 0;",
+            "    byte b = 0;",
+            "",
+            "    s &= ~1;",
+            "    s |= 1;",
+            "    s ^= 1;",
+            "",
+            "    b &= ~1;",
+            "    b |= 1;",
+            "    b ^= 1;",
+            "",
+            "    b |= 128;",
+            "    b &= 128;",
+            "    b ^= 128;",
+            "    b |= 1L;",
+            "    b &= 1L;",
+            "    b ^= 1L;",
+            "",
+            "    // BUG: Diagnostic contains: b = (byte) (b | 256)",
+            "    b |= 256;",
+            "    // BUG: Diagnostic contains: b = (byte) (b & ~256)",
+            "    b &= ~256;",
+            "    // BUG: Diagnostic contains: b = (byte) (b ^ 256)",
+            "    b ^= 256;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
   @Test
   public void allowsBinopsOfDeficientTypes() {
     compilationHelper
@@ -366,13 +403,13 @@ public class NarrowingCompoundAssignmentTest {
   }
 
   private void testPrecedence(String opA, String opB, boolean parens) {
-    String rhs = String.format("1 %s 2", opB);
+    String rhs = String.format("100_000 %s 200_000", opB);
     if (parens) {
       rhs = "(" + rhs + ")";
     }
     String expect = String.format("s = (short) (s %s %s", opA, rhs);
 
-    String compoundAssignment = String.format("    s %s= 1 %s 2;", opA, opB);
+    String compoundAssignment = String.format("    s %s= 100_000 %s 200_000;", opA, opB);
 
     compilationHelper
         .addSourceLines(
