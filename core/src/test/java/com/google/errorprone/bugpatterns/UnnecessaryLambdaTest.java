@@ -352,4 +352,40 @@ public class UnnecessaryLambdaTest {
         .expectUnchanged()
         .doTest();
   }
+
+  @Test
+  public void e() {
+    testHelper
+        .addInputLines(
+            "Test.java",
+            "import java.util.function.Predicate;",
+            "class Test {",
+            "  private void foo(Predicate<Object> p) {}",
+            "  public void test() {",
+            "    foo(E.ELEM.pred());",
+            "  }",
+            "  private enum E {",
+            "    ELEM;",
+            "    Predicate<Object> pred() {",
+            "      return o -> true;",
+            "    }",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "import java.util.function.Predicate;",
+            "class Test {",
+            "  private void foo(Predicate<Object> p) {}",
+            "  public void test() {",
+            "    foo(E.ELEM::pred);",
+            "  }",
+            "  private enum E {",
+            "    ELEM;",
+            "    boolean pred(Object o) {",
+            "      return true;",
+            "    }",
+            "  }",
+            "}")
+        .doTest();
+  }
 }

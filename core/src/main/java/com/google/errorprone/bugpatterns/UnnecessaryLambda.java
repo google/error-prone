@@ -290,10 +290,13 @@ public class UnnecessaryLambda extends BugChecker
           (receiver != null ? "." : "") + newName);
     } else {
       Symbol sym = getSymbol(node);
-      fix.replace(
-          node,
-          String.format(
-              "%s::%s", isStatic(sym) ? sym.owner.enclClass().getSimpleName() : "this", newName));
+      String receiverCode;
+      if (node instanceof MethodInvocationTree && getReceiver(node) != null) {
+        receiverCode = state.getSourceForNode(getReceiver(node));
+      } else {
+        receiverCode = isStatic(sym) ? sym.owner.enclClass().getSimpleName().toString() : "this";
+      }
+      fix.replace(node, String.format("%s::%s", receiverCode, newName));
     }
   }
 
