@@ -529,4 +529,18 @@ public final class AnnotationPositionTest {
         .expectUnchanged()
         .doTest(TEXT_MATCH);
   }
+
+  @Test
+  public void recordAnnotation() {
+    assumeTrue(RuntimeVersion.isAtLeast16());
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            "public record Test(String bar) {",
+            "  @SuppressWarnings(\"unused\")",
+            "  public Test {}",
+            "}")
+        .expectUnchanged()
+        .doTest(TEXT_MATCH);
+  }
 }
