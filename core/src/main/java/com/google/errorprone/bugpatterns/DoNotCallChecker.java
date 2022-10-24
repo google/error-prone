@@ -38,7 +38,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableListMultimap;
 import com.google.common.collect.ImmutableMap;
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.CompilationUnitTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
@@ -68,29 +67,12 @@ import com.sun.tools.javac.code.Types;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Stream;
-import javax.inject.Inject;
 import javax.lang.model.element.Modifier;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(name = "DoNotCall", summary = "This method should not be called.", severity = ERROR)
 public class DoNotCallChecker extends BugChecker
     implements MethodTreeMatcher, CompilationUnitTreeMatcher {
-  private final boolean checkNewGetClassMethods;
-  private final boolean checkThreadRun;
-
-  @Inject
-  public DoNotCallChecker(ErrorProneFlags flags) {
-    checkNewGetClassMethods =
-        flags.getBoolean("DoNotCallChecker:CheckNewGetClassMethods").orElse(true);
-    checkThreadRun = flags.getBoolean("DoNotCallChecker:CheckThreadRun").orElse(true);
-  }
-
-  private static final Matcher<ExpressionTree> STACK_TRACE_ELEMENT_GET_CLASS =
-      instanceMethod().onExactClass("java.lang.StackTraceElement").named("getClass");
-
-  private static final Matcher<ExpressionTree> ANY_GET_CLASS =
-      instanceMethod().anyClass().named("getClass");
-
   private static final Matcher<ExpressionTree> THREAD_RUN =
       instanceMethod().onDescendantOf("java.lang.Thread").named("run").withNoParameters();
 
@@ -328,14 +310,6 @@ public class DoNotCallChecker extends BugChecker
       private void handleTree(ExpressionTree tree, MethodSymbol symbol) {
         for (Map.Entry<Matcher<ExpressionTree>, String> matcher : THIRD_PARTY_METHODS.entrySet()) {
           if (matcher.getKey().matches(tree, state)) {
-            if (!checkNewGetClassMethods
-                && ANY_GET_CLASS.matches(tree, state)
-                && !STACK_TRACE_ELEMENT_GET_CLASS.matches(tree, state)) {
-              return;
-            }
-            if (!checkThreadRun && THREAD_RUN.matches(tree, state)) {
-              return;
-            }
             state.reportMatch(buildDescription(tree).setMessage(matcher.getValue()).build());
             return;
           }
