@@ -11,6 +11,7 @@ severity: SUGGESTION
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+_Alternate names: PackageName_
 
 ## The problem
 Java files should be located in a directory that
