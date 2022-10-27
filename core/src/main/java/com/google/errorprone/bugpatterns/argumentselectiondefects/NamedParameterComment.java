@@ -42,7 +42,7 @@ public final class NamedParameterComment {
 
   public static final Pattern PARAMETER_COMMENT_PATTERN =
       Pattern.compile(
-          "\\s*(\\p{javaJavaIdentifierStart}\\p{javaJavaIdentifierPart}*)(\\.\\.\\.)?\\s*=\\s*");
+          "\\s*(\\p{javaJavaIdentifierStart}\\p{javaJavaIdentifierPart}*)(\\Q...\\E)?\\s*=\\s*");
 
   private static final String PARAMETER_COMMENT_MARKER = "=";
 
