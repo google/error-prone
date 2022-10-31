@@ -14,9 +14,7 @@ To make changes, edit the @BugPattern annotation or the explanation in docs/bugp
 
 ## The problem
 `T extends Object` is redundant; both `<T>` and `<T extends Object>` compile to
-identical bytecode
-
-— unless you are using the Checker Framework).
+identical class files.— unless you are using the Checker Framework).
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("ExtendsObject")` to the enclosing element.
