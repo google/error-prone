@@ -29,6 +29,11 @@ public class UnsafeWildcardTest {
       CompilationTestHelper.newInstance(UnsafeWildcard.class, getClass());
 
   @Test
+  public void testUnsoundGenericMethod() {
+    compilationHelper.addSourceFile("UnsoundGenericMethod.java").doTest();
+  }
+
+  @Test
   public void positiveExpressions() {
     compilationHelper
         .addSourceLines(
@@ -269,7 +274,9 @@ public class UnsafeWildcardTest {
             "  public <U> void positive(WithBound<? super U> implicit) {",
             "    // BUG: Diagnostic contains: Cast to wildcard type unsafe",
             "    this.<U>positive(null);",
-            "    positive(null);", // ok b/c compiler uses U = Object and ? super Object is ok
+            "    // BUG: Diagnostic contains: impossible",
+            // Compiler uses U = Object and ? super Object doesn't intersect with upper bound Number
+            "    positive(null);",
             "  }",
             "}")
         .doTest();

@@ -297,9 +297,9 @@ public class UnsafeWildcard extends BugChecker
         // null for type variables, so we use null check as a proxy for whether lowerBound is a type
         // variable.
         // TODO(kmb): avoid counting on compiler's handling of non-trivial upper bounds here
+        Type boundVar = targetType.tsym.type.getTypeArguments().get(i);
         if (lowerBound.getUpperBound() != null
             && lowerBound.getUpperBound().toString().endsWith("java.lang.Object")) {
-          Type boundVar = targetType.tsym.type.getTypeArguments().get(i);
 
           if (!state.getTypes().isSubtypeNoCapture(lowerBound, boundVar.getUpperBound())) {
             return buildDescription(tree)
@@ -307,6 +307,23 @@ public class UnsafeWildcard extends BugChecker
                     messageHeader
                         + targetType
                         + " because of type argument "
+                        + i
+                        + " with implicit upper bound "
+                        + boundVar.getUpperBound())
+                .build();
+          }
+        } else {
+          // Compiler sometimes infers ? super Object even though boundVar has an upper bound, so
+          // check for wildcards that are impossible, ie., lower bound is strict supertype of upper.
+          // TODO(kmb): consider implementing this as a more general check for inferred type
+          // arguments whose wildcards wouldn't typecheck if they were written explicitly.
+          if (state.getTypes().isSubtypeNoCapture(boundVar.getUpperBound(), lowerBound)
+              && !state.getTypes().isSameType(boundVar.getUpperBound(), lowerBound)) {
+            return buildDescription(tree)
+                .setMessage(
+                    messageHeader
+                        + targetType
+                        + " because of impossible type argument "
                         + i
                         + " with implicit upper bound "
                         + boundVar.getUpperBound())
