@@ -1,3 +1,6 @@
+buildpack:
+  name: Blazar-Buildpack-Java
+
 provides:
   - docgen
 
@@ -9,8 +12,3 @@ depends:
 env:
   SET_VERSION_OVERRIDE: "2.13.2-$GIT_BRANCH-SNAPSHOT"
 
-buildpack:
-  host: git.hubteam.com
-  organization: HubSpotProtected
-  repository: Blazar-Buildpack-Java
-  branch: v2
