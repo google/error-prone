@@ -22,11 +22,11 @@ import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.enclosingClass;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
+import static com.google.errorprone.util.ASTHelpers.isStatic;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MemberSelectTreeMatcher;
-import com.google.errorprone.bugpatterns.StaticImports.StaticImportInfo;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.Visibility;
@@ -49,16 +49,16 @@ public final class NonCanonicalType extends BugChecker implements MemberSelectTr
     if (state.getPath().getParentPath().getLeaf() instanceof MemberSelectTree) {
       return NO_MATCH;
     }
-    StaticImportInfo importInfo = StaticImports.tryCreate(tree, state);
-    if (importInfo == null || !importInfo.members().isEmpty()) {
+    String canonicalName = canonicalName(tree);
+    if (canonicalName == null) {
       return NO_MATCH;
     }
     // Skip generated code. There are some noisy cases in AutoValue.
-    if (importInfo.canonicalName().contains("$")) {
+    if (canonicalName.contains("$")) {
       return NO_MATCH;
     }
     String nonCanonicalName = getNonCanonicalName(tree);
-    if (importInfo.canonicalName().equals(nonCanonicalName)) {
+    if (canonicalName.equals(nonCanonicalName)) {
       return NO_MATCH;
     }
     for (Symbol symbol = getSymbol(tree); symbol != null; symbol = enclosingClass(symbol)) {
@@ -72,13 +72,22 @@ public final class NonCanonicalType extends BugChecker implements MemberSelectTr
     }
     SuggestedFix.Builder fixBuilder = SuggestedFix.builder();
     SuggestedFix fix =
-        fixBuilder
-            .replace(tree, qualifyType(state, fixBuilder, importInfo.canonicalName()))
-            .build();
+        fixBuilder.replace(tree, qualifyType(state, fixBuilder, canonicalName)).build();
     return buildDescription(tree)
-        .setMessage(createDescription(importInfo.canonicalName(), nonCanonicalName))
+        .setMessage(createDescription(canonicalName, nonCanonicalName))
         .addFix(fix)
         .build();
+  }
+
+  private static String canonicalName(MemberSelectTree tree) {
+    Symbol sym = getSymbol(tree);
+    if (sym == null) {
+      return null;
+    }
+    if (sym instanceof Symbol.MethodSymbol && !isStatic(sym)) {
+      return null;
+    }
+    return sym.owner.getQualifiedName() + "." + sym.getSimpleName();
   }
 
   private static final Pattern PACKAGE_CLASS_NAME_SPLITTER = Pattern.compile("(.*?)\\.([A-Z].*)");

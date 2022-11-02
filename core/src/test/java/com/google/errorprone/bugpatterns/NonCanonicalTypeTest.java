@@ -105,7 +105,7 @@ public final class NonCanonicalTypeTest {
         .addSourceLines(
             "Test.java",
             "class Test {",
-            // TODO(b/116104523): This should be flagged.
+            "  // BUG: Diagnostic contains: Did you mean 'A.B test() {'",
             "  AString.B test() {",
             "    return null;",
             "  }",
@@ -162,6 +162,20 @@ public final class NonCanonicalTypeTest {
             "  // BUG: Diagnostic contains: A.N",
             "  private B.N f() {",
             "    return null;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void typeParameter() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test<E extends Enum<E>> {",
+            "  E test(Class<E> clazz, String name) {",
+            "    // BUG: Diagnostic contains: Enum.valueOf",
+            "    return E.valueOf(clazz, name);",
             "  }",
             "}")
         .doTest();
