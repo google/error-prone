@@ -87,7 +87,7 @@ public class ClassNewInstance extends BugChecker implements MethodInvocationTree
   // update or add a catch block to handle the new exceptions
   private static boolean fixExceptions(VisitorState state, SuggestedFix.Builder fix) {
     TryTree tryTree = null;
-    OUTER:
+    
     for (TreePath path = state.getPath(); path != null; path = path.getParentPath()) {
       if (path.getLeaf() instanceof CatchTree) {
         // don't add more catch blocks if newInstance() was called in a catch block
