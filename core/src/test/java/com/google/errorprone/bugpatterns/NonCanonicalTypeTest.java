@@ -180,4 +180,17 @@ public final class NonCanonicalTypeTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void arrays() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  int len(String[] xs) {",
+            "    return xs.length;",
+            "  }",
+            "}")
+        .doTest();
+  }
 }

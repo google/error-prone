@@ -84,7 +84,7 @@ public final class NonCanonicalType extends BugChecker implements MemberSelectTr
     if (sym == null) {
       return null;
     }
-    if (sym instanceof Symbol.MethodSymbol && !isStatic(sym)) {
+    if ((sym instanceof Symbol.MethodSymbol || sym instanceof Symbol.VarSymbol) && !isStatic(sym)) {
       return null;
     }
     return sym.owner.getQualifiedName() + "." + sym.getSimpleName();
