@@ -14,4 +14,5 @@ There is nothing special about `ImmutableMap.Entry`; it is precisely the same
 type as `Map.Entry`. This example makes it look deceptively as though
 `ImmutableList<ImmutableMap.Entry<?, ?>>` is an immutable type and therefore
 safe to store indefinitely, when really it offers no more safety than
-`ImmutableList<Map.Entry<?, ?>>`.
+`ImmutableList<Map.Entry<?, ?>>`. You should use `ImmutableList<Map.Entry<?,
+?>>` instead, so it's obvious what type you're referring to.
