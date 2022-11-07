@@ -17,6 +17,7 @@
 package com.google.errorprone.bugpatterns.formatstring;
 
 import com.google.errorprone.CompilationTestHelper;
+import com.google.errorprone.util.RuntimeVersion;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -237,7 +238,9 @@ public class FormatStringAnnotationCheckerTest {
             "    } else {",
             "      fmt3 = \"bar%s\";",
             "    }",
-            "    // BUG: Diagnostic contains: Variables used as format strings must be initialized",
+            RuntimeVersion.isAtLeast20()
+                ? "    // BUG: Diagnostic contains: must be final or effectively final"
+                : "    // BUG: Diagnostic contains: must be initialized",
             "    log(fmt3);",
             "    String fmt4 = fmt3;",
             "    // BUG: Diagnostic contains: Local format string variables must only be assigned",

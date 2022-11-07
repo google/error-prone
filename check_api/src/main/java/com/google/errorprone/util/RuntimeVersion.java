@@ -61,6 +61,11 @@ public final class RuntimeVersion {
     return FEATURE >= 19;
   }
 
+  /** Returns true if the current runtime is JDK 20 or newer. */
+  public static boolean isAtLeast20() {
+    return FEATURE >= 20;
+  }
+
   /**
    * Returns the latest {@code --release} version.
    *
