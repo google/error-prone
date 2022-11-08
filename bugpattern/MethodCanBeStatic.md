@@ -37,4 +37,29 @@ access the method. So, adding `static` is conceptually similar to removing that
 unused parameter.
 
 ## Suppression
-Suppress false positives by adding the suppression annotation `@SuppressWarnings("MethodCanBeStatic")` to the enclosing element.
+
+Methods which are used by reflection can be annotated with `@Keep` to suppress
+the warning.
+
+The `@Keep` annotation can also be applied to annotations, to suppress the
+warning for any member annotated with that annotation.
+
+```java
+import com.google.errorprone.annotations.Keep;
+
+@Keep
+@Retention(RetentionPolicy.RUNTIME)
+@interface SomeAnnotation {}
+...
+
+public class Data {
+  @SomeAnnotation
+  int doSomething(int x) {
+    return x;
+  }
+}
+```
+
+All false positives can be suppressed by annotating the variable with
+`@SuppressWarnings("MethodCanBeStatic")`.
+
