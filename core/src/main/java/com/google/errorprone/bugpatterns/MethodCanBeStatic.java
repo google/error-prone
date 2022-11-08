@@ -60,7 +60,8 @@ import javax.lang.model.element.Modifier;
 @BugPattern(
     altNames = "static-method",
     summary = "A private method that does not reference the enclosing instance can be static",
-    severity = SUGGESTION)
+    severity = SUGGESTION,
+    documentSuppression = false)
 public class MethodCanBeStatic extends BugChecker implements CompilationUnitTreeMatcher {
   private final FindingOutputStyle findingOutputStyle;
 

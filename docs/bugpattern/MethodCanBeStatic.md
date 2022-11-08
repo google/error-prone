@@ -19,3 +19,30 @@ normally be removed. This situation with `static` is fairly similar: in either
 case there is one additional instance the caller needs to have in order to
 access the method. So, adding `static` is conceptually similar to removing that
 unused parameter.
+
+## Suppression
+
+Methods which are used by reflection can be annotated with `@Keep` to suppress
+the warning.
+
+The `@Keep` annotation can also be applied to annotations, to suppress the
+warning for any member annotated with that annotation.
+
+```java
+import com.google.errorprone.annotations.Keep;
+
+@Keep
+@Retention(RetentionPolicy.RUNTIME)
+@interface SomeAnnotation {}
+...
+
+public class Data {
+  @SomeAnnotation
+  int doSomething(int x) {
+    return x;
+  }
+}
+```
+
+All false positives can be suppressed by annotating the variable with
+`@SuppressWarnings("MethodCanBeStatic")`.
