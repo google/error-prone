@@ -87,6 +87,7 @@ import com.sun.source.tree.UnionTypeTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.tree.WhileLoopTree;
 import com.sun.source.tree.WildcardTree;
+import com.sun.source.util.TreePath;
 import com.sun.source.util.TreePathScanner;
 import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.code.Symbol;
@@ -561,15 +562,18 @@ public abstract class BugChecker implements Suppressible, Serializable {
 
     @Override
     public A scan(Tree tree, B b) {
+      return suppressed(tree) ? null : super.scan(tree, b);
+    }
+
+    @Override
+    public A scan(TreePath treePath, B b) {
+      return suppressed(treePath.getLeaf()) ? null : super.scan(treePath, b);
+    }
+
+    private boolean suppressed(Tree tree) {
       boolean isSuppressible =
           tree instanceof ClassTree || tree instanceof MethodTree || tree instanceof VariableTree;
-      if (isSuppressible) {
-        boolean suppressed = state != null ? isSuppressed(tree, state) : isSuppressed(tree);
-        if (suppressed) {
-          return null;
-        }
-      }
-      return super.scan(tree, b);
+      return isSuppressible && isSuppressed(tree, state);
     }
   }
 }

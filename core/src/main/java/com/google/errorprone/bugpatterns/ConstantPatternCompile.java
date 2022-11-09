@@ -89,7 +89,7 @@ public final class ConstantPatternCompile extends BugChecker implements ClassTre
     SuggestedFix.Builder fixBuilder = SuggestedFix.builder();
     Tree[] firstHit = new Tree[1];
     for (Tree member : classTree.getMembers()) {
-      new TreePathScanner<Void, Void>() {
+      new SuppressibleTreePathScanner<Void, Void>(state) {
         @Override
         public Void visitClass(ClassTree node, Void unused) {
           // Don't descend into nested classes - we'll visit them later

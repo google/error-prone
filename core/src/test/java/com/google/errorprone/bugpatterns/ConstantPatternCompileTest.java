@@ -420,4 +420,21 @@ public class ConstantPatternCompileTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void suppressible() {
+    testHelper
+        .addInputLines(
+            "in/Test.java",
+            "import java.util.regex.Matcher;",
+            "import java.util.regex.Pattern;",
+            "class Test {",
+            "  @SuppressWarnings(\"ConstantPatternCompile\")",
+            "  boolean isCar(String input) {",
+            "    return Pattern.compile(\"car\").matcher(input).matches();",
+            "  }",
+            "}")
+        .expectUnchanged()
+        .doTest();
+  }
 }
