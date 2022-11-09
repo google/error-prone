@@ -15,7 +15,7 @@
 <script type="text/javascript" src="../../../../script-dir/jquery-ui.min.js"></script>
 </head>
 <body class="class-declaration-page">
-<script type="text/javascript">var data = {"i0":10};
+<script type="text/javascript">var data = {"i0":10,"i1":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "alt-color";
 var rowColor = "row-color";
@@ -169,13 +169,19 @@ extends com.sun.source.util.TreePathScanner&lt;A,&#8203;B&gt;</pre>
 <a href="BugChecker.SuppressibleTreePathScanner.html" title="type parameter in BugChecker.SuppressibleTreePathScanner">B</a>&nbsp;b)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
+<tr class="row-color" id="i1">
+<td class="col-first"><code><a href="BugChecker.SuppressibleTreePathScanner.html" title="type parameter in BugChecker.SuppressibleTreePathScanner">A</a></code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#scan(com.sun.source.util.TreePath,B)">scan</a></span>&#8203;(com.sun.source.util.TreePath&nbsp;treePath,
+<a href="BugChecker.SuppressibleTreePathScanner.html" title="type parameter in BugChecker.SuppressibleTreePathScanner">B</a>&nbsp;b)</code></th>
+<td class="col-last">&nbsp;</td>
+</tr>
 </tbody>
 </table>
 </div>
 </div>
 <div class="inherited-list">
 <h3 id="methods.inherited.from.class.com.sun.source.util.TreePathScanner">Methods inherited from class&nbsp;com.sun.source.util.TreePathScanner</h3>
-<code>getCurrentPath, scan</code></div>
+<code>getCurrentPath</code></div>
 <div class="inherited-list">
 <h3 id="methods.inherited.from.class.com.sun.source.util.TreeScanner">Methods inherited from class&nbsp;com.sun.source.util.TreeScanner</h3>
 <code>reduce, scan, visitAnnotatedType, visitAnnotation, visitArrayAccess, visitArrayType, visitAssert, visitAssignment, visitBinary, visitBindingPattern, visitBlock, visitBreak, visitCase, visitCatch, visitClass, visitCompilationUnit, visitCompoundAssignment, visitConditionalExpression, visitContinue, visitDoWhileLoop, visitEmptyStatement, visitEnhancedForLoop, visitErroneous, visitExports, visitExpressionStatement, visitForLoop, visitIdentifier, visitIf, visitImport, visitInstanceOf, visitIntersectionType, visitLabeledStatement, visitLambdaExpression, visitLiteral, visitMemberReference, visitMemberSelect, visitMethod, visitMethodInvocation, visitModifiers, visitModule, visitNewArray, visitNewClass, visitOpens, visitOther, visitPackage, visitParameterizedType, visitParenthesized, visitPrimitiveType, visitProvides, visitRequires, visitReturn, visitSwitch, visitSwitchExpression, visitSynchronized, visitThrow, visitTry, visitTypeCast, visitTypeParameter, visitUnary, visitUnionType, visitUses, visitVariable, visitWhileLoop, visitWildcard, visitYield</code></div>
@@ -225,6 +231,17 @@ extends com.sun.source.util.TreePathScanner&lt;A,&#8203;B&gt;</pre>
 <section class="detail" id="scan(com.sun.source.tree.Tree,B)">
 <h3 id="scan(com.sun.source.tree.Tree,java.lang.Object)">scan</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="BugChecker.SuppressibleTreePathScanner.html" title="type parameter in BugChecker.SuppressibleTreePathScanner">A</a></span>&nbsp;<span class="member-name">scan</span>&#8203;(<span class="parameters">com.sun.source.tree.Tree&nbsp;tree,
+<a href="BugChecker.SuppressibleTreePathScanner.html" title="type parameter in BugChecker.SuppressibleTreePathScanner">B</a>&nbsp;b)</span></div>
+<dl class="notes">
+<dt>Overrides:</dt>
+<dd><code>scan</code>&nbsp;in class&nbsp;<code>com.sun.source.util.TreePathScanner&lt;<a href="BugChecker.SuppressibleTreePathScanner.html" title="type parameter in BugChecker.SuppressibleTreePathScanner">A</a>,&#8203;<a href="BugChecker.SuppressibleTreePathScanner.html" title="type parameter in BugChecker.SuppressibleTreePathScanner">B</a>&gt;</code></dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="scan(com.sun.source.util.TreePath,B)">
+<h3 id="scan(com.sun.source.util.TreePath,java.lang.Object)">scan</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="BugChecker.SuppressibleTreePathScanner.html" title="type parameter in BugChecker.SuppressibleTreePathScanner">A</a></span>&nbsp;<span class="member-name">scan</span>&#8203;(<span class="parameters">com.sun.source.util.TreePath&nbsp;treePath,
 <a href="BugChecker.SuppressibleTreePathScanner.html" title="type parameter in BugChecker.SuppressibleTreePathScanner">B</a>&nbsp;b)</span></div>
 <dl class="notes">
 <dt>Overrides:</dt>
