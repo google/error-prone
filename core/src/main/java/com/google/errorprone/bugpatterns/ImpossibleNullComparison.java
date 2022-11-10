@@ -70,8 +70,12 @@ import java.util.Set;
 import javax.annotation.Nullable;
 
 /** Matches comparison of proto fields to {@code null}. */
-@BugPattern(summary = "Protobuf fields cannot be null.", severity = ERROR)
-public class ProtoFieldNullComparison extends BugChecker implements CompilationUnitTreeMatcher {
+@BugPattern(
+    summary = "Protobuf fields cannot be null.",
+    altNames = "ProtoFieldNullComparison",
+    severity = ERROR)
+public final class ImpossibleNullComparison extends BugChecker
+    implements CompilationUnitTreeMatcher {
 
   // TODO(b/111109484): Try to consolidate these with NullnessPropagationTransfer.
   private static final Matcher<ExpressionTree> CHECK_NOT_NULL =
@@ -138,23 +142,23 @@ public class ProtoFieldNullComparison extends BugChecker implements CompilationU
 
   private final boolean matchTestAssertions;
 
-  public ProtoFieldNullComparison(ErrorProneFlags flags) {
+  public ImpossibleNullComparison(ErrorProneFlags flags) {
     this.matchTestAssertions =
         flags.getBoolean("ProtoFieldNullComparison:MatchTestAssertions").orElse(true);
   }
 
   @Override
   public Description matchCompilationUnit(CompilationUnitTree tree, VisitorState state) {
-    ProtoNullComparisonScanner scanner = new ProtoNullComparisonScanner(state);
+    NullComparisonScanner scanner = new NullComparisonScanner(state);
     scanner.scan(state.getPath(), null);
     return Description.NO_MATCH;
   }
 
-  private class ProtoNullComparisonScanner extends TreePathScanner<Void, Void> {
+  private class NullComparisonScanner extends TreePathScanner<Void, Void> {
     private final Map<Symbol, ExpressionTree> effectivelyFinalValues = new HashMap<>();
     private final VisitorState state;
 
-    private ProtoNullComparisonScanner(VisitorState state) {
+    private NullComparisonScanner(VisitorState state) {
       this.state = state;
     }
 
