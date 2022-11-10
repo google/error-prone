@@ -18,10 +18,12 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
+import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.isSameType;
+import static com.google.errorprone.util.ASTHelpers.isSubtype;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.errorprone.BugPattern;
@@ -31,6 +33,7 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.suppliers.Supplier;
+import com.google.errorprone.suppliers.Suppliers;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
@@ -40,10 +43,17 @@ import com.sun.tools.javac.code.Type;
 @BugPattern(summary = "Prefer ASTHelpers instead of calling this API directly", severity = WARNING)
 public class ASTHelpersSuggestions extends BugChecker implements MethodInvocationTreeMatcher {
 
+  private static final Supplier<Type> MODULE_SYMBOL =
+      Suppliers.typeFromString("com.sun.tools.javac.code.Symbol.ModuleSymbol");
+
   private static final Matcher<ExpressionTree> SYMBOL =
-      instanceMethod()
-          .onDescendantOf("com.sun.tools.javac.code.Symbol")
-          .namedAnyOf("isDirectlyOrIndirectlyLocal", "isLocal", "packge", "isStatic");
+      anyOf(
+          instanceMethod()
+              .onDescendantOf("com.sun.tools.javac.code.Symbol")
+              .namedAnyOf("isDirectlyOrIndirectlyLocal", "isLocal", "packge"),
+          instanceMethod()
+              .onClass((t, s) -> isSubtype(MODULE_SYMBOL.get(s), t, s))
+              .namedAnyOf("isStatic"));
 
   private static final Matcher<ExpressionTree> SCOPE =
       instanceMethod().onDescendantOf("com.sun.tools.javac.code.Scope");

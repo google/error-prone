@@ -58,7 +58,7 @@ public class ASTHelpersSuggestionsTest {
   }
 
   @Test
-  public void onSymbolSubtyle() {
+  public void onSymbolSubtype() {
     testHelper
         .addInputLines(
             "Test.java",
@@ -78,7 +78,7 @@ public class ASTHelpersSuggestionsTest {
             "import com.sun.tools.javac.code.Symbol.VarSymbol;",
             "class Test {",
             "  void f(VarSymbol s) {",
-            "    isStatic(s);",
+            "    s.isStatic();",
             "    enclosingPackage(s);",
             "    scope(s.members()).anyMatch(x -> isStatic(x));",
             "  }",
