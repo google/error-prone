@@ -1,5 +1,5 @@
 ---
-title: ProtoFieldNullComparison
+title: ImpossibleNullComparison
 summary: Protobuf fields cannot be null.
 layout: bugpattern
 tags: ''
@@ -11,6 +11,7 @@ severity: ERROR
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+_Alternate names: ProtoFieldNullComparison_
 
 ## The problem
 This checker looks for comparisons of protocol buffer fields with null. If a
@@ -69,4 +70,4 @@ Presence can then be tested using `myMessage.hasMyString()`, and the value
 retrieved using `myMessage.getMyString().getValue()`.
 
 ## Suppression
-Suppress false positives by adding the suppression annotation `@SuppressWarnings("ProtoFieldNullComparison")` to the enclosing element.
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("ImpossibleNullComparison")` to the enclosing element.

@@ -227,6 +227,9 @@ Getters on AutoValues, AutoBuilders, and Protobuf Messages are side-effect free,
 __[Immutable](bugpattern/Immutable)__<br>
 Type declaration annotated with @Immutable is not immutable
 
+__[ImpossibleNullComparison](bugpattern/ImpossibleNullComparison)__<br>
+Protobuf fields cannot be null.
+
 __[Incomparable](bugpattern/Incomparable)__<br>
 Types contained in sorted collections must implement Comparable.
 
@@ -427,9 +430,6 @@ Access to a private protocol buffer field is forbidden. This protocol buffer car
 
 __[ProtoBuilderReturnValueIgnored](bugpattern/ProtoBuilderReturnValueIgnored)__<br>
 Unnecessary call to proto&#39;s #build() method.  If you don&#39;t consume the return value of #build(), the result is discarded and the only effect is to verify that all required fields are set, which can be expressed more directly with #isInitialized().
-
-__[ProtoFieldNullComparison](bugpattern/ProtoFieldNullComparison)__<br>
-Protobuf fields cannot be null.
 
 __[ProtoStringFieldReferenceEquality](bugpattern/ProtoStringFieldReferenceEquality)__<br>
 Comparing protobuf fields of type String using reference equality
