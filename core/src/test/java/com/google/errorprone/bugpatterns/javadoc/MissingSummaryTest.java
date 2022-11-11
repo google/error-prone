@@ -122,6 +122,20 @@ public final class MissingSummaryTest {
   }
 
   @Test
+  public void effectivelyPrivateCase() {
+    helper
+        .addSourceLines(
+            "Test.java", //
+            "class Test {",
+            "  private class Inner {",
+            "    /** @throws IllegalStateException */",
+            "    public void test() {}",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void negative() {
     helper
         .addSourceLines(

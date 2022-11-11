@@ -24,6 +24,7 @@ import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.findSuperMethods;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
+import static com.google.errorprone.util.ASTHelpers.isEffectivelyPrivate;
 import static java.util.stream.Collectors.joining;
 
 import com.google.errorprone.BugPattern;
@@ -198,8 +199,6 @@ public final class MissingSummary extends BugChecker
         && !findSuperMethods((MethodSymbol) symbol, state.getTypes()).isEmpty()) {
       return false;
     }
-    return symbol != null
-        && (symbol.getModifiers().contains(Modifier.PUBLIC)
-            || symbol.getModifiers().contains(Modifier.PROTECTED));
+    return symbol != null && !isEffectivelyPrivate(symbol);
   }
 }

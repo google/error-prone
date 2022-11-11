@@ -356,7 +356,7 @@ public class ASTHelpers {
   }
 
   /** Returns whether this symbol or any of its owners are private. */
-  private static boolean isEffectivelyPrivate(Symbol symbol) {
+  public static boolean isEffectivelyPrivate(Symbol symbol) {
     return enclosingElements(symbol).anyMatch(Symbol::isPrivate);
   }
 
