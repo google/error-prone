@@ -53,42 +53,7 @@ import java.util.Iterator;
 import java.util.List;
 import javax.lang.model.element.ElementKind;
 
-/**
- * Detects invocations of methods with a parameter annotated {@code @CompileTimeConstant} such that
- * the corresponding actual parameter is not a compile-time constant expression, and initialisation
- * of fields declared {@code @CompileTimeConstant final} such that the actual value is not a
- * compile-time constant expression.
- *
- * <p>This type annotation checker enforces that for all method and constructor invocations, for all
- * formal parameters of the invoked method/constructor that are annotated with the {@link
- * com.google.errorprone.annotations.CompileTimeConstant} type annotation, the corresponding actual
- * parameter is an expression that satisfies one of the following conditions:
- *
- * <ol>
- *   <li>The expression is one for which the Java compiler can determine a constant value at compile
- *       time, or
- *   <li>the expression consists of the literal {@code null}, or
- *   <li>the expression consists of a single identifier, where the identifier is a formal method
- *       parameter or class field that is declared {@code final} and has the {@link
- *       com.google.errorprone.annotations.CompileTimeConstant} annotation.
- * </ol>
- *
- * <p>This type annotation checker also enforces that for all field declarations annotated with the
- * {@link com.google.errorprone.annotations.CompileTimeConstant} type annotation, the field is also
- * declared {@code final} and the corresponding initialised value satifsies one of the following
- * conditions:
- *
- * <ol>
- *   <li>The expression is one for which the Java compiler can determine a constant value at compile
- *       time, or
- *   <li>the expression consists of the literal {@code null}, or
- *   <li>the expression consists of a single identifier, where the identifier is a formal method
- *       parameter or class field that is declared {@code final} and has the {@link
- *       com.google.errorprone.annotations.CompileTimeConstant} annotation.
- * </ol>
- *
- * @see CompileTimeConstantExpressionMatcher
- */
+/** A Bugpattern; see the accompanying Markdown documentation. */
 @BugPattern(
     name = "CompileTimeConstant",
     summary =
