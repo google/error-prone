@@ -90,39 +90,10 @@ loadScripts(document, 'script');</script>
 <pre>public class <span class="type-name-label">CompileTimeConstantChecker</span>
 extends <a href="BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a>
 implements <a href="BugChecker.LambdaExpressionTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.LambdaExpressionTreeMatcher</a>, <a href="BugChecker.MemberReferenceTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.MemberReferenceTreeMatcher</a>, <a href="BugChecker.MethodInvocationTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.MethodInvocationTreeMatcher</a>, <a href="BugChecker.MethodTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.MethodTreeMatcher</a>, <a href="BugChecker.NewClassTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.NewClassTreeMatcher</a>, <a href="BugChecker.VariableTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.VariableTreeMatcher</a>, <a href="BugChecker.AssignmentTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.AssignmentTreeMatcher</a></pre>
-<div class="block">Detects invocations of methods with a parameter annotated <code>@CompileTimeConstant</code> such that
- the corresponding actual parameter is not a compile-time constant expression, and initialisation
- of fields declared <code>@CompileTimeConstant final</code> such that the actual value is not a
- compile-time constant expression.
-
- <p>This type annotation checker enforces that for all method and constructor invocations, for all
- formal parameters of the invoked method/constructor that are annotated with the <a href="../annotations/CompileTimeConstant.html" title="annotation in com.google.errorprone.annotations"><code>CompileTimeConstant</code></a> type annotation, the corresponding actual
- parameter is an expression that satisfies one of the following conditions:
-
- <ol>
-   <li>The expression is one for which the Java compiler can determine a constant value at compile
-       time, or
-   <li>the expression consists of the literal <code>null</code>, or
-   <li>the expression consists of a single identifier, where the identifier is a formal method
-       parameter or class field that is declared <code>final</code> and has the <a href="../annotations/CompileTimeConstant.html" title="annotation in com.google.errorprone.annotations"><code>CompileTimeConstant</code></a> annotation.
- </ol>
-
- <p>This type annotation checker also enforces that for all field declarations annotated with the
- <a href="../annotations/CompileTimeConstant.html" title="annotation in com.google.errorprone.annotations"><code>CompileTimeConstant</code></a> type annotation, the field is also
- declared <code>final</code> and the corresponding initialised value satifsies one of the following
- conditions:
-
- <ol>
-   <li>The expression is one for which the Java compiler can determine a constant value at compile
-       time, or
-   <li>the expression consists of the literal <code>null</code>, or
-   <li>the expression consists of a single identifier, where the identifier is a formal method
-       parameter or class field that is declared <code>final</code> and has the <a href="../annotations/CompileTimeConstant.html" title="annotation in com.google.errorprone.annotations"><code>CompileTimeConstant</code></a> annotation.
- </ol></div>
+<div class="block">A Bugpattern; see the accompanying Markdown documentation.</div>
 <dl class="notes">
 <dt>See Also:</dt>
-<dd><a href="../matchers/CompileTimeConstantExpressionMatcher.html" title="class in com.google.errorprone.matchers"><code>CompileTimeConstantExpressionMatcher</code></a>, 
-<a href="../../../../serialized-form.html#com.google.errorprone.bugpatterns.CompileTimeConstantChecker">Serialized Form</a></dd>
+<dd><a href="../../../../serialized-form.html#com.google.errorprone.bugpatterns.CompileTimeConstantChecker">Serialized Form</a></dd>
 </dl>
 </section>
 <section class="summary">
