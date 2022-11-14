@@ -12,7 +12,7 @@ severity: ERROR
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
-_Alternate names: Java7ApiChecker, AndroidApiChecker_
+_Alternate names: AndroidApiChecker_
 
 ## The problem
 Code that needs to be compatible with Android cannot use types or members that
