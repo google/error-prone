@@ -38,7 +38,7 @@ import java.io.UncheckedIOException;
  */
 @BugPattern(
     name = "AndroidJdkLibsChecker",
-    altNames = {"Java7ApiChecker", "AndroidApiChecker"},
+    altNames = "AndroidApiChecker",
     summary = "Use of class, field, or method that is not compatible with legacy Android devices",
     severity = ERROR)
 // TODO(b/32513850): Allow Android N+ APIs, e.g., by computing API diff using android.jar
