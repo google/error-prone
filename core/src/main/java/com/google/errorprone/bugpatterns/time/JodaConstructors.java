@@ -15,13 +15,13 @@
  */
 package com.google.errorprone.bugpatterns.time;
 
+import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.constructor;
 import static com.google.errorprone.matchers.Matchers.packageStartsWith;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 
-import com.google.common.collect.Iterables;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
@@ -38,6 +38,7 @@ import com.sun.source.tree.NewClassTree;
  * <ul>
  *   <li>{@code org.joda.time.Duration#Duration(long)}
  *   <li>{@code org.joda.time.Instant#Instant()}
+ *   <li>{@code org.joda.time.Instant#Instant(long)}
  *   <li>{@code org.joda.time.DateTime#DateTime()}
  *   <li>{@code org.joda.time.DateTime#DateTime(org.joda.time.Chronology)}
  *   <li>{@code org.joda.time.DateTime#DateTime(org.joda.time.DateTimeZone)}
@@ -53,12 +54,17 @@ public final class JodaConstructors extends BugChecker implements NewClassTreeMa
   private static final Matcher<ExpressionTree> DURATION_CTOR =
       constructor().forClass("org.joda.time.Duration").withParameters("long");
 
-  private static final Matcher<ExpressionTree> INSTANT_CTOR =
+  private static final Matcher<ExpressionTree> INSTANT_CTOR_NO_ARG =
       constructor().forClass("org.joda.time.Instant").withNoParameters();
 
-  private static final Matcher<ExpressionTree> DATE_TIME_CTORS =
+  private static final Matcher<ExpressionTree> INSTANT_CTOR_LONG_ARG =
+      constructor().forClass("org.joda.time.Instant").withParameters("long");
+
+  private static final Matcher<ExpressionTree> DATE_TIME_CTOR_NO_ARG =
+      constructor().forClass("org.joda.time.DateTime").withNoParameters();
+
+  private static final Matcher<ExpressionTree> DATE_TIME_CTORS_ONE_ARG =
       anyOf(
-          constructor().forClass("org.joda.time.DateTime").withNoParameters(),
           constructor()
               .forClass("org.joda.time.DateTime")
               .withParameters("org.joda.time.Chronology"),
@@ -75,40 +81,51 @@ public final class JodaConstructors extends BugChecker implements NewClassTreeMa
 
     // ban new Duration(long)
     if (DURATION_CTOR.matches(tree, state)) {
-      ExpressionTree millisArg = Iterables.getOnlyElement(tree.getArguments());
       SuggestedFix fix =
           SuggestedFix.replace(
               getStartPosition(tree),
-              getStartPosition(millisArg),
+              getStartPosition(getOnlyElement(tree.getArguments())),
               state.getSourceForNode(tree.getIdentifier()) + ".millis(");
       return describeMatch(tree, fix);
     }
 
     // ban new Instant()
-    if (INSTANT_CTOR.matches(tree, state)) {
-      SuggestedFix fix =
-          SuggestedFix.replace(tree, state.getSourceForNode(tree.getIdentifier()) + ".now()");
+    if (INSTANT_CTOR_NO_ARG.matches(tree, state)) {
+      SuggestedFix fix = SuggestedFix.replace(tree, getIdentifierSource(tree, state) + ".now()");
       return describeMatch(tree, fix);
     }
 
-    // ban new DateTime(), new DateTime(DateTimeZone), and new DateTime(Chronology)
-    if (DATE_TIME_CTORS.matches(tree, state)) {
-      if (tree.getArguments().isEmpty()) {
-        SuggestedFix fix =
-            SuggestedFix.replace(tree, state.getSourceForNode(tree.getIdentifier()) + ".now()");
-        return describeMatch(tree, fix);
-      } else {
-        ExpressionTree arg = Iterables.getOnlyElement(tree.getArguments());
-        SuggestedFix fix =
-            SuggestedFix.replace(
-                getStartPosition(tree),
-                getStartPosition(arg),
-                state.getSourceForNode(tree.getIdentifier()) + ".now(");
-        return describeMatch(tree, fix);
-      }
+    // ban new Instant(long)
+    if (INSTANT_CTOR_LONG_ARG.matches(tree, state)) {
+      SuggestedFix fix =
+          SuggestedFix.replace(
+              getStartPosition(tree),
+              getStartPosition(getOnlyElement(tree.getArguments())),
+              getIdentifierSource(tree, state) + ".ofEpochMilli(");
+      return describeMatch(tree, fix);
+    }
+
+    // ban new DateTime()
+    if (DATE_TIME_CTOR_NO_ARG.matches(tree, state)) {
+      SuggestedFix fix = SuggestedFix.replace(tree, getIdentifierSource(tree, state) + ".now()");
+      return describeMatch(tree, fix);
+    }
+
+    // ban new DateTime(DateTimeZone) and new DateTime(Chronology)
+    if (DATE_TIME_CTORS_ONE_ARG.matches(tree, state)) {
+      SuggestedFix fix =
+          SuggestedFix.replace(
+              getStartPosition(tree),
+              getStartPosition(getOnlyElement(tree.getArguments())),
+              getIdentifierSource(tree, state) + ".now(");
+      return describeMatch(tree, fix);
     }
 
     // otherwise, no match
     return Description.NO_MATCH;
+  }
+
+  private static String getIdentifierSource(NewClassTree tree, VisitorState state) {
+    return state.getSourceForNode(tree.getIdentifier());
   }
 }
