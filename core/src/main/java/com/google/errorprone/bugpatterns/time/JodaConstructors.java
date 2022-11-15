@@ -23,6 +23,7 @@ import static com.google.errorprone.matchers.Matchers.packageStartsWith;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.NewClassTreeMatcher;
@@ -72,6 +73,13 @@ public final class JodaConstructors extends BugChecker implements NewClassTreeMa
               .forClass("org.joda.time.DateTime")
               .withParameters("org.joda.time.DateTimeZone"));
 
+  private final boolean matchEpochMillisConstructor;
+
+  public JodaConstructors(ErrorProneFlags flags) {
+    this.matchEpochMillisConstructor =
+        flags.getBoolean("JodaConstructors:MatchEpochMillisConstructor").orElse(true);
+  }
+
   @Override
   public Description matchNewClass(NewClassTree tree, VisitorState state) {
     // Allow usage by JodaTime itself
@@ -96,7 +104,7 @@ public final class JodaConstructors extends BugChecker implements NewClassTreeMa
     }
 
     // ban new Instant(long)
-    if (INSTANT_CTOR_LONG_ARG.matches(tree, state)) {
+    if (matchEpochMillisConstructor && INSTANT_CTOR_LONG_ARG.matches(tree, state)) {
       SuggestedFix fix =
           SuggestedFix.replace(
               getStartPosition(tree),

@@ -195,6 +195,19 @@ public class JodaConstructorsTest {
   }
 
   @Test
+  public void instantConstructor_flaggedOff() {
+    helper
+        .addSourceLines(
+            "TestClass.java",
+            "import org.joda.time.Instant;",
+            "public class TestClass {",
+            "  private static final Instant I1 = new Instant(42);",
+            "}")
+        .setArgs("-XepOpt:JodaConstructors:MatchEpochMillisConstructor=false")
+        .doTest();
+  }
+
+  @Test
   public void instantConstructor_fqcn() {
     helper
         .addSourceLines(
