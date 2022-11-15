@@ -156,7 +156,6 @@ import com.google.errorprone.bugpatterns.IgnoredPureGetter;
 import com.google.errorprone.bugpatterns.ImmutableMemberCollection;
 import com.google.errorprone.bugpatterns.ImmutableSetForContains;
 import com.google.errorprone.bugpatterns.ImplementAssertionWithChaining;
-import com.google.errorprone.bugpatterns.ImpossibleNullComparison;
 import com.google.errorprone.bugpatterns.Incomparable;
 import com.google.errorprone.bugpatterns.IncompatibleModifiersChecker;
 import com.google.errorprone.bugpatterns.InconsistentCapitalization;
@@ -286,6 +285,7 @@ import com.google.errorprone.bugpatterns.PrivateConstructorForUtilityClass;
 import com.google.errorprone.bugpatterns.PrivateSecurityContractProtoAccess;
 import com.google.errorprone.bugpatterns.ProtectedMembersInFinalClass;
 import com.google.errorprone.bugpatterns.ProtoBuilderReturnValueIgnored;
+import com.google.errorprone.bugpatterns.ProtoFieldNullComparison;
 import com.google.errorprone.bugpatterns.ProtoRedundantSet;
 import com.google.errorprone.bugpatterns.ProtoStringFieldReferenceEquality;
 import com.google.errorprone.bugpatterns.ProtoTruthMixedDescriptors;
@@ -669,7 +669,6 @@ public class BuiltInCheckerSuppliers {
           IdentityHashMapBoxing.class,
           IgnoredPureGetter.class,
           ImmutableChecker.class,
-          ImpossibleNullComparison.class,
           Incomparable.class,
           IncompatibleArgumentType.class,
           IncompatibleModifiersChecker.class,
@@ -737,6 +736,7 @@ public class BuiltInCheckerSuppliers {
           PreconditionsInvalidPlaceholder.class,
           PrivateSecurityContractProtoAccess.class,
           ProtoBuilderReturnValueIgnored.class,
+          ProtoFieldNullComparison.class,
           ProtoStringFieldReferenceEquality.class,
           ProtoTruthMixedDescriptors.class,
           ProtocolBufferOrdinal.class,

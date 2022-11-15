@@ -26,10 +26,10 @@ import org.junit.runners.JUnit4;
  */
 @RunWith(JUnit4.class)
 @Ignore("b/130670448")
-public final class ImpossibleNullComparisonTest {
+public final class ProtoFieldNullComparisonTest {
 
   private final CompilationTestHelper compilationHelper =
-      CompilationTestHelper.newInstance(ImpossibleNullComparison.class, getClass());
+      CompilationTestHelper.newInstance(ProtoFieldNullComparison.class, getClass());
 
   @Test
   public void scalarCases() {
@@ -144,7 +144,7 @@ public final class ImpossibleNullComparisonTest {
             "import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;",
             "public class Test {",
             "  public boolean doIt(TestProtoMessage mob, FieldDescriptor f) {",
-            "    // BUG: Diagnostic contains:",
+            "    // BUG: Diagnostic contains: ProtoFieldNullComparison",
             "    return mob.getField(f) == null;",
             "  }",
             "}")
@@ -161,7 +161,7 @@ public final class ImpossibleNullComparisonTest {
             "public class Test {",
             "  public boolean doIt(TestProtoMessage mob, FieldDescriptor f) {",
             "    String s = ((String) mob.getField(f));",
-            "    // BUG: Diagnostic contains:",
+            "    // BUG: Diagnostic contains: ProtoFieldNullComparison",
             "    return s == null;",
             "  }",
             "}")
@@ -177,7 +177,7 @@ public final class ImpossibleNullComparisonTest {
             "import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;",
             "public class Test {",
             "  public void test(TestProtoMessage e, ExtensionLite extensionLite) {",
-            "    // BUG: Diagnostic contains:",
+            "    // BUG: Diagnostic contains: ProtoFieldNullComparison",
             "    boolean a = e.getExtension(extensionLite) == null;",
             "  }",
             "}")
@@ -193,7 +193,7 @@ public final class ImpossibleNullComparisonTest {
             "import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;",
             "public class Test {",
             "  public void doIt(TestProtoMessage mob, FieldDescriptor f) {",
-            "    // BUG: Diagnostic contains:",
+            "    // BUG: Diagnostic contains: ProtoFieldNullComparison",
             "    boolean a = mob.getRepeatedField(f, 0) == null;",
             "  }",
             "}")
@@ -209,7 +209,7 @@ public final class ImpossibleNullComparisonTest {
             "import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;",
             "public class Test {",
             "  public void test(TestProtoMessage e, ExtensionLite extensionLite) {",
-            "    // BUG: Diagnostic contains:",
+            "    // BUG: Diagnostic contains: ProtoFieldNullComparison",
             "    boolean a = e.getExtension(extensionLite, 0) == null;",
             "  }",
             "}")
@@ -228,7 +228,7 @@ public final class ImpossibleNullComparisonTest {
             "public class Test {",
             " public void test(ExtensionLite<TestProtoMessage,",
             "  List<TestFieldProtoMessage>> e, TestProtoMessage message) {",
-            "    // BUG: Diagnostic contains:",
+            "    // BUG: Diagnostic contains: ProtoFieldNullComparison",
             "    boolean y = message.getExtension(e) == null;",
             " }",
             "}")
@@ -255,7 +255,7 @@ public final class ImpossibleNullComparisonTest {
             " ImmutableList.Builder extensionList = ImmutableList.builder();",
             " int extensionCount = mob.getExtensionCount(extension);",
             " for (int extensionIndex = 0; extensionIndex < extensionCount; ++extensionIndex) {",
-            "  // BUG: Diagnostic contains:",
+            "  // BUG: Diagnostic contains: ProtoFieldNullComparison",
             "  boolean y = mob.getExtension(extension) == null;",
             "  extensionList.add(mob.getExtension(extension));",
             " }",
