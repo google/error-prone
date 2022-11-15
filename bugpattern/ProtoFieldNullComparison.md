@@ -11,6 +11,7 @@ severity: ERROR
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+_Alternate names: ImpossibleNullComparison_
 
 ## The problem
 This checker looks for comparisons of protocol buffer fields with null. If a
