@@ -255,7 +255,7 @@ class NullnessUtils {
           qualifiedName,
           qualifiedName.replaceFirst(".*[.]", ""),
           isTypeUse,
-          /*isAlreadyInScope=*/ false);
+          /* isAlreadyInScope= */ false);
     }
 
     static NullableAnnotationToUse annotationWithoutImporting(
@@ -346,11 +346,11 @@ class NullnessUtils {
       if (classSym.isAnnotationType()) {
         // We've got an existing annotation called Nullable. We can use this.
         return annotationWithoutImporting(
-            "Nullable", isTypeUse(classSym.className()), /*isAlreadyInScope=*/ true);
+            "Nullable", isTypeUse(classSym.className()), /* isAlreadyInScope= */ true);
       } else {
         // The imported `Nullable` is not an annotation type. Fully qualify the annotation.
         return annotationWithoutImporting(
-            defaultType, isTypeUse(defaultType), /*isAlreadyInScope=*/ false);
+            defaultType, isTypeUse(defaultType), /* isAlreadyInScope= */ false);
       }
     }
     // There is no symbol already. Import and use.

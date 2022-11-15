@@ -296,7 +296,7 @@ public class BugCheckerRefactoringTestHelper {
                 FileManagers.testFileManager(),
                 diagnosticsCollector,
                 ImmutableList.copyOf(errorProneOptions.getRemainingArgs()),
-                /*classes=*/ null,
+                /* classes= */ null,
                 files,
                 context);
     Iterable<? extends CompilationUnitTree> trees = task.parse();

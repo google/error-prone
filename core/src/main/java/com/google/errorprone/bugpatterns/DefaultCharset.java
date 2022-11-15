@@ -251,14 +251,14 @@ public class DefaultCharset extends BugChecker
     SuggestedFix.Builder fix = SuggestedFix.builder();
     if (parentReceiver != null) {
       fix.replace(
-          /*startPos=*/ state.getEndPosition(parentReceiver),
-          /*endPos=*/ getStartPosition(tree),
-          /*replaceWith=*/ "." + prefix);
+          /* startPos= */ state.getEndPosition(parentReceiver),
+          /* endPos= */ getStartPosition(tree),
+          /* replaceWith= */ "." + prefix);
     } else {
       fix.replace(
-          /*startPos=*/ getStartPosition(parent),
-          /*endPos=*/ getStartPosition(tree),
-          /*replaceWith=*/ prefix);
+          /* startPos= */ getStartPosition(parent),
+          /* endPos= */ getStartPosition(tree),
+          /* replaceWith= */ prefix);
     }
     fix.replace(
         state.getEndPosition(ASTHelpers.getReceiver(tree)), state.getEndPosition(tree), suffix);

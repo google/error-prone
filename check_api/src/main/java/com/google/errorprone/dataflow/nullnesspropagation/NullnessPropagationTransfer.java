@@ -836,8 +836,8 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
           CFGBuilder.build(
               initializerPath,
               ast,
-              /*assumeAssertionsEnabled=*/ false,
-              /*assumeAssertionsDisabled=*/ false,
+              /* assumeAssertionsEnabled= */ false,
+              /* assumeAssertionsDisabled= */ false,
               javacEnv);
       Analysis<Nullness, AccessPathStore<Nullness>, NullnessPropagationTransfer> analysis =
           new ForwardAnalysisImpl<>(this);

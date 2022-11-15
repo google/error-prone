@@ -59,7 +59,8 @@ public class FunctionalInterfaceClash extends BugChecker implements ClassTreeMat
     Types types = state.getTypes();
     // collect declared and inherited methods whose signature contains a functional interface
     SetMultimap<String, MethodSymbol> methods = HashMultimap.create();
-    for (Symbol sym : types.membersClosure(getType(tree), /*skipInterface=*/ false).getSymbols()) {
+    for (Symbol sym :
+        types.membersClosure(getType(tree), /* skipInterface= */ false).getSymbols()) {
       if (!(sym instanceof MethodSymbol)) {
         continue;
       }
@@ -97,7 +98,7 @@ public class FunctionalInterfaceClash extends BugChecker implements ClassTreeMat
         MethodSymbol msym2 = worklist.removeFirst();
         ImmutableList<MethodSymbol> overrides =
             clash.stream()
-                .filter(m -> msym2.overrides(m, origin, types, /*checkResult=*/ false))
+                .filter(m -> msym2.overrides(m, origin, types, /* checkResult= */ false))
                 .collect(toImmutableList());
         worklist.addAll(overrides);
         clash.removeAll(overrides);

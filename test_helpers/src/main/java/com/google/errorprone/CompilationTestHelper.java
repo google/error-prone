@@ -150,7 +150,7 @@ public class CompilationTestHelper {
       return Optional.empty();
     }
     try {
-      Path tempJarFile = Files.createTempFile(/* prefix = */ null, /* suffix = */ ".jar");
+      Path tempJarFile = Files.createTempFile(/* prefix= */ null, /* suffix= */ ".jar");
       try (OutputStream os = Files.newOutputStream(tempJarFile);
           JarOutputStream jos = new JarOutputStream(os)) {
         for (Class<?> clazz : overrideClasspath) {
@@ -360,7 +360,7 @@ public class CompilationTestHelper {
             .getTask(
                 new PrintWriter(
                     new BufferedWriter(new OutputStreamWriter(outputStream, UTF_8)),
-                    /*autoFlush=*/ true),
+                    /* autoFlush= */ true),
                 FileManagers.testFileManager(),
                 diagnosticHelper.collector,
                 /* options= */ ImmutableList.copyOf(processedArgs),

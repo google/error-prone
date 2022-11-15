@@ -50,7 +50,7 @@ public class AmbiguousMethodReference extends BugChecker implements ClassTreeMat
     ClassSymbol origin = getSymbol(tree);
     Types types = state.getTypes();
     Iterable<Symbol> members =
-        types.membersClosure(getType(tree), /*skipInterface=*/ false).getSymbols();
+        types.membersClosure(getType(tree), /* skipInterface= */ false).getSymbols();
 
     // collect declared and inherited methods, grouped by reference descriptor
     Map<String, List<MethodSymbol>> methods =

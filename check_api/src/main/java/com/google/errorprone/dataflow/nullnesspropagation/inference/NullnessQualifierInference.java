@@ -260,7 +260,7 @@ public class NullnessQualifierInference extends TreeScanner<Void, Void> {
         sourceNode.getArguments().stream(),
         (formal, actual) -> {
           // formal parameter type (no l-val b/c that would wrongly constrain the method return)
-          generateConstraintsForWrite(formal.type(), formal.symbol(), actual, /*lVal=*/ null);
+          generateConstraintsForWrite(formal.type(), formal.symbol(), actual, /* lVal= */ null);
         });
 
     // Generate constraints for method return
@@ -275,7 +275,7 @@ public class NullnessQualifierInference extends TreeScanner<Void, Void> {
         Type rcvrtype = fieldAccess.selected.type.tsym.type;
         // Note this should be a singleton set, one for each type parameter
         ImmutableSet<InferenceVariable> rcvrReferences =
-            findUnannotatedTypeVarRefs(tvs, rcvrtype, /*decl=*/ null, fieldAccess.selected);
+            findUnannotatedTypeVarRefs(tvs, rcvrtype, /* decl= */ null, fieldAccess.selected);
         Type restype = fieldAccess.sym.type.asMethodType().restype;
         findUnannotatedTypeVarRefs(tvs, restype, fieldAccess.sym, node)
             .forEach(
@@ -527,7 +527,7 @@ public class NullnessQualifierInference extends TreeScanner<Void, Void> {
   @AutoValue
   abstract static class TypeAndSymbol {
     static TypeAndSymbol create(Type type) {
-      return create(type, /*symbol=*/ null);
+      return create(type, /* symbol= */ null);
     }
 
     static TypeAndSymbol create(Type type, @Nullable VarSymbol symbol) {

@@ -52,7 +52,8 @@ public final class ProtoTimestampGetSecondsGetNano extends BugChecker
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
     if (GET_NANOS.matches(tree, state)) {
-      if (!containsCallToSameReceiverNearby(tree, GET_SECONDS, state, /*checkProtoChains=*/ true)) {
+      if (!containsCallToSameReceiverNearby(
+          tree, GET_SECONDS, state, /* checkProtoChains= */ true)) {
         return describeMatch(tree);
       }
     }

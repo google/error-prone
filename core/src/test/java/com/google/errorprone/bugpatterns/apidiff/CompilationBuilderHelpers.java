@@ -130,7 +130,7 @@ public final class CompilationBuilderHelpers {
                   fileManager,
                   diagnosticCollector,
                   javacopts,
-                  /*classes=*/ Collections.<String>emptyList(),
+                  /* classes= */ Collections.<String>emptyList(),
                   fileManager.getJavaFileObjectsFromPaths(sources))
               .call();
 
