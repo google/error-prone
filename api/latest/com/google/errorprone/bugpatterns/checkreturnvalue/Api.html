@@ -15,7 +15,7 @@
 <script type="text/javascript" src="../../../../../script-dir/jquery-ui.min.js"></script>
 </head>
 <body class="class-declaration-page">
-<script type="text/javascript">var data = {"i0":6,"i1":9,"i2":6,"i3":6,"i4":9,"i5":10};
+<script type="text/javascript">var data = {"i0":6,"i1":6,"i2":6,"i3":9,"i4":10};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],2:["t2","Instance Methods"],4:["t3","Abstract Methods"],8:["t4","Concrete Methods"]};
 var altColor = "alt-color";
 var rowColor = "row-color";
@@ -83,8 +83,9 @@ loadScripts(document, 'script');</script>
 <hr>
 <pre>public abstract class <span class="type-name-label">Api</span>
 extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></pre>
-<div class="block">Represents a Java method or constructor. Provides a method to parse an API from a string format,
- and another method to create an ErrorProne <a href="../../matchers/Matcher.html" title="interface in com.google.errorprone.matchers"><code>Matcher</code></a> for the API.</div>
+<div class="block">Represents a Java method or constructor.
+
+ <p>Provides a method to parse an API from a string format, and emit an API as the same sting.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -135,35 +136,27 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 </td>
 </tr>
 <tr class="row-color" id="i1">
-<td class="col-first"><code>static <a href="Api.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">Api</a></code></td>
-<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#fromSymbol(com.sun.tools.javac.code.Symbol.MethodSymbol,com.google.errorprone.VisitorState)">fromSymbol</a></span>&#8203;(com.sun.tools.javac.code.Symbol.MethodSymbol&nbsp;symbol,
-<a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
-<td class="col-last">
-<div class="block">Returns the <code>Api</code> representation of the given <code>symbol</code>.</div>
-</td>
-</tr>
-<tr class="alt-color" id="i2">
 <td class="col-first"><code>abstract <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#methodName()">methodName</a></span>()</code></th>
 <td class="col-last">
 <div class="block">Returns the simple name of the method.</div>
 </td>
 </tr>
-<tr class="row-color" id="i3">
+<tr class="alt-color" id="i2">
 <td class="col-first"><code>abstract com.google.common.collect.ImmutableList&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#parameterTypes()">parameterTypes</a></span>()</code></th>
 <td class="col-last">
 <div class="block">Returns the list of fully qualified parameter types for the given method/constructor.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i4">
+<tr class="row-color" id="i3">
 <td class="col-first"><code>static <a href="Api.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">Api</a></code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#parse(java.lang.String)">parse</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;api)</code></th>
 <td class="col-last">
-<div class="block">Parses an API string into an <a href="Api.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue"><code>Api</code></a>.</div>
+<div class="block">Parses an API string into an <a href="Api.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue"><code>Api</code></a>, ignoring trailing or inner whitespace between names.</div>
 </td>
 </tr>
-<tr class="row-color" id="i5">
+<tr class="alt-color" id="i4">
 <td class="col-first"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#toString()">toString</a></span>()</code></th>
 <td class="col-last">&nbsp;</td>
@@ -201,14 +194,6 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="fromSymbol(com.sun.tools.javac.code.Symbol.MethodSymbol,com.google.errorprone.VisitorState)">
-<h3>fromSymbol</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="Api.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">Api</a></span>&nbsp;<span class="member-name">fromSymbol</span>&#8203;(<span class="parameters">com.sun.tools.javac.code.Symbol.MethodSymbol&nbsp;symbol,
-<a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
-<div class="block">Returns the <code>Api</code> representation of the given <code>symbol</code>.</div>
-</section>
-</li>
-<li>
 <section class="detail" id="className()">
 <h3>className</h3>
 <div class="member-signature"><span class="modifiers">public abstract</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="member-name">className</span>()</div>
@@ -244,7 +229,9 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <section class="detail" id="parse(java.lang.String)">
 <h3>parse</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="Api.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">Api</a></span>&nbsp;<span class="member-name">parse</span>&#8203;(<span class="parameters"><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;api)</span></div>
-<div class="block">Parses an API string into an <a href="Api.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue"><code>Api</code></a>. Example API strings are:
+<div class="block">Parses an API string into an <a href="Api.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue"><code>Api</code></a>, ignoring trailing or inner whitespace between names.
+
+ <p>Example API strings are:
 
  <ul>
    <li>a constructor (e.g., <code>java.net.URI#&lt;init&gt;(java.lang.String)</code>)
@@ -252,6 +239,10 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
    <li>an instance method (e.g., <code>java.util.List#get(int)</code>)
    <li>an instance method with types erased (e.g., <code>java.util.List#add(java.lang.Object)</code>)
  </ul></div>
+<dl class="notes">
+<dt>Throws:</dt>
+<dd><code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/IllegalArgumentException.html" title="class or interface in java.lang" class="external-link">IllegalArgumentException</a></code> - when <code>api</code> is not well-formed</dd>
+</dl>
 </section>
 </li>
 </ul>

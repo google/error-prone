@@ -88,8 +88,8 @@ loadScripts(document, 'script');</script>
 <tbody>
 <tr class="alt-color">
 <td class="col-first"><code>static <a href="../Api.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">Api</a></code></td>
-<th class="col-second" scope="row"><span class="type-name-label">Api.</span><code><span class="member-name-link"><a href="../Api.html#fromSymbol(com.sun.tools.javac.code.Symbol.MethodSymbol,com.google.errorprone.VisitorState)">fromSymbol</a></span>&#8203;(com.sun.tools.javac.code.Symbol.MethodSymbol&nbsp;symbol,
-<a href="../../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
+<th class="col-second" scope="row"><span class="type-name-label">ApiFactory.</span><code><span class="member-name-link"><a href="../ApiFactory.html#fromSymbol(com.sun.tools.javac.code.Symbol.MethodSymbol,com.sun.tools.javac.code.Types)">fromSymbol</a></span>&#8203;(com.sun.tools.javac.code.Symbol.MethodSymbol&nbsp;symbol,
+com.sun.tools.javac.code.Types&nbsp;types)</code></th>
 <td class="col-last">
 <div class="block">Returns the <code>Api</code> representation of the given <code>symbol</code>.</div>
 </td>
@@ -98,7 +98,7 @@ loadScripts(document, 'script');</script>
 <td class="col-first"><code>static <a href="../Api.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">Api</a></code></td>
 <th class="col-second" scope="row"><span class="type-name-label">Api.</span><code><span class="member-name-link"><a href="../Api.html#parse(java.lang.String)">parse</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;api)</code></th>
 <td class="col-last">
-<div class="block">Parses an API string into an <a href="../Api.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue"><code>Api</code></a>.</div>
+<div class="block">Parses an API string into an <a href="../Api.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue"><code>Api</code></a>, ignoring trailing or inner whitespace between names.</div>
 </td>
 </tr>
 </tbody>

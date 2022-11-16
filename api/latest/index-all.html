@@ -789,6 +789,10 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/google/errorprone/bugpatterns/apidiff/ApiDiffProto.MemberDiffOrBuilder.html" title="interface in com.google.errorprone.bugpatterns.apidiff"><span class="type-name-link">ApiDiffProto.MemberDiffOrBuilder</span></a> - Interface in <a href="com/google/errorprone/bugpatterns/apidiff/package-summary.html">com.google.errorprone.bugpatterns.apidiff</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/bugpatterns/checkreturnvalue/ApiFactory.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue"><span class="type-name-link">ApiFactory</span></a> - Class in <a href="com/google/errorprone/bugpatterns/checkreturnvalue/package-summary.html">com.google.errorprone.bugpatterns.checkreturnvalue</a></dt>
+<dd>
+<div class="block">Utility method to produce <a href="com/google/errorprone/bugpatterns/checkreturnvalue/Api.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue"><code>Api</code></a> objects from javac <code>Symbol.MethodSymbol</code>.</div>
+</dd>
 <dt><a href="com/google/errorprone/fixes/AppliedFix.html" title="class in com.google.errorprone.fixes"><span class="type-name-link">AppliedFix</span></a> - Class in <a href="com/google/errorprone/fixes/package-summary.html">com.google.errorprone.fixes</a></dt>
 <dd>
 <div class="block">Represents the corrected source which we think was intended, by applying a Fix.</div>
@@ -4170,7 +4174,7 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/suppliers/Suppliers.html#fromStrings(java.lang.Iterable)">fromStrings(Iterable&lt;String&gt;)</a></span> - Static method in class com.google.errorprone.suppliers.<a href="com/google/errorprone/suppliers/Suppliers.html" title="class in com.google.errorprone.suppliers">Suppliers</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/checkreturnvalue/Api.html#fromSymbol(com.sun.tools.javac.code.Symbol.MethodSymbol,com.google.errorprone.VisitorState)">fromSymbol(Symbol.MethodSymbol, VisitorState)</a></span> - Static method in class com.google.errorprone.bugpatterns.checkreturnvalue.<a href="com/google/errorprone/bugpatterns/checkreturnvalue/Api.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">Api</a></dt>
+<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/checkreturnvalue/ApiFactory.html#fromSymbol(com.sun.tools.javac.code.Symbol.MethodSymbol,com.sun.tools.javac.code.Types)">fromSymbol(Symbol.MethodSymbol, Types)</a></span> - Static method in class com.google.errorprone.bugpatterns.checkreturnvalue.<a href="com/google/errorprone/bugpatterns/checkreturnvalue/ApiFactory.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ApiFactory</a></dt>
 <dd>
 <div class="block">Returns the <code>Api</code> representation of the given <code>symbol</code>.</div>
 </dd>
@@ -10441,7 +10445,7 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/checkreturnvalue/Api.html#parse(java.lang.String)">parse(String)</a></span> - Static method in class com.google.errorprone.bugpatterns.checkreturnvalue.<a href="com/google/errorprone/bugpatterns/checkreturnvalue/Api.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">Api</a></dt>
 <dd>
-<div class="block">Parses an API string into an <a href="com/google/errorprone/bugpatterns/checkreturnvalue/Api.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue"><code>Api</code></a>.</div>
+<div class="block">Parses an API string into an <a href="com/google/errorprone/bugpatterns/checkreturnvalue/Api.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue"><code>Api</code></a>, ignoring trailing or inner whitespace between names.</div>
 </dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/apidiff/ApiDiffProto.ClassDiff.html#parseDelimitedFrom(java.io.InputStream)">parseDelimitedFrom(InputStream)</a></span> - Static method in class com.google.errorprone.bugpatterns.apidiff.<a href="com/google/errorprone/bugpatterns/apidiff/ApiDiffProto.ClassDiff.html" title="class in com.google.errorprone.bugpatterns.apidiff">ApiDiffProto.ClassDiff</a></dt>
 <dd>&nbsp;</dd>
