@@ -18,7 +18,7 @@ package com.google.errorprone.bugpatterns.checkreturnvalue;
 
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.common.collect.ImmutableSetMultimap.toImmutableSetMultimap;
-import static com.google.errorprone.bugpatterns.checkreturnvalue.Api.fullyErasedAndUnannotatedType;
+import static com.google.errorprone.bugpatterns.checkreturnvalue.ApiFactory.fullyErasedAndUnannotatedType;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 import com.google.common.collect.ImmutableList;
@@ -144,10 +144,7 @@ public final class ExternalCanIgnoreReturnValue extends MethodRule {
   private static MethodPredicate configByParsingApiObjects(CharSource file) throws IOException {
     ImmutableSetMultimap<String, Api> apis;
     try (Stream<String> lines = file.lines()) {
-      apis =
-          lines
-              .map(l -> Api.parse(l, /* assumeNoWhitespace= */ true))
-              .collect(toImmutableSetMultimap(Api::className, api -> api));
+      apis = lines.map(Api::parse).collect(toImmutableSetMultimap(Api::className, api -> api));
     }
     return (methodSymbol, state) ->
         apis.get(surroundingClass(methodSymbol)).stream()

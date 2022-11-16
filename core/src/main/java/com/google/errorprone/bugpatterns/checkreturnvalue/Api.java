@@ -17,11 +17,6 @@ package com.google.errorprone.bugpatterns.checkreturnvalue;
 
 import static com.google.common.base.CharMatcher.whitespace;
 import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.collect.ImmutableList.toImmutableList;
-import static com.google.common.collect.ImmutableSet.toImmutableSet;
-import static com.google.errorprone.matchers.Matchers.anyMethod;
-import static com.google.errorprone.matchers.Matchers.anyOf;
-import static com.google.errorprone.matchers.Matchers.constructor;
 import static java.lang.Character.isJavaIdentifierPart;
 import static java.lang.Character.isJavaIdentifierStart;
 
@@ -29,79 +24,19 @@ import com.google.auto.value.AutoValue;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
-import com.google.errorprone.VisitorState;
 import com.google.errorprone.annotations.CompileTimeConstant;
-import com.google.errorprone.matchers.Matcher;
-import com.sun.source.tree.ExpressionTree;
-import com.sun.tools.javac.code.Symbol.MethodSymbol;
-import com.sun.tools.javac.code.Type;
-import com.sun.tools.javac.code.Type.ArrayType;
-import com.sun.tools.javac.code.Type.ClassType;
-import com.sun.tools.javac.code.Type.StructuralTypeMapping;
-import com.sun.tools.javac.code.TypeMetadata;
-import com.sun.tools.javac.code.Types;
-import java.util.List;
 
 /**
- * Represents a Java method or constructor. Provides a method to parse an API from a string format,
- * and another method to create an ErrorProne {@link Matcher} for the API.
+ * Represents a Java method or constructor.
+ *
+ * <p>Provides a method to parse an API from a string format, and emit an API as the same sting.
  */
 // TODO(kak): do we want to be able to represent classes in addition to methods/constructors?
 // TODO(kak): if not, then consider renaming to `MethodSignature` or something
 @AutoValue
 public abstract class Api {
 
-  /** Returns the {@code Api} representation of the given {@code symbol}. */
-  public static Api fromSymbol(MethodSymbol symbol, VisitorState state) {
-    Types types = state.getTypes();
-    return new AutoValue_Api(
-        symbol.owner.getQualifiedName().toString(),
-        symbol.name.toString(),
-        symbol.getParameters().stream()
-            .map(p -> fullyErasedAndUnannotatedType(p.type, types))
-            .collect(toImmutableList()));
-  }
-
-  static String fullyErasedAndUnannotatedType(Type type, Types types) {
-    // Removes type arguments, replacing w/ upper bounds
-    Type erasedType = types.erasureRecursive(type);
-    Type unannotatedType = erasedType.accept(ANNOTATION_REMOVER, null);
-    return unannotatedType.toString();
-  }
-
-  /**
-   * Removes type metadata (e.g.: type annotations) from types, as well as from "containing
-   * structures" like arrays. Notably, this annotation remover doesn't handle Type parameters, as it
-   * only attempts to handle erased types.
-   */
-  private static final StructuralTypeMapping<Void> ANNOTATION_REMOVER =
-      new StructuralTypeMapping<>() {
-        @Override
-        public Type visitType(Type t, Void unused) {
-          return t.baseType();
-        }
-
-        @Override
-        public Type visitClassType(ClassType t, Void unused) {
-          return super.visitClassType(t.cloneWithMetadata(TypeMetadata.EMPTY), unused);
-        }
-
-        // Remove annotations from all enclosing containers
-        @Override
-        public Type visitArrayType(ArrayType t, Void unused) {
-          return super.visitArrayType(t.cloneWithMetadata(TypeMetadata.EMPTY), unused);
-        }
-      };
-
-  // TODO(b/223668437): use this (or something other than the Matcher<> API)
-  static Matcher<ExpressionTree> createMatcherFromApis(List<String> apis) {
-    return anyOf(apis.stream().map(Api::parse).map(Api::matcher).collect(toImmutableList()));
-  }
-
-  static ImmutableSet<Api> createSetFromApis(List<String> apis) {
-    return apis.stream().map(Api::parse).collect(toImmutableSet());
-  }
+  private static final Joiner COMMA_JOINER = Joiner.on(',');
 
   /** Returns the fully qualified type that contains the given method/constructor. */
   public abstract String className();
@@ -118,7 +53,7 @@ public abstract class Api {
   @Override
   public final String toString() {
     return String.format(
-        "%s#%s(%s)", className(), methodName(), Joiner.on(',').join(parameterTypes()));
+        "%s#%s(%s)", className(), methodName(), COMMA_JOINER.join(parameterTypes()));
   }
 
   /** Returns whether this API represents a constructor or not. */
@@ -126,18 +61,10 @@ public abstract class Api {
     return methodName().equals("<init>");
   }
 
-  private Matcher<ExpressionTree> matcher() {
-    return isConstructor()
-        ? constructor().forClass(className()).withParameters(parameterTypes())
-        : anyMethod()
-            .onClass(className())
-            .named(methodName())
-            // TODO(b/219754967): what about arrays
-            .withParameters(parameterTypes());
-  }
-
   /**
-   * Parses an API string into an {@link Api}. Example API strings are:
+   * Parses an API string into an {@link Api}, ignoring trailing or inner whitespace between names.
+   *
+   * <p>Example API strings are:
    *
    * <ul>
    *   <li>a constructor (e.g., {@code java.net.URI#<init>(java.lang.String)})
@@ -145,6 +72,8 @@ public abstract class Api {
    *   <li>an instance method (e.g., {@code java.util.List#get(int)})
    *   <li>an instance method with types erased (e.g., {@code java.util.List#add(java.lang.Object)})
    * </ul>
+   *
+   * @throws IllegalArgumentException when {@code api} is not well-formed
    */
   @VisibleForTesting
   public static Api parse(String api) {
@@ -152,6 +81,27 @@ public abstract class Api {
   }
 
   /**
+   * Parses an API string that was already known to not include any leading, trailing, or inner
+   * whitespace.
+   *
+   * <p>If the API string contains whitespace, this method may produce an API object with extraneous
+   * spaces attached, or may treat it as malformed (and throw an exception).
+   *
+   * @throws IllegalArgumentException when {@code api} is not well-formed
+   */
+  // TODO(glorioso): Refactoring has shown the folly of this method. It's probably not useful, since
+  //   if we're _parsing_ into API objects, there's not as much of a performance concern for
+  //   touching whitespaces. If we use bare string identifiers instead, whitespaces are problematic,
+  //   but this code wouldn't be involved.
+  static Api parseFromStringWithoutWhitespace(String api) {
+    return parse(api, true);
+  }
+
+  static Api internalCreate(String className, String methodName, ImmutableList<String> params) {
+    return new AutoValue_Api(className, methodName, params);
+  }
+
+  /**
    * Parses an API string into an {@link Api}. Example API strings are:
    *
    * <ul>
@@ -161,7 +111,7 @@ public abstract class Api {
    *   <li>an instance method with types erased (e.g., {@code java.util.List#add(java.lang.Object)})
    * </ul>
    */
-  static Api parse(String api, boolean assumeNoWhitespace) {
+  private static Api parse(String api, boolean assumeNoWhitespace) {
     Parser p = new Parser(api, assumeNoWhitespace);
 
     // Let's parse this in 3 parts:
@@ -175,7 +125,7 @@ public abstract class Api {
     ImmutableList<String> paramList = p.parameters();
     p.ensureNoMoreCharacters();
 
-    return new AutoValue_Api(className, methodName, paramList);
+    return internalCreate(className, methodName, paramList);
   }
 
   private static final class Parser {
@@ -376,11 +326,11 @@ public abstract class Api {
         check(whitespace().matches(api.charAt(position)), api, "it should end in ')'");
       }
     }
-  }
 
-  // The @CompileTimeConstant is for performance - reason should be constant and not eagerly
-  // constructed.
-  private static void check(boolean condition, String api, @CompileTimeConstant String reason) {
-    checkArgument(condition, "Unable to parse '%s' because %s", api, reason);
+    // The @CompileTimeConstant is for performance - reason should be constant and not eagerly
+    // constructed.
+    private static void check(boolean condition, String api, @CompileTimeConstant String reason) {
+      checkArgument(condition, "Unable to parse '%s' because %s", api, reason);
+    }
   }
 }

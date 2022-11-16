@@ -110,12 +110,16 @@ public final class ApiTest {
         "  com.google.android.libraries.stitch.binder.Binder"
             + "#get(android.content.Context , java.lang.Class) ";
     Api api = Api.parse(string);
+    assertThat(api.className()).isEqualTo("com.google.android.libraries.stitch.binder.Binder");
     assertThat(api.methodName()).isEqualTo("get");
     assertThat(api.parameterTypes())
         .containsExactly("android.content.Context", "java.lang.Class")
         .inOrder();
     assertThat(api.isConstructor()).isFalse();
     assertThat(api.toString()).isEqualTo(whitespace().removeFrom(string));
+
+    assertThrows(
+        IllegalArgumentException.class, () -> Api.parseFromStringWithoutWhitespace(string));
   }
 
   @Test
