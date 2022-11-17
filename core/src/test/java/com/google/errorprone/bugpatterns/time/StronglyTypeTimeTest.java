@@ -64,7 +64,7 @@ public final class StronglyTypeTimeTest {
   }
 
   @Test
-  public void jodaInstant() {
+  public void jodaInstantConstructor() {
     refactoringHelper
         .addInputLines(
             "Test.java",
@@ -80,6 +80,30 @@ public final class StronglyTypeTimeTest {
             "import org.joda.time.Instant;",
             "class Test {",
             "  private static final Instant FOO = new Instant(100L);",
+            "  public Instant get() {",
+            "    return FOO;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void jodaInstantStaticFactory() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            "import org.joda.time.Instant;",
+            "class Test {",
+            "  private static final long FOO_MILLIS = 100L;",
+            "  public Instant get() {",
+            "    return Instant.ofEpochMilli(FOO_MILLIS);",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "import org.joda.time.Instant;",
+            "class Test {",
+            "  private static final Instant FOO = Instant.ofEpochMilli(100L);",
             "  public Instant get() {",
             "    return FOO;",
             "  }",

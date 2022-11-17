@@ -71,6 +71,10 @@ public final class StronglyTypeTime extends BugChecker implements CompilationUni
                   "millis", "standardSeconds", "standardMinutes", "standardHours", "standardDays")
               .withParameters("long"),
           constructor().forClass("org.joda.time.Instant").withParameters("long"),
+          staticMethod()
+              .onClass("org.joda.time.Instant")
+              .namedAnyOf("ofEpochMilli", "ofEpochSecond")
+              .withParameters("long"),
           constructor().forClass("org.joda.time.DateTime").withParameters("long"));
 
   private static final Pattern TIME_UNIT_REMOVER =
