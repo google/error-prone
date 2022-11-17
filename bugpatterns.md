@@ -896,7 +896,7 @@ __[JodaDurationWithMillis](bugpattern/JodaDurationWithMillis)__<br>
 Use of duration.withMillis(long) is not allowed. Please use Duration.millis(long) instead.
 
 __[JodaInstantWithMillis](bugpattern/JodaInstantWithMillis)__<br>
-Use of instant.withMillis(long) is not allowed. Please use new Instant(long) instead.
+Use of instant.withMillis(long) is not allowed. Use Instant.ofEpochMilli(long) instead.
 
 __[JodaNewPeriod](bugpattern/JodaNewPeriod)__<br>
 This may have surprising semantics, e.g. new Period(LocalDate.parse(&quot;1970-01-01&quot;), LocalDate.parse(&quot;1970-02-02&quot;)).getDays() &#61;&#61; 1, not 32.
