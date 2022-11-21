@@ -248,20 +248,6 @@ public class CommandLineFlagTest {
   }
 
   @Test
-  public void cantOverrideByAltname() {
-    ErrorProneTestCompiler compiler =
-        builder.report(ScannerSupplier.fromBugCheckerClasses(DisableableChecker.class)).build();
-    ImmutableList<JavaFileObject> sources =
-        forResources(getClass(), "CommandLineFlagTestFile.java");
-
-    InvalidCommandLineOptionException expected =
-        assertThrows(
-            InvalidCommandLineOptionException.class,
-            () -> compiler.compile(new String[] {"-Xep:foo:OFF"}, sources));
-    assertThat(expected).hasMessageThat().contains("foo is not a valid checker name");
-  }
-
-  @Test
   public void ignoreUnknownChecksFlagAllowsOverridingUnknownCheck() {
     ErrorProneTestCompiler compiler = builder.build();
     ImmutableList<JavaFileObject> sources =

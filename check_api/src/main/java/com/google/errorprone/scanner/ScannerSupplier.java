@@ -16,11 +16,14 @@
 
 package com.google.errorprone.scanner;
 
+import static com.google.common.collect.ImmutableListMultimap.flatteningToImmutableListMultimap;
+
 import com.google.common.base.Predicate;
 import com.google.common.base.Supplier;
 import com.google.common.collect.HashBiMap;
 import com.google.common.collect.ImmutableBiMap;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableListMultimap;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
@@ -160,64 +163,67 @@ public abstract class ScannerSupplier implements Supplier<Scanner> {
     }
 
     if (errorProneOptions.isDropErrorsToWarnings()) {
-      getAllChecks().values().stream()
+      checks.values().stream()
           .filter(c -> c.defaultSeverity() == SeverityLevel.ERROR && c.disableable())
           .forEach(c -> severities.put(c.canonicalName(), SeverityLevel.WARNING));
     }
 
     if (errorProneOptions.isDisableAllWarnings()) {
-      getAllChecks().values().stream()
+      checks.values().stream()
           .filter(c -> c.defaultSeverity() == SeverityLevel.WARNING)
           .forEach(c -> disabled.add(c.canonicalName()));
     }
     if (errorProneOptions.isDisableAllChecks()) {
-      getAllChecks().values().stream()
+      checks.values().stream()
           .filter(c -> c.disableable())
           .forEach(c -> disabled.add(c.canonicalName()));
     }
 
+    ImmutableListMultimap<String, BugCheckerInfo> checksByAltName =
+        checks.values().stream()
+            .collect(flatteningToImmutableListMultimap(x -> x, c -> c.allNames().stream()))
+            .inverse();
+
     // Process overrides
     severityOverrides.forEach(
         (checkName, newSeverity) -> {
-          BugCheckerInfo check = getAllChecks().get(checkName);
-          if (check == null) {
+          if (!checksByAltName.containsKey(checkName)) {
             if (errorProneOptions.ignoreUnknownChecks()) {
               return;
             }
             throw new InvalidCommandLineOptionException(checkName + " is not a valid checker name");
           }
-
-          switch (newSeverity) {
-            case OFF:
-              if (!check.disableable()) {
-                throw new InvalidCommandLineOptionException(
-                    check.canonicalName() + " may not be disabled");
-              }
-              severities.remove(check.canonicalName());
-              disabled.add(check.canonicalName());
-              break;
-            case DEFAULT:
-              severities.put(check.canonicalName(), check.defaultSeverity());
-              disabled.remove(check.canonicalName());
-              break;
-            case WARN:
-              // Demoting an enabled check from an error to a warning is a form of disabling
-              if (!disabled().contains(check.canonicalName())
-                  && !check.disableable()
-                  && check.defaultSeverity() == SeverityLevel.ERROR) {
-                throw new InvalidCommandLineOptionException(
-                    check.canonicalName()
-                        + " is not disableable and may not be demoted to a warning");
-              }
-              severities.put(check.canonicalName(), SeverityLevel.WARNING);
-              disabled.remove(check.canonicalName());
-              break;
-            case ERROR:
-              severities.put(check.canonicalName(), SeverityLevel.ERROR);
-              disabled.remove(check.canonicalName());
-              break;
-            default:
-              throw new IllegalStateException("Unexpected severity level: " + newSeverity);
+          for (BugCheckerInfo check : checksByAltName.get(checkName)) {
+            switch (newSeverity) {
+              case OFF:
+                if (!check.disableable()) {
+                  throw new InvalidCommandLineOptionException(
+                      check.canonicalName() + " may not be disabled");
+                }
+                severities.remove(check.canonicalName());
+                disabled.add(check.canonicalName());
+                break;
+              case DEFAULT:
+                severities.put(check.canonicalName(), check.defaultSeverity());
+                disabled.remove(check.canonicalName());
+                break;
+              case WARN:
+                // Demoting an enabled check from an error to a warning is a form of disabling
+                if (!disabled().contains(check.canonicalName())
+                    && !check.disableable()
+                    && check.defaultSeverity() == SeverityLevel.ERROR) {
+                  throw new InvalidCommandLineOptionException(
+                      check.canonicalName()
+                          + " is not disableable and may not be demoted to a warning");
+                }
+                severities.put(check.canonicalName(), SeverityLevel.WARNING);
+                disabled.remove(check.canonicalName());
+                break;
+              case ERROR:
+                severities.put(check.canonicalName(), SeverityLevel.ERROR);
+                disabled.remove(check.canonicalName());
+                break;
+            }
           }
         });
 

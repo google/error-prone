@@ -557,29 +557,44 @@ public class ScannerSupplierTest {
   }
 
   @Test
-  public void disablingPackageLocation_suppressible() {
-    ScannerSupplier ss = ScannerSupplier.fromBugCheckerClasses(PackageLocation.class);
+  public void canSuppressViaAltName() {
+    ScannerSupplier ss = ScannerSupplier.fromBugCheckerClasses(WithAltName.class);
     ErrorProneOptions epOptions =
-        ErrorProneOptions.processArgs(ImmutableList.of("-Xep:PackageLocation:OFF"));
+        ErrorProneOptions.processArgs(ImmutableList.of("-Xep:HeresMyAltName:OFF"));
 
     ScannerSupplier overrides = ss.applyOverrides(epOptions);
-    assertScanner(overrides).hasEnabledChecks(); // no checks are enabled
+    assertScanner(overrides).hasEnabledChecks(/* empty */ );
   }
 
   /** An unsuppressible version of {@link PackageLocation}. */
   @BugPattern(
       name = "PackageLocation",
       summary = "",
+      altNames = {"AlternativePackageLocation"},
       severity = ERROR,
       suppressionAnnotations = {},
       disableable = false)
   public static class UnsuppressiblePackageLocation extends PackageLocation {}
+
+  @BugPattern(altNames = "HeresMyAltName", summary = "", severity = ERROR)
+  public static class WithAltName extends PackageLocation {}
 
   @Test
   public void disablingPackageLocation_unsuppressible() {
     ScannerSupplier ss = ScannerSupplier.fromBugCheckerClasses(UnsuppressiblePackageLocation.class);
     ErrorProneOptions epOptions =
         ErrorProneOptions.processArgs(ImmutableList.of("-Xep:PackageLocation:OFF"));
+
+    InvalidCommandLineOptionException exception =
+        assertThrows(InvalidCommandLineOptionException.class, () -> ss.applyOverrides(epOptions));
+    assertThat(exception).hasMessageThat().contains("may not be disabled");
+  }
+
+  @Test
+  public void disablingPackageLocation_viaAltName_unsuppressible() {
+    ScannerSupplier ss = ScannerSupplier.fromBugCheckerClasses(UnsuppressiblePackageLocation.class);
+    ErrorProneOptions epOptions =
+        ErrorProneOptions.processArgs(ImmutableList.of("-Xep:AlternativePackageLocation:OFF"));
 
     InvalidCommandLineOptionException exception =
         assertThrows(InvalidCommandLineOptionException.class, () -> ss.applyOverrides(epOptions));
