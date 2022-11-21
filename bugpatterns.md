@@ -1198,6 +1198,9 @@ This method reference is unnecessary, and can be replaced with the variable itse
 __[UnnecessaryParentheses](bugpattern/UnnecessaryParentheses)__<br>
 These grouping parentheses are unnecessary; it is unlikely the code will be misinterpreted without them
 
+__[UnqualifiedYield](bugpattern/UnqualifiedYield)__<br>
+In recent versions of Java, &#39;yield&#39; is a contextual keyword, and calling an unqualified method with that name is an error.
+
 __[UnrecognisedJavadocTag](bugpattern/UnrecognisedJavadocTag)__<br>
 This Javadoc tag wasn&#39;t recognised by the parser. Is it malformed somehow, perhaps with mismatched braces?
 
