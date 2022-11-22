@@ -95,7 +95,8 @@ public class BugCheckerRefactoringTestHelper {
       private String maybeFormat(String input) {
         try {
           return new Formatter().formatSource(input);
-        } catch (FormatterException e) {
+          // TODO(b/254713810): Remove the AIOOBE catch below.
+        } catch (FormatterException | ArrayIndexOutOfBoundsException e) {
           return input;
         }
       }
