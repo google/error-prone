@@ -1,6 +1,6 @@
 ---
 title: ProtoFieldNullComparison
-summary: Protobuf fields cannot be null.
+summary: This value cannot be null, and comparing it to null may be misleading.
 layout: bugpattern
 tags: ''
 severity: ERROR

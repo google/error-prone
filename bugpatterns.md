@@ -429,7 +429,7 @@ __[ProtoBuilderReturnValueIgnored](bugpattern/ProtoBuilderReturnValueIgnored)__<
 Unnecessary call to proto&#39;s #build() method.  If you don&#39;t consume the return value of #build(), the result is discarded and the only effect is to verify that all required fields are set, which can be expressed more directly with #isInitialized().
 
 __[ProtoFieldNullComparison](bugpattern/ProtoFieldNullComparison)__<br>
-Protobuf fields cannot be null.
+This value cannot be null, and comparing it to null may be misleading.
 
 __[ProtoStringFieldReferenceEquality](bugpattern/ProtoStringFieldReferenceEquality)__<br>
 Comparing protobuf fields of type String using reference equality
