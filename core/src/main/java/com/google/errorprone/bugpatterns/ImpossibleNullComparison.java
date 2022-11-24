@@ -29,6 +29,8 @@ import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.isConsideredFinal;
 import static com.google.errorprone.util.ASTHelpers.isSameType;
+import static java.lang.String.format;
+import static java.util.Arrays.stream;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
@@ -61,7 +63,6 @@ import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -71,7 +72,7 @@ import javax.annotation.Nullable;
 
 /** Matches comparison of proto fields to {@code null}. */
 @BugPattern(
-    summary = "Protobuf fields cannot be null.",
+    summary = "This value cannot be null, and comparing it to null may be misleading.",
     name = "ProtoFieldNullComparison",
     altNames = "ImpossibleNullComparison",
     severity = ERROR)
@@ -142,10 +143,13 @@ public final class ImpossibleNullComparison extends BugChecker
               "com.google.protobuf.GeneratedMessageLite", "com.google.protobuf.GeneratedMessage");
 
   private final boolean matchTestAssertions;
+  private final boolean matchOptionalAndMultimap;
 
   public ImpossibleNullComparison(ErrorProneFlags flags) {
     this.matchTestAssertions =
         flags.getBoolean("ProtoFieldNullComparison:MatchTestAssertions").orElse(true);
+    this.matchOptionalAndMultimap =
+        flags.getBoolean("ImpossibleNullComparison:MatchOptionalAndMultimap").orElse(true);
   }
 
   @Override
@@ -254,10 +258,11 @@ public final class ImpossibleNullComparison extends BugChecker
 
     private Optional<Fixer> getFixer(ExpressionTree tree, VisitorState state) {
       ExpressionTree resolvedTree = getEffectiveTree(tree);
-      if (resolvedTree == null || !PROTO_RECEIVER.matches(resolvedTree, state)) {
+      if (resolvedTree == null) {
         return Optional.empty();
       }
-      return Arrays.stream(GetterTypes.values())
+      return stream(GetterTypes.values())
+          .filter(x -> matchOptionalAndMultimap || !x.name().contains("GET"))
           .map(type -> type.match(resolvedTree, state))
           .filter(Objects::nonNull)
           .findFirst();
@@ -284,21 +289,72 @@ public final class ImpossibleNullComparison extends BugChecker
     return builder.replace(lastIndexOf, lastIndexOf + pattern.length(), replacement).toString();
   }
 
-  /** Generates a replacement hazzer, if available. */
-  @FunctionalInterface
+  /** Generates a replacement, if available. */
   private interface Fixer {
     /**
-     * @param negated whether the hazzer should be negated.
+     * @param negated whether the replacement should be negated.
      */
-    Optional<String> getHazzer(boolean negated, VisitorState state);
+    Optional<String> getReplacement(boolean negated, VisitorState state);
   }
 
+  private static final Matcher<ExpressionTree> OPTIONAL_GET_MATCHER =
+      instanceMethod().onExactClass("java.util.Optional").namedAnyOf("get", "orElseThrow");
+
+  private static final Matcher<ExpressionTree> GUAVA_OPTIONAL_GET_MATCHER =
+      instanceMethod().onExactClass("com.google.common.base.Optional").named("get");
+
+  private static final Matcher<ExpressionTree> MULTIMAP_GET_MATCHER =
+      instanceMethod().onDescendantOf("com.google.common.collect.Multimap").named("get");
+
   private enum GetterTypes {
+    OPTIONAL_GET {
+      @Nullable
+      @Override
+      Fixer match(ExpressionTree tree, VisitorState state) {
+        if (!OPTIONAL_GET_MATCHER.matches(tree, state)) {
+          return null;
+        }
+        return (n, s) ->
+            Optional.of(
+                s.getSourceForNode(getReceiver(tree)) + (n ? ".isEmpty()" : ".isPresent()"));
+      }
+    },
+    GUAVA_OPTIONAL_GET {
+      @Nullable
+      @Override
+      Fixer match(ExpressionTree tree, VisitorState state) {
+        if (!GUAVA_OPTIONAL_GET_MATCHER.matches(tree, state)) {
+          return null;
+        }
+        return (n, s) ->
+            Optional.of((n ? "!" : "") + s.getSourceForNode(getReceiver(tree)) + ".isPresent()");
+      }
+    },
+    MULTIMAP_GET {
+      @Nullable
+      @Override
+      Fixer match(ExpressionTree tree, VisitorState state) {
+        if (!MULTIMAP_GET_MATCHER.matches(tree, state)) {
+          return null;
+        }
+        return (n, s) ->
+            Optional.of(
+                format(
+                    "%s%s.containsKey(%s)",
+                    n ? "!" : "",
+                    s.getSourceForNode(getReceiver(tree)),
+                    s.getSourceForNode(
+                        getOnlyElement(((MethodInvocationTree) tree).getArguments()))));
+      }
+    },
     /** {@code proto.getFoo()} */
     SCALAR {
       @Nullable
       @Override
       Fixer match(ExpressionTree tree, VisitorState state) {
+        if (!PROTO_RECEIVER.matches(tree, state)) {
+          return null;
+        }
         if (tree.getKind() != Kind.METHOD_INVOCATION) {
           return null;
         }
@@ -345,6 +401,9 @@ public final class ImpossibleNullComparison extends BugChecker
       @Nullable
       @Override
       Fixer match(ExpressionTree tree, VisitorState state) {
+        if (!PROTO_RECEIVER.matches(tree, state)) {
+          return null;
+        }
         if (tree.getKind() != Kind.METHOD_INVOCATION) {
           return null;
         }
@@ -363,7 +422,7 @@ public final class ImpossibleNullComparison extends BugChecker
           MethodInvocationTree methodInvocation, boolean negated, VisitorState visitorState) {
         String methodName = ASTHelpers.getSymbol(methodInvocation).getQualifiedName().toString();
         String countMethod = methodName + "Count";
-        return String.format(
+        return format(
             "%s.%s() %s %s",
             visitorState.getSourceForNode(getReceiver(methodInvocation)),
             countMethod,
@@ -376,6 +435,9 @@ public final class ImpossibleNullComparison extends BugChecker
       @Nullable
       @Override
       Fixer match(ExpressionTree tree, VisitorState state) {
+        if (!PROTO_RECEIVER.matches(tree, state)) {
+          return null;
+        }
         if (tree.getKind() != Kind.METHOD_INVOCATION) {
           return null;
         }
@@ -403,6 +465,9 @@ public final class ImpossibleNullComparison extends BugChecker
       @Nullable
       @Override
       Fixer match(ExpressionTree tree, VisitorState state) {
+        if (!PROTO_RECEIVER.matches(tree, state)) {
+          return null;
+        }
         if (EXTENSION_METHODS_WITH_NO_FIX.matches(tree, state)) {
           return GetterTypes::emptyFix;
         }
@@ -471,7 +536,7 @@ public final class ImpossibleNullComparison extends BugChecker
     COMPARISON {
       @Override
       SuggestedFix fix(Fixer fixer, ExpressionTree tree, VisitorState state) {
-        Optional<String> replacement = fixer.getHazzer(tree.getKind() == Kind.EQUAL_TO, state);
+        Optional<String> replacement = fixer.getReplacement(tree.getKind() == Kind.EQUAL_TO, state);
         return replacement.map(r -> SuggestedFix.replace(tree, r)).orElse(SuggestedFix.emptyFix());
       }
     },
@@ -480,13 +545,13 @@ public final class ImpossibleNullComparison extends BugChecker
       @Override
       SuggestedFix fix(Fixer fixer, ExpressionTree tree, VisitorState state) {
         return fixer
-            .getHazzer(/* negated= */ false, state)
+            .getReplacement(/* negated= */ false, state)
             .map(
                 r -> {
                   MethodInvocationTree receiver = (MethodInvocationTree) getReceiver(tree);
                   return SuggestedFix.replace(
                       tree,
-                      String.format(
+                      format(
                           "%s(%s).isTrue()",
                           state.getSourceForNode(receiver.getMethodSelect()), r));
                 })
@@ -499,7 +564,7 @@ public final class ImpossibleNullComparison extends BugChecker
       SuggestedFix fix(Fixer fixer, ExpressionTree tree, VisitorState state) {
         MethodInvocationTree methodInvocationTree = (MethodInvocationTree) tree;
         return fixer
-            .getHazzer(/* negated= */ false, state)
+            .getReplacement(/* negated= */ false, state)
             .map(
                 r -> {
                   int startPos = getStartPosition(methodInvocationTree);

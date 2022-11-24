@@ -281,28 +281,28 @@ public final class ImpossibleNullComparisonTest {
             "  void test() {",
             "    TestProtoMessage message = TestProtoMessage.newBuilder().build();",
             "    TestFieldProtoMessage field = message.getMessage();",
-            "    // BUG: Diagnostic contains: Protobuf fields cannot be null",
+            "    // BUG: Diagnostic contains: This value cannot be null",
             "    // remove this line",
             "    checkNotNull(field);",
-            "    // BUG: Diagnostic contains: Protobuf fields cannot be null",
+            "    // BUG: Diagnostic contains: This value cannot be null",
             "    // remove this line",
             "    checkNotNull(message.getMessage());",
-            "    // BUG: Diagnostic contains: Protobuf fields cannot be null",
+            "    // BUG: Diagnostic contains: This value cannot be null",
             "    // remove this line",
             "    verifyNotNull(message.getMessage());",
-            "    // BUG: Diagnostic contains: Protobuf fields cannot be null",
+            "    // BUG: Diagnostic contains: This value cannot be null",
             "    // remove this line",
             "    checkNotNull(message.getMultiFieldList());",
-            "    // BUG: Diagnostic contains: Protobuf fields cannot be null",
+            "    // BUG: Diagnostic contains: This value cannot be null",
             "    // remove this line",
             "    checkNotNull(message.getMessage(), new Object());",
-            "    // BUG: Diagnostic contains: Protobuf fields cannot be null",
+            "    // BUG: Diagnostic contains: This value cannot be null",
             "    // remove this line",
             "    checkNotNull(message.getMultiFieldList(), new Object());",
-            "    // BUG: Diagnostic contains: Protobuf fields cannot be null",
+            "    // BUG: Diagnostic contains: This value cannot be null",
             "    // remove this line",
             "    checkNotNull(message.getMessage(), \"%s\", new Object());",
-            "    // BUG: Diagnostic contains: Protobuf fields cannot be null",
+            "    // BUG: Diagnostic contains: This value cannot be null",
             "    // remove this line",
             "    checkNotNull(message.getMultiFieldList(), \"%s\", new Object());",
             "    // BUG: Diagnostic contains: fieldMessage = message.getMessage();",
@@ -399,6 +399,81 @@ public final class ImpossibleNullComparisonTest {
             "    return Optional.ofNullable(message.getMessage());",
             "  }",
             "}")
+        .doTest();
+  }
+
+  @Test
+  public void optionalGet() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.util.Optional;",
+            "public class Test {",
+            "  public boolean o(Optional<String> o) {",
+            "    // BUG: Diagnostic contains: o.isEmpty()",
+            "    return o.get() == null;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void guavaOptionalGet() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.common.base.Optional;",
+            "public class Test {",
+            "  public boolean o(Optional<String> o) {",
+            "    // BUG: Diagnostic contains: !o.isPresent()",
+            "    return o.get() == null;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void multimapGet() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.common.collect.Multimap;",
+            "public class Test {",
+            "  public boolean o(Multimap<String, String> m) {",
+            "    // BUG: Diagnostic contains: !m.containsKey(\"foo\")",
+            "    return m.get(\"foo\") == null;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void listMultimapGet() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.common.collect.ListMultimap;",
+            "public class Test {",
+            "  public boolean o(ListMultimap<String, String> m) {",
+            "    // BUG: Diagnostic contains: !m.containsKey(\"foo\")",
+            "    return m.get(\"foo\") == null;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void optionalGet_notMatchedWithFlagOff() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.util.Optional;",
+            "public class Test {",
+            "  public boolean o(Optional<String> o) {",
+            "    return o.get() == null;",
+            "  }",
+            "}")
+        .setArgs("-XepOpt:ImpossibleNullComparison:MatchOptionalAndMultimap=false")
         .doTest();
   }
 }
