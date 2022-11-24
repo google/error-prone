@@ -193,4 +193,17 @@ public final class NonCanonicalTypeTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void clazz_noFinding() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  void test () {",
+            "    var c = boolean.class;",
+            "  }",
+            "}")
+        .doTest();
+  }
 }

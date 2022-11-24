@@ -37,6 +37,7 @@ import com.sun.tools.javac.code.Symbol.TypeSymbol;
 import com.sun.tools.javac.util.Position;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.annotation.Nullable;
 
 /** Flags types being referred to by their non-canonical name. */
 @BugPattern(
@@ -79,12 +80,16 @@ public final class NonCanonicalType extends BugChecker implements MemberSelectTr
         .build();
   }
 
+  @Nullable
   private static String canonicalName(MemberSelectTree tree) {
     Symbol sym = getSymbol(tree);
     if (sym == null) {
       return null;
     }
     if ((sym instanceof Symbol.MethodSymbol || sym instanceof Symbol.VarSymbol) && !isStatic(sym)) {
+      return null;
+    }
+    if (sym.getSimpleName().contentEquals("class")) {
       return null;
     }
     return sym.owner.getQualifiedName() + "." + sym.getSimpleName();
