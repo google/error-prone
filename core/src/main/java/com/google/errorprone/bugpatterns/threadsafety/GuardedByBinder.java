@@ -17,6 +17,7 @@
 package com.google.errorprone.bugpatterns.threadsafety;
 
 import static com.google.errorprone.bugpatterns.threadsafety.IllegalGuardedBy.checkGuardedBy;
+import static com.google.errorprone.util.ASTHelpers.isStatic;
 
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.threadsafety.GuardedByExpression.Kind;
@@ -234,7 +235,7 @@ public final class GuardedByBinder {
         }
 
         private GuardedByExpression bindSelect(GuardedByExpression base, Symbol sym) {
-          if (base.kind().equals(Kind.TYPE_LITERAL) && !sym.isStatic()) {
+          if (base.kind().equals(Kind.TYPE_LITERAL) && !isStatic(sym)) {
             throw new IllegalGuardedBy("Instance access on static: " + base + ", " + sym);
           }
 
@@ -297,7 +298,7 @@ public final class GuardedByBinder {
          */
         private GuardedByExpression normalizeBase(
             BinderContext context, Symbol symbol, GuardedByExpression base) {
-          if (symbol.isStatic()) {
+          if (isStatic(symbol)) {
             return F.typeLiteral(symbol.owner.enclClass());
           }
 

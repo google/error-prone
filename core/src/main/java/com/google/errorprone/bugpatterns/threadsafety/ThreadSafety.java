@@ -19,6 +19,7 @@ package com.google.errorprone.bugpatterns.threadsafety;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.ImmutableList.toImmutableList;
+import static com.google.errorprone.util.ASTHelpers.isStatic;
 
 import com.google.auto.value.AutoValue;
 import com.google.common.base.Joiner;
@@ -679,7 +680,7 @@ public final class ThreadSafety {
           result.add(name);
         }
       }
-      if (s.isStatic()) {
+      if (isStatic(s)) {
         break;
       }
     }

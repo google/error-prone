@@ -137,7 +137,7 @@ public class HidingField extends BugChecker implements ClassTreeMatcher {
         && !parentVariable.getModifiers().contains(Modifier.PROTECTED)
         && !parentVariable.getModifiers().contains(Modifier.PUBLIC)) { // package-private variable
 
-      if (!enclosingPackage(parentVariable).equals(getSymbol(currClass).packge())) {
+      if (!enclosingPackage(parentVariable).equals(enclosingPackage(getSymbol(currClass)))) {
         return true;
       }
     }

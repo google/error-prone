@@ -17,6 +17,7 @@ package com.google.errorprone.bugpatterns.threadsafety;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkState;
 import static com.google.errorprone.bugpatterns.threadsafety.IllegalGuardedBy.checkGuardedBy;
+import static com.google.errorprone.util.ASTHelpers.isStatic;
 import static java.util.Objects.requireNonNull;
 
 import com.google.auto.value.AutoValue;
@@ -195,7 +196,7 @@ public class GuardedBySymbolResolver implements GuardedByBinder.Resolver {
         && classSymbol != classSymbol.owner
         && classSymbol.owner instanceof Symbol.ClassSymbol) {
       T sym = getMember(type, kind, classSymbol.owner, name);
-      if (sym != null && sym.isStatic()) {
+      if (sym != null && isStatic(sym)) {
         return sym;
       }
     }
