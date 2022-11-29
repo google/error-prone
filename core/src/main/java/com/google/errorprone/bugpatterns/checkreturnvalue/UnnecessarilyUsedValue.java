@@ -94,6 +94,8 @@ public final class UnnecessarilyUsedValue extends BugChecker
     // TODO(kak): use the ResultUsePolicyEvaluator from the CheckReturnValue checker
     return hasDirectAnnotationWithSimpleName(
             getSymbol(methodInvocationTree), "CanIgnoreReturnValue")
-        && name.contentEquals("unused");
+        // match unused[0-9]*, since those are likely intentional CRV-related suppressions (captured
+        // into an unused variable), as opposed to a "normal" variable like `long unusedBalance`.
+        && name.toString().matches("unused\\d*");
   }
 }
