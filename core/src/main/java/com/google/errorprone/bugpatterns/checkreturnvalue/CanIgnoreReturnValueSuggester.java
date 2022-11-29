@@ -89,8 +89,6 @@ public final class CanIgnoreReturnValueSuggester extends BugChecker implements M
       return Description.NO_MATCH;
     }
 
-    // if the enclosing type is already annotated with CIRV, we could theoretically _not_ directly
-    // annotate the method but we're likely to discourage annotating types with CIRV: b/229776283
     // if the method is already directly annotated w/ @CRV, bail out
     if (hasAnnotation(methodTree, CRV, state)) {
       // TODO(kak): we might want to actually _remove_ @CRV and add @CIRV in this case!
