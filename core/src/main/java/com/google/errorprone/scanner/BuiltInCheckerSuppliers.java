@@ -133,6 +133,7 @@ import com.google.errorprone.bugpatterns.FallThrough;
 import com.google.errorprone.bugpatterns.FieldCanBeFinal;
 import com.google.errorprone.bugpatterns.FieldCanBeLocal;
 import com.google.errorprone.bugpatterns.FieldCanBeStatic;
+import com.google.errorprone.bugpatterns.Finalize;
 import com.google.errorprone.bugpatterns.Finally;
 import com.google.errorprone.bugpatterns.FloatCast;
 import com.google.errorprone.bugpatterns.FloatingPointAssertionWithinEpsilon;
@@ -847,6 +848,7 @@ public class BuiltInCheckerSuppliers {
           ExtendingJUnitAssert.class,
           ExtendsObject.class,
           FallThrough.class,
+          Finalize.class,
           Finally.class,
           FloatCast.class,
           FloatingPointAssertionWithinEpsilon.class,
