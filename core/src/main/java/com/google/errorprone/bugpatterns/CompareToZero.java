@@ -49,8 +49,8 @@ import com.sun.source.util.TreePath;
     severity = WARNING)
 public final class CompareToZero extends BugChecker implements MethodInvocationTreeMatcher {
   private static final String SUGGEST_IMPROVEMENT =
-      "It is generally more robust (and readable) to compare the result of #compareTo/#compare to"
-          + "0. Although the suggested replacement is identical in this case, we'd suggest it for"
+      "It is generally more robust (and readable) to compare the result of #compareTo/#compare to "
+          + "0. Although the suggested replacement is identical in this case, we'd suggest it for "
           + "consistency.";
 
   private static final ImmutableSet<Kind> COMPARISONS =
