@@ -733,6 +733,9 @@ __[ExtendsObject](bugpattern/ExtendsObject)__<br>
 __[FallThrough](bugpattern/FallThrough)__<br>
 Switch case may fall through
 
+__[Finalize](bugpattern/Finalize)__<br>
+Do not override finalize
+
 __[Finally](bugpattern/Finally)__<br>
 If you return or throw from a finally, then values returned or thrown from the try-catch block will be ignored. Consider using try-with-resources instead.
 
